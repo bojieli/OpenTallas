@@ -200,7 +200,7 @@ module tb_coll_tp8_native59 #(
             $finish;
         end
 `endif
-        if ((done_n == ND && INJECT < 0 && TAGBAD < 0) ||
+        if ((LASTBAD < 0 && done_n == ND && INJECT < 0 && TAGBAD < 0) ||
             ((INJECT >= 0 || TAGBAD >= 0) && cyc > 4000 + 4 * LATS + NMSG * WORDS * 16)) begin
             $display("TP8COLL dies=%0d latu=%0d lats=%0d msgs=%0d words=%0d gap=%0d skew=%0d inject=%0d mismatches=%0d out_err=%0d fault=%b code=%b words_out=%0d first=%0d last=%0d",
                      ND, LATU, LATS, NMSG, WORDS, GAP, SKEW, INJECT, bad, errs, flt, fc, words_out, first, lastc);
