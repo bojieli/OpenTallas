@@ -108,8 +108,8 @@
  "job": {
   "owner": "Claude:el1013-qwen-small-masters r3b",
   "branch": "claude/el1013-qwen-r3b-spine",
-  "tag": "cr1",
-  "purpose": "Slab original parentregisters hardened coreclocklocal partition",
+  "tag": "cr2",
+  "purpose": "Slab original parent registers in local core leaf, input pin capture of scale/multiplier returns adds two clocks; exact TP8 values and mutant",
   "extra_paths": [
    "physical/qwen_slab_structural"
   ],
@@ -119,14 +119,16 @@
     "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --out {RUN}/bench/entries",
     "expect": "pass",
     "threads": 1,
-    "peak_ram_gb": 2
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
    },
    {
     "name": "core_composition_scale_mutant",
     "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --entry-mutant --out {RUN}/bench/entries_mut",
     "expect": "fail",
     "threads": 1,
-    "peak_ram_gb": 2
+    "peak_ram_gb": 2,
+    "fail_regex": "^FAIL: [1-9][0-9]* errors$"
    }
   ],
   "views_to": "physical/ref_tile/qfd_slab_pg_core/views",
