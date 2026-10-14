@@ -1,4 +1,6 @@
+`ifdef OT_SPVM_RESET_ACK
 `include "dsfd_vm_reset_ack.svh"
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------
 // dsfd_vm_bgq (SYSTOLIC successor) -- redesign-ds 2026-10-09, OWNER rule "structural alternatives from established

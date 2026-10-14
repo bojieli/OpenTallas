@@ -1,4 +1,6 @@
+`ifdef OT_SPVM_RESET_ACK
 `include "dsfd_vm_reset_ack.svh"
+`endif
 // ---------------------------------------------------------------------------------------------------------------
 // dsfd_vm_bgl (el1013-s81-bgq28, 2026-10-13): ONE bank of the VM bank tile as a hard leaf, replicated x8 under the
 // wires-only parent dsfd_vm_bgq28h.  Replaces the flat dsfd_vm_bgr tile (bgr28 spine r6: GRT 20,000 markers; 5,441
