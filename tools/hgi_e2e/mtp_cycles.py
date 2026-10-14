@@ -15,6 +15,11 @@ A launch's measured cycles = its KCPL time minus the previous launch's (the cont
 launch overhead of the controller is inside the number, as it is on the die).
 
     python3 tools/hgi_e2e/mtp_cycles.py RUN_LOG LAUNCHES_JSON [--price 63800] [--out report.json]
+
+With the bench run under E2E_RECLOG=1 the log also carries one `E2E REC <k> <tag> unit <u> disp <c> ret <c> real <0|1>
+s2 <disp> <end>` line per retired record: the report then adds, per unit, the records' measured residence (retire -
+dispatch) against the simulator's (S2 end - S2 dispatch) and the ten slowest records by ratio (real units only; a
+stub retires after its S2 cost by construction).  A run cut short is reported on the part it reached.
 """
 from __future__ import annotations
 
@@ -35,6 +40,33 @@ def kcpl(run_log):
             assert n == len(out), f"KCPL lines out of order at {n}"
             out.append(dict(cyc=c, token=tok, status=st))
     return out
+
+
+UNITS = ["CTL", "SM", "SU", "SFU", "FUSED", "ATT", "COLL", "ARGMAX", "DMA", "IDX", "HC", "SIMT"]
+
+
+def records(run_log):
+    """the E2E REC lines: per unit measured residence vs the simulator's, and the slowest real records"""
+    rec = []
+    for ln in Path(run_log).read_text(errors="replace").splitlines():
+        m = re.match(r"E2E REC (\d+) (\S+) unit (\d+) disp (-?\d+) ret (-?\d+) real (\d) s2 ([\d.]+) ([\d.]+)", ln)
+        if m:
+            k, tag, u, d, r, real, sd, se = m.groups()
+            rec.append(dict(k=int(k), tag=tag, unit=UNITS[int(u)], measured=int(r) - int(d), sim=round(float(se) - float(sd), 1),
+                            real=int(real)))
+    if not rec:
+        return None
+    by = {}
+    for x in rec:
+        d = by.setdefault(x["unit"] + ("" if x["real"] else " (stub)"), dict(records=0, measured=0, sim=0.0))
+        d["records"] += 1
+        d["measured"] += x["measured"]
+        d["sim"] += x["sim"]
+    for d in by.values():
+        d["sim"] = round(d["sim"], 1)
+        d["ratio"] = round(d["measured"] / d["sim"], 3) if d["sim"] else None
+    slow = sorted((x for x in rec if x["real"] and x["sim"] > 0), key=lambda x: -(x["measured"] / x["sim"]))[:10]
+    return dict(retired=len(rec), by_unit=by, slowest=slow)
 
 
 def report(run_log, launches, price):
@@ -83,7 +115,7 @@ def report(run_log, launches, price):
                 bad_status=[x["i"] for x in per if x["status"]][:16],
                 job_cycles=k[-1]["cyc"] if k else None, sim_job_cycles=round(sum(x["s2_cycles"] for x in L), 1),
                 job_ratio_vs_sim=round(k[-1]["cyc"] / sum(x["s2_cycles"] for x in L[:n]), 3) if k else None,
-                by_kind=kinds, l0_columns=cols, l0_verify=v)
+                by_kind=kinds, l0_columns=cols, l0_verify=v, records=records(run_log))
 
 
 def main():
@@ -101,6 +133,12 @@ def main():
     for kk, d in sorted(r["by_kind"].items(), key=lambda kv: -kv[1]["measured"]):
         print(f"  {kk:8s} {d['launches']:4d} launches  measured {d['measured']:9d} ({d['measured_per_launch']:9.1f} each, worst "
               f"{d['worst']})  sim {d['sim']:10.1f} ({d['sim_per_launch']:8.1f})  ratio {d['ratio_vs_sim']}")
+    if r["records"]:
+        print(f"records retired {r['records']['retired']}; residence (retire - dispatch) by unit, measured vs simulator:")
+        for u, d in sorted(r["records"]["by_unit"].items(), key=lambda kv: -kv[1]["measured"]):
+            print(f"  {u:14s} {d['records']:5d} records  measured {d['measured']:9d}  sim {d['sim']:10.1f}  ratio {d['ratio']}")
+        for x in r["records"]["slowest"][:5]:
+            print(f"  slow: k {x['k']} {x['tag'][:40]} {x['unit']} measured {x['measured']} sim {x['sim']}")
     v = r["l0_verify"]
     if v:
         print(f"L0 verify, 5 columns: measured {v['measured_cycles']} vs price {v['price_cycles']:.0f} = {v['ratio']} "
