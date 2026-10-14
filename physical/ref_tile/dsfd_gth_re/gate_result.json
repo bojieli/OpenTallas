@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "dsfd_gth_re",
  "verdict": "WARN",
- "generated": "2026-10-14T04:08:29-0700",
+ "generated": "2026-10-14T04:35:01-0700",
  "host": "ot-epyc1tb",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "6adb1895b154fed95243d6b7856141c41b14ffd6",
+  "start_commit": "65f7d4154b82f3f5100af3a61a1e1a58c0199b6c",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "56e5a9f7d303005a7daac5464472ea1f57f348cced3b1931d6d25985f06680e5",
-  "manifest_sha256": "539ab77fb62120bc754f3c4ab7cd025740bdb2b5c3e32baf0280a808d6c902a1",
+  "archive_sha256": "20ca527457a46279043b63defce60c25745d2e21c484091c9ba016f0f308e155",
+  "manifest_sha256": "ac0911da42b48897f1ba7965ade85262a78e752699e70c57886c262f1a838165",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -22843,8 +22843,8 @@
    {
     "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_s.sv",
     "kind": "file",
-    "sha256": "44d6451bbbfca011afcfc30741ddac807aa0f21bcfdd5b7de267a5b3ecfd1a5a",
-    "git_blob": "c369f2993a673abe07768867ba7020eeacbdc311",
+    "sha256": "266542ac20e1ef0685e64bfdf9891cd113033f80a9da6a030794d1a61a07adfa",
+    "git_blob": "630ffb4f8a54902f38d45ebab8e3b0714415d8a9",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -107323,7 +107323,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "bb9fa3a2766ef179666bb01892f7c0088d3911a1",
+   "origin_main": "a194c5cbec457435d84cd98c87a76197a074a5f6",
    "content_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
    "files": [
     {
@@ -107696,11 +107696,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T04:02:07-0700",
-  "remote_script_sha256": "872c78257cb6b2db8a412af85ad2da80a4dab53f19745de8e353c2a7e2576fe0",
+  "captured": "2026-10-14T04:27:46-0700",
+  "remote_script_sha256": "ac72f8063483a006cdf1eac24cb346676f36183232b230f1fbed43cfe5d17d45",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_gth_re-20261014-040136",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_gth_re-20261014-042714",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -107711,8 +107711,8 @@
   "max_root_sinks": 13077,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": 297.3,
-  "tt_spread_ps": 66.8,
+  "tt_insertion_ps": 302.3,
+  "tt_spread_ps": 89.9,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -107726,79 +107726,79 @@
     "tt": {
      "boundary": {
       "n": 1956,
-      "mean": 253.7,
-      "min": 242.4,
-      "max": 285.4
+      "mean": 258.8,
+      "min": 244.7,
+      "max": 282.6
      },
      "all": {
       "n": 13077,
-      "mean": 254.3,
-      "min": 230.5,
-      "max": 297.3
+      "mean": 256.1,
+      "min": 212.4,
+      "max": 302.3
      },
      "errors": [],
      "macros": {
       "n": 8,
       "nets": 2,
       "max_per_net": 4,
-      "reg_mean": 254.3,
-      "max_slew": 214.8,
-      "max_late": 6.8,
+      "reg_mean": 256.1,
+      "max_slew": 215.2,
+      "max_late": -12.6,
       "pins": [
        {
         "pin": "u_l.g_r[0].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
-        "arr": 261.1,
-        "slew": 214.8,
-        "late": 6.8,
+        "arr": 243.5,
+        "slew": 215.2,
+        "late": -12.6,
         "net": "clknet_1_0__leaf_ck"
        },
        {
         "pin": "u_l.g_r[0].u_root.u_qm.g_q.u_m/clk",
-        "arr": 237.9,
-        "slew": 142.7,
-        "late": -16.4,
+        "arr": 220.4,
+        "slew": 143.3,
+        "late": -35.7,
         "net": "clknet_1_1__leaf_ck"
        },
        {
         "pin": "u_l.g_r[1].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
-        "arr": 254.5,
-        "slew": 195.5,
-        "late": 0.2,
+        "arr": 236.9,
+        "slew": 195.9,
+        "late": -19.2,
         "net": "clknet_1_0__leaf_ck"
        },
        {
         "pin": "u_l.g_r[1].u_root.u_qm.g_q.u_m/clk",
-        "arr": 231.3,
-        "slew": 124.4,
-        "late": -23.0,
+        "arr": 213.8,
+        "slew": 125.0,
+        "late": -42.3,
         "net": "clknet_1_1__leaf_ck"
        },
        {
         "pin": "u_l.g_r[2].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
-        "arr": 242.3,
-        "slew": 160.1,
-        "late": -12.0,
+        "arr": 224.4,
+        "slew": 159.7,
+        "late": -31.7,
         "net": "clknet_1_0__leaf_ck"
        },
        {
         "pin": "u_l.g_r[2].u_root.u_qm.g_q.u_m/clk",
-        "arr": 230.5,
-        "slew": 122.1,
-        "late": -23.8,
+        "arr": 212.4,
+        "slew": 121.2,
+        "late": -43.7,
         "net": "clknet_1_1__leaf_ck"
        },
        {
         "pin": "u_l.g_r[3].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
-        "arr": 249.0,
-        "slew": 179.5,
-        "late": -5.3,
+        "arr": 231.1,
+        "slew": 179.2,
+        "late": -25.0,
         "net": "clknet_1_0__leaf_ck"
        },
        {
         "pin": "u_l.g_r[3].u_root.u_qm.g_q.u_m/clk",
-        "arr": 237.1,
-        "slew": 140.5,
-        "late": -17.2,
+        "arr": 219.0,
+        "slew": 139.5,
+        "late": -37.1,
         "net": "clknet_1_1__leaf_ck"
        }
       ]
@@ -107809,7 +107809,7 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "13,077 sinks on the largest root <= 15,000; measured TT insertion 297.3 ps, leaf spread 66.8 ps"
+  "text": "13,077 sinks on the largest root <= 15,000; measured TT insertion 302.3 ps, leaf spread 89.9 ps"
  },
  "items": [
   {
