@@ -1,0 +1,56 @@
+{
+  "status": "SOURCE_CANDIDATE_DEFAULT_OFF_PHYSICAL_OPEN",
+  "macro": "OT_SPVM_RESET_ACK",
+  "source_commit": "580128f5c",
+  "helper_source_commit": "02f20d8e7",
+  "request": "actual raw epoch rs[0], upstream of finalconditioner; async clears both witness and ACK with stopped clock",
+  "protocol": "sample allfinalreleaseLOW after requestrelease; later consuming root edge seesallHIGH+actualconsumerlive; ACK onlytelemetry, no datapath gating",
+  "selected_flat": {
+    "parent": "55740b883",
+    "top": "dsfd_sp_vm_m",
+    "NP": 28,
+    "NPR": 10,
+    "tile_instances": "g_h[h].g_t[t].u_bg, h/t=0..3",
+    "root_count": 16,
+    "consumer_clock": "ck[0]",
+    "final_conditioner": "rst_s[1] = rst_i",
+    "ack_port": "reset_ack",
+    "ACK_only_FFs": 32
+  },
+  "native_successor": {
+    "top": "dsfd_vm_bgq28h_mc24",
+    "NP": 28,
+    "NPR": 10,
+    "tile_count": 16,
+    "leaf_per_tile": 8,
+    "roots_per_leaf": 3,
+    "root_count": 384,
+    "ACK_only_FFs": 768,
+    "leaf_ack_order": [
+      "bank:rsti/ck",
+      "request:rst_req/ck_req",
+      "return:rst_ret/ck_ret"
+    ],
+    "parent_ack_mapping": "reset_ack[3*k+:3], k=0..7; parent384 aggregation UNINTEGRATED",
+    "H2_forwarding": "rb1 valid uses rst_req, not bankreset; bankstate rsti, returnstate rst_ret",
+    "live": "actual same localreset gating consumers, no distinct localonline protocol"
+  },
+  "qualification": {
+    "stopped_clock_numerical": "PASS",
+    "missed_conditioner_numerical": "PASS",
+    "forward_mutant": "FAIL as expected",
+    "no_witness_mutant": "FAIL as expected",
+    "new_ACK_physical_views": "OPEN",
+    "ACK_root_driver_and_pin_binding": "OPEN",
+    "whole_VM_barrier": "OPEN"
+  },
+  "source_files": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv": "9bbd82c90bf5c04ced7e0bf386b37292f96cb34a08dead9767d69928ad695142",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv": "f71cdbd58e304cde99b56b722843561e38c7e882a6740816a275d5e8bc379fb3",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq28h_mc24.sv": "c9db1292814d98d76af4b0f3cd2509189acee54600f933f31a80de04ccbf74db",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_reset_ack.svh": "27c38ac1de8cdba2c3bc4e23c7b5dd1256a2061fd872c11e05bb67529d4da2e3",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_bank_reset_ack.sv": "e4df92a9eefe02d920aeecf65c28a4ad6dbf1f93e70b79dc9b0104517df99cc7"
+  },
+  "archive_sha256": "f24119ff2cb91ab98eeb6c740cb1b1752354cd5b07e4bd79eae5e8d096df0f82",
+  "admission": "ot-run8GB8threads epcy4 unitoth-ubuntu-1647622-1791970223 exit0"
+}

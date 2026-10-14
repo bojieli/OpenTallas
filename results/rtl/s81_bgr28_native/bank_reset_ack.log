@@ -1,0 +1,19 @@
+ot-run: ot-epyc1tb     admits   525 GB (avail 751, growth 81, headroom 64, waiters 0/0 GB) load 40/128 running 10 disk 876 GB 
+ot-run: ot-epyc4       admits   682 GB (avail 908, growth 118, headroom 48, waiters 0/0 GB) load 31/128 running 11 disk 1115 GB 
+ot-run: ot-pve1        admits   163 GB (avail 211, growth 6, headroom 32, waiters 0/0 GB) load 33/28 running 2 disk 1314 GB 
+ot-run: ot-agidock128  admits   -91 GB (avail 90, growth 15, headroom 24, waiters 2/152 GB) load 14/64 running 4 disk 285 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1647622-1791970223 after 0 s
+gold rc=0
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 312ns; walltime 0.000 s; speed 7.054 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+mut_forward rc=1
+[42000] %Fatal: tb_dsfd_vm_bank_reset_ack.sv:20: Assertion failed in tb_dsfd_vm_bank_reset_ack: missed conditioner was acknowledged
+%Error: rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_bank_reset_ack.sv:20: Verilog $stop
+Aborting...
+mut_nowitness rc=1
+[42000] %Fatal: tb_dsfd_vm_bank_reset_ack.sv:20: Assertion failed in tb_dsfd_vm_bank_reset_ack: missed conditioner was acknowledged
+%Error: rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_bank_reset_ack.sv:20: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1647622-1791970223): exit 0
