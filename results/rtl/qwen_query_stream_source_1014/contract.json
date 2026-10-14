@@ -1,0 +1,27 @@
+{
+  "status": "DEFAULT_OFF_SOURCE_PREPARATION_LINT_PASS_NO_ARITHMETIC_OR_PHYSICAL_ADOPTION",
+  "generic_parameter": "XQUERY_STREAM default0 inPart andROMlogic; historicaltoggle behavior selected by default",
+  "new_parent": "ot_qwen_tile_tp8_query_numeric_stream",
+  "new_control": "ot_qwen_tile_ctl_tp8_query_numeric_stream (query_stream ctl +4094metadata onONEcoherentedge)",
+  "ports": {
+    "query_tuple": "210={mask4,addr96,epoch21,mode1,context16,version32,seq40}",
+    "query_valid": "cx_query_issue_v registered SAME actual preupdate generation edge",
+    "query_reserve": "MUST be stable true before every actual producing coherentedge; false productionedge faults allocation. Wholecoherentfamily must pause before queuecapacity exhausted",
+    "query_ack_toggle": "ignored inSTREAMmode; preserved historicalinterfacealias only",
+    "cx_query_toggle": "constant0 inSTREAMmode; no pendingpublication latch",
+    "cx_query_credit": "constant1 inSTREAMmode; not livetransportready, caller uses explicit actualquery_reserve/wholeCCgate",
+    "numeric_tuple": "oldatomic89 sameTOREGedge46, unchanged"
+  },
+  "live_capture": "E+1base copies prior query tuple before next CC NBA overwrite, actual_step sampled every base edge including0whilepaused; cannot sampleheld valid repeatedly",
+  "retirement": "queue consumeraccept\u2192bank ISSUE only; distinctnumeric pop\u2192RETIRE; no responsecapture retirement",
+  "state_change": "toggle1 resetregister eliminated inSTREAMmode; seqcounter40+issued40+fault1+allocationvalid1 retained; atomic210 output is wireconcat existingregisters, no additionaledge/Q",
+  "pin_cost": "new210bit atomicoutput currentlyduplicates historical publicqueryfield aliases retained forlocalcache/oracle; no freecutcompression or assignedphysicalfaces",
+  "open": [
+    "actualfullarithmetic/allmutants",
+    "qualifiedsamefamilyphase/output_step/gating",
+    "livequeue/currentcapacity/service",
+    "HOSTtoken/root/sourceownership",
+    "registeredacceptACK recovery",
+    "sourcecurrentcensus/CTS/pins"
+  ]
+}

@@ -1,0 +1,518 @@
+{
+  "status": "EXACT_CURRENT14_CHILD_VIEW_BYTES_BOUND_TO_HISTORICAL_R5_SPEC_NOT_CURRENT_PARENT_FIT",
+  "spec": "physical/ref_tile/qfd_tile_nk_r5/spec.json",
+  "spec_sha256": "7279c799e3a50fdb5569808458f3fd11526feddbdac2bc991d45ee7ed911d6ab",
+  "read_commit": "86fedc9a862f042c3c76aee7e1595cc32df490f6",
+  "children": [
+    {
+      "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp",
+      "master": "ot_qwen_tile_rpair",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "LEF_size_um": [
+        311.04,
+        129.6
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/abstract.json": {
+          "sha256": "1442331323633c08ae0a7dca755f1d22453b5bbf1d40ec7e1df0d4a99d29eca6",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/child_lint.json": {
+          "sha256": "d235d578b4af5973c6a448ee7ef1c8231bf0de0513eaa51bbf28ce8ba7371813",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/insertion.json": {
+          "sha256": "6cb6eb7c5bb57d79a5db135f2c31d35f66cf311cbbf36e9b64653dfb77ef1f6e",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair.lef": {
+          "sha256": "c7d0328cf80fc23bb5e116af454a07061a0d6bf9d1c649eb68b60b5d4ae83bbb",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ff.lib": {
+          "sha256": "07313eb731ace2aee76dc70b816caf52232702ce339f136c30a453eb71bea6d6",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ss.lib": {
+          "sha256": "7bbc8bd1be34c60f42177987d4431599a43b144e2d805a31ba8e8a799391d3fc",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib": {
+          "sha256": "b03824e7785b66d8b926fee916aa8ea1e1c8156297ce6c5a6d17fc858166a1cf",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
+      "master": "ot_qwen_tile_rpair",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "LEF_size_um": [
+        311.04,
+        129.6
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/abstract.json": {
+          "sha256": "1442331323633c08ae0a7dca755f1d22453b5bbf1d40ec7e1df0d4a99d29eca6",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/child_lint.json": {
+          "sha256": "d235d578b4af5973c6a448ee7ef1c8231bf0de0513eaa51bbf28ce8ba7371813",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/insertion.json": {
+          "sha256": "6cb6eb7c5bb57d79a5db135f2c31d35f66cf311cbbf36e9b64653dfb77ef1f6e",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair.lef": {
+          "sha256": "c7d0328cf80fc23bb5e116af454a07061a0d6bf9d1c649eb68b60b5d4ae83bbb",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ff.lib": {
+          "sha256": "07313eb731ace2aee76dc70b816caf52232702ce339f136c30a453eb71bea6d6",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ss.lib": {
+          "sha256": "7bbc8bd1be34c60f42177987d4431599a43b144e2d805a31ba8e8a799391d3fc",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib": {
+          "sha256": "b03824e7785b66d8b926fee916aa8ea1e1c8156297ce6c5a6d17fc858166a1cf",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+      "master": "ot_qwen_tile_rpair",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "LEF_size_um": [
+        311.04,
+        129.6
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/abstract.json": {
+          "sha256": "1442331323633c08ae0a7dca755f1d22453b5bbf1d40ec7e1df0d4a99d29eca6",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/child_lint.json": {
+          "sha256": "d235d578b4af5973c6a448ee7ef1c8231bf0de0513eaa51bbf28ce8ba7371813",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/insertion.json": {
+          "sha256": "6cb6eb7c5bb57d79a5db135f2c31d35f66cf311cbbf36e9b64653dfb77ef1f6e",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair.lef": {
+          "sha256": "c7d0328cf80fc23bb5e116af454a07061a0d6bf9d1c649eb68b60b5d4ae83bbb",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ff.lib": {
+          "sha256": "07313eb731ace2aee76dc70b816caf52232702ce339f136c30a453eb71bea6d6",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ss.lib": {
+          "sha256": "7bbc8bd1be34c60f42177987d4431599a43b144e2d805a31ba8e8a799391d3fc",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib": {
+          "sha256": "b03824e7785b66d8b926fee916aa8ea1e1c8156297ce6c5a6d17fc858166a1cf",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+      "master": "ot_qwen_tile_rpair",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "LEF_size_um": [
+        311.04,
+        129.6
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/abstract.json": {
+          "sha256": "1442331323633c08ae0a7dca755f1d22453b5bbf1d40ec7e1df0d4a99d29eca6",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/child_lint.json": {
+          "sha256": "d235d578b4af5973c6a448ee7ef1c8231bf0de0513eaa51bbf28ce8ba7371813",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/insertion.json": {
+          "sha256": "6cb6eb7c5bb57d79a5db135f2c31d35f66cf311cbbf36e9b64653dfb77ef1f6e",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair.lef": {
+          "sha256": "c7d0328cf80fc23bb5e116af454a07061a0d6bf9d1c649eb68b60b5d4ae83bbb",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ff.lib": {
+          "sha256": "07313eb731ace2aee76dc70b816caf52232702ce339f136c30a453eb71bea6d6",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ss.lib": {
+          "sha256": "7bbc8bd1be34c60f42177987d4431599a43b144e2d805a31ba8e8a799391d3fc",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib": {
+          "sha256": "b03824e7785b66d8b926fee916aa8ea1e1c8156297ce6c5a6d17fc858166a1cf",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+      "master": "ot_qwen_tile_rpair",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "LEF_size_um": [
+        311.04,
+        129.6
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/abstract.json": {
+          "sha256": "1442331323633c08ae0a7dca755f1d22453b5bbf1d40ec7e1df0d4a99d29eca6",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/child_lint.json": {
+          "sha256": "d235d578b4af5973c6a448ee7ef1c8231bf0de0513eaa51bbf28ce8ba7371813",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/insertion.json": {
+          "sha256": "6cb6eb7c5bb57d79a5db135f2c31d35f66cf311cbbf36e9b64653dfb77ef1f6e",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair.lef": {
+          "sha256": "c7d0328cf80fc23bb5e116af454a07061a0d6bf9d1c649eb68b60b5d4ae83bbb",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ff.lib": {
+          "sha256": "07313eb731ace2aee76dc70b816caf52232702ce339f136c30a453eb71bea6d6",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ss.lib": {
+          "sha256": "7bbc8bd1be34c60f42177987d4431599a43b144e2d805a31ba8e8a799391d3fc",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        },
+        "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib": {
+          "sha256": "b03824e7785b66d8b926fee916aa8ea1e1c8156297ce6c5a6d17fc858166a1cf",
+          "last_file_commit": "9e3f93efd063439769e2a0458d803c57dbadf3e9"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.g_ndh.u_node",
+      "master": "ot_qwen_tile_node",
+      "view": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+      "LEF_size_um": [
+        47.52,
+        432.0
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/abstract.json": {
+          "sha256": "549278867e0aa08efe70838b4286fbb9da940fc00b35cab35da51e501033fc07",
+          "last_file_commit": "012bdca0e79fbef04a8edce1abb757f7bda6f1af"
+        },
+        "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/child_lint.json": {
+          "sha256": "e0dbf3648553932c4d1d91afdea4fc3b7382ce938e72faa3bfb19492464157d5",
+          "last_file_commit": "012bdca0e79fbef04a8edce1abb757f7bda6f1af"
+        },
+        "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/insertion.json": {
+          "sha256": "61cf25464dcbd16d86496788f32a10a629dd5e60d5f45b52e400b252e04c065e",
+          "last_file_commit": "012bdca0e79fbef04a8edce1abb757f7bda6f1af"
+        },
+        "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node.lef": {
+          "sha256": "a35f635ec1a4ca0a6fc678e260e5f8982353e7d16b1c87368b815ee561cce69e",
+          "last_file_commit": "012bdca0e79fbef04a8edce1abb757f7bda6f1af"
+        },
+        "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_ff.lib": {
+          "sha256": "c38dd3545b4b1bf844e2630052b4369590002522aba222ce32a2e7449192e874",
+          "last_file_commit": "012bdca0e79fbef04a8edce1abb757f7bda6f1af"
+        },
+        "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_ss.lib": {
+          "sha256": "98890f90c91a78421c916e67f2d18306be55cdb982c9ded647281a93783e7ebe",
+          "last_file_commit": "012bdca0e79fbef04a8edce1abb757f7bda6f1af"
+        },
+        "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_tt.lib": {
+          "sha256": "1e5b955ed1f9e231142a96cd87b2718ad9256101570878b5727fb6609db8bee4",
+          "last_file_commit": "012bdca0e79fbef04a8edce1abb757f7bda6f1af"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl",
+      "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+      "LEF_size_um": [
+        99.792,
+        140.4
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl.lef": {
+          "sha256": "449bd1b84dba594b38710bfc0d942be54db416591c0846edfe0bd19355bc0593",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v": {
+          "sha256": "f709219373023a7aed69de9c0d821bbcd15faae790f9c896de70232f86e12740",
+          "last_file_commit": "4bb4d17dd79c11c5a6e359741b053537e0abdbc4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ff.lib": {
+          "sha256": "0cf31cb31f59353c406e3cde89ddfabeb13e4c05091e3565ae3458df7bcd6897",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ss.lib": {
+          "sha256": "f92be062d2cd1ec2202b469247b21c68c1ea721a86e2ca9f2d2b79d3b4b0ca90",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_tt.lib": {
+          "sha256": "a8b891350af31598d19251e56be94557e66a6730a6a1fb3c87d90913d4269f83",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl",
+      "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+      "LEF_size_um": [
+        99.792,
+        140.4
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl.lef": {
+          "sha256": "449bd1b84dba594b38710bfc0d942be54db416591c0846edfe0bd19355bc0593",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v": {
+          "sha256": "f709219373023a7aed69de9c0d821bbcd15faae790f9c896de70232f86e12740",
+          "last_file_commit": "4bb4d17dd79c11c5a6e359741b053537e0abdbc4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ff.lib": {
+          "sha256": "0cf31cb31f59353c406e3cde89ddfabeb13e4c05091e3565ae3458df7bcd6897",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ss.lib": {
+          "sha256": "f92be062d2cd1ec2202b469247b21c68c1ea721a86e2ca9f2d2b79d3b4b0ca90",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_tt.lib": {
+          "sha256": "a8b891350af31598d19251e56be94557e66a6730a6a1fb3c87d90913d4269f83",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl",
+      "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+      "LEF_size_um": [
+        99.792,
+        140.4
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl.lef": {
+          "sha256": "449bd1b84dba594b38710bfc0d942be54db416591c0846edfe0bd19355bc0593",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v": {
+          "sha256": "f709219373023a7aed69de9c0d821bbcd15faae790f9c896de70232f86e12740",
+          "last_file_commit": "4bb4d17dd79c11c5a6e359741b053537e0abdbc4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ff.lib": {
+          "sha256": "0cf31cb31f59353c406e3cde89ddfabeb13e4c05091e3565ae3458df7bcd6897",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ss.lib": {
+          "sha256": "f92be062d2cd1ec2202b469247b21c68c1ea721a86e2ca9f2d2b79d3b4b0ca90",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_tt.lib": {
+          "sha256": "a8b891350af31598d19251e56be94557e66a6730a6a1fb3c87d90913d4269f83",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl",
+      "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+      "LEF_size_um": [
+        99.792,
+        140.4
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl.lef": {
+          "sha256": "449bd1b84dba594b38710bfc0d942be54db416591c0846edfe0bd19355bc0593",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v": {
+          "sha256": "f709219373023a7aed69de9c0d821bbcd15faae790f9c896de70232f86e12740",
+          "last_file_commit": "4bb4d17dd79c11c5a6e359741b053537e0abdbc4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ff.lib": {
+          "sha256": "0cf31cb31f59353c406e3cde89ddfabeb13e4c05091e3565ae3458df7bcd6897",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ss.lib": {
+          "sha256": "f92be062d2cd1ec2202b469247b21c68c1ea721a86e2ca9f2d2b79d3b4b0ca90",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_tt.lib": {
+          "sha256": "a8b891350af31598d19251e56be94557e66a6730a6a1fb3c87d90913d4269f83",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl",
+      "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+      "LEF_size_um": [
+        99.792,
+        140.4
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl.lef": {
+          "sha256": "449bd1b84dba594b38710bfc0d942be54db416591c0846edfe0bd19355bc0593",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v": {
+          "sha256": "f709219373023a7aed69de9c0d821bbcd15faae790f9c896de70232f86e12740",
+          "last_file_commit": "4bb4d17dd79c11c5a6e359741b053537e0abdbc4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ff.lib": {
+          "sha256": "0cf31cb31f59353c406e3cde89ddfabeb13e4c05091e3565ae3458df7bcd6897",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ss.lib": {
+          "sha256": "f92be062d2cd1ec2202b469247b21c68c1ea721a86e2ca9f2d2b79d3b4b0ca90",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_tt.lib": {
+          "sha256": "a8b891350af31598d19251e56be94557e66a6730a6a1fb3c87d90913d4269f83",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl",
+      "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+      "LEF_size_um": [
+        99.792,
+        140.4
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl.lef": {
+          "sha256": "449bd1b84dba594b38710bfc0d942be54db416591c0846edfe0bd19355bc0593",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v": {
+          "sha256": "f709219373023a7aed69de9c0d821bbcd15faae790f9c896de70232f86e12740",
+          "last_file_commit": "4bb4d17dd79c11c5a6e359741b053537e0abdbc4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ff.lib": {
+          "sha256": "0cf31cb31f59353c406e3cde89ddfabeb13e4c05091e3565ae3458df7bcd6897",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ss.lib": {
+          "sha256": "f92be062d2cd1ec2202b469247b21c68c1ea721a86e2ca9f2d2b79d3b4b0ca90",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_tt.lib": {
+          "sha256": "a8b891350af31598d19251e56be94557e66a6730a6a1fb3c87d90913d4269f83",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl",
+      "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+      "LEF_size_um": [
+        99.792,
+        140.4
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl.lef": {
+          "sha256": "449bd1b84dba594b38710bfc0d942be54db416591c0846edfe0bd19355bc0593",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v": {
+          "sha256": "f709219373023a7aed69de9c0d821bbcd15faae790f9c896de70232f86e12740",
+          "last_file_commit": "4bb4d17dd79c11c5a6e359741b053537e0abdbc4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ff.lib": {
+          "sha256": "0cf31cb31f59353c406e3cde89ddfabeb13e4c05091e3565ae3458df7bcd6897",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ss.lib": {
+          "sha256": "f92be062d2cd1ec2202b469247b21c68c1ea721a86e2ca9f2d2b79d3b4b0ca90",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_tt.lib": {
+          "sha256": "a8b891350af31598d19251e56be94557e66a6730a6a1fb3c87d90913d4269f83",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        }
+      }
+    },
+    {
+      "inst": "u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl",
+      "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+      "LEF_size_um": [
+        99.792,
+        140.4
+      ],
+      "symmetry_statements": [],
+      "rotation_rule": "NO_POSITIVE_R90_PERMISSION; currentflowonlyR0/MX/MY/R180",
+      "files": {
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl.lef": {
+          "sha256": "449bd1b84dba594b38710bfc0d942be54db416591c0846edfe0bd19355bc0593",
+          "last_file_commit": "2edb6bd2ade19780dd328965958273099e638df6"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v": {
+          "sha256": "f709219373023a7aed69de9c0d821bbcd15faae790f9c896de70232f86e12740",
+          "last_file_commit": "4bb4d17dd79c11c5a6e359741b053537e0abdbc4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ff.lib": {
+          "sha256": "0cf31cb31f59353c406e3cde89ddfabeb13e4c05091e3565ae3458df7bcd6897",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_ss.lib": {
+          "sha256": "f92be062d2cd1ec2202b469247b21c68c1ea721a86e2ca9f2d2b79d3b4b0ca90",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_tt.lib": {
+          "sha256": "a8b891350af31598d19251e56be94557e66a6730a6a1fb3c87d90913d4269f83",
+          "last_file_commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        }
+      }
+    }
+  ]
+}

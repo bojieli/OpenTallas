@@ -243,6 +243,7 @@ module ot_qwen_w12_matvec_part #(
     parameter integer XADDR_FAST = 0,
     parameter integer XMODE_EXPORT = 0,
     parameter integer XCONTEXT_EXPORT = 0,
+    parameter integer XQUERY_STREAM = 0, // default preserves immutable pending-toggle behavior
     parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
     input  wire              clk,
@@ -302,6 +303,7 @@ module ot_qwen_w12_matvec_part #(
     output reg op_accept,
     output reg x_issue_last,
     input wire i_query_ack_toggle,
+    input wire i_query_reserve, // meaningful only in distinct XQUERY_STREAM candidate
     output wire [39:0] x_query_seq,
     output wire x_query_toggle,x_query_credit,x_query_fault,x_query_issue_v,
     input  wire [G*32-1:0]   x_q,
@@ -650,9 +652,9 @@ end endgenerate
        assign next_read[qi]=active&&(qi<NPX)&&(((gb+qi)>>split_r)<(GT>>split_r));
       end
       wire acked=toggle==i_query_ack_toggle;
-      assign x_query_credit=acked;
+      assign x_query_credit=(XQUERY_STREAM != 0)?1'b1:acked;
       assign x_query_seq=issued_sequence;
-      assign x_query_toggle=toggle;
+      assign x_query_toggle=(XQUERY_STREAM != 0)?1'b0:toggle;
       assign x_query_fault=credit_fault;assign x_query_issue_v=issued_valid;
       always @(posedge clk or negedge rst_n)begin
        if(!rst_n)begin next_sequence<=0;issued_sequence<=0;toggle<=0;credit_fault<=0;issued_valid<=0;end
@@ -660,8 +662,8 @@ end endgenerate
         issued_valid<=0;
         if(go&&ready)next_sequence<=0;
         if(|next_read)begin
-         if(!x_query_credit)credit_fault<=1;
-         else begin issued_sequence<=next_sequence;next_sequence<=next_sequence+1'b1;toggle<=!toggle;issued_valid<=1;end
+         if(!x_query_credit || ((XQUERY_STREAM != 0) && !i_query_reserve))credit_fault<=1;
+         else begin issued_sequence<=next_sequence;next_sequence<=next_sequence+1'b1;if(XQUERY_STREAM == 0)toggle<=!toggle;issued_valid<=1;end
         end
        end
       end

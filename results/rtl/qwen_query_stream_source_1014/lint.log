@@ -1,0 +1,68 @@
+%Warning-MULTIDRIVEN: rtl/physical/ot_qwen_tile_kids_grouped.sv:53:30: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_query_numeric_stream.u_core.u_kids.tx_group_q'
+                      rtl/physical/ot_qwen_tile_tx8_capture.sv:10:25: ... Location of first driving block
+   10 |   always @(posedge clk) q[390*i+:389]<=d[390*i+:389];
+      |                         ^
+                      rtl/physical/ot_qwen_tile_tx8_capture.sv:12:38: ... Location of other driving block
+   12 |    if(!rst_n[i])q[390*i+389]<=0;else q[390*i+389]<=d[390*i+389];
+      |                                      ^
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1787:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_query_numeric_stream.u_core.u_ctl.u_control.u_logic.u_me.__Vcellout__g_hier.g_sl[7].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1790:27: ... Location of first driving block
+ 1790 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1789:77: ... Location of other driving block
+ 1789 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1787:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_query_numeric_stream.u_core.u_ctl.u_control.u_logic.u_me.__Vcellout__g_hier.g_sl[6].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1790:27: ... Location of first driving block
+ 1790 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1789:77: ... Location of other driving block
+ 1789 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1787:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_query_numeric_stream.u_core.u_ctl.u_control.u_logic.u_me.__Vcellout__g_hier.g_sl[5].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1790:27: ... Location of first driving block
+ 1790 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1789:77: ... Location of other driving block
+ 1789 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1787:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_query_numeric_stream.u_core.u_ctl.u_control.u_logic.u_me.__Vcellout__g_hier.g_sl[4].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1790:27: ... Location of first driving block
+ 1790 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1789:77: ... Location of other driving block
+ 1789 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1787:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_query_numeric_stream.u_core.u_ctl.u_control.u_logic.u_me.__Vcellout__g_hier.g_sl[3].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1790:27: ... Location of first driving block
+ 1790 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1789:77: ... Location of other driving block
+ 1789 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1787:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_query_numeric_stream.u_core.u_ctl.u_control.u_logic.u_me.__Vcellout__g_hier.g_sl[2].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1790:27: ... Location of first driving block
+ 1790 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1789:77: ... Location of other driving block
+ 1789 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1787:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_query_numeric_stream.u_core.u_ctl.u_control.u_logic.u_me.__Vcellout__g_hier.g_sl[1].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1790:27: ... Location of first driving block
+ 1790 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1789:77: ... Location of other driving block
+ 1789 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1787:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_query_numeric_stream.u_core.u_ctl.u_control.u_logic.u_me.__Vcellout__g_hier.g_sl[0].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1790:27: ... Location of first driving block
+ 1790 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1789:77: ... Location of other driving block
+ 1789 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 9.851 MB sources in 99 modules, into 67.989 MB in 66 C++ files needing 0.000 MB
+- Verilator: Walltime 27.532 s (elab=0.781, cvt=25.186, bld=0.000); cpu 27.508 s on 1 threads; allocated 2120.230 MB

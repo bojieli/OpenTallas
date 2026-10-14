@@ -129,6 +129,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer XLOCAL = 0,
     parameter integer XMODE_EXPORT = 0,
     parameter integer XCONTEXT_EXPORT = 0,
+    parameter integer XQUERY_STREAM = 0,
     parameter integer XADMIT = 0,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
@@ -186,6 +187,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     output wire [15:0] cx_xcontext,
     output wire [31:0] cx_xversion,
     input wire query_ack_toggle,
+    input wire query_reserve, // stream candidate only; caller reserves before core edge
     output wire [39:0] cx_query_seq,
     output wire cx_query_toggle,cx_query_credit,cx_query_fault,cx_query_issue_v,
     input wire accept_ack_toggle,accept_transport_fence,
@@ -303,7 +305,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         assign t_vout = t_vout_i;
     end endgenerate
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX((XLOCAL != 0) ? TG : 0), .XADDR_FAST(XLOCAL != 0), .XMODE_EXPORT(XMODE_EXPORT), .XCONTEXT_EXPORT(XCONTEXT_EXPORT), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX), .LEXT(CEXT),
+        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX((XLOCAL != 0) ? TG : 0), .XADDR_FAST(XLOCAL != 0), .XMODE_EXPORT(XMODE_EXPORT), .XCONTEXT_EXPORT(XCONTEXT_EXPORT), .XQUERY_STREAM(XQUERY_STREAM), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX), .LEXT(CEXT),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
         .clk(clk), .rst_n(rst_n), .go(go_core), .ready(me_ready), .idle(cx_core_idle),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
@@ -315,7 +317,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .scale_re(), .scale_gre(), .scale_addr(), .scale_q({TG*W*16{1'b0}}),
         .kv_re(me_kv_re), .kv_addr(me_kv_addr), .kv_q(me_kv_q),
-        .x_re(cx_xre), .x_addr(cx_xaddr), .x_epoch(cx_xepoch), .x_jrepeat(cx_xjrepeat), .i_op_context(op_meta_i[15:0]), .i_vm_version(op_meta_i[47:16]), .x_op_context(cx_xcontext), .x_vm_version(cx_xversion), .accepted_op_context(cx_accepted_context), .accepted_vm_version(cx_accepted_version), .op_accept(cx_op_accept), .x_issue_last(cx_issue_last), .i_query_ack_toggle(query_ack_toggle),
+        .x_re(cx_xre), .x_addr(cx_xaddr), .x_epoch(cx_xepoch), .x_jrepeat(cx_xjrepeat), .i_op_context(op_meta_i[15:0]), .i_vm_version(op_meta_i[47:16]), .x_op_context(cx_xcontext), .x_vm_version(cx_xversion), .accepted_op_context(cx_accepted_context), .accepted_vm_version(cx_accepted_version), .op_accept(cx_op_accept), .x_issue_last(cx_issue_last), .i_query_ack_toggle(query_ack_toggle),.i_query_reserve(query_reserve),
  .x_query_seq(cx_query_seq),.x_query_toggle(cx_query_toggle),.x_query_credit(cx_query_credit),.x_query_fault(cx_query_fault),.x_query_issue_v(cx_query_issue_v), .x_q(xl_i),
         .ov(), .o_we(), .o_addr(), .o_mask(), .o_data(),
         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
