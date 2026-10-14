@@ -18,6 +18,9 @@
 `endif
 module `S81PH_GTH_CL_NAME #(parameter integer ROOTD = 128, parameter integer MUT = 0) (
     input wire [0:0] ck, input wire [0:0] rst, input wire [0:0] ckv, input wire [0:0] rsv,
+`ifdef S81PH_GTH_DIE_CLOCKS
+    input wire [31:0] ck_l, // one compensated die clock pin per hardened root leaf; no parent tree
+`endif
     input wire [511:0] f_vm,
     output wire [6946:0] t_capture,
     input wire [691:0] rW0, input wire [760:0] rW1, input wire [760:0] rW2, input wire [760:0] rW3,
@@ -28,6 +31,11 @@ module `S81PH_GTH_CL_NAME #(parameter integer ROOTD = 128, parameter integer MUT
     input wire [11:0] f_cd,
     output wire [10:0] t_xgo
 );
+`ifdef S81PH_GTH_DIE_CLOCKS
+    wire [31:0] leaf_ck = ck_l;
+`else
+    wire [31:0] leaf_ck = {32{ck[0]}}; // behavioural compatibility, never a physical cluster tree
+`endif
     wire [69*128-1:0] ln;                 // lane of root r: {word 68, lane valid}
     assign ln[0 +: 69] = rW0[621 +: 69];
     assign ln[69 +: 69] = rW0[552 +: 69];
@@ -183,11 +191,11 @@ module `S81PH_GTH_CL_NAME #(parameter integer ROOTD = 128, parameter integer MUT
                 assign li = {276'd0, lo_a[828*(4*(g+1) + k) +: 828]};
             end
             if (g < 4) begin : g_w
-                dsfd_gth_rw u_l (.ck(ck[0]), .rs(rs_a[5*g + k + 1]), .rso(rs_a[5*g + k]), .li(li), .lo(lo_a[828*(4*g + k) +: 828]),
+                dsfd_gth_rw u_l (.ck(leaf_ck[4*g+k]), .rs(rs_a[5*g + k + 1]), .rso(rs_a[5*g + k]), .li(li), .lo(lo_a[828*(4*g + k) +: 828]),
                     .ci(ch_a[848*(5*g + k + 1) +: 636]), .co(ch_a[848*(5*g + k) +: 848]), .fi(fs_a[2*(5*g + k + 1) +: 2]),
                     .fo(fs_a[2*(5*g + k) +: 2]));
             end else begin : g_e
-                dsfd_gth_re u_l (.ck(ck[0]), .rs(rs_a[5*g + k + 1]), .rso(rs_a[5*g + k]), .li(li), .lo(lo_a[828*(4*g + k) +: 828]),
+                dsfd_gth_re u_l (.ck(leaf_ck[4*g+k]), .rs(rs_a[5*g + k + 1]), .rso(rs_a[5*g + k]), .li(li), .lo(lo_a[828*(4*g + k) +: 828]),
                     .ci(ch_a[848*(5*g + k + 1) +: 636]), .co(ch_a[848*(5*g + k) +: 848]), .fi(fs_a[2*(5*g + k + 1) +: 2]),
                     .fo(fs_a[2*(5*g + k) +: 2]));
             end

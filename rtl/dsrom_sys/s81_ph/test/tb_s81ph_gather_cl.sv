@@ -28,7 +28,11 @@ module tb_s81ph_gather_cl;
         .rW0(tp[0][691:0]), .rW1(tp[1][760:0]), .rW2(tp[2][760:0]), .rW3(tp[3][760:0]), .rW4(tp[4][760:0]), .rW5(tp[5][691:0]),
         .rE0(tp[6][691:0]), .rE1(tp[7][760:0]), .rE2(tp[8][760:0]), .rE3(tp[9][760:0]), .rE4(tp[10][760:0]), .rE5(tp[11][691:0]),
         .c_cmd(c_cmd), .c_done(df), .c_st(sf), .f_cd(f_cd), .t_xgo(xf));
-    dsfd_sp_gather_c_cl u_c (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_vm(f_vm), .t_capture(tc),
+    dsfd_sp_gather_c_cl u_c (
+`ifdef S81PH_GTH_DIE_CLOCKS
+        .ck_l({32{ck}}),
+`endif
+        .ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_vm(f_vm), .t_capture(tc),
         .rW0(tp[0][691:0]), .rW1(tp[1][760:0]), .rW2(tp[2][760:0]), .rW3(tp[3][760:0]), .rW4(tp[4][760:0]), .rW5(tp[5][691:0]),
         .rE0(tp[6][691:0]), .rE1(tp[7][760:0]), .rE2(tp[8][760:0]), .rE3(tp[9][760:0]), .rE4(tp[10][760:0]), .rE5(tp[11][691:0]),
         .c_cmd(c_cmd), .c_done(dc), .c_st(sc), .f_cd(f_cd), .t_xgo(xc));

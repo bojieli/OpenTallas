@@ -26,6 +26,7 @@ python3 $SRC/tools/s81_ph/gen_gather_cl.py --check || { echo "GATHER_CL_GATE FAI
 sha256sum $FILES $P/test/gen_gather_cl_stim.py $P/test/gen_root_stim.py $TRACE > $OUT/sources.sha256
 G="python3 $P/test/gen_gather_cl_stim.py"
 SS=${SS:-8}; SDEF="+define+S81PH_GTH_S=$SS"
+if [ "${DIE_CLOCKS:-0}" = 1 ]; then SDEF="$SDEF +define+S81PH_GTH_DIE_CLOCKS"; fi
 $G stress 3 $OUT/stress.txt; $G ovf 3 $OUT/ovf.txt --S $SS; $G refuse 3 $OUT/refuse.txt
 REAL=""
 if [ -n "$TRACE" ]; then for L in $LAYERS; do $G real 0 $OUT/real_L$L.txt --trace $TRACE --layer $L && REAL="$REAL real_L$L"; done; fi
