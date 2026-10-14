@@ -588,8 +588,18 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
     return dict(schema=SCHEMA, die_v=str(die_v), top=top, verdict='PASS' if not fail_keys else 'FAIL',
                 failing=fail_keys, summary=S, masters=out_m,
                 undriven_nets=dict(sorted(undriven.items(), key=lambda kv: -kv[1])[:200]),
+                undriven_classes=_classes(undriven), multi_driven_classes=_classes(multi),
                 multi_driven_nets=dict(sorted(multi.items(), key=lambda kv: -kv[1])[:200]),
                 top_assigns=findings['TOP_ASSIGN'][:20], params_not_in_rtl=findings['PARAM_NOT_IN_RTL'][:40])
+
+
+def _classes(d):
+    """net-name classes (digits collapsed) -> bits, all nets (the per-net lists above are capped)"""
+    c = defaultdict(lambda: [0, 0, None])
+    for n, v in d.items():
+        k = re.sub(r'\d+', 'N', n)
+        c[k][0] += v; c[k][1] += 1; c[k][2] = c[k][2] or n
+    return {k: dict(bits=v[0], nets=v[1], example=v[2]) for k, v in sorted(c.items(), key=lambda kv: -kv[1][0])}
 
 
 def elab_kit(die_v, top, idx, mparams, out_dir, defines):
@@ -652,6 +662,9 @@ def main(argv=None):
         base = Path(fl).parent
         for ln in Path(fl).read_text().split('\n'):
             ln = ln.strip()
+            if ln.startswith('+define+'):          # a die RTL manifest carries its build defines
+                a.define += [d for d in ln[len('+define+'):].split('+') if d]
+                continue
             if ln and not ln.startswith(('#', '//', '+', '-')):
                 p = Path(ln)
                 files.append(str(p if p.is_absolute() or (ROOT / p).exists() else base / p))
