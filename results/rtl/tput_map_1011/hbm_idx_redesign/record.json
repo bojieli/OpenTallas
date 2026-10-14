@@ -219,13 +219,16 @@
     "final_source_commit": "f40ae0c6e RTL / 6f4063648 staged production source"
    },
    "phase_observer": {
-    "status": "RUNNING",
+    "status": "PASS_VERIFIED",
     "host": "ot-epyc4",
     "run": "/srv/opentallas-scratch2/claude/idx-redesign-1013b/trace_L20",
     "systemd": "codex-idx-native-phase-1013c",
     "remote_unit": "oth-ubuntu-166892-1791951844",
     "scope": "baseline exact BASE L20; compiled RTL model reused, original archive main symbol renamed in a copy and observer main linked",
-    "next": "require HGI_E2E PASS, records/cycle equality vs baseline before treating phase trace as evidence"
+    "next": "Native candidate producer structural redesign; do not attribute synthetic adapter gain to measured native loss.",
+    "record_file_byte_identical": true,
+    "record_sha256": "52a76e5a4f37e6c561bcd92de11d85a51e6d6778401873bcf5f9d7693f9fb38d",
+    "evidence": "evidence_1013/phase_L20/{provenance.json,summary.json,decomposition.md,phase.csv,run.log,e2e_records.txt}"
    }
   }
  ]
