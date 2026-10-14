@@ -26,7 +26,7 @@ module tb_hgi_qdq_core_fin2_corruption;
  end
  task automatic reset_real;
    begin @(negedge cf);rec=0;rst_n=0;repeat(16)@(negedge cf);rst_n=1;repeat(16)@(negedge cf);
-     if(dut.head_oh!==16'h0001 || dut.finish_oh!==32'h00000001 || dut.bad || dut.q_v!=0 || pending_beats!=0 || pending_requests!=0)
+     if(dut.head_oh!==16'h0001 || dut.finish_oh!==32'h00000001 || dut.occupancy_oh!==32'h00000001 || dut.bad || dut.q_v!=0 || pending_beats!=0 || pending_requests!=0)
        $fatal(1,"CORRUPTION_RESET_STALE");
    end
  endtask
@@ -48,22 +48,25 @@ module tb_hgi_qdq_core_fin2_corruption;
    begin
      live_record();
      if(kind==0)force dut.head_oh=16'h0003;
-     else force dut.finish_oh=32'h00000003;
+     else if(kind==1)force dut.finish_oh=32'h00000003;
+     else force dut.occupancy_oh=32'h00000003;
      #1;
      if(!dut.encoding_bad || dut.r_issue || dut.n_load)$fatal(1,"CORRUPTION_IMMEDIATE_CONTAINMENT kind=%0d",kind);
      if(kind==0 && $countones(dut.head_oh)!=2)$fatal(1,"CORRUPTION_HEAD_NOT_FORCED");
      if(kind==1 && $countones(dut.finish_oh)!=2)$fatal(1,"CORRUPTION_FINISH_NOT_FORCED");
+     if(kind==2 && $countones(dut.occupancy_oh)!=2)$fatal(1,"CORRUPTION_OCCUPANCY_NOT_FORCED");
      repeat(8)begin
        @(negedge cc);#1;
        if(bv || !ret[2] || ret[1] || !dut.bad || dut.r_issue || dut.n_load)$fatal(1,"CORRUPTION_REGISTERED_CONTAINMENT kind=%0d ret=%b",kind,ret);
        for(integer l=0;l<8;l=l+1)if(wrq[l*16+15])$fatal(1,"CORRUPTION_NEW_REQUEST kind=%0d",kind);
      end
      if(kind==0)force dut.head_oh=16'h0001;
-     else force dut.finish_oh=32'h00000001;
+     else if(kind==1)force dut.finish_oh=32'h00000001;
+     else force dut.occupancy_oh=32'h00000002;
      #1;if(dut.encoding_bad || !dut.bad || dut.r_issue || dut.n_load)$fatal(1,"CORRUPTION_NOT_LATCHED kind=%0d",kind);
      @(negedge cc);#1;
      if(bv || dut.r_issue || dut.n_load)$fatal(1,"CORRUPTION_RESTARTED_WITHOUT_RESET kind=%0d",kind);
-     if(kind==0)release dut.head_oh;else release dut.finish_oh;
+     if(kind==0)release dut.head_oh;else if(kind==1)release dut.finish_oh;else release dut.occupancy_oh;
      tests=tests+1;
      $display("PASS CORE_FIN2_CORRUPTION_CASE kind=%0d pending_beats=%0d pending_requests=%0d",kind,pending_beats,pending_requests);
    end
@@ -71,8 +74,9 @@ module tb_hgi_qdq_core_fin2_corruption;
  initial begin
    reset_real();contain(0);reset_real();live_record();
    reset_real();contain(1);reset_real();live_record();
-   if(tests!=2)$fatal(1,"CORRUPTION_COVERAGE");
-   $display("PASS CORE_FIN2_CORRUPTION tests=%0d recovery_issues=2",tests);$finish;
+   reset_real();contain(2);reset_real();live_record();
+   if(tests!=3)$fatal(1,"CORRUPTION_COVERAGE");
+   $display("PASS CORE_FIN2_CORRUPTION tests=%0d recovery_issues=3",tests);$finish;
  end
 endmodule
 `default_nettype wire

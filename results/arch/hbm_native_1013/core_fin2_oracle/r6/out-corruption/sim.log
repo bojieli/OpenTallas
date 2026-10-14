@@ -1,0 +1,8 @@
+PASS CORE_FIN2_CORRUPTION_CASE kind=0 pending_beats=1 pending_requests=4
+PASS CORE_FIN2_CORRUPTION_CASE kind=1 pending_beats=1 pending_requests=4
+PASS CORE_FIN2_CORRUPTION_CASE kind=2 pending_beats=1 pending_requests=4
+PASS CORE_FIN2_CORRUPTION tests=3 recovery_issues=3
+- /srv/opentallas-scratch/claude/core-fin2-oracle/r6/rtl/test/hbm_accel/generic/tb_hgi_qdq_core_fin2_corruption.sv:79: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 267ns; walltime 0.000 s; speed 944.525 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
