@@ -1,0 +1,466 @@
+{
+  "status": "REQUEST_ONLY_NATIVE_PARENT_CLOCK_PHASE_AND_INGRESS_UNQUALIFIED",
+  "structural_source_commit": "9a6aa5e3ef120f78fd7900283a1c96cc65131740",
+  "exact_gate_source_commit": "a7cd6c71ab7cda6833d5748b82a88ac88488bf8a",
+  "qualified_clock_binding_commit": "1dae833eb91436dab85b1bbea5fc51e1ce09d5bd",
+  "exact_source_archive_sha256": "c9c545504289ad0a32aa3a92617d3f6101274462b8b13021727980d53bc94e33",
+  "request": {
+    "master": "ot_smh_own_local_icg_eg",
+    "width_um": 84.24,
+    "height_um": 73.44,
+    "signal_layer_cap": "M5",
+    "extra_clock_pins": 26,
+    "extra_data_pins": 1,
+    "source_raw_bit": 2,
+    "original_gated_bit": 7768,
+    "reset_bit": 3,
+    "reset_active": "low",
+    "CGI_bit": 4,
+    "preserve": "original995logical state, same originalenableD/RAWedge and pause/reset behavior, registeredseams, originalcut8870 ordinarydata budget",
+    "boundary_phi_ps": 0,
+    "period_ps": 833.333,
+    "ICG_setup_U_ps": "150 or210 from measuredTT totalroots",
+    "ICG_hold_H_ps": 100
+  },
+  "corners": {
+    "tt": {
+      "actual_new_own_boundary_R_ps": 173.33061710485424,
+      "boundary_registers": 515,
+      "original_registers": 993,
+      "commit_roots": [
+        {
+          "pin": "u_enable_mirror/CLK",
+          "normalized_arrival_ps": -173.237778,
+          "insertion_ps": 0.0928391048542494,
+          "slew_ps": 0.294293
+        },
+        {
+          "pin": "u_enable_aux_mirror/CLK",
+          "normalized_arrival_ps": -93.007133,
+          "insertion_ps": 80.32348410485424,
+          "slew_ps": 5.248465
+        }
+      ],
+      "children": [
+        {
+          "index": 0,
+          "published_child_R_ps": 180.9,
+          "clock_cap_fF": 10.6328,
+          "own_output_and_ICG_entry_rise_ps": 49.99012,
+          "own_output_and_ICG_entry_fall_ps": 47.402195000000006,
+          "RAW_source_phase_ps": -230.89012,
+          "delivered_GCLK_slew_ps": 54.831398,
+          "child_boundary_phi_ps": 6.000000013273166e-06
+        },
+        {
+          "index": 1,
+          "published_child_R_ps": 171.4,
+          "clock_cap_fF": 11.2287,
+          "own_output_and_ICG_entry_rise_ps": 51.232376,
+          "own_output_and_ICG_entry_fall_ps": 48.44711699999999,
+          "RAW_source_phase_ps": -222.63237600000002,
+          "delivered_GCLK_slew_ps": 57.588676,
+          "child_boundary_phi_ps": 6.000000013273166e-06
+        },
+        {
+          "index": 2,
+          "published_child_R_ps": 171.4,
+          "clock_cap_fF": 11.2287,
+          "own_output_and_ICG_entry_rise_ps": 51.549088,
+          "own_output_and_ICG_entry_fall_ps": 48.72787900000003,
+          "RAW_source_phase_ps": -222.94908800000002,
+          "delivered_GCLK_slew_ps": 58.190071,
+          "child_boundary_phi_ps": -9.000000005698894e-06
+        },
+        {
+          "index": 3,
+          "published_child_R_ps": 175.8,
+          "clock_cap_fF": 11.3663,
+          "own_output_and_ICG_entry_rise_ps": 52.870415,
+          "own_output_and_ICG_entry_fall_ps": 49.80713300000002,
+          "RAW_source_phase_ps": -228.67041500000002,
+          "delivered_GCLK_slew_ps": 58.032497,
+          "child_boundary_phi_ps": -3.399999999942338e-05
+        },
+        {
+          "index": 4,
+          "published_child_R_ps": 315.0,
+          "clock_cap_fF": 18.592,
+          "own_output_and_ICG_entry_rise_ps": 69.470634,
+          "own_output_and_ICG_entry_fall_ps": 63.515232000000026,
+          "RAW_source_phase_ps": -384.470634,
+          "delivered_GCLK_slew_ps": 94.623184,
+          "child_boundary_phi_ps": -3.099999997857594e-05
+        },
+        {
+          "index": 5,
+          "published_child_R_ps": 180.9,
+          "clock_cap_fF": 10.6328,
+          "own_output_and_ICG_entry_rise_ps": 50.615269,
+          "own_output_and_ICG_entry_fall_ps": 47.883488,
+          "RAW_source_phase_ps": -231.515269,
+          "delivered_GCLK_slew_ps": 54.840923,
+          "child_boundary_phi_ps": 6.000000013273166e-06
+        },
+        {
+          "index": 6,
+          "published_child_R_ps": 171.4,
+          "clock_cap_fF": 11.2287,
+          "own_output_and_ICG_entry_rise_ps": 52.187565,
+          "own_output_and_ICG_entry_fall_ps": 49.21527500000002,
+          "RAW_source_phase_ps": -223.587565,
+          "delivered_GCLK_slew_ps": 58.298706,
+          "child_boundary_phi_ps": -9.000000005698894e-06
+        },
+        {
+          "index": 7,
+          "published_child_R_ps": 171.4,
+          "clock_cap_fF": 11.2287,
+          "own_output_and_ICG_entry_rise_ps": 52.140923,
+          "own_output_and_ICG_entry_fall_ps": 49.15582699999999,
+          "RAW_source_phase_ps": -223.54092300000002,
+          "delivered_GCLK_slew_ps": 58.535324,
+          "child_boundary_phi_ps": -9.000000005698894e-06
+        },
+        {
+          "index": 8,
+          "published_child_R_ps": 175.8,
+          "clock_cap_fF": 11.3663,
+          "own_output_and_ICG_entry_rise_ps": 52.872368,
+          "own_output_and_ICG_entry_fall_ps": 49.75729799999999,
+          "RAW_source_phase_ps": -228.672368,
+          "delivered_GCLK_slew_ps": 58.516773,
+          "child_boundary_phi_ps": -1.7999999982976078e-05
+        },
+        {
+          "index": 9,
+          "published_child_R_ps": 315.0,
+          "clock_cap_fF": 18.592,
+          "own_output_and_ICG_entry_rise_ps": 68.012634,
+          "own_output_and_ICG_entry_fall_ps": 62.26983999999999,
+          "RAW_source_phase_ps": -383.012634,
+          "delivered_GCLK_slew_ps": 94.69706,
+          "child_boundary_phi_ps": 3.099999997857594e-05
+        },
+        {
+          "index": 10,
+          "published_child_R_ps": 339.6,
+          "clock_cap_fF": 18.7557,
+          "own_output_and_ICG_entry_rise_ps": 69.56076,
+          "own_output_and_ICG_entry_fall_ps": 63.54459000000003,
+          "RAW_source_phase_ps": -409.16076000000004,
+          "delivered_GCLK_slew_ps": 95.02462,
+          "child_boundary_phi_ps": 2.3999999996249244e-05
+        },
+        {
+          "index": 11,
+          "published_child_R_ps": 429.0,
+          "clock_cap_fF": 10.99,
+          "own_output_and_ICG_entry_rise_ps": 52.071594,
+          "own_output_and_ICG_entry_fall_ps": 49.11652000000004,
+          "RAW_source_phase_ps": -481.071594,
+          "delivered_GCLK_slew_ps": 58.078789,
+          "child_boundary_phi_ps": 3.099999997857594e-05
+        }
+      ],
+      "gating_setup_min_ps": 208.031265,
+      "gating_hold_min_ps": 102.539368
+    },
+    "ff": {
+      "actual_new_own_boundary_R_ps": 133.44504938058256,
+      "boundary_registers": 515,
+      "original_registers": 993,
+      "commit_roots": [
+        {
+          "pin": "u_enable_mirror/CLK",
+          "normalized_arrival_ps": -133.34758,
+          "insertion_ps": 0.0974693805825666,
+          "slew_ps": 0.308954
+        },
+        {
+          "pin": "u_enable_aux_mirror/CLK",
+          "normalized_arrival_ps": -73.597046,
+          "insertion_ps": 59.848003380582554,
+          "slew_ps": 3.937124
+        }
+      ],
+      "children": [
+        {
+          "index": 0,
+          "published_child_R_ps": 148.0,
+          "clock_cap_fF": 10.8898,
+          "own_output_and_ICG_entry_rise_ps": 35.970093,
+          "own_output_and_ICG_entry_fall_ps": 34.54822200000001,
+          "RAW_source_phase_ps": -183.970093,
+          "delivered_GCLK_slew_ps": 38.437263,
+          "child_boundary_phi_ps": 0.0
+        },
+        {
+          "index": 1,
+          "published_child_R_ps": 139.6,
+          "clock_cap_fF": 11.4858,
+          "own_output_and_ICG_entry_rise_ps": 36.817253,
+          "own_output_and_ICG_entry_fall_ps": 35.30005299999999,
+          "RAW_source_phase_ps": -176.417253,
+          "delivered_GCLK_slew_ps": 40.333324,
+          "child_boundary_phi_ps": -6.000000013273166e-06
+        },
+        {
+          "index": 2,
+          "published_child_R_ps": 139.6,
+          "clock_cap_fF": 11.4858,
+          "own_output_and_ICG_entry_rise_ps": 37.070675,
+          "own_output_and_ICG_entry_fall_ps": 35.53537399999999,
+          "RAW_source_phase_ps": -176.670675,
+          "delivered_GCLK_slew_ps": 40.795841,
+          "child_boundary_phi_ps": -6.000000013273166e-06
+        },
+        {
+          "index": 3,
+          "published_child_R_ps": 143.1,
+          "clock_cap_fF": 11.6234,
+          "own_output_and_ICG_entry_rise_ps": 37.902168,
+          "own_output_and_ICG_entry_fall_ps": 36.29770300000001,
+          "RAW_source_phase_ps": -181.00216799999998,
+          "delivered_GCLK_slew_ps": 40.624699,
+          "child_boundary_phi_ps": 9.000000005698894e-06
+        },
+        {
+          "index": 4,
+          "published_child_R_ps": 261.4,
+          "clock_cap_fF": 19.1062,
+          "own_output_and_ICG_entry_rise_ps": 49.563362,
+          "own_output_and_ICG_entry_fall_ps": 46.56195500000001,
+          "RAW_source_phase_ps": -310.96336199999996,
+          "delivered_GCLK_slew_ps": 66.774574,
+          "child_boundary_phi_ps": -2.3999999996249244e-05
+        },
+        {
+          "index": 5,
+          "published_child_R_ps": 148.0,
+          "clock_cap_fF": 10.8898,
+          "own_output_and_ICG_entry_rise_ps": 36.34256,
+          "own_output_and_ICG_entry_fall_ps": 34.86096600000002,
+          "RAW_source_phase_ps": -184.34256,
+          "delivered_GCLK_slew_ps": 38.444351,
+          "child_boundary_phi_ps": -1.499999999055035e-05
+        },
+        {
+          "index": 6,
+          "published_child_R_ps": 139.6,
+          "clock_cap_fF": 11.4858,
+          "own_output_and_ICG_entry_rise_ps": 37.447384,
+          "own_output_and_ICG_entry_fall_ps": 35.846806000000015,
+          "RAW_source_phase_ps": -177.047384,
+          "delivered_GCLK_slew_ps": 40.882069,
+          "child_boundary_phi_ps": 9.000000005698894e-06
+        },
+        {
+          "index": 7,
+          "published_child_R_ps": 139.6,
+          "clock_cap_fF": 11.4858,
+          "own_output_and_ICG_entry_rise_ps": 37.397938,
+          "own_output_and_ICG_entry_fall_ps": 35.78177299999999,
+          "RAW_source_phase_ps": -176.997938,
+          "delivered_GCLK_slew_ps": 41.064869,
+          "child_boundary_phi_ps": -6.000000013273166e-06
+        },
+        {
+          "index": 8,
+          "published_child_R_ps": 143.1,
+          "clock_cap_fF": 11.6234,
+          "own_output_and_ICG_entry_rise_ps": 37.856743,
+          "own_output_and_ICG_entry_fall_ps": 36.20270199999999,
+          "RAW_source_phase_ps": -180.956743,
+          "delivered_GCLK_slew_ps": 40.997173,
+          "child_boundary_phi_ps": 9.000000005698894e-06
+        },
+        {
+          "index": 9,
+          "published_child_R_ps": 261.4,
+          "clock_cap_fF": 19.1062,
+          "own_output_and_ICG_entry_rise_ps": 48.57254,
+          "own_output_and_ICG_entry_fall_ps": 45.64954,
+          "RAW_source_phase_ps": -309.97254,
+          "delivered_GCLK_slew_ps": 66.836617,
+          "child_boundary_phi_ps": -2.3999999996249244e-05
+        },
+        {
+          "index": 10,
+          "published_child_R_ps": 281.0,
+          "clock_cap_fF": 19.0145,
+          "own_output_and_ICG_entry_rise_ps": 49.193867,
+          "own_output_and_ICG_entry_fall_ps": 46.19510300000002,
+          "RAW_source_phase_ps": -330.193867,
+          "delivered_GCLK_slew_ps": 66.163795,
+          "child_boundary_phi_ps": 0.0
+        },
+        {
+          "index": 11,
+          "published_child_R_ps": 350.8,
+          "clock_cap_fF": 11.1185,
+          "own_output_and_ICG_entry_rise_ps": 37.21347,
+          "own_output_and_ICG_entry_fall_ps": 35.63086300000003,
+          "RAW_source_phase_ps": -388.01347,
+          "delivered_GCLK_slew_ps": 40.39986,
+          "child_boundary_phi_ps": 1.2000000026546331e-05
+        }
+      ],
+      "gating_setup_min_ps": 295.888763,
+      "gating_hold_min_ps": 58.306366
+    },
+    "ss": {
+      "actual_new_own_boundary_R_ps": 243.11612400776716,
+      "boundary_registers": 515,
+      "original_registers": 993,
+      "commit_roots": [
+        {
+          "pin": "u_enable_mirror/CLK",
+          "normalized_arrival_ps": -243.02626,
+          "insertion_ps": 0.08986400776714731,
+          "slew_ps": 0.284776
+        },
+        {
+          "pin": "u_enable_aux_mirror/CLK",
+          "normalized_arrival_ps": -127.543297,
+          "insertion_ps": 115.57282700776716,
+          "slew_ps": 7.818328
+        }
+      ],
+      "children": [
+        {
+          "index": 0,
+          "published_child_R_ps": 236.9,
+          "clock_cap_fF": 10.4681,
+          "own_output_and_ICG_entry_rise_ps": 75.597664,
+          "own_output_and_ICG_entry_fall_ps": 71.25571100000002,
+          "RAW_source_phase_ps": -312.497664,
+          "delivered_GCLK_slew_ps": 86.665131,
+          "child_boundary_phi_ps": 6.000000013273166e-06
+        },
+        {
+          "index": 1,
+          "published_child_R_ps": 225.5,
+          "clock_cap_fF": 11.0641,
+          "own_output_and_ICG_entry_rise_ps": 77.59626,
+          "own_output_and_ICG_entry_fall_ps": 72.80334900000003,
+          "RAW_source_phase_ps": -303.09626000000003,
+          "delivered_GCLK_slew_ps": 90.978241,
+          "child_boundary_phi_ps": 1.499999999055035e-05
+        },
+        {
+          "index": 2,
+          "published_child_R_ps": 225.5,
+          "clock_cap_fF": 11.0641,
+          "own_output_and_ICG_entry_rise_ps": 78.031746,
+          "own_output_and_ICG_entry_fall_ps": 73.159672,
+          "RAW_source_phase_ps": -303.531746,
+          "delivered_GCLK_slew_ps": 91.843628,
+          "child_boundary_phi_ps": 0.0
+        },
+        {
+          "index": 3,
+          "published_child_R_ps": 231.1,
+          "clock_cap_fF": 11.2017,
+          "own_output_and_ICG_entry_rise_ps": 80.181046,
+          "own_output_and_ICG_entry_fall_ps": 74.795414,
+          "RAW_source_phase_ps": -311.281046,
+          "delivered_GCLK_slew_ps": 91.753212,
+          "child_boundary_phi_ps": -2.1000000003823516e-05
+        },
+        {
+          "index": 4,
+          "published_child_R_ps": 402.8,
+          "clock_cap_fF": 18.2628,
+          "own_output_and_ICG_entry_rise_ps": 106.152214,
+          "own_output_and_ICG_entry_fall_ps": 94.596409,
+          "RAW_source_phase_ps": -508.952214,
+          "delivered_GCLK_slew_ps": 148.694717,
+          "child_boundary_phi_ps": 1.2000000026546331e-05
+        },
+        {
+          "index": 5,
+          "published_child_R_ps": 236.9,
+          "clock_cap_fF": 10.4681,
+          "own_output_and_ICG_entry_rise_ps": 76.65464,
+          "own_output_and_ICG_entry_fall_ps": 72.026768,
+          "RAW_source_phase_ps": -313.55464,
+          "delivered_GCLK_slew_ps": 86.687141,
+          "child_boundary_phi_ps": 2.1000000003823516e-05
+        },
+        {
+          "index": 6,
+          "published_child_R_ps": 225.5,
+          "clock_cap_fF": 11.0641,
+          "own_output_and_ICG_entry_rise_ps": 79.121033,
+          "own_output_and_ICG_entry_fall_ps": 73.951481,
+          "RAW_source_phase_ps": -304.621033,
+          "delivered_GCLK_slew_ps": 92.014847,
+          "child_boundary_phi_ps": 1.499999999055035e-05
+        },
+        {
+          "index": 7,
+          "published_child_R_ps": 225.5,
+          "clock_cap_fF": 11.0641,
+          "own_output_and_ICG_entry_rise_ps": 79.087906,
+          "own_output_and_ICG_entry_fall_ps": 73.906071,
+          "RAW_source_phase_ps": -304.587906,
+          "delivered_GCLK_slew_ps": 92.353783,
+          "child_boundary_phi_ps": -1.499999999055035e-05
+        },
+        {
+          "index": 8,
+          "published_child_R_ps": 231.1,
+          "clock_cap_fF": 11.2017,
+          "own_output_and_ICG_entry_rise_ps": 80.285896,
+          "own_output_and_ICG_entry_fall_ps": 74.827946,
+          "RAW_source_phase_ps": -311.385896,
+          "delivered_GCLK_slew_ps": 92.450294,
+          "child_boundary_phi_ps": -6.000000013273166e-06
+        },
+        {
+          "index": 9,
+          "published_child_R_ps": 402.8,
+          "clock_cap_fF": 18.2628,
+          "own_output_and_ICG_entry_rise_ps": 103.804787,
+          "own_output_and_ICG_entry_fall_ps": 92.775395,
+          "RAW_source_phase_ps": -506.604787,
+          "delivered_GCLK_slew_ps": 148.761353,
+          "child_boundary_phi_ps": 4.3000000005122274e-05
+        },
+        {
+          "index": 10,
+          "published_child_R_ps": 434.8,
+          "clock_cap_fF": 18.5886,
+          "own_output_and_ICG_entry_rise_ps": 106.992348,
+          "own_output_and_ICG_entry_fall_ps": 95.17834900000003,
+          "RAW_source_phase_ps": -541.7923480000001,
+          "delivered_GCLK_slew_ps": 150.659836,
+          "child_boundary_phi_ps": -1.8000000011397788e-05
+        },
+        {
+          "index": 11,
+          "published_child_R_ps": 557.0,
+          "clock_cap_fF": 10.9067,
+          "own_output_and_ICG_entry_rise_ps": 79.197952,
+          "own_output_and_ICG_entry_fall_ps": 73.98209000000003,
+          "RAW_source_phase_ps": -636.197952,
+          "delivered_GCLK_slew_ps": 91.591599,
+          "child_boundary_phi_ps": 0.0
+        }
+      ],
+      "gating_setup_min_ps": 67.97879,
+      "gating_hold_min_ps": 193.971649
+    }
+  },
+  "evidence_sha256": "fa2b7a237d67f7fdb019bc85c5b161cd2cf3822ccc2279036ffea0b5e8964ef6",
+  "limits": [
+    "actual CTS own ODB; TT placement RC in allcorners",
+    "12 published realchildclockpins placed on ownGCLKports; externalparententrywire0 and overlappingmacros intentional",
+    "actual delivered GCLK slew differsfrom publishedchildsource0: childR recalibrationrequired",
+    "conditional ICG pulse checks unobserved; ordinaryDFF PW reports do not qualify gate",
+    "native parent must demonstrate all RAW/OWNcommit portphases, inputCGI/state/reset/pause stablewindows, registered epoch equivalence, setup/hold and clockgating coverage with real loadedroute",
+    "WG exactlogic bench passes; no separateWGphysicalqualification",
+    "production/cost/nativepathqualification absent"
+  ]
+}
