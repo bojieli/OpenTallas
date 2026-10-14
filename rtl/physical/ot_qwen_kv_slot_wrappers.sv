@@ -49,8 +49,12 @@ module qkd_kvwq_ctl_bin #(
     wire              rw_v;
     wire [21:0]       rw_id;
     wire              fault_b;
+    // el1014 native pin audit (capture rst_n 392.1 > 190 ps): the reset port lands on ONE local synchroniser at the pin
+    // (asynchronous assertion, release three ck edges later); the body and the pin stage take the local release
+    wire              rs_n;
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rs (.clk(ck), .rst_n_in(rst_n), .rst_n(rs_n));
     ot_qkvd_kv_wq_ctl_binary #(.HD(HD), .QD(QD), .TAGW(TAGW), .MUT(0), .HEAD_PIPE(0), .FLANE_BINARY(1)) u_body (
-        .clk(ck), .rst_n(rst_n),
+        .clk(ck), .rst_n(rs_n),
         .kvw_v(kvn_d[HD*8+22]), .kvw_vg(kvn_d[HD*8+21 -: 2]), .kvw_t(kvn_d[HD*8+19 -: 14]),
         .kvw_layer(kvn_d[HD*8+5 -: 6]), .kvw_d(kvn_d[HD*8-1:0]), .kvw_cr(kvn_cr),
         .f_v(f_v), .f_d(f_d), .f_sec(f_sec), .f_lane(f_lane), .f_tag(f_tag),
@@ -75,8 +79,8 @@ module qkd_kvwq_ctl_bin #(
     (* keep *) reg [FW-2:0]   fo_d [0:3];
     (* keep *) reg            fault_o;
     integer k;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin fo_v <= 4'd0; fault_o <= 1'b0; end
+    always @(posedge ck or negedge rs_n)
+        if (!rs_n) begin fo_v <= 4'd0; fault_o <= 1'b0; end
         else begin fo_v <= {fm[3][FW-1], fm[2][FW-1], fm[1][FW-1], fm[0][FW-1]}; fault_o <= fault_b; end
     always @(posedge ck) for (k = 0; k < 4; k = k + 1) fo_d[k] <= fm[k][FW-2:0];
     assign f0 = {fo_v[0], fo_d[0]};

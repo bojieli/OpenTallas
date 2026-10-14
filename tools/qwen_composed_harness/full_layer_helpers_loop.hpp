@@ -6,6 +6,9 @@
 #include <functional>
 // Startup/HC and HOST drain inputs are supplied by the actual owner. There is
 // no default producer and no synthetic cohort-ready or terminal-ready value.
+// Shared clock state lets a caller continue the identical CORE/HBM schedule
+// (terminal, POST_TERMINAL retirement) after the helper sequence returns.
+struct SequenceClock {uint64_t cn=553667,hn=512000,events=0;bool ch=false,hh=false;};
 struct HelperSequenceResult {unsigned errors=0,layers=0;bool head=false;uint64_t core_edges=0,helper_edges=0;};
 using ActualHostStartup=std::function<void(qwen_native_host::HostOwner&,qwen_native_host::Inputs&,uint64_t)>;
 using ActualHostDrain=std::function<uint8_t(const qwen_native_host::HostOwner&)>;
@@ -29,15 +32,17 @@ static HelperSequenceResult run_actual_helper_layers(
  qwen_native_host::Inputs&inputs,const ActualHostStartup&startup,
  const ActualHostDrain&host_drain,const fs::path&out,
  const std::string&head_image={},const std::string&head_program={},
- EmbeddingOwner*embedding=nullptr,const std::string&embedding_bank={}){
+ EmbeddingOwner*embedding=nullptr,const std::string&embedding_bank={},SequenceClock*clock_state=nullptr){
  if(!startup||!host_drain)throw std::runtime_error("actual HOST producer/drain binding required");
  if(layers.empty())throw std::runtime_error("missing actual layers");
  if(layers.size()==36&&!head_image.empty()&&!embedding)throw std::runtime_error("full38-stage token requires actual embedding after HOST dispatch");
  if(embedding&&embedding_bank.empty())throw std::runtime_error("actual embedding code/scale bank required");
  link.banks(layers.front().program);size_t layer_index=0;unsigned segment=0;bool begun=false,running=false,head=false;
- uint64_t cn=553667,hn=512000;bool ch=false,hh=false;HelperSequenceResult result;
+ SequenceClock local_clock;SequenceClock&clock=clock_state?*clock_state:local_clock;
+ uint64_t&cn=clock.cn,&hn=clock.hn;bool&ch=clock.ch,&hh=clock.hh;HelperSequenceResult result;
  bool grant_saved=false,embedding_started=false,embedding_complete=!embedding;uint64_t layer_helper_begin=0;
- for(uint64_t events=0;events<8000000ULL*(layers.size()+1);events++){
+ const uint64_t event_limit=clock.events+8000000ULL*(layers.size()+1);
+ for(uint64_t&events=clock.events;events<event_limit;events++){
   bool core=cn<=hn;ctx.time(core?cn:hn);
   if(!core){hn+=512000;hh=!hh;for(auto&x:r)x->backend.hbm_edge(hh);continue;}
   cn+=416667;ch=!ch;

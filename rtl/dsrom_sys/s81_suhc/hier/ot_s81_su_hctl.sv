@@ -14,11 +14,15 @@
 // MUT (bench negative controls): 1 done before the result writes (once the operand rows are in: the done contract
 // ignored; done ONE write early, the flat core's m1, is behaviour-equivalent here: this tile counts the writes 2 + NRL
 // cycles after the pin owners issue them); 2 done tag flipped (the tile MUTs: 3, 4, 5).
+// RA / RB / QR (s81-functional-token 2026-10-14, die item F1; tile ot_s81_su_rxt): ONE operand row read a cycle (RA one
+// every 16 / RAL cycles), RB interleaved score row r / bias row r (the bias rows follow the cnt score rows), QR the 4 rope
+// rows of each head (in_base + 32 h + 28 .. 31); result writes RA / RB cnt rows, QR 4 cnt rows (one write slot).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_su_hctl #(
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16,
     parameter integer S_RD = 16, S_WR = 16, NSW = 4, NQB = 2, NQN = 1, NKV = 1,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer RAL = 16
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -55,6 +59,8 @@ module ot_s81_su_hctl #(
     localparam integer RQN = QN_N / 16, RKV = KV_N / 16, RQB = 2 * QB_NB, RSW = SW_W / 16, RSM = SMW / 16;
     localparam integer NPV = 512 / SM_LPH;
     localparam [3:0] K_QN = 0, K_KV = 1, K_QB = 2, K_SW = 3, K_SE = 4, K_SO = 5, K_GQ = 6, K_GK = 7;
+    localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10;
+    localparam integer XSUB = 16 / RAL;
 
     reg         run;
     reg  [3:0]  kind;
@@ -66,6 +72,7 @@ module ot_s81_su_hctl #(
     reg  [15:0] ri, rr, np, nrow, nw, cw;
     reg         sm_owner_v, sm_owner;
     reg         rdy_ok, alive_q;
+    reg  [1:0]  xs;                                  // RA read pacing (RAL < 16)
     assign e_cmd_ready = !run && !fault && alive_q;
     assign busy = run;
     wire take = e_cmd_v && e_cmd_ready;
@@ -73,7 +80,7 @@ module ot_s81_su_hctl #(
     wire [13:0] ibase = p0[13:0];
 
     function automatic [15:0] nparams(input [3:0] k);
-        nparams = (k == K_KV || k == K_SO) ? 5 : (k == K_SE) ? 1 + (SM_H + 15) / 16 : 1;
+        nparams = (k == K_KV || k == K_SO || k == K_QR) ? 5 : (k == K_SE) ? 1 + (SM_H + 15) / 16 : 1;
     endfunction
     function automatic [15:0] rows_out(input [3:0] k, input [15:0] c);     // result row WRITES of the job
         case (k)
@@ -83,6 +90,8 @@ module ot_s81_su_hctl #(
             K_SW: rows_out = c * (SW_W / 64 + NSW + SW_W / 32);
             K_SE: rows_out = c * RSM;
             K_SO: rows_out = NPV * (SMW / 32);
+            K_RA, K_RB: rows_out = c;
+            K_QR: rows_out = 4 * c;
             default: rows_out = 0;
         endcase
     endfunction
@@ -90,6 +99,7 @@ module ot_s81_su_hctl #(
         case (k)
             K_QN: rows_in = NVQ * RQN;  K_KV: rows_in = RKV;  K_QB: rows_in = c * RQB;  K_SW: rows_in = c * 2 * RSW;
             K_SE: rows_in = c * RSM;    K_SO: rows_in = NPV * RSM; K_GQ: rows_in = DQ / 16; K_GK: rows_in = DK / 16;
+            K_RA: rows_in = c;          K_RB: rows_in = 2 * c;     K_QR: rows_in = 4 * c;
             default: rows_in = 0;
         endcase
     endfunction
@@ -138,7 +148,7 @@ module ot_s81_su_hctl #(
         if (!rst_n || !rst_q) begin
             run <= 0; kind <= 0; jslot <= 0; jtag <= 0; jid <= 0; dbase <= 0; ph <= 0; p0 <= 0;
             ri <= 0; rr <= 0; np <= 0; nrow <= 0; nw <= 0; cw <= 0; sm_owner_v <= 0; sm_owner <= 0;
-            rdy_ok <= 0; alive_q <= 0;
+            rdy_ok <= 0; alive_q <= 0; xs <= 0;
             e_done_v <= 0; e_done_tag <= 0; fault <= 0; fault_code <= 0; st_jobs <= 0; rq_v <= 0; rq_row <= 0;
             dn_st <= 0; dn_kind <= 0; dn_gsel <= 0; dn_fp4 <= 0; dn_jid <= 0;
         end else begin
@@ -152,7 +162,7 @@ module ot_s81_su_hctl #(
                 dbase <= c_arg[13:0]; ph <= 0; ri <= 0; rr <= 0; np <= nparams(c_arg[23:20]); cw <= 0;
                 rdy_ok <= 1'b0; jid <= jid + 8'd1;
                 dn_st <= 1'b1; dn_kind <= c_arg[23:20]; dn_gsel <= c_arg[19:18]; dn_fp4 <= c_arg[14]; dn_jid <= jid + 8'd1;
-                if (c_arg[23]) begin fault <= 1; fault_code <= 3; end
+                if (c_arg[23:20] > K_QR) begin fault <= 1; fault_code <= 3; end
                 if (c_arg[23:20] == K_SO && !(sm_owner_v && sm_owner == e_cmd_d[83])) begin fault <= 1; fault_code <= 6; end
             end
             if (run && !fault) begin
@@ -180,7 +190,22 @@ module ot_s81_su_hctl #(
                     nw <= rows_out(kind, p0[14 +: 16]);
                     ph <= 2;
                 end
-                if (ph == 2) begin
+                if (ph == 2 && (kind == K_RA || kind == K_RB || kind == K_QR)) begin
+                    // one operand row a cycle (RA: one every XSUB cycles) on slot 0
+                    if (ri < nrow && (kind != K_RA || xs == 0)) begin
+                        rq_v[0] <= 1;
+                        rq_row[13:0] <= (kind == K_RB) ? ibase + {1'b0, ri[13:1]} + (ri[0] ? p0[14 +: 14] : 14'd0) :
+                                        (kind == K_QR) ? ibase + {ri[13:2], 5'd0} + 14'd28 + {12'd0, ri[1:0]} : ibase + ri[13:0];
+                        ri <= ri + 1;
+                    end
+                    xs <= (kind == K_RA && XSUB > 1) ? ((xs == XSUB - 1) ? 2'd0 : xs + 2'd1) : 2'd0;
+                    begin : xrsp
+                        reg [15:0] c;
+                        c = rr + rs_n;
+                        rr <= c;
+                    end
+                end
+                if (ph == 2 && !(kind == K_RA || kind == K_RB || kind == K_QR)) begin
                     if ((kind != K_QN && kind != K_KV) || rdy_ok) begin
                         for (s = 0; s < S_RD; s = s + 1)
                             if (ri + s < nrow) begin rq_v[s] <= 1; rq_row[14 * s +: 14] <= ibase + ri + s; end
