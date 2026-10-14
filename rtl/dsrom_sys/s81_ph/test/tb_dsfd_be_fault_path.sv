@@ -3,10 +3,10 @@ module tb_dsfd_be_fault_path;
     reg ck=0, rn=0; reg [15:0] i=0;
     always #5 ck=~ck;
     wire [15:0] o0,o1,o2,o6;
-    dsfd_be_fault_path #(.STAGES(0)) u0(ck,rn,i,o0);
-    dsfd_be_fault_path #(.STAGES(1)) u1(ck,rn,i,o1);
-    dsfd_be_fault_path #(.STAGES(2)) u2(ck,rn,i,o2);
-    dsfd_be_fault_path #(.STAGES(6)) u6(ck,rn,i,o6);
+    dsfd_be_fault_path #(.STAGES(0)) u0(.ck(ck),.rn(rn),.raw_rst(rn),.i(i),.o(o0),.conditioner_ack());
+    dsfd_be_fault_path #(.STAGES(1)) u1(.ck(ck),.rn(rn),.raw_rst(rn),.i(i),.o(o1),.conditioner_ack());
+    dsfd_be_fault_path #(.STAGES(2)) u2(.ck(ck),.rn(rn),.raw_rst(rn),.i(i),.o(o2),.conditioner_ack());
+    dsfd_be_fault_path #(.STAGES(6)) u6(.ck(ck),.rn(rn),.raw_rst(rn),.i(i),.o(o6),.conditioner_ack());
     reg [15:0] model [0:5]; integer k,t,errors=0,checks=0;
     initial begin
         for(k=0;k<6;k=k+1) model[k]=0;

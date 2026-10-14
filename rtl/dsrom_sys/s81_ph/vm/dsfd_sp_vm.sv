@@ -1616,8 +1616,17 @@ module dsfd_vm_be #(
         ot_dsrom_mtp_rstsync u_rss (.clk(cks[0]), .rst_n_async(rss[0]), .rst_n(rns0));
     end endgenerate
     wire [15:0] fe_fault_at_be;
-    dsfd_be_fault_path #(.STAGES(FE_FAULT_STAGES)) u_fault_path (
-        .ck(clk), .rn(rn0), .i(fe_flt), .o(fe_fault_at_be));
+`ifdef OT_BE_FAULT_LOCAL_RN
+    localparam integer FAULT_LOCAL_RN = 1;
+`else
+    localparam integer FAULT_LOCAL_RN = 0;
+`endif
+    // ACK collection is a separate controller-owned integration request. Its
+    // actual clock/reset/source pins remain unbound, so do not tie it to clk.
+    wire [(FE_FAULT_STAGES > 0 ? FE_FAULT_STAGES : 1)-1:0] fault_conditioner_ack;
+    dsfd_be_fault_path #(.STAGES(FE_FAULT_STAGES), .LOCAL_RN(FAULT_LOCAL_RN)) u_fault_path (
+        .ck(clk), .rn(rn0), .raw_rst(rst[0]), .i(fe_flt), .o(fe_fault_at_be),
+        .conditioner_ack(fault_conditioner_ack));
     wire [255:0] srq_d [0:NS-1]; wire [1:0] srq_v [0:NS-1]; wire [NS-1:0] vrv_s, c_l0v_s, t_p2c_s;
     wire [127:0] vrq_s [0:NS-1]; wire [16*128-1:0] bl_d [0:NS-1]; wire [15:0] bl_v [0:NS-1];
     wire [150:0] p2_s [0:NS-1]; wire [39:0] st [0:NS];

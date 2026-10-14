@@ -99,6 +99,11 @@ for _n in ('be_hard_h_gold_s1', 'be_hard_h_tp'):
     CASES['fault9_' + _n] = dict(_c, params=dict(_c['params'], BE_FAULT_STAGES=9))
     CASES['fault10_' + _n] = dict(_c, params=dict(_c['params'], BE_FAULT_STAGES=10))
 
+for _n in ('be_hard_h_gold_s1', 'be_hard_h_tp'):
+    _c = CASES[_n]
+    CASES['fault10_local_' + _n] = dict(_c, params=dict(_c['params'], BE_FAULT_STAGES=10),
+                                       defines=_c.get('defines', []) + ['OT_BE_FAULT_LOCAL_RN'])
+
 def build(out, tag, defines, params):
     obj = out / f'obj_{tag}'
     vbin, vver = verilator_bin()

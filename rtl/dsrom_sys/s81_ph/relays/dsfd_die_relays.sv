@@ -52,15 +52,30 @@ endmodule
 module dsfd_be_f16(input wire ck, rn, input wire [15:0] i, output reg [15:0] o);
     always @(posedge ck) if (!rn) o <= 16'd0; else o <= i;
 endmodule
-module dsfd_be_fault_path #(parameter integer STAGES = 0)(
-    input wire ck, rn, input wire [15:0] i, output wire [15:0] o
+module dsfd_be_fault_path #(parameter integer STAGES = 0, parameter integer LOCAL_RN = 0)(
+    input wire ck, rn, raw_rst, input wire [15:0] i, output wire [15:0] o,
+    output wire [(STAGES > 0 ? STAGES : 1)-1:0] conditioner_ack
 );
     initial if (STAGES < 0) $error("dsfd_be_fault_path: STAGES must be nonnegative");
     wire [15:0] q [0:STAGES];
     assign q[0] = i;
     genvar s;
     generate for (s = 0; s < STAGES; s = s + 1) begin : g_stage
+        wire stage_rn;
+        if (LOCAL_RN != 0) begin : g_local
+            dsfd_die_rstsync u_rs (.ck(ck), .rst(raw_rst), .rn(stage_rn));
+        end else begin : g_common
+            assign stage_rn = rn;
+        end
+        assign conditioner_ack[s] = stage_rn;
+`ifdef OT_BE_FAULT_MUT_COMMON_RN
         dsfd_be_f16 u_r (.ck(ck), .rn(rn), .i(q[s]), .o(q[s+1]));
+`else
+        dsfd_be_f16 u_r (.ck(ck), .rn(stage_rn), .i(q[s]), .o(q[s+1]));
+`endif
+    end endgenerate
+    generate if (STAGES == 0) begin : g_no_ack
+        assign conditioner_ack = 1'b0;
     end endgenerate
 `ifdef OT_BE_FAULT_MUT_BYPASS
     assign o = i;
@@ -73,4 +88,31 @@ module dsfd_be_fault_path #(parameter integer STAGES = 0)(
 `else
     assign o = q[STAGES];
 `endif
+endmodule
+
+// Integration request only: the controller clock/reset must be explicitly bound
+// by its owner. No serial-clock or controller reset binding is inferred here.
+// Each conditioner's ACK is captured independently twice before reduction.
+(* keep_hierarchy = "yes" *)
+module dsfd_be_fault_ack_collect #(parameter integer N = 1)(
+    input wire ck, rn, input wire [N-1:0] i,
+    output wire [N-1:0] o, output wire all_acked
+);
+    genvar a;
+    generate for (a=0; a<N; a=a+1) begin : g_ack
+        (* keep = 1, dont_touch = "true" *) reg q0, q1;
+        always @(posedge ck) begin
+            if (!rn) begin q0 <= 1'b0; q1 <= 1'b0; end
+            else begin
+`ifdef OT_BE_ACK_MUT_PRE_AND
+                q0 <= &i;
+`else
+                q0 <= i[a];
+`endif
+                q1 <= q0;
+            end
+        end
+        assign o[a] = q1;
+    end endgenerate
+    assign all_acked = &o;
 endmodule

@@ -1,0 +1,5 @@
+FAIL nsumers not zero before ACK rise
+FAIL dge reset-release waveform wrong
+RESULT local_stages=10 data_FF=160 conditioner_FF=20 controller_request_FF=20 checks=26 errors=2 raw_clock_stopped=1 forwarded_rn0_held_high=1 controller_clock=TEST_ONLY_independent
+FATAL: /home/ubuntu/wt/codex-s81-fe-fault-source-trace/rtl/dsrom_sys/s81_ph/test/tb_dsfd_be_fault_local_reset.sv:69: FAIL
+       Time: 365000 Scope: tb_dsfd_be_fault_local_reset

@@ -1,0 +1,35 @@
+{
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv": "5336e45a19b01d9371b1720fcbe78f76814ef08e3d18841dc88eeff2799f8800",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_be_fault_local_reset.sv": "37ddef269d1bcf0cc77fe1e270765ecef61fa0f044c896924f89768f8e7cdcd6"
+  },
+  "cases": [
+    {
+      "case": "positive",
+      "expect": "pass",
+      "observed_exit": 0,
+      "ok": true,
+      "log_sha256": "a700634f0086017d318d06c97e44889d162727738eeec66485177091cac903b2"
+    },
+    {
+      "case": "mut_common_rn",
+      "expect": "fail",
+      "observed_exit": 1,
+      "ok": true,
+      "log_sha256": "5b05841128cb25f861d91c3282e5345f926426e35f62a8d2f48c3e7053098432"
+    },
+    {
+      "case": "mut_pre_and_ack",
+      "expect": "fail",
+      "observed_exit": 1,
+      "ok": true,
+      "log_sha256": "dcf45759fb1bcca118931a48f0fb629ed2bd9dcce4af5c18b434089d0bfb41f3"
+    }
+  ],
+  "pass_": true,
+  "controller_clock": "TEST_ONLY independent 14ns fixture",
+  "actual_controller_clock": null,
+  "actual_controller_reset_ports": null,
+  "actual_raw_reset_driver": null,
+  "physical_adopted": false
+}

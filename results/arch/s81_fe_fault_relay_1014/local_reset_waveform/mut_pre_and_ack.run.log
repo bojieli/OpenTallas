@@ -1,0 +1,23 @@
+FAIL individual ordinary2FF ACK collection k=4 got=000/000 expected=000/0ff
+FAIL individual ordinary2FF ACK collection k=5 got=3ff/000 expected=3ff/07f
+FAIL individual ordinary2FF ACK collection k=6 got=3ff/000 expected=3ff/03f
+FAIL individual ordinary2FF ACK collection k=7 got=3ff/000 expected=3ff/03f
+FAIL individual ordinary2FF ACK collection k=8 got=3ff/000 expected=3ff/04f
+FAIL individual ordinary2FF ACK collection k=9 got=3ff/000 expected=3ff/087
+FAIL individual ordinary2FF ACK collection k=10 got=3ff/000 expected=3ff/103
+FAIL individual ordinary2FF ACK collection k=11 got=3ff/000 expected=3ff/201
+FAIL individual ordinary2FF ACK collection k=13 got=3ff/000 expected=3ff/1ff
+FAIL individual ordinary2FF ACK collection k=14 got=3ff/000 expected=3ff/0ff
+FAIL individual ordinary2FF ACK collection k=15 got=3ff/000 expected=3ff/07f
+FAIL individual ordinary2FF ACK collection k=16 got=3ff/000 expected=3ff/03f
+FAIL individual ordinary2FF ACK collection k=17 got=3ff/000 expected=3ff/03f
+FAIL individual ordinary2FF ACK collection k=18 got=000/000 expected=000/04f
+FAIL individual ordinary2FF ACK collection k=19 got=000/000 expected=000/087
+FAIL individual ordinary2FF ACK collection k=20 got=000/000 expected=000/103
+FAIL individual ordinary2FF ACK collection k=21 got=3ff/000 expected=3ff/201
+FAIL individual ordinary2FF ACK collection k=23 got=3ff/000 expected=3ff/1ff
+FAIL individual ordinary2FF ACK collection k=24 got=3ff/000 expected=3ff/0ff
+FAIL individual ordinary2FF ACK collection k=25 got=3ff/000 expected=3ff/07f
+RESULT local_stages=10 data_FF=160 conditioner_FF=20 controller_request_FF=20 checks=26 errors=20 raw_clock_stopped=1 forwarded_rn0_held_high=1 controller_clock=TEST_ONLY_independent
+FATAL: /home/ubuntu/wt/codex-s81-fe-fault-source-trace/rtl/dsrom_sys/s81_ph/test/tb_dsfd_be_fault_local_reset.sv:69: FAIL
+       Time: 365000 Scope: tb_dsfd_be_fault_local_reset

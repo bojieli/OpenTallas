@@ -1,0 +1,51 @@
+{
+  "default_off_macro": "OT_BE_FAULT_LOCAL_RN",
+  "stages": 10,
+  "data_FF": 160,
+  "consumer_conditioner_FF": 20,
+  "consumer_total_FF": 180,
+  "controller_capture_FF_request": 20,
+  "total_new_FF_request": 200,
+  "controller_capture": "ordinary independent2FF per ACK before reduction; standalone RTL request, not connected in parent",
+  "controller_module": "dsfd_be_fault_ack_collect",
+  "controller_clock": null,
+  "controller_reset_ports": null,
+  "controller_placement": null,
+  "raw_driver": null,
+  "raw_driver_clock_reference": null,
+  "raw_driver_phase": null,
+  "serial_clock_delivery": null,
+  "parent_adopted": false,
+  "new_reset_ACK_collector_bound": false,
+  "baseline141_ACK_282FF_role": "existing consumer conditioners only; existing controller requires another282 capture FF separately",
+  "added_fault_status_serial_cycles": 10,
+  "added_data_return_cycles": 0,
+  "additional_local_reset_release_cycles_vs_root_rn0_nominal": 0,
+  "physical_master_body_equivalence": {
+    "dsfd_die_rstsync": {
+      "byte_identical": true,
+      "body_sha256": "59ae360a87a4a386dd41b09cb9acd165a3dc29257f0de73469aca0769f6d9453",
+      "baseline_source": "0ff9801c2",
+      "qualified_record_source": "626202850"
+    },
+    "dsfd_be_f16": {
+      "byte_identical": true,
+      "body_sha256": "be8037ae09b0011c798475cd1683f608d9af62b0d1f5bb8564b01485e7b9153e",
+      "baseline_source": "0ff9801c2",
+      "qualified_record_source": "585558587"
+    },
+    "dsfd_be_r55": {
+      "byte_identical": true,
+      "body_sha256": "564cbcf8c80b8e1f7b58064496380329d3d87beb4d65346c77a61488919cc402",
+      "baseline_source": "0ff9801c2"
+    },
+    "dsfd_die_r1": {
+      "byte_identical": true,
+      "body_sha256": "174ec17c01d96d0fa9c8617ce2c936b98f4ee16c1a0fbcbc17ce47b23d1efa8b",
+      "baseline_source": "0ff9801c2"
+    }
+  },
+  "N10_LOCAL_native_gold_TP_pending": true,
+  "raw_clock_stopped_RTL_fixture_PASS": true,
+  "mapped_async_conditioner_functional_fixture_PASS": true
+}

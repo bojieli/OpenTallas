@@ -1,0 +1,45 @@
+{
+  "qualified_master_source": "626202850 (runtime source06542a05c)",
+  "mapped_master_sha256": "97f5b56b88b74963e17344070f2916098bd1934cb56c97167ac36a4e4f3286dd",
+  "mapped_async_FF_count": 2,
+  "mapped_RESETN_connections": 2,
+  "model_image": "openroad/orfs:asap7lock",
+  "model_image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+  "model_sha256": {
+    "asap7sc7p5t_SEQ_RVT_TT_220101.v": "59fdb426d0421137211b83db4ebe905d097ca93cc5548b939c69e8d07d988213",
+    "asap7sc7p5t_INVBUF_RVT_TT_201020.v": "8804a647af1e2161c13fffcaef9ec50786494534872ec50adaae593967a3b459",
+    "asap7sc7p5t_SIMPLE_RVT_TT_201020.v": "849946d9b648ef58f39a97027de5e7f24051f6ef4fded598dec861e3257ea4b6",
+    "dff.v": "1141a9ddb579a4eaf131bb0fe4a4b44f22c11af54c970a829e9357d9ddfb9313"
+  },
+  "mode": "functional mapped-conditioner simulation, original TT UDP truth tables with explicit delayed-input passthrough for unsupported Icarus timing-check outputs; no SDF and no physical settling/phase claim",
+  "command": [
+    "iverilog",
+    "-g2012",
+    "-I/tmp/s81_local_models",
+    "-s",
+    "tb_dsfd_be_fault_local_reset",
+    "-o",
+    "/home/ubuntu/wt/codex-s81-fe-fault-source-trace/results/arch/s81_fe_fault_relay_1014/local_reset_mapped/mapped.vvp",
+    "/home/ubuntu/wt/codex-s81-fe-fault-source-trace/results/arch/s81_fe_fault_relay_1014/local_reset_mapped/mapped_conditioners_fixture.sv",
+    "/home/ubuntu/wt/codex-s81-fe-fault-source-trace/rtl/dsrom_sys/s81_ph/test/tb_dsfd_be_fault_local_reset.sv",
+    "/tmp/s81_local_models/asap7sc7p5t_SEQ_RVT_TT_220101.v",
+    "/tmp/s81_local_models/asap7sc7p5t_INVBUF_RVT_TT_201020.v",
+    "/tmp/s81_local_models/asap7sc7p5t_SIMPLE_RVT_TT_201020.v"
+  ],
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv": "5336e45a19b01d9371b1720fcbe78f76814ef08e3d18841dc88eeff2799f8800",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_be_fault_local_reset.sv": "37ddef269d1bcf0cc77fe1e270765ecef61fa0f044c896924f89768f8e7cdcd6"
+  },
+  "observed_exit": 0,
+  "pass_": true,
+  "actual_controller_clock": null,
+  "actual_raw_driver": null,
+  "parent_adopted": false,
+  "original_official_model_sha256": {
+    "asap7sc7p5t_SEQ_RVT_TT_220101.v": "6e63ff4b5587097a76bf395c6f2383035368d5c8d95dbf551ba324d3a9537fde",
+    "asap7sc7p5t_INVBUF_RVT_TT_201020.v": "8804a647af1e2161c13fffcaef9ec50786494534872ec50adaae593967a3b459",
+    "asap7sc7p5t_SIMPLE_RVT_TT_201020.v": "849946d9b648ef58f39a97027de5e7f24051f6ef4fded598dec861e3257ea4b6",
+    "dff.v": "1141a9ddb579a4eaf131bb0fe4a4b44f22c11af54c970a829e9357d9ddfb9313"
+  },
+  "functional_delay_shim": "Only bind delayed_D/RESETN/SETN/CLK to corresponding ports; original UDP truth tables and master netlist unchanged. Icarus timing-check output wires otherwise float."
+}
