@@ -3,9 +3,10 @@
 // Actual four B2 slices. Shared group1 classes: 0 SU, 1 quant, 2 DMA peer.
 // Native DMA front writes use separate done-only DQ transport, never WRS credits.
 // Source ingress capacity is reserved before posting; permits govern dequeue only.
-module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0)(
- input wire [3:0] su_clk,quant_clk,dma_clk,input wire vclk,rst_n,
+module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,SU_NATIVE_RAW=0,HARD_CLOCKS=0)(
+ input wire [3:0] su_clk,quant_clk,dma_clk,input wire vclk,rst_n,input wire [31:0] station_clk,
  input wire [3:0] su_rreq,su_wreq,su_drained,su_mirror,
+ input wire [32*17-1:0] su_native_rq,input wire [32*281-1:0] su_native_wq,
  input wire [32*16-1:0] su_rq,output wire [31:0] su_rcredit,output wire [32*257-1:0] su_rr,
  input wire [32*280-1:0] su_wq,output wire [31:0] su_wcredit,su_done,
  output wire [3:0] su_rgrant,su_wgrant,su_rack,su_wack,
@@ -43,12 +44,12 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0)(
    wire [15:0] r=su_rq[(q*8+b)*16+:16];wire [279:0] w=su_wq[(q*8+b)*280+:280];
    wire bad=r[15]&&(r[14:13]!=0||(su_mirror[q]&&r[12]))||w[279]&&(w[278:277]!=0||(su_mirror[q]&&w[276]));
    reg af;(* async_reg="true" *)reg af1,af2,an1,an2;
-   always @(posedge su_clk[q] or negedge rst_n)if(!rst_n)af<=0;else if(bad)af<=1;
+   always @(posedge su_clk[q] or negedge rst_n)if(!rst_n)af<=0;else if(!SU_NATIVE_RAW&&bad)af<=1;
    always @(posedge vclk or negedge rst_n)if(!rst_n)begin af1<=0;af2<=0;an1<=1;an2<=1;end else begin af1<=af;af2<=af1;an1<=~af;an2<=an1;end
    wire allow=!af2&&(af2==~an2);wire lf;
    ot_hbm_b2_lane_cdc_owned slink(.cclk(su_clk[q]),.vclk(vclk),.rst_n(rst_n),.permit(rg[0]|wg[0]),.vrpermit(vrg[0]&&allow),.vwpermit(vwg[0]&&allow),
-    .crq({r[15],su_mirror[q],su_mirror[q]?2'b00:2'(q),r[12:0]}),.crq_credit(su_rcredit[q*8+b]),.crr(su_rr[(q*8+b)*257+:257]),
-    .cwq({w[279],su_mirror[q],su_mirror[q]?2'b00:2'(q),w[276:264],w[263:0]}),.cwq_credit(su_wcredit[q*8+b]),.cwq_done(su_done[q*8+b]),
+    .crq(SU_NATIVE_RAW?su_native_rq[(q*8+b)*17+:17]:{r[15],su_mirror[q],su_mirror[q]?2'b00:2'(q),r[12:0]}),.crq_credit(su_rcredit[q*8+b]),.crr(su_rr[(q*8+b)*257+:257]),
+    .cwq(SU_NATIVE_RAW?su_native_wq[(q*8+b)*281+:281]:{w[279],su_mirror[q],su_mirror[q]?2'b00:2'(q),w[276:264],w[263:0]}),.cwq_credit(su_wcredit[q*8+b]),.cwq_done(su_done[q*8+b]),
     .vrq(srq[b*17+:17]),.vrq_credit(src[b]),.vrr(srr[b*257+:257]),.vwq(swq[b*281+:281]),.vwq_credit(swc[b]),.vwq_done(sd[b]),
     .fault(lf),.cdrained(cd[b]),.vdrained(vd[b]),.rready(rrdy[b]),.wready(wrdy[b]));
    assign fault[q*8+b]=lf|af;assign su_cdrained[q*8+b]=cd[b];assign su_vdrained[q*8+b]=vd[b];
@@ -59,7 +60,7 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0)(
     .fault(fault[32+q*8+b]),.cdrained(cd[16+b]),.vdrained(vd[16+b]),.rready(rrdy[16+b]),.wready(wrdy[16+b]));
    assign dma_cdrained[q*8+b]=cd[16+b];assign dma_vdrained[q*8+b]=vd[16+b];
   end
-  ot_hbm_b2_peer_mux_q #(.MUT(MUT==1?1:0)) station(.clk(vclk),.rst_n(rst_n),.bank_clk({8{vclk}}),.src_clk({dma_clk[q],quant_clk[q],su_clk[q]}),
+  ot_hbm_b2_peer_mux_q #(.MUT(MUT==1?1:0),.HARD_CLOCKS(HARD_CLOCKS)) station(.clk(vclk),.rst_n(rst_n),.bank_clk(station_clk[q*8+:8]),.src_clk({dma_clk[q],quant_clk[q],su_clk[q]}),
    .rreq({dma_rreq[q],qbusy[q]|quant_rec[q*683],su_rreq[q]}),.wreq({dma_wreq[q],qbusy[q]|quant_rec[q*683],su_wreq[q]}),
    .src_drained({dma_peer_drained[q]&&(&cd[16+:8]),quant_drained[q],su_drained[q]&&(&cd[0+:8])}),
    .lane_rready(rrdy),.lane_wready(wrdy),.lane_vdrained(vd),.src_rq(srq),.src_rcredit(src),.src_rr(srr),.src_wq(swq),.src_wcredit(swc),.src_done(sd),
