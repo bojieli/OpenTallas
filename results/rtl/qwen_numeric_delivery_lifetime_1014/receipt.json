@@ -1,0 +1,68 @@
+{
+  "numeric_parent_commit": "36f141274",
+  "ledger_commit": "20d3727f6",
+  "compile_unit": "oth-ubuntu-2018009-1791974265",
+  "compile_outer_exit": 1,
+  "compile_exit_reason": "classifier expected mask assertion but forged-query mutant was rejected earlier by real ledger; RTL/fixture/binaries unchanged",
+  "qualified_reexecution_unit": "oth-ubuntu-2046381-1791974921",
+  "qualified_reexecution_exit": 0,
+  "reexecution_checks": "frozen source and mutant hashes, Verilator recorded command/MUT/ALL_SPLITS/source order, binary SHA256 recorded; all six actual binaries re-executed",
+  "six_operation_fixture": {
+    "words_produced_delivered_consumed": 680,
+    "queries_issued_retired": 680,
+    "bank_outstanding_final": 0,
+    "ledger_peak": 47,
+    "queue_peak": 1,
+    "base_edges": 4883
+  },
+  "full_split_22_operation_diagnostic": {
+    "words_produced_delivered_consumed": 936,
+    "queries_issued_retired": 872,
+    "nonquery_words_delivered": 64,
+    "bank_outstanding_final": 0,
+    "ledger_peak": 47,
+    "queue_peak": 2,
+    "base_edges": 11971
+  },
+  "nonquery_provenance": "actual every-math source identity48 at real TOREG edge46; never current offered/accepted descriptor inference",
+  "query_ACK": "only actual bank issue acceptance",
+  "query_output_ACK": "only actual queued512 numeric word downstream acceptance and ordered bank retirement",
+  "numeric_front_flags": "has_query false implies no retirement; numeric context/version preserved for every word",
+  "source_version_fixture": "C1230000+opcontext32 test input, not real VM reservation",
+  "bank_shape": {
+    "N": 48,
+    "SEQ_W": 40,
+    "COUNT_W": 7,
+    "bound_recipients": "one actual canonical tile per isolated profile",
+    "sealed": 0,
+    "aggregate_drained": false
+  },
+  "clock_contract": "22 coherent core roots+independent live loader; separate live-base posting/consumer queue; same-phase gated base used as actual producer step in fixture only",
+  "queue_depth": 2,
+  "posting_latency_base_edges": 1,
+  "earliest_pop_after_post_base_edges": 1,
+  "reserved_produced_unposted_slots": 1,
+  "local_output_latency_CC": 46,
+  "local_drain_latency_CC": 49,
+  "local_drain_events": [
+    6,
+    22
+  ],
+  "fixture_reset_scope": "isolated per-profile bank/core resets only after local numeric/query drain, not a global transport-fence or peer seal certificate",
+  "token16_inputs": "arbitrary fixture provenance; no sole HOST/dispatch shared-token/TAG59 origin binding",
+  "negative_cases": [
+    "word_bit_flip",
+    "nonquery_forced_query_real_ledger_rejection",
+    "stale_numeric_context",
+    "actual_query_event_before_bank_init"
+  ],
+  "unqualified": [
+    "all768 acceptances/consumer seals",
+    "independent incoming node/replay/globaldrain",
+    "HOST TAG59 allocator/storage/source ingress",
+    "VM snapshot reservation/freshness",
+    "physical CDC/phase/base ratio/registered credit",
+    "native service cost/fullcheckpoint/token throughput",
+    "149 compressed ABI"
+  ]
+}
