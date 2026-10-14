@@ -98,7 +98,13 @@ module ot_async_fifo #(
         reg [PTR_W-1:0] pub_q;
         wire [DEPTH-1:0] selected [0:NCH-1], read_sel [0:NCH-1];
         wire [DEPTH-1:0] w_sel = {{(DEPTH-1){1'b0}},1'b1} << wr_bin[ADDR_W-1:0];
+`ifdef OT_VMFE_MUT_FCC_PIPE_SELECT
+        // Candidate-specific negative control: select the following entry.
+        wire [ADDR_W-1:0] bad_read_addr = rd_bin_next[ADDR_W-1:0] + 1'b1;
+        wire [DEPTH-1:0] r_sel_next = {{(DEPTH-1){1'b0}},1'b1} << bad_read_addr;
+`else
         wire [DEPTH-1:0] r_sel_next = {{(DEPTH-1){1'b0}},1'b1} << rd_bin_next[ADDR_W-1:0];
+`endif
         always @(posedge wr_clk) data_q <= wr_data; // payload reset-free, no valid-gated fanout
         always @(posedge wr_clk or negedge wr_domain_rst_n)
             if (!wr_domain_rst_n) pub_q <= {PTR_W{1'b0}};
