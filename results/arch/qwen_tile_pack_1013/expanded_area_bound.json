@@ -1,0 +1,67 @@
+{
+  "status": "necessary lower bound only; fixed dimensions, no general hardware impossibility claim",
+  "gap_um": 20.088,
+  "outer_margin_um": 20.088,
+  "target": [
+    362.88,
+    1425.6
+  ],
+  "expanded_sum_um2": 510993.821376,
+  "expanded_capacity_um2": 481798.26950399997,
+  "excess_um2": 29195.55187200004,
+  "necessary_width_at_target_height_um": 383.65218257261415,
+  "necessary_height_at_target_width_um": 1510.769875236295,
+  "method": "Inflate every child rectangle by half of20.088 gap on each side. Pairwise required gap implies disjoint inflated rectangles. Outermargins20.088 constrain them to expanded innerbox (W-gap)*(H-gap). Their sumarea is a necessary bound only; satisfyingarea would not prove constructive fit.",
+  "shapes": [
+    {
+      "name": "bank",
+      "count": 5,
+      "w": 311.04,
+      "h": 129.6
+    },
+    {
+      "name": "lane",
+      "count": 8,
+      "w": 99.792,
+      "h": 140.4
+    },
+    {
+      "name": "node",
+      "count": 1,
+      "w": 47.52,
+      "h": 432
+    },
+    {
+      "name": "ctl_compact_probe",
+      "count": 1,
+      "w": 77.76,
+      "h": 129.6
+    },
+    {
+      "name": "store_compact_probe",
+      "count": 1,
+      "w": 77.76,
+      "h": 86.4
+    },
+    {
+      "name": "tx_current_probe",
+      "count": 8,
+      "w": 25.92,
+      "h": 86.4
+    },
+    {
+      "name": "rqr_compact_probe",
+      "count": 2,
+      "w": 25.92,
+      "h": 108
+    },
+    {
+      "name": "response_probe",
+      "count": 1,
+      "w": 21.6,
+      "h": 43.2
+    }
+  ],
+  "source_binding": "Closed14 dimensions stand. Newaspect probes do not representclosed views. CTL/store compact probes60dd live; TX current sizingnotqualified; RQR25.92x108 gate measured1024FF;response21.6x43.2 gate measured129FF.",
+  "request": "The statedshape set needs either smaller source-qualified ancillary footprints or an explicit larger width/height slot plus station/reticle cost review. No existing419.904pitch fit and no channel waiver claimed."
+}
