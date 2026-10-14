@@ -51,7 +51,7 @@ def lower(request, directory, root=None):
     require(len(stages) == count and {s['stage'] for s in stages} == set(range(count)),
             'every real stage requires an explicit program, including idle stages')
     require(request.get('candidate_only') is True, 'native candidate cannot self-adopt')
-    require(request.get('hc_hwords') == 640, 'actual H[4,5120] FP32 rows required')
+    require(request.get('hc_hwords') == 640, 'actual H[4,5120] BF16 rows required')
     require(set(request['source_jobs']) and len(request['source_jobs']) == len(set(request['source_jobs'])),
             'explicit complete source job coverage required')
     allocated = {}
