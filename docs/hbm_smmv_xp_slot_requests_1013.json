@@ -1,0 +1,334 @@
+{
+  "schema": "opentallas.smmv.slot_change_request.v1",
+  "contract": "results/arch/hier_contract_1011/r25gq.json",
+  "basis": "Existing measured XP/DE physical partition and die intake; no final global coordinates or assigned pins published",
+  "authorization": "2026-10-13 coordinator: advance current face pin requests for repair/CTS/route; final die fit remains open",
+  "final_die_slot_fit": "PENDING assigned guides",
+  "masters": {
+    "hgi_smmv_eng_de": {
+      "top": "ot_hgi_smmv",
+      "params": {
+        "W": 8,
+        "XQ": 3,
+        "DE": 1
+      },
+      "outline": {
+        "w": 108.0,
+        "h": 108.0
+      },
+      "pin_request": {
+        "W": [
+          "clk",
+          "rst_n",
+          "sm_base"
+        ],
+        "E": [
+          "sm_cmd",
+          "sm_ret",
+          "sm_cg_en",
+          "sm_cr"
+        ],
+        "S": [
+          "x_v",
+          "x_rdy",
+          "x_base",
+          "x_n",
+          "x_p",
+          "x_stride",
+          "x_space",
+          "x_fmt",
+          "x_xb",
+          "x_done",
+          "x_fault"
+        ],
+        "N": [
+          "rec_v",
+          "rec_rdy",
+          "rec_hdr",
+          "rec_a",
+          "rec_b",
+          "rec_o",
+          "rec_n_a",
+          "rec_n_b",
+          "rec_done",
+          "rec_fault",
+          "halted",
+          "pub_v",
+          "pub_rdy",
+          "pub_base",
+          "pub_stride",
+          "pub_space",
+          "pub_m",
+          "pub_q",
+          "pub_p",
+          "pub_bf16",
+          "pub_done",
+          "pub_fault",
+          "dbg_iss_seq"
+        ]
+      },
+      "layer_cap": "M5",
+      "signal_layers": "M2 M5",
+      "assigned_coordinates": null,
+      "slot_fit": "Requested outline only; final die placement/slot fit pending"
+    },
+    "hgi_xp_aq": {
+      "top": "ot_hdc_actquant",
+      "params": {},
+      "outline": {
+        "w": 172.8,
+        "h": 86.4
+      },
+      "pin_request": {
+        "S": [
+          "x"
+        ],
+        "N": [
+          "q",
+          "e",
+          "y",
+          "vo",
+          "fault"
+        ],
+        "W": [
+          "clk",
+          "rst_n",
+          "v",
+          "fp4"
+        ]
+      },
+      "layer_cap": "M5",
+      "signal_layers": "M2 M5",
+      "assigned_coordinates": null,
+      "slot_fit": "Requested outline only; final die placement/slot fit pending"
+    },
+    "hgi_xp_bfm": {
+      "top": "ot_hgi_xp_bfm",
+      "params": {},
+      "outline": {
+        "w": 172.8,
+        "h": 54.0
+      },
+      "pin_request": {
+        "S": [
+          "wave_d"
+        ],
+        "W": [
+          "clk",
+          "rst_n",
+          "bd_v",
+          "bf_v",
+          "wave_t",
+          "aq_vo",
+          "aq_f",
+          "aq_q0",
+          "aq_e0"
+        ],
+        "E": [
+          "aq_q1",
+          "aq_e1"
+        ],
+        "N": [
+          "m_v",
+          "m_t",
+          "m_d",
+          "fault"
+        ]
+      },
+      "layer_cap": "M5",
+      "signal_layers": "M2 M5",
+      "assigned_coordinates": null,
+      "slot_fit": "Requested outline only; final die placement/slot fit pending"
+    },
+    "hgi_xp_buf": {
+      "top": "ot_hgi_xp_buf",
+      "params": {},
+      "outline": {
+        "w": 172.8,
+        "h": 108.0
+      },
+      "pin_request": {
+        "S": [
+          "w_v_i",
+          "w_t_i",
+          "w_d_i"
+        ],
+        "N": [
+          "ob_v",
+          "ob_eop",
+          "ob_addr",
+          "ob_grp",
+          "ob_d"
+        ],
+        "W": [
+          "clk",
+          "rst_n",
+          "tok0",
+          "tok_i"
+        ],
+        "E": [
+          "tok_o",
+          "fault"
+        ]
+      },
+      "layer_cap": "M5",
+      "signal_layers": "M2 M5",
+      "assigned_coordinates": null,
+      "slot_fit": "Requested outline only; final die placement/slot fit pending"
+    },
+    "hgi_xp_rd_ln": {
+      "top": "ot_hgi_xp_rd_ln",
+      "params": {
+        "CR": 16
+      },
+      "outline": {
+        "w": 237.6,
+        "h": 54.0
+      },
+      "pin_request": {
+        "S": [
+          "wrq",
+          "wrq_cr",
+          "wrr"
+        ],
+        "N": [
+          "wave_d"
+        ],
+        "W": [
+          "clk",
+          "rst_n",
+          "rq_i",
+          "cr_o",
+          "rsv_o",
+          "pop_i",
+          "lpop_i",
+          "fault"
+        ]
+      },
+      "layer_cap": "M5",
+      "signal_layers": "M2 M5",
+      "assigned_coordinates": null,
+      "slot_fit": "Requested outline only; final die placement/slot fit pending"
+    },
+    "hgi_xp_rdc": {
+      "top": "ot_hgi_xp_rdc",
+      "params": {
+        "CR": 16,
+        "RQC": 10,
+        "XQ": 4,
+        "XDD": 63
+      },
+      "outline": {
+        "w": 54.0,
+        "h": 43.2
+      },
+      "pin_request": {
+        "W": [
+          "clk",
+          "rst_n",
+          "x_v",
+          "x_rdy",
+          "x_base",
+          "x_n",
+          "x_p",
+          "x_space",
+          "x_fmt",
+          "x_xb",
+          "x_done",
+          "x_fault"
+        ],
+        "S": [
+          "rq_o",
+          "cr_i",
+          "rsv_i",
+          "pop_o",
+          "lpop_o"
+        ],
+        "N": [
+          "aq_v",
+          "bd_v",
+          "bf_v",
+          "wave_t",
+          "xw_eop_i",
+          "fault_i"
+        ]
+      },
+      "layer_cap": "M5",
+      "signal_layers": "M2 M5",
+      "assigned_coordinates": null,
+      "slot_fit": "Requested outline only; final die placement/slot fit pending"
+    },
+    "hgi_xp_sps": {
+      "top": "ot_hgi_xp_sps",
+      "params": {},
+      "outline": {
+        "w": 172.8,
+        "h": 21.6
+      },
+      "pin_request": {
+        "S": [
+          "i_en",
+          "i_addr",
+          "i_grp",
+          "i_data"
+        ],
+        "N": [
+          "o_en",
+          "o_addr",
+          "o_grp",
+          "o_data"
+        ],
+        "W": [
+          "clk",
+          "rst_n"
+        ]
+      },
+      "layer_cap": "M5",
+      "signal_layers": "M2 M5",
+      "assigned_coordinates": null,
+      "slot_fit": "Requested outline only; final die placement/slot fit pending"
+    },
+    "hgi_xp_xwm": {
+      "top": "ot_hgi_xp_xwm",
+      "params": {},
+      "outline": {
+        "w": 345.6,
+        "h": 43.2
+      },
+      "pin_request": {
+        "S": [
+          "a_v",
+          "a_eop",
+          "a_addr",
+          "a_grp",
+          "a_d",
+          "b_v",
+          "b_eop",
+          "b_addr",
+          "b_grp",
+          "b_d"
+        ],
+        "N": [
+          "c_v",
+          "c_eop",
+          "c_addr",
+          "c_grp",
+          "c_d",
+          "xw_en",
+          "xw_addr",
+          "xw_grp",
+          "xw_data",
+          "xw_eop"
+        ],
+        "W": [
+          "clk",
+          "rst_n"
+        ]
+      },
+      "layer_cap": "M5",
+      "signal_layers": "M2 M5",
+      "assigned_coordinates": null,
+      "slot_fit": "Requested outline only; final die placement/slot fit pending"
+    }
+  }
+}

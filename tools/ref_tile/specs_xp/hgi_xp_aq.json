@@ -47,7 +47,7 @@
   "owner": "Claude:el1013-hbm-redesign-smmv",
   "branch": "claude/hbm-redesign-smmv",
   "tag": "r0",
-  "purpose": "SM.MATVEC redesign (owner 10-13) x-plane leaf aq: the block-dot activation quantiser ot_hdc_actquant UNCHANGED (13-stage feed-forward, one block an edge), hardened ONCE x2; M5 leaf, every pin a flop, one clock root",
+  "purpose": "SM.MATVEC redesign (owner 10-13) x-plane leaf aq: the block-dot activation quantiser ot_hdc_actquant UNCHANGED (13-stage feed-forward, one block an edge), hardened ONCE x2; M5 leaf, every pin a flop, one clock root; current face pin request for physical closure; final die slot/guide fit pending docs/hbm_smmv_xp_slot_requests_1013.json",
   "extra_paths": [
    "results/arch/hgi_sim_20261010/g25_proof",
    "results/rtl/dshbm_1m_allmeasured_20261004",
@@ -61,12 +61,13 @@
    "spec",
    "schemas",
    "data/inventory",
-   "compiler"
+   "compiler",
+   "docs/hbm_smmv_xp_slot_requests_1013.json"
   ],
   "benches": [
    {
     "name": "smmv_l0_xpt_exact",
-    "cmd": "set -o pipefail; FUSE=1 PROGRAM=0 J=16 DEFS='-DXBD +define+NCL=4 +define+WVM8 +define+XQ=3 +define+WIN=8 +define+XP +define+XPT +define+SMMV_DE=1' bash rtl/hbm_accel/generic/adapters/tb/run_smmv_tput.sh ds {RUN}/bench/smmv_l0_xpt_exact '' +WD=200000; grep -aE 'summary:|TOTAL|HGI_SMMV_TPUT' {RUN}/bench/smmv_l0_xpt_exact/run.log; grep -q 'HGI_SMMV_TPUT PASS' {RUN}/bench/smmv_l0_xpt_exact/run.log",
+    "cmd": "set -o pipefail; FUSE=1 PROGRAM=0 J=16 DEFS='-DXBD +define+NCL=4 +define+WVM8 +define+XQ=3 +define+WIN=8 +define+XP +define+XPT +define+SMMV_DE=1 +define+XSPD=51' bash rtl/hbm_accel/generic/adapters/tb/run_smmv_tput.sh ds {RUN}/bench/smmv_l0_xpt_exact '' +WD=200000; grep -aE 'summary:|TOTAL|HGI_SMMV_TPUT' {RUN}/bench/smmv_l0_xpt_exact/run.log; grep -q 'HGI_SMMV_TPUT PASS' {RUN}/bench/smmv_l0_xpt_exact/run.log",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 96,
@@ -79,7 +80,7 @@
    },
    {
     "name": "smmv_l0_xpt_wdrop_mutant",
-    "cmd": "set -o pipefail; FUSE=1 PROGRAM=0 J=16 DEFS='-DXBD +define+NCL=4 +define+WVM8 +define+XQ=3 +define+WIN=8 +define+XP +define+XPT +define+SMMV_DE=1' bash rtl/hbm_accel/generic/adapters/tb/run_smmv_tput.sh ds {RUN}/bench/smmv_l0_xpt_wdrop_mutant 'MUT_WDROP' +WD=200000; grep -aE 'summary:|TOTAL|HGI_SMMV_TPUT' {RUN}/bench/smmv_l0_xpt_wdrop_mutant/run_MUT_WDROP.log; grep -q 'HGI_SMMV_TPUT PASS' {RUN}/bench/smmv_l0_xpt_wdrop_mutant/run_MUT_WDROP.log",
+    "cmd": "set -o pipefail; FUSE=1 PROGRAM=0 J=16 DEFS='-DXBD +define+NCL=4 +define+WVM8 +define+XQ=3 +define+WIN=8 +define+XP +define+XPT +define+SMMV_DE=1 +define+XSPD=51' bash rtl/hbm_accel/generic/adapters/tb/run_smmv_tput.sh ds {RUN}/bench/smmv_l0_xpt_wdrop_mutant 'MUT_WDROP' +WD=200000; grep -aE 'summary:|TOTAL|HGI_SMMV_TPUT' {RUN}/bench/smmv_l0_xpt_wdrop_mutant/run_MUT_WDROP.log; grep -q 'HGI_SMMV_TPUT PASS' {RUN}/bench/smmv_l0_xpt_wdrop_mutant/run_MUT_WDROP.log",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 96,
@@ -92,5 +93,10 @@
   ],
   "views_to": "physical/ref_tile/hgi_xp_aq/views",
   "record_to": "results/rtl/ref_tile/hgi_xp_aq"
+ },
+ "slot_change_request": {
+  "file": "docs/hbm_smmv_xp_slot_requests_1013.json",
+  "master": "hgi_xp_aq",
+  "status": "requested; assigned coordinates pending"
  }
 }
