@@ -166,6 +166,16 @@ class HelperOverlay(unittest.TestCase):
             CL.ship_helpers('local', str(run), job)
         self.assertEqual((run/'cl/orfs_hold_mm.tcl').read_bytes(),before)
 
+    def test_missing_directory_refuses_even_before_source_synced_marker(self):
+        import shutil
+        job, run = self.installed_job()
+        self.assertTrue(job['helper_overlay_installed'])
+        self.assertNotIn('source_synced',job)
+        shutil.rmtree(run/'cl')
+        with self.assertRaisesRegex(ValueError,'previously installed frozen helper directory is missing'):
+            CL.ship_helpers('local',str(run),job)
+        self.assertFalse((run/'cl').exists())
+
     def test_valid_digest_does_not_hide_committed_tree_mismatch(self):
         job, run = self.installed_job()
         original = job['route_overlay_plan']

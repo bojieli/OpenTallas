@@ -2511,7 +2511,7 @@ def ship_helpers(host, run, job=None):
                     job["helper_overlay_verification"] = dict(receipt, verified_at=now_iso(),
                                                                host=host, run=run, mutation=False)
                     return
-                if job.get("source_synced") or job.get("helper_overlay_verification"):
+                if job.get("source_synced") or job.get("helper_overlay_installed") or job.get("helper_overlay_verification"):
                     raise ValueError("previously installed frozen helper directory is missing")
             except (ValueError, OSError, subprocess.SubprocessError) as ex:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {ex}; preserve original execution") from ex
