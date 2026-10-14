@@ -457,6 +457,17 @@ def generate():
         ot_nhb_fifo_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
                                         .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
     end endgenerate""")
+    # (h) el1013-qwen-kvstrips: the e read's latency is a build constant KVD_ERL (default 1 = the golden contract: data the
+    # cycle after er_valid).  The die's aggregator slice registers the read address at its pin and the SRAM output before
+    # its pin (qkd_astk_ep: 3), so the push follows the word by that many cycles; nothing else changes.
+    ectl = rep(ectl, """    always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= er_valid;""",
+               """`ifdef KVD_ERL
+    reg [`KVD_ERL-1:0] er_dl;
+    always @(posedge clk or negedge rc) if (!rc) er_dl <= {`KVD_ERL{1'b0}}; else er_dl <= {er_dl, er_valid};
+    always @* er_pend = er_dl[`KVD_ERL-1];
+`else
+    always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= er_valid;
+`endif""")
     wrapper = ENGINE
     s = s[:i] + HEAD.lstrip('\n') + '\n' + ectl + '\n' + wrapper + s[j:]
     # ================= the aggregator: node beat lanes (beat b = lanes d = LFB k + b of every head) =================
@@ -942,6 +953,9 @@ def ectl_slot(s):
     s = rall(s, 'er_valid <= ', '`ECTL_ERV <= ', 3)
     s = rall(s, 'er_addr <= {rg_g', '`ECTL_ERA <= {rg_g', 1)
     s = rall(s, 'else er_pend <= er_valid;', 'else er_pend <= `ECTL_ERP;', 1)
+    # merge of el1013-qwen-kvstrips (KVD_ERL) with q13-ectl (KVD_ECTL_SLOT): the KVD_ERL delay line starts from the same
+    # slot-qualified strobe, so the two build constants compose (slot push delay + e-slice read latency)
+    s = rall(s, 'else er_dl <= {er_dl, er_valid};', 'else er_dl <= {er_dl, `ECTL_ERP};', 1)
     s = rall(s, '.push(er_pend), .din(er_data),', '.push(er_pend), .din(`ECTL_ERD),', 2)
     s = rall(s, 'ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ)) u_rows', 'ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ), .D1(`ECTL_D1)) u_rows', 1)
     s = rall(s, 'ot_nhb_fifo_rows2_h #(.W(64), .D(DQ)) u_e', 'ot_nhb_fifo_rows2_h #(.W(64), .D(DQ), .D1(`ECTL_D1)) u_e', 1)

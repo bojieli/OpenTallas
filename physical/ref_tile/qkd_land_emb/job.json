@@ -1,5 +1,5 @@
 {
- "name": "qkd_land_emb-ks1-COMMIT",
+ "name": "qkd_land_emb-ks1-0b660bb49",
  "block": "qkd_land_emb",
  "ref_tile": true,
  "owner": "Claude:el1013-qwen-kvstrips",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1013-qwen-kvstrips",
-  "commit": "COMMIT",
+  "commit": "0b660bb49",
   "extra_paths": [
    "physical/qkd_land_strip",
    "rtl/test/qwen_kv_die/tb_qkd_land_rd.sv",
@@ -115,7 +115,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_land_emb/qkd_land_emb-ks1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_land_emb/qkd_land_emb-ks1-0b660bb49"
   }
  ],
  "cycles_added": 0,

@@ -20,7 +20,13 @@ module tb_qfd_band_lanes;
     parameter integer NL = 4, LNK = 0, MUT = 0, NOPS = 3000, SEED = 1;
     parameter integer RDMEM = 0, BANR = 0;   // el1011-q-seq: DUT delay lines in SRAM (2 = one-edge-short mutant) / valid-only adder resets
     parameter integer NBP = 6;               // bands: 6 (TP4, GT 6,144) or 3 (TP8, GT 3,072)
+<<<<<<< HEAD
     localparam integer NB = NBP, LG = $clog2(NB * 1024), LAT_L = 41, LAT_B = 46 + 2 * LNK - 8 * (13 - LG);   // qwen-tp8/spine: the upper has LG-11 levels
+=======
+    parameter integer CL = 0;                // el1013-qwen-small-masters: 1 = the tree top is the die CLUSTER cell qfd_tt_up4 (NL 16, NBP 3, LNK 1:
+                                             // its two pin stages ARE the one link relay stage; no u_l1..u_l4 delay on its links, sel undelayed)
+    localparam integer NB = NBP, LG = $clog2(NB * 1024), LAT_L = 41, LAT_B = 46 + 2 * LNK;
+>>>>>>> origin/claude/el1013-qwen-sm-r2
     reg clk = 0, rst_n = 0;
     always #5 clk = ~clk;
     // ---- stimulus -----------------------------------------------------------------------------------------------
@@ -50,6 +56,7 @@ module tb_qfd_band_lanes;
             .tt_ty(b == 0 ? tt_r : {3*NL*32{1'b0}}), .tt_use(b == 0 ? tu_r : 1'b0), .tt_v(b == 0 ? tv_r2 : 1'b0),
             .pw(pw[b*NL*32 +: NL*32]), .pw_v(pv[b]), .ty(ty[b]), .fault(bf[b]));
     end endgenerate
+<<<<<<< HEAD
     ot_hdc_delay #(.W(NB*NL*32), .D(LNK)) u_l1 (.clk(clk), .rst_n(rst_n), .d(pw), .q(pw_r));
     ot_hdc_delay #(.W(2*NB), .D(LNK), .RESET(1)) u_l2 (.clk(clk), .rst_n(rst_n), .d({pv, bf}), .q({pv_r, bf_r}));
     ot_hdc_delay #(.W(3*NL*32), .D(LNK)) u_l3 (.clk(clk), .rst_n(rst_n), .d(tt), .q(tt_r));
@@ -57,6 +64,28 @@ module tb_qfd_band_lanes;
     ot_qfd_band_upper #(.NL(NL), .NB(NB), .LNK(LNK), .MUT((MUT == 2 || MUT == 3 || MUT == 4) ? MUT : 0), .LG(LG)) u_up (
         .clk(clk), .rst_n(rst_n), .pw(pw_r), .pw_v(pv_r), .lf(bf_r), .sel_e(sel[LG:0]), .tv_e(tv[LG:0]),
         .tt_ty(tt), .tt_use(tu), .tt_v(tvv), .fault(uf));
+=======
+    generate if (CL == 0) begin : g_flat
+        ot_hdc_delay #(.W(NB*NL*32), .D(LNK)) u_l1 (.clk(clk), .rst_n(rst_n), .d(pw), .q(pw_r));
+        ot_hdc_delay #(.W(2*NB), .D(LNK), .RESET(1)) u_l2 (.clk(clk), .rst_n(rst_n), .d({pv, bf}), .q({pv_r, bf_r}));
+        ot_hdc_delay #(.W(3*NL*32), .D(LNK)) u_l3 (.clk(clk), .rst_n(rst_n), .d(tt), .q(tt_r));
+        ot_hdc_delay #(.W(2), .D(LNK), .RESET(1)) u_l4 (.clk(clk), .rst_n(rst_n), .d({tu, tvv}), .q({tu_r, tv_r2}));
+        ot_qfd_band_upper #(.NL(NL), .NB(NB), .LNK(LNK), .MUT((MUT == 2 || MUT == 3) ? MUT : 0), .LG(LG)) u_up (
+            .clk(clk), .rst_n(rst_n), .pw(pw_r), .pw_v(pv_r), .lf(bf_r), .sel_e(sel[LG:0]), .tv_e(tv[LG:0]),
+            .tt_ty(tt), .tt_use(tu), .tt_v(tvv), .fault(uf));
+    end else begin : g_cl
+        // the cluster through its own die bundles; packing as documented in rtl/physical/ot_qwen_tt_up4_cluster.sv
+        wire [1537:0] cty;
+        initial if (NL != 16 || NB != 3 || LNK != 1) begin $display("FAIL qfd_band_lanes CL=1 needs NL 16, NBP 3, LNK 1"); $fatal(1); end
+        qfd_tt_up4 #(.NB(NB), .LG(LG), .DLY(2), .LMUT((MUT == 2 || MUT == 3) ? MUT : 0)) u_up (
+            .ck(clk), .rst_n(rst_n), .pw0({pv[0], pw[0*512 +: 512]}), .pw1({pv[1], pw[1*512 +: 512]}), .pw2({pv[2], pw[2*512 +: 512]}),
+            .lf0(bf[0]), .lf1(bf[1]), .lf2(bf[2]), .sel({tv[LG:0], sel[LG:0]}), .ty(cty), .flt(uf));
+        assign tt_r = cty[1535:0];
+        assign tu_r = cty[1536];
+        assign tv_r2 = cty[1537];
+        assign pw_r = pw; assign pv_r = pv; assign bf_r = bf; assign tt = cty[1535:0]; assign tu = cty[1536]; assign tvv = cty[1537];
+    end endgenerate
+>>>>>>> origin/claude/el1013-qwen-sm-r2
     // ---- op history: cycle n's op (valid, split) -----------------------------------------------------------------------
     localparam integer HN = 1 << 14;
     reg        hv [0:HN-1];
