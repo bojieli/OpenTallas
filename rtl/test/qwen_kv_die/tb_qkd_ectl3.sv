@@ -17,7 +17,11 @@ module tb_qkd_ectl3;
     reg  [633:0]  si;  reg [1024:0] rs;  reg [33:0] s0, s1, s2, s3;
     wire [424:0]  d_so, r_so;  wire [15:0] d_rq, r_rq;  wire [1558:0] d_t0, d_t1, r_t0, r_t1;
     wire [15:0]   d_e0, d_e1, d_e2, d_e3, r_e0, r_e1, r_e2, r_e3;
-    qkd_ectl3 #(.S(S), .E(E)) u_d (.ck(ck), .rst_n(rst_n), .e0(d_e0), .e1(d_e1), .e2(d_e2), .e3(d_e3), .s0(s0), .s1(s1),
+`ifdef KVD_ECTL_SPLIT_CLOCK
+    qkd_ectl3_s u_d (.ck({3{ck}}), .cfg({3'(E), 2'(S)}),
+`else
+    qkd_ectl3 #(.S(S), .E(E)) u_d (.ck(ck),
+`endif .rst_n(rst_n), .e0(d_e0), .e1(d_e1), .e2(d_e2), .e3(d_e3), .s0(s0), .s1(s1),
         .s2(s2), .s3(s3), .t0(d_t0), .t1(d_t1), .rq(d_rq), .rs(rs), .si(si), .so(d_so));
     // reference inputs: the same, delayed per signal
     reg  [633:0]  si1, si2;  reg [1024:0] rs1;
