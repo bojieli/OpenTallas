@@ -66,6 +66,7 @@ def main():
     p.add_argument('--negative',action='store_true')
     p.add_argument('--entries',action='store_true',help='use core-leaf/eight-child clock-entry slab parent (same cycles)')
     p.add_argument('--entry-mutant',action='store_true',help='swap two scale-return bits in the entries wrapper')
+    p.add_argument('--row-mutant',action='store_true',help='force old16-bit core under18-bit golden row interface')
     p.add_argument('--fullrows',action='store_true',help='18-bit production row boundary checks:65536/131072 and151936 nout')
     p.add_argument('--gid',type=int,help='exact group identity override for a common core view')
     p.add_argument('--gid-mutant',action='store_true',help='flip the core group strap while golden group stays unchanged')
@@ -73,7 +74,7 @@ def main():
     p.add_argument('--mutant',choices=sorted(MUTANTS),help='bench: a TP8 mutant that must FAIL (implies --negative)')
     p.add_argument('--variant',choices=sorted(VARIANTS),default='m3');a=p.parse_args()
     v=VARIANTS[a.variant]
-    if (a.entry_mutant or a.gid_mutant) and not a.entries: p.error('--entry-mutant requires --entries')
+    if (a.entry_mutant or a.gid_mutant or a.row_mutant) and not a.entries: p.error('--entry-mutant requires --entries')
     if a.mode=='model':
         from uarch_model import qwen_slab_m3_closure_model
         print(json.dumps(qwen_slab_m3_closure_model(),indent=2));return
@@ -83,10 +84,11 @@ def main():
         if a.entries: cmd += ['-DOT_SLAB_ENTRIES','rtl/physical/ot_qwen_slab_pg_entries.sv']
         if a.entry_mutant: cmd += ['-DOT_SLAB_ENTRIES_MUT']; a.negative=True
         if a.gid_mutant: cmd += ['-DOT_SLAB_GID_MUT']; a.negative=True
+        if a.row_mutant: cmd += ['-DOT_SLAB_ROW_MUT']; a.negative=True
         bf=v.get('extra',[])
         if a.tp==8 and bf: raise SystemExit('--tp 8 is the BANDF 0 frame (the band-lane frame is re-cut separately)')
         if a.mutant: a.negative=True;neg=MUTANTS[a.mutant]
-        elif a.entry_mutant or a.gid_mutant: neg=['LEAD=9']
+        elif a.entry_mutant or a.gid_mutant or a.row_mutant: neg=['LEAD=9']
         else: neg=(['BMUT=1','LEAD=9'] if bf else ['LEAD=8']) if a.negative else ['LEAD=9']
         for kv in [f"MUL_LAT={v['mul_lat']}",f"MUL_KCP={v['kcp']}",'OREG=1','IN_STAGE=1','AM_SPLIT=1','S5_CTL=1','SCALE_PAIR=1']+bf+(TP8 if a.tp==8 else [])+([f'GID={a.gid}'] if a.gid is not None else [])+(['NW=18','FULLROWS=1'] if a.fullrows else [])+neg:
             cmd+=['-P','tb_qwen_slab_port_group.'+kv]
@@ -98,7 +100,7 @@ def main():
         (a.out/'run.log').write_text(proc.stdout+proc.stderr)
         evidence_sources=BENCH_SOURCES+(['rtl/physical/ot_qwen_slab_pg_entries.sv'] if a.entries else [])
         pins={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in evidence_sources}
-        (a.out/'result.json').write_text(json.dumps(dict(returncode=proc.returncode,negative=a.negative,variant=a.variant,tp=a.tp,mutant=('group_strap_bit' if a.gid_mutant else 'scale_return_bits' if a.entry_mutant else a.mutant),entries=a.entries,fullrows=a.fullrows,source_pins=pins),indent=2)+'\n')
+        (a.out/'result.json').write_text(json.dumps(dict(returncode=proc.returncode,negative=a.negative,variant=a.variant,tp=a.tp,mutant=('narrow_row_width' if a.row_mutant else 'group_strap_bit' if a.gid_mutant else 'scale_return_bits' if a.entry_mutant else a.mutant),entries=a.entries,fullrows=a.fullrows,source_pins=pins),indent=2)+'\n')
         print((proc.stdout+proc.stderr)[-1500:]);raise SystemExit(proc.returncode)
     from uarch_model import qwen_slab_m3_closure_model
     cmd=command(a.out,a.name,a.threads,a.variant)
