@@ -1,0 +1,43 @@
+{
+  "element": "ot_hbm_b2_peer_mux_lane",
+  "actual_instances": 32,
+  "outline_um": {
+    "w": 216,
+    "h": 64.8
+  },
+  "expected_logical_flops": 1079,
+  "request": "PlaceoneclockedstationbesideeachactualB2bank; 8explicitrootsperquadrant. Needactualmeasuredpinlaunch/capture/reach/phasegrant beforeassignment.",
+  "assigned_coordinates": null,
+  "clock_domain": "VM1111.111ps nominalphase; eachrawclockphi\u2212actualmeasuredR, notcommonpinphase",
+  "layer": "M5PG/signalcap;M6parentstrap",
+  "pins": {
+    "S": [
+      "src_rq",
+      "src_wq"
+    ],
+    "N": [
+      "src_rr",
+      "src_rcredit",
+      "src_wcredit",
+      "src_done"
+    ],
+    "W": [
+      "clk",
+      "rst_n",
+      "rgrant",
+      "wgrant",
+      "rcredit",
+      "rr",
+      "wcredit",
+      "done",
+      "fault"
+    ],
+    "E": [
+      "rq",
+      "wq"
+    ]
+  },
+  "source_mutable_ECC_debt": "Reply/request stationpayload presentlyunprotectedregisters; do notqualify untilprotected sourcevariantmeasured",
+  "native_CDC_payload_debt": "OwnedCDC FIFOarraysnotyetrealSRAM/ECCbackend; incompletephysicalparentnotretired",
+  "bench_evidence": "a76/4d actual2group1ownersSUquant+realDMA-DQ contention; thirdDMApeerpending, quantprice192/168FAIL"
+}
