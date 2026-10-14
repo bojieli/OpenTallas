@@ -1113,5 +1113,11 @@
   ],
   "arithmetic_grid_source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_arithmetic_grid.sv",
   "arithmetic_grid_kind": "WIRES_ONLY:16closedarithmetic+16registeredmap;1742-bit exact frozen control pack, independent clock/reset entries; not HGI quarter shell",
-  "arithmetic_grid_source_bound": true
+  "arithmetic_grid_source_bound": true,
+  "candidate_rectangle_check": {
+    "count": 40,
+    "overlaps_outside": [],
+    "status": "PASS",
+    "limitation": "Proposal rectangles only; actual pins, clock/PG/OBS, generic cache address mapping and all missing control state still open."
+  }
 }
