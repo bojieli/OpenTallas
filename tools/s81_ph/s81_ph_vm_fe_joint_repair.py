@@ -43,7 +43,8 @@ def solve(inp,pins,capture,out,radius,margin,nodes):
   for k in range(i+1,N):
    choices=[];already=False
    for a,b,ax in [(i,k,0),(k,i,0),(i,k,1),(k,i,1)]:
-    rhs=xy[b,ax]-xy[a,ax]-size[a,ax]-2.16
+    gap=0. if names[i].startswith('clt') and names[k].startswith('clt') else 2.16
+    rhs=xy[b,ax]-xy[a,ax]-size[a,ax]-gap
     lowdiff=lo[2*a+ax]*step[ax]-hi[2*b+ax]*step[ax];highdiff=hi[2*a+ax]*step[ax]-lo[2*b+ax]*step[ax]
     if highdiff<=rhs+1e-7:already=True;break
     if lowdiff<=rhs+1e-7:choices.append((a,b,ax,rhs,max(0.,highdiff-rhs)))
@@ -56,7 +57,7 @@ def solve(inp,pins,capture,out,radius,margin,nodes):
  mat=coo_matrix((vv,(rr,cc)),shape=(len(rl),len(lo))).tocsr();start=time.time()
  with warnings.catch_warnings(record=True) as ws:
   res=milp(np.array(obj),integrality=np.array(integ),bounds=Bounds(lo,hi),constraints=LinearConstraint(mat,rl,ru),options={'node_limit':nodes,'mip_rel_gap':.05,'threads':1})
- rec=dict(schema='opentallas.vmfe-coupled-finite-repair.v1',input=inp,input_sha256=hashlib.sha256(Path(inp).read_bytes()).hexdigest(),source_sha256=hashlib.sha256(F.SRC.encode()).hexdigest(),radius_um=radius,direct_reach_reserve_um=margin,node_limit=nodes,elapsed_s=time.time()-start,status=int(res.status),message=res.message,variables=len(lo),constraints=len(rl),coupled_nonoverlap_disjunctions=disjunctions,immediate_infeasible_pairs=immediate,node_count=getattr(res,'mip_node_count',None),mip_gap=getattr(res,'mip_gap',None),objective=getattr(res,'fun',None),warnings=[str(w.message) for w in ws],global_impossibility_claim=False,native_qualified=False,limits={'hop_um':500,'cut':.60},fixed_instances=[n for n in names if n.startswith(('clt','fsr'))],actual_clock_rc_budget_um=None)
+ rec=dict(schema='opentallas.vmfe-coupled-finite-repair.v1',input=inp,input_sha256=hashlib.sha256(Path(inp).read_bytes()).hexdigest(),source_sha256=hashlib.sha256(F.SRC.encode()).hexdigest(),radius_um=radius,direct_reach_reserve_um=margin,node_limit=nodes,elapsed_s=time.time()-start,status=int(res.status),message=res.message,variables=len(lo),constraints=len(rl),coupled_nonoverlap_disjunctions=disjunctions,immediate_infeasible_pairs=immediate,node_count=getattr(res,'mip_node_count',None),mip_gap=getattr(res,'mip_gap',None),objective=getattr(res,'fun',None),warnings=[str(w.message) for w in ws],global_impossibility_claim=False,native_qualified=False,limits={'hop_um':500,'cut':.60},existing_anchored_CLT_abutment_preserved=True,other_macro_gap_um=2.16,fixed_instances=[n for n in names if n.startswith(('clt','fsr'))],actual_clock_rc_budget_um=None)
  if res.x is not None:
   delta=np.rint(res.x[:2*N]).reshape(N,2)*step;F.reposition(p,{n:tuple(xy[i]+delta[i]) for i,n in enumerate(names)},True)
   rec['moved_instances']={n:delta[i].tolist() for i,n in enumerate(names) if np.any(abs(delta[i])>1e-6)}
