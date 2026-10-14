@@ -25,6 +25,8 @@ module tb_qkd_host_token_service_replay;
  task begin_service(input reg[15:0]e);integer n;begin
   rd=512'h80000223|(512'(e)<<48);rv=1;tick(1);rv=0;tick(25);
   check(sbe==e&&!ready&&le==e&&acks[7],"genuine addressed BEGIN/pending snapshot");
+  rd=512'h80000223|(512'd1<<32)|(512'(e)<<48)|(512'd1<<64);rv=1;tick(1);rv=0;tick(10);
+  check(dut.peer_permit&&!fault,"genuine matching addressed permit after pending advertisement");
   admitted_marker=1;tick(1);admitted_marker=0;n=0;
   while(guard.mc!=1&&n<300)begin tick(1);n++;end
   check(guard.mc==1,"genuine admitted BOOT_END checkpoint");barrier=1;tick(1);barrier=0;n=0;
@@ -33,17 +35,17 @@ module tb_qkd_host_token_service_replay;
  end endtask
  task start(input reg[15:0]tokenepoch,input reg[15:0]serviceepoch);reg[181:0]raw;begin
   raw=0;raw[38]=1;raw[35:18]=18'd140123;raw[17:0]=19;
-  rd=512'h80000222|(512'd1<<32)|(512'(raw)<<48)|(512'(tokenepoch)<<230)|(512'd1<<246)|(512'(serviceepoch)<<247);
+  rd=512'h80000222|(512'd2<<32)|(512'(raw)<<48)|(512'(tokenepoch)<<230)|(512'd1<<246)|(512'(serviceepoch)<<247);
   rv=1;tick(1);rv=0;tick(14);
  end endtask
  initial begin
   por=0;tick(5);por=1;reset();begin_service(1);
   check(!dut.peer_epoch_seen&&starts==0,"peer never received old allocated token0");
-  // The old service1/token0/seq1 start is held outside this real receiver.
+  // The old service1/token0/seq2 start is held outside this real receiver.
   reset();begin_service(2);check(!dut.peer_epoch_seen,"token comparison history remains invalid after fresh service2");
-  start(0,1);check(starts==0&&fault&&!dut.peer_epoch_seen,"never-seen stale service1/token0/seq1 cannot alias first command after service2 BEGIN0");
+  start(0,1);check(starts==0&&fault&&!dut.peer_epoch_seen,"never-seen stale service1/token0/seq2 cannot alias first command after service2 BEGIN0");
   reset();begin_service(3);start(0,3);check(starts==1&&!fault&&te==0,"first genuine token epoch0 valid under matching fresh service3");
-  $display("PASS token service replay checks=%0d never-seen old0/service1/seq1 blocked after real service2/barrier",checks);$finish;
+  $display("PASS token service replay checks=%0d never-seen old0/service1/seq2 blocked after real service2/barrier",checks);$finish;
  end
  initial begin tick(3000);$fatal(1,"timeout");end
 endmodule
