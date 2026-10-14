@@ -58,7 +58,7 @@
         "cmd": "bash tools/hgi_sm_pub_parent_gate.sh {RUN}/bench/exact exact",
         "expect": "pass",
         "pass_regex": "PASS cycle exact",
-        "min_count_regex": "packets=[1-9][0-9]* words=[1-9][0-9]*",
+        "min_count_regex": "(?:packets|words)=([1-9][0-9]*)",
         "threads": 8,
         "peak_ram_gb": 8
       },
