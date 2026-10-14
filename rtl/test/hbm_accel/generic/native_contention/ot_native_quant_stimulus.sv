@@ -4,7 +4,7 @@
 module ot_native_quant_stimulus(input wire clk,rst_n,go,
  output reg [4*683-1:0] rec=0,input wire [11:0] ret,
  output reg done=0,output integer cycles=0,output integer checked=0);
- reg [255:0] gin[0:7][0:127],gout[0:7][0:127];
+ reg [255:0] gin[0:7][0:127],gout[0:7][0:127],loadbuf[0:127];
  integer op[0:7],n[0:7],ab[0:7],ob[0:7],cost[0:7],blk[0:7];
  integer nret[0:3],cyc=0,t0=0,price=0,fd,nrec,scan;string dir,fn;
  reg loaded=0,started=0;reg [127:0] h;reg [255:0] da,dd;
@@ -42,8 +42,8 @@ module ot_native_quant_stimulus(input wire clk,rst_n,go,
    scan=$fscanf(fd,"%d %d %d %d %d %d",op[k],n[k],ab[k],ob[k],cost[k],blk[k]);
    if(scan!=6||n[k]<=0||n[k]>1024)$fatal(1,"THREEPRODUCER malformed quant record");
    ab[k]=ab[k]%65536;ob[k]=ob[k]%65536;price+=cost[k];
-   fn=$sformatf("%s/in_%0d.hex",dir,k);$readmemh(fn,gin[k],0,n[k]/8-1);
-   fn=$sformatf("%s/out_%0d.hex",dir,k);$readmemh(fn,gout[k],0,n[k]/8-1);
+   fn=$sformatf("%s/in_%0d.hex",dir,k);$readmemh(fn,loadbuf,0,n[k]/8-1);for(integer s=0;s<n[k]/8;s++)gin[k][s]=loadbuf[s];
+   fn=$sformatf("%s/out_%0d.hex",dir,k);$readmemh(fn,loadbuf,0,n[k]/8-1);for(integer s=0;s<n[k]/8;s++)gout[k][s]=loadbuf[s];
   end
   $fclose(fd);if(price!=168)$fatal(1,"THREEPRODUCER quant immutable price changed");loaded=1;
   wait(rst_n&&go);@(negedge clk);t0=cyc;started=1;
