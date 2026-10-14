@@ -327,6 +327,12 @@
   "record_to": "results/rtl/ref_tile/qfd_tile_nk_r5"
  },
  "child_insertion": "boundary_mean",
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_SAFE_BALANCE": "1",
+  "OT_SPINE_ITERS": "12"
+ },
  "macros": [],
  "recipe": 2,
  "io_flop_at_pins": {

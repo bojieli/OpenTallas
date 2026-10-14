@@ -324,5 +324,11 @@
   "views_to": "physical/ref_tile/qfd_tile_nk_r5/views",
   "record_to": "results/rtl/ref_tile/qfd_tile_nk_r5"
  },
- "child_insertion": "boundary_mean"
+ "child_insertion": "boundary_mean",
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_SAFE_BALANCE": "1",
+  "OT_SPINE_ITERS": "12"
+ }
 }
