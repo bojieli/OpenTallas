@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "dsfd_vm_fld_m5",
+ "verdict": "WARN",
+ "generated": "2026-10-13T13:33:43-0700",
+ "host": "ot-epyc4",
+ "cts": true,
+ "commit": "38ebdb044",
+ "clock": {
+  "max_root_sinks": 8882,
+  "root": "port:ck[0]",
+  "cts": true,
+  "tt_insertion_ps": null,
+  "tt_spread_ps": null,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "8,882 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1-bit vector ports ['ck']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])",
+   "fix": "declare them scalar in RTL"
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 3968 um2 + macros 0 in core 11011: util 36%",
+   "fix": "set \"std_area_um2\": 3968 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage ll_ptr[3]$_SDFF_PP0_ -> lc[5][2]$_SDFF_PN0_/D: ~653 ps estimated (16 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 36.1% outside 45%-65% (std 3971 + macro 0 um2 in 11011 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=0 ck_insertion rc=1",
+   "fix": ""
+  }
+ ]
+}

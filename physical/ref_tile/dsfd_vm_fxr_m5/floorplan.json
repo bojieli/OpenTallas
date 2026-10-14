@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  54.0,
-  25.92
+  43.2,
+  32.4
  ],
  "core": [
   2.16,
   2.16,
-  51.84,
-  23.76
+  41.040000000000006,
+  30.24
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -30,12 +30,12 @@
  },
  "pins": {
   "N": [
-   "i",
-   "i_rf"
+   "i_v",
+   "i"
   ],
   "S": [
-   "o",
-   "o_rf"
+   "o_v",
+   "o"
   ],
   "W": [
    "ck",
@@ -76,6 +76,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fxr.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl"
  ]
