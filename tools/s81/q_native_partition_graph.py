@@ -67,6 +67,10 @@ def extract(data, top):
                 if port['direction'] in ('input', 'inout'):
                     drivers[bit].add('external')
 
+    actual_clock_bits = {bit for cell in original['cells'].values()
+                         for port, bits in cell['connections'].items()
+                         if port in ('CLK', 'RD_CLK', 'WR_CLK')
+                         for bit in bits if isinstance(bit, int)}
     result = json.loads(json.dumps(data))
     parent = result['modules'][top]
     parent['cells'] = dict(kept)
@@ -79,21 +83,21 @@ def extract(data, top):
                 for bit in bits if isinstance(bit, int)}
         boundary = sorted(bit for bit in used if users[bit] - {group})
         ports = {}; connection = {}; directions = {}; pin_rows = []
-        clock_bits = sorted({bit for cell in cells.values()
-                             for port, bits in cell['connections'].items()
-                             if port in ('CLK', 'RD_CLK', 'WR_CLK')
-                             for bit in bits if isinstance(bit, int) and bit in boundary
-                             and group not in drivers[bit]})
-        for index, bit in enumerate(clock_bits):
-            name = 'clock_' + str(index)
-            ports[name] = {'direction': 'input', 'bits': [bit]}
+        clock_bits = sorted(set(boundary) & actual_clock_bits)
+        clock_index = defaultdict(int)
+        for bit in clock_bits:
+            direction = 'output' if group in drivers[bit] else 'input'
+            name = ('clock_out_' if direction == 'output' else 'clock_') + str(clock_index[direction])
+            clock_index[direction] += 1
+            ports[name] = {'direction': direction, 'bits': [bit]}
             connection[name] = [bit]
-            directions[name] = 'input'
+            directions[name] = direction
             pin_rows.append({'port': name, 'index': 0, 'source_wire_id': bit,
                              'source_aliases': sorted(aliases.get(bit, ())),
                              'source_groups': sorted(drivers[bit]),
                              'peer_groups': sorted(users[bit] - {group}),
-                             'role': 'actual source clock; independent physical binding OPEN'})
+                             'role': 'actual source clock; independent physical binding OPEN',
+                             'direction': direction})
         # Each actual crossing wire is exposed once. Original source aliases
         # are retained in the packet so downstream pin assignment uses the ABI.
         for direction in ('input', 'output'):
@@ -132,7 +136,7 @@ def extract(data, top):
                     'exact_cell_connection_reconstruction': True,
                     'exact_memory_reconstruction': True,
                     'physical_admission': False,
-                    'open': ['full production functional bench', 'independent actual five-root clock ABI',
+                    'open': ['full production functional bench', 'actual raw/generated clock producer and per-consumer binding ABI',
                              'leaf mapped areas and sinks', 'assigned native pins/outlines', 'CTS and SS/FF route']}
 
 
