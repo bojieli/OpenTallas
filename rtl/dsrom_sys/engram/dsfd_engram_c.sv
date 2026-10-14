@@ -78,7 +78,7 @@ module dsfd_engram_c #(
     // (physical/s81_engc_tiles/compose/ck_entry_{keep,place}.tcl).  N = (latest child - this child) / stage delay,
     // "child" = top-tree arrival + internal insertion, so every child's flops see the clock at the same time
     // (pin arrival + insertion spread <= 80 ps, measured in the CTS-stop gate).  A wire in simulation.
-    localparam integer CKN_WIN = 8, CKN_IO = 7, CKN_SINK = 3, CKN_WS = 5, CKN_LKP = 4, CKN_PB0 = 2, CKN_PB1 = 2, CKN_PB2 = 1;
+    localparam integer CKN_WIN = 7, CKN_IO = 5, CKN_SINK = 3, CKN_WS = 5, CKN_LKP = 4, CKN_PB0 = 2, CKN_PB1 = 2, CKN_PB2 = 0;
     wire ck_win, ck_io, ck_sink, ck_ws, ck_lkp, ck_pb0, ck_pb2, ck_pb1;
     ot_engc_ck_entry #(.N(CKN_WIN))  u_hdly_ck_win  (.a(ck[0]), .y(ck_win));
     ot_engc_ck_entry #(.N(CKN_IO))   u_hdly_ck_io   (.a(ck[0]), .y(ck_io));

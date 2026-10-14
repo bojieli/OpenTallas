@@ -59,13 +59,6 @@ def main():
                                "{RUN}/routes/{LABEL}/args {RUN}/record/ && (python3 tools/tt_views/view_export.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs "
                                f"--name dsfd_engram_c --out {{RUN}}/record --corners tt {mv} --image openroad/orfs:asap7lock "
                                "> {RUN}/record/export_tt_collect.log 2>&1 || echo TT_EXPORT_FAILED > {RUN}/record/TT_EXPORT_FAILED)"}},
-        # floorplan lint (FLOORPLAN_MARGIN of el1013-engc-compose-d21a6cf78): the row-holding seams are >= 12 um
-        # (macro_place.tcl); util is (std + macro) / core, and this cluster is 8 hard children + 37 clock entry
-        # cells (16 um2 of standard cells in 73,300 um2 of free floor = 0.02 %), so the 60 % placement-room limit has
-        # nothing to protect here; the channel (cut) check stays on
-        "fp_lint": {"set": {"util_max": 0.88, "util_hold_max": 0.88},
-                    "why": "all-tile cluster in the 1188 x 432 contract slot: macro 438,609 um2 of 511,933 um2 (85.7 %), "
-                           "standard cells 16 um2 (the clock entry chains); row-holding child seams opened to >= 12 um"},
         "cycles_added": 0,
         "cycles_note": "no cycle change by the composition; isolated window->slot-ready 508.7 cycles vs 500 priced (1.017x), engram_c_gate isolated_local_ag",
         "merge_target": "main", "route_hold_corners": "mm", "route_corner": "TC", "route_hold_margin_ns": 0.05,
