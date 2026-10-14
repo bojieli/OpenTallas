@@ -1,0 +1,16 @@
+DRAINTRACE op=0 tid=0 last_issue_cc=114 final_output_cc=160 latency=46 outstanding=0 peak=46
+DRAINTRACE op=1 tid=127 last_issue_cc=506 final_output_cc=552 latency=46 outstanding=0 peak=46
+DRAINTRACE op=2 tid=512 last_issue_cc=1087 final_output_cc=1133 latency=46 outstanding=0 peak=46
+DRAINTRACE op=3 tid=767 last_issue_cc=1668 final_output_cc=1714 latency=46 outstanding=0 peak=46
+DRAINTRACE op=4 tid=511 last_issue_cc=2069 final_output_cc=2115 latency=46 outstanding=0 peak=46
+DRAINTRACE op=5 tid=703 last_issue_cc=2529 final_output_cc=2575 latency=46 outstanding=0 peak=46
+DELIVERY_LEDGER depth=8 issued=680 retired=680 outstanding=0 seals=0 ledger_peak=48 queue_peak=5 startup_before_events=1
+OUTPUT40 numeric_consumed=680 typed_consumed=680 held_output_base_edges=0
+LOCAL_DRAIN events=6 native_peak_outstanding=46
+EVENT40 fills=289 responses=680
+QUERY40 durable_callbacks=680 observed_pending_base_edges=680 base_edges=4883 max_pending_queries=1
+PASS production acceptedIB and request ports GT3072 NW18 ops=6 arithmetic=680 requests=680 misses=143 XLOCAL=1 IREG_XL_bypass_only=1 ME_EXTRA=8 indexed_entries=32 coherent26roots=1 raw_split_fault_diagnostics=0
+- rtl/test/qwen_kv_die/tb_qwen_numeric_stream_lifetime.sv:294: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 49us; walltime 0.493 s; speed 99.066 us/s
+- Verilator: cpu 0.493 s on 1 threads; allocated 20 MB

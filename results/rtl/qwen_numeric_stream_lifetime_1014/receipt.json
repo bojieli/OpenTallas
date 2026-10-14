@@ -1,0 +1,53 @@
+{
+  "parent_commit": "e24671b5be42aaf963f2738bcc1bad3964a710ca",
+  "ledger_commit": "20d3727f6",
+  "queue_commit": "393c9d1ef",
+  "queue_source_sha256": "769f95de8152edfdb0e356bf11633a8ab6e57b553eadad51dc4d3081c3e3ca8e",
+  "main_unit": "oth-ubuntu-2233017-1791977250",
+  "main_unit_exit": 1,
+  "main_exit_reason": "identity-only stage offset escaped diagnostic; hardware positives and other negatives completed before wrapper exit",
+  "post_retire_unit": "oth-ubuntu-2282551-1791977691",
+  "post_retire_wrapper_exit": 0,
+  "late_tuple_unit": "oth-ubuntu-2317597-1791978038",
+  "late_tuple_wrapper_exit": 0,
+  "approved_checks": {
+    "positives": 3,
+    "observed_mutant_rejections": 5
+  },
+  "diagnostic_unobserved_mutation": "identity-only metadata43 vs44 offset with constant operation ctx/ver; drain-before-next-accept invariant prevents observing variation in this fixture",
+  "native_profiles": {
+    "numeric_words": 680,
+    "query_issues": 680,
+    "query_retirements": 680,
+    "nonquery_words": 0,
+    "queue_peak": 5,
+    "ledger_peak": 48
+  },
+  "full_split_profiles": {
+    "numeric_words": 936,
+    "query_issues": 872,
+    "query_retirements": 872,
+    "nonquery_words": 64,
+    "queue_peak": 5,
+    "ledger_peak": 48
+  },
+  "full_sink_stalls": {
+    "numeric_words": 936,
+    "query_issues": 872,
+    "query_retirements": 872,
+    "nonquery_words": 64,
+    "queue_peak": 8,
+    "ledger_peak": 54,
+    "blocked_base_edges_per_window": 70
+  },
+  "arithmetic_output_delta_coherent_edges": 46,
+  "local_drain_certificate_coherent_edges": 49,
+  "local_reset_waits_queue_empty_and_retired": true,
+  "aggregate_seals": 0,
+  "source_parent_clock_roots": 23,
+  "stale_stdout_root_label": "inherited coherent26roots status string is not a census",
+  "source_metadata_Q": 4094,
+  "queue_Q": 4820,
+  "component_minimum_produce_to_pop_base_edges": 2,
+  "scope": "Selected actual canonical tile per isolated profile, RPS0 hash-ROM reference arithmetic and full-key cache/event seam. No real HOST token/provider/shared source binding, peer consumer seals, aggregate quiescence, physical phase/status/CDC or native performance claim."
+}

@@ -1,0 +1,21 @@
+DRAINTRACE op=0 tid=0 last_issue_cc=114 final_output_cc=160 latency=46 outstanding=0 peak=46
+DRAINTRACE op=1 tid=127 last_issue_cc=506 final_output_cc=552 latency=46 outstanding=0 peak=46
+DRAINTRACE op=2 tid=512 last_issue_cc=1087 final_output_cc=1133 latency=46 outstanding=0 peak=46
+DRAINTRACE op=3 tid=767 last_issue_cc=1668 final_output_cc=1714 latency=46 outstanding=0 peak=46
+DRAINTRACE op=4 tid=511 last_issue_cc=2069 final_output_cc=2115 latency=46 outstanding=0 peak=46
+DRAINTRACE op=5 tid=703 last_issue_cc=2529 final_output_cc=2575 latency=46 outstanding=0 peak=46
+DRAINTRACE op=6 tid=0 last_issue_cc=3093 final_output_cc=3139 latency=46 outstanding=0 peak=46
+DRAINTRACE op=7 tid=0 last_issue_cc=3425 final_output_cc=3471 latency=46 outstanding=0 peak=46
+DRAINTRACE op=8 tid=0 last_issue_cc=3758 final_output_cc=3804 latency=46 outstanding=0 peak=46
+DRAINTRACE op=9 tid=0 last_issue_cc=4096 final_output_cc=4142 latency=46 outstanding=0 peak=46
+DRAINTRACE op=10 tid=0 last_issue_cc=4431 final_output_cc=4477 latency=46 outstanding=0 peak=46
+DRAINTRACE op=11 tid=0 last_issue_cc=4769 final_output_cc=4815 latency=46 outstanding=0 peak=46
+DRAINTRACE op=12 tid=0 last_issue_cc=5101 final_output_cc=5147 latency=46 outstanding=0 peak=46
+DRAINTRACE op=13 tid=0 last_issue_cc=5433 final_output_cc=5479 latency=46 outstanding=0 peak=46
+DRAINTRACE op=14 tid=0 last_issue_cc=5763 final_output_cc=5809 latency=46 outstanding=0 peak=46
+DRAINTRACE op=15 tid=0 last_issue_cc=6094 final_output_cc=6140 latency=46 outstanding=0 peak=46
+DRAINTRACE op=16 tid=0 last_issue_cc=6426 final_output_cc=6472 latency=46 outstanding=0 peak=46
+DRAINTRACE op=17 tid=0 last_issue_cc=6759 final_output_cc=6805 latency=46 outstanding=0 peak=46
+[103446000] %Fatal: tb_qwen_numeric_stream_lifetime.sv:89: Assertion failed in tb_qwen_numeric_stream_lifetime: actual delivery ledger startup or event fault
+%Error: rtl/test/qwen_kv_die/tb_qwen_numeric_stream_lifetime.sv:89: Verilog $stop
+Aborting...

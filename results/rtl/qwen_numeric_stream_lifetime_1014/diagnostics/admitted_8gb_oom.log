@@ -1,0 +1,142 @@
+Oct 14 04:26:01 regular-crane CRON[2220207]: pam_unix(cron:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+Oct 14 04:26:01 regular-crane CRON[2220209]: (ubuntu) CMD (/usr/local/bin/ot-heavy-reconcile >/dev/null 2>&1)
+Oct 14 04:26:01 regular-crane CRON[2220207]: pam_unix(cron:session): session closed for user ubuntu
+Oct 14 04:26:08 regular-crane systemd[3813]: Started oth-ubuntu-2220983-1791977168.scope - [systemd-run] /usr/bin/python3 run.py.
+Oct 14 04:26:12 regular-crane systemd[1]: tmp-containerd\x2dmount3747160605.mount: Deactivated successfully.
+Oct 14 04:26:12 regular-crane containerd[3128]: time="2026-10-14T04:26:12.906760314-07:00" level=info msg="connecting to shim c63ed66e5472e867c34e61477a1edeefb3735361108b3535798ef65e827b21d9" address="unix:///run/containerd/s/c182e404af11343b5aacc0271184c4eadf45d6d614f48109525cb436b8424622" namespace=moby protocol=ttrpc version=3
+Oct 14 04:26:12 regular-crane systemd[1]: Started docker-c63ed66e5472e867c34e61477a1edeefb3735361108b3535798ef65e827b21d9.scope - libcontainer container c63ed66e5472e867c34e61477a1edeefb3735361108b3535798ef65e827b21d9.
+Oct 14 04:26:12 regular-crane networkd-dispatcher[3057]: WARNING:Unknown index 43260 seen, reloading interface list
+Oct 14 04:26:12 regular-crane kernel: docker0: port 6(vethf83a3e6) entered blocking state
+Oct 14 04:26:12 regular-crane kernel: docker0: port 6(vethf83a3e6) entered disabled state
+Oct 14 04:26:12 regular-crane kernel: vethf83a3e6: entered allmulticast mode
+Oct 14 04:26:12 regular-crane kernel: vethf83a3e6: entered promiscuous mode
+Oct 14 04:26:12 regular-crane systemd-networkd[2977]: vethf83a3e6: Link UP
+Oct 14 04:26:12 regular-crane kernel: eth0: renamed from vethec4fe6a
+Oct 14 04:26:12 regular-crane systemd-networkd[2977]: vethf83a3e6: Gained carrier
+Oct 14 04:26:12 regular-crane kernel: docker0: port 6(vethf83a3e6) entered blocking state
+Oct 14 04:26:12 regular-crane kernel: docker0: port 6(vethf83a3e6) entered forwarding state
+Oct 14 04:26:12 regular-crane dockerd[3394]: time="2026-10-14T04:26:12.952699718-07:00" level=info msg="sbJoin: gwep4 ''->'4defb8b38129', gwep6 ''->''" eid=4defb8b38129 ep=sleepy_nightingale net=bridge nid=9bba27581655
+Oct 14 04:26:14 regular-crane systemd-networkd[2977]: vethf83a3e6: Gained IPv6LL
+Oct 14 04:26:15 regular-crane kernel: verilator_bin invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0
+Oct 14 04:26:15 regular-crane kernel: CPU: 38 UID: 1000 PID: 2221011 Comm: verilator_bin Not tainted 7.0.0-38-generic #38-Ubuntu PREEMPT(lazy) 
+Oct 14 04:26:15 regular-crane kernel: Hardware name: Supermicro AS -1116CS-TN/H14SHM, BIOS 2.0 03/23/2026
+Oct 14 04:26:15 regular-crane kernel: Call Trace:
+Oct 14 04:26:15 regular-crane kernel:  <TASK>
+Oct 14 04:26:15 regular-crane kernel:  show_stack+0x49/0x60
+Oct 14 04:26:15 regular-crane kernel:  dump_stack_lvl+0x5f/0x90
+Oct 14 04:26:15 regular-crane kernel:  dump_stack+0x10/0x18
+Oct 14 04:26:15 regular-crane kernel:  dump_header+0x48/0x1c7
+Oct 14 04:26:15 regular-crane kernel:  oom_kill_process.cold+0x8/0xac
+Oct 14 04:26:15 regular-crane kernel:  out_of_memory+0xff/0x2b0
+Oct 14 04:26:15 regular-crane kernel:  mem_cgroup_out_of_memory+0xc8/0xe0
+Oct 14 04:26:15 regular-crane kernel:  try_charge_memcg+0x3c3/0x620
+Oct 14 04:26:15 regular-crane kernel:  charge_memcg+0x34/0x80
+Oct 14 04:26:15 regular-crane kernel:  __mem_cgroup_charge+0x2f/0xa0
+Oct 14 04:26:15 regular-crane kernel:  alloc_anon_folio+0x20c/0x4b0
+Oct 14 04:26:15 regular-crane kernel:  do_anonymous_page+0x14a/0x4d0
+Oct 14 04:26:15 regular-crane kernel:  ? __pte_offset_map+0x1c/0x130
+Oct 14 04:26:15 regular-crane kernel:  handle_pte_fault+0x1cb/0x1f0
+Oct 14 04:26:15 regular-crane kernel:  __handle_mm_fault+0x493/0x720
+Oct 14 04:26:15 regular-crane kernel:  handle_mm_fault+0xee/0x2e0
+Oct 14 04:26:15 regular-crane kernel:  do_user_addr_fault+0x2ee/0x830
+Oct 14 04:26:15 regular-crane kernel:  exc_page_fault+0x83/0x1e0
+Oct 14 04:26:15 regular-crane kernel:  asm_exc_page_fault+0x27/0x30
+Oct 14 04:26:15 regular-crane kernel: RIP: 0033:0x643c3cbacffc
+Oct 14 04:26:15 regular-crane kernel: Code: 31 db 4d 63 8c 86 7c 0a 00 00 48 c1 e1 0d 49 01 c8 4a 8d 04 09 49 39 c0 72 1e 0f 1f 40 00 48 89 ca 48 89 c1 4c 01 c8 83 c6 01 <48> 89 17 48 89 d7 49 39 c0 73 e9 48 63 de 31 c0 48 c7 02 00 00 00
+Oct 14 04:26:15 regular-crane kernel: RSP: 002b:00007ffc917d6f90 EFLAGS: 00010202
+Oct 14 04:26:15 regular-crane kernel: RAX: 0000643d5f89a2d0 RBX: 0000000000000000 RCX: 0000643d5f89a1e0
+Oct 14 04:26:15 regular-crane kernel: RDX: 0000643d5f89a0f0 RSI: 0000000000000002 RDI: 0000643d5f89a000
+Oct 14 04:26:15 regular-crane kernel: RBP: 0000643c3d0f4920 R08: 0000643d5f89c000 R09: 00000000000000f0
+Oct 14 04:26:15 regular-crane kernel: R10: 00000000000000f0 R11: 0000000000000206 R12: 0000643d19f85940
+Oct 14 04:26:15 regular-crane kernel: R13: 0000643c3cf6cbc0 R14: 0000643c3d115d20 R15: 00007ffc917d7068
+Oct 14 04:26:15 regular-crane kernel:  </TASK>
+Oct 14 04:26:15 regular-crane kernel: memory: usage 8388608kB, limit 8388608kB, failcnt 38
+Oct 14 04:26:15 regular-crane kernel: swap: usage 0kB, limit 0kB, failcnt 0
+Oct 14 04:26:15 regular-crane kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2220983-1791977168.scope:
+Oct 14 04:26:15 regular-crane kernel: anon 8572215296
+Oct 14 04:26:15 regular-crane kernel: file 0
+Oct 14 04:26:15 regular-crane kernel: kernel 17719296
+Oct 14 04:26:15 regular-crane kernel: kernel_stack 163840
+Oct 14 04:26:15 regular-crane kernel: pagetables 17248256
+Oct 14 04:26:15 regular-crane kernel: sec_pagetables 0
+Oct 14 04:26:15 regular-crane kernel: percpu 10400
+Oct 14 04:26:15 regular-crane kernel: sock 0
+Oct 14 04:26:15 regular-crane kernel: vmalloc 0
+Oct 14 04:26:15 regular-crane kernel: shmem 0
+Oct 14 04:26:15 regular-crane kernel: zswap 0
+Oct 14 04:26:15 regular-crane kernel: zswapped 0
+Oct 14 04:26:15 regular-crane kernel: file_mapped 0
+Oct 14 04:26:15 regular-crane kernel: file_dirty 0
+Oct 14 04:26:15 regular-crane kernel: file_writeback 0
+Oct 14 04:26:15 regular-crane kernel: swapcached 0
+Oct 14 04:26:15 regular-crane kernel: anon_thp 0
+Oct 14 04:26:15 regular-crane kernel: file_thp 0
+Oct 14 04:26:15 regular-crane kernel: shmem_thp 0
+Oct 14 04:26:15 regular-crane kernel: inactive_anon 8571789312
+Oct 14 04:26:15 regular-crane kernel: active_anon 425984
+Oct 14 04:26:15 regular-crane kernel: inactive_file 0
+Oct 14 04:26:15 regular-crane kernel: active_file 0
+Oct 14 04:26:15 regular-crane kernel: unevictable 0
+Oct 14 04:26:15 regular-crane kernel: slab_reclaimable 10992
+Oct 14 04:26:15 regular-crane kernel: slab_unreclaimable 264240
+Oct 14 04:26:15 regular-crane kernel: slab 275232
+Oct 14 04:26:15 regular-crane kernel: hugetlb 0
+Oct 14 04:26:15 regular-crane kernel: workingset_refault_anon 0
+Oct 14 04:26:15 regular-crane kernel: workingset_refault_file 0
+Oct 14 04:26:15 regular-crane kernel: workingset_activate_anon 0
+Oct 14 04:26:15 regular-crane kernel: workingset_activate_file 0
+Oct 14 04:26:15 regular-crane kernel: workingset_restore_anon 0
+Oct 14 04:26:15 regular-crane kernel: workingset_restore_file 0
+Oct 14 04:26:15 regular-crane kernel: workingset_nodereclaim 0
+Oct 14 04:26:15 regular-crane kernel: pgdemote_kswapd 0
+Oct 14 04:26:15 regular-crane kernel: pgdemote_direct 0
+Oct 14 04:26:15 regular-crane kernel: pgdemote_khugepaged 0
+Oct 14 04:26:15 regular-crane kernel: pgdemote_proactive 0
+Oct 14 04:26:15 regular-crane kernel: pgpromote_success 0
+Oct 14 04:26:15 regular-crane kernel: pgscan 2
+Oct 14 04:26:15 regular-crane kernel: pgsteal 0
+Oct 14 04:26:15 regular-crane kernel: pswpin 0
+Oct 14 04:26:15 regular-crane kernel: pswpout 0
+Oct 14 04:26:15 regular-crane kernel: pgscan_kswapd 0
+Oct 14 04:26:15 regular-crane kernel: pgscan_direct 2
+Oct 14 04:26:15 regular-crane kernel: pgscan_khugepaged 0
+Oct 14 04:26:15 regular-crane kernel: pgscan_proactive 0
+Oct 14 04:26:15 regular-crane kernel: pgsteal_kswapd 0
+Oct 14 04:26:15 regular-crane kernel: pgsteal_direct 0
+Oct 14 04:26:15 regular-crane kernel: pgsteal_khugepaged 0
+Oct 14 04:26:15 regular-crane kernel: pgsteal_proactive 0
+Oct 14 04:26:15 regular-crane kernel: pgfault 2098482
+Oct 14 04:26:15 regular-crane kernel: pgmajfault 0
+Oct 14 04:26:15 regular-crane kernel: pgrefill 0
+Oct 14 04:26:15 regular-crane kernel: pgactivate 1
+Oct 14 04:26:15 regular-crane kernel: pgdeactivate 0
+Oct 14 04:26:15 regular-crane kernel: pglazyfree 0
+Oct 14 04:26:15 regular-crane kernel: pglazyfreed 0
+Oct 14 04:26:15 regular-crane kernel: swpin_zero 0
+Oct 14 04:26:15 regular-crane kernel: swpout_zero 0
+Oct 14 04:26:15 regular-crane kernel: zswpin 0
+Oct 14 04:26:15 regular-crane kernel: zswpout 0
+Oct 14 04:26:15 regular-crane kernel: zswpwb 0
+Oct 14 04:26:15 regular-crane kernel: thp_fault_alloc 0
+Oct 14 04:26:15 regular-crane kernel: thp_collapse_alloc 0
+Oct 14 04:26:15 regular-crane kernel: thp_swpout 0
+Oct 14 04:26:15 regular-crane kernel: thp_swpout_fallback 0
+Oct 14 04:26:15 regular-crane kernel: numa_pages_migrated 0
+Oct 14 04:26:15 regular-crane kernel: numa_pte_updates 0
+Oct 14 04:26:15 regular-crane kernel: numa_hint_faults 0
+Oct 14 04:26:15 regular-crane kernel: Memory cgroup min protection 0kB -- low protection 0kB
+Oct 14 04:26:15 regular-crane kernel: Tasks state (memory values in pages):
+Oct 14 04:26:15 regular-crane kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+Oct 14 04:26:15 regular-crane kernel: [2220983]  1000 2220983    45130     5380     2415     2965         0   126976        0             0 python3
+Oct 14 04:26:15 regular-crane kernel: [2221004]  1000 2221004     4685     3439     1799     1640         0    77824        0             0 perl
+Oct 14 04:26:15 regular-crane kernel: [2221005]  1000 2221005     4680     3390     1799     1591         0    77824        0             0 perl
+Oct 14 04:26:15 regular-crane kernel: [2221010]  1000 2221010  1057063  1054097  1050655     3442         0  8519680        0             0 verilator_bin
+Oct 14 04:26:15 regular-crane kernel: [2221011]  1000 2221011  1042470  1039527  1036158     3369         0  8404992        0             0 verilator_bin
+Oct 14 04:26:15 regular-crane kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2220983-1791977168.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2220983-1791977168.scope,task=verilator_bin,pid=2221010,uid=1000
+Oct 14 04:26:15 regular-crane kernel: Memory cgroup out of memory: Killed process 2221010 (verilator_bin) total-vm:4228252kB, anon-rss:4202620kB, file-rss:13768kB, shmem-rss:0kB, UID:1000 pgtables:8320kB oom_score_adj:0
+Oct 14 04:26:15 regular-crane systemd[1]: user@1000.service: The kernel OOM killer killed some processes in this unit.
+Oct 14 04:26:15 regular-crane systemd[3813]: oth-ubuntu-2220983-1791977168.scope: The kernel OOM killer killed some processes in this unit.
+Oct 14 04:26:15 regular-crane systemd[3813]: oth-ubuntu-2220983-1791977168.scope: Failed with result 'oom-kill'.
+Oct 14 04:26:15 regular-crane systemd[3813]: oth-ubuntu-2220983-1791977168.scope: Consumed 14.120s CPU time over 7.086s wall clock time, 8G memory peak.
+Oct 14 04:26:19 regular-crane systemd[1]: tmp-containerd\x2dmount2604201121.mount: Deactivated successfully.
+Oct 14 04:26:19 regular-crane containerd[3128]: time="2026-10-14T04:26:19.981509408-07:00" level=info msg="connecting to shim 4c4e402f87f864ca56c0012b8f9c306822824a2ffff17a19c557728c9adca310" address="unix:///run/containerd/s/b23f7433f66384170c38989f721d3a7e16404ab4771a7ac0909e6ac0bb899350" namespace=moby protocol=ttrpc version=3

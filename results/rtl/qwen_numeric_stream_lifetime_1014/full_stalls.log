@@ -1,0 +1,32 @@
+DRAINTRACE op=0 tid=0 last_issue_cc=114 final_output_cc=160 latency=46 outstanding=0 peak=46
+DRAINTRACE op=1 tid=127 last_issue_cc=506 final_output_cc=552 latency=46 outstanding=0 peak=46
+DRAINTRACE op=2 tid=512 last_issue_cc=1087 final_output_cc=1133 latency=46 outstanding=0 peak=46
+DRAINTRACE op=3 tid=767 last_issue_cc=1589 final_output_cc=1635 latency=46 outstanding=0 peak=46
+DRAINTRACE op=4 tid=511 last_issue_cc=1944 final_output_cc=1990 latency=46 outstanding=0 peak=46
+DRAINTRACE op=5 tid=703 last_issue_cc=2404 final_output_cc=2450 latency=46 outstanding=0 peak=46
+DRAINTRACE op=6 tid=0 last_issue_cc=2936 final_output_cc=2982 latency=46 outstanding=0 peak=46
+DRAINTRACE op=7 tid=0 last_issue_cc=3268 final_output_cc=3314 latency=46 outstanding=0 peak=46
+DRAINTRACE op=8 tid=0 last_issue_cc=3601 final_output_cc=3647 latency=46 outstanding=0 peak=46
+DRAINTRACE op=9 tid=0 last_issue_cc=3939 final_output_cc=3985 latency=46 outstanding=0 peak=46
+DRAINTRACE op=10 tid=0 last_issue_cc=4274 final_output_cc=4320 latency=46 outstanding=0 peak=46
+DRAINTRACE op=11 tid=0 last_issue_cc=4612 final_output_cc=4658 latency=46 outstanding=0 peak=46
+DRAINTRACE op=12 tid=0 last_issue_cc=4889 final_output_cc=4935 latency=46 outstanding=0 peak=46
+DRAINTRACE op=13 tid=0 last_issue_cc=5195 final_output_cc=5241 latency=46 outstanding=0 peak=46
+DRAINTRACE op=14 tid=0 last_issue_cc=5525 final_output_cc=5571 latency=46 outstanding=0 peak=46
+DRAINTRACE op=15 tid=0 last_issue_cc=5856 final_output_cc=5902 latency=46 outstanding=0 peak=46
+DRAINTRACE op=16 tid=0 last_issue_cc=6188 final_output_cc=6234 latency=46 outstanding=0 peak=46
+DRAINTRACE op=17 tid=0 last_issue_cc=6521 final_output_cc=6567 latency=46 outstanding=0 peak=46
+DRAINTRACE op=18 tid=0 last_issue_cc=6853 final_output_cc=6899 latency=46 outstanding=0 peak=46
+DRAINTRACE op=19 tid=0 last_issue_cc=7205 final_output_cc=7251 latency=46 outstanding=0 peak=46
+DRAINTRACE op=20 tid=0 last_issue_cc=7557 final_output_cc=7603 latency=46 outstanding=0 peak=46
+DRAINTRACE op=21 tid=0 last_issue_cc=7909 final_output_cc=7955 latency=46 outstanding=0 peak=46
+DELIVERY_LEDGER depth=8 issued=872 retired=872 outstanding=0 seals=0 ledger_peak=54 queue_peak=8 startup_before_events=1
+OUTPUT40 numeric_consumed=936 typed_consumed=872 held_output_base_edges=0
+LOCAL_DRAIN events=22 native_peak_outstanding=46
+EVENT40 fills=545 responses=872
+QUERY40 durable_callbacks=872 observed_pending_base_edges=872 base_edges=11971 max_pending_queries=1
+PASS production acceptedIB and request ports GT3072 NW18 ops=22 arithmetic=936 requests=872 misses=143 XLOCAL=1 IREG_XL_bypass_only=1 ME_EXTRA=8 indexed_entries=32 coherent26roots=1 raw_split_fault_diagnostics=1
+- rtl/test/qwen_kv_die/tb_qwen_numeric_stream_lifetime.sv:294: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 120us; walltime 1.325 s; speed 90.327 us/s
+- Verilator: cpu 1.325 s on 1 threads; allocated 20 MB

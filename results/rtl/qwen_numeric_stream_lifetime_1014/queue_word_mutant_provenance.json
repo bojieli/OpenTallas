@@ -1,0 +1,5 @@
+{
+  "before": "entries[tail]<={numeric_word,numeric_has_query,numeric_identity,numeric_query_seq};",
+  "after": "entries[tail]<={numeric_word ^ 512'd1,numeric_has_query,numeric_identity,numeric_query_seq};",
+  "sha256": "96ef337ed2de6d1a1e771df48651bbb2b5553d0e14363eff2f8797c792fca522"
+}
