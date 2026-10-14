@@ -1,0 +1,39 @@
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:44:359: syntax error, unexpected IDENTIFIER
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:45:6: syntax error, unexpected IDENTIFIER, expecting "'{"
+   45 |  reg allow=1,gate=1;wire hit;always @(negedge clk) gate<=allow&&hit&&query_credit&&read_credit&&query_output_credit;
+      |      ^~~~~
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:48:13: syntax error, unexpected IDENTIFIER, expecting "'{"
+   48 |  reg [15:0] tid=0;reg [378:0] ib=0;reg [20:0] load_epoch=0;
+      |             ^~~
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:48:31: syntax error, unexpected IDENTIFIER, expecting "'{"
+   48 |  reg [15:0] tid=0;reg [378:0] ib=0;reg [20:0] load_epoch=0;
+      |                               ^~
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:48:47: syntax error, unexpected IDENTIFIER, expecting "'{"
+   48 |  reg [15:0] tid=0;reg [378:0] ib=0;reg [20:0] load_epoch=0;
+      |                                               ^~~~~~~~~~
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:49:14: syntax error, unexpected IDENTIFIER, expecting "'{"
+   49 |  reg [127:0] lx=0;wire [127:0] cache_x;reg [127:0] stale_x=0;always @(posedge cc) stale_x<=cache_x;
+      |              ^~
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:49:52: syntax error, unexpected IDENTIFIER, expecting "'{"
+   49 |  reg [127:0] lx=0;wire [127:0] cache_x;reg [127:0] stale_x=0;always @(posedge cc) stale_x<=cache_x;
+      |                                                    ^~~~~~~
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:52:13: syntax error, unexpected IDENTIFIER, expecting "'{"
+   52 |  reg [95:0] oracle_addr=0;reg [3:0] oracle_req=0;reg [20:0] oracle_epoch=0;
+      |             ^~~~~~~~~~~
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:52:37: syntax error, unexpected IDENTIFIER, expecting "'{"
+   52 |  reg [95:0] oracle_addr=0;reg [3:0] oracle_req=0;reg [20:0] oracle_epoch=0;
+      |                                     ^~~~~~~~~~
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:52:61: syntax error, unexpected IDENTIFIER, expecting "'{"
+   52 |  reg [95:0] oracle_addr=0;reg [3:0] oracle_req=0;reg [20:0] oracle_epoch=0;
+      |                                                             ^~~~~~~~~~~~
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:53:14: syntax error, unexpected IDENTIFIER, expecting "'{"
+   53 |  reg [127:0] held_ref=0;reg [127:0] raw_ref;
+      |              ^~~~~~~~
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:53:37: syntax error, unexpected IDENTIFIER, expecting "'{"
+   53 |  reg [127:0] held_ref=0;reg [127:0] raw_ref;
+      |                                     ^~~~~~~
+%Error: rtl/test/qwen_kv_die/tb_qwen_xcache_output40.sv:56:2: syntax error, unexpected endfunction
+   56 |  endfunction
+      |  ^~~~~~~~~~~
+%Error: Exiting due to 13 error(s)

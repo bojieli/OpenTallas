@@ -1,0 +1,3 @@
+[506000] %Fatal: tb_qwen_actual_query_retire.sv:65: Assertion failed in tb_qwen_actual_query_retire: actual query ledger duplicate or stale event issued=2 retired=0 outstanding=2 actualtuple=0000000000000000000000 currentctx=0000 ver=00000065
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_retire.sv:65: Verilog $stop
+Aborting...

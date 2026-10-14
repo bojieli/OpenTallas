@@ -1,0 +1,5 @@
+{
+  "before": "entries[tail]<={numeric_word,query_pending,query_output_tuple,query_output_toggle};",
+  "after": "entries[tail]<={numeric_word,1'b1,query_output_tuple,query_output_toggle};",
+  "sha256": "f4e36e80f117896e0ae8b5b181633a2b50789e25589276ee928907825c8e9fa1"
+}
