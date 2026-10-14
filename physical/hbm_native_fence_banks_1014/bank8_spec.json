@@ -78,6 +78,7 @@
       }
     ],
     "views_to": "physical/ref_tile/hbm_native_fence_bank8_m5_1014/views",
-    "record_to": "results/arch/hbm_native_1013/fence_bank_successor"
+    "record_to": "results/arch/hbm_native_1013/fence_bank_successor",
+    "source_note": "Harden remaining actualfixedparameter bank; noalias tobank32/128"
   }
 }
