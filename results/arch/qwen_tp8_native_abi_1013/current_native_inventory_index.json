@@ -28,7 +28,7 @@
         "sha256": "0aa826882d50d3ada7902abbe02b21a959a4b4df8b3560ad01859a6ebdda0120"
       },
       "status": "5source-qualified CTS prototypes, ANYpins/unexportedhardlibs, no closednativeparent; groupedTXnewcandidate underway",
-      "clock_coverage": "Actual4_1 CTS ODB7767FF equals ck.json all.n7767 (7675DFFHQN+92ASR); complete postCTS coverage. Prelayout8921 to7767 optimization provenance still under audit."
+      "clock_coverage": "Frozen864dc prototype actualCTS7767FF equals ck.json all.n7767; 1154 logicalFF removed by eliminate_dead_logic before first ODB. Receipt eca87d714. New context/query40/lifetime sources require fresh gates; old clock census is not their physical census."
     },
     {
       "name": "native_KV_seq",
@@ -49,14 +49,14 @@
       "name": "native_host",
       "owner": "/root/qwen_host_integration",
       "receipt": {
-        "commit": "b21676b9a",
+        "commit": "38737622f",
         "path": "physical/qkd_host_integration/pin_inventory.json",
-        "sha256": "eb510b5b84e5b0937c16250f804aacbc12bd9d084b640418775391bb25f49183"
+        "sha256": "8854e3560934bdb0325efbb3d73907858b6e71e135a32cff56e41d6c7291835c"
       },
-      "status": "28 requested/candidate master ABIs, 2508 links. Native QM six-clock families and four dedicated HOST W546 CDC leaves explicit. Queue10303FF/pacer16FF source components measured, full original FDI ng8 bridge2048 sectors/69755 cycles functional only. qfd_link_adp512 historical instances0; actual eight CLOSED128 leaves bound in distinct unqualified split parent842.4. All outlines and distribution remain UNVERIFIED.",
+      "status": "31 requested/candidate master ABIs, 2514 links. Native token endpoint923genericFF/820portbits has pending mapped outline and unbound four genuine drains. QM six-clock families/four dedicated HOST CDC leaves and source-specific adapter candidates remain unqualified physical compositions.",
       "mandatory_seams": "833ps packet to1000ps QM host unrelated; new real16x514 ingress queue reserves CDC4 and local count5 credit pacer, physical seam and native throughput unqualified. Receiver R5 capacity adapter still requires actual structural binding.",
-      "declared_master_entries": 28,
-      "connectivity_records": 2508
+      "declared_master_entries": 31,
+      "connectivity_records": 2514
     },
     {
       "name": "native_SU_formatter",
@@ -76,7 +76,12 @@
         "path": "results/arch/qwen_tp8_1012/vm_region_epoch_binding_candidate.json",
         "sha256": "b08448a63b051be22502597ecb11c90147f8cd4cf23d2bbfd0f81003700adfd4"
       },
-      "status": "Actual regionleaf data-only xo/ro/so/ovf; token/outputvalid/ACK/load_step/sourcecontext notimplemented; CLOCK/ENGINEtagdebt unbound"
+      "status": "Existing native region is data-only. Separate default-off ROW lease candidate9110 reserves immutable descriptor/version over entire operation; every read explicit accepted query. Integrated64 native reads pass, six protocol mutants plus earlycapture reject. Published seq16 candidate must be superseded by source-bound seq40 before composition. Production posted-write admission/drain, canonical request-mode binding, X/SU/32-source paths and physical interfaces remain open.",
+      "lease_candidate": {
+        "commit": "9110bda97",
+        "path": "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease.sv",
+        "sha256": "6c98b25ec8f4bae81c77a687491485720cd190591a7cd6a817ecd5411b279b34"
+      }
     },
     {
       "name": "VM_band_pockets_ACK",
@@ -96,7 +101,7 @@
         "path": "results/arch/qwen_tp8_cache_ack_1013/recipient_expectation.json",
         "sha256": "8c014aca70b5b1bc4e114111fbc8637edd210adbec755de5a65a12a355ce1dea"
       },
-      "status": "768 TID map is expectation only. New production accepted-IB379/context16/version32/query-mode export and separate cache event toggles implemented in default-off candidates. Full consumer/node/replay drain and real recipient bindings remain open; response capture is not retirement.",
+      "status": "Actual128-bit cache capture is one tile-query obligation; expected768TIDs require16x48 banks. Source-bound seq40 supports conservative2^39 legal query bound. Production acceptedIB guard709/query40b646 and output-identity0c81 are distinct default-off candidates. Actual final TOREG lastissue+46 coherent steps, clear47; declared local drain49 costs2 beyondclear. All numeric936 outputs must deliver, only872 query outputs retire in current fixture. Full node/source/replay/global seals and physical transport remain unbound.",
       "accepted_interface": {
         "commit": "a778c2ba6",
         "path": "results/arch/qwen_tp8_context_interface_1014/interface.json",
@@ -106,6 +111,11 @@
         "commit": "c58d1436e",
         "path": "results/rtl/qwen_xcache_events_1014/interface.json",
         "sha256": "bf1d95f4afcbdfb1b966992334d37dc1cb90ebca3a38694bb5f75cd39f832be2"
+      },
+      "sequence_interface": {
+        "commit": "b646b9303",
+        "path": "results/rtl/qwen_query_sequence40_1014/bound_and_interface.json",
+        "sha256": "af9f88c4d561dd7df01edc05059f991dcfe901e64cf064551451b35b3e3c370b"
       }
     },
     {
@@ -122,15 +132,25 @@
       "name": "delivery_lifetime_component",
       "owner": "/root/qwen_die",
       "receipt": {
-        "commit": "ad6904156",
+        "commit": "f9bb1fc09",
         "path": "results/arch/qwen_delivery_lifetime_1014/receipt.json",
-        "sha256": "d72acf10a7541315842a4da25c52b63ac5614595341fad6b6f2370d55e06f858"
+        "sha256": "eb147d4cab8c62be3211c86890cdb53959369c64af886d7b667e7dc3128d8164"
       },
-      "status": "Default-off held accepted descriptor/VM reservation and ordered recipient ledger; component positive+4 mutants only. 16x192 banks7346Q/root+1985Q control=119521 analytical bits. Actual tile/VM events, seals, clocks, pins and native cost remain unbound."
+      "status": "Default-off component seq40/count7 with16x48 real tile-query banks; two positive cases and10 observed failing mutants. Vector48 concurrent issue/retire events and49 outstanding requests tested. Exact generic census vector4370Q/bank +1985Q controller =71905Q field, 11094ports/bank. Scalar4322Q/bank =71137Q field. No mapped area, clock delivery, assigned pins or native field cost. Scalar768 acceptance reduction still requires actual spatial transport."
+    },
+    {
+      "name": "SU_writer_quiescence",
+      "owner": "/root/qwen_small",
+      "receipt": {
+        "commit": "64e16e88d",
+        "path": "results/rtl/ref_tile/qfd_su_vreduce/writer_quiescent_1014/source_manifest.json",
+        "sha256": "a196b12e7cb8725fbe5773b01d0c2b06e2a6656d72a97b3423460ba5dc0a7cf3"
+      },
+      "status": "Actual IS1 writer_quiescent captures no go/go_q/go_s/e_pend, idle/inactive/inflight0 and no posted VM/reducer/KV writes. SW8 120 accepted component commands,5738 certificate samples/0futurewrites; idle-only mutant513 future-write hazards. Parent must block new/queued admission and separately drain posted buffers/memory commit ACKs. OtherIS conservativelyfalse; no physical/lease composition qualification."
     }
   ],
   "other_open_physical": {
-    "SU_alignment": "4c45b454f fullSW64+regional reducer120 component operations/1117 events/282 tuples, VL7/LMIN15 only. Refavg94.07/dut177.99 and delta36..413; not native image price. Complete16-leaf alignment candidate135168 bits not integrated physical views; future VM external CLOCK/ENGINE debt must rebind.",
+    "SU_alignment": "Actual default-off16 four-lane children integrated in bv_acc baac1408f/evidence eed16e1bd; fullSW64 120component commands/1117events/282tuples exact VL7/CRX2/MC4/ML15. Complete135168 alignmentbits/provisional16x129.6x108 unmeasured. Native CROM5 requires distinct CRX4/MC6/alignment9 proof; future VM external debt must rebind. No full native-image price.",
     "adapter": "Source03afb6d02 proxy candidate externalTX4/R5: measured+16cycles unit proof, generic66575FF/78roots/max9275+8SRAM. Requested1360.8 parentH lacks constructive78-station placement/reach/PG/power; no adoption. Existing8-leaf842.4 parent remains unqualified.",
     "collective_local": "N8/credit32/return517 nativeLOCALn9 gateopen; no oldN4/credit8 alias; UCIeP546+R514 transport simultaneous1060>1024 requires actualserializedrate proof"
   },
