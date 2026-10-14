@@ -385,40 +385,40 @@ module qfd_tt_ctlm_head #(
         .d_su_ready(1'b0), .d_su_idle(1'b0), .d_su_active(1'b0), .d_su_inflight(8'd0), .d_su_progress(16'd0), .d_su_rows(16'd0),
         .c_me_ready(s_me_ready), .c_me_idle(s_me_idle), .c_me_progress(s_me_progress),
         .c_su_ready(), .c_su_idle(), .c_su_progress(), .c_su_rows());
-    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_sd_me_go (.clk(c_me_clk), .rst_n(rrv[6]), .d(c_me_go), .q(u_me_go));
-    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_ready (.clk(c_me_clk), .rst_n(rrv[7]), .d(u_me_ready), .q(c_me_ready));
-    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_idle (.clk(c_me_clk), .rst_n(rrv[2]), .d(u_me_idle), .q(c_me_idle));
-    ot_hdc_delay #(.W(18), .D(1)) u_sd_me_i_nout (.clk(c_me_clk), .rst_n(rrv[3]), .d(c_me_i_nout), .q(u_me_i_nout));
-    ot_hdc_delay #(.W(18), .D(1)) u_sd_me_i_tiles (.clk(c_me_clk), .rst_n(rrv[4]), .d(c_me_i_tiles), .q(u_me_i_tiles));
-    ot_hdc_delay #(.W(18), .D(1)) u_sd_me_i_k (.clk(c_me_clk), .rst_n(rrv[5]), .d(c_me_i_k), .q(u_me_i_k));
-    ot_hdc_delay #(.W(1), .D(1)) u_sd_me_i_wsrc (.clk(c_me_clk), .rst_n(rrv[6]), .d(c_me_i_wsrc), .q(u_me_i_wsrc));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_wbase (.clk(c_me_clk), .rst_n(rrv[7]), .d(c_me_i_wbase), .q(u_me_i_wbase));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_ts (.clk(c_me_clk), .rst_n(rrv[2]), .d(c_me_i_ts), .q(u_me_i_ts));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_ks (.clk(c_me_clk), .rst_n(rrv[3]), .d(c_me_i_ks), .q(u_me_i_ks));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_js (.clk(c_me_clk), .rst_n(rrv[4]), .d(c_me_i_js), .q(u_me_i_js));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_xbase (.clk(c_me_clk), .rst_n(rrv[5]), .d(c_me_i_xbase), .q(u_me_i_xbase));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_xks (.clk(c_me_clk), .rst_n(rrv[6]), .d(c_me_i_xks), .q(u_me_i_xks));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_xjs (.clk(c_me_clk), .rst_n(rrv[7]), .d(c_me_i_xjs), .q(u_me_i_xjs));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_xcs (.clk(c_me_clk), .rst_n(rrv[2]), .d(c_me_i_xcs), .q(u_me_i_xcs));
-    ot_hdc_delay #(.W(3), .D(1)) u_sd_me_i_jsh (.clk(c_me_clk), .rst_n(rrv[3]), .d(c_me_i_jsh), .q(u_me_i_jsh));
-    ot_hdc_delay #(.W(4), .D(1)) u_sd_me_i_split (.clk(c_me_clk), .rst_n(rrv[4]), .d(c_me_i_split), .q(u_me_i_split));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_wcs (.clk(c_me_clk), .rst_n(rrv[5]), .d(c_me_i_wcs), .q(u_me_i_wcs));
-    ot_hdc_delay #(.W(1), .D(1)) u_sd_me_i_round (.clk(c_me_clk), .rst_n(rrv[6]), .d(c_me_i_round), .q(u_me_i_round));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_obase (.clk(c_me_clk), .rst_n(rrv[7]), .d(c_me_i_obase), .q(u_me_i_obase));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_ots (.clk(c_me_clk), .rst_n(rrv[2]), .d(c_me_i_ots), .q(u_me_i_ots));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_ojs (.clk(c_me_clk), .rst_n(rrv[3]), .d(c_me_i_ojs), .q(u_me_i_ojs));
-    ot_hdc_delay #(.W(1), .D(1)) u_sd_me_i_mmode (.clk(c_me_clk), .rst_n(rrv[4]), .d(c_me_i_mmode), .q(u_me_i_mmode));
-    ot_hdc_delay #(.W(1), .D(1)) u_sd_me_i_oen (.clk(c_me_clk), .rst_n(rrv[5]), .d(c_me_i_oen), .q(u_me_i_oen));
-    ot_hdc_delay #(.W(1), .D(1)) u_sd_me_i_amax (.clk(c_me_clk), .rst_n(rrv[6]), .d(c_me_i_amax), .q(u_me_i_amax));
-    ot_hdc_delay #(.W(1), .D(1)) u_sd_me_i_rmax (.clk(c_me_clk), .rst_n(rrv[7]), .d(c_me_i_rmax), .q(u_me_i_rmax));
-    ot_hdc_delay #(.W(24), .D(1)) u_sd_me_i_mbase (.clk(c_me_clk), .rst_n(rrv[2]), .d(c_me_i_mbase), .q(u_me_i_mbase));
-    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_wrom_re (.clk(c_me_clk), .rst_n(rrv[3]), .d(u_me_wrom_re), .q(c_me_wrom_re));
-    ot_hdc_delay #(.W(24), .D(1)) u_su_me_wrom_addr (.clk(c_me_clk), .rst_n(rrv[4]), .d(u_me_wrom_addr), .q(c_me_wrom_addr));
-    ot_hdc_delay #(.W(18), .D(1)) u_su_me_am_idx (.clk(c_me_clk), .rst_n(rrv[5]), .d(u_me_am_idx), .q(c_me_am_idx));
-    ot_hdc_delay #(.W(32), .D(1)) u_su_me_am_val (.clk(c_me_clk), .rst_n(rrv[6]), .d(u_me_am_val), .q(c_me_am_val));
-    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_am_any (.clk(c_me_clk), .rst_n(rrv[7]), .d(u_me_am_any), .q(c_me_am_any));
-    ot_hdc_delay #(.W(16), .D(1), .RESET(1)) u_su_me_progress (.clk(c_me_clk), .rst_n(rrv[2]), .d(u_me_progress), .q(c_me_progress));
-    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_fault (.clk(c_me_clk), .rst_n(rrv[3]), .d(u_me_fault), .q(c_me_fault));
+    ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_sd_me_go (.clk(clk), .en(me_clk_en), .rst_n(rrv[6]), .d(c_me_go), .q(u_me_go));
+    ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_su_me_ready (.clk(clk), .en(me_clk_en), .rst_n(rrv[7]), .d(u_me_ready), .q(c_me_ready));
+    ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_su_me_idle (.clk(clk), .en(me_clk_en), .rst_n(rrv[2]), .d(u_me_idle), .q(c_me_idle));
+    ot_tt_ce_delay #(.W(18), .D(1)) u_sd_me_i_nout (.clk(clk), .en(me_clk_en), .rst_n(rrv[3]), .d(c_me_i_nout), .q(u_me_i_nout));
+    ot_tt_ce_delay #(.W(18), .D(1)) u_sd_me_i_tiles (.clk(clk), .en(me_clk_en), .rst_n(rrv[4]), .d(c_me_i_tiles), .q(u_me_i_tiles));
+    ot_tt_ce_delay #(.W(18), .D(1)) u_sd_me_i_k (.clk(clk), .en(me_clk_en), .rst_n(rrv[5]), .d(c_me_i_k), .q(u_me_i_k));
+    ot_tt_ce_delay #(.W(1), .D(1)) u_sd_me_i_wsrc (.clk(clk), .en(me_clk_en), .rst_n(rrv[6]), .d(c_me_i_wsrc), .q(u_me_i_wsrc));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_wbase (.clk(clk), .en(me_clk_en), .rst_n(rrv[7]), .d(c_me_i_wbase), .q(u_me_i_wbase));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_ts (.clk(clk), .en(me_clk_en), .rst_n(rrv[2]), .d(c_me_i_ts), .q(u_me_i_ts));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_ks (.clk(clk), .en(me_clk_en), .rst_n(rrv[3]), .d(c_me_i_ks), .q(u_me_i_ks));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_js (.clk(clk), .en(me_clk_en), .rst_n(rrv[4]), .d(c_me_i_js), .q(u_me_i_js));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_xbase (.clk(clk), .en(me_clk_en), .rst_n(rrv[5]), .d(c_me_i_xbase), .q(u_me_i_xbase));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_xks (.clk(clk), .en(me_clk_en), .rst_n(rrv[6]), .d(c_me_i_xks), .q(u_me_i_xks));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_xjs (.clk(clk), .en(me_clk_en), .rst_n(rrv[7]), .d(c_me_i_xjs), .q(u_me_i_xjs));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_xcs (.clk(clk), .en(me_clk_en), .rst_n(rrv[2]), .d(c_me_i_xcs), .q(u_me_i_xcs));
+    ot_tt_ce_delay #(.W(3), .D(1)) u_sd_me_i_jsh (.clk(clk), .en(me_clk_en), .rst_n(rrv[3]), .d(c_me_i_jsh), .q(u_me_i_jsh));
+    ot_tt_ce_delay #(.W(4), .D(1)) u_sd_me_i_split (.clk(clk), .en(me_clk_en), .rst_n(rrv[4]), .d(c_me_i_split), .q(u_me_i_split));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_wcs (.clk(clk), .en(me_clk_en), .rst_n(rrv[5]), .d(c_me_i_wcs), .q(u_me_i_wcs));
+    ot_tt_ce_delay #(.W(1), .D(1)) u_sd_me_i_round (.clk(clk), .en(me_clk_en), .rst_n(rrv[6]), .d(c_me_i_round), .q(u_me_i_round));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_obase (.clk(clk), .en(me_clk_en), .rst_n(rrv[7]), .d(c_me_i_obase), .q(u_me_i_obase));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_ots (.clk(clk), .en(me_clk_en), .rst_n(rrv[2]), .d(c_me_i_ots), .q(u_me_i_ots));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_ojs (.clk(clk), .en(me_clk_en), .rst_n(rrv[3]), .d(c_me_i_ojs), .q(u_me_i_ojs));
+    ot_tt_ce_delay #(.W(1), .D(1)) u_sd_me_i_mmode (.clk(clk), .en(me_clk_en), .rst_n(rrv[4]), .d(c_me_i_mmode), .q(u_me_i_mmode));
+    ot_tt_ce_delay #(.W(1), .D(1)) u_sd_me_i_oen (.clk(clk), .en(me_clk_en), .rst_n(rrv[5]), .d(c_me_i_oen), .q(u_me_i_oen));
+    ot_tt_ce_delay #(.W(1), .D(1)) u_sd_me_i_amax (.clk(clk), .en(me_clk_en), .rst_n(rrv[6]), .d(c_me_i_amax), .q(u_me_i_amax));
+    ot_tt_ce_delay #(.W(1), .D(1)) u_sd_me_i_rmax (.clk(clk), .en(me_clk_en), .rst_n(rrv[7]), .d(c_me_i_rmax), .q(u_me_i_rmax));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_mbase (.clk(clk), .en(me_clk_en), .rst_n(rrv[2]), .d(c_me_i_mbase), .q(u_me_i_mbase));
+    ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_su_me_wrom_re (.clk(clk), .en(me_clk_en), .rst_n(rrv[3]), .d(u_me_wrom_re), .q(c_me_wrom_re));
+    ot_tt_ce_delay #(.W(24), .D(1)) u_su_me_wrom_addr (.clk(clk), .en(me_clk_en), .rst_n(rrv[4]), .d(u_me_wrom_addr), .q(c_me_wrom_addr));
+    ot_tt_ce_delay #(.W(18), .D(1)) u_su_me_am_idx (.clk(clk), .en(me_clk_en), .rst_n(rrv[5]), .d(u_me_am_idx), .q(c_me_am_idx));
+    ot_tt_ce_delay #(.W(32), .D(1)) u_su_me_am_val (.clk(clk), .en(me_clk_en), .rst_n(rrv[6]), .d(u_me_am_val), .q(c_me_am_val));
+    ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_su_me_am_any (.clk(clk), .en(me_clk_en), .rst_n(rrv[7]), .d(u_me_am_any), .q(c_me_am_any));
+    ot_tt_ce_delay #(.W(16), .D(1), .RESET(1)) u_su_me_progress (.clk(clk), .en(me_clk_en), .rst_n(rrv[2]), .d(u_me_progress), .q(c_me_progress));
+    ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_su_me_fault (.clk(clk), .en(me_clk_en), .rst_n(rrv[3]), .d(u_me_fault), .q(c_me_fault));
     assign cmd = {u_me_i_mbase, u_me_i_rmax, u_me_i_amax, u_me_i_oen, u_me_i_mmode, u_me_i_ojs, u_me_i_ots, u_me_i_obase, u_me_i_round, u_me_i_wcs, u_me_i_split, u_me_i_jsh, u_me_i_xcs, u_me_i_xjs, u_me_i_xks, u_me_i_xbase, u_me_i_js, u_me_i_ks, u_me_i_ts, u_me_i_wbase, u_me_i_wsrc, u_me_i_k, u_me_i_tiles, u_me_i_nout, u_me_go};
     assign {u_me_fault, u_me_progress, u_me_am_any, u_me_am_val, u_me_am_idx, u_me_wrom_addr, u_me_wrom_re, u_me_idle, u_me_ready} = ret;
     ot_hdc_delay #(.W(1),.D(OS),.RESET(1)) u_os_fin (.clk(clk),.rst_n(rsv[4]),.d(m_fin),.q(m_fin_o));
@@ -760,4 +760,23 @@ module ot_qfd_tt_ctlm_split #(
         .kv_ok(kv_ok),
         .kv_write_drained(kv_write_drained),
         .cmd(cmd),.ret(ret));
+endmodule
+
+// Edge-equivalent form of an enabled-clock delay line. Only head station
+// registers use it; the complete engine retains native local clock gating.
+module ot_tt_ce_delay #(parameter integer W=1,D=1,RESET=0)(
+ input wire clk,rst_n,en,input wire [W-1:0] d,output wire [W-1:0] q);
+ generate if(D==0) begin:g_wire
+  assign q=d;
+ end else begin:g_pipe
+  reg [W-1:0] r[0:D-1];integer k;
+  if(RESET!=0) begin:g_reset
+   always @(posedge clk or negedge rst_n)
+    if(!rst_n) begin for(k=0;k<D;k=k+1) r[k]<=0;end
+    else if(en) begin r[0]<=d;for(k=1;k<D;k=k+1) r[k]<=r[k-1];end
+  end else begin:g_data
+   always @(posedge clk) if(en) begin r[0]<=d;for(k=1;k<D;k=k+1) r[k]<=r[k-1];end
+  end
+  assign q=r[D-1];
+ end endgenerate
 endmodule

@@ -3,7 +3,7 @@
  "block": "qfd_tt_ctlm_tree",
  "ref_tile": true,
  "owner": "Codex:qwen-tt-split",
- "purpose": "Independent-root full-width tree structural candidate; original full operation fields and 18-bit rows remain. NOT authorized adoption until idle-gating power tradeoff measured/reviewed.",
+ "purpose": "Native idle/supply-preserving controller/tree split with engine-local pruned gate predictor; full TP8 fields/18-bit rows; no clock/enable forwarding and zero added station stages. Production behavior must pass strict flat33975 comparison before routes.",
  "threads": 8,
  "peak_ram_gb": 12,
  "source": {
@@ -19,7 +19,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_tt_ctlm_tree #(.G(3072), .PSRAM(1), .HQ2(1), .MEREG(3), .RRG(1), .PCUT(1), .AUD(34039)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qfd_tt_ctlm_split.sv rtl/physical/ot_qfd_tt_ctlm_slot.sv rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm_tp8.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/qwen_sys/redesign_qwen/ot_qfd_tt_split.sv rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_qwen_me_spine_h_w12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i.sv rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fp.sv rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v rtl/hdc/ot_hdc_dyn_ttiles.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_cg.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_tt_ctlm_tree #(.G(3072), .PSRAM(1), .HQ2(1), .MEREG(3), .RRG(1), .PCUT(1), .AUD(33975)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qfd_tt_ctlm_split.sv rtl/physical/ot_qfd_tt_ctlm_slot.sv rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm_tp8.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/qwen_sys/redesign_qwen/ot_qfd_tt_split.sv rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_qwen_me_spine_h_w12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i.sv rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fp.sv rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v rtl/hdc/ot_hdc_dyn_ttiles.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_cg.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -74,7 +74,7 @@
    "peak_ram_gb": 12
   },
   "collect": {
-   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tt_ctlm_tree --out {RUN}/record/views/qfd_tt_ctlm_tree --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tt_ctlm_tree --out {RUN}/record/views/qfd_tt_ctlm_tree --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
   }
  },
  "verdict": {
@@ -91,7 +91,8 @@
    "physical/common_flow/link_budget_consistent.sdc"
   ],
   "macros": [
-   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
   ]
  },
  "hold_eco": {

@@ -39,7 +39,7 @@
   "MEREG": 3,
   "RRG": 1,
   "PCUT": 1,
-  "AUD": 34039
+  "AUD": 33975
  },
  "clock_port": "clk",
  "reset_ports": [
@@ -52,41 +52,11 @@
  "layer_cap": "M5",
  "pins": {
   "S": [
-   "h_start",
-   "pos",
-   "pw_v",
-   "pw_data",
-   "me_mem_ok",
-   "m_fval_o",
-   "kvd_v",
-   "kvd_ks",
-   "kvd_split",
-   "kvd_k",
-   "kvd_pos"
-  ],
-  "N": [
-   "cmd",
-   "ret"
-  ],
-  "W": [
    "clk",
-   "rst_n",
+   "token",
+   "pw_addr",
    "x_oidle",
    "x_oprog",
-   "kv_ok",
-   "m_fin_o",
-   "me_clk_en",
-   "kvd_wbase",
-   "kvd_js",
-   "kvd_jsh",
-   "kvd_nout"
-  ],
-  "E": [
-   "token",
-   "prog_base",
-   "pw_addr",
-   "x_oacc",
-   "x_orows",
    "kv_write_drained",
    "m_fidx_o",
    "c_fault",
@@ -94,152 +64,182 @@
    "kvd_wcs",
    "kvd_tiles",
    "kvd_kindk"
+  ],
+  "N": [
+   "rst_n",
+   "pos",
+   "pw_data",
+   "kv_ok",
+   "m_fin_o",
+   "me_clk_en",
+   "kvd_v",
+   "kvd_ks",
+   "kvd_split",
+   "kvd_k",
+   "kvd_pos"
+  ],
+  "W": [
+   "h_start",
+   "prog_base",
+   "pw_v",
+   "x_oacc",
+   "x_orows",
+   "me_mem_ok",
+   "m_fval_o",
+   "kvd_wbase",
+   "kvd_js",
+   "kvd_jsh",
+   "kvd_nout"
+  ],
+  "E": [
+   "cmd",
+   "ret"
   ]
  },
  "pin_ranges": {
   "cmd": [
-   10,
-   54
+   40,
+   84
   ],
   "ret": [
-   65,
-   77
+   92,
+   104
   ],
   "clk": [
-   8,
-   9
+   6.0,
+   7.5
   ],
   "rst_n": [
-   13,
-   14
+   6.0,
+   7.5
   ],
   "h_start": [
    6.0,
    7.5
   ],
   "token": [
-   6.0,
-   7.98
+   9.5,
+   11.48
   ],
   "pos": [
    9.5,
    11.48
   ],
   "prog_base": [
-   9.98,
-   11.48
+   9.5,
+   11.0
   ],
   "pw_v": [
-   13.48,
-   14.98
+   13.0,
+   14.5
   ],
   "pw_addr": [
    13.48,
    14.98
   ],
   "pw_data": [
-   16.98,
-   24.02
+   13.48,
+   20.52
   ],
   "x_oacc": [
-   16.98,
-   19.62
+   16.5,
+   19.14
   ],
   "x_oidle": [
-   18.0,
-   19.5
+   16.98,
+   18.48
   ],
   "x_oprog": [
-   21.5,
-   23.26
+   20.48,
+   22.24
   ],
   "x_orows": [
-   21.62,
-   23.38
+   21.14,
+   22.9
   ],
   "kv_ok": [
-   25.26,
-   26.76
+   22.52,
+   24.02
   ],
   "kv_write_drained": [
-   25.38,
-   26.88
+   24.24,
+   25.74
   ],
   "me_mem_ok": [
+   24.9,
+   26.4
+  ],
+  "m_fin_o": [
    26.02,
    27.52
   ],
-  "m_fin_o": [
-   28.76,
-   30.26
-  ],
   "m_fidx_o": [
-   28.88,
-   30.86
+   27.74,
+   29.72
   ],
   "m_fval_o": [
-   29.52,
-   33.04
+   28.4,
+   31.92
   ],
   "me_clk_en": [
-   32.26,
-   33.76
+   29.52,
+   31.02
   ],
   "c_fault": [
-   32.86,
-   34.36
+   31.72,
+   33.22
   ],
   "kvd_v": [
-   35.04,
-   36.54
+   33.02,
+   34.52
   ],
   "kvd_wbase": [
-   35.76,
-   38.4
+   33.92,
+   36.56
   ],
   "kvd_ts": [
-   36.36,
-   39.0
+   35.22,
+   37.86
   ],
   "kvd_ks": [
-   38.54,
-   41.18
+   36.52,
+   39.16
   ],
   "kvd_js": [
-   40.4,
-   43.04
+   38.56,
+   41.2
   ],
   "kvd_wcs": [
-   41.0,
-   43.64
+   39.86,
+   42.5
   ],
   "kvd_split": [
-   43.18,
-   44.68
+   41.16,
+   42.66
   ],
   "kvd_jsh": [
-   45.04,
-   46.54
+   43.2,
+   44.7
   ],
   "kvd_tiles": [
-   45.64,
-   47.62
+   44.5,
+   46.48
   ],
   "kvd_k": [
-   46.68,
-   48.66
+   44.66,
+   46.64
   ],
   "kvd_nout": [
-   48.54,
-   50.52
+   46.7,
+   48.68
   ],
   "kvd_kindk": [
-   49.62,
-   51.12
+   48.48,
+   49.98
   ],
   "kvd_pos": [
-   50.66,
-   52.64
+   48.64,
+   50.62
   ]
  },
  "macros": [
@@ -275,12 +275,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "slot_change_request": "Candidate controller/tree split below qfd_tt_ctlm in existing 475.2-square slot; independent roots, no parent flops/CTS/forwarded clock. qfd_tt_ctlm_head candidate outline {'w': 237.6, 'h': 237.6}, N/S facing cmd380+ret95 seam at matching x10..54/65..77um. Provisional other pins pending die top-down assignment. Existing DCU2/DUC2 split one enabled register per child, zero added stages. AUD64 supply-only local ICG candidate pending owner power review; NOT adopted production view. Head2programSRAMs, tree4tagSRAMs, complete TP8 G3072/18-bit operation fields preserved. Parent qfd_tt_ctlm_s source is wires-only with ck_head and ck_tree; head at(0,0),tree at(0,259.2),parent259.2x475.2 inside originalslot.",
+ "slot_change_request": "Native-AUD33975 independent-root split below qfd_tt_ctlm. Existing DCU2/DUC2 distributed one stage per leaf: zero new station edges. Engine native local clock enable comes from synthesis-pruned duplicate controller predictor, with its OWN two explicitly accounted program SRAMs and direct duplicated head input pins. No clock or enable is forwarded, no shared parent CTS, no idle-gate waiver. Actual issuing head retains FULL operation fields/18-bit rows and original TP8 G3072 tree/tag stores. Candidate parent layout648x280.8: head237.6square at(0,0),tree388.8x280.8 at(259.2,0),21.6um channel. Requires actual original475.2square slot revision; interim seam pins headE/treeW at40..84(cmd380),92..104(ret95), other pins provisional pending top-down die assignment. This replaces the failed AUD64 candidate, which is NOT submitted/adopted.",
  "job": {
   "owner": "Codex:qwen-tt-split",
   "branch": "claude/el1013-qwen-r3b-host",
   "tag": "split1",
-  "purpose": "Independent-root controller/tree structural candidate; original full operation fields and 18-bit rows remain. NOT authorized adoption until idle-gating power tradeoff measured/reviewed.",
+  "purpose": "Native idle/supply-preserving controller/tree split with engine-local pruned gate predictor; full TP8 fields/18-bit rows; no clock/enable forwarding and zero added station stages. Production behavior must pass strict flat33975 comparison before routes.",
   "extra_paths": [
    "physical/qfd_tt_ctlm_split",
    "rtl/test/tb_qfd_tt_ctlm_i_psram.sv",

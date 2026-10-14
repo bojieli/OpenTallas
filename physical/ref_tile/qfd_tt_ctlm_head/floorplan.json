@@ -16,7 +16,7 @@
   235.44
  ],
  "why": "spec outline",
- "std_area_um2": 2800.0,
+ "std_area_um2": 3000.0,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -30,41 +30,11 @@
  },
  "pins": {
   "S": [
-   "h_start",
-   "pos",
-   "pw_v",
-   "pw_data",
-   "me_mem_ok",
-   "m_fval_o",
-   "kvd_v",
-   "kvd_ks",
-   "kvd_split",
-   "kvd_k",
-   "kvd_pos"
-  ],
-  "N": [
-   "cmd",
-   "ret"
-  ],
-  "W": [
    "clk",
-   "rst_n",
+   "token",
+   "pw_addr",
    "x_oidle",
    "x_oprog",
-   "kv_ok",
-   "m_fin_o",
-   "me_clk_en",
-   "kvd_wbase",
-   "kvd_js",
-   "kvd_jsh",
-   "kvd_nout"
-  ],
-  "E": [
-   "token",
-   "prog_base",
-   "pw_addr",
-   "x_oacc",
-   "x_orows",
    "kv_write_drained",
    "m_fidx_o",
    "c_fault",
@@ -72,6 +42,36 @@
    "kvd_wcs",
    "kvd_tiles",
    "kvd_kindk"
+  ],
+  "N": [
+   "rst_n",
+   "pos",
+   "pw_data",
+   "kv_ok",
+   "m_fin_o",
+   "me_clk_en",
+   "kvd_v",
+   "kvd_ks",
+   "kvd_split",
+   "kvd_k",
+   "kvd_pos"
+  ],
+  "W": [
+   "h_start",
+   "prog_base",
+   "pw_v",
+   "x_oacc",
+   "x_orows",
+   "me_mem_ok",
+   "m_fval_o",
+   "kvd_wbase",
+   "kvd_js",
+   "kvd_jsh",
+   "kvd_nout"
+  ],
+  "E": [
+   "cmd",
+   "ret"
   ]
  },
  "clock_port": "clk",

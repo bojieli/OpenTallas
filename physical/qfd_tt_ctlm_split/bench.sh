@@ -8,14 +8,14 @@ import re,sys
 from pathlib import Path
 s=Path('rtl/test/tb_qfd_tt_ctlm_i_psram.sv').read_text()
 u1=re.search(r'    ot_qfd_tt_ctlm_i #\([^\n]*\) u1 \(.*?\);',s,re.S).group()
-if sys.argv[2] in ('strict','power'):
+if sys.argv[2] in ('strict','strict_argmax','power'):
  ref=u1.replace(' u1 (',' u0 (')
  ref=re.sub(r'(\w+)_1\b',r'\1_0',ref)
  ref=ref.replace('.AUD(U1_AUD)', '.AUD(U1_AUD)')
  s=re.sub(r'    ot_qfd_tt_ctlm_i #\([^\n]*\) u0 \(.*?\);',lambda _:ref,s,flags=re.S)
 sp=u1.replace('ot_qfd_tt_ctlm_i #','ot_qfd_tt_ctlm_split #',1).replace('.clk(clk)','.ck_head(clk), .ck_tree(clk)')
 s=s.replace(u1,sp)
-if sys.argv[2]=='strict':
+if sys.argv[2] in ('strict','strict_argmax'):
  s=s.replace('if (TXN == 0 && (out_mismatch || pq_mismatch))', 'if (out_mismatch || pq_mismatch)')
 s=s.replace('u1.u_ctrl_me','u1.u_head.u_ctrl_me').replace('u1.prog_q','u1.u_head.prog_q')
 if sys.argv[2]=='power':
@@ -40,7 +40,7 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}; [ -
 D=""; [ "$MUT" = mut ] && D="-DOT_TT_SPLIT_MUT"
 case "$MODE" in
  strict) CV="-GNCYC=60000 -GPCOV=1 -GCOVMASK=16254821 -GMINEV=3 -GTXN=1 -GDBGTX=0" ;;
- argmax) CV="-GNCYC=20000 -GCOVMASK=2 -GMINEV=5 -GTXN=1" ;;
+ argmax|strict_argmax) CV="-GNCYC=20000 -GCOVMASK=2 -GMINEV=5 -GTXN=1" ;;
  *) CV="-GNCYC=60000 -GPCOV=1 -GCOVMASK=16254821 -GMINEV=3 -GTXN=1" ;;
 esac
 "$V" --binary --timing -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -CFLAGS -O1 --x-assign fast --x-initial fast \

@@ -39,6 +39,10 @@ head+='    assign {'+', '.join('u_me_'+n for n in reversed(retnames))+'} = ret;\
 head+='    ot_hdc_delay #(.W(1),.D(OS),.RESET(1)) u_os_fin (.clk(clk),.rst_n(rsv[4]),.d(m_fin),.q(m_fin_o));\n'
 a=body.index('    ot_hdc_delay #(.W(18 + 32)');b=body.index('    ot_qfd_tt_ctl #',a)
 head+=body[a:b]
+# Native clock-gated station updates become equivalent synchronous enables
+# on the head's one root. The controller state already runs on this root.
+# The pre-edge registered enable is exactly the ICG's sampled enable.
+head=re.sub(r'ot_hdc_delay([^;]+?)\.clk\(c_me_clk\)',lambda m:'ot_tt_ce_delay'+m[1]+'.clk(clk), .en(me_clk_en)',head)
 # Preserve native enable phase with a local controller shadow, not an enable
 # arriving over a cross-tile combinational path. Only me_clk_en is live on
 # the shadow: synthesis prunes unused data/argmax/descriptor state. Its two
@@ -95,6 +99,26 @@ text+=param.replace('ot_qfd_tt_ctlm_i','ot_qfd_tt_ctlm_split',1)+') (\n'+',\n'.j
 for module,names,clock in [('qfd_tt_ctlm_head',headnames,'ck_head'),('qfd_tt_ctlm_tree',treenames,'ck_tree')]:
  text+='    '+module+' #('+', '.join(f'.{p}({p})' for p in params)+') u_'+('head' if 'head' in module else 'tree')+' (\n'+',\n'.join(f'        .{n}({clock if n=="clk" else n})' for n in names)+',\n        .cmd(cmd),.ret(ret));\n'
 text+='endmodule\n'
+text+='''
+// Edge-equivalent form of an enabled-clock delay line. Only head station
+// registers use it; the complete engine retains native local clock gating.
+module ot_tt_ce_delay #(parameter integer W=1,D=1,RESET=0)(
+ input wire clk,rst_n,en,input wire [W-1:0] d,output wire [W-1:0] q);
+ generate if(D==0) begin:g_wire
+  assign q=d;
+ end else begin:g_pipe
+  reg [W-1:0] r[0:D-1];integer k;
+  if(RESET!=0) begin:g_reset
+   always @(posedge clk or negedge rst_n)
+    if(!rst_n) begin for(k=0;k<D;k=k+1) r[k]<=0;end
+    else if(en) begin r[0]<=d;for(k=1;k<D;k=k+1) r[k]<=r[k-1];end
+  end else begin:g_data
+   always @(posedge clk) if(en) begin r[0]<=d;for(k=1;k<D;k=k+1) r[k]<=r[k-1];end
+  end
+  assign q=r[D-1];
+ end endgenerate
+endmodule
+'''
 Path('rtl/physical/ot_qfd_tt_ctlm_split.sv').write_text(text)
 Path('physical/qfd_tt_ctlm_split/seam.json').write_text(json.dumps({'command_bits':CW,'return_bits':RW,'command_lsb_first':dict(zip(cmdnames,cmdwidth)),'return_lsb_first':dict(zip(retnames,retwidth)),'station_cycles':{'head_launch':1,'tree_capture':1,'tree_launch':1,'head_capture':1},'original_DCU':2,'original_DUC':2,'added_station_cycles':0,'clock':'independent roots/native MEREG3 ICGs with tree-local pruned controller shadow; no clock or enable forwarding'},indent=1)+'\n')
 print(CW,RW,headnames,treenames)
