@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.quant_sfu.actual_inventory.v1",
-  "source": "b415845f8",
+  "source": "aaf4341d7",
   "current_required_contract": "r25gq v12; dielead owns new v13 actualassignment",
   "quant": {
     "master": "ot_hgi_qdq_q_pin4",
@@ -189,7 +189,7 @@
     ],
     "existing_overlap_pairs": [],
     "actual_native_proof": {
-      "source": "3430b8aac",
+      "source": "ffd1a0692",
       "common_VM": "64fced1f9",
       "phases": [
         61,
@@ -199,23 +199,106 @@
       "records": 32,
       "cycles": 184,
       "price": 168,
+      "all_client_VM_drains": 32,
+      "all_quadrant_record_drains": 4,
+      "mutants": "header0doneFAIL; assembly11592wrongFAIL",
+      "scope": "heldgrants; release/globalmirror notqualified",
       "physical_parent_fit": "OPEN"
     },
     "current_boundary_candidate": {
-      "source": "90b0971bf",
-      "FRONTFAST": 2,
-      "FINFLAGS": 1,
+      "source": "aaf4341d7",
+      "FRONTFAST": 3,
       "FASTFIN": 1,
+      "WRSPLIT": 1,
       "DRAIN": 1,
-      "phase61": "13,312exactwords184/168+all32drains; phase487/mutantsrunning",
-      "fast_payload": "CLOSEDbody129.6x71.28 but1bitQ224.6>220; newreal peroutputkeptFF variantchildowned",
-      "retire": "CLOSED172.8x103.68,P153.3/Q208.7,R299.2TT239.5FF spread28.2",
-      "general": "originalCLOSED86.4x71.28,P154.4/Q217.6,R139.1TT",
-      "CORE": "newFIN1maskbody86.4x77.76 CTS4132sinksTT140.4spread13.9; actualexportP190/Q220pending",
-      "WR": "oldmonolithic ACKflags gate rawinputnegFF-258ps; notrouted; newPAY259.2x125.28/FIN86.4x86.4 sourceb874 childowned, snapshot/actualcommits split; actualproductionintegrationnext"
+      "native_proof": "running unique faceaaf immutabletree; ffd FRONTFAST2 evidence retained",
+      "front": {
+        "fast": {
+          "master": "ot_hgi_qdq_fr_one_payload_face",
+          "shape": [
+            129.6,
+            71.28
+          ],
+          "P_ps": 149.9,
+          "Q_ps": 216.5,
+          "R_TT_ps": 198.1
+        },
+        "retire": {
+          "master": "ot_hgi_qdq_fr_capture_retire",
+          "shape": [
+            172.8,
+            103.68
+          ],
+          "P_ps": 153.3,
+          "Q_ps": 208.7,
+          "R_TT_ps": 299.2
+        },
+        "general": {
+          "master": "ot_hgi_qdq_fr",
+          "shape": [
+            86.4,
+            71.28
+          ],
+          "P_ps": 154.4,
+          "Q_ps": 217.6,
+          "R_TT_ps": 139.1
+        },
+        "relative_template_only": [
+          259.2,
+          293.76
+        ],
+        "absolute_slot": null
+      },
+      "CORE": {
+        "master": "ot_hgi_qdq_core FIN1mask distinctsource90b0971bf",
+        "shape": [
+          86.4,
+          77.76
+        ],
+        "CTS_sinks": 4132,
+        "R_TT_ps": 140.4,
+        "spread_ps": 13.9,
+        "actual_pin_audit": "pending"
+      },
+      "PAY": {
+        "master": "ot_hgi_qdq_wr_pay",
+        "shape": [
+          259.2,
+          125.28
+        ],
+        "route": "p3-94e699311 baseTT31.57FF9.20DRC4 daemonfinishing",
+        "pin_audit": "pending"
+      },
+      "FIN": {
+        "master": "ot_hgi_qdq_wr_fin",
+        "f2_shape": [
+          86.4,
+          86.4
+        ],
+        "f2_defect": "all8ACK P216.2>190",
+        "f3_source": "25308c5de",
+        "f3_route": "TT104.6FF29.49 awaitingterminalexport/pins",
+        "f4_source": "ade8bbe1d",
+        "f4_shape": [
+          54,
+          54
+        ],
+        "f4_CTS": "1206sinks R110.4spread7.9",
+        "actual_slot": null
+      }
     },
     "clock": "Each actualphysicalleaf needs separate phi-R delivery entry; softwarelogicalclk ties are not a physicalclocktree",
-    "M6_PORT": "No newgrant claimed; CLOSEDdecoder M6 bodies stand"
+    "M6_PORT": "No newgrant claimed; CLOSEDdecoder M6 bodies stand",
+    "geometry_status": "OPEN: dielead22f1ff348 bounded clear-site search found no622.08x596.16 envelope; inherited site overlaps14 actualv13 children.",
+    "literal_outer_peer_binding": {
+      "current_proof": "tb_hgi_qdq_native_peer4: rec and rst_n driven testfixture; ret consumed exactscoreboard. This is not physicalCP/FUSED peer binding.",
+      "native_endpoint_path": "ot_hgi_qdq_native_peer4_drain.g_quad[q].endpoint; exactsourcefile has actualinstance label",
+      "candidate_semantic_record_producer": "ot_hgi_fused_record q_rec registered683bits -> ot_hgi_fused_station.u_q (ot_hgi_quant_unit, notqpin4); sourceABI reference only, no instantiated native4successor",
+      "production_qpin4_rec_peer": null,
+      "production_qpin4_reset_driver": null,
+      "production_qpin4_ret_peer": null,
+      "required_action": "sourceowned native recorddispatch/reset/returnbinding and actual\u03c6-R clockpin positions before relocationgrant"
+    }
   },
   "sfu": {
     "required_parent_outline_um": [
@@ -229,13 +312,14 @@
       "FF_R": 268.9
     },
     "mapper": "16xruntime lane_j mapper; m2CLOSEDbut1bitQ222.7>220 and26/657 actual setup pairs fail. M5pinw103.68x54 allmappedoutputsW gatep2refusedbadslotcitation; requires actualdieleadslotchange string, noM6grant",
-    "controller": "child real c12 N16, BS1/RET5 plusmapper4 andCLOSED b_q1/LEAF1, frozenwordoracle15090exactwrites/39193checks; VM0/NONE/EXP/SIGM/SILU alternative only; nativecache/groupassignment/ACKdrain/productionprice open",
+    "controller": "four-root actualfrozenwordoracle sourcefbc154dfd PASS39193cyclechecks/1026emits/192desc/15090words+warmreset; statusfaultalignment/nativecache/credits/pricing open",
     "new_control_roots": "Full276 future75/retire60 bits chronological138chunks: 10350,10350,8280,8280 dataFF ownroots; proposed4x216x172.8 M5slotsunassigned; no monolithic52kroot route",
     "model_paths": [
       "results/arch/hbm_native_1013/uncovered_structural_2240/sfu_quarter_composition_request.json",
       "results/arch/hbm_native_1013/uncovered_structural_2240/sfu_mapper_lane_actual_pairs.json"
     ],
-    "source_owner": "/root/hbm_quant_sfu_2240/sfu_native_quarter"
+    "source_owner": "/root/hbm_quant_sfu_2240/sfu_native_quarter",
+    "CTS_blocker": "sharedhelper3b78725cd rootserialpublication pending; cap0 currentlyinvalid beforecompute, no synth running"
   },
   "OV_alternative": "Unselected WQ3; RFsharedregisteredpayload and4META source625 leafroutes; lgr/lgw existingM5facecut~.75 unsignedM6PORT alternative notaccepted; M5 taller/privateRQsource alternative modeling next, no invalidparentroute",
   "live_handles": [
