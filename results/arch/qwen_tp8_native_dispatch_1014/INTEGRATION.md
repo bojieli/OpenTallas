@@ -70,3 +70,7 @@ Admitted ot-run unit `oth-ubuntu-227215-1791955264` on ot-agidock128 (2GB/1threa
 
 
 The dispatcher exports `descriptor_native` (NEXT wake identity) and `accepted_provider_native` (last accepted operation status ownership). The native/ROM request pulses identify exact acceptance. Tree-local predictor and issuing head must consume both metadata signals aligned to the corresponding existing command/return station epochs; the router does not itself implement the split's DCU/DUC transport. Metadata assertions passed admitted unit `oth-ubuntu-236401-1791955386`.
+
+## Payload binding limitation (coordinator review, 2026-10-13)
+
+The pinned 27-word image and its 23-word fused lowering above are shape-profile candidates. The checkpoint-backed emitter inserts post-allreduce BF16 scale operations for O and down projections. These candidate instruction images must not be paired unchanged with that payload or described as checkpoint-backed whole-layer execution. A separately emitted TP8 payload program must retain those operations and be lowered by decoded semantics, with an independent numerical reference and actual VM commit acknowledgments. The original profile and component proofs remain preserved.
