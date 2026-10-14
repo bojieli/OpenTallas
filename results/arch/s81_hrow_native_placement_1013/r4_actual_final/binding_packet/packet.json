@@ -454,7 +454,7 @@
  "rc_budget_status": "All9 final SS/FF ETMs available; actual production clock/reset producer, delivery, operating load/slew and route RC OPEN.500um is geometric ceiling only.",
  "closed_child_timing_facts": {
   "path": "/home/ubuntu/wt/codex-s81-hrow-native-placement/results/arch/s81_hrow_native_placement_1013/r4_actual_final/binding_packet/closed_child_ss_ff_timing_facts.json.gz",
-  "sha256": "5ad4494b72603bfb6c6bbb919f336969eb12198eb138c6e4026becdde69a3af6"
+  "sha256": "01954d1efed3a93a70df3ea20066b685f71d6e9840268596dce6aca3affa24a6"
  },
  "missing_final_relay_timing_masters": [],
  "current_consumed_native207": {
@@ -1016,5 +1016,9 @@
    },
    "scope": "Explicit mapped RESETN recovery/removal leaf checks; actual inter-master delivery and pulse-width qualification OPEN. Exporter labels unchanged."
   }
+ },
+ "source_graph": {
+  "path": "results/arch/s81_hrow_native_placement_1013/r4_actual_final/binding_packet/source_graph.json",
+  "sha256": "57b4d79bb18295db254f3f4501be9b4de5307da3b9799dcc6dd2fc7f66e42b3f"
  }
 }
