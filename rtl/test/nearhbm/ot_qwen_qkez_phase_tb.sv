@@ -37,6 +37,8 @@ module ot_qwen_qkez_phase_tb #(
     output wire [1:0] dbg_m_h,
     output wire [2:0] dbg_z_h,
     output wire [31:0] dbg_m_d, dbg_z_d,
+    output wire dbg_rz_ready,
+    output wire [127:0] dbg_rz_d,
     output wire [7:0]           ev_hub
 );
     ot_qwen_nearhbm_attn_die_tb #(.HD(HD),.R(R),.LINK(LINK),.ADD_LAT(ADD_LAT),.MUL_LAT(MUL_LAT),.DQ(DQ),.ZW(ZW),.SCALE(SCALE)) u_attn (.*);
@@ -59,4 +61,9 @@ module ot_qwen_qkez_phase_tb #(
     // rx and rv1 both capture ra0/rv0 on this edge; keep the same tag latency.
     always @(posedge clk) zh <= u_attn.u_hub.u_p.ra0;
     assign dbg_z_h=zh;
+    assign dbg_rz_ready=u_attn.u_hub.u_p.rz_ok[0];
+    genvar h;
+    generate for(h=0;h<4;h=h+1) begin : g_rz_debug
+        assign dbg_rz_d[32*h +: 32]=u_attn.u_hub.u_p.rz[h];
+    end endgenerate
 endmodule
