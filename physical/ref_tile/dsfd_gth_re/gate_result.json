@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "dsfd_gth_re",
  "verdict": "FAIL",
- "generated": "2026-10-14T00:32:41-0700",
- "host": "ot-epyc1tb",
+ "generated": "2026-10-14T00:38:08-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "a79abb2efd8edb1799180595904fd9c5dfa27d0c",
+  "start_commit": "452b243f4938d346a1e1dc86430656f4058b982d",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "5fa5728ff5a4f58933ff58ddbf010b8e927475333f2c28e3598bec8946cbfefd",
-  "manifest_sha256": "c25befefb6653e4be69b45b665c05a2238a7ad61cf5daa12dee4dd487bd17345",
+  "archive_sha256": "bd0e488e15325494dc514377d45931afa2693f3c6242bd5240cb17fb1c98477c",
+  "manifest_sha256": "d08274d832f1b3852a77fcae944e2a74ac11fbd581778f6807188d7cfd3a7cd8",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -17883,8 +17883,8 @@
    {
     "path": "physical/s81_ph_views/gather/leaf_role_split/io_flop_at_pins.tcl",
     "kind": "file",
-    "sha256": "335cede673833e6ec6b01a95a0f7c39b5e7fb70a68860f56a926e8d8ff9912d4",
-    "git_blob": "37fc1501380803901af25146feaf6d8e0a08c9f5",
+    "sha256": "8305784b5c6002190169dc5bdb295b5411dba23869e3929686ffc3d79723c3e4",
+    "git_blob": "0ea7614d06c3f4b1cffed032f0c2948bdc32031f",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -107488,11 +107488,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T00:30:18-0700",
-  "remote_script_sha256": "5674b20c7e2ed5aefb15c50b284065696bf047e6e6f7fac1894c77f40ff40913",
+  "captured": "2026-10-14T00:35:41-0700",
+  "remote_script_sha256": "e9ef183f997eec0bbadfefbb64859ffbb6f64a6b584d2ce857e0c037bc862f48",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_gth_re-20261014-002943",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_gth_re-20261014-003508",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
