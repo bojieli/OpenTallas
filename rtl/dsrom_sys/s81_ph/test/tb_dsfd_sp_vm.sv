@@ -37,6 +37,11 @@ module tb_dsfd_sp_vm;
     parameter integer MODE = 0;
     parameter integer VF = 13, VR = 13, P2D = 40;
     parameter integer TP_ROWS = 56;          // throughput: rows per root of the capture phase
+    // XCH (claude s81-grpA r3): MODE 1 adds a DEPENDENT X read of the captured region (X2, bus lane 2, XCH rows from row
+    // 2048) -- the consumer of the capture slot.  XGOS 0: issued when the slot's ARMN done arrives (today's controller
+    // contract); XGOS 1: issued right after the ARMN as an XGO armed on slot 0 (RTL define OT_SPVM_XGOS).  Prints XCHAIN.
+    parameter integer XCH = 0;
+    parameter integer XGOS = 0;
     parameter integer BROWS = 128;           // burst: rows per root
     parameter integer BNP = 0;               // burst: positions - 1
     parameter integer BSKEW = 3;             // burst: max start skew between roots (serial cycles)
@@ -148,6 +153,7 @@ module tb_dsfd_sp_vm;
             end else if (p == 2 || p >= 6 && p <= 9) begin
                 // X streamer read: expected at its bus lane (id in the data field)
                 ex_l[b_d[p*512 +: 4]].push_back(gm[rw]); ex_lt[b_d[p*512 +: 4]].push_back(cyc);
+                if (p == 2 && xch_first < 0) xch_first = cyc;
                 if (xs_row[xidx(p)].size() == 0 || xs_row[xidx(p)][0] != rw) begin
                     $display("FAIL cyc %0d: X port %0d read row %0d not the next streamed", cyc, p, rw); nbad = nbad + 1;
                 end else void'(xs_row[xidx(p)].pop_front());
@@ -409,6 +415,17 @@ module tb_dsfd_sp_vm;
             x_busy[xp] = t; x_ln[xp] = lane;
         end
     endtask
+    // X streamer armed on a producer slot (XGOS): go {xp, go 1, wait 1, slot, base}
+    task automatic xrd_w(input integer xp, input integer lane, input integer base, input integer n, input integer slot);
+        reg [7:0] t; integer q;
+        begin
+            t = ntag(0); cmd_q.push_back(vcmd(3'd7, {xp[2:0], 1'b0, lane[3:0], n[12:0] - 13'd1}, 10'd0, t)); pend_tag.push_back(t);
+            t = ntag(0); cmd_q.push_back(vcmd(3'd7, {xp[2:0], 1'b1, 1'b1, slot[1:0], base[13:0]}, 10'd0, t)); pend_tag.push_back(t);
+            for (q = 0; q < n; q = q + 1) xs_row[xp].push_back(base + q);
+            x_busy[xp] = t; x_ln[xp] = lane;
+        end
+    endtask
+    integer xch_go = -1, xch_first = -1;
     // landing producer pointer (LARM): group 0..3 svc, 4 coll, 5 sel, 6 col, 7 hc
     task automatic larm(input integer grp_, input integer base);
         reg [7:0] t; begin
@@ -701,12 +718,14 @@ module tb_dsfd_sp_vm;
                     xrd(0, 0, 9216, 128); xrd(1, 1, 9216 + 128 + 9, 128);
                     arm(0, 2048, (256 * ((TP_ROWS + 1) / 2)) / 16, NR * TP_ROWS, 1, 5);
                     void'(cap_phase(2048 * 16, 0, TP_ROWS, 1, 2, 0, 9));
+                    if (XCH > 0 && XGOS != 0) begin xrd_w(2, 2, 2048, XCH, 0); xch_go = cyc; end
                     for (r = 0; r < NR; r = r + 1) r_gap[r] = r_gap[r] + 30;
                     for (r = 0; r < 46; r = r + 1) begin wj_row.push_back(8192 + r); wj_pay.push_back(0); end
                     for (r = 0; r < 23; r = r + 1) rj.push_back((8448 + 2 * r) | (1 << 16) | ((8449 + 2 * r) << 17));
                     for (r = 0; r < 32; r = r + 1) begin cq_rows.push_back(12288 + r); cq_we.push_back(1); end
                     for (r = 0; r < 32; r = r + 1) begin cq_rows.push_back(12288 + r); cq_we.push_back(0); end
                 end
+                if (XCH > 0 && XGOS == 0 && xch_go < 0 && slot_busy[0] == 2) begin xrd(2, 2, 2048, XCH); xch_go = cyc; end
             end else if (MODE == 4 || MODE == 5) begin
                 // ---------------- LANDING WORST BURST: MODE 4 attention window (svc 64 beats + sel 64 rows back to back,
                 // collector 680 rows at 2/3 a cycle, collective 320 words under t_cts), MODE 5 HC window (hc 64 beats)
@@ -738,6 +757,7 @@ module tb_dsfd_sp_vm;
                 if (tp_p2_t1 < 0 && tp_cap_t1 > 0 && p2c_base.size() == 0 && region_q.size() == 0 && pend_tag.size() == 0) tp_p2_t1 = cyc;
                 if (tp_wfc_t1 < 0 && cyc > tp_t0 + 10 && sb_r.size() == 0 && rj.size() == 0 && !s_rv && ex_q[0].size() == 0 && ex_q[1].size() == 0) tp_wfc_t1 = cyc;
                 if (tp_x_t1 < 0 && (MODE != 1 || (xs_row[0].size() == 0 && xs_row[1].size() == 0 && ex_l[0].size() == 0 && ex_l[1].size() == 0 &&
+                                                   xs_row[2].size() == 0 && ex_l[2].size() == 0 && (XCH == 0 || xch_go >= 0) &&
                                                    cq_rows.size() == 0 && sb_c.size() == 0 && ex_q_c.size() == 0))) tp_x_t1 = cyc;
             end
         end
@@ -774,6 +794,9 @@ module tb_dsfd_sp_vm;
                          MODE, MODE == 1 ? TP_ROWS : BROWS, MODE == 1 ? 1 : BNP + 1, n_el_exp, cap_last_emit - cap_first_emit + 1,
                          cap_first_emit, cap_last_emit, cap_ops, cap_last - cap_first + 1, slot_t_done[0] - cap_last_emit,
                          slot_t_done[0] - slot_t_arm[0], tp_p2_t1 - tp_t0, tp_wfc_t1 - tp_t0, tp_x_t1 - tp_t0, tp_t0);
+            if (XCH > 0)
+                $display("XCHAIN xgos=%0d rows=%0d slot_done=%0d (tb sees the ARMN done) x_go_issued=%0d first_x_row_at_bank=%0d done_to_first_row=%0d arm_to_first_row=%0d (serial cycles)",
+                         XGOS, XCH, slot_t_done[0], xch_go, xch_first, xch_first - slot_t_done[0], xch_first - slot_t_arm[0]);
             if (nbad == 0 && (nchk + n_el_land > 0 || MODE == 3)) $display("PASS"); else $display("FAIL");
             $finish;
         end
