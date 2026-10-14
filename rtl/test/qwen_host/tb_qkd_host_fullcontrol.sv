@@ -131,7 +131,7 @@ initial begin
  if(mem[258]!==64'h3456_0003_cafe_0025 || mem[259][63:32]!==32'h0002_0002)$fatal(1,"FMT1 CQ final %h %h",mem[258],mem[259]);
  // All32per-die mapped summaries retain upper dies; raw80causebank independent.
  transport_fault=8'h80;physical_fault=8'h40;tk8[5*93+88]=1;kst8[4*10+9]=1;
- expected_kst=kst8;repeat(5)tick;rd(13'h1080,v);if(v!==32'h48120000)$fatal(1,"die diagnostic lost %h",v);
+ for(i=0;i<8;i=i+1)kst8[i*10+:9]=9'(256+i*17);expected_kst=kst8;repeat(5)tick;rd(13'h1080,v);if(v!==32'h48120000)$fatal(1,"die diagnostic lost %h",v);
  rd(13'h1090,v);if(v!==expected_kst[31:0])$fatal(1,"raw low");rd(13'h1094,v);if(v!==expected_kst[63:32])$fatal(1,"raw middle");rd(13'h1098,v);if(v!=={16'b0,expected_kst[79:64]})$fatal(1,"raw high");
  wr(13'h1084,32'h40000000);repeat(3)tick;if(!irq)$fatal(1,"die7 IRQ lost");
  transport_fault=0;physical_fault=0;tk8[5*93+88]=0;kst8=0;repeat(3)tick;wr(13'h1080,32'hffffffff);rd(13'h1080,v);if(v!==0)$fatal(1,"diag W1C");
