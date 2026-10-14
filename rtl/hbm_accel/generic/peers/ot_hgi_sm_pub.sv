@@ -1090,7 +1090,7 @@ module ot_hgi_sm_pub_hier #(
 );
     ot_hgi_sm_pub_parent #(.NSM(NSM),.NC(NC),.NPC(NPC),.MUT_ROW(MUT_ROW),.MUT_PAR(MUT_PAR),.NSS(NSS),.SD(SD),.AD(AD)) u_parent (
       .clk_rst(clk),.clk_cmd(clk),.clk_cmd_relay({3{clk}}),.clk_slice({8{clk}}),
-      .clk_return({8{clk}}),.clk_vm({4{clk}}),.clk_tree({7{clk}}),.clk_credit({8{clk}}),.clk_egress(clk),
+      .clk_return({8{clk}}),.clk_vm_core({4{clk}}),.clk_vm_port({4{clk}}),.clk_tree({7{clk}}),.clk_credit({8{clk}}),.clk_stream_edge({2{clk}}),
       .rst_n(rst_n),
       .pub_v(pub_v),
       .pub_rdy(pub_rdy),
@@ -1125,11 +1125,12 @@ module ot_hgi_sm_pub_parent #(
     parameter integer SD = 8,
     parameter integer AD = 32              // per-SM arrival entries in every slice (= the slice default; row credits)
 ) (
-    input wire clk_rst,clk_cmd,clk_egress,
+    input wire clk_rst,clk_cmd,
+    input wire [1:0] clk_stream_edge,
     input wire [7:0] clk_credit,
     input wire [2:0] clk_cmd_relay,
     input wire [7:0] clk_slice,clk_return,
-    input wire [3:0] clk_vm,
+    input wire [3:0] clk_vm_core,clk_vm_port,
     input wire [6:0] clk_tree,
     input  wire               rst_n,
     input  wire               pub_v,
@@ -1248,13 +1249,15 @@ module ot_hgi_sm_pub_parent #(
     localparam integer OWW = (NIN > 1) ? $clog2(NIN) : 1;
     generate for (gc = 0; gc < NPC; gc = gc + 1) begin : g_c
         wire [NIN-1:0] i_v,ak; wire [NIN*279-1:0] i_pkt;
-    `ifdef SYNTHESIS
-    ot_hgi_sm_pub_vmmerge
+            wire n_v,ack_q;wire [278:0] n_p;
+`ifdef SYNTHESIS
+        ot_hgi_sm_pub_vmcore u_core
 `else
-    ot_hgi_sm_pub_vmmerge #(.NIN(NIN))
+        ot_hgi_sm_pub_vmcore #(.NIN(NIN)) u_core
 `endif
-    u (.clk(clk_vm[gc]),.rn(rn),.i_v(i_v),.i_pkt(i_pkt),
-          .vmr(vmr[gc*274 +:274]),.vmq(vmq[gc*338 +:338]),.active(vq_vw[gc]),.ack(ak));
+        (.clk(clk_vm_core[gc]),.rn(rn),.i_v(i_v),.i_pkt(i_pkt),.ack_q(ack_q),.ack(ak),.n_v(n_v),.n_p(n_p));
+        ot_hgi_sm_pub_vmport u_port (.clk(clk_vm_port[gc]),.rn(rn),.n_v(n_v),.n_p(n_p),
+          .vmr(vmr[gc*274 +:274]),.vmq(vmq[gc*338 +:338]),.ack_q(ack_q),.active(vq_vw[gc]));
         for(gj=0;gj<NIN;gj=gj+1) begin:g_a
           if(gc+gj*NPC<NSL) begin:g_ae
             assign i_v[gj]=s_wv[gc+gj*NPC]; assign i_pkt[gj*279 +:279]=s_wp[(gc+gj*NPC)*279 +:279];
@@ -1314,9 +1317,12 @@ module ot_hgi_sm_pub_parent #(
             assign t_cr[LV*NLF + gn] = 1'b0;
         end
     endgenerate
-    ot_hgi_sm_pub_egress u_egress (.clk(clk_egress),.rn(rn),.i_v(t_v[LV*NLF]),
-      .i_data(t_d[LV*NLF*W +:W]),.i_busy(t_a[LV*NLF]),.relay_v(r1_v),.busy(agg_r),
-      .o_v(s0_v),.o_idx(s0_idx),.o_data(s0_data));
+    wire [51:0] stream_relay_data,stream_out_data;
+    ot_hgi_sm_pub_stream_edge u_stream_relay (.clk(clk_stream_edge[0]),.rn(rn),.i_v(t_v[LV*NLF]),
+      .i_data(t_d[LV*NLF*W +:W]),.i_busy(t_a[LV*NLF]),.o_v(r1_v),.o_busy(agg_r),.o_data(stream_relay_data));
+    ot_hgi_sm_pub_stream_edge u_stream_port (.clk(clk_stream_edge[1]),.rn(rn),.i_v(r1_v),
+      .i_data(stream_relay_data),.i_busy(1'b0),.o_v(s0_v),.o_busy(),.o_data(stream_out_data));
+    assign s0_idx=stream_out_data[51:32];assign s0_data=stream_out_data[31:0];
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -1424,4 +1430,48 @@ endmodule
 module ot_hgi_sm_pub_reset(input wire clk,rst_n_in,output wire rn);
  ot_rst_relay #(.REGIONS(1)) u(.clk(clk),.rst_n_in(rst_n_in),.rst_n(rn));
 endmodule
+// Die-wire split of the existing two-stage VM merge. No transaction edge is added.
+module ot_hgi_sm_pub_vmcore #(parameter integer NIN=2)(
+ input wire clk,rn, input wire [NIN-1:0] i_v, input wire [NIN*279-1:0] i_pkt,
+ input wire ack_q, output wire [NIN-1:0] ack, output reg n_v, output reg [278:0] n_p);
+ localparam integer OWW=(NIN>1)?$clog2(NIN):1;
+ assign ack=ak;
+        reg [NIN-1:0] pend, ak; reg bsy; reg [OWW-1:0] own, rr;
+        always @(posedge clk or negedge rn) begin
+            if (!rn) begin pend <= '0; ak <= '0; bsy <= 1'b0; n_v <= 1'b0; own <= '0; rr <= '0; end
+            else begin : nd
+                reg f; integer q_, jj; reg [NIN-1:0] pn;
+                n_v <= 1'b0; ak <= '0;
+                pn = pend;
+                for (q_ = 0; q_ < NIN; q_ = q_ + 1) if (i_v[q_]) pn[q_] = 1'b1;
+                f = 1'b0;
+                if (!bsy) for (jj = 0; jj < NIN; jj = jj + 1) begin q_ = (rr + 1 + jj) % NIN;
+                    if (!f && pend[q_]) begin
+                        f = 1'b1; pn[q_] = 1'b0; own <= OWW'(q_); rr <= OWW'(q_); bsy <= 1'b1; n_v <= 1'b1;
+                        n_p <= i_pkt[q_ * 279 +: 279];
+                    end
+                end
+                if (bsy && ack_q) begin bsy <= 1'b0; ak[own] <= 1'b1; end    // acknowledged: back to the owning slice
+                pend <= pn;
+            end
+        end
+
+endmodule
+module ot_hgi_sm_pub_vmport(input wire clk,rn,n_v,input wire [278:0] n_p,
+ input wire [273:0] vmr,output wire [337:0] vmq,output reg ack_q,output wire active);
+ reg vq_v;reg [278:0] vq_p;
+ assign active=vq_v;
+ assign vmq={vq_v,1'b1,12'd0,vq_p[278:264],5'd0,vq_p[263:8],
+ {{4{vq_p[7]}},{4{vq_p[6]}},{4{vq_p[5]}},{4{vq_p[4]}},{4{vq_p[3]}},{4{vq_p[2]}},{4{vq_p[1]}},{4{vq_p[0]}}},16'h5042};
+ always @(posedge clk) if(n_v) vq_p<=n_p;
+ always @(posedge clk or negedge rn) if(!rn) begin ack_q<=1'b0;vq_v<=1'b0;end
+ else begin ack_q<=vmr[273] && vmr[256];vq_v<=n_v;end
+endmodule
+module ot_hgi_sm_pub_stream_edge(input wire clk,rn,i_v,i_busy,input wire [51:0] i_data,
+ output reg o_v,o_busy,output reg [51:0] o_data);
+ always @(posedge clk) if(i_v) o_data<=i_data;
+ always @(posedge clk or negedge rn) if(!rn) begin o_v<=1'b0;o_busy<=1'b0;end
+ else begin o_v<=i_v;o_busy<=i_busy;end
+endmodule
+
 `default_nettype wire

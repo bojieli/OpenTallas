@@ -25,14 +25,6 @@
       "requirement": "bind each own clock to its routed min/mean/max and actual parent entry-wire delay; no shared root timing credit"
     },
     {
-      "port": "clk_egress",
-      "hard_child_pin": "u_egress.clk",
-      "master": "ot_hgi_sm_pub_egress",
-      "view": "physical/ref_tile/smpub_egress/views/ot_hgi_sm_pub_egress",
-      "insertion": "physical/ref_tile/smpub_egress/views/ot_hgi_sm_pub_egress/insertion.json",
-      "requirement": "bind each own clock to its routed min/mean/max and actual parent entry-wire delay; no shared root timing credit"
-    },
-    {
       "port": "clk_cmd_relay[0]",
       "hard_child_pin": "g_cmd[1].u.clk",
       "master": "ot_hgi_sm_pub_cmd_relay",
@@ -249,38 +241,6 @@
       "requirement": "bind each own clock to its routed min/mean/max and actual parent entry-wire delay; no shared root timing credit"
     },
     {
-      "port": "clk_vm[0]",
-      "hard_child_pin": "g_c[0].u.clk",
-      "master": "ot_hgi_sm_pub_vmmerge",
-      "view": "physical/ref_tile/smpub_vmmerge/views/ot_hgi_sm_pub_vmmerge",
-      "insertion": "physical/ref_tile/smpub_vmmerge/views/ot_hgi_sm_pub_vmmerge/insertion.json",
-      "requirement": "bind each own clock to its routed min/mean/max and actual parent entry-wire delay; no shared root timing credit"
-    },
-    {
-      "port": "clk_vm[1]",
-      "hard_child_pin": "g_c[1].u.clk",
-      "master": "ot_hgi_sm_pub_vmmerge",
-      "view": "physical/ref_tile/smpub_vmmerge/views/ot_hgi_sm_pub_vmmerge",
-      "insertion": "physical/ref_tile/smpub_vmmerge/views/ot_hgi_sm_pub_vmmerge/insertion.json",
-      "requirement": "bind each own clock to its routed min/mean/max and actual parent entry-wire delay; no shared root timing credit"
-    },
-    {
-      "port": "clk_vm[2]",
-      "hard_child_pin": "g_c[2].u.clk",
-      "master": "ot_hgi_sm_pub_vmmerge",
-      "view": "physical/ref_tile/smpub_vmmerge/views/ot_hgi_sm_pub_vmmerge",
-      "insertion": "physical/ref_tile/smpub_vmmerge/views/ot_hgi_sm_pub_vmmerge/insertion.json",
-      "requirement": "bind each own clock to its routed min/mean/max and actual parent entry-wire delay; no shared root timing credit"
-    },
-    {
-      "port": "clk_vm[3]",
-      "hard_child_pin": "g_c[3].u.clk",
-      "master": "ot_hgi_sm_pub_vmmerge",
-      "view": "physical/ref_tile/smpub_vmmerge/views/ot_hgi_sm_pub_vmmerge",
-      "insertion": "physical/ref_tile/smpub_vmmerge/views/ot_hgi_sm_pub_vmmerge/insertion.json",
-      "requirement": "bind each own clock to its routed min/mean/max and actual parent entry-wire delay; no shared root timing credit"
-    },
-    {
       "port": "clk_tree[0]",
       "hard_child_pin": "g_l[1].g_n[0].g_h1.u.clk",
       "master": "ot_hgi_sm_pub_smrg_l1",
@@ -335,6 +295,86 @@
       "view": "physical/ref_tile/smpub_smrg_l3/views/ot_hgi_sm_pub_smrg_l3",
       "insertion": "physical/ref_tile/smpub_smrg_l3/views/ot_hgi_sm_pub_smrg_l3/insertion.json",
       "requirement": "bind each own clock to its routed min/mean/max and actual parent entry-wire delay; no shared root timing credit"
+    },
+    {
+      "port": "clk_vm_core[0]",
+      "hard_child_pin": "g_c[0].u_core.clk",
+      "master": "ot_hgi_sm_pub_vmcore",
+      "view": "physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore",
+      "insertion": "physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore/insertion.json",
+      "requirement": "actual existing stages split into local capture and real outer-pin station; each own root consumes routed insertion"
+    },
+    {
+      "port": "clk_vm_port[0]",
+      "hard_child_pin": "g_c[0].u_port.clk",
+      "master": "ot_hgi_sm_pub_vmport",
+      "view": "physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport",
+      "insertion": "physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport/insertion.json",
+      "requirement": "actual existing stages split into local capture and real outer-pin station; each own root consumes routed insertion"
+    },
+    {
+      "port": "clk_vm_core[1]",
+      "hard_child_pin": "g_c[1].u_core.clk",
+      "master": "ot_hgi_sm_pub_vmcore",
+      "view": "physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore",
+      "insertion": "physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore/insertion.json",
+      "requirement": "actual existing stages split into local capture and real outer-pin station; each own root consumes routed insertion"
+    },
+    {
+      "port": "clk_vm_port[1]",
+      "hard_child_pin": "g_c[1].u_port.clk",
+      "master": "ot_hgi_sm_pub_vmport",
+      "view": "physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport",
+      "insertion": "physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport/insertion.json",
+      "requirement": "actual existing stages split into local capture and real outer-pin station; each own root consumes routed insertion"
+    },
+    {
+      "port": "clk_vm_core[2]",
+      "hard_child_pin": "g_c[2].u_core.clk",
+      "master": "ot_hgi_sm_pub_vmcore",
+      "view": "physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore",
+      "insertion": "physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore/insertion.json",
+      "requirement": "actual existing stages split into local capture and real outer-pin station; each own root consumes routed insertion"
+    },
+    {
+      "port": "clk_vm_port[2]",
+      "hard_child_pin": "g_c[2].u_port.clk",
+      "master": "ot_hgi_sm_pub_vmport",
+      "view": "physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport",
+      "insertion": "physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport/insertion.json",
+      "requirement": "actual existing stages split into local capture and real outer-pin station; each own root consumes routed insertion"
+    },
+    {
+      "port": "clk_vm_core[3]",
+      "hard_child_pin": "g_c[3].u_core.clk",
+      "master": "ot_hgi_sm_pub_vmcore",
+      "view": "physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore",
+      "insertion": "physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore/insertion.json",
+      "requirement": "actual existing stages split into local capture and real outer-pin station; each own root consumes routed insertion"
+    },
+    {
+      "port": "clk_vm_port[3]",
+      "hard_child_pin": "g_c[3].u_port.clk",
+      "master": "ot_hgi_sm_pub_vmport",
+      "view": "physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport",
+      "insertion": "physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport/insertion.json",
+      "requirement": "actual existing stages split into local capture and real outer-pin station; each own root consumes routed insertion"
+    },
+    {
+      "port": "clk_stream_edge[0]",
+      "hard_child_pin": "u_stream_relay.clk",
+      "master": "ot_hgi_sm_pub_stream_edge",
+      "view": "physical/ref_tile/smpub_stream_edge/views/ot_hgi_sm_pub_stream_edge",
+      "insertion": "physical/ref_tile/smpub_stream_edge/views/ot_hgi_sm_pub_stream_edge/insertion.json",
+      "requirement": "the two original stream stages, physically separated; no extra cycle"
+    },
+    {
+      "port": "clk_stream_edge[1]",
+      "hard_child_pin": "u_stream_port.clk",
+      "master": "ot_hgi_sm_pub_stream_edge",
+      "view": "physical/ref_tile/smpub_stream_edge/views/ot_hgi_sm_pub_stream_edge",
+      "insertion": "physical/ref_tile/smpub_stream_edge/views/ot_hgi_sm_pub_stream_edge/insertion.json",
+      "requirement": "the two original stream stages, physically separated; no extra cycle"
     }
   ],
   "qualification": "actual RTL connections; final die delivery requires routed child views and measured entry wires"

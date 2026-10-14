@@ -8,8 +8,8 @@ if [ "$MODE" = mutant ]; then
   python3 - "$RTL" "$OUT/mutant.sv" <<'PY'
 from pathlib import Path
 import sys
-s=Path(sys.argv[1]).read_text();old='o_data<=relay_d[31:0];';assert s.count(old)==1
-Path(sys.argv[2]).write_text(s.replace(old,"o_data<=relay_d[31:0] ^ 32'd1;"))
+s=Path(sys.argv[1]).read_text();old='.i_data(stream_relay_data),.i_busy';assert s.count(old)==1
+Path(sys.argv[2]).write_text(s.replace(old,".i_data(stream_relay_data ^ 52'd1),.i_busy"))
 PY
   RTL=$OUT/mutant.sv
 fi
