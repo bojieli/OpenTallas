@@ -1,0 +1,305 @@
+{
+ "source_commit": "23b4a1820",
+ "frozen_full_proof_commit": "ec62eb90d",
+ "request338": {
+  "valid": 337,
+  "we": 336,
+  "byte_addr": [
+   335,
+   304
+  ],
+  "data": [
+   303,
+   48
+  ],
+  "byte_strobe": [
+   47,
+   16
+  ],
+  "tag": [
+   15,
+   0
+  ]
+ },
+ "response274": {
+  "valid": 273,
+  "tag": [
+   272,
+   257
+  ],
+  "we": 256,
+  "data": [
+   255,
+   0
+  ]
+ },
+ "no_request_ready": true,
+ "engine_clock_ps": 833.333,
+ "VM_clock_ps": 1111.111,
+ "physical_phases_assigned": false,
+ "observed_budget_source": {
+  "MV": "SVR2=0; v_in<4; reserveatoriginalr_go; releaseafterregisteredactualresponse",
+  "IL": "rd_out<4; requestspulse; ownerheldthroughactualreturns",
+  "serial": "ph waits actualread orwriteack reply"
+ },
+ "native_mainSID_ring_assignment": "UNASSIGNED; do not inferlegacyrebasing",
+ "actual_read_record_trace": {
+  "epoch": 3,
+  "descriptor_hex": "000008000e0000700000000000000000000000000000000000000001c0000020007000000201c0000000000000000000000000000000000000000000700000200070000001007a0300800004400000000000000000000001",
+  "packets": [
+   "2000200e00000000000000000000000000000000000000000000000000000000000000000000000004d52",
+   "2000201000000000000000000000000000000000000000000000000000000000000000000000000004d52",
+   "2000201200000000000000000000000000000000000000000000000000000000000000000000000004d52",
+   "2000201400000000000000000000000000000000000000000000000000000000000000000000000004d52",
+   "2000201600000000000000000000000000000000000000000000000000000000000000000000000004d52",
+   "2000201800000000000000000000000000000000000000000000000000000000000000000000000004d52",
+   "2000201a00000000000000000000000000000000000000000000000000000000000000000000000004d52",
+   "2000201c00000000000000000000000000000000000000000000000000000000000000000000000004d52"
+  ]
+ },
+ "actual_write_record_trace": {
+  "epoch": 3,
+  "descriptor_hex": "000008001180008c00000000000000000000000000000000000000008c000020008c000003e62c020000000000000000000000000000000008000008c0000020008c0000034dc00100000004400000000000000000000001",
+  "packets": [
+   "30007cc40206379da3396af75000000000000000000000000000000000000000000000000ff0000004d57",
+   "30007cc60c8894ce7e28ce23bdde8033d39663d4252fecb91113a065f4f5f78a68179cb8affffffff4d57",
+   "30007cc806daef58b00254495cfb4ac2560811f3e714df64c0a1c3711795498ed2a475d58ffffffff4d57",
+   "30007cca0965cfa27a6750b7f031b35ce4f611cb4d54c5dbebba947ed25e0ac46a44f4a9affffffff4d57",
+   "30007ccc01e613e40748356eeba0290eb34a4b1433195177261a72371df0d32851ad0a772ffffffff4d57",
+   "30007cce03274b9942c8b98fcf8ad232894a2fab50f950afef1a29919a6144c38775d87e8ffffffff4d57",
+   "30007cd00056d06691cf5bb92609e98493e3063d75d0ca0b0c06e34c1f39ab420936ae8a0ffffffff4d57",
+   "30007cd20bfeba9c9f618a9e1ab69ddaedb04fe7a4b658bc767d4ed2874aeedb8f28153f3ffffffff4d57",
+   "30007cd40c96edaec6046e02bec182ac3df754e153ff24436140cddb820ed3a479cc5b37dffffffff4d57",
+   "30007cd60000000000000000000000000000000008d072b40a1801bce278f52be75a8161e0000ffff4d57"
+  ]
+ },
+ "full_actual_trace": "results/rtl/b2_dma_q5_20261014/serial_publication_23b4a1820/partition.run.log",
+ "driver": "rtl/test/hbm_accel/b2_dma/tb_hgi_b2_dma_q.sv",
+ "minimal_producer_records": {
+  "packet_read": "store(ab=1,n=8,m=1,as=8,ob=gaddr(0x3000),os=32); fence()",
+  "packet_write": "g_ist=2;load(f=0,ab=0x4000,n=8,m=1,as=64,db=1,ds=8,stripe=0,s0=0);g_ist=1"
+ },
+ "fresh_qid0_packet_read": {
+  "descriptor_hex": "00000800020000100000000000000000000000000000000000000000400000200010000000600000000000000000000000000000000000000000000010000020001000000000020300800004400000000000000000000001",
+  "fence_hex": "00000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101000000000000000000000000000001",
+  "prefill_VM_words": [
+   {
+    "word": 0,
+    "data_hex": "a5a50f0f"
+   },
+   {
+    "word": 1,
+    "data_hex": "80e0fb9e"
+   },
+   {
+    "word": 2,
+    "data_hex": "ef2ee62d"
+   },
+   {
+    "word": 3,
+    "data_hex": "ca74d2bc"
+   },
+   {
+    "word": 4,
+    "data_hex": "30b2dd4b"
+   },
+   {
+    "word": 5,
+    "data_hex": "1ff8c9da"
+   },
+   {
+    "word": 6,
+    "data_hex": "7a06b469"
+   },
+   {
+    "word": 7,
+    "data_hex": "a14ca0f8"
+   },
+   {
+    "word": 8,
+    "data_hex": "8f8aab87"
+   },
+   {
+    "word": 9,
+    "data_hex": "ead09616"
+   },
+   {
+    "word": 10,
+    "data_hex": "d11e82a5"
+   },
+   {
+    "word": 11,
+    "data_hex": "3fa48d34"
+   },
+   {
+    "word": 12,
+    "data_hex": "1ae279c3"
+   },
+   {
+    "word": 13,
+    "data_hex": "41286452"
+   },
+   {
+    "word": 14,
+    "data_hex": "ac7650e1"
+   },
+   {
+    "word": 15,
+    "data_hex": "8abc5b70"
+   }
+  ],
+  "expected_HBM_words": [
+   {
+    "byte_addr": 12288,
+    "data_hex": "80e0fb9e"
+   },
+   {
+    "byte_addr": 12292,
+    "data_hex": "ef2ee62d"
+   },
+   {
+    "byte_addr": 12296,
+    "data_hex": "ca74d2bc"
+   },
+   {
+    "byte_addr": 12300,
+    "data_hex": "30b2dd4b"
+   },
+   {
+    "byte_addr": 12304,
+    "data_hex": "1ff8c9da"
+   },
+   {
+    "byte_addr": 12308,
+    "data_hex": "7a06b469"
+   },
+   {
+    "byte_addr": 12312,
+    "data_hex": "a14ca0f8"
+   },
+   {
+    "byte_addr": 12316,
+    "data_hex": "8f8aab87"
+   }
+  ],
+  "expected_CQ_read_byte_addresses": [
+   0,
+   32
+  ],
+  "request_tag": "4d52"
+ },
+ "fresh_qid0_packet_write": {
+  "descriptor_hex": "00000800020000100000000000000000000000000000000000000000100000200010000000000202000000000000000000000000000000000400000080000020001000000080000100000004400000000000000000000001",
+  "prefill_VM_words": [
+   {
+    "word": 0,
+    "data_hex": "a5a50f0f"
+   },
+   {
+    "word": 1,
+    "data_hex": "80e0fb9e"
+   },
+   {
+    "word": 2,
+    "data_hex": "ef2ee62d"
+   },
+   {
+    "word": 3,
+    "data_hex": "ca74d2bc"
+   },
+   {
+    "word": 4,
+    "data_hex": "30b2dd4b"
+   },
+   {
+    "word": 5,
+    "data_hex": "1ff8c9da"
+   },
+   {
+    "word": 6,
+    "data_hex": "7a06b469"
+   },
+   {
+    "word": 7,
+    "data_hex": "a14ca0f8"
+   },
+   {
+    "word": 8,
+    "data_hex": "8f8aab87"
+   },
+   {
+    "word": 9,
+    "data_hex": "ead09616"
+   },
+   {
+    "word": 10,
+    "data_hex": "d11e82a5"
+   },
+   {
+    "word": 11,
+    "data_hex": "3fa48d34"
+   },
+   {
+    "word": 12,
+    "data_hex": "1ae279c3"
+   },
+   {
+    "word": 13,
+    "data_hex": "41286452"
+   },
+   {
+    "word": 14,
+    "data_hex": "ac7650e1"
+   },
+   {
+    "word": 15,
+    "data_hex": "8abc5b70"
+   }
+  ],
+  "expected_VM_words": [
+   {
+    "word": 1,
+    "data_hex": "3852e42a"
+   },
+   {
+    "word": 2,
+    "data_hex": "e7d34857"
+   },
+   {
+    "word": 3,
+    "data_hex": "5536697d"
+   },
+   {
+    "word": 4,
+    "data_hex": "87130065"
+   },
+   {
+    "word": 5,
+    "data_hex": "7f4fd43d"
+   },
+   {
+    "word": 6,
+    "data_hex": "42a8b8fe"
+   },
+   {
+    "word": 7,
+    "data_hex": "e78ab4ef"
+   },
+   {
+    "word": 8,
+    "data_hex": "879eba5d"
+   }
+  ],
+  "HBM_default_byte_function": "tb_hgi_b2_dma_q.sv hb() exact source",
+  "expected_CQ_write_byte_addresses": [
+   0,
+   32
+  ],
+  "expected_CQ_write_byte_strobes": [
+   "fffffff0",
+   "0000000f"
+  ],
+  "write_tag": "4d57"
+ },
+ "fresh_record_scope": "These exactdriver-constructedqid0 records needactualB2 mainSID/ring binding andrealnativebank prefill, thenproducerfixture proof; JSON isnotitselfnativequalification. Capturedstressrecord traces requireprecedingmemory history or replayfulltrace."
+}
