@@ -163,5 +163,12 @@
     "registered_status": "STATUS_REG2: local chronological collision and occupied-state snapshots register before global status reduction. PIN_CAPTURE1 collision observation is3edges after original line collision; busy is2edges delayed, including pending registered injection. None collision remains immediate at external bypass. Composed fault/idle/retire still open.",
     "data_valid": "Original chronological output edge unchanged. No SDC multicycle/phase changes. Whole16 lane oracle repeat required for modified status graph.",
     "slot": "UNASSIGNED"
+  },
+  "c3_status_payload_reset": {
+    "source_change": "Reset only outputstatus/known validity; unreset276 collision/occupancy payload snapshots+front snapshot. Single known_q suppresses old snapshot on firstpostresetedge; new snapshot available on next original status edge.",
+    "semantic_edges_added": 0,
+    "phase_vs_original": "PIN1+STATUS2 collision3,busy2 unchanged; chronological payload/valid zero addededges",
+    "reset_sinks_estimate": 143,
+    "proof": "Original c12 pipe data/valid/status gate passes including1ps active async reset; actual mask-removal mutant required and source-bound physical synthesis/CTS resetsinks stillunmeasured."
   }
 }

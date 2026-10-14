@@ -3,7 +3,7 @@
 // Independent same-edge clock roots, not asynchronous domains. Unassigned physical leaf.
 module ot_hgi_sfu_ctl_chunk #(
  parameter integer W=75, OFFSET=0, STAGES=138,
- parameter integer MUT_BOUNDARY=0, PIN_CAPTURE=0, STATUS_REG=0
+ parameter integer MUT_BOUNDARY=0, PIN_CAPTURE=0, STATUS_REG=0, MUT_STALE_STATUS=0
 )(
  input wire clk,rst_n,v,
  input wire [2:0] sfu,
@@ -47,11 +47,17 @@ module ot_hgi_sfu_ctl_chunk #(
  assign q=r[1];assign vo=rv[1];
  // Data/valid pins are registered. coll/busy are status reductions: registered relay stillrequired physically.
  generate if(STATUS_REG==2)begin:g_local_status_terms
+  // These snapshots are payload. Reset only the validity fence and outputs;
+  // the first post-reset snapshot replaces stale state before observation.
   reg [STAGES:1] collision_q,occupancy_q;
-  reg c,b,front_q;
+  reg c,b,front_q,known_q;
+  always @(posedge clk)begin
+   collision_q<=collision;occupancy_q<=rv;
+   front_q<=PIN_CAPTURE&&v_pin&&depth(sfu_pin)!=0;
+  end
   always @(posedge clk or negedge rst_n)
-   if(!rst_n)begin collision_q<=0;occupancy_q<=0;front_q<=0;c<=0;b<=0;end
-   else begin collision_q<=collision;occupancy_q<=rv;front_q<=PIN_CAPTURE&&v_pin&&depth(sfu_pin)!=0;c<=|collision_q;b<=(|occupancy_q)||front_q;end
+   if(!rst_n)begin known_q<=0;c<=0;b<=0;end
+   else begin known_q<=1;c<=(MUT_STALE_STATUS||known_q)&&(|collision_q);b<=(MUT_STALE_STATUS||known_q)&&((|occupancy_q)||front_q);end
   assign coll=c;assign busy=b;
  end else if(STATUS_REG==1)begin:g_registered_status
   reg c,b;
