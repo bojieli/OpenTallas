@@ -91,7 +91,49 @@
       }
      ]
     }
-   ]
+   ],
+   "reset_constraint_arc_types": {
+    "ss": [
+     "hold_rising",
+     "setup_rising"
+    ],
+    "ff": [
+     "hold_rising",
+     "setup_rising"
+    ]
+   },
+   "async_reset_qualification": "OPEN; exported reset constraints carry setup_rising/hold_rising labels, no explicit recovery/removal types. Preserve raw labels; require validated export interpretation or explicit routed recovery/removal evidence.",
+   "raw_lookup_extrema_ps": {
+    "ss": {
+     "rising_edge": {
+      "min": 327.66678,
+      "max": 619.56128
+     },
+     "hold_rising": {
+      "min": -73.5596,
+      "max": -73.5596
+     },
+     "setup_rising": {
+      "min": 90.1789,
+      "max": 90.1789
+     }
+    },
+    "ff": {
+     "rising_edge": {
+      "min": 159.93262,
+      "max": 280.45392
+     },
+     "hold_rising": {
+      "min": -31.98715,
+      "max": -31.98715
+     },
+     "setup_rising": {
+      "min": 43.40309,
+      "max": 43.40309
+     }
+    }
+   },
+   "extrema_scope": "Across all exported pin lookup entries, including load range and leaf clock boundary paths. No operating load, insertion compensation, async semantics, per-pair timing or wire budget inferred."
   },
   "dsfd_hrow_r15": {
    "record_commit": "b4e5e2af3",
@@ -138,7 +180,49 @@
     "sha256": "c5782dba4b7bcf6e5b6da7bfacd1dacbb35da11a6834f56800a98c7d98917d53"
    },
    "changed_pin_count": 0,
-   "pin_deltas": []
+   "pin_deltas": [],
+   "reset_constraint_arc_types": {
+    "ss": [
+     "hold_rising",
+     "setup_rising"
+    ],
+    "ff": [
+     "hold_rising",
+     "setup_rising"
+    ]
+   },
+   "async_reset_qualification": "OPEN; exported reset constraints carry setup_rising/hold_rising labels, no explicit recovery/removal types. Preserve raw labels; require validated export interpretation or explicit routed recovery/removal evidence.",
+   "raw_lookup_extrema_ps": {
+    "ss": {
+     "hold_rising": {
+      "min": -105.75282,
+      "max": -53.83622
+     },
+     "setup_rising": {
+      "min": 69.21298,
+      "max": 134.23167
+     },
+     "rising_edge": {
+      "min": 334.69568,
+      "max": 644.4256
+     }
+    },
+    "ff": {
+     "hold_rising": {
+      "min": -61.91365,
+      "max": -23.98827
+     },
+     "setup_rising": {
+      "min": 35.57044,
+      "max": 79.46102
+     },
+     "rising_edge": {
+      "min": 163.29115,
+      "max": 292.04663
+     }
+    }
+   },
+   "extrema_scope": "Across all exported pin lookup entries, including load range and leaf clock boundary paths. No operating load, insertion compensation, async semantics, per-pair timing or wire budget inferred."
   },
   "dsfd_hrow_r23": {
    "record_commit": "16f451be6",
@@ -185,7 +269,49 @@
     "sha256": "1ec5c6fe4a2ace837d9a9523d75228b5a344756f3e317126de62b889fcea1052"
    },
    "changed_pin_count": 0,
-   "pin_deltas": []
+   "pin_deltas": [],
+   "reset_constraint_arc_types": {
+    "ss": [
+     "hold_rising",
+     "setup_rising"
+    ],
+    "ff": [
+     "hold_rising",
+     "setup_rising"
+    ]
+   },
+   "async_reset_qualification": "OPEN; exported reset constraints carry setup_rising/hold_rising labels, no explicit recovery/removal types. Preserve raw labels; require validated export interpretation or explicit routed recovery/removal evidence.",
+   "raw_lookup_extrema_ps": {
+    "ss": {
+     "hold_rising": {
+      "min": -103.92637,
+      "max": -51.89605
+     },
+     "setup_rising": {
+      "min": 67.24369,
+      "max": 132.43593
+     },
+     "rising_edge": {
+      "min": 339.71188,
+      "max": 658.4173
+     }
+    },
+    "ff": {
+     "hold_rising": {
+      "min": -60.73252,
+      "max": -23.03727
+     },
+     "setup_rising": {
+      "min": 34.97263,
+      "max": 78.46762
+     },
+     "rising_edge": {
+      "min": 165.86296,
+      "max": 297.19666
+     }
+    }
+   },
+   "extrema_scope": "Across all exported pin lookup entries, including load range and leaf clock boundary paths. No operating load, insertion compensation, async semantics, per-pair timing or wire budget inferred."
   }
  },
  "raw_timing_facts": {

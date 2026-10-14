@@ -24,6 +24,19 @@ def main():
   ins=directory/'insertion.json';abstract=directory/'abstract.json'
   intake[ma]={'record_commit':commit,'source_commit':'06542a05c','status':'CLOSED leaf; historical parent placement not requalified','final_lef':ref(lef),'abstract':ref(abstract),'insertion':ref(ins),'insertion_corners':{c:json.load(open(ins))[c]['boundary'] for c in ['ss','tt','ff']},'outline_um':[geo['W'],geo['H']],'historical_cts_pin_evidence':ref(ROOT/P.MP[ma]['evidence']),'changed_pin_count':len(delta),'pin_deltas':delta}
   facts[ma]={c:{'liberty':ref(directory/(ma+'_'+c+'.lib')),'pins':pinreg_audit.parse_lib(directory/(ma+'_'+c+'.lib'))['pins'],'units':'ps; raw lookup tables; no assumed operating slew/load'} for c in ['ss','ff']}
+ for ma,v in intake.items():
+  reset='rst' if ma=='dsfd_die_rstsync' else 'rn'
+  v['reset_constraint_arc_types']={c:sorted({a[0] for a in facts[ma][c]['pins'][reset]['arcs']}) for c in ['ss','ff']}
+  v['async_reset_qualification']='OPEN; exported reset constraints carry setup_rising/hold_rising labels, no explicit recovery/removal types. Preserve raw labels; require validated export interpretation or explicit routed recovery/removal evidence.'
+  v['raw_lookup_extrema_ps']={}
+  for c in ['ss','ff']:
+   values=collections.defaultdict(list)
+   for n,p in facts[ma][c]['pins'].items():
+    if n=='ck':continue
+    for typ,related,tables in p['arcs']:
+     for table in tables.values():values[typ].extend(table)
+   v['raw_lookup_extrema_ps'][c]={typ:dict(min=min(xs),max=max(xs)) for typ,xs in values.items() if xs}
+  v['extrema_scope']='Across all exported pin lookup entries, including load range and leaf clock boundary paths. No operating load, insertion compensation, async semantics, per-pair timing or wire budget inferred.'
  existing=json.load(gzip.open(OUT/'closed_child_ss_ff_timing_facts.json.gz','rt'));facts.update(existing)
  fp=OUT/'available_final_ss_ff_timing_facts.json.gz'
  with gzip.GzipFile(filename=str(fp),mode='wb',mtime=0) as f:f.write(json.dumps(facts,separators=(',',':')).encode())
