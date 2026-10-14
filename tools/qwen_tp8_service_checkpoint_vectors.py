@@ -37,6 +37,9 @@ def package(oracle_dir, die, out):
     (out / 'kv.hex').write_text('\n'.join(rows) + '\n')
     metadata = {'schema': 'opentallas.qwen-tp8-checkpoint-service-vectors.v1',
                 'status': 'ORACLE_FED_SERVICE_ARITHMETIC_COMPONENT_ONLY', 'die': die,
+                'payload_layer': report.get('payload_layer', 0),
+                'x_source': report.get('x_source', {'kind':'checkpoint_embedding'}),
+                'collective_reference_profile': report.get('collective_reference_profile','legacy_linear8'),
                 'position': report['position'], 'source_oracle_sha256': sha(oracle_dir / 'oracle.json'),
                 'fused_program_sha256': rank['lowered_program_sha256'],
                 'oracle_input_policy': report['input_policy'],

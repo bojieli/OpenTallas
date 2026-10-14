@@ -17,10 +17,10 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def lower_image(directory):
-    manifest = json.loads((directory / 'layer0_rom.json').read_text())
-    if TP != 8 or GROUPS != 3072 or manifest['tp'] != 8 or manifest['layer'] != 0:
-        raise ValueError('requires actual TP8/GT3072 layer-zero image environment')
+def lower_image(directory, *, layer=0):
+    manifest = json.loads((directory / f'layer{layer}_rom.json').read_text())
+    if TP != 8 or GROUPS != 3072 or manifest['tp'] != 8 or manifest['layer'] != layer or not 0 <= layer < 36:
+        raise ValueError('requires actual TP8/GT3072 requested-layer image environment')
     if manifest['checkpoint_lock_sha256'] != sha(LOCK) or manifest['config_sha256'] != sha(CONFIG):
         raise ValueError('checkpoint/config source pin mismatch')
     for path, digest in manifest['source_sha256'].items():
@@ -60,8 +60,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--image', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
+    parser.add_argument('--layer', type=int, choices=range(36), default=0)
     args = parser.parse_args()
-    candidate = lower_image(args.image)
+    candidate = lower_image(args.image, layer=args.layer)
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / 'program.hex').write_text(''.join(w + '\n' for w in candidate['program_hex']))
     (args.out / 'segments.hex').write_text(''.join(w + '\n' for w in candidate['descriptor_hex']))

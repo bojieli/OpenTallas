@@ -72,7 +72,7 @@ def production_tp8_fold(partials):
     return G.fold([G.add(partials[p], partials[p+4]) for p in range(4)])
 
 
-def generate(image_root, snapshot, out, position=255, token=0, collective_profile='legacy_linear8'):
+def generate(image_root, snapshot, out, position=255, token=0, collective_profile='legacy_linear8', layer=0, x_input=None):
     if collective_profile not in ('legacy_linear8', 'production_tp8_two_level'):
         raise ValueError('unknown collective reference profile')
     if TP != 8 or GROUPS != 3072 or I.SU_WIDTH != 64 or G.KV_FMT != 'fp8':
@@ -81,17 +81,25 @@ def generate(image_root, snapshot, out, position=255, token=0, collective_profil
         raise ValueError('position outside native layer capacity')
     out.mkdir(parents=True, exist_ok=True)
     vm_map, _ = FP.vm_map()
-    images = [Image(image_root / f'die{die}') for die in range(8)]
+    images = [Image(image_root / f'die{die}', layer=layer) for die in range(8)]
     if any(image.descriptors != images[0].descriptors for image in images[1:]):
         raise ValueError('eight rank collective descriptor mismatch')
-    lowered = [lower_image(image.dir) for image in images]
+    lowered = [lower_image(image.dir, layer=layer) for image in images]
     effect_mask = np.ones(FP.vm_map()[1], dtype=np.bool_)
     for lo, hi in lowered[0]['removed_intermediate_intervals'].values():
         effect_mask[lo:hi] = False
-    embedding = shipped_vocab_rows(snapshot, 'embedding', start=token, count=1)
-    codes = embedding['codes'].numpy()[0].astype(np.float32)
-    scale = embedding['scales'].float().numpy()[0, 0]
-    x_initial = G.mul(codes, np.float32(scale))
+    if x_input is None:
+        if layer != 0:
+            raise ValueError('later checkpoint layer requires committed previous-layer X input')
+        embedding = shipped_vocab_rows(snapshot, 'embedding', start=token, count=1)
+        codes = embedding['codes'].numpy()[0].astype(np.float32)
+        scale = embedding['scales'].float().numpy()[0, 0]
+        x_initial = G.mul(codes, np.float32(scale))
+    else:
+        words = Path(x_input).read_text().split()
+        if len(words) != 4096 or any(word.startswith('@') for word in words):
+            raise ValueError('later-layer X input requires4096exact FP32 words')
+        x_initial = G.from_bits(np.array([int(word,16) for word in words], dtype=np.uint32))
     (out / 'vm_x_fp32.hex').write_text('@1000\n' + ''.join(f'{int(x):08x}\n' for x in G.bits(x_initial)))
     machines = [NativeOracleMachine(image) for image in images]
     report = {'schema': 'opentallas.qwen-tp8-native-layer-oracle.v1',
@@ -107,6 +115,8 @@ def generate(image_root, snapshot, out, position=255, token=0, collective_profil
                     ('tools/qwen_tp8_native_layer_oracle.py', 'tools/qwen_o4_layer0_oracle_w12.py',
                      'tools/hdc_golden.py', 'tools/hdc_program.py', 'tools/hdc_isa.py',
                      'tools/qwen_tp8_payload_fused_lower.py', 'tools/qwen_tp8_fused_attention_lower.py')}}
+    report['payload_layer'] = layer
+    report['x_source'] = {'kind':'checkpoint_embedding' if x_input is None else 'previous_layer_X', 'sha256': None if x_input is None else sha(x_input)}
     report['collective_reference_profile'] = collective_profile
     report['production_tp8_collective_compatible'] = collective_profile == 'production_tp8_two_level'
     if collective_profile == 'production_tp8_two_level':
@@ -121,8 +131,8 @@ def generate(image_root, snapshot, out, position=255, token=0, collective_profil
         directory = out / f'die{die}'; directory.mkdir(exist_ok=True)
         t, dim = np.meshgrid(np.arange(position), np.arange(128), indexing='ij')
         # Safe finite signed E4M3 values, serialized as the exact receiver bytes.
-        k_codes = (((t*11+dim*7+die*13) % 48)+24).astype(np.uint8) | (((t+dim+die)%2)*128).astype(np.uint8)
-        v_codes = (((t*3+dim*5+die*17) % 48)+24).astype(np.uint8) | (((t+2*dim+die)%2)*128).astype(np.uint8)
+        k_codes = (((t*11+dim*7+die*13+layer*19) % 48)+24).astype(np.uint8) | (((t+dim+die)%2)*128).astype(np.uint8)
+        v_codes = (((t*3+dim*5+die*17+layer*23) % 48)+24).astype(np.uint8) | (((t+2*dim+die)%2)*128).astype(np.uint8)
         for name, values in (('K', k_codes), ('V', v_codes)):
             (directory / f'prior_{name}_fp8.bin').write_bytes(values.tobytes())
         keys, values = fp8_decode(k_codes), fp8_decode(v_codes)
@@ -191,9 +201,11 @@ def main():
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--position', type=int, default=255)
     parser.add_argument('--token', type=int, default=0)
+    parser.add_argument('--layer', type=int, choices=range(36), default=0)
+    parser.add_argument('--x-input', type=Path)
     parser.add_argument('--collective-profile', choices=('legacy_linear8', 'production_tp8_two_level'), default='legacy_linear8')
     args = parser.parse_args()
-    generate(args.image_root, args.snapshot, args.out, args.position, args.token, args.collective_profile)
+    generate(args.image_root, args.snapshot, args.out, args.position, args.token, args.collective_profile, args.layer, args.x_input)
 
 if __name__ == '__main__':
     main()

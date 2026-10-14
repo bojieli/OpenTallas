@@ -41,11 +41,11 @@ def _bf16_u16_to_f32(u16):
 
 
 class Image:
-    def __init__(self, directory):
+    def __init__(self, directory, *, layer=0):
         self.dir = Path(directory)
-        self.manifest = json.loads((self.dir / 'layer0_rom.json').read_text())
-        if self.manifest['layer'] != 0 or self.manifest['tp'] != TP:
-            raise ValueError('expected emitted layer-0 TP2 images')
+        self.manifest = json.loads((self.dir / f'layer{layer}_rom.json').read_text())
+        if not 0 <= layer < 36 or self.manifest['layer'] != layer or self.manifest['tp'] != TP:
+            raise ValueError('expected source-pinned requested-layer TP images')
         for name, digest in self.manifest['image_sha256'].items():
             if _sha(self.dir / name) != digest:
                 raise ValueError(f'image digest mismatch: {name}')
