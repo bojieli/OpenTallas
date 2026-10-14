@@ -122,6 +122,8 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 # that is not CLOSED are unaffected.
 CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register")
 DIE_WINDOW_CUT_MIN = 0.6
+PIN_LAUNCH_MAX_PS = 220.0             # tile defect: first-load launch beyond phi - R (header 10-13 die clock rule)
+PIN_CAPTURE_MAX_PS = 190.0            # tile defect: setup at the pin plus R
 PIN_REGISTER_PAIR_MAX_PS = 683.3      # 833.3 - 60 - SKEW 90 (same clock level): o + s of one view above it leaves no wire
 CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + "
                          "mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json "

@@ -142,6 +142,8 @@ def pin_hook_wrapper(s: dict) -> bool:
 
 def gen_pin_hooks(s: dict) -> dict:
     if not pin_hook_wrapper(s):
+        if s.get("pin_hook_before_flops"):
+            raise SpecError("pin_hook_before_flops needs the recipe-2 pin-hook wrapper (io_flop_at_pins + inhold/outhold, recipe >= 2)")
         return {}
     hold = "leaf_iohold.tcl" if s.get("outhold") else "leaf_inhold.tcl"
     pre_gpl = ["# ref_tile PRE_GLOBAL_PLACE (kit recipe 2): the hold stages are inserted FIRM at the pins first, then every",
@@ -149,6 +151,14 @@ def gen_pin_hooks(s: dict) -> dict:
                "# one hook per step, so the two repo hooks are sourced from this kit file.",
                f"source /src/physical/dsrom_window_source/{hold}",
                f"source /src/{QDM}/io_flop_at_pins.tcl"]
+    # spec "pin_hook_before_flops": repo Tcl hooks sourced after the hold stages and BEFORE the pin flops are fixed
+    # (e.g. a relay master's bit-to-pin alignment); safe relative repo paths only, and they join the source-sync list.
+    for rel in s.get("pin_hook_before_flops", []):
+        if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+            raise SpecError("pin_hook_before_flops must name safe relative repo Tcl files")
+        if not (ROOT / rel).is_file():
+            raise SpecError(f"missing pin hook: {rel}")
+        pre_gpl.insert(-1, f"source /src/{rel}")
     pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (kit recipe 2): release the FIRM hold cells / drivers and the pin flops for DPL",
                "source /src/physical/dsrom_window_source/leaf_inhold_release.tcl",
                f"source /src/{QDM}/out_flop_release.tcl"]
@@ -1110,7 +1120,7 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
