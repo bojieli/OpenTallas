@@ -66,11 +66,43 @@
       "words_exact": 2584,
       "bench": "HGI_SMMV_TPUT PASS",
       "log_sha256": "b97d7ae17b61ad8320e48a2d2d016c1d7eb2a06c408a78c46cdc96c7f6486aba"
+    },
+    "U0t51": {
+      "layer": "L0",
+      "form": "final hardened leaves with read-pointer and emit-enable fanout copies",
+      "source_commit": "0799ec858",
+      "tiles_sha256": "b5c74e94b0262bf8dcce8a40f16fa208c717ac34ff345a90c65f5efc33d362d9",
+      "XSPD": 51,
+      "DE": 1,
+      "XQ": 3,
+      "WIN": 8,
+      "cycles": 3112,
+      "price": 2950.4,
+      "ratio": 1.0547722342733188,
+      "words_exact": 2318,
+      "bench": "HGI_SMMV_TPUT PASS",
+      "log_sha256": "c9a60dcb512c533b95327d297bb879c0d7df9454984844d0bc8e602a1807620c"
+    },
+    "U1t51": {
+      "layer": "L1",
+      "form": "final hardened leaves with read-pointer and emit-enable fanout copies",
+      "source_commit": "0799ec858",
+      "tiles_sha256": "b5c74e94b0262bf8dcce8a40f16fa208c717ac34ff345a90c65f5efc33d362d9",
+      "XSPD": 51,
+      "DE": 1,
+      "XQ": 3,
+      "WIN": 8,
+      "cycles": 3704,
+      "price": 3689.1,
+      "ratio": 1.0040389254831803,
+      "words_exact": 2584,
+      "bench": "HGI_SMMV_TPUT PASS",
+      "log_sha256": "552e42bae4ce01b775909155b58cfd8d81a257ccbbb7b47271dc506ec1cd70e4"
     }
   },
   "qualification_limits": [
-    "These are RTL production-shape simulations, not routed tile or die qualification.",
-    "Final fanout-copy tiles U0t51/U1t51 and six tiles mutants were live at collection; H0/H1 use prior tiles source.",
-    "No legacy throughput row replaced; physical closure and compiler/fullshape evidence outstanding."
+    "RTL production-shape simulations, not routed tile or die qualification.",
+    "Final hardened-leaf U0/U1 positive PASS, six tiles mutants still building.",
+    "Production compiler full checkpoint proof compiler_stacked_1013 passes L0/L1 and kills matrix-order mutant; physical closure outstanding."
   ]
 }
