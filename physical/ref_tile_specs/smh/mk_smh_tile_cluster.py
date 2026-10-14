@@ -165,7 +165,7 @@ def spec(variant):
         # launches); the wake pin's kept HB4 hold stage (ot_hdly u_hdly_cgi) dont_touch'ed at PRE_FLOORPLAN
         "io_flop_at_pins": {"cols": 6, "allow_none": True},
         "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 96, "hold_delay": True},
-        "job": {"owner": "Claude:el1013-smh-r11", "branch": "claude/el1013-smh-r11", "tag": "r15",
+        "job": {"owner": "Claude:el1013-smh-r11", "branch": "claude/el1013-smh-r11", "tag": "r16",
                 # r14 (el1013-smh-r14, 10-13): r13 passed CTS and was stopped EARLY_FAIL_SETUP (3,985 / 3,885 endpoints).
                 # Diagnosis in el1011-hbm-smh.log: 95 % = rin / bin ports straight into pt_w's pins (the child spends
                 # 240-530 ps pin -> landing flops), the rest g-lane pin registers left mid-wire by the placer.
@@ -182,7 +182,17 @@ def spec(variant):
                     "-> tcl h1, 630-1,023 um of wire between two hard children, -65 / -103 ps on 112 / 176 "
                     "endpoints): OT_SMH_XREL = one leaf-owned register on every operand / control bit between the x "
                     "store and BOTH columns (1,084 + 531 flops a leaf, +1 cycle on both columns and every tile alike), "
-                    "at fixed stations midway (<= ~300 um a hop)"),
+                    "at fixed stations midway (<= ~300 um a hop)"
+                    "  r16 (r15 15b3b4de9 EARLY_FAIL_CONGESTION at 5_1_grt on eg and wg, 69 / 279 markers, all on leaf "
+                    "1's xb_w / xb_x / iw / ix operand nets round its x store | bdc gap; leaf 0 clean): the 1,084 xb "
+                    "relay registers were placed in instance order inside their 100-um window, so each bit ran "
+                    "sideways twice (x store -> register, register -> bdc pin): 1,104 wires through the worst cut "
+                    "(x 186) of the 30.26-um gap (GRT H capacity 22 a 0.57-um gcell = 1,168 tracks: 0.95; the 58.32-um "
+                    "leaf-0 gap 1,048 / 2,251 = 0.47; smh_xb_cut.py). "
+                    "The registers now sit at the column of the bdc pin they drive (sr_place_cols: Q net = a vertical "
+                    "drop), so only the x store's own pin spread crosses a cut: 505 wires worst (x 135.2) = 0.43 of "
+                    "the leaf-1 gap, 0.22 of leaf 0; the xf registers are filled in tcl pin order.  RTL, pins, "
+                    "outline, cycles and benches unchanged"),
                 "purpose": (f"[smmv-b/smt] ot_hbm_accel_smh_tile_{variant}: SM tile as ONE ref_tile cluster (owner "
                             "contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles "
                             "(pt_w p45h, pt_e p40s, xs p45m, bdc p50, tcl p45, tct p45), floorplan re-derived from their "
@@ -299,6 +309,49 @@ def g_stations(variant):
              "      }; if {$found} break",
              "    }; if {!$found} {error \"G_STATION no legal site for [$i getName] in ($x0 $y0 $x1 $y1)\"}",
              "  }",
+             "}",
+             "# el1013-smh-r16: operand relay registers IN PIN ORDER.  r15 GRT (EARLY_FAIL_CONGESTION, both tiles): sr_place_win filled",
+             "# the xb window in instance order, so a register sat anywhere in the 100-um window: its Q net ran sideways to its",
+             "# bdc pin and its D net sideways from the x store (GRT: the 30.26-um leaf-1 gap full, H capacity 22 / usage 23 a",
+             "# gcell at the window centre; markers on xb_w / xb_x / iw / ix nets only; the 58.32-um leaf-0 gap clean).",
+             "# sr_pin_x: x of the hard-child pin a register drives (through <= 3 BUF / INV).",
+             "proc sr_pin_x {i} {",
+             "  set cur $i",
+             "  for {set hop 0} {$hop < 4} {incr hop} {",
+             "    set nxt {}",
+             "    foreach it [$cur getITerms] { if {![$it isOutputSignal]} continue; set n [$it getNet]; if {$n eq \"NULL\"} continue",
+             "      foreach jt [$n getITerms] { if {![$jt isInputSignal]} continue; set j [$jt getInst]",
+             "        if {[[$j getMaster] isBlock]} { set bb [$jt getBBox]; return [expr {([$bb xMin]+[$bb xMax])/2}] }",
+             "        if {[regexp {^(BUF|INV)} [[$j getMaster] getName]]} { set nxt $j } } }",
+             "    if {$nxt eq {}} break; set cur $nxt",
+             "  }; return -1",
+             "}",
+             "proc sr_sort_pin_x {insts} {",
+             "  set l {}; foreach i $insts {lappend l [list [sr_pin_x $i] [$i getName] $i]}",
+             "  set o {}; foreach e [lsort -integer -index 0 [lsort -dictionary -index 1 $l]] {lappend o [lindex $e 2]}; return $o",
+             "}",
+             "# sr_place_cols: every register in the row nearest the window centre that is free AT THE X OF ITS PIN (the Q net is a",
+             "# vertical drop on the pin's own track column); a register with no pin or no free row takes the ordered window fill.",
+             "proc sr_place_cols {insts x0 y0 x1 y1} {",
+             "  set X0 [expr {round($x0*$::sr_dbu)}]; set Y0 [expr {round($y0*$::sr_dbu)}]; set X1 [expr {round($x1*$::sr_dbu)}]; set Y1 [expr {round($y1*$::sr_dbu)}]",
+             "  set cy [expr {($Y0+$Y1)/2}]; set rows {}; set pad [expr {round(1.0*$::sr_dbu)}]; set rest {}; set ncol 0",
+             "  foreach r $::sr_rows {lassign $r ox oy xe ori; if {$oy >= $Y0 && $oy+$::sr_rh <= $Y1 && $xe > $X0 && $ox < $X1} {lappend rows [linsert $r 0 [expr {abs($oy-$cy)}]]}}",
+             "  set rows [lsort -integer -index 0 $rows]",
+             "  foreach i [sr_sort_pin_x $insts] {",
+             "    set px [sr_pin_x $i]; if {$px < 0} {lappend rest $i; continue}",
+             "    set h [[$i getMaster] getHeight]; set w [expr {max([[$i getMaster] getWidth],$::sr_mw_dff)+4*$::sr_sw+$pad}]; set found 0",
+             "    foreach r $rows {lassign $r delta ox oy xe ori",
+             "      set x [expr {max($X0,min($px-$w/2,min($xe,$X1)-$w))}]; set x [expr {$ox+int(floor(double($x-$ox)/$::sr_sw))*$::sr_sw}]",
+             "      if {$x < $ox || $x+$w > $xe} continue",
+             "      set free 1; for {set k [expr {int(floor(double($oy)/$::sr_rh))}]} {$k <= int(floor(double($oy+$h-1)/$::sr_rh))} {incr k} {",
+             "        if {![dict exists $::sr_used $k]} continue; foreach iv [dict get $::sr_used $k] {lassign $iv a b; if {$x+$w > $a && $x < $b} {set free 0; break}}",
+             "        if {!$free} break }",
+             "      if {!$free} continue",
+             "      $i setOrient $ori; $i setLocation [expr {$x+2*$::sr_sw}] $oy; $i setPlacementStatus FIRM; incr ::sr_fixed; sr_occupy $x $oy [expr {$x+$w}] [expr {$oy+$h}]; set found 1; incr ncol; break",
+             "    }; if {!$found} {lappend rest $i}",
+             "  }",
+             "  if {[llength $rest]} {sr_place_win $rest $x0 $y0 $x1 $y1}",
+             "  puts \"X_STATION_COLS $ncol registers at their pin column, [llength $rest] by ordered window fill\"",
              "}", "set gn 0"]
     tot = 0
     for name, rex, n, x, y, hx, hy in G_ST:
@@ -318,7 +371,10 @@ def g_stations(variant):
                   "foreach i [$::sr_blk getInsts] {set nm [string map {\\\\ {}} [$i getName]]; "
                   f"if {{[regexp {{{rex}}} $nm] && [string match DFF* [[$i getMaster] getName]]}} {{lappend gl $i}}}}",
                   f"if {{[llength $gl] < {lo} || [llength $gl] > {hi}}} {{error \"G_STATION {name}: expected {lo}..{hi} registers, got [llength $gl]\"}}",
-                  f"sr_place_win $gl {round(x - hx, 3)} {round(y - hy, 3)} {round(x + hx, 3)} {round(y + hy, 3)}",
+                  # r16: xb (under / over the bdc operand pins) at the pin columns; xf (station away from the tcl pins) filled in
+                  # pin order
+                  (f"sr_place_cols $gl {round(x - hx, 3)} {round(y - hy, 3)} {round(x + hx, 3)} {round(y + hy, 3)}" if name.startswith("xb_")
+                   else f"sr_place_win [sr_sort_pin_x $gl] {round(x - hx, 3)} {round(y - hy, 3)} {round(x + hx, 3)} {round(y + hy, 3)}"),
                   f"puts \"X_STATION {name} [llength $gl]\"", "incr gn [llength $gl]"]
     lines += [f"puts \"G_STATION_PLACED {len(G_ST) + len(X_ST)} DFFS $gn FIXED_CELLS $::sr_fixed\""]
     return lines
