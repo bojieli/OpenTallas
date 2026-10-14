@@ -7,6 +7,12 @@ import sys, json, gzip, re
 from collections import defaultdict
 
 plan, rpt, cdj, out = sys.argv[1:5]
+aliases = {}
+alias_file = None
+if '--pin-aliases' in sys.argv:
+    alias_file = sys.argv[sys.argv.index('--pin-aliases') + 1]
+    aliases = json.load(open(alias_file))
+alias_endpoints = 0
 p = json.load(gzip.open(plan))
 mst = {i[0]: i[1] for i in p['insts']}
 drv = {}
@@ -34,7 +40,16 @@ for ln in open(rpt, errors='ignore'):
     bit = int(bit_text[1:-1]) if bit_text else 0
     sl = float(sl)
     tot['n'] += 1
-    ds = [d for d in drv.get((inst, port), []) if d[0] <= bit <= d[1]]
+    lookup_port, lookup_bit = port, bit
+    actual_pin = port + (bit_text or '')
+    master_aliases = aliases.get(mst.get(inst, em), {})
+    mapped = master_aliases.get(actual_pin)
+    if mapped is None and not bit_text:
+        mapped = master_aliases.get(port + '[0]')
+    if mapped is not None:
+        lookup_port, lookup_bit = mapped
+        alias_endpoints += 1
+    ds = [d for d in drv.get((inst, lookup_port), []) if d[0] <= lookup_bit <= d[1]]
     if len(ds) > 1:
         raise ValueError(f'ambiguous plan drivers for {inst}/{port}[{bit}]: {ds}')
     if ds:
@@ -71,7 +86,7 @@ for r in rows:
     a = categories.setdefault(r['category'], dict(endpoints=0, violators=0, wns_ps=1e9, tns_ns=0))
     a['endpoints'] += r['endpoints']; a['violators'] += r['violators']
     a['wns_ps'] = min(a['wns_ps'], r['wns_ps']); a['tns_ns'] += r['tns_ns']
-json.dump(dict(report=rpt, endpoints=tot['n'], violators=tot['viol'], categories=categories, classes=rows), open(out, 'w'), indent=1)
+json.dump(dict(report=rpt, pin_aliases=alias_file, alias_endpoints=alias_endpoints, endpoints=tot['n'], violators=tot['viol'], categories=categories, classes=rows), open(out, 'w'), indent=1)
 print(rpt, tot)
 for r in rows:
     if r['violators'] or '--all' in sys.argv: print('%-10s %-12s %-34s -> %-34s %-18s n %7d viol %7d wns %8.1f tns %9.1f ns L %6.1f/%s' % (
