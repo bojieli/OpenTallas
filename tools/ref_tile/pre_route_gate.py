@@ -476,7 +476,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
                   if sev == "WARN" else "")
         if spec["kind"] == "cluster" and spec.get("clock", "spine") == "spine" and kv.get("GATE_CTS_RC") == "0":
             done = re.search(r"^GATE_SPINE_DONE .*OT_SPINE done port (\S+)", out, re.M)
-            if not done or done.group(1) != spec["clock_port"]:
+            if not done or re.sub(r"\[0\]$", "", done.group(1)) != re.sub(r"\[0\]$", "", spec["clock_port"]):
                 g.add("FAIL", "clock_spine", f"no 'OT_SPINE done port {spec['clock_port']}' in the CTS log: the spine did not "
                       "build, TritonCTS ran instead (OT_SPINE_PORT not reaching the container before 225badfab)",
                       "check OT_SPINE_PORT in config.mk and the PRE_CTS hook order (spine sourced first)")

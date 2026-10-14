@@ -26,7 +26,7 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 |---|---|
 | `name`, `top`, `kind` | kit name ([a-z0-9_]), top module, `tile` (leaf) or `cluster` (has hard children) |
 | `sources`, `params`, `clock_port`, `reset_ports` | RTL, top parameters, clock port, reset ports |
-| `outline {w,h}` / `std_area_um2` + `util` / `contract {file, slot}` | outline: explicit, sized to util (0.52 default), or the die contract slot |
+| `outline {w,h}` / `std_area_um2` + `util` / `contract {file, slot}` | outline: explicit (snapped up to the 2.16 lattice; `"exact": true` keeps the given size: a drop-in replacement inside a fixed sub-slot), sized to util (0.52 default), or the die contract slot |
 | `pins {N,S,E,W: [port base names]}` | per-face port groups; base names only (`ck`, never `ck[0]`); every port exactly once |
 | `macros [{view, count, at?, orient?, inst?}]` | SRAM/ROM views (DIR holds NAME.lef + NAME_{ss,ff,tt}.lib) |
 | `children [{view, count, at?, inst?}]` | hard children (cluster): views exported by this flow |
