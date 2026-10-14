@@ -17,7 +17,11 @@ for TOP in "${TOPS[@]}"; do
   vvp "$OUT/$TOP-$MUT" > "$OUT/$TOP-run-$MUT.log" 2>&1
   RC=$?
   set -e
-  if [[ $MUT == 0 ]];then [[ $RC == 0 ]]&&grep -q '^PASS' "$OUT/$TOP-run-$MUT.log";else [[ $RC != 0 ]]&&grep -q 'FATAL' "$OUT/$TOP-run-$MUT.log";fi
+  if [[ $MUT == 0 ]];then
+   if [[ $RC != 0 ]] || ! grep -q '^PASS' "$OUT/$TOP-run-$MUT.log";then cat "$OUT/$TOP-run-$MUT.log";exit 1;fi
+  else
+   if [[ $RC == 0 ]] || ! grep -q 'FATAL' "$OUT/$TOP-run-$MUT.log";then cat "$OUT/$TOP-run-$MUT.log";exit 1;fi
+  fi
   cat "$OUT/$TOP-run-$MUT.log";rm "$OUT/$TOP-$MUT"
  done
 done
