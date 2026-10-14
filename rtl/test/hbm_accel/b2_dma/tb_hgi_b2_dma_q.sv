@@ -45,7 +45,7 @@ module tb_hgi_b2_dma_q;
     // which made the first descriptor depend on the DUT hierarchy under Verilator5.050.
     reg [31:0] rseed = 32'(SEED);
     function automatic integer rnd(input integer n);
-        begin rseed = rseed * 32'd1664525 + 32'd1013904223; rnd = int'(rseed % $unsigned(n)); end
+        begin rseed = rseed ^ (rseed << 13); rseed = rseed ^ (rseed >> 17); rseed = rseed ^ (rseed << 5); rnd = int'(rseed % $unsigned(n)); end
     endfunction
     task automatic bad(input string s);
         begin if (errs < 12) $display("B2_DMA_Q ERR @%0d: %s", cyc, s); errs = errs + 1; end
@@ -117,7 +117,7 @@ module tb_hgi_b2_dma_q;
     bit quiet = 1;                                              // no record outstanding: any request is an error
     reg [31:0] bp_seed = 32'(SEED) ^ 32'h7a1bfc03;
     function automatic integer bp_rnd(input integer n);
-        begin bp_seed = bp_seed * 32'd22695477 + 32'd1; bp_rnd = int'(bp_seed % $unsigned(n)); end
+        begin bp_seed = bp_seed ^ (bp_seed << 13); bp_seed = bp_seed ^ (bp_seed >> 17); bp_seed = bp_seed ^ (bp_seed << 5); bp_rnd = int'(bp_seed % $unsigned(n)); end
     endfunction
     function automatic bit hold;
        integer br; begin br = bp_rnd(4); hold = bp == 1 ? br == 0 : bp == 2 ? br != 0 : 0; end
