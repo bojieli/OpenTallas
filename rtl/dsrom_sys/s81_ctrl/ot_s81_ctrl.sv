@@ -230,7 +230,7 @@ module ot_s81_ctrl #(
             $fatal(1,"native H transfer requires layer/internal hop, valid VM returns and explicit slot lowering");
         ot_s81_htransfer_boundary #(.XW(XW),.RXB(RXB),.TXB(TXB),.S_RD(HC_S_RD),.S_WR(HC_COMMIT_BANKS)) hboundary(
             .clk(clk),.rst_n(rst_n),.land_v(vm_we),.land_a(vm_waddr),.land_d(vm_wdata),
-            .hc_head(hc_queue_head),.normal_inputs_present(hc_normal_inputs_present),.hc_inputs_present(hc_inputs_present),
+            .hc_head(hc_queue_head),.hc_done_v(dn_v[2]),.hc_done_tag(dn_tag[2*TAGW+:8]),.normal_inputs_present(hc_normal_inputs_present),.hc_inputs_present(hc_inputs_present),
             .hc_rq_v(hc_vm_rq_v),.hc_rq_row(hc_vm_rq_row),.hc_rs_v(hc_vm_rs_v),.hc_rs_d(hc_vm_rs_d),
             .vm_rq_v(transfer_vm_rq_v),.vm_rq_row(transfer_vm_rq_row),.vm_rs_v(transfer_vm_rs_v),.vm_rs_d(transfer_vm_rs_d),
             .commit_v(hc_commit_v),.commit_a(hc_commit_row),.commit_mask(hc_commit_mask),.hop_go(transfer_go),

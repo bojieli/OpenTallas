@@ -11,6 +11,7 @@ module ot_s81_htransfer_boundary #(
  input wire clk,rst_n,
  input wire land_v,input wire [13:0] land_a,input wire [511:0] land_d,
  input wire [85:0] hc_head, // dsfd_sp_hc_c t_head: {valid,accepted,descriptor84}
+ input wire hc_done_v,input wire [7:0] hc_done_tag,
  input wire normal_inputs_present,
  output wire hc_inputs_present,
  input wire [S_RD-1:0] hc_rq_v,input wire [S_RD*14-1:0] hc_rq_row,
@@ -38,7 +39,24 @@ module ot_s81_htransfer_boundary #(
    hc_head_arg[13:0]==14'(RXB+(hc_head_slot?XW:0));
  // A landing H_LOAD may start at the HEADER. hland itself withholds responses
  // until the matching rows land. Post-Engram or other bases keep normal gating.
- assign hc_inputs_present=landing_head || normal_inputs_present;
+ reg [1:0] h_resident, load_pending;
+ reg [6:0] load_tag[0:1];
+ // Match the actual returned completion, never an issue event or delay price.
+ // The cseq serializes H_STORE behind the prior H operation. Its fixed forward
+ // bus preserves order even when that operation completes before leaf drain.
+ always @(posedge clk or negedge rst_n) begin
+   if(!rst_n)begin h_resident<=0;load_pending<=0;load_tag[0]<=0;load_tag[1]<=0;end
+   else begin
+     if(hc_done_v && load_pending[hc_done_tag[7]] && load_tag[hc_done_tag[7]]==hc_done_tag[6:0])begin
+       h_resident[hc_done_tag[7]]<=1;load_pending[hc_done_tag[7]]<=0;
+     end
+     if(hc_head[84] && hc_head_arg[23:20]==0)begin
+       h_resident[hc_head_slot]<=0;load_pending[hc_head_slot]<=1;load_tag[hc_head_slot]<=hc_head[6:0];
+     end
+   end
+ end
+ wire resident_store=hc_head_valid && hc_head_arg[23:20]==1 && h_resident[hc_head_slot];
+ assign hc_inputs_present=landing_head || resident_store || normal_inputs_present;
  wire lf,tf;wire [3:0] lc,tc;
  wire [31:0] stream_count,vm_count;
  wire [2*$clog2(XW+1)-1:0] committed;

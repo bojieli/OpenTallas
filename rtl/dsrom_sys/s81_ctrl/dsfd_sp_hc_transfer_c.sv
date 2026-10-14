@@ -41,7 +41,7 @@ module dsfd_sp_hc_transfer_c #(
  .t_tf0(t_tf0),.t_tf1(t_tf1),.t_tf2(t_tf2),.f_tr0(f_tr0),.f_tr1(f_tr1),.f_tr2(f_tr2));
  ot_s81_htransfer_boundary #(.RXB(RXB),.TXB(TXB),.XW(XW),.S_RD(S_RD),.S_WR(COMMIT_BANKS)) boundary(
  .clk(ck),.rst_n(rst),.land_v(package_vm_we),.land_a(package_vm_addr),.land_d(package_vm_data),
- .hc_head(head_snapshot),.normal_inputs_present(normal_inputs_present),.hc_inputs_present(inp),
+ .hc_head(head_snapshot),.hc_done_v(c_done[8]),.hc_done_tag(c_done[7:0]),.normal_inputs_present(normal_inputs_present),.hc_inputs_present(inp),
  .hc_rq_v(hc_rq_v),.hc_rq_row(hc_rq_row),.hc_rs_v(hc_rs_v),.hc_rs_d(hc_rs_d),
  .vm_rq_v(vm_rq_v),.vm_rq_row(vm_rq_row),.vm_rs_v(vm_rs_v),.vm_rs_d(vm_rs_d),
  .commit_v(commit_v),.commit_a(commit_a),.commit_mask(commit_mask),.hop_go(hop_go),
