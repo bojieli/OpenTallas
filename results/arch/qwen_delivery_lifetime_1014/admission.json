@@ -1,0 +1,39 @@
+{
+  "scope": "COMPONENT_AND_GENERIC_CENSUS_ONLY",
+  "runs": [
+    {
+      "unit": "oth-ubuntu-1649381-1791965584",
+      "host": "ot-epyc1tb",
+      "mem_GB": 1,
+      "threads": 1,
+      "exit": 0,
+      "role": "positive plus4 mutants"
+    },
+    {
+      "unit": "oth-ubuntu-1735618-1791966295",
+      "host": "ot-epyc1tb",
+      "mem_GB": 1,
+      "threads": 1,
+      "exit": 0,
+      "role": "expanded positive plus6 mutants"
+    },
+    {
+      "unit": "oth-ubuntu-1224398-1791966074",
+      "host": "ot-epyc4",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "bank census",
+      "yosys_peak_MB": 1615.86
+    },
+    {
+      "unit": "oth-ubuntu-1224399-1791966074",
+      "host": "ot-epyc4",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "controller census",
+      "yosys_peak_MB": 26.18
+    }
+  ]
+}

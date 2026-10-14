@@ -14,8 +14,9 @@ an assigned outline, pins, clock delivery, CTS, or exported timing view.
 The recipient expectation is 768 tiles ×4 quads =3072, pending binding to the
 actual native tile/cache event topology. Sixteen banks of192 recipients keep
 the declared state below15000 per root: 7346 bits per bank and1985 controller
-bits, total119521. These are analytical RTL register counts, not synthesis or
-mapped area. Separate child clocks must belong to the live base phase family;
+bits, total119521. Independent admitted Yosys0.52 proc/opt/memory_map censuses
+confirm exactly7346 and1985 Q bits at the declared production parameters.
+They do not establish mapped area or CTS. Separate child clocks must belong to the live base phase family;
 no loader/core domain merge or hierarchy CTS is implied.
 
 Each accepted query creates one obligation carrying a recipient and monotonic
@@ -39,17 +40,25 @@ transport/replay flush acknowledgement before allocation reopens. The fence
 also clears ACK-bank state. A raw reset without a transport fence is insufficient.
 
 The component gate ran via ot-run1GB/1thread on EPYC1,
-unit `oth-ubuntu-1649381-1791965584`, exit0. Twelve held operations cover three
+units `oth-ubuntu-1649381-1791965584` and expanded-mutant
+`oth-ubuntu-1735618-1791966295`, both exit0. Twelve held operations cover three
 reduced-width token wraps, offered-IB changes before actual acceptance, VM
 reservation delay, partial recipient/source drains, ordinary request backpressure,
-and an old-version late ACK. Four independently mutated source copies fail the
+and an old-version late ACK. Independently mutated source copies fail the
 observed assertions: version check, source drain gate, accepted context check,
-and accepted IB check. Source hashes and raw logs are in receipt.json.
+and accepted IB check, context wrap fence, and outstanding retirement gate.
+Source hashes and raw logs are in receipt.json. Independent EPYC4 census units
+`oth-ubuntu-1224398-1791966074` (bank) and
+`oth-ubuntu-1224399-1791966074` (controller) both exited0.
 
 This is a lifetime component gate, not actual tile+VM composition or a throughput
 qualification. The controller serializes whole operations until full drain and
 adds reservation/acceptance/release handshakes plus wrap/reset fences. Their
-native stall cost has not been measured or accepted. Tile a778c2ba6 supplies the
+native stall cost has not been measured or accepted. The current serial acceptance
+port costs at least768 live base edges to acknowledge768 tiles; this is a
+component interface, not a proposed final parallel delivery price. A spatial
+acceptance reduction with actual tagged child receipts is required before a
+production topology can be qualified. Tile a778c2ba6 supplies the
 production accepted IB seam; tile/VM owners are implementing actual event and
 snapshot adapters. Full-key cache metadata and its physical status path remain
 separately required. No149-bit root ABI, dictionary reinterpretation, all-field

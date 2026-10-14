@@ -9,7 +9,9 @@ cases=[('positive',None,None,None),
  ('version_mutant','retire_version==version_q','1\'b1','late version ACK'),
  ('source_drain_mutant','source_output_drained && !fault','1\'b1 && !fault','release before source quiescence'),
  ('context_mutant','accept_context!=held_context','1\'b0','late context acceptance'),
- ('accepted_ib_mutant','accept_ib!=held_ib','1\'b0','offered IB substituted')]
+ ('accepted_ib_mutant','accept_ib!=held_ib','1\'b0','offered IB substituted'),
+ ('wrap_fence_mutant','state<=WRAP_FENCE','state<=IDLE','context wrap reopened'),
+ ('pending_retire_mutant','outstanding[j]!=0','1\'b0','seal waived outstanding')]
 receipt={'scope':'LIFETIME_COMPONENT_ONLY_NOT_ACTUAL_TILE_VM_COMPOSITION',
  'sources':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (src,tb)},'cases':[]}
 for name,old,new,expected in cases:

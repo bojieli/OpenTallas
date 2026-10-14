@@ -1,0 +1,69 @@
+{
+  "schema": "opentallas.qwen-tp8.delivery-lifetime-candidate.v1",
+  "status": "DEFAULT_OFF_COMPONENT_NOT_ADOPTED",
+  "qualified": false,
+  "production_composition": false,
+  "assigned_pins": false,
+  "rtl_sha256": "e132d6829920316ad80edef55cc11ad3cefd90e45946890d779cb0b856674793",
+  "logical_topology": {
+    "tiles": 768,
+    "quad_recipients_per_tile": 4,
+    "recipient_id": "4*tile_id+quad_id",
+    "tile_id": "16*column+row",
+    "recipient_binding": "EXPECTATION_ONLY_PENDING_ACTUAL_CACHE_EVENT_TOPOLOGY",
+    "banks": 16,
+    "recipients_per_bank": 192,
+    "bank_id": "recipient_id//192",
+    "local_id": "recipient_id%192",
+    "clock_entries": "one unpaused coherent base clock per bank and one controller; physical phi-R delivery unassigned"
+  },
+  "state": {
+    "controller_Q_bits": 1985,
+    "bank_Q_bits": 7346,
+    "total_Q_bits": 119521,
+    "basis": "actual admitted Yosys0.52 proc/opt/memory_map production-parameter census; not mapped area or CTS"
+  },
+  "operation_scope": {
+    "acquire": "reserve one actual accepted operation VM version after qualified native commit pipeline drain",
+    "held_descriptor": "IB379/mode1/context16/version32; incoming offer cannot overwrite",
+    "actual_acceptance": "actual tile rst_n&&go_i&&u_me.ready event, with post-IREG acceptedIB; paused levels must be deduplicated",
+    "write_reservation": "held through matching global release; private512 response is only per-query retention",
+    "release": "every real recipient sealed, every issued query retired, source output/replay drained",
+    "reset_and_token_wrap": "transport/replay/cache invalidation fence acknowledged before allocation reopens"
+  },
+  "event_payload_bits": {
+    "controller_accept": 438,
+    "bank_issue": 73,
+    "bank_retire": 73,
+    "bank_seal": 57,
+    "dispatch_common": 428,
+    "query": "170 at actual tile context candidate; precise event toggles and provenance separate"
+  },
+  "ordered_retire": {
+    "sequence_bits": 16,
+    "max_outstanding_per_recipient": 15,
+    "sequence_exhaustion": "blocks issues; no silent wrap",
+    "out_of_order_or_duplicate": "sticky fault; requires ordered retirement or separately proven reorder adapter"
+  },
+  "cost_limits": {
+    "native_cost_measured": false,
+    "cost_adopted": false,
+    "minimum_serial_acceptance_edges_768_tiles": 768,
+    "parallel_acceptance_reduction": "required before production topology; current serial port is component interface",
+    "pipeline_bubbles": "source acquire/all acceptance/full drain/release and fences; full native effect unmeasured"
+  },
+  "binding_owners": {
+    "actual_tile_acceptance": "/root/qwen_tile: a778c2ba6",
+    "cache_event_toggles": "/root/qwen_tile: c58d1436e",
+    "consumer_node_replay_seal": "/root/qwen_tile, pending actual trace/drain predicate and node context sideband",
+    "operation_vm_snapshot": "/root/qwen_vm/region_pilot, actual native ROW adapter in progress",
+    "full_actual_composition": "/root/qwen_die/x_delivery, pending actual production binding"
+  },
+  "pending_physical": [
+    "registered admission and ready/status faces",
+    "actual toggle/event transport and replay latency",
+    "local ordered-retire topology and buffering",
+    "constructive subslots, clock/PG and assigned pins",
+    "native throughput and whole-token cost"
+  ]
+}
