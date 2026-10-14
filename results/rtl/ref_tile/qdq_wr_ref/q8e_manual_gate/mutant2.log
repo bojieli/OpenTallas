@@ -1,0 +1,35 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch2/claude/hbmqs2240-q8e
+ot-run: ot-epyc4       admits   582 GB (avail 809, growth 158, headroom 48, waiters 0/0 GB) load 46/128 running 24 disk 1328 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/hbmqs2240-q8e
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/hbmqs2240-q8e
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-386614-1791956823 after 0 s
+tools/hgi_unit_tput/run_qdq_case.sh: line 26: 388414 Aborted                    (core dumped) "$out/obj/sim" +DIR="$vec" ${QDQ_PLUS:-} > "$out/run.log" 2>&1
+TPUT 0 op 4 n 512 issue 0 ret 95 gap 95 cost 24
+TPUT 1 op 4 n 512 issue 1 ret 111 gap 16 cost 24
+TPUT 2 op 5 n 128 issue 2 ret 115 gap 4 cost 12
+TPUT 3 op 6 n 512 issue 3 ret 131 gap 16 cost 24
+TPUT 4 op 4 n 512 issue 4 ret 147 gap 16 cost 24
+TPUT 5 op 6 n 512 issue 5 ret 163 gap 16 cost 24
+TPUT 6 op 4 n 512 issue 6 ret 179 gap 16 cost 24
+TPUT 7 op 5 n 128 issue 7 ret 183 gap 4 cost 12
+MISMATCH rec 0 word 0: 3e400000 != be700000
+MISMATCH rec 0 word 1: bd600000 != be800000
+MISMATCH rec 0 word 2: 3e700000 != bea00000
+MISMATCH rec 0 word 3: 3ee00000 != 3ea00000
+MISMATCH rec 0 word 4: 3e400000 != 3e700000
+MISMATCH rec 0 word 5: bde00000 != 3e300000
+MISMATCH rec 0 word 6: be300000 != 3c200000
+MISMATCH rec 0 word 7: 3bb00000 != bd800000
+EXACT 0 mismatch 510
+EXACT 1 mismatch 502
+EXACT 2 mismatch 116
+EXACT 3 mismatch 478
+EXACT 4 mismatch 348
+EXACT 5 mismatch 328
+EXACT 6 mismatch 504
+EXACT 7 mismatch 112
+[13321152] %Fatal: tb_hgi_qdq_q_tput.sv:130: Assertion failed in tb_hgi_qdq_q_tput: FATAL: 2898 of 3328 words mismatch
+%Error: rtl/test/hbm_accel/generic/tb_hgi_qdq_q_tput.sv:130: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-386614-1791956823): exit 134

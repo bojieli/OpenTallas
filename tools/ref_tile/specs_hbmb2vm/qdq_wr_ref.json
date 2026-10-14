@@ -59,7 +59,8 @@
  "route": {
   "pd": 0.5,
   "threads": 16,
-  "peak_ram_gb": 40
+  "peak_ram_gb": 40,
+  "pin_min_tracks": 1
  },
  "job": {
   "owner": "Codex:hbm_quant_sfu_2240",
@@ -116,5 +117,6 @@
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
  "structural_change": "q8d routed TT -112.55 FF -2.32 DRC6: sh->sh 22 levels and metadata->FIFO/head 21-25 levels at SS. Independent kept FIFO head reads and masked data selection place pop/fin after each read mux; two parallel completion subtracts move done-bit select after carry, preserving transaction and cycle timing. Same clock spine and exact boundary.",
- "clock": "spine"
+ "clock": "spine",
+ "recipe": 1
 }
