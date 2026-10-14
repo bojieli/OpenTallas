@@ -20,11 +20,11 @@ for profile in 1_1_0_0 2_0_0_0 1_1_0_1 2_0_0_1 1_1_2_0 1_1_4_0; do
   > "$run_dir/compile_$profile.log" 2>&1
  vvp "$run_dir/sim_$profile" > "$run_dir/run_$profile.log"
  if [[ "$mutant" == 0 ]]; then
-  rg -q '^EXACT_PASS ' "$run_dir/run_$profile.log"
-  ! rg -q 'EXACT_FAIL|EXACT_TIMEOUT|ERROR:' "$run_dir/run_$profile.log"
+  grep -Eq '^EXACT_PASS ' "$run_dir/run_$profile.log"
+  ! grep -Eq 'EXACT_FAIL|EXACT_TIMEOUT|ERROR:' "$run_dir/run_$profile.log"
  else
-  rg -q '^EXACT_FAIL ' "$run_dir/run_$profile.log"
-  ! rg -q 'EXACT_PASS|EXACT_TIMEOUT|ERROR:' "$run_dir/run_$profile.log"
+  grep -Eq '^EXACT_FAIL ' "$run_dir/run_$profile.log"
+  ! grep -Eq 'EXACT_PASS|EXACT_TIMEOUT|ERROR:' "$run_dir/run_$profile.log"
  fi
  cat "$run_dir/run_$profile.log"
 done
