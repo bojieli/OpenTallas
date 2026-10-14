@@ -3506,6 +3506,23 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 if y0 >= g['y0'] and y0 + h <= die_top and free((x0, y0, x0 + w, y0 + h)):
                     return x0, y0
         return None
+    # qwen split compute C5 (compute-die lead r2, die-bus audit 2026-10-14): the reference array is lockstep (one BD, one
+    # NWS per tree level, one TWS); on the die every tile sees go after its own head + corridor stages and every leg has
+    # its own relay count (C3: 503 / 720 nodes misaligned, max leg skew 106, block-word spread up to 220 at a slab vs its
+    # 4-deep FIFO).  The node takes valid from leg a only, so skew = a wrong sum: pad the early leg of every node and every
+    # block word to its slab's latest arrival, from THIS build's chains (tools/qwen_split/tree_skew.arrival_pads)
+    if TP8 and TP8.get('split') == 'compute' and _os.environ.get('OT_TREE_PADS_INLINE', '1') != '0':
+        sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+        import tree_skew as _TS
+        S_, E_ = {}, {}
+        for idx, (bid, cl, bits, eps) in buses:
+            if bid.endswith('_rdy') or len(eps) != 2:
+                continue
+            S_[bid] = (len(plans[idx]['frames']) + 1) if idx in plans else 1
+            E_[bid] = (eps[0][0], eps[-1][0])
+        ipads, irep = _TS.arrival_pads(S_, E_)
+        tpads.update(ipads)
+        m['tp8_inline_pads'] = dict(irep, pads=len(ipads), pad_relays=sum(ipads.values()))
     pad_done = {}
     if tpads:
         bidx = {bid: idx for idx, (bid, cl, bits, eps) in buses}
@@ -4372,7 +4389,7 @@ def _r18_post(v, m):
     _r18_masters(v, m)
 
 
-R18_CK = ('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'crst', 'hrst', 'rst_n', 'h_arst_n', 'c_arst_n')
+R18_CK = ('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'crst', 'hrst', 'rst_n', 'h_arst_n', 'c_arst_n') + tuple(f'ck{i}' for i in range(9))
 
 
 def _r18_masters(v, m):

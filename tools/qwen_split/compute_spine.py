@@ -39,6 +39,26 @@ XHEAD_D = 1567                  # head-row word {go 1, ib 379, desc 73, fill 111
 TAP_SW, TAP_AW, TAP_PF, TAP_GI = 1 + 24 + 64 + 2048, 1 + 24 + 16 + 512, 74, 380
 
 
+# C5: masters whose hardened children each take their own die clock entry (delivered at phi - R of that child):
+# die ports ck0 .. ck<n-1> = RTL clock port bits ck[n-1:0] (qfd_tt_up4: 5 = 4 leaves + cluster pin flops, r5 10-14;
+# qfd_xcol_e/w: 9 = xhead + 8 leaves, ot_qfd_xslice_slots.sv)
+CHILD_CK = {'qfd_tt_up4': 5, 'qfd_xcol_e': 9, 'qfd_xcol_w': 9}
+
+
+def _child_clocks(m, rec):
+    n_of = {i.name: CHILD_CK[i.master] for i in m['insts'] if i.master in CHILD_CK}
+    nb = []
+    for b, c, n, e in m['buses']:
+        if c == 'clock_trunk' and any(i in n_of and p == 'ck' for i, p in e):
+            e2 = []
+            for i, p in e:
+                e2 += [(i, f'ck{k}') for k in range(n_of[i])] if (i in n_of and p == 'ck') else [(i, p)]
+            e = e2
+        nb.append((b, c, n, e))
+    m['buses'] = nb
+    rec['child_clocks'] = {k: v for k, v in CHILD_CK.items()}
+
+
 def _dvm(v, m, put, rec, vm, su, xt):
     """Distributed x slices in the die (C4): stations -> qfd_xcst_n/s (516-b corridor word), column heads ->
     qfd_xcol_e/w (one cluster slot per column in the corridor, centred on the head row), the x tap qfd_xs_tap at the VM
@@ -221,6 +241,7 @@ def place(v, m, G):
     rec['outside_spine'] = bad
     if bad:
         raise SystemExit(f'split compute spine: slots outside the spine: {bad[:8]}')
+    _child_clocks(m, rec)
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         json.dump(dict(die=m['die'], rec=rec, insts=ins), open(os.environ['OT_SPLIT_DUMP'], 'w'), default=str)
