@@ -651,10 +651,12 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             # split (kvs1 real case: 'qkd_rhead MX y has no legal origin'): the closed head_hs view has horizontal pins on
             # M4 AND M6, which no y-mirrored origin can put on both track grids -> v1 places every head unflipped in y
             # (R0 / MY); the heads below the control tile then face it with their N (output) face: element-queue item
-            hd_dn = o_up if split else o_dn
+            # (MY is illegal too: its vertical pins sit on M3 and M5): every split head is R0, so the col-1 heads' nb (E face)
+            # faces away from the aggregator
+            hd_dn, hd_up = ('R0', 'R0') if split else (o_dn, o_up)
             for h in range(4):
                 add(f'head_{st}_{e}_{h}', 'qkd_rhead', ex, ey + TILE_Y[f'h{h}'], HEAD[0] - SHAVE, HEAD[1] - SHAVE,
-                    hd_dn if h < 2 else o_up, 'row_engine', 'attn')
+                    hd_dn if h < 2 else hd_up, 'row_engine', 'attn')
             add(f'ectl_{st}_{e}', 'qkd_ectl', ex, ey + TILE_Y['c'], ECTL[0] - SHAVE, ECTL[1] - SHAVE,
                 o_up, 'row_engine', 'attn')
     # centre column: N edge stack, hub, S edge host
