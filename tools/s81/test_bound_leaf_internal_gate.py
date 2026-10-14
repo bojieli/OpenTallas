@@ -54,7 +54,13 @@ def test_zero_etm_minperiod_does_not_prove_missing_internal_paths():
     # or internal sequential-to-sequential path in a one-stage relay.
     for c in ('ss', 'ff'):
         r['real_leaf']['corners'][c]['structural_reg2reg_pairs'] = 0
+    assert not g.gate(m, r)['passed']
+    r['real_leaf']['routed_spec']['sha256'] = 'actualsource'
+    r['real_leaf']['no_internal_reg2reg_review'] = {c: {'passed': True, 'basis': 'source-bound one-stage relay reviewed with returned STA absence', 'log_sha256': c, 'source_spec_sha256': 'actualsource'} for c in ('ss', 'ff')}
     assert g.gate(m, r)['passed']
+    # Faulty structural fanin census zero must NEVER override returned negative timing.
+    r['real_leaf']['corners']['ss']['reg2reg']['max'] = {'endpoints': 8, 'worst_ps': -187.58}
+    assert not g.gate(m, r)['passed']
 
 def test_opensta_property_units_are_ps():
     log = 'OT_INTERNAL_CLOCK core 833.333008\nOT_INTERNAL_COVERAGE max 8 0 12.5\nOT_INTERNAL_STRUCTURAL_PAIRS 8\nOT_INTERNAL_REG2REG max 8 12.5\nOT_INTERNAL_DONE\n'
