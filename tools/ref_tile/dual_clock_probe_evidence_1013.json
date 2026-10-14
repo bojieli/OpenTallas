@@ -3,22 +3,22 @@
   "actual_fixture": "/home/ubuntu/wt/el1013-s81-wfcstg/physical/s81_ph_views/closed/dsfd_wfc_vmx_prd_default",
   "real_etm_status": "Full both-direction max/min rejected: no hold_rising or hold_falling arcs in any original ETM. Explicit setup-only diagnostic validates both directions at all corners.",
   "actual_results": [
-    "DUAL_PATH tt cs max before=6.108447 after=-151.391571 expected=-151.391553",
-    "DUAL_PATH tt sc max before=-72.780060 after=-215.280075 expected=-215.28006",
+    "DUAL_PATH tt cs max before=6.108447 after=-211.391571 expected=-211.391553",
+    "DUAL_PATH tt sc max before=-72.780060 after=-275.280090 expected=-275.28006",
     "DUAL_REF tt a/ck[0] arrival=7.500000 R=342.4 phi=349.9",
     "DUAL_REF tt b/ck[0] arrival=7.500000 R=342.4 phi=349.9",
     "DUAL_REF tt a/ckv[0] arrival=0.000000 R=349.9 phi=349.9",
     "DUAL_REF tt b/ckv[0] arrival=0.000000 R=349.9 phi=349.9",
     "DUAL_PASS tt UNQUALIFIED actual ETM setup-only diagnostic; missing hold arcs; zero-wire API accounting only",
-    "DUAL_PATH ff cs max before=84.317139 after=-72.182869 expected=-72.182861",
-    "DUAL_PATH ff sc max before=-4.313550 after=-147.813568 expected=-147.81355",
+    "DUAL_PATH ff cs max before=84.317139 after=-132.182877 expected=-132.182861",
+    "DUAL_PATH ff sc max before=-4.313550 after=-207.813568 expected=-207.81355",
     "DUAL_REF ff a/ck[0] arrival=6.500000 R=277.6 phi=284.1",
     "DUAL_REF ff b/ck[0] arrival=6.500000 R=277.6 phi=284.1",
     "DUAL_REF ff a/ckv[0] arrival=0.000000 R=284.1 phi=284.1",
     "DUAL_REF ff b/ckv[0] arrival=0.000000 R=284.1 phi=284.1",
     "DUAL_PASS ff UNQUALIFIED actual ETM setup-only diagnostic; missing hold arcs; zero-wire API accounting only",
-    "DUAL_PATH ss cs max before=-129.927795 after=-289.927795 expected=-289.927795",
-    "DUAL_PATH ss sc max before=-205.352509 after=-345.352539 expected=-345.352509",
+    "DUAL_PATH ss cs max before=-129.927795 after=-349.927795 expected=-349.927795",
+    "DUAL_PATH ss sc max before=-205.352509 after=-405.352539 expected=-405.352509",
     "DUAL_REF ss a/ck[0] arrival=10.000000 R=449.8 phi=459.8",
     "DUAL_REF ss b/ck[0] arrival=10.000000 R=449.8 phi=459.8",
     "DUAL_REF ss a/ckv[0] arrival=0.000000 R=459.8 phi=459.8",
@@ -48,5 +48,17 @@
     "zero_sources": [
       "Error: probe_tt.tcl, 214 slack mismatch cs max -143.891571 vs -151.391553"
     ]
+  },
+  "setup_margin_rule": "60+150=210ps whenever either TT boundary insertion exceeds300ps; otherwise60+90=150ps",
+  "input_hold_exception_root_cause": {
+    "source_sdc": "retained actual6_final.sdc line9364",
+    "normal_data_hold_waivers": 1167,
+    "retained_special_ports": [
+      "ckv[0]",
+      "rst[0]",
+      "rsv[0]"
+    ],
+    "tightened_sdc_sha256": "fdfc3e6de23c0df9915a71d88f399a42197958cf5eb33b071ad34046f3186373",
+    "qualification": "tightened copied constraint export is diagnostic only; original CLOSED does not prove hold with these checks"
   }
 }
