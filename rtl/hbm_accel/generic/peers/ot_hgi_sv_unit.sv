@@ -770,18 +770,39 @@ module ot_hgi_sv_head #(
     wire st_aa = dstt == D_AA, st_ab = dstt == D_AB;
     wire        is_src = !rk[2];
     wire [1:0]  aq = rk[1:0];
-    wire        cur_used = rv[rk];
-    wire [17:0] cur_lo = lo[rk], cur_hi = hi[rk];
-    wire [17:0] span = alloc_span[rk];
-    wire        a_large = span[17:15] != 3'd0;                                   // > 32,767 words: a dedicated frame
+    // B3 (Claude group-B3 10-14, preoffset CTS gate reg->reg -118.9 ps: rk -> tb_lb 22 levels = rk-indexed operands, the
+    // 17-bit bump fit add / compare, ra_ok, aa_go and the victim decode in one D_AA edge): every rk-indexed operand of the
+    // region and the bump-fit arithmetic are REGISTERED, loaded on the edge that sets rk (SK1 -> region 4, an AA skip, the
+    // AB step) or that resets bp (frame turnover in AA), from registers that are stable from SK1 on.  D_AA selects only
+    // registered terms.  Same edges, same decisions: no cycle added.
+    reg [17:0] pr_lo, pr_hi, pr_span; reg [18:0] pr_ext; reg pr_used, pr_fhit, pr_large, pr_two, pr_toobig, pr_fits;
+    reg [2:0] pr_fe; reg [16:0] pr_lbk, pr_bpn;
+    task automatic pre(input [2:0] k, input [16:0] b);
+        reg [16:0] lk;
+        begin
+            lk = {b[16:8] + 9'(lo[k][7:0] < b[7:0]), lo[k][7:0]};               // lb == lo (mod 256 words)
+            pr_lo <= lo[k]; pr_hi <= hi[k]; pr_span <= alloc_span[k]; pr_ext <= alloc_ext[k]; pr_used <= rv[k];
+            pr_fe <= f_e[k[1:0]]; pr_fhit <= f_hit[k[1:0]];
+            pr_large <= alloc_span[k][17:15] != 3'd0;
+            pr_two <= alloc_span[k][17:15] != 3'd0 && alloc_ext[k] > 19'd65535;
+            pr_toobig <= alloc_ext[k] > 19'd131071;
+            pr_lbk <= lk;
+            pr_fits <= ({2'b00, lk} + {1'b0, alloc_span[k]}) <= 19'd65535;
+            pr_bpn <= lk + alloc_span[k][16:0] + 17'd9;                            // + 1 + an 8-word gap: no shared sector
+        end
+    endtask
+    wire        cur_used = pr_used;
+    wire [17:0] cur_lo = pr_lo, cur_hi = pr_hi;
+    wire [17:0] span = pr_span;
+    wire        a_large = pr_large;                                               // > 32,767 words: a dedicated frame
     // a region placed at its lo[7:0] offset in a dedicated frame: past 65,535 it runs on into the NEXT frame (the
     // local address space is contiguous): frames f and f + 1 are taken together, f + 1 as the TAIL of f (same epoch,
     // freed with f, no pins or table entries of its own).  More than two frames does not fit (capacity gap).
-    wire [18:0] ext = alloc_ext[rk];
-    wire        a_two = a_large && ext > 19'd65535;
-    wire        too_big = ext > 19'd131071;
-    wire [2:0]  fe = f_e[aq];
-    wire        fw_ok = is_src && f_hit[aq] && tb_v[fe];                          // forward (entry still alive)
+    wire [18:0] ext = pr_ext;
+    wire        a_two = pr_two;
+    wire        too_big = pr_toobig;
+    wire [2:0]  fe = pr_fe;
+    wire        fw_ok = is_src && pr_fhit && tb_v[fe];                             // forward (entry still alive)
     wire        fw_rs = tb_kind[fe] == K_RS;
     wire        ipnow = (rk == 3'd4) && ip_on && tb_v[ip_e];
     // table victim: an invalid entry, else one that is not sink_live, not forwarded by this record, not the in-place one
@@ -801,10 +822,9 @@ module ot_hgi_sv_head #(
     wire [3:0] ep_two = ((fr_ep[ffr2[1:0]] > fr_ep[ffr2[1:0] + 2'd1]) ? fr_ep[ffr2[1:0]] : fr_ep[ffr2[1:0] + 2'd1]) + 4'd1;
     // The old bp + ((lo - bp) mod 256) was an 8-bit subtract followed by a 17-bit add.
     // Same modulo-2^17 address: preserve the requested low byte and advance one page on wrap.
-    wire [8:0] lb_page = bp[16:8] + 9'(cur_lo[7:0] < bp[7:0]);
-    wire [16:0] lbk = {lb_page, cur_lo[7:0]};                                    // lb == lo (mod 256 words)
-    wire        fits = ({2'b00, lbk} + {1'b0, span}) <= 19'd65535;
-    wire [16:0] bp_n = lbk + span[16:0] + 17'd9;                                  // + 1 + an 8-word gap: no shared sector
+    wire [16:0] lbk = pr_lbk;                                                     // registered (pre)
+    wire        fits = pr_fits;
+    wire [16:0] bp_n = pr_bpn;
     wire        ra_ok = a_large ? ffr[2] : (open_v && fits);
     wire [1:0]  ra_f = a_large ? ffr[1:0] : opf;
     wire [18:0] ra_lb = a_large ? {1'b0, ffr[1:0], 8'd0, cur_lo[7:0]} : {1'b0, opf, lbk[15:0]};
@@ -993,12 +1013,13 @@ module ot_hgi_sv_head #(
                     for (integer e = 0; e < 8; e = e + 1)
                         if ((s_ov[0][e] || s_ov[1][e]) && !(ip_on_n && ip_e == 3'(e))) tb_fok[e] <= 1'b0;
                     sl_lvw[dslot] <= c_lvw;                    // EVERY record (the EXT stream credit needs it without an O sink)
-                    rk <= 3'd4; dstt <= D_AA;
+                    rk <= 3'd4; dstt <= D_AA; pre(3'd4, bp);
                 end
                 // ALLOC edge A (region rk, order O R A B C D): decide forward / in place / allocate, pin
                 D_AA: begin
                     if (!cur_used) begin
-                        if (rk == 3'd3) dstt <= D_HOLD; else rk <= (rk == 3'd5) ? 3'd0 : rk + 3'd1;
+                        if (rk == 3'd3) dstt <= D_HOLD;
+                        else begin rk <= (rk == 3'd5) ? 3'd0 : rk + 3'd1; pre((rk == 3'd5) ? 3'd0 : rk + 3'd1, bp); end
                     end else if (aa_fault) begin dfault <= 1'b1; dstt <= D_FAULT; end
                     else if (aa_go) begin
                         dstt <= D_AB; stallc <= 4'd0;
@@ -1052,7 +1073,7 @@ module ot_hgi_sv_head #(
                             if (open_v) begin fr_st[opf] <= F_HELD; open_v <= 1'b0; end
                             else if (ffr1[2]) begin
                                 fr_st[ffr1[1:0]] <= F_OPEN; fr_ep[ffr1[1:0]] <= fr_ep[ffr1[1:0]] + 4'd1; opf <= ffr1[1:0];
-                                open_v <= 1'b1; bp <= 17'd0;
+                                open_v <= 1'b1; bp <= 17'd0; pre(rk, 17'd0);
                             end
                         end else if (ra_req && a_large && !ra_ok && open_v && fr_pin[opf] == 6'd0 && !d_pin_v) begin
                             fr_st[opf] <= F_HELD; open_v <= 1'b0;          // an empty bump frame gives way to a large region
@@ -1092,7 +1113,8 @@ module ot_hgi_sv_head #(
                             tb_lb[vic] <= a_lb; tb_own[vic] <= dslot;
                         end
                     end
-                    if (rk == 3'd3) dstt <= D_HOLD; else begin rk <= (rk == 3'd5) ? 3'd0 : rk + 3'd1; dstt <= D_AA; end
+                    if (rk == 3'd3) dstt <= D_HOLD;
+                    else begin rk <= (rk == 3'd5) ? 3'd0 : rk + 3'd1; dstt <= D_AA; pre((rk == 3'd5) ? 3'd0 : rk + 3'd1, bp); end
                 end
                 D_HOLD: if (push_take) dstt <= D_IDLE;                              // the word moved into the FIFO
                 default: ;                                                          // D_FAULT: sticky
