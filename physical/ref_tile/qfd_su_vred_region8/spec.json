@@ -1,0 +1,95 @@
+{
+ "name": "qfd_su_vred_region8",
+ "top": "ot_hdc_vreduce_region8",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_hdc_vreduce_entries64.sv",
+  "rtl/hdc/ot_hdc_vreduce.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {
+  "AW": 24
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 237.6
+ },
+ "pins": {
+  "W": [
+   "x_in"
+  ],
+  "E": [
+   "data_out",
+   "tag_out",
+   "v_out",
+   "busy_out",
+   "fault_out"
+  ],
+  "S": [
+   "addr_in",
+   "v_in",
+   "mx_in",
+   "sq_in",
+   "last_in"
+  ],
+  "N": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4
+ },
+ "inhold": true,
+ "outhold": true,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex smallmasters",
+  "branch": "claude/el1013-qwen-r3b-spine",
+  "tag": "p1",
+  "purpose": "Structuralprototype SU64 regional reducer; actualwhole-reducer exact and perregion mutant pending",
+  "cycles_added": 3,
+  "benches": [
+   {
+    "name": "reducer64_exact",
+    "cmd": "bash rtl/test/run_hdc_vreduce_entries64.sh {RUN}/bench/exact exact",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS VRED segments=120 .*delta=3$"
+   },
+   {
+    "name": "reducer64_region_mutant",
+    "cmd": "bash rtl/test/run_hdc_vreduce_entries64.sh {RUN}/bench/mutant mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "fail_regex": "^FAIL VRED errors=[1-9][0-9]*$"
+   }
+  ]
+ },
+ "structural_change": "Flat vreduce88388FF exceedsclockroot count. ActualSQ+8elementchain partition eight11154FF regionalleaves and7100FF tree/time tail, localroots, thinparent9entries. Regioninput/outputcapture andtailinputcapture propose+3clocks, referencewhole-reducer proofpending. Nojobsubmituntil exact+mutants/CTS/pins.",
+ "slot_change_request": "Childsubslots forSU64stillunassigned; provisionaloutline/pins, actualmaster full64lane+reducer+glue regionneeded; old777.576x2058.456 slotnotfit.",
+ "macros": [],
+ "children": [],
+ "inter": []
+}
