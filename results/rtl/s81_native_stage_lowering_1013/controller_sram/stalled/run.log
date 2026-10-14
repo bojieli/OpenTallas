@@ -1,0 +1,7 @@
+NATIVE_DEBUG seq_run=0 kind=1 issue=0 returned=0 hland_active=0 mode=0 requested=640 delivered=640 landed=640 slot=1 fresh=0 live=0 fifo=0
+NATIVE_LANDING streamed_loads=1 vm_fallback_loads=1
+TB_S81_NATIVE_TRANSFER_CONTROLLER mut=0 stall=1 messages=2 accepted_loads=2 accepted_stores=2 jobs=2 errors=0 early=0 faults=0000 first=1403 last=3927 PASS
+- /srv/opentallas-scratch/codex/s81-native-controller-sram/rtl/dsrom_sys/s81_ctrl/test/tb_s81_native_transfer_controller.sv:90: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 88.224 s; speed 133.716 ns/s
+- Verilator: cpu 88.218 s on 1 threads; allocated 39 MB

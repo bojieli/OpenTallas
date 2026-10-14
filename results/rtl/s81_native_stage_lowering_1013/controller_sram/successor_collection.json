@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.s81.native-h-only.successor-collection.v1",
+  "source_commit": "bcc05f560",
+  "gates": [
+    {
+      "case": "stalled",
+      "unit": "oth-ubuntu-504585-1791952070",
+      "host": "ot-epyc1tb",
+      "unit_terminal": "inactive/dead success",
+      "binary_exit": 0,
+      "verdict": [
+        "TB_S81_NATIVE_TRANSFER_CONTROLLER mut=0 stall=1 messages=2 accepted_loads=2 accepted_stores=2 jobs=2 errors=0 early=0 faults=0000 first=1403 last=3927 PASS"
+      ],
+      "gate_pass": true,
+      "all_compiled_source_hashes_match_current_head": true,
+      "record_sha256": "86689e6ca1d1006568ca92f3052797f95ffbcbb8cc93b6ff8a6eb340916e6f56"
+    },
+    {
+      "case": "mut1",
+      "unit": "oth-ubuntu-504670-1791952079",
+      "host": "ot-epyc1tb",
+      "unit_terminal": "inactive/dead success",
+      "binary_exit": 0,
+      "verdict": [
+        "TB_S81_NATIVE_TRANSFER_CONTROLLER mut=1 stall=0 messages=1 accepted_loads=1 accepted_stores=1 jobs=2 errors=1 early=0 faults=0000 first=1378 last=2036 FAIL"
+      ],
+      "gate_pass": true,
+      "all_compiled_source_hashes_match_current_head": true,
+      "record_sha256": "b71227b83033e976df477034b2c33c20c8d936b5f86161b649547824594a7fc8"
+    },
+    {
+      "case": "mut2",
+      "unit": "oth-ubuntu-504668-1791952079",
+      "host": "ot-epyc1tb",
+      "unit_terminal": "inactive/dead success",
+      "binary_exit": 0,
+      "verdict": [
+        "TB_S81_NATIVE_TRANSFER_CONTROLLER mut=2 stall=0 messages=0 accepted_loads=0 accepted_stores=0 jobs=2 errors=1 early=0 faults=0000 first=-1 last=-1 FAIL"
+      ],
+      "gate_pass": true,
+      "all_compiled_source_hashes_match_current_head": true,
+      "record_sha256": "f021e7ef732c12422c46d74149cc64ae5408a90ab198389b6f7880e1bfeffcb0"
+    },
+    {
+      "case": "mut3",
+      "unit": "oth-ubuntu-504669-1791952079",
+      "host": "ot-epyc1tb",
+      "unit_terminal": "inactive/dead success",
+      "binary_exit": 0,
+      "verdict": [
+        "TB_S81_NATIVE_TRANSFER_CONTROLLER mut=3 stall=0 messages=0 accepted_loads=2 accepted_stores=2 jobs=2 errors=1 early=0 faults=1100 first=-1 last=-1 FAIL"
+      ],
+      "gate_pass": true,
+      "all_compiled_source_hashes_match_current_head": true,
+      "record_sha256": "9320f3b6354fb93575073020889f2b1b0cbf8465b01cabb8e420aad88fdf0085"
+    }
+  ],
+  "scope": "actual2-job NG256 H-only package/controller/HC/32-bankVM/macro commit/hop with no artificial PGAP",
+  "full_pf_boundary_proven": false,
+  "native_executed_whole_transfer_count": null,
+  "priced_layer_throughput_qualified": false
+}

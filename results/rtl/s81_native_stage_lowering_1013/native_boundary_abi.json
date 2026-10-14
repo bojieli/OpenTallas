@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.s81.native-boundary-abi.v1",
+  "status": "WIRE_CODEC_ONLY_NATIVE_PF_BINDING_MISSING",
+  "source_sha256": {
+    "tools/w11_dsrom_full_tp_program.py": "1551420eae15b3ddcf870bbf99edca6138a82c348a4c4cf3e75ca2ba7aac32c2",
+    "tools/hdc_program_v41.py": "71c6d76f1218b6f66ce768f9679efa70750cfecd21f6c93d97a9d65828006da7",
+    "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv": "ca1e3bbc1bd884ba4a93e886be743c921b8bd9bb1c1adf874773e04db1fda4a6",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_hop_tx.sv": "b89a21045bb433513a21259b03a7655ec12f37cb2f86f67171641cfa2be834f8",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv": "300f6753f25347a48e716372a61934670aafb1f978c59897420a776ef01c6bdf"
+  },
+  "h_bf16_bytes": 40960,
+  "pf_binary32_bytes": 16,
+  "canonical_payload_bytes": 40976,
+  "hc_h_rows": 640,
+  "candidate_transport_rows": 641,
+  "tail_valid_bytes": 16,
+  "candidate_slot_stride_rows": 641,
+  "current_pure_h_controller_qualified_for_pf": false,
+  "native_executed_transfer_count": null,
+  "remaining_bindings": [
+    "actual dynamic PF writer and macro commit",
+    "hop PF read and full-message fence",
+    "receiver PF epoch/slot region",
+    "COEF_LOAD pre source from received PF",
+    "native120 full operation and VM region table",
+    "source-bound full arithmetic and PF mutants",
+    "assigned pins, routes, full production throughput"
+  ]
+}
