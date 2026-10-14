@@ -1,0 +1,203 @@
+{
+  "schema": "opentallas.s81.q_full.native_lane_inventory.v1",
+  "full_map_receipt_sha256": "fade4064d82ca4d3c9f186c71d889a4926145612b4858aa957998a59ea8abd2e",
+  "source_commit": "6ed42d12c",
+  "lanes": [
+    {
+      "actual_instance": "u_e.g_mac[0].g_lane_hardened.u_lane",
+      "actual_module": "$paramod\\ot_s81_q_lane_pair_native\\TW=s32'00000000000000000000000000010001",
+      "parameters": {
+        "TW": "00000000000000000000000000010001"
+      },
+      "ports": {
+        "gclk_ma": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_m": {
+          "direction": "input",
+          "bits": 1
+        },
+        "l_v0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "l_v1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "l_t": {
+          "direction": "input",
+          "bits": 17
+        },
+        "l_xq0": {
+          "direction": "input",
+          "bits": 256
+        },
+        "l_xq1": {
+          "direction": "input",
+          "bits": 256
+        },
+        "w0q": {
+          "direction": "input",
+          "bits": 256
+        },
+        "w1q": {
+          "direction": "input",
+          "bits": 256
+        },
+        "l_xe0": {
+          "direction": "input",
+          "bits": 10
+        },
+        "l_xe1": {
+          "direction": "input",
+          "bits": 10
+        },
+        "we0": {
+          "direction": "input",
+          "bits": 10
+        },
+        "we1": {
+          "direction": "input",
+          "bits": 10
+        },
+        "l0_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "l1_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "l0_f": {
+          "direction": "output",
+          "bits": 1
+        },
+        "l1_f": {
+          "direction": "output",
+          "bits": 1
+        },
+        "l0_y": {
+          "direction": "output",
+          "bits": 32
+        },
+        "l1_y": {
+          "direction": "output",
+          "bits": 32
+        },
+        "l0_t": {
+          "direction": "output",
+          "bits": 17
+        },
+        "l1_t": {
+          "direction": "output",
+          "bits": 17
+        }
+      },
+      "declared_bits": 1187,
+      "recursive_mapped_std_area_um2": 6597.552059997084,
+      "recursive_flops": 13149,
+      "macros": {}
+    },
+    {
+      "actual_instance": "u_e.g_mac[1].g_lane_hardened.u_lane",
+      "actual_module": "$paramod\\ot_s81_q_lane_pair_native\\TW=s32'00000000000000000000000000010001",
+      "parameters": {
+        "TW": "00000000000000000000000000010001"
+      },
+      "ports": {
+        "gclk_ma": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_m": {
+          "direction": "input",
+          "bits": 1
+        },
+        "l_v0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "l_v1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "l_t": {
+          "direction": "input",
+          "bits": 17
+        },
+        "l_xq0": {
+          "direction": "input",
+          "bits": 256
+        },
+        "l_xq1": {
+          "direction": "input",
+          "bits": 256
+        },
+        "w0q": {
+          "direction": "input",
+          "bits": 256
+        },
+        "w1q": {
+          "direction": "input",
+          "bits": 256
+        },
+        "l_xe0": {
+          "direction": "input",
+          "bits": 10
+        },
+        "l_xe1": {
+          "direction": "input",
+          "bits": 10
+        },
+        "we0": {
+          "direction": "input",
+          "bits": 10
+        },
+        "we1": {
+          "direction": "input",
+          "bits": 10
+        },
+        "l0_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "l1_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "l0_f": {
+          "direction": "output",
+          "bits": 1
+        },
+        "l1_f": {
+          "direction": "output",
+          "bits": 1
+        },
+        "l0_y": {
+          "direction": "output",
+          "bits": 32
+        },
+        "l1_y": {
+          "direction": "output",
+          "bits": 32
+        },
+        "l0_t": {
+          "direction": "output",
+          "bits": 17
+        },
+        "l1_t": {
+          "direction": "output",
+          "bits": 17
+        }
+      },
+      "declared_bits": 1187,
+      "recursive_mapped_std_area_um2": 6597.552059997084,
+      "recursive_flops": 13149,
+      "macros": {}
+    }
+  ],
+  "qualification": "Actual production PQ1 yields TW17/1187 declared bits per lane; standalone TW16 envelope is superseded for allocation. Control and two ROM-return extraction, functional native PQ1 proof and physical pins/clocks/closure remain OPEN.",
+  "physical_admission": false
+}
