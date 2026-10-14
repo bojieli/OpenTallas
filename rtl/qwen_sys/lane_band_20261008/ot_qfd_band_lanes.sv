@@ -38,6 +38,14 @@
 // Every block input lands in a flop at the pin, every output leaves a station flop (no logic between pin and flop).
 // MUT = 1 (band): level 9 pairs (0,2)(1,3) instead of (0,1)(2,3); MUT = 2 (upper): level 11 pairs (b0,b3)(b1,b4)(b2,b5).
 // MUT = 3 (upper): band words taken in reverse band order (band-index mutant; MUT 2 is a no-op at NB = 3).
+// UPPER LEVEL COUNT (qwen-tp8/spine 2026-10-12): the upper holds levels TCUT+4 .. LG-1, NU = LG - TCUT - 4 of them (the
+// lane's levels stop at LG-1; level LG is the port element's hold).  TP4 (LG = TCUT + 6): NU = 2, bit-identical.  TP8
+// (GT 3,072, LG = TCUT + 5): NU = 1 (level 11 only: 1 adder b0+b1, b2 held); the band's round-trip wait DU and the
+// upper's use / valid delays scale with NU (DU = NU (TA+1) + 4 + 2 LNK), so ty stays the GT-3,072 lane's y + 5 + 2 LNK.
+// Before this, NB = 3 ran a second (adder-less) level TCUT+5 = LG: every band result was TA+1 edges later than the
+// control element's LG-derived timing (tb_qfd_spine_band at GT = 24 << TCUT failed at every split).
+// UMUT = 4 (upper, negative): NU forced to 2 at any LG (the old TP8 behaviour) -- with the matching DU in the bands
+// (band MUT 4) it reproduces the pre-fix TP8 spine.
 // TP8 (results/arch/qwen_tp8_1012): ot_qfd_band_upper NB = 3, LG = 12 (GT 3,072): level 11 = 1 adder (b0+b1), b2 held,
 // level 12 no adders (GT >> 12 = 0 groups); a parameter setting, TP4 (NB 6, LG 13) unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
@@ -103,10 +111,17 @@ module ot_qfd_band_lanes #(
     parameter integer TCUT = 7,
     parameter integer LG = TCUT + 6,
     parameter integer RDMEM = 0,         // el1011-q-seq: u_hold / u_wait delay lines in SRAM (rdelay MEM)
-    parameter integer BANR = 0           // el1011-q-seq: level adders with valid-only resets (tadd ANR)
+    parameter integer BANR = 0,          // el1011-q-seq: level adders with valid-only resets (tadd ANR)
+    // LNKS = 1 (el1013-qwen-small-masters r3b, hardened lane leaf): the number of relay stages on the band <-> tree-top
+    // links is a STRAP (lnk, static, tied by the die) instead of the parameter LNK (which must then be 0): the round-trip
+    // wait is DU0 + 2 lnk edges with DU0 = NU (TA + 1) + 4, read from the same SRAM ring at a strapped distance, and the
+    // lockstep valid is tapped at the same distance.  For lnk = L the block is edge-for-edge the LNK = L block.
+    // 0 <= lnk <= (130 - DU0) / 2 (the 128-deep ring; 59 at TP8, 55 at TP4).  Needs RDMEM = 1.
+    parameter integer LNKS = 0
 ) (
     input  wire               clk,
     input  wire               rst_n,
+    input  wire [5:0]         lnk,               // LNKS strap (unused, may be left open, when LNKS = 0)
     input  wire               b0,                // strap: 1 on band 0 (takes the tree top's split-11/12 words)
     input  wire [8*NL*32-1:0] tw,                // the band's level-7 words (from the slab)
     input  wire [LG:0]        sel_e,             // lane-timed per-level select / valid ([$clog2(6144):0])
@@ -120,7 +135,8 @@ module ot_qfd_band_lanes #(
     output wire               fault
 );
     localparam integer TA = TREE_LAT;
-    localparam integer DU = 2 * (TA + 1) + 4 + 2 * LNK;     // 20 + 2 LNK at TREE_LAT 7
+    localparam integer NU = (MUT == 4) ? 2 : LG - TCUT - 4;   // the upper's levels TCUT+4 .. LG-1 (2 at TP4, 1 at TP8)
+    localparam integer DU = NU * (TA + 1) + 4 + 2 * LNK;     // 20 + 2 LNK at TREE_LAT 7, NU 2
     // -- pin flops ------------------------------------------------------------------------------------------------
     // (the per-level selects, b0 and tt_use land in one flop copy per lane: each copy drives one lane's <= 128 mux
     //  bits instead of NL x 128)
@@ -156,9 +172,24 @@ module ot_qfd_band_lanes #(
     assign pw = pw_s; assign pw_v = pw_vs;
     // -- the band's own words wait for the round trip (the lane's level-11/12 holds + 4 + 2 LNK) ---------------------
     wire [8*NL*32-1:0] lw;
-    ot_qwen_me_rdelay_w12 #(.W(8*NL*32), .D(DU), .MEM(RDMEM)) u_wait (.clk(clk), .rst_n(rst_n), .d(l10), .q(lw));
     wire vexp;          // the op's level-11 valid, aligned with tt_v_q (lockstep check)
-    ot_hdc_delay #(.W(1), .D(DU), .RESET(1)) u_vexp (.clk(clk), .rst_n(rst_n), .d(tv11_r), .q(vexp));
+    generate if (LNKS == 0) begin : g_wp
+        ot_qwen_me_rdelay_w12 #(.W(8*NL*32), .D(DU), .MEM(RDMEM)) u_wait (.clk(clk), .rst_n(rst_n), .d(l10), .q(lw));
+        ot_hdc_delay #(.W(1), .D(DU), .RESET(1)) u_vexp (.clk(clk), .rst_n(rst_n), .d(tv11_r), .q(vexp));
+    end else begin : g_ws
+        initial if (LNK != 0 || RDMEM != 1) $error("ot_qfd_band_lanes LNKS = 1 needs LNK = 0 and RDMEM = 1");
+        // strap copies (static): one per use
+        (* keep *) reg [6:0] xd_q, xv_q;
+        always @(posedge clk) begin xd_q <= {lnk, 1'b0}; xv_q <= {lnk, 1'b0}; end
+        ot_qfd_bl_xdelay #(.W(8*NL*32), .D(DU)) u_wait (.clk(clk), .rst_n(rst_n), .xd(xd_q), .d(l10), .q(lw));
+        // the valid: a DU + 126 deep line, tapped at DU - 1 + 2 lnk (ot_hdc_delay D = DU + 2 lnk)
+        localparam integer VD = DU + 126;
+        reg [VD-1:0] vsh;
+        always @(posedge clk or negedge rst_n) if (!rst_n) vsh <= {VD{1'b0}}; else vsh <= {vsh[VD-2:0], tv11_r};
+        reg vx_q;       // registered tap: vsh is read one stage early
+        always @(posedge clk or negedge rst_n) if (!rst_n) vx_q <= 1'b0; else vx_q <= vsh[DU - 2 + xv_q];
+        assign vexp = vx_q;
+    end endgenerate
     // -- result slots: band 0 slots 0..2 take the tree top's words at split >= 11 ----------------------------------
     (* keep *) reg [8*NL*32-1:0] ty_s;
     integer q, ll;
@@ -202,27 +233,31 @@ module ot_qfd_band_upper #(
     output wire                fault
 );
     localparam integer TA = TREE_LAT;
+    localparam integer NU = (MUT == 4) ? 2 : LG - TCUT - 4;   // levels TCUT+4 .. TCUT+3+NU (= LG-1): 2 at TP4, 1 at TP8
+    generate if (NU < 1 || NU > 2 || TCUT + 3 + NU > LG) begin : g_bad
+        initial begin $display("ot_qfd_band_upper: unsupported LG %0d / TCUT %0d (NU %0d)", LG, TCUT, NU); $finish; end
+    end endgenerate
     // -- pin flops --------------------------------------------------------------------------------------------------
     (* keep *) reg [NB*NL*32-1:0] pw_q;
     reg [NB-1:0] pv_q, lf_q;
     always @(posedge clk) pw_q <= pw;
     always @(posedge clk or negedge rst_n) if (!rst_n) begin pv_q <= 0; lf_q <= 0; end else begin pv_q <= pw_v; lf_q <= lf; end
     // the lane's sel_r / tv_r (sel_e / tv_e registered) DLY edges later: DLY delay stages, then one flop copy per lane
-    wire [1:0] sel_d, tv_d;
-    ot_hdc_delay #(.W(2), .D(DLY)) u_sd (.clk(clk), .rst_n(rst_n), .d(sel_e[TCUT+5:TCUT+4]), .q(sel_d));
-    ot_hdc_delay #(.W(2), .D(DLY), .RESET(1)) u_td (.clk(clk), .rst_n(rst_n), .d(tv_e[TCUT+5:TCUT+4]), .q(tv_d));
-    reg [1:0] sel_r, tv_r;   // the control copy (use / valid / lockstep)
+    wire [NU-1:0] sel_d, tv_d;
+    ot_hdc_delay #(.W(NU), .D(DLY)) u_sd (.clk(clk), .rst_n(rst_n), .d(sel_e[TCUT+3+NU:TCUT+4]), .q(sel_d));
+    ot_hdc_delay #(.W(NU), .D(DLY), .RESET(1)) u_td (.clk(clk), .rst_n(rst_n), .d(tv_e[TCUT+3+NU:TCUT+4]), .q(tv_d));
+    reg [NU-1:0] sel_r, tv_r;   // the control copy (use / valid / lockstep)
     always @(posedge clk) sel_r <= sel_d;
-    always @(posedge clk or negedge rst_n) if (!rst_n) tv_r <= 2'b00; else tv_r <= tv_d;
+    always @(posedge clk or negedge rst_n) if (!rst_n) tv_r <= {NU{1'b0}}; else tv_r <= tv_d;
     // -- levels 11, 12 per lane --------------------------------------------------------------------------------------
     wire [NL-1:0] lpf;
     wire [3*NL*32-1:0] y;
     genvar l, b;
     generate for (l = 0; l < NL; l = l + 1) begin : g_lane
         wire [NB*32-1:0] li, lo;
-        (* keep *) reg [1:0] sl, tl;          // this lane's copy of sel_r / tv_r
+        (* keep *) reg [NU-1:0] sl, tl;       // this lane's copy of sel_r / tv_r
         always @(posedge clk) sl <= sel_d;
-        always @(posedge clk or negedge rst_n) if (!rst_n) tl <= 2'b00; else tl <= tv_d;
+        always @(posedge clk or negedge rst_n) if (!rst_n) tl <= {NU{1'b0}}; else tl <= tv_d;
         for (b = 0; b < NB; b = b + 1) begin : g_b
             // MUT = 3 (band-index mutant, TP8 qwen_tp8_1012): band b's slot reads band NB-1-b's word
             assign li[32*b +: 32] = pw_q[32*(((MUT == 3) ? (NB - 1 - b) : b)*NL + l) +: 32];
@@ -230,15 +265,15 @@ module ot_qfd_band_upper #(
         for (b = 0; b < 3; b = b + 1) begin : g_o
             assign y[32*(b*NL + l) +: 32] = lo[32*b +: 32];
         end
-        ot_qfd_bt_levels #(.GI(NB), .NLV(2), .TREE_LAT(TREE_LAT), .MUTLV(MUT == 2 ? 1 : 0)) u_lv (
+        ot_qfd_bt_levels #(.GI(NB), .NLV(NU), .TREE_LAT(TREE_LAT), .MUTLV(MUT == 2 ? 1 : 0)) u_lv (
             .clk(clk), .rst_n(rst_n), .l0(li), .sel_r(sl), .tv_r(tl), .lo(lo), .pf(lpf[l]));
     end endgenerate
     // use = the op's level-11 select at its L11 capture, carried to the L12 output; v = its level-11 valid
     wire uv, vv;
     reg use11;          // captured on the L11 lq edge, from the select that edge uses
     always @(posedge clk or negedge rst_n) if (!rst_n) use11 <= 1'b0; else use11 <= sel_r[0];
-    ot_hdc_delay #(.W(1), .D(TA + 1), .RESET(1)) u_use (.clk(clk), .rst_n(rst_n), .d(use11), .q(uv));
-    ot_hdc_delay #(.W(1), .D(2 * (TA + 1)), .RESET(1)) u_v (.clk(clk), .rst_n(rst_n), .d(tv_r[0]), .q(vv));
+    ot_hdc_delay #(.W(1), .D((NU - 1) * (TA + 1)), .RESET(1)) u_use (.clk(clk), .rst_n(rst_n), .d(use11), .q(uv));
+    ot_hdc_delay #(.W(1), .D(NU * (TA + 1)), .RESET(1)) u_v (.clk(clk), .rst_n(rst_n), .d(tv_r[0]), .q(vv));
     // -- output station ---------------------------------------------------------------------------------------------
     (* keep *) reg [3*NL*32-1:0] ty_s;
     (* keep *) reg use_s, v_s;
@@ -254,3 +289,42 @@ module ot_qfd_band_upper #(
         else begin f_q <= (|lpf) || (|lf_q) || (pv_q != {NB{tv_r[0]}}); f_s <= f_q; end
     assign fault = f_s;
 endmodule
+
+
+// ot_qfd_bl_xdelay (el1013-qwen-small-masters r3b): ot_qwen_me_rdelay_w12 MEM = 1 (SRAM ring, exact q(t) = d(t - D))
+// with a strapped extra distance: q(t) = d(t - D - xd), xd static, D - 3 + xd <= 127.  Same macros, same input register
+// and capture flop; the read address is a REGISTER (next write pointer minus the strapped distance: no adder between a
+// flop and the macro's address pins).  xd = 0: edge-for-edge the rdelay.
+module ot_qfd_bl_xdelay #(
+    parameter integer W = 256,
+    parameter integer D = 12
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire [6:0]   xd,
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q
+);
+    localparam integer MW = 256;
+    localparam integer NMM = (W + MW - 1) / MW;
+    initial if (D < 4 || D > 130) $error("ot_qfd_bl_xdelay: 4 <= D <= 130");
+    reg  [W-1:0] d_r;
+    reg  [6:0] wp;
+    always @(posedge clk) d_r <= d;
+    always @(posedge clk or negedge rst_n) if (!rst_n) wp <= 7'd0; else wp <= wp + 1'b1;
+    genvar mm;
+    wire [NMM*MW-1:0] wpad = {{(NMM*MW-W){1'b0}}, d_r};
+    wire [NMM*MW-1:0] rd;
+    generate for (mm = 0; mm < NMM; mm = mm + 1) begin : g_m
+        // one kept address register per macro: ra(t) = wp(t) - (D - 3) - xd
+        (* keep *) reg [6:0] ra;
+        always @(posedge clk) ra <= wp + 7'd1 - 7'(D - 3) - xd;
+        ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in(ra), .rd_out(rd[mm*MW +: MW]),
+            .w_ce_in(1'b1), .w_addr_in(wp), .wd_in(wpad[mm*MW +: MW]), .w_mask_in({MW{1'b1}}),
+            .rr_en(2'b0), .rr_addr('0), .cr_en(2'b0), .cr_sel('0));
+    end endgenerate
+    reg [W-1:0] q_r;                     // capture flop next to the macros (no logic before it)
+    always @(posedge clk) q_r <= rd[W-1:0];
+    assign q = q_r;
+endmodule
+
