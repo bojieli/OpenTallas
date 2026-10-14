@@ -2475,14 +2475,43 @@ if "abstract_pin_stub" not in t and t.count(a) == 1:
 """
 
 
+def installed_helper_receipt(host, run, frozen):
+    """Inspect the executed helper directory without changing a running snapshot."""
+    if is_local(host):
+        return HO.verify_installed_plan(Path(run) / "cl", frozen)
+    code = ("exec(" + repr(Path(HO.__file__).read_text()) + ")\n"
+            "print(json.dumps(verify_installed_plan(" + repr(run + "/cl") + ","
+            + repr(frozen) + ")))\n")
+    result = ssh(host, "python3 -", input=code, timeout=120)
+    if result.returncode:
+        raise ValueError("original remote helper verification failed: " + result.stderr[-1500:])
+    try:
+        return json.loads(result.stdout)
+    except (ValueError, TypeError) as ex:
+        raise ValueError("original remote helper verification receipt unreadable") from ex
+
+
 def ship_helpers(host, run, job=None):
-    """(re)write the loop's helper scripts into {CL}: jobs synced before a helper existed get it too"""
+    """Install new helpers, or verify and reuse an already executed frozen set."""
     # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
     import io, tarfile
     payloads = None
     modes = None
     frozen = None
     if job is not None and job.get("freeze_helper_overlay"):
+        frozen = job.get("route_overlay_plan")
+        if frozen is not None:
+            try:
+                receipt = installed_helper_receipt(host, run, frozen)
+                if receipt["status"] == "verified_original":
+                    HO.committed_frozen_payloads(REPO, frozen)
+                    job["helper_overlay_verification"] = dict(receipt, verified_at=now_iso(),
+                                                               host=host, run=run, mutation=False)
+                    return
+                if job.get("source_synced") or job.get("helper_overlay_verification"):
+                    raise ValueError("previously installed frozen helper directory is missing")
+            except (ValueError, OSError, subprocess.SubprocessError) as ex:
+                raise ValueError(f"FROZEN_HELPER_OVERLAY: {ex}; preserve original execution") from ex
         current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
         modes = {f["path"]: f["mode"] for f in current["files"]}
         frozen = job.setdefault("route_overlay_plan", current)
