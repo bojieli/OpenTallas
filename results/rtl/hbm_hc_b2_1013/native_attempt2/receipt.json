@@ -69,11 +69,11 @@
   "mutants": {
     "arithmetic": 1114,
     "pre_tag": 1,
-    "gain_early_read": 640
+    "gain_early_read": 640,
+    "quarter_order": 1282
   },
   "live_mutants": [
-    "early_retire m4 firstcase observed0/2560writeslanded; programstilllive",
-    "quarter_order m8 PREcase2hang4000; programstilllive"
+    "early_retire m4 firstcase observed0/2560writeslanded; programstilllive"
   ],
   "prices": {
     "HC_POST": 222.7,

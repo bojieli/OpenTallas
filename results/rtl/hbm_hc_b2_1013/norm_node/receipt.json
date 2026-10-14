@@ -1,0 +1,16 @@
+{
+  "actual_source_sha256": {
+    "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": "d3b4f28929f5fffa18ef6dac8b52e681bd4b743e033b912140a9ed1c148c0cf2",
+    "rtl/test/tb_hbm_norm_sum_node.sv": "52f6b07cb16f3d1318acf479c12e3b761cf79ba1762e14186b551ada9fee30b9"
+  },
+  "source_matches_current": {
+    "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": true,
+    "rtl/test/tb_hbm_norm_sum_node.sv": true
+  },
+  "scope": "Standalone transaction exactness and detected mutants only; no route or native layer qualification",
+  "logs": {
+    "m0": "NORM_SUM_NODE cases=4 errors=0",
+    "m1": "NORM_SUM_NODE cases=4 errors=6"
+  },
+  "ledger_eligible": false
+}

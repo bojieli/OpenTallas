@@ -1,0 +1,6 @@
+SPLITBENCH rows=4 y_vecs=320 q_vecs=320 rstd=4 ro=0 gold_y_err=0 gold_q_err=0 fault=0 go0_to_y0=345
+PASS
+- rtl/test/tb_hbm_norm_split.sv:118: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 23.698 s; speed 88.004 ns/s
+- Verilator: cpu 23.695 s on 1 threads; allocated 73 MB

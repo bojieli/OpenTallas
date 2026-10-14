@@ -1,0 +1,18 @@
+{
+  "actual_source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win.sv": "6d8b867853cf6c7896e6a65418f93860f0ded67dccf269b8df66c41261246d5c",
+    "rtl/hbm_accel/generic/peers/tb_hgi_hc_win.sv": "5e4027f5590b4392c3c3d4331ba96df4248293e861e0f78afd335cbbf6c017bf"
+  },
+  "source_matches_current": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win.sv": true,
+    "rtl/hbm_accel/generic/peers/tb_hgi_hc_win.sv": false
+  },
+  "scope": "Standalone transaction exactness and detected mutants only; no route or native layer qualification",
+  "logs": {
+    "m0": "HC_WIN summary req=32 rows=32 errors=0 fault=0",
+    "m1": "HC_WIN summary req=32 rows=32 errors=32 fault=0",
+    "m2": "HC_WIN summary req=32 rows=32 errors=64 fault=0",
+    "m3": "HC_WIN summary req=32 rows=32 errors=31 fault=0"
+  },
+  "ledger_eligible": false
+}

@@ -1,0 +1,12 @@
+ERR node expected 40700000 got 40400000 ready 1 fault 0
+ERR publication count or retained data
+ERR node expected 40800000 got 00000000 ready 1 fault 0
+ERR publication count or retained data
+ERR node expected 3f400000 got 3f000000 ready 1 fault 0
+ERR publication count or retained data
+NORM_SUM_NODE cases=4 errors=6
+NORM_SUM_NODE FAIL
+- rtl/test/tb_hbm_norm_sum_node.sv:34: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 190ns; walltime 0.000 s; speed 2.189 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
