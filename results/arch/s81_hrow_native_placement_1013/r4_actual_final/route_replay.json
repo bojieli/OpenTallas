@@ -15,6 +15,9 @@
   0.9957805907172996
  ],
  "pass_": true,
+ "edge_limit": 1.0,
+ "full_and_window_cut_limit": 0.6,
+ "all_individual_edges_le_060": false,
  "connectivity_and_normal_escapes_pass": true,
  "actual_final_lef_pin_rebind_pass": true,
  "exact_bit_pairs": 81363,

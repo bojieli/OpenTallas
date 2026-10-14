@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.native_hrow_source_binding_packet.v1",
- "status": "PARTIAL PASS actual final pin geometry/capacity/replay; actual production binding and per-pair timing budgets OPEN",
+ "status": "HISTORICAL r4 eight-bit grouping: full/54um cuts\u2264.60, individual edges up to.9958 under1.0 criterion. Superseded by stricter every-edge\u2264.60 candidate.",
  "parameters": {
   "HARD_RELAYS": 1,
   "CQ": 3,
@@ -454,7 +454,7 @@
  "rc_budget_status": "All9 final SS/FF ETMs available; actual production clock/reset producer, delivery, operating load/slew and route RC OPEN.500um is geometric ceiling only.",
  "closed_child_timing_facts": {
   "path": "/home/ubuntu/wt/codex-s81-hrow-native-placement/results/arch/s81_hrow_native_placement_1013/r4_actual_final/binding_packet/closed_child_ss_ff_timing_facts.json.gz",
-  "sha256": "01954d1efed3a93a70df3ea20066b685f71d6e9840268596dce6aca3affa24a6"
+  "sha256": "5fcf4fa6b3f27d549d4002d8e8414456ade3a06fe2092431e5419585ad117951"
  },
  "missing_final_relay_timing_masters": [],
  "current_consumed_native207": {
@@ -812,6 +812,9 @@
    0.9957805907172996
   ],
   "pass_": true,
+  "edge_limit": 1.0,
+  "full_and_window_cut_limit": 0.6,
+  "all_individual_edges_le_060": false,
   "connectivity_and_normal_escapes_pass": true,
   "actual_final_lef_pin_rebind_pass": true,
   "exact_bit_pairs": 81363,
@@ -1020,5 +1023,16 @@
  "source_graph": {
   "path": "results/arch/s81_hrow_native_placement_1013/r4_actual_final/binding_packet/source_graph.json",
   "sha256": "57b4d79bb18295db254f3f4501be9b4de5307da3b9799dcc6dd2fc7f66e42b3f"
- }
+ },
+ "cut_policy": {
+  "full_and_54um_window_limit": 0.6,
+  "individual_grid_edge_limit": 1.0,
+  "individual_grid_edge_max": [
+   0.992592592592606,
+   0.9957805907172996
+  ],
+  "all_individual_edges_le_060": false,
+  "scope": "Data/localRN only,80% usable M2-M7 capacity. Actual global clock/reset traffic and RC qualification OPEN."
+ },
+ "superseded_by": "results/arch/s81_hrow_native_placement_1013/r4_edge60_chunk4/binding_packet/packet.json"
 }

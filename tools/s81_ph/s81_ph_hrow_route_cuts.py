@@ -13,7 +13,7 @@ G=10.8;WIN=5;USABLE=.8
 HF=7/.270/2+1/.048+1/.064;VF=1/.036/2+1/.048+.85/.064
 HL=1/.064;VL=.85/.064
 
-def check(plan,w,h,chunk=8,passes=16,dump_path=None,wire_limit_um=None):
+def check(plan,w,h,chunk=8,passes=16,dump_path=None,wire_limit_um=None,edge_limit=1.0):
  nx,ny=int(np.ceil(w/G)),int(np.ceil(h/G));capH=np.full((ny,nx-1),HF*G*USABLE);capV=np.full((ny-1,nx),VF*G*USABLE)
  rects=plan.rects()
  for name,(x0,y0,x1,y1,master) in rects.items():
@@ -80,7 +80,7 @@ def check(plan,w,h,chunk=8,passes=16,dump_path=None,wire_limit_um=None):
    other=np.broadcast_to(xx[:,None] if d==0 else yy[:,None],ww.shape)
    np.add.at(WU,(ww[valid],other[valid]) if d==0 else (other[valid],ww[valid]),delta)
  source=Path(__file__).with_name('hrow_grid_router.cpp')
- executable=Path(tempfile.gettempdir())/'s81_hrow_grid_router'
+ executable=Path(tempfile.gettempdir())/('s81_hrow_grid_router_'+hashlib.sha256(source.read_bytes()).hexdigest()[:12])
  subprocess.run(['g++','-O3','-std=c++17',str(source),'-o',str(executable)],check=True)
  with tempfile.TemporaryDirectory(prefix='s81-hrow-routes-') as tmp:
   ip,op=Path(tmp)/'input',Path(tmp)/'output'
@@ -92,7 +92,7 @@ def check(plan,w,h,chunk=8,passes=16,dump_path=None,wire_limit_um=None):
     escape=max(sum(abs(pp['source_point_um'][j]-(a[j]+.5)*G)+abs(pp['sink_point_um'][j]-(b[j]+.5)*G) for j in (0,1)) for pp in pairs)
     limit=int(np.floor((wire_limit_um-escape)/G+1e-10)) if wire_limit_um is not None else -1
     f.write(f'{bits} {a[0]} {a[1]} {b[0]} {b[1]} {faces[fa]} {faces[fb]} {limit}\n')
-  subprocess.run([str(executable),str(ip),str(op)],check=True)
+  subprocess.run([str(executable),str(ip),str(op),str(edge_limit)],check=True)
   lines=op.read_text().splitlines();assert int(lines[0])==len(segs)
   for i,line in enumerate(lines[1:]):
    v=list(map(int,line.split()));arr=np.asarray(v[1:],dtype=int).reshape(-1,3);assert len(arr)==v[0];chosen[i]=prepared(arr.tolist());adjust(chosen[i],segs[i][0])
@@ -114,6 +114,6 @@ def check(plan,w,h,chunk=8,passes=16,dump_path=None,wire_limit_um=None):
     length=grid_length+sum(abs(pp['source_point_um'][i]-(s[1][i]+.5)*G)+abs(pp['sink_point_um'][i]-(s[2][i]+.5)*G) for i in (0,1))
     pairs.append(dict(pp,grid_polyline_um=round(length,4)))
    return dict(bits=s[0],source_cell=s[1],sink_cell=s[2],cls=s[3],source_instance=s[4],sink_instance=s[5],source_face=s[6],sink_face=s[7],H=q[0].tolist(),V=q[1].tolist(),exact_pairs=pairs)
-  document=dict(schema='opentallas.hrow_concrete_grid_routes.v1',gcell_um=G,outline_um=[w,h],capacity_H=capH.tolist(),capacity_V=capV.tolist(),escape_demand_H=escapeH.tolist(),escape_demand_V=escapeV.tolist(),routes=[document_route(s,q) for s,q in zip(segs,chosen)])
+  document=dict(schema='opentallas.hrow_concrete_grid_routes.v1',edge_limit=edge_limit,gcell_um=G,outline_um=[w,h],capacity_H=capH.tolist(),capacity_V=capV.tolist(),escape_demand_H=escapeH.tolist(),escape_demand_V=escapeV.tolist(),routes=[document_route(s,q) for s,q in zip(segs,chosen)])
   with gzip.open(path,'wt') as f:json.dump(document,f,separators=(',',':'))
- return dict(schema='opentallas.hrow_grid_edge_routes.v1',gcell_um=G,window_um=G*WIN,groups=len(segs),chunk_max_bits=chunk,passes='A* repeated rip-up; up to16',pin_normal_escape=True,capacity='M2-M7 only;80% usable;overM5 M6(H),85%M7(V)',physical_polyline_limit_um=wire_limit_um,full_vertical_cut_max=[round(float(fullH.max()),4),round(float((fullH.argmax()+1)*G),2)],full_horizontal_cut_max=[round(float(fullV.max()),4),round(float((fullV.argmax()+1)*G),2)],window_vertical_cut_max=round(wH,4),window_horizontal_cut_max=round(wV,4),window_vertical_worst_gcell=pH,window_horizontal_worst_gcell=pV,gcell_max=[round(float((useH/capH).max()),4),round(float((useV/capV).max()),4)],pass_=max(wH,wV,float(fullH.max()),float(fullV.max()))<=.6 and max(float((useH/capH).max()),float((useV/capV).max()))<=1.0,route_segments=sum(len(r[0])+len(r[1]) for r in chosen),grid_route_path_max_um=round(max(len(r[0])+len(r[1]) for r in chosen)*G,2))
+ return dict(schema='opentallas.hrow_grid_edge_routes.v1',gcell_um=G,window_um=G*WIN,groups=len(segs),chunk_max_bits=chunk,passes='A* repeated rip-up; up to16',pin_normal_escape=True,capacity='M2-M7 only;80% usable;overM5 M6(H),85%M7(V)',edge_limit=edge_limit,physical_polyline_limit_um=wire_limit_um,full_vertical_cut_max=[round(float(fullH.max()),4),round(float((fullH.argmax()+1)*G),2)],full_horizontal_cut_max=[round(float(fullV.max()),4),round(float((fullV.argmax()+1)*G),2)],window_vertical_cut_max=round(wH,4),window_horizontal_cut_max=round(wV,4),window_vertical_worst_gcell=pH,window_horizontal_worst_gcell=pV,gcell_max=[round(float((useH/capH).max()),4),round(float((useV/capV).max()),4)],pass_=max(wH,wV,float(fullH.max()),float(fullV.max()))<=.6 and max(float((useH/capH).max()),float((useV/capV).max()))<=edge_limit,route_segments=sum(len(r[0])+len(r[1]) for r in chosen),grid_route_path_max_um=round(max(len(r[0])+len(r[1]) for r in chosen)*G,2))
