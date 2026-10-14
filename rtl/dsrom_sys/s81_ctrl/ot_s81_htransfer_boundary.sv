@@ -27,7 +27,12 @@ module ot_s81_htransfer_boundary #(
 );
  wire hc_head_valid=hc_head[85], hc_head_slot=hc_head[83];
  wire [23:0] hc_head_arg=hc_head[30:7];
- wire store_accept=hc_head[84] && hc_head_arg[23:20]==1;
+ wire is_store=hc_head[84] && hc_head_arg[23:20]==1;
+ wire store_base_ok=hc_head_arg[13:0]==14'(TXB+(hc_head_slot?XW:0));
+ wire store_accept=is_store && store_base_ok;
+ reg bind_fault;
+ always @(posedge clk or negedge rst_n)
+   if(!rst_n) bind_fault<=0; else if(is_store && !store_base_ok) bind_fault<=1;
  wire store_slot=hc_head_slot;
  wire landing_head=hc_head_valid && hc_head_arg[23:20]==0 &&
    hc_head_arg[13:0]==14'(RXB+(hc_head_slot?XW:0));
@@ -47,6 +52,6 @@ module ot_s81_htransfer_boundary #(
  .wr_v(commit_v),.wr_a(commit_a),.wr_mask(commit_mask),.hop_go(hop_go),
  .hop_re(hop_re),.hop_ra(hop_ra),.vm_re(hop_vm_re),.vm_ra(hop_vm_ra),
  .fault(tf),.fault_code(tc),.committed_rows(committed));
- assign fault=lf||tf;
- assign fault_code=lf?lc:tc;
+ assign fault=lf||tf||bind_fault;
+ assign fault_code=bind_fault?4'd5:lf?lc:tc;
 endmodule
