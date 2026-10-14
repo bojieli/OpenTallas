@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qdq_core_fin2_ref",
  "verdict": "WARN",
- "generated": "2026-10-14T05:21:53-0700",
- "host": "ot-epyc4",
+ "generated": "2026-10-14T05:39:46-0700",
+ "host": "ot-epyc1tb",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "427fd1604674d0e913293607805262c2073d2ad4",
+  "start_commit": "3cfca21b77bfd9c02744d339af4162f5bc03f433",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "1aad714e26fa9b43855f0c7f909ea141443ee2fb16bcae31a178d7a68ac30578",
-  "manifest_sha256": "78a7cce2c76dd7615728d1799b41b8d8f5a2fa5261b2287ab6663f37335bec56",
+  "archive_sha256": "1681740b3d46097944bd0d49661816fd0f5e1c7139c1c243db96b2aadcab18bb",
+  "manifest_sha256": "bb0be543406147df64e0613931e50d8de57aae3a4355b5d714ef99bd2c99ee1c",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -28251,8 +28251,8 @@
    {
     "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_core_fin2.sv",
     "kind": "file",
-    "sha256": "ebddd55aa9e70bcf117d0fdd150142eaf5bb6d0e09517113f36855fcbc04393e",
-    "git_blob": "a247b4a4eaf9116bb5d64bc28f8db00f6bf3f62b",
+    "sha256": "bd2b5043184642a25e76407864712fc54caa03532b26f7c0f06f19a9e4ba88fe",
+    "git_blob": "84fd4e06042f4f30724642f93af11615215ea9eb",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -106385,11 +106385,11 @@
     "matches_provenance_commit": true
    }
   ],
-  "captured": "2026-10-14T05:18:48-0700",
-  "remote_script_sha256": "be8f93765c3bf7015bda3151f5a16aba68cc00edb04cfb9a8e204987f8ce208d",
+  "captured": "2026-10-14T05:36:47-0700",
+  "remote_script_sha256": "87287e59b3634ba815e1d13b3f8b92c97c7f2d37d29e798b0e2e1c3a3861edb7",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qdq_core_fin2_ref-20261014-051821",
+  "remote_host": "ot-epyc1tb",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qdq_core_fin2_ref-20261014-053623",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -106397,11 +106397,11 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 4149,
+  "max_root_sinks": 4150,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 139.4,
-  "tt_spread_ps": 10.9,
+  "tt_insertion_ps": 145.7,
+  "tt_spread_ps": 13.5,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -106415,15 +106415,15 @@
     "tt": {
      "boundary": {
       "n": 430,
-      "mean": 135.6,
-      "min": 131.9,
-      "max": 139.4
+      "mean": 140.2,
+      "min": 134.5,
+      "max": 144.5
      },
      "all": {
-      "n": 4149,
-      "mean": 135.4,
-      "min": 128.5,
-      "max": 139.4
+      "n": 4150,
+      "mean": 139.5,
+      "min": 132.2,
+      "max": 145.7
      },
      "errors": [],
      "macros": null,
@@ -106433,19 +106433,13 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "4,149 sinks on the largest root <= 15,000; measured TT insertion 139.4 ps, leaf spread 10.9 ps"
+  "text": "4,150 sinks on the largest root <= 15,000; measured TT insertion 145.7 ps, leaf spread 13.5 ps"
  },
  "items": [
   {
    "severity": "WARN",
-   "check": "textbook.high_fanout",
-   "message": "reset u_rst.rst_n[3]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 272 loads (272 flops, e.g. dep_clear[0]$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
-   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
-  },
-  {
-   "severity": "WARN",
    "check": "textbook.boundary",
-   "message": "5 input->register endpoint(s) > 3 levels (worst i_fin->hd[3]$_DFF_PN0_/D 4 lv, i_fin->fin_c[4]$_DFFE_PN0P_/D 4 lv, i_fin->fin_c[3]$_DFFE_PN0P_/D 4 lv): register the boundary (pin flops / registered outputs)",
+   "message": "5 input->register endpoint(s) > 3 levels (worst i_fin->fin_c[4]$_DFFE_PN0P_/D 5 lv, i_fin->q_v[15]$_DFF_PN0_/D 4 lv, i_fin->hd[3]$_DFFE_PN0P_/D 4 lv): register the boundary (pin flops / registered outputs)",
    "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
   }
  ]
