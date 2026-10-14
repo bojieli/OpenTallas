@@ -1,0 +1,237 @@
+{
+  "schema": "opentallas.hc_norm.takeover.v1",
+  "source_commit": "7103633eb",
+  "contract_version": 12,
+  "contract_source": "results/arch/hier_contract_1011/r25gq.json",
+  "contract_sha256": "f1c9332f12fd679b53f9536f8fd94265a8d028be31bba7d494793f5d5a504f94",
+  "hc_slots": [
+    {
+      "name": "hb_hc_SW",
+      "cell": "hfd_hc",
+      "parent": "die",
+      "outline": {
+        "w": 2263.68,
+        "h": 1499.04
+      },
+      "origin": {
+        "x": 8563.968,
+        "y": 11136.96,
+        "orient": "R0"
+      },
+      "clock_entry": {
+        "pin": "ck",
+        "face": "N",
+        "layer": "M7"
+      }
+    },
+    {
+      "name": "hb_hc_SE",
+      "cell": "hfd_hc",
+      "parent": "die",
+      "outline": {
+        "w": 2263.68,
+        "h": 1499.04
+      },
+      "origin": {
+        "x": 21293.288,
+        "y": 11136.96,
+        "orient": "MY"
+      },
+      "clock_entry": {
+        "pin": "ck",
+        "face": "N",
+        "layer": "M7"
+      }
+    },
+    {
+      "name": "hb_hc_NW",
+      "cell": "hfd_hc",
+      "parent": "die",
+      "outline": {
+        "w": 2263.68,
+        "h": 1499.04
+      },
+      "origin": {
+        "x": 8563.968,
+        "y": 13340.16,
+        "orient": "R0"
+      },
+      "clock_entry": {
+        "pin": "ck",
+        "face": "N",
+        "layer": "M7"
+      }
+    },
+    {
+      "name": "hb_hc_NE",
+      "cell": "hfd_hc",
+      "parent": "die",
+      "outline": {
+        "w": 2263.68,
+        "h": 1499.04
+      },
+      "origin": {
+        "x": 21293.288,
+        "y": 13340.16,
+        "orient": "MY"
+      },
+      "clock_entry": {
+        "pin": "ck",
+        "face": "N",
+        "layer": "M7"
+      }
+    },
+    {
+      "name": "hb_hc_eng",
+      "cell": "hfd_hc_eng",
+      "parent": "die",
+      "outline": {
+        "w": 4384.8,
+        "h": 1566.0
+      },
+      "origin": {
+        "x": 16794.0,
+        "y": 12204.0,
+        "orient": "R0"
+      },
+      "clock_entry": {
+        "pin": "ck",
+        "face": "N",
+        "layer": "M7"
+      }
+    }
+  ],
+  "hc_cell_counts": {
+    "hfd_hc": 4,
+    "hfd_hc_tile_xl": 352,
+    "hfd_hc_eng": 1
+  },
+  "norm_slot_count": 0,
+  "norm_candidate_frame": {
+    "schema": "opentallas.child_origins.v1",
+    "parent_cell": "ot_hbm_norm_split_view_g8p",
+    "parent_outline_um": [
+      1612.656,
+      972.0
+    ],
+    "origin_lattice_um": [
+      0.864,
+      2.16
+    ],
+    "child_cell": "ot_hbm_norm_gtile8",
+    "child_outline_um": [
+      365.04,
+      365.04
+    ],
+    "child_view": "physical/ref_tile/hbm_norm_gtile8_ref/views/ot_hbm_norm_gtile8",
+    "view_job": "hbm_norm_gtile8_ref-u52-0813c81c0",
+    "band_um": [
+      395.28,
+      576.72
+    ],
+    "children": [
+      {
+        "name": "u.g_grp[0].u_g",
+        "x": 30.24,
+        "y": 30.24,
+        "orient": "R0",
+        "outer_face": "S"
+      },
+      {
+        "name": "u.g_grp[1].u_g",
+        "x": 30.24,
+        "y": 576.72,
+        "orient": "MX",
+        "outer_face": "N"
+      },
+      {
+        "name": "u.g_grp[2].u_g",
+        "x": 425.952,
+        "y": 30.24,
+        "orient": "R0",
+        "outer_face": "S"
+      },
+      {
+        "name": "u.g_grp[3].u_g",
+        "x": 425.952,
+        "y": 576.72,
+        "orient": "MX",
+        "outer_face": "N"
+      },
+      {
+        "name": "u.g_grp[4].u_g",
+        "x": 821.664,
+        "y": 30.24,
+        "orient": "R0",
+        "outer_face": "S"
+      },
+      {
+        "name": "u.g_grp[5].u_g",
+        "x": 821.664,
+        "y": 576.72,
+        "orient": "MX",
+        "outer_face": "N"
+      },
+      {
+        "name": "u.g_grp[6].u_g",
+        "x": 1217.376,
+        "y": 30.24,
+        "orient": "R0",
+        "outer_face": "S"
+      },
+      {
+        "name": "u.g_grp[7].u_g",
+        "x": 1217.376,
+        "y": 576.72,
+        "orient": "MX",
+        "outer_face": "N"
+      }
+    ],
+    "parent_pins": "S / N edge: each tile data bit at the x of its tile pin (0 um of x run); W / E edge inside the band",
+    "parent_pin_tcl": "physical/hbm_norm_split_20261008/g8p_u52/top_io.tcl",
+    "mx_note": "row 1 is MX: the M5 pin columns do not move; the M6 PG stripe mirror was not audited (all-R0 fallback: one row of 8 at the same pitch, outer faces S)"
+  },
+  "closed_norm_child_clock": {
+    "tt": {
+      "mean_ps": 460.9,
+      "spread_ps": 32.9,
+      "sinks": 62598
+    },
+    "ff": {
+      "mean_ps": 376.7,
+      "spread_ps": 29.6,
+      "sinks": 62598
+    },
+    "ss": {
+      "mean_ps": 598.7,
+      "spread_ps": 40.0,
+      "sinks": 62598
+    }
+  },
+  "local8_backing_adapter": {
+    "capacity_sectors": 8192,
+    "native32_banks_used": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "exhaustive_address_checks": 8192,
+    "native_address_max": 32743,
+    "latency_added": 0,
+    "production_vm8_qualified": false
+  },
+  "closure": "NOT_QUALIFIED",
+  "remaining": [
+    "Collect corrected B2 exact and mutant",
+    "Native VM8 composition must replace bench backing adapter for production qualification",
+    "HC c5 window/control leaves remain unbuilt; reuse accepted hcp lanes",
+    "Publish actual die pin assignments before rebuilding open masters",
+    "Norm g8p has no current die slot; do not submit its parent",
+    "Norm future parent needs per-child clock delivery and hardened own logic before route"
+  ]
+}
