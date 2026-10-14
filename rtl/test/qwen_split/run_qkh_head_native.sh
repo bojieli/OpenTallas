@@ -12,7 +12,7 @@ v=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
   rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv rtl/hdc/nearhbm/ot_qkh_subtiles.sv \
   rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_delay.sv \
   rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv \
-  rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv > "$out/build.log" 2>&1 || {
+  rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv > "$out/build.log" 2>&1 || {
     tail -20 "$out/build.log"; exit 2;
   }
 "$out/obj/tb" > "$out/run.log" 2>&1
