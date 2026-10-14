@@ -316,6 +316,8 @@ module ot_hbm_lk_ep #(
             .TIMEOUT(TIMEOUT), .MAX_RETRY(MAX_RETRY), .NAKH_HW(NAKH_HW)) u_t (
 `endif
             .clk(clk), .rst_n(rst_n), .session(session),
+            .clk_ti(clk), .clk_ts(clk), .clk_rp(clk),       // el1013-lkep-split: one clock entry per hard child of the sub
+            .rst_n_r(rst_n), .session_r(session),           // N-face copies for the RX leaf
             .w_d(w_d), .w_oh(w_oh[g*NSL*QD +: NSL*QD]), .adm(l0_v[g]), .icr_ret(icr_ret[g]),
             .tx_v(th_vt[g]), .tx_d(th_dt[g]), .tx_cr(tcrq[g]),
             .ak(ak[g]), .fb_v(fbv[g]), .fb_d({fb_nak, fb_seq}),
