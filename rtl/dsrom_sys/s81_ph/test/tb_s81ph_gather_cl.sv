@@ -47,7 +47,7 @@ module tb_s81ph_gather_cl;
         .ck_r({ckv, {132{ck}}}),
 `endif
 `ifdef S81PH_GTH_DIE_CLOCKS
-        .ck_l({32{ck}}),
+        .ck_l({32{ck}}), .ck_q({48{ck}}),
 `endif
         .ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_vm(f_vm), .t_capture(tc),
         .rW0(tp[0][691:0]), .rW1(tp[1][760:0]), .rW2(tp[2][760:0]), .rW3(tp[3][760:0]), .rW4(tp[4][760:0]), .rW5(tp[5][691:0]),
@@ -76,9 +76,10 @@ module tb_s81ph_gather_cl;
         end
     end
     // ---------------- compare
-    function automatic integer shift_of(input integer r);   // c + k (flat delayed by this, cluster by 2)
+    function automatic integer rly_of(input integer n); rly_of = (n < 2) ? 0 : n - 1; endfunction   // R = (0, 0, 1, 2)
+    function automatic integer shift_of(input integer r);   // R(c) + R(k) (flat delayed by this, cluster by 2): v4 direct
         integer g, k;
-        begin g = r / 16; k = (r % 16) / 4; shift_of = ((g < 4) ? g : 7 - g) + k; end
+        begin g = r / 16; k = (r % 16) / 4; shift_of = rly_of((g < 4) ? g : 7 - g) + rly_of(k); end
     endfunction
     reg [52:0] hf [0:NR-1][0:7]; reg [52:0] hc [0:NR-1][0:7];
     integer k, j, expect_ = 0, need = 0;
@@ -216,7 +217,7 @@ module tb_s81ph_gather_cl;
         end
         idle(300); status_check;
         $display("READY_SUMMARY errors=%0d early_command=%0d ctl_words_flat=%0d",ready_errors,early_accepted,ctl_words_f);
-        $display("SUMMARY phases=%0d rows_flat=%0d rows_cluster=%0d row_mismatch=%0d ctl_mismatch=%0d status_mismatch=%0d first=%0d roots_with_rows=%0d xgo=%0d done=%0d ctl_words=%0d busy_seen=%0d fault_flat=%b fault_cluster=%b bad_before_fault=%0d shift=c+k-2",
+        $display("SUMMARY phases=%0d rows_flat=%0d rows_cluster=%0d row_mismatch=%0d ctl_mismatch=%0d status_mismatch=%0d first=%0d roots_with_rows=%0d xgo=%0d done=%0d ctl_words=%0d busy_seen=%0d fault_flat=%b fault_cluster=%b bad_before_fault=%0d shift=R(c)+R(k)-2",
                  n_ph, rows_f, rows_c, row_mism, ctl_mism, st_mism, first_bad, $countones(got), n_xgo, n_done, n_ctl, busy_seen, tf[6944], tc[6944], bad_before_fault);
         if (need != 0 && !($countones(got) == NR && n_xgo == n_ph && n_done == n_ph && n_ctl >= n_ph && n_ph > 0 && busy_seen))
             $display("RESULT REFUSED coverage: roots %0d/128 xgo %0d done %0d busy %0d", $countones(got), n_xgo, n_done, busy_seen);

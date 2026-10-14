@@ -27,14 +27,25 @@ public:
  uint64_t edge=0,q_requests=0,q_responses=0,commit_acks=0,q_tag_captures=0,q_tag_returns=0,attn_tag_writes=0,attn_tag_acks_offered=0;
  unsigned epoch=0,layer=0,token=0,position=255;bool reserved=false,stalls=false;
  unsigned ack_delay=1; // registered ACK after an actual write edge; no inferred commit
+ // Two-die split (owner 10-14, results/arch/qwen_split_1014/LINK.md): this
+ // receiver is the compute-die VM end of the front (KV/system die) <-> VM faces.
+ // link_latency = one-way compute<->system crossing in CORE cycles (0 = merged
+ // die). Q request crosses S->C, the 64-word response returns as 4 flits C->S;
+ // each ATT/RES beat lands in the VM link_latency after acceptance and its ACK
+ // credit crosses back; qr_vm_committed is a C->S level event. Data and order are
+ // unchanged by construction, only latency. 44 = half the measured +87-cycle
+ // Q->RES round trip of tb_qwen_split_link (C_ST 8, K_ST 16, PHY 5).
+ unsigned link_latency=0;std::deque<Write> inflight;std::vector<Write> landed;std::deque<bool> committed_level;
  explicit VmReceiver(std::vector<uint32_t>& values):vm(values){}
  void reserve(unsigned e,unsigned l,unsigned t=0,unsigned p=255){
-  if(!acks.empty()||!responses.empty())throw std::runtime_error("new VM identity before drain");
+  if(!acks.empty()||!responses.empty()||!inflight.empty())throw std::runtime_error("new VM identity before drain");
   epoch=e;layer=l;token=t;position=p;reserved=true;qr_written.reset();q_tag_events.clear();attn_tag_events.clear();
  }
  void observe_write(unsigned address){if(address>=13696&&address<14208)qr_written.set(address-13696);}
  template<class Front> void drive(Front& f){
-  f.qr_vm_committed=reserved&&qr_written.all();
+  {bool level=reserved&&qr_written.all();committed_level.push_back(level);
+   while(committed_level.size()>link_latency+1)committed_level.pop_front();
+   f.qr_vm_committed=committed_level.size()==link_latency+1?committed_level.front():false;}
   f.q_vm_req_ready=responses.empty()&&(!stalls||edge%7!=0);
   f.q_vm_rsp_v=0;f.attn_commit_valid=0;
   f.attn_vm_ready=reserved&&(!stalls||edge%5!=0);
@@ -60,7 +71,7 @@ public:
    if(!reserved||f.q_vm_req_epoch!=epoch||f.q_vm_req_chunk>7||
       f.q_vm_req_a0!=13696+64*f.q_vm_req_chunk||f.q_vm_req_a1!=f.q_vm_req_a0+1)
     throw std::runtime_error("Q VM request ownership/address mismatch");
-   QResponse r{edge+1,unsigned(f.q_vm_req_epoch),unsigned(f.q_vm_req_chunk),{}};
+   QResponse r{edge+1+(link_latency?2*link_latency+3:0),unsigned(f.q_vm_req_epoch),unsigned(f.q_vm_req_chunk),{}};
    if constexpr(HasQTag<Front>::value){r.accepted_request_tag=f.q_vm_req_tag;
     if(r.accepted_request_tag!=((uint64_t(epoch)<<43)|(uint64_t(layer+1)<<37)|(uint64_t(token)<<19)|(uint64_t(position)<<6)))throw std::runtime_error("actual QVM request fullTAG59 differs from reserved identity");
     ++q_tag_captures;q_tag_events.push_back({edge,r.accepted_request_tag,r.epoch,r.chunk,false});}
@@ -82,9 +93,12 @@ public:
   }
  }
  void store_after_edge(){
-  if(!writes.empty()&&writes.back().edge==edge){auto&w=writes.back();
+  landed.clear();
+  if(!writes.empty()&&writes.back().edge==edge)inflight.push_back(writes.back());
+  while(!inflight.empty()&&inflight.front().edge+link_latency<=edge){auto&w=inflight.front();
    for(unsigned i=0;i<16;i++)vm.at(w.address+i)=w.data[i];
-   acks.push_back({edge+ack_delay,w.beat,w.epoch,w.layer,w.accepted_write_tag});
+   acks.push_back({edge+ack_delay+link_latency,w.beat,w.epoch,w.layer,w.accepted_write_tag});
+   landed.push_back(w);inflight.pop_front();
   }
   ++edge;
  }

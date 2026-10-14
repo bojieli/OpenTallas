@@ -12,6 +12,10 @@ front=$d/native-services-front59-1014/v2/library/obj
 sector=$d/native-services-frontend-1014/sector-library-v1/obj
 pc=$d/qwen-native-hbm-pc-provider-1014/library_v2/obj
 kernel=$d/qwen-composed-harness-f460-1014/kernel
+# The LV6 core alone is 2.117 GB of text, so the f460 kernel (73 MB, same generated
+# C++ as archive 54a3930e) is linked as a PIC shared library to keep the
+# executable text under the 2 GB small-code-model limit.
+kso=${KERNEL_SO_DIR:-$stage/kernel_pic}
 helper=$d/qwen-full-layer-sequence-1014/native59_helper/obj
 collector=$d/qwen-full-layer-sequence-1014/libnative59.so
 probe=${PROBE_OBJ:-$d/qwen-full-layer-sequence-1014/core_instruction_probe.o}
@@ -21,7 +25,7 @@ alloc=$hostc/native-host-owner-models/allocator; cohort=$hostc/native-host-owner
 embed=$c/qwen-host-embedding-1014/embedding
 vroot=/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include
 [[ ! -e "$out" ]]; mkdir -p "$out"
-inc=(-I"$stage/src" -I"$lv6" -I"$front" -I"$sector" -I"$pc" -I"$kernel" -I"$helper" -I"$host" -I"$board" -I"$alloc" -I"$cohort" -I"$embed/obj" -I"$vroot" -I"$vroot/vltstd")
+inc=(-I"$stage/src" -I"$lv6" -I"$front" -I"$sector" -I"$pc" -I"$kso/obj" -I"$helper" -I"$host" -I"$board" -I"$alloc" -I"$cohort" -I"$embed/obj" -I"$vroot" -I"$vroot/vltstd")
 if [[ "${MODE:-run}" == syntax ]]; then
  g++ -std=c++20 -fsyntax-only "${inc[@]}" "$stage/src/whole_token.cpp" > "$out/syntax.log" 2>&1 && echo PASS_SYNTAX_ONLY || { cat "$out/syntax.log" | head -40; exit 2; }
  exit 0
@@ -33,13 +37,13 @@ r=json.loads((Path(sys.argv[1]).parent/'receipt.json').read_text())
 assert r['exit']==0 and '-GLV=6' in r['command'] and '-GG=3072' in r['command'], r
 PY
 arch=("$lv6/Vot_hdc_core_vector_weight_native_candidate__ALL.a" "$front/Vot_qwen_tp8_native_services_frontend_native59__ALL.a"
- "$sector/Vot_qwen_tp8_kv_sector_adapter__ALL.a" "$pc/Vqwen_native_hbm_pc_provider__ALL.a" "$kernel/Vot_qwen_tp8_attention_service__ALL.a"
+ "$sector/Vot_qwen_tp8_kv_sector_adapter__ALL.a" "$pc/Vqwen_native_hbm_pc_provider__ALL.a"
  "$helper/Vot_qwen_native59__ALL.a" "$host/Vqkd_host_token_service__ALL.a" "$board/Vqkd_host_board_port_fixture__ALL.a"
  "$alloc/Vot_qwen_tp8_token_epoch_allocator__ALL.a" "$cohort/Vot_qwen_tp8_token_cohort__ALL.a" "$embed/obj/Vot_qwen_tp8_embedding_core__ALL.a")
-sha256sum "$stage"/src/* "${arch[@]}" "$probe" "$collector" "$kernel/sim_hdc_v41x_fastfp_dpi.o" "$kernel/sim_nhb_fp_lat_dpi.o" > "$out/inputs.sha256"
-g++ -std=c++20 -O1 -pthread "${inc[@]}" "$stage/src/whole_token.cpp" "$probe" "${arch[@]}" \
+sha256sum $(find "$stage/src" -maxdepth 1 -type f) "${arch[@]}" "$probe" "$collector" "$kso/libot_qwen_tp8_attention_service.so" "$kso/generated_sources.sha256" "$kernel/sim_hdc_v41x_fastfp_dpi.o" "$kernel/sim_nhb_fp_lat_dpi.o" > "$out/inputs.sha256"
+g++ -std=c++20 -O1 -pthread -rdynamic "${inc[@]}" "$stage/src/whole_token.cpp" "$probe" "${arch[@]}" \
  "$kernel/sim_hdc_v41x_fastfp_dpi.o" "$kernel/sim_nhb_fp_lat_dpi.o" \
- "$vroot/verilated.cpp" "$vroot/verilated_threads.cpp" "$vroot/verilated_dpi.cpp" -ldl -o "$out/whole_token" > "$out/link.log" 2>&1
+ "$vroot/verilated.cpp" "$vroot/verilated_threads.cpp" "$vroot/verilated_dpi.cpp" "$kso/libot_qwen_tp8_attention_service.so" -Wl,-rpath,"$kso" -ldl -o "$out/whole_token" > "$out/link.log" 2>&1
 sha256sum "$out/whole_token" > "$out/binary.sha256"
 [[ -n "$plan" ]] || { echo PASS_LINK_ONLY; exit 0; }
 sha256sum "$plan" >> "$out/inputs.sha256"
