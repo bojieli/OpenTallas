@@ -48,5 +48,5 @@
  "original_DCU": 2,
  "original_DUC": 2,
  "added_station_cycles": 0,
- "clock": "independent roots/local supply-only MEREG3 ICGs; no clock forwarding"
+ "clock": "independent roots/native MEREG3 ICGs with tree-local pruned controller shadow; no clock or enable forwarding"
 }

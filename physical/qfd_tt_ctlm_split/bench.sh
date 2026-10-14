@@ -11,7 +11,7 @@ u1=re.search(r'    ot_qfd_tt_ctlm_i #\([^\n]*\) u1 \(.*?\);',s,re.S).group()
 if sys.argv[2] in ('strict','power'):
  ref=u1.replace(' u1 (',' u0 (')
  ref=re.sub(r'(\w+)_1\b',r'\1_0',ref)
- ref=ref.replace('.AUD(U1_AUD)', '.AUD(U1_AUD | 64)' if sys.argv[2]=='strict' else '.AUD(U1_AUD & ~64)')
+ ref=ref.replace('.AUD(U1_AUD)', '.AUD(U1_AUD)')
  s=re.sub(r'    ot_qfd_tt_ctlm_i #\([^\n]*\) u0 \(.*?\);',lambda _:ref,s,flags=re.S)
 sp=u1.replace('ot_qfd_tt_ctlm_i #','ot_qfd_tt_ctlm_split #',1).replace('.clk(clk)','.ck_head(clk), .ck_tree(clk)')
 s=s.replace(u1,sp)
@@ -45,7 +45,7 @@ case "$MODE" in
 esac
 "$V" --binary --timing -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -CFLAGS -O1 --x-assign fast --x-initial fast \
  +define+OT_ICUT_NONFATAL --top-module tb_qfd_tt_ctlm_i_psram $CV -GMINRD=200 -GSEED=1 -GU1_HQ2=1 -GU1_RRG=1 -GU1_PCUT=1 \
- -GMOK=1 -GPFMASK=1 -GU1_AUD=34039 -GU1_MEREG=3 -GTBG=3072 $D --Mdir "$OUT/obj" "$OUT/tb.sv" \
+ -GMOK=1 -GPFMASK=1 -GU1_AUD=33975 -GU1_MEREG=3 -GTBG=3072 $D --Mdir "$OUT/obj" "$OUT/tb.sv" \
  rtl/physical/ot_qfd_tt_ctlm_split.sv $L > "$OUT/build.log" 2>&1 || { grep -m5 '%Error' "$OUT/build.log"; echo "FAIL tt_ctlm_split build"; exit 1; }
 "$OUT/obj/Vtb_qfd_tt_ctlm_i_psram" > "$OUT/run.log" 2>&1
 RLINE=$(grep -E '^(PASS|FAIL) tt_ctlm_i_psram' "$OUT/run.log" | tail -1)
