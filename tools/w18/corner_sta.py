@@ -93,6 +93,7 @@ read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef{vt_lefs}
 {libs}
 {mlibs}
 read_db {base}/6_final.odb
+set ::ot_ce_corner {corner}
 read_sdc {base}/{sdc_name}
 read_spef {base}/6_final.spef
 set_propagated_clock [all_clocks]

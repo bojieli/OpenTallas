@@ -34,7 +34,8 @@ module ot_qwen_die_coll_xfifo #(
     parameter integer HDLO = 0,
     // MEMM = 1 (el1011-q-coll 2026-10-11, textbook class 1): both CDC FIFO bodies (sq 16 x 546, cq 64 x 516) are dual-clock
     // 1R1W macros instead of ~41k flops on the ck / ckd roots; needs PIPE = 2.
-    parameter integer MEMM = 0
+    parameter integer MEMM = 0,
+    parameter integer SQ_IBMEM = 0
 ) (
     input  wire ck, input wire ckd, input wire rst_n,
     input  wire i_seq_coll_v,  input  wire [WSQ-1:0] i_seq_coll,  output wire i_seq_coll_cr,
@@ -56,7 +57,7 @@ module ot_qwen_die_coll_xfifo #(
     localparam integer CQ_IB = 4;
     localparam integer RRES = CQ_IB + CQ_AD;              // return words the path holds without overflow
     wire sq_icr, wf_sq, rf_sq, wf_cq, rf_cq;
-    ot_qwen_die_cdc_ch #(.W(WSQ), .PIPE(PIPE), .MEMM(MEMM), .IBUF(CR), .OCRED(ENG_IB), .AD((2 * CR > 8) ? 2 * CR : 8)) u_sq (.wclk(ckd), .wrst_n(rst_n), .i_v(x_i_seq_coll_v), .i_d(x_i_seq_coll),
+    ot_qwen_die_cdc_ch #(.W(WSQ), .PIPE(PIPE), .MEMM(MEMM), .IBMEM(SQ_IBMEM), .IBUF(CR), .OCRED(ENG_IB), .AD((2 * CR > 8) ? 2 * CR : 8)) u_sq (.wclk(ckd), .wrst_n(rst_n), .i_v(x_i_seq_coll_v), .i_d(x_i_seq_coll),
         .i_cr(sq_icr), .w_fault(wf_sq), .rclk(ck), .rrst_n(rst_n), .o_v(x_o_seq_coll_v), .o_d(x_o_seq_coll),
         .o_cr(x_o_seq_coll_cr), .r_fault(rf_sq));
     ot_qwen_die_cdc_ch #(.W(WCQ), .PIPE(PIPE), .MEMM(MEMM), .IBUF(CQ_IB), .OCRED(LCR), .AD(CQ_AD)) u_cq (.wclk(ck), .wrst_n(rst_n), .i_v(x_i_coll_seq_v),
@@ -66,7 +67,12 @@ module ot_qwen_die_coll_xfifo #(
     wire grs_n;
     ot_reset_sync u_grs (.clk(ckd), .async_rst_n(rst_n), .sync_rst_n(grs_n));
     reg red_q, ocr_q, gcr_q, gf_q;
-    reg [7:0] rr;                                         // return words not yet reserved
+`ifdef OT_NCOLL_MUT_NARROW_RR
+    localparam integer RRW = 8; // negative control: native RRES260 truncates at256
+`else
+    localparam integer RRW = $clog2(RRES + 1);
+`endif
+    reg [RRW-1:0] rr;                                         // return words not yet reserved
     reg [5:0] pend;                                       // forward credits withheld for want of return space
     wire [5:0] avail = pend + {5'b0, sq_icr};
 `ifdef OT_NCOLL_MUT_NOREFUND_CHECK
@@ -74,7 +80,7 @@ module ot_qwen_die_coll_xfifo #(
 `else
     wire       grant = (avail != 0) && (rr >= N);
 `endif
-    wire [7:0] rr_n  = rr + (red_q ? N - 1 : 0) + {7'b0, ocr_q} - (grant ? N : 0);
+    wire [RRW-1:0] rr_n  = rr + (red_q ? N - 1 : 0) + {{(RRW-1){1'b0}}, ocr_q} - (grant ? N : 0);
     always @(posedge ckd or negedge grs_n)
         if (!grs_n) begin red_q <= 1'b0; ocr_q <= 1'b0; gcr_q <= 1'b0; gf_q <= 1'b0; rr <= RRES - CR * N; pend <= 6'd0; end
         else begin

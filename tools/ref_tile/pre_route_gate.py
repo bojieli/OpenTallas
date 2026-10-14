@@ -51,6 +51,8 @@ import ref_tile as RT  # noqa: E402
 import child_lint  # noqa: E402
 import textbook_lint as TL  # noqa: E402
 import pin_fit as PF  # noqa: E402
+import source_binding as SB  # noqa: E402
+HO = SB.overlay_module()
 
 DEFAULT_SRC_PATHS = ("tools", "rtl", "physical", "Makefile")
 # the textbook checks whose refuse tier the gate enforces (calibrated: zero closed-set refusals, see README)
@@ -397,13 +399,17 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     if [round(x, 3) for x in fp["die"][2:]] != [round(x, 3) for x in fresh["outline"]]:
         g.add("FAIL", "kit", f"kit outline {fp['die'][2:]} != regenerated {fresh['outline']}", "re-run ref_tile.py gen")
     env = (kd / "kit.env").read_text()
+    if "pin_group_max" in spec.get("route", {}):
+        pgm = re.search(r"^export OT_PIN_GROUP_MAX=(\d+)$", env, re.M)
+        if not pgm or int(pgm[1]) != RT.pin_group_max(spec):
+            g.add("FAIL", "pin_group", "kit ordered pin chunk limit differs from route.pin_group_max", "re-run ref_tile.py gen")
     if "PLACE_DENSITY_LB_ADDON=" not in env:
         g.add("FAIL", "density", "kit leaves ORFS's PLACE_DENSITY_LB_ADDON in force: the placer target becomes lower-bound + "
               "0.05, not the spec PD (qkd_nhb_pbst 0.50 -> 0.1075, GPL-0305)", "re-run ref_tile.py gen")
     lc = fp["layer_contract"]
-    rl = re.search(r"^RLAYERS='M2 (M[5-7])'$", env, re.M)
+    rl = re.search(r"^RLAYERS='M2 (M[5-9])'$", env, re.M)
     if not rl:
-        g.add("FAIL", "layer", "kit.env has no explicit RLAYERS M2..M5/M6/M7 (a script default would override the "
+        g.add("FAIL", "layer", "kit.env has no explicit RLAYERS M2..M5/M6/M7/M8/M9 (a script default would override the "
               "layer contract)", "re-run ref_tile.py gen")
     elif spec["kind"] == "tile":
         fresh_lc = RT.layer_contract(spec, RT.contract_slot(spec))
@@ -420,6 +426,12 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
         if over and not (over == ["M6"] and fresh_lc.get("m6_pin_grant")):
             g.add("FAIL", "layer", f"pin layers {over} above the tile cap {rl.group(1)}: the parent strap layer would "
                   "carry pins", "pins on M4/M5 (route.pin_h / pin_v / pin_balance)")
+    elif rl is not None and spec["kind"] == "cluster":
+        cap, grant = RT.cluster_signal_cap(spec, RT.contract_slot(spec))
+        if rl.group(1) != cap or lc.get("pg_layer") != "M7":
+            g.add("FAIL", "layer", "cluster kit signals/PG differ from its audited layer contract", "re-run ref_tile.py gen")
+        if grant:
+            g.add("INFO", "layer_grant", f"digest-bound {cap} grant {grant['source']}; no die signals through rectangle; phase-aligned die PG required")
     g.add("INFO", "layer", f"{spec['kind']}: PG {lc['pg_layer']} stripes as pins, signals {lc['rlayers'][0]}-"
           f"{lc['rlayers'][1]}, parent strap {lc['strap_layer']}"
           + (f", cap {lc['layer_cap']} ({lc.get('cap_basis')})" if lc.get("layer_cap") else "")
@@ -471,7 +483,12 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
 
 # --------------------------------------------------------------------------------------------- remote
 REMOTE_SH = r"""set -uo pipefail
-R={R}; mkdir -p $R/src $R/bin && tar -xzf $R.tgz -C $R/src && rm -f $R.tgz
+R={R}; mkdir -p $R/src $R/bin
+ACTUAL=$(sha256sum $R.tgz | cut -d' ' -f1)
+[ "$ACTUAL" = "{ARCHIVE_SHA256}" ] || {{ echo GATE_SOURCE_BINDING_FAIL; exit 1; }}
+echo "GATE_SOURCE_ARCHIVE_SHA256=$ACTUAL"
+tar -xzf $R.tgz -C $R/src || exit 1
+rm -f $R.tgz
 cat > $R/bin/docker <<'EOS'
 #!/bin/bash
 for e in ${{PATH//:/ }}; do if [ -x "$e/docker" ] && ! [ "$e/docker" -ef "$0" ]; then
@@ -479,6 +496,8 @@ for e in ${{PATH//:/ }}; do if [ -x "$e/docker" ] && ! [ "$e/docker" -ef "$0" ];
   exec "$e/docker" "$@"; fi; done; exit 127
 EOS
 chmod +x $R/bin/docker; export PATH=$R/bin:$PATH
+docker image inspect --format 'GATE_TOOL_IMAGE_ID={{{{.Id}}}} GATE_TOOL_IMAGE_DIGESTS={{{{json .RepoDigests}}}}' {IMG} 2>/dev/null
+printf 'GATE_TOOL_CTS_MACRO_CLUSTER=%s\n' "${{OT_CTS_MACRO_CLUSTER:-}}"
 cd $R/src && echo {COMMIT} > SOURCE_COMMIT
 T0=$(date +%s)
 # the gate builds the tree at the ROUTE's corner (ref_tile.py ROUTE_PREFIX: setup at TT, owner option B): a cluster spine
@@ -515,27 +534,37 @@ if [ "{CTS}" = 1 ]; then
   python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
   python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt')}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
-  docker run --rm -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
+  docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
 fi
 echo GATE_DONE
 """
 
 
-def ship_tar(paths):
+def ship_tar(paths, overlay_payloads=None, overlay_modes=None):
     import io
     import tarfile
+    if overlay_payloads is None:
+        plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT, paths=[h for h in SHIP_HELPERS if (DAEMON_TREE / h).exists()])
+        overlay_modes = {f["path"]: f["mode"] for f in plan["files"]}
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
         for p in sorted(set(paths)):
+            if any(p != q and p.startswith(q.rstrip("/") + "/") for q in paths):
+                continue
             src = ROOT / p
             if src.exists():
                 tf.add(str(src), arcname=p, filter=lambda ti: None if ("/views/" in ti.name and ti.name.endswith(".gds"))
-                       or "__pycache__" in ti.name else ti)
+                       or "__pycache__" in ti.name or "source_binding_history" in Path(ti.name).parts
+                       or Path(ti.name).name in SB.EXCLUDED else ti)
         for h in SHIP_HELPERS:      # the loop's shipped flow helpers win over the snapshot's copies
             f = DAEMON_TREE / h
             if f.exists():
-                tf.add(str(f), arcname=h)
+                payload = overlay_payloads[h]
+                ti = tarfile.TarInfo(h)
+                ti.size = len(payload)
+                ti.mode = overlay_modes[h] if overlay_modes is not None else f.stat().st_mode & 0o777
+                tf.addfile(ti, io.BytesIO(payload))
     return buf.getvalue()
 
 
@@ -560,17 +589,34 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     dirs |= {str(Path(p).parent) for p in ref}
     ts = time.strftime("%Y%m%d-%H%M%S")
     R = f"/srv/opentallas-scratch/claude/ref_gate/{spec['name']}-{ts}"
-    commit = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short=9", "HEAD"], capture_output=True,
-                            text=True).stdout.strip() + "+wt"
+    start_commit = SB.git_head(ROOT)
+    daemon_commit = SB.git_head(DAEMON_TREE)
+    route_plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT)
+    data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]})
+    binding = SB.snapshot(data, ROOT, start_commit, DAEMON_TREE, daemon_commit, SHIP_HELPERS)
+    binding["route_overlay_plan"] = route_plan
+    binding["captured"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
+    g.source_binding = binding
+    commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=cap, KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
-                          CLK=spec["clock_port"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
+                          CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
+    import hashlib
+    binding["remote_script_sha256"] = hashlib.sha256(sh.encode()).hexdigest()
+    binding["tool_image_requested"] = "openroad/orfs:latest"
+    binding["remote_host"] = host
+    binding["remote_run"] = R
+    local_snapshot = Path(os.environ.get("TMPDIR", "/tmp")) / f"ref_gate_{spec['name']}_{ts}.source_snapshot.json"
+    local_snapshot.write_text(json.dumps(binding, indent=1) + "\n")
+    g.add("INFO", "source_binding", f"immutable shipping manifest {local_snapshot}")
     script = f"/tmp/ref_gate_{spec['name']}_{ts}.sh"
     t0 = time.time()
-    data = ship_tar(dirs)
     up = subprocess.run(["ssh", host, f"cat > {script}"], input=sh.encode(), capture_output=True)
     if not up.returncode:
         up = subprocess.run(["ssh", host, f"mkdir -p {Path(R).parent} && cat > {R}.tgz"], input=data, capture_output=True)
+    if not up.returncode:
+        up = subprocess.run(["ssh", host, f"cat > {R}.source_snapshot.json"],
+                            input=(json.dumps(binding, indent=1) + "\n").encode(), capture_output=True)
     if up.returncode:
         g.add("FAIL", "remote", f"cannot ship to {host}: {up.stderr[-200:]!r}", "pick another host")
         return
@@ -587,9 +633,22 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     logp.write_text(out + "\n--- stderr\n" + p.stderr.decode(errors="replace")[-4000:])
     g.remote_host = host
     g.add("INFO", "remote", f"remote log {logp}; host dir {host}:{R}")
-    secs = round(time.time() - t0)
-    kv = dict(re.findall(r"\b(GATE_[A-Z_]+)=(\S+)", out))
+    analyse_remote(g, kd, spec, out, cts, binding, cap, host, round(time.time() - t0), local_snapshot)
+
+
+def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: dict,
+                   cap: int, host: str, secs: int = 0, local_snapshot: Path | None = None):
+    """One parser for live runs and fully verified frozen-run recovery."""
+    fp = json.loads((kd / "floorplan.json").read_text())
+    kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
+    if kv.get("GATE_SOURCE_ARCHIVE_SHA256") != binding["archive_sha256"]:
+        g.add("FAIL", "source_binding", "remote did not verify the staged source archive", "preserve log; rerun gate")
+        return
+    binding["remote_archive_verified"] = True
+    binding["runtime_tool_provenance"] = re.findall(r"^GATE_TOOL_.*$", out, re.M)
+    if local_snapshot is not None:
+        local_snapshot.write_text(json.dumps(binding, indent=1) + "\n")
     if kv.get("GATE_FLOW_RC") != "0":
         why = "; ".join(errs[:4]) or "see gate_remote.log"
         stall = any(re.search(r"tim(ed)? ?out|TimeoutExpired|exceeded", e, re.I) for e in errs) or \
@@ -719,20 +778,39 @@ def clock_item(g: Gate, rec: dict) -> None:
         g.add("INFO", "clock_rule", f"root {rec['root']}: {rec['text']}")
 
 
-def kit_clock_evidence(kd: Path) -> dict | None:
+def kit_gate_evidence(kd: Path, source_commit=None) -> dict | None:
     try:
         d = json.loads((kd / CLOCK_RESULT).read_text())
-        return d["clock"] if isinstance(d.get("clock"), dict) else None
+        binding = d.get("source_binding")
+        ok, _ = SB.validate(binding, ROOT, DAEMON_TREE, source_commit)
+        return d if ok and binding.get("remote_archive_verified") and isinstance(d.get("clock"), dict) else None
     except (OSError, ValueError, KeyError, AttributeError):
         return None
 
 
-def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, closed_stands: bool = False) -> dict:
+def kit_clock_evidence(kd: Path, source_commit=None) -> dict | None:
+    rec = kit_gate_evidence(kd, source_commit)
+    return rec["clock"] if rec else None
+
+
+def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, closed_stands: bool = False, source_commit=None) -> dict:
     """SUBMIT side of the measured clock rule.  The kit's committed gate result decides when it exists; without one the
     sink count of this block's latest synthesized design (known_sinks, from the loop's job history) does.  A kit with no
     gate result and no history passes here and is judged by the in-flow lint right after synthesis (FLOORPLAN_MARGIN,
     before placement).  closed_stands: a CLOSED tile is not re-judged."""
-    ev = kit_clock_evidence(kd)
+    rec = kit_gate_evidence(kd, source_commit)
+    ev = rec["clock"] if rec else None
+    if rec and not closed_stands:
+        frozen = rec["source_binding"].get("route_overlay_plan")
+        if frozen is None:
+            # Legacy v2 has exact six-helper evidence, not a historical full route plan.
+            frozen, _ = HO.capture_plan(DAEMON_TREE, ROOT)
+            frozen["gate_verified_paths"] = rec["source_binding"].get("daemon_overlays", [])
+            frozen["scope"] = "legacy_gate_exact_overlays_with_current_full_route_plan"
+        g.route_overlay_plan = frozen
+    if (kd / CLOCK_RESULT).exists() and ev is None and not closed_stands:
+        g.add("FAIL", "source_binding", "gate result is legacy, unverified, or differs from the route source/daemon overlay",
+              "preserve original as unqualified; regenerate the gate for this exact source")
     n = (ev or {}).get("max_root_sinks")
     if not isinstance(n, int):          # the kit's own gate result outranks history (a rebuilt tile proves itself)
         n = known_sinks if isinstance(known_sinks, int) else None
@@ -797,16 +875,35 @@ def main(argv=None) -> int:
         g.add("FAIL", "spec", str(ex), "fix the tile spec")
     g.print()
     if a.remote and getattr(g, "clock", None) and "kd" in locals():
-        out = {"schema": "opentallas.ref_tile.gate_result.v1", "kit": kd.name, "verdict": g.verdict,
-               "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": getattr(g, "remote_host", a.remote), "cts": bool(a.cts),
-               "commit": subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short=9", "HEAD"], capture_output=True,
-                                        text=True).stdout.strip(),
-               "clock": g.clock, "items": [i for i in g.items if i["severity"] != "INFO"][:40]}
-        (kd / CLOCK_RESULT).write_text(json.dumps(out, indent=1) + "\n")
-        print(f"GATE: {kd.name}/{CLOCK_RESULT} written (clock evidence for the submit gate: commit it with the kit)")
+        write_gate_result(g, kd, a.cts, a.remote)
     if a.json:
         Path(a.json).write_text(json.dumps({"verdict": g.verdict, "items": g.items}, indent=1) + "\n")
     return 1 if g.verdict == "FAIL" else 0
+
+
+def write_gate_result(g: Gate, kd: Path, cts: bool, host: str):
+    """Completion observes no HEAD: all provenance was frozen at shipping."""
+    out = {"schema": "opentallas.ref_tile.gate_result.v2", "kit": kd.name, "verdict": g.verdict,
+           "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": getattr(g, "remote_host", host), "cts": bool(cts),
+           "commit": g.source_binding.get("commit"), "source_binding": g.source_binding,
+           "clock": g.clock, "items": [i for i in g.items if i["severity"] != "INFO"][:40]}
+    previous = kd / CLOCK_RESULT
+    if previous.exists():
+        import hashlib
+        old = previous.read_bytes()
+        history = kd / "source_binding_history"
+        history.mkdir(exist_ok=True)
+        preserved = history / (hashlib.sha256(old).hexdigest() + ".json")
+        try:
+            original = json.loads(old)
+        except ValueError:
+            original = old.decode(errors="replace")
+        preserved.write_text(json.dumps({"qualification_status": "unqualified_previous_source_binding",
+                                         "original_result": original}, indent=1) + "\n")
+        print(f"GATE: previous result preserved as unqualified evidence: {preserved}")
+    previous.write_text(json.dumps(out, indent=1) + "\n")
+    print(f"GATE: {kd.name}/{CLOCK_RESULT} written (exact staged source binding; commit it with the kit)")
+    return out
 
 
 def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
@@ -896,7 +993,7 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
                                       .get("referenced", []), commit)
                         check_slot_fit(g, Path(td) / kit, spec, repo, commit)
                         if clock_mode != "off":
-                            check_clock_evidence(g, Path(td) / kit, known_sinks, closed_stands)
+                            check_clock_evidence(g, Path(td) / kit, known_sinks, closed_stands, commit)
                             if clock_mode != "refuse":
                                 for i in g.items:
                                     if i["check"] == "clock_rule" and i["severity"] == "FAIL":
@@ -913,7 +1010,7 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
     msg = " | ".join(f"{i['check']}: {i['message']}" + (f" (fix: {i['fix']})" if i["fix"] else "")
                      for i in (fails or warns))[:1500]
     return {"verdict": "REFUSE" if fails else ("WARN" if warns else "PASS"), "message": msg or "pre-route gate PASS",
-            "clock": getattr(g, "clock", None)}
+            "clock": getattr(g, "clock", None), "route_overlay_plan": getattr(g, "route_overlay_plan", None)}
 
 if __name__ == "__main__":
     sys.exit(main())
