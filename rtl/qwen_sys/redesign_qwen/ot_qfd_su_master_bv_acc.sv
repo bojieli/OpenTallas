@@ -29,6 +29,11 @@ module ot_qfd_sp_su64_sfu_bv_acc #(
     parameter integer CRX = 2,              // constant-ROM edges outside this master beyond the base's one
     parameter integer HID = 4096,
     parameter integer CRD = 4,
+    // Functional composition options; a physical parent still needs independent child clocks and relay leaves.
+    parameter integer LT = 0,
+    parameter integer LOFF = 0,
+    parameter integer RD = 2,
+    parameter integer LMIN = 0,          // minimum lane memory latency; existing answer delays align VL to it
     parameter integer VL = 7,               // the banked vector memory's extra read latency (answer at 1 + VL)
     parameter integer MUT = 0
 ) (
@@ -93,7 +98,8 @@ module ot_qfd_sp_su64_sfu_bv_acc #(
     output wire              wrom_fault
 );
     localparam integer MC = OS + IS + CRX;
-    localparam integer ML = (VL > MC) ? VL : MC;
+    localparam integer MBASE = (VL > MC) ? VL : MC;
+    localparam integer ML = (LMIN > MBASE) ? LMIN : MBASE;
     localparam integer FI = 2*NW + 1 + 3*AW + 1 + 3*AW + 1 + 3*AW + 2 + 2 + 3 + 3 + 1 + 1 + 2 + 3*AW + 2 + 1 + 2*AW + 64;
     wire rs;
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
@@ -176,7 +182,7 @@ module ot_qfd_sp_su64_sfu_bv_acc #(
     assign sw_a0 = vm_waddr[0 +: AW];
     assign sw_a1 = vm_waddr[AW +: AW];
     wire [15:0] s_progress, s_rows;
-    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML)) u_su (
+    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .LT(LT), .LOFF(LOFF), .RD(RD)) u_su (
         .clk(clk), .rst_n(rs), .go(go_s), .ready(s_ready), .idle(s_idle),
         .i_nout(q_nout), .i_nin(q_nin),
         .i_asrc(q_asrc), .i_abase(q_abase), .i_aso(q_aso), .i_asi(q_asi),
