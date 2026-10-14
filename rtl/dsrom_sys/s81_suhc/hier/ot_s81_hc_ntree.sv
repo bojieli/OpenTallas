@@ -16,7 +16,7 @@
 //     registered at every pin).  The lane is time-multiplexed: octet s of vector v reaches the bottom at
 //     base + 2 p_s + v (p_s = its half-tile), two slots by octet parity, so no two partials ever meet (a meeting sets
 //     the lane's sticky fault bit);
-//   * the bottom collectors (ot_s81_hc_cnclt, one a chain) hold the leaves and fire the chain's own subtree of the
+//   * the bottom collectors (one a chain, two bank-half leaves ot_s81_hc_cncla / _cnclb with their own clock roots) hold the leaves and fire the chain's own subtree of the
 //     golden pairwise tree (ot_s81_hc_stree OWN = c, unchanged) at a FIXED offset NT_K after the vector beat passes the
 //     far tile; the closed final-rung tile ot_s81_hc_cntree (h2 tuple, unchanged master) takes the three chains'
 //     exports, and ot_s81_hc_cnrsq runs the scalar tail of ot_s81_hc_cseq (ot_dsrom_divc, + eps, ot_dsrom_rsqrt:
@@ -29,7 +29,7 @@
 // Unchanged and still used: every ctnl / ctpl / ctra / ctrb / ctfn tile of the half-octets, the forward / return buses,
 // the column roots, the comb (cseq keeps its own norm tail: its sum and r are computed and discarded, the closed
 // tiles stand).  Changed masters (NEW names): ot_s81_hc_cth_nt (region wrapper, no route), ot_s81_hc_ctfx_nt,
-// ot_s81_hc_ctfs_nt, ot_s81_hc_ctrn_nt (strips, outlines = the closed strips'), new: ot_s81_hc_cnclt (C = 0 / 1 / 2),
+// ot_s81_hc_ctfs_nt, ot_s81_hc_ctrn_nt (strips, outlines = the closed strips'), new: ot_s81_hc_cncla / ot_s81_hc_cnclb (C = 0 / 1 / 2),
 // ot_s81_hc_cnrsq; reused at a new slot: ot_s81_hc_cntree (h2 tuple).
 // Faults (lane collision, missing / duplicate leaf at fire, tree / div / eps / rsqrt) are sticky in the bottom and
 // enter chain 0's far tile on the return valid word (bit S_RT + 2): crx x_f1 -> cseq fault code 1.
@@ -113,34 +113,39 @@ module ot_s81_hc_ctfx_nt #(
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
-// ot_s81_hc_cnclt (bottom collector of chain C): pin flops on the chain's far-tile forward bus control (fv, the vector
-// index) and partial lane; the leaf buffer (NV vectors x LC octets x 4 banks); on the norm go (ng) the buffer empties;
-// vector j fires NT_K cycles after its vector beat left the far tile: the chain's own subtree of the golden tree
-// (ot_s81_hc_stree OWN = C) on the buffered leaves.  rvt / pi / ex leave on output flops with the timing of
-// ot_s81_hc_crootr_t's s_ex (v_q -> tree -> output flop) so the closed ot_s81_hc_cntree consumes them unchanged.
-// Sticky fault: lane fault bit, a leaf outside the chain / a vector >= NV / a duplicate, a leaf missing at fire, tree.
+// Bottom collector of chain C, split by BANK HALF into two hardened leaves with their own clock roots
+// (el1014-s81-norm-tree r2, 2026-10-14): the single-root collector ot_s81_hc_cnclt measured 19,155 / 16,082 / 19,155
+// sinks (C 0 / 1 / 2) with TT insertion 407.0 / 365.0 / 362.7 ps > 300 (clock rule REFUSE).  Every node the chain owns
+// covers leaves of ONE bank (sz <= NS, NS a power of two, leaf j NS + s), so the chain's subtree is four independent
+// per-bank subtrees: banks 0 / 1 -> ot_s81_hc_cncla, banks 2 / 3 -> ot_s81_hc_cnclb, each with half the leaf buffer
+// (NV x LC x 64 b) and half the adders (~9.6k sinks a leaf).  Same ot_dsrom_qadd nodes, same pairing, same fire offset
+// NT_K: the exports are the golden tree's, bit for bit, and leave on output flops in the same cycle as before; the
+// bottom wrapper (wires) interleaves the two halves' exports back into the closed ot_s81_hc_cntree's heap order.
+// Leaf pins (both halves): N f_fv / f_nv / dl (the half's 64 data bits of each lane slot + the slot's tags, from the far
+// tile above); S ex (A: + rvt / pi / flt, to cntree / cnrsq); the halves abut on A's E / B's W face: B's sticky fault
+// enters A on a pin flop (A's flt one cycle later for a B-side fault; faults are sticky, the code is unchanged).
+// Also from the r1 gate: the leaf write is decoded per (vector, octet) (no runtime part-select) and the leaf read is a
+// one-hot select registered per octet (was one 3-bit index with 5,654 loads).
+// Sticky fault: lane fault bit (A), a leaf outside the chain / a vector >= NV / a duplicate, a leaf missing at fire, tree.
 // NT_K 67 = measured (hc_gate NG 256 hier3, 0c402af5a NT_DBG): the far octet's leaf of vector j is captured 66 cycles
 // after j's beat (all three chains in the same cycle); zero slack, the missing-leaf fault guards it (NT_K 66 must FAIL).
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_s81_hc_cnclt #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, AL = 4, C = 0, NT_K = 67
+
+// one bank half of the chain's subtree of the golden pairwise tree (ot_s81_hc_stree OWN = C restricted to banks 2H, 2H+1)
+module ot_s81_hc_streeh #(
+    parameter integer NS = 32, NP = 11, LA = 4, OWN = 0, H = 0
 ) (
-    input  wire                 sk,
-    input  wire                 srs,
-    input  wire [S_RD+4:0]      f_fv,          // far tile fv_out
-    input  wire [7:0]           f_nv,          // far tile fd_out[O_NV +: 8]
-    input  wire [DLW-1:0]       dl,            // far tile partial lane
-    output reg                  rvt,
-    output reg  [7:0]           pi,
-    output reg  [NEX*32-1:0]    ex,
-    output reg                  flt
+    input  wire                   clk,
+    input  wire                   rst_n,
+    input  wire                   v,
+    input  wire [NP*64-1:0]       pk,             // slot p, bank 2H + j at 64 p + 32 j
+    output wire [NEX*32-1:0]      ex,             // this half's exported nodes, increasing heap order
+    output wire                   fault
 );
-    localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, NL = 4 * NS, LT = $clog2(NL);
+    localparam integer NL = 4 * NS;
+    localparam integer LT = $clog2(NL);
     localparam integer L0 = NP, L1 = (NS - 2 * NP > 0) ? NS - 2 * NP : 0, L2 = NP;
     localparam integer B0 = 0, B1 = NP, B2 = NP + L1;
-    localparam integer LC = (C == 0) ? L0 : (C == 1) ? L1 : L2, BC = (C == 0) ? B0 : (C == 1) ? B1 : B2;
-    localparam integer N = 4 * NG, NV = D / N;
-    localparam integer SW = 137, DLW = 2 * SW + 1;
     function automatic integer lev(input integer n);
         integer t;
         begin t = 0; while ((n >> (t + 1)) > 0) t = t + 1; lev = LT - t; end
@@ -157,80 +162,286 @@ module ot_s81_hc_cnclt #(
             end
         end
     endfunction
-    function automatic integer expd(input integer n, input integer c);
-        expd = (owner(n) == c) && (c != 3) && (n == 1 || owner(n / 2) != c);
+    function automatic integer half(input integer n);
+        half = (((n << lev(n)) - NL) / NS) / 2;
     endfunction
-    function automatic integer exidx(input integer n, input integer c);
+    function automatic integer mine(input integer n);
+        mine = (owner(n) == OWN) && (half(n) == H);
+    endfunction
+    function automatic integer expd(input integer n);
+        expd = mine(n) && (n == 1 || owner(n / 2) != OWN);
+    endfunction
+    function automatic integer exidx(input integer n);
         integer m, t;
-        begin t = 0; for (m = 1; m < n; m = m + 1) t = t + expd(m, c); exidx = t; end
+        begin t = 0; for (m = 1; m < n; m = m + 1) t = t + expd(m); exidx = t; end
     endfunction
-    localparam integer NEX_ = exidx(2 * NL, C);
+    localparam integer NEX_ = exidx(2 * NL);
+    localparam integer NEX  = (NEX_ > 0) ? NEX_ : 1;
+    localparam integer B = (OWN == 0) ? B0 : (OWN == 1) ? B1 : B2;
+
+    wire [LT*LA:0] vl;
+    ot_hdc_vline #(.D(LT * LA)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vl));
+    wire [31:0]     val [1:2*NL-1];
+    wire [2*NL-1:0] f;
+    assign f[0] = 1'b0;
+    genvar n;
+    generate
+        for (n = 1; n < 2 * NL; n = n + 1) begin : g_n
+            localparam integer K = lev(n);
+            if (mine(n)) begin : g_own
+                if (n >= NL) begin : g_leaf                       // bank J (2H or 2H + 1), sub-tile S = slot S - B
+                    localparam integer J = (n - NL) / NS, S = (n - NL) % NS;
+                    assign val[n] = pk[64 * (S - B) + 32 * (J - 2 * H) +: 32];
+                    assign f[n] = 1'b0;
+                end else begin : g_add
+                    ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rst_n, vl[LA * (K - 1)], val[2 * n], val[2 * n + 1], val[n], f[n]);
+                end
+                if (expd(n)) begin : g_ex
+                    assign ex[32 * exidx(n) +: 32] = val[n];
+                end
+            end else begin : g_none
+                assign val[n] = 32'd0;
+                assign f[n] = 1'b0;
+            end
+        end
+        if (NEX_ == 0) begin : g_nex
+            assign ex = 32'd0;
+        end
+    endgenerate
+    assign fault = |f;
+endmodule
+
+// the bank-half collector datapath shared by ot_s81_hc_cncla / ot_s81_hc_cnclb (not a tile by itself)
+module ot_s81_hc_cncl_core #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, AL = 4, C = 0, H = 0, NT_K = 67
+) (
+    input  wire                 sk,
+    input  wire                 rs_n,
+    input  wire [S_RD+4:0]      f_fv,
+    input  wire [7:0]           f_nv,
+    input  wire [DLH-1:0]       dl,            // 2 slots {data 64, vector 3, octet 5, v} (+ lane fault, H 0)
+    output reg                  v_q,
+    output reg  [2:0]           i_q,
+    output wire [NEX*32-1:0]    ex_w,
+    output wire                 e_any          // this cycle's lane / leaf / missing / tree fault
+);
+    localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, NL = 4 * NS, LT = $clog2(NL);
+    localparam integer L0 = NP, L1 = (NS - 2 * NP > 0) ? NS - 2 * NP : 0, L2 = NP;
+    localparam integer B0 = 0, B1 = NP, B2 = NP + L1;
+    localparam integer LC = (C == 0) ? L0 : (C == 1) ? L1 : L2, BC = (C == 0) ? B0 : (C == 1) ? B1 : B2;
+    localparam integer N = 4 * NG, NV = D / N;
+    localparam integer SH = 73, DLH = 2 * SH + ((H == 0) ? 1 : 0);
+    function automatic integer lev(input integer n);
+        integer t;
+        begin t = 0; while ((n >> (t + 1)) > 0) t = t + 1; lev = LT - t; end
+    endfunction
+    function automatic integer owner(input integer n);
+        integer k, sz, s0;
+        begin
+            k = lev(n); sz = 1 << k; s0 = ((n << k) - NL) % NS;
+            owner = 3;
+            if (sz <= NS) begin
+                if (L0 > 0 && s0 >= B0 && s0 + sz <= B0 + L0) owner = 0;
+                else if (L1 > 0 && s0 >= B1 && s0 + sz <= B1 + L1) owner = 1;
+                else if (L2 > 0 && s0 >= B2 && s0 + sz <= B2 + L2) owner = 2;
+            end
+        end
+    endfunction
+    function automatic integer expd(input integer n);
+        expd = (owner(n) == C) && ((((n << lev(n)) - NL) / NS) / 2 == H) && (n == 1 || owner(n / 2) != C);
+    endfunction
+    function automatic integer exidx(input integer n);
+        integer m, t;
+        begin t = 0; for (m = 1; m < n; m = m + 1) t = t + expd(m); exidx = t; end
+    endfunction
+    localparam integer NEX_ = exidx(2 * NL);
     localparam integer NEX = (NEX_ > 0) ? NEX_ : 1;
 `ifndef SYNTHESIS
-    initial if (NV > 8 || LC < 1 || NT_K < 2) $fatal(1, "ot_s81_hc_cnclt: NV <= 8 vectors, a live chain, NT_K >= 2");
+    initial if (NV > 8 || LC < 1 || NT_K < 3 || H > 1) $fatal(1, "ot_s81_hc_cncl_core: NV <= 8 vectors, a live chain, NT_K >= 3, H 0 / 1");
 `endif
-    reg [1:0] rsr;
-    always @(posedge sk) rsr <= {rsr[0], srs};
-    wire rs_n = rsr[1];
+    // pin flops
     reg [S_RD+4:0] fvq;
     reg [7:0]      nvq;
-    reg [DLW-1:0]  dlq;
+    reg [DLH-1:0]  dlq;
     always @(posedge sk or negedge rs_n)
         if (!rs_n) begin fvq <= 0; dlq <= 0; end
         else begin fvq <= f_fv; dlq <= dl; end
     always @(posedge sk) nvq <= f_nv;
     wire ng_v = fvq[S_RD+1], nv_v = fvq[S_RD+2];
-    // leaf buffer
-    reg [NP*128-1:0] lb [0:NV-1];
-    reg [LC-1:0]     hv [0:NV-1];
-    reg              e_lane;
-    integer q, j;
+    // leaf buffer: decoded per (vector, octet), no runtime part-select
+    reg [63:0]   lb [0:NV*LC-1];          // vector j, octet p at j LC + p
+    reg [LC-1:0] hv [0:NV-1];
+    reg          e_lane;
+    integer q, j, p;
     always @(posedge sk or negedge rs_n)
         if (!rs_n) begin
             for (j = 0; j < NV; j = j + 1) hv[j] <= 0;
             e_lane <= 1'b0;
         end else begin
             e_lane <= 1'b0;
-            if (dlq[DLW-1]) e_lane <= 1'b1;
+            if (H == 0 && dlq[DLH-1]) e_lane <= 1'b1;
             if (ng_v) for (j = 0; j < NV; j = j + 1) hv[j] <= 0;
             else
                 for (q = 0; q < 2; q = q + 1)
-                    if (dlq[SW * q]) begin : lf
+                    if (dlq[SH * q]) begin : lf
                         reg [4:0] o;
                         reg [2:0] vi;
-                        o = dlq[SW * q + 1 +: 5]; vi = dlq[SW * q + 6 +: 3];
+                        o = dlq[SH * q + 1 +: 5]; vi = dlq[SH * q + 6 +: 3];
                         if (o < BC || o >= BC + LC || vi >= NV || hv[vi][o - BC]) e_lane <= 1'b1;
                         else hv[vi][o - BC] <= 1'b1;
                     end
         end
     always @(posedge sk)
         for (q = 0; q < 2; q = q + 1)
-            if (dlq[SW * q]) begin : wr
-                reg [4:0] o;
-                reg [2:0] vi;
-                o = dlq[SW * q + 1 +: 5]; vi = dlq[SW * q + 6 +: 3];
-                if (o >= BC && o < BC + LC && vi < NV) lb[vi][128 * (o - BC) +: 128] <= dlq[SW * q + 9 +: 128];
-            end
-    // fire schedule: vector beat at the far tile + NT_K
+            for (j = 0; j < NV; j = j + 1)
+                for (p = 0; p < LC; p = p + 1)
+                    if (dlq[SH * q] && dlq[SH * q + 1 +: 5] == BC + p && dlq[SH * q + 6 +: 3] == j)
+                        lb[j * LC + p] <= dlq[SH * q + 9 +: 64];
+    // fire schedule: vector beat at the far tile + NT_K; the read select is decoded one cycle early and registered
+    // once per octet (one-hot, <= 64 loads a bit)
     wire [NT_K:0] fl;
-    wire [2:0]    fi;
+    wire [2:0]    fi1;
+    reg  [2:0]    fi;
+    (* keep = "true" *) reg [NV-1:0] sel [0:LC-1];
     ot_hdc_vline #(.D(NT_K)) u_fl (.clk(sk), .rst_n(rs_n), .v(nv_v), .vd(fl));
-    ot_hdc_delay #(.W(3), .D(NT_K)) u_fi (.clk(sk), .rst_n(rs_n), .d(nvq[2:0]), .q(fi));
-    reg              v_q, e_miss;
-    reg [2:0]        i_q;
-    reg [NP*128-1:0] pk_q;
+    ot_hdc_delay #(.W(3), .D(NT_K - 1)) u_fi (.clk(sk), .rst_n(rs_n), .d(nvq[2:0]), .q(fi1));
+    always @(posedge sk) begin
+        fi <= fi1;
+        for (p = 0; p < LC; p = p + 1)
+            for (j = 0; j < NV; j = j + 1) sel[p][j] <= (fi1 == j);
+    end
+    reg              e_miss;
+    reg [LC*64-1:0]  pk_q;
     always @(posedge sk or negedge rs_n)
         if (!rs_n) begin v_q <= 1'b0; e_miss <= 1'b0; end
         else begin v_q <= fl[NT_K]; e_miss <= fl[NT_K] && (hv[fi] != {LC{1'b1}}); end
-    always @(posedge sk) begin i_q <= fi; pk_q <= lb[fi]; end
+    always @(posedge sk) begin
+        i_q <= fi;
+        for (p = 0; p < LC; p = p + 1) begin : rd
+            reg [63:0] a;
+            a = 64'd0;
+            for (j = 0; j < NV; j = j + 1) a = a | (lb[j * LC + p] & {64{sel[p][j]}});
+            pk_q[64 * p +: 64] <= a;
+        end
+    end
+    wire tf;
+    ot_s81_hc_streeh #(.NS(NS), .NP(NP), .LA(AL), .OWN(C), .H(H)) u_tree (.clk(sk), .rst_n(rs_n), .v(v_q),
+        .pk({{((NP - LC) * 64){1'b0}}, pk_q}), .ex(ex_w), .fault(tf));
+    assign e_any = e_lane | e_miss | tf;
+endmodule
+
+// ot_s81_hc_cncla: banks 0 / 1 of chain C's collector + the chain's rvt / pi to cntree + the collector's sticky fault
+// (B's fault enters on the E-face pin flop flt_b)
+module ot_s81_hc_cncla #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, AL = 4, C = 0, NT_K = 67
+) (
+    input  wire                 sk,
+    input  wire                 srs,
+    input  wire [S_RD+4:0]      f_fv,          // far tile fv_out
+    input  wire [7:0]           f_nv,          // far tile fd_out[O_NV +: 8]
+    input  wire [2*73:0]        dl,            // far tile partial lane: banks 0 / 1 of both slots + tags + lane fault
+    input  wire                 flt_b,         // ot_s81_hc_cnclb's sticky fault
+    output reg                  rvt,
+    output reg  [7:0]           pi,
+    output reg  [NEX*32-1:0]    ex,
+    output reg                  flt
+);
+    localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, NL = 4 * NS, LT = $clog2(NL);
+    localparam integer L0 = NP, L1 = (NS - 2 * NP > 0) ? NS - 2 * NP : 0, L2 = NP;
+    localparam integer B0 = 0, B1 = NP, B2 = NP + L1;
+    function automatic integer lev(input integer n);
+        integer t;
+        begin t = 0; while ((n >> (t + 1)) > 0) t = t + 1; lev = LT - t; end
+    endfunction
+    function automatic integer owner(input integer n);
+        integer k, sz, s0;
+        begin
+            k = lev(n); sz = 1 << k; s0 = ((n << k) - NL) % NS;
+            owner = 3;
+            if (sz <= NS) begin
+                if (L0 > 0 && s0 >= B0 && s0 + sz <= B0 + L0) owner = 0;
+                else if (L1 > 0 && s0 >= B1 && s0 + sz <= B1 + L1) owner = 1;
+                else if (L2 > 0 && s0 >= B2 && s0 + sz <= B2 + L2) owner = 2;
+            end
+        end
+    endfunction
+    function automatic integer expd(input integer n);
+        expd = (owner(n) == C) && ((((n << lev(n)) - NL) / NS) / 2 == 0) && (n == 1 || owner(n / 2) != C);
+    endfunction
+    function automatic integer exidx(input integer n);
+        integer m, t;
+        begin t = 0; for (m = 1; m < n; m = m + 1) t = t + expd(m); exidx = t; end
+    endfunction
+    localparam integer NEX_ = exidx(2 * NL);
+    localparam integer NEX = (NEX_ > 0) ? NEX_ : 1;
+    reg [1:0] rsr;
+    always @(posedge sk) rsr <= {rsr[0], srs};
+    wire rs_n = rsr[1];
+    reg fbq;
+    always @(posedge sk or negedge rs_n) if (!rs_n) fbq <= 1'b0; else fbq <= flt_b;
+    wire              v_q, e_any;
+    wire [2:0]        i_q;
     wire [NEX*32-1:0] ex_w;
-    wire              tf;
-    ot_s81_hc_stree #(.NS(NS), .NP(NP), .LA(AL), .OWN(C)) u_tree (.clk(sk), .rst_n(rs_n), .v(v_q), .pk(pk_q),
-        .im(32'd0), .ex(ex_w), .r_v(), .r(), .fault(tf));
+    ot_s81_hc_cncl_core #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .AL(AL), .C(C), .H(0), .NT_K(NT_K)) u_c (
+        .sk(sk), .rs_n(rs_n), .f_fv(f_fv), .f_nv(f_nv), .dl(dl), .v_q(v_q), .i_q(i_q), .ex_w(ex_w), .e_any(e_any));
     always @(posedge sk or negedge rs_n)
         if (!rs_n) begin rvt <= 1'b0; flt <= 1'b0; end
-        else begin rvt <= v_q; flt <= flt | e_lane | e_miss | tf; end
+        else begin rvt <= v_q; flt <= flt | e_any | fbq; end
     always @(posedge sk) begin pi <= {5'd0, i_q}; ex <= ex_w; end
+endmodule
+
+// ot_s81_hc_cnclb: banks 2 / 3 of chain C's collector; its sticky fault leaves on the W face to ot_s81_hc_cncla
+module ot_s81_hc_cnclb #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, AL = 4, C = 0, NT_K = 67
+) (
+    input  wire                 sk,
+    input  wire                 srs,
+    input  wire [S_RD+4:0]      f_fv,          // far tile fv_out
+    input  wire [7:0]           f_nv,          // far tile fd_out[O_NV +: 8]
+    input  wire [2*73-1:0]      dl,            // far tile partial lane: banks 2 / 3 of both slots + tags
+    output reg  [NEX*32-1:0]    ex,
+    output reg                  flt
+);
+    localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, NL = 4 * NS, LT = $clog2(NL);
+    localparam integer L0 = NP, L1 = (NS - 2 * NP > 0) ? NS - 2 * NP : 0, L2 = NP;
+    localparam integer B0 = 0, B1 = NP, B2 = NP + L1;
+    function automatic integer lev(input integer n);
+        integer t;
+        begin t = 0; while ((n >> (t + 1)) > 0) t = t + 1; lev = LT - t; end
+    endfunction
+    function automatic integer owner(input integer n);
+        integer k, sz, s0;
+        begin
+            k = lev(n); sz = 1 << k; s0 = ((n << k) - NL) % NS;
+            owner = 3;
+            if (sz <= NS) begin
+                if (L0 > 0 && s0 >= B0 && s0 + sz <= B0 + L0) owner = 0;
+                else if (L1 > 0 && s0 >= B1 && s0 + sz <= B1 + L1) owner = 1;
+                else if (L2 > 0 && s0 >= B2 && s0 + sz <= B2 + L2) owner = 2;
+            end
+        end
+    endfunction
+    function automatic integer expd(input integer n);
+        expd = (owner(n) == C) && ((((n << lev(n)) - NL) / NS) / 2 == 1) && (n == 1 || owner(n / 2) != C);
+    endfunction
+    function automatic integer exidx(input integer n);
+        integer m, t;
+        begin t = 0; for (m = 1; m < n; m = m + 1) t = t + expd(m); exidx = t; end
+    endfunction
+    localparam integer NEX_ = exidx(2 * NL);
+    localparam integer NEX = (NEX_ > 0) ? NEX_ : 1;
+    reg [1:0] rsr;
+    always @(posedge sk) rsr <= {rsr[0], srs};
+    wire rs_n = rsr[1];
+    wire              v_q, e_any;
+    wire [2:0]        i_q;
+    wire [NEX*32-1:0] ex_w;
+    ot_s81_hc_cncl_core #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .AL(AL), .C(C), .H(1), .NT_K(NT_K)) u_c (
+        .sk(sk), .rs_n(rs_n), .f_fv(f_fv), .f_nv(f_nv), .dl(dl), .v_q(v_q), .i_q(i_q), .ex_w(ex_w), .e_any(e_any));
+    always @(posedge sk or negedge rs_n)
+        if (!rs_n) flt <= 1'b0;
+        else flt <= flt | e_any;
+    always @(posedge sk) ex <= ex_w;
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -297,7 +508,8 @@ module ot_s81_hc_cnrsq #(
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
-// ot_s81_hc_cnbot (bottom region wrapper, wires only, never hardened): the three collectors, the closed final-rung
+// ot_s81_hc_cnbot (bottom region wrapper, wires only, never hardened): the three collectors (each two bank-half leaves
+// ot_s81_hc_cncla / ot_s81_hc_cnclb, exports interleaved back into heap order), the closed final-rung
 // tile ot_s81_hc_cntree at its h2 tuple (ngo = the norm go as it leaves chain 0's far tile), the scalar tail.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cnbot #(
@@ -343,17 +555,58 @@ module ot_s81_hc_cnbot #(
     endfunction
     localparam integer NE0_ = exidx(2 * NL, 0), NE1_ = exidx(2 * NL, 1), NE2_ = exidx(2 * NL, 2);
     localparam integer NE0 = (NE0_ > 0) ? NE0_ : 1, NE1 = (NE1_ > 0) ? NE1_ : 1, NE2 = (NE2_ > 0) ? NE2_ : 1;
-    wire [2:0] rv, cf;
-    wire [7:0] p0, p1, p2;
-    wire [NE0*32-1:0] x0;
-    wire [NE1*32-1:0] x1;
-    wire [NE2*32-1:0] x2;
-    ot_s81_hc_cnclt #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .AL(AL), .C(0), .NT_K(NT_K)) u_c0 (.sk(sk), .srs(srs),
-        .f_fv(f_fv[0 +: FVW]), .f_nv(f_nv[0 +: 8]), .dl(dl[0 +: DLW]), .rvt(rv[0]), .pi(p0), .ex(x0), .flt(cf[0]));
-    ot_s81_hc_cnclt #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .AL(AL), .C(1), .NT_K(NT_K)) u_c1 (.sk(sk), .srs(srs),
-        .f_fv(f_fv[FVW +: FVW]), .f_nv(f_nv[8 +: 8]), .dl(dl[DLW +: DLW]), .rvt(rv[1]), .pi(p1), .ex(x1), .flt(cf[1]));
-    ot_s81_hc_cnclt #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .AL(AL), .C(2), .NT_K(NT_K)) u_c2 (.sk(sk), .srs(srs),
-        .f_fv(f_fv[2 * FVW +: FVW]), .f_nv(f_nv[16 +: 8]), .dl(dl[2 * DLW +: DLW]), .rvt(rv[2]), .pi(p2), .ex(x2), .flt(cf[2]));
+    localparam integer NEM = (NE0 > NE1) ? ((NE0 > NE2) ? NE0 : NE2) : ((NE1 > NE2) ? NE1 : NE2);
+    function automatic integer hlf(input integer n);
+        hlf = (((n << lev(n)) - NL) / NS) / 2;
+    endfunction
+    function automatic integer exh(input integer n, input integer c, input integer h);   // index among half h's exports
+        integer m, t;
+        begin t = 0; for (m = 1; m < n; m = m + 1) t = t + (expd(m, c) && hlf(m) == h); exh = t; end
+    endfunction
+    function automatic integer neh(input integer c, input integer h);
+        neh = (exh(2 * NL, c, h) > 0) ? exh(2 * NL, c, h) : 1;
+    endfunction
+    wire [2:0] rv, cf, fb;
+    wire [7:0] pc [0:2];
+    wire [NEM*32-1:0] xf [0:2];                          // per chain: the full export vector in heap order
+    wire [NEM*32-1:0] xa [0:2], xb [0:2];                // per chain: bank-half exports
+    genvar c, n;
+    generate
+        for (c = 0; c < 3; c = c + 1) begin : g_c
+            localparam integer NA = neh(c, 0), NB = neh(c, 1);
+            wire [DLW-1:0] dlc = dl[c * DLW +: DLW];
+            // the lane split by bank half: slot q = {data 128, vector 3, octet 5, v} -> {data 64 of the half, tags 9}
+            wire [2*73:0]   dla = {dlc[DLW-1], dlc[SW + 9 +: 64], dlc[SW +: 9], dlc[9 +: 64], dlc[0 +: 9]};
+            wire [2*73-1:0] dlb = {dlc[SW + 73 +: 64], dlc[SW +: 9], dlc[73 +: 64], dlc[0 +: 9]};
+            ot_s81_hc_cncla #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .AL(AL), .C(c), .NT_K(NT_K)) u_a (.sk(sk),
+                .srs(srs), .f_fv(f_fv[c * FVW +: FVW]), .f_nv(f_nv[c * 8 +: 8]), .dl(dla), .flt_b(fb[c]), .rvt(rv[c]), .pi(pc[c]),
+                .ex(xa[c][NA*32-1:0]), .flt(cf[c]));
+            ot_s81_hc_cnclb #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .AL(AL), .C(c), .NT_K(NT_K)) u_b (.sk(sk),
+                .srs(srs), .f_fv(f_fv[c * FVW +: FVW]), .f_nv(f_nv[c * 8 +: 8]), .dl(dlb), .ex(xb[c][NB*32-1:0]), .flt(fb[c]));
+            if (NA < NEM) begin : g_pa
+                assign xa[c][NEM*32-1:NA*32] = {((NEM - NA) * 32){1'b0}};
+            end
+            if (NB < NEM) begin : g_pb
+                assign xb[c][NEM*32-1:NB*32] = {((NEM - NB) * 32){1'b0}};
+            end
+            for (n = 1; n < 2 * NL; n = n + 1) begin : g_x
+                if (expd(n, c)) begin : g_e
+                    if (hlf(n) == 0) begin : g_ha
+                        assign xf[c][32 * exidx(n, c) +: 32] = xa[c][32 * exh(n, c, 0) +: 32];
+                    end else begin : g_hb
+                        assign xf[c][32 * exidx(n, c) +: 32] = xb[c][32 * exh(n, c, 1) +: 32];
+                    end
+                end
+            end
+            if (exidx(2 * NL, c) < NEM) begin : g_pf
+                assign xf[c][NEM*32-1:exidx(2 * NL, c)*32] = {((NEM - exidx(2 * NL, c)) * 32){1'b0}};
+            end
+        end
+    endgenerate
+    wire [NE0*32-1:0] x0 = xf[0][NE0*32-1:0];
+    wire [NE1*32-1:0] x1 = xf[1][NE1*32-1:0];
+    wire [NE2*32-1:0] x2 = xf[2][NE2*32-1:0];
+    wire [7:0] p0 = pc[0], p1 = pc[1], p2 = pc[2];
     reg [1:0] rsr;
     always @(posedge sk) rsr <= {rsr[0], srs};
     reg ngo;                                             // the norm go leaving chain 0's far tile (pin flop)
