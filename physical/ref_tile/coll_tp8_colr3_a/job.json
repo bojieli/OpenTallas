@@ -1,5 +1,5 @@
 {
- "name": "coll_tp8_colr3_a-r4-COMMIT",
+ "name": "coll_tp8_colr3_a-r4-f8ab98504",
  "block": "ot_coll_tp8_col_tile_r3",
  "ref_tile": true,
  "owner": "Claude:qwen-coll-io-1014",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/qwen-coll-io-1014",
-  "commit": "COMMIT",
+  "commit": "f8ab98504252c290739e15c58444b5e3fbc5e7d2",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/qwen_coll_cx"
@@ -132,7 +132,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/coll_tp8_colr3/coll_tp8_colr3_a-r4-COMMIT"
+   "to": "results/rtl/ref_tile/coll_tp8_colr3/coll_tp8_colr3_a-r4-f8ab98504"
   }
  ],
  "cycles_added": 0,
