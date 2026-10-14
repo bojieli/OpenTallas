@@ -1,0 +1,31 @@
+{
+ "cell_census": {
+  "wrapper": 1713,
+  "controller": 3441,
+  "tree": 10060
+ },
+ "examples": [
+  [
+   "DFFHQNx1_ASAP7_75t_R",
+   "u_body.u_fpm.u_c.g_dpin.dpin_q[0]$_DFF_P_"
+  ],
+  [
+   "DFFHQNx1_ASAP7_75t_R",
+   "u_body.u_fpm.u_c.g_dpin.dpin_q[1]$_DFF_P_"
+  ],
+  [
+   "DFFHQNx1_ASAP7_75t_R",
+   "u_body.u_fpm.u_c.g_dpin.dpin_q[23]$_DFF_P_"
+  ],
+  [
+   "DFFHQNx1_ASAP7_75t_R",
+   "u_body.u_fpm.u_c.g_dpin.dpin_q[24]$_DFF_P_"
+  ],
+  [
+   "DFFHQNx1_ASAP7_75t_R",
+   "u_body.u_fpm.u_c.g_dpin.dpin_q[25]$_DFF_P_"
+  ]
+ ],
+ "source": "qfd_tt_ctlm compact live gate1_2_yosys.v",
+ "source_sha256": "953121e1ee6c669a1e9b3abb8528876a87191d20582c19c7a590ac0d07ba8750"
+}
