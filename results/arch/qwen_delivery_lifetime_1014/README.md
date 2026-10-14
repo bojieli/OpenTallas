@@ -11,11 +11,15 @@ ENABLE=0. Historical production masters and views are unchanged. These are
 separate prospective hardened leaves, not a flat physical parent. Neither has
 an assigned outline, pins, clock delivery, CTS, or exported timing view.
 
-The recipient expectation is 768 tiles ×4 quads =3072, pending binding to the
-actual native tile/cache event topology. Sixteen banks of192 recipients keep
-the declared state below15000 per root: 7346 bits per bank and1985 controller
-bits, total119521. Independent admitted Yosys0.52 proc/opt/memory_map censuses
-confirm exactly7346 and1985 Q bits at the declared production parameters.
+The actual event cache produces one128-bit response for one96-bit packed
+four-address query per tile. The four32-bit operands share that capture and
+downstream pipeline. It therefore creates one obligation per tile query,
+recipient=tile_id, for768 expected tile instances. No four fabricated quad ACKs
+are created. Actual full-field straps/events still require composition.
+Sixteen banks of48 recipients have1874 bits each and1985 controller bits,
+total31969. Independent admitted Yosys0.52 proc/opt/memory_map censuses
+confirm those counts. The old16×192/119521 estimate is superseded; it counted
+four independent recipients for a single tile query.
 They do not establish mapped area or CTS. Separate child clocks must belong to the live base phase family;
 no loader/core domain merge or hierarchy CTS is implied.
 
@@ -63,3 +67,21 @@ production accepted IB seam; tile/VM owners are implementing actual event and
 snapshot adapters. Full-key cache metadata and its physical status path remain
 separately required. No149-bit root ABI, dictionary reinterpretation, all-field
 ACK, version-retention adoption, or final v5 fit is claimed here.
+
+The scalar ACK bank also has a capacity gap:48 tiles can issue queries on one
+native coherent edge but its port accepts one event per base edge. The distinct
+`ot_qwen_xdelivery_ack_vector` alternative captures48 independent issue and
+retirement tuples in parallel. Its exact current-source generic census is1922
+bits per bank, total32737 with the controller. Its component burst test passes
+48 simultaneous requests and48 simultaneous issue/retirements; replacing it
+with one-lane capacity or ignoring one stale version fails. Current v3 gates
+and censuses ran EPYC1 units1786042/1786073/1786072/1786041, all exit0.
+
+Parallel capacity comes with8790 exact port bits per bank, including all
+provenance and ready/status. Registered wide-face transport, source/consumer
+event crossing, and physical pins remain unassigned. This alternative cannot
+claim full-field routing, cost or48-way throughput from a selected-tile proof.
+The source-bound maximum query count and legal sequence-wrap progress remain
+under review; stopping the whole coherent clock while waiting for outstanding
+pipeline retirement would deadlock. Sequence width is parameterized and may
+need to increase with explicit additional metadata/state/track cost.

@@ -11,16 +11,21 @@ cases=[('positive',None,None,None),
  ('context_mutant','accept_context!=held_context','1\'b0','late context acceptance'),
  ('accepted_ib_mutant','accept_ib!=held_ib','1\'b0','offered IB substituted'),
  ('wrap_fence_mutant','state<=WRAP_FENCE','state<=IDLE','context wrap reopened'),
- ('pending_retire_mutant','outstanding[j]!=0','1\'b0','seal waived outstanding')]
+ ('pending_retire_mutant','outstanding[j]!=0','1\'b0','seal waived outstanding'),
+ ('vector_positive',None,None,None),
+ ('vector_version_mutant','retire_version[g*32+:32]==version_q','1\'b1','one stale version escaped'),
+ ('vector_capacity_mutant','assign issue_ready[g]=issue_match','assign issue_ready[g]=(g==0) && issue_match','parallel48 issue capacity lost')]
 receipt={'scope':'LIFETIME_COMPONENT_ONLY_NOT_ACTUAL_TILE_VM_COMPOSITION',
- 'sources':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (src,tb)},'cases':[]}
+ 'sources':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (src,tb,root/'tb_qwen_xdelivery_vector.sv')},'cases':[]}
 for name,old,new,expected in cases:
  text=original
  if old:
   assert text.count(old)==1,(name,text.count(old))
   text=text.replace(old,new)
  variant=root/(name+'.sv');variant.write_text(text)
- build=subprocess.run(['iverilog','-g2012','-s','tb_qwen_xdelivery_lifetime','-o',name+'.vvp',str(variant),str(tb)],capture_output=True,text=True)
+ case_tb=root/'tb_qwen_xdelivery_vector.sv' if name.startswith('vector') else tb
+ top=case_tb.stem
+ build=subprocess.run(['iverilog','-g2012','-s',top,'-o',name+'.vvp',str(variant),str(case_tb)],capture_output=True,text=True)
  (root/(name+'.build.log')).write_text(build.stdout+build.stderr)
  if build.returncode:raise RuntimeError(build.stderr)
  run=subprocess.run(['vvp',name+'.vvp'],capture_output=True,text=True,timeout=30)
@@ -28,7 +33,7 @@ for name,old,new,expected in cases:
  if expected:
   if run.returncode==0 or expected not in output:raise RuntimeError('mutant escaped: '+name+' '+output)
  else:
-  if run.returncode or 'PASS lifetime:' not in output:raise RuntimeError(output)
+  if run.returncode or 'PASS ' not in output:raise RuntimeError(output)
  receipt['cases'].append({'case':name,'exit':run.returncode,'observed':output.strip(),
   'source_sha256':hashlib.sha256(variant.read_bytes()).hexdigest()})
  print(('PASS rejected ' if expected else 'PASS ')+name,flush=True)

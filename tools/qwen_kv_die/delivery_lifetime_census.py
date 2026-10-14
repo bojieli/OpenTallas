@@ -2,9 +2,9 @@
 """Generic RTL state census only; run through ot-run on frozen staged source."""
 import hashlib,json,pathlib,subprocess,sys
 p=pathlib.Path.cwd();kind=sys.argv[1]
-assert kind in ('bank','ctrl')
-top='ot_qwen_xdelivery_ack_bank' if kind=='bank' else 'ot_qwen_xdelivery_lifetime_ctrl'
-params={'ENABLE':1,'N':192,'SEQ_W':16,'COUNT_W':4} if kind=='bank' else {'ENABLE':1,'TILES':768,'BANKS':16,'TOKEN_W':16}
+assert kind in ('bank','vector','ctrl')
+top={'bank':'ot_qwen_xdelivery_ack_bank','vector':'ot_qwen_xdelivery_ack_vector','ctrl':'ot_qwen_xdelivery_lifetime_ctrl'}[kind]
+params={'ENABLE':1,'N':48,'SEQ_W':16,'COUNT_W':4} if kind!='ctrl' else {'ENABLE':1,'TILES':768,'BANKS':16,'TOKEN_W':16}
 source=p/'ot_qwen_xdelivery_lifetime.sv'
 commands=['read_verilog -sv '+str(source),'hierarchy -top '+top+' '+' '.join('-chparam %s %s'%x for x in params.items()),'proc','opt','memory_map','opt','stat','write_json '+kind+'.json']
 cmd=['yosys','-p','; '.join(commands)]

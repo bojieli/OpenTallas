@@ -4,24 +4,28 @@
   "qualified": false,
   "production_composition": false,
   "assigned_pins": false,
-  "rtl_sha256": "e132d6829920316ad80edef55cc11ad3cefd90e45946890d779cb0b856674793",
+  "rtl_sha256": "4f8535bb5178eea2873ad1b25ae90079829b1a644a1caaf51ef6316044412aaf",
   "logical_topology": {
     "tiles": 768,
-    "quad_recipients_per_tile": 4,
-    "recipient_id": "4*tile_id+quad_id",
+    "quad_recipients_per_tile": null,
+    "recipient_id": "tile_id",
     "tile_id": "16*column+row",
-    "recipient_binding": "EXPECTATION_ONLY_PENDING_ACTUAL_CACHE_EVENT_TOPOLOGY",
+    "recipient_binding": "One128-bit response/event per full96-bit packed four-address tile query (tile owner source c58d1436e); all768 native field straps/events still require full composition",
     "banks": 16,
-    "recipients_per_bank": 192,
-    "bank_id": "recipient_id//192",
-    "local_id": "recipient_id%192",
-    "clock_entries": "one unpaused coherent base clock per bank and one controller; physical phi-R delivery unassigned"
+    "recipients_per_bank": 48,
+    "bank_id": "tile_id//48",
+    "local_id": "tile_id%48",
+    "clock_entries": "one unpaused coherent base clock per bank and one controller; physical phi-R delivery unassigned",
+    "cache_recipients_per_tile": 1
   },
   "state": {
     "controller_Q_bits": 1985,
-    "bank_Q_bits": 7346,
-    "total_Q_bits": 119521,
-    "basis": "actual admitted Yosys0.52 proc/opt/memory_map production-parameter census; not mapped area or CTS"
+    "bank_Q_bits": 1874,
+    "total_Q_bits": 31969,
+    "basis": "actual admitted Yosys0.52 proc/opt/memory_map production-parameter census; not mapped area or CTS",
+    "parallel_bank_Q_bits": 1922,
+    "parallel_total_Q_bits": 32737,
+    "superseded_3072_quad_estimate": "119521bits at16x192; incorrect actual transaction granularity, retained only historical component receipt"
   },
   "operation_scope": {
     "acquire": "reserve one actual accepted operation VM version after qualified native commit pipeline drain",
@@ -33,9 +37,9 @@
   },
   "event_payload_bits": {
     "controller_accept": 438,
-    "bank_issue": 73,
-    "bank_retire": 73,
-    "bank_seal": 57,
+    "bank_issue": 71,
+    "bank_retire": 71,
+    "bank_seal": 55,
     "dispatch_common": 428,
     "query": "170 at actual tile context candidate; precise event toggles and provenance separate"
   },
@@ -64,6 +68,16 @@
     "actual toggle/event transport and replay latency",
     "local ordered-retire topology and buffering",
     "constructive subslots, clock/PG and assigned pins",
-    "native throughput and whole-token cost"
-  ]
+    "native throughput and whole-token cost",
+    "source-bound maximum query sequence count and wrap progress proof; wholeCC pause cannot freeze outstanding retirement"
+  ],
+  "parallel_alternative": {
+    "module": "ot_qwen_xdelivery_ack_vector",
+    "enabled_by_default": false,
+    "capacity": "all48 recipients issue and retire simultaneously each live base edge",
+    "actual_burst_gate": "PASS48 requests,48 simultaneous issue/retire; one stale version cohort mutant and scalar-capacity mutant FAIL",
+    "pins_total_per_bank": 8790,
+    "physical_capacity": "NOT_ASSIGNED_OR_QUALIFIED: actual48 independent tuple transport/wide-face delivery and registered admission needed",
+    "full_field_events": "not synthesized from selected tile"
+  }
 }

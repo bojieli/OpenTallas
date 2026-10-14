@@ -2,7 +2,7 @@
 // core levels. A seal is an explicit whole-consumer drain certificate; local
 // core_idle and cache response_capture are deliberately not connected here.
 module ot_qwen_xdelivery_ack_bank #(
-  parameter integer ENABLE=0, N=192, SEQ_W=16, COUNT_W=4,
+  parameter integer ENABLE=0, N=48, SEQ_W=16, COUNT_W=4,
   parameter integer ID_W=(N<2?1:$clog2(N))
 )(
   input wire clk, rst_n,
@@ -81,6 +81,77 @@ module ot_qwen_xdelivery_ack_bank #(
              !active || !participants[seal_id] || sealed[seal_id] ||
              (issue_v && issue_id==seal_id)) fault<=1;
           else sealed[seal_id]<=1'b1;
+        end
+      end
+    end
+  end
+endmodule
+
+// Parallel per-recipient alternative: no scalar event serialization. Every
+// input tuple retains its actual provenance; shared/current metadata is not
+// substituted for a late event. Physical wide-face delivery is still required.
+module ot_qwen_xdelivery_ack_vector #(
+  parameter integer ENABLE=0, N=48, SEQ_W=16, COUNT_W=4
+)(
+  input wire clk,rst_n,begin_v,fenced_clear,
+  input wire [15:0] begin_context, input wire [31:0] begin_version,
+  input wire [N-1:0] participant_mask,
+  input wire [N-1:0] issue_v, output wire [N-1:0] issue_ready,
+  input wire [N*SEQ_W-1:0] issue_seq,
+  input wire [N*16-1:0] issue_context, input wire [N*32-1:0] issue_version,
+  input wire [N-1:0] retire_v, output wire [N-1:0] retire_ready,
+  input wire [N*SEQ_W-1:0] retire_seq,
+  input wire [N*16-1:0] retire_context, input wire [N*32-1:0] retire_version,
+  input wire [N-1:0] seal_v,
+  input wire [N*16-1:0] seal_context, input wire [N*32-1:0] seal_version,
+  output wire drained,fault
+);
+  reg active,control_fault;
+  reg [15:0] context_q; reg [31:0] version_q;
+  reg [N-1:0] participants;
+  wire [N-1:0] empty,recipient_fault;
+  assign fault=control_fault || (|recipient_fault);
+  assign drained=ENABLE && active && (&empty) && !fault;
+  always @(posedge clk) begin
+    if(!rst_n || fenced_clear) begin
+      active<=0;control_fault<=0;context_q<=0;version_q<=0;participants<=0;
+    end else if(ENABLE && begin_v) begin
+      if(active && !drained) control_fault<=1;
+      else begin active<=1;context_q<=begin_context;version_q<=begin_version;participants<=participant_mask;end
+    end
+  end
+  for(genvar g=0;g<N;g=g+1) begin: recipient
+    reg sealed,local_fault;
+    reg [COUNT_W-1:0] outstanding;
+    reg [SEQ_W-1:0] issued,retired;
+    wire issue_match=ENABLE && active && issue_context[g*16+:16]==context_q &&
+      issue_version[g*32+:32]==version_q;
+    wire retire_match=ENABLE && active && retire_context[g*16+:16]==context_q &&
+      retire_version[g*32+:32]==version_q;
+    assign recipient_fault[g]=local_fault;
+    assign empty[g]=!participants[g] || (sealed && outstanding==0);
+    assign issue_ready[g]=issue_match && !fault && participants[g] && !sealed &&
+      outstanding!={COUNT_W{1'b1}} && issued!={SEQ_W{1'b1}} && issue_seq[g*SEQ_W+:SEQ_W]==issued;
+    assign retire_ready[g]=retire_match && !fault && participants[g] &&
+      outstanding!=0 && retire_seq[g*SEQ_W+:SEQ_W]==retired;
+    always @(posedge clk) begin
+      if(!rst_n || fenced_clear) begin
+        sealed<=0;local_fault<=0;outstanding<=0;issued<=0;retired<=0;
+      end else if(ENABLE) begin
+        if(begin_v && (!active || drained)) begin
+          sealed<=0;outstanding<=0;issued<=0;retired<=0;
+        end else if(!begin_v) begin
+          if(issue_v[g] && (!issue_match || !participants[g] || sealed ||
+             issue_seq[g*SEQ_W+:SEQ_W]!=issued || issued=={SEQ_W{1'b1}})) local_fault<=1;
+          if(retire_v[g] && !retire_ready[g]) local_fault<=1;
+          if(issue_v[g] && issue_ready[g]) begin issued<=issued+1'b1;outstanding<=outstanding+1'b1;end
+          if(retire_v[g] && retire_ready[g]) begin retired<=retired+1'b1;outstanding<=outstanding-1'b1;end
+          if(issue_v[g] && issue_ready[g] && retire_v[g] && retire_ready[g]) outstanding<=outstanding;
+          if(seal_v[g]) begin
+            if(!active || !participants[g] || sealed || issue_v[g] ||
+               seal_context[g*16+:16]!=context_q || seal_version[g*32+:32]!=version_q) local_fault<=1;
+            else sealed<=1;
+          end
         end
       end
     end

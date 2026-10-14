@@ -34,6 +34,38 @@
       "exit": 0,
       "role": "controller census",
       "yosys_peak_MB": 26.18
+    },
+    {
+      "unit": "oth-ubuntu-1786042-1791967384",
+      "host": "ot-epyc1tb",
+      "mem_GB": 1,
+      "threads": 1,
+      "exit": 0,
+      "role": "actual-granularity scalar+vector positive/mutants"
+    },
+    {
+      "unit": "oth-ubuntu-1786073-1791967384",
+      "host": "ot-epyc1tb",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "48-recipient scalar bank census"
+    },
+    {
+      "unit": "oth-ubuntu-1786072-1791967384",
+      "host": "ot-epyc1tb",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "48-recipient vector bank census"
+    },
+    {
+      "unit": "oth-ubuntu-1786041-1791967384",
+      "host": "ot-epyc1tb",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "controller current-source census"
     }
   ]
 }
