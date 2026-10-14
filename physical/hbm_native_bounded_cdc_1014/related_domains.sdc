@@ -1,6 +1,14 @@
 # Related PLL /3 and /4 clocks. No asynchronous groups or crossing exceptions.
 set ot_bound_period [expr {[get_property [get_clocks core_clk] period]*4.0/3.0}]
 create_clock -name vm_clk -period $ot_bound_period [get_ports rclk]
+# IO-reference SDCs can carry explicit rising/falling delays on a secondary clock source.
+# Clear every clock-tagged edge before querying the actual clock-pin boundary arrivals.
+foreach ot_c [all_clocks] {
+ foreach ot_p [get_ports {wclk rclk}] {
+  unset_input_delay -clock $ot_c $ot_p
+  unset_input_delay -clock $ot_c -clock_fall $ot_p
+ }
+}
 unset_input_delay [get_ports {wclk rclk}]
 puts "BOUNDED_CDC_PERIODS core=[get_property [get_clocks core_clk] period] vm=[get_property [get_clocks vm_clk] period] ratio=4/3"
 set_clock_uncertainty -setup 150 -from [get_clocks {core_clk vm_clk}] -to [get_clocks {core_clk vm_clk}]
