@@ -20,6 +20,13 @@ proc ot_clock_spine {} {
   } finally {proc ::ot_tt_spine_native {} $original}
   set gated [ot_sp_leaf_arrivals]
   set gate $::ot_sp_icg
+  set gated_pins {}
+  dict for {n net} $::ot_sp_leafnet {
+    foreach pin [get_pins -quiet -of_objects [get_nets -quiet [$net getName]] -filter "direction==input"] {
+      lappend gated_pins $pin
+    }
+  }
+  if {![llength $gated_pins]} {error "TT native gated clock sink census empty"}
   set master [[$gate getMaster] getName]
   set cgpin [get_pins -quiet "[$gate getName]/CLK"]
   if {[llength $cgpin] != 1} {error "TT native ICG CLK pin missing"}
@@ -59,6 +66,28 @@ proc ot_clock_spine {} {
   set ::env(OT_SPINE_MACRO_LEAF) 1
   set ::env(OT_SPINE_SYM) 1
   dict set ::ot_ref_child_ins $master $insertion
+  # Buffering the ICG input changes its real input slew and the gated subtree's
+  # delay. Re-measure that live subtree on EVERY standard balancing iteration.
+  # The original one-shot value only guides initial topology; it is not a phase
+  # target or an assumed final clock insertion.
+  set ::ot_tt_gated_sink_pins $gated_pins
+  set ::ot_tt_icg_input $cgpin
+  set ::ot_tt_icg_master $master
+  rename ot_sp_leaf_arrivals ::ot_tt_leaf_static
+  proc ot_sp_leaf_arrivals {} {
+    ::ot_tt_leaf_static
+    set latest 0.0
+    foreach pin $::ot_tt_gated_sink_pins {
+      set a [get_property $pin arrival_max_rise]
+      if {[string is double -strict $a] && $a > $latest} {set latest $a}
+    }
+    set ck [get_property $::ot_tt_icg_input arrival_max_rise]
+    set own [expr {$latest - $ck}]
+    if {$own <= 0 || $own > 5000} {error "TT live native subtree invalid: $own ps"}
+    dict set ::ot_ref_child_ins $::ot_tt_icg_master $own
+    puts "TT_DUAL_SPINE current gated latest $latest ICG_CLK $ck subtree $own ps"
+    return [::ot_tt_leaf_static]
+  }
   try {
     if {![::ot_tt_spine_native]} {error "TT primary spine was not built"}
     foreach i $primary_insts {
@@ -71,6 +100,9 @@ proc ot_clock_spine {} {
     }
     puts "TT_DUAL_SPINE complete: independent primary and native-gated local trees"
   } finally {
+    rename ot_sp_leaf_arrivals {}
+    rename ::ot_tt_leaf_static ot_sp_leaf_arrivals
+    unset ::ot_tt_gated_sink_pins ::ot_tt_icg_input ::ot_tt_icg_master
     dict for {p body} $saved {proc $p [info args $p] $body}
     proc ::ot_tt_spine_native {} $native
   }
