@@ -1,0 +1,396 @@
+{
+  "status": "Source-qualified CTS prototype measurements, not closed masters or assigned die pins",
+  "records": [
+    {
+      "kit": "ot_qwen_tile_ctl_tp8_compact",
+      "top": "ot_qwen_tile_ctl_tp8",
+      "outline": {
+        "w": 77.76,
+        "h": 129.6
+      },
+      "clock_source_pin": "clk",
+      "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk}]",
+      "clock_pin_face_layer_xy": "UNASSIGNED_ANY_PROBE_NOT_DIE_PIN_BINDING",
+      "gate_receipt": "physical/ref_tile/ot_qwen_tile_ctl_tp8_compact/gate_result.json",
+      "gate_receipt_sha256": "62b8c1d2cc6ffd9a38a06b33523ba304607539ae2a9a10feb956898448465d3b",
+      "clock_receipt": "results/arch/qwen_native_leaf_receipts_1013/ot_qwen_tile_ctl_tp8_compact_ck.json",
+      "clock_receipt_sha256": "226c31afa6afd3bda5ba1f610ce99c1b202345597942ee87f60423a0d51dd08f",
+      "archive_sha256": "62b55d7f56ba6d9120f4077afdee15171369077100bf28178b646388e047a14b",
+      "manifest_sha256": "6e4d34ce1ed7b6d6f60b4255bcd3ec2dcd82d15c014e1bbf4633ec075f3bbd84",
+      "source_start_commit": "60dd1ac2c9139cf58148c342ecc864fb62549332",
+      "source_identity": "exact_content_snapshot",
+      "source_manifest_files": "See exact gate receipt source_binding.files; start_commit is not a substituted contentidentity.",
+      "clock_flops": 8921,
+      "corner_references": {
+        "tt": {
+          "boundary": {
+            "n": 5130,
+            "mean": 182.2,
+            "min": 175.5,
+            "max": 188.3
+          },
+          "all": {
+            "n": 7767,
+            "mean": 181.9,
+            "min": 175.5,
+            "max": 188.3
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ff": {
+          "boundary": {
+            "n": 5130,
+            "mean": 148.6,
+            "min": 142.8,
+            "max": 154.3
+          },
+          "all": {
+            "n": 7767,
+            "mean": 148.4,
+            "min": 142.8,
+            "max": 154.3
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ss": {
+          "boundary": {
+            "n": 5130,
+            "mean": 238.1,
+            "min": 229.2,
+            "max": 245.1
+          },
+          "all": {
+            "n": 7767,
+            "mean": 237.8,
+            "min": 229.2,
+            "max": 245.1
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      "parasitics": "placement-estimated",
+      "characterized_TT_FF_SS_leaflibs": "NOT_EXPORTED_NO_CLOSED_VIEW",
+      "setup_margin_ps": 1.9055867994666187
+    },
+    {
+      "kit": "ot_qwen_xcache_store32_compact",
+      "top": "ot_qwen_xcache_store32",
+      "outline": {
+        "w": 77.76,
+        "h": 86.4
+      },
+      "clock_source_pin": "clk",
+      "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk}]",
+      "clock_pin_face_layer_xy": "UNASSIGNED_ANY_PROBE_NOT_DIE_PIN_BINDING",
+      "gate_receipt": "physical/ref_tile/ot_qwen_xcache_store32_compact/gate_result.json",
+      "gate_receipt_sha256": "6ac38b06cb5803f15d8a8cf1aa784a27b8fba91fbd0a0a92ce11265fb183cc4a",
+      "clock_receipt": "results/arch/qwen_native_leaf_receipts_1013/ot_qwen_xcache_store32_compact_ck.json",
+      "clock_receipt_sha256": "ab001e1e5525610e1eedfbaaf175025ee478bafa49c79e0922edf56a7f22ed91",
+      "archive_sha256": "05e98860b157a46268d4c2cf2faa4e0b778e8ce8180a03547e390e5724c77762",
+      "manifest_sha256": "0ea9fca1c6c2e4cb03ba4565a5ebc15cbd35bc91bfc8cf98559dd4bfde27375e",
+      "source_start_commit": "60dd1ac2c9139cf58148c342ecc864fb62549332",
+      "source_identity": "exact_content_snapshot",
+      "source_manifest_files": "See exact gate receipt source_binding.files; start_commit is not a substituted contentidentity.",
+      "clock_flops": 4800,
+      "corner_references": {
+        "tt": {
+          "boundary": {
+            "n": 4800,
+            "mean": 141.6,
+            "min": 137.8,
+            "max": 146.1
+          },
+          "all": {
+            "n": 4800,
+            "mean": 141.6,
+            "min": 137.8,
+            "max": 146.1
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ff": {
+          "boundary": {
+            "n": 4800,
+            "mean": 113.9,
+            "min": 110.0,
+            "max": 118.4
+          },
+          "all": {
+            "n": 4800,
+            "mean": 113.9,
+            "min": 110.0,
+            "max": 118.4
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ss": {
+          "boundary": {
+            "n": 4800,
+            "mean": 189.5,
+            "min": 185.9,
+            "max": 193.9
+          },
+          "all": {
+            "n": 4800,
+            "mean": 189.5,
+            "min": 185.9,
+            "max": 193.9
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      "parasitics": "placement-estimated",
+      "characterized_TT_FF_SS_leaflibs": "NOT_EXPORTED_NO_CLOSED_VIEW",
+      "setup_margin_ps": null
+    },
+    {
+      "kit": "ot_qwen_xcache_response",
+      "top": "ot_qwen_xcache_response",
+      "outline": {
+        "w": 21.6,
+        "h": 43.2
+      },
+      "clock_source_pin": "clk",
+      "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk}]",
+      "clock_pin_face_layer_xy": "UNASSIGNED_ANY_PROBE_NOT_DIE_PIN_BINDING",
+      "gate_receipt": "physical/ref_tile/ot_qwen_xcache_response/gate_result.json",
+      "gate_receipt_sha256": "e01492b9b0d1efefa6c1a92d16bc0542abb17adfb7cbefcc512ffccfd84e894d",
+      "clock_receipt": "results/arch/qwen_native_leaf_receipts_1013/ot_qwen_xcache_response_ck.json",
+      "clock_receipt_sha256": "530ad1ac00594be46c1ee364727114594edfe29e77073154b0d941692564f719",
+      "archive_sha256": "674c94a8629c73d44a52ea6eab8727c969423e78421494b35b03b6e16c4f375c",
+      "manifest_sha256": "2dab24d5bfffa0972c646137f1425cb157b0775dfc673c2c634054df0258936f",
+      "source_start_commit": "fda6426b319b49b20a78bf1280c15ef0c6457ebe",
+      "source_identity": "exact_content_snapshot",
+      "source_manifest_files": "See exact gate receipt source_binding.files; start_commit is not a substituted contentidentity.",
+      "clock_flops": 129,
+      "corner_references": {
+        "tt": {
+          "boundary": {
+            "n": 129,
+            "mean": 77.5,
+            "min": 76.7,
+            "max": 78.8
+          },
+          "all": {
+            "n": 129,
+            "mean": 77.5,
+            "min": 76.7,
+            "max": 78.8
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ff": {
+          "boundary": {
+            "n": 129,
+            "mean": 57.9,
+            "min": 57.0,
+            "max": 59.2
+          },
+          "all": {
+            "n": 129,
+            "mean": 57.9,
+            "min": 57.0,
+            "max": 59.2
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ss": {
+          "boundary": {
+            "n": 129,
+            "mean": 113.0,
+            "min": 112.1,
+            "max": 114.3
+          },
+          "all": {
+            "n": 129,
+            "mean": 113.0,
+            "min": 112.1,
+            "max": 114.3
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      "parasitics": "placement-estimated",
+      "characterized_TT_FF_SS_leaflibs": "NOT_EXPORTED_NO_CLOSED_VIEW",
+      "setup_margin_ps": null
+    },
+    {
+      "kit": "ot_qwen_tile_rqr_s_compact",
+      "top": "ot_qwen_tile_rqr_s",
+      "outline": {
+        "w": 25.92,
+        "h": 108
+      },
+      "clock_source_pin": "clk",
+      "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk}]",
+      "clock_pin_face_layer_xy": "UNASSIGNED_ANY_PROBE_NOT_DIE_PIN_BINDING",
+      "gate_receipt": "physical/ref_tile/ot_qwen_tile_rqr_s_compact/gate_result.json",
+      "gate_receipt_sha256": "3ecb2b23ca72e59c368b3e652fad194a96cb6deff26c36d974a09cb66facc9bd",
+      "clock_receipt": "results/arch/qwen_native_leaf_receipts_1013/ot_qwen_tile_rqr_s_compact_ck.json",
+      "clock_receipt_sha256": "588d20190dc5ac2185dd0c3e428cf996b60c57b2f805a020117d5f67b7849ac2",
+      "archive_sha256": "31df71342befaf89dd0811ed8e71c54296d69eb1648e984f72a3d86de5bebf00",
+      "manifest_sha256": "999ba721ec1b1e980a9a55cbc8be56a052c5a0f349487e821cce292e91ecf382",
+      "source_start_commit": "e07f3dbbb1a1ffb4d38044294916376c6c1554e3",
+      "source_identity": "exact_content_snapshot",
+      "source_manifest_files": "See exact gate receipt source_binding.files; start_commit is not a substituted contentidentity.",
+      "clock_flops": 1024,
+      "corner_references": {
+        "tt": {
+          "boundary": {
+            "n": 1024,
+            "mean": 101.9,
+            "min": 94.3,
+            "max": 106.4
+          },
+          "all": {
+            "n": 1024,
+            "mean": 101.9,
+            "min": 94.3,
+            "max": 106.4
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ff": {
+          "boundary": {
+            "n": 1024,
+            "mean": 83.0,
+            "min": 75.5,
+            "max": 87.7
+          },
+          "all": {
+            "n": 1024,
+            "mean": 83.0,
+            "min": 75.5,
+            "max": 87.7
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ss": {
+          "boundary": {
+            "n": 1024,
+            "mean": 134.9,
+            "min": 127.0,
+            "max": 139.6
+          },
+          "all": {
+            "n": 1024,
+            "mean": 134.9,
+            "min": 127.0,
+            "max": 139.6
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      "parasitics": "placement-estimated",
+      "characterized_TT_FF_SS_leaflibs": "NOT_EXPORTED_NO_CLOSED_VIEW",
+      "setup_margin_ps": null
+    },
+    {
+      "kit": "ot_qwen_tile_rqr_n_compact",
+      "top": "ot_qwen_tile_rqr_n",
+      "outline": {
+        "w": 25.92,
+        "h": 108
+      },
+      "clock_source_pin": "clk",
+      "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk}]",
+      "clock_pin_face_layer_xy": "UNASSIGNED_ANY_PROBE_NOT_DIE_PIN_BINDING",
+      "gate_receipt": "physical/ref_tile/ot_qwen_tile_rqr_n_compact/gate_result.json",
+      "gate_receipt_sha256": "c944893c4ae4e337b655ccd8d27c98322a58b196ddfb94b9598a444162f44500",
+      "clock_receipt": "results/arch/qwen_native_leaf_receipts_1013/ot_qwen_tile_rqr_n_compact_ck.json",
+      "clock_receipt_sha256": "d2b4bee1ff412599d0773a97768da1926bf7862e977c7cf7c7777a27561e16c9",
+      "archive_sha256": "ee67d202d31335459daa31a33ab8c5fc550fbc0b92e158074aae6422badfee45",
+      "manifest_sha256": "39261aa7a6cffa7e8820bd6bef5e97a03b93f3cc41ebd4616fd5660f796e93b2",
+      "source_start_commit": "e07f3dbbb1a1ffb4d38044294916376c6c1554e3",
+      "source_identity": "exact_content_snapshot",
+      "source_manifest_files": "See exact gate receipt source_binding.files; start_commit is not a substituted contentidentity.",
+      "clock_flops": 1024,
+      "corner_references": {
+        "tt": {
+          "boundary": {
+            "n": 1024,
+            "mean": 96.3,
+            "min": 91.1,
+            "max": 100.7
+          },
+          "all": {
+            "n": 1024,
+            "mean": 96.3,
+            "min": 91.1,
+            "max": 100.7
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ff": {
+          "boundary": {
+            "n": 1024,
+            "mean": 77.7,
+            "min": 72.4,
+            "max": 81.9
+          },
+          "all": {
+            "n": 1024,
+            "mean": 77.7,
+            "min": 72.4,
+            "max": 81.9
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ss": {
+          "boundary": {
+            "n": 1024,
+            "mean": 128.7,
+            "min": 123.6,
+            "max": 133.4
+          },
+          "all": {
+            "n": 1024,
+            "mean": 128.7,
+            "min": 123.6,
+            "max": 133.4
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      "parasitics": "placement-estimated",
+      "characterized_TT_FF_SS_leaflibs": "NOT_EXPORTED_NO_CLOSED_VIEW",
+      "setup_margin_ps": null
+    }
+  ],
+  "packing_bounds": [
+    "results/arch/qwen_tile_pack_1013/fixed_shapes_bound.json",
+    "results/arch/qwen_tile_pack_1013/necessary_height_bound.json",
+    "results/arch/qwen_tile_pack_1013/expanded_area_bound.json"
+  ],
+  "risk": "Native control setup+1.9ps is marginal before assignedfaces/hops/route. No actualTT/FF/SS characterized hardleaf views are exported. Cache mandatoryregistered request/status/return and contextACK remainopen."
+}
