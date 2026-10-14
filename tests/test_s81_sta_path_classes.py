@@ -68,3 +68,19 @@ def test_native_real_port_alias_keeps_actual_capture_label(tmp_path):
     assert record['alias_endpoints'] == 2
     assert {(r['launch'], r['capture']) for r in record['classes']} == {
         ('real_a.out', 'real_d.xs_q0'), ('dsfd_rly_4_EW.out', 'real_d.cmd')}
+
+
+def test_report_violation_marker_survives_rounded_zero_slack(tmp_path):
+    run_case(tmp_path, [['a', 'data', 8, 'a', 'out', 'd', 'input[7:0]', 50]])
+    (tmp_path / 'end.rpt').write_text('min_delay ck_col_0\n'
+        'd/input[6] (real_d) 100 100 0.0 (VIOLATED)\n'
+        'd/input[2] (real_d) 100 100 0.0 (MET)\n')
+    result = subprocess.run([sys.executable, str(SCRIPT),
+        str(tmp_path / 'plan.gz'), str(tmp_path / 'end.rpt'),
+        str(tmp_path / 'clock.json'), str(tmp_path / 'marker.json')],
+        capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    record = json.loads((tmp_path / 'marker.json').read_text())
+    assert record['endpoints'] == 2
+    assert record['violators'] == record['rounded_zero_violators'] == 1
+    assert record['classes'][0]['rounded_zero_violators'] == 1
