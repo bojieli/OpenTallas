@@ -34,7 +34,7 @@ module tb_s81_queued_head #(parameter integer MUT=0);
   repeat(6)@(negedge ck);rs=1;wait(online);issue(0,0);issue(1,1);
   repeat(25)@(negedge ek);
   if(starts!=0||!hv||hd!==desc(0,0)||seenhead==0)errors=errors+1;
-  normal=1;repeat(2)@(negedge ek);normal=0;
+  normal=1;@(negedge ek);normal=0;
   repeat(30)@(negedge ek);
   if(starts!=2)errors=errors+1;
   @(negedge ek);done=1;tag=0;@(negedge ek);tag=8'h81;@(negedge ek);done=0;
