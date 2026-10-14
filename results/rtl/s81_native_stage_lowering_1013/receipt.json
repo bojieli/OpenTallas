@@ -35,7 +35,7 @@
   "full_native_executed_transfer_count": null,
   "missing": [
     "complete native operation placement and endpoint descriptors for current physical mapping",
-    "full package/stage/hop finite stream integration",
+    "full native layer operation/PF/field integration beyond exact two-job package/stage/hop transfer",
     "true startup GAIN readiness with no arbitrary PGAP",
     "native BF broadcast lane binding",
     "full source-pinned relevant production exact and mutants",
@@ -55,7 +55,10 @@
     "head_gate/latest.log": "522497e4b242cffc7e78d3c2d66e43186af3d7e7834397d989f6327b303e5e5f",
     "head_gate/verdicts.log": "6ded746dd0c1891b261a26f99f99791a5a08478c2f94d5bedbfe3b874254a1a3",
     "head_gate/circular.log": "1c9067838fdc21f32316c77e4ce0bb212d6941a51e5c497e7814bdf3122a2640",
-    "head_gate/base_latest.log": "80190a8c12148b6ce64dc085cedc08234d476de3b5d75cb9da9570cf22871662"
+    "head_gate/base_latest.log": "80190a8c12148b6ce64dc085cedc08234d476de3b5d75cb9da9570cf22871662",
+    "slot_ownership/base.log": "cacfeaa9be00ef5a950a7239c496357606eeef9aa52b77210df1b744661085cc",
+    "slot_ownership/ignore_reuse.log": "15f265248c16bdf3fa04b1aaa7de631ed1f68f31930fceadb00a1899bb6cdd25",
+    "slot_ownership/verdicts.log": "d473fbe6ea8868720c86b51420227dc1abcd1063a09755561d34c02824f8afc0"
   },
   "macro_commit_gate": {
     "source": "a00ee8873",
@@ -66,5 +69,33 @@
     "mutants": "early-read 633 data errors; partial mask fault2 and no hop publication",
     "limits": "No full arithmetic or complete native token schedule; MACRO0 retains actual VM bank queue and serve path"
   },
-  "initial_head_mutant": "First mutation failed on idle data at 5ns, too early to establish a valid-head error. Valid-only corruption successor is running; initial small failure record preserved."
+  "initial_head_mutant": "Idle-only mutation was superseded by a valid-head corruption mutant, which fails at16ns for all3 production arithmetic cases.",
+  "production_head_gate": {
+    "source": "e09629ae5 head exports; source-pinned record in production_head",
+    "exact_unit": "oth-ubuntu-319694-1791948787",
+    "mutant_unit": "oth-ubuntu-302137-1791948124",
+    "actual_accepts_per_case": 20,
+    "actual_hloads_per_case": 2,
+    "actual_hstores_per_case": 2,
+    "cycles_per_case": 6392,
+    "scope": "Existing NG256 full production arithmetic three-case workload; no full native token schedule"
+  },
+  "integrated_controller_gate": {
+    "source": "8906bb591",
+    "record_directory": "controller_8906",
+    "exact": "continuous and stalled two-job H transfer both PASS; zero data/early-read errors and zero faults",
+    "actual_hloads": 2,
+    "actual_hstores": 2,
+    "negative": "unrebased slot, corrupted accepted head base, and partial macro commit mask all FAIL as intended",
+    "scope": "Real package/stage/HC/32-bank macro-commit/hop composition; two pure H jobs, not full native token/PF/field proof"
+  },
+  "slot_ownership_gate": {
+    "source": "d586954f9",
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-478216-1791951822",
+    "exit": 0,
+    "exact": "other-slot STORE allowed with old read queued; same-slot STORE refusal fault4",
+    "negative": "MUT2 ignoring same-slot reuse fails",
+    "record_directory": "slot_ownership"
+  }
 }
