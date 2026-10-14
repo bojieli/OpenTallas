@@ -1,0 +1,5 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE FAIL pins: 4 ports not in the pin plan (exhaustive regions fail the floorplan): ['ifdef', 'OT_SPVM_RESET_ACK', 'reset_ack', 'endif']  -> FIX: assign every port to a face
+GATE WARN pins: 1-bit vector ports ['rs']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])  -> FIX: declare them scalar in RTL
+GATE INFO remote: skipped: local FAIL first
+PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)

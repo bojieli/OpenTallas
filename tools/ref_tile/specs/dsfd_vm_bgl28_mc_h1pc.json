@@ -1,10 +1,11 @@
 {
  "name": "dsfd_vm_bgl28_mc_h1pc",
- "top": "dsfd_vm_bgl28_mc",
+ "top": "dsfd_vm_bgl28_mc_h1pc",
  "kind": "tile",
  "sources": [
   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv",
-  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v"
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl28_mc_h1pc.sv"
  ],
  "clock_port": "ck",
  "reset_ports": [
