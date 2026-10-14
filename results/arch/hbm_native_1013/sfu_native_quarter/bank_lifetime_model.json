@@ -27,5 +27,14 @@
     "exact": "PASS481 checks,67 returns,68 committed writes,six LQ10 wraps,early credit/delayed ACK/externaldrain,warmreset,invalidbank",
     "genuine_mutant": "EXPECTED FAIL EARLY_OWNER_RELEASE before committed ACK; actual owner fence predicate mutated",
     "native_scope": "actual bank/CDC integration not yet tested"
+  },
+  "actual_native_gate": {
+    "result": "PASS PHASE61 and487, each2768checks/67writes/67reads/536exactwords,warmreset",
+    "actual_source": "64fced1f9 real ot_vms_bank RG2/WG2 and actual protected ot_hbm_b2_lane_cdc/CDC FIFO",
+    "clocks_ps": [
+      833.333,
+      1111.111
+    ],
+    "scope": "One main bank, group1 held by explicit test grant. No shared arbitration allocation, no mirror egress, no cache frame/sector assembly, no whole-quarter throughput or physical qualification"
   }
 }
