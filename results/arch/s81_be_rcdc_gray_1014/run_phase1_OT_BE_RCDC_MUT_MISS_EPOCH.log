@@ -171,6 +171,6 @@ CDC_BAD t=4345000 head126 tail127 got0463 expected00000466 vc3
 CDC_BAD selected entry not stable full serial cycle age=1
 CDC_BAD t=4354000 head127 tail127 got0464 expected0000007f vc3
 CDC_BAD t=4372000 head128 tail128 got0465 expected00000080 vc3
-[6212000] %Fatal: tb_dsfd_be_rcdc_gray.sv:60: Assertion failed in tb_dsfd_be_rcdc_gray: CDC_BAD errors=173 got=412
-%Error: rtl/dsrom_sys/s81_ph/test/tb_dsfd_be_rcdc_gray.sv:60: Verilog $stop
+[6212000] %Fatal: tb_dsfd_be_rcdc_gray.sv:69: Assertion failed in tb_dsfd_be_rcdc_gray: CDC_BAD errors=173 got=412
+%Error: rtl/dsrom_sys/s81_ph/test/tb_dsfd_be_rcdc_gray.sv:69: Verilog $stop
 Aborting...

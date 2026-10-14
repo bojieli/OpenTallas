@@ -1,0 +1,924 @@
+
+-- Running command `read_verilog -sv -DSYNTHESIS results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv rtl/lib/ot_reset_sync.sv; hierarchy -top dsfd_vm_be_rcdc; proc; opt; memory_map; opt; flatten; opt; write_json results/arch/s81_be_rcdc_gray_1014/census/legacy.json; stat' --
+
+1. Executing Verilog-2005 frontend: results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv
+Parsing SystemVerilog input from `results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv' to AST representation.
+Generating RTLIL representation for module `\dsfd_vm_be_kreg'.
+Generating RTLIL representation for module `\dsfd_vm_be_rcdc'.
+Warning: Replacing memory \g_c[1].sh with list of registers. See results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:116
+Warning: Replacing memory \g_c[1].mem with list of registers. See results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:113
+Warning: Replacing memory \g_c[0].sh with list of registers. See results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:116
+Warning: Replacing memory \g_c[0].mem with list of registers. See results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:113
+Generating RTLIL representation for module `\dsfd_vm_be_rcdc_gray'.
+Warning: Replacing memory \g_c[1].mem with list of registers. See results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:262
+Warning: Replacing memory \g_c[0].mem with list of registers. See results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:262
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/lib/ot_reset_sync.sv
+Parsing SystemVerilog input from `rtl/lib/ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \dsfd_vm_be_rcdc
+Used module:     \dsfd_vm_be_kreg
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\dsfd_vm_be_kreg'.
+Parameter \W = 8
+Parameter \ID = 5
+Generating RTLIL representation for module `$paramod\dsfd_vm_be_kreg\W=8\ID=5'.
+
+3.3. Executing AST frontend in derive mode using pre-parsed AST for module `\dsfd_vm_be_kreg'.
+Parameter \W = 1
+Parameter \ID = 3
+Generating RTLIL representation for module `$paramod\dsfd_vm_be_kreg\W=1\ID=3'.
+
+3.4. Executing AST frontend in derive mode using pre-parsed AST for module `\dsfd_vm_be_kreg'.
+Parameter \W = 8
+Parameter \ID = 1
+Generating RTLIL representation for module `$paramod\dsfd_vm_be_kreg\W=8\ID=1'.
+
+3.5. Executing AST frontend in derive mode using pre-parsed AST for module `\dsfd_vm_be_kreg'.
+Parameter \W = 8
+Parameter \ID = 4
+Generating RTLIL representation for module `$paramod\dsfd_vm_be_kreg\W=8\ID=4'.
+
+3.6. Executing AST frontend in derive mode using pre-parsed AST for module `\dsfd_vm_be_kreg'.
+Parameter \W = 1
+Parameter \ID = 2
+Generating RTLIL representation for module `$paramod\dsfd_vm_be_kreg\W=1\ID=2'.
+
+3.7. Executing AST frontend in derive mode using pre-parsed AST for module `\dsfd_vm_be_kreg'.
+Parameter \W = 8
+Parameter \ID = 0
+Generating RTLIL representation for module `$paramod\dsfd_vm_be_kreg\W=8\ID=0'.
+
+3.8. Analyzing design hierarchy..
+Top module:  \dsfd_vm_be_rcdc
+Used module:     $paramod\dsfd_vm_be_kreg\W=8\ID=5
+Used module:     $paramod\dsfd_vm_be_kreg\W=1\ID=3
+Used module:     $paramod\dsfd_vm_be_kreg\W=8\ID=1
+Used module:     $paramod\dsfd_vm_be_kreg\W=8\ID=4
+Used module:     $paramod\dsfd_vm_be_kreg\W=1\ID=2
+Used module:     $paramod\dsfd_vm_be_kreg\W=8\ID=0
+
+3.9. Analyzing design hierarchy..
+Top module:  \dsfd_vm_be_rcdc
+Used module:     $paramod\dsfd_vm_be_kreg\W=8\ID=5
+Used module:     $paramod\dsfd_vm_be_kreg\W=1\ID=3
+Used module:     $paramod\dsfd_vm_be_kreg\W=8\ID=1
+Used module:     $paramod\dsfd_vm_be_kreg\W=8\ID=4
+Used module:     $paramod\dsfd_vm_be_kreg\W=1\ID=2
+Used module:     $paramod\dsfd_vm_be_kreg\W=8\ID=0
+Removing unused module `\ot_reset_sync'.
+Removing unused module `\dsfd_vm_be_rcdc_gray'.
+Removing unused module `\dsfd_vm_be_kreg'.
+Removed 3 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 3 switch rules as full_case in process $proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:86$84 in module dsfd_vm_be_rcdc.
+Marked 4 switch rules as full_case in process $proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:78$80 in module dsfd_vm_be_rcdc.
+Marked 3 switch rules as full_case in process $proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:56$63 in module dsfd_vm_be_rcdc.
+Marked 4 switch rules as full_case in process $proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:48$59 in module dsfd_vm_be_rcdc.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_INIT pass (extract init attributes).
+
+4.4. Executing PROC_ARST pass (detect async resets in processes).
+
+4.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\dsfd_vm_be_kreg\W=8\ID=1.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$289'.
+     1/1: $0\q[7:0]
+Creating decoders for process `$paramod\dsfd_vm_be_kreg\W=1\ID=3.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$288'.
+     1/1: $0\q[0:0]
+Creating decoders for process `$paramod\dsfd_vm_be_kreg\W=8\ID=5.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$287'.
+     1/1: $0\q[7:0]
+Creating decoders for process `$paramod\dsfd_vm_be_kreg\W=8\ID=0.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$292'.
+     1/1: $0\q[7:0]
+Creating decoders for process `$paramod\dsfd_vm_be_kreg\W=1\ID=2.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$291'.
+     1/1: $0\q[0:0]
+Creating decoders for process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:119$132'.
+     1/3: $0\g_c[1].od[63:0]
+     2/3: $0\g_c[1].p_od.i[31:0]
+     3/3: $0\g_c[1].p_od.a[63:0]
+Creating decoders for process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$131'.
+     1/9: $0\g_c[1].p_sh.i[31:0]
+     2/9: $0\g_c[1].sh[7][63:0]
+     3/9: $0\g_c[1].sh[6][63:0]
+     4/9: $0\g_c[1].sh[5][63:0]
+     5/9: $0\g_c[1].sh[4][63:0]
+     6/9: $0\g_c[1].sh[3][63:0]
+     7/9: $0\g_c[1].sh[2][63:0]
+     8/9: $0\g_c[1].sh[1][63:0]
+     9/9: $0\g_c[1].sh[0][63:0]
+Creating decoders for process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$122'.
+     1/9: $0\g_c[1].p_w.i[31:0]
+     2/9: $0\g_c[1].mem[7][63:0]
+     3/9: $0\g_c[1].mem[6][63:0]
+     4/9: $0\g_c[1].mem[5][63:0]
+     5/9: $0\g_c[1].mem[4][63:0]
+     6/9: $0\g_c[1].mem[3][63:0]
+     7/9: $0\g_c[1].mem[2][63:0]
+     8/9: $0\g_c[1].mem[1][63:0]
+     9/9: $0\g_c[1].mem[0][63:0]
+Creating decoders for process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:119$105'.
+     1/3: $0\g_c[0].od[63:0]
+     2/3: $0\g_c[0].p_od.i[31:0]
+     3/3: $0\g_c[0].p_od.a[63:0]
+Creating decoders for process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$104'.
+     1/9: $0\g_c[0].p_sh.i[31:0]
+     2/9: $0\g_c[0].sh[7][63:0]
+     3/9: $0\g_c[0].sh[6][63:0]
+     4/9: $0\g_c[0].sh[5][63:0]
+     5/9: $0\g_c[0].sh[4][63:0]
+     6/9: $0\g_c[0].sh[3][63:0]
+     7/9: $0\g_c[0].sh[2][63:0]
+     8/9: $0\g_c[0].sh[1][63:0]
+     9/9: $0\g_c[0].sh[0][63:0]
+Creating decoders for process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$95'.
+     1/9: $0\g_c[0].p_w.i[31:0]
+     2/9: $0\g_c[0].mem[7][63:0]
+     3/9: $0\g_c[0].mem[6][63:0]
+     4/9: $0\g_c[0].mem[5][63:0]
+     5/9: $0\g_c[0].mem[4][63:0]
+     6/9: $0\g_c[0].mem[3][63:0]
+     7/9: $0\g_c[0].mem[2][63:0]
+     8/9: $0\g_c[0].mem[1][63:0]
+     9/9: $0\g_c[0].mem[0][63:0]
+Creating decoders for process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:86$84'.
+     1/5: $0\o_v[0:0]
+     2/5: $0\rp[3:0]
+     3/5: $0\r_ok[0:0]
+     4/5: $0\r_cnt[1:0]
+     5/5: $0\r_st[1:0]
+Creating decoders for process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:78$80'.
+     1/5: $4\rp_nx[3:0]
+     2/5: $3\rp_nx[3:0]
+     3/5: $2\rp_nx[3:0]
+     4/5: $1\rp_nx[3:0]
+     5/5: $0\rp_nx[3:0]
+Creating decoders for process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:73$72'.
+     1/2: $0\w_st_r[1:0]
+     2/2: $0\wp_r[3:0]
+Creating decoders for process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:56$63'.
+     1/5: $0\wp_pub[3:0]
+     2/5: $0\wp[3:0]
+     3/5: $0\w_ok[0:0]
+     4/5: $0\w_cnt[1:0]
+     5/5: $0\w_st[1:0]
+Creating decoders for process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:48$59'.
+     1/5: $4\wp_nx[3:0]
+     2/5: $3\wp_nx[3:0]
+     3/5: $2\wp_nx[3:0]
+     4/5: $1\wp_nx[3:0]
+     5/5: $0\wp_nx[3:0]
+Creating decoders for process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:43$50'.
+     1/2: $0\r_st_w[1:0]
+     2/2: $0\rp_w[3:0]
+Creating decoders for process `$paramod\dsfd_vm_be_kreg\W=8\ID=4.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$290'.
+     1/1: $0\q[7:0]
+
+4.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\dsfd_vm_be_rcdc.\rp_nx' from process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:78$80'.
+No latch inferred for signal `\dsfd_vm_be_rcdc.\wp_nx' from process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:48$59'.
+
+4.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\dsfd_vm_be_kreg\W=8\ID=1.\q' using process `$paramod\dsfd_vm_be_kreg\W=8\ID=1.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$289'.
+  created $dff cell `$procdff$463' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_be_kreg\W=1\ID=3.\q' using process `$paramod\dsfd_vm_be_kreg\W=1\ID=3.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$288'.
+  created $dff cell `$procdff$464' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_be_kreg\W=8\ID=5.\q' using process `$paramod\dsfd_vm_be_kreg\W=8\ID=5.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$287'.
+  created $dff cell `$procdff$465' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_be_kreg\W=8\ID=0.\q' using process `$paramod\dsfd_vm_be_kreg\W=8\ID=0.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$292'.
+  created $dff cell `$procdff$466' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_be_kreg\W=1\ID=2.\q' using process `$paramod\dsfd_vm_be_kreg\W=1\ID=2.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$291'.
+  created $dff cell `$procdff$467' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].od' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:119$132'.
+  created $dff cell `$procdff$468' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].p_od.i' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:119$132'.
+  created $dff cell `$procdff$469' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].p_od.a' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:119$132'.
+  created $dff cell `$procdff$470' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].p_sh.i' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$131'.
+  created $dff cell `$procdff$471' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].sh[0]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$131'.
+  created $dff cell `$procdff$472' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].sh[1]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$131'.
+  created $dff cell `$procdff$473' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].sh[2]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$131'.
+  created $dff cell `$procdff$474' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].sh[3]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$131'.
+  created $dff cell `$procdff$475' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].sh[4]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$131'.
+  created $dff cell `$procdff$476' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].sh[5]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$131'.
+  created $dff cell `$procdff$477' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].sh[6]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$131'.
+  created $dff cell `$procdff$478' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].sh[7]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$131'.
+  created $dff cell `$procdff$479' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].p_w.i' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$122'.
+  created $dff cell `$procdff$480' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].mem[0]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$122'.
+  created $dff cell `$procdff$481' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].mem[1]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$122'.
+  created $dff cell `$procdff$482' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].mem[2]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$122'.
+  created $dff cell `$procdff$483' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].mem[3]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$122'.
+  created $dff cell `$procdff$484' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].mem[4]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$122'.
+  created $dff cell `$procdff$485' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].mem[5]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$122'.
+  created $dff cell `$procdff$486' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].mem[6]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$122'.
+  created $dff cell `$procdff$487' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[1].mem[7]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$122'.
+  created $dff cell `$procdff$488' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].od' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:119$105'.
+  created $dff cell `$procdff$489' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].p_od.i' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:119$105'.
+  created $dff cell `$procdff$490' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].p_od.a' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:119$105'.
+  created $dff cell `$procdff$491' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].p_sh.i' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$104'.
+  created $dff cell `$procdff$492' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].sh[0]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$104'.
+  created $dff cell `$procdff$493' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].sh[1]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$104'.
+  created $dff cell `$procdff$494' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].sh[2]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$104'.
+  created $dff cell `$procdff$495' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].sh[3]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$104'.
+  created $dff cell `$procdff$496' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].sh[4]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$104'.
+  created $dff cell `$procdff$497' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].sh[5]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$104'.
+  created $dff cell `$procdff$498' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].sh[6]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$104'.
+  created $dff cell `$procdff$499' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].sh[7]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$104'.
+  created $dff cell `$procdff$500' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].p_w.i' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$95'.
+  created $dff cell `$procdff$501' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].mem[0]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$95'.
+  created $dff cell `$procdff$502' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].mem[1]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$95'.
+  created $dff cell `$procdff$503' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].mem[2]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$95'.
+  created $dff cell `$procdff$504' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].mem[3]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$95'.
+  created $dff cell `$procdff$505' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].mem[4]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$95'.
+  created $dff cell `$procdff$506' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].mem[5]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$95'.
+  created $dff cell `$procdff$507' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].mem[6]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$95'.
+  created $dff cell `$procdff$508' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\g_c[0].mem[7]' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$95'.
+  created $dff cell `$procdff$509' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\o_v' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:86$84'.
+  created $dff cell `$procdff$510' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\rp' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:86$84'.
+  created $dff cell `$procdff$511' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\r_st' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:86$84'.
+  created $dff cell `$procdff$512' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\r_cnt' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:86$84'.
+  created $dff cell `$procdff$513' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\r_ok' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:86$84'.
+  created $dff cell `$procdff$514' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\wp_r' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:73$72'.
+  created $dff cell `$procdff$515' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\w_st_r' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:73$72'.
+  created $dff cell `$procdff$516' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\wp' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:56$63'.
+  created $dff cell `$procdff$517' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\wp_pub' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:56$63'.
+  created $dff cell `$procdff$518' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\w_st' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:56$63'.
+  created $dff cell `$procdff$519' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\w_cnt' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:56$63'.
+  created $dff cell `$procdff$520' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\w_ok' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:56$63'.
+  created $dff cell `$procdff$521' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\rp_w' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:43$50'.
+  created $dff cell `$procdff$522' with positive edge clock.
+Creating register for signal `\dsfd_vm_be_rcdc.\r_st_w' using process `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:43$50'.
+  created $dff cell `$procdff$523' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_be_kreg\W=8\ID=4.\q' using process `$paramod\dsfd_vm_be_kreg\W=8\ID=4.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$290'.
+  created $dff cell `$procdff$524' with positive edge clock.
+
+4.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod\dsfd_vm_be_kreg\W=8\ID=1.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$289'.
+Removing empty process `$paramod\dsfd_vm_be_kreg\W=1\ID=3.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$288'.
+Removing empty process `$paramod\dsfd_vm_be_kreg\W=8\ID=5.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$287'.
+Removing empty process `$paramod\dsfd_vm_be_kreg\W=8\ID=0.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$292'.
+Removing empty process `$paramod\dsfd_vm_be_kreg\W=1\ID=2.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$291'.
+Removing empty process `dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:119$132'.
+Removing empty process `dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$131'.
+Found and cleaned up 8 empty switches in `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$122'.
+Removing empty process `dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$122'.
+Removing empty process `dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:119$105'.
+Removing empty process `dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:115$104'.
+Found and cleaned up 8 empty switches in `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$95'.
+Removing empty process `dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:112$95'.
+Found and cleaned up 7 empty switches in `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:86$84'.
+Removing empty process `dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:86$84'.
+Found and cleaned up 4 empty switches in `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:78$80'.
+Removing empty process `dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:78$80'.
+Removing empty process `dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:73$72'.
+Found and cleaned up 7 empty switches in `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:56$63'.
+Removing empty process `dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:56$63'.
+Found and cleaned up 4 empty switches in `\dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:48$59'.
+Removing empty process `dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:48$59'.
+Removing empty process `dsfd_vm_be_rcdc.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:43$50'.
+Removing empty process `$paramod\dsfd_vm_be_kreg\W=8\ID=4.$proc$results/arch/s81_be_rcdc_gray_1014/census/input_exact_modules.sv:3$290'.
+Cleaned up 38 empty switches.
+
+5. Executing OPT pass (performing simple optimizations).
+
+5.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+Optimizing module dsfd_vm_be_rcdc.
+<suppressed ~38 debug messages>
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+
+5.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=1'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=3'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=5'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=0'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=2'.
+Finding identical cells in module `\dsfd_vm_be_rcdc'.
+<suppressed ~114 debug messages>
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=4'.
+Removed a total of 38 cells.
+
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=1\ID=3..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=5..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=0..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=1\ID=2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \dsfd_vm_be_rcdc..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$458.
+    dead port 2/2 on $mux $procmux$452.
+    dead port 1/2 on $mux $procmux$449.
+    dead port 2/2 on $mux $procmux$443.
+    dead port 1/2 on $mux $procmux$440.
+    dead port 1/2 on $mux $procmux$437.
+    dead port 2/2 on $mux $procmux$389.
+    dead port 2/2 on $mux $procmux$383.
+    dead port 1/2 on $mux $procmux$380.
+    dead port 2/2 on $mux $procmux$374.
+    dead port 1/2 on $mux $procmux$371.
+    dead port 1/2 on $mux $procmux$368.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=4..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 12 multiplexer ports.
+<suppressed ~24 debug messages>
+
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+  Optimizing cells in module \dsfd_vm_be_rcdc.
+    New input vector for $reduce_or cell $procmux$387_ANY: { $procmux$387_CMP [0] $procmux$387_CMP [1] }
+    New input vector for $reduce_or cell $procmux$456_ANY: { $procmux$456_CMP [0] $procmux$456_CMP [1] }
+  Optimizing cells in module \dsfd_vm_be_rcdc.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+Performed a total of 2 changes.
+
+5.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=1'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=3'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=5'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=0'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=2'.
+Finding identical cells in module `\dsfd_vm_be_rcdc'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=4'.
+Removed a total of 0 cells.
+
+5.6. Executing OPT_RMDFF pass (remove dff with constant values).
+Removing $procdff$501 ($dff) from module dsfd_vm_be_rcdc.
+Removing $procdff$492 ($dff) from module dsfd_vm_be_rcdc.
+Replaced 2 DFF cells.
+
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=1..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=1\ID=3..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=5..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=0..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=1\ID=2..
+Finding unused cells or wires in module \dsfd_vm_be_rcdc..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=4..
+Removed 2 unused cells and 176 unused wires.
+<suppressed ~11 debug messages>
+
+5.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+Optimizing module dsfd_vm_be_rcdc.
+
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=1\ID=2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=1\ID=3..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=0..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=4..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=5..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \dsfd_vm_be_rcdc..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~24 debug messages>
+
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+  Optimizing cells in module \dsfd_vm_be_rcdc.
+    New input vector for $reduce_or cell $procmux$456_ANY: { $procmux$398_CMP $procmux$401_CMP }
+  Optimizing cells in module \dsfd_vm_be_rcdc.
+Performed a total of 1 changes.
+
+5.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=2'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=3'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=0'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=1'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=4'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=5'.
+Finding identical cells in module `\dsfd_vm_be_rcdc'.
+Removed a total of 0 cells.
+
+5.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=1\ID=2..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=1\ID=3..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=0..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=1..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=4..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=5..
+Finding unused cells or wires in module \dsfd_vm_be_rcdc..
+
+5.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+Optimizing module dsfd_vm_be_rcdc.
+
+5.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=1\ID=2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=1\ID=3..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=0..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=4..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=5..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \dsfd_vm_be_rcdc..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~24 debug messages>
+
+5.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+  Optimizing cells in module \dsfd_vm_be_rcdc.
+Performed a total of 0 changes.
+
+5.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=2'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=3'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=0'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=1'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=4'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=5'.
+Finding identical cells in module `\dsfd_vm_be_rcdc'.
+Removed a total of 0 cells.
+
+5.20. Executing OPT_RMDFF pass (remove dff with constant values).
+
+5.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=1\ID=2..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=1\ID=3..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=0..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=1..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=4..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=5..
+Finding unused cells or wires in module \dsfd_vm_be_rcdc..
+
+5.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+Optimizing module dsfd_vm_be_rcdc.
+
+5.23. Finished OPT passes. (There is nothing left to do.)
+
+6. Executing MEMORY_MAP pass (converting $mem cells to logic and flip-flops).
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+Optimizing module dsfd_vm_be_rcdc.
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=2'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=3'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=0'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=1'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=4'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=5'.
+Finding identical cells in module `\dsfd_vm_be_rcdc'.
+Removed a total of 0 cells.
+
+7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=1\ID=2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=1\ID=3..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=0..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=4..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=5..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \dsfd_vm_be_rcdc..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~24 debug messages>
+
+7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+  Optimizing cells in module \dsfd_vm_be_rcdc.
+Performed a total of 0 changes.
+
+7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=2'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=3'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=0'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=1'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=4'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=5'.
+Finding identical cells in module `\dsfd_vm_be_rcdc'.
+Removed a total of 0 cells.
+
+7.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=1\ID=2..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=1\ID=3..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=0..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=1..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=4..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=5..
+Finding unused cells or wires in module \dsfd_vm_be_rcdc..
+
+7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+Optimizing module dsfd_vm_be_rcdc.
+
+7.9. Finished OPT passes. (There is nothing left to do.)
+
+8. Executing FLATTEN pass (flatten design).
+Keeping dsfd_vm_be_rcdc.g_c[0].u_oh (found keep_hierarchy property).
+Keeping dsfd_vm_be_rcdc.g_c[0].u_vc (found keep_hierarchy property).
+Keeping dsfd_vm_be_rcdc.g_c[0].u_woh (found keep_hierarchy property).
+Keeping dsfd_vm_be_rcdc.g_c[1].u_oh (found keep_hierarchy property).
+Keeping dsfd_vm_be_rcdc.g_c[1].u_vc (found keep_hierarchy property).
+Keeping dsfd_vm_be_rcdc.g_c[1].u_woh (found keep_hierarchy property).
+No more expansions possible.
+
+9. Executing OPT pass (performing simple optimizations).
+
+9.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_be_rcdc.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+
+9.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_be_rcdc'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=5'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=4'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=1'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=0'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=3'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=2'.
+Removed a total of 0 cells.
+
+9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_be_rcdc..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=5..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=4..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=8\ID=0..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=1\ID=3..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\dsfd_vm_be_kreg\W=1\ID=2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~24 debug messages>
+
+9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_be_rcdc.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+  Optimizing cells in module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+Performed a total of 0 changes.
+
+9.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_be_rcdc'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=5'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=4'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=1'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=8\ID=0'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=3'.
+Finding identical cells in module `$paramod\dsfd_vm_be_kreg\W=1\ID=2'.
+Removed a total of 0 cells.
+
+9.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_be_rcdc..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=5..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=4..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=1..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=8\ID=0..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=1\ID=3..
+Finding unused cells or wires in module $paramod\dsfd_vm_be_kreg\W=1\ID=2..
+
+9.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=2.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=1\ID=3.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=0.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=1.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=4.
+Optimizing module $paramod\dsfd_vm_be_kreg\W=8\ID=5.
+Optimizing module dsfd_vm_be_rcdc.
+
+9.9. Finished OPT passes. (There is nothing left to do.)
+
+10. Executing JSON backend.
+
+11. Printing statistics.
+
+=== $paramod\dsfd_vm_be_kreg\W=1\ID=2 ===
+
+   Number of wires:                  3
+   Number of wire bits:              3
+   Number of public wires:           3
+   Number of public wire bits:       3
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $dff                            1
+
+=== $paramod\dsfd_vm_be_kreg\W=1\ID=3 ===
+
+   Number of wires:                  3
+   Number of wire bits:              3
+   Number of public wires:           3
+   Number of public wire bits:       3
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $dff                            1
+
+=== $paramod\dsfd_vm_be_kreg\W=8\ID=0 ===
+
+   Number of wires:                  3
+   Number of wire bits:             17
+   Number of public wires:           3
+   Number of public wire bits:      17
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $dff                            1
+
+=== $paramod\dsfd_vm_be_kreg\W=8\ID=1 ===
+
+   Number of wires:                  3
+   Number of wire bits:             17
+   Number of public wires:           3
+   Number of public wire bits:      17
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $dff                            1
+
+=== $paramod\dsfd_vm_be_kreg\W=8\ID=4 ===
+
+   Number of wires:                  3
+   Number of wire bits:             17
+   Number of public wires:           3
+   Number of public wire bits:      17
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $dff                            1
+
+=== $paramod\dsfd_vm_be_kreg\W=8\ID=5 ===
+
+   Number of wires:                  3
+   Number of wire bits:             17
+   Number of public wires:           3
+   Number of public wire bits:      17
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $dff                            1
+
+=== dsfd_vm_be_rcdc ===
+
+   Number of wires:                202
+   Number of wire bits:           5927
+   Number of public wires:          79
+   Number of public wire bits:    2857
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                187
+     $add                            2
+     $and                           16
+     $dff                           48
+     $eq                             4
+     $logic_and                     24
+     $logic_not                      4
+     $logic_or                       2
+     $mux                           46
+     $ne                             4
+     $or                            14
+     $paramod\dsfd_vm_be_kreg\W=1\ID=2      1
+     $paramod\dsfd_vm_be_kreg\W=1\ID=3      1
+     $paramod\dsfd_vm_be_kreg\W=8\ID=0      1
+     $paramod\dsfd_vm_be_kreg\W=8\ID=1      1
+     $paramod\dsfd_vm_be_kreg\W=8\ID=4      1
+     $paramod\dsfd_vm_be_kreg\W=8\ID=5      1
+     $pmux                           6
+     $reduce_bool                    4
+     $reduce_or                      2
+     $shl                            2
+     $sub                            3
+
+=== design hierarchy ===
+
+   dsfd_vm_be_rcdc                   1
+     $paramod\dsfd_vm_be_kreg\W=1\ID=2      1
+     $paramod\dsfd_vm_be_kreg\W=1\ID=3      1
+     $paramod\dsfd_vm_be_kreg\W=8\ID=0      1
+     $paramod\dsfd_vm_be_kreg\W=8\ID=1      1
+     $paramod\dsfd_vm_be_kreg\W=8\ID=4      1
+     $paramod\dsfd_vm_be_kreg\W=8\ID=5      1
+
+   Number of wires:                220
+   Number of wire bits:           6001
+   Number of public wires:          97
+   Number of public wire bits:    2931
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                187
+     $add                            2
+     $and                           16
+     $dff                           54
+     $eq                             4
+     $logic_and                     24
+     $logic_not                      4
+     $logic_or                       2
+     $mux                           46
+     $ne                             4
+     $or                            14
+     $pmux                           6
+     $reduce_bool                    4
+     $reduce_or                      2
+     $shl                            2
+     $sub                            3
+

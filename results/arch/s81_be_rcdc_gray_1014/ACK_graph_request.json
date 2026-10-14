@@ -1,0 +1,359 @@
+{
+  "schema": "opentallas.be_gray_ack_request.v1",
+  "source_commit": "8cd806853",
+  "status": "REQUEST_UNCONNECTED_IN_VM",
+  "enable_macro": "OT_BE_RCDC_GRAY",
+  "current_root_baseline": {
+    "consumer_ACK_signals": 141,
+    "consumer_ACK_witness_FF": 282,
+    "consumer_breakdown_FF": {
+      "FE": 234,
+      "BE": 16,
+      "flatbank": 32
+    },
+    "individual_controller_capture_FF_required_separately": 282,
+    "source": "parent reported current root; exact physical/source receipt unbound here"
+  },
+  "new_ACKs": [
+    {
+      "RTL_source_instance": "u_be.g_s[0].u_sl.u_rc0.u_gray.u_wrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack[0]",
+      "BE_output": "cdc_rst_ack[0]",
+      "RTL_clock_parent_port": "ck[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[0].u_sl.u_rc0.u_gray.u_rrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack_s[0]",
+      "BE_output": "cdc_rst_ack_s[0]",
+      "RTL_clock_parent_port": "cks[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[0].u_sl.u_rc1.u_gray.u_wrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack[1]",
+      "BE_output": "cdc_rst_ack[1]",
+      "RTL_clock_parent_port": "ck[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[0].u_sl.u_rc1.u_gray.u_rrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack_s[1]",
+      "BE_output": "cdc_rst_ack_s[1]",
+      "RTL_clock_parent_port": "cks[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[1].u_sl.u_rc0.u_gray.u_wrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack[0]",
+      "BE_output": "cdc_rst_ack[2]",
+      "RTL_clock_parent_port": "ck[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[1].u_sl.u_rc0.u_gray.u_rrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack_s[0]",
+      "BE_output": "cdc_rst_ack_s[2]",
+      "RTL_clock_parent_port": "cks[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[1].u_sl.u_rc1.u_gray.u_wrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack[1]",
+      "BE_output": "cdc_rst_ack[3]",
+      "RTL_clock_parent_port": "ck[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[1].u_sl.u_rc1.u_gray.u_rrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack_s[1]",
+      "BE_output": "cdc_rst_ack_s[3]",
+      "RTL_clock_parent_port": "cks[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[2].u_sl.u_rc0.u_gray.u_wrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack[0]",
+      "BE_output": "cdc_rst_ack[4]",
+      "RTL_clock_parent_port": "ck[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[2].u_sl.u_rc0.u_gray.u_rrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack_s[0]",
+      "BE_output": "cdc_rst_ack_s[4]",
+      "RTL_clock_parent_port": "cks[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[2].u_sl.u_rc1.u_gray.u_wrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack[1]",
+      "BE_output": "cdc_rst_ack[5]",
+      "RTL_clock_parent_port": "ck[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[2].u_sl.u_rc1.u_gray.u_rrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack_s[1]",
+      "BE_output": "cdc_rst_ack_s[5]",
+      "RTL_clock_parent_port": "cks[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[3].u_sl.u_rc0.u_gray.u_wrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack[0]",
+      "BE_output": "cdc_rst_ack[6]",
+      "RTL_clock_parent_port": "ck[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[3].u_sl.u_rc0.u_gray.u_rrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack_s[0]",
+      "BE_output": "cdc_rst_ack_s[6]",
+      "RTL_clock_parent_port": "cks[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[3].u_sl.u_rc1.u_gray.u_wrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack[1]",
+      "BE_output": "cdc_rst_ack[7]",
+      "RTL_clock_parent_port": "ck[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    },
+    {
+      "RTL_source_instance": "u_be.g_s[3].u_sl.u_rc1.u_gray.u_rrs",
+      "RTL_source_master": "ot_reset_sync",
+      "source_kind": "conditioned local reset AND existing own forwarded reset",
+      "leaf_output": "cdc_rst_ack_s[1]",
+      "BE_output": "cdc_rst_ack_s[7]",
+      "RTL_clock_parent_port": "cks[0]",
+      "raw_epoch_inputs": [
+        "rst[0]",
+        "rss[0]"
+      ],
+      "raw_epoch_logic": "rst[0] & rss[0], no forwarded rn/rns substitute",
+      "actual_driver_view_pin": null,
+      "actual_launch_clock_source_R_phase_RC": null,
+      "actual_collector_input_pin": null,
+      "actual_collector_clock": null,
+      "individual_2FF_receiver_required": true,
+      "pre_sync_reduction_permitted": false,
+      "physical_qualified": false
+    }
+  ],
+  "additional_collector_ACK_inputs": 16,
+  "additional_nominal_receiver_FF": 32,
+  "conditional_total_collector_ACK_inputs": 157,
+  "additional_leaf_conditioner_FF": 32,
+  "additional_local_ACK_FF": 0,
+  "local_ACK_source": "actual conditioner stage2 output and own forwarded reset, not an invented counter",
+  "estimated_BE_leaf_state_delta_all_four": -8160,
+  "conditional_BE_plus_collector_state_delta": -8128,
+  "actual_mapped_census": null,
+  "old_CLOSED_supports_new_ABI": false,
+  "forwarded_reset_stopped_clock_sufficiency": false,
+  "new_raw_epoch_port_binding": null,
+  "root_collector_connected": false,
+  "physical_qualified": false,
+  "conditional_consumer_ACK_signals": 157,
+  "conditional_consumer_nominal_witness_FF": 314,
+  "new_conditioner_32_FF_already_in_FIFO_census": true,
+  "conditional_controller_capture_FF": 314,
+  "existing_282_consumer_FF_is_not_collector_only": true,
+  "consumer_ACK_and_conditioner_double_counted": false
+}

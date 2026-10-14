@@ -2,11 +2,11 @@
 module tb_dsfd_be_rcdc_gray;
     parameter integer PHASE=1;
     reg wclk=0,rclk=0,raw=0,wn=0,rn=0,wv=0,rr=0;
-    reg [15:0] wd=0;wire wr,rv,ov;wire[15:0]od;wire[1:0]ovc;
+    reg [15:0] wd=0;wire wr,rv,ov,wa,ra;wire[15:0]od;wire[1:0]ovc;
     reg stopw=0,stopr=0;
     always #6 if (!stopw) wclk=~wclk;
     initial begin #(PHASE); forever #4.5 if (!stopr) rclk=~rclk; end
-    dsfd_vm_be_rcdc_gray #(.W(16),.NC(2)) dut(.raw_epoch_n(raw),.wclk(wclk),.wrst_n(wn),.w_v(wv),.w_rdy(wr),.w_d(wd),.rclk(rclk),.rrst_n(rn),.r_v(rv),.r_rdy(rr),.o_v(ov),.o_d(od),.o_vc(ovc));
+    dsfd_vm_be_rcdc_gray #(.W(16),.NC(2)) dut(.raw_epoch_n(raw),.wclk(wclk),.wrst_n(wn),.w_v(wv),.w_rdy(wr),.w_d(wd),.rclk(rclk),.rrst_n(rn),.r_v(rv),.r_rdy(rr),.o_v(ov),.o_d(od),.o_vc(ovc),.reset_ack_w(wa),.reset_ack_r(ra));
     integer sent=0,got=0,head=0,tail=0,errors=0,epoch=0;
     integer expected[0:10000];time wt[0:10000];time lo=999999,hi=0;
     time slot_written[0:7];
@@ -21,6 +21,15 @@ module tb_dsfd_be_rcdc_gray;
         if($time-slot_written[pi]<12) begin $display("CDC_BAD publication before full serial stability age=%0d",$time-slot_written[pi]);errors=errors+1;end
       end
       prev_pub=dut.wp_gray_pub;prev_running=(dut.w_st==2'b11);
+    end
+    reg prev_wa=0,prev_ra=0;
+    always @(posedge wclk) begin #1;
+      if(wa && !prev_wa && (dut.wp!==0 || dut.w_st!==2'b00)) begin $display("CDC_BAD final write ACK before pointer/state reset");errors=errors+1;end
+      prev_wa=wa;
+    end
+    always @(posedge rclk) begin #1;
+      if(ra && !prev_ra && (dut.rp!==0 || dut.r_st!==2'b00 || ov!==0)) begin $display("CDC_BAD final read ACK before pointer/state reset");errors=errors+1;end
+      prev_ra=ra;
     end
     integer cycles=0;
     reg checking=1;
@@ -43,7 +52,7 @@ module tb_dsfd_be_rcdc_gray;
       // Raw reset pulse while both clocks are stopped and forwarded rn stays high.
       checking=0;wv=0;rr=0;stopw=1;stopr=1;#20;raw=0;#2;raw=1;
       #20;
-      if(dut.wn!==0 || dut.rn!==0) begin $display("CDC_BAD stopped raw pulse missed");errors=errors+1;end
+      if(wa!==0 || ra!==0 || dut.w_reset_n!==0 || dut.r_reset_n!==0) begin $display("CDC_BAD stopped raw pulse missed");errors=errors+1;end
       epoch=1;head=0;tail=0;sent=0;stopw=0;stopr=0;
       // Consumers start reset; no stale acceptance is permitted once online.
       checking=1;

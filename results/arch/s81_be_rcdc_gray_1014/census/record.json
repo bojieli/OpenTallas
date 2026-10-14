@@ -1,0 +1,31 @@
+{
+  "status": "ACTUAL_GENERIC_YOSYS_CENSUS_NOT_TECH_MAPPED",
+  "W": 128,
+  "DEPTH": 8,
+  "NC": 2,
+  "legacy": {
+    "actual_generic_synth_FF": 2245,
+    "types": {
+      "$dff": 2245
+    },
+    "netlist_sha256": "08faf1df25a255f8f11a6ac47c8d496470884db51270762b0834056db3158a55"
+  },
+  "gray": {
+    "actual_generic_synth_FF": 1225,
+    "types": {
+      "$dff": 1221,
+      "$adff": 4
+    },
+    "netlist_sha256": "86a8368c2ba8500b1c65a2a6b20bfb3c1be5e8a33ad9bf32a6dab96021ce3247"
+  },
+  "delta_per_FIFO": -1020,
+  "delta_per_BE_leaf": -2040,
+  "delta_all_four_BE_leaves": -8160,
+  "raw_local_conditioner_FF": 32,
+  "additional_collector_ACK_inputs": 16,
+  "additional_nominal_collector_FF": 32,
+  "exact_source_sha256": "c1fbe955248218349f483c8e554feb5658a2474bb5169c2a198b8306d3601553",
+  "extracted_module_text_exact": true,
+  "ASAP7_mapped_census": null,
+  "physical_qualified": false
+}

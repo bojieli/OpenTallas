@@ -8,5 +8,5 @@ g++    verilated.o verilated_timing.o verilated_threads.o Vtb_dsfd_be_rcdc_gray_
 rm Vtb_dsfd_be_rcdc_gray__ALL.verilator_deplist.tmp
 make: Leaving directory '/tmp/s81_cdc_phase0_gold'
 - V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
-- Verilator: Built from 0.321 MB sources in 26 modules, into 0.142 MB in 6 C++ files needing 0.001 MB
-- Verilator: Walltime 4.175 s (elab=0.009, cvt=0.016, bld=4.125); cpu 0.050 s on 2 threads; allocated 43.191 MB
+- Verilator: Built from 0.322 MB sources in 26 modules, into 0.147 MB in 6 C++ files needing 0.001 MB
+- Verilator: Walltime 3.370 s (elab=0.007, cvt=0.012, bld=3.328); cpu 0.044 s on 2 threads; allocated 43.195 MB

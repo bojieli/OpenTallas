@@ -404,6 +404,6 @@ CDC_BAD t=6118000 head111 tail114 got0840 expected0000083f vc3
 CDC_BAD t=6136000 head112 tail115 got0841 expected00000840 vc3
 CDC_BAD t=6145000 head113 tail116 got0842 expected00000841 vc3
 CDC_BAD t=6172000 head114 tail118 got0843 expected00000842 vc3
-[6212000] %Fatal: tb_dsfd_be_rcdc_gray.sv:60: Assertion failed in tb_dsfd_be_rcdc_gray: CDC_BAD errors=406 got=406
-%Error: rtl/dsrom_sys/s81_ph/test/tb_dsfd_be_rcdc_gray.sv:60: Verilog $stop
+[6212000] %Fatal: tb_dsfd_be_rcdc_gray.sv:69: Assertion failed in tb_dsfd_be_rcdc_gray: CDC_BAD errors=406 got=406
+%Error: rtl/dsrom_sys/s81_ph/test/tb_dsfd_be_rcdc_gray.sv:69: Verilog $stop
 Aborting...

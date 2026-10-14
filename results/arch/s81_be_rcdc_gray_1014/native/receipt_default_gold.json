@@ -1,0 +1,35 @@
+{
+  "case": "default_gold",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv": "531ff23c22e581e79e5498076d2a1d821c5245dd819d6207d9e42b414b33ad9c",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm.sv": "ca250822b05604134ee3498174a599bb355028135edaf94d6b62d99d00a1e225",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv": "c1fbe955248218349f483c8e554feb5658a2474bb5169c2a198b8306d3601553",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv": "990c783f6b446a002b22a93d0f9f017164d720dc97fb59250d9a8c708272a12f",
+    "rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv": "3585ce988a6169ac8cf1b287d7f2aefe2948b01f26a4d7de1458ba986ef822c2",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv": "7d1c01eed80cd2fa59746e5216d7c84ab2c5f5a692f8a8130a421fab1715b168",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv": "9cee04525e5159f6046ebeeffff9e01f1f5130908658ee6910d4e8cccce577ee",
+    "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv": "08ae0f922a82d1ca82c6e9ef81a71a955e0b97b491341a094bd14163522181b6",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv": "611872cc885af05808aeaa1386602ad03b37339519d67991fda40e394a314ee8",
+    "rtl/lib/ot_async_fifo.sv": "ae6a81497e7575cf780cffca8486c3b5663a7a079d7fa3fed46d1dce5f5c23d7",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/common/ot_ratio_cdc_fifo.sv": "b608b11a3e676f0a83ddfba49b6187b5991e2d443a4d1c5269274ee6587e8557",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv": "6a564096256c0253de7ced686cd6e8e7800073f96efe9b41f5f08b5a91ca471a"
+  },
+  "gate": {
+    "case": "rcdc_default_gold",
+    "expect": "pass",
+    "passed": true,
+    "ok": true,
+    "tail": [
+      "RESULT cyc=64000 checked=43245 mismatches_or_fails=0 phases=143 arm=143 p2rd=533 done=7141 rows_ready=70 starts=474 p2_words=14150 ctrl_reads=3073 el=225568/225568 cap_ops=13660 max_occ=3 mirror_max=3 lat p0=47 p1=47 p2=-1 p4=-1 p6=-1 p7=-1",
+      "PASS",
+      "LOCKSTEP cycles=63966 mismatches=0 pre=0 ports=fffffff rd=43245 wr=19904 drain=1250 cap=13660 cts_low=0 cts_tog=1 cw_stall=28 rdy=63806 dv=4696 ks=244 fe_flt=0000/0000",
+      "LOCKSTEP_OK"
+    ],
+    "lockstep": "LOCKSTEP cycles=63966 mismatches=0 pre=0 ports=fffffff rd=43245 wr=19904 drain=1250 cap=13660 cts_low=0 cts_tog=1 cw_stall=28 rdy=63806 dv=4696 ks=244 fe_flt=0000/0000"
+  },
+  "physical_qualified": false,
+  "old_CLOSED_replaced": false
+}
