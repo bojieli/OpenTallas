@@ -10,7 +10,7 @@ out = pathlib.Path.cwd()
 m = json.loads((out / 'provenance.json').read_text())
 src = out / 'src'
 vlt = os.path.expanduser('~/.local/opentallas-tools/verilator-5.050/bin/verilator')
-LFACE = ['rtl/physical/ot_qwen_live_face.sv', 'rtl/physical/ot_qwen_tile_ctl_lface.sv',
+LFACE = ['rtl/physical/ot_qwen_live_face.sv', 'rtl/physical/ot_qwen_tile_numeric_output_metadata.sv', 'rtl/physical/ot_qwen_tile_ctl_lface.sv',
          'rtl/test/qwen_kv_die/tb_qwen_tile_lface.sv']
 sources = [s for s in m['sources'] if not s.endswith('tb_qwen_xcache_query40.sv')] + LFACE
 # name, params, expected failure text (None = must PASS)

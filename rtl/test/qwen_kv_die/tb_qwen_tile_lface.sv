@@ -42,8 +42,8 @@ module tb_qwen_tile_lface;
  reg clk=0;always #5 clk=~clk;
  wire [39:0] query_seq;wire query_fault,query_issue_v,accept_toggle,admission_fault;reg accept_ack=0;integer base_edges=0;reg [39:0] next_query=0;
  // ---- live queues + registered family enable ----
- wire [1:0] credit;wire en;wire qv,nv;wire [QW-1:0] qt;wire [511:0] nt;wire qfault,nfault;reg ready=1;
- reg allow=1,gate=1;wire hit;always @(negedge clk) gate<=allow&&hit&&en;
+ wire [1:0] credit;wire en;wire qv,nv;wire [QW-1:0] qt;wire [600:0] nt;wire [88:0] ntuple;wire qfault,nfault;reg ready=1;
+ reg allow=1,gate=1,hold=0;wire hit;always @(negedge clk) gate<=allow&&hit&&en&&!hold;
  wire cc=clk&&gate;
  reg rst_n=0,go=0,clear=0,lv=0,j_repeat=1;
  reg [15:0] tid=0;reg [378:0] ib=0;reg [20:0] load_epoch=0;
@@ -56,11 +56,11 @@ module tb_qwen_tile_lface;
  ot_qwen_live_credit_queue #(.W(QW),.DEPTH(DEPTH),.LAT(LAT),.MUT(QMUT)) u_qq(.base_clk(clk),.rst_n(rst_n),.core_en(gate),
   .produce_v(query_issue_v),.produce_tuple({read_mode,query_seq,cr,ca,ep,read_ctx,read_ver}),.credit_q(credit[0]),
   .consume_ready(ready),.consume_v(qv),.consume_tuple(qt),.fault(qfault));
- ot_qwen_live_credit_queue #(.W(512),.DEPTH(DEPTH),.LAT(LAT),.MUT(QMUT)) u_nq(.base_clk(clk),.rst_n(rst_n),.core_en(gate),
-  .produce_v(cv),.produce_tuple(ct),.credit_q(credit[1]),
+ ot_qwen_live_credit_queue #(.W(601),.DEPTH(DEPTH),.LAT(LAT),.MUT(QMUT)) u_nq(.base_clk(clk),.rst_n(rst_n),.core_en(gate),
+  .produce_v(cv),.produce_tuple({ntuple,ct}),.credit_q(credit[1]),
   .consume_ready(ready),.consume_v(nv),.consume_tuple(nt),.fault(nfault));
  // ---- bench expectation FIFOs (filled from the lockstep-checked core edge, drained by the live pops) ----
- reg [QW-1:0] qexp[0:65535];reg [511:0] nexp[0:4095];integer qw=0,qr=0,nw=0,nr=0,stall_left=0,credit_pause=0,ack_pause=0,max_q=0;
+ reg [QW-1:0] qexp[0:65535];reg [600:0] nexp[0:4095];integer qw=0,qr=0,nw=0,nr=0,stall_left=0,hold_left=0,credit_pause=0,ack_pause=0,max_q=0;
  function automatic [31:0] xv(input [23:0] a);
   xv=32'h3f800000 | (((a*24'd7919)^24'h123456)&23'h7fffff);
  endfunction
@@ -74,7 +74,7 @@ module tb_qwen_tile_lface;
   .clk_ctl(cc),.clk_rp({5{cc}}),.clk_sl({8{cc}}),.clk_node(cc),.clk_tx({8{cc}}),.clk_rqr({2{cc}}),
   .rst_n(rst_n),.tile_id(tid),.ib_go(go),.ib(ib),.x_response(response),
   .n_a(512'd0),.n_b(512'd0),.n_va(1'b0),.n_y(),.n_vy(),.t_out(ct),.t_vout(cv),.fault(cf),
-  .cx_xre(cr),.cx_xaddr(ca),.cx_xepoch(ep),.op_context(offered_ctx),.vm_version(32'(100+offered_ctx)),.cx_xjrepeat(read_mode),.cx_xcontext(read_ctx),.cx_xversion(read_ver),.cx_op_accept(op_accept),.cx_accepted_context(accepted_ctx),.cx_accepted_version(accepted_ver),.cx_core_idle(core_idle),.cx_accepted_ib(accepted_ib),.accept_ack_toggle(accept_ack),.accept_transport_fence(1'b0),.cx_accept_toggle(accept_toggle),.cx_admission_fault(admission_fault),.cx_issue_last(),.cx_query_seq(query_seq),.cx_query_fault(query_fault),.cx_query_issue_v(query_issue_v));
+  .cx_xre(cr),.cx_xaddr(ca),.cx_xepoch(ep),.op_context(offered_ctx),.vm_version(32'(100+offered_ctx)),.cx_xjrepeat(read_mode),.cx_xcontext(read_ctx),.cx_xversion(read_ver),.cx_op_accept(op_accept),.cx_accepted_context(accepted_ctx),.cx_accepted_version(accepted_ver),.cx_core_idle(core_idle),.cx_accepted_ib(accepted_ib),.accept_ack_toggle(accept_ack),.accept_transport_fence(1'b0),.cx_accept_toggle(accept_toggle),.cx_admission_fault(admission_fault),.cx_issue_last(),.cx_query_seq(query_seq),.cx_query_fault(query_fault),.cx_query_issue_v(query_issue_v),.numeric_tuple(ntuple));
  ot_qwen_xcache_context32 cache(
   .load_clk(clk),.core_clk(cc),.rst_n(rst_n),.clear(clear),
   .live_j_repeat(j_repeat),.read_j_repeat(read_mode),.load_j_repeat(xjs==0),
@@ -85,16 +85,21 @@ module tb_qwen_tile_lface;
  reg last_accept_toggle=0;
  always @(posedge clk)begin
   base_edges=base_edges+1;
-  if(!rst_n)begin accept_ack<=0;stall_left=0;ready<=1;last_accept_toggle=0;end
+  if(!rst_n)begin accept_ack<=0;stall_left=0;ready<=1;last_accept_toggle=0;hold_left=0;hold<=0;end
   else begin
    accept_ack<=accept_toggle;
    // Consumer stall schedule: periodic short stalls plus a long stall started at every op acceptance, so the core
    // clock stops with queries in flight and with the admission ACK still travelling (ack_q not yet updated).
-   if(STALL && accept_toggle!=last_accept_toggle)stall_left=97;
+   if(STALL && accept_toggle!=last_accept_toggle)begin stall_left=97;hold_left=12;end
+   // Family pause (external, e.g. another queue's credit) right at acceptance: the core clock is stopped while the
+   // admission ACK returns, so the core-clock ACK pin register is stale for the whole pause.
+   if(hold_left>0)hold_left=hold_left-1;
+   hold<=(hold_left>0);
    last_accept_toggle=accept_toggle;
    if(stall_left>0)stall_left=stall_left-1;
    ready<=!STALL || (stall_left==0 && base_edges%23<17);
-   if(!gate && allow && hit)begin credit_pause=credit_pause+1;if(u_core.u_ctl.ack_q!=accept_ack)ack_pause=ack_pause+1;end
+   if(!gate && allow && hit && !hold)credit_pause=credit_pause+1;
+   if(!gate && u_core.u_ctl.ack_q!=accept_ack)ack_pause=ack_pause+1;
    if(u_qq.count>max_q)max_q=u_qq.count;
    if(u_qq.pop)begin
     if(qr>=qw)$fatal(1,"live query pop without an issued query");
@@ -150,7 +155,7 @@ module tb_qwen_tile_lface;
     if(accepted_ctx!==current_ctx || accepted_ver!==32'(100+current_ctx))$fatal(1,"production accepted context mismatch");
    end
    if(rv!==cv || rv && rt!==ct) $fatal(1,"actual CEXT2 arithmetic mismatch op=%0d edge=%0d",ops,edges);
-   if(cv)begin nexp[nw%4096]=ct;nw=nw+1;end
+   if(cv)begin nexp[nw%4096]={ntuple,ct};nw=nw+1;end
    if(rf!==cf || cachefault) $fatal(1,"actual tile/cache fault op=%0d",ops);
    if(rv) checks=checks+1;
   end
@@ -221,7 +226,7 @@ module tb_qwen_tile_lface;
   if(resident_checks!=1)$fatal(1,"missing resident context/version overlap coverage");
   if(mode_checks!=1)$fatal(1,"missing actual j6 mode-overlap coverage");
   if(requests<600 || checks!=680+(ALL_SPLITS?256:0) || misses<4) $fatal(1,"coverage actualrequests=%0d arithmetic=%0d misses=%0d",requests,checks,misses);
-  if(STALL && (credit_pause<100 || ack_pause<1))$fatal(1,"stopped-clock coverage missing credit_pause=%0d ack_pause=%0d",credit_pause,ack_pause);
+  if(STALL && (credit_pause<100 || ack_pause<6))$fatal(1,"stopped-clock coverage missing credit_pause=%0d ack_pause=%0d",credit_pause,ack_pause);
   $display("LFACE LAT=%0d DEPTH=%0d STALL=%0d base_edges=%0d core_edges=%0d credit_paused_base_edges=%0d paused_with_ack_in_flight=%0d max_query_queue=%0d (mailbox bench: 4568 base edges, 871 pending edges)",LAT,DEPTH,STALL,base_edges,edges,credit_pause,ack_pause,max_q);
   $display("PASS lface registered faces GT%0d ops=%0d arithmetic=%0d requests=%0d misses=%0d streamed_queries=%0d streamed_words=%0d no_fault no_deadlock",TARGET_GT,ops,checks,requests,misses,requests,checks);$finish;
  end

@@ -48,7 +48,8 @@ module ot_qwen_tile_ctl_tp8_lface #(parameter integer MUT = 0) (
     output wire [3127:0] cx_ld,
     input  wire [71:0]   cx_lerr,
     output wire          cx_tvd,
-    input  wire          cx_nfault
+    input  wire          cx_nfault,
+    output wire [88:0]   numeric_tuple   // streaming identity of the numeric word (TOREG edge), no mailbox
 );
     // ---- input face: ACK / fence pin registers (core clock) ----
     (* keep *) reg ack_q, fence_q;
@@ -100,6 +101,10 @@ module ot_qwen_tile_ctl_tp8_lface #(parameter integer MUT = 0) (
     assign cx_accepted_context = actx_q;
     assign cx_accepted_version = aver_q;
     assign cx_accepted_ib      = aib_q;
+    // ---- streaming numeric identity companion (registered tag on the TOREG producing edge) ----
+    ot_qwen_tile_numeric_output_metadata u_metadata (.core_clk(clk), .rst_n(rst_n), .query_issue_v(cx_query_issue_v),
+        .query_sequence(cx_query_seq), .query_context(cx_xcontext), .query_version(cx_xversion),
+        .numeric_tuple(numeric_tuple));
     (* keep *) reg fault_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) fault_q <= 1'b0; else fault_q <= tile_fault;
@@ -143,7 +148,8 @@ module ot_qwen_rom_tile_nkt_tp8_core_lface #(parameter integer CMUT = 0, paramet
     output wire [15:0]       cx_accepted_context,
     output wire [31:0]       cx_accepted_version,
     output wire [378:0]      cx_accepted_ib,
-    output wire              cx_core_idle
+    output wire              cx_core_idle,
+    output wire [88:0]       numeric_tuple
 );
     wire [69:0]   cx_rreq;
     wire [5119:0] cx_rq;
@@ -165,7 +171,8 @@ module ot_qwen_rom_tile_nkt_tp8_core_lface #(parameter integer CMUT = 0, paramet
         .cx_admission_fault(cx_admission_fault), .cx_op_accept(cx_op_accept), .cx_issue_last(cx_issue_last),
         .cx_accepted_context(cx_accepted_context), .cx_accepted_version(cx_accepted_version),
         .cx_accepted_ib(cx_accepted_ib), .cx_core_idle(cx_core_idle),
-        .cx_rreq(cx_rreq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lerr(cx_lerr), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
+        .cx_rreq(cx_rreq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lerr(cx_lerr), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault),
+        .numeric_tuple(numeric_tuple));
     ot_qwen_tile_kids #(.CODE_BANKS(5), .RPS(0), .CMUT(CMUT), .MCLK(1), .SPLIT(1)) u_kids (.clk(clk_ctl), .clk_rp(clk_rp),
         .clk_sl(clk_sl), .clk_node(clk_node), .clk_tx(clk_tx), .clk_rqr(clk_rqr), .rst_n(rst_n),
         .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(512'd0), .cx_tvd(cx_tvd),
