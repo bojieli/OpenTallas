@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qdq_core_fin2_ref",
  "verdict": "WARN",
- "generated": "2026-10-14T05:39:46-0700",
- "host": "ot-epyc1tb",
+ "generated": "2026-10-14T05:54:26-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "3cfca21b77bfd9c02744d339af4162f5bc03f433",
+  "start_commit": "bde6efa3eae66e140a97606f5867231a95855047",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "1681740b3d46097944bd0d49661816fd0f5e1c7139c1c243db96b2aadcab18bb",
-  "manifest_sha256": "bb0be543406147df64e0613931e50d8de57aae3a4355b5d714ef99bd2c99ee1c",
+  "archive_sha256": "2f78cf7861e47d9643a03c6afc067afd85526cd3f5f0b7b4671bcff422bcc0bf",
+  "manifest_sha256": "21f20e492717c60ef123357c5d058563c7cc00e73dab83e2c060067fa336cd05",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -28251,8 +28251,8 @@
    {
     "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_core_fin2.sv",
     "kind": "file",
-    "sha256": "bd2b5043184642a25e76407864712fc54caa03532b26f7c0f06f19a9e4ba88fe",
-    "git_blob": "84fd4e06042f4f30724642f93af11615215ea9eb",
+    "sha256": "76f3cfb81dcc176cd423be92c112586c7c5e65a0330d87949a75f4b8d459d98a",
+    "git_blob": "d2d1f91613e62e3f146528d4b25ad35da5f55b79",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -42149,6 +42149,14 @@
     "kind": "file",
     "sha256": "8b5a66571b9ddfbd7ff43ddb20f31068c8a46a80321dff95e7fdf6a9404057ec",
     "git_blob": "1bd670a3f52c582ea0254702de811251bfe0b413",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/test/hbm_accel/generic/tb_hgi_qdq_core_fin2_oracle.sv",
+    "kind": "file",
+    "sha256": "7dd6541aabd3ee8045d4d149ff5c7c9f3197efe79a2363d38db794c6b96c0a3b",
+    "git_blob": "183f7d302c48c35f70347fe64308b13540d57a6c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -76065,6 +76073,14 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "tools/hgi_unit_tput/run_qdq_core_fin2_oracle.sh",
+    "kind": "file",
+    "sha256": "a6446481562be311c389ea2795acc32de8f0326817cd6230ffea2fee06639712",
+    "git_blob": "4ec7ee52f98ee68827a0c65ead4cdd49e07d7796",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "tools/hgi_unit_tput/run_qdq_fr_face_ff.sh",
     "kind": "file",
     "sha256": "72bb998317f5e7ba4012d5ca30d1178b68ae92c7e025a97be8a78cfcff45f1ea",
@@ -76157,6 +76173,14 @@
     "kind": "file",
     "sha256": "476456248d94fb7d78b6124e7f8d286e24c2ddb14b47200a8eb0b17015d6af3c",
     "git_blob": "88865c13671c2e8f65749f21434f07eb9eaf51f5",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/hgi_unit_tput/snapshot_qdq_core_fin2_oracle.py",
+    "kind": "file",
+    "sha256": "4f65ea1c5d38c69778778e14b38496506e06ad71718dccccaf89252c5d25dd9d",
+    "git_blob": "8e9d1074e4cb76b5c05154308c303680290c2172",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -101267,8 +101291,8 @@
    {
     "path": "tools/uarch_model.py",
     "kind": "file",
-    "sha256": "4baca1995a645a8d713253498318629fab88131f6a08cc6e60c12ec4f804dd31",
-    "git_blob": "c5e91b513dbdd280917751fc6be53a23cfdfecd4",
+    "sha256": "aa21ed3cd1c38a75ecc9a54749cb763710df7f7279352936018482ca965d329a",
+    "git_blob": "94419fe30453476dd9b96b4bec95c43a6efad3a9",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -106385,11 +106409,11 @@
     "matches_provenance_commit": true
    }
   ],
-  "captured": "2026-10-14T05:36:47-0700",
-  "remote_script_sha256": "87287e59b3634ba815e1d13b3f8b92c97c7f2d37d29e798b0e2e1c3a3861edb7",
+  "captured": "2026-10-14T05:50:59-0700",
+  "remote_script_sha256": "4001164fa8cbe09ae5008d8ea1832db25fb9eb1d839bd11cf8a368b3ac6ca1e4",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qdq_core_fin2_ref-20261014-053623",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qdq_core_fin2_ref-20261014-055031",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -106397,11 +106421,11 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 4150,
+  "max_root_sinks": 4189,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 145.7,
-  "tt_spread_ps": 13.5,
+  "tt_insertion_ps": 142.6,
+  "tt_spread_ps": 9.8,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -106414,16 +106438,16 @@
     "clock": "core_clk",
     "tt": {
      "boundary": {
-      "n": 430,
-      "mean": 140.2,
-      "min": 134.5,
-      "max": 144.5
+      "n": 469,
+      "mean": 139.4,
+      "min": 137.0,
+      "max": 142.6
      },
      "all": {
-      "n": 4150,
-      "mean": 139.5,
-      "min": 132.2,
-      "max": 145.7
+      "n": 4189,
+      "mean": 138.7,
+      "min": 132.8,
+      "max": 142.6
      },
      "errors": [],
      "macros": null,
@@ -106433,13 +106457,13 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "4,150 sinks on the largest root <= 15,000; measured TT insertion 145.7 ps, leaf spread 13.5 ps"
+  "text": "4,189 sinks on the largest root <= 15,000; measured TT insertion 142.6 ps, leaf spread 9.8 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "textbook.boundary",
-   "message": "5 input->register endpoint(s) > 3 levels (worst i_fin->fin_c[4]$_DFFE_PN0P_/D 5 lv, i_fin->q_v[15]$_DFF_PN0_/D 4 lv, i_fin->hd[3]$_DFFE_PN0P_/D 4 lv): register the boundary (pin flops / registered outputs)",
+   "message": "34 input->register endpoint(s) > 3 levels (worst i_fin->occ[3]$_DFF_PN0_/D 5 lv, i_fin->ret[0]$_DFF_PN0_/D 4 lv, i_fin->occ[2]$_DFF_PN0_/D 4 lv): register the boundary (pin flops / registered outputs)",
    "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
   }
  ]
