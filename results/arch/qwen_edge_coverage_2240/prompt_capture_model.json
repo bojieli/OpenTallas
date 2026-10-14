@@ -25,5 +25,27 @@
   "die_coordinates_and_PG_phase": "UNASSIGNED gate-onlyproposal accepted",
   "production_throughput": "RequiresactualND8hostpacketcomposition measured beforequalification",
   "failure_trigger": "p1actualmacro->regsetup\u2212234.56ps; hold+33.56ps, no route",
-  "structural_cut": "allrawmacrooutputcapturebeforelane/ECClogic; no function reorder"
+  "structural_cut": "allrawmacrooutputcapturebeforelane/ECClogic; no function reorder",
+  "selected_route": {
+    "record": "34da7905f",
+    "job": "qkd_host_prompt_capture_bal-p3-2da78b1db-arg2",
+    "TT_setup_ps": 122.13,
+    "FF_hold_ps": 9.09,
+    "DRC": 0,
+    "boundary_spread_ps": {
+      "TT": 22.6,
+      "FF": 9.0,
+      "SS": 51.9
+    },
+    "role": "new q4/fault5 child only, held actualnativeparent"
+  },
+  "full_native_parent_proof": {
+    "branch": "codex/qwen-host-control-compose-1013",
+    "commit": "5602fbff1",
+    "source_manifest": "physical/qkd_host_control_compose/evidence/capture/source_hashes.json",
+    "PB_READ_PIPE": 5,
+    "PROMPT_READ_LATENCY": 4,
+    "reset_peer_proof": "637a63521 / parentimport f5d19e899",
+    "status": "functional actual ND8 exact+observedmutants; physicalpricing/die qualification pending"
+  }
 }
