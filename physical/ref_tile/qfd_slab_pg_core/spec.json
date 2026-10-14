@@ -26,12 +26,11 @@
  },
  "clock_port": "clk",
  "reset_ports": [
-  "rst_n",
-  "bw_rst_n"
+  "rst_n"
  ],
  "defines": [],
  "outline": {
-  "w": 259.2,
+  "w": 129.6,
   "h": 129.6
  },
  "pins": {
@@ -70,14 +69,6 @@
   "N": [
    "clk",
    "rst_n",
-   "bw_clk",
-   "bw_rst_n",
-   "bw_v",
-   "bw_rdy",
-   "bw_d",
-   "tw_v",
-   "tw_rdy",
-   "tw_d",
    "o_we",
    "o_addr",
    "o_mask",
@@ -86,15 +77,11 @@
    "am_tv",
    "am_top",
    "am_rmax",
-   "fault",
-   "bw_w_fault",
-   "bw_r_fault",
-   "bw_w_live",
-   "bw_r_live"
+   "fault"
   ]
  },
  "route": {
-  "pd": 0.55,
+  "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.01,
@@ -108,8 +95,8 @@
  "job": {
   "owner": "Claude:el1013-qwen-small-masters r3b",
   "branch": "claude/el1013-qwen-r3b-spine",
-  "tag": "cr1",
-  "purpose": "Slab original parentregisters hardened coreclocklocal partition",
+  "tag": "cr2",
+  "purpose": "Slab original parent registers in local core leaf, input pin capture of scale/multiplier returns adds two clocks; exact TP8 values and mutant",
   "extra_paths": [
    "physical/qwen_slab_structural"
   ],
@@ -119,21 +106,23 @@
     "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --out {RUN}/bench/entries",
     "expect": "pass",
     "threads": 1,
-    "peak_ram_gb": 2
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
    },
    {
     "name": "core_composition_scale_mutant",
     "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --entry-mutant --out {RUN}/bench/entries_mut",
     "expect": "fail",
     "threads": 1,
-    "peak_ram_gb": 2
+    "peak_ram_gb": 2,
+    "fail_regex": "^FAIL: [1-9][0-9]* errors$"
    }
   ],
   "views_to": "physical/ref_tile/qfd_slab_pg_core/views",
   "record_to": "results/rtl/ref_tile/qfd_slab_pg_core"
  },
- "structural_change": "Original slab parent gate6761ownflops sharedclockspine insertion1771.3/spread510.7 fails dieclock requirement. Existing parent request/tag/scale merge/argmax/output registers extracted unchanged into hardened core leaf. Four scale columns+four multiplier leaves retain ownroots; new parent onlywires andoneentry perchild. No latency change; exact original TP8 golden bench and scale-return bit-swap mutant prove extraction. Core boundary correction: register all 1,024 scale-return bits and 512 data/16 valid/32 error multiplier-return bits at their input pins; delay residual operand, tags and valid stages accordingly. +2 result edges, unchanged values/order; avoids input lane_err four-level control path and column OR before a pin capture.",
- "slot_change_request": "Core leaf259.2x129.6 must beplaced in central172.8um slab bandwith21.6umchannelsabove/below; parent clocks oneentry percore+8children. Fullslab footprint777.6x691.2 exceeds8groups*1840.296 parentheight; exactdieportplacement redesign required before fullcluster route. GID47 coreonly currently; other47GID parameters require correspondingnamedcore views or runtime strap redesign, cannotbind thisview toallGIDs.",
+ "structural_change": "Original slab parent gate6761ownflops sharedclockspine insertion1771.3/spread510.7 fails dieclock requirement. Existing parent request/tag/scale merge/argmax/output registers extracted unchanged into hardened core leaf. Four scale columns+four multiplier leaves retain ownroots; new parent onlywires andoneentry perchild. No latency change; exact original TP8 golden bench and scale-return bit-swap mutant prove extraction. Core boundary correction: register all 1,024 scale-return bits and 512 data/16 valid/32 error multiplier-return bits at their input pins; delay residual operand, tags and valid stages accordingly. +2 result edges, unchanged values/order; avoids input lane_err four-level control path and column OR before a pin capture. Sparse-core placement fix after GPL0305: remove inert BW_FIFO0 ports from core (constant BW outputs remain thin-parent wires); shrink outline129.6square to reduce filler/pin-row and clock-span burden. Sparse-core placement fix after GPL0305: remove inert BW_FIFO0 ports from core (constant BW outputs remain thin-parent wires); shrink outline129.6square to reduce filler/pin-row and clock-span burden. Sparse-core placement fix after GPL0305: remove inert BW_FIFO0 ports from core (constant BW outputs remain thin-parent wires); shrink outline129.6square to reduce filler/pin-row and clock-span burden. Sparse-core placement fix after GPL0305: remove inert BW_FIFO0 ports from core (constant BW outputs remain thin-parent wires); shrink outline129.6square to reduce filler/pin-row and clock-span burden.",
+ "slot_change_request": "Core129.6square in existing172.8middleband with21.6channels above/below. Original production BW_FIFO0 inactive words removed from core physical interface and remain explicit constants in parent. Parent supports production BW_FIFO0 only; BW_FIFO1 cannot silently use thisview. Fullgroup and eightgroup portslot still need die geometry revision, allGIDs must bind their correct parameter core.",
  "macros": [],
  "inter": [],
  "recipe": 2,
@@ -218,127 +207,79 @@
   ],
   "lane_a": [
    4,
-   98.581
+   48.989
   ],
   "lane_s": [
-   99.157,
-   146.448
+   49.565,
+   72.059
   ],
   "lane_v": [
-   147.024,
-   149.98
+   72.635,
+   74.041
   ],
   "lane_ws": [
-   150.556,
-   153.512
+   74.617,
+   76.023
   ],
   "core_gre1": [
-   154.088,
-   154.272
+   76.599,
+   76.687
   ],
   "core_addr1": [
-   154.848,
-   159.282
+   77.263,
+   79.371
   ],
   "core_rs0": [
-   159.858,
-   160.043
+   79.947,
+   80.035
   ],
   "res_in": [
-   160.619,
-   255.2
+   80.611,
+   125.6
   ],
   "clk": [
    4,
-   4.145
+   4.191
   ],
   "rst_n": [
-   4.721,
-   4.867
-  ],
-  "bw_clk": [
-   5.443,
-   5.588
-  ],
-  "bw_rst_n": [
-   6.164,
-   6.309
-  ],
-  "bw_v": [
-   6.885,
-   7.03
-  ],
-  "bw_rdy": [
-   7.606,
-   7.752
-  ],
-  "bw_d": [
-   8.328,
-   82.704
-  ],
-  "tw_v": [
-   83.28,
-   83.425
-  ],
-  "tw_rdy": [
-   84.001,
-   84.147
-  ],
-  "tw_d": [
-   84.723,
-   159.099
+   4.767,
+   4.957
   ],
   "o_we": [
-   159.675,
-   159.821
+   5.533,
+   5.724
   ],
   "o_addr": [
-   160.397,
-   163.883
+   6.3,
+   10.872
   ],
   "o_mask": [
-   164.459,
-   166.783
+   11.448,
+   14.497
   ],
   "o_data": [
-   167.359,
-   241.736
+   15.073,
+   112.622
   ],
   "ov": [
-   242.312,
-   242.457
+   113.198,
+   113.389
   ],
   "am_tv": [
-   243.033,
-   243.178
+   113.965,
+   114.155
   ],
   "am_top": [
-   243.754,
-   250.872
+   114.731,
+   124.067
   ],
   "am_rmax": [
-   251.448,
-   251.594
+   124.643,
+   124.833
   ],
   "fault": [
-   252.17,
-   252.315
-  ],
-  "bw_w_fault": [
-   252.891,
-   253.036
-  ],
-  "bw_r_fault": [
-   253.612,
-   253.757
-  ],
-  "bw_w_live": [
-   254.333,
-   254.479
-  ],
-  "bw_r_live": [
-   255.055,
-   255.2
+   125.409,
+   125.6
   ]
  },
  "refglob": "*",

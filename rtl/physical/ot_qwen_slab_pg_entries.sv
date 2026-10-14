@@ -11,7 +11,7 @@ module ot_qwen_slab_pg_core #(
     parameter integer SCALE_BANKS = 16,
     parameter integer COLS = 4,             // macro columns: banks c*BPC .. c*BPC+BPC-1 share a column copy
     parameter integer MUL_LAT = 6,
-    parameter integer BW_FIFO = 1,
+    parameter integer BW_FIFO = 0,
     // Timing-only options (values and order unchanged; default off = the S3 RTL):
     //   IN_STAGE 1: one register stage in front of every multiplier (operands and valid, placed beside it), so
     //               the boundary register res_q -> multiplier wire is its own cycle.  +1 cycle per ME op.
@@ -49,14 +49,6 @@ module ot_qwen_slab_pg_core #(
     input  wire              clk,
     input  wire              rst_n,
     // block word in (the block's forwarded clock) and on to the tree top
-    input  wire              bw_clk,
-    input  wire              bw_rst_n,
-    input  wire              bw_v,
-    output wire              bw_rdy,
-    input  wire [W*32-1:0]   bw_d,
-    output wire              tw_v,
-    input  wire              tw_rdy,
-    output wire [W*32-1:0]   tw_d,
     // instruction tag at request time (the RTL's pre_tag + its valid line tap)
     input  wire              p_v,
     input  wire              p_last, p_oen, p_amax, p_rmax, p_wsrc, p_mmode,
@@ -76,8 +68,6 @@ module ot_qwen_slab_pg_core #(
     output wire [1+32+NW-1:0] am_top,
     output wire              am_rmax,
     output wire              fault,
-    output wire              bw_w_fault, bw_r_fault, bw_w_live, bw_r_live
-,
     output wire core_gre1,
     output wire [AW-1:0] core_addr1,
     input wire [COLS*256-1:0] col_m5,
@@ -87,8 +77,7 @@ module ot_qwen_slab_pg_core #(
     output wire [255:0] lane_s,
     input wire [W*32-1:0] lane_y,
     input wire [W-1:0] lane_vo,
-    input wire [2*W-1:0] lane_err
-);
+    input wire [2*W-1:0] lane_err);
     localparam integer LW = $clog2(W);
     localparam integer BPC = SCALE_BANKS / COLS;
     localparam integer LEAD = 8 + SCALE_PAIR; // tag pins -> multiplier input (see header, 1.)
@@ -100,7 +89,6 @@ module ot_qwen_slab_pg_core #(
     ot_qwen_slab_pg_rcopy #(.AW(1)) u_rs0 (.clk(clk), .gre(rst_n), .addr(1'b0), .gre_q(rs0), .addr_q());
     ot_qwen_slab_pg_rcopy #(.AW(1)) u_rs  (.clk(clk), .gre(rs0), .addr(1'b0), .gre_q(rs), .addr_q());
     ot_qwen_slab_pg_rcopy #(.AW(1)) u_rsb (.clk(clk), .gre(rs0), .addr(1'b0), .gre_q(rs_bw), .addr_q());
-    ot_qwen_slab_pg_rcopy #(.AW(1)) u_bwr (.clk(bw_clk), .gre(bw_rst_n), .addr(1'b0), .gre_q(bw_rs), .addr_q());
 
     // ---- boundary registers (cycle 1) ---------------------------------------------------------------
     reg              t_v, t_last, t_oen, t_amax, t_rmax, t_wsrc, t_mmode;
@@ -401,16 +389,6 @@ module ot_qwen_slab_pg_core #(
     end endgenerate
     assign {am_tv, am_rmax, am_top} = am_out;
 
-    // ---- block-word crossing FIFO (decision C) ----------------------------------------------------
-    generate if (BW_FIFO != 0) begin : g_bw
-        ot_meso_fifo #(.W(W*32), .ENABLE(1)) u_bw (
-            .wclk(bw_clk), .wrst_n(bw_rs), .w_v(bw_v), .w_rdy(bw_rdy), .w_d(bw_d),
-            .rclk(clk), .rrst_n(rs_bw), .r_v(tw_v), .r_rdy(tw_rdy), .r_d(tw_d),
-            .w_live(bw_w_live), .r_live(bw_r_live), .w_fault(bw_w_fault), .r_fault(bw_r_fault));
-    end else begin : g_nobw
-        assign bw_rdy = 1'b0; assign tw_v = 1'b0; assign tw_d = {W*32{1'b0}};
-        assign bw_w_live = 1'b0; assign bw_r_live = 1'b0; assign bw_w_fault = 1'b0; assign bw_r_fault = 1'b0;
-    end endgenerate
 endmodule
 
 module ot_qwen_slab_pg_entries #(
@@ -423,7 +401,7 @@ module ot_qwen_slab_pg_entries #(
     parameter integer SCALE_BANKS = 16,
     parameter integer COLS = 4,             // macro columns: banks c*BPC .. c*BPC+BPC-1 share a column copy
     parameter integer MUL_LAT = 6,
-    parameter integer BW_FIFO = 1,
+    parameter integer BW_FIFO = 0,
     // Timing-only options (values and order unchanged; default off = the S3 RTL):
     //   IN_STAGE 1: one register stage in front of every multiplier (operands and valid, placed beside it), so
     //               the boundary register res_q -> multiplier wire is its own cycle.  +1 cycle per ME op.
@@ -498,6 +476,11 @@ module ot_qwen_slab_pg_entries #(
     output wire              fault,
     output wire              bw_w_fault, bw_r_fault, bw_w_live, bw_r_live
 );
+`ifndef SYNTHESIS
+    initial if (BW_FIFO != 0) $fatal(1, "slab entries core supports production BW_FIFO=0; FIFO path requires a separate leaf");
+`endif
+    assign bw_rdy=1'b0; assign tw_v=1'b0; assign tw_d={W*32{1'b0}};
+    assign bw_w_fault=1'b0; assign bw_r_fault=1'b0; assign bw_w_live=1'b0; assign bw_r_live=1'b0;
     localparam integer BPC = SCALE_BANKS / COLS;
     wire core_gre1, core_rs0;
     wire [AW-1:0] core_addr1;
@@ -517,8 +500,7 @@ module ot_qwen_slab_pg_entries #(
 `else
     ot_qwen_slab_pg_core #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .GID(GID), .SCALE_BANKS(SCALE_BANKS), .COLS(COLS), .MUL_LAT(MUL_LAT), .BW_FIFO(BW_FIFO), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT), .S5_CTL(S5_CTL), .SCALE_PAIR(SCALE_PAIR), .OREG(OREG), .MUL_KCP(MUL_KCP), .BANDF(BANDF), .TCUT(TCUT), .SMIN(SMIN), .SMAX(SMAX)) u_core (
 `endif
-        .clk(clk), .rst_n(rst_n), .bw_clk(bw_clk), .bw_rst_n(bw_rst_n), .bw_v(bw_v), .bw_rdy(bw_rdy), .bw_d(bw_d), .tw_v(tw_v), .tw_rdy(tw_rdy), .tw_d(tw_d), .p_v(p_v), .p_last(p_last), .p_oen(p_oen), .p_amax(p_amax), .p_rmax(p_rmax), .p_wsrc(p_wsrc), .p_mmode(p_mmode), .p_split(p_split), .p_nb(p_nb), .p_lb(p_lb), .p_nout(p_nout), .p_sbase(p_sbase), .p_oa(p_oa), .p_ots(p_ots), .res_in(res_in), .o_we(o_we), .o_addr(o_addr), .o_mask(o_mask), .o_data(o_data), .ov(ov), .am_tv(am_tv), .am_top(am_top), .am_rmax(am_rmax), .fault(fault), .bw_w_fault(bw_w_fault), .bw_r_fault(bw_r_fault), .bw_w_live(bw_w_live), .bw_r_live(bw_r_live),
-        .core_gre1(core_gre1), .core_addr1(core_addr1), .col_m5(core_col_m5), .core_rs0(core_rs0), .lane_v(lane_v), .lane_ws(lane_ws), .lane_a(lane_a), .lane_s(lane_s), .lane_y(lane_y), .lane_vo(lane_vo), .lane_err(lane_err));
+        .clk(clk), .rst_n(rst_n), .p_v(p_v), .p_last(p_last), .p_oen(p_oen), .p_amax(p_amax), .p_rmax(p_rmax), .p_wsrc(p_wsrc), .p_mmode(p_mmode), .p_split(p_split), .p_nb(p_nb), .p_lb(p_lb), .p_nout(p_nout), .p_sbase(p_sbase), .p_oa(p_oa), .p_ots(p_ots), .res_in(res_in), .o_we(o_we), .o_addr(o_addr), .o_mask(o_mask), .o_data(o_data), .ov(ov), .am_tv(am_tv), .am_top(am_top), .am_rmax(am_rmax), .fault(fault), .core_gre1(core_gre1), .core_addr1(core_addr1), .col_m5(core_col_m5), .core_rs0(core_rs0), .lane_v(lane_v), .lane_ws(lane_ws), .lane_a(lane_a), .lane_s(lane_s), .lane_y(lane_y), .lane_vo(lane_vo), .lane_err(lane_err));
     wire [3:0] col_ck = {ck_col3,ck_col2,ck_col1,ck_col0};
     wire [3:0] lane_ck = {ck_lane3,ck_lane2,ck_lane1,ck_lane0};
     genvar c;

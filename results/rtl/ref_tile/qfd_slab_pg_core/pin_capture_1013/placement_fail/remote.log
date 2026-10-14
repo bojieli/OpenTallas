@@ -1,0 +1,17 @@
+GATE_FLOW_RC=0 GATE_FLOW_S=51
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN ot_qwen_slab_pg_core cells 36,885 flops 8,974 depth 390.1 ps util 0.1197 reach 0.0 um (0.7 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=8974 root=port:clk rule=PASS: 8,974 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 12.0% outside 45%-65% (std 3821 + macro 0 um2 in 31931 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "bw_clk": [1, false], "bw_rst_n": [1, false], "bw_v": [1, false], "bw_rdy": [1, false], "bw_d": [null, true], "tw_v": [1, false], "tw_rdy": [1, false], "tw_d": [null, true], "p_v": [1, false], "p_last": [1, false], "p_oen": [1, false], "p_amax": [1, false], "p_rmax": [1, false], "p_wsrc": [1, false], "p_mmode": [1, false], "p_split": [null, true], "p_nb": [null, true], "p_lb": [null, true], "p_nout": [null, true], "p_sbase": [null, true], "p_oa": [null, true], "p_ots": [null, true], "res_in": [null, true], "o_we": [1, false], "o_addr": [null, true], "o_mask": [null, true], "o_data": [null, true], "ov": [1, false], "am_tv": [1, false], "am_top": [null, true], "am_rmax": [1, false], "fault": [1, false], "bw_w_fault": [1, false], "bw_r_fault": [1, false], "bw_w_live": [1, false], "bw_r_live": [1, false], "core_gre1": [1, false], "core_addr1": [null, true], "col_m5": [null, true], "core_rs0": [1, false], "lane_v": [null, true], "lane_ws": [null, true], "lane_a": [null, true], "lane_s": [null, true], "lane_y": [null, true], "lane_vo": [null, true], "lane_err": [null, true]}
+GATE_AREA    Chip area for top module '\ot_qwen_slab_pg_core': 4836.360960
+GATE_CTS_RC=2
+GATE_CTSERR [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.
+GATE_GPLD global_placement -density 0.55 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5500
+GATE_CK_RC=1
+GATE_DONE
+
+--- stderr
+ot-heavy: request 16G is charged 10G (family 'ref_gate_*' seed 10G (class 'ref_gate_qfd_slab_pg_core_#-#.sh' not measured yet)); the cap stays 16G

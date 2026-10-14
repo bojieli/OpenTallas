@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  259.2,
+  129.6,
   129.6
  ],
  "core": [
   2.16,
   2.16,
-  257.03999999999996,
+  127.44,
   127.44
  ],
  "why": "spec outline",
@@ -64,14 +64,6 @@
   "N": [
    "clk",
    "rst_n",
-   "bw_clk",
-   "bw_rst_n",
-   "bw_v",
-   "bw_rdy",
-   "bw_d",
-   "tw_v",
-   "tw_rdy",
-   "tw_d",
    "o_we",
    "o_addr",
    "o_mask",
@@ -80,11 +72,7 @@
    "am_tv",
    "am_top",
    "am_rmax",
-   "fault",
-   "bw_w_fault",
-   "bw_r_fault",
-   "bw_w_live",
-   "bw_r_live"
+   "fault"
   ]
  },
  "clock_port": "clk",
