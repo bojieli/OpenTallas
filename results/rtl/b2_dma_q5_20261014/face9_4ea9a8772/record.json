@@ -24,7 +24,7 @@
   "total_candidate_cycles": 65177,
   "total_flat_cycles": 60365,
   "pricing": "UNMEASURED-vs-price unchanged",
-  "all7_mutants": "LIVE final-source rerun; earliercb6 all7 observedFAIL",
+  "all7_mutants": "OBSERVED_FAIL on final source4ea9a8772, -GNREC=4, launcher exit0 on ot-epyc1tb",
   "physical": "UNQUALIFIED; four successor source-bound gates pending; nine roots exported; parent geometry UNASSIGNED",
   "reservation_change": "No additional acceptance while existing m_pend charged; preserves one posted background token promised by adapter and prevents completion masking during a new I-list"
 }
