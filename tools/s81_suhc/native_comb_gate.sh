@@ -1,7 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 mode=$1
-out=$2
+mkdir -p "$2"
+out=$(realpath "$2")
 fixture=''
 for candidate in /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl /srv/opentallas-scratch2/claude/s81-suhc/su_cases_v2_ildr.pkl "$HOME/s81-suhc/su_cases_v2_ildr.pkl"; do
     if [ -s "$candidate" ]; then fixture=$candidate; break; fi
