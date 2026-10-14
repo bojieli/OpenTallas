@@ -89,7 +89,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--psram', type=int, choices=[0, 1], required=True)
-    ap.add_argument('--yosys', default='yosys')
+    ap.add_argument('--yosys', default=str(Path.home() / '.local/opentallas-tools/yosys-0.68/bin/yosys'))
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=False)
     params = {'G': 3072, 'D': 8, 'NW': 18, 'SW': 64, 'CRED': 32, 'RB': 3,
