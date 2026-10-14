@@ -1,0 +1,15 @@
+{
+  "historical_source": "1eb017b62",
+  "historical_witness_exit": 1,
+  "canonical_source_commit": "ef86feaec",
+  "canonical_combined_actual_reset_exit": 0,
+  "synthesized_witness_bits": 2,
+  "reset_function": "epoch_n && actual local_n, one actual async reset pin; stopped source clock still asynchronously clears on either input assertion",
+  "numeric_and_actual_full_startup_replay": "PENDING_NEW_SOURCE",
+  "physical_admission": false,
+  "sources": {
+    "rtl/dsrom_sys/s81_ctrl/q_startup_candidate/ot_s81_qx_pq_startup_core.sv": "9605c9baf0e68042460fe9a6618c0cb0250137a1c090c3c4ae02506f9810277c",
+    "results/physical/qelem_internal_1013/q_startup_witness_synthesis/historical_multi_edge_witness.sv": "ece7418c1aadc208d0c278f030cc651576c72cce8e1f2bd066b800c8134123a5",
+    "results/physical/qelem_internal_1013/q_startup_witness_synthesis/combined_actual_reset_witness.sv": "76b017a3576109698ef0de85ceda529b1eb1d90aefa01bde2f14ae681bbfd3d7"
+  }
+}
