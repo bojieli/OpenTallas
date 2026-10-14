@@ -1,0 +1,10 @@
+QUERY_STREAM local reset flushed old unrecorded tuples before fresh full210 packet
+QUERY_STREAM depth=8 stall=0 words=192 real_records=192 unallocated=0 posts=192 interval=191 first_pop_delta=2 peak=1 paused=2 last_pop=194
+QUERY_STREAM depth=2 stall=0 words=192 real_records=192 unallocated=0 posts=192 interval=286 first_pop_delta=2 peak=1 paused=97 last_pop=289
+QUERY_STREAM depth=8 stall=1 words=192 real_records=192 unallocated=0 posts=192 interval=351 first_pop_delta=35 peak=8 paused=167 last_pop=359
+QUERY_STREAM depth=2 stall=1 words=192 real_records=192 unallocated=0 posts=192 interval=495 first_pop_delta=35 peak=2 paused=306 last_pop=498
+PASS live query queue full210 fields/record-only-pop/full stalls
+- /srv/opentallas-scratch/codex/qwen-query-stream-1014/tb_qwen_query_stream_queue.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.000 s; speed 12.427 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

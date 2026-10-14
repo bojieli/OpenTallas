@@ -1,0 +1,7 @@
+BOUNDARY_OFFER base=201 old_outstanding=46 numeric_delivered=17
+BOUNDARY_GRANT base=301 old_outstanding=0 queueempty=1 source49=1 oldbank_unsealed=1
+PASS boundary actual2accept112words112queryretire old49_queueempty_ledgerzero=1 held_offer_old_posts=47 peakqueue=8 ledgerpeak=48 base=478 secondaccept=303 seals=0
+- rtl/test/qwen_kv_die/tb_qwen_numeric_merged_boundary.sv:272: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.050 s; speed 96.383 us/s
+- Verilator: cpu 0.050 s on 1 threads; allocated 20 MB

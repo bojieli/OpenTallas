@@ -1,0 +1,101 @@
+{
+  "source_sha256": "fd3fceb3b79f4a2c525b2e5a745f6445474161f289731ef076edd3a84a435e2e",
+  "fixture_sha256": "03d853d2f6cc8904e003ff6720d4dc231446d2251dbcc8082f98beca5ee3e414",
+  "cases": [
+    {
+      "case": "positive",
+      "source_sha256": "fd3fceb3b79f4a2c525b2e5a745f6445474161f289731ef076edd3a84a435e2e",
+      "exit_code": 0,
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_qwen_query_stream_queue",
+        "--Mdir",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/obj_positive",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/positive.sv",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/tb_qwen_query_stream_queue.sv"
+      ]
+    },
+    {
+      "case": "late_tuple",
+      "source_sha256": "9f4557d6982787b151dd6ecc011cda1fe0c72b07513008641192087d5f7a04a9",
+      "exit_code": 1,
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_qwen_query_stream_queue",
+        "--Mdir",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/obj_late_tuple",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/late_tuple.sv",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/tb_qwen_query_stream_queue.sv"
+      ]
+    },
+    {
+      "case": "truncated_seq",
+      "source_sha256": "1328fdcd22454c2c5b12d84f890ab4cafa7038f472b5bf601e7ffcd6f8817c6c",
+      "exit_code": 1,
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_qwen_query_stream_queue",
+        "--Mdir",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/obj_truncated_seq",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/truncated_seq.sv",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/tb_qwen_query_stream_queue.sv"
+      ]
+    },
+    {
+      "case": "post_as_pop",
+      "source_sha256": "902a8e1d107b3e551635532018bc5352332496b29f89dc719316f18623ac3c7c",
+      "exit_code": 1,
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_qwen_query_stream_queue",
+        "--Mdir",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/obj_post_as_pop",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/post_as_pop.sv",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/tb_qwen_query_stream_queue.sv"
+      ]
+    },
+    {
+      "case": "unreserved_post",
+      "source_sha256": "f8982063e1bd2cb3d9bd93a06f308e139f3fb9ec71413cc01e5b013efb3caf4b",
+      "exit_code": 1,
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_qwen_query_stream_queue",
+        "--Mdir",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/obj_unreserved_post",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/unreserved_post.sv",
+        "/srv/opentallas-scratch/codex/qwen-query-stream-1014/tb_qwen_query_stream_queue.sv"
+      ]
+    }
+  ]
+}
