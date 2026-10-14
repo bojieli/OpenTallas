@@ -46,14 +46,21 @@ module ot_hgi_sfu_ctl_chunk #(
  end
  assign q=r[1];assign vo=rv[1];
  // Data/valid pins are registered. coll/busy are status reductions: registered relay stillrequired physically.
- generate if(STATUS_REG)begin:g_registered_status
+ generate if(STATUS_REG==2)begin:g_local_status_terms
+  reg [STAGES:1] collision_q,occupancy_q;
+  reg c,b,front_q;
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n)begin collision_q<=0;occupancy_q<=0;front_q<=0;c<=0;b<=0;end
+   else begin collision_q<=collision;occupancy_q<=rv;front_q<=PIN_CAPTURE&&v_pin&&depth(sfu_pin)!=0;c<=|collision_q;b<=(|occupancy_q)||front_q;end
+  assign coll=c;assign busy=b;
+ end else if(STATUS_REG==1)begin:g_registered_status
   reg c,b;
   always @(posedge clk or negedge rst_n)
    if(!rst_n)begin c<=1'b0;b<=1'b0;end
-   else begin c<=|collision;b<=|rv;end
+   else begin c<=|collision;b<=(|rv)||(PIN_CAPTURE&&v_pin&&depth(sfu_pin)!=0);end
   assign coll=c;assign busy=b;
  end else begin:g_legacy_status
-  assign coll=|collision;assign busy=|rv;
+  assign coll=|collision;assign busy=(|rv)||(PIN_CAPTURE&&v_pin&&depth(sfu_pin)!=0);
  end endgenerate
  initial if((W!=75&&W!=60)||STAGES!=138||(OFFSET!=0&&OFFSET!=138))
   $fatal(1,"SFU chronological chunk requires75/60bit x138stage exact partitions");

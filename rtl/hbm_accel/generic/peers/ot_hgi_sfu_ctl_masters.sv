@@ -4,7 +4,7 @@ module ot_hgi_sfu_ctl75lo(
  input wire clk,rst_n,v,tail_v, input wire [2:0] sfu,
  input wire [74:0] d,tail_d, output wire [74:0] q, output wire vo,coll,busy
 );
- ot_hgi_sfu_ctl_chunk #(.W(75),.OFFSET(0),.PIN_CAPTURE(1),.STATUS_REG(1)) u (
+ ot_hgi_sfu_ctl_chunk #(.W(75),.OFFSET(0),.PIN_CAPTURE(1),.STATUS_REG(2)) u (
  .clk(clk),.rst_n(rst_n),.v(v),.sfu(sfu),.d(d),.tail_d(tail_d),.tail_v(tail_v),.q(q),.vo(vo),.coll(coll),.busy(busy));
 endmodule
 
@@ -12,7 +12,7 @@ module ot_hgi_sfu_ctl75hi(
  input wire clk,rst_n,v,tail_v, input wire [2:0] sfu,
  input wire [74:0] d,tail_d, output wire [74:0] q, output wire vo,coll,busy
 );
- ot_hgi_sfu_ctl_chunk #(.W(75),.OFFSET(138),.PIN_CAPTURE(1),.STATUS_REG(1)) u (
+ ot_hgi_sfu_ctl_chunk #(.W(75),.OFFSET(138),.PIN_CAPTURE(1),.STATUS_REG(2)) u (
  .clk(clk),.rst_n(rst_n),.v(v),.sfu(sfu),.d(d),.tail_d(tail_d),.tail_v(tail_v),.q(q),.vo(vo),.coll(coll),.busy(busy));
 endmodule
 
@@ -20,7 +20,7 @@ module ot_hgi_sfu_ctl60lo(
  input wire clk,rst_n,v,tail_v, input wire [2:0] sfu,
  input wire [59:0] d,tail_d, output wire [59:0] q, output wire vo,coll,busy
 );
- ot_hgi_sfu_ctl_chunk #(.W(60),.OFFSET(0),.PIN_CAPTURE(1),.STATUS_REG(1)) u (
+ ot_hgi_sfu_ctl_chunk #(.W(60),.OFFSET(0),.PIN_CAPTURE(1),.STATUS_REG(2)) u (
  .clk(clk),.rst_n(rst_n),.v(v),.sfu(sfu),.d(d),.tail_d(tail_d),.tail_v(tail_v),.q(q),.vo(vo),.coll(coll),.busy(busy));
 endmodule
 
@@ -28,7 +28,7 @@ module ot_hgi_sfu_ctl60hi(
  input wire clk,rst_n,v,tail_v, input wire [2:0] sfu,
  input wire [59:0] d,tail_d, output wire [59:0] q, output wire vo,coll,busy
 );
- ot_hgi_sfu_ctl_chunk #(.W(60),.OFFSET(138),.PIN_CAPTURE(1),.STATUS_REG(1)) u (
+ ot_hgi_sfu_ctl_chunk #(.W(60),.OFFSET(138),.PIN_CAPTURE(1),.STATUS_REG(2)) u (
  .clk(clk),.rst_n(rst_n),.v(v),.sfu(sfu),.d(d),.tail_d(tail_d),.tail_v(tail_v),.q(q),.vo(vo),.coll(coll),.busy(busy));
 endmodule
 

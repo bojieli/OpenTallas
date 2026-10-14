@@ -139,5 +139,29 @@
     ],
     "binding": "OT_HARD_CHILDREN exact unique master names with no # overrides; soft branch chronological genericchunk exact params",
     "reason": "one top name cannot represent distinct W75/W60 and OFFSET0/138 ETMs simultaneously"
+  },
+  "c2_physical_alternative": {
+    "outlines_um": {
+      "75lo": [
+        120.96,
+        97.2
+      ],
+      "75hi": [
+        120.96,
+        97.2
+      ],
+      "60lo": [
+        110.16,
+        88.56
+      ],
+      "60hi": [
+        110.16,
+        88.56
+      ]
+    },
+    "basis": "Actual c1 synth areas5582/5589/4491/4480um2, c2 rounded estimates5600/4500, targetutil0.52 aspect1.25",
+    "registered_status": "STATUS_REG2: local chronological collision and occupied-state snapshots register before global status reduction. PIN_CAPTURE1 collision observation is3edges after original line collision; busy is2edges delayed, including pending registered injection. None collision remains immediate at external bypass. Composed fault/idle/retire still open.",
+    "data_valid": "Original chronological output edge unchanged. No SDC multicycle/phase changes. Whole16 lane oracle repeat required for modified status graph.",
+    "slot": "UNASSIGNED"
   }
 }

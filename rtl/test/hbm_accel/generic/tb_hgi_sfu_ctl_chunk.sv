@@ -17,17 +17,17 @@ wire now=v&&sfu==0;
 assign actual=now?d:lo;
 wire av=now||lov;
 wire ac=hic||loc||(now&&lov);
-reg expected_status_coll=0,expected_status_busy=0;
+reg [3:0] expected_coll=0,expected_busy=0;
 always @(posedge clk or negedge rst_n)
- if(!rst_n)begin expected_status_coll<=0;expected_status_busy<=0;end
- else begin expected_status_coll<=|oracle.g_line.cl;expected_status_busy<=eb;end
+ if(!rst_n)begin expected_coll<=0;expected_busy<=0;end
+ else begin expected_coll<={expected_coll[2:0],|oracle.g_line.cl};expected_busy<={expected_busy[2:0],eb};end
 integer checks=0,valid=0,collisions=0,wraps=0;
 reg [31:0] lfsr=32'h12345678;
 always @(negedge clk)if(rst_n)begin
  if(av!==ev||(!PIN_CAPTURE&&!STATUS_REG&&(ac!==ec||(hib||lob)!==eb))||(ev&&actual!==expected))
   $fatal(1,"CHUNK_MISMATCH cycle%0d sfu%0d valid%0d/%0d",checks,sfu,av,ev);
- if(STATUS_REG&&!PIN_CAPTURE&&(ac!==(expected_status_coll||(now&&lov))||(hib||lob)!==expected_status_busy))
-  $fatal(1,"REGISTERED_STATUS_MISMATCH");
+ if((STATUS_REG||PIN_CAPTURE)&&(ac!==((STATUS_REG+PIN_CAPTURE ? expected_coll[STATUS_REG+PIN_CAPTURE-1] : (|oracle.g_line.cl))||(now&&lov))||(hib||lob)!==(STATUS_REG ? expected_busy[STATUS_REG-1] : eb)))
+  $fatal(1,"REGISTERED_STATUS_MISMATCH cycle%0d coll%0d/%0d busy%0d/%0d",checks,ac,(expected_coll[STATUS_REG+PIN_CAPTURE-1]||(now&&lov)),hib||lob,expected_busy[STATUS_REG-1]);
  checks++;if(ev)valid++;if(ec)collisions++;
 end
 initial begin
