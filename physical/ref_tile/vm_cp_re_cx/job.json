@@ -1,5 +1,5 @@
 {
- "name": "vm_cp_re_cx-cx6-COMMIT",
+ "name": "vm_cp_re_cx-cx6-7ebd7d5ad",
  "block": "vm_cp_re",
  "ref_tile": true,
  "owner": "Claude:vm8-face4-1013",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/vm8-face-1013",
-  "commit": "COMMIT",
+  "commit": "7ebd7d5ad",
   "extra_paths": [
    "physical/hbm_accel_die_views/vm",
    "physical/hbm_accel_die_views/common",
@@ -99,7 +99,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/vm_cp_re_cx/vm_cp_re_cx-cx6-COMMIT"
+   "to": "results/rtl/ref_tile/vm_cp_re_cx/vm_cp_re_cx-cx6-7ebd7d5ad"
   }
  ],
  "cycles_added": 0,
