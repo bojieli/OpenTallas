@@ -1,0 +1,17 @@
+{
+  "status": "requested_not_adopted",
+  "partial_known_ownstate_pass": true,
+  "checker": "tools/s81_ph/s81_be_native_placement.py",
+  "command": "python3 tools/s81_ph/s81_be_native_placement.py",
+  "expected_exit": 1,
+  "validation": "42cells,692bits,220RTLsourcebitmapping,696knownpairs,226unassignedsourcepairs; actual CTS candidate pin coordinates and actual BE_SL c15e2bf6a LEF",
+  "historical_reports": "Initial placement and cut failures preserved. Earlier local-cut evaluators included truncated windows; final uses full five-bin valid windows, matching the existing FE floorplan checker.",
+  "broader_obligations": [
+    "Selected child source/views not bound",
+    "No adopted die slot",
+    "No source-clock/reset driver reference supplied",
+    "No complete parent buses or pin-align audit"
+  ],
+  "latency_delta_cycles": 0,
+  "area_delta_um2": 26642.02752
+}
