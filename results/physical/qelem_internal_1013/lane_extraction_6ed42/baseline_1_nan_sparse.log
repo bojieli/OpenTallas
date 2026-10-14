@@ -1,0 +1,10 @@
+NAN_ROWS ref=7123
+SEQ matched=7785 dropped_at_reset=2 extra_delay_cycles min=9 max=24 mean_x1000=16695
+SEQ extra_delay_hist 0 0 0 0 0 0 0 0 0 9 35 299 106 1066 829 5441
+SEQ serviced_wait_beats=71552
+QZ=1 QY=1 QX=10 FL=2
+PASS QP=1 XS=1 CAP=0 P1=1 L=2 compared=2562788 exempt=106 seed=1 cycles=2562848 gated_edges=2526089 closed_cycles=37226 hits=192953 issues=275433 rows=7787 nonzero=7787 classes=255 wraps=5912 qadv=646 restarts=356 rejected=12724 go_closed=437 go_drain=41 go_open=18 resets=20
+- /srv/opentallas-scratch/codex/qelem-qh-6ed42/src/rtl/test/tb_dsrom_qx_exact.sv:405: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3ms; walltime 54.276 s; speed 47.220 us/s
+- Verilator: cpu 54.273 s on 1 threads; allocated 9 MB

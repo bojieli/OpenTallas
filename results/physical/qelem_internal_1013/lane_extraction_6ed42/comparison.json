@@ -1,0 +1,87 @@
+{
+  "source_commit": "6ed42d12c",
+  "verdict": "PASS_SAME_EPOCHS_WITH_MUTANT_FAILURE",
+  "cases": [
+    {
+      "case": "1",
+      "identical_coverage_and_latency": true,
+      "positive_summary": [
+        "NAN_ROWS ref=7801",
+        "SEQ matched=7799 dropped_at_reset=2 extra_delay_cycles min=9 max=23 mean_x1000=16739",
+        "SEQ extra_delay_hist 0 0 0 0 0 0 0 0 0 3 28 261 98 1027 778 5604",
+        "SEQ serviced_wait_beats=69463",
+        "QZ=1 QY=1 QX=10 FL=2",
+        "PASS QP=1 XS=1 CAP=0 P1=1 L=2 compared=2602880 exempt=81 seed=1 cycles=2602924 gated_edges=2566019 closed_cycles=37364 hits=196793 issues=274753 rows=7801 nonzero=6519 classes=255 wraps=5232 qadv=649 restarts=382 rejected=13133 go_closed=434 go_drain=34 go_open=19 resets=15"
+      ]
+    },
+    {
+      "case": "2",
+      "identical_coverage_and_latency": true,
+      "positive_summary": [
+        "NAN_ROWS ref=7778",
+        "SEQ matched=7769 dropped_at_reset=9 extra_delay_cycles min=9 max=25 mean_x1000=16668",
+        "SEQ extra_delay_hist 0 0 0 0 0 0 0 0 0 4 18 364 112 1071 777 5423",
+        "SEQ serviced_wait_beats=73541",
+        "QZ=1 QY=1 QX=10 FL=2",
+        "PASS QP=1 XS=1 CAP=0 P1=1 L=2 compared=2518665 exempt=81 seed=2 cycles=2518706 gated_edges=2481855 closed_cycles=37315 hits=189049 issues=274001 rows=7778 nonzero=6393 classes=255 wraps=5056 qadv=598 restarts=352 rejected=12147 go_closed=433 go_drain=41 go_open=20 resets=15"
+      ]
+    },
+    {
+      "case": "3",
+      "identical_coverage_and_latency": true,
+      "positive_summary": [
+        "NAN_ROWS ref=7839",
+        "SEQ matched=7833 dropped_at_reset=6 extra_delay_cycles min=9 max=25 mean_x1000=16744",
+        "SEQ extra_delay_hist 0 0 0 0 0 0 0 0 0 8 7 306 113 1040 837 5522",
+        "SEQ serviced_wait_beats=76392",
+        "QZ=1 QY=1 QX=10 FL=2",
+        "PASS QP=1 XS=1 CAP=0 P1=1 L=2 compared=2615902 exempt=86 seed=3 cycles=2615952 gated_edges=2580452 closed_cycles=35956 hits=196913 issues=279049 rows=7839 nonzero=6455 classes=255 wraps=6064 qadv=637 restarts=387 rejected=12608 go_closed=435 go_drain=32 go_open=20 resets=16"
+      ]
+    },
+    {
+      "case": "4",
+      "identical_coverage_and_latency": true,
+      "positive_summary": [
+        "NAN_ROWS ref=7535",
+        "SEQ matched=7531 dropped_at_reset=4 extra_delay_cycles min=9 max=24 mean_x1000=16725",
+        "SEQ extra_delay_hist 0 0 0 0 0 0 0 0 0 2 17 289 55 959 867 5342",
+        "SEQ serviced_wait_beats=66408",
+        "QZ=1 QY=1 QX=10 FL=2",
+        "PASS QP=1 XS=1 CAP=0 P1=1 L=2 compared=2474767 exempt=106 seed=4 cycles=2474825 gated_edges=2436718 closed_cycles=38579 hits=186449 issues=261793 rows=7535 nonzero=6302 classes=255 wraps=5624 qadv=640 restarts=376 rejected=12207 go_closed=438 go_drain=34 go_open=20 resets=20"
+      ]
+    },
+    {
+      "case": "1_nan_sparse",
+      "identical_coverage_and_latency": true,
+      "positive_summary": [
+        "NAN_ROWS ref=7123",
+        "SEQ matched=7785 dropped_at_reset=2 extra_delay_cycles min=9 max=24 mean_x1000=16695",
+        "SEQ extra_delay_hist 0 0 0 0 0 0 0 0 0 9 35 299 106 1066 829 5441",
+        "SEQ serviced_wait_beats=71552",
+        "QZ=1 QY=1 QX=10 FL=2",
+        "PASS QP=1 XS=1 CAP=0 P1=1 L=2 compared=2562788 exempt=106 seed=1 cycles=2562848 gated_edges=2526089 closed_cycles=37226 hits=192953 issues=275433 rows=7787 nonzero=7787 classes=255 wraps=5912 qadv=646 restarts=356 rejected=12724 go_closed=437 go_drain=41 go_open=18 resets=20"
+      ]
+    }
+  ],
+  "additional_cycles": 0,
+  "ot_unit": "oth-ubuntu-490603-1791961321",
+  "physical_admission": false,
+  "production_PQ1_binding": "OPEN",
+  "mutant": "[2086000] %Fatal: tb_dsrom_qx_exact.sv:156: Assertion failed in tb_dsrom_qx_exact.seq_push: sequence mismatch key=1048 cycle=2086 dut 3fa79a09800103 ref 3fb0fae9800103",
+  "log_sha256": {
+    "baseline.build.log": "f581e8f0ef50cbd4d4e702251b4dd46180fadd8a54ed9beec81fe337dcf58cb5",
+    "baseline_1.log": "79a3196bfabf16579981d8e1c27cdccd33e8dfb0124b3fc84995c3cb84cdbb10",
+    "baseline_1_nan_sparse.log": "6c1003b7d92d99f0d6d2b71d2faea52f51a72d138c800c9c1e33284ec8911422",
+    "baseline_2.log": "6a01d78a6b76de87b2e52f0c599ac710353db1cc8a658215da2b3d5db74d95af",
+    "baseline_3.log": "af7a4cd256a9a52edd3f6bb8c45eaa8ca2034ad96fc61b5bfc68a1df33e0882d",
+    "baseline_4.log": "c19cc100ba092bbbab8fb36e7e648391fe0a6c44212e396deeb1f6f2fe0cc101",
+    "hardleaf.build.log": "17ca079e8b5d794051fcca2375bc52a6fba79b90fd48934ecdefddb6c02fd6c9",
+    "hardleaf_1.log": "051a9aec4d46d6bf258435b06b7447817d3ace2930350dd727212a43df0c6fa5",
+    "hardleaf_1_nan_sparse.log": "e221ebee691f97bd5de13d1e84291a666c8b7f9cfee53ae9258e8d24d595dfc1",
+    "hardleaf_2.log": "c844498f4646d5910787a178c350117cb8ff9e6a9130fc79839fd1e856abb70d",
+    "hardleaf_3.log": "b6bae2885c3591d446cc95ea96789b3baa6682b577a9004ef3e0ef84facb6e4e",
+    "hardleaf_4.log": "82eb531ea7bd102e69be7b900767840a6ee3aec8d72957a09dea517a94622ecf",
+    "mutant.build.log": "fcb7802150b5ec9eb36a8c3b28278d3e18fdbd6b01e99dd6392c6e188375f0e5",
+    "mutant_1.log": "c6b96bf8d982c130580bce26624a08752d3e16687d484bf681a41b19b41f7f81"
+  }
+}
