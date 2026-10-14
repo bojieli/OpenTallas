@@ -1,11 +1,11 @@
 {
- "verdict": "FAIL",
+ "verdict": "WARN",
  "items": [
   {
-   "severity": "FAIL",
-   "check": "macro_edge",
-   "message": "ot_sram_1r1w_128x256_m1_r2c2#0 6.5 um from the S core edge (< 20 um)",
-   "fix": "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+   "severity": "WARN",
+   "check": "util",
+   "message": "utilisation 37% outside 45%-60% (std 450 + macro 3894 in core 11645 um2)",
+   "fix": "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   },
   {
    "severity": "INFO",
