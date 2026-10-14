@@ -1,0 +1,1240 @@
+{
+ "schema": "opentallas.vm-new-station-clock-inventory.v1",
+ "status": "PROPOSED_ENTRIES_NOT_IMPLEMENTED_OR_PHASE_QUALIFIED",
+ "existing_scalar_clock_entries": 149,
+ "proposed_extra_entries": 27,
+ "proposed_total_entries": 176,
+ "actual_child_sink_count": 512,
+ "clock_root_limit": 15000,
+ "source_hashes": {
+  "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/insertion.json": "3fa993e9b7efdff3baa9b2857583f7e7e7f0577bf44956f984338df0d5238e8c",
+  "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t.lef": "9077b7e7aa5446a0464855e9ed339f706fed577e16de896a155d276328597498",
+  "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t_tt.lib": "59c3b9da98f6e480716cea42cfa97dec756443d790f5980011e5dff31653ca0c",
+  "results/arch/qwen_tp8_1012/rg6_bank_command_station_candidate.json": "b60711edc8050d738bdc0fedf0384826f25218877f6dbba953321787f4924dfd",
+  "results/arch/qwen_tp8_1012/rg6_row_station_candidate.json": "c66c71ed3868efd28ac1445237889dd86a8402ecae5c695d7077ec12712d1a5f",
+  "results/arch/qwen_tp8_1012/vm_rg6.json": "7d5c388cb79d0ee333451d123e5371af3e79cf524fdb9bca57a30657e7facfb4"
+ },
+ "legacy_measurement_clock_name": "ck",
+ "actual_unique_lib_and_LEF_clock_pin": "clk",
+ "clock_delivery_rule": "Per corner phi - actual childR - measured parent entrywire; missing clock corners fail closed. Geometric TT estimate is not compensation evidence.",
+ "setup_reserve_for_current_data_screens_ps": 210,
+ "hold_tree_ps": 100,
+ "note": "Legacy insertion measurement names ck; exported Lib/LEF unique scalar hard clock is clk. This is the real one-clock association accepted by shared generic-entry validator, not a second clock or fabricated insertion. Exact scalar child-port wiring required at implementation.",
+ "entries": [
+  {
+   "proposed_instance": "u_b0_cmd_station",
+   "proposed_parent_clock_port": "ck_b0_cmd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    69.12,
+    4.32
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    71.48400000000001,
+    4.362
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 4.362,
+   "TT_wire_only_diagnostic_ps": 3.3151200000000003,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b0_wd_station",
+   "proposed_parent_clock_port": "ck_b0_wd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    69.12,
+    138.24
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    71.48400000000001,
+    138.282
+   ],
+   "provisional_nearest_face": "W",
+   "geometric_minimum_entry_wire_um": 71.48400000000001,
+   "TT_wire_only_diagnostic_ps": 54.32784000000001,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b1_cmd_station",
+   "proposed_parent_clock_port": "ck_b1_cmd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    69.12,
+    209.51999999999998
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    71.48400000000001,
+    209.56199999999998
+   ],
+   "provisional_nearest_face": "W",
+   "geometric_minimum_entry_wire_um": 71.48400000000001,
+   "TT_wire_only_diagnostic_ps": 54.32784000000001,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b1_wd_station",
+   "proposed_parent_clock_port": "ck_b1_wd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    69.12,
+    343.44
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    71.48400000000001,
+    343.48199999999997
+   ],
+   "provisional_nearest_face": "W",
+   "geometric_minimum_entry_wire_um": 71.48400000000001,
+   "TT_wire_only_diagnostic_ps": 54.32784000000001,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b2_cmd_station",
+   "proposed_parent_clock_port": "ck_b2_cmd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    69.12,
+    414.71999999999997
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    71.48400000000001,
+    414.76199999999994
+   ],
+   "provisional_nearest_face": "W",
+   "geometric_minimum_entry_wire_um": 71.48400000000001,
+   "TT_wire_only_diagnostic_ps": 54.32784000000001,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b2_wd_station",
+   "proposed_parent_clock_port": "ck_b2_wd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    69.12,
+    548.64
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    71.48400000000001,
+    548.682
+   ],
+   "provisional_nearest_face": "W",
+   "geometric_minimum_entry_wire_um": 71.48400000000001,
+   "TT_wire_only_diagnostic_ps": 54.32784000000001,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b3_cmd_station",
+   "proposed_parent_clock_port": "ck_b3_cmd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    69.12,
+    619.92
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    71.48400000000001,
+    619.962
+   ],
+   "provisional_nearest_face": "W",
+   "geometric_minimum_entry_wire_um": 71.48400000000001,
+   "TT_wire_only_diagnostic_ps": 54.32784000000001,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b3_wd_station",
+   "proposed_parent_clock_port": "ck_b3_wd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    69.12,
+    753.8399999999999
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    71.48400000000001,
+    753.882
+   ],
+   "provisional_nearest_face": "W",
+   "geometric_minimum_entry_wire_um": 71.48400000000001,
+   "TT_wire_only_diagnostic_ps": 54.32784000000001,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b4_cmd_station",
+   "proposed_parent_clock_port": "ck_b4_cmd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    518.4,
+    4.32
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    520.764,
+    4.362
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 4.362,
+   "TT_wire_only_diagnostic_ps": 3.3151200000000003,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b4_wd_station",
+   "proposed_parent_clock_port": "ck_b4_wd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    518.4,
+    138.24
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    520.764,
+    138.282
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 138.282,
+   "TT_wire_only_diagnostic_ps": 105.09432000000001,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b5_cmd_station",
+   "proposed_parent_clock_port": "ck_b5_cmd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    518.4,
+    209.51999999999998
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    520.764,
+    209.56199999999998
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 209.56199999999998,
+   "TT_wire_only_diagnostic_ps": 159.26711999999998,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b5_wd_station",
+   "proposed_parent_clock_port": "ck_b5_wd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    518.4,
+    412.56
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    520.764,
+    412.602
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 412.602,
+   "TT_wire_only_diagnostic_ps": 313.57752,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b6_cmd_station",
+   "proposed_parent_clock_port": "ck_b6_cmd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    518.4,
+    481.68
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    520.764,
+    481.722
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 481.722,
+   "TT_wire_only_diagnostic_ps": 366.10872,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b6_wd_station",
+   "proposed_parent_clock_port": "ck_b6_wd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    518.4,
+    548.64
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    520.764,
+    548.682
+   ],
+   "provisional_nearest_face": "W",
+   "geometric_minimum_entry_wire_um": 520.764,
+   "TT_wire_only_diagnostic_ps": 395.78064,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b7_cmd_station",
+   "proposed_parent_clock_port": "ck_b7_cmd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    518.4,
+    619.92
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    520.764,
+    619.962
+   ],
+   "provisional_nearest_face": "N",
+   "geometric_minimum_entry_wire_um": 460.038,
+   "TT_wire_only_diagnostic_ps": 349.62888000000004,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b7_wd_station",
+   "proposed_parent_clock_port": "ck_b7_wd_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    518.4,
+    753.8399999999999
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    520.764,
+    753.882
+   ],
+   "provisional_nearest_face": "N",
+   "geometric_minimum_entry_wire_um": 326.11800000000005,
+   "TT_wire_only_diagnostic_ps": 247.84968000000003,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b0_row_station",
+   "proposed_parent_clock_port": "ck_b0_row_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    388.8,
+    69.12
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    391.164,
+    69.162
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 69.162,
+   "TT_wire_only_diagnostic_ps": 52.563120000000005,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b1_row_station",
+   "proposed_parent_clock_port": "ck_b1_row_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    410.4,
+    274.32
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    412.76399999999995,
+    274.36199999999997
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 274.36199999999997,
+   "TT_wire_only_diagnostic_ps": 208.51511999999997,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b2_row_station",
+   "proposed_parent_clock_port": "ck_b2_row_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    432,
+    479.52
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    434.364,
+    479.56199999999995
+   ],
+   "provisional_nearest_face": "W",
+   "geometric_minimum_entry_wire_um": 434.364,
+   "TT_wire_only_diagnostic_ps": 330.11663999999996,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b3_row_station",
+   "proposed_parent_clock_port": "ck_b3_row_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    410.4,
+    479.52
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    412.76399999999995,
+    479.56199999999995
+   ],
+   "provisional_nearest_face": "W",
+   "geometric_minimum_entry_wire_um": 412.76399999999995,
+   "TT_wire_only_diagnostic_ps": 313.70063999999996,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b4_row_station",
+   "proposed_parent_clock_port": "ck_b4_row_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    838.08,
+    69.12
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    840.4440000000001,
+    69.162
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 69.162,
+   "TT_wire_only_diagnostic_ps": 52.563120000000005,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b5_row_station",
+   "proposed_parent_clock_port": "ck_b5_row_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    859.68,
+    274.32
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    862.044,
+    274.36199999999997
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 274.36199999999997,
+   "TT_wire_only_diagnostic_ps": 208.51511999999997,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b6_row_station",
+   "proposed_parent_clock_port": "ck_b6_row_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    881.28,
+    479.52
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    883.644,
+    479.56199999999995
+   ],
+   "provisional_nearest_face": "E",
+   "geometric_minimum_entry_wire_um": 347.55600000000004,
+   "TT_wire_only_diagnostic_ps": 264.14256000000006,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_b7_row_station",
+   "proposed_parent_clock_port": "ck_b7_row_station",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    859.68,
+    479.52
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    862.044,
+    479.56199999999995
+   ],
+   "provisional_nearest_face": "E",
+   "geometric_minimum_entry_wire_um": 369.15600000000006,
+   "TT_wire_only_diagnostic_ps": 280.55856000000006,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_rr4_0_link_station0",
+   "proposed_parent_clock_port": "ck_rr4_0_link_station0",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    781.92,
+    278.64
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    784.284,
+    278.68199999999996
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 278.68199999999996,
+   "TT_wire_only_diagnostic_ps": 211.79831999999996,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_rr4_0_link_station1",
+   "proposed_parent_clock_port": "ck_rr4_0_link_station1",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    803.52,
+    278.64
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    805.884,
+    278.68199999999996
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 278.68199999999996,
+   "TT_wire_only_diagnostic_ps": 211.79831999999996,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  },
+  {
+   "proposed_instance": "u_rr4_1_link_station0",
+   "proposed_parent_clock_port": "ck_rr4_1_link_station0",
+   "actual_scalar_hard_clock_pin": "clk",
+   "actual_master": "ot_qwen_tree_delay1_t",
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "at_um": [
+    838.08,
+    278.64
+   ],
+   "clock_local_center_um": [
+    2.364,
+    0.042
+   ],
+   "clock_region_center_um": [
+    840.4440000000001,
+    278.68199999999996
+   ],
+   "provisional_nearest_face": "S",
+   "geometric_minimum_entry_wire_um": 278.68199999999996,
+   "TT_wire_only_diagnostic_ps": 211.79831999999996,
+   "corners": {
+    "tt": {
+     "n": 512,
+     "mean": 84.1,
+     "min": 81.1,
+     "max": 87.0
+    },
+    "ff": {
+     "n": 512,
+     "mean": 67.3,
+     "min": 64.2,
+     "max": 70.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 114.2,
+     "min": 111.3,
+     "max": 117.3
+    }
+   },
+   "actual_parent_entry_wire_by_corner": null,
+   "actual_R_plus_parent_entry_wire_level": null,
+   "source_phase_bindings": null
+  }
+ ]
+}
