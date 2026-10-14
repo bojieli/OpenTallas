@@ -1,0 +1,70 @@
+{
+ "name": "hrow5_ing_ack1",
+ "top": "dsfd_mtp_hrow_ing",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv",
+  "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "pins": {
+  "W": [
+   "f_hp",
+   "t_hpg"
+  ],
+  "E": [
+   "t_wc"
+  ],
+  "N": [
+   "t_ev",
+   "t_flt"
+  ],
+  "S": [
+   "ck",
+   "rst",
+   "f_pid",
+   "rst_ack"
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.01,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:s81_vmfe_misc_2240",
+  "branch": "codex/s81-vmfe-misc-2240",
+  "tag": "ack1",
+  "purpose": "Source-candidate genuine consumer reset ACK successor. Old CLOSED master untouched. Pin/contact/ownstate/clock/reset receipts and parent replay required; no native driver inferred.",
+  "views_to": "physical/ref_tile/hrow5_ing_ack1/views",
+  "record_to": "results/rtl/ref_tile/hrow5_ing_ack1",
+  "benched_by": "results/arch/s81_hrow_reset_ack_1014/proof.json"
+ },
+ "outline": {
+  "w": 129.6,
+  "h": 129.6
+ },
+ "util": 0.52,
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "defines": [
+  "OT_HROW_RESET_ACK"
+ ],
+ "structural_change": "Dedicated default-off OT_HROW_RESET_ACK. Actual consumer-local epoch witnesses; nominal +2 FF. New mapped counts, SS/FF timing, physical pins, clock/reset load pending.",
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

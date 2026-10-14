@@ -1,0 +1,75 @@
+{
+  "name": "hrow5_hub_ack1",
+  "top": "dsfd_mtp_hrow_hub",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv",
+    "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+  ],
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst"
+  ],
+  "pins": {
+    "W": [
+      "f_vrq",
+      "t_vrq",
+      "t_vrs",
+      "f_clr",
+      "t_flt",
+      "ck",
+      "rst"
+    ],
+    "N": [
+      "f_pr0",
+      "t_rc0",
+      "f_ev0",
+      "f_if0",
+      "rst_ack"
+    ],
+    "E": [
+      "f_pr1",
+      "t_rc1",
+      "f_ev1",
+      "f_if1"
+    ],
+    "S": [
+      "f_pr2",
+      "t_rc2",
+      "f_ev2",
+      "f_if2"
+    ]
+  },
+  "route": {
+    "pd": 0.55,
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "hold_margin_ns": 0.03
+  },
+  "job": {
+    "owner": "Codex:s81_vmfe_misc_2240",
+    "branch": "codex/s81-vmfe-misc-2240",
+    "tag": "ack1",
+    "purpose": "Source-candidate genuine consumer reset ACK successor. Old CLOSED master untouched. Pin/contact/ownstate/clock/reset receipts and parent replay required; no native driver inferred.",
+    "views_to": "physical/ref_tile/hrow5_hub_ack1/views",
+    "record_to": "results/rtl/ref_tile/hrow5_hub_ack1",
+    "benched_by": "results/arch/s81_hrow_reset_ack_1014/proof.json"
+  },
+  "outline": {
+    "w": 216.0,
+    "h": 216.0
+  },
+  "util": 0.52,
+  "inhold": true,
+  "outhold": true,
+  "params": {},
+  "macros": [],
+  "children": [],
+  "inter": [],
+  "defines": [
+    "OT_HROW_RESET_ACK"
+  ],
+  "structural_change": "Dedicated default-off OT_HROW_RESET_ACK. Actual consumer-local epoch witnesses; nominal +14 FF. New mapped counts, SS/FF timing, physical pins, clock/reset load pending."
+}

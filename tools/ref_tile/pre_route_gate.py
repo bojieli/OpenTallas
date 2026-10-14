@@ -112,13 +112,24 @@ def synthesis_std_area(chip_area: float, blocks: list, root=ROOT) -> float:
     return max(0.0, chip_area - logical)
 
 
-def rtl_ports(sources, top, root=None, dirs=False):
+def rtl_ports(sources, top, root=None, dirs=False, defines=None):
     root = root or ROOT
     texts = []
     for f in sources:
         p = root / f
         if p.exists():
             texts.append(p.read_text(errors="replace"))
+    # Resolve conditional candidate interfaces with the real Verilog preprocessor.
+    # Text-only parsing otherwise mistakes `ifdef/`endif tokens for port names.
+    if defines is not None:
+        files = [root / f for f in sources if (root / f).exists()]
+        inc = sorted({str(p.parent) for p in files})
+        cmd = ["iverilog", "-g2012", "-E", "-o", "-", "-DSYNTHESIS"]
+        cmd += ["-D" + d for d in defines] + ["-I" + p for p in inc] + [str(p) for p in files]
+        run = subprocess.run(cmd, capture_output=True, text=True)
+        if run.returncode:
+            raise RT.SpecError("RTL port preprocessing failed: " + run.stderr[-2000:])
+        texts = [run.stdout]
     # a module named through a macro (`define X top ... module `X: dsfd_coll_cb / cbf) is not seen by the text parser
     texts = [re.sub(r"\bmodule\s+`(\w+)", lambda m: f"module {top}" if re.search(
         rf"`define\s+{m.group(1)}\s+{re.escape(top)}\b", tx) else m.group(0), tx) for tx in texts]
@@ -440,12 +451,12 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     if re.search(r"define_pdn_grid[^\n]*-macro", pdn) and "ot_ref_present" not in pdn:
         g.add("FAIL", "pdn", "macro grid without a present-master guard (PDN-0217)", "re-run gen")
     # pins vs RTL
-    ports = rtl_ports(spec["sources"], spec["top"])
+    ports = rtl_ports(spec["sources"], spec["top"], defines=spec.get("defines", []))
     check_pins(g, spec, ports)
     # pin plan vs the ROUTE's pin placement (same settings as the route: one source of truth), recipe-2 pin-flop spread
     plan = check_pin_fit(g, spec, strict_widths(spec["sources"], spec["top"], spec.get("params")), fresh["outline"])
     tcl = ROOT / OFLOP_TCL
-    check_oflop(g, spec, plan, rtl_ports(spec["sources"], spec["top"], dirs=True), fresh["outline"],
+    check_oflop(g, spec, plan, rtl_ports(spec["sources"], spec["top"], dirs=True, defines=spec.get("defines", [])), fresh["outline"],
                 tcl.read_text(errors="replace") if tcl.is_file() else None)
     # RTL lint
     files = [str(ROOT / f) for f in spec["sources"] if (ROOT / f).exists()]
@@ -591,7 +602,14 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     R = f"/srv/opentallas-scratch/claude/ref_gate/{spec['name']}-{ts}"
     start_commit = SB.git_head(ROOT)
     daemon_commit = SB.git_head(DAEMON_TREE)
-    route_plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT)
+    freeze_path = os.environ.get("OT_REF_GATE_HELPER_FREEZE")
+    frozen = json.loads(Path(freeze_path).read_text()) if freeze_path else None
+    route_plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT, head=frozen["origin_main"] if frozen else None)
+    if frozen:
+        equal, reason = HO.compare_plans(frozen, route_plan)
+        if not equal:
+            g.add("FAIL", "source_binding", reason, "restore the pinned helper bytes before gate shipping")
+            return
     data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]})
     binding = SB.snapshot(data, ROOT, start_commit, DAEMON_TREE, daemon_commit, SHIP_HELPERS)
     binding["route_overlay_plan"] = route_plan
@@ -842,7 +860,7 @@ def main(argv=None) -> int:
     ap.add_argument("--commit", help="check source paths at this commit (default: working tree)")
     ap.add_argument("--remote", help="fleet host for the synthesis / floorplan / textbook run (auto: ot-run admission and placement)")
     ap.add_argument("--cts", action="store_true", help="with --remote: continue through CTS, report insertion + paths")
-    ap.add_argument("--synth-cap", type=int, default=2700, help="synthesis time cap, s (default 2700)")
+    ap.add_argument("--synth-cap", type=lambda v: "unlimited" if v == "unlimited" else int(v), default=2700, help="synthesis time cap, s (default 2700)")
     ap.add_argument("--mem", type=int, default=24, help="ot-heavy GB (< 32 = small slot, no big-slot wait)")
     ap.add_argument("--json")
     a = ap.parse_args(argv)

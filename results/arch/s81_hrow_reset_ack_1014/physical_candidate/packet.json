@@ -1,0 +1,562 @@
+{
+  "schema": "s81.hrow94.physical_ack_candidate.v1",
+  "source_commit": "ef45a3fd8a10fc3e1f86af17eec58132f7ae6178",
+  "imported_source_commit": "bd7d09141",
+  "imported_proof_commit": "7f2c2d184",
+  "source_graph": {
+    "path": "results/arch/s81_hrow_reset_ack_1014/source_ack_graph.json",
+    "sha256": "e907ea24ac33149561015301ee8f111ecc0f6deb911d4a4c00f220a0fbc1ec50"
+  },
+  "reserved_data_placement": {
+    "path": "results/arch/s81_hrow_native_placement_1013/r4_edge60_chunk4/candidate.json",
+    "sha256": "be2b2eaf69873756ea018b6139e93a85f609f3e5a9169ca2f1749addd8b5142e"
+  },
+  "strict_historical_data_candidate": "81,363 bit pairs,<=500um geometry,every represented edge/cut<=.60; no actual RC qualification",
+  "source_ack_outputs": 94,
+  "physical_child_instances": 88,
+  "new_raw_epoch_inputs": 27,
+  "total_added_signal_contacts": 121,
+  "historical_raw_reset_pin_endpoints": 61,
+  "successor_raw_reset_pin_endpoints": 88,
+  "price": {
+    "original_relay_ff": 18897,
+    "original_conditioner_ff": 54,
+    "added_ack_ff": 188,
+    "total_parent_ff": 19139,
+    "datapath_latency_added": 0,
+    "ack_consumer_edge_added": 1,
+    "startup_controller_sync_ff": null,
+    "startup_latency": null,
+    "leaf_ownstate": "retained source, not recounted into parent relay price"
+  },
+  "new_mapped_ack_ff": null,
+  "nominal_ack_ff": 188,
+  "masters": {
+    "dsfd_die_rstsync": {
+      "replicas": 27,
+      "ack_ports_per_instance": 1,
+      "nominal_added_ack_ff_per_instance": 2,
+      "nominal_added_ack_ff_total": 54,
+      "historical_source_nominal_parent_ff_per_instance": 2,
+      "historical_actual_mapped_sequential_cells": 2,
+      "historical_actual_mapped_cell_types": {
+        "DFFASRHQNx1_ASAP7_75t_R": 2
+      },
+      "historical_final_netlist": {
+        "path": "results/arch/s81_hrow_native_placement_1013/reset_classification/dsfd_die_rstsync_6_final.v",
+        "sha256": "6aaaecdffe019749633eb9556d7fb7195c30287ba4eadcfad6cbe62026702b7e"
+      },
+      "successor_actual_mapped_sequential_cells": null,
+      "successor_actual_ack_ff": null,
+      "successor_clock_sink_count": null,
+      "source_clock_sink_estimate": 4,
+      "retained_outline_um": [
+        32.4,
+        32.4
+      ],
+      "outline_fit_status": "reserved geometry, successor utilization/CTS/pin-access unmeasured",
+      "historical_lef": {
+        "path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/dsfd_die_rstsync.lef",
+        "sha256": "03f7519e06e8f756f42b28382bd72c263a031113b060a12fa783d1f7a0e4b5d3"
+      },
+      "historical_contact_face_counts": {
+        "W": 8,
+        "E": 8
+      },
+      "proposed_ack_face": "N",
+      "proposed_raw_epoch_face": null,
+      "actual_new_contacts": null,
+      "existing_kit_spec": {
+        "path": "physical/ref_tile/dsfd_die_rstsync_m5/spec.json",
+        "sha256": "18cc2a52928fd8666c96ef3d158b048733e2394cafc22a28d42a6c5e827aab12"
+      },
+      "successor_kit_name": "dsfd_die_rstsync_m5_ack1",
+      "successor_params": {
+        "RESET_ACK": 1
+      },
+      "successor_defines": [
+        "OT_HROW_RESET_ACK"
+      ],
+      "source_compilation": [
+        "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv",
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv"
+      ],
+      "gate_launch_owner": "s81_vmfe_misc_2240",
+      "gate_launch_status": "REQUEST: separate successor kits/source binding/pin constraints required; no inherited CLOSED qualification",
+      "proposed_successor_spec": {
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/dsfd_die_rstsync_m5_ack1.json",
+        "sha256": "c43c4ccb036bc88d1f6da06385d865716b676e7f3970189c2601c6c186c79932"
+      }
+    },
+    "dsfd_hrow_r1025": {
+      "replicas": 6,
+      "ack_ports_per_instance": 1,
+      "nominal_added_ack_ff_per_instance": 2,
+      "nominal_added_ack_ff_total": 12,
+      "historical_source_nominal_parent_ff_per_instance": 1025,
+      "historical_actual_mapped_sequential_cells": 1025,
+      "historical_actual_mapped_cell_types": {
+        "DFFASRHQNx1_ASAP7_75t_R": 1,
+        "DFFHQNx2_ASAP7_75t_R": 196,
+        "DFFHQNx1_ASAP7_75t_R": 828
+      },
+      "historical_final_netlist": {
+        "path": "results/arch/s81_hrow_native_placement_1013/r4_actual_final/reset_classification/dsfd_hrow_r1025_6_final.v.gz",
+        "sha256": "5e755eed491d705b0a249cbf1b653ca800ca9be073326f324c608a4069209e8e"
+      },
+      "successor_actual_mapped_sequential_cells": null,
+      "successor_actual_ack_ff": null,
+      "successor_clock_sink_count": null,
+      "source_clock_sink_estimate": 1027,
+      "retained_outline_um": [
+        129.6,
+        129.6
+      ],
+      "outline_fit_status": "reserved geometry, successor utilization/CTS/pin-access unmeasured",
+      "historical_lef": {
+        "path": "physical/ref_tile/dsfd_hrow_r1025_m5/views/dsfd_hrow_r1025/dsfd_hrow_r1025.lef",
+        "sha256": "c5287baf659735a74b8f349c4f0d444e13d94da4bd0ad3aa2d36f02a905bea5f"
+      },
+      "historical_contact_face_counts": {
+        "W": 1051,
+        "E": 1051
+      },
+      "proposed_ack_face": "N",
+      "proposed_raw_epoch_face": "S",
+      "actual_new_contacts": null,
+      "existing_kit_spec": {
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/base_spec_receipts/dsfd_hrow_r1025_m5.json",
+        "sha256": "d64bec668ebe44cf06e6326fb6f5bd76c803c30d32383fdd0e60803ed22672e6"
+      },
+      "successor_kit_name": "dsfd_hrow_r1025_m5_ack1",
+      "successor_params": {},
+      "successor_defines": [
+        "OT_HROW_RESET_ACK"
+      ],
+      "source_compilation": [
+        "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv",
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv"
+      ],
+      "gate_launch_owner": "s81_vmfe_misc_2240",
+      "gate_launch_status": "REQUEST: separate successor kits/source binding/pin constraints required; no inherited CLOSED qualification",
+      "proposed_successor_spec": {
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/dsfd_hrow_r1025_m5_ack1.json",
+        "sha256": "aeb79a9d1400cf9dfed966845f7b3cfd4b67e02c24f5cf4ba6c15135698f7021"
+      }
+    },
+    "dsfd_hrow_r15": {
+      "replicas": 9,
+      "ack_ports_per_instance": 1,
+      "nominal_added_ack_ff_per_instance": 2,
+      "nominal_added_ack_ff_total": 18,
+      "historical_source_nominal_parent_ff_per_instance": 15,
+      "historical_actual_mapped_sequential_cells": 15,
+      "historical_actual_mapped_cell_types": {
+        "DFFASRHQNx1_ASAP7_75t_R": 1,
+        "DFFHQNx1_ASAP7_75t_R": 14
+      },
+      "historical_final_netlist": {
+        "path": "results/arch/s81_hrow_native_placement_1013/reset_classification/dsfd_hrow_r15_6_final.v",
+        "sha256": "114e2310b3c3f7b59c74daab497c586b5099d848490a8c72ead3061b9e5fd6d0"
+      },
+      "successor_actual_mapped_sequential_cells": null,
+      "successor_actual_ack_ff": null,
+      "successor_clock_sink_count": null,
+      "source_clock_sink_estimate": 17,
+      "retained_outline_um": [
+        32.4,
+        32.4
+      ],
+      "outline_fit_status": "reserved geometry, successor utilization/CTS/pin-access unmeasured",
+      "historical_lef": {
+        "path": "physical/ref_tile/dsfd_hrow_r15_m5/views/dsfd_hrow_r15/dsfd_hrow_r15.lef",
+        "sha256": "759ac50813acb136aeafc795008705d43f4ff4bc695735508961ab100e9d67e4"
+      },
+      "historical_contact_face_counts": {
+        "W": 23,
+        "E": 21
+      },
+      "proposed_ack_face": "N",
+      "proposed_raw_epoch_face": "S",
+      "actual_new_contacts": null,
+      "existing_kit_spec": {
+        "path": "physical/ref_tile/dsfd_hrow_r15_m5/spec.json",
+        "sha256": "d2a408e929a5787868698d8a604e0bc6cf726e2ae2ea8ef6e8855044ad222948"
+      },
+      "successor_kit_name": "dsfd_hrow_r15_m5_ack1",
+      "successor_params": {},
+      "successor_defines": [
+        "OT_HROW_RESET_ACK"
+      ],
+      "source_compilation": [
+        "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv",
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv"
+      ],
+      "gate_launch_owner": "s81_vmfe_misc_2240",
+      "gate_launch_status": "REQUEST: separate successor kits/source binding/pin constraints required; no inherited CLOSED qualification",
+      "proposed_successor_spec": {
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/dsfd_hrow_r15_m5_ack1.json",
+        "sha256": "66e34d49c2621aa8d13f890219b7bc157f2a27bc9ca7feb528a0e30543230324"
+      }
+    },
+    "dsfd_hrow_r2079": {
+      "replicas": 6,
+      "ack_ports_per_instance": 1,
+      "nominal_added_ack_ff_per_instance": 2,
+      "nominal_added_ack_ff_total": 12,
+      "historical_source_nominal_parent_ff_per_instance": 2079,
+      "historical_actual_mapped_sequential_cells": 2079,
+      "historical_actual_mapped_cell_types": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 1721,
+        "DFFHQNx2_ASAP7_75t_R": 355
+      },
+      "historical_final_netlist": {
+        "path": "results/arch/s81_hrow_native_placement_1013/r4_actual_final/reset_classification/dsfd_hrow_r2079_6_final.v.gz",
+        "sha256": "cde8205195724bc8acdb40958e0462157daa10646ab3dfa5fadb0cdfafa0f9d3"
+      },
+      "successor_actual_mapped_sequential_cells": null,
+      "successor_actual_ack_ff": null,
+      "successor_clock_sink_count": null,
+      "source_clock_sink_estimate": 2081,
+      "retained_outline_um": [
+        129.6,
+        129.6
+      ],
+      "outline_fit_status": "reserved geometry, successor utilization/CTS/pin-access unmeasured",
+      "historical_lef": {
+        "path": "physical/ref_tile/dsfd_hrow_r2079_m5/views/dsfd_hrow_r2079/dsfd_hrow_r2079.lef",
+        "sha256": "24b5e455371781c0737ac63bf329f0d0106822a63fd18274281ac4d1dc9c3be2"
+      },
+      "historical_contact_face_counts": {
+        "W": 2105,
+        "E": 2106
+      },
+      "proposed_ack_face": "N",
+      "proposed_raw_epoch_face": "S",
+      "actual_new_contacts": null,
+      "existing_kit_spec": {
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/base_spec_receipts/dsfd_hrow_r2079_m5.json",
+        "sha256": "05ca540b319f14cfb5b44d09015a6b0e3da4dcc280e5d5c576ccf5584c004d4a"
+      },
+      "successor_kit_name": "dsfd_hrow_r2079_m5_ack1",
+      "successor_params": {},
+      "successor_defines": [
+        "OT_HROW_RESET_ACK"
+      ],
+      "source_compilation": [
+        "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv",
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv"
+      ],
+      "gate_launch_owner": "s81_vmfe_misc_2240",
+      "gate_launch_status": "REQUEST: separate successor kits/source binding/pin constraints required; no inherited CLOSED qualification",
+      "proposed_successor_spec": {
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/dsfd_hrow_r2079_m5_ack1.json",
+        "sha256": "a343bce7cb6ca9c8f06db9d6b84cafa0d8a1b8f9bb36b0dd7083cd44cc322928"
+      }
+    },
+    "dsfd_hrow_r23": {
+      "replicas": 6,
+      "ack_ports_per_instance": 1,
+      "nominal_added_ack_ff_per_instance": 2,
+      "nominal_added_ack_ff_total": 12,
+      "historical_source_nominal_parent_ff_per_instance": 23,
+      "historical_actual_mapped_sequential_cells": 23,
+      "historical_actual_mapped_cell_types": {
+        "DFFASRHQNx1_ASAP7_75t_R": 2,
+        "DFFHQNx1_ASAP7_75t_R": 21
+      },
+      "historical_final_netlist": {
+        "path": "results/arch/s81_hrow_native_placement_1013/reset_classification/dsfd_hrow_r23_6_final.v",
+        "sha256": "40b952ea790e2761748e9f9a2f672d7dc94d5d931e10a949782e6b8a13ce7f52"
+      },
+      "successor_actual_mapped_sequential_cells": null,
+      "successor_actual_ack_ff": null,
+      "successor_clock_sink_count": null,
+      "source_clock_sink_estimate": 25,
+      "retained_outline_um": [
+        32.4,
+        32.4
+      ],
+      "outline_fit_status": "reserved geometry, successor utilization/CTS/pin-access unmeasured",
+      "historical_lef": {
+        "path": "physical/ref_tile/dsfd_hrow_r23_m5/views/dsfd_hrow_r23/dsfd_hrow_r23.lef",
+        "sha256": "dd00f258b92778b9e224b6eba38c8b9eb60ba6d752aac3d754574e16c44ee63e"
+      },
+      "historical_contact_face_counts": {
+        "W": 31,
+        "E": 29
+      },
+      "proposed_ack_face": "N",
+      "proposed_raw_epoch_face": "S",
+      "actual_new_contacts": null,
+      "existing_kit_spec": {
+        "path": "physical/ref_tile/dsfd_hrow_r23_m5/spec.json",
+        "sha256": "7785063f3ede2893add468d05cf9154174e050e8f62308418af07c39c2b1cf4c"
+      },
+      "successor_kit_name": "dsfd_hrow_r23_m5_ack1",
+      "successor_params": {},
+      "successor_defines": [
+        "OT_HROW_RESET_ACK"
+      ],
+      "source_compilation": [
+        "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv",
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv"
+      ],
+      "gate_launch_owner": "s81_vmfe_misc_2240",
+      "gate_launch_status": "REQUEST: separate successor kits/source binding/pin constraints required; no inherited CLOSED qualification",
+      "proposed_successor_spec": {
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/dsfd_hrow_r23_m5_ack1.json",
+        "sha256": "0598b360143cb0b19cd03b9167aab2328cbfd928490bf78818e153ba32b3b7a3"
+      }
+    },
+    "dsfd_mtp_hrow_cbe": {
+      "replicas": 15,
+      "ack_ports_per_instance": 1,
+      "nominal_added_ack_ff_per_instance": 2,
+      "nominal_added_ack_ff_total": 30,
+      "historical_source_nominal_parent_ff_per_instance": null,
+      "historical_actual_mapped_sequential_cells": 5250,
+      "historical_actual_mapped_cell_types": {
+        "DFFHQNx1_ASAP7_75t_R": 4990,
+        "DFFHQNx3_ASAP7_75t_R": 10,
+        "DFFHQNx2_ASAP7_75t_R": 240,
+        "DFFASRHQNx1_ASAP7_75t_R": 10
+      },
+      "historical_final_netlist": {
+        "path": "results/arch/s81_hrow_native_placement_1013/reset_classification/dsfd_mtp_hrow_cbe_6_final.v.gz",
+        "sha256": "d4f2db3ebfe8f9c8bcee43c9a263d8e5c801855125cbe7d6ae9c3f08c347f0d8"
+      },
+      "successor_actual_mapped_sequential_cells": null,
+      "successor_actual_ack_ff": null,
+      "successor_clock_sink_count": null,
+      "source_clock_sink_estimate": 5252,
+      "retained_outline_um": [
+        475.2,
+        216.0
+      ],
+      "outline_fit_status": "reserved geometry, successor utilization/CTS/pin-access unmeasured",
+      "historical_lef": {
+        "path": "physical/ref_tile/hrow5_cbe_cx/views/dsfd_mtp_hrow_cbe/dsfd_mtp_hrow_cbe.lef",
+        "sha256": "5d16ae66b6243a3b6c9c574f649d58cdea6afc8b03bd57603ee3adfeea97ff55"
+      },
+      "historical_contact_face_counts": {
+        "W": 46,
+        "N": 2079,
+        "S": 2175,
+        "E": 40
+      },
+      "proposed_ack_face": "E",
+      "proposed_raw_epoch_face": null,
+      "actual_new_contacts": null,
+      "existing_kit_spec": {
+        "path": "physical/ref_tile/hrow5_cbe/spec.json",
+        "sha256": "9cbc5288b133054c1fa8c3dc775a4991db02ee5710c235863bb9ba3684df7da0"
+      },
+      "successor_kit_name": "hrow5_cbe_ack1",
+      "successor_params": {},
+      "successor_defines": [
+        "OT_HROW_RESET_ACK"
+      ],
+      "source_compilation": [
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv",
+        "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+      ],
+      "gate_launch_owner": "s81_vmfe_misc_2240",
+      "gate_launch_status": "REQUEST: separate successor kits/source binding/pin constraints required; no inherited CLOSED qualification",
+      "proposed_successor_spec": {
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/hrow5_cbe_ack1.json",
+        "sha256": "28406945eecd38ecfef8fcf5c1e5a88c5905f82ab4e598134ae5ebbc7ca5e25c"
+      }
+    },
+    "dsfd_mtp_hrow_cbw": {
+      "replicas": 15,
+      "ack_ports_per_instance": 1,
+      "nominal_added_ack_ff_per_instance": 2,
+      "nominal_added_ack_ff_total": 30,
+      "historical_source_nominal_parent_ff_per_instance": null,
+      "historical_actual_mapped_sequential_cells": 6294,
+      "historical_actual_mapped_cell_types": {
+        "DFFHQNx1_ASAP7_75t_R": 6047,
+        "DFFHQNx2_ASAP7_75t_R": 231,
+        "DFFHQNx3_ASAP7_75t_R": 6,
+        "DFFASRHQNx1_ASAP7_75t_R": 10
+      },
+      "historical_final_netlist": {
+        "path": "results/arch/s81_hrow_native_placement_1013/reset_classification/dsfd_mtp_hrow_cbw_6_final.v.gz",
+        "sha256": "fec8eb526f227c4d5388a68555e1212540743ceb3ac800d8fc10d72a55c6f5c0"
+      },
+      "successor_actual_mapped_sequential_cells": null,
+      "successor_actual_ack_ff": null,
+      "successor_clock_sink_count": null,
+      "source_clock_sink_estimate": 6296,
+      "retained_outline_um": [
+        475.2,
+        216.0
+      ],
+      "outline_fit_status": "reserved geometry, successor utilization/CTS/pin-access unmeasured",
+      "historical_lef": {
+        "path": "physical/ref_tile/hrow5_cbw_cx/views/dsfd_mtp_hrow_cbw/dsfd_mtp_hrow_cbw.lef",
+        "sha256": "35c39e1ea47088981801f7f0ef81db7b24eee576ca7a1adb3c5ccc97bc6c8f29"
+      },
+      "historical_contact_face_counts": {
+        "W": 46,
+        "S": 2175,
+        "N": 2079,
+        "E": 40
+      },
+      "proposed_ack_face": "E",
+      "proposed_raw_epoch_face": null,
+      "actual_new_contacts": null,
+      "existing_kit_spec": {
+        "path": "physical/ref_tile/hrow5_cbw/spec.json",
+        "sha256": "e02b744d812b9661d9b678a51dae8d65a2ba0d0c5d0651cb4c46dabb26bc56de"
+      },
+      "successor_kit_name": "hrow5_cbw_ack1",
+      "successor_params": {},
+      "successor_defines": [
+        "OT_HROW_RESET_ACK"
+      ],
+      "source_compilation": [
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv",
+        "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+      ],
+      "gate_launch_owner": "s81_vmfe_misc_2240",
+      "gate_launch_status": "REQUEST: separate successor kits/source binding/pin constraints required; no inherited CLOSED qualification",
+      "proposed_successor_spec": {
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/hrow5_cbw_ack1.json",
+        "sha256": "085b1014e04096c8b893511aab1eda0bac7d0291888ad78d441ecb84d2affc63"
+      }
+    },
+    "dsfd_mtp_hrow_hub": {
+      "replicas": 1,
+      "ack_ports_per_instance": 7,
+      "nominal_added_ack_ff_per_instance": 14,
+      "nominal_added_ack_ff_total": 14,
+      "historical_source_nominal_parent_ff_per_instance": null,
+      "historical_actual_mapped_sequential_cells": null,
+      "historical_actual_mapped_cell_types": {},
+      "historical_final_netlist": null,
+      "successor_actual_mapped_sequential_cells": null,
+      "successor_actual_ack_ff": null,
+      "successor_clock_sink_count": null,
+      "source_clock_sink_estimate": null,
+      "retained_outline_um": [
+        216.0,
+        216.0
+      ],
+      "outline_fit_status": "reserved geometry, successor utilization/CTS/pin-access unmeasured",
+      "historical_lef": {
+        "path": "physical/ref_tile/hrow5_hub/views/dsfd_mtp_hrow_hub/dsfd_mtp_hrow_hub.lef",
+        "sha256": "7d05342c03e26423a63d92206b30c3df9926a6f18561f122920d64cfc7aedc1c"
+      },
+      "historical_contact_face_counts": {
+        "W": 1107,
+        "N": 1063,
+        "E": 1103,
+        "S": 1063
+      },
+      "proposed_ack_face": "N",
+      "proposed_raw_epoch_face": null,
+      "actual_new_contacts": null,
+      "existing_kit_spec": {
+        "path": "physical/ref_tile/hrow5_hub/spec.json",
+        "sha256": "e2f7def393da89b207af3dee15e68b07c3ca6cefe31f6c09dc2e5293bf47a874"
+      },
+      "successor_kit_name": "hrow5_hub_ack1",
+      "successor_params": {},
+      "successor_defines": [
+        "OT_HROW_RESET_ACK"
+      ],
+      "source_compilation": [
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv",
+        "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+      ],
+      "gate_launch_owner": "s81_vmfe_misc_2240",
+      "gate_launch_status": "REQUEST: separate successor kits/source binding/pin constraints required; no inherited CLOSED qualification",
+      "proposed_successor_spec": {
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/hrow5_hub_ack1.json",
+        "sha256": "a571390dd348d7f631498c87dde48848b2bd2ed8d9c28c635cbb1621f90f5e2e"
+      }
+    },
+    "dsfd_mtp_hrow_ing": {
+      "replicas": 3,
+      "ack_ports_per_instance": 1,
+      "nominal_added_ack_ff_per_instance": 2,
+      "nominal_added_ack_ff_total": 6,
+      "historical_source_nominal_parent_ff_per_instance": null,
+      "historical_actual_mapped_sequential_cells": null,
+      "historical_actual_mapped_cell_types": {},
+      "historical_final_netlist": null,
+      "successor_actual_mapped_sequential_cells": null,
+      "successor_actual_ack_ff": null,
+      "successor_clock_sink_count": null,
+      "source_clock_sink_estimate": null,
+      "retained_outline_um": [
+        129.6,
+        129.6
+      ],
+      "outline_fit_status": "reserved geometry, successor utilization/CTS/pin-access unmeasured",
+      "historical_lef": {
+        "path": "physical/ref_tile/hrow5_ing/views/dsfd_mtp_hrow_ing/dsfd_mtp_hrow_ing.lef",
+        "sha256": "339e3ce939640a04620c82f38ede2260a8581b15811079d79388b101b051d957"
+      },
+      "historical_contact_face_counts": {
+        "S": 4,
+        "W": 540,
+        "N": 23,
+        "E": 1063
+      },
+      "proposed_ack_face": "S",
+      "proposed_raw_epoch_face": null,
+      "actual_new_contacts": null,
+      "existing_kit_spec": {
+        "path": "physical/ref_tile/hrow5_ing/spec.json",
+        "sha256": "824fc9101becd566fd36fa2db5c36b0b3a533c05ba22731576d914158fa49c0d"
+      },
+      "successor_kit_name": "hrow5_ing_ack1",
+      "successor_params": {},
+      "successor_defines": [
+        "OT_HROW_RESET_ACK"
+      ],
+      "source_compilation": [
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv",
+        "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+        "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+      ],
+      "gate_launch_owner": "s81_vmfe_misc_2240",
+      "gate_launch_status": "REQUEST: separate successor kits/source binding/pin constraints required; no inherited CLOSED qualification",
+      "proposed_successor_spec": {
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/hrow5_ing_ack1.json",
+        "sha256": "c47f1907134390c65e7501b8d4e3b0400640ea914ae63b8e49cbaaf4197ff38c"
+      }
+    }
+  },
+  "ack_pin_inventory": "ack_pins.json",
+  "new_raw_reset_inventory": "new_epoch_pins.json",
+  "production_instance": null,
+  "global_origin": null,
+  "clock_source": null,
+  "clock_phase": null,
+  "reset_source": null,
+  "startup_receipt_consumer": null,
+  "startup_receipt_routes": null,
+  "required_receipts": [
+    "source-bound successor synthesis netlist + exact cell Liberty count for each of9 masters",
+    "successor gate/CTS ODB pin rectangles for all94 ACK +27 epoch input contacts, actual CK/RN/rawRST capacitance and mapped clock-sink counts",
+    "legal pin-access and unchanged/moved old contacts explicitly rebind81,363 data pairs; added121 contacts cannot inherit old replay",
+    "SS setup / FF hold for ACK output + raw-epoch async recovery/removal/pulsewidth; retain raw ETM labels and mapped cell arcs",
+    "successor final LEF/SSFF ETM/insertion/netlist/source hashes/clock constraints for9 masters",
+    "actual production TD instance/global transform, named refclk/reset producer output/net/phase and perleaf clock/reset route arrivals",
+    "genuine startup controller placement: synchronize each94 ACK individually before reduction and combine actual C/E/D readiness",
+    "route94 ACK +27 new epoch nets and existing clock/reset traffic; redo all cuts<=.60 and every pair RC budget; successor reach remainsNULL"
+  ],
+  "qualification": "OPEN source candidate; historical CLOSED preserved; no native producer or phase inferred"
+}

@@ -1,0 +1,77 @@
+{
+  "name": "dsfd_hrow_r1025_m5_ack1",
+  "top": "dsfd_hrow_r1025",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv"
+  ],
+  "clock_port": "ck",
+  "reset_ports": [
+    "rn",
+    "reset_epoch_n"
+  ],
+  "outline": {
+    "w": 129.6,
+    "h": 129.6,
+    "exact": true
+  },
+  "pins": {
+    "W": [
+      "ck",
+      "rn",
+      "i"
+    ],
+    "E": [
+      "o"
+    ],
+    "N": [
+      "rst_ack"
+    ],
+    "S": [
+      "reset_epoch_n"
+    ]
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "hold_margin_ns": 0.03,
+    "pin_h": "M2 M4",
+    "macro_halo_um": 5.4
+  },
+  "recipe": 2,
+  "job": {
+    "owner": "Codex:s81_vmfe_misc_2240",
+    "branch": "codex/s81-vmfe-misc-2240",
+    "tag": "ack1",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_ph/relays"
+    ],
+    "purpose": "Source-candidate genuine consumer reset ACK successor. Old CLOSED master untouched. Pin/contact/ownstate/clock/reset receipts and parent replay required; no native driver inferred.",
+    "benched_by": "results/arch/s81_hrow_reset_ack_1014/proof.json",
+    "views_to": "physical/ref_tile/dsfd_hrow_r1025_m5_ack1/views",
+    "record_to": "results/rtl/ref_tile/dsfd_hrow_r1025_m5_ack1"
+  },
+  "structural_change": "Dedicated default-off OT_HROW_RESET_ACK. Actual consumer-local epoch witnesses; nominal +2 FF. New mapped counts, SS/FF timing, physical pins, clock/reset load pending.",
+  "pin_hook_before_flops": [
+    "physical/s81_ph_views/relay_master/bit_pin_align.tcl",
+    "physical/s81_ph_views/relay_master/hold_stagger.tcl"
+  ],
+  "io_flop_at_pins": {
+    "cols": 8,
+    "allow_none": true
+  },
+  "orfs_vars": {
+    "OT_OFLOP_GAP": "34.56"
+  },
+  "params": {},
+  "macros": [],
+  "children": [],
+  "inter": [],
+  "inhold": true,
+  "outhold": true,
+  "defines": [
+    "OT_HROW_RESET_ACK"
+  ]
+}

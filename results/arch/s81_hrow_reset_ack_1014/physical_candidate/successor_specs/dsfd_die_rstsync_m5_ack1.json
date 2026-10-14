@@ -1,0 +1,67 @@
+{
+  "name": "dsfd_die_rstsync_m5_ack1",
+  "top": "dsfd_die_rstsync",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv"
+  ],
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst"
+  ],
+  "outline": {
+    "w": 32.4,
+    "h": 32.4,
+    "exact": true
+  },
+  "pins": {
+    "W": [
+      "ck",
+      "rst"
+    ],
+    "E": [
+      "rn"
+    ],
+    "N": [
+      "rst_ack"
+    ],
+    "S": []
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "recipe": 2,
+  "job": {
+    "owner": "Codex:s81_vmfe_misc_2240",
+    "branch": "codex/s81-vmfe-misc-2240",
+    "tag": "ack1",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_ph/relays"
+    ],
+    "purpose": "Source-candidate genuine consumer reset ACK successor. Old CLOSED master untouched. Pin/contact/ownstate/clock/reset receipts and parent replay required; no native driver inferred.",
+    "benched_by": "results/arch/s81_hrow_reset_ack_1014/proof.json",
+    "views_to": "physical/ref_tile/dsfd_die_rstsync_m5_ack1/views",
+    "record_to": "results/rtl/ref_tile/dsfd_die_rstsync_m5_ack1"
+  },
+  "structural_change": "Dedicated default-off OT_HROW_RESET_ACK. Actual consumer-local epoch witnesses; nominal +2 FF. New mapped counts, SS/FF timing, physical pins, clock/reset load pending.",
+  "params": {
+    "RESET_ACK": 1
+  },
+  "macros": [],
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "defines": [
+    "OT_HROW_RESET_ACK"
+  ]
+}

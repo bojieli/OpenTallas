@@ -1,0 +1,99 @@
+{
+  "name": "hrow5_cbw_ack1",
+  "top": "dsfd_mtp_hrow_cbw",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv",
+    "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+  ],
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst"
+  ],
+  "pins": {
+    "S": [
+      "f_w",
+      "f_r",
+      "f_d"
+    ],
+    "N": [
+      "t_w",
+      "t_r",
+      "t_d"
+    ],
+    "W": [
+      "ck",
+      "rst",
+      "f_bid"
+    ],
+    "E": [
+      "rst_ack"
+    ]
+  },
+  "route": {
+    "pd": 0.55,
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "hold_margin_ns": 0.03,
+    "pin_min_tracks": 3,
+    "pin_v": "M5",
+    "macro_halo_um": 5.4
+  },
+  "job": {
+    "owner": "Codex:s81_vmfe_misc_2240",
+    "branch": "codex/s81-vmfe-misc-2240",
+    "tag": "ack1",
+    "purpose": "Source-candidate genuine consumer reset ACK successor. Old CLOSED master untouched. Pin/contact/ownstate/clock/reset receipts and parent replay required; no native driver inferred.",
+    "views_to": "physical/ref_tile/hrow5_cbw_ack1/views",
+    "record_to": "results/rtl/ref_tile/hrow5_cbw_ack1",
+    "benched_by": "results/arch/s81_hrow_reset_ack_1014/proof.json"
+  },
+  "outline": {
+    "w": 475.2,
+    "h": 216.0
+  },
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "at": [
+        31.104,
+        24.84
+      ]
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "at": [
+        268.92,
+        24.84
+      ],
+      "orient": "MY"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "at": [
+        31.104,
+        121.5
+      ]
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "at": [
+        268.92,
+        121.5
+      ],
+      "orient": "MY"
+    }
+  ],
+  "floorplan_why": "r5b 2026-10-12: chain turned N->S (was W->E). The 2,079-b chain (f_w 1039 + f_r 15 + f_d 1025) crossed a 432x216 tile horizontally, but the 4 SRAMs (OBS M1-M4) leave only 70.7 um of horizontal channel: M2+M4 ~2,500 derated tracks vs ~3,100 nets (2,079 through + macro-edge I/O) = 1.24 -> GRT overflow 26k, markers capped 20k (cap-0 over macros 16k; hotspot = mid channel y 90-126 + macro edges). Running the bus N->S puts it on M5, free over the macros: ~9,800 derated vertical tracks (M5 full width + M3 in channels) vs ~3,100 = 0.32; face 2,079 pins at 3 M5 tracks = 300 of 471 um. Outline 475.2 (11 x 43.2) x 216 for a 63 um mid channel (512 macro-edge pins/row). r5g: east column MY-mirrored (like pin sets face like channels).",
+  "inhold": true,
+  "outhold": true,
+  "params": {},
+  "children": [],
+  "inter": [],
+  "defines": [
+    "OT_HROW_RESET_ACK"
+  ],
+  "structural_change": "Dedicated default-off OT_HROW_RESET_ACK. Actual consumer-local epoch witnesses; nominal +2 FF. New mapped counts, SS/FF timing, physical pins, clock/reset load pending."
+}
