@@ -3,7 +3,7 @@
   "status": "SOURCE_CANDIDATE_FUNCTIONAL_PASS_PHYSICAL_OPEN",
   "enable_macro": "OT_SPVM_RESET_ACK",
   "default_numerical_behavior": "unchanged; macro undefined adds no ports/state",
-  "source_sha256": "0fa5565813207f0407d65a0fdeb6b3d01a124fb45b34bb8633067960fab12aaf",
+  "source_sha256": "e9485ebe168df51e3e5061aed6fd94bf277752951f5242ad808c6c0f1691b906",
   "tb_sha256": "775dfff0e120175b52fa2a5756ea828ad29a528714637697a2741c5cb53bf919",
   "exports": {
     "dsfd_vm_be.rst_ack": "4 serial-domain registered leaf ACKs",
@@ -51,7 +51,8 @@
     "tool": "verilator -E -P with VM include directory; whitespace-normalized",
     "identical": true,
     "sha256": "8204277222d87c2e6122bc2751c6b88a149489dbeb089db28c8192e0617ba3df",
-    "needs_repeat_after_epoch_update": true
+    "needs_repeat_after_epoch_update": false,
+    "includes_parent_hookup": true
   },
   "raw_epoch_ports": {
     "reset_epoch_n": "BE.rst[0] before every die relay/local copy",
