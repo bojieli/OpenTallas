@@ -91,3 +91,33 @@ def validate(binding, root, daemon, commit=None):
         if hashlib.sha256(payload).hexdigest() != e["sha256"]:
             return False, f"route source differs from staged snapshot: {p}"
     return True, "exact staged source and daemon overlay match"
+
+
+def recover_verified_snapshot(binding, staged_root, log_bytes, script_bytes):
+    """Recover original source identity after a parser failure, never infer a later commit.
+
+    This verifies the complete shipping sidecar, all extracted bytes, the exact
+    executed script, its SOURCE_COMMIT marker, and the remote archive-digest log.
+    The returned binding describes that original run; current route qualification
+    must still compare it against the requested route commit and live overlays.
+    """
+    import copy
+    import re
+    ok, why = validate(binding, staged_root, staged_root)
+    if not ok:
+        raise ValueError(why)
+    if hashlib.sha256(script_bytes).hexdigest() != binding.get("remote_script_sha256"):
+        raise ValueError("executed script differs from shipping manifest")
+    log = log_bytes.decode(errors="replace")
+    hashes = re.findall(r"^GATE_SOURCE_ARCHIVE_SHA256=(\S+)\s*$", log, re.M)
+    if hashes != [binding.get("archive_sha256")]:
+        raise ValueError("archive verification absent, ambiguous, or mismatched in original log")
+    identity = binding.get("commit") or "snapshot-sha256:" + binding["manifest_sha256"]
+    if (staged_root / "SOURCE_COMMIT").read_text().strip() != identity:
+        raise ValueError("original SOURCE_COMMIT marker differs from exact snapshot identity")
+    recovered = copy.deepcopy(binding)
+    recovered["remote_archive_verified"] = True
+    recovered["runtime_tool_provenance"] = re.findall(r"^GATE_TOOL_.*$", log, re.M)
+    recovered["recovery"] = {"kind": "full_original_snapshot_verified", "log_sha256": hashlib.sha256(log_bytes).hexdigest(),
+                             "staged_root": str(staged_root), "qualification": "original_source_only_not_current_HEAD"}
+    return recovered
