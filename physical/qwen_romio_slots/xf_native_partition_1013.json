@@ -392,7 +392,7 @@
     ],
     "outline": {
       "w": 259.2,
-      "h": 324
+      "h": 328.32
     },
     "orient": "R0",
     "forward_payload_bits": 546,
@@ -406,9 +406,10 @@
       "LCR": 32,
       "CQ_AD": 256,
       "PIPE": 2,
-      "MEMM": 1
+      "MEMM": 1,
+      "SQ_IBMEM": 1
     },
-    "state": "prototype; dieassignedpins, CTS, fullnativeSEQcomposition pending"
+    "state": "paired native macrostore proof passed; physicalCTS gate PASS(root4846), fullSEQCRED32composition pending"
   },
   "die_obligations": [
     "consume exact leaf port request and emit assigned pins",

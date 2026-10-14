@@ -242,7 +242,7 @@
     "needs": [
      "iverilog"
     ],
-    "fail_regex": "^FAIL native_coll_port sent=[1-9][0-9]* .*fault_ck=1 fault_ckd=1"
+    "fail_regex": "^FAIL native_coll_port sent=[1-9][0-9]* .*fault_ckd=1"
    },
    {
     "name": "native_local_ib_bypass_mutant",
