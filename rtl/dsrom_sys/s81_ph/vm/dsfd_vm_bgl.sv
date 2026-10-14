@@ -28,7 +28,8 @@ module dsfd_vm_bgl #(
     parameter integer RQ = 8,
     parameter integer MACRO = 1,
     parameter integer DW = 128,
-    parameter integer CLOCK_SPLIT = 0
+    parameter integer CLOCK_SPLIT = 0,
+    parameter integer BAL_PREFIX = 0
 ) (
     input  wire [0:0]          ck,
     input  wire                ck_req,
@@ -130,6 +131,24 @@ module dsfd_vm_bgl #(
 
     // ------------------------------------------------------------------ E1 + E2 fused: hits -> one-hot slot selects
     localparam integer NG = 4, GZ = (NP + NG - 1) / NG, CW = $clog2(NP + 1);
+    // Exact integer popcounts with a balanced reduction tree. The physical
+    // MC leaf selects this opt-in implementation; legacy wrappers retain the
+    // original grouped serial prefix. No pipeline stage or bank ordering changes.
+    localparam integer CPN = 1 << $clog2(NP);
+    function automatic [CW-1:0] balanced_count;
+        input [NP-1:0] bits;
+        input integer start_pos, stop_pos;
+        reg [CW-1:0] tree [1:2*CPN-1];
+        integer n;
+        begin
+            for (n = 0; n < CPN; n = n + 1) begin
+                tree[CPN+n] = 0;
+                if (n < NP && n >= start_pos && n < stop_pos) tree[CPN+n] = bits[n];
+            end
+            for (n = CPN-1; n > 0; n = n - 1) tree[n] = tree[2*n] + tree[2*n+1];
+            balanced_count = tree[1];
+        end
+    endfunction
     reg [NP-1:0] hit, ho;
     reg [CW-1:0] lpre [0:NP-1];
     reg [CW-1:0] gt [0:NG-1];
@@ -153,9 +172,15 @@ module dsfd_vm_bgl #(
                 gt[g2] = gt[g2] + ho[i2];
             end
         end
+        if (BAL_PREFIX) begin
+            for (i2 = 0; i2 < NP; i2 = i2 + 1)
+                lpre[i2] = balanced_count(ho, (i2/GZ)*GZ, i2);
+            for (g2 = 0; g2 < NG; g2 = g2 + 1)
+                gt[g2] = balanced_count(ho, g2*GZ, (g2+1)*GZ);
+        end
         goff[0] = {CW{1'b0}};
         for (g2 = 1; g2 < NG; g2 = g2 + 1) goff[g2] = goff[g2-1] + gt[g2-1];
-        tot = goff[NG-1] + gt[NG-1];
+        tot = BAL_PREFIX ? ((gt[0] + gt[1]) + (gt[2] + gt[3])) : (goff[NG-1] + gt[NG-1]);
         for (i2 = 0; i2 < NP; i2 = i2 + 1) opre[i2] = goff[i2 / GZ] + lpre[i2];
         for (j2 = 0; j2 < QD; j2 = j2 + 1)
             for (i2 = 0; i2 < NP; i2 = i2 + 1)
@@ -492,7 +517,7 @@ module dsfd_vm_bgl28_mc (
 `else
     localparam integer MACRO = 1;
 `endif
-    dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1)) u (
+    dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1), .BAL_PREFIX(1)) u (
         .ck(ck), .ck_req(ck_req), .ck_ret(ck_ret), .rs(rs), .grp(grp), .bi(bi), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d),
         .f_v(f_v), .f_we(f_we), .f_row(f_row), .f_mask(f_mask), .f_d(f_d), .r_v(r_v), .r_d(r_d), .r_f(r_f), .r_o(r_o),
         .o_v(o_v), .o_d(o_d), .o_f(o_f), .o_o(o_o));
