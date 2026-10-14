@@ -11,6 +11,9 @@ module ot_s81_pq_core_native (
     input wire ck_ctl, ck_qb, ck_fault,
     input wire [1:0] ck_aq,
     input wire [3:0] ck_ix,
+`ifdef OT_PQ_IX_PHYS_SPLIT
+    input wire [15:0] ck_ix_read,
+`endif
 `ifdef OT_PQ_BC_SLICED
     input wire [15:0] ck_bc,
 `else
@@ -103,7 +106,18 @@ module ot_s81_pq_core_native (
 `else
     genvar z;
     generate for (z = 0; z < 4; z = z + 1) begin : g_coverage
-`ifdef OT_PQ_IX_PIN_VARIANTS
+`ifdef OT_PQ_IX_PHYS_SPLIT
+        assign ix_rows_read[96*z +: 96] =
+            g_ix[z].u_ix.g_rg[0].u_rg.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[0].u_rg.g_bank[1].rows_read &
+            g_ix[z].u_ix.g_rg[1].u_rg.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[1].u_rg.g_bank[1].rows_read &
+            g_ix[z].u_ix.g_rg[2].u_rg.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[2].u_rg.g_bank[1].rows_read &
+            g_ix[z].u_ix.g_rg[3].u_rg.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[3].u_rg.g_bank[1].rows_read;
+        assign ix_rows_written[96*z +: 96] = g_ix[z].u_ix.g_rg[0].u_rg.g_bank[0].written;
+`elsif OT_PQ_IX_PIN_VARIANTS
         if(z < 2) begin : g_l
         assign ix_rows_read[96*z +: 96] =
             g_ix[z].g_left.u_ix.u_native.g_read_group[0].g_bank[0].rows_read & g_ix[z].g_left.u_ix.u_native.g_read_group[0].g_bank[1].rows_read &
@@ -134,20 +148,36 @@ module ot_s81_pq_core_native (
 `endif
     wire [511:0] aq_q;
     wire [19:0] aq_e;
+`ifdef OT_PQ_AQ_SIDE_PARITY
+    wire [9:0] aq_p;
+`endif
     genvar g;
     generate for (g = 0; g < 2; g = g + 1) begin : g_aq
         ot_dsrom_aq12t u_aq (.clk(ck_aq[g]), .rst_n(rst_n), .v(aq_vin), .x(x_q[1024*g +: 1024]),
-            .vo(), .q(aq_q[256*g +: 256]), .e(aq_e[10*g +: 10]), .y(), .fault(aqf[g]));
+            .vo(), .q(aq_q[256*g +: 256]), .e(aq_e[10*g +: 10]), .y(), .fault(aqf[g])
+`ifdef OT_PQ_AQ_SIDE_PARITY
+            , .qp(aq_p[5*g +: 5])
+`endif
+        );
     end endgenerate
     wire [255:0] hq0, hq1;
     wire [9:0] he0, he1;
     ot_s81_pq_qb_sram u_qb (.clk(ck_qb), .rst_n(rst_n), .consume(q_consume), .aqi_d(aqi), .aq_q(aq_q), .aq_e(aq_e),
         .h_b0(h_b0), .h_b1(h_b1), .hw_sv(hw[13:12]), .hq0(hq0), .hq1(hq1), .he0(he0), .he1(he1),
-        .fault(storage_fault[4]));
+        .fault(storage_fault[4])
+`ifdef OT_PQ_AQ_SIDE_PARITY
+        , .aq_p(aq_p)
+`endif
+    );
     wire [1023:0] bt_d;
     generate for (g = 0; g < 4; g = g + 1) begin : g_ix
         wire [255:0] d;
-`ifdef OT_PQ_IX_PIN_VARIANTS
+`ifdef OT_PQ_IX_PHYS_SPLIT
+        ot_s81_pq_ix_split_native u_ix (.clk(ck_ix[g]), .clk_read(ck_ix_read[4*g +: 4]),
+            .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
+            .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
+            .bt_d(d), .fault(storage_fault[g]));
+`elsif OT_PQ_IX_PIN_VARIANTS
         if(g < 2) begin : g_left
         ot_s81_pq_ix_left_native u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
             .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),

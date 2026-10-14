@@ -17,7 +17,9 @@ module ot_dsrom_aq12t (
     output reg  [255:0]  q,
     output reg  signed [9:0] e,
     output reg  [511:0]  y,
-    output reg           fault
+    output reg           fault,
+    // Optional native seam; ignored by legacy parents, zero when disabled.
+    output reg [4:0]     qp
 );
     // the tile's reset relay (el1011-ds-misc/pqc): rst_n is synchronised and re-driven from a flop next to the tile's
     // control flops (vline, multiplier valids, ring pointers, vo / fault); no datapath register is reset.
@@ -302,17 +304,50 @@ module ot_dsrom_aq12t (
             s16_sub[i] <= (shs < 12'sd0) ? 7'd0 : ({2'd0, c} << shs[3:0]);
         end
     end
+`ifndef OT_PQ_AQ_SIDE_PARITY
+    always @* qp = 5'd0;
+`endif
     // -- cycle 29 (S17): codes and dequantised BF16 (output registers) ----------------------------------------------
     always @(posedge clk or negedge rst_l) begin
         if (!rst_l) begin vo <= 1'b0; fault <= 1'b0; end
         else begin vo <= vl[LATENCY - 1]; fault <= vl[LATENCY - 1] && s16_nf; end
     end
+`ifdef OT_PQ_AQ_SIDE_PARITY
+    // The native QB receives parity registered at the same edge as q/e.
+    // This removes the 64-input XOR from QB's input-to-storage path without
+    // moving any data epoch or adding a register stage to the native seam.
+    wire [255:0] q_launch_d;
+    genvar qg;
+    generate for(qg=0;qg<32;qg=qg+1) begin : g_q_launch
+        assign q_launch_d[8*qg +: 8] = s16_c[qg][4]
+            ? {s16_sgn[qg], s16_g4[qg] + 4'd8, 3'd0}
+            : s16_c[qg][3] ? {s16_sgn[qg], s16_g4[qg] + 4'd7, s16_c[qg][2:0]}
+            : {s16_sgn[qg], 4'd0, s16_c[qg][2:0]};
+    end endgenerate
+    always @(posedge clk) begin
+        q <= q_launch_d;
+        qp <= {^s16_e, ^q_launch_d[255:192], ^q_launch_d[191:128],
+                       ^q_launch_d[127:64], ^q_launch_d[63:0]};
+`ifdef OT_PQ_AQ_PARITY_MUT
+        qp[0] <= ~^q_launch_d[63:0];
+`endif
+    end
+`ifndef SYNTHESIS
+`ifndef OT_PQ_AQ_PARITY_MUT
+    always @(negedge clk) if(rst_l && vo)
+        if(qp !== {^e,^q[255:192],^q[191:128],^q[127:64],^q[63:0]})
+            $fatal(1,"native AQ parity seam epoch mismatch");
+`endif
+`endif
+`endif
     always @(posedge clk) begin
         e <= s16_e;
         for (i = 0; i < 32; i = i + 1) begin
+`ifndef OT_PQ_AQ_SIDE_PARITY
             if (s16_c[i][4])      q[8*i +: 8] <= {s16_sgn[i], s16_g4[i] + 4'd8, 3'd0};
             else if (s16_c[i][3]) q[8*i +: 8] <= {s16_sgn[i], s16_g4[i] + 4'd7, s16_c[i][2:0]};
             else                  q[8*i +: 8] <= {s16_sgn[i], 4'd0, s16_c[i][2:0]};
+`endif
             if (s16_c[i] == 5'd0)          y[16*i +: 16] <= {s16_sgn[i], 15'd0};
             else if (s16_be[i] >= 12'sd255) y[16*i +: 16] <= {s16_sgn[i], 8'hFF, 7'd0};
             else if (s16_be[i] >= 12'sd1)   y[16*i +: 16] <= {s16_sgn[i], s16_be[i][7:0], s16_cn[i][6:0]};
