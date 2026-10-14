@@ -16,6 +16,7 @@ def main():
     text = text[text.index("module ot_v41_pqc_ix #("):text.index("\n// T_QB:")]
     text = text.replace("module ot_v41_pqc_ix", "module ot_s81_pq_ix_sram", 1)
     text = text.replace("output wire [255:0]    bt_d", "output wire           fault,\n    output wire [255:0]    bt_d", 1)
+    text = text.replace("input  wire            par,", "input  wire            consume,\n    input  wire            par,", 1)
     start = text.index("    // the buffer: one array per lane index")
     text = text[:start] + r'''
     // KMAX=6144 uses 96 of 128 rows. A row contains eight BF16 words
@@ -35,6 +36,10 @@ def main():
     wire we = write_valid && (write_blk[0] == par);
     wire [6:0] wa = write_blk[WBW-1:1];
     wire [7:0] bank_fault;
+    reg consume_1, consume_2;
+    always @(posedge clk or negedge rst_l[0])
+        if (!rst_l[0]) begin consume_1 <= 0; consume_2 <= 0; end
+        else begin consume_1 <= consume; consume_2 <= consume_1; end
     // The diagnostic leaves from its own pin register, like the data lanes.
     reg fault_pin;
     always @(posedge clk or negedge rst_l[0])
@@ -49,7 +54,7 @@ def main():
 `else
             wire [6:0] ra = row[6:0];
 `endif
-            wire re = p1_bg[2*gu + gp];
+            wire re = p1_bg[2*gu + gp] && consume_1;
             wire [255:0] rd;
             wire [255:0] wd = bw_d[256*gp +: 256];
             ot_sram_1r1w_128x256_m1_r2c2 u_mem (
@@ -85,7 +90,7 @@ def main():
             for (gl = 0; gl < 2; gl = gl + 1) begin : g_lane
                 reg [15:0] selected;
                 always @(posedge clk)
-                    selected <= p2_bg[4*gu + 2*gp + gl]
+                    selected <= p2_bg[4*gu + 2*gp + gl] && consume_2
                         ? rd[128*gl + 16*p2_bb[3*(4*gu + 2*gp + gl) +: 3] +: 16] : 16'd0;
                 assign bt_d[64*gu + 32*gp + 16*gl +: 16] = selected;
             end

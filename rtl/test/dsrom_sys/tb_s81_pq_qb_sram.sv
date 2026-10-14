@@ -11,7 +11,7 @@ module tb_s81_pq_qb_sram;
     wire [255:0] q0, q1, ref0, ref1;
     wire [9:0] e0, e1, refe0, refe1;
     wire fault;
-    ot_s81_pq_qb_sram dut (.clk(clk), .rst_n(rst_n), .aqi_d(aqi), .aq_q(aq_q), .aq_e(aq_e),
+    ot_s81_pq_qb_sram dut (.clk(clk), .rst_n(rst_n), .consume(1'b1), .aqi_d(aqi), .aq_q(aq_q), .aq_e(aq_e),
         .h_b0(h_b0), .h_b1(h_b1), .hw_sv(hw_sv), .hq0(q0), .hq1(q1), .he0(e0), .he1(e1), .fault(fault));
     ot_v41_pqc_qb #(.KMAX(6144)) ref_qb (.clk(clk), .rst_n(rst_n), .aqi_d(aqi), .aq_q(aq_q), .aq_e(aq_e),
         .h_b0(h_b0), .h_b1(h_b1), .hw_sv(hw_sv), .hq0(ref0), .hq1(ref1), .he0(refe0), .he1(refe1));

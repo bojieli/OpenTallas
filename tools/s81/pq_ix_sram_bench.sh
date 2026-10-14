@@ -18,7 +18,7 @@ set +e
 vvp "$work/mut.vvp" > "$work/mut.log" 2>&1
 rc=$?
 set -e
-if [[ $rc == 0 ]] || ! rg -q 'PQ_IX_SRAM FAIL' "$work/mut.log"; then
+if [[ $rc == 0 ]] || ! grep -q 'PQ_IX_SRAM FAIL' "$work/mut.log"; then
   cat "$work/mut.log"
   exit 1
 fi

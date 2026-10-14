@@ -7,6 +7,7 @@ module ot_s81_pq_ix_sram #(
 ) (
     input  wire            clk,
     input  wire            rst_n,
+    input  wire            consume,
     input  wire            par,              // the block parity this tile holds (tie: g[1])
     input  wire [1023:0]   xw,               // x_q words 32 g[0] .. 32 g[0] + 31
     input  wire            ba_v,             // the spine's BF16 write stage A (registers)
@@ -76,6 +77,10 @@ module ot_s81_pq_ix_sram #(
     wire we = write_valid && (write_blk[0] == par);
     wire [6:0] wa = write_blk[WBW-1:1];
     wire [7:0] bank_fault;
+    reg consume_1, consume_2;
+    always @(posedge clk or negedge rst_l[0])
+        if (!rst_l[0]) begin consume_1 <= 0; consume_2 <= 0; end
+        else begin consume_1 <= consume; consume_2 <= consume_1; end
     // The diagnostic leaves from its own pin register, like the data lanes.
     reg fault_pin;
     always @(posedge clk or negedge rst_l[0])
@@ -90,7 +95,7 @@ module ot_s81_pq_ix_sram #(
 `else
             wire [6:0] ra = row[6:0];
 `endif
-            wire re = p1_bg[2*gu + gp];
+            wire re = p1_bg[2*gu + gp] && consume_1;
             wire [255:0] rd;
             wire [255:0] wd = bw_d[256*gp +: 256];
             ot_sram_1r1w_128x256_m1_r2c2 u_mem (
@@ -126,7 +131,7 @@ module ot_s81_pq_ix_sram #(
             for (gl = 0; gl < 2; gl = gl + 1) begin : g_lane
                 reg [15:0] selected;
                 always @(posedge clk)
-                    selected <= p2_bg[4*gu + 2*gp + gl]
+                    selected <= p2_bg[4*gu + 2*gp + gl] && consume_2
                         ? rd[128*gl + 16*p2_bb[3*(4*gu + 2*gp + gl) +: 3] +: 16] : 16'd0;
                 assign bt_d[64*gu + 32*gp + 16*gl +: 16] = selected;
             end

@@ -11,7 +11,7 @@ module tb_s81_pq_ix_sram;
     reg [6:0] hw7 = 0;
     wire [255:0] actual, reference;
     wire fault;
-    ot_s81_pq_ix_sram dut (.clk(clk), .rst_n(rst_n), .par(1'(PAR)), .xw(xw), .ba_v(ba_v),
+    ot_s81_pq_ix_sram dut (.clk(clk), .rst_n(rst_n), .consume(1'b1), .par(1'(PAR)), .xw(xw), .ba_v(ba_v),
         .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw7), .bt_d(actual), .fault(fault));
     ot_v41_pqc_ix #(.KMAX(6144), .VRD(64)) ref_ix (.clk(clk), .rst_n(rst_n), .par(1'(PAR)), .xw(xw), .ba_v(ba_v),
         .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw7), .bt_d(reference));

@@ -16,6 +16,6 @@ set +e
 vvp "$work/mut.vvp" > "$work/mut.log" 2>&1
 rc=$?
 set -e
-if [[ $rc == 0 ]] || ! rg -q 'PQ_QB_SRAM FAIL' "$work/mut.log"; then cat "$work/mut.log"; exit 1; fi
+if [[ $rc == 0 ]] || ! grep -q 'PQ_QB_SRAM FAIL' "$work/mut.log"; then cat "$work/mut.log"; exit 1; fi
 cat "$work/mut.log"
 echo 'PQ_QB_SRAM_GATE PASS positive=1 mutant_row=FAIL production_KMAX=6144 macros=4'

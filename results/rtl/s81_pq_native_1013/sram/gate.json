@@ -12,28 +12,29 @@
   "halfword_checks_per_parity": 16480,
   "mutant_row": "FAIL cycle219",
   "physical_corruption": "caught",
-  "unit": "oth-ubuntu-137882-1791945608"
+  "unit": "oth-ubuntu-247324-1791946631"
  },
  "qb": {
   "positive": 1,
   "bit_checks": 343672,
   "logical_words": 384,
-  "mutant_row": "FAIL cycle603",
+  "mutant_row": "FAIL cycle603 (wrong bank and row)",
   "exponent_corruption": "caught",
-  "unit": "oth-ubuntu-137613-1791945606"
+  "unit": "oth-ubuntu-247357-1791946631"
  },
  "host": "ot-epyc1tb",
  "physical_qualified": false,
  "end_to_end_qualified": false,
  "sha256": {
-  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_sram.sv": "1190db085abb0f97a42d5c0f2d7eaae38b3a64a2f5f4f2c30353eadbe10382ee",
-  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv": "699daf4bcfb8c8be100c253e6bd4fbc6c0f8ad7b55e1cb886381b03d5a115498",
-  "tools/s81/pq_ix_sram.py": "67425de9f5426ca13369ee9ff5c9173b2a0a168a6dfb572f3dc53bb97442087f",
-  "tools/s81/pq_ix_sram_bench.sh": "0598df71d98407701a0ae123d89444f1c5a1b5dc5b13c55d61bd41034c5b8d98",
-  "tools/s81/pq_qb_sram_bench.sh": "958af87e8081637c9e78048f90f818704a2607c7931e6ebc2655ee0e837ca940",
-  "rtl/test/dsrom_sys/tb_s81_pq_ix_sram.sv": "8276acd3fd61cc5d51ad305324688858c6c33e86ddbcb73f50e000fcb91e9e4f",
-  "rtl/test/dsrom_sys/tb_s81_pq_qb_sram.sv": "aa35f05ac0a22409fbdcfbfa2cc4ab32036f7f8af9d1f3a12547f0bea6ba7a31",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_sram.sv": "197cedcd3187e642c67a54e919c5e4452d1a31801546b3881e0b2788536be24c",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv": "cf0d0dfcbf3654fcf274406087b336fde6625d30e5173c1d5618b49bbd2c7e4a",
+  "tools/s81/pq_ix_sram.py": "27a175ad377392184dad6de27bc157cb4c80b398dd9a0f51ef7003abb5e16717",
+  "tools/s81/pq_ix_sram_bench.sh": "8b06c243db78c5ee34031bd6e71768144cfc3da88266f8673b2b0d6f443db061",
+  "tools/s81/pq_qb_sram_bench.sh": "d89a2402e60cc0d6c8ef0d9ac32993ade180ffae9e496b608e8f993cd70b5628",
+  "rtl/test/dsrom_sys/tb_s81_pq_ix_sram.sv": "ef1a4b48c991cf11f350942b53d3429667d4791db3002b5e0f918e0676658537",
+  "rtl/test/dsrom_sys/tb_s81_pq_qb_sram.sv": "c9477b8c896debdf7e016527438a5b670bd1e63b9923090caf54902086c0ba8e",
   "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv": "f6c45bff4f75c10441765ecff25aba83e800c8c9ec72e48b493a9eba2f74a78a",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
- }
+ },
+ "consumed_read_contract": "input consume captures stream advance, beat valid and family; speculative other-family data is not consumed. Strict loaded/RDW/parity guards remain on consumed requests."
 }

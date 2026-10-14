@@ -4,7 +4,7 @@
 // A legal two-word write differs in bit0; concurrent q reads differ in bit3.
 // Macro output is the original bt_q register, so no cycle is added.
 module ot_s81_pq_qb_sram (
-    input wire clk, rst_n,
+    input wire clk, rst_n, consume,
     input wire [9:0] aqi_d,
     input wire [511:0] aq_q,
     input wire [19:0] aq_e,
@@ -31,9 +31,10 @@ module ot_s81_pq_qb_sram (
     end
     reg [15:0] i0, i1;
     reg [1:0] gates;
+    reg consume_1;
     always @(posedge clk or negedge rst_l[0])
-        if (!rst_l[0]) begin i0 <= 0; i1 <= 0; gates <= 0; end
-        else begin i0 <= h_b0; i1 <= h_b1; gates <= hw_sv; end
+        if (!rst_l[0]) begin i0 <= 0; i1 <= 0; gates <= 0; consume_1 <= 0; end
+        else begin i0 <= h_b0; i1 <= h_b1; gates <= hw_sv; consume_1 <= consume; end
     wire [1:0] bank0 = {i0[3], i0[0]}, bank1 = {i1[3], i1[0]};
     wire [6:0] row0 = {i0[8:4], i0[2:1]}, row1 = {i1[8:4], i1[2:1]};
     wire [255:0] rd [0:3];
@@ -43,12 +44,17 @@ module ot_s81_pq_qb_sram (
     reg fault_pin;
     always @(posedge clk or negedge rst_l[0]) begin
         if (!rst_l[0]) begin selected0 <= 0; selected1 <= 0; g2 <= 0; fault_pin <= 0; end
-        else begin selected0 <= bank0; selected1 <= bank1; g2 <= gates; fault_pin <= |bfault; end
+        else begin selected0 <= bank0; selected1 <= bank1; g2 <= gates & {2{consume_1}}; fault_pin <= |bfault; end
     end
     assign fault = fault_pin;
     always @(posedge clk) begin
         hq0 <= g2[0] ? rd[selected0] : 256'd0;
+`ifdef OT_S81_PQ_QB_MUT_ROW
+        // Wrong logical read index: q1 consumes q0's bank as well as its row.
+        hq1 <= g2[1] ? rd[selected0] : 256'd0;
+`else
         hq1 <= g2[1] ? rd[selected1] : 256'd0;
+`endif
         he0 <= g2[0] ? erd[selected0] : 10'd0;
         he1 <= g2[1] ? erd[selected1] : 10'd0;
     end
@@ -61,8 +67,8 @@ module ot_s81_pq_qb_sram (
         wire [6:0] wa = {wi[8:4],wi[2:1]};
         wire [255:0] wd = a ? aq_q[255:0] : aq_q[511:256];
         wire [9:0] ew = a ? aq_e[9:0] : aq_e[19:10];
-        wire r0 = gates[0] && bank0 == 2'(b);
-        wire r1 = gates[1] && bank1 == 2'(b);
+        wire r0 = consume_1 && gates[0] && bank0 == 2'(b);
+        wire r1 = consume_1 && gates[1] && bank1 == 2'(b);
         wire re = r0 || r1;
 `ifdef OT_S81_PQ_QB_MUT_ROW
         wire [6:0] ra = row0;
@@ -103,8 +109,8 @@ module ot_s81_pq_qb_sram (
     end endgenerate
 `ifndef SYNTHESIS
     always @(posedge clk) if (rst_l[0]) begin
-        if (gates[0] && i0 >= 384) $fatal(1, "QB q0 index beyond production storage");
-        if (gates[1] && i1 >= 384) $fatal(1, "QB q1 index beyond production storage");
+        if (consume_1 && gates[0] && i0 >= 384) $fatal(1, "QB q0 index beyond production storage");
+        if (consume_1 && gates[1] && i1 >= 384) $fatal(1, "QB q1 index beyond production storage");
         if (aqi[9] && (aqi[8:1] >= 192 || aqi[1])) $fatal(1, "QB write pair outside legal loader protocol");
     end
 `endif

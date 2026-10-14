@@ -1,0 +1,65 @@
+{
+ "schema": "s81-production-pq-native-core-gate-v1",
+ "parameters": {
+  "PHW": 9,
+  "SAW": 11,
+  "KMAX": 6144,
+  "R": 128,
+  "return_groups": 12,
+  "macros": 36
+ },
+ "cases": 4,
+ "operations": 16,
+ "all_four_tags": true,
+ "positions": [
+  1,
+  2
+ ],
+ "compared_cycles": 5536,
+ "q_beats": 2304,
+ "bf_beats": 2304,
+ "VM_reads": 2304,
+ "return_rows_counted": 768,
+ "consumed_reads": {
+  "q": 2304,
+  "bf": 2304
+ },
+ "speculative_head_cycles": {
+  "q": 318,
+  "bf": 586
+ },
+ "positive": "PASS",
+ "mutants": {
+  "early_consume": "FAIL strict read-before-loaded guard",
+  "ix": "FAIL test1/cycle132",
+  "qb": "FAIL test0/cycle82"
+ },
+ "host": "ot-epyc4",
+ "units": {
+  "positive": "oth-ubuntu-4172967-1791946949",
+  "early_consume": "oth-ubuntu-4173012-1791946949",
+  "ix": "oth-ubuntu-4173009-1791946949",
+  "qb": "oth-ubuntu-4173013-1791946949"
+ },
+ "sha256": {
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_sram.sv": "197cedcd3187e642c67a54e919c5e4452d1a31801546b3881e0b2788536be24c",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv": "cf0d0dfcbf3654fcf274406087b336fde6625d30e5173c1d5618b49bbd2c7e4a",
+  "tools/s81/pq_ix_sram.py": "27a175ad377392184dad6de27bc157cb4c80b398dd9a0f51ef7003abb5e16717",
+  "tools/s81/pq_ix_sram_bench.sh": "8b06c243db78c5ee34031bd6e71768144cfc3da88266f8673b2b0d6f443db061",
+  "tools/s81/pq_qb_sram_bench.sh": "d89a2402e60cc0d6c8ef0d9ac32993ade180ffae9e496b608e8f993cd70b5628",
+  "rtl/test/dsrom_sys/tb_s81_pq_ix_sram.sv": "ef1a4b48c991cf11f350942b53d3429667d4791db3002b5e0f918e0676658537",
+  "rtl/test/dsrom_sys/tb_s81_pq_qb_sram.sv": "c9477b8c896debdf7e016527438a5b670bd1e63b9923090caf54902086c0ba8e",
+  "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv": "f6c45bff4f75c10441765ecff25aba83e800c8c9ec72e48b493a9eba2f74a78a",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv": "4cc50b81da418fff651f7c00e9e0a321917e1ffc9e554015fd82096113d41ed8",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_native.sv": "23cbadd5a7956758396a7476a5fe784a99887123d9561b7a046a4cd881197b1d",
+  "rtl/test/dsrom_sys/tb_s81_pq_core_native.cpp": "385221a3d47c3eab34421aedd69494f55869e8bdb4cc688af0e00c35a7a2ffec",
+  "tools/s81/pq_native_ctl.py": "73bf32b1a6bf23df88045a77e0630ca1e5b4802975f4a6f01441ce48e4f1d4c0",
+  "tools/s81/pq_native_core_bench.py": "7b7dc98dec8b37efb933e29b132d846d7293eecbde616a38ee2ec8a7c7eec9e7",
+  "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv": "f2d6b450070682b5bc1b182e8cc5395a1b56802b5e35a5f2eb8d2ec130af903e"
+ },
+ "payload_check": "Every valid Q/BF payload bit; every control, metadata, ROM and issuer output each cycle; other-family data aliases are unconsumed",
+ "distributed_returns": "Twelve external count/fault groups; this core bench is not an actual root/RWB/layer composition",
+ "physical_qualified": false,
+ "throughput_qualified": false
+}
