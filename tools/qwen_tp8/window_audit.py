@@ -80,7 +80,7 @@ def main():
                     through=(u[1]==v[1] and VM[1]<u[1]<VM[3] and min(u[0],v[0])<VM[2] and max(u[0],v[0])>VM[0]) or (u[0]==v[0] and VM[0]<u[0]<VM[2] and min(u[1],v[1])<VM[3] and max(u[1],v[1])>VM[1])
                     if through:
                         intrusions[choice].append(bus)
-                        crossing_detail[choice].append(dict(bus=bus,cls=cls,endpoint_instances=names,vm_owned_endpoint='sp_vector_memory' in names,segment=[u,v]))
+                        crossing_detail[choice].append(dict(bus=bus,cls=cls,endpoint_instances=names[:8],endpoint_instance_count=len(names),vm_owned_endpoint='sp_vector_memory' in names,segment=[u,v]))
                     for cell,d,n in segment(u,v,a.step): demand[choice][cell][d]+=bits*n
     blocks=[(i['x'],i['y'],i['x']+i['w'],i['y']+i['h']) for i in inst.values() if i['w']*i['h']>40000]
     hard=[(i['x'],i['y'],i['x']+i['w'],i['y']+i['h']) for i in inst.values() if i['w']*i['h']>40000 and (i['m'].startswith(('qfd_tile','ot_hbm','qfd_io_serdes','qfd_io_ucie','qkd_pll','qfd_clkrx')))]
