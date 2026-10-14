@@ -2,7 +2,7 @@
 module tb_hgi_coll_tkm_head_seam;
  parameter MUT=0,MASKED=0,BLOCKS=40;
  reg clk=0;always #5 clk=~clk;reg rst_n=0;
- reg[8159:0]heads;reg[95:0]masks;reg[31:0]epochs;reg[7:0]hn;
+ reg[10879:0]heads;reg[127:0]masks;reg[31:0]epochs;reg[11:0]hn;
  wire[31:0]take,cmd_epoch;wire[3:0]pop;
  function automatic[7:0]mask_for(input integer lane,input integer block_);
   mask_for=MASKED?8'(block_*37+lane*11):8'hff;
@@ -14,7 +14,7 @@ module tb_hgi_coll_tkm_head_seam;
  integer base[0:3];reg[3:0]pop_pin;reg[31:0]epoch_pin;
  reg[4*BLOCKS*8-1:0]seen=0;integer checked=0,cycles=0,l,s,i,id,j;
  ot_hgi_coll_tkm_seq_lane_core #(.KMAX(64),.MUT(MUT))dut(.clk(clk),.rst_n(rst_n),.start(1'b0),
- .lane_heads0(heads[0+:2040]),.lane_masks0(masks[0+:24]),.lane_epoch0(epochs[0+:8]),.lane_hn0(hn[0+:2]),.lane_heads1(heads[2040+:2040]),.lane_masks1(masks[24+:24]),.lane_epoch1(epochs[8+:8]),.lane_hn1(hn[2+:2]),.lane_heads2(heads[4080+:2040]),.lane_masks2(masks[48+:24]),.lane_epoch2(epochs[16+:8]),.lane_hn2(hn[4+:2]),.lane_heads3(heads[6120+:2040]),.lane_masks3(masks[72+:24]),.lane_epoch3(epochs[24+:8]),.lane_hn3(hn[6+:2]),.lane_take(take),.lane_pop(pop),.lane_take_epochs(cmd_epoch),
+ .lane_heads0(heads[0+:2720]),.lane_masks0(masks[0+:32]),.lane_epoch0(epochs[0+:8]),.lane_hn0(hn[0+:3]),.lane_heads1(heads[2720+:2720]),.lane_masks1(masks[32+:32]),.lane_epoch1(epochs[8+:8]),.lane_hn1(hn[3+:3]),.lane_heads2(heads[5440+:2720]),.lane_masks2(masks[64+:32]),.lane_epoch2(epochs[16+:8]),.lane_hn2(hn[6+:3]),.lane_heads3(heads[8160+:2720]),.lane_masks3(masks[96+:32]),.lane_epoch3(epochs[24+:8]),.lane_hn3(hn[9+:3]),.lane_take(take),.lane_pop(pop),.lane_take_epochs(cmd_epoch),
  .lane_d0v(4'b0),.lane_d1v(4'b0),.lane_dv(4'b0),.lane_fault(4'b0),.lane_ldv(4'b0),
  .lane_nv_mask(32'b0),.lane_occ(32'b0),
  .chain_up(340'b0),.chain_tau(84'b0),.chain_busy(1'b0),
@@ -23,11 +23,11 @@ module tb_hgi_coll_tkm_head_seam;
  always @*begin
   heads=0;masks=0;epochs=0;hn=0;
   for(integer l=0;l<4;l=l+1)begin
-   epochs[8*l+:8]=base[l];hn[2*l+:2]=((BLOCKS-base[l])>=3)?3:(BLOCKS-base[l]);
-   for(integer s=0;s<3;s=s+1)if(base[l]+s<BLOCKS)begin
-    masks[24*l+8*s+:8]=mask_for(l,base[l]+s);
+   epochs[8*l+:8]=base[l];hn[3*l+:3]=((BLOCKS-base[l])>=5)?5:(BLOCKS-base[l]);
+   for(integer s=0;s<4;s=s+1)if(base[l]+s<BLOCKS)begin
+    masks[32*l+8*s+:8]=mask_for(l,base[l]+s);
     for(integer i=0;i<8;i=i+1)begin
-     heads[2040*l+680*s+85*i+:85]=entry_for(l*BLOCKS*8+(base[l]+s)*8+i);
+     heads[2720*l+680*s+85*i+:85]=entry_for(l*BLOCKS*8+(base[l]+s)*8+i);
     end
    end
   end

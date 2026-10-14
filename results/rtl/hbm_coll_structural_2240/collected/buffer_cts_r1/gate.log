@@ -1,0 +1,17 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc1tb for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_tkm_buffer_ref2240_20261014-033211.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_tkm_buffer_ref2240_20261014-033211.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/hbm_tkm_buffer_ref2240-20261014-033211
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 16 s (gate total 130 s)
+GATE INFO util: synthesized std area 238 um2 + macros 24628 in core 53953: util 46%
+GATE INFO textbook: PASS ot_hgi_coll_tkm_buffer cells 1,418 flops 707 depth 11.7 ps util 0.4615 reach 0.0 um (0.0 s)
+GATE INFO cts_calibration: ss insertion all 418.6..443.3 ps (spread 24.7), boundary mean 428.2; tt insertion all 322.2..358.1 ps (spread 35.9), boundary mean 352.8; ff insertion all 251.6..309.0 ps (spread 57.4), boundary mean 303.9; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.520 vs spec PD 0.52
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hbm_tkm_buffer_ref2240/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: macro->reg    300 paths, worst slack -28.8 ps (e.g. rd_data[291]$_DFF_P_/D)
+GATE INFO path_classes: in->reg         3 paths, worst slack 367.5 ps (e.g. u_rr.sync_q[0]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: reg->reg        4 paths, worst slack 406.9 ps (e.g. rd_v$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS -2.8778646132820995e-11 hold WNS 3.155248284869572e-11
+GATE INFO clock_rule: root port:clk: 709 sinks on the largest root <= 15,000; measured TT insertion 358.1 ps, leaf spread 35.9 ps
+PRE_ROUTE_GATE: PASS (0 fail, 0 warn)
+GATE: hbm_tkm_buffer_ref2240/gate_result.json written (exact staged source binding; commit it with the kit)

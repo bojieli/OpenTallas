@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// One own-flop ingress leaf: decode, three SRAM banks, FIFO head, three staging slots.
+// One own-flop ingress leaf: decode, three SRAM banks, FIFO head, five staging slots for the registered head round trip.
 // Current selector feedback must gain registered credit/mask seams before physical adoption.
 module ot_hgi_coll_tkm_lane #(parameter integer MUT=0, HEAD_SEAM=0)(
  input wire clk, rst_n, input wire del_valid,del_reserve,
@@ -9,8 +9,8 @@ module ot_hgi_coll_tkm_lane #(parameter integer MUT=0, HEAD_SEAM=0)(
  output wire del_permit,output reg fault,output wire [1:0] early_valid,
  output reg decoded_v,output wire [7:0] decoded_mask,
  output wire [679:0] head_e,output wire [7:0] head_m,
- output wire[2039:0]heads_e,output wire[23:0]heads_m,output reg[7:0]head_epoch,
- output reg [7:0] taken,output reg [1:0] head_n,
+ output wire[2719:0]heads_e,output wire[31:0]heads_m,output reg[7:0]head_epoch,
+ output reg [7:0] taken,output reg [2:0] head_n,
  output reg [7:0] occ,output wire landing_v,output wire fifo_empty
 );
  reg[7:0]take_pin,epoch_pin;reg pop_pin,live_pin;
@@ -48,7 +48,8 @@ module ot_hgi_coll_tkm_lane #(parameter integer MUT=0, HEAD_SEAM=0)(
   end
  end
  wire fo;wire[679:0]fd;wire[6:0]fcnt;
- wire fpop=!fifo_empty&&live_use&&({1'b0,head_n}+3'(landing_v)<3'd3);
+ localparam integer STAGES=HEAD_SEAM?5:3;
+ wire fpop=!fifo_empty&&live_use&&(4'(head_n)+4'(landing_v)-4'(pop_use&&live_use)<4'(STAGES));
  ot_hcoll_sfifo #(.W(680),.AW(6))u_fifo(.clk(clk),.rst_n(rr[0]),.push(decoded_v),.din(decoded_e),
   .pop(fpop),.empty(fifo_empty),.dout(fd),.ovf(fo),.count(fcnt));
  reg ld_v;reg[679:0]ld_e;reg[82:0]tau_p;
@@ -56,22 +57,20 @@ module ot_hgi_coll_tkm_lane #(parameter integer MUT=0, HEAD_SEAM=0)(
  for(genvar s=0;s<8;s=s+1)begin:g_mask
   assign ld_m[s]=ld_e[85*s+83]&&(ld_e[85*s+1+:83]>tau_p);
  end
- reg[679:0]se[0:2];reg[7:0]sm[0:2];
- for(genvar n=0;n<3;n=n+1)begin:g_head_pin
-  assign heads_e[680*n+:680]=se[n];assign heads_m[8*n+:8]=sm[n];
+ reg[679:0]se[0:STAGES-1];reg[7:0]sm[0:STAGES-1];
+ for(genvar n=0;n<4;n=n+1)begin:g_head_pin
+  if(n<STAGES)begin assign heads_e[680*n+:680]=se[n];assign heads_m[8*n+:8]=sm[n];end
+  else begin assign heads_e[680*n+:680]=0;assign heads_m[8*n+:8]=0;end
  end
  assign head_e=se[0];assign head_m=sm[0];assign landing_v=ld_v;
  assign del_permit=HEAD_SEAM?permit_q:((cr>8'(res_q))&&ins_live);
  always @(posedge clk)begin
   ld_e<=fd;tau_p<=tau;
   // Masks are computed behind captured fd/tau pins, at the existing staging edge.
-  if(pop_use&&live_use)begin se[0]<=se[1];sm[0]<=sm[1];se[1]<=se[2];sm[1]<=sm[2];end
+  if(pop_use&&live_use)for(integer i_=0;i_<STAGES-1;i_=i_+1)begin se[i_]<=se[i_+1];sm[i_]<=sm[i_+1];end
   if(ld_v)begin
-   case(head_n-2'(pop_use&&live_use))
-    0:begin se[0]<=ld_e;sm[0]<=ld_m;end
-    1:begin se[1]<=ld_e;sm[1]<=ld_m;end
-    default:begin se[2]<=ld_e;sm[2]<=ld_m;end
-   endcase
+   se[head_n-3'(pop_use&&live_use)]<=ld_e;
+   sm[head_n-3'(pop_use&&live_use)]<=ld_m;
   end
  end
  always @(posedge clk or negedge rn)begin
@@ -84,7 +83,7 @@ module ot_hgi_coll_tkm_lane #(parameter integer MUT=0, HEAD_SEAM=0)(
    res_q<=del_reserve;d0_v<=del_valid;d1_v<=d0_v;decoded_v<=d1_v;
    cr<=cr-((MUT==3)?8'd0:8'(res_q))+8'(fpop_q);rfault<=res_q&&(cr==0);fpop_q<=fpop;
    occ<=occ+8'(decoded_v)-8'(fpop);ld_v<=fpop;
-   head_n<=head_n-2'(pop_use&&live_use)+2'(ld_v);
+   head_n<=head_n-3'(pop_use&&live_use)+3'(ld_v);
    if(pop_use&&live_use)taken<=0;else if(live_use)taken<=taken|take_use;
    if(rfault||fo||(d0_v&&!d0_f[544]))fault<=1;
    if(d1_v&&(d1_q>=g||(24'(d1_gi)-d1_qpf)>=24'(pf)))fault<=1;

@@ -1,0 +1,17 @@
+PHASE 9 at 8
+PHASE 1 at 16
+PHASE 2 at 854
+PHASE 3 at 922
+PHASE 4 at 1002
+PHASE 5 at 1007
+PHASE 6 at 1083
+PHASE 7 at 1110
+PHASE 8 at 1195
+PHASE 0 at 1196
+TKM G=8 n=512 M=0 k=300 nout=300 rank=80 R=1 CYCLES=1199 SURV=1231 INS=364 SINK=1188
+TIMELINE first_delivery=83 last_delivery=762 sink_credit_blocked_cycles=122
+PASS tb_hgi_coll_tkm /srv/opentallas-scratch/codex/tkmseams2240-full-r1/vectors/g8_n512_k300_bf16
+- rtl/hbm_accel/generic/collective/tkm/tb_hgi_coll_tkm.sv:208: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 30.948 s; speed 32.972 ns/s
+- Verilator: cpu 30.946 s on 1 threads; allocated 293 MB

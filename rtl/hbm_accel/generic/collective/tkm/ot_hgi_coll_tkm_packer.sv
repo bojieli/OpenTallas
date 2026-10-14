@@ -62,7 +62,14 @@ module ot_hgi_coll_tkm_packer #(parameter integer FW=512, MUT=0, ACK_SEAM=0)(
   end
   if(start_q)for(integer i_=0;i_<16;i_=i_+1)lb[i_]<=0;
  end
- always @(posedge clk)if(lq_pop)begin w_addr<=lq_a[lq_h];w_mask<=lq_m[lq_h];w_data<=lq_d[lq_h];end
+ // Independent local pointer feedback retains each physical mux selector copy.
+ for(genvar chunk=0;chunk<(FW+31)/32;chunk=chunk+1)begin:g_rd_chunk
+  (* keep *)reg[2:0]h_local;
+  always @(posedge clk or negedge rn)
+   if(!rn)h_local<=0;else if(lq_pop)h_local<=h_local+1'b1;
+  always @(posedge clk)if(lq_pop)w_data[32*chunk+:32]<=lq_d[h_local][32*chunk+:32];
+ end
+ always @(posedge clk)if(lq_pop)begin w_addr<=lq_a[lq_h];w_mask<=lq_m[lq_h];end
  always @(posedge clk or negedge rn)begin
   if(!rn)begin
    w_seq<=0;w_v<=0;

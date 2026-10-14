@@ -48,10 +48,10 @@ module ot_hgi_coll_tkm_seq_split #(
     output wire  [31:0]          stat_surv       // survivors taken
 );
  wire[DEL-1:0]perm,ft,dv,fe,ldv,d0v,d1v,pop;
- wire[DEL*680-1:0]he;wire[DEL*2040-1:0]heads;wire[DEL*24-1:0]masks;wire[DEL*8-1:0]epochs,take_epochs;
+ wire[DEL*680-1:0]he;wire[DEL*2720-1:0]heads;wire[DEL*32-1:0]masks;wire[DEL*8-1:0]epochs,take_epochs;
  wire[DEL*8-1:0]nv_mask;
  wire[DEL*8-1:0]hm,dn,occ,take;
- wire[DEL*2-1:0]hn;
+ wire[DEL*3-1:0]hn;
  wire live;wire[82:0]tau;wire[7:0]g,gb;wire[15:0]pf;
  wire bwv,brv,bresp;wire[9:0]bwa,bra;wire[339:0]bwd,brd;
  ot_hgi_coll_tkm_buffer u_buffer(.clk(buffer_clk),.rst_n(rst_n),.w_v(bwv),.w_addr(bwa),.w_data(bwd),.r_v(brv),.r_addr(bra),.rd_v(bresp),.rd_data(brd));
@@ -64,7 +64,7 @@ module ot_hgi_coll_tkm_seq_split #(
  assign del_permit=perm;
  ot_hgi_coll_tkm_seq_lane_core #(.KMAX(KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.CAP(CAP),.MUT(MUT))u_core(
    .lane_d0v(d0v),.lane_d1v(d1v),.lane_fault(ft),.lane_dv(dv),.lane_ldv(ldv),
-   .lane_heads0(heads[0+:2040]),.lane_masks0(masks[0+:24]),.lane_epoch0(epochs[0+:8]),.lane_hn0(hn[0+:2]),.lane_heads1(heads[2040+:2040]),.lane_masks1(masks[24+:24]),.lane_epoch1(epochs[8+:8]),.lane_hn1(hn[2+:2]),.lane_heads2(heads[4080+:2040]),.lane_masks2(masks[48+:24]),.lane_epoch2(epochs[16+:8]),.lane_hn2(hn[4+:2]),.lane_heads3(heads[6120+:2040]),.lane_masks3(masks[72+:24]),.lane_epoch3(epochs[24+:8]),.lane_hn3(hn[6+:2]),.lane_take_epochs(take_epochs),.lane_nv_mask(nv_mask),.lane_occ(occ),.lane_take(take),.lane_pop(pop),
+   .lane_heads0(heads[0+:2720]),.lane_masks0(masks[0+:32]),.lane_epoch0(epochs[0+:8]),.lane_hn0(hn[0+:3]),.lane_heads1(heads[2720+:2720]),.lane_masks1(masks[32+:32]),.lane_epoch1(epochs[8+:8]),.lane_hn1(hn[3+:3]),.lane_heads2(heads[5440+:2720]),.lane_masks2(masks[64+:32]),.lane_epoch2(epochs[16+:8]),.lane_hn2(hn[6+:3]),.lane_heads3(heads[8160+:2720]),.lane_masks3(masks[96+:32]),.lane_epoch3(epochs[24+:8]),.lane_hn3(hn[9+:3]),.lane_take_epochs(take_epochs),.lane_nv_mask(nv_mask),.lane_occ(occ),.lane_take(take),.lane_pop(pop),
    .lane_live(live),.lane_tau(tau),.lane_g(g),.lane_gb(gb),.lane_pf(pf),
    .chain_entry(chain_entry),
    .chain_valid(chain_valid),
@@ -104,7 +104,7 @@ module ot_hgi_coll_tkm_seq_split #(
    .del_valid(del_valid[l]),.del_reserve(del_reserve[l]),.del_flit(del_flit[PWT*l+:PWT]),
    .cfg_g(g),.cfg_gbase(gb),.cfg_pf(pf),.ins_live(live),.tau(tau),.sel_take(take[8*l+:8]),.sel_pop(pop[l]),.sel_epoch(take_epochs[8*l+:8]),
    .del_permit(perm[l]),.fault(ft[l]),.early_valid(early),.decoded_v(dv[l]),.decoded_mask(nv_mask[8*l+:8]),
-   .heads_e(heads[2040*l+:2040]),.heads_m(masks[24*l+:24]),.head_epoch(epochs[8*l+:8]),.head_e(he[680*l+:680]),.head_m(hm[8*l+:8]),.taken(dn[8*l+:8]),.head_n(hn[2*l+:2]),.occ(occ[8*l+:8]),
+   .heads_e(heads[2720*l+:2720]),.heads_m(masks[32*l+:32]),.head_epoch(epochs[8*l+:8]),.head_e(he[680*l+:680]),.head_m(hm[8*l+:8]),.taken(dn[8*l+:8]),.head_n(hn[3*l+:3]),.occ(occ[8*l+:8]),
    .landing_v(ldv[l]),.fifo_empty(fe[l]));
  end
 `ifndef SYNTHESIS

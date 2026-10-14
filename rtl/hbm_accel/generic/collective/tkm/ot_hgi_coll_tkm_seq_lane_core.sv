@@ -18,10 +18,10 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     input wire [((KMAX+63)/64)-1:0] chain_busy,
     input wire [DEL-1:0] lane_d0v,lane_d1v,
     input wire [DEL-1:0] lane_fault,lane_dv,lane_ldv,
-    input wire[2039:0]lane_heads0,lane_heads1,lane_heads2,lane_heads3,
-    input wire[23:0]lane_masks0,lane_masks1,lane_masks2,lane_masks3,
+    input wire[2719:0]lane_heads0,lane_heads1,lane_heads2,lane_heads3,
+    input wire[31:0]lane_masks0,lane_masks1,lane_masks2,lane_masks3,
     input wire[7:0]lane_epoch0,lane_epoch1,lane_epoch2,lane_epoch3,
-    input wire[1:0]lane_hn0,lane_hn1,lane_hn2,lane_hn3,
+    input wire[2:0]lane_hn0,lane_hn1,lane_hn2,lane_hn3,
     output reg[DEL*8-1:0]lane_take_epochs,
     input wire [DEL*8-1:0] lane_nv_mask,
     input wire [DEL*8-1:0] lane_occ,
@@ -134,24 +134,24 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     wire [1:0]st_n[0:DEL-1];
     assign lane_tau=tau;
     assign lane_g=g_q;assign lane_gb=gb_q;assign lane_pf=pf_q;
-    wire[8159:0]lane_heads={lane_heads3,lane_heads2,lane_heads1,lane_heads0};
-    wire[95:0]lane_masks={lane_masks3,lane_masks2,lane_masks1,lane_masks0};
+    wire[10879:0]lane_heads={lane_heads3,lane_heads2,lane_heads1,lane_heads0};
+    wire[127:0]lane_masks={lane_masks3,lane_masks2,lane_masks1,lane_masks0};
     wire[31:0]lane_epochs={lane_epoch3,lane_epoch2,lane_epoch1,lane_epoch0};
-    wire[7:0]lane_hn={lane_hn3,lane_hn2,lane_hn1,lane_hn0};
-    // Three head mirrors cover the registered command round trip without reusing a stale mask.
-    reg[DEL*2040-1:0]head_pin;reg[DEL*24-1:0]mask_pin;
-    reg[DEL*8-1:0]epoch_pin;reg[DEL*2-1:0]hn_pin;
+    wire[11:0]lane_hn={lane_hn3,lane_hn2,lane_hn1,lane_hn0};
+    // Four head mirrors cover the registered command round trip without reusing a stale mask.
+    reg[DEL*2720-1:0]head_pin;reg[DEL*32-1:0]mask_pin;
+    reg[DEL*8-1:0]epoch_pin;reg[DEL*3-1:0]hn_pin;
     reg[7:0]consume_epoch[0:DEL-1],consume_mask[0:DEL-1];
     wire[7:0]head_offset[0:DEL-1];
     always @(posedge clk)begin head_pin<=lane_heads;mask_pin<=lane_masks;epoch_pin<=lane_epochs;hn_pin<=lane_hn;end
     for(genvar l=0;l<DEL;l=l+1)begin:g_lane_faces
      assign head_offset[l]=consume_epoch[l]-epoch_pin[8*l+:8];
-     assign st_e[l][0]=(head_offset[l]<3)?head_pin[2040*l+680*head_offset[l]+:680]:680'd0;
+     assign st_e[l][0]=(head_offset[l]<4)?head_pin[2720*l+680*head_offset[l]+:680]:680'd0;
      assign st_e[l][1]='0;assign st_e[l][2]='0;
-     assign st_m[l][0]=(head_offset[l]<3)?mask_pin[24*l+8*head_offset[l]+:8]:8'd0;
+     assign st_m[l][0]=(head_offset[l]<4)?mask_pin[32*l+8*head_offset[l]+:8]:8'd0;
      assign st_m[l][1]='0;assign st_m[l][2]='0;
      assign dn[l]=consume_mask[l];assign occ[l]=occ_pin[8*l+:8];
-     assign st_n[l]=(head_offset[l]<8'(hn_pin[2*l+:2]))?2'd1:2'd0;
+     assign st_n[l]=(head_offset[l]<8'(hn_pin[3*l+:3]))?2'd1:2'd0;
     end
     always @(posedge clk or negedge rn)begin
      if(!rn)begin

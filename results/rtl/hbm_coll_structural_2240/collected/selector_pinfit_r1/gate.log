@@ -1,0 +1,9 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['chain_clr', 'chain_conv', 'chain_busy']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])  -> FIX: declare them scalar in RTL
+GATE FAIL pin_fit: the route's pin placement cannot place this plan (PPL-0093 / PPL-0111 / PPL-0086 at 3_2_place_iop; route OT_PIN_GROUP_MAX=1 + balanced place_pin, 2 track(s) a pin): N face 120.96 um (lane_heads2, lane_masks2, lane_epoch2, lane_hn2, ...): 5475 balanced pins on 120.96 um = 0.0442 um a pin on one layer < the 0.048 um track pitch  -> FIX: give every bus its own disjoint pin_ranges and set route.pin_balance (place_pin, uniform over the range, no PPL groups), or a longer edge / a second pin layer
+GATE INFO oflop: E face 23.0 pins/um (lane_heads1, lane_masks1, lane_epoch1): recipe-2 hold stages take 7.71 um behind the face, the pin flops need gap 9.9 um and 13 columns (derived in the flow)
+GATE INFO oflop: N face 45.3 pins/um (lane_heads2, lane_masks2, lane_epoch2): recipe-2 hold stages take 15.19 um behind the face, the pin flops need gap 19.4 um and 87 columns (derived in the flow)
+GATE INFO oflop: S face 28.0 pins/um (lane_heads3, lane_masks3, lane_epoch3): recipe-2 hold stages take 9.39 um behind the face, the pin flops need gap 12.0 um and 54 columns (derived in the flow)
+GATE INFO oflop: W face 18.5 pins/um (clk, rst_n, lane_heads0): recipe-2 hold stages take 6.2 um behind the face, the pin flops need gap 7.9 um and 10 columns (derived in the flow)
+GATE INFO remote: skipped: local FAIL first
+PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)
