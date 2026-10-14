@@ -9,7 +9,7 @@ src=(rtl/hdc/v41x/ot_hbm_idx_owned_native.sv rtl/hdc/v41x/ot_hdc_v41x_idx_hslice
  rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv
  rtl/test/hbm_idx_chunk_el/tb_hbm_native_idx_owned.sv rtl/test/hbm_idx_chunk_el/native_idx_owned.vlt)
 "$vl" --hierarchical --cc --exe --build -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style \
- --top-module tb_hbm_native_idx_owned -CFLAGS '-DVTOP=Vtb_hbm_native_idx_owned -O1' \
+ --top-module tb_hbm_native_idx_owned -GNS=16 -CFLAGS '-DVTOP=Vtb_hbm_native_idx_owned -O1' \
  --Mdir "$out/obj" "${src[@]}" "$(pwd)/rtl/test/hdc_v41_tb_harness.cpp" >"$out/build.log" 2>&1
 python3 tools/hbm_native_idx_owned_vectors.py --out "$out/vectors" >"$out/vectors.log"
 nt=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["ntok"])' "$out/vectors/metadata.json")

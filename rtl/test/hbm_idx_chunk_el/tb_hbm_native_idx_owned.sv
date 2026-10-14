@@ -14,7 +14,7 @@
 // refuses).  Every valid slot's score, fault and index is compared; beats must
 // come out in the order they went in, with the last tag on the final beat.
 module tb_hbm_native_idx_owned #(
-    parameter integer NS = 2,
+    parameter integer NS = 16,
     parameter integer NK = 4,
     parameter integer IH = 32,
     parameter integer NB = 4,
