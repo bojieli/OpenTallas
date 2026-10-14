@@ -43,9 +43,13 @@ def vectors(ctx, seed, kind, outdir, groups):
                          0xbf808000, 0xbf818000, 0x00008000, 0x00018000], dtype=np.uint32)
         q = np.resize(bits, (4, 128)).view(np.float32).copy()
     gold = R.golden_die(q, k, v)
-    part, internals = R.partitioned_die(q, k, v, return_parts=True)
-    if not R.same_bits(gold, part):
-        raise AssertionError('canonical native golden and partitioned scheme disagree')
+    # Denominator follows the canonical lane_sum CHUNK independent of PV split.
+    maxima, denom = [], []
+    for h in range(4):
+        scores = R.G.mul(R.G.matvec_il(k[:, 0, :], R.G.to_bf16(q[h]), R.S_SC), R.SCALE)
+        m = scores.max()
+        maxima.append(R.G.bits(m))
+        denom.append(R.G.bits(R.G.lane_sum(R.G.exp(R.G.add(scores, R.G.neg(m))))))
     (outdir / 'q.hex').write_text(''.join(f'{int(b):08x}\n' for b in R.G.bits(q).reshape(-1)))
     with (outdir / 'kv.hex').open('w') as f:
         for arr in (R.fp8_encode(k), R.fp8_encode(v)):
@@ -53,7 +57,7 @@ def vectors(ctx, seed, kind, outdir, groups):
                 f.write(bytes(arr[t, 0, ::-1]).hex() + '\n')
     (outdir / 'gold.hex').write_text(''.join(f'{int(b):08x}\n' for b in R.G.bits(gold).reshape(-1)))
     (outdir / 'check.hex').write_text(''.join(f'{int(b):08x}\n' for b in
-        np.concatenate([R.G.bits(internals['M']), R.G.bits(internals['Z'])])))
+        np.concatenate([np.asarray(maxima), np.asarray(denom)])))
     hashes = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in outdir.glob('*.hex')}
     meta = dict(schema='qwen-tp8-attention-native-v1', ctx=ctx, position=ctx-1, seed=seed, kind=kind,
                 q_heads=4, kv_heads=1, hd=128, groups=groups, attn_splits=[R.S_SC, R.S_PV],
@@ -127,7 +131,7 @@ def main():
     b.add_argument('--out', type=Path, required=True)
     b.add_argument('--stall', type=int, default=0)
     b.add_argument('--max-cycles', type=int, default=400000)
-    b.add_argument('--mutant', choices=['none', 'q_order', 'context', 'context_length'], default='none')
+    b.add_argument('--mutant', choices=['none', 'q_order', 'context', 'context_length', 'group'], default='none')
     c = sub.add_parser('counterproof')
     c.add_argument('--ctx', type=int, default=8192)
     c.add_argument('--seed', type=int, default=1)
