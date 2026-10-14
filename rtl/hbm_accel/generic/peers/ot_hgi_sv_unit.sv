@@ -132,8 +132,8 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
     // Claude hbm-group-B 10-14 (native pin audit: raw rst_n fanned out before its first flop, lf 460+ ps): the
     // rst_n PORT drives only this relay (rtl/lib/ot_rst_relay.sv); every region resets from its own registered copy.
     // Head and leaves use the SAME relay depth, so they still release on one common edge (3 cycles after the port).
-    wire [3:0] rr_lf;
-    ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr_lf (.clk(clk), .rst_n_in(rst_n), .rst_n(rr_lf));
+    wire [5:0] rr_lf;
+    ot_rst_relay #(.REGIONS(6), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr_lf (.clk(clk), .rst_n_in(rst_n), .rst_n(rr_lf));
     localparam integer CW = 54 + 28 + NSJ + 1;
     localparam integer QB = $clog2(LQ + 1);                 // credit counter bits (0..LQ)
     localparam integer FB = $clog2(2 * LQ + 32), FD = 1 << FB;   // stage in-flight FIFO (slot ids)
@@ -240,8 +240,8 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
         end
         wire [13:0] dfr_s [0:1]; assign dfr_s[0] = dfr0; assign dfr_s[1] = dfr1;
 
-        always @(posedge clk or negedge rr_lf[3])
-            if (!rr_lf[3]) begin
+        always @(posedge clk or negedge rr_lf[4 + g])   // one relay copy per wide lane (gate: 1,588 loads on one copy)
+            if (!rr_lf[4 + g]) begin
                 for (integer q = 0; q < NSJ; q = q + 1) begin s_rem[q] <= 9'd0; s_out[q] <= '0; end
                 for (integer q = 0; q < 2; q = q + 1) begin d_rem[q] <= 9'd0; d_out[q] <= '0; d_need[q] <= 6'd0; end
                 rr <= 3'd0; cr <= QB'(LQ); fn <= '0; wcr <= QB'(LQ); wpend <= 6'd0; dfn <= '0;
