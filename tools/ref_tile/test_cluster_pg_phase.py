@@ -19,7 +19,7 @@ class Phase(unittest.TestCase):
   v+=[f'END {name}'];return '\n'.join(v)+'\n'
  def audit(self,shift=0,swap=False,width=.48,placement=100):
   r=dict(schema='opentallas.cluster-pg-phase.v1',master='rg6',grant_sha256='grantdigest',instance='vm6',
-         die_pg_view=self.ref('die.lef',self.lef('die',(100,100),300)),
+         die_pg_view=self.ref('die.lef',self.lef('die',(100,100),300).replace('SIZE 300 BY 300','SIZE 500 BY 500')),
          cluster_view=self.ref('child.lef',self.lef('ot_rg6',(0,0),40,shift,swap,width)),
          die_def=self.ref('die.def',f'UNITS DISTANCE MICRONS 1000 ;\nCOMPONENTS 1 ;\n- vm6 ot_rg6 + FIXED ( {placement*1000} 100000 ) N ;\nEND COMPONENTS\n'))
   return self.ref('audit.json',json.dumps(r))
