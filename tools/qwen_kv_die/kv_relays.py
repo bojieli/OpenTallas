@@ -60,6 +60,97 @@ def parse(stubs):
     return out
 
 
+def crosscheck(rel, die_v, split=True):
+    """every relay chain whose end is a REAL bound master (kv_die.BINDINGS): the direction of each bit at that end (its
+    RTL port direction) must equal the relay's.  Returns [(relay inst, end, bit, relay dir, rtl dir)] conflicts."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import kv_die as K
+    import die_port_bind_kv as P
+    K._set_geometry(split)
+    root = Path(__file__).resolve().parents[2]
+    wires, insts = P.parse_die(die_v)
+    by_net = {}
+    inst_m = {}
+    for mst, inst, conns in insts:
+        inst_m[inst] = mst
+        for c in re.finditer(r'\.(\\?\S+?)\(([^()]*)\)', conns):
+            by_net.setdefault(c.group(2).strip(), []).append((inst, c.group(1)))
+    hdr = {}
+
+    def rtl_dirs(mst, port):
+        b = K.BINDINGS.get(mst)
+        if b is None:
+            return None
+        if mst not in hdr:
+            f = root / b['file']
+            hdr[mst] = P.header(f.read_text(errors='replace'), b['module']) if f.exists() else (None, None)
+        params, ports = hdr[mst]
+        if ports is None:
+            return None
+        params = dict(params or {}, **{k: str(v) for k, v in (b.get('parameters') or {}).items()})
+        base = (b.get('sliced') or {}).get(port, port)
+        if base not in b['ports']:
+            return None
+        bits = []
+        for rp in b['ports'][base]:
+            d, w = ports[rp]
+            bits += [d] * (P.evalw(w, params) or 0)
+        if base != port:      # k-th slice of the base concatenation (slices in die-port order)
+            sl = [base] + sorted(k for k, v in b['sliced'].items() if v == base)
+            n = len(bits) // len(sl)
+            k = sl.index(port)
+            bits = bits[k * n:(k + 1) * n]
+        return bits
+
+    def end(net, side):
+        """the non-relay endpoint across the chain from a relay's a (side 'a') or b (side 'b') net"""
+        seen = 0
+        while seen < 500:
+            seen += 1
+            others = [(i, p) for i, p in by_net.get(net, []) if not (inst_m[i].startswith('qkd_rly') and p == side)]
+            nxt = [(i, p) for i, p in others if inst_m[i].startswith('qkd_rly')]
+            if not nxt:
+                return others[0] if len(others) == 1 else None
+            i, p = nxt[0]
+            net = next(c.group(2).strip() for mst_, ii, conns in [x for x in insts if x[1] == i]
+                       for c in re.finditer(r'\.(\S+?)\(([^()]*)\)', conns) if c.group(1) == side)
+        return None
+    conf, checked = [], 0
+    relays = [(mst, inst, conns) for mst, inst, conns in insts if mst.startswith('qkd_rly')]
+    heads = [x for x in relays if not any(inst_m[i].startswith('qkd_rly') for i, _ in
+             by_net.get(re.search(r'\.a\(([^()]*)\)', x[2]).group(1).strip(), []) if i != x[1])]
+    for mst, inst, conns in heads:
+        r = rel[mst]
+        na = re.search(r'\.a\(([^()]*)\)', conns).group(1).strip()
+        ea = [(i, p) for i, p in by_net.get(na, []) if i != inst]
+        if len(ea) != 1:
+            continue
+        cur, tail = inst, conns
+        while True:
+            nb = re.search(r'\.b\(([^()]*)\)', tail).group(1).strip()
+            nx = [(i, p) for i, p in by_net.get(nb, []) if i != cur]
+            if len(nx) == 1 and inst_m[nx[0][0]].startswith('qkd_rly'):
+                cur = nx[0][0]
+                tail = next(x[2] for x in relays if x[1] == cur)
+                continue
+            eb = nx[0] if len(nx) == 1 else None
+            break
+        for (i, p), side in ((ea[0], 'a'), (eb, 'b')):
+            if i is None:
+                continue
+            d = rtl_dirs(inst_m[i], p.lstrip('\\'))
+            if d is None:
+                continue
+            checked += 1
+            for k, dk in enumerate(d[:r['w']]):
+                fwd = k in r['fwd']
+                want_fwd = (dk == 'output') if side == 'a' else (dk == 'input')
+                if dk in ('input', 'output') and fwd != want_fwd:
+                    conf.append((inst, f'{i}.{p}', k, 'fwd' if fwd else 'rev', dk))
+    return conf, checked
+
+
 def runs(bits):
     s = sorted(bits)
     out, i = [], 0
@@ -144,12 +235,19 @@ def main(argv=None):
     ap.add_argument('--stubs', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--json', type=Path)
+    ap.add_argument('--die-v', help='cross-check every relay chain against the RTL port directions of its REAL ends')
     ap.add_argument('--bench', type=Path, help='also write the self-checking bench (tb_qkd_kv_relays)')
     ap.add_argument('--mut', type=int, default=0, help='bench mutant (never published)')
     a = ap.parse_args(argv)
     rel = parse(a.stubs)
     if not rel:
         raise SystemExit('no qkd_rly_* stubs found')
+    if a.die_v:
+        conf, checked = crosscheck(rel, a.die_v)
+        print(json.dumps(dict(crosscheck_real_ends=checked, conflicts=len(conf), examples=conf[:6])))
+        if conf:
+            raise SystemExit('relay direction conflicts with a REAL end (fix the die bus class): '
+                             + '; '.join(f'{c[0]} end {c[1]} bit {c[2]} relay {c[3]} rtl {c[4]}' for c in conf[:6]))
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(emit(rel, a.mut))
     if a.bench:
