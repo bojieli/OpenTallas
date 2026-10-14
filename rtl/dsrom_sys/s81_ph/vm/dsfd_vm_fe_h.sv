@@ -462,14 +462,22 @@ module dsfd_vm_fcc (
         (* keep = 1 *) reg [1:0] xw_t; (* keep = 1 *) reg [1:0] xr_t;
         always @(posedge cks[0] or negedge xw0) if (!xw0) xw_t <= 2'b00; else xw_t <= 2'b11;
         always @(posedge clk or negedge xr0) if (!xr0) xr_t <= 2'b00; else xr_t <= 2'b11;
-        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)) u_cc0 (.wr_clk(cks[0]), .wr_rst_n(xw_t[0]), .wr_valid(sw_v[0]),
+        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)
+`ifdef OT_VMFE_FCC_PIPE
+            , .FIFO_PIPE(1)
+`endif
+            ) u_cc0 (.wr_clk(cks[0]), .wr_rst_n(xw_t[0]), .wr_valid(sw_v[0]),
             .wr_ready(cw_rdy[0]), .wr_data(sw_d0), .wr_overflow(), .rd_clk(clk), .rd_rst_n(xr_t[0]), .rd_valid(xr_v[0]),
             .rd_ready(cr_take[0]), .rd_data(cr_d0), .rd_underflow()
 `ifdef OT_SPVM_RESET_ACK
             , .wr_reset_live(fifo_live_w[0]), .rd_reset_live(fifo_live_r[0])
 `endif
             );
-        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)) u_cc1 (.wr_clk(cks[0]), .wr_rst_n(xw_t[1]), .wr_valid(sw_v[1]),
+        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)
+`ifdef OT_VMFE_FCC_PIPE
+            , .FIFO_PIPE(1)
+`endif
+            ) u_cc1 (.wr_clk(cks[0]), .wr_rst_n(xw_t[1]), .wr_valid(sw_v[1]),
             .wr_ready(cw_rdy[1]), .wr_data(sw_d1), .wr_overflow(), .rd_clk(clk), .rd_rst_n(xr_t[1]), .rd_valid(xr_v[1]),
             .rd_ready(cr_take[1]), .rd_data(cr_d1), .rd_underflow()
 `ifdef OT_SPVM_RESET_ACK
