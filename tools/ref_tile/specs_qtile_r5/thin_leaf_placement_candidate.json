@@ -1,0 +1,176 @@
+{
+ "schema": "opentallas.qwen-tile-leaf-placement.v1",
+ "status": "candidate_requires_measured_ctl_and_child_hop_gate",
+ "outline": [
+  399.6,
+  1442.88
+ ],
+ "column_pitch": 419.904,
+ "clock_delivery": "one clock entry per child, phi minus each child insertion.json boundary_mean",
+ "clock_ports": {
+  "ctl": "clk_ctl",
+  "rom_rows": "clk_rp[4:0]",
+  "lane_slices": "clk_sl[7:0]",
+  "node": "clk_node"
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+   "count": 1,
+   "at": [
+    77.75999999999999,
+    23.76
+   ],
+   "orient": "R0",
+   "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp"
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+   "count": 1,
+   "at": [
+    77.75999999999999,
+    174.96
+   ],
+   "orient": "R0",
+   "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp"
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+   "count": 1,
+   "at": [
+    77.75999999999999,
+    982.824
+   ],
+   "orient": "MX",
+   "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp"
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+   "count": 1,
+   "at": [
+    77.75999999999999,
+    1134.024
+   ],
+   "orient": "MX",
+   "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp"
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+   "count": 1,
+   "at": [
+    77.75999999999999,
+    1285.224
+   ],
+   "orient": "MX",
+   "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp"
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+   "count": 1,
+   "at": [
+    77.75999999999999,
+    345.6
+   ],
+   "orient": "R0",
+   "inst": "u_tile.u_logic.g_ndh.u_node"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    158.976,
+    328.32
+   ],
+   "orient": "MY",
+   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    288.576,
+    328.32
+   ],
+   "orient": "R0",
+   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    158.976,
+    492.48
+   ],
+   "orient": "MY",
+   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    288.576,
+    492.48
+   ],
+   "orient": "R0",
+   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    158.976,
+    656.64
+   ],
+   "orient": "MY",
+   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    288.576,
+    656.64
+   ],
+   "orient": "R0",
+   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    158.976,
+    820.8
+   ],
+   "orient": "MY",
+   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    288.576,
+    820.8
+   ],
+   "orient": "R0",
+   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh"
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_ctl_strip/views/ot_qwen_tile_ctl",
+   "at": [
+    9.72,
+    19.44
+   ],
+   "orient": "R0",
+   "inst": "u_ctl",
+   "unclosed": true,
+   "outline": [
+    47.52,
+    1404.0
+   ]
+  }
+ ],
+ "rtl_top": "ot_qwen_rom_tile_nkt_mc",
+ "control_inputs": "word={xl[127:0],ib[378:0],ib_go}; LOAD/EXEC protocol tools/qwen_kv_die/xline_delivery.md",
+ "port_mapping": "RTL rtl/physical/ot_qwen_rom_tile_nkt.sv + ot_qwen_tile_kids.sv, cx_* wires connect ctl to children; external n_*,t_* are direct node ports",
+ "assigned_pins": "pending die v5"
+}
