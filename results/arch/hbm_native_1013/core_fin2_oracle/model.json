@@ -1,0 +1,51 @@
+{
+  "scope": "independentstandaloneSVoracle:realCORE FIN1vsdistinctFIN2 withrealFR andfinitelegalfeedback;noCORE/frontendsourceedits",
+  "core_source_commit": "80e1681e0",
+  "baseline": "ot_hgi_qdq_core FIN_BYPASS1 MUT0",
+  "candidate": "ot_hgi_qdq_core_fin2 FIN_BYPASS2 MUT0/negativeMUT2",
+  "default_ready_semantics": "CORESPANPIPE1,realFRSPANPIPE1;readythreshold4/RQ16;produceronlyusesactualregisteredretready",
+  "additional_ready_case": "CORESPANPIPE0/realFRSPANPIPE0;threshold10;diagnosticcontractstressonly",
+  "clocks_ps": {
+    "period": 833,
+    "FRphase": 61,
+    "COREphase": 487,
+    "stimuli": "FRnegedgeproducer,COREnegedgefinitefeedback;sourceexactresetrelays"
+  },
+  "response_fifo_per_lane": 8192,
+  "beat_fifo": 8192,
+  "write_ack_fifo": 8192,
+  "records_per_clean_phase": 512,
+  "max_record_beats": 12,
+  "response_delay_max_cycles": 68,
+  "consumer_stall_max_cycles": 5,
+  "write_ack_delay_max_cycles": 17,
+  "drain_cycle_bound_formula": "remainingRecords*(12*(68+5+17)+64)+256;functionaldeadlockbound,notwalltimecap",
+  "observable_comparison": [
+    "ret3 includingready/fault",
+    "requestvalid+address128",
+    "bpvalid+40payload",
+    "rg_req",
+    "o_act",
+    "asm_rst_n"
+  ],
+  "independent_properties": [
+    "admittedS3referencefields matchsemanticrequestaddress/lane/last/header",
+    "noRAW/WAR/WAWissuancebeforepriorretire",
+    "credit/response/beatFIFOconservation",
+    "slotreuseageafteractualretpulse>=2",
+    "noq_v/pendingclearoverlap",
+    "effective live dependency masks equalbaseline",
+    "warmresetflush",
+    "wrap andconcurrentenqueue/retirecoverage"
+  ],
+  "production_claim": "NoQDQwordarithmetic/rate/nativepricequalification;parentownsnative13312words184/168 proof",
+  "bench_state_estimate_bytes": 1048576,
+  "compute_MACs_per_cycle": 0,
+  "COREport_bits": {
+    "S3": 190,
+    "request": 128,
+    "beat": 40,
+    "feedback": 24
+  },
+  "new_hardware": "none;FIN2 modelownedbyparent;testadds0cycles/0area"
+}

@@ -1,0 +1,104 @@
+{
+  "status": "PASS bounded real-module control comparison",
+  "source_commit": "80e1681e0",
+  "source_manifest": {
+    "commit": "80e1681e0",
+    "files": [
+      {
+        "path": "rtl/lib/ot_rst_relay.sv",
+        "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+        "git_blob": "0259a926697bf544c4456016d1d475a2ae542e34"
+      },
+      {
+        "path": "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
+        "sha256": "2e42d8c75334158af4d518cfa0efa9179b660372dbd9f1ce6ecee9ac87192cc6",
+        "git_blob": "4794aa0ef565caba03882f0296ac3233f606957d"
+      },
+      {
+        "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr.sv",
+        "sha256": "1d2f97942cff7aaff682a9b9854da8d8e151002c84c7ce5d2220c70d7d7b377d",
+        "git_blob": "f0a01269e5a801e97d2f96e0367f60d65a9632d4"
+      },
+      {
+        "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_core.sv",
+        "sha256": "a56bf7f2b592af5c1a8e4f0e2c20e49349f4e21b09c37d8882af3f292573c4ba",
+        "git_blob": "c838522b3af92b8f92d4ed14eb68dabbdd6c531b"
+      },
+      {
+        "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_core_fin2.sv",
+        "sha256": "ebddd55aa9e70bcf117d0fdd150142eaf5bb6d0e09517113f36855fcbc04393e",
+        "git_blob": "a247b4a4eaf9116bb5d64bc28f8db00f6bf3f62b"
+      }
+    ]
+  },
+  "test_vehicle": {
+    "bench": "rtl/test/hbm_accel/generic/tb_hgi_qdq_core_fin2_oracle.sv",
+    "runner": "tools/hgi_unit_tput/run_qdq_core_fin2_oracle.sh",
+    "bench_sha256": "7dd6541aabd3ee8045d4d149ff5c7c9f3197efe79a2363d38db794c6b96c0a3b",
+    "runner_sha256": "a6446481562be311c389ea2795acc32de8f0326817cd6230ffea2fee06639712"
+  },
+  "runs": [
+    {
+      "path": "results/arch/hbm_native_1013/core_fin2_oracle/r3/out-span1",
+      "result": "PASS",
+      "first_result_line": "PASS CORE_FIN2_ORACLE span=1 epochs=8 admitted=1642 retired=1638 enqueues=1639 wraps=102 concurrent=8 min_reuse_age=99 RAW=103 WAR=255 WAW=357 rejected=204 multi=1325 credit_stall=24843 beat_stall=7025",
+      "build_log_sha256": "0cd50e9bbbcb295852ebfc54b4695d92487c3a52951354dcc477b820b8a42ccb",
+      "sim_log_sha256": "2ef8511603f62c0f144ea5cf4402060762a5254b33bf4ec3420d1de0d04f48f1"
+    },
+    {
+      "path": "results/arch/hbm_native_1013/core_fin2_oracle/r3/out-span0",
+      "result": "PASS",
+      "first_result_line": "PASS CORE_FIN2_ORACLE span=0 epochs=8 admitted=1642 retired=1638 enqueues=1641 wraps=102 concurrent=8 min_reuse_age=11 RAW=103 WAR=306 WAW=511 rejected=204 multi=1326 credit_stall=24664 beat_stall=6848",
+      "build_log_sha256": "518e22a5629356ebd6895aed86d26bad797dccff7e760fb30abd803c32ebb958",
+      "sim_log_sha256": "905b4ab20534ca7f0f8ce49b12a1e8dce97c73d388d403dc6e7be5226afd7349"
+    },
+    {
+      "path": "results/arch/hbm_native_1013/core_fin2_oracle/r3/out-mut2",
+      "result": "EXPECTED FAIL actual beat port mismatch",
+      "first_result_line": "[30163000] %Fatal: tb_hgi_qdq_core_fin2_oracle.sv:40: Assertion failed in tb_hgi_qdq_core_fin2_oracle: CORE_FIN2_PORT_MISMATCH cycle=36210 ret=000/000 bp=9022210400/1022010501",
+      "build_log_sha256": "8cd8123527d3313ec3c41b6125023f5ba9b6ecfe8a75059f1abc566f3bf072e6",
+      "sim_log_sha256": "dd9f2538f8949ad31ba1a446784de166cb317483c22baf4e7dfec7f5fb21e773"
+    }
+  ],
+  "failures_preserved": [
+    {
+      "run": "r1/out-span1",
+      "kind": "coverage shortfall",
+      "detail": "No observed credit stalls; revised disjoint all-valid stimulus in r2."
+    }
+  ],
+  "scope_limit": "Finite admitted-record oracle, not an exhaustive formal proof, arithmetic golden comparison, physical timing gate, or native throughput qualification.",
+  "slot_reuse_evidence": {
+    "actual_admission": "Producer uses only baseline ret[0]; every cycle compares candidate ret[0].",
+    "independent_history": "Capture actual tail/enqueue and head/retire at CORE posedge; at negedge associate retirement pulse with old head and reject enqueue age <2 or concurrent same-slot reuse. History resets only with actual assembly reset relay.",
+    "span1_min_age_core_edges": 99,
+    "span0_min_age_core_edges": 11,
+    "wraps_each": 102,
+    "concurrent_enqueue_retire_each": 8,
+    "complementary_invariants": [
+      "No candidate q_v & dep_clear each live edge",
+      "All effective live q_dep rows equal baseline",
+      "Each enqueued effective mask equals independent FR range-ledger mask",
+      "No first issued beat starts before an older conflicting eligible record retires"
+    ]
+  },
+  "protocol": {
+    "period_ps": 833,
+    "front_phase_ps": 61,
+    "core_phase_ps": 487,
+    "records_per_clean_phase": [
+      512,
+      512,
+      512,
+      96
+    ],
+    "epochs": 8,
+    "warm_reset": "During three admitted long records with pending work; assert old valids absent after real staged reset.",
+    "fault_epochs": [
+      "real malformed record count nfault",
+      "ASM bad pulse with 3 admitted records",
+      "WR bad pulse with 3 admitted records"
+    ],
+    "services": "Per-lane FIFO responses/credits arise only from actual request valids. Pops/fire occur only after all response lanes of an actual beat exist. FIN arises only from consumption of an actual last beat, in FIFO order. Finite capacities 8192; no constant legal-service stubs."
+  }
+}
