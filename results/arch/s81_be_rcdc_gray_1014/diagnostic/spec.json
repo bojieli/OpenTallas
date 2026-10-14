@@ -1,0 +1,127 @@
+{
+  "name": "s81be-gray-m7-c7cf30d5d",
+  "block": "dsfd_vm_be_sl",
+  "owner": "Codex:s81_vmfe_misc_2240/be_native_placement",
+  "source": {
+    "branch": "codex/s81-be-rcdc-gray",
+    "commit": "c7cf30d5ddd5f3deaadb8275916e0005954c21c3",
+    "extra_paths": []
+  },
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc4",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "purpose": "Default-off selected-entry Gray CDC successor with true raw reset epoch and explicit four final ACK outputs; genuine new contact ABI; isolated honest M7 diagnostic.",
+  "structural_change": "Selected stable entry replaces all-slot stream sampling; accepted Gray publication and 2FF pointer/online crossings; two raw-epoch local reset conditioners per FIFO; one raw input and four final conditioner ACK outputs at real E/M4 contact coordinates.",
+  "hold_merge": "DIAGNOSTIC ONLY: genuine unallocated M7 pin-face/slot request; actual VM global(14036.112,12804.48), BE localx64.752+475.2s, manufacturing-grid/lattice acceptance OPEN; M6 eligibility not waived, old CLOSED preserved; wired raw-route contacts/AP/SS/FF/DRC and actual source-slot/clock/reset binding required.",
+  "auto_merge": false,
+  "merge_target": null,
+  "slot_change_request": {
+    "status": "REQUESTED_UNALLOCATED",
+    "old_declared_cap": "M6",
+    "actual_legacy_cap": "M7",
+    "candidate_actual_cap": "M7",
+    "parent_strap": "M8",
+    "outline_um": [
+      302.4,
+      92.88
+    ],
+    "eligibility_waived": false,
+    "old_CLOSED_replaced": false,
+    "pin_face_request": "physical/s81_be_gray_m7_candidate/request.json",
+    "global_VM_origin_um": [
+      14036.112,
+      12804.48
+    ],
+    "changed_contacts": 2605,
+    "BE_base_x_requested_um": 64.752,
+    "BE_delta_x_um": -0.048,
+    "allocator_lattice_acceptance": "OPEN_UNALLOCATED",
+    "new_contacts": 5,
+    "total_contacts": 4099,
+    "controller_ACK_binding": null
+  },
+  "no_bench_reason": "All five fresh exact RTL native default/Gray gold and TP and observed wrong-entry mutant completed; exact source hashes checked again at intake. No old CLOSED source reuse.",
+  "stages": {
+    "bench": [
+      {
+        "name": "existing_native_evidence_source_binding",
+        "cmd": "python3 tools/s81_ph/s81_be_gray_required_checks.py --cl {CL} --out {RUN}/required_checks_bench.json",
+        "expect": "pass",
+        "pass_regex": "BE_GRAY_REQUIRED_CHECKS_PASS",
+        "threads": 1,
+        "peak_ram_gb": 2
+      },
+      {
+        "name": "target_contacts_four_orientations",
+        "cmd": "python3 tools/s81_ph/s81_be_pin_access_probe.py physical/s81_be_gray_m7_candidate/target_contacts_unrouted.lef {RUN}/target_AP_orientations --aligned-tracks",
+        "expect": "pass",
+        "pass_regex": "\"pass_\": true",
+        "threads": 4,
+        "peak_ram_gb": 8
+      },
+      {
+        "name": "target_contacts_actual_global_slots",
+        "cmd": "python3 tools/s81_ph/s81_be_pin_access_probe.py physical/s81_be_gray_m7_candidate/target_contacts_unrouted.lef {RUN}/target_AP_global --parent-be-slots --be-x-shift=-.048",
+        "expect": "pass",
+        "pass_regex": "\"pass_\": true",
+        "threads": 4,
+        "peak_ram_gb": 8
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "ActualrelatedCK/CKS preserved; localper-clock virtuals re-referencedfromactualCTS/routedboundarymeans; no guessed globalinsertion; routecheckpoint measuresR."
+    },
+    "route": {
+      "cmd": "python3 tools/s81_ph/s81_be_gray_required_checks.py --cl {CL} --out {RUN}/required_checks_route.json && SRC={SRC} OUT={RUN}/routes CORES={THREADS} NEED=32 bash physical/s81_be_gray_m7_candidate/launch.sh {LABEL}",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ],
+      "needs": [
+        "orfs"
+      ]
+    },
+    "signoff": {
+      "cmd": "python3 tools/s81_ph/s81_be_gray_diagnostic_signoff.py --run {RUN}/routes/{LABEL} --out {RUN}/diagnostic_signoff.json",
+      "needs": [
+        "orfs"
+      ]
+    }
+  },
+  "verdict": {
+    "metrics_cmd": "python3 -c \"import json; print(json.dumps(json.load(open('{RUN}/diagnostic_signoff.json'))['metrics']))\"",
+    "checks": [
+      {
+        "name": "actual_M7_AP_and_SS_FF_DRC",
+        "cmd": "python3 -c \"import json; d=json.load(open('{RUN}/diagnostic_signoff.json')); assert d['diagnostic_checks_pass']\""
+      },
+      {
+        "name": "routed_at_actual_SS",
+        "cmd": "python3 {CL}/route_corner_check.py {RUN}/routes/{LABEL} --want SS"
+      }
+    ]
+  },
+  "hold_eco": {
+    "enabled": false,
+    "reason": "Preservefirstactualfullhalo diagnostic result; no automaticreplacement"
+  },
+  "cycles_added": null,
+  "route_corner": "WC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.035,
+  "budget": {
+    "enabled": false,
+    "reason": "Diagnosticpreservesactuallegacydualclockperiods andcurrentper-domainIOpolicy; actualglobalclock/resetdriversandR remainopen; no headlineclosure"
+  },
+  "resource_basis": "Same requested302.4x92.88 outline, generic FIFO state drops2245\u21921225 each; actual ASAP7 mapped census pending fresh synthesis. Reserve32GiB by admission; no allocator grant implied.",
+  "reroute_reason": {
+    "kind": "slot_change",
+    "slot_change_request": "physical/s81_be_gray_m7_candidate/request.json: genuine raw epoch plus four ACK pin ABI; selected-entry Gray CDC, request-only M7 family/slot binding"
+  },
+  "diagnostic_snapshot_policy": "Official ORFS CTS_SNAPSHOTS=1; no SDC, I/O delay, corner, margin, or virtual-peer correlation change.",
+  "latency_basis": "Native measured hot read latency unchanged47 and TP554 lockstep; isolated CDC phase latency33..43ns, no phase-independent fixed-cycle promise."
+}
