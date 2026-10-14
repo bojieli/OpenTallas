@@ -49,7 +49,7 @@ module ot_qfd_su_kv_native_posted #(
  reg [23:0] e;reg [19:0] a;reg [16:0] w;reg [12:0] pp;
  reg [8:0] code;reg [2:0] allowed;
  wire take=word_v&&word_ready;
- assign epoch_ready=ENABLE!=0&&!active&&!word_v&&!fault&&!eb_q&&!epoch_begin;
+ assign epoch_ready=ENABLE!=0&&!active&&!word_v&&!fault&&!eb_q;
  assign drained=!active&&!word_v;
  always_comb begin
   seen_n=seen;sent_n=sent;bytes_n=bytes_r;err=0;
