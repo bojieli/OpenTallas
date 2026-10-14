@@ -104,7 +104,7 @@ module ot_hgi_b2_dma_mv #(
     input wire [147:0] kv_wa, input wire [1023:0] kv_wd,
     output reg kc_v, output reg [14:0] kc_vs, kc_vst,
     output reg [31:0] kc_ds, kc_dst, output reg [17:0] kc_ns, output reg [19:0] kc_m,
-    output wire kc_gnt, output wire [191:0] kc_cr,
+    output wire kc_gnt, output reg [191:0] kc_cr,
     output wire [3:0] kc_wrdy,
     input wire [1:0] qid, input wire il_active, input wire [337:0] il_vmq, output reg [273:0] il_vmr,
     input  wire          clk,
@@ -468,7 +468,7 @@ module ot_hgi_b2_dma_mv #(
     reg        pr_v; reg [3:0] pr_k; wire [255:0] p1_sec = lr_d; reg [4:0] pr_sp; reg [5:0] pr_dp; reg [36:0] pr_dsec; reg pr_fl;
     // extract (px) and convert (p2) are separate stages; encode (pe) and byte placement (p3) are separate stages
     // (route 51ae5ce55: p2_w / des -> p3_d, 31 levels: the encoders and the variable placement in one cycle)
-    reg        px_v; reg [3:0] px_k; reg [255:0] px_r; reg [5:0] px_dp; reg [36:0] px_dsec; reg px_fl;
+    reg        px_v; reg [3:0] px_k; reg [255:0] px_r; reg [4:0] px_sb; reg [5:0] px_dp; reg [36:0] px_dsec; reg px_fl;
     reg        p2_v; reg [3:0] p2_k; reg [255:0] p2_w; reg [5:0] p2_dp; reg [36:0] p2_dsec; reg p2_fl;
     reg        pe_v; reg [7:0] pe_lv; reg [255:0] pe_e; reg [5:0] pe_dp; reg [36:0] pe_dsec; reg pe_fl, pe_keep;
     reg        p3_v; reg [255:0] p3_d; reg [31:0] p3_s; reg [36:0] p3_dsec; reg p3_fl, p3_keep;
@@ -623,14 +623,17 @@ module ot_hgi_b2_dma_mv #(
     // slots reserved = queued + flushes in the pipe, kept as a register (a popcount over the 8 stages sat in u_go)
     reg [4:0] wq_res;
     wire wq_room = wq_res < 5'd15;
+    // The landing macro feeds the existing raw PX register directly; byte
+    // selection follows that register and joins decode before the existing P2
+    // boundary. No payload register bank or pipeline edge is added.
     // ---- extract (p1 -> px): lane j's raw element, right-aligned (word / half / byte at offset sp + j << sl2)
     reg [255:0] ext_r;
     always @* begin
         ext_r = 256'd0;
         for (integer j = 0; j < 8; j = j + 1) begin : xl
             reg [4:0] off; reg [31:0] w;
-            off = pr_sp + (5'(j) << sl2);
-            w = p1_sec[{off[4:2], 5'd0} +: 32];
+            off = px_sb + (5'(j) << sl2);
+            w = px_r[{off[4:2], 5'd0} +: 32];
             ext_r[32*j +: 32] = (sl2 == 2'd2) ? w : (sl2 == 2'd1) ? {16'd0, off[1] ? w[31:16] : w[15:0]}
                                                              : {24'd0, w[{off[1:0], 3'd0} +: 8]};
         end
@@ -640,7 +643,7 @@ module ot_hgi_b2_dma_mv #(
     always @* begin
         dec_w = 256'd0;
         for (integer j = 0; j < 8; j = j + 1) begin : dl
-            reg [31:0] r; r = px_r[32*j +: 32];
+            reg [31:0] r; r = ext_r[32*j +: 32];
             if (ssp == 2'd1) dec_w[32*j +: 32] = r;
             else case (sf)
                 3'd1: dec_w[32*j +: 32] = {r[15:0], 16'd0};
@@ -793,7 +796,9 @@ module ot_hgi_b2_dma_mv #(
     end
     assign kc_gnt = g_gnt;
     for (genvar gc = 0; gc < 32; gc = gc + 1) begin : g_kc_cr
-       assign kc_cr[gc*6 +: 6] = g_cr[gc];
+       always @(posedge clk or negedge rn)
+         if (!rn) kc_cr[gc*6 +: 6] <= 6'(GLQ);
+         else kc_cr[gc*6 +: 6] <= g_cr[gc];
     end
     assign kb_we = 1'b0; assign kb_re = 1'b0; assign kb_wa = 8'd0; assign kb_ra = 8'd0; assign kb_wd = 256'd0;
     reg [5:0] l_wn [0:3];
@@ -1098,7 +1103,7 @@ module ot_hgi_b2_dma_mv #(
             pr_v <= p1_v;
             if (p1_v) begin pr_k <= p1_k; pr_sp <= p1_sp; pr_dp <= p1_dp; pr_dsec <= p1_dsec; pr_fl <= p1_fl; pr_sl <= p1_sl; end
             px_v <= pr_v;
-            if (pr_v) begin px_k <= pr_k; px_r <= ext_r; px_dp <= pr_dp; px_dsec <= pr_dsec; px_fl <= pr_fl; px_sl <= pr_sl; end
+            if (pr_v) begin px_k <= pr_k; px_r <= lr_d; px_sb <= pr_sp; px_dp <= pr_dp; px_dsec <= pr_dsec; px_fl <= pr_fl; px_sl <= pr_sl; end
             p2_v <= px_v;
             if (px_v) begin p2_k <= px_k; p2_w <= dec_w; p2_dp <= px_dp; p2_dsec <= px_dsec; p2_fl <= px_fl; p2_sl <= px_sl; end
             pa_v <= p2_v;
