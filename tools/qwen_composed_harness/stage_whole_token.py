@@ -30,6 +30,7 @@ def main():
     p.add_argument('--layers', type=int, default=36)
     p.add_argument('--token', type=int, default=0)
     p.add_argument('--name', required=True)
+    p.add_argument('--embedding', type=Path, default=Path('/srv/opentallas-scratch/codex/qwen-host-embedding-1014/embedding'))
     p.add_argument('--mutant', help='layer:rank:line:column -- flip the high bit of one INT8 weight nibble (sign of a gate/up/down weight) in a copy')
     a = p.parse_args()
     banks, stage = a.banks.resolve(), a.stage.resolve()
@@ -68,7 +69,11 @@ def main():
         layers.append({'layer': layer, 'image': str(images / f'layer{layer}'),
                        'program': str(banks / 'fused_images' / f'layer{layer}'),
                        'oracle': str(oracle_dir(banks, a.token, layer))})
-    spec = {'position': 0, 'epoch': 0, 'layers': layers}
+    emb = a.embedding.resolve()
+    tok = emb / 'vectors' / f'token{a.token}'
+    spec = {'position': 0, 'epoch': 0, 'layers': layers,
+            'actual_stage0': {'program': str(emb / 'embedding_program.hex'), 'program_sha256': sha(emb / 'embedding_program.hex'),
+                              'bank': str(emb / 'vectors'), 'bank_sha256': {n: sha(tok / n) for n in ('codes.hex', 'scale.hex')}}}
     stage.mkdir(parents=True, exist_ok=True)
     spec_path = stage / f'spec_{a.name}.json'
     spec_path.write_text(json.dumps(spec, indent=2) + '\n')

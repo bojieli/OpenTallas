@@ -32,18 +32,13 @@
   "W": [
    "li"
   ],
-  "E": [
-   "lo"
-  ],
   "N": [
    "ck",
-   "rs",
-   "ci",
-   "fi"
+   "rs"
   ],
   "S": [
    "co",
-   "fo",
+   "st",
    "rso"
   ]
  },
@@ -55,7 +50,7 @@
    "master": "ot_sram_1r1w_256x34_m2_r2c2",
    "inst": "*g_r?0?*u_bm*u_m",
    "idx": 0,
-   "x": 22.464,
+   "x": 69.984,
    "y": 22.8,
    "w": 38.664,
    "h": 28.92,
@@ -81,7 +76,7 @@
    "master": "ot_sram_1r1w_256x34_m2_r2c2",
    "inst": "*g_r?1?*u_bm*u_m",
    "idx": 0,
-   "x": 22.464,
+   "x": 69.984,
    "y": 51.744,
    "w": 38.664,
    "h": 28.92,
@@ -107,7 +102,7 @@
    "master": "ot_sram_1r1w_256x34_m2_r2c2",
    "inst": "*g_r?2?*u_bm*u_m",
    "idx": 0,
-   "x": 22.464,
+   "x": 69.984,
    "y": 80.688,
    "w": 38.664,
    "h": 28.92,
@@ -133,7 +128,7 @@
    "master": "ot_sram_1r1w_256x34_m2_r2c2",
    "inst": "*g_r?3?*u_bm*u_m",
    "idx": 0,
-   "x": 22.464,
+   "x": 69.984,
    "y": 109.632,
    "w": 38.664,
    "h": 28.92,
@@ -184,9 +179,15 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/s81_die_pins/v18/gather_leaves/dsfd_gth_rw.tcl",
-  "physical/s81_ph_views/gather/leaf_midpoint/pre_dpl.tcl",
-  "physical/s81_ph_views/gather/leaf_midpoint/pre_gpl.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/dsfd_gth_rw/pre_gpl.tcl",
+  "physical/ref_tile/dsfd_gth_rw/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
   "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2/ot_sram_1r1w_256x34_m2_r2c2.lef",
   "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2/ot_sram_1r1w_256x34_m2_r2c2_ss.lib",
   "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2/ot_sram_1r1w_256x34_m2_r2c2_ff.lib",

@@ -22,9 +22,9 @@ template<class Ranks>void step_all(Ranks&r,VerilatedContext&ctx,SequenceClock&c,
   unsigned stage,const std::function<bool()>&finished,uint64_t limit,const char*what){
  for(uint64_t start=c.events;c.events<start+limit;c.events++){
   bool core=c.cn<=c.hn;ctx.time(core?c.cn:c.hn);
-  if(!core){c.hn+=512000;c.hh=!c.hh;for(auto&x:r)x->backend.hbm_edge(c.hh);continue;}
+  if(!core){c.hn+=512000;c.hh=!c.hh;rank_pool().run([&](unsigned k){r[k]->backend.hbm_edge(c.hh);});continue;}
   c.cn+=416667;c.ch=!c.ch;
-  if(!c.ch){for(auto&x:r)x->fall();link.fall();embed.fall();host.fall();continue;}
+  if(!c.ch){rank_pool().run([&](unsigned k){r[k]->fall();});link.fall();embed.fall();host.fall();continue;}
   before_low();host.low(in);
   if(host.fault())throw std::runtime_error(std::string("actual HOST allocator/cohort fault during ")+what);
   bool reset=true;
@@ -33,8 +33,9 @@ template<class Ranks>void step_all(Ranks&r,VerilatedContext&ctx,SequenceClock&c,
    r[rank]->host_die_reset_n=rst;reset&=rst;}
   embed.low(r,reset);
   link.low(r,reset,false,host.epoch(),stage,host.token(),host.position());
-  for(unsigned rank=0;rank<8;rank++){if(link.rank(rank).core_start)throw std::runtime_error("core start after head retirement");r[rank]->low(false);}
-  for(auto&x:r)x->rise();link.rise(r);embed.rise(r);host.rise();
+  for(unsigned rank=0;rank<8;rank++)if(link.rank(rank).core_start)throw std::runtime_error("core start after head retirement");
+  rank_pool().run([&](unsigned k){r[k]->low(false);});
+  rank_pool().run([&](unsigned k){r[k]->rise();});link.rise(r);embed.rise(r);host.rise();
   for(unsigned id=0;id<8;id++)if(host.hosts[id]->service_abort||host.hosts[id]->package_abort||host.boards[id]->faults)
    throw std::runtime_error(std::string("actual HOST/board abort or fault during ")+what);
   after_rise();
@@ -52,6 +53,7 @@ int main(int argc,char**argv){try{
  auto layers=read_plan(a.plan);
  if(layers.front().number!=0||layers.front().position!=0)throw std::runtime_error("whole token starts at layer0 position0");
  VerilatedContext ctx;ctx.threads(1);
+ std::cerr<<"rank evaluation "<<(rank_pool().parallel()?"parallel x8":"sequential")<<std::endl;
  HostOwner host;Inputs in;Startup startup;PreTerminal pre;
  EmbeddingOwner embed(ctx,a.embedding_program);
  std::array<std::unique_ptr<Rank>,8> r;
@@ -76,7 +78,7 @@ int main(int argc,char**argv){try{
  auto drains=[&](){uint8_t kv=0,vm=0;
   for(unsigned rank=0;rank<8;rank++){auto&x=*r[rank];
    if(x.writes.drained()&&x.reads.drained())kv|=1u<<rank;
-   if(x.core.done&&x.core.su_is_idle&&x.front.native_idle&&x.receiver.acks.empty()&&x.receiver.responses.empty())vm|=1u<<rank;}
+   if(x.core.done&&x.core.su_is_idle&&x.front.native_idle&&x.receiver.acks.empty()&&x.receiver.inflight.empty()&&x.receiver.responses.empty())vm|=1u<<rank;}
   in.kv_drained=kv;in.vm_drained=vm;in.collective_drained=link.drained()?255:0;in.host_drained=pre(host,startup);};
  Terminal term;term.begin(host,token,value,uint32_t(head_edge));
  step_all(r,ctx,clock,link,host,in,embed,[&]{startup(host,in);drains();term.before_low(host,in);},
