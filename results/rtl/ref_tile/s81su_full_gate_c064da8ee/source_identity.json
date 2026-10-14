@@ -248,6 +248,183 @@
      "compiled_by_gate": true
     }
    }
+  },
+  "s81su_qnq_sp8_ref-v5-sp8-2df2353b8": {
+   "source_commit": "2df2353b8",
+   "files": {
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv": {
+     "identical": false
+    },
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": {
+     "identical": false
+    },
+    "rtl/hdc/ot_sram_dline.sv": {
+     "identical": true
+    },
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fastfp.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fp32_f12.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_prefix.sv": {
+     "identical": true
+    },
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_sfu.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": {
+     "identical": true
+    }
+   },
+   "note": "qn files differ from the gate commit only in the default CB of the qnt modules (256 at 2df2353b8, 32 at the gate commit); the QNQ module text is identical (git diff c064da8ee 2df2353b8: 2 lines, both the qnt parameter lists)"
+  },
+  "s81su_qnq_spx_ref-v5-spx-2df2353b8": {
+   "source_commit": "2df2353b8",
+   "files": {
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv": {
+     "identical": false
+    },
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": {
+     "identical": false
+    },
+    "rtl/hdc/ot_sram_dline.sv": {
+     "identical": true
+    },
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fastfp.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fp32_f12.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_prefix.sv": {
+     "identical": true
+    },
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_sfu.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": {
+     "identical": true
+    }
+   }
+  },
+  "s81su_qbe_sp8_ref-v5-sp8-2df2353b8": {
+   "source_commit": "2df2353b8",
+   "files": {
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qb.sv": {
+     "identical": true
+    },
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qb.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_sram_dline.sv": {
+     "identical": true
+    },
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fastfp.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fp32_f12.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_prefix.sv": {
+     "identical": true
+    },
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_sfu.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": {
+     "identical": true
+    }
+   }
+  },
+  "s81su_qbe_spx_ref-v5-spx-2df2353b8": {
+   "source_commit": "2df2353b8",
+   "files": {
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qb.sv": {
+     "identical": true
+    },
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qb.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_sram_dline.sv": {
+     "identical": true
+    },
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fastfp.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fp32_f12.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_prefix.sv": {
+     "identical": true
+    },
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_sfu.sv": {
+     "identical": true
+    },
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": {
+     "identical": true
+    }
+   }
   }
  },
  "gate_sources_equal_commit": true,

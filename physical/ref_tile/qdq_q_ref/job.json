@@ -1,5 +1,5 @@
 {
- "name": "qdq_q_ref-q6-7e3f21a6a",
+ "name": "qdq_q_ref-q7-fc3cf212a",
  "block": "ot_hgi_qdq_q_pin4",
  "ref_tile": true,
  "owner": "Codex:hbm-qdq-physical",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "codex/hbm-qdq-physical",
-  "commit": "7e3f21a6a",
+  "commit": "fc3cf212a",
   "extra_paths": [
    "compiler",
    "results/rtl/tput_map_1011/ds_qdq_b2"
@@ -115,7 +115,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qdq_q_ref/qdq_q_ref-q6-7e3f21a6a"
+   "to": "results/rtl/ref_tile/qdq_q_ref/qdq_q_ref-q7-fc3cf212a"
   }
  ],
  "cycles_added": 0,

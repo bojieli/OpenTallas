@@ -11,12 +11,17 @@ plan = importlib.util.module_from_spec(loader)
 loader.loader.exec_module(plan)
 specs, instances, drivers, receivers = {}, {}, {}, {}
 # On-grid moves repair the actual packed-range reach. Open relay tiles only.
-relay_y = {"u_rt0": 1373.76, "u_rb3": 224.64}
+# face/fork tiles: locked per-bit plans of face_pin_plan.py (fw2 | fw3 seam moved: u_fw3 origin follows fw2's height).
+floader = importlib.util.spec_from_file_location("face_pin_plan", CP / "face_pin_plan.py")
+fplan = importlib.util.module_from_spec(floader)
+floader.loader.exec_module(fplan)
+relay_y = dict(fplan.INST_Y)
 for instance, master, x, y, orient, connections in plan.INST:
     if master not in specs:
-        candidate = CP / "codex_specs" / f"{master}_cx2.json"
         legacy = ROOT / "physical/ref_tile" / master / "spec.json"
-        specs[master] = json.loads((candidate if candidate.exists() else legacy).read_text())
+        candidate = next((c for c in (CP / "codex_specs" / f"{master}_cx2.json", CP / "codex_specs" / f"{master}_cx.json")
+                          if c.exists()), legacy)
+        specs[master] = json.loads(candidate.read_text())
     spec = specs[master]
     width, height = spec["outline"]["w"], spec["outline"]["h"]
     x = plan.VMW - width if x is None else x
@@ -51,7 +56,9 @@ for i, (name, a) in enumerate(boxes):
         if (min(a["x"] + a["w"], b["x"] + b["w"]) > max(a["x"], b["x"])
                 and min(a["y"] + a["h"], b["y"] + b["h"]) > max(a["y"], b["y"])):
             overlap.append([name, other])
-result = dict(planning_only=True, region=[plan.VMW, plan.VMH], instances=instances,
+_inst, per_bit, _over = fplan.hops()
+result = dict(planning_only=True, per_bit_hops=per_bit,
+              per_bit_hops_above500=[hop for hop in per_bit if hop["max_bit_um"] > 500], region=[plan.VMW, plan.VMH], instances=instances,
               instance_count=len(instances), overlap=overlap, hops=hops,
               hops_endpoint_above500=[hop for hop in hops if hop["max_same_order_end_um"] > 500],
               limitations="Packed-range endpoints assume the same bit order at both ends. Actual bit-level "

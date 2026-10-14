@@ -11,12 +11,16 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_IN
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_LVT_FF_nldm_211120.lib.gz
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_LVT_FF_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz
-
 read_db /in/results/asap7/opentallas_dsfd_wfc_lnk_asap7_s81ph_mtp_wfc_lnk_b_0cd6caa1b_tc/base/6_final.odb
 read_sdc /in/results/asap7/opentallas_dsfd_wfc_lnk_asap7_s81ph_mtp_wfc_lnk_b_0cd6caa1b_tc/base/6_final.sdc
 read_spef /in/results/asap7/opentallas_dsfd_wfc_lnk_asap7_s81ph_mtp_wfc_lnk_b_0cd6caa1b_tc/base/6_final.spef
 set_propagated_clock [all_clocks]
-puts "OT_WS [sta::worst_slack_cmd min]"
+read_sdc /src/physical/s81_ph_views/common/signoff_unc60.sdc
+read_sdc /src/physical/common_flow/io_ref_routed.sdc
+read_sdc /cl/io_ref_routed.sdc
+puts "OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]"
 write_timing_model -library_name dsfd_wfc_lnk_ff /out/dsfd_wfc_lnk_ff.lib
+
+
 puts "OT_EXPORT_DONE"
 exit

@@ -322,18 +322,30 @@ JOB = re.compile(r"SUJ op=(\d+) kind=(\d+) start=(-?\d+) done=(-?\d+)")
 def cmd_run(a):
     sh = SHAPES[a.shape]
     out = Path(a.out)
-    tag = f"{a.shape}_{a.fp}_m{a.mut}_a{a.amut}" + ("_h" if a.hier else "")
+    tag = f"{a.shape}_{a.fp}_m{a.mut}_a{a.amut}" + ("_h" if a.hier else "") + ("_t" if a.tiles else "") + (f"_lvm{a.lvm}" if a.lvm else "")
     rtl = RTL + (HIER if a.hier else [])
+    gen = []
+    if a.tiles:        # gate s81su_tiles: the slab with the ROUTED tops dsfd_su_t_<x> in place of the cores (su_tile_tops.py)
+        import su_tile_tops as TT
+        if not a.hier or a.mut or a.amut:
+            sys.exit("--tiles needs --hier and no --mut/--amut (the routed tops carry no mutant parameter; use --tmut)")
+        text, man = TT.build()
+        (out / "tile_tops").mkdir(parents=True, exist_ok=True)
+        if not (out / "tile_tops/dsfd_sp_su_h_tt.sv").exists() or (out / "tile_tops/dsfd_sp_su_h_tt.sv").read_text() != text:
+            (out / "tile_tops/dsfd_sp_su_h_tt.sv").write_text(text)
+        (out / "tile_tops/tile_tops.json").write_text(json.dumps(man, indent=1) + "\n")
+        rtl = [s_ for s_ in rtl if s_ != TT.SLAB] + TT.WRAP
+        gen = [out / "tile_tops/dsfd_sp_su_h_tt.sv"]
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_s81_su_master"
     if not exe.exists():
         obj.mkdir(parents=True, exist_ok=True)
-        srcs = [ROOT / s for s in H.FP[a.fp] + rtl + [TB]]
+        srcs = [ROOT / s for s in H.FP[a.fp] + rtl] + gen + [ROOT / TB]
         if a.fp == "dpi":
             srcs = H.dpi_rest(obj) + srcs
         cmd = [H.VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_su_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", *[f"-G{k}={v}" for k, v in sh.items()],
-               f"-GMUT={a.mut}", f"-GAMUT={a.amut}", *(["-DSU_HIER"] if a.hier else []), *map(str, srcs), "-CFLAGS", "-O1"]
+               f"-GMUT={a.mut}", f"-GAMUT={a.amut}", *([f"-GLVM={a.lvm}"] if a.lvm else []), *(["-DSU_HIER"] if a.hier else []), *(["-DSU_TILE_TOPS"] if a.tiles else []), *map(str, srcs), "-CFLAGS", "-O1"]
         rr = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + rr.stdout + rr.stderr)
         if rr.returncode != 0:
@@ -341,7 +353,11 @@ def cmd_run(a):
     res = []
     for meta in json.loads((out / "runs.json").read_text())["runs"]:
         d = out / "runs" / meta["run"]
-        rr = subprocess.run([str(exe)], cwd=d, capture_output=True, text=True)
+        rr = subprocess.run([str(exe)] + ([f"+tmut={a.tmut}"] if a.tiles else []), cwd=d, capture_output=True, text=True)
+        if a.tiles:
+            tt = [x for x in rr.stdout.splitlines() if "SU_TILE_TOPS" in x and "tmut=" not in x]
+            if tt:
+                print("\n".join(tt[:60]), flush=True)
         m = SUG.search(rr.stdout)
         jobs = [dict(op=int(x[0]), kind=int(x[1]), start=int(x[2]), done=int(x[3])) for x in JOB.findall(rr.stdout)]
         if not m:
@@ -357,9 +373,13 @@ def cmd_run(a):
               row["jobs"], "fault", row["fault"], row["fault_code"], "cyc", row["cycles"],
               "early", row["early_done_rows"], flush=True)
     rec = dict(schema="opentallas.s81_suhc.su_gate.run.v1", generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-               shape=a.shape, params=sh, fp=a.fp, mut=a.mut, amut=a.amut, hier=bool(a.hier), runs=res,
+               shape=a.shape, params=sh, fp=a.fp, mut=a.mut, amut=a.amut, hier=bool(a.hier), lvm=(a.lvm or 10), runs=res,
                status="pass" if res and all(x["ok"] for x in res) else "fail",
                source_sha256={s: H.sha(ROOT / s) for s in H.FP[a.fp] + rtl + [TB]})
+    if a.tiles:
+        tag += str(a.tmut)
+        rec.update(tiles=True, tmut=a.tmut, tile_tops=json.loads((out / "tile_tops/tile_tops.json").read_text()),
+                   slab_tt_sha256=H.sha(out / "tile_tops/dsfd_sp_su_h_tt.sv"))
     (out / f"run_{tag}.json").write_text(json.dumps(rec, indent=1) + "\n")
     print("RUN", tag, rec["status"])
     return 0 if rec["status"] == "pass" else 1
@@ -379,6 +399,10 @@ def main():
     p.add_argument("--mut", type=int, default=0)
     p.add_argument("--amut", type=int, default=0)
     p.add_argument("--hier", action="store_true", help="the hierarchical slab dsfd_sp_su_h")
+    p.add_argument("--tiles", action="store_true", help="the slab built from the ROUTED tile tops dsfd_su_t_<x> (su_tile_tops.py)")
+    p.add_argument("--lvm", type=int, default=0, help="VM read latency of the bench VM (tb LVM; 0 = the bench default 10): "
+                   "measures how many serial VM read round trips a job class holds")
+    p.add_argument("--tmut", type=int, default=0, help="with --tiles: output mutant of tile class K (+tmut=K, no rebuild)")
     a = ap.parse_args()
     return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)
 

@@ -229,3 +229,24 @@ class StructureRepeat(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MultiDomainClockEvidence(unittest.TestCase):
+    def output(self, source="cks[0]", hi=250):
+        rows = [{"source": "ck[0]", "clock": "core_clk", "tt": {"all": {"min": 100, "max": 120}}},
+                {"source": source, "clock": "str_clk", "tt": {"all": {"min": 190, "max": hi}}}]
+        return ("GATE_TB textbook_lint: INFO clock_roots max_root_sinks=17460 root=port:cks[0]\n"
+                "GATE_CK tt insertion all 100..120 ps (spread 20)\n" +
+                "\n".join("GATE_CK_DOMAIN " + json.dumps(r) for r in rows))
+
+    def test_largest_root_uses_its_own_tree(self):
+        r = PG.clock_record(self.output(), True)
+        self.assertEqual(r["measured_clock"], "str_clk")
+        self.assertEqual((r["tt_insertion_ps"], r["tt_spread_ps"]), (250, 60))
+        self.assertEqual(r["verdict"], "PASS")
+
+    def test_secondary_domain_cannot_borrow_primary_domain_exception(self):
+        self.assertEqual(PG.clock_record(self.output(hi=301), True)["verdict"], "REFUSE")
+        r = PG.clock_record(self.output(source="other"), True)
+        self.assertIsNone(r["tt_insertion_ps"])
+        self.assertEqual(r["verdict"], "REFUSE")

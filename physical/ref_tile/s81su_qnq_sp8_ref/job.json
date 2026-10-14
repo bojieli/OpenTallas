@@ -1,14 +1,14 @@
 {
- "name": "s81su_qnq_sp8_ref-v4-sp8-1ec43dde7",
+ "name": "s81su_qnq_sp8_ref-v5-sp8-COMMIT",
  "block": "dsfd_su_t_qnq",
  "ref_tile": true,
- "owner": "Codex:s81_su_closure",
- "purpose": "Codex measured qnq successor: balanced actual local clock spine, <=8 sinks/40um leaf bin and100um clock segment, 10ps padding tolerance; real input/internal/SRAM wd_in capture delays and preserved interior M5 via access. Same RTL, slot, clocks, boundary budgets and cycles. Prior terminal evidence preserved; progressing sibling unchanged.; fresh HB1 terminalTT74.01/FF-25.34/DRC3: added measured s0_x, tag-line, ae, r1_t/r2_c/q captures; access guard handles real clock+data M4edge violations",
+ "owner": "Claude:el1013-s81su-qnqb",
+ "purpose": "Codex measured qnq successor: balanced actual local clock spine, <=8 sinks/40um leaf bin and100um clock segment, 10ps padding tolerance; real input/internal/SRAM wd_in capture delays and preserved interior M5 via access. Same RTL, slot, clocks, boundary budgets and cycles. Prior terminal evidence preserved; progressing sibling unchanged.; v5 [s81su-qnqb 10-13]: same kit as v4-sp8, SRAM edge access = shared whole-GCell macro-edge via guard (physical/common_flow/macro_edge_via_guard.tcl, 1.2 um M5 per vertical macro edge) -- every v4 spx/sp8 DRC violation was an M4 bridge from the first over-macro M5 track inside the old 0.3 um strip; hold ECO re-applies the guard",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "codex/s81su-physical-20261013",
-  "commit": "1ec43dde7"
+  "branch": "claude/el1013-s81su-qnqb",
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -73,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_qnq_sp8_ref/s81su_qnq_sp8_ref-v4-sp8-1ec43dde7"
+   "to": "results/rtl/ref_tile/s81su_qnq_sp8_ref/s81su_qnq_sp8_ref-v5-sp8-COMMIT"
   }
  ],
  "cycles_added": 0,

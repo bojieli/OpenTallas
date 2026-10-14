@@ -13,7 +13,7 @@ J=~/.local/state/closure_loop/jobs
 st() { python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['status'])" "$J/$1.json" 2>/dev/null || echo MISSING; }
 [ "$(st smh_pt_w_ref_p45h-r1-6332f4e44)" = CLOSED ] || { echo "BLOCKED: pt_w p45h not CLOSED"; exit 2; }
 XS="${SMT_XS_OVERRIDE:-}"; XJ="${SMT_XJ_OVERRIDE:-}"   # coordinator 10-12: closed xs p50/p45 @0fbf9bc20 (M6 grant, r25gq v11)
-[ -n "$XS" ] || for j in smh_xs_ref_p50m-r2-a3b3345d2 smh_xs_ref_p45m-r2-a3b3345d2 smh_xs_ref_p50m-r1-b749b74bf smh_xs_ref_p45m-r1-b749b74bf smh_xs_ref_p40x-r1-9315ade96 smh_xs_ref_t40-r1-c2250fec8; do [ "$(st $j)" = CLOSED ] && { XS=${j%-r[0-9]-*}; XJ=$j; break; }; done
+[ -n "$XS" ] || for j in smh_xs_ref_p50m-r3-29a3f8638 smh_xs_ref_p45m-r3-29a3f8638 smh_xs_ref_p50m-r2-a3b3345d2 smh_xs_ref_p45m-r2-a3b3345d2 smh_xs_ref_p50m-r1-b749b74bf smh_xs_ref_p45m-r1-b749b74bf smh_xs_ref_p40x-r1-9315ade96 smh_xs_ref_t40-r1-c2250fec8; do [ "$(st $j)" = CLOSED ] && { XS=${j%-r[0-9]-*}; XJ=$j; break; }; done
 [ -n "$XS" ] || { echo "BLOCKED: no exact-pin xs closed (p40x: $(st smh_xs_ref_p40x-r1-9315ade96), t40: $(st smh_xs_ref_t40-r1-c2250fec8))"; exit 2; }
 export SMT_XS_KIT=$XS
 # gate-only xs placeholders must go before the record lands

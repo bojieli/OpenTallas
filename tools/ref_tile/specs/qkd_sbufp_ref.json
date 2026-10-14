@@ -41,13 +41,12 @@
  "route": {
   "pd": 0.5,
   "threads": 8,
-  "peak_ram_gb": 32,
-  "hold_margin_ns": 0.01
+  "peak_ram_gb": 32
  },
  "job": {
   "owner": "Claude:q13b-kvend",
   "branch": "claude/q13b-kvend",
-  "tag": "q14",
+  "tag": "q15",
   "purpose": "q13b-kvend: ot_qkvd_sbufp through the reference tile flow, replacing the old-flow ot_qkvd_sbuf view (clock insertion 505 ps max / 280 min, SS -251 ps, unregistered ~660 ps pop cone) that made the kv_end spine diverge (qkd_d2d_ref-q10: L 2,509 ps, hold stall -169 on 2,139 inputs). pop registered once per slice inside the tile; every face pin registered; kv_end PQ=2 child.",
   "benches": [
    {
@@ -85,6 +84,12 @@
    }
   ],
   "views_to": "physical/ref_tile/qkd_sbufp_ref/views",
-  "record_to": "results/rtl/ref_tile/qkd_sbufp_ref"
- }
+  "record_to": "results/rtl/ref_tile/qkd_sbufp_ref",
+  "structural_change": "SRAM pin-edge M5 no-entry guard (macro_edge_via_guard, 1.2 um per vertical macro edge, added pre-GRT / removed post-DRT) + kit recipe 2 (macro halo 5.4 um, hold margin 30 ps, pin hold cells and pin flops FIRM at the pins): q14 routes kept 2-5 M4 shorts at the SRAM east pin edge and one missed FF by 24 ps"
+ },
+ "recipe": 2,
+ "boundary_tcl": [
+  "physical/qwen_die_masters/sram_edge_guard.tcl"
+ ],
+ "structural_change": "SRAM pin-edge M5 no-entry guard (macro_edge_via_guard, 1.2 um per vertical macro edge, added pre-GRT / removed post-DRT) + kit recipe 2 (macro halo 5.4 um, hold margin 30 ps, pin hold cells and pin flops FIRM at the pins): q14 routes kept 2-5 M4 shorts at the SRAM east pin edge and one missed FF by 24 ps"
 }

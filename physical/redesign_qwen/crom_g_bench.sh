@@ -11,8 +11,9 @@ for n in [f"crom_w_c{c}_d{k}" for c in range(16) for k in range(2)] + [f"crom_n_
     with open(f"{d}/{n}.viamap.hex", "w") as f:
         for r in range(512): f.write("%0532x\n" % random.getrandbits(2128))
 PY
-g=$([ $m = neg ] && echo 1 || echo 0)
-$V --binary -j 8 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-DECLFILENAME -Wno-INITIALDLY -Wno-TIMESCALEMOD -GGMUT=$g --top-module tb_qfd_crom_g \
+# RLY=1 (env): the slot-shaped M5 master ot_qfd_crom_gr; mode mut = GMUT 2 (data bit flip in tile 0, RLY 1 only)
+g=$([ $m = neg ] && echo 1 || echo 0); [ $m = mut ] && g=2
+$V --binary -j 8 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-DECLFILENAME -Wno-INITIALDLY -Wno-TIMESCALEMOD -GGMUT=$g -GRLY=${RLY:-0} --top-module tb_qfd_crom_g \
    -Mdir "$o/obj" rtl/qwen_sys/system_20261008/ot_qfd_crom.sv rtl/hdc/ot_hdc_delay.sv \
    physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v rtl/test/redesign_qwen/tb_qfd_crom_g.sv > "$o/build.log" 2>&1 || { echo BUILD_FAIL; exit 2; }
 "$o/obj/Vtb_qfd_crom_g" +OT_ROM_DIR="$o/img" > "$o/run.log" 2>&1

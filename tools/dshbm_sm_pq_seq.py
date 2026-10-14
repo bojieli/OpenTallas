@@ -129,14 +129,14 @@ def cmd_run(a):
     (d / "seq.hex").write_text("\n".join(f"{v:08x}" for v in seq) + "\n")
     (d / "lines.hex").write_text("\n".join(lines) + "\n")
     (d / "x.hex").write_text("\n".join(xw) + "\n")
-    params = dict(SUB=MS.SUB, LBS=MS.LBS, LSB=MS.LSB, NC=a.nc, XDEPTH=XDEPTH, RMAX=MS.RMAX, LEV=MS.LEV, XB=xb,
+    params = dict(SUB=MS.SUB, LBS=MS.LBS, LSB=MS.LSB, NC=a.nc, XDEPTH=XDEPTH, RMAX=a.rmax, LEV=MS.LEV, XB=xb,
                   HAZ=a.haz, G1ASB=a.g1asb)
     if a.req_credit:
         params["REQCR"] = 1
     if a.int8:
         params["ENABLE_INT8"] = 1
         params["PIPE_INT8"] = a.int8_pipe
-    bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + ("_smh" if a.smh else "")
+    bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + (f"_rmax{a.rmax}" if a.rmax != MS.RMAX else "") + ("_smh" if a.smh else "")
                               + ("_negflip" if a.neg_flip else "") + ("_muts1w" if a.mut_s1w else "") + ("_mutbf" if a.mut_bfdly else "")
                               + ("_rc" if a.req_credit else "") + (f"_int8p{a.int8_pipe}" if a.int8 else "") + ("_nobyp" if a.mut_nobyp else "") + ("_obdrop" if a.mut_obdrop else "") + ("_movf" if a.mut_reqovf else "") + ("_mleak" if a.mut_reqleak else "")
                               + ("_cg" if a.cg else "") + ("_cglate" if a.cg_mut_late else "") + ("_cgh0" if a.cg_mut_hold0 else "") + "".join("_" + x.lower() for x in a.define))
@@ -187,7 +187,7 @@ def cmd_run(a):
     out = dict(schema="opentallas.dshbm.sm_pq_seq.v1", seq=seqname, serial=a.serial, haz=a.haz, g1_asbuilt=a.g1asb,
                element=("ot_hbm_accel_smh (hierarchical: front / identical leaf tiles / column back ends; pipelined "
                         "issue, G1 select by the producing column)" if a.smh else
-                        "ot_hbm_accel_sm_pq (pipelined issue) on ot_hbm_accel_sm_v ENABLE=1 leaves"), nc=a.nc,
+                        "ot_hbm_accel_sm_pq (pipelined issue) on ot_hbm_accel_sm_v ENABLE=1 leaves"), nc=a.nc, rmax=a.rmax,
                active_columns=a.active, x_beats_per_address=xb, simulator=a.sim, bench_clock_ns=1.0, status=status,
                mismatching_ops=bad, total_cycles=total, timeout=timeout, ops=rows, req_stalls=a.req_stalls,
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -235,6 +235,7 @@ def main(argv=None):
     ap.add_argument("step", choices=("run",))
     ap.add_argument("--seq", required=True, help="ar_l20 | p6_l20 | wg | p6_wg | other | p6_other | stress | p6_stress")
     ap.add_argument("--nc", type=int, default=8)
+    ap.add_argument("--rmax", type=int, default=MS.RMAX, help="row/tag capacity; 4096 selects the production default masters (legacy bench default 256)")
     ap.add_argument("--active", type=int, default=1)
     ap.add_argument("--haz", type=int, default=1)
     ap.add_argument("--g1asb", type=int, default=0, help="1 = as-built leaf G1 select (negative test)")

@@ -63,9 +63,11 @@ def main(argv=None):
             if own is None:
                 own, how = dl, (how + '; ' if how else '') + 'die lead'
             line = (f"{r['cell']} x{r['instances']} [{' '.join(r['flags'])}] view {r['view']} ({r['binding']}; {r['setup_corner']}): "
-                    f"clk->pin worst {r['worst_out_ps']} ps on {r['worst_out_bus']} ({r['out_over_bits']} bits > 166.7), "
-                    f"pin->flop worst {r['worst_in_ps']} ps on {r['worst_in_bus']} ({r['in_over_bits']} bits > 166.7), "
-                    f"comb bits {r['comb_bits']}, FF L {r['L_min_ps']} / H {r['H_max_ps']} -> L-H {r['min_delay_margin_ps']} ps")
+                    f"R {r.get('reference_ps')} ps ({r.get('reference_src')}), boundary spread {r.get('boundary_spread_ps')} ps; "
+                    f"o = clk->pin - R worst {r['worst_out_ps']} ps on {r['worst_out_bus']}, s = setup@pin + R worst "
+                    f"{r['worst_in_ps']} ps on {r['worst_in_bus']}, C = o + s {r.get('pair_cost_ps')} ps -> reach against its own "
+                    f"kind {r.get('reach_self_um')} um; comb bits {r['comb_bits']}, FF L {r['L_min_ps']} / H {r['H_max_ps']} -> "
+                    f"L-H {r['min_delay_margin_ps']} ps. FIX: " + '; '.join(r.get('fix') or ['-']))
             ranked.append(dict(r, die=die, owner_log=own, owner_basis=how))
             posts.setdefault(own, collections.OrderedDict()).setdefault(r['view'], [die, line])
             if own != dl:
@@ -76,30 +78,33 @@ def main(argv=None):
              f"{hp.get('reset_nets_over')} reset nets, max {hp.get('max_um')} um; worst classes: "
              + '; '.join(f"{k} x{v['hops']} {v['max_um']} um" for k, v in (hp.get('by_class') or [])[:8]))
         posts.setdefault(dl, collections.OrderedDict())[f'__die__{die}'] = [die, s]
-    b = 833.333 * 0.2
-    ranked.sort(key=lambda r: (-(r['comb_bits'] > 0), -max((r['worst_out_ps'] or 0) - b, (r['worst_in_ps'] or 0) - b, 0)))
+    ranked.sort(key=lambda r: (-(r['comb_bits'] > 0), -(r.get('pair_cost_ps') or 0)))
     for i, r in enumerate(ranked):
         r['rank'] = i + 1
     Path(a.out).write_text(json.dumps(dict(schema='opentallas.pinreg_audit.ranked.v1', generated=now, dies=dies, ranked=ranked),
                                       indent=1) + '\n')
-    L = ['# Die timing by construction: pin-register audit, ranked (PROVISIONAL)', '',
-         'Rule (owner 2026-10-13): register at the pin -> wire <= 500 um -> register at the pin, IO 0.2 T of 833.333 ps '
-         '(166.7 ps a side). Tool: `tools/hier_contract/pinreg_audit.py`. Every view audited here was exported before the '
-         'export-SDC fix (main abc334b14), so each number may move by tens of ps: re-run once the views are re-exported.', '',
+    L = ['# Die timing by construction: pin-register audit, ranked (insertion-compensated clock entry)', '',
+         'Rule (owner 2026-10-13): register at the pin -> wire <= 500 um -> register at the pin. Die statement: clock at each '
+         'tile clock pin = phi - R (R = mean boundary-register insertion); hop A -> B: o_A + 0.76 L + s_B <= 833.3 - 60 - 90 = '
+         '683.3 ps (TT); per tile C = o + s, reach = (683.3 - C) / 0.76 against its own kind. The sign-off SDC (IO 0.2 T outside) '
+         'proves only o, s <= 516.7 ps each. Tool: `tools/hier_contract/pinreg_audit.py`; each die file states which views '
+         'still predate the export-SDC fix.', '',
          '| die | contract | cells | audited | violating | not auditable (cells / inst) | hops > 500 um (data + reset) | max um |',
          '|---|---|---:|---:|---:|---|---|---:|']
     L += [f"| {d['die']} | v{d['contract_version']} | {d['contract_cells']} | {d['audited']} | {d['violating']} | {d['not_auditable']} / "
           f"{d['instances_not_auditable']} | {d['data_hops_over']} + {d['reset_nets_over']} | {d['hop_max_um']} |" for d in dies]
-    L += ['', '| # | die | cell | inst | flags | clk->pin worst ps (bits over) | pin->flop worst ps (bits over) | L-H ps | corner | binding | owner log |',
-          '|---|---|---|---:|---|---|---|---:|---|---|---|']
-    L += [f"| {r['rank']} | {r['die']} | {r['cell']} | {r['instances']} | {' '.join(r['flags'])} | {r['worst_out_ps']} ({r['out_over_bits']}) | "
-          f"{r['worst_in_ps']} ({r['in_over_bits']}) | {r['min_delay_margin_ps']} | {r['setup_corner']} | {r['binding']} | {r['owner_log']} |"
-          for r in ranked]
+    L += ['', '| # | die | cell | inst | flags | R ps | spread | o ps (bus) | s ps (bus) | C | reach um | L-H ps | corner | binding | owner log | fix |',
+          '|---|---|---|---:|---|---:|---:|---|---|---:|---:|---:|---|---|---|---|']
+    L += [f"| {r['rank']} | {r['die']} | {r['cell']} | {r['instances']} | {' '.join(r['flags'])} | {r.get('reference_ps')} | "
+          f"{r.get('boundary_spread_ps')} | {r['worst_out_ps']} ({r['worst_out_bus']}) | {r['worst_in_ps']} ({r['worst_in_bus']}) | "
+          f"{r.get('pair_cost_ps')} | {r.get('reach_self_um')} | {r['min_delay_margin_ps']} | {r['setup_corner']} | {r['binding']} | "
+          f"{r['owner_log']} | {'; '.join(r.get('fix') or [])} |" for r in ranked]
     Path(a.md).write_text('\n'.join(L) + '\n')
     for lg, items in posts.items():
-        txt = (f"{now} [pinreg-audit] DIE TIMING BY CONSTRUCTION audit (owner 10-13: register at the pin, wire <= 500 um, IO 0.2 T = "
-               f"166.7 ps a side; a miss is a defect to fix, not to waive). PROVISIONAL: views pre export-SDC fix abc334b14, re-run "
-               f"after re-export. Full tables: results/arch/pinreg_audit_1013/ (tool tools/hier_contract/pinreg_audit.py).\n"
+        txt = (f"{now} [pinreg-audit] DIE TIMING BY CONSTRUCTION audit v2 (owner 10-13: register at the pin, wire <= 500 um; judged on "
+               f"the pair equation o_A + 0.76 L + s_B <= 683.3 ps with insertion-compensated clock entry, NOT 166.7 ps a side: the "
+               f"earlier out_over / in_over lists are withdrawn). Full tables: results/arch/pinreg_audit_1013/*_compensated.md "
+               f"(tool tools/hier_contract/pinreg_audit.py).\n"
                + ''.join(f"  - [{die}] {line}\n" for die, line in items.values()))
         if a.dry_run:
             print('==>', lg, len(items))

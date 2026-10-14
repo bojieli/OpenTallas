@@ -83,6 +83,29 @@
   "S3_SLICE_V08_DEFAULT_DEC_A": {
    "cycles": 169,
    "note": "same run on ot_hgi_qw_dec (track A, DEC3=0 equivalent at bbdb82ce3): cycle-identical"
+  },
+  "S3_q8_fr_core_SPANPIPE1_PIN4": {
+   "cycles": 181,
+   "ratio": 1.077,
+   "S1_cycles": 173,
+   "S1_ratio": 1.03,
+   "verilator": "5.032",
+   "host": "ot-agidock128 /tmp/qdq8_run (scratch, not kept)",
+   "source_commit": "71a03aeb8",
+   "structure": "q8 re-partition: ot_hgi_qdq_q wires only over ot_hgi_qdq_fr (rec -> S3) and ot_hgi_qdq_core (queue .. write); +1 record ingress (S3 pin flops), +1 pop -> decode (hq pin flops), ready margin RQ-12; q7 (same parameters, own logic in the cluster) was 179 = 1.065",
+   "exact": "PASS HGI_QDQ_Q_TPUT records=8 words=3328 cycles=181 priced=168 S=3; m1 FATAL fault after 0 dones, m2 FATAL 2898 of 3328 words mismatch",
+   "status": "measured at the edit, logs in scratch only; the committed evidence is the cluster job bench (grep cycles=181) when qdq_q_ref q8 runs. Within 1.10x: no accepted-cost ledger entry needed. NOT yet physically closed"
+  },
+  "S3_q8b_four_leaf_SPANPIPE1_PIN4": {
+   "cycles": 183,
+   "ratio": 1.089,
+   "S1_cycles": 175,
+   "S1_ratio": 1.042,
+   "verilator": "5.050",
+   "host": "ot-epyc4 /tmp/qdq8_run/bundle/out2 (scratch, not kept)",
+   "structure": "q8b four face-anchored leaves under a wires-only ot_hgi_qdq_q: ot_hgi_qdq_fr (rec -> S3), ot_hgi_qdq_core (queue, hazards, read walk, wrq, retire), ot_hgi_qdq_asm (beat queue, pops, beat placement), ot_hgi_qdq_wr (result FIFO SRAM, wwq, finish detection); a flop at every seam pin. Over q8 (181): +1 decode -> result FIFO (y pin flops), +1 last done -> ret (finish pulse N -> S); pop / space credits return through pin flops used as look-ahead (no cycle); q7 was 179",
+   "exact": "PASS HGI_QDQ_Q_TPUT records=8 words=3328 cycles=183 priced=168 S=3; m1 FATAL fault after 0 dones, m2 FATAL 2898 of 3328 words mismatch; span equivalence PASS checked=513, span mutant FAIL",
+   "status": "measured at the edit, logs in scratch only; the committed evidence is the job bench (grep cycles=183) of qdq_q_ref q8 and of the leaf jobs. 1.089x <= 1.10x: no accepted-cost ledger entry. NOT yet physically closed"
   }
  }
 }

@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  501.12,
+  622.08,
   596.16
  ],
  "core": [
   2.16,
   2.16,
-  498.96,
+  619.9200000000001,
   594.0
  ],
  "why": "spec outline",
@@ -65,7 +65,7 @@
    "inst": "u_qdq.u_od.g_tile[0].g_m0.u_m",
    "idx": 0,
    "x": 259.2,
-   "y": 388.8,
+   "y": 43.2,
    "w": 171.288,
    "h": 77.76,
    "orient": "R0",
@@ -77,8 +77,8 @@
    "master": "ot_hgi_qw_dxl",
    "inst": "u_qdq.g_d3.u_dec.u_dxl",
    "idx": 0,
-   "x": 354.24,
-   "y": 43.2,
+   "x": 302.4,
+   "y": 345.6,
    "w": 120.96,
    "h": 120.96,
    "orient": "R0",
@@ -90,8 +90,8 @@
    "master": "ot_hgi_qw_dbq",
    "inst": "u_qdq.g_d3.u_dec.u_dbq",
    "idx": 0,
-   "x": 354.24,
-   "y": 216.0,
+   "x": 475.2,
+   "y": 345.6,
    "w": 120.96,
    "h": 120.96,
    "orient": "R0",
@@ -103,8 +103,8 @@
    "master": "ot_hgi_qw_daq",
    "inst": "u_qdq.g_d3.u_dec.u_daq",
    "idx": 0,
-   "x": 198.72,
-   "y": 216.0,
+   "x": 302.4,
+   "y": 172.8,
    "w": 129.6,
    "h": 129.6,
    "orient": "R0",
@@ -167,24 +167,6 @@
   [
    "WARN",
    "macro_grid",
-   "ot_hgi_qw_dxl#0: origin (354.24, 43.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_qw_dbq#0: origin (354.24, 216.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_qw_daq#0: origin (198.72, 216.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
    "ot_hgi_qdq_lq#0: origin (25.92, 43.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
@@ -209,7 +191,7 @@
   [
    "WARN",
    "util",
-   "utilisation 42% outside 45%-60% (std 10756 + macro 111801 in core 294026 um2)",
+   "utilisation 34% outside 45%-60% (std 10756 + macro 111801 in core 365615 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],

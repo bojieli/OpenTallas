@@ -436,9 +436,14 @@ def check_placement(m: dict, orient: str, ox_nm: int, oy_nm: int, tracks: dict =
     layers = layers or ASAP7_LAYERS
     W, H = m["W"], m["H"]
     out = {"orient": orient, "origin_nm": [ox_nm, oy_nm], "layers": {}}
+    # A pin is judged per layer by its BEST shape: an exported abstract may attach a routed patch of the pin's net to the
+    # PIN (qkd_ke_tm rst_n: the on-track 0.192 x 0.024 boundary rect plus a 0.046 x 0.264 M4 jog whose centre is half a
+    # pitch off); the router takes its access point on the on-track shape, so only a pin with NO on-track shape on a
+    # layer is off track there.  "pins" counts pins a layer (single-shape pins: unchanged).
     for p in m["pins"]:
         if p["use"] in ("POWER", "GROUND"):
             continue
+        best = {}
         for lay, r in p["rects"]:
             if lay not in tracks:
                 continue
@@ -447,6 +452,8 @@ def check_placement(m: dict, orient: str, ox_nm: int, oy_nm: int, tracks: dict =
             q = transform_rect(r, orient, W, H)
             c2 = (q[1] + q[3] + 2 * oy_nm) if axis == "y" else (q[0] + q[2] + 2 * ox_nm)
             d = min(min((2 * t - c2) % (2 * P), (c2 - 2 * t) % (2 * P)) for t in T) / 2
+            best[lay] = d if lay not in best else min(best[lay], d)
+        for lay, d in best.items():
             e = out["layers"].setdefault(lay, {"pins": 0, "offtrack": 0, "max_offset_nm": 0.0})
             e["pins"] += 1
             if d > 0:

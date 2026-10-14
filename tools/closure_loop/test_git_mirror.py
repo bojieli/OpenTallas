@@ -176,9 +176,9 @@ class MirrorIntegrationTest(MirrorBase):
     def test_half_merged_src_is_reextracted_by_fallback(self):
         real = G.extract_script
 
-        def broken(mirror, full, paths, run, receipt=None):
+        def broken(mirror, full, paths, run, receipt=None, **k):
             # merge part of the tree into src (corrupted), then die
-            return (real(mirror, full, paths, run, receipt).replace("echo GIT_MIRROR_EXTRACTED", "")
+            return (real(mirror, full, paths, run, receipt, **k).replace("echo GIT_MIRROR_EXTRACTED", "")
                     + f'echo corrupt > {run}/src/tools/run.py; rm -f {run}/src/Makefile; exit 1\n')
         with patch.object(G, "extract_script", side_effect=broken):
             j = self.sync(self.job(self.c1))

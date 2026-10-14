@@ -59,7 +59,7 @@ library (ot_dsrom_aq12t_ss) {
   }
 
   cell ("ot_dsrom_aq12t") {
-    area : 9338.290 
+    area : 24882.309 
     is_macro_cell : true;
     pin("clk") {
       direction : input;
@@ -69,7 +69,7 @@ library (ot_dsrom_aq12t_ss) {
         timing_sense : positive_unate;
         timing_type : min_clock_tree_path;
         cell_rise(scalar) {
-          values("463.51315");
+          values("455.34872");
         }
         cell_fall(scalar) {
           values("526.09106");

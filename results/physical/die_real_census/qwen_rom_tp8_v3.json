@@ -3,10 +3,10 @@
  "die": "qwen_rom_tp8",
  "case": "v3",
  "mode": "contract",
- "source": "main c23342b9f",
- "when": "2026-10-13 03:10 PDT",
+ "source": "main 602d3ab9b + slot pin check (816 real by name + outline; 0 with the v3 slot's pins: port pair x_d / x_r awaits contract v4)",
+ "when": "2026-10-13 07:33 PDT",
  "roots": [
-  "/home/ubuntu/wt/slot-fit-1013"
+  "/home/ubuntu/wt/claude-qwen-tp8-census-1013"
  ],
  "inputs": {
   "contract": "results/arch/hier_contract_1012/qwen_rom_tp8.json"
@@ -14,33 +14,27 @@
  "rule": "real = exact LEF macro + exact Liberty cell of a view directory holding <master>.lef and <master>_<corner>.lib",
  "summary": {
   "instances": 2069,
-  "real": 0,
+  "real": 816,
   "lef_only": 0,
   "etm_only": 0,
   "hard_macro": 4,
-  "placeholder": 2065,
-  "real_frac": 0.0,
+  "placeholder": 1249,
+  "real_frac": 0.394393,
   "masters": 44,
   "masters_by_class": {
-   "real": 0,
+   "real": 4,
    "lef_only": 0,
    "etm_only": 0,
    "hard_macro": 1,
-   "placeholder": 43
+   "placeholder": 39
   },
+  "real_slot_exact": 0,
+  "real_provisional_etm": 0,
   "placeholder_with_view": 129,
   "top_placeholders": [
    [
     "qfd_tile_nk",
     768
-   ],
-   [
-    "qfd_cst_n",
-    384
-   ],
-   [
-    "qfd_cst_s",
-    384
    ],
    [
     "qkd_cdc_wleaf",
@@ -59,14 +53,6 @@
     32
    ],
    [
-    "qfd_chead_e",
-    24
-   ],
-   [
-    "qfd_chead_w",
-    24
-   ],
-   [
     "qfd_crom_g",
     8
    ],
@@ -77,6 +63,22 @@
    [
     "qkd_kvwq_ctl_bin",
     4
+   ],
+   [
+    "qfd_io_serdes",
+    3
+   ],
+   [
+    "qfd_sp_band_lanes",
+    3
+   ],
+   [
+    "qfd_sp_res_ser",
+    3
+   ],
+   [
+    "qfd_tt_up4_g",
+    3
    ]
   ]
  },
@@ -108,11 +110,18 @@
    "lef_near": false
   },
   "qfd_chead_e": {
-   "class": "placeholder",
-   "view": null,
-   "view_exists": false,
-   "lef": "none",
-   "etm": "none",
+   "class": "real",
+   "view": "physical/ref_tile/qfd_chead_e/views/qfd_chead_e",
+   "view_exists": true,
+   "lef": "outline",
+   "etm": "by name",
+   "slot": "h_24",
+   "slot_pins": "differ",
+   "slot_check": [
+    "1292 contract pins missing from the LEF (e.g. e[0], e[100], e[101], e[102])",
+    "2037 LEF pins not in the contract (e.g. e_d[0], e_d[100], e_d[101], e_d[102])"
+   ],
+   "exported_before_export_sdc_fix": false,
    "instances": 24,
    "size": [
     52.68,
@@ -121,11 +130,18 @@
    "lef_near": false
   },
   "qfd_chead_w": {
-   "class": "placeholder",
-   "view": null,
-   "view_exists": false,
-   "lef": "none",
-   "etm": "none",
+   "class": "real",
+   "view": "physical/ref_tile/qfd_chead_w/views/qfd_chead_w",
+   "view_exists": true,
+   "lef": "outline",
+   "etm": "by name",
+   "slot": "h_0",
+   "slot_pins": "differ",
+   "slot_check": [
+    "1292 contract pins missing from the LEF (e.g. e[0], e[100], e[101], e[102])",
+    "2037 LEF pins not in the contract (e.g. e_d[0], e_d[100], e_d[101], e_d[102])"
+   ],
+   "exported_before_export_sdc_fix": false,
    "instances": 24,
    "size": [
     52.68,
@@ -160,11 +176,18 @@
    "lef_near": false
   },
   "qfd_cst_n": {
-   "class": "placeholder",
-   "view": null,
-   "view_exists": false,
-   "lef": "none",
-   "etm": "none",
+   "class": "real",
+   "view": "physical/ref_tile/qfd_cst_n/views/qfd_cst_n",
+   "view_exists": true,
+   "lef": "outline",
+   "etm": "by name",
+   "slot": "s_0_10",
+   "slot_pins": "differ",
+   "slot_check": [
+    "1527 contract pins missing from the LEF (e.g. a[0], a[100], a[101], a[102])",
+    "1528 LEF pins not in the contract (e.g. a_d[0], a_d[100], a_d[101], a_d[102])"
+   ],
+   "exported_before_export_sdc_fix": false,
    "instances": 384,
    "size": [
     52.68,
@@ -173,11 +196,18 @@
    "lef_near": false
   },
   "qfd_cst_s": {
-   "class": "placeholder",
-   "view": null,
-   "view_exists": false,
-   "lef": "none",
-   "etm": "none",
+   "class": "real",
+   "view": "physical/ref_tile/qfd_cst_s/views/qfd_cst_s",
+   "view_exists": true,
+   "lef": "outline",
+   "etm": "by name",
+   "slot": "s_0_0",
+   "slot_pins": "differ",
+   "slot_check": [
+    "1527 contract pins missing from the LEF (e.g. a[0], a[100], a[101], a[102])",
+    "1528 LEF pins not in the contract (e.g. a_d[0], a_d[100], a_d[101], a_d[102])"
+   ],
+   "exported_before_export_sdc_fix": false,
    "instances": 384,
    "size": [
     52.68,

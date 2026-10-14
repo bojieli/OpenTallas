@@ -269,6 +269,35 @@ module tb_s81ph_coll_sys;
             for (d = 0; d < 4; d = d + 1) if (dn[d] != rn[d] || ridx[d] != TOT_IDX()) begin
                 errs = errs + 1; $display("DIE %0d INCOMPLETE dut %0d ref %0d of %0d", d, dn[d], rn[d], TOT_IDX()); end
             if (!all_pt()) begin errs = errs + 1; $display("PT INCOMPLETE"); end
+`ifdef OT_S81PH_COLL_CES_SPLIT
+            // COVERAGE REFUSAL (s81-cesn 2026-10-13): the split lane-slices must be IN the build (4 ces0 + 12 cesn
+            // parents) and every seam of both parents must have carried beats, the same number in every slice
+            // (lockstep: ces0 x 3 = cesn); otherwise a pass says nothing about the split and is refused.
+            begin : cov
+                integer k, i, bad;
+                bad = 0;
+                if (s81ph_ces_cov::inst[0] != 4 || s81ph_ces_cov::inst[1] != 12) bad = bad + 1;
+                for (k = 0; k < 2; k = k + 1) begin
+                    if (s81ph_ces_cov::ln[k] == 0 || s81ph_ces_cov::lny[k] == 0 || s81ph_ces_cov::ow[k] == 0 ||
+                        s81ph_ces_cov::bw[k] == 0) bad = bad + 1;
+                    for (i = 1; i < 4; i = i + 1) if (s81ph_ces_cov::xl[k][i] == 0 || s81ph_ces_cov::xli[k][i] == 0) bad = bad + 1;
+                    for (i = 0; i < 5; i = i + 1) if (s81ph_ces_cov::pt[k][i] == 0 || s81ph_ces_cov::pti[k][i] == 0) bad = bad + 1;
+                end
+                if (s81ph_ces_cov::ln[1] != 3 * s81ph_ces_cov::ln[0] || s81ph_ces_cov::lny[1] != 3 * s81ph_ces_cov::lny[0] ||
+                    s81ph_ces_cov::ow[1] != 3 * s81ph_ces_cov::ow[0] || s81ph_ces_cov::bw[1] != 3 * s81ph_ces_cov::bw[0]) bad = bad + 1;
+                for (i = 1; i < 4; i = i + 1) if (s81ph_ces_cov::xl[1][i] != 3 * s81ph_ces_cov::xl[0][i]) bad = bad + 1;
+                for (i = 0; i < 5; i = i + 1) if (s81ph_ces_cov::pt[1][i] != 3 * s81ph_ces_cov::pt[0][i]) bad = bad + 1;
+                $display("COV split parents %0d + %0d; ces0: ln %0d lny %0d xl %0d %0d %0d pt %0d %0d %0d %0d %0d ow %0d bw %0d; cesn: ln %0d lny %0d xl %0d %0d %0d pt %0d %0d %0d %0d %0d ow %0d bw %0d",
+                    s81ph_ces_cov::inst[0], s81ph_ces_cov::inst[1],
+                    s81ph_ces_cov::ln[0], s81ph_ces_cov::lny[0], s81ph_ces_cov::xl[0][1], s81ph_ces_cov::xl[0][2], s81ph_ces_cov::xl[0][3],
+                    s81ph_ces_cov::pt[0][0], s81ph_ces_cov::pt[0][1], s81ph_ces_cov::pt[0][2], s81ph_ces_cov::pt[0][3], s81ph_ces_cov::pt[0][4],
+                    s81ph_ces_cov::ow[0], s81ph_ces_cov::bw[0],
+                    s81ph_ces_cov::ln[1], s81ph_ces_cov::lny[1], s81ph_ces_cov::xl[1][1], s81ph_ces_cov::xl[1][2], s81ph_ces_cov::xl[1][3],
+                    s81ph_ces_cov::pt[1][0], s81ph_ces_cov::pt[1][1], s81ph_ces_cov::pt[1][2], s81ph_ces_cov::pt[1][3], s81ph_ces_cov::pt[1][4],
+                    s81ph_ces_cov::ow[1], s81ph_ces_cov::bw[1]);
+                if (bad != 0) begin errs = errs + 1; $display("TB_S81PH_COLL_SYS FAIL coverage: %0d split-seam coverage conditions unmet", bad); end
+            end
+`endif
             $display("CYCLES dut_last %0d ref_last %0d first_send %0d records %0d messages %0d coll_done %0d", d_last_cyc, r_last_cyc, first_send_cyc, TOT, NM, cdone_cyc);
             if (errs == 0) $display("TB_S81PH_COLL_SYS PASS"); else $display("TB_S81PH_COLL_SYS FAIL errs %0d", errs);
             $finish;

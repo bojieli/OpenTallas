@@ -45,13 +45,13 @@
     "q": {
      "hold_rising/ck": {
       "tile": "dsfd_svcio_q",
-      "bit": "q[40]",
-      "ps_at_5p76fF": 158.6
+      "bit": "q[423]",
+      "ps_at_5p76fF": 174.9
      },
      "setup_rising/ck": {
       "tile": "dsfd_svcio_q",
-      "bit": "q[392]",
-      "ps_at_5p76fF": -47.4
+      "bit": "q[332]",
+      "ps_at_5p76fF": -40.1
      }
     },
     "rd": {
@@ -121,32 +121,32 @@
     "od": {
      "rising_edge/ck": {
       "tile": "dsfd_svcio_od",
-      "bit": "od[232]",
-      "ps_at_5p76fF": 418.5
+      "bit": "od[379]",
+      "ps_at_5p76fF": 356.5
      }
     },
     "of": {
      "falling_edge/ck": {
       "tile": "dsfd_svcio_od",
       "bit": "of[0]",
-      "ps_at_5p76fF": 289.5
+      "ps_at_5p76fF": 292.8
      },
      "rising_edge/ck": {
       "tile": "dsfd_svcio_od",
       "bit": "of[0]",
-      "ps_at_5p76fF": 271.0
+      "ps_at_5p76fF": 274.1
      }
     },
     "q": {
      "hold_rising/ck": {
       "tile": "dsfd_svcio_q",
-      "bit": "q[16]",
-      "ps_at_5p76fF": 137.2
+      "bit": "q[388]",
+      "ps_at_5p76fF": 135.5
      },
      "setup_rising/ck": {
       "tile": "dsfd_svcio_q",
-      "bit": "q[392]",
-      "ps_at_5p76fF": -49.5
+      "bit": "q[332]",
+      "ps_at_5p76fF": -50.0
      }
     },
     "rd": {
@@ -178,7 +178,7 @@
      "rising_edge/ck": {
       "tile": "dsfd_svcio_x",
       "bit": "xf[0]",
-      "ps_at_5p76fF": 13011.4
+      "ps_at_5p76fF": 219.8
      }
     }
    },
@@ -235,13 +235,13 @@
     "q": {
      "hold_rising/ck": {
       "tile": "dsfd_svcio_q",
-      "bit": "q[16]",
-      "ps_at_5p76fF": 129.3
+      "bit": "q[388]",
+      "ps_at_5p76fF": 112.5
      },
      "setup_rising/ck": {
       "tile": "dsfd_svcio_q",
-      "bit": "q[392]",
-      "ps_at_5p76fF": -49.5
+      "bit": "q[332]",
+      "ps_at_5p76fF": -53.1
      }
     },
     "rd": {
@@ -273,7 +273,7 @@
      "rising_edge/ck": {
       "tile": "dsfd_svcio_x",
       "bit": "xf[0]",
-      "ps_at_5p76fF": 177.5
+      "ps_at_5p76fF": 8.5
      }
     }
    },
@@ -290,158 +290,186 @@
  },
  "glue": [
   {
-   "tt_wire_ratio": 0.818,
+   "tt_wire_ratio": 0.77,
    "what": "quadrant station chain, station -> station",
    "launch": "dsfd_svc_stn.q_w",
    "capture": "dsfd_svc_stn.q_e",
    "length_um": 180.0,
    "stations": 0,
-   "tt_setup": 193.4,
-   "tt_setup_bal": 193.4,
-   "ss_setup": -65.1,
-   "ss_setup_bal": -65.1,
-   "ff_hold": 127.5,
-   "ff_hold_bal": 127.5
+   "tt_setup": 174.1,
+   "tt_setup_bal": 174.1,
+   "ss_setup": -33.8,
+   "ss_setup_bal": -33.8,
+   "ff_hold": 119.3,
+   "ff_hold_bal": 119.3
   },
   {
-   "tt_wire_ratio": 0.818,
+   "tt_wire_ratio": 0.77,
    "what": "od chain, station -> station",
    "launch": "dsfd_svc_stn.od_ev",
    "capture": "dsfd_svc_stn.od_wv",
    "length_um": 180.0,
    "stations": 0,
-   "tt_setup": 18.0,
-   "tt_setup_bal": 18.0,
-   "ss_setup": -155.0,
-   "ss_setup_bal": -155.0,
-   "ff_hold": 137.6,
-   "ff_hold_bal": 137.6
+   "tt_setup": 129.3,
+   "tt_setup_bal": 129.3,
+   "ss_setup": -88.4,
+   "ss_setup_bal": -88.4,
+   "ff_hold": 132.0,
+   "ff_hold_bal": 132.0
   },
   {
-   "tt_wire_ratio": 0.818,
+   "tt_wire_ratio": 0.77,
    "what": "od chain data",
    "launch": "dsfd_svc_stn.od_ed",
    "capture": "dsfd_svc_stn.od_wd",
    "length_um": 180.0,
    "stations": 0,
-   "tt_setup": 131.2,
-   "tt_setup_bal": 131.2,
-   "ss_setup": -134.8,
-   "ss_setup_bal": -134.8,
-   "ff_hold": 128.5,
-   "ff_hold_bal": 128.5
+   "tt_setup": 115.0,
+   "tt_setup_bal": 115.0,
+   "ss_setup": -120.6,
+   "ss_setup_bal": -120.6,
+   "ff_hold": 114.4,
+   "ff_hold_bal": 114.4
   },
   {
-   "tt_wire_ratio": 0.818,
+   "tt_wire_ratio": 0.77,
    "what": "od chain ready",
    "launch": "dsfd_svc_stn.od_wr",
    "capture": "dsfd_svc_stn.od_er",
    "length_um": 180.0,
    "stations": 0,
-   "tt_setup": 19.5,
-   "tt_setup_bal": 19.5,
-   "ss_setup": -165.0,
-   "ss_setup_bal": -165.0,
-   "ff_hold": 153.4,
-   "ff_hold_bal": 153.4
+   "tt_setup": 112.8,
+   "tt_setup_bal": 112.8,
+   "ss_setup": -109.4,
+   "ss_setup_bal": -109.4,
+   "ff_hold": 138.4,
+   "ff_hold_bal": 138.4
   },
   {
-   "tt_wire_ratio": 0.818,
+   "tt_wire_ratio": 0.77,
    "what": "a0 chain, station -> station",
    "launch": "dsfd_svc_stn.a0_ev",
    "capture": "dsfd_svc_stn.a0_wv",
    "length_um": 180.0,
    "stations": 0,
-   "tt_setup": 40.8,
-   "tt_setup_bal": 40.8,
-   "ss_setup": -144.8,
-   "ss_setup_bal": -144.8,
-   "ff_hold": 149.2,
-   "ff_hold_bal": 149.2
+   "tt_setup": 129.3,
+   "tt_setup_bal": 129.3,
+   "ss_setup": -82.9,
+   "ss_setup_bal": -82.9,
+   "ff_hold": 137.0,
+   "ff_hold_bal": 137.0
   },
   {
-   "tt_wire_ratio": 0.818,
+   "tt_wire_ratio": 0.77,
    "what": "a0 chain data",
    "launch": "dsfd_svc_stn.a0_ed",
    "capture": "dsfd_svc_stn.a0_wd",
    "length_um": 180.0,
    "stations": 0,
-   "tt_setup": 115.2,
-   "tt_setup_bal": 115.2,
-   "ss_setup": -114.4,
-   "ss_setup_bal": -114.4,
-   "ff_hold": 120.6,
-   "ff_hold_bal": 120.6
+   "tt_setup": 115.0,
+   "tt_setup_bal": 115.0,
+   "ss_setup": -122.6,
+   "ss_setup_bal": -122.6,
+   "ff_hold": 111.5,
+   "ff_hold_bal": 111.5
   },
   {
-   "tt_wire_ratio": 0.818,
+   "tt_wire_ratio": 0.77,
    "what": "a0 chain ready",
    "launch": "dsfd_svc_stn.a0_wr",
    "capture": "dsfd_svc_stn.a0_er",
    "length_um": 180.0,
    "stations": 0,
-   "tt_setup": 27.2,
-   "tt_setup_bal": 27.2,
-   "ss_setup": -137.9,
-   "ss_setup_bal": -137.9,
-   "ff_hold": 138.1,
-   "ff_hold_bal": 138.1
+   "tt_setup": 116.1,
+   "tt_setup_bal": 116.1,
+   "ss_setup": -108.3,
+   "ss_setup_bal": -108.3,
+   "ff_hold": 140.9,
+   "ff_hold_bal": 140.9
   },
   {
-   "tt_wire_ratio": 0.812,
+   "tt_wire_ratio": 0.767,
    "what": "IO hub -> first station (q)",
    "launch": "dsfd_svcio_q.q_q",
    "capture": "dsfd_svc_stn.q_e",
    "length_um": 43.2,
    "stations": 0,
-   "tt_setup": 176.3,
-   "tt_setup_bal": 197.3,
-   "ss_setup": -66.1,
-   "ss_setup_bal": -38.6,
-   "ff_hold": 132.3,
-   "ff_hold_bal": 136.4
+   "tt_setup": 136.3,
+   "tt_setup_bal": 163.9,
+   "ss_setup": -76.9,
+   "ss_setup_bal": -39.9,
+   "ff_hold": 138.2,
+   "ff_hold_bal": 125.8
   },
   {
-   "tt_wire_ratio": 0.818,
+   "tt_wire_ratio": 0.77,
    "what": "last station -> IO hub (od)",
    "launch": "dsfd_svc_stn.od_ed",
    "capture": "dsfd_svcio_od.od_d",
    "length_um": 43.2,
    "stations": 0,
-   "tt_setup": 204.9,
-   "tt_setup_bal": 166.1,
-   "ss_setup": 9.8,
-   "ss_setup_bal": -57.0,
-   "ff_hold": 62.4,
-   "ff_hold_bal": 90.5
+   "tt_setup": 233.6,
+   "tt_setup_bal": 181.1,
+   "ss_setup": 70.4,
+   "ss_setup_bal": -0.3,
+   "ff_hold": 25.2,
+   "ff_hold_bal": 53.2
   },
   {
-   "tt_wire_ratio": 0.762,
+   "tt_wire_ratio": 0.77,
+   "what": "last station -> IO hub (od valid)",
+   "launch": "dsfd_svc_stn.od_ev",
+   "capture": "dsfd_svcio_od.od_v",
+   "length_um": 43.2,
+   "stations": 0,
+   "tt_setup": 226.7,
+   "tt_setup_bal": 174.2,
+   "ss_setup": 38.2,
+   "ss_setup_bal": -32.5,
+   "ff_hold": 89.8,
+   "ff_hold_bal": 117.8
+  },
+  {
+   "tt_wire_ratio": 0.763,
    "what": "IO hub ready -> station (od)",
    "launch": "dsfd_svcio_od.od_r",
    "capture": "dsfd_svc_stn.od_er",
    "length_um": 43.2,
    "stations": 0,
-   "tt_setup": 97.1,
-   "tt_setup_bal": 135.9,
-   "ss_setup": -16.4,
-   "ss_setup_bal": 50.4,
-   "ff_hold": 139.3,
-   "ff_hold_bal": 111.2
+   "tt_setup": 181.2,
+   "tt_setup_bal": 233.7,
+   "ss_setup": -25.7,
+   "ss_setup_bal": 45.0,
+   "ff_hold": 150.9,
+   "ff_hold_bal": 122.9
   },
   {
-   "tt_wire_ratio": 0.818,
+   "tt_wire_ratio": 0.77,
    "what": "last station -> IO hub (a0)",
    "launch": "dsfd_svc_stn.a0_ed",
    "capture": "dsfd_svcio_ad.a0_d",
    "length_um": 43.2,
    "stations": 0,
-   "tt_setup": 380.8,
-   "tt_setup_bal": 285.2,
-   "ss_setup": 231.4,
-   "ss_setup_bal": 91.0,
-   "ff_hold": -0.0,
-   "ff_hold_bal": 77.3
+   "tt_setup": 413.1,
+   "tt_setup_bal": 304.0,
+   "ss_setup": 285.0,
+   "ss_setup_bal": 140.7,
+   "ff_hold": -33.3,
+   "ff_hold_bal": 43.9
+  },
+  {
+   "tt_wire_ratio": 0.77,
+   "what": "last station -> IO hub (a0 valid)",
+   "launch": "dsfd_svc_stn.a0_ev",
+   "capture": "dsfd_svcio_ad.a0_v",
+   "length_um": 43.2,
+   "stations": 0,
+   "tt_setup": 372.0,
+   "tt_setup_bal": 262.9,
+   "ss_setup": 252.2,
+   "ss_setup_bal": 107.9,
+   "ff_hold": 16.4,
+   "ff_hold_bal": 93.6
   },
   {
    "tt_wire_ratio": 0.765,
@@ -450,48 +478,48 @@
    "capture": "dsfd_svc_stn.a0_er",
    "length_um": 43.2,
    "stations": 0,
-   "tt_setup": -49.2,
-   "tt_setup_bal": 46.4,
-   "ss_setup": -246.5,
-   "ss_setup_bal": -106.1,
-   "ff_hold": 225.6,
-   "ff_hold_bal": 148.3
+   "tt_setup": 4.1,
+   "tt_setup_bal": 113.2,
+   "ss_setup": -241.1,
+   "ss_setup_bal": -96.8,
+   "ff_hold": 235.1,
+   "ff_hold_bal": 157.9
   },
   {
-   "tt_wire_ratio": 0.762,
+   "tt_wire_ratio": 0.763,
    "what": "u_od.bad -> fault station u_fs",
    "launch": "dsfd_svcio_od.bad",
    "capture": "dsfd_stnh_512x1.di0",
    "length_um": 406.9,
    "stations": 1,
-   "tt_setup": -35.9,
-   "tt_setup_bal": 82.2,
-   "ss_setup": -189.0,
-   "ss_setup_bal": -46.3,
-   "ff_hold": 161.6,
-   "ff_hold_bal": 87.4
+   "tt_setup": 25.9,
+   "tt_setup_bal": 142.3,
+   "ss_setup": -189.9,
+   "ss_setup_bal": -47.9,
+   "ff_hold": 157.0,
+   "ff_hold_bal": 84.0
   },
   {
-   "tt_wire_ratio": 0.696,
+   "tt_wire_ratio": 0.707,
    "what": "fault station u_fs -> u_ad.fi",
    "launch": "dsfd_stnh_512x1.do0",
    "capture": "dsfd_svcio_ad.fi",
    "length_um": 400.2,
    "stations": 1,
-   "tt_setup": 259.2,
-   "tt_setup_bal": 84.2,
-   "ss_setup": 38.2,
-   "ss_setup_bal": -178.0,
-   "ff_hold": -39.0,
-   "ff_hold_bal": 84.4
+   "tt_setup": 250.3,
+   "tt_setup_bal": 77.3,
+   "ss_setup": 37.5,
+   "ss_setup_bal": -178.1,
+   "ff_hold": -36.8,
+   "ff_hold_bal": 85.4
   }
  ],
  "glue_worst_ps": {
-  "tt_setup": -49.2,
-  "ss_setup": -246.5,
-  "ff_hold": -39.0,
-  "tt_setup_bal": 18.0,
-  "ss_setup_bal": -178.0,
-  "ff_hold_bal": 77.3
+  "tt_setup": 4.1,
+  "ss_setup": -241.1,
+  "ff_hold": -36.8,
+  "tt_setup_bal": 77.3,
+  "ss_setup_bal": -178.1,
+  "ff_hold_bal": 43.9
  }
 }

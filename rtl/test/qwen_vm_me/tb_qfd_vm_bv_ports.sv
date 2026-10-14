@@ -17,7 +17,16 @@
 //               read; at every land_cnt step n: every result row whose last writer among the bursts so far is < n holds
 //               the reference value (progress soundness); the final image of every region; no x_fault / x_hazard /
 //               w_fault / w_hazard / serializer fault; bursts landed == bursts generated.
+//   skid rule   `wmodel`: an independent model of the memory's SKID CAPACITY RULE (a per-bank server of one row an edge
+//               behind the SU lane rows, order mx, rd, seq, oldest first; at most SQD rows of a source waiting).  The
+//               memory must raise w_fault exactly when the model overflows (never earlier: no row lost inside the
+//               rule; never silently: fail-stop outside it).  The WQ line reports the deepest queue of each source.
+//               WDIR = 1: directed burst AT the bound (SQD sequencer rows on consecutive edges, two of them the same
+//               row, all on one bank that SU lane rows hold meanwhile, then a reducer element on that bank): must PASS
+//               with the sequencer queue at SQD.  WDIR = 2: one row more: the model overflows, the memory must fault
+//               (the run FAILS: the expected fail-stop).  The random stream is the same with and without WDIR.
 // MUT = 1: the memory's SU lane select is one lane off; SMUT = 1: a serializer swaps a slot's mask.  Both must FAIL.
+// MUT = 14: the skid queues hold 2 rows (the pre-fix capacity): SEED 9 at MWD 3 and WDIR = 1 must FAIL.
 module tb_qfd_vm_bv_ports;
     parameter integer ELEMS = 16384, NRB = 16, SMIN = 3, SMAX = 7, XVM = 12, BMAX = 4, SW = 8, VL = 7;
     parameter integer DB = 16, RSD = 4, CRB = 4, MUT = 0, SMUT = 0, TSR = 0, CYCLES = 30000, SEED = 5, XRN = 4096;
@@ -25,6 +34,15 @@ module tb_qfd_vm_bv_ports;
     parameter integer MEE = 0, VMT = 0, RV = 1, RO = 2;   // el1011-q-sp: me_en one edge early / hardened bank tiles
                                                            // (VMT: pass XVM + RV + RO + 7 and VL = 7 + RV + RO + 5)
     parameter integer XQT = 0;                 // ot_qfd_sp_vector_memory_bv XQT (fe-push-qwen-1010)
+    parameter integer XPR = 0;                 // bit-plane x transport (qwen-tp8-vm 1013): pass XVM + XPR + 1 - RO
+    // qwen-tp8-vm-rtl 1013: registered control trees (XTK levels), me tree (XMK levels: me_en_t is me_en XMK + 1 edges
+    // early, an earlier tap of the stall loop: needs XMK <= RSD - 2), line / x_q leaf owners (XLO; pass XVM + XQR + 2).
+    // MWD: me_want lookahead depth in negedges (0 = XMK + 1); a tree-less run at the same MWD has the same stimulus.
+    parameter integer XTK = 0, XMK = 0, XMF = 16, XLO = 0, XQR = 0, MWD = 0;
+    parameter integer DBGC = 0, DBGN = 12;     // write-side trace window (diagnostics only)
+    parameter integer SQD = 4, WDIR = 0, WDC = 2000;   // skid capacity (the memory's SQD), directed burst and its cycle
+    localparam integer NRBS = 16;              // SU replica banks: the bank space of the write arbiter
+    localparam integer WD = (MWD != 0) ? MWD : XMK + 1;
     parameter [ND*8-1:0] DSET = {8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0};
     localparam integer AW = 24, RW = 20, NX = 1 << SMAX, BEAT = (NRB - 1) * 16, NB = 6, NS = 8;
     localparam integer XR0 = 0, RD0 = XRN, SQ0 = XRN + 1024, MX0 = XRN + 2048, RS0 = XRN + 3072, RSN = 5120, SU0 = XRN + 8192;
@@ -32,7 +50,8 @@ module tb_qfd_vm_bv_ports;
     always #0.5 clk = ~clk;
     integer seed;
     // ---- DUT inputs ----
-    reg me_want_nx, started_nx;
+    reg me_want_nx, started_nx, started_t;
+    reg [WD-1:0] wq;                           // me_want lookahead: wq[k] is me_want k + 1 negedges ahead
     reg me_want, x_dv, w_v, r_v, rd_v, mx_we;
     wire me_en;
     reg [AW-1:0] x_dc, x_dcs, rd_addr, mx_addr;
@@ -70,8 +89,9 @@ module tb_qfd_vm_bv_ports;
             .o_data(l_data[gb*512 +: 512]), .o_cr(l_cr[gb]), .rok(l_ok[gb]), .fault(l_fault[gb]));
     end endgenerate
     ot_qfd_sp_vector_memory_bv #(.XQT(XQT), .ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(SMIN), .SMAX(SMAX), .XVM(XVM), .BMAX(BMAX),
-        .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT), .MEE(MEE), .VMT(VMT), .RV(RV), .RO(RO)) dut (
-        .clk(clk), .rst_n(rst_n), .me_en(me_en), .me_en_e(me_en_e), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
+        .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT), .MEE(MEE), .VMT(VMT), .RV(RV), .RO(RO), .XPR(XPR),
+        .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR), .SQD(SQD), .NRBS(NRBS)) dut (
+        .clk(clk), .rst_n(rst_n), .me_en(me_en), .me_en_e(me_en_e), .me_en_t(me_en_t), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
         .x_rdy(), .x_fault(x_fault), .x_hazard(x_hazard),
         .s_re0(s_re0), .s_re1(s_re1), .s_a0(s_a0), .s_a1(s_a1), .s_q(s_q),
         .sw_mask(sw_mask), .sw_a0(sw_a0), .sw_a1(sw_a1), .sw_data(sw_data),
@@ -88,12 +108,53 @@ module tb_qfd_vm_bv_ports;
     assign me_en = me_want && (okd[RSD-1] || !started_e);
     // MEE: the same enable one edge early (me_want drawn one negedge ahead; okd one shift earlier; started one ahead)
     wire me_en_e = me_want_nx && (okd[RSD-2] || !started_nx);
+    // XMK: the same enable XMK + 1 edges early: me_want XMK + 1 ahead and the stall loop tapped XMK stages earlier
+    wire me_en_t;
+    generate if (XMK != 0) begin : g_met
+        if (RSD - 2 - XMK < 0) begin : g_bad
+            initial begin $display("FAIL qfd_vm_bv_ports XMK %0d needs RSD >= %0d", XMK, XMK + 2); $finish; end
+        end
+        assign me_en_t = wq[XMK] && (okd[(RSD-2-XMK >= 0) ? RSD-2-XMK : 0] || !started_t);
+    end else begin : g_nmet
+        assign me_en_t = me_en_e;
+    end endgenerate
     reg  me_eq;
-    integer bad_me;
-    initial bad_me = 0;
+    reg  [XMK:0] me_tq;
+    integer bad_me, n_tchk, t_run, n_mt, n_pc, n_lq;
+    initial begin bad_me = 0; n_tchk = 0; me_tq = 0; t_run = 0; n_mt = 0; n_pc = 0; n_lq = 0; end
+    // Coverage of the tree / owner build.  The references below exist only when the memory really elaborated the
+    // requested structure (a build that asks for XMK / XTK / XLO and still gets the broadcast or the flat line / x_q
+    // does not compile), and each structure must be seen moving, else the run FAILS as vacuous.
+    generate
+        if (XMK != 0) begin : g_cv_m
+            reg p;
+            always @(posedge clk) begin p <= dut.g_met.mq[0]; if (started_e && p !== dut.g_met.mq[0]) n_mt = n_mt + 1; end
+        end
+        if (XTK != 0) begin : g_cv_c
+            reg [15:0] p;
+            always @(posedge clk) begin
+                p <= dut.g_plane.g_ct.u_ct.q[15:0];
+                if (started_e && p !== dut.g_plane.g_ct.u_ct.q[15:0]) n_pc = n_pc + 1;
+            end
+        end
+        if (XLO != 0) begin : g_cv_l
+            reg [31:0] p;
+            always @(posedge clk) begin
+                p <= dut.g_xown.xr[31:0];
+                if (started_e && p !== dut.g_xown.xr[31:0]) n_lq = n_lq + 1;
+            end
+        end
+    endgenerate
+    wire tree_vac = (XMK != 0 && (n_mt < 100 || n_tchk < 1000)) || (XTK != 0 && n_pc < 100) || (XLO != 0 && n_lq < 100);
     always @(posedge clk) begin
         me_eq <= me_en_e;
         if (MEE != 0 && started_nx && me_eq !== me_en) bad_me = bad_me + 1;
+        me_tq <= {me_tq, me_en_t};
+        if (started_e) t_run = t_run + 1;
+        if (XMK != 0 && started_e && t_run > XMK + 4) begin
+            n_tchk = n_tchk + 1;
+            if (me_tq[XMK] !== me_en) bad_me = bad_me + 1;
+        end
     end
     // ---- reference memory ----
     reg [31:0] vm [0:ELEMS-1];
@@ -187,6 +248,78 @@ module tb_qfd_vm_bv_ports;
         $display("w_hazard term at %0t: hz0 %0d su_hz %b waw %0d lt_v %b", $time, dut.hz0, dut.su_hz, dut.waw, dut.lt_v);
         for (hk2 = 0; hk2 < 9; hk2 = hk2 + 1) if (dut.lt_v[hk2]) $display("  late row %0d: %0d", hk2, dut.lt_row[hk2*RW +: RW]);
     end
+    // diagnostics: the first w_fault term that fires (q_ovf: a skid queue overflowed; f_bad: SU write stride > 1;
+    // m_fault: the result merge; t_ovf: a tile x FIFO), with the skid queues' state at that edge
+    reg wf_seen = 0;
+    integer wk;
+    always @(posedge clk) if (rst_n && !wf_seen && (dut.q_ovf || dut.f_bad || dut.m_fault || dut.t_ovf)) begin
+        wf_seen <= 1;
+        $display("w_fault term at %0t cyc %0d: q_ovf %0d f_bad %0d m_fault %0d t_ovf %0d", $time, cyc, dut.q_ovf, dut.f_bad,
+                 dut.m_fault, dut.t_ovf);
+        for (wk = 0; wk < 3; wk = wk + 1)
+            $display("  skid %0d (0 mx, 1 rd, 2 seq): q_v %b q_late %b oldest row %0d (bank %0d) next row %0d", wk, dut.q_v[wk],
+                     dut.q_late[wk], dut.q_row[wk*SQD], dut.q_row[wk*SQD] % NRBS, dut.q_row[wk*SQD+1]);
+    end
+    // ---- wmodel: the skid capacity rule, from the PRESENTED traffic only ----
+    // A row presented at edge p is in the queue after p + 1 and first competes with the SU lane rows presented at p
+    // (both reach the arbiter two edges after their port edge); a row granted at edge t leaves at t.
+    localparam integer NWR_ = (SW + 30) / 16;
+    function [NRBS-1:0] su_banks(input [SW-1:0] m, input [AW-1:0] a0, input [AW-1:0] a1);
+        integer g_, ll_; reg mm_; reg [AW-1:0] r0_;
+        begin
+            su_banks = 0; r0_ = a0 >> 4;
+            for (g_ = 0; g_ < NWR_ * 16; g_ = g_ + 1) begin
+                ll_ = g_ - a0[3:0];
+                if (!m[1] || (a1 - a0) == 0) mm_ = (g_ == a0[3:0]) && (|m);
+                else mm_ = (ll_ >= 0 && ll_ < SW) ? m[ll_] : 1'b0;
+                if ({r0_, 4'h0} + g_ >= ELEMS) mm_ = 1'b0;
+                if (mm_) su_banks[(r0_ + g_ / 16) % NRBS] = 1'b1;
+            end
+        end
+    endfunction
+    integer mq_n [0:2], mq_row [0:2][0:63], mo_max [0:2];
+    integer m_ovf, m_waits, d_ovf, mk, mi, mn;
+    reg [NRBS-1:0] m_su1, m_su2, m_used;
+    reg [2:0] m_kv1;
+    integer m_kr1 [0:2];
+    initial begin
+        m_ovf = 0; m_waits = 0; d_ovf = 0; m_su1 = 0; m_su2 = 0; m_kv1 = 0;
+        for (mk = 0; mk < 3; mk = mk + 1) begin mq_n[mk] = 0; mo_max[mk] = 0; end
+    end
+    always @(posedge clk) if (rst_n) begin : wmodel
+        if (dut.q_ovf) d_ovf = d_ovf + 1;
+        // (1) the waiting rows against the SU lane rows presented two edges ago
+        m_used = m_su2;
+        for (mk = 0; mk < 3; mk = mk + 1) begin
+            mn = 0;
+            for (mi = 0; mi < mq_n[mk]; mi = mi + 1)
+                if (!m_used[mq_row[mk][mi] % NRBS]) m_used[mq_row[mk][mi] % NRBS] = 1'b1;
+                else begin
+                    m_waits = m_waits + 1;
+                    mq_row[mk][mn] = mq_row[mk][mi]; mn = mn + 1;
+                end
+            mq_n[mk] = mn;
+        end
+        // (2) the rows presented one edge ago join
+        for (mk = 0; mk < 3; mk = mk + 1) if (m_kv1[mk]) begin
+            if (mq_n[mk] >= SQD) m_ovf = m_ovf + 1;
+            else begin mq_row[mk][mq_n[mk]] = m_kr1[mk]; mq_n[mk] = mq_n[mk] + 1; end
+            if (mq_n[mk] > mo_max[mk]) mo_max[mk] = mq_n[mk];
+        end
+        // (3) this edge's ports
+        m_su2 = m_su1; m_su1 = su_banks(sw_mask, sw_a0, sw_a1);
+        m_kv1 = {w_v, rd_v, me_en && mx_we};
+        m_kr1[0] = mx_addr[RW-1:0]; m_kr1[1] = rd_addr[AW-1:4]; m_kr1[2] = w_row;
+    end
+    // DBGC != 0: trace of the write side in [DBGC - DBGN, DBGC] (sources presented, SU banks, skid queues, grants)
+    generate if (DBGC != 0) begin : g_dbg
+        always @(posedge clk) if (rst_n && cyc >= DBGC - DBGN && cyc <= DBGC)
+            $display("WTR cyc %0d w_v %0d row %0d (b%0d) rd_v %0d (b%0d) mx %0d (b%0d) me %0d | sw %b a0 %0d | k1_v %b | f_v %0d su_hs %b | seq q_v %b late %b rows %0d(b%0d) %0d(b%0d) | rd q_v %b row b%0d | mx q_v %b row b%0d | gk %b gm %0d m_v %0d | q_ovf %0d",
+                     cyc, w_v, w_row, w_row % 16, rd_v, (rd_addr >> 4) % 16, mx_we, mx_addr % 16, me_en, sw_mask, sw_a0,
+                     dut.k1_v, dut.f_v, dut.su_hs, dut.q_v[2], dut.q_late[2], dut.q_row[2*SQD], dut.q_row[2*SQD] % 16, dut.q_row[2*SQD+1],
+                     dut.q_row[2*SQD+1] % 16, dut.q_v[1], dut.q_row[SQD] % 16, dut.q_v[0], dut.q_row[0] % 16, dut.ge, dut.gm, dut.m_v,
+                     dut.q_ovf);
+    end endgenerate
     reg [15:0] land_seen;
     // ---- stimulus ----
     function integer dset(input integer i); dset = DSET[i*8 +: 8]; endfunction
@@ -213,7 +346,7 @@ module tb_qfd_vm_bv_ports;
     endtask
     initial begin
         seed = SEED; bad_x = 0; bad_s = 0; bad_r = 0; bad_land = 0; bad_img = 0; n_s = 0; n_r = 0; n_land = 0; tuples = 0;
-        started = -1; nburst = 0; land_seen = 0; rw_p = 0; rr_p = 0; started_e = 0; started_nx = 0;
+        started = -1; nburst = 0; land_seen = 0; rw_p = 0; rr_p = 0; started_e = 0; started_nx = 0; started_t = 0; wq = {WD{1'b1}};
         for (i = 0; i < ELEMS; i = i + 1) vm[i] = 0;
         for (i = 0; i < ELEMS / 16; i = i + 1) shadow[i] = 0;
         for (i = 0; i < RSN / 16; i = i + 1) lastw[i] = -1;
@@ -232,7 +365,9 @@ module tb_qfd_vm_bv_ports;
             for (l = 0; l < 16; l = l + 1) w_data[32*l +: 32] = $random(seed);
         end
         @(negedge clk); w_v = 0;
-        repeat (19) @(negedge clk);
+        repeat (19 - XMK) @(negedge clk);
+        started_t = 1;
+        repeat (XMK) @(negedge clk);
         started_nx = 1;
         @(negedge clk);
         started_e = 1;
@@ -256,7 +391,9 @@ module tb_qfd_vm_bv_ports;
             end
             // ---- engine: its registers (burst, maxima, x descriptor) change only after an engine edge ----
             eng_prev = en_edge;
-            if (MEE != 0) begin me_want = me_want_nx; me_want_nx = ($random(seed) & 7) != 0; end
+            if (MEE != 0) begin
+                me_want = wq[0]; wq = wq >> 1; wq[WD-1] = ($random(seed) & 7) != 0; me_want_nx = wq[0];
+            end
             else me_want = ($random(seed) & 7) != 0;
             if (eng_prev) begin
                 b_ov = 0; b_we = 0; mx_we = 0;
@@ -307,18 +444,48 @@ module tb_qfd_vm_bv_ports;
             w_v = ($random(seed) & 15) == 0; w_row = (SQ0 / 16) + (($random(seed) & 32'h7fffffff) % 64); w_mask = $random(seed);
             for (l = 0; l < 16; l = l + 1) w_data[32*l +: 32] = $random(seed);
             r_v = ($random(seed) & 3) == 0; r_row = (XR0 / 16) + (($random(seed) & 32'h7fffffff) % (XRN / 16));
+            // ---- WDIR: directed skid burst (overrides the write ports drawn above; the random stream is untouched) ----
+            // SQD (WDIR 2: SQD + 1) sequencer rows on consecutive edges, all on bank 0 (rows SQ0 / 16 + 16 (j mod 3): the
+            // fourth repeats the first: same-row order), while a stride-0 SU element holds bank 0 (row SU0 / 16 + 16 j: the
+            // lane rows have priority), then one reducer element on bank 0 (goes before the waiting sequencer rows);
+            // no other skid traffic until the queue has drained.
+            if (WDIR != 0 && cyc >= WDC && cyc < WDC + 3 * SQD + 8) begin : wdir
+                integer j_;
+                j_ = cyc - WDC;
+                w_v = 0; rd_v = 0; sw_mask = 0; mx_we = 0;
+                if (j_ < SQD + (WDIR == 2 ? 1 : 0)) begin
+                    w_v = 1; w_row = SQ0 / 16 + 16 * (j_ % 3); w_mask = 16'h0ff0 << (j_ % 5);
+                    sw_mask = 1; sw_a0 = SU0 + 256 * j_ + 3; sw_a1 = sw_a0;
+                end
+                if (j_ == SQD + (WDIR == 2 ? 1 : 0)) begin rd_v = 1; rd_addr = RD0 + 256 + 5; end
+            end
         end
         // drain: no new traffic, the engine runs until every burst landed
         b_ov = 0; b_we = 0; mx_we = 0; x_dv = 0; s_re0 = 0; sw_mask = 0; rd_v = 0; w_v = 0; r_v = 0;
         // MEE: the loop's last negedge already advanced me_want; only the lookahead (not yet seen by an edge) becomes 1
-        if (MEE != 0) begin me_want_nx = 1; @(negedge clk); end
+        // (WD > 1: the older lookahead entries were already shown to the memory as me_en_t / me_en_e: they are played out)
+        if (MEE != 0) begin
+            wq[WD-1] = 1'b1; me_want_nx = wq[0];
+            for (i = 0; i < WD; i = i + 1) begin
+                @(negedge clk);
+                if (i < WD - 1) begin me_want = wq[0]; wq = wq >> 1; wq[WD-1] = 1'b1; me_want_nx = wq[0]; end
+            end
+        end
         me_want = 1;
         for (i = 0; i < 20000 && land_cnt != nburst[15:0]; i = i + 1) @(negedge clk);
         repeat (40) @(negedge clk);
         for (i = 0; i < ELEMS; i = i + 1)
             if (shadow[i / 16][32*(i % 16) +: 32] !== vm[i]) bad_img = bad_img + 1;
         if (bad_me != 0) $display("me_en_e lookahead mismatches %0d", bad_me);
-        if (bad_me == 0 && bad_x == 0 && bad_s == 0 && bad_r == 0 && bad_land == 0 && bad_img == 0 && !x_fault && !x_hazard && !w_fault &&
+        if (XTK != 0 || XMK != 0 || XLO != 0)
+            $display("TREE XTK=%0d XMK=%0d XMF=%0d XLO=%0d XQR=%0d me_consumers=%0d me_toggles=%0d me_t_checks=%0d pctl_changes=%0d xline_changes=%0d",
+                     XTK, XMK, XMF, XLO, XQR, dut.NMC, n_mt, n_tchk, n_pc, n_lq);
+        $display("WQ SQD=%0d max_waiting mx=%0d rd=%0d seq=%0d waits=%0d model_overflow=%0d dut_overflow=%0d WDIR=%0d",
+                 SQD, mo_max[0], mo_max[1], mo_max[2], m_waits, m_ovf, d_ovf, WDIR);
+        if (m_ovf != d_ovf) $display("skid capacity rule: the memory overflowed %0d times, the rule's model %0d", d_ovf, m_ovf);
+        if (tree_vac) $display("FAIL qfd_vm_bv_ports TREE-VACUOUS x=%0d", bad_x);
+        else
+        if (m_ovf == d_ovf && (WDIR != 1 || mo_max[2] == SQD) && bad_me == 0 && bad_x == 0 && bad_s == 0 && bad_r == 0 && bad_land == 0 && bad_img == 0 && !x_fault && !x_hazard && !w_fault &&
             !w_hazard && !(|l_fault) && land_cnt == nburst[15:0] && nburst > 500 && n_s > 1000 && n_r > 1000 && tuples > 500)
             $display("PASS qfd_vm_bv_ports NRB=%0d SW=%0d VL=%0d su_reads=%0d row_reads=%0d tuples=%0d bursts=%0d land_steps=%0d cycles=%0d",
                      NRB, SW, VL, n_s, n_r, tuples, nburst, n_land, CYCLES);

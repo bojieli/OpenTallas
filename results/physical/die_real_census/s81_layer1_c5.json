@@ -3,10 +3,10 @@
  "die": "s81_layer1",
  "case": "c5",
  "mode": "case",
- "source": "case 2fa1d3e09 v5 opts; views main c23342b9f + case source",
- "when": "2026-10-13 03:07 PDT",
+ "source": "case 2fa1d3e09 v5 opts (as timed: q_elem on kit/interim_tt.lib); views main 30e399aa9 + case source",
+ "when": "2026-10-13 08:21 PDT",
  "roots": [
-  "/srv/opentallas-scratch/claude/die-real-census-1013/main_c23342b9f",
+  "/srv/opentallas-scratch/claude/s81-qelem-1013/census/root",
   "/srv/opentallas-scratch/claude/s81-die-iter/src_2fa1"
  ],
  "inputs": {
@@ -50,20 +50,22 @@
  "summary": {
   "instances": 57015,
   "real": 0,
-  "lef_only": 0,
+  "lef_only": 1280,
   "etm_only": 1683,
   "hard_macro": 12556,
-  "placeholder": 42776,
+  "placeholder": 41496,
   "real_frac": 0.0,
   "masters": 212,
   "masters_by_class": {
    "real": 0,
-   "lef_only": 0,
+   "lef_only": 1,
    "etm_only": 17,
    "hard_macro": 4,
-   "placeholder": 191
+   "placeholder": 190
   },
-  "placeholder_with_view": 0,
+  "real_slot_exact": 0,
+  "real_provisional_etm": 0,
+  "placeholder_with_view": 29184,
   "top_placeholders": [
    [
     "dsfd_rly_63_WE",
@@ -90,10 +92,6 @@
     1280
    ],
    [
-    "ot_v41_rom_elem_q_qxpq_w10",
-    1280
-   ],
-   [
     "dsfd_rly_2_NS",
     1118
    ],
@@ -111,6 +109,10 @@
    ],
    [
     "dsfd_rly_63_NE",
+    896
+   ],
+   [
+    "dsfd_rly_66_NS",
     896
    ]
   ]
@@ -2038,8 +2040,8 @@
   },
   "dsfd_rly_15_EN": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_15_en/views/dsfd_rly_15_EN",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 234,
@@ -2053,8 +2055,8 @@
   },
   "dsfd_rly_15_SN": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_15_sn/views/dsfd_rly_15_SN",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 918,
@@ -2068,8 +2070,8 @@
   },
   "dsfd_rly_1_EW": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_1_ew/views/dsfd_rly_1_EW",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 384,
@@ -2083,8 +2085,8 @@
   },
   "dsfd_rly_1_WE": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_1_we/views/dsfd_rly_1_WE",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 640,
@@ -2098,8 +2100,8 @@
   },
   "dsfd_rly_266_SN": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_266_sn/views/dsfd_rly_266_SN",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 640,
@@ -2113,8 +2115,8 @@
   },
   "dsfd_rly_266_WE": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_266_we/views/dsfd_rly_266_WE",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 640,
@@ -2128,8 +2130,8 @@
   },
   "dsfd_rly_283_SN": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 640,
@@ -2143,8 +2145,8 @@
   },
   "dsfd_rly_283_WE": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 640,
@@ -2158,8 +2160,8 @@
   },
   "dsfd_rly_2_ES": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_2_es/views/dsfd_rly_2_ES",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 640,
@@ -2173,8 +2175,8 @@
   },
   "dsfd_rly_2_EW": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_2_ew/views/dsfd_rly_2_EW",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 640,
@@ -2188,8 +2190,8 @@
   },
   "dsfd_rly_2_NE": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_2_ne/views/dsfd_rly_2_NE",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 290,
@@ -2203,8 +2205,8 @@
   },
   "dsfd_rly_2_NS": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_2_ns/views/dsfd_rly_2_NS",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 1118,
@@ -2218,8 +2220,8 @@
   },
   "dsfd_rly_2_NW": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_2_nw/views/dsfd_rly_2_NW",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 512,
@@ -2233,8 +2235,8 @@
   },
   "dsfd_rly_2_SN": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_2_sn/views/dsfd_rly_2_SN",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 512,
@@ -2248,8 +2250,8 @@
   },
   "dsfd_rly_2_WE": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 640,
@@ -2263,8 +2265,8 @@
   },
   "dsfd_rly_2_WS": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_2_ws/views/dsfd_rly_2_WS",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 640,
@@ -2278,8 +2280,8 @@
   },
   "dsfd_rly_54_EW": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_54_ew/views/dsfd_rly_54_EW",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 640,
@@ -2293,8 +2295,8 @@
   },
   "dsfd_rly_63_ES": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_63_es/views/dsfd_rly_63_ES",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 128,
@@ -2308,8 +2310,8 @@
   },
   "dsfd_rly_63_NE": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_63_ne/views/dsfd_rly_63_NE",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 896,
@@ -2323,8 +2325,8 @@
   },
   "dsfd_rly_63_NS": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_63_ns/views/dsfd_rly_63_NS",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 3968,
@@ -2338,8 +2340,8 @@
   },
   "dsfd_rly_63_SE": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_63_se/views/dsfd_rly_63_SE",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 384,
@@ -2353,8 +2355,8 @@
   },
   "dsfd_rly_63_WE": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 7808,
@@ -2368,8 +2370,8 @@
   },
   "dsfd_rly_63_WN": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_63_wn/views/dsfd_rly_63_WN",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 512,
@@ -2383,8 +2385,8 @@
   },
   "dsfd_rly_63_WS": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_63_ws/views/dsfd_rly_63_WS",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 3456,
@@ -2398,8 +2400,8 @@
   },
   "dsfd_rly_66_NS": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_66_ns/views/dsfd_rly_66_NS",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 896,
@@ -2413,8 +2415,8 @@
   },
   "dsfd_rly_66_SN": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_66_sn/views/dsfd_rly_66_SN",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 512,
@@ -2428,8 +2430,8 @@
   },
   "dsfd_rly_68_EW": {
    "class": "placeholder",
-   "view": null,
-   "view_exists": false,
+   "view": "physical/ref_tile/s81_rly_68_ew/views/dsfd_rly_68_EW",
+   "view_exists": true,
    "lef": "none",
    "etm": "none",
    "instances": 256,
@@ -3282,10 +3284,10 @@
    "lef_near": false
   },
   "ot_v41_rom_elem_q_qxpq_w10": {
-   "class": "placeholder",
-   "view": null,
-   "view_exists": false,
-   "lef": "none",
+   "class": "lef_only",
+   "view": "physical/s81_die_views/q_elem_qs5f_efs",
+   "view_exists": true,
+   "lef": "exact",
    "etm": "none",
    "instances": 1280,
    "size": [

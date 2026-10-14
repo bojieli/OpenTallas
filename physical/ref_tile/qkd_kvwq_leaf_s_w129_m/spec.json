@@ -1,0 +1,91 @@
+{
+ "name": "qkd_kvwq_leaf_s_w129_m",
+ "top": "qkd_kvwq_leaf_s_w129_m",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/kv_die_20261009/qkd_kvwq_leaf_slot.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_tiles.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "contract": {
+  "file": "results/arch/hier_contract_1012/qwen_rom_tp8.json",
+  "slot": "wleaf_EN_0"
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "c",
+   "dp",
+   "ck"
+  ],
+  "S": [
+   "n",
+   "dn",
+   "w",
+   "wr"
+  ],
+  "E": [
+   "lane",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:el1013-qwen-elements-r6",
+  "branch": "claude/el1013-qwen-elements-r6",
+  "tag": "sl1",
+  "purpose": "Qwen ROM TP8 contract v3 slot cell qkd_kvwq_leaf_s_w129_m (128 instances, slots wleaf_<q>_<pc>): first view under the die master name with the die's own buses c/n/dn/dp/w/wr/lane (the closed route qkd_kvwq_leaf_s_w129_m-b90ad2fab of the same body was exported as cell ot_qkvd_kv_wq_leaf with RTL port names and cannot bind). Body = ot_qkvd_kv_wq_leaf unchanged (every port a flop at its pin); wrapper = wiring only, buses packed LSB first in kv_die BINDINGS order. Outline 129.6 x 183.6, pins M5 (N/S) / M4 (E), clock ck on N, cap M5.",
+  "extra_paths": [
+   "physical/qkd_kvwq_leaf_slot",
+   "rtl/test/tb_qkd_kvwq_leaf_slot.sv",
+   "tools/qwen_kv_die"
+  ],
+  "benches": [
+   {
+    "name": "kvwq_leaf_slot_exact",
+    "cmd": "bash physical/qkd_kvwq_leaf_slot/bench.sh {RUN}/bench/pos",
+    "expect": "pass",
+    "pass_regex": "^PASS kvwq_leaf_slot",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "60,000 random cycles through the die buses (field offsets generated from kv_die BINDINGS): feed n == c 293 bits exact, take / replace, one push per held word with exact {sec, data, tag}, done on the held tag, bad on any other return, done chain OR; coverage floors on pushes / dones / bads / replaced"
+   },
+   {
+    "name": "kvwq_leaf_slot_mutant",
+    "cmd": "bash physical/qkd_kvwq_leaf_slot/bench.sh {RUN}/bench/neg mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL kvwq_leaf_slot mutant detected",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "OT_QKD_KVWQ_LEAF_MUT inverts one CDC write data bit at the pin"
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

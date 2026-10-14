@@ -54,6 +54,8 @@ module tb_hgi_qdq_q_tput;
  reg [255:0] gin [0:127]; reg [255:0] gout [0:127];
  integer nrec, fd, k, s, j, op [0:15], n [0:15], ab [0:15], ob [0:15], cost [0:15], blk [0:15], iss [0:15];
  integer cyc = 0, words = 0, bad = 0, bk = 0, total_cost = 0, nret = 0, t0 = 0, prev = 0, started = 0;
+ integer rows = 1;   // +ROWS=m: every record walks m rows (row stride = n, in place; rows > 0 read / write beyond the vectors:
+                     // only row 0 is compared) -- exercises the read walk's row advance, which the m = 1 production shapes do not
  string dir, fn;
  reg [255:0] sd;
  always @(posedge clk) cyc <= cyc + 1;
@@ -80,10 +82,17 @@ module tb_hgi_qdq_q_tput;
  reg [127:0] h; reg [255:0] da, dd;
  initial begin
   if (!$value$plusargs("DIR=%s", dir)) $fatal(1, "FATAL: +DIR");
+  void'($value$plusargs("ROWS=%d", rows));
   fd = $fopen({dir, "/recs.txt"}, "r"); void'($fscanf(fd, "%d", nrec));
   for (k = 0; k < nrec; k = k + 1) begin
    void'($fscanf(fd, "%d %d %d %d %d %d", op[k], n[k], ab[k], ob[k], cost[k], blk[k]));
    ab[k] = ab[k] % 65536; ob[k] = ob[k] % 65536;          // slice-local (sid 0), bank phase unchanged
+  end
+  // multi-row walk: IN PLACE (O = A, legal: a beat is read before it is written), so the m-row range stays inside the
+  // record's own region (the production bases are >= 1,792 words apart)
+  if (rows > 1) for (k = 0; k < nrec; k = k + 1) begin
+   if (rows * n[k] > 1792) $fatal(1, "FATAL: +ROWS too large for the record regions");
+   ob[k] = ab[k];
   end
   $fclose(fd);
   repeat (4) @(posedge clk); rst_n = 1; repeat (8) @(posedge clk);
@@ -97,7 +106,8 @@ module tb_hgi_qdq_q_tput;
    while (!ret[0]) @(negedge clk);
    h = 128'd0; h[127:124] = 4'd4; h[123:118] = 6'(op[k]); h[99:93] = (MUT == 1) ? 7'b0010000 : 7'b0010001;
    if (op[k] == 6) h[71:64] = 8'd16;
-   da = desc(3'd0, 40'(ab[k]), 20'(n[k]), 20'd1, 32'd0); dd = desc(3'd0, 40'(ob[k]), 20'(n[k]), 20'd1, 32'd0);
+   da = desc(3'd0, 40'(ab[k]), 20'(n[k]), 20'(rows), rows > 1 ? 32'(n[k]) : 32'd0);
+   dd = desc(3'd0, 40'(ob[k]), 20'(n[k]), 20'(rows), rows > 1 ? 32'(n[k]) : 32'd0);
    rec = {21'(n[k]), 21'(n[k]), dd, da, h, 1'b1}; iss[k] = cyc - t0; total_cost = total_cost + cost[k];
    @(negedge clk); rec[0] = 0;
   end
@@ -118,6 +128,8 @@ module tb_hgi_qdq_q_tput;
   end
   for (k = 0; k < 8; k = k + 1) if (bank_status[k*18 + 17]) $fatal(1, "FATAL: bank %0d status %h", k, bank_status[k*18 +: 18]);
   if (bad) $fatal(1, "FATAL: %0d of %0d words mismatch", bad, words);
+  if (rows > 1) $display("PASS HGI_QDQ_Q_ROWS rows=%0d records=%0d words=%0d cycles=%0d S=%0d", rows, nrec, words, prev, S);
+  else
   $display("PASS HGI_QDQ_Q_TPUT records=%0d words=%0d cycles=%0d priced=%0d S=%0d", nrec, words, prev, total_cost, S);
   $finish;
  end

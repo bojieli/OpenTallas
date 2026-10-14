@@ -135,26 +135,6 @@ library (qfd_lst_c_split_ff) {
     pin("sel_e") {
       direction : input;
       capacitance : 11.9102;
-      timing() {
-        related_pin : "clk";
-        timing_type : hold_rising;
-        rise_constraint(scalar) {
-          values("20.58537");
-        }
-        fall_constraint(scalar) {
-          values("18.03421");
-        }
-      }
-      timing() {
-        related_pin : "clk";
-        timing_type : setup_rising;
-        rise_constraint(scalar) {
-          values("118.86335");
-        }
-        fall_constraint(scalar) {
-          values("128.06305");
-        }
-      }
     }
     pin("VDD") {
       direction : input;

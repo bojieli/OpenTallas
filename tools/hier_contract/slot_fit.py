@@ -11,6 +11,9 @@ Compares a ref_tile kit (spec.json + floorplan.json + kit.env) with the slot the
   pin_layer   the layer the kit uses on a face (kit.env PIN_H for E/W, PIN_V for N/S) vs the contract pin layers /
               slot pin_layers
   layer_cap   kit routing cap (RLAYERS) vs slot layer_cap (else pg_layer)
+  pin_align   (owner 2026-10-13) a port the tile spec plans in a range ("pin_ranges") vs the span the slot gives it:
+              more than 20 um outside = a note, more than 36 um = a mismatch (tools/hier_contract/pin_align.py: the jog
+              of a relay-pitch bus then fills 0.60 of a 20-um die channel by itself)
   insertion   estimated clock insertion vs slot target_insertion_ps (+-100 ps, child_lint (g)); the estimate is the
               spec's est_insertion_ps, else the cell's previous view in the kit (TT lib max_clock_tree_path, else
               insertion.json).  No estimate = a note, not a mismatch.
@@ -37,6 +40,10 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import child_lint  # noqa: E402
+try:
+    import pin_align  # noqa: E402
+except ImportError:      # a tree that ships slot_fit.py without pin_align.py: the one-ended alignment check is skipped
+    pin_align = None
 
 SCHEMA = "opentallas.hier_contract.v1"
 CONTRACT_GLOB = "results/arch/hier_contract_*/*.json"
@@ -184,7 +191,8 @@ def kit_facts(kd: Path, job: dict | None = None) -> dict:
             "outline": [float(x) for x in fp["die"][2:4]], "pins": {f: list(n) for f, n in pins.items()},
             "clock_port": spec.get("clock_port"), "reset_ports": list(spec.get("reset_ports", [])),
             "pin_layers": {"E": var("PIN_H"), "W": var("PIN_H"), "N": var("PIN_V"), "S": var("PIN_V")},
-            "cap": cap, "est_insertion_ps": est, "est_basis": basis, "slot_change_request": req}
+            "cap": cap, "est_insertion_ps": est, "est_basis": basis, "slot_change_request": req,
+            "pin_ranges": spec.get("pin_ranges") if isinstance(spec.get("pin_ranges"), dict) else {}}
 
 
 # -------------------------------------------------------------------------------------------------------- compare
@@ -192,6 +200,20 @@ def _oriented(layer: str, face: str) -> bool:
     """asap7: even metals run horizontally (E/W face pins), odd metals vertically (N/S face pins)"""
     n = child_lint.metal(layer)
     return n is not None and (n % 2 == 0) == (face in ("E", "W"))
+
+
+def slot_span(p: dict) -> tuple[float, float] | None:
+    """(lo, hi) um along the face of a contract pin: "span_um", else "offset" (pin / bus centre) +- "width" / 2"""
+    sp = p.get("span_um")
+    try:
+        if isinstance(sp, (list, tuple)) and len(sp) == 2:
+            return tuple(sorted((float(sp[0]), float(sp[1]))))
+        if p.get("offset") is not None:
+            o, w = float(p["offset"]), float(p.get("width") or 0.0)
+            return (o - w / 2, o + w / 2)
+    except (TypeError, ValueError):
+        pass
+    return None
 
 
 def compare(k: dict, s: dict) -> tuple[list[str], list[str]]:
@@ -257,6 +279,29 @@ def compare(k: dict, s: dict) -> tuple[list[str], list[str]]:
             bad.append(f"{f}-face pins may land on {'/'.join(over)} (slot {'/'.join(sorted(allowed))})")
         if lack:
             bad.append(f"{f}-face slot pin layer {'/'.join(lack)} is not a kit pin layer ({'/'.join(sorted(used))})")
+    # ---- pin alignment, one-ended (owner 2026-10-13, tools/hier_contract/pin_align.py): a port the kit plans in a
+    # range (tile spec "pin_ranges") against the span the slot gives it.  The peer faces the SLOT span, so every um the
+    # kit range lies outside it is a jog in the die channel: > WARN_UM a note, > FAIL_UM a mismatch (the jog of a bus
+    # at the relay pin pitch then fills 0.60 of a 20-um channel by itself).  Slot pins still waiting for the view's
+    # offsets (offset_pending_view) and ports without a planned range are not judged.
+    rng = (k.get("pin_ranges") or {}) if pin_align is not None else {}
+    for p in s.get("pins") or []:
+        if not isinstance(p, dict) or p.get("offset_pending_view") or base(p.get("name") or "") not in rng:
+            continue
+        span = slot_span(p)
+        try:
+            lo, hi = sorted(float(x) for x in rng[base(p["name"])][:2])
+        except (TypeError, ValueError):
+            continue
+        if span is None:
+            continue
+        jog = pin_align.range_jog(lo, hi, *span)
+        msg = (f"{base(p['name'])} planned at {lo:g}..{hi:g} um lies up to {jog:.1f} um outside its slot span "
+               f"{span[0]:g}..{span[1]:g} um on {p.get('face')}")
+        if jog > pin_align.FAIL_UM:
+            bad.append(f"pin_align: {msg} (> {pin_align.FAIL_UM} um: the jog alone fills a 20-um channel past the 0.60 cut rule)")
+        elif jog > pin_align.WARN_UM:
+            notes.append(f"pin_align WARN: {msg} (> {pin_align.WARN_UM:g} um jog in the die channel)")
     # ---- layer cap
     scap = s.get("layer_cap")
     if isinstance(scap, dict):      # derived contracts: {"cap": "M5", "view_max_layer": ..., "conforms": ...}

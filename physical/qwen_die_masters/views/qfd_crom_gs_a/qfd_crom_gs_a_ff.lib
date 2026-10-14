@@ -73,7 +73,7 @@ library (qfd_crom_gs_a_ff) {
   }
 
   cell ("ot_qfd_crom_gs") {
-    area : 2506.743 
+    area : 48496.633 
     is_macro_cell : true;
     pin("clk") {
       direction : input;

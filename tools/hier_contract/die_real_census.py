@@ -23,7 +23,11 @@ therefore not real.  Classes per master:
                 named view exists that the die did not bind (a replacement candidate), "lef_near" whether the generated
                 macro at least has the view's outline and pin names
 Contract mode has no case files: a slot is "real" when a named view exists whose LEF outline equals the slot outline
-(the die CAN bind it), else placeholder; the JSON says mode "contract" and the README row is labelled so.
+(the die CAN bind it), else placeholder; the JSON says mode "contract" and the README row is labelled so.  A bindable
+view is then held against its slot (child_lint check (e): pin names, faces, layers, PG layer): "slot_check" lists the
+differences ("slot_pins": exact / differ) and summary "real_slot_exact" counts the instances whose view matches the slot
+as the contract states it; a view that differs is real only once the contract adopts its pins (slot change request).
+"exported_before_export_sdc_fix" marks a view committed before main abc334b14 (its ETM is PROVISIONAL).
 Output: <out>/<die>_<case>.json (per master: instances, class, view, sha256 of the compared texts) and one row per
 (die, case) in <out>/README.md.  Exit 0 always (a census, not a gate); --min-real-frac F exits 1 below F.
 """
@@ -39,7 +43,11 @@ import time
 from collections import Counter
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import child_lint  # noqa: E402
+
 SCHEMA = "opentallas.die_real_census.v1"
+EXPORT_FIX = "abc334b14"          # view_export verdict replay (el1013-export-sdc.log); pinreg_audit.py uses the same mark
 CLASSES = ("real", "lef_only", "etm_only", "hard_macro", "placeholder")
 MACRO_RE = r"(asap7_memory_macros|_macros_v\d|pdie_macros|/hard_ip/|/phy/)"
 VIEW_ROOTS = ("physical",)
@@ -206,12 +214,37 @@ def census_case(inst: Counter, lefs: list[Path], libs: list[Path], roots: list[P
     return {"masters": per, "other_instances": sum(other.values()), "other_masters": len(other)}
 
 
+def slot_check(lef: Path, cell: str, slot: dict) -> list[str]:
+    """differences between a view's LEF and the slot as the contract states it (child_lint check (e))"""
+    try:
+        m = child_lint.parse_lef(lef.read_text(errors="replace"), cell)
+        ce = slot.get("clock_entry") or {}
+        if ce.get("pin") and all(child_lint.expand_bus(p["name"]) != [ce["pin"]] for p in slot.get("pins", [])):
+            slot = dict(slot, pins=list(slot.get("pins", [])) + [{k: ce[k] for k in ("face", "layer") if ce.get(k)}
+                                                                 | {"name": ce["pin"]}])
+        return child_lint.check_contract(m, slot, child_lint.check_pg(m).get("top_layer"))
+    except Exception as e:  # noqa: BLE001  (a census, not a gate: an unreadable view is a difference, never a crash)
+        return [f"slot check failed: {type(e).__name__}: {e}"]
+
+
+def before_export_fix(root: Path, rel: str) -> bool | None:
+    """the view's LEF was last committed before the export-SDC fix (None: not a git tree / the fix is unknown there)"""
+    import subprocess
+
+    def ct(*a):
+        r = subprocess.run(["git", "-C", str(root), "log", "-1", "--format=%ct", *a], capture_output=True, text=True)
+        return int(r.stdout.strip()) if r.returncode == 0 and r.stdout.strip() else None
+    fix, view = ct(EXPORT_FIX), ct("--", rel)
+    return None if fix is None or view is None else view < fix
+
+
 def census_contract(contract: Path, roots: list[Path], macro_re=MACRO_RE) -> dict:
     d = json.loads(contract.read_text())
     slots = [s for s in d.get("slots", []) if isinstance(s, dict) and s.get("kind") != "die" and s.get("cell")]
     inst = Counter(s["cell"] for s in slots)
-    outline = {}
+    outline, first = {}, {}
     for s in slots:
+        first.setdefault(s["cell"], s)
         outline.setdefault(s["cell"], set()).add((round(float(s["outline"]["w"]), 3), round(float(s["outline"]["h"]), 3)))
     idx = view_index(roots, set(inst))
     per = {}
@@ -233,6 +266,13 @@ def census_contract(contract: Path, roots: list[Path], macro_re=MACRO_RE) -> dic
                 r = {"class": ("hard_macro" if re.search(macro_re, str(vd)) else "real") if fit else "placeholder",
                      "view": view, "view_exists": True, "lef": "outline" if fit else "none", "etm": "by name" if fit else "none"}
             if fit:
+                if r["class"] == "real":
+                    bad = slot_check(vd / f"{m}.lef", m, first[m])
+                    r.update(slot=first[m].get("name"), slot_pins="differ" if bad else "exact", slot_check=bad)
+                    for root in roots:
+                        if vd.is_relative_to(root):
+                            r["exported_before_export_sdc_fix"] = before_export_fix(root, str((vd / f"{m}.lef").relative_to(root)))
+                            break
                 break
         per[m] = dict(r, instances=inst[m], size=sorted(outline[m])[0], lef_near=False)
     return {"masters": per, "other_instances": 0, "other_masters": 0, "contract_version": d.get("version"),
@@ -248,6 +288,10 @@ def summarise(res: dict) -> dict:
     n = sum(tot.values())
     return {"instances": n, **{c: tot[c] for c in CLASSES}, "real_frac": round(tot["real"] / n, 6) if n else 0.0,
             "masters": len(res["masters"]), "masters_by_class": {c: mc[c] for c in CLASSES},
+            "real_slot_exact": sum(r["instances"] for r in res["masters"].values()
+                                   if r["class"] == "real" and r.get("slot_pins", "exact") == "exact"),
+            "real_provisional_etm": sum(r["instances"] for r in res["masters"].values()
+                                        if r["class"] == "real" and r.get("exported_before_export_sdc_fix")),
             "placeholder_with_view": sum(r["instances"] for r in res["masters"].values()
                                          if r["class"] == "placeholder" and r["view_exists"]),
             "top_placeholders": [[m, r["instances"]] for m, r in sorted(
@@ -322,7 +366,9 @@ def main(argv=None) -> int:
     print(f"DIE_REAL_CENSUS {a.die} {case} ({mode}): {s['real']} real / {s['placeholder']} placeholder / {s['lef_only']} "
           f"lef-only / {s['etm_only']} etm-only / {s['hard_macro']} hard-macro of {s['instances']} instances "
           f"({100 * s['real_frac']:.2f}% real; masters {s['masters_by_class']['real']}/{s['masters']}); "
-          f"{res['other_instances']} std/undefined")
+          f"{res['other_instances']} std/undefined"
+          + (f"; real with the slot's pins exactly {s['real_slot_exact']}, real on a pre export-SDC-fix ETM "
+             f"{s['real_provisional_etm']}" if mode == "contract" else ""))
     return 1 if a.min_real_frac is not None and s["real_frac"] < a.min_real_frac else 0
 
 

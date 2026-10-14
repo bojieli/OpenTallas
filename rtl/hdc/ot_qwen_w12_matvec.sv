@@ -232,6 +232,8 @@ module ot_qwen_w12_matvec_part #(
     // ACC 7 / TREE 7 / LRST 3 / ANR 1; rtl/physical/ot_qwen_tile_lsl.sv in simulation, its blackbox + views in the parent route)
     parameter integer HIER_HARD = 0,
     parameter integer LRR = 0,            // el1011-q-tile h3: one reset relay flop per hardened leaf (1-cycle later leaf release)
+    parameter integer XTX = 0,            // el1011-q-tile r3 (HIER_HARD): XTX registered transmit rungs in front of every hardened
+                                          // leaf (v/first/split/w and the ROUNDED x), one kept copy per leaf; +XTX cycles of latency
     parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
     input  wire              clk,
@@ -315,7 +317,10 @@ module ot_qwen_w12_matvec_part #(
     localparam integer TA = TREE_LAT;     // split-tree adder: ot_hdc_qadd (rtl/hdc/ot_hdc_fastfp.sv), LATENCY 3, or ot_qwen_w12_ladd
     localparam integer TL = TA + 1;       // split-tree cycles per level: the adder + 1 output register
     localparam integer OD = TL * LG;      // split tree
-    localparam integer XDD = (PART == 2) ? XD : 0;
+    //: XTX (HIER_HARD only): the leaves see their inputs XTX cycles later, so every S3-referenced valid / tag / split
+    //: line that meets the leaves' results is XTX cycles longer (same order, same arithmetic)
+    localparam integer XTD = (HIER > 0 && HIER_HARD != 0) ? XTX : 0;
+    localparam integer XDD = ((PART == 2) ? XD : 0) + XTD;
     localparam integer LV0 = (PART == 2) ? TCUT : 0;   // tree levels LV0+1..LG live here
     localparam integer PRUNE = (SMIN > 0);
     // result-port groups: the only groups a K-split tree can deliver to
@@ -853,8 +858,26 @@ end endgenerate
                 end else begin : g_lrn
                     assign rst_l = rst_n;
                 end
-                ot_qwen_tile_lsl u_lh (.clk(clk), .rst_n(rst_l), .v_d(s2_v), .first_d(s2_first), .split_d(s2_tag[TW-6 -: 4]),
-                    .w_d(w_in), .x_d(s3x_d[G*32-1:0]), .t_out(top[HIER*32*g +: HIER*32]), .lfault(lf), .tfault(stf[g]));
+                //: XTX: registered transmit rungs per leaf (one kept instance per leaf and rung, so Yosys opt_merge cannot
+                //: fold the 8 identical copies back into one broadcast).  Rung 1 takes the ROUNDED / masked x (s3x_d), so the
+                //: BF16 round + mask is the only logic before a register and every later hop is register -> wire ->
+                //: register (<= ~350 um each across the 1,296 um cluster).  Only the valid bit is reset.
+                localparam integer XW = 1 + 1 + 4 + G * HIER * 32 + G * 32;
+                wire [XW-1:0] tx_d = {s2_v, s2_first, s2_tag[TW-6 -: 4], w_in, s3x_d[G*32-1:0]};
+                wire [XW-1:0] tx_q;
+                if (XTX > 0) begin : g_tx
+                    wire [XW*(XTX+1)-1:0] tc;
+                    assign tc[XW-1:0] = tx_d;
+                    genvar rr;
+                    for (rr = 0; rr < XTX; rr = rr + 1) begin : g_r
+                        ot_qwen_tx_ff #(.W(XW)) u_tx (.clk(clk), .rst_n(rst_l), .d(tc[XW*rr +: XW]), .q(tc[XW*(rr+1) +: XW]));
+                    end
+                    assign tx_q = tc[XW*XTX +: XW];
+                end else begin : g_ntx
+                    assign tx_q = tx_d;
+                end
+                ot_qwen_tile_lsl u_lh (.clk(clk), .rst_n(rst_l), .v_d(tx_q[XW-1]), .first_d(tx_q[XW-2]), .split_d(tx_q[XW-3 -: 4]),
+                    .w_d(tx_q[G*32 +: G*HIER*32]), .x_d(tx_q[G*32-1:0]), .t_out(top[HIER*32*g +: HIER*32]), .lfault(lf), .tfault(stf[g]));
             end else begin : g_sf
             ot_qwen_w12_lane_slice #(.G(G), .NPL(HIER), .IL(IL), .MUL_LAT(MUL_LAT), .ACC_LAT(ACC_LAT),
                 .TREE_LAT(TREE_LAT), .LRST(LRST), .ANR(ANR), .TMUT((g == 0) ? TMUT : 0)) u_ls (
@@ -999,7 +1022,7 @@ end endgenerate
     endgenerate
     // PART 1: the tile's top level and its valid, towards the tree above
     assign t_out = lvl[LG][W*32-1:0];
-    assign t_vout = vline[SD + OD];
+    assign t_vout = vline[SD + OD + XTD];           // XTX: the leaves' results (t_out) are XTD cycles later
     wire [GI*W*32-1:0] raw_res = lvl[LG];
     wire raw_v = vline[SD + OD + XDD];
     wire raw_last, raw_oen, raw_amax, raw_wsrc, raw_mmode;
@@ -1592,4 +1615,17 @@ module ot_qwen_w12_lane_slice #(
     endgenerate
     assign t_out = lvl[LG][NPL*32-1:0];
     assign tfault = |tf;
+endmodule
+
+//: el1011-q-tile r3: one registered transmit rung (kept hierarchy so identical per-leaf copies survive opt_merge); the
+//: MSB is the valid bit (async reset), the rest is datapath (no reset)
+(* keep_hierarchy *)
+module ot_qwen_tx_ff #(parameter integer W = 8) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire [W-1:0] d,
+    output reg  [W-1:0] q
+);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+    always @(posedge clk) q[W-2:0] <= d[W-2:0];
 endmodule

@@ -16,7 +16,8 @@
   "rtl/hdc/ot_hdc_fastfp.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/lib/ot_rst_relay.sv",
-  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_pipe.sv"
  ],
  "params": {},
  "clock_port": "clk",
@@ -171,8 +172,8 @@
  "job": {
   "owner": "Claude:q13-kvh",
   "branch": "claude/q13-kvh",
-  "tag": "q13",
-  "purpose": "q13-kvh: attention hub cluster with the reciprocal as a hardened local-root leaf (ot_qkh_recip_leaf, CLOSED cx1 TT +99.59 / FF +3.64) in its own east column; q8 EARLY_FAIL_HOLD was the in-parent u_recip delay line (1,210 flop->flop endpoints on a 48k-buffer spine). 2+2 seam relay registers on x/v and y/vo/fault (rvo-driven, no fixed latency). 4 pbst + 4 pvlg + 4 zh unchanged.",
+  "tag": "q13b",
+  "purpose": "q13b: q13 EARLY_FAIL_SETUP (post-CTS) = raw rst_n port net across the 1,175 um cluster (port -> hard-tile rst_n pins -722 ps, port -> ot_rst_relay async clear -611 ps) + output flops not at the N pins (out_data flop -> port -190). Fix: ot_rst_pipe (pin synchroniser + per-region 2-stage flop chains for the 8 control regions and each of the 12 hard tiles), io_flop_at_pins cols 8. Rest as q13: hardened reciprocal leaf in the east column with 2+2 seam relays; benches exact PASS / pbmut FAIL were green on q13.",
   "benches": [
    {
     "name": "hubt_rl_layer_exact",
@@ -207,5 +208,8 @@
  "floorplan_note": "q8b (el1011-q-kvd 2026-10-12): q8 gate --cts FAIL util 90% (hub std 124,773 um2 + 12 children 274,337 in 443,587 core; slot 647.976^2 = 419,873 cannot hold std + children). Children kept 4 x 3 (pbst S row next to the S inputs, pvlg middle, zh N row next to the N outputs), pitches 216 x 259.2 um on the 43.2 lattice -> 64.8 um column / 108 um row std channels; outline 889.92 x 760.32 (util ~0.60, std density in the channels ~0.32). Slot grows 419,873 -> 676,627 um2 (+61%): reported to the KV die lead. q13: +1 east column for the 216^2 reciprocal leaf at (907.2, 259.2) (64.8 um channel to the tile array, 47.52 east margin); outline 1170.72 x 760.32.",
  "defines": [
   "QKH_RECIP_LEAF"
- ]
+ ],
+ "io_flop_at_pins": {
+  "cols": 8
+ }
 }

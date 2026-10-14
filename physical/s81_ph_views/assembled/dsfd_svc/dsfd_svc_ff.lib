@@ -174,25 +174,25 @@ library (dsfd_svc_asm_ff) {
       }
   }
   bus (q) { bus_type : b515; direction : input;
-   capacitance : 10.4445;
+   capacitance : 7.3446;
    timing () {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("119.76355");
+          values("99.78972");
         }
         fall_constraint(scalar) {
-          values("129.31749");
+          values("112.46216");
         }
       }
    timing () {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-49.51683");
+          values("-53.05378");
         }
         fall_constraint(scalar) {
-          values("-57.60352");
+          values("-61.01639");
         }
       }
   }
@@ -270,7 +270,7 @@ library (dsfd_svc_asm_ff) {
         timing_type : rising_edge;
         cell_rise(dsfd_svcio_x__template_1) {
           index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
-          values("13001.08301,13003.39746,13007.49805,13015.25781,13030.51465,13060.90820,13121.60547");
+          values("2.06919,4.38353,8.48397,16.24434,31.50033,61.89383,122.59124");
         }
         rise_transition(dsfd_svcio_x__template_1) {
           index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");

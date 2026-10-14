@@ -48,6 +48,46 @@
    "ok": true,
    "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.070 MB sources in 5 modules, into 0.002 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.003 s (elab=0.000, cvt=0.001, bld=0.000); cpu 0.003 s on 1 threads; allocated 33.387 MB\nlint-ok\n",
    "track": "parallel"
+  },
+  "bench_vm_ring": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "VM_RING_SRC tile=rb sha256=fa5e8f1ad1081b5ce6be3dc2e662772f16569e3ee74f01979a9d08bdcfa82668 mut=none\nVM_RING tile=rb WA=2048 WB=1078 WF=0 cycles=50411 beatsA=20000(main 9996 stn 10004) beatsB=20000(main 10059 stn 9941) exact_err=0 order_err=0 data_err=0 addr_err=0 credit_err=0 toggled=3126/3126 stallA=8385/8288 fullA=621/616 zeroA=1051/1076 stallB=8289/8402 fullB=637/630 zeroB=1044/1040 cfg=0\nVM_RING_RUN PASS tile=rb beats=40000\nVM_RING tile=rb WA=2048 WB=1078 WF=0 cycles=50469 beatsA=20000(main 9996 stn 10004) beatsB=20000(main 9979 stn 10021) exact_err=0 order_err=0 data_err=0 addr_err=0 credit_err=0 toggled=3126/3126 stallA=8333/8288 fullA=638/594 zeroA=1143/1039 stallB=8324/8397 fullB=632/598 zeroB=1067/1026 cfg=0\nVM_RING_RUN PASS tile=rb beats=40000\nVM_RING_BENCH PASS tile=rb mut=none beats=80000/1\nrc=0\n",
+   "track": "post_closure_hand_run",
+   "log": "results/rtl/ref_tile/vm8_ring_bench_1013/rb_exact.log"
+  },
+  "bench_vm_ring_mut_drop": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "VM_RING_SRC tile=rb sha256=fa5e8f1ad1081b5ce6be3dc2e662772f16569e3ee74f01979a9d08bdcfa82668 mut=DROP\nring_mut: DROP applied to physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_rb.sv -> ../out/rb_mut_drop/vm_cp_rb_mut_DROP.sv\nVM_RING tile=rb WA=2048 WB=1078 WF=0 cycles=1207232 beatsA=3824(main 1904 stn 1904) beatsB=20000(main 10059 stn 9941) exact_err=28 order_err=3681 data_err=0 addr_err=0 credit_err=1198307 toggled=3126/3126 stallA=507946/507997 fullA=2/0 zeroA=747/726 stallB=8289/8399 fullB=637/630 zeroB=1044/1040 cfg=0\nVM_RING_RUN FAIL tile=rb: exact order credit leak_or_deadlock cov_beats_A cov_backpressure_A\nVM_RING tile=rb WA=2048 WB=1078 WF=0 cycles=1207232 beatsA=3824(main 1904 stn 1904) beatsB=20000(main 9979 stn 10021) exact_err=28 order_err=3681 data_err=0 addr_err=0 credit_err=1198301 toggled=3126/3126 stallA=508205/508533 fullA=3/0 zeroA=775/739 stallB=8324/8397 fullB=632/598 zeroB=1067/1026 cfg=0\nVM_RING_RUN FAIL tile=rb: exact order credit leak_or_deadlock cov_beats_A cov_backpressure_A\nVM_RING_BENCH FAIL tile=rb mut=DROP beats=0/1\nrc=1\n",
+   "track": "post_closure_hand_run",
+   "log": "results/rtl/ref_tile/vm8_ring_bench_1013/rb_mut_drop.log"
+  },
+  "bench_vm_ring_mut_addr": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "VM_RING_SRC tile=rb sha256=fa5e8f1ad1081b5ce6be3dc2e662772f16569e3ee74f01979a9d08bdcfa82668 mut=ADDR\nring_mut: ADDR applied to physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_rb.sv -> ../out/rb_mut_addr/vm_cp_rb_mut_ADDR.sv\nVM_RING tile=rb WA=2048 WB=1078 WF=0 cycles=1207232 beatsA=16(main 0 stn 0) beatsB=20000(main 10059 stn 9941) exact_err=602397 order_err=0 data_err=0 addr_err=16 credit_err=1199996 toggled=3126/3126 stallA=509850/509901 fullA=0/0 zeroA=1/1 stallB=8289/8399 fullB=637/630 zeroB=1044/1040 cfg=0\nVM_RING_RUN FAIL tile=rb: exact addr credit leak_or_deadlock cov_beats_A cov_backpressure_A\nVM_RING tile=rb WA=2048 WB=1078 WF=0 cycles=1207232 beatsA=16(main 0 stn 0) beatsB=20000(main 9979 stn 10021) exact_err=602922 order_err=0 data_err=0 addr_err=16 credit_err=1199999 toggled=3126/3126 stallA=510109/510437 fullA=0/0 zeroA=1/1 stallB=8324/8397 fullB=632/598 zeroB=1067/1026 cfg=0\nVM_RING_RUN FAIL tile=rb: exact addr credit leak_or_deadlock cov_beats_A cov_backpressure_A\nVM_RING_BENCH FAIL tile=rb mut=ADDR beats=0/1\nrc=1\n",
+   "track": "post_closure_hand_run",
+   "log": "results/rtl/ref_tile/vm8_ring_bench_1013/rb_mut_addr.log"
+  },
+  "bench_vm_ring_mut_credit": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "VM_RING_SRC tile=rb sha256=fa5e8f1ad1081b5ce6be3dc2e662772f16569e3ee74f01979a9d08bdcfa82668 mut=CREDIT\nring_mut: CREDIT applied to physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_rb.sv -> ../out/rb_mut_credit/vm_cp_rb_mut_CREDIT.sv\nVM_RING tile=rb WA=2048 WB=1078 WF=0 cycles=1207232 beatsA=20000(main 19497 stn 503) beatsB=20000(main 10059 stn 9941) exact_err=1351 order_err=0 data_err=0 addr_err=0 credit_err=1199989 toggled=3126/3126 stallA=16089/34743 fullA=1199/8 zeroA=2058/67 stallB=8289/8399 fullB=637/630 zeroB=1044/1040 cfg=0\nVM_RING_RUN FAIL tile=rb: exact credit leak_or_deadlock cov_beats_A\nVM_RING tile=rb WA=2048 WB=1078 WF=0 cycles=1207232 beatsA=20000(main 19318 stn 682) beatsB=20000(main 9979 stn 10021) exact_err=1470 order_err=0 data_err=0 addr_err=0 credit_err=1199951 toggled=3126/3126 stallA=16095/34494 fullA=1192/7 zeroA=2059/55 stallB=8324/8397 fullB=632/598 zeroB=1067/1026 cfg=0\nVM_RING_RUN FAIL tile=rb: exact credit leak_or_deadlock cov_beats_A\nVM_RING_BENCH FAIL tile=rb mut=CREDIT beats=0/1\nrc=1\n",
+   "track": "post_closure_hand_run",
+   "log": "results/rtl/ref_tile/vm8_ring_bench_1013/rb_mut_credit.log"
+  },
+  "bench_vm_ring_vacuous": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "VM_RING_SRC tile=rb sha256=fa5e8f1ad1081b5ce6be3dc2e662772f16569e3ee74f01979a9d08bdcfa82668 mut=none\nVM_RING tile=rb WA=2048 WB=1078 WF=0 cycles=9418 beatsA=1000(main 501 stn 499) beatsB=1000(main 501 stn 499) exact_err=0 order_err=0 data_err=0 addr_err=0 credit_err=0 toggled=3126/3126 stallA=454/377 fullA=32/22 zeroA=57/34 stallB=408/427 fullB=36/32 zeroB=52/45 cfg=0\nVM_RING_RUN FAIL tile=rb: cov_beats_A\nVM_RING tile=rb WA=2048 WB=1078 WF=0 cycles=9439 beatsA=1000(main 459 stn 541) beatsB=1000(main 502 stn 498) exact_err=0 order_err=0 data_err=0 addr_err=0 credit_err=0 toggled=3126/3126 stallA=436/425 fullA=33/28 zeroA=63/63 stallB=401/460 fullB=27/33 zeroB=48/47 cfg=0\nVM_RING_RUN FAIL tile=rb: cov_beats_A\nVM_RING_BENCH FAIL tile=rb mut=none beats=0/1\nrc=1\n",
+   "track": "post_closure_hand_run",
+   "log": "results/rtl/ref_tile/vm8_ring_bench_1013/rb_vacuous.log"
   }
  },
  "no_bench_reason": "Physical-only M5 PG/pin and actual output boundary delay station rebuild; source RTL byte-identical to 2370c0876 (identity results/physical/vm8_codex_1013/rtl_identity.json). Exact VM_CP_BENCH PASS and XBUS/RELAY mutant detection pinned da9cd8d8d physical/hbm_accel_die_views/vm/cp/bench_b89f43b23_v5050.log; current route source 2370c0876 benches positive rc0/XBUS rc1 immutable state in inventory.json. Production throughput remains OPEN, not qualified by this reuse.",
@@ -164,5 +204,16 @@
   "no_bench_reason": "Physical-only M5 PG/pin and actual output boundary delay station rebuild; source RTL byte-identical to 2370c0876 (identity results/physical/vm8_codex_1013/rtl_identity.json). Exact VM_CP_BENCH PASS and XBUS/RELAY mutant detection pinned da9cd8d8d physical/hbm_accel_die_views/vm/cp/bench_b89f43b23_v5050.log; current route source 2370c0876 benches positive rc0/XBUS rc1 immutable state in inventory.json. Production throughput remains OPEN, not qualified by this reuse."
  },
  "io_budget": "link_budget_consistent (fixed split)",
- "rebudget": null
+ "rebudget": null,
+ "behavioral_binding": {
+  "by": "Claude:vm8-ring-1013",
+  "date": "2026-10-13",
+  "how": "post-closure hand run of the shared ring-transport bench on the routed source RTL; these bench entries were NOT run by the closure loop (track post_closure_hand_run)",
+  "rtl": "physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_rb.sv",
+  "rtl_sha256_routed_2c31a0533": "fa5e8f1ad1081b5ce6be3dc2e662772f16569e3ee74f01979a9d08bdcfa82668",
+  "bench_commit": "dd90730d755791b78c1a809a655ead1b6c63b626",
+  "evidence": "results/rtl/ref_tile/vm8_ring_bench_1013/summary.json",
+  "replaces_no_bench_reason": "Physical-only M5 PG/pin and actual output boundary delay station rebuild; source RTL byte-identical to 2370c0876 (identity results/physical/vm8_codex_1013/rtl_identity.json). Exact VM_CP_BENCH PASS and XBUS/RELAY mutant detection pinned da9cd8d8d physical/hbm_accel_die_views/vm/cp/bench_b89f43b23_v5050.log; current route source 2370c0876 benches positive rc0/XBUS rc1 immutable state in inventory.json. Production throughput remains OPEN, not qualified by this reuse.",
+  "open": "production throughput of the VM8 control plane is not qualified by this bench"
+ }
 }

@@ -21,7 +21,7 @@
 //                  K partials, NRN on the node slice, one output relay on the score / faults.  The parent only holds
 //                  flops; a relay hop is <= ~350 um on the 4 x 4 floorplan.
 // Sub-tile RTL: rtl/hdc/nearhbm/ot_qkh_subtiles.sv.
-// Latency: inputs + NRI, score + NRI + NRK + 3, node slice + NRI + NRN (the control tile's HXK / HXN, stack_h_gen.hsub).
+// Latency: inputs + NRS + NRI, score + NRS + NRI + NRK + 3, node slice + NRS + NRI + NRN (the control tile's HXK / HXN, stack_h_gen.hsub).
 // ---------------------------------------------------------------------------------------------------------------------
 
 // a registered relay of D stages, kept as its own instance (copies for different sub-tiles are never merged)
@@ -54,7 +54,8 @@ module ot_qwen_nearhbm_head_hs #(
     parameter [31:0]  SCALE = 32'h3DB504F3,
     parameter integer LFB = 4,
     parameter integer LTW = 12,
-    parameter integer NRI = 2,           // relay stages S2 -> sub-tile pins
+    parameter integer NRS = 1,           // q13-rhead r2: SHARED mid-floor relay stages S2 -> S2b (one copy for all 16 sub-tiles)
+    parameter integer NRI = 2,           // relay stages S2b -> sub-tile pins (one kept copy a sub-tile)
     parameter integer NRK = 2,           // relay stages sub-tile K partial -> K-tree pins
     parameter integer NRN = 2            // relay stages sub-tile node slice -> nb_d pins
 ) (
@@ -95,6 +96,25 @@ module ot_qwen_nearhbm_head_hs #(
         if (!rp) begin c2[3:1] <= 3'd0; lt2 <= {LTW{1'b0}}; qv2 <= 1'b0; end
         else begin c2[3:1] <= c_in[3:1]; lt2 <= lt_in; qv2 <= q_valid_in; end
     always @(posedge clk) begin c2[0] <= c_in[0]; row2 <= row_in; e2 <= e_in; qb2 <= q_beat_in; qd2 <= q_data_in; hid2 <= hid; end
+    // ---- S2b (q13-rhead r2, structural): the S-face pin flops no longer drive the 16 per-sub-tile relays directly.
+    // Route evidence qkh_head_hs_ref-q13a-75e0349aa: qd2[392] (S face, y = 0) -> g_t[15].u_rid/r[0] (row 3 of the 4 x 4
+    // floor, y > 560 um) = 765 ps of data path through 7 wire repeaters in ONE cycle (TT -41.92 ps; 11 endpoints, all rows
+    // 2 / 3).  NRS shared stages carry every pin bit to the floor centre first, so each hop is pin -> centre (<= ~430 um)
+    // and centre -> sub-tile relay (<= ~350 um).  Shared (1,577 flops a stage), not one copy a sub-tile (3,728): the
+    // parent stays under 15k sinks on its clock root.  Latency + NRS on every input (HXK / HXN of the control tile).
+    wire [3+LTW:0]  cs_o;                     // reset part: {c[3:1], lt, qv}
+    wire [HD*8+16+6+512+2:0] ds_o;            // plain part: {c[0], row, e, qb, qd, hid}
+    (* keep_hierarchy *) ot_qkh_relay #(.W(4 + LTW), .D(NRS), .RST(1)) u_rsc (.clk(clk), .rst_n(rp), .d({c2[3:1], lt2, qv2}), .q(cs_o));
+    (* keep_hierarchy *) ot_qkh_relay #(.W(1 + HD*8 + 16 + 6 + 512 + 2), .D(NRS)) u_rsd (.clk(clk), .rst_n(rp),
+                                                                                    .d({c2[0], row2, e2, qb2, qd2, hid2}), .q(ds_o));
+    wire [3:0]       c3   = {cs_o[3+LTW:1+LTW], ds_o[HD*8+16+6+512+2]};
+    wire [LTW-1:0]   lt3  = cs_o[LTW:1];
+    wire             qv3  = cs_o[0];
+    wire [HD*8-1:0]  row3 = ds_o[16+6+512+2 +: HD*8];
+    wire [15:0]      e3   = ds_o[6+512+2 +: 16];
+    wire [5:0]       qb3  = ds_o[512+2 +: 6];
+    wire [511:0]     qd3  = ds_o[2 +: 512];
+    wire [1:0]       hid3 = ds_o[1:0];
     // ---- per sub-tile: input relays, the sub-tile, K-partial relay, node-slice relay ----------------------------------
     wire [32*NT-1:0] kp_t, kp_k;
     wire [NT-1:0]    kpv_t, kpv_k, gf_t, gf_k_w;
@@ -103,8 +123,8 @@ module ot_qwen_nearhbm_head_hs #(
     generate for (t = 0; t < NT; t = t + 1) begin : g_t
         wire [3+LTW:0]  cr_i, cr_o;           // reset part: {c[3:1], lt, qv}
         wire [216:0]    dr_i, dr_o;           // plain part: {c[0], row, e, qb, qd, hid}
-        assign cr_i = {c2[3:1], lt2, qv2};
-        assign dr_i = {c2[0], row2[64*t +: 64], e2, qb2, qd2[128*(t % 4) +: 128], hid2};
+        assign cr_i = {c3[3:1], lt3, qv3};
+        assign dr_i = {c3[0], row3[64*t +: 64], e3, qb3, qd3[128*(t % 4) +: 128], hid3};
         (* keep_hierarchy *) ot_qkh_relay #(.W(4 + LTW), .D(NRI), .RST(1)) u_ric (.clk(clk), .rst_n(rr[t]), .d(cr_i), .q(cr_o));
         (* keep_hierarchy *) ot_qkh_relay #(.W(1 + 64 + 16 + 6 + 128 + 2), .D(NRI)) u_rid (.clk(clk), .rst_n(rr[t]), .d(dr_i), .q(dr_o));
         wire [3:0]     c_s  = {cr_o[3+LTW:1+LTW], dr_o[216]};

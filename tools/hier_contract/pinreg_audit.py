@@ -6,21 +6,50 @@
 Two checks per die contract (results/arch/hier_contract_*/<die>.json):
 
 TILES  every closed view (Liberty ETM, OpenSTA write_timing_model) a contract cell resolves to is read per pin:
-         out_ps   clock -> output pin, lightest-load table entry, minus the tile's clock insertion reference
-         in_ps    input pin -> flop = setup at the pin plus the insertion reference (includes the flop's setup time)
-         L / H    FF corner: earliest clock -> output and latest hold requirement at an input, both against the reference
-       flags:  comb       a combinational pin-to-pin arc (the pin is not registered)
-               out_over   out_ps > budget           in_over  in_ps > budget        (budget = 0.2 T = 166.7 ps a side)
-               min_delay  L(min over outputs) - H(max over inputs) < 50 ps + skew  (the tile against its own kind)
-               no_clock_arc  an output without any clock arc (constant / unconstrained; reported, not ranked)
-       The insertion reference is the view's insertion.json corner mean (the boundary pin-flop reference the sign-off
-       SDC uses) when present, else the midrange of the clock pin's min/max_clock_tree_path arcs, else 0 (ideal clock).
+         O / S    raw ETM arcs from the tile's CLOCK PIN: clock -> output pin (lightest-load entry), setup at an input pin
+         R        the tile's clock-insertion reference = mean clock arrival at its boundary registers (insertion.json
+                  <corner>.boundary.mean: the same register set and rule as the sign-off reference io_ref_routed.sdc /
+                  the kit's QDM PINFLOP median); else the midrange of the clock pin's min/max_clock_tree_path arcs
+                  (ESTIMATE, note ref_estimated), else 0 (ideal clock)
+         out_ps   o = O - R   launch residual after the reference        in_ps  s = S + R   capture residual (with setup)
+         L / H    FF corner: earliest clock -> output and latest hold requirement at an input, both against R
+
+       THE DIE STATEMENT (el1013-pinreg-audit.log 10-13, same equation as physical/common_flow/link_budget_consistent.sdc).
+       The die delivers the clock to tile X's clock pin at  phi - R_X + e_X  (insertion-compensated entry, |e_A - e_B| <=
+       SKEW), so the boundary registers of every tile tick at the common phase phi.  A hop A -> B of L um then needs
+              o_A + w L + s_B  <=  T - U - SKEW            (setup; U 60, SKEW 90 same region / 150 across, w 0.76 ps/um TT)
+              l_A + w_min L - h_B  >=  U_h + SKEW_h        (hold;  the L - H test below, 50 + 50)
+       The sign-off SDC (IO "0.2 T") gives the OUTSIDE 0.2 T: it proves o, s <= 0.8 T - 90 - 60 = 516.7 ps a side, which
+       does not compose by itself (two closed tiles may spend 1,033 ps).  What composes is the pair sum, so per tile:
+         C        = worst o + worst s = O + S: the tile's reference-free cost of one hop against its own kind
+         reach    = (T - U - SKEW - C) / w   the die wire a hop tile -> same tile can carry (>= --reach 500 um = OK;
+                    negative = fails abutted); against another tile use o_A + s_B
+         B        = (T - U - SKEW - w * reach) / 2 = 151.7 ps: the per-side share at the full 500 um (bits over it counted)
+         clock    entry_offset_ps = -R (the REQUIRED die clock arrival at the tile's clock pin relative to phi, per
+                  corner), boundary spread (max - min arrival at the boundary registers: NOT compensatable, it is
+                  inside o and s), q_lb = O - I_max and p_lb = S + I_min (launch / capture path beyond the latest /
+                  earliest boundary register: a register AT the pin leaves ~180 / ~150 ps, the closed station class)
+       flags (a tile is VIOLATING on comb / out_unreg / in_unreg / spread / abut / min_delay):
+               comb        a combinational pin-to-pin arc (the pin is not registered)
+               out_unreg   q_lb > --q-pin: logic or a long wire between the launch flop and the pin
+               in_unreg    p_lb > --p-pin: the first flop is not at the pin (or a control input fans out first)
+               spread      boundary spread > --max-spread (80 ps, the owner clock rule's leaf-arrival spread)
+               abut        C > T - U - SKEW: a hop to its own kind fails with no wire at all
+               min_delay   L(min over outputs) - H(max over inputs) < 50 ps + skew  (the tile against its own kind)
+       notes (not tile defects):
+               reach_limited  reach < --reach: the die places a relay within `reach` of this tile
+               ref_estimated  no insertion.json: R is the lib midrange over ALL clock sinks (spread_unmeasured: that
+                              all-sink spread is over --max-spread; measure the boundary with ck_insertion.py)
+               no_clock_arc   an output without any clock arc (constant / unconstrained; reported, not ranked)
        View resolution, in order: --view CELL=DIR, --bind (die_views bind map), --census (S81 real-view census
        timing_libs), the slot's `kit` (physical/ref_tile/<kit>/views/<cell>), a repo view whose Liberty cell has the
        contract cell's name, and (--alias) a same-family Qwen master (qfd_cst_n -> qfd_cst, qfd_crom_g -> qfd_crom_g_a):
        alias bindings are marked and are candidates only.  A cell with no view is listed as NOT AUDITABLE.
        Every view exported before the export-SDC fix (main abc334b14, 2026-10-13 02:42 PDT) is marked PROVISIONAL: its
-       ETM boundary numbers may be off by tens of ps; re-run after the view is re-exported.
+       ETM boundary numbers may be off by tens of ps; re-run after the view is re-exported.  A view is CORRECTED only by
+       its own record: abstract.json / export.json carries `reexport_1013` (re-export at the routed verdict's sequence)
+       or a `verdict` with `check` / `expect_ps` (exported by the fixed tool).  A view without that record stays
+       PROVISIONAL whatever its commit time (a later commit touching the directory is not a re-export).
 
 HOPS   the die case realised from the contract (netlist + placement) gives every die-level data net = one hop (relays
        and stations are instances, so a net never contains a register).  Qwen: --case DIR (elements.lef, place.tcl,
@@ -44,6 +73,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 EXPORT_FIX = 'abc334b14'          # view_export verdict replay (el1013-export-sdc.log)
 T_PS = 833.333
+WIRE = dict(tt=0.76, ss=1.135)   # ps/um buffered die wire (tools/budgets/common.py, dsrom_s81_fulldie TT fit)
 NUM = re.compile(r'-?\d+\.?\d*(?:[eE][-+]?\d+)?')
 TBL = ('cell_rise', 'cell_fall', 'rise_constraint', 'fall_constraint')
 
@@ -119,12 +149,30 @@ def clock_refs(lib, ins_json, corner):
         f = [v for a in tree for v in a[2].get('cell_fall', [])] or r
         if not r:
             continue
-        ref = dict(rise=(min(r) + max(r)) / 2, fall=(min(f) + max(f)) / 2, min=min(r), max=max(r), src='lib midrange')
-        j = (ins_json or {}).get(corner) or {}
-        if (ins_json or {}).get('clock') == name and isinstance(j.get('boundary'), dict) and j['boundary'].get('mean') is not None:
-            d = float(j['boundary']['mean']) - ref['rise']
-            ref.update(rise=ref['rise'] + d, fall=ref['fall'] + d, src='insertion.json boundary mean')
-        out[name] = ref
+        out[name] = dict(rise=(min(r) + max(r)) / 2, fall=(min(f) + max(f)) / 2, min=min(r), max=max(r), src='lib midrange',
+                         bmin=min(r), bmax=max(r), n=None)
+    records = [ins_json or {}]
+    # A dual-clock view needs the independently measured reference of each
+    # clock. The pin mapping comes from the routed SDC's create_clock port.
+    records += list((ins_json or {}).get('clock_measurements', {}).values())
+    for record in records:
+        j = record.get(corner) or {}
+        b = j.get('boundary') if isinstance(j, dict) else None
+        if not (out and isinstance(b, dict) and b.get('mean') is not None):
+            continue
+        ck = record.get('lib_clock_pin') or record.get('clock')
+        # insertion.json names the SDC clock port ("ck"); the Liberty clock pin may be a bus bit ("ck[0]") or the RTL
+        # name ("clk"): exact name, else the bus, else the view's only clock pin (the measurement has one clock).
+        # A view with several clock pins under other names (raw "cck" beside the spine "sk"): the measured clock is the
+        # pin whose latest tree arc IS the measurement's latest boundary / sink arrival (same route, within 1 ps).
+        hit = ([n for n in out if n == ck] or [n for n in out if bus_of(n) == ck] or (list(out) if len(out) == 1 else [])
+               or [n for n in out if any(isinstance(x, dict) and x.get('max') is not None and abs(float(x['max']) - out[n]['max']) <= 1.0
+                                         for x in (b, j.get('all')))])
+        for name in hit[:1]:
+            ref = out[name]
+            d = float(b['mean']) - ref['rise']
+            ref.update(rise=ref['rise'] + d, fall=ref['fall'] + d, src='insertion.json boundary mean',
+                       bmin=float(b.get('min', ref['min'])), bmax=float(b.get('max', ref['max'])), n=b.get('n'))
     return out
 
 
@@ -232,6 +280,26 @@ def last_commit_time(d):
     return int(t) if t else 0
 
 
+def export_corrected(view):
+    """-> 'reexport_1013' | 'verdict' | None: the view's own record of an export at the routed verdict's sequence."""
+    for n in ('abstract.json', 'export.json'):
+        f = ROOT / view / n
+        if not f.exists():
+            continue
+        try:
+            d = json.loads(f.read_text())
+        except (OSError, ValueError):
+            continue
+        if not isinstance(d, dict):
+            continue
+        if d.get('reexport_1013'):
+            return 'reexport_1013'
+        v = d.get('verdict')
+        if isinstance(v, dict) and (v.get('check') or v.get('expect_ps')):
+            return 'verdict'
+    return None
+
+
 def resolve_views(contract, a):
     """cell -> dict(view, binding, instances, slots) for every non-die contract cell (plus census closed masters)."""
     cells = collections.OrderedDict()
@@ -294,6 +362,39 @@ def bus_of(pin):
     return re.sub(r'\[\d+\]$', '', pin)
 
 
+def side_budget(a, corner):
+    """-> (per-side share B at the full reach, pair sum available with no wire, wire ps/um) for the corner."""
+    w = WIRE.get(corner, WIRE['tt']) if a.wire is None else a.wire
+    avail = T_PS - a.setup_unc - a.die_skew
+    return (avail - w * a.reach) / 2, avail, w
+
+
+def fixes(s, dc, flags, a, w, thr):
+    out = []
+    if 'comb' in flags:
+        out.append(f"{s['comb_bits']} combinational pin-to-pin bits: register them at the pin")
+    if 'out_unreg' in flags:
+        x = s['q_lb_ps'] - a.q_class
+        out.append(f"output pin register missing or far: {s['out_unreg_bits']} bits ({', '.join(s['out_unreg_buses'][:4])}), worst "
+                   f"{s['q_lb_bus']} leaves {s['q_lb_ps']:.0f} ps after the latest boundary clock = {x:.0f} ps over a pin flop "
+                   f"(logic, or ~{x / w:.0f} um of wire, after the flop): add / move the output register to the pin")
+    if 'in_unreg' in flags:
+        x = s['p_lb_ps'] - a.p_class
+        ctl = bool(re.search(r'rst|reset|clr|_en$|_v$|^en|stall|flush', s['p_lb_bus'] or ''))
+        out.append(f"input pin register missing or far: {s['in_unreg_bits']} bits ({', '.join(s['in_unreg_buses'][:4])}), worst "
+                   f"{s['p_lb_bus']} needs {s['p_lb_ps']:.0f} ps before the earliest boundary clock = {x:.0f} ps over a pin flop: "
+                   + ('control / reset input fans out before its first flop: one pin register, fan-out tree behind it'
+                      if ctl else f'first flop ~{x / w:.0f} um (or logic) behind the pin: register at the pin'))
+    if 'spread' in flags:
+        out.append(f"boundary clock spread {dc['boundary_spread_ps']:.0f} ps > {a.max_spread:.0f}: put the boundary registers on one "
+                   f"balanced sub-root (or split the root); every ps is inside o + s ({1 / w:.1f} um of reach per ps)")
+    if 'abut' in flags and not ({'out_unreg', 'in_unreg'} & set(flags)):
+        out.append(f"o + s = {s['pair_cost_ps']:.0f} ps > {s['pair_available_ps']:.0f}: fails against its own kind with no wire")
+    if 'min_delay' in flags:
+        out.append(f"L - H = {s['min_delay_margin_ps']:.0f} ps < {thr:.0f}: pin hold cells at the input pin flops (finishing recipe 2)")
+    return out
+
+
 def audit_view(view, a, fix_time):
     libs = corner_libs(view)
     if not libs:
@@ -304,8 +405,12 @@ def audit_view(view, a, fix_time):
     ins = json.loads(ij.read_text()) if ij.exists() else None
     rec = dict(view=view, setup_corner=sc, hold_corner=hc, libs={k: v.name for k, v in libs.items()})
     ct = last_commit_time(view)
-    rec['exported_before_export_sdc_fix'] = bool(ct and ct < fix_time)
-    budget, thr = a.budget_frac * T_PS, a.hold_margin + a.skew
+    rec['export_sdc_corrected'] = export_corrected(view)
+    rec['committed_before_export_sdc_fix'] = bool(ct and ct < fix_time)
+    rec['exported_before_export_sdc_fix'] = not rec['export_sdc_corrected']
+    thr = a.hold_margin + a.skew
+    budget, avail, _w = side_budget(a, sc or 'tt')
+    refs_sc = {}
     buses = collections.OrderedDict()
 
     def b(name, d):
@@ -318,14 +423,19 @@ def audit_view(view, a, fix_time):
         lib = parse_lib(libs[sc])
         refs = clock_refs(lib, ins, sc)
         rec['lib_cell'] = lib['cell']
-        rec['clocks'] = {k: dict(ref_ps=round(v['rise'], 1), min_ps=round(v['min'], 1), max_ps=round(v['max'], 1), src=v['src'])
+        rec['clocks'] = {k: dict(ref_ps=round(v['rise'], 1), min_ps=round(v['min'], 1), max_ps=round(v['max'], 1), src=v['src'],
+                                 boundary_min_ps=round(v['bmin'], 1), boundary_max_ps=round(v['bmax'], 1),
+                                 boundary_spread_ps=round(v['bmax'] - v['bmin'], 1), boundary_n=v['n'])
                          for k, v in refs.items()}
+        refs_sc = refs
         if not refs:
             rec['note'] = 'no *_clock_tree_path arc: ideal-clock view, reference 0'
         for name, m in pin_metrics(lib, refs).items():
             r = b(name, m['dir'])
             r['bits'] += 1
             r['clocks'] = sorted(set(r.get('clocks', [])) | set(m['clk']))
+            ck = refs.get(m['clk'][0]) if m['clk'] else None
+            hi, lo = (ck['bmax'] - ck['rise'], ck['rise'] - ck['bmin']) if ck else (0.0, 0.0)
             if m['comb']:
                 r['comb_bits'] += 1
                 r['comb_from'] = sorted(set(r['comb_from']) | {bus_of(x) for x in m['comb']})[:8]
@@ -337,6 +447,8 @@ def audit_view(view, a, fix_time):
                         r['worst_out_pin'] = name
                     r['out_ps'] = mx(r['out_ps'], m['out'])
                     r['out_over_bits'] += m['out'] > budget
+                    r['q_lb_ps'] = mx(r.get('q_lb_ps'), m['out'] - hi)
+                    r['out_unreg_bits'] = r.get('out_unreg_bits', 0) + (m['out'] - hi > a.q_pin)
             elif m['dir'] == 'input':
                 if m['inp'] is None and not m['comb']:
                     r['no_setup_arc_bits'] += 1
@@ -345,9 +457,13 @@ def audit_view(view, a, fix_time):
                         r['worst_in_pin'] = name
                     r['in_ps'] = mx(r['in_ps'], m['inp'])
                     r['in_over_bits'] += m['inp'] > budget
+                    r['p_lb_ps'] = mx(r.get('p_lb_ps'), m['inp'] - lo)
+                    r['in_unreg_bits'] = r.get('in_unreg_bits', 0) + (m['inp'] - lo > a.p_pin)
     if hc:
         lib = parse_lib(libs[hc])
         refs = clock_refs(lib, ins, hc)
+        rec['clocks_ff'] = {k: dict(ref_ps=round(v['rise'], 1), boundary_min_ps=round(v['bmin'], 1),
+                                    boundary_max_ps=round(v['bmax'], 1), src=v['src']) for k, v in refs.items()}
         for name, m in pin_metrics(lib, refs).items():
             r = b(name, m['dir'])
             if m['dir'] == 'output':
@@ -355,8 +471,8 @@ def audit_view(view, a, fix_time):
             elif m['dir'] == 'input':
                 r['H_ps'] = mx(r['H_ps'], m['hold'])
     for r in buses.values():
-        for k in ('out_ps', 'in_ps', 'L_ps', 'H_ps'):
-            if r[k] is not None:
+        for k in ('out_ps', 'in_ps', 'L_ps', 'H_ps', 'q_lb_ps', 'p_lb_ps'):
+            if r.get(k) is not None:
                 r[k] = round(r[k], 1)
     Ls = [(r['L_ps'], k) for k, r in buses.items() if r['L_ps'] is not None]
     Hs = [(r['H_ps'], k) for k, r in buses.items() if r['H_ps'] is not None]
@@ -377,15 +493,62 @@ def audit_view(view, a, fix_time):
                                      if Hs and r['L_ps'] is not None and r['L_ps'] - summ['H_max_ps'] < thr)
     summ['min_delay_bits_in'] = sum(r['bits'] for r in buses.values()
                                     if Ls and r['H_ps'] is not None and summ['L_min_ps'] - r['H_ps'] < thr)
+    # ---- die clock delivery: the data clock (the one most data pins are timed to), its reference and spread
+    use = collections.Counter()
+    for r in buses.values():
+        for c in r.get('clocks', []):
+            use[c] += r['bits']
+    dck = use.most_common(1)[0][0] if use else (next(iter(refs_sc)) if refs_sc else None)
+    ck = refs_sc.get(dck)
+    qs = [(r['q_lb_ps'], k) for k, r in buses.items() if r.get('q_lb_ps') is not None]
+    ps_ = [(r['p_lb_ps'], k) for k, r in buses.items() if r.get('p_lb_ps') is not None]
+    o, s_ = summ['worst_out_ps'], summ['worst_in_ps']
+    C = round((o or 0.0) + (s_ or 0.0), 1) if (o is not None or s_ is not None) else None
+    summ.update(pair_cost_ps=C, reach_self_um=round((avail - C) / _w, 1) if C is not None else None,
+                side_budget_ps=round(budget, 1), pair_available_ps=round(avail, 1),
+                q_lb_ps=max(qs)[0] if qs else None, q_lb_bus=max(qs)[1] if qs else None,
+                p_lb_ps=max(ps_)[0] if ps_ else None, p_lb_bus=max(ps_)[1] if ps_ else None,
+                out_unreg_bits=sum(r.get('out_unreg_bits', 0) for r in buses.values()),
+                in_unreg_bits=sum(r.get('in_unreg_bits', 0) for r in buses.values()),
+                out_unreg_buses=sorted((k for k, r in buses.items() if r.get('out_unreg_bits')), key=lambda k: -buses[k]['q_lb_ps'])[:8],
+                in_unreg_buses=sorted((k for k, r in buses.items() if r.get('in_unreg_bits')), key=lambda k: -buses[k]['p_lb_ps'])[:8])
+    if ck:
+        ffr = (rec.get('clocks_ff') or {}).get(dck) or {}
+        rec['die_clock'] = dict(
+            clock_pin=dck, corner=sc, reference_ps=round(ck['rise'], 1), reference_src=ck['src'],
+            entry_offset_ps=round(-ck['rise'], 1), entry_offset_ff_ps=round(-ffr['ref_ps'], 1) if ffr else None,
+            boundary_min_ps=round(ck['bmin'], 1), boundary_max_ps=round(ck['bmax'], 1),
+            boundary_spread_ps=round(ck['bmax'] - ck['bmin'], 1), boundary_n=ck['n'],
+            all_sinks_min_ps=round(ck['min'], 1), all_sinks_max_ps=round(ck['max'], 1),
+            # the residual after compensation IS (out_ps, in_ps); moving the entry by d ps trades them 1:1 (o - d, s + d)
+            residual_out_ps=o, residual_in_ps=s_,
+            balanced_entry_offset_ps=round(-(ck['rise'] + ((o or 0.0) - (s_ or 0.0)) / 2), 1) if o is not None and s_ is not None else None,
+            signoff_allow_ps=round(0.8 * T_PS - 90.0 - a.setup_unc, 1),
+            note='entry_offset = required die clock arrival at this clock pin relative to the common boundary phase; '
+                 'balanced_entry_offset equalises o and s (hold must then be re-checked: l and h move with it)')
     flags = []
     if summ['comb_bits']:
         flags.append('comb')
-    if summ['out_over_bits']:
-        flags.append('out_over')
-    if summ['in_over_bits']:
-        flags.append('in_over')
+    if summ['out_unreg_bits']:
+        flags.append('out_unreg')
+    if summ['in_unreg_bits']:
+        flags.append('in_unreg')
+    measured = bool(ck) and ck['src'] == 'insertion.json boundary mean'
+    if measured and ck['bmax'] - ck['bmin'] > a.max_spread:
+        flags.append('spread')
+    if C is not None and C > avail:
+        flags.append('abut')
     if summ['min_delay_margin_ps'] is not None and summ['min_delay_margin_ps'] < thr:
         flags.append('min_delay')
+    notes = []
+    if C is not None and C <= avail and summ['reach_self_um'] < a.reach:
+        notes.append('reach_limited')
+    if ck and not measured:
+        notes.append('ref_estimated')
+        if ck['bmax'] - ck['bmin'] > a.max_spread:
+            notes.append('spread_unmeasured')     # all-sink lib spread over the limit; the boundary spread needs insertion.json
+    rec['notes'] = notes
+    rec['fix'] = fixes(summ, rec.get('die_clock'), flags, a, _w, thr)
     summ['clock_out_bits'] = sum(r['bits'] for r in buses.values() if r['dir'] == 'clock_out')
     if sc == 'ss':
         rec['note'] = (rec.get('note', '') + ' SS-only view (no TT lib): out/in are SS numbers against the TT budget').strip()
@@ -394,10 +557,54 @@ def audit_view(view, a, fix_time):
 
 
 def severity(t):
+    """combinational first, then the shortest reach against its own kind (the largest o + s)."""
     s = t.get('summary') or {}
-    b = T_PS * 0.2
-    over = max((s.get('worst_out_ps') or 0) - b, (s.get('worst_in_ps') or 0) - b, 0)
-    return (-(s.get('comb_bits', 0) > 0), -round(over, 1), -(s.get('comb_bits', 0)), (s.get('min_delay_margin_ps') if s.get('min_delay_margin_ps') is not None else 1e9))
+    return (-(s.get('comb_bits', 0) > 0), -(s.get('pair_cost_ps') or 0.0), -(s.get('comb_bits', 0)),
+            (s.get('min_delay_margin_ps') if s.get('min_delay_margin_ps') is not None else 1e9))
+
+
+def die_clock_summary(audited, a):
+    """The die clock tree's side of the rule: per-tile entry offsets, and what a COMMON-phase entry would cost."""
+    ts = [t for t in audited if t.get('die_clock') and t['summary'].get('worst_out_ps') is not None
+          and t['summary'].get('worst_in_ps') is not None and t.get('setup_corner') == 'tt']
+    if not ts:
+        return None
+    R = {t['cell']: t['die_clock']['reference_ps'] for t in ts}
+    rmax, rmin = max(R.values()), min(R.values())
+    avail = T_PS - a.setup_unc - a.die_skew
+    comp = max(((x['summary']['worst_out_ps'] + y['summary']['worst_in_ps'], x['cell'], y['cell']) for x in ts for y in ts))
+    comm = max(((x['summary']['worst_out_ps'] + y['summary']['worst_in_ps'] + R[x['cell']] - R[y['cell']], x['cell'], y['cell'])
+                for x in ts for y in ts))
+    hs = [t for t in ts if t['summary'].get('L_min_ps') is not None and t['summary'].get('H_max_ps') is not None and t.get('clocks_ff')]
+    Rf = {t['cell']: (t['clocks_ff'].get(t['die_clock']['clock_pin']) or {}).get('ref_ps', 0.0) for t in hs}
+    hold = None
+    if hs:
+        hc = min(((x['summary']['L_min_ps'] - y['summary']['H_max_ps'], x['cell'], y['cell']) for x in hs for y in hs))
+        hm = min(((x['summary']['L_min_ps'] - y['summary']['H_max_ps'] + Rf[x['cell']] - Rf[y['cell']], x['cell'], y['cell'])
+                  for x in hs for y in hs))
+        hold = dict(need_ps=a.hold_margin + a.skew,
+                    compensated=dict(margin_ps=round(hc[0], 1), src=hc[1], dst=hc[2]),
+                    common_phase=dict(margin_ps=round(hm[0], 1), src=hm[1], dst=hm[2]))
+    trk = sorted(Rf[c] / R[c] for c in Rf if R[c] > 50 and Rf[c] > 0)
+    return dict(
+        corner='tt', tiles=len(ts), reference_min_ps=rmin, reference_max_ps=rmax, reference_span_ps=round(rmax - rmin, 1),
+        deepest=max(R, key=R.get), shallowest=min(R, key=R.get),
+        rule='clock at tile X clock pin = phi - R_X (+ common trunk); the branch to X carries R_max - R_X of added delay',
+        added_delay_ps={c: round(rmax - v, 1) for c, v in sorted(R.items(), key=lambda kv: kv[1])},
+        ocv_skew_ps=dict(frac=a.ocv, non_shared_per_side_ps=rmax, pair_ps=round(2 * a.ocv * rmax, 1), of_die_skew_ps=a.die_skew,
+                         note='every clock pin is matched to the deepest tile, so each side of every hop carries >= R_max of '
+                              'non-shared insertion: 2 x OCV x R_max of the die skew budget is spent before the die tree itself'),
+        ff_tt_tracking=dict(min=round(trk[0], 3), max=round(trk[-1], 3),
+                            mistrack_ps=round((trk[-1] - trk[0]) * (rmax - rmin), 1),
+                            note='R_ff / R_tt per tile; a fixed-ratio delay line misses the span by this much at the other corner') if trk else None,
+        setup_pair_available_ps=round(avail, 1),
+        setup_worst_pair=dict(compensated=dict(o_plus_s_ps=round(comp[0], 1), src=comp[1], dst=comp[2],
+                                               wire_left_ps=round(avail - comp[0], 1)),
+                              common_phase=dict(o_plus_s_ps=round(comm[0], 1), src=comm[1], dst=comm[2],
+                                                wire_left_ps=round(avail - comm[0], 1)),
+                              note='potential pairs among the audited cells (connectivity not resolved); common phase adds '
+                                   'R_src - R_dst to the pair'),
+        hold_worst_pair=hold)
 
 
 # ------------------------------------------------------------------------------------------------------- hop audit
@@ -409,6 +616,7 @@ def hops_qwen_case(case, contract, reach):
     """die_audit.py's class-4 walk at the 500 um rule, with the endpoint masters kept per hop."""
     D = Path(case)
     size, pins, cur, pin = {}, collections.defaultdict(dict), None, None
+    bitpin = collections.defaultdict(dict)        # cell -> full pin name -> (x, y): for concatenated connections
     for lef in sorted(D.glob('*.lef')):
         for ln in open(lef):
             s = ln.strip()
@@ -425,20 +633,67 @@ def hops_qwen_case(case, contract, reach):
                 d[0] += (float(t[1]) + float(t[3])) / 2
                 d[1] += (float(t[2]) + float(t[4])) / 2
                 d[2] += 1
+                bitpin[cur][pin] = ((float(t[1]) + float(t[3])) / 2, (float(t[2]) + float(t[4])) / 2)
                 pin = None
     pos = {}
-    for ln in open(D / 'place.tcl'):
-        m = re.match(r'ot_mts::place \[\$_blk findInst (\S+)\] ([\d.]+) ([\d.]+) (\S+)', ln)
-        if m:
-            pos[m.group(1)] = (float(m.group(2)), float(m.group(3)), m.group(4))
+    if (D / 'place.tcl').exists():
+        for ln in open(D / 'place.tcl'):
+            m = re.match(r'ot_mts::place \[\$_blk findInst (\S+)\] ([\d.]+) ([\d.]+) (\S+)', ln)
+            if m:
+                pos[m.group(1)] = (float(m.group(2)), float(m.group(3)), m.group(4))
+    else:       # HBM die case (tools/hbm_accel_die_fp.py grt): the placement is the place_inst block of run.tcl
+        for ln in open(D / 'run.tcl'):
+            m = re.match(r'place_inst -name (\S+) -location \{([\d.]+) ([\d.]+)\} -orientation (\S+)', ln)
+            if m:
+                pos[m.group(1)] = (float(m.group(2)), float(m.group(3)), m.group(4))
     txt = (D / 'die.v').read_text()
-    width = {m.group(2): int(m.group(1)) + 1 for m in re.finditer(r'wire \[(\d+):0\] (\S+);', txt)}
+    # a bundled case (manifest bundle_k = 16) carries one wire per k bits: report bits, not bundles
+    kb = json.loads((D / 'manifest.json').read_text()).get('bundle_k', 1) if (D / 'manifest.json').exists() else 1
+    width = {m.group(2): (int(m.group(1)) + 1) * kb for m in re.finditer(r'wire \[(\d+):0\] (\S+);', txt)}
     inst, netpins = {}, collections.defaultdict(list)
+    netbits = collections.defaultdict(list)        # net -> [(inst, full pin name)] of concatenated connections
     for m in re.finditer(r'^\s+(\w+) (\S+) \((.*?)\);', txt, re.M):
         mst, nm, body = m.groups()
         inst[nm] = mst
-        for p in re.finditer(r'\.(\w+)\((\S+?)\)', body):
-            netpins[p.group(2)].append((nm, p.group(1)))
+        for p in re.finditer(r'\.(\w+)\(([^()]*)\)', body):
+            port, ex = p.group(1), p.group(2).strip()
+            if re.fullmatch(r"\d+'[bdh][0-9a-fA-F_]+", ex):
+                continue                              # a constant (strap, chain end, tied ready): not a net
+            if ex.startswith('{'):
+                # contract v5 die.v: a concatenation, MSB first (a hard-macro bus pin fed bit by bit from several nets,
+                # or one net wired field to field): every element is measured at its own pin bit
+                el = []
+                for e in ex.strip('{}').split(','):
+                    e = e.strip()
+                    q = re.fullmatch(r'(\w+)\[(\d+)(?::(\d+))?\]', e)
+                    if q:
+                        hi, lo = int(q.group(2)), int(q.group(3) if q.group(3) is not None else q.group(2))
+                        el += [q.group(1)] * (hi - lo + 1)
+                    else:
+                        el.append(e if re.fullmatch(r'\w+', e) else None)
+                seen_ = set()
+                for j, net in enumerate(el):
+                    if net is None:
+                        continue
+                    pn = f'{port}[{len(el) - 1 - j}]'
+                    if pn in bitpin.get(mst, {}):
+                        netbits[net].append((nm, pn))
+                    elif net not in seen_:
+                        netpins[net].append((nm, port))
+                    seen_.add(net)
+                continue
+            # a slice of a net (one die bundle = several view ports) is that net
+            netpins[re.sub(r'\[\d+(?::\d+)?\]$', '', ex)].append((nm, port))
+    for net, l in netbits.items():
+        by_i = collections.defaultdict(list)
+        for i, pn in l:
+            by_i[i].append(pn)
+        for i, pns in by_i.items():
+            xs_ = [bitpin[inst[i]][q][0] for q in pns]
+            ys_ = [bitpin[inst[i]][q][1] for q in pns]
+            key = '@bits:' + net
+            pins[inst[i]][key + ':' + i] = [sum(xs_), sum(ys_), len(pns)]
+            netpins[net].append((i, key + ':' + i))
 
     def pinxy(i, p):
         if i not in pos or inst[i] not in size:
@@ -548,6 +803,7 @@ def fmt(v, w=7):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--contract', required=True)
+    ap.add_argument('--contract-label', help='recorded instead of the --contract path (a contract read from another branch)')
     ap.add_argument('--bind', action='append', help='die_views bind map (repeatable)')
     ap.add_argument('--census', help='S81 real-view census JSON (masters[].timing_libs)')
     ap.add_argument('--view', action='append', help='CELL=view dir (repeatable)')
@@ -555,7 +811,16 @@ def main(argv=None):
     ap.add_argument('--case', help='Qwen die case dir (elements.lef, place.tcl, die.v)')
     ap.add_argument('--s81-opts', help='S81 generator options file')
     ap.add_argument('--s81-extra', default='--cfifo-colck')
-    ap.add_argument('--budget-frac', type=float, default=0.2, help="the tile's share of T on each side of a seam")
+    ap.add_argument('--setup-unc', type=float, default=60.0, help='setup clock uncertainty at sign-off, ps')
+    ap.add_argument('--die-skew', type=float, default=90.0, help='die clock arrival error between two insertion-compensated '
+                    'tile clock pins, ps (kit OT_IO_SKEW: 90 same region; 150 across regions)')
+    ap.add_argument('--wire', type=float, default=None, help='die wire ps/um (default 0.76 TT, 1.135 for SS-only views)')
+    ap.add_argument('--max-spread', type=float, default=80.0, help='boundary clock arrival spread allowed in a tile, ps')
+    ap.add_argument('--q-class', type=float, default=180.0, help='clock -> pin of a register AT the pin, ps (closed stations)')
+    ap.add_argument('--p-class', type=float, default=150.0, help='pin -> flop + setup of a register AT the pin, ps')
+    ap.add_argument('--q-pin', type=float, default=220.0, help='out_unreg above this launch path, ps')
+    ap.add_argument('--p-pin', type=float, default=190.0, help='in_unreg above this capture path, ps')
+    ap.add_argument('--ocv', type=float, default=0.05, help='clock-path OCV on non-shared insertion (tools/budgets/common.py)')
     ap.add_argument('--reach', type=float, default=500.0)
     ap.add_argument('--hold-margin', type=float, default=50.0)
     ap.add_argument('--skew', type=float, default=50.0, help='die clock skew between two tiles for the minimum-delay test, ps '
@@ -579,6 +844,8 @@ def main(argv=None):
         tiles.append(t)
     audited = [t for t in tiles if 'summary' in t]
     viol = sorted((t for t in audited if t['flags']), key=severity)
+    B, avail, w_tt = side_budget(a, 'tt')
+    dcs = die_clock_summary(audited, a)
     thr = a.hold_margin + a.skew
     cross = []
     for s in audited:
@@ -593,26 +860,45 @@ def main(argv=None):
     elif a.s81_opts:
         hops = hop_summary(*hops_s81(a.s81_opts, a.s81_extra, contract, a.reach), a.reach)
     prov = sum(1 for t in audited if t.get('exported_before_export_sdc_fix'))
-    out = dict(schema='opentallas.pinreg_audit.v1', die=contract.get('die'), contract=a.contract,
+    out = dict(schema='opentallas.pinreg_audit.v1', die=contract.get('die'), contract=a.contract_label or a.contract,
                contract_version=contract.get('version'), source_commit=git('rev-parse', '--short=9', 'HEAD').strip(),
-               rule=dict(budget_ps=round(a.budget_frac * T_PS, 1), budget_frac=a.budget_frac, reach_um=a.reach,
-                         min_delay_ps=thr, hold_margin_ps=a.hold_margin, skew_ps=a.skew, period_ps=T_PS,
-                         reading='tile share of the cycle: clock->pin <= 0.2 T after the insertion reference, pin->flop '
-                                 '(setup at the pin + reference) <= 0.2 T; the die wire owns the remaining 0.6 T'),
-               status=('PROVISIONAL: %d of %d audited views were exported before the export-SDC fix (%s); their boundary '
-                       'numbers may be off by tens of ps' % (prov, len(audited), EXPORT_FIX)) if prov else 'views post export-SDC fix',
+               schema_note='v2 (10-13): judged on the pair equation with insertion-compensated clock entry; v1 judged '
+                           'each side against 0.2 T',
+               rule=dict(period_ps=T_PS, setup_unc_ps=a.setup_unc, die_skew_ps=a.die_skew, wire_ps_per_um=w_tt, reach_um=a.reach,
+                         pair_available_ps=round(avail, 1), side_budget_ps=round(B, 1),
+                         signoff_allow_ps=round(0.8 * T_PS - 90.0 - a.setup_unc, 1),
+                         max_spread_ps=a.max_spread, q_pin_ps=a.q_pin, p_pin_ps=a.p_pin, q_class_ps=a.q_class, p_class_ps=a.p_class,
+                         min_delay_ps=thr, hold_margin_ps=a.hold_margin, skew_ps=a.skew,
+                         reading='die clock at tile X clock pin = phi - R_X (R = mean boundary-register insertion, the sign-off '
+                                 'reference); hop A -> B: o_A + w L + s_B <= T - U - SKEW with o = clk->pin - R, s = setup@pin + R; '
+                                 'per tile C = o + s, reach = (T - U - SKEW - C) / w; the sign-off SDC (0.2 T outside) only '
+                                 'proves o, s <= signoff_allow each'),
+               die_clock=dcs,
+               status=('PROVISIONAL: %d of %d audited views carry no corrected-export record (reexport_1013 / verdict check) '
+                       'after the export-SDC fix (%s); their boundary numbers may be off by tens of ps'
+                       % (prov, len(audited), EXPORT_FIX)) if prov else 'views post export-SDC fix',
+               export_sdc=dict(corrected=len(audited) - prov, pre_fix=prov,
+                               pre_fix_views=sorted({t['view'] for t in audited if t.get('exported_before_export_sdc_fix')})),
                counts=dict(contract_cells=len(tiles), audited=len(audited), not_auditable=len(tiles) - len(audited),
-                           violating=len(viol), alias_bound=sum(1 for t in audited if (t['binding'] or '').startswith('ALIAS')),
+                           violating=len(viol), reach_limited=sum(1 for t in audited if 'reach_limited' in t.get('notes', [])),
+                           clean=sum(1 for t in audited if not t['flags'] and 'reach_limited' not in t.get('notes', [])),
+                           ref_estimated=sum(1 for t in audited if 'ref_estimated' in t.get('notes', [])),
+                           alias_bound=sum(1 for t in audited if (t['binding'] or '').startswith('ALIAS')),
                            by_flag=dict(collections.Counter(f for t in viol for f in t['flags'])),
                            instances_audited=sum(t['instances'] for t in audited),
                            instances_not_auditable=sum(t['instances'] for t in tiles if 'summary' not in t),
                            hops_over=hops['hops_over'] if hops else None),
                ranked_violations=[dict(rank=i + 1, cell=t['cell'], instances=t['instances'], flags=t['flags'], view=t['view'],
                                        binding=t['binding'], provisional=t.get('exported_before_export_sdc_fix'),
-                                       setup_corner=t.get('setup_corner'),
+                                       setup_corner=t.get('setup_corner'), notes=t.get('notes'), fix=t.get('fix'),
+                                       reference_ps=(t.get('die_clock') or {}).get('reference_ps'),
+                                       reference_src=(t.get('die_clock') or {}).get('reference_src'),
+                                       boundary_spread_ps=(t.get('die_clock') or {}).get('boundary_spread_ps'),
                                        **{k: t['summary'][k] for k in ('comb_bits', 'out_over_bits', 'in_over_bits', 'worst_out_ps',
                                                                       'worst_out_bus', 'worst_in_ps', 'worst_in_bus', 'L_min_ps',
-                                                                      'H_max_ps', 'min_delay_margin_ps', 'pins')})
+                                                                      'H_max_ps', 'min_delay_margin_ps', 'pins', 'pair_cost_ps',
+                                                                      'reach_self_um', 'q_lb_ps', 'q_lb_bus', 'p_lb_ps', 'p_lb_bus',
+                                                                      'out_unreg_bits', 'in_unreg_bits')})
                                   for i, t in enumerate(viol)],
                not_auditable=[dict(cell=t['cell'], instances=t['instances'], kinds=t['kinds']) for t in tiles if 'summary' not in t],
                cross_tile_min_delay=dict(note='potential pairs (connectivity between view cells is not resolved): '
@@ -620,18 +906,52 @@ def main(argv=None):
                hops=hops, tiles=tiles)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(out, indent=1) + '\n')
+    f1 = lambda v: '-' if v is None else f'{v:.1f}'
     L = [f"# Pin-register audit: {out['die']} (contract v{out['contract_version']}, {out['source_commit']})", '',
-         f"Rule: clock->pin and pin->flop each <= {out['rule']['budget_ps']} ps (0.2 T), hop <= {a.reach:.0f} um, "
-         f"L - H >= {thr:.0f} ps ({a.hold_margin:.0f} + skew {a.skew:.0f}).", '', f"**{out['status']}**", '',
-         f"Cells {len(tiles)}: audited {len(audited)} ({out['counts']['instances_audited']} instances), violating {len(viol)} "
-         f"{out['counts']['by_flag']}, not auditable {len(tiles) - len(audited)} ({out['counts']['instances_not_auditable']} instances), "
-         f"alias-bound {out['counts']['alias_bound']}.", '',
-         '| # | cell | inst | corner | flags | comb bits | out > B bits | worst out ps (bus) | in > B bits | worst in ps (bus) | L min | H max | L-H | binding |',
-         '|---|---|---:|---|---|---:|---:|---|---:|---|---:|---:|---:|---|']
+         f"Rule (die statement): the die delivers the clock to each tile's clock pin at `phi - R` (R = mean insertion of the "
+         f"tile's boundary registers, the sign-off reference); a hop A -> B of L um needs `o_A + {w_tt} L + s_B <= "
+         f"{T_PS:.1f} - {a.setup_unc:.0f} - {a.die_skew:.0f} = {avail:.1f} ps` (o = clk->pin - R, s = setup@pin + R). "
+         f"Per tile C = o + s and reach = ({avail:.1f} - C) / {w_tt} against its own kind; the per-side share at "
+         f"{a.reach:.0f} um is {B:.1f} ps. The sign-off SDC (IO 0.2 T outside) proves only o, s <= "
+         f"{out['rule']['signoff_allow_ps']} ps each. Hold: L - H >= {thr:.0f} ps ({a.hold_margin:.0f} + skew {a.skew:.0f}).", '',
+         f"**{out['status']}**", '',
+         f"Cells {len(tiles)}: audited {len(audited)} ({out['counts']['instances_audited']} instances); VIOLATING {len(viol)} "
+         f"{out['counts']['by_flag']}; reach-limited only {out['counts']['reach_limited']}; clean {out['counts']['clean']}; "
+         f"reference estimated (no insertion.json) {out['counts']['ref_estimated']}; not auditable {len(tiles) - len(audited)} "
+         f"({out['counts']['instances_not_auditable']} instances); alias-bound {out['counts']['alias_bound']}.", '']
+    if dcs:
+        sp, hp_ = dcs['setup_worst_pair'], dcs['hold_worst_pair']
+        L += ['## Die clock delivery', '',
+              f"R spans {dcs['reference_min_ps']} ({dcs['shallowest']}) .. {dcs['reference_max_ps']} ({dcs['deepest']}) ps at TT "
+              f"= {dcs['reference_span_ps']} ps. Compensated entry: each branch carries R_max - R of added delay; OCV "
+              f"{a.ocv:.0%} on the non-shared {dcs['reference_max_ps']} ps a side = {dcs['ocv_skew_ps']['pair_ps']} ps of the "
+              f"{a.die_skew:.0f} ps die skew on EVERY hop; FF/TT tracking of R "
+              + (f"{dcs['ff_tt_tracking']['min']}..{dcs['ff_tt_tracking']['max']} = {dcs['ff_tt_tracking']['mistrack_ps']} ps over the span."
+                 if dcs['ff_tt_tracking'] else 'n/a.'), '',
+              f"Worst potential pair, setup (available {avail:.1f} ps before wire): compensated {sp['compensated']['o_plus_s_ps']} ps "
+              f"({sp['compensated']['src']} -> {sp['compensated']['dst']}, wire left {sp['compensated']['wire_left_ps']}); COMMON-phase "
+              f"entry {sp['common_phase']['o_plus_s_ps']} ps ({sp['common_phase']['src']} -> {sp['common_phase']['dst']}, wire left "
+              f"{sp['common_phase']['wire_left_ps']})."
+              + (f" Hold (need {hp_['need_ps']:.0f}): compensated {hp_['compensated']['margin_ps']} ps ({hp_['compensated']['src']} -> "
+                 f"{hp_['compensated']['dst']}); common phase {hp_['common_phase']['margin_ps']} ps ({hp_['common_phase']['src']} -> "
+                 f"{hp_['common_phase']['dst']})." if hp_ else ''), '']
+    L += ['## Tiles (all audited, worst reach first)', '',
+          '| cell | inst | corner | R ps (src) | clock entry vs phi | + branch delay | boundary spread | o ps (bus) | s ps (bus) | C = o+s | reach um | q_lb | p_lb | L-H | flags | notes |',
+          '|---|---:|---|---|---:|---:|---:|---|---|---:|---:|---:|---:|---:|---|---|']
+    for t in sorted(audited, key=lambda t: -(t['summary'].get('pair_cost_ps') or 0)):
+        s_, dc = t['summary'], t.get('die_clock') or {}
+        add = (dcs or {}).get('added_delay_ps', {}).get(t['cell'])
+        L.append(f"| {t['cell']} | {t['instances']} | {t.get('setup_corner')} | {f1(dc.get('reference_ps'))} "
+                 f"({'ins.json' if dc.get('reference_src', '').startswith('insertion') else 'lib mid'}) | {f1(dc.get('entry_offset_ps'))} | "
+                 f"{f1(add)} | {f1(dc.get('boundary_spread_ps'))} | {f1(s_['worst_out_ps'])} ({s_['worst_out_bus']}) | "
+                 f"{f1(s_['worst_in_ps'])} ({s_['worst_in_bus']}) | {f1(s_['pair_cost_ps'])} | {f1(s_['reach_self_um'])} | "
+                 f"{f1(s_['q_lb_ps'])} | {f1(s_['p_lb_ps'])} | {f1(s_['min_delay_margin_ps'])} | {' '.join(t['flags']) or '-'} | "
+                 f"{' '.join(t.get('notes', [])) or '-'} |")
+    L += ['', '## Violating tiles and the fix each needs', '']
     for r in out['ranked_violations']:
-        L.append(f"| {r['rank']} | {r['cell']} | {r['instances']} | {r['setup_corner']} | {' '.join(r['flags'])} | {r['comb_bits']} | {r['out_over_bits']} | "
-                 f"{fmt(r['worst_out_ps']).strip()} ({r['worst_out_bus']}) | {r['in_over_bits']} | {fmt(r['worst_in_ps']).strip()} ({r['worst_in_bus']}) | "
-                 f"{fmt(r['L_min_ps']).strip()} | {fmt(r['H_max_ps']).strip()} | {fmt(r['min_delay_margin_ps']).strip()} | {r['binding']} |")
+        L.append(f"{r['rank']}. **{r['cell']}** x{r['instances']} [{' '.join(r['flags'])}] ({r['binding']}): " + '; '.join(r['fix'] or ['-']))
+    L += ['', f"Export-SDC: {out['export_sdc']['corrected']} audited cells on corrected views, {prov} still pre-fix"
+              + (': ' + ', '.join(out['export_sdc']['pre_fix_views']) if prov else '') + '.']
     L += ['', 'Not auditable (no closed view): ' + (', '.join(f"{t['cell']} x{t['instances']}" for t in out['not_auditable']) or 'none'), '']
     if hops:
         L += [f"## Hops over {a.reach:.0f} um: {hops['hops_over']} ({hops['bits_over']} bits; {hops['data_hops_over']} data, "
@@ -644,7 +964,7 @@ def main(argv=None):
         L += ['## Hops: no die case given (contract carries placement but no nets)']
     if a.md:
         Path(a.md).write_text('\n'.join(L) + '\n')
-    print('\n'.join(L[:8]))
+    print('\n'.join(L[:12]))
     print(f"hops over {a.reach:.0f} um: {hops['hops_over'] if hops else 'n/a'}")
     return 0
 

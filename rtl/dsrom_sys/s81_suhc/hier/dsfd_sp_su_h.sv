@@ -483,11 +483,23 @@ module dsfd_sp_su_h #(
         end else if (TK == 2) begin : g_qbt
             assign o_v = 1'b0; assign o_a = 0; assign o_m = 0; assign o_d = 0;
             assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
-            ot_s81_su_qbt #(.QB_NB(QB_NB), .S_RD(S_RD), .NPB(NPB)) u_qbt (
-                .clk(sk), .rst_in(rst[t]),
-                .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
-                .dn_v_i(dv[t]), .dn_d_i(dd[t]), .e_v(qe_v), .e_d(qe_d), .e_t(qe_t), .e_ob(qe_ob), .e_f4(qe_f4),
-                .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+            // full configuration (rate-aligned, S_RD == 2 NPB): two half-taps (the high one is the SW data half-tap, hardened
+            // once), cycle for cycle the single tap; reduced shapes: the assembling tap
+            if (S_RD == 2 * NPB) begin : g_sp
+                ot_s81_su_qbtl #(.QB_NB(QB_NB), .S_RD(S_RD), .NPB(NPB)) u_qbtl (
+                    .clk(sk), .rst_in(rst[t]),
+                    .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
+                    .dn_v_i(dv[t]), .dn_d_i(dd[t][S_RD*256-1:0]), .e_v(qe_v), .e_d(qe_d[NPB*512-1:0]), .e_t(qe_t), .e_ob(qe_ob),
+                    .e_f4(qe_f4), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+                ot_s81_su_swth #(.S_RD(S_RD)) u_qbth (
+                    .clk(sk), .dn_d_i(dd[t][S_RD*512-1:S_RD*256]), .e_d(qe_d[2*NPB*512-1:NPB*512]));
+            end else begin : g_as
+                ot_s81_su_qbt #(.QB_NB(QB_NB), .S_RD(S_RD), .NPB(NPB)) u_qbt (
+                    .clk(sk), .rst_in(rst[t]),
+                    .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
+                    .dn_v_i(dv[t]), .dn_d_i(dd[t]), .e_v(qe_v), .e_d(qe_d), .e_t(qe_t), .e_ob(qe_ob), .e_f4(qe_f4),
+                    .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+            end
         end else if (TK == 5) begin : g_qbe
             // equal-depth relays from the tap (every engine ERL stations: lockstep), positions 2 TI / 2 TI + 1
             wire [1:0] rv; wire [1023:0] rd; wire [23:0] rt; wire [13:0] rob; wire rf4;
@@ -588,12 +600,25 @@ module dsfd_sp_su_h #(
         end else if (TK == 12) begin : g_swt
             assign o_v = 1'b0; assign o_a = 0; assign o_m = 0; assign o_d = 0;
             assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
-            ot_s81_su_swt #(.SW_W(SW_W), .S_RD(S_RD), .NSQ(NSWQ), .NCH(SNCH)) u_swt (
-                .clk(sk), .rst_in(rst[t]),
-                .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
-                .dn_v_i(dv[t]), .dn_d_i(dd[t]), .i_f(sw_f), .e_d(sw_d), .e_gv(sw_gv), .e_uv(sw_uv), .e_t(sw_t), .e_w(sw_w),
-                .e_lim(sw_lim), .e_ob(sw_ob), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy),
-                .o_rjid(o_rjid));
+            // full configuration (rate-aligned, S_RD == 2 NSWQ): two half-taps, pins registered (one cycle deeper than the
+            // single tap); reduced shapes: the assembling tap
+            if (S_RD == 2 * NSWQ) begin : g_sp
+                ot_s81_su_swtl #(.SW_W(SW_W), .S_RD(S_RD), .NSQ(NSWQ), .NCH(SNCH)) u_swtl (
+                    .clk(sk), .rst_in(rst[t]),
+                    .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
+                    .dn_v_i(dv[t]), .dn_d_i(dd[t][S_RD*256-1:0]), .i_f(sw_f), .e_d(sw_d[SL*256-1:0]), .e_gv(sw_gv), .e_uv(sw_uv),
+                    .e_t(sw_t), .e_w(sw_w), .e_lim(sw_lim), .e_ob(sw_ob), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive),
+                    .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+                ot_s81_su_swth #(.S_RD(S_RD)) u_swth (
+                    .clk(sk), .dn_d_i(dd[t][S_RD*512-1:S_RD*256]), .e_d(sw_d[SL*512-1:SL*256]));
+            end else begin : g_as
+                ot_s81_su_swt #(.SW_W(SW_W), .S_RD(S_RD), .NSQ(NSWQ), .NCH(SNCH)) u_swt (
+                    .clk(sk), .rst_in(rst[t]),
+                    .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
+                    .dn_v_i(dv[t]), .dn_d_i(dd[t]), .i_f(sw_f), .e_d(sw_d), .e_gv(sw_gv), .e_uv(sw_uv), .e_t(sw_t), .e_w(sw_w),
+                    .e_lim(sw_lim), .e_ob(sw_ob), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy),
+                    .o_rjid(o_rjid));
+            end
         end else if (TK == 13) begin : g_swq
             // quant engine TI: lo = the chain heads of pass row 2 TI, hi = row 2 TI + 1 (words {bf16, 16'h0})
             wire [1023:0] x; wire [13:0] rob;

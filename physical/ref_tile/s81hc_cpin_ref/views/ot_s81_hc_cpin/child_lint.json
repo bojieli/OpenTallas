@@ -4,9 +4,10 @@
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 7442 of 7444 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cmd_d[0] M5 (98.832,200.725), c_cmd_d[10] M5 (98.832,200.725), c_cmd_d[11] M5 (98.832,200.725))"
+  "(f) face-pin access: 7442 of 7444 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cmd_d[0] M5 (98.832,200.725), c_cmd_d[10] M5 (98.832,200.725), c_cmd_d[11] M5 (98.832,200.725))",
+  "(g) clock insertion: no TT lib (pass --libs) - parent CTS cannot see the tile's insertion delay"
  ],
- "summary": "ot_s81_hc_cpin 576.72 x 200.88: PG M6 VDD 18 stripes (91% spread, 100% cov) / VSS 19 stripes (97% spread, 100% cov); strap M7; face pins 7444 blocked-above 0 blocked-same 0; clock cck insertion 77 ps; clock sk insertion 314 ps",
+ "summary": "ot_s81_hc_cpin 576.72 x 200.88: PG M6 VDD 18 stripes (91% spread, 100% cov) / VSS 19 stripes (97% spread, 100% cov); strap M7; face pins 7444 blocked-above 0 blocked-same 0; pockets M6 0 (closed)",
  "info": {
   "cell": "ot_s81_hc_cpin",
   "W": 576.72,
@@ -54,15 +55,17 @@
     "c_cmd_d[14] M5 (98.832,200.725)"
    ]
   },
-  "clock_insertion": {
-   "cck": {
-    "max_ps": 77.27,
-    "min_ps": 59.33
+  "pockets": {
+   "layer": "M6",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M6",
+    "d_um": 2.048,
+    "added": 414
    },
-   "sk": {
-    "max_ps": 314.33,
-    "min_ps": 237.55
-   }
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
   }
  }
 }

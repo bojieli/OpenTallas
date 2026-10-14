@@ -144,6 +144,26 @@ HC_ROW_SECT = 8 * HC_RS              # sectors of one fn row (2,560 = 81,920 B =
 HC_SET_BYTES = (4 + 24 * HC_ROW_SECT) * 32
 HC_STRIPE_LOC = 30 << 30             # STRIPE4 HC rows: stack-local base (24 GiB) of the striped row region (4 stacks)
 HC_STRIPE = {}                       # stack-local row base -> (layer, which, row o)
+# Physical stack capacity: the die's loader / DMA engines refuse a stack-local byte address >= STACK_BYTES
+# (rtl ot_hbm_loader_service_join / ot_hgi_dma_back STACK_BYTES = 22,500,000,000 = 20.95 GiB; stack = address [36:35]).
+STACK_BYTES = 22_500_000_000
+# DATA WINDOW (2026-10-13): stack-local [DATA_WIN, DATA_WIN + DATA_WIN_BYTES) is reserved ON EVERY STACK for data rows
+# that live on all four stacks (the MTP column slots: ds_mtp_kernels.COLB).  Inside the physical capacity; the weight
+# manifest (stack 2 upwards) skips it (Manifest.place), a fixed-base extent in it is refused.  NOT yet moved into it
+# (their owners regenerate vectors): the HC stripe rows -- HC_STRIPE_LOC = stack-local 30 GiB is ABOVE STACK_BYTES, so
+# the real die's loader address check refuses every HC row prefetch; the first 256 MiB of the window is kept for them.
+DATA_WIN = 20 << 30
+DATA_WIN_BYTES = 512 << 20
+assert DATA_WIN + DATA_WIN_BYTES <= STACK_BYTES
+
+
+def data_window_hit(base, size):
+    """end of the reserved data window that [base, base + size) intersects on some stack, else None"""
+    for s_ in range(4):
+        lo = (s_ << 35) + DATA_WIN
+        if base < lo + DATA_WIN_BYTES and lo < base + size:
+            return lo + DATA_WIN_BYTES
+    return None
 # E-HOME (owner rule, lead GO 10-10): each Engram table lives in the HBM of 4 home dies (layer 1: ranks 0-3, layer 14:
 # ranks 4-7), 288 B rows {256 B E4M3 codes | 8 B UE8M0 | 24 B 0}, rows split contiguously over the 4 homes
 EG_HOMES = [[0, 1, 2, 3], [4, 5, 6, 7]]
@@ -223,6 +243,42 @@ def assert_fused_fast_path(rec, scratch=None, gain_layout=None, check_gain=True)
         raise ValueError(f"FUSED.{rec.op} {rec.tag!r} misses the lane-local fast path: " + "; ".join(bad))
 
 
+HC_PROV_LOG = None                   # a list -> every aperture reader appends (rank, slot, wanted row, held row)
+
+
+def hc_prov_set(die, vm_base, row):
+    """PROVENANCE of the HC aperture: (layer, which, row) the last LOAD / preset wrote into the slot at vm_base (a
+    write that does not start at a slot base is not a row load and leaves no provenance entry to trust)"""
+    off = vm_base - MC.VM_WORDS
+    if off < 0:
+        return
+    if not hasattr(die, "hc_prov"):
+        die.hc_prov = {}
+    slot, rem = divmod(off, HC_SLOT)
+    die.hc_prov[slot] = tuple(row) if rem == 0 else None
+
+
+def hc_prov_check(die, rd):
+    """An aperture HC_MIX_ROWS reads the row its lowering named (rec.hc_row), or the record FAULTS: a slot never
+    loaded, or holding another layer's / mix's / rank's row, is a compiler error the arithmetic cannot show by itself
+    (the unit would return a well-formed wrong mix)."""
+    slot, rem = divmod(rd.desc["B"].base - MC.VM_WORDS, HC_SLOT)
+    want = getattr(rd, "hc_row", None)
+    have = getattr(die, "hc_prov", {}).get(slot)
+    if HC_PROV_LOG is not None:
+        HC_PROV_LOG.append((die.rank, slot, want, have))
+    if rem or want is None:
+        raise MC.Fault(3, f"HC_MIX_ROWS {rd.tag!r} rank {die.rank}: aperture reader without a row provenance "
+                          f"(hc_row {want}, B {rd.desc['B'].base:#x})")
+    if have is None:
+        raise MC.Fault(3, f"HC_MIX_ROWS {rd.tag!r} rank {die.rank}: HC aperture slot {slot} was NEVER LOADED; the "
+                          f"record needs layer {want[0]} hc_{want[1]}_fn row {want[2]}")
+    if tuple(have) != tuple(want):
+        raise MC.Fault(3, f"HC_MIX_ROWS {rd.tag!r} rank {die.rank}: HC aperture slot {slot} holds layer {have[0]} "
+                          f"hc_{have[1]}_fn row {have[2]}, the record needs layer {want[0]} hc_{want[1]}_fn row "
+                          f"{want[2]}")
+
+
 def hc_row_words(fn_row):
     """one fn row in the weight-set layout (hgi-1010/g hc_weights.weight_set; the HC aperture holds it verbatim):
     word ((k R + r) SPW + s) 8 + l = fn[8 (r W + 8 s + l) + k], zero past the row's K / 8 chunks"""
@@ -271,6 +327,10 @@ class Manifest:
             base = -(-base // 544) * 544
             ex = dict(lines=True, gk=gk, gbytes=8 * SM_LB)
         size = rb * rows * n_experts
+        skip = data_window_hit(base, size)
+        if skip is not None:                 # the extent would cross a stack's reserved data window: place it after
+            base = -(-skip // 544) * 544 if lines else skip
+            assert data_window_hit(base, size) is None, (key, base, size)
         if base + size > MAN_END:
             raise MC.Fault(3, f"per-die HBM footprint: {key} ends at {(base + size) / 2**30:.1f} GiB > the "
                               f"{MAN_END / 2**30:.0f} GiB manifest window of the die's 128 GiB")
@@ -283,10 +343,17 @@ class Manifest:
 
     def place_at(self, key, base, rows, cols, fmt):
         """a fixed-base extent (IKS key regions: row-aligned, independent of placement order)"""
+        if data_window_hit(base, int(-(-cols * ESZ[fmt] // 32) * 32) * rows) is not None:
+            raise MC.Fault(3, f"fixed-base extent {key} at {base:#x} lies in a stack's reserved data window")
         rb = -(-int(cols * ESZ[fmt]) // 32) * 32
         e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=1, estride=rb * rows)
         self.ent.append(e)
         return e
+
+    def holds(self, addr):
+        """is addr inside a placed extent?  The stack bits make flat addresses >= WBASE that are NOT weights (a data
+        region on stack 2 / 3: the MTP column slots' rows there), so "an address >= WBASE" is not "a weight"."""
+        return any(e["base"] <= addr < e["base"] + e["estride"] * e["experts"] for e in self.ent)
 
     def find(self, addr):
         for e in self.ent:
@@ -310,6 +377,31 @@ class Lower:
         self.ent = {}
         self.cur_op = None
         self.bufn = dict(qa=1280, kvraw=512, gsc=384, y=D, yf=D, iq=4096, iwr=32, eg_rows=6144, eg_kv=25600)
+        # HC aperture: the row the FFN mix record of layer L prefetches into slot 0 (the next attn reader's row).
+        # None = the backbone chain (layer (L + 1) % m.L: one column, layers in order); a program with another
+        # launch order (ds_mtp_kernels) sets hc_next_attn(L) -> the layer whose attn row follows, or None = no
+        # cross-body prefetch (that reader's row is loaded by the body that precedes it: hc_row_load)
+        self.hc_next_attn = None
+        # the HBM region the tables of the layer being lowered live at (a multi-layer program relocates the records
+        # there after the lowering; the gain-layout check reads the region the bytes were built for)
+        self.table_region = TBASE
+
+    def hc_row_load(self, nL, nw, rank):
+        """DMA.LOAD of rank's fn row of (layer nL, nw) into its HC aperture slot (attn 0, ffn 1), or None when the rank
+        owns no mix row.  STRIPE4 (spec 3.6, hgi-1010/c) 2-D load (spec db9ef1603): the row's 8 bank segments (R W =
+        2,560 words each), bank k on stack k mod 4 at stack-local loc + k x 10,240 B, into the slot's banks
+        (destination stride 4,096 words).  rec.hc_row = (layer, which, row): the provenance the checker compares."""
+        lo, hi = 24 * rank // TP, 24 * (rank + 1) // TP
+        slot = 0 if nw == "attn" else 1
+        bw = HC_RS * 8                    # words a bank segment (2,560)
+        loc = HC_STRIPE_LOC + ((nL * 2 + (nw == "ffn")) * 24 + lo) * 8 * bw * 4
+        HC_STRIPE[loc] = (nL, nw, lo)
+        rec = Rec("DMA", "LOAD", desc=dict(
+            A=MDesc(space="HBM", fmt="FP32", base=(1 << 37) | loc, n=bw, m=8, stride=bw * 4),
+            O=MDesc(space="VM", fmt="FP32", base=MC.VM_WORDS + HC_SLOT * slot, n=bw, m=8, stride=HC_BANK)),
+            tag=f"hc_{nw}.weight_row_prefetch (layer {nL})", family="hc_mixes")
+        rec.hc_row = (nL, nw, lo)
+        return rec if hi > lo else None
 
     @staticmethod
     def owned_keys(rank, n):
@@ -351,7 +443,8 @@ class Lower:
 
         def add(rec, rd, wr, run=True):
             if run and rec.unit == "FUSED" and rec.op == "HC_PRE_NORM":
-                assert_fused_fast_path(rec, gain_layout=table_layout_at(rec.desc["B"].base))
+                # the layer's tables are built for self.table_region; the descriptor is still at TBASE (relocated later)
+                assert_fused_fast_path(rec, gain_layout=table_layout_at(rec.desc["B"].base - TBASE + self.table_region))
             elif run:
                 assert_fused_fast_path(rec)
             if not run:
@@ -433,22 +526,19 @@ class Lower:
                                    stride=HC_BANK)
                         add(Rec("DMA", "FENCE", tag=f"hc_{w}.weight_fence", family="hc_mixes"), [f"HCW{slot}"],
                             [f"HCW{slot}"])
-                        add(Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=SL, O=V("MIXRAW", max(hi - lo, 1),
+                        mr = Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=SL, O=V("MIXRAW", max(hi - lo, 1),
                                                                                                   off=lo)),
-                                tag=op["tag"] + " rows", family="hc_mixes"), ["h", f"HCW{slot}"], ["MIXRAW"], hi > lo)
-                        nL, nw = (L, "ffn") if w == "attn" else ((L + 1) % m.L, "attn")
-                        # STRIPE4 (spec 3.6, hgi-1010/c) 2-D load (spec db9ef1603): the row's 8 bank segments (R W = 2,560
-                        # words each), bank k on stack k mod 4 at stack-local loc + k x 10,240 B, into the slot's banks
-                        # (destination stride 4,096 words)
-                        bw = HC_RS * 8                    # words a bank segment (2,560)
-                        loc = HC_STRIPE_LOC + ((nL * 2 + (nw == "ffn")) * 24 + lo) * 8 * bw * 4
-                        HC_STRIPE[loc] = (nL, nw, lo)
-                        add(Rec("DMA", "LOAD", desc=dict(
-                            A=MDesc(space="HBM", fmt="FP32", base=(1 << 37) | loc, n=bw, m=8, stride=bw * 4),
-                            O=MDesc(space="VM", fmt="FP32", base=MC.VM_WORDS + HC_SLOT * (1 - slot), n=bw, m=8,
-                                    stride=HC_BANK)),
-                            tag=f"hc_{nw}.weight_row_prefetch (layer {nL})", family="hc_mixes"), [],
-                            [f"HCW{1 - slot}"], hi > lo)
+                                 tag=op["tag"] + " rows", family="hc_mixes")
+                        mr.hc_row = (L, w, lo)            # the row this reader needs in its slot (provenance checker)
+                        add(mr, ["h", f"HCW{slot}"], ["MIXRAW"], hi > lo)
+                        if w == "attn":
+                            nL, nw = L, "ffn"
+                        else:
+                            nL, nw = ((L + 1) % m.L if self.hc_next_attn is None else self.hc_next_attn(L)), "attn"
+                        if nL is not None:
+                            ld = self.hc_row_load(nL, nw, rank)
+                            add(ld or Rec("DMA", "LOAD", tag=f"hc_{nw}.weight_row_prefetch (layer {nL})",
+                                          family="hc_mixes"), [], [f"HCW{1 - slot}"], hi > lo)
                     else:
                         add(Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=Bw, O=V("MIXRAW", max(hi - lo, 1),
                                                                                                   off=lo)),
@@ -1003,15 +1093,54 @@ GALL_NAMES = ["GALL", "ea", "eg_kv", "eg_rows"] + [f"ea.s{e}" for e in range(7)]
 TABLE_N = {}
 TABLE_OFF = {}
 TABLE_FMT = {}
-TABLE_LAYOUT = {}        # name -> "GPK" for a gain stored packed lane-local (rule B), else absent (linear)
+TABLE_SPAN = 1 << 24     # one table region (a layer slot of a multi-layer program: ds_mtp_kernels TSTR)
+# The layout of a table is a property of the BYTES at an HBM address, so it is recorded by absolute byte base, per
+# region, by the builder that wrote those bytes -- never by table name or by the offsets of the last build_tables call:
+# a program that keeps several layers' tables at once (ds_mtp_kernels: L0, three DSpark stages, the seed set, each
+# relocated to TBASE + slot * TABLE_SPAN) reads every one of them through its own address.  (10-13: a name / last-offset
+# lookup answered "linear" for every relocated stage gain, so the simulator read the packed gains unpermuted and all
+# 15 DSpark stage rows, the drafts and four of five verify targets were wrong.)
+TABLE_LAYOUT_AT = {}     # absolute HBM byte base -> "GPK" (a gain stored packed lane-local, rule B); absent = linear
+
+
+def set_table_layouts(region, layouts):
+    """Replace the recorded layouts of the table region at HBM base `region` by {offset: layout} (the builder's call)."""
+    for b in [b for b in TABLE_LAYOUT_AT if region <= b < region + TABLE_SPAN]:
+        del TABLE_LAYOUT_AT[b]
+    for off, lay in layouts.items():
+        assert 0 <= off < TABLE_SPAN, off
+        TABLE_LAYOUT_AT[region + off] = lay
 
 
 def table_layout_at(base):
-    """the layout of the table at HBM byte base (None = linear or not a table)"""
-    for nm, off in TABLE_OFF.items():
-        if TBASE + off == base:
-            return TABLE_LAYOUT.get(nm)
-    return None
+    """the layout of the table bytes at absolute HBM byte base (None = linear or not a table)"""
+    return TABLE_LAYOUT_AT.get(base)
+
+
+def gain_image(name, a):
+    """(stored elements, layout) of a BF16 norm gain: rule (B) packs a d = FUSED_HCD HC_PRE_NORM / final_norm gain in
+    the lane-local layout GPK on an HLL target (the engine unpacks it); every other gain is linear.  ONE rule for
+    every table builder, so the writer and the reader (hc_pre_norm_gain) cannot disagree."""
+    if FUSED_HLL and a.size == FUSED_HCD and name.endswith(HC_GPK_GAINS):
+        pk = np.empty_like(a)
+        pk[gpk_index(a.size)] = a
+        return pk, "GPK"
+    return a, None
+
+
+def hc_pre_norm_gain(rec, g):
+    """The gain a FUSED.HC_PRE_NORM record computes with, from the elements g read at its B: what the hardware does.
+    The lane-local engine (HLL target, d = FUSED_HCD) unpacks GPK and has no other mode; the micro-op path reads
+    linear.  The image at B must be in the layout that path reads -- anything else is a compiler / image error the
+    arithmetic cannot show by itself (the unit would return a well-formed wrong norm), so it FAULTS."""
+    d = rec.desc["A"].n // 4
+    want = "GPK" if (FUSED_HLL and d == FUSED_HCD) else None
+    have = table_layout_at(rec.desc["B"].base)
+    if have != want:
+        raise MC.Fault(3, f"FUSED.HC_PRE_NORM {rec.tag!r}: the gain image at {rec.desc['B'].base:#x} is "
+                          f"{have or 'linear'}, the record's path (d {d}, HLL {int(FUSED_HLL)}) reads "
+                          f"{want or 'linear'}")
+    return np.asarray(g)[gpk_index(g.size)] if want == "GPK" else g
 
 
 CK_CAP = [0, 0]          # per-die row-store bytes per KV source; index-key rows per source (set in main)
@@ -1039,8 +1168,9 @@ def eg_host_table(ids, nrows, li):
     return out
 
 
-def build_tables(m, st, L, pos, rank):
-    """Per-die HBM tables (real bytes): gains, RoPE row at the position, the head's sink, gate bias, window ring."""
+def build_tables(m, st, L, pos, rank, region=TBASE):
+    """Per-die HBM tables (real bytes): gains, RoPE row at the position, the head's sink, gate bias, window ring.
+    region = the HBM base these bytes will live at (their layouts are recorded there: set_table_layouts)."""
     P = m.P(L)
     cos, sin = V_.rope_cs(m.freqs_yarn if m.ratio[L] > 0 else m.freqs_plain, pos)
     items = [(f"{P}attn_norm.weight", m.lw(L, "attn_norm.weight")), (f"{P}ffn_norm.weight", m.lw(L, "ffn_norm.weight")),
@@ -1069,7 +1199,7 @@ def build_tables(m, st, L, pos, rank):
             kvs = np.stack([sl[p][0] for p in ps]) if ps else np.zeros((0, 512), F)
             scs = np.stack([sl[p][1] for p in ps]) if ps else np.zeros((0, 512), F)
             items += [("SLOTKV", kvs), ("SLOTSC", scs)]
-    off, blobs = 0, []
+    off, blobs, layouts = 0, [], {}
     for name, arr in items:
         a = np.asarray(arr, dtype=F).reshape(-1)
         off = -(-off // 32) * 32
@@ -1079,12 +1209,9 @@ def build_tables(m, st, L, pos, rank):
         if fmt == "BF16":
             if not np.array_equal(MC.A.to_bf16(a).view(np.uint32), a.view(np.uint32)):
                 raise ValueError(f"table {name}: not exactly BF16")
-            TABLE_LAYOUT.pop(name, None)
-            if FUSED_HLL and a.size == FUSED_HCD and name.endswith(HC_GPK_GAINS):
-                pk = np.empty_like(a)               # rule (B): the HC_PRE_NORM gain in the packed lane-local layout
-                pk[gpk_index(a.size)] = a
-                a = pk
-                TABLE_LAYOUT[name] = "GPK"
+            a, lay_ = gain_image(name, a)
+            if lay_:
+                layouts[off] = lay_
             raw = MC.encode_fmt(a, "BF16")
         else:
             raw = a.view(np.uint8)
@@ -1094,6 +1221,8 @@ def build_tables(m, st, L, pos, rank):
     buf = np.zeros(-(-off // 32) * 32, dtype=np.uint8)
     for o, raw in blobs:
         buf[o:o + raw.size] = raw
+    assert buf.size <= TABLE_SPAN, buf.size
+    set_table_layouts(region, layouts)
     return buf
 
 
@@ -1168,6 +1297,7 @@ def ds_units(m, man, golib):
             if vm_b:                                    # the aperture slot: one fn row (row lo), decoded from its image
                 if n != 1:
                     raise MC.Fault(3, "HC_MIX_ROWS from the aperture: O.n must be 1")
+                hc_prov_check(die, rd)
                 row = hc_row_from_words(M.vm_read(rd.desc["B"], die, L))
                 mixes = V_.mul(V_.matvec_c(row[None, :], flat, V_.HC_SPLIT, cls="he"), rr)
                 M.vm_write(rd.desc["O"], die, L, np.asarray(mixes[:1], F))
@@ -1207,8 +1337,7 @@ def ds_units(m, man, golib):
         for die in M.dies:
             h = M.read(r.desc["A"], die, L).reshape(HC, D)
             g = M.read(r.desc["B"], die, L)
-            if table_layout_at(r.desc["B"].base) == "GPK":      # the lane-local engine unpacks the GPK gain
-                g = np.asarray(g)[gpk_index(g.size)]
+            g = hc_pre_norm_gain(M.rec_of(die, r), g)           # GPK on the lane-local engine; a wrong image faults
             pre = M.read(r.desc["C"], die, L)
             M.vm_write(r.desc["O"], die, L, V_.rmsnorm_fold(m.hc_pre(h, pre), g, m.eps))
 
@@ -1290,6 +1419,8 @@ def ds_units(m, man, golib):
             return base_load(M, r, L)               # a STRIPE4 data row (the MTP column swap), not an HC weight row
         if not (a.space == "HBM" and a.base >= WBASE):
             return base_load(M, r, L)
+        if a.base >> 37 == 0 and not man.holds(a.base):
+            return base_load(M, r, L)               # a linear data region on stack 2 / 3 (native MTP swap rows)
         for die in M.dies:
             base, n, _, _, _ = M.eff(a, die, L)
             if base >> 37 == 1 and (base & ((1 << 35) - 1)) in HC_STRIPE:   # STRIPE4 HC weight row, 8 bank segments
@@ -1302,6 +1433,7 @@ def ds_units(m, man, golib):
                 for k in range(8):                       # bank k on stack k mod 4 (the bytes the e2e export places)
                     die.synth_hbm[((k & 3) << 35) | (loc + k * bw * 4)] = vals[k * bw:(k + 1) * bw].view(np.uint8).tobytes()
                 M.vm_write(M.rec_of(die, r).desc["O"], die, L, vals)
+                hc_prov_set(die, M.rec_of(die, r).desc["O"].base, (Lw, which, o))
                 continue
             e, ex, r0, c0 = man.find(base)
             if "hc_" in e["key"]:                       # an HC weight row (the weight-set image, from the checkpoint)
@@ -1314,6 +1446,7 @@ def ds_units(m, man, golib):
                 Lw = int(parts[1]) if parts[0] == "layers" else m.L + int(parts[1])
                 vals = hc_row_words(m.lw(Lw, f"hc_{which}_fn")[o])
                 M.vm_write(M.rec_of(die, r).desc["O"], die, L, vals)
+                hc_prov_set(die, M.rec_of(die, r).desc["O"].base, (Lw, which, o))
                 continue
             Lk = int(e["key"][3:])
             codes, sc = m.emb_codes[Lk]
@@ -1325,7 +1458,15 @@ def ds_units(m, man, golib):
 
     def dma_store(M, r, L):
         o = r.desc["O"]
-        if o.space == "HBM" and (o.base >= WBASE or (IKS[0] and KBASE <= o.base < CKBASE)):   # index key -> key store (G16)
+        if o.space == "HBM" and o.base >> 37 == 1:
+            # a STRIPE4 data row (the MTP column swap-out, the mirror of dma_load's guard): bits [39:37] are the stripe
+            # code, not an address >= WBASE, so the index-key branch below must not see it; the HC weight rows that
+            # share the code are read-only
+            if (o.base & ((1 << 35) - 1)) in HC_STRIPE:
+                raise MC.Fault(3, f"STRIPE4 store {o.base:#x} into an HC weight row")
+            return base_store(M, r, L)
+        if o.space == "HBM" and ((o.base >= WBASE and man.holds(o.base)) or
+                                 (IKS[0] and KBASE <= o.base < CKBASE)):                     # index key -> key store (G16)
             e, _, grp, _ = man.find(o.base)
             for die in M.dies:
                 golib.st.ik[int(e["key"][7:])][grp] = M.read(r.desc["A"], die, L)
@@ -1452,7 +1593,7 @@ def schedule_layer(rank_recs, ops, L):
         w = T.rebuild_waits(new)
         for x, y in zip(w, new):
             x.tag, x.family, x.src = y.tag, y.family, getattr(y, "src", None)
-            for at in ("implicit",):
+            for at in ("implicit", "hc_row"):
                 if hasattr(y, at):
                     setattr(x, at, getattr(y, at))
         res.append(w)
@@ -1626,6 +1767,7 @@ def main():
                 w_ = hc_row_words(m.lw(first, "hc_attn_fn")[lo]).view(np.uint32).reshape(8, -1)
                 for k in range(8):
                     d.vm[MC.VM_WORDS + HC_BANK * k:MC.VM_WORDS + HC_BANK * k + w_.shape[1]] = w_[k]
+                hc_prov_set(d, MC.VM_WORDS, (first, "attn", lo))
     sel_hbm, g_hbm = {}, {}
     results = []
     for L in list(layers) + (["head"] if a.head else []):

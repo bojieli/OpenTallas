@@ -110,6 +110,58 @@ class Gen(unittest.TestCase):
                 self.assertAlmostEqual(v / RT.CHILD_LATTICE_UM, round(v / RT.CHILD_LATTICE_UM), places=6)
 
 
+class Abut(unittest.TestCase):
+    """two R0 macros stacked N-S at gap <= 0.1 um with pins on W / E only are one abutted stack (no channel FAIL);
+    side by side, or a real gap under 20 um, keeps the channel rule"""
+    V = "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+
+    def blk(self, i, x, y):
+        m = RT.read_view_lef(self.V)
+        return {"kind": "macro", "view": self.V, "master": m["name"], "inst": None, "w": m["W"], "h": m["H"], "at": [x, y],
+                "orient": "R0", "count": 1, "idx": i, "x": x, "y": y, "offtrack": 0}
+
+    def chan(self, blocks):
+        s = {"pins": {"S": ["ck"]}}
+        return [m for sev, chk, m, _ in RT.floorplan_checks(s, 400.0, 400.0, blocks, None) if chk == "channel"]
+
+    def test_abut_plan_is_probe_only(self):
+        """abut_plan admits a planned narrow channel as WARN only on a probe cluster (job.hold_merge); without the
+        probe marker it FAILs itself and the 20-um channel rule still fires"""
+        w = RT.read_view_lef(self.V)["W"]
+        bl = [self.blk(0, 100.0, 100.0), self.blk(1, 100.0 + w + 4.32, 100.0)]
+        ab = {"channel_um": 4.32, "edge_um": 20.0, "why": "lane bay probe"}
+        probe = {"kind": "cluster", "pins": {"S": ["ck"]}, "abut_plan": ab, "job": {"hold_merge": "probe"}}
+        r = RT.floorplan_checks(probe, 400.0, 400.0, bl, None)
+        self.assertEqual([c for sev, c, _, _ in r if sev == "FAIL" and c == "channel"], [])
+        self.assertEqual([sev for sev, c, _, _ in r if c == "abut_plan"], ["WARN"])
+        merge = {"kind": "cluster", "pins": {"S": ["ck"]}, "abut_plan": ab, "job": {}}
+        r = RT.floorplan_checks(merge, 400.0, 400.0, bl, None)
+        self.assertEqual([sev for sev, c, _, _ in r if c == "abut_plan"], ["FAIL"])
+        self.assertEqual(len([c for sev, c, _, _ in r if sev == "FAIL" and c == "channel"]), 1)
+        tight = [self.blk(0, 100.0, 100.0), self.blk(1, 100.0 + w + 2.16, 100.0)]        # under the declared channel
+        r = RT.floorplan_checks(probe, 400.0, 400.0, tight, None)
+        self.assertEqual(len([c for sev, c, _, _ in r if sev == "FAIL" and c == "channel"]), 1)
+
+    def test_stack_abutted(self):
+        h = RT.read_view_lef(self.V)["H"]
+        self.assertEqual(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)]), [])
+
+    def test_at_exact_is_not_snapped(self):
+        h = RT.read_view_lef(self.V)["H"]
+        s = {"kind": "tile", "pins": {"S": ["ck"]}, "children": [],
+             "macros": [{"view": self.V, "count": 1, "at": [99.792, 99.36], "at_exact": True},
+                        {"view": self.V, "count": 1, "at": [99.792, round(99.36 + h + 0.024, 3)], "at_exact": True}]}
+        bl = RT.place_blocks(s, 400.0, 400.0, RT.blocks_of(s))
+        self.assertEqual([b["y"] for b in bl], [99.36, round(99.36 + h + 0.024, 3)])
+        self.assertEqual([b["offtrack"] for b in bl], [bl[0]["offtrack"]] * 2)      # same residue on every track grid
+        self.assertEqual([m for sev, chk, m, _ in RT.floorplan_checks(s, 400.0, 400.0, bl, None) if chk == "channel"], [])
+
+    def test_gap_and_side_by_side_still_fail(self):
+        m = RT.read_view_lef(self.V)
+        self.assertEqual(len(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + m["H"] + 5.0)])), 1)
+        self.assertEqual(len(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0 + m["W"] + 0.024, 100.0)])), 1)
+
+
 class Job(unittest.TestCase):
     def test_structural_change_reaches_job(self):
         s = json.loads((EX / "nhb_pbst_ref.json").read_text())
@@ -187,6 +239,19 @@ class Recipe(unittest.TestCase):
         with tempfile.TemporaryDirectory() as a:
             first = self.old_kit(a)
             self.assertEqual(first, self.kit(a))
+
+    def test_kit_spec_json_reads_the_kit_env_beside_it(self):
+        # the submit gate regenerates <tmp>/<kit>/spec.json with ROOT = a tree that has no kits: the recipe comes from
+        # the kit.env beside the spec, so an old kit is not re-judged with the new-kit defaults
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+            old = self.old_kit(a, name="rcp_old_x")
+            kd = Path(a) / RT.KIT_ROOT / "rcp_old_x"
+            again = RT.gen(str(kd / "spec.json"), commit="c" * 40, out_root=Path(b))
+            self.assertEqual({f.name: f.read_text() for f in (Path(b) / again["kit"]).iterdir()}, old)
+            s = RT.load_spec(str(kd / "spec.json"))
+            self.assertEqual(RT.kit_recipe(s, Path(b), str(kd / "spec.json")), 1)
+        with tempfile.TemporaryDirectory() as c:      # no kit.env anywhere in sight: a new kit
+            self.assertEqual(RT.kit_recipe(s, Path(c)), 2)
 
     def test_recipe_1_still_refuses_the_combination(self):
         with tempfile.TemporaryDirectory() as a:

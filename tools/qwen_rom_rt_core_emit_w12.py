@@ -109,14 +109,25 @@ def emit_vstream(text: str) -> str:
     LANE x stride added by the parent instead: cura0 + l*asi (same AW-bit sum), so a simulator can
     compile the lane once (Verilator hier_block).  Simulation only; algebraically the same module."""
     old = "ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(l), .KV_FP8(KV_FP8), .ML(ML)) u_lane ("
-    if text.count(old) != 1:
-        raise SystemExit("vstream lane anchor")
-    text = text.replace(old, "ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .ML(ML)) u_lane (")
-    for a, st in (("cura", "asi"), ("curb", "bsi"), ("curc", "csi"), ("curd", "dsi")):
-        pat = f".{a}0({a}),"
-        if text.count(pat) != 1:
-            raise SystemExit(f"vstream anchor {pat}")
-        text = text.replace(pat, f".{a}0({a} + l * {st}),")
+    # qwen-1010/A (3f2a5befb): the RTL forms the lane offsets itself under LOFF = 1 (every flat lane LANE 0, the same
+    # cur + l * stride sums this emitter used to write).  The runtime build takes that RTL path (LOFF default 1 in
+    # the emitted copy, LT 0 = flat lanes) instead of rewriting the instance.  rom-layer-tput 10-13: the old anchor
+    # no longer exists on main, so every qrom build failed here.
+    native = ".LANE((LOFF != 0) ? LMUT * l : l), .KV_FP8(KV_FP8), .ML(ML)) u_lane ("
+    loff = "    parameter integer LOFF = 0, "
+    if text.count(old) == 0 and text.count(native) == 1 and text.count(loff) == 1:
+        if any(text.count(f".{a}0(l{a}),") != 1 for a in ("cura", "curb", "curc", "curd")):
+            raise SystemExit("vstream LOFF lane-offset anchor")
+        text = text.replace(loff, "    parameter integer LOFF = 1, ", 1)
+    else:
+        if text.count(old) != 1:
+            raise SystemExit("vstream lane anchor")
+        text = text.replace(old, "ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .ML(ML)) u_lane (")
+        for a, st in (("cura", "asi"), ("curb", "bsi"), ("curc", "csi"), ("curd", "dsi")):
+            pat = f".{a}0({a}),"
+            if text.count(pat) != 1:
+                raise SystemExit(f"vstream anchor {pat}")
+            text = text.replace(pat, f".{a}0({a} + l * {st}),")
     text = text.replace("module ot_hdc_vstream #(", "module ot_hdc_vstream_rt #(", 1)
     # observation ports replace the core's hierarchical reads (u_su.active / u_su.inflight), which a
     # Verilator hierarchical block cannot serve

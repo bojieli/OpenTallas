@@ -100,14 +100,14 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("66.98505");
+          values("37.37328");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("9.45729");
+          values("39.04765");
         }
       }
     }
@@ -130,20 +130,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("50.66732");
+          values("21.03392");
         }
         fall_constraint(scalar) {
-          values("67.52103");
+          values("32.84873");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-28.15145");
+          values("1.45655");
         }
         fall_constraint(scalar) {
-          values("-40.97485");
+          values("-6.25820");
         }
       }
     }
@@ -154,20 +154,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("62.18562");
+          values("32.53714");
         }
         fall_constraint(scalar) {
-          values("73.10115");
+          values("38.31450");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-43.61759");
+          values("-14.01116");
         }
         fall_constraint(scalar) {
-          values("-47.10010");
+          values("-12.27398");
         }
       }
     }
@@ -386,20 +386,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("52.01416");
+          values("22.33385");
         }
         fall_constraint(scalar) {
-          values("61.95817");
+          values("27.31328");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-32.36399");
+          values("-2.70736");
         }
         fall_constraint(scalar) {
-          values("-34.59832");
+          values("0.10350");
         }
       }
     }
@@ -410,20 +410,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("51.28217");
+          values("21.59060");
         }
         fall_constraint(scalar) {
-          values("61.35011");
+          values("26.62183");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-31.65029");
+          values("-1.99121");
         }
         fall_constraint(scalar) {
-          values("-33.94143");
+          values("0.83626");
         }
       }
     }
@@ -434,20 +434,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("60.96419");
+          values("31.34418");
         }
         fall_constraint(scalar) {
-          values("72.37611");
+          values("37.56633");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-42.35476");
+          values("-12.77535");
         }
         fall_constraint(scalar) {
-          values("-46.09363");
+          values("-11.24465");
         }
       }
     }
@@ -458,20 +458,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("62.48640");
+          values("32.86557");
         }
         fall_constraint(scalar) {
-          values("73.68350");
+          values("38.84864");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-43.68312");
+          values("-14.10017");
         }
         fall_constraint(scalar) {
-          values("-47.31881");
+          values("-12.44038");
         }
       }
     }
@@ -482,20 +482,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("61.76268");
+          values("32.17761");
         }
         fall_constraint(scalar) {
-          values("73.06535");
+          values("38.19997");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-42.95077");
+          values("-13.40319");
         }
         fall_constraint(scalar) {
-          values("-46.72169");
+          values("-11.81314");
         }
       }
     }
@@ -506,20 +506,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("61.44742");
+          values("31.81562");
         }
         fall_constraint(scalar) {
-          values("72.48170");
+          values("37.69508");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-42.86099");
+          values("-13.27136");
         }
         fall_constraint(scalar) {
-          values("-46.42533");
+          values("-11.60043");
         }
       }
     }
@@ -530,20 +530,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("61.95156");
+          values("32.32262");
         }
         fall_constraint(scalar) {
-          values("73.19974");
+          values("38.40659");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-43.33165");
+          values("-13.74620");
         }
         fall_constraint(scalar) {
-          values("-46.97459");
+          values("-12.14328");
         }
       }
     }
@@ -554,20 +554,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("50.29666");
+          values("20.63858");
         }
         fall_constraint(scalar) {
-          values("60.54694");
+          values("25.82110");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-30.60906");
+          values("-0.98657");
         }
         fall_constraint(scalar) {
-          values("-33.11860");
+          values("1.65128");
         }
       }
     }
@@ -578,20 +578,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("63.06465");
+          values("33.43682");
         }
         fall_constraint(scalar) {
-          values("74.15701");
+          values("39.37044");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-44.25323");
+          values("-14.66785");
         }
         fall_constraint(scalar) {
-          values("-47.80151");
+          values("-12.97576");
         }
       }
     }
@@ -602,20 +602,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("62.73772");
+          values("33.08731");
         }
         fall_constraint(scalar) {
-          values("73.89143");
+          values("39.13140");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-43.92207");
+          values("-14.31221");
         }
         fall_constraint(scalar) {
-          values("-47.52241");
+          values("-12.72324");
         }
       }
     }
@@ -626,20 +626,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("63.05184");
+          values("33.36733");
         }
         fall_constraint(scalar) {
-          values("74.13438");
+          values("39.42594");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-44.26048");
+          values("-14.60619");
         }
         fall_constraint(scalar) {
-          values("-47.78586");
+          values("-13.02638");
         }
       }
     }
@@ -650,20 +650,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("61.52988");
+          values("31.93524");
         }
         fall_constraint(scalar) {
-          values("72.71745");
+          values("37.83421");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-42.85977");
+          values("-13.29950");
         }
         fall_constraint(scalar) {
-          values("-46.57224");
+          values("-11.64239");
         }
       }
     }
@@ -674,20 +674,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("61.63330");
+          values("32.01396");
         }
         fall_constraint(scalar) {
-          values("72.81376");
+          values("38.00180");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-42.91071");
+          values("-13.33036");
         }
         fall_constraint(scalar) {
-          values("-46.57514");
+          values("-11.72284");
         }
       }
     }
@@ -698,20 +698,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("60.77452");
+          values("31.19062");
         }
         fall_constraint(scalar) {
-          values("72.02880");
+          values("37.21601");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-42.11741");
+          values("-12.57245");
         }
         fall_constraint(scalar) {
-          values("-45.81908");
+          values("-10.96566");
         }
       }
     }
@@ -722,20 +722,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("62.12355");
+          values("32.44701");
         }
         fall_constraint(scalar) {
-          values("73.02840");
+          values("38.28286");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-43.57365");
+          values("-13.93305");
         }
         fall_constraint(scalar) {
-          values("-47.00758");
+          values("-12.21654");
         }
       }
     }
@@ -746,20 +746,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("62.58651");
+          values("32.96948");
         }
         fall_constraint(scalar) {
-          values("73.76172");
+          values("38.98627");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-43.76857");
+          values("-14.19519");
         }
         fall_constraint(scalar) {
-          values("-47.41771");
+          values("-12.60579");
         }
       }
     }
@@ -770,20 +770,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("63.45172");
+          values("33.87979");
         }
         fall_constraint(scalar) {
-          values("74.67241");
+          values("39.83992");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-44.42411");
+          values("-14.89333");
         }
         fall_constraint(scalar) {
-          values("-48.11011");
+          values("-13.23601");
         }
       }
     }
@@ -794,20 +794,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("61.89456");
+          values("32.24031");
         }
         fall_constraint(scalar) {
-          values("72.91984");
+          values("38.11567");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-43.27555");
+          values("-13.65965");
         }
         fall_constraint(scalar) {
-          values("-46.80162");
+          values("-11.95522");
         }
       }
     }
@@ -818,20 +818,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("57.48914");
+          values("27.94383");
         }
         fall_constraint(scalar) {
-          values("69.06894");
+          values("34.17074");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-38.93153");
+          values("-9.41279");
         }
         fall_constraint(scalar) {
-          values("-42.92427");
+          values("-7.98890");
         }
       }
     }
@@ -842,20 +842,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("62.71954");
+          values("33.05734");
         }
         fall_constraint(scalar) {
-          values("73.92090");
+          values("39.17268");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-44.05268");
+          values("-14.43056");
         }
         fall_constraint(scalar) {
-          values("-47.65737");
+          values("-12.86798");
         }
       }
     }
@@ -866,20 +866,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("60.49725");
+          values("30.91162");
         }
         fall_constraint(scalar) {
-          values("71.74518");
+          values("36.84723");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-41.89190");
+          values("-12.34018");
         }
         fall_constraint(scalar) {
-          values("-45.65330");
+          values("-10.70901");
         }
       }
     }
@@ -890,20 +890,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("63.14355");
+          values("33.57435");
         }
         fall_constraint(scalar) {
-          values("74.39210");
+          values("39.57343");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-44.14547");
+          values("-14.61704");
         }
         fall_constraint(scalar) {
-          values("-47.84437");
+          values("-12.98555");
         }
       }
     }
@@ -914,20 +914,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("59.30869");
+          values("29.63352");
         }
         fall_constraint(scalar) {
-          values("70.78962");
+          values("36.07143");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-40.74239");
+          values("-11.10265");
         }
         fall_constraint(scalar) {
-          values("-44.05394");
+          values("-9.28788");
         }
       }
     }
@@ -938,20 +938,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("61.69767");
+          values("32.18994");
         }
         fall_constraint(scalar) {
-          values("73.17223");
+          values("38.27760");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-42.70703");
+          values("-13.22959");
         }
         fall_constraint(scalar) {
-          values("-46.58439");
+          values("-11.64958");
         }
       }
     }
@@ -962,20 +962,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("62.14989");
+          values("32.54391");
         }
         fall_constraint(scalar) {
-          values("73.17121");
+          values("38.39135");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-43.49661");
+          values("-13.93366");
         }
         fall_constraint(scalar) {
-          values("-47.05291");
+          values("-12.23464");
         }
       }
     }
@@ -986,20 +986,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("60.98093");
+          values("31.32770");
         }
         fall_constraint(scalar) {
-          values("72.05853");
+          values("37.29931");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-42.43015");
+          values("-12.81600");
         }
         fall_constraint(scalar) {
-          values("-46.00860");
+          values("-11.20952");
         }
       }
     }
@@ -1010,20 +1010,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("64.20233");
+          values("34.51209");
         }
         fall_constraint(scalar) {
-          values("75.08331");
+          values("40.43081");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-45.43454");
+          values("-15.76657");
         }
         fall_constraint(scalar) {
-          values("-48.79757");
+          values("-14.08613");
         }
       }
     }
@@ -1034,20 +1034,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("62.50117");
+          values("32.83894");
         }
         fall_constraint(scalar) {
-          values("73.58176");
+          values("38.86235");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-43.76805");
+          values("-14.14131");
         }
         fall_constraint(scalar) {
-          values("-47.31581");
+          values("-12.55091");
         }
       }
     }
@@ -1058,20 +1058,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("62.52346");
+          values("32.87885");
         }
         fall_constraint(scalar) {
-          values("73.66891");
+          values("38.93978");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-43.72192");
+          values("-14.11758");
         }
         fall_constraint(scalar) {
-          values("-47.31771");
+          values("-12.54844");
         }
       }
     }
@@ -1082,20 +1082,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("62.41575");
+          values("32.76313");
         }
         fall_constraint(scalar) {
-          values("73.33765");
+          values("38.56165");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-43.80192");
+          values("-14.19068");
         }
         fall_constraint(scalar) {
-          values("-47.29456");
+          values("-12.47869");
         }
       }
     }
@@ -1106,20 +1106,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("61.34725");
+          values("31.69871");
         }
         fall_constraint(scalar) {
-          values("72.36345");
+          values("37.56289");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-42.79112");
+          values("-13.18178");
         }
         fall_constraint(scalar) {
-          values("-46.34843");
+          values("-11.50705");
         }
       }
     }
@@ -2206,20 +2206,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("66.80551");
+          values("37.29081");
         }
         fall_constraint(scalar) {
-          values("80.61492");
+          values("45.78585");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-44.74413");
+          values("-15.27881");
         }
         fall_constraint(scalar) {
-          values("-54.07273");
+          values("-19.19729");
         }
       }
     }
@@ -2230,20 +2230,20 @@ library (dsfd_svc_join_tt) {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("50.51308");
+          values("20.88519");
         }
         fall_constraint(scalar) {
-          values("63.21348");
+          values("28.47982");
         }
       }
       timing() {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-28.12032");
+          values("1.46770");
         }
         fall_constraint(scalar) {
-          values("-36.30312");
+          values("-1.53315");
         }
       }
     }

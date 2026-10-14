@@ -18,7 +18,7 @@ sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 from hier_contract_export import parse_lef  # noqa: E402
 import hier_contract_migrate as MG  # noqa: E402
 
-RELAY = re.compile(r'^q[fk]d_rly')
+RELAY = re.compile(r'^q[fk]d_rly|^qfd_rst_rep')    # die_top_logic: data relays and reset-tree repeaters (v4 T11)
 HARD_IP = ('ot_hbm3e_phy', 'qfd_io_serdes', 'qfd_io_ucie', 'qkd_pll', 'qfd_clkrx', 'ot_qfd_serdes_112g_x12_phy')
 CLUSTER = ('qfd_tile_nk', 'qfd_tile_h3c', 'qfd_tile_h3s')
 CLUSTER_SLOT = (311.04, 1296.0)
@@ -198,7 +198,7 @@ def main():
             # coordinator DECISION 2026-10-12 12:15 (q-tile request A/B 10:03): qfd_tile_nk / h3c / h3s is a CLUSTER
             # slot (hard ROM/SRAM/leaf children): slot 311.04 x 1296 (content >= 288.36), layers M2-M7 with PG M7,
             # pins M4 only on the W/E faces; the die routes over it on M8+ only (cuts.py CLUSTER)
-            s['outline'] = dict(w=CLUSTER_SLOT[0], h=CLUSTER_SLOT[1])
+            s['outline'] = dict(w=CLUSTER_SLOT[0], h=CLUSTER_SLOT[1] if a.version < 5 else 1317.6)
             s.update(signal_max_layer='M7', pg_layer='M7', strap_layer='M8', pin_layers=['M4'])
             s['layer_cap'] = dict(cap='M7', kind='cluster', die_over='M8+', pin_layers=['M4'],
                                   layer_cap_grant='qwen-tp8 die lead: ROM/SRAM-band cluster, macros block M1-M4; pins '
@@ -284,6 +284,20 @@ def main():
                              slots_by_cell_mm2={k: round(v, 3) for k, v in sorted(area.items())},
                              rederived_cells=rederived),
            'open_items': {k: sorted(v) for k, v in sorted(open_items.items())}}
+    if a.version >= 4:
+        # v4 slot change answers (stations / heads _d/_r, cdc_wleaf, rhead cluster, VM region): one idempotent pass
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import contract_v4_tp8 as V4
+        rg = ROOT / 'results/arch/hier_contract_1012/qwen_rom_tp8_v4_regen.json'
+        out = V4.apply(out, a.when, json.load(open(rg)) if rg.exists() else {}, source_note=a.source,
+                       skip=('qkd_rhead', 'qfd_sp_vector_memory') if a.version >= 5 else ())
+        if a.version >= 5:
+            # v5 (die lead r8): the generator follows v4 / v4b; the contract is the case + the v4b / v5 records
+            import contract_v4b_tp8 as V4B
+            import contract_v5_tp8 as V5
+            out = V4B.apply(out)
+            out = V5.apply(out, json.load(open(a.prev)) if a.prev else None, a.when, source_note=a.source)
+        out['version'] = a.version
     Path(a.out).write_text(json.dumps(out, indent=1) + '\n')
     print(json.dumps(dict(slots=len(slots), relays=sum(relays.values()), kept=len(kept), rederived=sorted(rederived),
                           slot_share=out['floorplan']['slot_share'], die_um=[dw, dh])))

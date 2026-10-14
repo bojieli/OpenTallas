@@ -128,20 +128,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("130.60300");
+          values("83.68375");
         }
         fall_constraint(scalar) {
-          values("131.35544");
+          values("83.34403");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.53558");
+          values("-38.58212");
         }
         fall_constraint(scalar) {
-          values("-80.23788");
+          values("-32.15954");
         }
       }
     }
@@ -152,20 +152,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.71844");
+          values("53.60983");
         }
         fall_constraint(scalar) {
-          values("105.77153");
+          values("57.16353");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-54.69404");
+          values("-7.74841");
         }
         fall_constraint(scalar) {
-          values("-54.77084");
+          values("-6.02808");
         }
       }
     }
@@ -248,20 +248,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("129.97064");
+          values("83.04009");
         }
         fall_constraint(scalar) {
-          values("148.87000");
+          values("100.84570");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-90.83424");
+          values("-43.86230");
         }
         fall_constraint(scalar) {
-          values("-102.08168");
+          values("-53.98219");
         }
       }
     }
@@ -296,14 +296,14 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("191.66959");
+          values("153.41827");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-162.75497");
+          values("-124.54021");
         }
       }
     }
@@ -338,20 +338,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("204.37126");
+          values("166.64220");
         }
         fall_constraint(scalar) {
-          values("244.11215");
+          values("203.92232");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-165.76541");
+          values("-128.00964");
         }
         fall_constraint(scalar) {
-          values("-197.76590");
+          values("-157.25073");
         }
       }
     }
@@ -362,20 +362,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("168.98134");
+          values("121.98559");
         }
         fall_constraint(scalar) {
-          values("199.22197");
+          values("150.96188");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-126.18934");
+          values("-79.16584");
         }
         fall_constraint(scalar) {
-          values("-150.37331");
+          values("-101.97861");
         }
       }
     }
@@ -386,20 +386,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("173.90152");
+          values("126.97810");
         }
         fall_constraint(scalar) {
-          values("184.34779");
+          values("136.32301");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-132.80904");
+          values("-85.84348");
         }
         fall_constraint(scalar) {
-          values("-137.37024");
+          values("-89.27267");
         }
       }
     }
@@ -494,20 +494,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("156.07359");
+          values("109.05582");
         }
         fall_constraint(scalar) {
-          values("165.38098");
+          values("117.17284");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-122.71290");
+          values("-75.67282");
         }
         fall_constraint(scalar) {
-          values("-122.13904");
+          values("-73.79518");
         }
       }
     }
@@ -518,20 +518,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("136.99031");
+          values("90.03368");
         }
         fall_constraint(scalar) {
-          values("138.05789");
+          values("89.95131");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-102.08640");
+          values("-55.09129");
         }
         fall_constraint(scalar) {
-          values("-91.07283");
+          values("-42.88525");
         }
       }
     }
@@ -542,20 +542,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("125.26157");
+          values("78.28995");
         }
         fall_constraint(scalar) {
-          values("126.88873");
+          values("78.78896");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-90.55802");
+          values("-43.54244");
         }
         fall_constraint(scalar) {
-          values("-81.20994");
+          values("-33.03385");
         }
       }
     }
@@ -566,20 +566,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("119.31927");
+          values("72.33585");
         }
         fall_constraint(scalar) {
-          values("122.09039");
+          values("73.98392");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.66892");
+          values("-36.64497");
         }
         fall_constraint(scalar) {
-          values("-77.02104");
+          values("-28.83424");
         }
       }
     }
@@ -590,20 +590,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("139.95853");
+          values("93.05731");
         }
         fall_constraint(scalar) {
-          values("145.72272");
+          values("97.71650");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-104.36496");
+          values("-57.43432");
         }
         fall_constraint(scalar) {
-          values("-101.28110");
+          values("-53.21002");
         }
       }
     }
@@ -614,20 +614,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("134.91904");
+          values("87.93888");
         }
         fall_constraint(scalar) {
-          values("141.63922");
+          values("93.53699");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-99.90245");
+          values("-52.87929");
         }
         fall_constraint(scalar) {
-          values("-97.27626");
+          values("-49.09598");
         }
       }
     }
@@ -638,20 +638,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("134.31085");
+          values("87.34896");
         }
         fall_constraint(scalar) {
-          values("129.53911");
+          values("81.44817");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-97.15418");
+          values("-50.14761");
         }
         fall_constraint(scalar) {
-          values("-81.57391");
+          values("-33.40662");
         }
       }
     }
@@ -662,20 +662,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("138.56169");
+          values("91.52673");
         }
         fall_constraint(scalar) {
-          values("144.68871");
+          values("96.37540");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-104.09347");
+          values("-57.03665");
         }
         fall_constraint(scalar) {
-          values("-100.76576");
+          values("-52.31716");
         }
       }
     }
@@ -686,20 +686,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("152.57663");
+          values("105.66853");
         }
         fall_constraint(scalar) {
-          values("157.05948");
+          values("109.04002");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-119.18358");
+          values("-72.23726");
         }
         fall_constraint(scalar) {
-          values("-112.16038");
+          values("-64.06960");
         }
       }
     }
@@ -710,20 +710,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("134.33560");
+          values("87.41745");
         }
         fall_constraint(scalar) {
-          values("129.15240");
+          values("81.13309");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-96.73286");
+          values("-49.77392");
         }
         fall_constraint(scalar) {
-          values("-81.14791");
+          values("-33.05808");
         }
       }
     }
@@ -734,20 +734,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("118.94463");
+          values("72.02913");
         }
         fall_constraint(scalar) {
-          values("108.34052");
+          values("60.31264");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-80.05516");
+          values("-33.09746");
         }
         fall_constraint(scalar) {
-          values("-59.67291");
+          values("-11.57175");
         }
       }
     }
@@ -758,20 +758,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("112.02119");
+          values("65.06405");
         }
         fall_constraint(scalar) {
-          values("102.72605");
+          values("54.65345");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-73.17155");
+          values("-26.17169");
         }
         fall_constraint(scalar) {
-          values("-53.96961");
+          values("-5.82010");
         }
       }
     }
@@ -2088,20 +2088,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("176.79788");
+          values("129.94638");
         }
         fall_constraint(scalar) {
-          values("199.15559");
+          values("151.18076");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-143.05136");
+          values("-96.15292");
         }
         fall_constraint(scalar) {
-          values("-155.75894");
+          values("-107.73568");
         }
       }
     }
@@ -2112,20 +2112,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("166.83685");
+          values("119.89201");
         }
         fall_constraint(scalar) {
-          values("169.43076");
+          values("121.38024");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-133.65807");
+          values("-86.67077");
         }
         fall_constraint(scalar) {
-          values("-127.16704");
+          values("-79.04002");
         }
       }
     }
@@ -2136,20 +2136,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("172.36064");
+          values("125.49829");
         }
         fall_constraint(scalar) {
-          values("195.76343");
+          values("147.78560");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-138.32736");
+          values("-91.42500");
         }
         fall_constraint(scalar) {
-          values("-151.92781");
+          values("-103.89487");
         }
       }
     }
@@ -2160,20 +2160,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("156.31676");
+          values("109.28322");
         }
         fall_constraint(scalar) {
-          values("182.40820");
+          values("133.85895");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-120.73888");
+          values("-73.82249");
         }
         fall_constraint(scalar) {
-          values("-137.19107");
+          values("-88.50703");
         }
       }
     }
@@ -2184,20 +2184,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("166.38641");
+          values("119.37590");
         }
         fall_constraint(scalar) {
-          values("189.91661");
+          values("141.52847");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-133.30016");
+          values("-86.26079");
         }
         fall_constraint(scalar) {
-          values("-147.43500");
+          values("-98.90975");
         }
       }
     }
@@ -2208,20 +2208,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("192.92763");
+          values("146.05510");
         }
         fall_constraint(scalar) {
-          values("214.86327");
+          values("166.87164");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-156.81548");
+          values("-109.89458");
         }
         fall_constraint(scalar) {
-          values("-169.20921");
+          values("-121.14979");
         }
       }
     }
@@ -2232,20 +2232,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("181.93631");
+          values("135.01263");
         }
         fall_constraint(scalar) {
-          values("201.97679");
+          values("153.95544");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-144.27220");
+          values("-97.30929");
         }
         fall_constraint(scalar) {
-          values("-154.11273");
+          values("-106.01804");
         }
       }
     }
@@ -2256,20 +2256,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("172.44278");
+          values("125.58450");
         }
         fall_constraint(scalar) {
-          values("195.53294");
+          values("147.53983");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-138.69440");
+          values("-91.77123");
         }
         fall_constraint(scalar) {
-          values("-152.07468");
+          values("-104.01144");
         }
       }
     }
@@ -2280,20 +2280,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("173.46164");
+          values("126.47260");
         }
         fall_constraint(scalar) {
-          values("194.36330");
+          values("146.03708");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-140.30804");
+          values("-93.29240");
         }
         fall_constraint(scalar) {
-          values("-152.10483");
+          values("-103.64063");
         }
       }
     }
@@ -2304,20 +2304,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("143.71693");
+          values("96.75630");
         }
         fall_constraint(scalar) {
-          values("152.25215");
+          values("104.16692");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-103.86180");
+          values("-56.85159");
         }
         fall_constraint(scalar) {
-          values("-103.32689");
+          values("-55.16356");
         }
       }
     }
@@ -2328,20 +2328,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("179.79555");
+          values("132.95146");
         }
         fall_constraint(scalar) {
-          values("205.13455");
+          values("157.13976");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-142.40779");
+          values("-95.47517");
         }
         fall_constraint(scalar) {
-          values("-157.25446");
+          values("-109.18718");
         }
       }
     }
@@ -2352,20 +2352,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("175.00790");
+          values("128.10060");
         }
         fall_constraint(scalar) {
-          values("190.91866");
+          values("142.90384");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-138.07205");
+          values("-91.12033");
         }
         fall_constraint(scalar) {
-          values("-145.12086");
+          values("-97.03683");
         }
       }
     }
@@ -2376,20 +2376,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("145.61720");
+          values("98.69621");
         }
         fall_constraint(scalar) {
-          values("154.72482");
+          values("106.71800");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-105.58368");
+          values("-58.62157");
         }
         fall_constraint(scalar) {
-          values("-105.38176");
+          values("-57.30070");
         }
       }
     }
@@ -2400,20 +2400,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("132.60265");
+          values("85.68105");
         }
         fall_constraint(scalar) {
-          values("146.74075");
+          values("98.72517");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-91.09888");
+          values("-44.12910");
         }
         fall_constraint(scalar) {
-          values("-94.22337");
+          values("-46.12957");
         }
       }
     }
@@ -2424,20 +2424,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("170.72307");
+          values("123.82568");
         }
         fall_constraint(scalar) {
-          values("194.39668");
+          values("146.38225");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-131.43753");
+          values("-84.50307");
         }
         fall_constraint(scalar) {
-          values("-143.41245");
+          values("-95.32855");
         }
       }
     }
@@ -2448,20 +2448,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("111.41766");
+          values("64.50828");
         }
         fall_constraint(scalar) {
-          values("136.19411");
+          values("88.17176");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-68.97280");
+          values("-22.01822");
         }
         fall_constraint(scalar) {
-          values("-81.93015");
+          values("-33.83535");
         }
       }
     }
@@ -2472,20 +2472,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("145.89908");
+          values("98.98360");
         }
         fall_constraint(scalar) {
-          values("155.43085");
+          values("107.40633");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-105.66127");
+          values("-58.70201");
         }
         fall_constraint(scalar) {
-          values("-105.79692");
+          values("-57.69856");
         }
       }
     }
@@ -2496,20 +2496,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.80409");
+          values("135.88527");
         }
         fall_constraint(scalar) {
-          values("203.23117");
+          values("155.22487");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-145.04005");
+          values("-98.08956");
         }
         fall_constraint(scalar) {
-          values("-155.01564");
+          values("-106.93868");
         }
       }
     }
@@ -2520,20 +2520,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("180.53856");
+          values("133.61687");
         }
         fall_constraint(scalar) {
-          values("201.61165");
+          values("153.60725");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-142.49763");
+          values("-95.54635");
         }
         fall_constraint(scalar) {
-          values("-152.92757");
+          values("-104.85442");
         }
       }
     }
@@ -2544,20 +2544,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("146.76041");
+          values("99.78762");
         }
         fall_constraint(scalar) {
-          values("155.41423");
+          values("107.32966");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-106.71231");
+          values("-59.68745");
         }
         fall_constraint(scalar) {
-          values("-106.14544");
+          values("-57.97717");
         }
       }
     }
@@ -2568,20 +2568,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("152.31841");
+          values("105.49856");
         }
         fall_constraint(scalar) {
-          values("178.60773");
+          values("129.85361");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-118.55849");
+          values("-71.71755");
         }
         fall_constraint(scalar) {
-          values("-134.88853");
+          values("-86.05614");
         }
       }
     }
@@ -2592,20 +2592,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("179.81723");
+          values("132.90225");
         }
         fall_constraint(scalar) {
-          values("200.52017");
+          values("152.48018");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-146.28299");
+          values("-99.31775");
         }
         fall_constraint(scalar) {
-          values("-157.59418");
+          values("-109.47716");
         }
       }
     }
@@ -2616,20 +2616,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("142.37132");
+          values("95.43874");
         }
         fall_constraint(scalar) {
-          values("152.73918");
+          values("104.71082");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-102.11353");
+          values("-55.13197");
         }
         fall_constraint(scalar) {
-          values("-102.90636");
+          values("-54.79697");
         }
       }
     }
@@ -2640,20 +2640,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("174.27211");
+          values("127.34154");
         }
         fall_constraint(scalar) {
-          values("194.27420");
+          values("146.24284");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-136.31998");
+          values("-89.34254");
         }
         fall_constraint(scalar) {
-          values("-146.69846");
+          values("-98.59338");
         }
       }
     }
@@ -2664,20 +2664,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.29414");
+          values("135.32712");
         }
         fall_constraint(scalar) {
-          values("199.39474");
+          values("151.28542");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-144.53755");
+          values("-97.53516");
         }
         fall_constraint(scalar) {
-          values("-152.30791");
+          values("-104.11399");
         }
       }
     }
@@ -2688,20 +2688,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.70236");
+          values("135.73787");
         }
         fall_constraint(scalar) {
-          values("199.65807");
+          values("151.55377");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-144.98412");
+          values("-97.97803");
         }
         fall_constraint(scalar) {
-          values("-152.62733");
+          values("-104.44212");
         }
       }
     }
@@ -2712,20 +2712,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("148.88037");
+          values("101.96107");
         }
         fall_constraint(scalar) {
-          values("157.36913");
+          values("109.36981");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-108.81573");
+          values("-61.86090");
         }
         fall_constraint(scalar) {
-          values("-108.05859");
+          values("-59.98977");
         }
       }
     }
@@ -2736,20 +2736,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("140.57777");
+          values("93.65067");
         }
         fall_constraint(scalar) {
-          values("149.64613");
+          values("101.62408");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-99.93682");
+          values("-52.96054");
         }
         fall_constraint(scalar) {
-          values("-99.93388");
+          values("-51.83197");
         }
       }
     }
@@ -2760,20 +2760,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("155.16133");
+          values("108.23486");
         }
         fall_constraint(scalar) {
-          values("180.35057");
+          values("132.32016");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-114.49845");
+          values("-67.52821");
         }
         fall_constraint(scalar) {
-          values("-127.70457");
+          values("-79.60057");
         }
       }
     }
@@ -2784,20 +2784,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("135.28972");
+          values("88.28639");
         }
         fall_constraint(scalar) {
-          values("162.33511");
+          values("114.30553");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-95.45135");
+          values("-48.49270");
         }
         fall_constraint(scalar) {
-          values("-111.29205");
+          values("-63.18796");
         }
       }
     }
@@ -2808,20 +2808,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("187.12039");
+          values("140.24945");
         }
         fall_constraint(scalar) {
-          values("207.15569");
+          values("159.17497");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-152.13008");
+          values("-105.21834");
         }
         fall_constraint(scalar) {
-          values("-162.98933");
+          values("-114.95024");
         }
       }
     }
@@ -2832,20 +2832,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("180.00105");
+          values("133.11812");
         }
         fall_constraint(scalar) {
-          values("202.53561");
+          values("154.54045");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-144.78447");
+          values("-97.85306");
         }
         fall_constraint(scalar) {
-          values("-157.79854");
+          values("-109.73035");
         }
       }
     }
@@ -2856,20 +2856,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("188.07973");
+          values("141.23807");
         }
         fall_constraint(scalar) {
-          values("210.91727");
+          values("162.93234");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-152.96745");
+          values("-106.07771");
         }
         fall_constraint(scalar) {
-          values("-165.99222");
+          values("-117.94532");
         }
       }
     }
@@ -2880,20 +2880,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.97743");
+          values("136.17345");
         }
         fall_constraint(scalar) {
-          values("206.72285");
+          values("158.75375");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-147.45467");
+          values("-100.62560");
         }
         fall_constraint(scalar) {
-          values("-161.32620");
+          values("-113.32021");
         }
       }
     }
@@ -2904,20 +2904,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("183.32996");
+          values("136.43491");
         }
         fall_constraint(scalar) {
-          values("204.16080");
+          values("156.14069");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-148.33054");
+          values("-101.38710");
         }
         fall_constraint(scalar) {
-          values("-159.94423");
+          values("-111.84698");
         }
       }
     }
@@ -2928,20 +2928,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.31648");
+          values("135.45178");
         }
         fall_constraint(scalar) {
-          values("205.69067");
+          values("157.71449");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-147.73509");
+          values("-100.83667");
         }
         fall_constraint(scalar) {
-          values("-161.22609");
+          values("-113.19843");
         }
       }
     }
@@ -2952,20 +2952,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("174.84991");
+          values("128.04044");
         }
         fall_constraint(scalar) {
-          values("200.15909");
+          values("152.17590");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-141.68112");
+          values("-94.77150");
         }
         fall_constraint(scalar) {
-          values("-156.26321");
+          values("-108.22054");
         }
       }
     }
@@ -2976,20 +2976,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("162.81030");
+          values("115.93071");
         }
         fall_constraint(scalar) {
-          values("187.88850");
+          values("139.89639");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-129.32367");
+          values("-82.41634");
         }
         fall_constraint(scalar) {
-          values("-144.43562");
+          values("-96.36955");
         }
       }
     }
@@ -3000,20 +3000,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.93886");
+          values("136.06416");
         }
         fall_constraint(scalar) {
-          values("206.10629");
+          values("158.11212");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-148.50793");
+          values("-101.58466");
         }
         fall_constraint(scalar) {
-          values("-161.80350");
+          values("-113.74102");
         }
       }
     }
@@ -3024,20 +3024,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("150.45477");
+          values("103.65299");
         }
         fall_constraint(scalar) {
-          values("180.98836");
+          values("133.01544");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-111.23788");
+          values("-64.41525");
         }
         fall_constraint(scalar) {
-          values("-128.72122");
+          values("-80.68879");
         }
       }
     }
@@ -3048,20 +3048,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("181.33897");
+          values("134.41650");
         }
         fall_constraint(scalar) {
-          values("202.71239");
+          values("154.65733");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-146.28909");
+          values("-99.31921");
         }
         fall_constraint(scalar) {
-          values("-158.39616");
+          values("-110.25863");
         }
       }
     }
@@ -3072,20 +3072,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("185.02962");
+          values("138.13840");
         }
         fall_constraint(scalar) {
-          values("206.27136");
+          values("158.26349");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-149.74509");
+          values("-102.80612");
         }
         fall_constraint(scalar) {
-          values("-161.54295");
+          values("-113.45919");
         }
       }
     }
@@ -3096,20 +3096,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("150.55219");
+          values("103.72163");
         }
         fall_constraint(scalar) {
-          values("180.88762");
+          values("132.90691");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-111.22728");
+          values("-64.33717");
         }
         fall_constraint(scalar) {
-          values("-128.35582");
+          values("-80.30768");
         }
       }
     }
@@ -3120,20 +3120,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("189.22112");
+          values("151.14641");
         }
         fall_constraint(scalar) {
-          values("227.11786");
+          values("186.95894");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-155.29544");
+          values("-117.14567");
         }
         fall_constraint(scalar) {
-          values("-180.45718");
+          values("-139.99060");
         }
       }
     }
@@ -3144,20 +3144,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("176.55348");
+          values("129.60938");
         }
         fall_constraint(scalar) {
-          values("195.65547");
+          values("147.57030");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-143.98557");
+          values("-97.00671");
         }
         fall_constraint(scalar) {
-          values("-154.16255");
+          values("-105.97741");
         }
       }
     }
@@ -3168,20 +3168,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("186.60896");
+          values("139.70998");
         }
         fall_constraint(scalar) {
-          values("207.24246");
+          values("159.22327");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-153.25546");
+          values("-106.30804");
         }
         fall_constraint(scalar) {
-          values("-164.58339");
+          values("-116.48754");
         }
       }
     }
@@ -3192,20 +3192,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("178.81256");
+          values("131.92107");
         }
         fall_constraint(scalar) {
-          values("202.83118");
+          values("154.82054");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-146.24451");
+          values("-99.30501");
         }
         fall_constraint(scalar) {
-          values("-160.06490");
+          values("-111.97856");
         }
       }
     }
@@ -3216,20 +3216,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("185.95515");
+          values("139.08295");
         }
         fall_constraint(scalar) {
-          values("206.74924");
+          values("158.75642");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-152.74326");
+          values("-105.82296");
         }
         fall_constraint(scalar) {
-          values("-164.21919");
+          values("-116.15824");
         }
       }
     }
@@ -3240,20 +3240,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("179.68588");
+          values("132.78052");
         }
         fall_constraint(scalar) {
-          values("203.21057");
+          values("155.18465");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-147.13461");
+          values("-100.17910");
         }
         fall_constraint(scalar) {
-          values("-160.58037");
+          values("-112.47810");
         }
       }
     }
@@ -3264,20 +3264,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("184.53136");
+          values("137.66273");
         }
         fall_constraint(scalar) {
-          values("206.63159");
+          values("158.64296");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-150.98206");
+          values("-104.06672");
         }
         fall_constraint(scalar) {
-          values("-163.44382");
+          values("-115.39140");
         }
       }
     }
@@ -3288,20 +3288,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("144.32396");
+          values("97.39858");
         }
         fall_constraint(scalar) {
-          values("153.97850");
+          values("105.95790");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-104.65558");
+          values("-57.68481");
         }
         fall_constraint(scalar) {
-          values("-104.95729");
+          values("-56.86420");
         }
       }
     }
@@ -3312,20 +3312,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("187.79143");
+          values("149.70695");
         }
         fall_constraint(scalar) {
-          values("225.55235");
+          values("185.31435");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-154.04236");
+          values("-115.88128");
         }
         fall_constraint(scalar) {
-          values("-179.09338");
+          values("-138.50209");
         }
       }
     }
@@ -3336,20 +3336,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("181.62912");
+          values("134.70792");
         }
         fall_constraint(scalar) {
-          values("202.13690");
+          values("154.14189");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-148.22916");
+          values("-101.30152");
         }
         fall_constraint(scalar) {
-          values("-159.22314");
+          values("-111.16060");
         }
       }
     }
@@ -3360,20 +3360,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("170.94112");
+          values("124.07308");
         }
         fall_constraint(scalar) {
-          values("195.15572");
+          values("147.17075");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-136.81531");
+          values("-89.89729");
         }
         fall_constraint(scalar) {
-          values("-150.86186");
+          values("-102.81565");
         }
       }
     }
@@ -3389,20 +3389,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("154.39093");
+          values("107.44848");
         }
         fall_constraint(scalar) {
-          values("180.63686");
+          values("132.58594");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-112.31600");
+          values("-65.33138");
         }
         fall_constraint(scalar) {
-          values("-131.12450");
+          values("-82.99699");
         }
       }
     }
@@ -3413,20 +3413,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("136.56253");
+          values("89.58894");
         }
         fall_constraint(scalar) {
-          values("148.28641");
+          values("100.18317");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-96.94066");
+          values("-49.92740");
         }
         fall_constraint(scalar) {
-          values("-100.74850");
+          values("-52.56252");
         }
       }
     }
@@ -3437,20 +3437,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("143.50032");
+          values("96.54970");
         }
         fall_constraint(scalar) {
-          values("154.15347");
+          values("106.08926");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-103.76286");
+          values("-56.76901");
         }
         fall_constraint(scalar) {
-          values("-106.57902");
+          values("-58.44034");
         }
       }
     }
@@ -4743,20 +4743,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("177.46669");
+          values("130.47189");
         }
         fall_constraint(scalar) {
-          values("183.01910");
+          values("134.89293");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-148.54861");
+          values("-101.51920");
         }
         fall_constraint(scalar) {
-          values("-143.51573");
+          values("-95.29642");
         }
       }
     }
@@ -4767,20 +4767,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("179.22910");
+          values("132.26280");
         }
         fall_constraint(scalar) {
-          values("184.59589");
+          values("136.50919");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-150.18193");
+          values("-103.17085");
         }
         fall_constraint(scalar) {
-          values("-144.94220");
+          values("-96.78059");
         }
       }
     }
@@ -4791,20 +4791,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("181.92007");
+          values("134.97600");
         }
         fall_constraint(scalar) {
-          values("187.90602");
+          values("139.84637");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-152.12660");
+          values("-105.13926");
         }
         fall_constraint(scalar) {
-          values("-147.91730");
+          values("-99.78284");
         }
       }
     }
@@ -4815,20 +4815,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("177.52695");
+          values("130.49863");
         }
         fall_constraint(scalar) {
-          values("184.05760");
+          values("135.84612");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-147.93079");
+          values("-100.87894");
         }
         fall_constraint(scalar) {
-          values("-144.35727");
+          values("-96.01084");
         }
       }
     }
@@ -4839,20 +4839,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("173.30811");
+          values("126.30624");
         }
         fall_constraint(scalar) {
-          values("179.29646");
+          values("131.14853");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-144.79826");
+          values("-97.77232");
         }
         fall_constraint(scalar) {
-          values("-140.25920");
+          values("-92.00266");
         }
       }
     }
@@ -4863,20 +4863,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("178.28476");
+          values("131.29416");
         }
         fall_constraint(scalar) {
-          values("184.56244");
+          values("136.42406");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-148.77521");
+          values("-101.75610");
         }
         fall_constraint(scalar) {
-          values("-144.82358");
+          values("-96.58271");
         }
       }
     }
@@ -4887,20 +4887,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("179.86504");
+          values("132.91525");
         }
         fall_constraint(scalar) {
-          values("185.13065");
+          values("137.07352");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-150.85730");
+          values("-103.86440");
         }
         fall_constraint(scalar) {
-          values("-145.53798");
+          values("-97.40681");
         }
       }
     }
@@ -4911,20 +4911,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("174.25612");
+          values("127.22183");
         }
         fall_constraint(scalar) {
-          values("181.36719");
+          values("133.10283");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-144.64143");
+          values("-97.57977");
         }
         fall_constraint(scalar) {
-          values("-141.63300");
+          values("-93.23170");
         }
       }
     }
@@ -4935,20 +4935,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("170.76938");
+          values("123.80924");
         }
         fall_constraint(scalar) {
-          values("177.70036");
+          values("129.62936");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-142.12868");
+          values("-95.12499");
         }
         fall_constraint(scalar) {
-          values("-138.56682");
+          values("-90.42066");
         }
       }
     }
@@ -4959,20 +4959,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("166.68991");
+          values("119.70351");
         }
         fall_constraint(scalar) {
-          values("174.17873");
+          values("126.06029");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-138.21938");
+          values("-91.19843");
         }
         fall_constraint(scalar) {
-          values("-135.19489");
+          values("-86.98707");
         }
       }
     }
@@ -4983,20 +4983,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("172.78995");
+          values("125.81375");
         }
         fall_constraint(scalar) {
-          values("179.31992");
+          values("131.21002");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-143.88158");
+          values("-96.86451");
         }
         fall_constraint(scalar) {
-          values("-139.79486");
+          values("-91.60250");
         }
       }
     }
@@ -5007,20 +5007,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("178.35770");
+          values("131.37456");
         }
         fall_constraint(scalar) {
-          values("184.84024");
+          values("136.72713");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-148.65170");
+          values("-101.63250");
         }
         fall_constraint(scalar) {
-          values("-144.90508");
+          values("-96.70505");
         }
       }
     }
@@ -5031,20 +5031,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("177.27209");
+          values("130.34529");
         }
         fall_constraint(scalar) {
-          values("183.12303");
+          values("135.09929");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-148.41214");
+          values("-101.44332");
         }
         fall_constraint(scalar) {
-          values("-143.64925");
+          values("-95.55293");
         }
       }
     }
@@ -5055,20 +5055,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("169.77963");
+          values("122.87492");
         }
         fall_constraint(scalar) {
-          values("176.26880");
+          values("128.26201");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-141.71069");
+          values("-94.77409");
         }
         fall_constraint(scalar) {
-          values("-137.57831");
+          values("-89.50703");
         }
       }
     }
@@ -5079,20 +5079,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("180.39211");
+          values("133.37009");
         }
         fall_constraint(scalar) {
-          values("191.88039");
+          values("143.48416");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-153.44427");
+          values("-106.39783");
         }
         fall_constraint(scalar) {
-          values("-154.26889");
+          values("-105.73487");
         }
       }
     }
@@ -5103,20 +5103,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("164.03789");
+          values("117.00460");
         }
         fall_constraint(scalar) {
-          values("171.61192");
+          values("123.27102");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-135.72401");
+          values("-88.66630");
         }
         fall_constraint(scalar) {
-          values("-133.01021");
+          values("-84.53333");
         }
       }
     }
@@ -5127,20 +5127,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("170.22002");
+          values("123.20065");
         }
         fall_constraint(scalar) {
-          values("176.83928");
+          values("128.63747");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-141.87567");
+          values("-94.83304");
         }
         fall_constraint(scalar) {
-          values("-138.21741");
+          values("-89.88077");
         }
       }
     }
@@ -5151,20 +5151,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("176.53485");
+          values("129.61050");
         }
         fall_constraint(scalar) {
-          values("182.69179");
+          values("134.67281");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-147.52182");
+          values("-100.55919");
         }
         fall_constraint(scalar) {
-          values("-143.05232");
+          values("-94.96194");
         }
       }
     }
@@ -5175,20 +5175,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("178.74924");
+          values("131.80052");
         }
         fall_constraint(scalar) {
-          values("184.26245");
+          values("136.15216");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-149.58357");
+          values("-102.59760");
         }
         fall_constraint(scalar) {
-          values("-144.52670");
+          values("-96.33288");
         }
       }
     }
@@ -5199,20 +5199,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("175.44760");
+          values("128.44128");
         }
         fall_constraint(scalar) {
-          values("181.38985");
+          values("133.19107");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-146.48291");
+          values("-99.45612");
         }
         fall_constraint(scalar) {
-          values("-141.93175");
+          values("-93.59792");
         }
       }
     }
@@ -5223,20 +5223,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("174.13445");
+          values("127.08192");
         }
         fall_constraint(scalar) {
-          values("180.26566");
+          values("131.94206");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-145.20624");
+          values("-98.12948");
         }
         fall_constraint(scalar) {
-          values("-140.84090");
+          values("-92.38215");
         }
       }
     }
@@ -5247,20 +5247,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("177.74185");
+          values("130.72922");
         }
         fall_constraint(scalar) {
-          values("183.36017");
+          values("135.20784");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-148.74529");
+          values("-101.70834");
         }
         fall_constraint(scalar) {
-          values("-143.82486");
+          values("-95.56389");
         }
       }
     }
@@ -5271,20 +5271,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("178.82272");
+          values("131.82584");
         }
         fall_constraint(scalar) {
-          values("185.11838");
+          values("136.97487");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-149.22250");
+          values("-102.19939");
         }
         fall_constraint(scalar) {
-          values("-145.33749");
+          values("-97.08855");
         }
       }
     }
@@ -5295,20 +5295,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.30591");
+          values("135.38019");
         }
         fall_constraint(scalar) {
-          values("187.13594");
+          values("139.12695");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-153.41240");
+          values("-106.45547");
         }
         fall_constraint(scalar) {
-          values("-147.65730");
+          values("-99.58155");
         }
       }
     }
@@ -5319,20 +5319,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("173.96461");
+          values("126.99177");
         }
         fall_constraint(scalar) {
-          values("179.98814");
+          values("131.88737");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-145.39539");
+          values("-98.38056");
         }
         fall_constraint(scalar) {
-          values("-140.87248");
+          values("-92.69282");
         }
       }
     }
@@ -5343,20 +5343,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("172.82426");
+          values("125.92069");
         }
         fall_constraint(scalar) {
-          values("179.19493");
+          values("131.17465");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-144.19011");
+          values("-97.24684");
         }
         fall_constraint(scalar) {
-          values("-139.91380");
+          values("-91.82176");
         }
       }
     }
@@ -5367,20 +5367,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("181.02295");
+          values("134.08803");
         }
         fall_constraint(scalar) {
-          values("186.02147");
+          values("137.99257");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-152.11050");
+          values("-105.13462");
         }
         fall_constraint(scalar) {
-          values("-146.53152");
+          values("-98.42482");
         }
       }
     }
@@ -5391,20 +5391,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("172.07378");
+          values("125.06263");
         }
         fall_constraint(scalar) {
-          values("178.32512");
+          values("130.11871");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-143.64224");
+          values("-96.60987");
         }
         fall_constraint(scalar) {
-          values("-139.45090");
+          values("-91.10947");
         }
       }
     }
@@ -5415,20 +5415,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("180.23608");
+          values("133.32315");
         }
         fall_constraint(scalar) {
-          values("185.45076");
+          values("137.44209");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-151.30650");
+          values("-104.36098");
         }
         fall_constraint(scalar) {
-          values("-145.94739");
+          values("-97.87305");
         }
       }
     }
@@ -5439,20 +5439,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("172.54364");
+          values("125.50391");
         }
         fall_constraint(scalar) {
-          values("178.57303");
+          values("130.31665");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-144.23853");
+          values("-97.17290");
         }
         fall_constraint(scalar) {
-          values("-139.81216");
+          values("-91.41923");
         }
       }
     }
@@ -5463,20 +5463,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("165.26265");
+          values("118.20607");
         }
         fall_constraint(scalar) {
-          values("172.38782");
+          values("124.02368");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-136.93484");
+          values("-89.85220");
         }
         fall_constraint(scalar) {
-          values("-133.56763");
+          values("-85.06815");
         }
       }
     }
@@ -5487,20 +5487,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("166.80505");
+          values("119.87443");
         }
         fall_constraint(scalar) {
-          values("173.79866");
+          values("125.75668");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-138.69157");
+          values("-91.71784");
         }
         fall_constraint(scalar) {
-          values("-135.05331");
+          values("-86.93644");
         }
       }
     }
@@ -5511,20 +5511,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("175.85510");
+          values("128.80833");
         }
         fall_constraint(scalar) {
-          values("187.07796");
+          values("138.72603");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-146.37048");
+          values("-99.30031");
         }
         fall_constraint(scalar) {
-          values("-148.46225");
+          values("-99.97479");
         }
       }
     }
@@ -5535,20 +5535,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("166.51746");
+          values("119.46410");
         }
         fall_constraint(scalar) {
-          values("173.71085");
+          values("125.36480");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-138.20706");
+          values("-91.12815");
         }
         fall_constraint(scalar) {
-          values("-135.11926");
+          values("-86.63826");
         }
       }
     }
@@ -5559,20 +5559,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("175.13788");
+          values("128.15802");
         }
         fall_constraint(scalar) {
-          values("181.86665");
+          values("133.74512");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-145.72844");
+          values("-98.71508");
         }
         fall_constraint(scalar) {
-          values("-142.12177");
+          values("-93.90366");
         }
       }
     }
@@ -5583,20 +5583,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("179.60204");
+          values("132.67291");
         }
         fall_constraint(scalar) {
-          values("184.84796");
+          values("136.81734");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-150.70151");
+          values("-103.72839");
         }
         fall_constraint(scalar) {
-          values("-145.35173");
+          values("-97.24702");
         }
       }
     }
@@ -5607,20 +5607,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("179.64784");
+          values("132.71461");
         }
         fall_constraint(scalar) {
-          values("185.84644");
+          values("137.80479");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-150.09625");
+          values("-103.11918");
         }
         fall_constraint(scalar) {
-          values("-145.98358");
+          values("-97.86707");
         }
       }
     }
@@ -5631,20 +5631,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("178.31813");
+          values("131.33902");
         }
         fall_constraint(scalar) {
-          values("184.87787");
+          values("136.75026");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-148.54720");
+          values("-101.53674");
         }
         fall_constraint(scalar) {
-          values("-144.93596");
+          values("-96.71181");
         }
       }
     }
@@ -5655,20 +5655,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("179.87973");
+          values("132.95483");
         }
         fall_constraint(scalar) {
-          values("185.05782");
+          values("137.02197");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-150.96710");
+          values("-104.00124");
         }
         fall_constraint(scalar) {
-          values("-145.56830");
+          values("-97.45769");
         }
       }
     }
@@ -5679,20 +5679,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("181.38321");
+          values("134.43376");
         }
         fall_constraint(scalar) {
-          values("187.32568");
+          values("139.23114");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-151.61444");
+          values("-104.62096");
         }
         fall_constraint(scalar) {
-          values("-147.34607");
+          values("-99.17475");
         }
       }
     }
@@ -5703,20 +5703,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("183.48413");
+          values("136.58983");
         }
         fall_constraint(scalar) {
-          values("188.82990");
+          values("140.82887");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-154.14555");
+          values("-107.22869");
         }
         fall_constraint(scalar) {
-          values("-149.13341");
+          values("-101.07101");
         }
       }
     }
@@ -5727,20 +5727,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("181.66095");
+          values("134.69185");
         }
         fall_constraint(scalar) {
-          values("187.54596");
+          values("139.44337");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-151.92058");
+          values("-104.91067");
         }
         fall_constraint(scalar) {
-          values("-147.60109");
+          values("-99.42120");
         }
       }
     }
@@ -5751,20 +5751,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("180.21495");
+          values("133.29625");
         }
         fall_constraint(scalar) {
-          values("185.54585");
+          values("137.52950");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-151.42465");
+          values("-104.46765");
         }
         fall_constraint(scalar) {
-          values("-146.24965");
+          values("-98.16355");
         }
       }
     }
@@ -5775,20 +5775,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("177.00745");
+          values("130.02759");
         }
         fall_constraint(scalar) {
-          values("183.03059");
+          values("134.91434");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-147.91408");
+          values("-100.89656");
         }
         fall_constraint(scalar) {
-          values("-143.54207");
+          values("-95.33790");
         }
       }
     }
@@ -5799,20 +5799,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("178.39828");
+          values("131.42836");
         }
         fall_constraint(scalar) {
-          values("183.66942");
+          values("135.57785");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-149.50610");
+          values("-102.49236");
         }
         fall_constraint(scalar) {
-          values("-144.19620");
+          values("-96.02718");
         }
       }
     }
@@ -5823,20 +5823,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("171.29640");
+          values("124.30090");
         }
         fall_constraint(scalar) {
-          values("177.75119");
+          values("129.60802");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-142.70247");
+          values("-95.68165");
         }
         fall_constraint(scalar) {
-          values("-138.59200");
+          values("-90.34097");
         }
       }
     }
@@ -5847,20 +5847,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("159.78366");
+          values("112.75177");
         }
         fall_constraint(scalar) {
-          values("167.74583");
+          values("119.53061");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-130.16663");
+          values("-83.11017");
         }
         fall_constraint(scalar) {
-          values("-128.46404");
+          values("-80.11374");
         }
       }
     }
@@ -5871,20 +5871,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("164.54735");
+          values("117.50573");
         }
         fall_constraint(scalar) {
-          values("172.32677");
+          values("124.05915");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-136.13568");
+          values("-89.06730");
         }
         fall_constraint(scalar) {
-          values("-133.48788");
+          values("-85.08342");
         }
       }
     }
@@ -5895,20 +5895,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("169.59966");
+          values("122.66747");
         }
         fall_constraint(scalar) {
-          values("176.83269");
+          values("128.78951");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-140.94873");
+          values("-93.97437");
         }
         fall_constraint(scalar) {
-          values("-137.60432");
+          values("-89.48610");
         }
       }
     }
@@ -5919,20 +5919,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("186.52219");
+          values("139.59390");
         }
         fall_constraint(scalar) {
-          values("196.38000");
+          values("148.35255");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-157.41051");
+          values("-110.43915");
         }
         fall_constraint(scalar) {
-          values("-157.72501");
+          values("-109.62358");
         }
       }
     }
@@ -5943,20 +5943,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("187.26450");
+          values("140.31847");
         }
         fall_constraint(scalar) {
-          values("197.64894");
+          values("149.58942");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-159.31500");
+          values("-112.32572");
         }
         fall_constraint(scalar) {
-          values("-159.28462");
+          values("-111.15089");
         }
       }
     }
@@ -5967,20 +5967,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("164.44893");
+          values("117.40155");
         }
         fall_constraint(scalar) {
-          values("171.95528");
+          values("123.59937");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-136.13795");
+          values("-89.07156");
         }
         fall_constraint(scalar) {
-          values("-133.36906");
+          values("-84.87756");
         }
       }
     }
@@ -5991,20 +5991,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("169.39256");
+          values("122.37580");
         }
         fall_constraint(scalar) {
-          values("176.01456");
+          values("127.83394");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-140.93909");
+          values("-93.89942");
         }
         fall_constraint(scalar) {
-          values("-137.05832");
+          values("-88.74338");
         }
       }
     }
@@ -6015,20 +6015,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("173.20728");
+          values("126.20481");
         }
         fall_constraint(scalar) {
-          values("179.29144");
+          values("131.14693");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-144.65282");
+          values("-97.62456");
         }
         fall_constraint(scalar) {
-          values("-140.18715");
+          values("-91.93651");
         }
       }
     }
@@ -7638,20 +7638,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("149.58835");
+          values("110.98413");
         }
         fall_constraint(scalar) {
-          values("198.47386");
+          values("158.79303");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-111.44609");
+          values("-72.84269");
         }
         fall_constraint(scalar) {
-          values("-140.50076");
+          values("-100.76765");
         }
       }
     }
@@ -7662,20 +7662,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("167.69960");
+          values("129.07690");
         }
         fall_constraint(scalar) {
-          values("201.78893");
+          values("162.11111");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-130.36656");
+          values("-91.74725");
         }
         fall_constraint(scalar) {
-          values("-150.02353");
+          values("-110.29585");
         }
       }
     }
@@ -7686,20 +7686,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("179.97437");
+          values("133.01103");
         }
         fall_constraint(scalar) {
-          values("200.60336");
+          values("152.52306");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-145.07780");
+          values("-98.06934");
         }
         fall_constraint(scalar) {
-          values("-155.68266");
+          values("-107.52710");
         }
       }
     }
@@ -7710,20 +7710,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("168.73232");
+          values("130.11444");
         }
         fall_constraint(scalar) {
-          values("202.16217");
+          values("162.45807");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-131.47118");
+          values("-92.87049");
         }
         fall_constraint(scalar) {
-          values("-150.94234");
+          values("-111.19492");
         }
       }
     }
@@ -7734,20 +7734,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("120.14626");
+          values("73.16884");
         }
         fall_constraint(scalar) {
-          values("146.57628");
+          values("98.47548");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-79.89400");
+          values("-32.87306");
         }
         fall_constraint(scalar) {
-          values("-92.25198");
+          values("-44.07425");
         }
       }
     }
@@ -7758,20 +7758,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("143.53311");
+          values("96.58724");
         }
         fall_constraint(scalar) {
-          values("173.81390");
+          values("125.75091");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-103.99508");
+          values("-57.00613");
         }
         fall_constraint(scalar) {
-          values("-119.59312");
+          values("-71.45539");
         }
       }
     }
@@ -7782,20 +7782,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("179.41455");
+          values("132.46124");
         }
         fall_constraint(scalar) {
-          values("184.71886");
+          values("136.65436");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-150.69525");
+          values("-103.69836");
         }
         fall_constraint(scalar) {
-          values("-145.43454");
+          values("-97.29575");
         }
       }
     }
@@ -7806,20 +7806,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("181.33678");
+          values("134.40550");
         }
         fall_constraint(scalar) {
-          values("186.68314");
+          values("138.64407");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-152.29813");
+          values("-105.32150");
         }
         fall_constraint(scalar) {
-          values("-147.15192");
+          values("-99.03848");
         }
       }
     }
@@ -7830,20 +7830,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("181.89981");
+          values("134.92694");
         }
         fall_constraint(scalar) {
-          values("187.53578");
+          values("139.43201");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-152.37865");
+          values("-105.36413");
         }
         fall_constraint(scalar) {
-          values("-147.66748");
+          values("-99.48447");
         }
       }
     }
@@ -7854,20 +7854,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("180.22682");
+          values("133.26918");
         }
         fall_constraint(scalar) {
-          values("201.12039");
+          values("153.05438");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-145.03473");
+          values("-98.03191");
         }
         fall_constraint(scalar) {
-          values("-155.70879");
+          values("-107.56485");
         }
       }
     }
@@ -7878,20 +7878,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("205.76337");
+          values("167.15604");
         }
         fall_constraint(scalar) {
-          values("229.43733");
+          values("189.76398");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-172.99123");
+          values("-134.38614");
         }
         fall_constraint(scalar) {
-          values("-187.01253");
+          values("-147.28856");
         }
       }
     }
@@ -7902,20 +7902,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("177.07341");
+          values("130.08990");
         }
         fall_constraint(scalar) {
-          values("183.14030");
+          values("135.01312");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-147.97523");
+          values("-100.95913");
         }
         fall_constraint(scalar) {
-          values("-143.58708");
+          values("-95.36403");
         }
       }
     }
@@ -7926,20 +7926,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.17654");
+          values("135.25177");
         }
         fall_constraint(scalar) {
-          values("188.53557");
+          values("140.49763");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-152.06386");
+          values("-105.09650");
         }
         fall_constraint(scalar) {
-          values("-148.21629");
+          values("-100.10398");
         }
       }
     }
@@ -7950,20 +7950,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("172.17957");
+          values("125.16132");
         }
         fall_constraint(scalar) {
-          values("178.44864");
+          values("130.28735");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-143.44426");
+          values("-96.40522");
         }
         fall_constraint(scalar) {
-          values("-139.14667");
+          values("-90.87136");
         }
       }
     }
@@ -7974,20 +7974,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("180.96161");
+          values("133.99440");
         }
         fall_constraint(scalar) {
-          values("187.40590");
+          values("139.31337");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-150.83456");
+          values("-103.82088");
         }
         fall_constraint(scalar) {
-          values("-147.10114");
+          values("-98.93268");
         }
       }
     }
@@ -7998,20 +7998,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.77121");
+          values("135.83647");
         }
         fall_constraint(scalar) {
-          values("189.33038");
+          values("141.29929");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-152.45909");
+          values("-105.48418");
         }
         fall_constraint(scalar) {
-          values("-148.82616");
+          values("-100.71597");
         }
       }
     }
@@ -8022,20 +8022,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("183.73552");
+          values("136.80589");
         }
         fall_constraint(scalar) {
-          values("189.19325");
+          values("141.15598");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-154.20671");
+          values("-107.23532");
         }
         fall_constraint(scalar) {
-          values("-149.31583");
+          values("-101.20413");
         }
       }
     }
@@ -8046,20 +8046,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.59686");
+          values("135.64349");
         }
         fall_constraint(scalar) {
-          values("188.19583");
+          values("140.13387");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-153.07211");
+          values("-106.07580");
         }
         fall_constraint(scalar) {
-          values("-148.32297");
+          values("-100.18694");
         }
       }
     }
@@ -8070,20 +8070,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.03163");
+          values("135.08205");
         }
         fall_constraint(scalar) {
-          values("188.18709");
+          values("140.11826");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-152.05452");
+          values("-105.06119");
         }
         fall_constraint(scalar) {
-          values("-147.98438");
+          values("-99.84068");
         }
       }
     }
@@ -8094,20 +8094,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("178.16507");
+          values("131.16331");
         }
         fall_constraint(scalar) {
-          values("185.14055");
+          values("136.99641");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-148.10774");
+          values("-101.08232");
         }
         fall_constraint(scalar) {
-          values("-145.00391");
+          values("-96.74717");
         }
       }
     }
@@ -8118,20 +8118,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("172.44315");
+          values("125.46416");
         }
         fall_constraint(scalar) {
-          values("178.75403");
+          values("130.64241");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-143.54781");
+          values("-96.53039");
         }
         fall_constraint(scalar) {
-          values("-139.25563");
+          values("-91.05914");
         }
       }
     }
@@ -8142,20 +8142,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("175.34586");
+          values("128.40428");
         }
         fall_constraint(scalar) {
-          values("181.27769");
+          values("133.23792");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-146.42398");
+          values("-99.44245");
         }
         fall_constraint(scalar) {
-          values("-141.75224");
+          values("-93.63319");
         }
       }
     }
@@ -8166,20 +8166,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("184.71042");
+          values("137.77872");
         }
         fall_constraint(scalar) {
-          values("189.91290");
+          values("141.87794");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-155.26469");
+          values("-108.29094");
         }
         fall_constraint(scalar) {
-          values("-150.10159");
+          values("-101.99182");
         }
       }
     }
@@ -8190,20 +8190,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("176.64180");
+          values("129.61894");
         }
         fall_constraint(scalar) {
-          values("183.92915");
+          values("135.72073");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-146.52309");
+          values("-99.47652");
         }
         fall_constraint(scalar) {
-          values("-143.80328");
+          values("-95.45914");
         }
       }
     }
@@ -8214,20 +8214,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("178.01138");
+          values("130.98236");
         }
         fall_constraint(scalar) {
-          values("185.06400");
+          values("136.83125");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-147.86365");
+          values("-100.80962");
         }
         fall_constraint(scalar) {
-          values("-144.92856");
+          values("-96.55997");
         }
       }
     }
@@ -8238,20 +8238,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("174.68770");
+          values("127.76060");
         }
         fall_constraint(scalar) {
-          values("180.87328");
+          values("132.85226");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-145.71162");
+          values("-98.74442");
         }
         fall_constraint(scalar) {
-          values("-141.24623");
+          values("-93.15349");
         }
       }
     }
@@ -8262,20 +8262,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.48637");
+          values("135.54147");
         }
         fall_constraint(scalar) {
-          values("188.21661");
+          values("140.15889");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-152.85379");
+          values("-105.86604");
         }
         fall_constraint(scalar) {
-          values("-148.25615");
+          values("-100.12426");
         }
       }
     }
@@ -8286,20 +8286,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.99667");
+          values("136.08188");
         }
         fall_constraint(scalar) {
-          values("188.95216");
+          values("140.92514");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-153.14262");
+          values("-106.18488");
         }
         fall_constraint(scalar) {
-          values("-148.83435");
+          values("-100.73486");
         }
       }
     }
@@ -8310,20 +8310,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("167.90578");
+          values("120.87718");
         }
         fall_constraint(scalar) {
-          values("174.68292");
+          values("126.42335");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-139.30576");
+          values("-92.24933");
         }
         fall_constraint(scalar) {
-          values("-135.62828");
+          values("-87.23123");
         }
       }
     }
@@ -8334,20 +8334,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("168.27245");
+          values("121.29786");
         }
         fall_constraint(scalar) {
-          values("175.65915");
+          values("127.56374");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-139.66722");
+          values("-92.64671");
         }
         fall_constraint(scalar) {
-          values("-136.57710");
+          values("-88.40579");
         }
       }
     }
@@ -8358,20 +8358,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("182.21205");
+          values("135.25089");
         }
         fall_constraint(scalar) {
-          values("188.80977");
+          values("140.72374");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-151.79259");
+          values("-104.78476");
         }
         fall_constraint(scalar) {
-          values("-148.33414");
+          values("-100.17229");
         }
       }
     }
@@ -8382,20 +8382,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("174.50414");
+          values("127.56229");
         }
         fall_constraint(scalar) {
-          values("180.63902");
+          values("132.59448");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-145.55812");
+          values("-98.57391");
         }
         fall_constraint(scalar) {
-          values("-141.04512");
+          values("-92.92445");
         }
       }
     }
@@ -8406,20 +8406,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("177.46278");
+          values("130.48720");
         }
         fall_constraint(scalar) {
-          values("185.06311");
+          values("136.96065");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-146.96446");
+          values("-99.94595");
         }
         fall_constraint(scalar) {
-          values("-144.38333");
+          values("-96.20260");
         }
       }
     }
@@ -8430,20 +8430,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("184.41766");
+          values("137.49965");
         }
         fall_constraint(scalar) {
-          values("190.20328");
+          values("142.17882");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-154.49268");
+          values("-107.53270");
         }
         fall_constraint(scalar) {
-          values("-150.04390");
+          values("-101.94700");
         }
       }
     }
@@ -8454,20 +8454,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("178.97781");
+          values("132.03816");
         }
         fall_constraint(scalar) {
-          values("186.35590");
+          values("138.30312");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-148.48077");
+          values("-101.49833");
         }
         fall_constraint(scalar) {
-          values("-145.74803");
+          values("-97.61935");
         }
       }
     }
@@ -8478,20 +8478,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("184.93462");
+          values("138.01123");
         }
         fall_constraint(scalar) {
-          values("190.22252");
+          values("142.20323");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-155.42053");
+          values("-108.45748");
         }
         fall_constraint(scalar) {
-          values("-150.36620");
+          values("-102.27613");
         }
       }
     }
@@ -8502,20 +8502,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("169.81761");
+          values("122.85502");
         }
         fall_constraint(scalar) {
-          values("176.59476");
+          values("128.48526");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-140.88840");
+          values("-93.88817");
         }
         fall_constraint(scalar) {
-          values("-137.05075");
+          values("-88.85869");
         }
       }
     }
@@ -8526,20 +8526,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("171.70082");
+          values("124.74329");
         }
         fall_constraint(scalar) {
-          values("178.32417");
+          values("130.25998");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-142.70132");
+          values("-95.70213");
         }
         fall_constraint(scalar) {
-          values("-138.64957");
+          values("-90.51024");
         }
       }
     }
@@ -8550,20 +8550,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("173.55231");
+          values("126.54476");
         }
         fall_constraint(scalar) {
-          values("179.75174");
+          values("131.58571");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-144.59634");
+          values("-97.57251");
         }
         fall_constraint(scalar) {
-          values("-140.28105");
+          values("-91.99480");
         }
       }
     }
@@ -8574,20 +8574,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("191.94365");
+          values("145.03555");
         }
         fall_constraint(scalar) {
-          values("200.69746");
+          values("152.66669");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-165.19267");
+          values("-118.24422");
         }
         fall_constraint(scalar) {
-          values("-163.40614");
+          values("-115.30074");
         }
       }
     }
@@ -8598,20 +8598,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("173.86153");
+          values("126.84676");
         }
         fall_constraint(scalar) {
-          values("180.02222");
+          values("131.86308");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-144.93190");
+          values("-97.89844");
         }
         fall_constraint(scalar) {
-          values("-140.58374");
+          values("-92.30342");
         }
       }
     }
@@ -8622,20 +8622,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("175.26932");
+          values("128.31648");
         }
         fall_constraint(scalar) {
-          values("181.30345");
+          values("133.23982");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-146.22476");
+          values("-99.22988");
         }
         fall_constraint(scalar) {
-          values("-141.64763");
+          values("-93.50867");
         }
       }
     }
@@ -8646,20 +8646,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("170.91713");
+          values("123.87772");
         }
         fall_constraint(scalar) {
-          values("177.45297");
+          values("129.16280");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-142.04066");
+          values("-94.97157");
         }
         fall_constraint(scalar) {
-          values("-138.09183");
+          values("-89.66340");
         }
       }
     }
@@ -8670,20 +8670,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("190.81181");
+          values("143.87814");
         }
         fall_constraint(scalar) {
-          values("199.75642");
+          values("151.71585");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-164.05602");
+          values("-117.07879");
         }
         fall_constraint(scalar) {
-          values("-162.47304");
+          values("-114.35776");
         }
       }
     }
@@ -8694,20 +8694,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("188.11673");
+          values("141.12550");
         }
         fall_constraint(scalar) {
-          values("197.32935");
+          values("149.20065");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-161.47588");
+          values("-114.45193");
         }
         fall_constraint(scalar) {
-          values("-160.19113");
+          values("-111.96717");
         }
       }
     }
@@ -8718,20 +8718,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("179.96393");
+          values("133.02008");
         }
         fall_constraint(scalar) {
-          values("185.28024");
+          values("137.22789");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-150.83008");
+          values("-103.84039");
         }
         fall_constraint(scalar) {
-          values("-145.58151");
+          values("-97.45356");
         }
       }
     }
@@ -8742,20 +8742,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("175.19002");
+          values("128.17764");
         }
         fall_constraint(scalar) {
-          values("181.04684");
+          values("132.88124");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-146.28288");
+          values("-99.25671");
         }
         fall_constraint(scalar) {
-          values("-141.65195");
+          values("-93.35976");
         }
       }
     }
@@ -8766,20 +8766,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("171.32904");
+          values("124.29707");
         }
         fall_constraint(scalar) {
-          values("177.71474");
+          values("129.43832");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-142.50235");
+          values("-95.44222");
         }
         fall_constraint(scalar) {
-          values("-138.42177");
+          values("-90.00739");
         }
       }
     }
@@ -8790,20 +8790,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("172.44186");
+          values("125.43322");
         }
         fall_constraint(scalar) {
-          values("178.96317");
+          values("130.81920");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-143.42294");
+          values("-96.38815");
         }
         fall_constraint(scalar) {
-          values("-139.37027");
+          values("-91.11845");
         }
       }
     }
@@ -8814,20 +8814,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("172.92343");
+          values("125.88662");
         }
         fall_constraint(scalar) {
-          values("179.15604");
+          values("130.87444");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-144.02911");
+          values("-96.96542");
         }
         fall_constraint(scalar) {
-          values("-139.78282");
+          values("-91.36742");
         }
       }
     }
@@ -8838,20 +8838,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("191.91100");
+          values("144.99049");
         }
         fall_constraint(scalar) {
-          values("200.70422");
+          values("152.67892");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-165.15619");
+          values("-118.19248");
         }
         fall_constraint(scalar) {
-          values("-163.41135");
+          values("-115.31348");
         }
       }
     }
@@ -8862,20 +8862,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("139.35580");
+          values("92.43643");
         }
         fall_constraint(scalar) {
-          values("169.19669");
+          values("120.46303");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-106.23693");
+          values("-59.29765");
         }
         fall_constraint(scalar) {
-          values("-125.34955");
+          values("-76.63540");
         }
       }
     }
@@ -8886,20 +8886,20 @@ library (ot_hgi_topk_lane_tile_ss) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("143.48221");
+          values("96.63354");
         }
         fall_constraint(scalar) {
-          values("172.21141");
+          values("123.47080");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-110.65264");
+          values("-63.78650");
         }
         fall_constraint(scalar) {
-          values("-128.89525");
+          values("-80.12438");
         }
       }
     }

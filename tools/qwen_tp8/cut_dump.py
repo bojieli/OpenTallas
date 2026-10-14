@@ -36,3 +36,8 @@ C.CAP_MODE='v3'; A=C.Net(out/'rom_tp8b.json'); R=C.rom_cuts(A)
 json.dump(R, open(out/'tp8b_cuts_v3.json','w'), indent=1)
 print('V3 row', R['row_H_max']['util'], 'spine', R['spine_V_max']['util'], 'col', R['col_V_max']['util'])
 for r in R['fine'][:6]: print('V3 fine', r)
+# pin alignment of every die bundle (owner 2026-10-13, tools/hier_contract/pin_align.py): jog, bit order, length
+pa, PA = D.pin_align_record('qwen_rom', m, v.masters(m, 1), v.port_widths(m, 1), D.real_blocks('qwen_rom', m))
+json.dump(pa, open(out/'pin_align.json','w'), indent=1, default=str)
+print(PA.line(pa))
+if pa['verdict'] == 'FAIL' and PA.gate_mode() == 'fail': sys.exit('pin align FAIL (see pin_align.json; OT_PIN_ALIGN_GATE=warn builds anyway)')

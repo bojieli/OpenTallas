@@ -14,7 +14,19 @@
  "price": {
   "cycles": 63800,
   "per": "L0 verify, 5 columns",
-  "src": "hgi-1010.log 20:22 h (hgi_sim DS MTP verify, interim)"
+  "src": "hgi-1010.log 20:22 h (hgi_sim DS MTP verify, interim)",
+  "decomposition": {
+   "per_column_cycles": {
+    "swapin": 335.9,
+    "embed": 326.0,
+    "L0 body": 11861.9,
+    "swapout": 241.0
+   },
+   "per_column_total": 12764.8,
+   "columns": 5,
+   "total": 63824.0,
+   "src": "the price-era simulator (tools/ at 867a9381e, S2 schedule per kernel body) re-run 2026-10-13 on today's snapshot and golden: PASS, ot-epyc4:/srv/opentallas-scratch/claude/mtp-v3/k867/sim.json; 5 x 12,764.8 = 63,824 = the 63,800 of record (rounded there). Nothing is re-priced: these are the terms the 63,800 was the sum of."
+  }
  },
  "measured": {
   "cycles": null,
@@ -127,12 +139,12 @@
   }
  },
  "native_b2_swap": {
-  "status": "DISPATCHER_COMPONENT_QUALIFIED_CALLER_BLOCKED_ON_ALLOCATION",
-  "source_commit": "1b262b327",
+  "status": "NATIVE_LAYOUT_VEHICLE_PASS_SIM (program records + B2 placement rule + component benches); die composition not routed",
+  "source_commit": "claude/mtp-lead2-1013 4eae2d9b5 (3cb500275 layout, cebb4a4ec benches, 4eae2d9b5 data window, 9d16f820f manifest membership)",
   "evidence": "b2_native_swap.json",
-  "entry": "Kernels.swap_b2(into,h_allocations,pre_allocation)",
-  "exactness": "8 focused tests PASS, full 20,480-word h and eight-word PRE, STORE/LOAD over all 13slots, compact LOCAL and strided MIRROR, stack/row/early-fence faults detected",
-  "remaining": "allocation decision above; DispatchGroup program encoding; vehicle run; swap-in (LOAD) engine path (DMA FRONT / mover, not ot_hgi_dma_back); die slots/wires; full verify <=1.10*63800 not measured",
+  "entry": "Kernels(m, spec, b2_swap='native') / `ds_mtp_kernels.py sim --swap native` (logical VM, GRP / GLAST header parameter); Kernels.swap_b2 + hgi_b2.mtp_swap.allocations_from_placement for resolved slice descriptors",
+  "exactness": "tests/test_hgi_b2_mtp_swap.py + _caller.py 27 PASS: native image by a hand-written rule over all 13 slots (STORE + LOAD, LOCAL and MIRROR); image == the STRIPE4 image with rows permuted by owner and unreadable by the STRIPE4 rule; allocator places quarter q LOCAL q from the native records alone; the committed DS L14 placement lowers h as it stands; mutants: member on another cluster's words refused by Check, 8 placement mutants, legacy-records-only placement refused, stack / row / early fence",
+  "remaining": "the B2 pass over the whole MTP program (export_b2 covers the layer vehicles only); routes of E, the record adapter and the cluster front slots; die slots; e2e die bench with four clusters",
   "qualified": false,
   "caller": {
    "source_commit": "4e7f15593 (merged on claude/mtp-dispatch-1013)",
@@ -141,7 +153,40 @@
    "tests": "python3 -m pytest -q tests/test_hgi_b2_mtp_swap.py tests/test_hgi_b2_mtp_swap_caller.py : 22 passed (8 lowering + 14 caller: real-allocator derivation, STORE and LOAD vs the STRIPE4 oracle slots 0..12 with PRE, record order, refusals, default path)",
    "allocator_finding": "the record-liveness allocator does NOT place h as rows q+4j per cluster today. Swap records alone: all of h LOCAL cluster 0. Committed DS L14 placement (results/rtl/hbm_b2_1012/v8_ds_L14/placement.json): h LOCAL in CONTIGUOUS quarters (cluster q = rows 80q..80q+79), PRE 4 words MIRROR -> allocations_from_placement REFUSES both. Only an h that is MIRROR-resident (read whole by a split record; base 65536 + 64q, stride 256) is accepted.",
    "blocked_on": "allocation decision: h MIRROR (or row-mod-4 LOCAL) in the allocator, OR a contiguous-quarter own-stack HBM image (changes the swap image away from the legacy STRIPE4 golden; needs the lead). Also open: Kernels.image()/encode_program has no DispatchGroup encoding; run_vehicle does not pass b2_swap."
-  }
+  },
+  "allocation_decision": "CLOSED 2026-10-13: h goes on the slot BY OWNER. The B2 allocator holds h where the layer's split records compute on it (cluster q = the contiguous quarter, logical rows 80q..80q+79; committed DS L14 placement LOCAL q, phys 0, stride 64). Native layout: slot row q+4j on stack q <- logical row 80q+j. Same sectors / stacks / per-stack footprint as STRIPE4 (COLB + slot*CSTR + 64q + 256j), rows permuted; zero ring words; no MIRROR h (20,480 of 32,768 mirror words) and no row-mod-4 compute split. The slot image is not the legacy one: a program uses one rule for every swap.",
+  "b2_pass": "hgi_b2/b2.py: a GRP-marked DMA record is cluster q's own record (Collect: need bit q + one sub-descriptor; Check mode NATIVE: every word in slice q or mirror, affine, 0 ring words, physical sub-descriptor per member; a member on another cluster's words is refused)",
+  "vehicle_run": {
+   "run": "ot-epyc4:/srv/opentallas-scratch/claude/mtp-v4n/nat (96-die simulator, golden gspec, HLL 1, pinned 4eae2d9b5, `--swap native`, COLB in the data window)",
+   "verdict": "PASS",
+   "result": "accept stream == golden [5, 223, 939]; drafts [223, 18, 16, 223] exact; 6/6 L0 columns bit-exact on all ranks (read back from the slots by native_row, independent of the records); 281 swap-in round trips 0 bad",
+   "s2_job_cycles": 686866.7,
+   "s2_swapin_per_launch": 347.9,
+   "s2_swapout_per_launch": 253.0,
+   "control": "same source, default STRIPE4 swap (mtp-v4n/leg): PASS, S2 680,254.7, swapin 335.9, swapout 241.0",
+   "golden_slot_image": {
+    "layout": "native",
+    "rank": 0,
+    "slots": 13,
+    "slot_bytes": 131072,
+    "window": "stack-local COLB = 0x510000000 (data window + 256 MiB) on stacks 0..3; the digests are of the window bytes and equal the first run's at the 31 GiB base",
+    "stack_sha256": [
+     "372d9e3a7176bc9f3ce2c992457c384311be5014f425a2050a53195aa982ee52",
+     "02783dacdc52831576df090b5de82a65ac5a049f53cdef78646d6e5dede8cd83",
+     "45d11f38c4a2204d308b98336e17447dcdf01060b996c87dbeee183c9cc300bc",
+     "a6d7b8931f21817eb4f724aba755812415506ba941dad69c361d2d56beb40094"
+    ],
+    "stripe4_stack_sha256": [
+     "734dc642546a28afb39ab6add1a2a5ae5c6a946d24ea69ccba0316f4e943c395",
+     "1b579774d542cae1cbe0090a6c8c31dfd11dee96d46c3de65ccf9c96ed7de0d2",
+     "7e6e8114223d5a98a3ab05cf019218c9a564876e27d45b26b4256e460235cbb8",
+     "49de084942f689f4ae3bd0e741f8b0b854d2de591e0ceddec4f440c514e00a35"
+    ],
+    "regenerate": "python3 tools/hgi_sim/ds_mtp_kernels.py sim --golden GSPEC --out OUT --swap native  (OUT/colslots_rank0.npz, sim.json colslot_image)"
+   },
+   "note": "simulator pricing: a group member streams from one stack (a quarter of the die bytes a cycle); the RTL measurements of record are the component benches below"
+  },
+  "rtl_benches_native_layout": "b2_swap_suite s4 (cebb4a4ec, ot-epyc4 mtp-v4n): oracle + slice stimulus in the native image, DUTs unchanged: grp0 PASS 203 (0.819), grp MUT 1 2 3 5 FAIL, MUT4 THROUGHPUT FAIL 607; rec0 PASS 224 (0.903), doorbell -> completion 307, rec MUT 1 2 3 5 6 7 8 9 FAIL, MUT4 FAIL 613; in0 PASS 348 (1.036 of 336), in MUT 1 2 3 FAIL, MUT4 THROUGHPUT FAIL 1,226 -- the cycles of the STRIPE4-oracle suite s3"
  },
  "native_b2_swap_dispatcher": {
   "element": "ot_hgi_b2_swap_disp + ot_hgi_b2_swap_ep + ot_hgi_b2_swap_relay (rtl/hbm_accel/generic/b2/ot_hgi_b2_swap_disp.sv); composition ot_hgi_b2_swap_grp with four UNCHANGED ot_hgi_dma_back NS1/NB8/VCR8",
@@ -183,10 +228,78 @@
    "ot_hgi_b2_swap_ep (x4)": "461 flops / 2,294 cells each",
    "relay per cluster at DHOPS 10": "2,310 flops (228 b down + 3 b up)"
   },
-  "physical": "NOT routed. S belongs in the cmdproc tile (beside ot_hgi_b2_disp); E in each cluster DMA unit tile at the ot_hgi_dma_back mv pin. New wires if the move-level link is kept: 4 x (228 down + 3 up) = 924 b, 10 relay stages each way; cut check x15 spine 0.584 -> 0.590 (two links) / 0.596 (all four) <= 0.60. Zero-wire alternative: carry the four records on the existing ot_hgi_b2_disp cb/rb buses with b2_dma_q BACK=1.",
+  "physical": "S ROUTED: hgi_b2_swap_disp_ref-b-ec94b01de CLOSED TT +86.72 / FF +25.28 / DRC 0 (EPYC1; --cts 3,008 sinks, insertion 127.1 ps, spread 6.4 ps; child_lint PASS; bench swap_grp_exact PASS 203 cycles, mut1/2/3/5 FAIL, mut4 throughput FAIL on the routed source), auto-merged main 6434a3e12 / record cc8155b67. S source unchanged since. E (cluster DMA tile) and the adapter (cmdproc glue) are not routed; die slots granted by contract v12 (zero new wires), not yet in the generator preset.",
   "swap_in": "NOT covered: ot_hgi_dma_back is VM -> HBM only; swap-in is DMA FRONT / the mover (die config FRONT 0)",
   "qualified": false,
   "bench_gate_pass": true,
-  "qualified_note": "NOT qualified (element gate needs TT/FF/DRC/child_lint). Passed: bench gate of the dispatcher COMPONENT only (exact PASS + mutants FAIL + ratio 0.815 <= 1.10). TT/FF/DRC/child_lint not run: no element gate claim; MTP.VERIFY stays NO_PASSING_VEHICLE."
+  "qualified_note": "S: element gate met as a ref leaf (TT/FF/DRC 0, exact bench + mutants bound to the route, child_lint PASS, 203/248 = 0.819). E, the record adapter and the die composition are not routed: MTP.VERIFY stays without an RTL vehicle PASS.",
+  "program_record_bench": {
+   "bench": "tb_hgi_b2_swap_rec: program image -> REAL ot_hgi_seq -> ot_hgi_b2_swap_rec (REAL ot_hgi_dma_record) -> S -> relays -> 4 REAL ot_hgi_dma_back",
+   "measured_cycles": {
+    "first DMA dispatch -> fence answer": 224,
+    "doorbell -> completion": 307
+   },
+   "ratio": 0.903,
+   "exact": "PASS (6 runs x 20,488 words) + 2 negative programs (duplicate cluster; dropped GLAST) end in the sticky unit fault with 0 HBM sectors written, S's own fault first",
+   "mutants": "MUT 1 2 3 5 (S), 6 (composition: S's fault report dropped), 7 9 (adapter), 8 (wrong TOKEN) FAIL; MUT 4 serialized FAIL (613 cycles)",
+   "single_owner": "2026-10-13: rec MUT3 and MUT6 survived while the adapter repeated S's outstanding count and S's duplicate-cluster check. The adapter now holds neither: the fence answer is S.fence_quiet AND the adapter's own pipeline, the duplicate-cluster fault is S's. Both mutants FAIL in this bench (suite s3).",
+   "suite": "ot-epyc1tb:/srv/opentallas-scratch/claude/mtp-rtl2/s3 (grp0 203 = 0.819; grp 1 2 3 5 FAIL, 4 throughput FAIL 607)"
+  }
+ },
+ "native_b2_swap_in": {
+  "element": "ot_hgi_b2_swap_disp (S, unchanged) + relays + ot_hgi_b2_swap_ep + ot_hgi_b2_swapin_fe + four UNCHANGED ot_hgi_dma_front B2 1 / QID q (rtl/hbm_accel/generic/b2/ot_hgi_b2_swapin.sv)",
+  "scope": "COMPONENT (swap-IN dispatch group: four own-stack h LOADs + PRE -> done = every VM write acknowledged). Not the MTP.VERIFY class; no physical route of the front slots.",
+  "on_token_path": true,
+  "token_path_note": "every kernel body of the MTP continuation starts with a swap-in of its column: 5 per L0 verify (one a column, inside the 63,800), 281 in the golden one-step job (853 launches); 94,388 of the job's 680,255 simulator cycles = 13.9 %",
+  "price_cycles": 336,
+  "limit_cycles": 369,
+  "price_src": "price.decomposition.swapin: 335.9 = hgi_sim S2 schedule of the swapin body (DMA.LOAD h 81,920 B STRIPE4 + DMA.LOAD PRE 32 B + END; DMA.LOAD = HBM first access 104 + bytes / die bandwidth, load issue interval 4; cp_busy 11). The same value at 867a9381e (price era) and on main today. It is the swap-in term of the 63,800 price, not a new price.",
+  "shape": "production swap-in: one group of four linear own-stack h LOADs (80 rows x 64 FP32 each from stack q, 20,480 words) + PRE 8 words on cluster 0, beats one a cycle at the dispatcher input -> done; slots 0,5,7,12; compact LOCAL and MIRROR destinations; DHOPS 10, svc HOPS 3, first data beat RLAT 40 after a request (the kport latency of every e2e / DMA bench: tb_hgi_e2e KLAT 40), lane credit 16",
+  "measured_cycles": {
+   "DHOPS10_HOPS3_RLAT40_LD16 (production bench shape)": 348,
+   "RLAT98 (sensitivity)": 696
+  },
+  "ratio": 1.036,
+  "latency_sensitivity": "6.0 cycles per cycle of svc first-beat latency (348 at RLAT 40, 696 at RLAT 98): ot_hgi_dma_front issues an 80-row record as windows of 4 rows and the group spends ~6 serial request round trips; the 1.10 limit (369) holds only for RLAT <= 43. The price model charges ONE first access (104) + the stream. If the die's svc read latency is above 43 cycles the swap-in is over 1.10x and the structural fix is in the front (issue the next windows while the first is in flight), not in S.",
+  "exact": "PASS (6 runs, 4 slices whole-compared, 2,561 sectors landed each; done never before the last landed sector)",
+  "mutants": {
+   "MUT1 clusters 1/2 swapped": "FAIL",
+   "MUT2 cluster 2 destination + 256": "FAIL",
+   "MUT3 join ignores outstanding count": "FAIL (done at +9)",
+   "MUT4 serialized group": "exact but THROUGHPUT FAIL 1,226 > 369"
+  },
+  "bench": "VERILATOR=... bash rtl/hbm_accel/generic/b2/tb/b2_swap_suite.sh OUT (in0..in4); ot-epyc1tb:/srv/opentallas-scratch/claude/mtp-rtl2/s3",
+  "qualified": false,
+  "bench_gate_pass": true,
+  "qualified_note": "component bench gate only (exact + mutants + 1.036 at the bench latency). No TT/FF/DRC/child_lint of the cluster-side front slots; latency sensitivity above is an open risk."
+ },
+ "sim_vehicle_1013": {
+  "verdict": "PASS",
+  "source": "main 6b91d82d9 (tools/hgi_sim table layout by HBM address, 98a0a9fef)",
+  "run": "ot-epyc4:/srv/opentallas-scratch/claude/mtp-v3/fix1 (96-die simulator, golden gspec, HGI_FUSED_HLL=1 die target)",
+  "result": "accept stream == golden [5, 223, 939]; drafts [223, 18, 16, 223] exact; targets exact; 6/6 L0 columns, DSK rows and 15/15 DSpark stage rows bit-exact; 281 swap-in round trips 0 bad; HC reader trace 1008 / 0 bad / 0 dead",
+  "root_cause": "the divergence (drafts [223,939,18,16], all stage rows wrong) was the GPK gain layout (af2622f4d rule B) looked up by table name through the last build_tables offsets: relocated stage gains read unpermuted. Control: the same failing tree with HGI_FUSED_HLL=0 PASSES (mtp-v3/hll0). NOT the 8-word PRE swap / sector-rounded DLOG store of 0398174d4 (both consistent).",
+  "s2_cycles": {
+   "job": 680254.7,
+   "L0_body_rank0": 12393.2,
+   "L0_body_hc_row_rank3": 12709.3,
+   "swapin": 335.9,
+   "embed": 326.0,
+   "swapout": 241.0,
+   "L0_verify_5_columns_rank0": 66480.5,
+   "L0_verify_5_columns_rank3": 68110.5,
+   "ratio_vs_63800_rank0": 1.042,
+   "ratio_vs_63800_rank3": 1.0676
+  },
+  "note": "simulator pricing of today's lowering, NOT an RTL measurement: the RTL e2e stages C / D / E are the measurement of record."
+ },
+ "colslot_window_defect_1013": {
+  "defect": "the column slot store COLB was stack-local 6 GiB on all four stacks; on stack 2 that is flat 70 GiB, inside the weight manifest's address map (WBASE = 64 GiB): layers.0.ffn.experts.w2 [0x11623fea40, 0x12613fea40), expert 44, rows 4,098..4,881 -- on the dies that own those rows every swap-out of rows o = 2 mod 4 wrote over weight rows (the manifest map is the same on every die; a die holds its own row range of each matrix)",
+  "evidence": "ot-epyc4 mtp-v4n colcheck (the vehicle's own Manifest against the four slot windows): exactly one overlap, stack 2",
+  "why_unseen": "the simulator reads weights from the checkpoint and the STRIPE4 code bit kept the address out of the manifest lookup; the e2e bench stubs SM (its hbm.bin holds no SM weight rows)",
+  "fix": "4eae2d9b5: ds_native STACK_BYTES (22.5e9, the RTL's limit) + a reserved DATA WINDOW on every stack (stack-local 20 GiB + 512 MiB; Manifest.place skips it, a fixed-base extent in it is refused); COLB = window + 256 MiB; Kernels.check_colslot_window() proves the four slot windows against the window, the stack capacity, the program's manifest extents and HC stripe rows; 9d16f820f: ds_native DMA units decide weight-or-data by manifest membership",
+  "e2e_stages_on_8eb26912c": "not affected as measurements (the slot bytes are data regions of the bench image)",
+  "first_attempt": "28cbaaed8 put COLB at stack-local 31 GiB: above STACK_BYTES, every engine of suite s5 raised its range fault (0 sectors written) -- the RTL caught it",
+  "open_for_owners": "(a) HC_STRIPE_LOC = stack-local 30 GiB (32.2e9 B) is above STACK_BYTES: the die's loader address check (ot_hbm_loader_service_join / ot_hbm_accel_loader_addr_to_service STACK_BYTES 22.5e9) refuses every HC row prefetch as addressed today; 256 MiB of the data window is kept for the rows (one constant + vector regeneration by the DS HBM vehicles). (b) the MTP vehicle's weight manifest (L0 + 3 stages + head, whole matrices at one map) ends at stack 2 local 21.1 GiB > STACK_BYTES (20.95 GiB); MAN_END still guards 30 GiB. (c) the Engram home table (stack 3 from local 0) must end below the data window."
  }
 }

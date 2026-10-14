@@ -119,6 +119,62 @@ class Sequence(unittest.TestCase):
         with self.assertRaises(ve.VerdictError):
             ve.load_verdict(vj, orfs, orfs / NICK)
 
+    def mkjob(self, ioref=True):
+        """an ARCHIVED legacy-lane run: job.json + run/cl (no verdict Tcl), job commit tree with the post-SDCs"""
+        ar, src = self.tmp / "ar", self.tmp / "src"
+        (ar / "run/cl").mkdir(parents=True)
+        for f in ("physical/k/signoff_unc60.sdc", "physical/common_flow/io_ref_routed.sdc"):
+            (src / f).parent.mkdir(parents=True, exist_ok=True)
+            (src / f).write_text(f + "\n")
+        (ar / "run/cl/io_ref_routed.sdc").write_text("loop copy\n")
+        (ar / "job.json").write_text(json.dumps(dict(name="j", spec=dict(source=dict(commit="abc")), metrics=dict(
+            sdc_name="6_final.sdc", post_sdc=["physical/k/signoff_unc60.sdc", "physical/common_flow/io_ref_routed.sdc"],
+            setup_post_sdc=[], setup_corner="tt", ss_ps=7.7, ff_ps=18.5))))
+        r = dict(appended=["/host/run/cl/io_ref_routed.sdc"], inserted=[], replaced={},
+                 setup_tt=dict(worst_slack_ps=7.75, errors=[]), hold_ff=dict(worst_slack_ps=18.6, errors=[]))
+        if not ioref:
+            r["setup_tt"] = dict(error="no w18_sta_ss.tcl")
+        (ar / "run/cl/routed_ioref.a2.json").write_text(json.dumps(r))
+        return ar, src
+
+    def test_job_replay_is_the_jobs_post_sdc_order(self):
+        ar, src = self.mkjob()
+        jb = ve.load_job(ar / "job.json", src, None, NICK)
+        self.assertEqual(jb["expect"], {"tt": 7.75, "ff": 18.6})
+        self.assertEqual(jb["seq"]["ss"], [
+            f"read_db /in/{NICK}/6_final.odb", f"read_sdc /in/{NICK}/6_final.sdc", f"read_spef /in/{NICK}/6_final.spef",
+            "set_propagated_clock [all_clocks]", "read_sdc /src/physical/k/signoff_unc60.sdc",
+            "read_sdc /src/physical/common_flow/io_ref_routed.sdc", "read_sdc /cl/io_ref_routed.sdc"])
+        self.assertEqual(jb["seq"]["ss"], jb["seq"]["ff"])
+
+    def test_job_replay_without_a_clean_ioref_uses_the_metrics(self):
+        ar, src = self.mkjob(ioref=False)
+        jb = ve.load_job(ar / "job.json", src, None, NICK)
+        self.assertEqual(jb["expect"], {"tt": 7.7, "ff": 18.5})
+        self.assertNotIn("read_sdc /cl/io_ref_routed.sdc", jb["seq"]["ss"])     # nothing was appended to that verdict
+
+    def test_job_replay_refuses_a_missing_post_sdc(self):
+        ar, src = self.mkjob()
+        (src / "physical/k/signoff_unc60.sdc").unlink()
+        with self.assertRaises(ve.VerdictError):
+            ve.load_job(ar / "job.json", src, None, NICK)
+
+    def test_job_replay_keeps_original_extra_sdc_before_post_sdc(self):
+        ar, src = self.mkjob()
+        extra = ar / "original_extra.sdc"
+        extra.write_text("create_clock -name core_clk -period 1024 [get_ports clk]\n")
+        jb = ve.load_job(ar / "job.json", src, None, NICK, extra)
+        for c in ("ss", "ff"):
+            self.assertEqual(jb["seq"][c][4], "read_sdc /job_extra.sdc")
+            self.assertEqual(jb["seq"][c][5], "read_sdc /src/physical/k/signoff_unc60.sdc")
+        self.assertEqual(jb["files"]["/job_extra.sdc"]["host"], str(extra))
+        self.assertEqual(jb["expect"], {"tt": 7.75, "ff": 18.6})
+
+    def test_job_replay_refuses_missing_original_extra_sdc(self):
+        ar, src = self.mkjob()
+        with self.assertRaises(ve.VerdictError):
+            ve.load_job(ar / "job.json", src, None, NICK, ar / "missing.sdc")
+
     def test_ws(self):
         self.assertEqual(ve.ws_ps("OT_WS max 1.15e-11 min -2e-12"), (11.5, -2.0))
 

@@ -59,7 +59,7 @@ library (qfd_io_serdes_rxd512_ff) {
   }
 
   cell ("ot_qfd_link_adapter") {
-    area : 14155.228 
+    area : 55552.223 
     is_macro_cell : true;
     pin("c_cr") {
       direction : output;
@@ -117,10 +117,10 @@ library (qfd_io_serdes_rxd512_ff) {
         timing_sense : positive_unate;
         timing_type : min_clock_tree_path;
         cell_rise(scalar) {
-          values("408.24014");
+          values("396.39893");
         }
         cell_fall(scalar) {
-          values("429.75531");
+          values("416.07242");
         }
       }
       timing() {

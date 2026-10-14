@@ -1,5 +1,5 @@
 {
- "name": "qfd_tree_delay2_t-u52-COMMIT",
+ "name": "qfd_tree_delay2_t-u52-baaa52fff",
  "block": "ot_qwen_tree_delay2_t",
  "ref_tile": true,
  "owner": "Claude:qwen-tp8-die-1013",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/qwen-tp8-die-1013",
-  "commit": "COMMIT",
+  "commit": "baaa52fff",
   "extra_paths": [
    "tools/qwen_die_seam"
   ]
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tree_delay2_t/qfd_tree_delay2_t-u52-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tree_delay2_t/qfd_tree_delay2_t-u52-baaa52fff"
   }
  ],
  "cycles_added": 2,

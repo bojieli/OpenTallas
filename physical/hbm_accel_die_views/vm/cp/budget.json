@@ -140,7 +140,7 @@
   "u_re": {
    "x": 950.4,
    "y": 806.4,
-   "w": 21.6,
+   "w": 259.2,
    "h": 388.8,
    "orient": "R0"
   },
@@ -154,26 +154,26 @@
   "u_s0": {
    "x": 345.6,
    "y": 540.0,
-   "w": 259.2,
+   "w": 280.8,
    "h": 216.0,
    "orient": "R0"
   },
   "u_s2": {
-   "x": 604.8,
+   "x": 626.4,
    "y": 540.0,
-   "w": 259.2,
+   "w": 280.8,
    "h": 216.0,
    "orient": "R0"
   },
   "u_s1": {
    "x": 345.6,
    "y": 1231.2,
-   "w": 259.2,
+   "w": 280.8,
    "h": 216.0,
    "orient": "MX"
   },
   "u_s3": {
-   "x": 604.8,
+   "x": 626.4,
    "y": 1231.2,
    "w": 259.2,
    "h": 216.0,
@@ -440,26 +440,18 @@
   {
    "kit": "vm_cp_re",
    "face": "N",
-   "bits": 1,
-   "len_um": 21.6,
-   "peak_b_per_um_layer": 0.03,
+   "bits": 2064,
+   "len_um": 259.2,
+   "peak_b_per_um_layer": 4.58,
    "layers": "M3 M5"
   },
   {
    "kit": "vm_cp_re",
    "face": "S",
-   "bits": 201,
-   "len_um": 21.6,
-   "peak_b_per_um_layer": 5.71,
+   "bits": 2264,
+   "len_um": 259.2,
+   "peak_b_per_um_layer": 4.58,
    "layers": "M3 M5"
-  },
-  {
-   "kit": "vm_cp_re",
-   "face": "E",
-   "bits": 4126,
-   "len_um": 388.8,
-   "peak_b_per_um_layer": 5.37,
-   "layers": "M4 M6"
   },
   {
    "kit": "vm_cp_re",
@@ -505,8 +497,8 @@
    "kit": "vm_cp_slice3",
    "face": "N",
    "bits": 1548,
-   "len_um": 259.2,
-   "peak_b_per_um_layer": 3.03,
+   "len_um": 280.8,
+   "peak_b_per_um_layer": 2.8,
    "layers": "M3 M5"
   },
   {
@@ -601,7 +593,7 @@
    "bits": 201,
    "frm": "u_rb2",
    "to": "u_re",
-   "mid_um": 417.6
+   "mid_um": 423.3
   },
   {
    "net": "n_rb2_wo",
@@ -636,7 +628,7 @@
    "bits": 2063,
    "frm": "u_re",
    "to": "u_fe2",
-   "mid_um": 442.2
+   "mid_um": 363.1
   },
   {
    "net": "n_re_rd",
@@ -650,7 +642,7 @@
    "bits": 2063,
    "frm": "u_re",
    "to": "u_fe1",
-   "mid_um": 446.6
+   "mid_um": 357.8
   },
   {
    "net": "n_root_st",
@@ -706,7 +698,7 @@
    "bits": 1,
    "frm": "u_rt2",
    "to": "u_re",
-   "mid_um": 363.2
+   "mid_um": 355.4
   },
   {
    "net": "n_rt2_eo",
@@ -776,112 +768,112 @@
    "bits": 10,
    "frm": "u_root",
    "to": "u_s0",
-   "mid_um": 43.2
+   "mid_um": 32.4
   },
   {
    "net": "n_s0_rd",
    "bits": 768,
    "frm": "u_s0",
    "to": "u_root",
-   "mid_um": 43.2
+   "mid_um": 32.4
   },
   {
    "net": "n_s0_rv",
    "bits": 1,
    "frm": "u_s0",
    "to": "u_root",
-   "mid_um": 43.2
+   "mid_um": 32.4
   },
   {
    "net": "n_s0_wd",
    "bits": 768,
    "frm": "u_root",
    "to": "u_s0",
-   "mid_um": 43.2
+   "mid_um": 32.4
   },
   {
    "net": "n_s1_cmd",
    "bits": 10,
    "frm": "u_root",
    "to": "u_s1",
-   "mid_um": 43.2
+   "mid_um": 32.4
   },
   {
    "net": "n_s1_rd",
    "bits": 768,
    "frm": "u_s1",
    "to": "u_root",
-   "mid_um": 43.2
+   "mid_um": 32.4
   },
   {
    "net": "n_s1_rv",
    "bits": 1,
    "frm": "u_s1",
    "to": "u_root",
-   "mid_um": 43.2
+   "mid_um": 32.4
   },
   {
    "net": "n_s1_wd",
    "bits": 768,
    "frm": "u_root",
    "to": "u_s1",
-   "mid_um": 43.2
+   "mid_um": 32.4
   },
   {
    "net": "n_s2_cmd",
    "bits": 10,
    "frm": "u_root",
    "to": "u_s2",
-   "mid_um": 259.2
+   "mid_um": 291.6
   },
   {
    "net": "n_s2_rd",
    "bits": 768,
    "frm": "u_s2",
    "to": "u_root",
-   "mid_um": 259.2
+   "mid_um": 291.6
   },
   {
    "net": "n_s2_rv",
    "bits": 1,
    "frm": "u_s2",
    "to": "u_root",
-   "mid_um": 259.2
+   "mid_um": 291.6
   },
   {
    "net": "n_s2_wd",
    "bits": 768,
    "frm": "u_root",
    "to": "u_s2",
-   "mid_um": 259.2
+   "mid_um": 291.6
   },
   {
    "net": "n_s3_cmd",
    "bits": 10,
    "frm": "u_root",
    "to": "u_s3",
-   "mid_um": 259.2
+   "mid_um": 280.8
   },
   {
    "net": "n_s3_rd",
    "bits": 512,
    "frm": "u_s3",
    "to": "u_root",
-   "mid_um": 259.2
+   "mid_um": 280.8
   },
   {
    "net": "n_s3_rv",
    "bits": 1,
    "frm": "u_s3",
    "to": "u_root",
-   "mid_um": 259.2
+   "mid_um": 280.8
   },
   {
    "net": "n_s3_wd",
    "bits": 512,
    "frm": "u_root",
    "to": "u_s3",
-   "mid_um": 259.2
+   "mid_um": 280.8
   }
  ],
  "worst_b_per_um_layer": 5.79,

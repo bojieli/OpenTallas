@@ -100,7 +100,7 @@ library (qfd_lst_c_split_ss) {
           values("151.13139");
         }
         cell_fall(scalar) {
-          values("174.23543");
+          values("174.23538");
         }
       }
       timing() {
@@ -135,26 +135,6 @@ library (qfd_lst_c_split_ss) {
     pin("sel_e") {
       direction : input;
       capacitance : 11.4137;
-      timing() {
-        related_pin : "clk";
-        timing_type : hold_rising;
-        rise_constraint(scalar) {
-          values("18.24188");
-        }
-        fall_constraint(scalar) {
-          values("24.68514");
-        }
-      }
-      timing() {
-        related_pin : "clk";
-        timing_type : setup_rising;
-        rise_constraint(scalar) {
-          values("262.04630");
-        }
-        fall_constraint(scalar) {
-          values("240.87585");
-        }
-      }
     }
     pin("VDD") {
       direction : input;

@@ -276,6 +276,24 @@ class Census(unittest.TestCase):
         s = r["summary"]
         self.assertEqual((r["mode"], s["instances"], s["real"], s["hard_macro"], s["placeholder"]), ("contract", 5, 2, 1, 2))
         self.assertIn("| d | v7 | contract |", (out / "README.md").read_text())
+        # a bindable view is held against the slot's pins: no contract pins = nothing to differ from
+        self.assertEqual((r["masters"]["t_real"]["slot_pins"], s["real_slot_exact"]), ("exact", 2))
+        d = json.loads(c.read_text())
+        for sl in d["slots"]:
+            if sl["cell"] == "t_real":
+                sl["pins"] = [{"name": "no_such_pin[3:0]", "face": "N", "layer": "M5"}]
+                sl["layer_cap"] = {"cap": "M5", "view_max_layer": "M8", "conforms": False}
+        c.write_text(json.dumps(d))
+        self.assertEqual(DC.main(["--die", "d", "--contract", str(c), "--repo", str(self.root), "--out", str(out)]), 0)
+        r = json.loads((out / "d_v7.json").read_text())
+        self.assertEqual((r["summary"]["real"], r["summary"]["real_slot_exact"]), (2, 0))
+        self.assertEqual(r["masters"]["t_real"]["slot_pins"], "differ")
+        self.assertIn("contract pins missing", " ".join(r["masters"]["t_real"]["slot_check"]))
+
+    def test_child_lint_dict_layer_cap(self):
+        import child_lint as CL
+        s = {"layer_cap": {"cap": "M5", "view_max_layer": "M8", "conforms": False}, "view_cap": "M8"}
+        self.assertEqual((CL.pick_cap(s, "M5"), CL.pick_cap(s, "M8"), CL.pick_cap(s, None)), (5, 8, 5))
 
 
 if __name__ == "__main__":

@@ -50,6 +50,7 @@ sys.path.insert(0, str(HERE.parent / "hier_contract"))
 import ref_tile as RT  # noqa: E402
 import child_lint  # noqa: E402
 import textbook_lint as TL  # noqa: E402
+import pin_fit as PF  # noqa: E402
 
 DEFAULT_SRC_PATHS = ("tools", "rtl", "physical", "Makefile")
 # the textbook checks whose refuse tier the gate enforces (calibrated: zero closed-set refusals, see README)
@@ -109,7 +110,7 @@ def synthesis_std_area(chip_area: float, blocks: list, root=ROOT) -> float:
     return max(0.0, chip_area - logical)
 
 
-def rtl_ports(sources, top, root=None):
+def rtl_ports(sources, top, root=None, dirs=False):
     root = root or ROOT
     texts = []
     for f in sources:
@@ -122,7 +123,7 @@ def rtl_ports(sources, top, root=None):
     mods = TL.rtl_modules(texts)
     if top not in mods:
         return None
-    return TL.module_ports(mods[top])
+    return TL.module_port_dirs(mods[top]) if dirs else TL.module_ports(mods[top])
 
 
 def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
@@ -153,6 +154,149 @@ def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
               "safe; a hand pin list must not say x[0])", "declare them scalar in RTL")
     if spec["clock_port"] not in ports:
         g.add("FAIL", "pins", f"clock port {spec['clock_port']} is not a port of {spec['top']}", "fix clock_port")
+
+
+# --------------------------------------------------------------------------------------------- pin fit / pin flops
+def strict_widths(sources, top, params=None, root=None):
+    """{port: (width, is_vector)} of the top with the SPEC's parameters applied, or None when the header is not fully
+    resolved (submit_lint.top_ports: ANSI header, parameter defaults + overrides, packed dimensions multiplied; anything
+    it does not model raises).  The pin-fit estimate refuses a kit, so it reads widths only from this parser: the
+    textbook parser (rtl_ports) evaluates the module DEFAULTS -- hgi_dma_back_b2 (NB=8, VCR=8) and qfd_tt_up4_leaf (NL=4)
+    came out 3-6x too wide, and both tiles are CLOSED."""
+    sys.path.insert(0, str(HERE.parent / "closure_loop"))
+    try:
+        import submit_lint as SL
+    except Exception:  # noqa: BLE001
+        return None
+    root = root or ROOT
+    for f in sources:
+        p = root / f
+        if not p.exists() or p.suffix not in (".sv", ".v"):
+            continue
+        text = p.read_text(errors="replace")
+        if not re.search(r"\bmodule\s+(?:automatic\s+)?" + re.escape(top) + r"\b", text):
+            continue
+        try:
+            ports = SL.top_ports(text, top, {k: str(v) for k, v in (params or {}).items()})
+        except Exception:  # noqa: BLE001  (ExprError and anything else: no estimate)
+            return None
+        return {n: (w, lsb >= 0) for n, w, lsb in ports} or None
+    return None
+
+
+FACE_LEN = {"W": 1, "E": 1, "N": 0, "S": 0}      # index into (W, H) of the face's length
+
+
+def kit_pin_plan(spec: dict, ports: dict | None, outline, lc: dict | None = None):
+    """(route pin settings, [{names, face, range, n, lo, hi, len, layers}]) of a kit, placed as the ROUTE places them
+    (RT.route_pin_settings: the same functions that write kit.env).  n is None when a port width is not known."""
+    lc = lc or RT.layer_contract(spec, RT.contract_slot(spec))
+    st = RT.route_pin_settings(spec, lc)
+    regs = []
+    for r in RT.pin_regions(spec):
+        ln = float(outline[FACE_LEN[r["face"]]])
+        ws = [(ports or {}).get(n, (None, False))[0] for n in r["names"]]
+        lo, hi = r["range"] if r["range"] else (0.0, ln)
+        regs.append({**r, "n": None if any(w is None for w in ws) else sum(ws), "lo": lo, "hi": hi, "len": ln,
+                     "layers": st["h"] if r["face"] in ("W", "E") else st["v"]})
+    return st, regs
+
+
+def check_pin_fit(g: Gate, spec: dict, ports: dict | None, outline, lc: dict | None = None):
+    """GATE = ROUTE (flowfix 2026-10-13): the pin plan is judged with the route's own pin-placement settings.  The
+    route chunks every region into ordered groups of 32 (OT_PIN_GROUP_MAX) and place_pins needs one section on one
+    layer per group; the gate ran with one group per region, so a face filled to ~96 % of its slots passed the gate
+    and died in the route (PPL-0093: qkd_seq_fan-kc2 23 of 1,623 pins, smh_pt_w, s81hc_ctpl, coll_tp8_col_mgb,
+    qkd_land_grp).  tools/pin_fit.py holds the model (a lower bound: it never refuses a placeable plan)."""
+    try:
+        st, regs = kit_pin_plan(spec, ports, outline, lc)
+    except RT.SpecError:
+        return None                      # reported by the kit regeneration
+    if st["exact"]:
+        return st, regs
+    if ports is None:
+        g.add("INFO", "pin_fit", "pin fit not estimated: the top's port widths are not resolved from its header with the "
+              "spec parameters (the --remote run places the pins with the route's settings)")
+        return st, regs
+    bad, unknown = [], []
+    for r in regs:
+        if r["n"] is None:
+            unknown.append("/".join(r["names"][:3]))
+            continue
+        f = PF.region_fit(r["n"], r["lo"], r["hi"], r["len"], r["layers"], st["tracks"], st["group_max"], st["balance"])
+        r["fit"] = f
+        if not f["fits"]:
+            where = f"{r['face']} face {r['len']:g} um" + (f" range {r['lo']:g}-{r['hi']:g}" if r["range"] else "")
+            bad.append(f"{where} ({', '.join(r['names'][:4])}{', ...' if len(r['names']) > 4 else ''}): {f['why']}")
+    for b in bad[:4]:
+        g.add("FAIL", "pin_fit", "the route's pin placement cannot place this plan (PPL-0093 / PPL-0111 / PPL-0086 at "
+              "3_2_place_iop; route "
+              f"OT_PIN_GROUP_MAX={st['group_max']}{' + balanced place_pin' if st['balance'] else ''}, "
+              f"{st['tracks']:g} track(s) a pin): {b}", PF.FIX_TEXT)
+    if unknown:
+        g.add("INFO", "pin_fit", f"pin fit not estimated for {len(unknown)} region(s) with a width the RTL parser could "
+              f"not resolve ({', '.join(unknown[:4])}): the --remote run places them with the route's settings")
+    return st, regs
+
+
+OFLOP_TCL = "physical/qwen_die_masters/io_flop_at_pins.tcl"
+
+
+def check_oflop(g: Gate, spec: dict, plan, dirs: dict | None, outline, tcl_text: str | None):
+    """RECIPE 2 ON A DENSE FACE (flowfix 2026-10-13): kit recipe 2 puts the pin hold stages (out BUF + HB4 + BUF, in HB4
+    + BUF) FIRM at the pins and then the pin flops FIRM at the same pins.  From ~6 b/um the legalised hold stages take
+    more than the flops' default 1 um gap: flops and stages interleave, every flop -> stage -> pin chain crosses the
+    column behind the face several times and global route fails there (GRT-0116: qkd_seq_fan-kc3 at 10.4 b/um, s81su
+    swtl / swth / qbtl, qfd_vm_rr4_t-r41).  io_flop_at_pins.tcl now derives gap / columns from the face (tools/pin_fit.py
+    oflop_plan); this check estimates the same numbers at submit and WARNs with the settings when the kit's hook cannot
+    spread them.  It never refuses: on the 1,101 ref jobs of 10-12/13 the estimate flags all 7 face GRT-0116 routes but
+    also 69 CLOSED ones (it assumes a hold stage and a pin flop on every port; the hook counts the real cells)."""
+    if not plan or not RT.pin_hook_wrapper(spec) or not (spec.get("inhold") or spec.get("outhold")):
+        return
+    st, regs = plan
+    ov = spec.get("orfs_vars", {})
+    cols = int((spec.get("io_flop_at_pins") or {}).get("cols", PF.OFLOP_COLS))
+    try:
+        gap_set = float(ov["OT_OFLOP_GAP"]) if "OT_OFLOP_GAP" in ov else None
+    except (TypeError, ValueError):
+        gap_set = None
+    auto = bool(tcl_text and "OT_OFLOP_AUTO" in tcl_text) and str(ov.get("OT_OFLOP_AUTO", "1")) != "0"
+    W, H = float(outline[0]), float(outline[1])
+    worst = {}
+    for r in regs:
+        if not r.get("n"):
+            continue
+        ds = {(dirs or {}).get(n) for n in r["names"]}
+        stage = max([PF.STAGE_OUT_UM if (d != "input" and spec.get("outhold")) else 0.0 for d in ds]
+                    + [(PF.STAGE_IN_UM if spec.get("inhold_drv", "x") else 0.378) if (d != "output" and spec.get("inhold")) else 0.0
+                       for d in ds])
+        if not stage:
+            continue
+        d = PF.face_density(r["n"], r["hi"] - r["lo"], r["layers"], st["tracks"], st["balance"])
+        p = PF.oflop_plan(d, stage, r["face"] in ("W", "E"), cols)
+        if p["dense"] and p["depth"] > worst.get(r["face"], ({"depth": 0},))[0]["depth"]:
+            worst[r["face"]] = (p, d, r)
+    for face, (p, d, r) in sorted(worst.items()):
+        deep = (W if face in ("W", "E") else H) - 2 * RT.CORE_MARGIN
+        what = (f"{face} face {d:.1f} pins/um ({', '.join(r['names'][:3])}): recipe-2 hold stages take {p['depth']} um "
+                f"behind the face, the pin flops need gap {p['gap']} um and {p['cols']} columns")
+        # OT_OFLOP_GAP / cols are one setting for every face of the kit: name the largest
+        setting = (f'"orfs_vars": {{"OT_OFLOP_GAP": "{max(x[0]["gap"] for x in worst.values())}"}} and '
+                   f'"io_flop_at_pins": {{"cols": {max(x[0]["cols"] for x in worst.values())}}}')
+        if p["band"] > PF.OFLOP_DEPTH_MAX * deep:
+            g.add("WARN", "oflop", f"{what} = {p['band']} um, more than {PF.OFLOP_DEPTH_MAX:.0%} of the {deep:.1f} um core "
+                  "behind the face (GRT-0116 class)", "a longer edge or pins on two layers (lower face density), or "
+                  "drop the pin hold stages of this face (\"outhold\": false + route.hold_delay in RTL)")
+        elif gap_set is not None and gap_set < 0.8 * p["gap"]:
+            g.add("WARN", "oflop", f"{what}, but the kit pins OT_OFLOP_GAP={gap_set:g}: the flops are stacked on the hold "
+                  "stages (GRT-0116 behind the face: qkd_seq_fan-kc3)", f"drop OT_OFLOP_GAP (the hook derives it) or set {setting}")
+        elif gap_set is None and not auto:
+            g.add("WARN", "oflop", f"{what}, but this source's {OFLOP_TCL} has no automatic spread"
+                  + (" (OT_OFLOP_AUTO=0)" if tcl_text and "OT_OFLOP_AUTO" in tcl_text else "")
+                  + ": gap 1.0 um stacks the flops on the hold stages (GRT-0116 behind the face: qkd_seq_fan-kc3)",
+                  f"rebase the kit on main (io_flop_at_pins.tcl with OT_OFLOP_AUTO) or set {setting}")
+        else:
+            g.add("INFO", "oflop", what + (f" (kit OT_OFLOP_GAP={gap_set:g})" if gap_set is not None else " (derived in the flow)"))
 
 
 # --------------------------------------------------------------------------------------------- sources
@@ -284,7 +428,13 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     if re.search(r"define_pdn_grid[^\n]*-macro", pdn) and "ot_ref_present" not in pdn:
         g.add("FAIL", "pdn", "macro grid without a present-master guard (PDN-0217)", "re-run gen")
     # pins vs RTL
-    check_pins(g, spec, rtl_ports(spec["sources"], spec["top"]))
+    ports = rtl_ports(spec["sources"], spec["top"])
+    check_pins(g, spec, ports)
+    # pin plan vs the ROUTE's pin placement (same settings as the route: one source of truth), recipe-2 pin-flop spread
+    plan = check_pin_fit(g, spec, strict_widths(spec["sources"], spec["top"], spec.get("params")), fresh["outline"])
+    tcl = ROOT / OFLOP_TCL
+    check_oflop(g, spec, plan, rtl_ports(spec["sources"], spec["top"], dirs=True), fresh["outline"],
+                tcl.read_text(errors="replace") if tcl.is_file() else None)
     # RTL lint
     files = [str(ROOT / f) for f in spec["sources"] if (ROOT / f).exists()]
     hard = sorted({RT.view_name(c["view"]) for c in spec["children"]})
@@ -331,7 +481,11 @@ EOS
 chmod +x $R/bin/docker; export PATH=$R/bin:$PATH
 cd $R/src && echo {COMMIT} > SOURCE_COMMIT
 T0=$(date +%s)
-SRC=$R/src SYNTH_TIMEOUT={CAP} bash tools/ref_tile/ref_route.sh {KIT}/kit.env gate $R/routes floorplan; FRC=$?
+# the gate builds the tree at the ROUTE's corner (ref_tile.py ROUTE_PREFIX: setup at TT, owner option B): a cluster spine
+# balanced at SS against the children's TT insertion targets measured a mixed-corner spread (dsfd_sp_pq_c, dscoll_ces0_sp)
+export OT_ORFS_CORNER_OVERRIDE=TC
+# pin groups exactly as the job's route command sets them (ref_tile.gen_job; the kit.env's own export wins in both)
+SRC=$R/src SYNTH_TIMEOUT={CAP} OT_PIN_GROUP_MAX={PGM} bash tools/ref_tile/ref_route.sh {KIT}/kit.env gate $R/routes floorplan; FRC=$?
 echo "GATE_FLOW_RC=$FRC GATE_FLOW_S=$(( $(date +%s) - T0 ))"
 C=$R/routes/gate/work/orfs; B=$(ls -d $C/results/asap7/*/base 2>/dev/null | head -1)
 grep -hE "^\[ERROR|Error:|ERROR \[|timed out|TimeoutExpired|exceeded" $R/routes/gate/flow.log $C/*.log 2>/dev/null | head -8 | sed 's/^/GATE_FLOWERR /'
@@ -358,8 +512,9 @@ if [ "{CTS}" = 1 ]; then
   grep -h "^OT_SPINE iter\|^REF_TILE spine" $R/cts.log | tail -2 | sed 's/^/GATE_SPINE /'
   grep -h "OT_SPINE done port" $R/cts.log $C/logs/asap7/*/base/4_1_cts.log 2>/dev/null | head -1 | sed 's/^/GATE_SPINE_DONE /'
   grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
-  python3 tools/closure_loop/ck_insertion.py --base $B --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
+  python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
+  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt')}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
 fi
@@ -385,6 +540,16 @@ def ship_tar(paths):
 
 
 def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool):
+    if host == "auto":
+        picked = subprocess.run(["ot-run", "--mem", str(mem), "--pick"], capture_output=True, text=True)
+        if picked.returncode or not picked.stdout.strip():
+            g.add("FAIL", "remote", "fleet admission could not choose a host: " + picked.stderr[-500:], "read ot-run --status")
+            return
+        host = picked.stdout.strip()
+        g.add("INFO", "remote", f"ot-run selected {host} for {mem} GB; inputs ship there before admission")
+        auto = True
+    else:
+        auto = False
     fp = json.loads((kd / "floorplan.json").read_text())
     ref = set(fp["referenced"])
     # Ship the same transitive Tcl/shell dependencies checked by the local gate.
@@ -398,7 +563,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     commit = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short=9", "HEAD"], capture_output=True,
                             text=True).stdout.strip() + "+wt"
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=cap, KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
-                          RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0)
+                          RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
+                          CLK=spec["clock_port"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     script = f"/tmp/ref_gate_{spec['name']}_{ts}.sh"
     t0 = time.time()
     data = ship_tar(dirs)
@@ -408,11 +574,18 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     if up.returncode:
         g.add("FAIL", "remote", f"cannot ship to {host}: {up.stderr[-200:]!r}", "pick another host")
         return
-    cmd = f"ot-heavy --mem {mem} -- bash {script}"
-    p = subprocess.run(["ssh", host, cmd], stdin=subprocess.DEVNULL, capture_output=True)
+    if auto:
+        # Exactly one ot-heavy reservation, inside ot-run; never nest guards.
+        p = subprocess.run(["ot-run", "--mem", str(mem), "--hosts", host,
+                            "--dir", str(Path(R).parent), "--", "bash", script],
+                           stdin=subprocess.DEVNULL, capture_output=True)
+    else:
+        cmd = f"ot-heavy --mem {mem} -- bash {script}"
+        p = subprocess.run(["ssh", host, cmd], stdin=subprocess.DEVNULL, capture_output=True)
     out = p.stdout.decode(errors="replace")
     logp = Path(os.environ.get("TMPDIR", "/tmp")) / f"ref_gate_{spec['name']}_{ts}.log"   # never into the kit (dirty tree)
     logp.write_text(out + "\n--- stderr\n" + p.stderr.decode(errors="replace")[-4000:])
+    g.remote_host = host
     g.add("INFO", "remote", f"remote log {logp}; host dir {host}:{R}")
     secs = round(time.time() - t0)
     kv = dict(re.findall(r"\b(GATE_[A-Z_]+)=(\S+)", out))
@@ -429,7 +602,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         return
     g.add("INFO", "remote", f"synth + floorplan + PDN OK on {host} in {kv.get('GATE_FLOW_S')} s (gate total {secs} s)")
     if kv.get("GATE_IOP_RC") not in (None, "0"):
-        g.add("FAIL", "io_place", "IO placement failed: " + "; ".join(errs[:3]), "fix the pin plan / pin layers")
+        g.add("FAIL", "io_place", "IO placement failed: " + "; ".join(errs[:3]),
+              PF.FIX_TEXT if any("PPL-0093" in e for e in errs) else "fix the pin plan / pin layers")
     m = re.search(r"^GATE_PORTS (.*)$", out, re.M)
     if m:
         ports = {k: tuple(v) for k, v in json.loads(m.group(1)).items()}
@@ -475,7 +649,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
                   if sev == "WARN" else "")
         if spec["kind"] == "cluster" and spec.get("clock", "spine") == "spine" and kv.get("GATE_CTS_RC") == "0":
             done = re.search(r"^GATE_SPINE_DONE .*OT_SPINE done port (\S+)", out, re.M)
-            if not done or done.group(1) != spec["clock_port"]:
+            if not done or re.sub(r"\[0\]$", "", done.group(1)) != re.sub(r"\[0\]$", "", spec["clock_port"]):
                 g.add("FAIL", "clock_spine", f"no 'OT_SPINE done port {spec['clock_port']}' in the CTS log: the spine did not "
                       "build, TritonCTS ran instead (OT_SPINE_PORT not reaching the container before 225badfab)",
                       "check OT_SPINE_PORT in config.mk and the PRE_CTS hook order (spine sourced first)")
@@ -502,10 +676,29 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
     m = re.search(r"textbook_lint: INFO clock_roots max_root_sinks=(\d+) root=(\S+)", out)
     if m:
         rec["max_root_sinks"], rec["root"] = int(m.group(1)), m.group(2)
-    ck = re.search(r"^GATE_CK .*?\btt insertion all ([\d.]+)\.\.([\d.]+) ps", out, re.M)
-    if cts and ck:
-        lo, hi = float(ck.group(1)), float(ck.group(2))
-        rec["tt_insertion_ps"], rec["tt_spread_ps"] = hi, round(hi - lo, 1)
+    domains = []
+    for line in re.findall(r"^GATE_CK_DOMAIN (.*)$", out, re.M):
+        try:
+            domains.append(json.loads(line))
+        except (ValueError, TypeError):
+            continue
+    if domains:
+        rec["clock_measurements"] = domains
+        # The largest root may be a secondary clock (fcc: str_clk on cks[0],
+        # 17,460 sinks), so its tree must supply its own measured exception.
+        root = (rec["root"] or "").removeprefix("port:")
+        matched = [d for d in domains if d.get("source") == root or d.get("clock") == root]
+        if cts and len(matched) == 1:
+            al = (matched[0].get("tt") or {}).get("all")
+            if al and al.get("min") is not None and al.get("max") is not None:
+                lo, hi = float(al["min"]), float(al["max"])
+                rec["tt_insertion_ps"], rec["tt_spread_ps"] = hi, round(hi - lo, 1)
+                rec["measured_clock"] = matched[0].get("clock")
+    else:
+        ck = re.search(r"^GATE_CK .*?\btt insertion all ([\d.]+)\.\.([\d.]+) ps", out, re.M)
+        if cts and ck:
+            lo, hi = float(ck.group(1)), float(ck.group(2))
+            rec["tt_insertion_ps"], rec["tt_spread_ps"] = hi, round(hi - lo, 1)
     ok, text = TL.clock_rule(rec["max_root_sinks"], rec)
     rec["verdict"] = "PASS" if ok and rec["max_root_sinks"] is not None else ("UNKNOWN" if ok else "REFUSE")
     rec["text"] = text
@@ -569,7 +762,7 @@ def main(argv=None) -> int:
     ap.add_argument("target", nargs="?", help="kit dir (physical/ref_tile/<name>) or a tile spec json")
     ap.add_argument("--job", help="closure-loop job spec (default: the kit's job.json)")
     ap.add_argument("--commit", help="check source paths at this commit (default: working tree)")
-    ap.add_argument("--remote", help="fleet host for the synthesis / floorplan / textbook run (ot-epyc2, ...)")
+    ap.add_argument("--remote", help="fleet host for the synthesis / floorplan / textbook run (auto: ot-run admission and placement)")
     ap.add_argument("--cts", action="store_true", help="with --remote: continue through CTS, report insertion + paths")
     ap.add_argument("--synth-cap", type=int, default=2700, help="synthesis time cap, s (default 2700)")
     ap.add_argument("--mem", type=int, default=24, help="ot-heavy GB (< 32 = small slot, no big-slot wait)")
@@ -605,7 +798,7 @@ def main(argv=None) -> int:
     g.print()
     if a.remote and getattr(g, "clock", None) and "kd" in locals():
         out = {"schema": "opentallas.ref_tile.gate_result.v1", "kit": kd.name, "verdict": g.verdict,
-               "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": a.remote, "cts": bool(a.cts),
+               "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": getattr(g, "remote_host", a.remote), "cts": bool(a.cts),
                "commit": subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short=9", "HEAD"], capture_output=True,
                                         text=True).stdout.strip(),
                "clock": g.clock, "items": [i for i in g.items if i["severity"] != "INFO"][:40]}
@@ -625,12 +818,15 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
             return
         a = subprocess.run(["git", "-C", repo, "archive", commit, *paths], capture_output=True, timeout=120)
         subprocess.run(["tar", "-x", "-C", str(dst)], input=a.stdout, check=True)
-    arch([kit, "physical/qwen_die_masters/io_ref_skew.sdc"])
+    arch([kit, "physical/qwen_die_masters/io_ref_skew.sdc", OFLOP_TCL])
     sp = json.loads((dst / kit / "spec.json").read_text())
     # sdc_extra too: without it RT.gen raised FileNotFoundError and the whole gate went SKIP for every kit that has one
     arch(list(sp.get("sources", [])) + list(sp.get("sdc_extra", []))
          + [it["view"] for it in sp.get("macros", []) + sp.get("children", [])]
-         + ([sp["contract"]["file"]] if sp.get("contract") else []))
+         + ([sp["contract"]["file"]] if sp.get("contract") else [])
+         # job.benches_from too (flowfix 10-13): gen_job reads the shared bench template, and without it the whole gate
+         # went SKIP "gate error FileNotFoundError" for every kit that has one (all s81hc_cry* / ctr* kits of 10-13)
+         + ([sp["job"]["benches_from"]] if (sp.get("job") or {}).get("benches_from") else []))
 
 
 def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") -> dict | None:
@@ -689,6 +885,13 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
                         ROOT = RT.ROOT = Path(td)
                         check_kit(g, Path(td) / kit, None)
                         ROOT = RT.ROOT = Path(repo)
+                        if spec.get("auto_react_parent"):
+                            # a loop successor (-arh / -arg / -hs) re-routes a kit whose parent already placed its pins
+                            # and reached the router: the flowfix estimates never stop it
+                            for i in g.items:
+                                if i["check"] in ("pin_fit", "oflop") and i["severity"] == "FAIL":
+                                    i["severity"] = "WARN"
+                                    i["message"] += f" (loop successor of {spec['auto_react_parent']}: not refused)"
                         check_sources(g, spec, json.loads((Path(td) / kit / "floorplan.json").read_text())
                                       .get("referenced", []), commit)
                         check_slot_fit(g, Path(td) / kit, spec, repo, commit)

@@ -1,5 +1,7 @@
 # Die timing by construction: pin-register audit, ranked (PROVISIONAL)
 
+> **TILE VERDICTS SUPERSEDED (10-13 09:10, el1013-pinreg-audit.log):** `out_over` / `in_over` here judge each side against 0.2 T = 166.7 ps, which is the share the sign-off SDC gives the OUTSIDE, not the tile. The die statement is the pair equation with insertion-compensated clock entry: see `qwen_rom_tp8_compensated.md`, `s81_compensated.md`, `ranked_compensated.md`. The hop tables (> 500 um) and the min-delay / combinational columns stand.
+
 Rule (owner 2026-10-13): register at the pin -> wire <= 500 um -> register at the pin, IO 0.2 T of 833.333 ps (166.7 ps a side). Tool: `tools/hier_contract/pinreg_audit.py`. Every view audited here was exported before the export-SDC fix (main abc334b14), so each number may move by tens of ps: re-run once the views are re-exported.
 
 | die | contract | cells | audited | violating | not auditable (cells / inst) | hops > 500 um (data + reset) | max um |

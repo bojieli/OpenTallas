@@ -12,7 +12,10 @@ module ot_qkvd_kv_end #(
     parameter integer SBD = 0,                 // ot_qkvd_d2d SBD: SRAM-bodied buffers at depth >= SBD (0 = flop arrays)
     parameter integer PQ  = 1,                 // ot_qkvd_d2d PQ (with HT): 1 = pop pin flops; 2 = + pin-registered tiles (sbufp / fbuf8p)
     parameter integer PF  = 0,                 // ot_qkvd_d2d PF: push pin flops at the hardened buffers (with HT)
-    parameter integer HT  = 0                  // ot_qkvd_d2d HT: every link buffer a hardened tile (ot_qkvd_buf_tiles.sv)
+    parameter integer HT  = 0,                 // ot_qkvd_d2d HT: every link buffer a hardened tile (ot_qkvd_buf_tiles.sv)
+    // SPL (q13-kvleaves 2026-10-13): 1 = thin cluster ot_qkvd_ke_cluster (= HT 1, PQ 2, PF 1 with every register in a
+    // hard pin-registered tile; r_cr, tx_up and fault one cycle later; W 528 / FW 548 only)
+    parameter integer SPL = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -30,6 +33,12 @@ module ot_qkvd_kv_end #(
     output wire            fault,
     output wire [4:0]      fault_cause
 );
+    generate if (SPL != 0) begin : g_spl
+    ot_qkvd_ke_cluster #(.QD(QD), .UCX(UCX), .FCR_RES(FCR_RES), .MUT(MUT)) u_c (
+        .clk(clk), .rst_n(rst_n), .t_v(t_v), .t_d(t_d), .t_cr(t_cr), .r_v(r_v), .r_d(r_d), .r_cr(r_cr),
+        .tx_up(tx_up), .tx_v(tx_v), .tx_flit(tx_flit), .rx_v(rx_v), .rx_flit(rx_flit), .fault(fault),
+        .fault_cause(fault_cause));
+    end else begin : g_flat
     ot_qkvd_d2d #(.NT(3), .NR(4), .TXB(4), .RXB(0), .W(W), .IBD({8'd8, 8'd4, 8'(UCX), 8'(UCX)}),
                   .FCR({8'd0, 8'd4, 8'd32, 8'(FCR_RES)}), .RBD({8'd32, 8'd8, 8'd32, 8'd4}),
                   .OCR({8'd32, 8'd8, 8'(QD), 8'd4}), .MUT(MUT), .SBD(SBD), .HT(HT),
@@ -37,4 +46,5 @@ module ot_qkvd_kv_end #(
         .clk(clk), .rst_n(rst_n), .t_v(t_v), .t_d(t_d), .t_cr(t_cr), .r_v(r_v), .r_d(r_d), .r_cr(r_cr),
         .tx_up(tx_up), .tx_v(tx_v), .tx_flit(tx_flit), .rx_v(rx_v), .rx_flit(rx_flit), .fault(fault),
         .fault_cause(fault_cause));
+    end endgenerate
 endmodule

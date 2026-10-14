@@ -1,4 +1,7 @@
 `timescale 1ns/1ps
+`ifndef OT_QFD_VM_TILE_MOD
+`define OT_QFD_VM_TILE_MOD ot_qfd_vm_grp
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // Die master qfd_sp_vector_memory_bv (qwen-vm-me 2026-10-08): the banked vector memory of qwen-rtl-finish
 // (ot_qfd_sp_vector_memory: 64 row banks, the parallel ME x service) completed with the ports the token bench's
@@ -28,10 +31,26 @@
 // written in the same edge, so an SU read sees exactly the writes presented before it, as the base.  Per bank, the SU
 // lane rows have priority (fixed timing, distinct banks; banks counted mod NRBS, which divides NRB, so a grant set
 // is conflict-free in every copy); the three skid sources (in the base's commit order mx, rd,
-// seq) take a free bank, else wait in a SQD-deep queue; the merge's row takes what is left.  An entry that misses its
+// seq) take a free bank, else wait in a SQD-row queue; the merge's row takes what is left.  An entry that misses its
 // nominal edge is LATE: a read of its row (any copy) or another write onto its row while it is late is w_hazard (the
 // contract, as the x path's: programs never touch such a row within the few edges of a bank conflict); a queue
 // overflow is w_fault.  The x path (copy 0) is ot_qfd_sp_vector_memory's, its hazard check now over every landing row.
+// SKID CAPACITY RULE (2026-10-13, after SEED 9 of tb_qfd_vm_bv_ports lost a sequencer row: three row writes on three
+// consecutive edges, the first denied twice by SU lane rows on its bank, against a 2-deep head-of-line queue).  The
+// skid ports carry no ready and no spacing rule (one row an edge is legal on each), and a bank takes one row an edge,
+// so the memory states what it absorbs and the queue is built to absorb exactly that:
+//   * WORK-CONSERVING: every waiting row (not only the oldest of its source) is written on the first edge on which
+//     its bank (mod NRBS) is taken neither by an SU lane row nor by a waiting row that goes first (order mx, rd, seq;
+//     within a source the older row).  Rows of one source on one bank therefore keep their order; a row is never held
+//     behind a row for ANOTHER bank.
+//   * hence the rows of a source waiting at an edge are a function of the PRESENTED traffic only (a per-bank server
+//     of one row an edge behind the SU lane rows), and the rule is: at most SQD rows of one source wait at once.
+//     Sizing: a row presented every edge and denied for D consecutive edges needs D + 1 entries; SQD = 4 covers the
+//     longest hold of one bank by a stride-<= 1 lane stream (ceil(16 / SW) + 1 edges: 3 at SW 8, 2 at SW 64) at the
+//     full rate of one row an edge.  Traffic beyond the rule is refused loudly: the row is dropped and w_fault rises
+//     at the next edge (fail-stop, never a silent loss).
+// The bench carries the rule as an independent model (tb_qfd_vm_bv_ports `wmodel`) and requires the memory to raise
+// w_fault exactly when the model overflows.  MUT = 14: the queues hold 2 rows (the pre-fix capacity; must FAIL).
 // ME result rows reach the memory at a variable time; the tree top counts LANDED bursts, so consumers that wait on
 // its progress / idle (the base's contract for ME outputs) see them.
 // me_ok: AND of the band serializers' rok (to the die's me_mem_ok), registered.
@@ -95,7 +114,7 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer NSU = 3,
     parameter integer NB = 6,
     parameter integer CRB = 4,
-    parameter integer SQD = 2,
+    parameter integer SQD = 4,                         // skid rows a source may have waiting (capacity rule above)
     parameter integer NRBS = 16,                       // banks of each SU replica copy (rows r mod NRBS)
     parameter integer USE_MACRO = 0,
     parameter integer MUT = 0,
@@ -117,18 +136,44 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer MEE = 0,
     parameter integer VMT = 0,
     parameter integer RV = 1,
-    parameter integer RO = 2
+    parameter integer RO = 2,
+    // qwen-tp8-vm 2026-10-13 (0 = unchanged): BIT-PLANE x transport (requires VMT = 1, XPR >= RO).  The tiles' x words
+    // take XPR me-enabled relay leaves (ot_qfd_vm_xrelay_t), then 32 plane leaves (ot_qfd_vm_xplane_t: pin flop, rot1,
+    // rot2, bv for one bit position of every element) replace the parent's rot1 / rot2 / bv.  x latency
+    // + XPR + 1 - RO engine edges (the x consumer's XVM grows by it); pop, NPP, SU and row paths unchanged.
+    // MUT = 3 / 4 / 5: plane 5's fine rotation / element shift / range count wrong; MUT = 6: a relay free-runs;
+    // MUT = 7: planes 0 and 1 swapped at the leaves' outputs (all must FAIL).
+    parameter integer XPR = 0,
+    // qwen-tp8-vm-rtl 2026-10-13 (all 0 = unchanged; need XPR != 0 and VMT = 1).  Registered trees and leaf owners
+    // around the bit plane (ot_qfd_vm_xtree.sv), so that NO x-transport logic and no one-edge broadcast stays here:
+    //   XTK  levels of the two CONTROL trees (ot_qfd_vm_fantree, EN 1): plane control {beat address, in-range count}
+    //        and the line / x_q control.  Each is tapped XTK engine edges early in the seam queue / the s and h
+    //        pipelines, so the leaves see it on the original edge: latency + 0.
+    //   XMK  levels of the me tree (EN 0, MEE = 1): me_en_t is me_en (XMK + 1) edges early; the tree's last level is
+    //        the me_e of every relay / plane / region / fan / line / face leaf, <= XMF sinks per node.
+    //   XLO  1: line and x_q are owned by leaves: 32 x ot_qfd_vm_xcol_t (plane + line of one bit position in ONE
+    //        leaf, PLAN 2026-10-13), XQR x_q relay stages (ot_qfd_vm_xrelay_t)
+    //        and ot_qfd_vm_xqface_t at the consumer face.  x latency + XQR + 2 engine edges (the x consumer's XVM
+    //        grows by it; the schedule here runs against XVM - XQR - 2).
+    // MUT = 8: a plane-control tree node is transparent; 9: a me-tree node; 10: line leaf 3 picks a wrong source;
+    // 11: face 0 free-runs; 12: a line-control tree node is transparent; 13: one x_q relay free-runs (all must FAIL).
+    parameter integer XTK = 0,
+    parameter integer XMK = 0,
+    parameter integer XMF = 16,
+    parameter integer XLO = 0,
+    parameter integer XQR = 0
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
     input  wire                    me_en,
     input  wire                    me_en_e,        // MEE: me_en one edge early
+    input  wire                    me_en_t,        // XMK: me_en (XMK + 1) edges early (unused when XMK = 0)
     // x descriptor (tree top)
     input  wire                    x_dv,
     input  wire [AW-1:0]           x_dc,
     input  wire [AW-1:0]           x_dcs,
     input  wire [3:0]              x_dsp,
-    output reg  [(1<<SMAX)*32-1:0] x_q,
+    output wire [(1<<SMAX)*32-1:0] x_q,
     output wire                    x_rdy,
     output reg                     x_fault,
     output reg                     x_hazard,
@@ -185,6 +230,10 @@ module ot_qfd_sp_vector_memory_bv #(
     localparam integer BEAT = (NRB - 1) * 16;
     localparam integer LB = $clog2(BMAX) + 1;
     localparam integer HL = XVM + 2;
+    localparam integer XBP = (VMT != 0 && XPR != 0) ? 1 : 0;                  // bit-plane transport built
+    localparam integer XOWN = (XBP != 0 && XLO != 0) ? 1 : 0;                 // line / x_q owned by leaves
+    localparam integer XO = (XOWN != 0) ? XQR + 2 : 0;                        // their added x edges
+    localparam integer XVMI = XVM - XO;                                       // the schedule's x latency
     // XS: the tile FIFO is pushed 4 clocks after the beat's issue edge (relays RV, pin flop, macro, capture); the pop
     // must land at least one edge later (a same-edge pop of an empty FIFO reads the entry being written: gate 18:3x
     // DBG OVF push=1 pop=1 cnt=0), so the pop source is one stage later than the push and x gains RV + RO + 2 edges.
@@ -194,7 +243,9 @@ module ot_qfd_sp_vector_memory_bv #(
     localparam integer TLX = (VMT != 0) ? 1 + TNI + TNX : 0;
     localparam integer TLR = (VMT != 0) ? 2 + TNI + TNX : 0;
     localparam integer TLS = (VMT != 0) ? 1 + TNI + TNS : 0;
-    localparam integer XS = (VMT != 0) ? RV + RO + 2 + TLX : 0;  // extra engine edges, x path (rot1 at issue + 4 + XS)
+    localparam integer XA = (VMT != 0 && XPR != 0) ? XPR + 1 - RO : 0;   // bit-plane transport: added x edges
+    localparam integer XRN = (VMT != 0 && XPR != 0) ? XPR : RO;          // x relays after the tile's xo register
+    localparam integer XS = (VMT != 0) ? RV + RO + 2 + TLX + XA : 0;  // extra engine edges, x path (rot1 at issue + 4 + XS)
     localparam integer SX = (VMT != 0) ? RV + RO + 1 + TLS : 0;  // extra edges, SU answers
     localparam integer RL = (VMT != 0) ? RV + RO + 5 + TLR : 3;  // row read: r_qr at r_v + 2 (+ RV + RO + 2 + TLR)
     localparam integer NPP = RV + 6 + TLX;                       // tile x FIFO: beats in flight between push and pop
@@ -213,7 +264,10 @@ module ot_qfd_sp_vector_memory_bv #(
     localparam integer DEPTHS = (ROWS + NRBS - 1) / NRBS;
     localparam integer LAWS = (DEPTHS > 1) ? $clog2(DEPTHS) : 1;
     localparam integer NPS = (NWR + 7 < NRBS) ? NWR + 7 : NRBS;   // coarse-rotate positions of an SU copy
-    localparam integer NL = NK * (SQD + 1);            // late rows checked per cycle (queue entries + late grants)
+    localparam integer NQ = NK * SQD;                  // skid entries, in grant order (source major, oldest first)
+    localparam integer LSQ = $clog2(SQD + 1);
+    localparam integer QCAP = (MUT == 14) ? 2 : SQD;   // MUT 14: the pre-fix capacity
+    localparam integer NL = 2 * NQ;                    // late rows checked per cycle (queue entries + late grants)
     integer i, a, di, k, b;
     genvar g, gc, c, dd;
 
@@ -233,6 +287,35 @@ module ot_qfd_sp_vector_memory_bv #(
     end else begin : g_mep
         assign me_c = me_en;
         assign me_x = {8{me_en}};
+    end endgenerate
+    // ---- me_e of every x-transport LEAF (qwen-tp8-vm-rtl 2026-10-13).  Consumers in physical order: per region the
+    //      tile and its 8 x XRN x relays; the 32 planes and their control tree; the 32 line leaves, their control tree,
+    //      the x_q relays and the faces.  XMK = 0: all take the me_en_e broadcast (as before).  XMK > 0: the last level
+    //      of the me tree, <= XMF consumers per node. ----
+    localparam integer RWX = (NX >= 512) ? 512 : NX;            // x_q relay leaf width (one plane, RWX elements)
+    localparam integer NQS = NX / RWX;
+    localparam integer FW = (NX * 32 >= 1024) ? 1024 : NX * 32; // x_q face leaf width (element-major)
+    localparam integer NF = (NX * 32) / FW;
+    localparam integer MCG = 1 + 8 * XRN;
+    localparam integer MB_P = ((NRB >= 8) ? NRB / 8 : 1) * MCG;
+    localparam integer MB_PC = MB_P + 32;
+    localparam integer MB_L = MB_PC + XTK * 8;
+    localparam integer MB_LC = MB_L;                            // PLAN 2026-10-13: the line leaf is inside the plane leaf (ot_qfd_vm_xcol_t): one me pin
+    localparam integer MB_QR = MB_LC + XTK * 8 * XOWN;
+    localparam integer MB_F = MB_QR + 32 * NQS * XQR * XOWN;
+    localparam integer NMC = MB_F + NF * XOWN;
+    wire [NMC-1:0] me_lf;
+    generate if (XBP != 0 && XMK != 0 && MEE != 0) begin : g_met
+        localparam integer NML = (NMC + XMF - 1) / XMF;
+        wire [NML-1:0] mq;
+        ot_qfd_vm_fantree #(.W(1), .K(XMK), .NLAST(NML), .FO(XMF), .NS(NML), .EN(0),
+            .MUTL((MUT == 9) ? XMK - 1 : -1), .MUTI(0)) u_met (.clk(clk), .me_e({(XMK*NML){1'b0}}), .d(me_en_t), .q(mq));
+        genvar mc;
+        for (mc = 0; mc < NMC; mc = mc + 1) begin : g_c
+            assign me_lf[mc] = mq[(mc * NML) / NMC];
+        end
+    end else begin : g_mef
+        assign me_lf = {NMC{(MEE != 0) ? me_en_e : me_en}};
     end endgenerate
     // =================================================================================================================
     // x path (copy 0), as ot_qfd_sp_vector_memory
@@ -288,8 +371,8 @@ module ot_qfd_sp_vector_memory_bv #(
     always @(*) begin
         bi_v = 1'b0; bi_j = 0; bi_dc = 0; bi_d = 0; bi_sp = 0; bi_n = 0; bi_end = 0;
         for (a = 0; a < HL; a = a + 1)
-            if (h_new[a] && a + h_b[a] >= XVM - 7 - XS && a <= XVM - 8 - XS) begin
-                bi_v = 1'b1; bi_j = a + h_b[a] - (XVM - 7 - XS); bi_dc = h_dc[a]; bi_d = h_d[a]; bi_sp = h_sp[a];
+            if (h_new[a] && a + h_b[a] >= XVMI - 7 - XS && a <= XVMI - 8 - XS) begin
+                bi_v = 1'b1; bi_j = a + h_b[a] - (XVMI - 7 - XS); bi_dc = h_dc[a]; bi_d = h_d[a]; bi_sp = h_sp[a];
                 bi_end = h_dc[a] + h_span[a];
                 bi_n = bi_n + 1'b1;
             end
@@ -442,11 +525,9 @@ module ot_qfd_sp_vector_memory_bv #(
     reg  [15:0]    k1_mb  [0:NK-1];
     always @(*) for (k = 0; k < NK; k = k + 1)
         for (i = 0; i < 16; i = i + 1) k1_mb[k][i] = k1_mask[k][i] && ({k1_row[k], 4'h0} + i < ELEMS);
-    // heads (entry 0 of each queue)
-    wire [NK-1:0] hq_v;
-    generate for (g = 0; g < NK; g = g + 1) begin : g_hq
-        assign hq_v[g] = q_v[g][0];
-    end endgenerate
+    // every entry is a grant candidate (work-conserving queue); flat index e = source * SQD + age rank (0 oldest)
+    reg  [NQ-1:0] qvf;
+    always @(*) for (k = 0; k < NK; k = k + 1) for (i = 0; i < SQD; i = i + 1) qvf[k*SQD + i] = q_v[k][i];
     // ---- merge ----
     wire           m_v, m_nowr, m_land;
     wire [RW-1:0]  m_row;
@@ -480,16 +561,23 @@ module ot_qfd_sp_vector_memory_bv #(
             su_hs[b] = f_v && (kk < NWR) && (|f_m[kk*16 +: 16]);
         end
     end
-    reg  [NK-1:0]  gk;                                  // skid head grants
-    reg  [NRBS-1:0] used;
+    // An entry is granted when its bank is taken neither by an SU lane row nor by an entry that goes first (any
+    // valid earlier entry on the bank: it is either granted or denied by the SU row, the bank is taken either way).
+    // Pairwise bank compares, no priority chain through the bank set.
+    reg  [NQ-1:0]  ge;                                  // skid entry grants
     reg            gm;
-    always @(*) begin
-        used = su_hs; gk = 0;
-        for (k = 0; k < NK; k = k + 1)
-            if (hq_v[k] && !used[q_row[k*SQD][LNRBS-1:0]]) begin
-                gk[k] = 1'b1; used[q_row[k*SQD][LNRBS-1:0]] = 1'b1;
-            end
-        gm = m_v && !m_nowr && !used[m_row[LNRBS-1:0]];
+    integer e, e2;
+    always @(*) begin : arb
+        reg bl;
+        for (e = 0; e < NQ; e = e + 1) begin
+            bl = su_hs[q_row[e][LNRBS-1:0]];
+            for (e2 = 0; e2 < e; e2 = e2 + 1)
+                if (qvf[e2] && q_row[e2][LNRBS-1:0] == q_row[e][LNRBS-1:0]) bl = 1'b1;
+            ge[e] = qvf[e] && !bl;
+        end
+        bl = su_hs[m_row[LNRBS-1:0]];
+        for (e = 0; e < NQ; e = e + 1) if (qvf[e] && q_row[e][LNRBS-1:0] == m_row[LNRBS-1:0]) bl = 1'b1;
+        gm = m_v && !m_nowr && !bl;
     end
     assign m_take = m_v && (m_nowr || gm);
     // per-bank write registers (beside the bank; written into every copy's macro the next edge)
@@ -502,12 +590,21 @@ module ot_qfd_sp_vector_memory_bv #(
         wire [2:0] kk = su_k[g*3 +: 3];
         wire [RW-1:0] srow = f_r0 + kk;
         reg  [2:0] src;          // 0 none, 1 su, 2 mx, 3 rd, 4 seq, 5 merge
+        // the one granted skid entry of this bank (grants are distinct mod NRBS, so distinct mod NRB): AND-OR select
+        reg  [2:0]    es;
+        reg  [RW-1:0] er;
+        reg  [15:0]   em;
+        reg  [511:0]  ed;
+        integer ee;
         always @(*) begin
+            es = 3'd0; er = {RW{1'b0}}; em = 16'd0; ed = 512'd0;
+            for (ee = 0; ee < NQ; ee = ee + 1)
+                if (ge[ee] && q_row[ee][LNRB-1:0] == g) begin
+                    es = es | (ee / SQD + 2); er = er | q_row[ee]; em = em | q_mask[ee]; ed = ed | q_data[ee];
+                end
             src = 3'd0;
             if (su_hit[g]) src = 3'd1;
-            else if (gk[0] && q_row[0*SQD][LNRB-1:0] == g) src = 3'd2;
-            else if (gk[1] && q_row[1*SQD][LNRB-1:0] == g) src = 3'd3;
-            else if (gk[2] && q_row[2*SQD][LNRB-1:0] == g) src = 3'd4;
+            else if (es != 3'd0) src = es;
             else if (gm && m_row[LNRB-1:0] == g) src = 3'd5;
         end
         always @(posedge clk or negedge rst_n) if (!rst_n) bw_we[g] <= 1'b0; else bw_we[g] <= (src != 0);
@@ -516,12 +613,8 @@ module ot_qfd_sp_vector_memory_bv #(
             case (src)
                 3'd1: begin bw_line[g*LAW +: LAW] <= srow[LNRB +: LAW]; bw_mask[g*16 +: 16] <= f_m[kk*16 +: 16];
                             bw_data[g*512 +: 512] <= f_d[kk*512 +: 512]; end
-                3'd2: begin bw_line[g*LAW +: LAW] <= q_row[0*SQD][LNRB +: LAW]; bw_mask[g*16 +: 16] <= q_mask[0*SQD];
-                            bw_data[g*512 +: 512] <= q_data[0*SQD]; end
-                3'd3: begin bw_line[g*LAW +: LAW] <= q_row[1*SQD][LNRB +: LAW]; bw_mask[g*16 +: 16] <= q_mask[1*SQD];
-                            bw_data[g*512 +: 512] <= q_data[1*SQD]; end
-                3'd4: begin bw_line[g*LAW +: LAW] <= q_row[2*SQD][LNRB +: LAW]; bw_mask[g*16 +: 16] <= q_mask[2*SQD];
-                            bw_data[g*512 +: 512] <= q_data[2*SQD]; end
+                3'd2, 3'd3, 3'd4: begin bw_line[g*LAW +: LAW] <= er[LNRB +: LAW]; bw_mask[g*16 +: 16] <= em;
+                            bw_data[g*512 +: 512] <= ed; end
                 default: begin bw_line[g*LAW +: LAW] <= m_row[LNRB +: LAW]; bw_mask[g*16 +: 16] <= m_mb;
                             bw_data[g*512 +: 512] <= m_data; end
             endcase
@@ -536,12 +629,20 @@ module ot_qfd_sp_vector_memory_bv #(
         wire [LNRBS-1:0] kk = g[LNRBS-1:0] - f_r0[LNRBS-1:0];
         wire [RW-1:0] srow = f_r0 + kk;
         reg  [2:0] src;
+        reg           es;
+        reg  [RW-1:0] er;
+        reg  [15:0]   em;
+        reg  [511:0]  ed;
+        integer ee;
         always @(*) begin
+            es = 1'b0; er = {RW{1'b0}}; em = 16'd0; ed = 512'd0;
+            for (ee = 0; ee < NQ; ee = ee + 1)
+                if (ge[ee] && q_row[ee][LNRBS-1:0] == g) begin
+                    es = 1'b1; er = er | q_row[ee]; em = em | q_mask[ee]; ed = ed | q_data[ee];
+                end
             src = 3'd0;
             if (su_hs[g]) src = 3'd1;
-            else if (gk[0] && q_row[0*SQD][LNRBS-1:0] == g) src = 3'd2;
-            else if (gk[1] && q_row[1*SQD][LNRBS-1:0] == g) src = 3'd3;
-            else if (gk[2] && q_row[2*SQD][LNRBS-1:0] == g) src = 3'd4;
+            else if (es) src = 3'd2;
             else if (gm && m_row[LNRBS-1:0] == g) src = 3'd5;
         end
         always @(posedge clk or negedge rst_n) if (!rst_n) ws_we[g] <= 1'b0; else ws_we[g] <= (src != 0);
@@ -549,75 +650,72 @@ module ot_qfd_sp_vector_memory_bv #(
             case (src)
                 3'd1: begin ws_line[g*LAWS +: LAWS] <= srow[LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= f_m[kk*16 +: 16];
                             ws_data[g*512 +: 512] <= f_d[kk*512 +: 512]; end
-                3'd2: begin ws_line[g*LAWS +: LAWS] <= q_row[0*SQD][LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= q_mask[0*SQD];
-                            ws_data[g*512 +: 512] <= q_data[0*SQD]; end
-                3'd3: begin ws_line[g*LAWS +: LAWS] <= q_row[1*SQD][LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= q_mask[1*SQD];
-                            ws_data[g*512 +: 512] <= q_data[1*SQD]; end
-                3'd4: begin ws_line[g*LAWS +: LAWS] <= q_row[2*SQD][LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= q_mask[2*SQD];
-                            ws_data[g*512 +: 512] <= q_data[2*SQD]; end
+                3'd2: begin ws_line[g*LAWS +: LAWS] <= er[LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= em;
+                            ws_data[g*512 +: 512] <= ed; end
                 default: begin ws_line[g*LAWS +: LAWS] <= m_row[LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= m_mb;
                             ws_data[g*512 +: 512] <= m_data; end
             endcase
         end
     end endgenerate
-    // skid queue state: pop granted heads, push the E1 registers, mark survivors late; late grants for one cycle
-    reg  [NK-1:0] lg_v;
-    reg  [RW-1:0] lg_row [0:NK-1];
+    // skid queue state: granted entries leave (any of them), the survivors close up in age order and are late, the
+    // E1 register is pushed behind them; a push onto QCAP survivors is the overflow.  Late grants for one cycle.
+    reg  [NQ-1:0]     cs_v, cs_new;                    // next state of slot j: valid / the pushed row
+    reg  [NQ*LSQ-1:0] cs_src;                          // else the survivor that moves into it
+    reg  [NK-1:0]     cs_ovf;
+    always @(*) begin : compact
+        integer n;
+        cs_v = 0; cs_new = 0; cs_src = 0; cs_ovf = 0;
+        for (k = 0; k < NK; k = k + 1) begin
+            n = 0;
+            for (i = 0; i < SQD; i = i + 1)
+                if (q_v[k][i] && !ge[k*SQD + i]) begin
+                    cs_v[k*SQD + n] = 1'b1; cs_src[(k*SQD + n)*LSQ +: LSQ] = i; n = n + 1;
+                end
+            if (k1_v[k]) begin
+                if (n < QCAP) begin cs_v[k*SQD + n] = 1'b1; cs_new[k*SQD + n] = 1'b1; end
+                else cs_ovf[k] = 1'b1;
+            end
+        end
+    end
+    reg  [NQ-1:0] lg_v;
+    reg  [RW-1:0] lg_row [0:NQ-1];
     reg           q_ovf;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             for (k = 0; k < NK; k = k + 1) begin q_v[k] <= 0; q_late[k] <= 0; end
             lg_v <= 0; q_ovf <= 1'b0;
         end else begin
-            q_ovf <= 1'b0;
-            for (k = 0; k < NK; k = k + 1) begin : qk
-                reg [SQD-1:0] v, lt;
-                reg           pushed;
-                v = q_v[k]; lt = q_late[k];
-                lg_v[k] <= gk[k] && lt[0];
-                if (gk[k]) begin v = v >> 1; lt = lt >> 1; end
-                lt = lt | v;                               // survivors of this edge are late
-                pushed = 1'b0;
-                for (i = 0; i < SQD; i = i + 1)
-                    if (k1_v[k] && !pushed && !v[i]) begin v[i] = 1'b1; lt[i] = 1'b0; pushed = 1'b1; end
-                if (k1_v[k] && !pushed) q_ovf <= 1'b1;
-                q_v[k] <= v; q_late[k] <= lt;
+            q_ovf <= |cs_ovf;
+            for (k = 0; k < NK; k = k + 1) begin
+                q_v[k] <= cs_v[k*SQD +: SQD]; q_late[k] <= cs_v[k*SQD +: SQD] & ~cs_new[k*SQD +: SQD];
+                for (i = 0; i < SQD; i = i + 1) lg_v[k*SQD + i] <= ge[k*SQD + i] && q_late[k][i];
             end
         end
     end
     always @(posedge clk) begin
-        for (k = 0; k < NK; k = k + 1) begin : qd
-            reg [SQD-1:0] v;
-            integer sl, tgt;
-            reg pushed;
-            v = q_v[k];
-            lg_row[k] <= q_row[k*SQD];
-            if (gk[k]) begin
-                for (sl = 0; sl < SQD - 1; sl = sl + 1) begin
-                    q_row[k*SQD + sl] <= q_row[k*SQD + sl + 1]; q_mask[k*SQD + sl] <= q_mask[k*SQD + sl + 1];
-                    q_data[k*SQD + sl] <= q_data[k*SQD + sl + 1];
+        for (k = 0; k < NK; k = k + 1)
+            for (i = 0; i < SQD; i = i + 1) begin
+                lg_row[k*SQD + i] <= q_row[k*SQD + i];
+                if (cs_new[k*SQD + i]) begin
+                    q_row[k*SQD + i] <= k1_row[k]; q_mask[k*SQD + i] <= k1_mb[k]; q_data[k*SQD + i] <= k1_data[k];
+                end else if (cs_v[k*SQD + i]) begin
+                    q_row[k*SQD + i]  <= q_row[k*SQD + cs_src[(k*SQD + i)*LSQ +: LSQ]];
+                    q_mask[k*SQD + i] <= q_mask[k*SQD + cs_src[(k*SQD + i)*LSQ +: LSQ]];
+                    q_data[k*SQD + i] <= q_data[k*SQD + cs_src[(k*SQD + i)*LSQ +: LSQ]];
                 end
-                v = v >> 1;
             end
-            pushed = 1'b0; tgt = 0;
-            for (sl = 0; sl < SQD; sl = sl + 1) if (!pushed && !v[sl]) begin tgt = sl; pushed = 1'b1; end
-            if (k1_v[k] && pushed) begin
-                q_row[k*SQD + tgt] <= k1_row[k]; q_mask[k*SQD + tgt] <= k1_mb[k]; q_data[k*SQD + tgt] <= k1_data[k];
-            end
-        end
     end
     // late rows (queue entries with late set + late grants now in the bank write registers)
     reg  [NL-1:0]  lt_v;
     reg  [NL*RW-1:0] lt_row;
     always @(*) begin
-        for (k = 0; k < NK; k = k + 1) begin
+        for (k = 0; k < NK; k = k + 1)
             for (i = 0; i < SQD; i = i + 1) begin
-                lt_v[k*(SQD+1) + i] = q_v[k][i] && q_late[k][i];
-                lt_row[(k*(SQD+1) + i)*RW +: RW] = q_row[k*SQD + i];
+                lt_v[k*SQD + i] = q_v[k][i] && q_late[k][i];
+                lt_row[(k*SQD + i)*RW +: RW] = q_row[k*SQD + i];
+                lt_v[NQ + k*SQD + i] = lg_v[k*SQD + i];
+                lt_row[(NQ + k*SQD + i)*RW +: RW] = lg_row[k*SQD + i];
             end
-            lt_v[k*(SQD+1) + SQD] = lg_v[k];
-            lt_row[(k*(SQD+1) + SQD)*RW +: RW] = lg_row[k];
-        end
     end
 
     // =================================================================================================================
@@ -709,20 +807,32 @@ module ot_qfd_sp_vector_memory_bv #(
                 assign pw[kq] = r;
             end
             wire [8*512-1:0] xo; wire [511:0] ro_t; wire [NSU*NSB*512-1:0] so_t; wire ovf_t;
-            ot_qfd_vm_grp #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
+            `OT_QFD_VM_TILE_MOD #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
                 .USE_MACRO(USE_MACRO), .NPP(NPP), .MEREG((MEE != 0) ? 1 : 0), .NRI(TNI), .NRX(TNX), .NRS(TNS)) u_t (
-                .clk(clk), .rst_n(rst_n), .me_in((MEE != 0) ? me_en_e : me_en),
+                .clk(clk), .rst_n(rst_n), .me_in(me_lf[g*MCG]),
                 .re(d_re), .ra(d_ra), .we(d_we), .wl(d_wl), .wm(d_wm), .wd(d_wd), .xv(d_xv), .rq(d_rq), .rqb(d_rqb),
                 .sre(d_sre), .sra(d_sra), .sv(d_sv), .swe(d_swe), .swl(d_swl), .swm(d_swm), .swd(d_swd),
                 .pop(pw[RO-1]), .xo(xo), .ro(ro_t), .so(so_t), .ovf(ovf_t));
-            wire [(RO+1)*8*512-1:0] xw;          // x words: tile register, then RO engine-edge relays
+            wire [(XRN+1)*8*512-1:0] xw;         // x words: tile register, then XRN engine-edge relays
             assign xw[0 +: 8*512] = xo;
-            for (kq = 1; kq <= RO; kq = kq + 1) begin : g_xr
-                reg [8*512-1:0] r;
-                always @(posedge clk) if (mxg) r <= xw[(kq-1)*8*512 +: 8*512];
-                assign xw[kq*8*512 +: 8*512] = r;
+            if (XPR == 0) begin : g_xsoft
+                for (kq = 1; kq <= RO; kq = kq + 1) begin : g_xr
+                    reg [8*512-1:0] r;
+                    always @(posedge clk) if (mxg) r <= xw[(kq-1)*8*512 +: 8*512];
+                    assign xw[kq*8*512 +: 8*512] = r;
+                end
+            end else begin : g_xleaf            // one 512-b relay leaf per bank per stage, own me replica
+                genvar kb;
+                for (kq = 1; kq <= XRN; kq = kq + 1) begin : g_xr
+                    for (kb = 0; kb < 8; kb = kb + 1) begin : g_b
+                        ot_qfd_vm_xrelay_t #(.W(512), .MEREG((MEE != 0) ? 1 : 0),
+                            .MUT((MUT == 6 && g == 0 && kb == 3 && kq == XRN) ? 1 : 0)) u_r (.clk(clk),
+                            .me_e(me_lf[g*MCG + 1 + (kq-1)*8 + kb]),
+                            .d(xw[((kq-1)*8 + kb)*512 +: 512]), .q(xw[(kq*8 + kb)*512 +: 512]));
+                    end
+                end
             end
-            assign capx[g*8*512 +: 8*512] = xw[RO*8*512 +: 8*512];
+            assign capx[g*8*512 +: 8*512] = xw[XRN*8*512 +: 8*512];
             wire [511:0] ro_r;
             ot_hdc_delay #(.W(512), .D(RO)) u_rr (.clk(clk), .rst_n(rst_n), .d(ro_t), .q(ro_r));
             assign ro_all[g*512 +: 512] = ro_r;
@@ -741,50 +851,167 @@ module ot_qfd_sp_vector_memory_bv #(
         assign t_ovf = |ovf_all;
     end endgenerate
     reg [NRB*512-1:0] rot1, rot2;
-    wire [LNRB-1:0] rot = s3_a[4 +: LNRB];
-    always @(posedge clk) begin
-        for (i = 0; i < NRB; i = i + 1) if (me_x[(i * 8) / NRB])
-            rot1[i*512 +: 512] <= capx[((i + (rot & ~((NRB >= 8) ? 7 : 0))) % NRB)*512 +: 512];
-    end
-    wire [LNRB-1:0] rotf = s4_a[4 +: LNRB] & ((NRB >= 8) ? 7 : {LNRB{1'b1}});
-    always @(posedge clk) begin
-        for (i = 0; i < NRB; i = i + 1) if (me_x[(i * 8) / NRB]) rot2[i*512 +: 512] <= rot1[((i + ((NRB >= 8) ? rotf : 0)) % NRB)*512 +: 512];
-    end
     reg [BEAT*32-1:0] bv;
-    wire [3:0] sh = s5_a[3:0] + ((MUT == 2) ? 4'd1 : 4'd0);
-    always @(posedge clk) begin
-        for (i = 0; i < BEAT; i = i + 1) if (me_x[(i * 8) / BEAT])
-            bv[i*32 +: 32] <= ((s5_a + i) < ELEMS) ? rot2[(i + sh)*32 +: 32] : 32'd0;
-    end
-    reg [NX*32-1:0] line;
-    generate for (c = 0; c < NX; c = c + 1) begin : g_ent
-        wire [ND-1:0] hit;
-        wire [ND*32-1:0] src;
-        for (dd = 0; dd < ND; dd = dd + 1) begin : g_d
-            localparam integer DV = DSET[dd*8 +: 8];
-            localparam integer JJ = (c * DV) / BEAT;
-            localparam integer MM = (c * DV) % BEAT;
-            if (JJ < BMAX) begin : g_ok
-                assign hit[dd] = s6_d[dd] && (s6_j == JJ);
-                assign src[dd*32 +: 32] = bv[MM*32 +: 32];
-            end else begin : g_no
-                assign hit[dd] = 1'b0;
-                assign src[dd*32 +: 32] = 32'd0;
+    wire [BEAT*32-1:0] bvs;
+    wire [32*BEAT-1:0] pq_all;                             // the planes' q, plane-major (bit plane only)
+    generate if (XPR == 0 || VMT == 0) begin : g_rsoft
+        wire [LNRB-1:0] rot = s3_a[4 +: LNRB];
+        always @(posedge clk) begin
+            for (i = 0; i < NRB; i = i + 1) if (me_x[(i * 8) / NRB])
+                rot1[i*512 +: 512] <= capx[((i + (rot & ~((NRB >= 8) ? 7 : 0))) % NRB)*512 +: 512];
+        end
+        wire [LNRB-1:0] rotf = s4_a[4 +: LNRB] & ((NRB >= 8) ? 7 : {LNRB{1'b1}});
+        always @(posedge clk) begin
+            for (i = 0; i < NRB; i = i + 1) if (me_x[(i * 8) / NRB]) rot2[i*512 +: 512] <= rot1[((i + ((NRB >= 8) ? rotf : 0)) % NRB)*512 +: 512];
+        end
+        wire [3:0] sh = s5_a[3:0] + ((MUT == 2) ? 4'd1 : 4'd0);
+        always @(posedge clk) begin
+            for (i = 0; i < BEAT; i = i + 1) if (me_x[(i * 8) / BEAT])
+                bv[i*32 +: 32] <= ((s5_a + i) < ELEMS) ? rot2[(i + sh)*32 +: 32] : 32'd0;
+        end
+        assign bvs = bv;
+    end else begin : g_plane
+        //: 32 plane leaves.  Control at the leaves' pins one engine edge before s3: the beat address (seam-queue
+        //: entry XS-1) and nvx, the count of in-range elements of that beat.  XTK = 0: both are broadcast in one edge.
+        //: XTK > 0: the same word of the entry XTK places earlier goes through XTK engine-enabled fan levels (1 -> 2
+        //: -> 8 nodes -> 4 planes at XTK 3), so the planes see it on the same edge.
+        localparam integer NVW = $clog2(BEAT + 1);
+        localparam integer QWP = LB + AW + ND + 4;
+        localparam integer PCW = LNRB + 4 + NVW;
+        wire [AW-1:0] a_pre = g_xs.qd[(XS-2-XTK)*QWP + ND + 4 +: AW];
+        wire [AW-1:0] a_tap = g_xs.qd[(XS-1-XTK)*QWP + ND + 4 +: AW];
+        reg  [NVW-1:0] nvx;
+        always @(posedge clk) if (me_c)
+            nvx <= (a_pre >= ELEMS) ? {NVW{1'b0}} : ((ELEMS - a_pre) >= BEAT) ? BEAT[NVW-1:0] : NVW'(ELEMS - a_pre);
+        wire [32*PCW-1:0] pcq;
+        if (XTK == 0) begin : g_cb
+            assign pcq = {32{a_tap[LNRB+3:0], nvx}};
+        end else begin : g_ct
+            ot_qfd_vm_fantree #(.W(PCW), .K(XTK), .NLAST(8), .FO(4), .NS(32), .EN(1), .MEREG((MEE != 0) ? 1 : 0),
+                .MUTL((MUT == 8) ? XTK - 1 : -1), .MUTI(1)) u_ct (.clk(clk), .me_e(me_lf[MB_PC +: XTK*8]),
+                .d({a_tap[LNRB+3:0], nvx}), .q(pcq));
+        end
+        genvar pl, pb;
+        for (pl = 0; pl < 32; pl = pl + 1) begin : g_p
+            wire [NRB*16-1:0] pd;
+            wire [BEAT-1:0]   pq;
+            for (pb = 0; pb < NRB*16; pb = pb + 1) begin : g_i
+                assign pd[pb] = capx[pb*32 + pl];
+            end
+            if (XOWN == 0) begin : g_pl        // XOWN: the plane is inside ot_qfd_vm_xcol_t (g_xown), which takes pd and pcq
+                ot_qfd_vm_xplane_t #(.NRB(NRB), .MEREG((MEE != 0) ? 1 : 0),
+                    .MUT((pl == 5 && MUT >= 3 && MUT <= 5) ? MUT - 2 : 0)) u_p (.clk(clk),
+                    .me_e(me_lf[MB_P + pl]), .d(pd), .c_a(pcq[pl*PCW + NVW +: LNRB+4]), .c_nv(pcq[pl*PCW +: NVW]), .q(pq));
+                assign pq_all[((MUT == 7 && pl < 2) ? 1 - pl : pl)*BEAT +: BEAT] = pq;
+            end
+            for (pb = 0; pb < BEAT; pb = pb + 1) begin : g_o
+                assign bvs[pb*32 + pl] = pq_all[pl*BEAT + pb];
             end
         end
-        reg [31:0] pick;
-        integer kk;
-        always @(*) begin
-            pick = 32'd0;
-            for (kk = 0; kk < ND; kk = kk + 1) if (hit[kk]) pick = src[kk*32 +: 32];
-        end
-        always @(posedge clk) if (me_x[(c * 8) / NX] && s6_bv && (|hit) && c < (1 << s6_sp)) line[c*32 +: 32] <= pick;
     end endgenerate
-    wire       co_v = h_new[XVM-1];
-    wire [3:0] co_sp = h_sp[XVM-1];
-    always @(posedge clk) if (co_v) begin
-        for (i = 0; i < NX; i = i + 1) if (me_x[(i * 8) / NX]) x_q[i*32 +: 32] <= line[(i & ((1 << co_sp) - 1))*32 +: 32];
-    end
+    wire       co_v = h_new[XVMI-1];
+    wire [3:0] co_sp = h_sp[XVMI-1];
+    generate if (XOWN == 0) begin : g_lflat
+        reg [NX*32-1:0] line;
+        reg [NX*32-1:0] x_q_r;
+        for (c = 0; c < NX; c = c + 1) begin : g_ent
+            wire [ND-1:0] hit;
+            wire [ND*32-1:0] src;
+            for (dd = 0; dd < ND; dd = dd + 1) begin : g_d
+                localparam integer DV = DSET[dd*8 +: 8];
+                localparam integer JJ = (c * DV) / BEAT;
+                localparam integer MM = (c * DV) % BEAT;
+                if (JJ < BMAX) begin : g_ok
+                    assign hit[dd] = s6_d[dd] && (s6_j == JJ);
+                    assign src[dd*32 +: 32] = bvs[MM*32 +: 32];
+                end else begin : g_no
+                    assign hit[dd] = 1'b0;
+                    assign src[dd*32 +: 32] = 32'd0;
+                end
+            end
+            reg [31:0] pick;
+            integer kk;
+            always @(*) begin
+                pick = 32'd0;
+                for (kk = 0; kk < ND; kk = kk + 1) if (hit[kk]) pick = src[kk*32 +: 32];
+            end
+            always @(posedge clk) if (me_x[(c * 8) / NX] && s6_bv && (|hit) && c < (1 << s6_sp)) line[c*32 +: 32] <= pick;
+        end
+        always @(posedge clk) if (co_v) begin
+            for (i = 0; i < NX; i = i + 1) if (me_x[(i * 8) / NX]) x_q_r[i*32 +: 32] <= line[(i & ((1 << co_sp) - 1))*32 +: 32];
+        end
+        assign x_q = x_q_r;
+    end else begin : g_xown
+        //: line / x_q in LEAVES ONLY (no flop and no logic here).  32 x ot_qfd_vm_xline_t, one per bit position: its
+        //: control {s6 line write, co capture} comes through an engine-enabled fan tree tapped XTK stages early (s
+        //: pipeline, below it the seam queue; h pipeline for co), its q is the flat x_q plane one engine edge late.
+        //: Then XQR relay stages (RWX-b ot_qfd_vm_xrelay_t, plane-major) and the element-major face leaves.
+        localparam integer QWL = LB + AW + ND + 4;
+        localparam integer LCW = 1 + ND + LB + 4 + 1 + 4;
+        localparam integer SWW = 1 + ND + LB + 4;
+        localparam integer XNVW = $clog2(BEAT + 1);
+        localparam integer XPCW = LNRB + 4 + XNVW;
+        // PLAN 2026-10-13: the placed control chain along the column row needs XTK 7 (13 stations, root at the centre), one
+        // more than the 7-entry word pipeline allowed: the seam-queue part now has QE = max(3, XTK - 3) entries (same taps
+        // for XTK <= 6; the seam queue holds XS >= XTK + 2 entries whenever the bit plane is on).
+        localparam integer QE = (XTK > 6) ? XTK - 3 : 3;
+        wire [(QE+4)*SWW-1:0] stg;                             // the line-write word at stage n (QE + 3 = s6 ... QE = s3)
+        assign stg[(QE+3)*SWW +: SWW] = {s6_bv, s6_d, s6_j, s6_sp};
+        assign stg[(QE+2)*SWW +: SWW] = {s5_bv, s5_d, s5_j, s5_sp};
+        assign stg[(QE+1)*SWW +: SWW] = {s4_bv, s4_d, s4_j, s4_sp};
+        assign stg[QE*SWW +: SWW] = {s3_bv, s3_d, s3_j, s3_sp};
+        genvar sq;
+        for (sq = 0; sq < QE; sq = sq + 1) begin : g_sq         // stage QE - 1 = seam-queue entry XS-1, ... 0 = XS-QE
+            assign stg[sq*SWW +: SWW] = {g_xs.qb[XS-QE+sq], g_xs.qd[(XS-QE+sq)*QWL + 4 +: ND],
+                                         g_xs.qd[(XS-QE+sq)*QWL + ND + 4 + AW +: LB], g_xs.qd[(XS-QE+sq)*QWL +: 4]};
+        end
+        wire [LCW-1:0] lc_d = {stg[(QE+3-XTK)*SWW +: SWW], h_new[XVMI-1-XTK], h_sp[XVMI-1-XTK]};
+        wire [32*LCW-1:0] lcq;
+        if (XTK == 0) begin : g_cb
+            assign lcq = {32{lc_d}};
+        end else begin : g_ct
+            ot_qfd_vm_fantree #(.W(LCW), .K(XTK), .NLAST(8), .FO(4), .NS(32), .EN(1), .MEREG((MEE != 0) ? 1 : 0),
+                .MUTL((MUT == 12) ? XTK - 1 : -1), .MUTI(2)) u_ct (.clk(clk), .me_e(me_lf[MB_LC +: XTK*8]),
+                .d(lc_d), .q(lcq));
+        end
+        wire [(XQR+1)*32*NX-1:0] xr;                           // plane-major x_q: line leaf q, then XQR relay stages
+        genvar lp, lk, ls, lf, lb;
+        for (lp = 0; lp < 32; lp = lp + 1) begin : g_l
+            wire [LCW-1:0] w = lcq[lp*LCW +: LCW];
+            // PLAN 2026-10-13: plane + line of one bit position are ONE leaf (ot_qfd_vm_xcol_t); MUT 7 swaps the data
+            // of planes 0 and 1 at the leaves' inputs (the bv plane is no longer a net of this module)
+            localparam integer PSRC = (MUT == 7 && lp < 2) ? 1 - lp : lp;
+            wire [NRB*16-1:0] cd;
+            for (lb = 0; lb < NRB*16; lb = lb + 1) begin : g_i
+                assign cd[lb] = capx[lb*32 + PSRC];
+            end
+            ot_qfd_vm_xcol_t #(.NRB(NRB), .SMIN(SMIN), .SMAX(SMAX), .BMAX(BMAX), .ND(ND), .DSET(DSET),
+                .MEREG((MEE != 0) ? 1 : 0), .PMUT((lp == 5 && MUT >= 3 && MUT <= 5) ? MUT - 2 : 0),
+                .LMUT((MUT == 10 && lp == 3) ? 1 : 0)) u_l (.clk(clk), .me_e(me_lf[MB_P + lp]),
+                .d_lo(cd[NRB*8-1:0]), .d_hi(cd[NRB*16-1:NRB*8]),
+                .c_a(g_plane.pcq[lp*XPCW + XNVW +: LNRB+4]), .c_nv(g_plane.pcq[lp*XPCW +: XNVW]),
+                .c_v(w[LCW-1]), .c_d(w[LB + 9 +: ND]), .c_j(w[9 +: LB]), .c_sp(w[8:5]),
+                .o_v(w[4]), .o_sp(w[3:0]), .q_lo(xr[lp*NX +: NX/2]), .q_hi(xr[lp*NX + NX/2 +: NX/2]));
+        end
+        for (lk = 1; lk <= XQR; lk = lk + 1) begin : g_r
+            for (lp = 0; lp < 32; lp = lp + 1) begin : g_p
+                for (ls = 0; ls < NQS; ls = ls + 1) begin : g_s
+                    ot_qfd_vm_xrelay_t #(.W(RWX), .MEREG((MEE != 0) ? 1 : 0),
+                        .MUT((MUT == 13 && lk == XQR && lp == 7 && ls == 0) ? 1 : 0)) u_r (.clk(clk),
+                        .me_e(me_lf[MB_QR + ((lk-1)*32 + lp)*NQS + ls]),
+                        .d(xr[((lk-1)*32 + lp)*NX + ls*RWX +: RWX]), .q(xr[(lk*32 + lp)*NX + ls*RWX +: RWX]));
+                end
+            end
+        end
+        for (lf = 0; lf < NF; lf = lf + 1) begin : g_f
+            wire [FW-1:0] fd;
+            for (lb = 0; lb < FW; lb = lb + 1) begin : g_b
+                assign fd[lb] = xr[(XQR*32 + ((lf*FW + lb) % 32))*NX + (lf*FW + lb) / 32];
+            end
+            ot_qfd_vm_xqface_t #(.W(FW), .MEREG((MEE != 0) ? 1 : 0), .MUT((MUT == 11 && lf == 0) ? 1 : 0)) u_f (
+                .clk(clk), .me_e(me_lf[MB_F + lf]), .d(fd), .q(x_q[lf*FW +: FW]));
+        end
+    end endgenerate
 
     // ---- SU operand copies ----
     wire [NSU-1:0] su_hz;
@@ -885,15 +1112,15 @@ module ot_qfd_sp_vector_memory_bv #(
     // x hazard: a landing row (registered rows of this edge's bank writes) on the span of a pending x tuple
     reg            lr_su, lr_m;
     reg  [RW-1:0]  lr_r0, lr_mr;
-    reg  [NK-1:0]  lr_k;
-    reg  [RW-1:0]  lr_kr [0:NK-1];
+    reg  [NQ-1:0]  lr_k;
+    reg  [RW-1:0]  lr_kr [0:NQ-1];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin lr_su <= 1'b0; lr_m <= 1'b0; lr_k <= 0; end
-        else begin lr_su <= |su_hit; lr_m <= gm; lr_k <= gk; end
+        else begin lr_su <= |su_hit; lr_m <= gm; lr_k <= ge; end
     end
     always @(posedge clk) begin
         lr_r0 <= f_r0; lr_mr <= m_row;
-        for (k = 0; k < NK; k = k + 1) lr_kr[k] <= q_row[k*SQD];
+        for (k = 0; k < NQ; k = k + 1) lr_kr[k] <= q_row[k];
     end
     function automatic hits(input [RW-1:0] lo, input [RW-1:0] hi, input [AW-1:0] dc, input [AW+12:0] sp);
         hits = ({lo, 4'h0} <= dc + sp) && ({hi, 4'hf} >= dc);
@@ -904,12 +1131,12 @@ module ot_qfd_sp_vector_memory_bv #(
         for (a = 0; a <= XVM; a = a + 1) if (h_new[a]) begin
             if (lr_su && hits(lr_r0, lr_r0 + NWR - 1, h_dc[a], h_span[a])) hzx = 1'b1;
             if (lr_m && hits(lr_mr, lr_mr, h_dc[a], h_span[a])) hzx = 1'b1;
-            for (k = 0; k < NK; k = k + 1) if (lr_k[k] && hits(lr_kr[k], lr_kr[k], h_dc[a], h_span[a])) hzx = 1'b1;
+            for (k = 0; k < NQ; k = k + 1) if (lr_k[k] && hits(lr_kr[k], lr_kr[k], h_dc[a], h_span[a])) hzx = 1'b1;
         end
         if (nt) begin
             if (lr_su && hits(lr_r0, lr_r0 + NWR - 1, x_dc, span_n)) hzx = 1'b1;
             if (lr_m && hits(lr_mr, lr_mr, x_dc, span_n)) hzx = 1'b1;
-            for (k = 0; k < NK; k = k + 1) if (lr_k[k] && hits(lr_kr[k], lr_kr[k], x_dc, span_n)) hzx = 1'b1;
+            for (k = 0; k < NQ; k = k + 1) if (lr_k[k] && hits(lr_kr[k], lr_kr[k], x_dc, span_n)) hzx = 1'b1;
         end
     end
     always @(posedge clk or negedge rst_n) begin

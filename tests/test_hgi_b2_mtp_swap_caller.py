@@ -5,8 +5,13 @@ placement is hgi_b2.b2.Collect + allocate run on those records in the HGI simula
 descriptors are read from that placement by allocations_from_placement (nothing hand-written).
 What is a stand-in: the Kernels object is built without the model (object.__new__ + the four attributes swap needs;
 a full Kernels needs the DeepSeek weights), and the record that makes h MIRROR is ONE SM.MATVEC reading h whole
-(the production layer bodies need the weights).  With the swap records alone, and in the committed DS L14 placement,
-the allocator does NOT place h as rows q + 4j per cluster, and the native lowering is refused (tests below).
+(the production layer bodies need the weights).
+
+NATIVE LAYOUT (hgi_b2.mtp_swap): cluster q moves its CONTIGUOUS quarter of h (logical rows 80q .. 80q + 79) to stack
+q's slot rows q + 4j.  That is where the allocator holds h: the native program's own records place quarter q LOCAL q
+(B2 mode NATIVE), the committed DS L14 layer placement holds quarter q LOCAL q at physical 0, and a whole-h reader
+makes it MIRROR (still resident in every slice).  The LEGACY STRIPE4 records alone put all of h LOCAL to cluster 0
+(DMA = a central ring client), which the native lowering refuses.
 """
 import hashlib
 import inspect
@@ -27,7 +32,7 @@ from hgi_sim.records import MDesc, Rec, encode_program
 from hgi_sim.qwen_compiler import Builder
 from hgi_sim.machine import Hbm, Die, Machine, UNITS, u_dma_load, u_dma_store
 
-COLB, CSTR = 0x180000000, 1 << 17      # independent of ds_mtp_kernels (asserted equal below)
+COLB, CSTR = (20 << 30) + (256 << 20), 1 << 17      # independent of ds_mtp_kernels (asserted equal below)
 WB = 0x100000                          # the stand-in consumer's weight rows
 POISON = 0x7F812345
 
@@ -47,13 +52,18 @@ def memory():
     return h
 
 
-def allocator_run(K, consumer):
+def program(K, consumer, native):
+    sw = K.swap_native if native else K.swap
+    return sw(True)[:-1] + consumer + sw(False)
+
+
+def allocator_run(K, consumer, native=True):
     """hgi_b2 pass 1 (Collect) over swapin -> consumer -> swapout on one die; returns the PlacementSet."""
     hbm = memory()
     hbm.add(WB, np.zeros(8 * 20480 * 2, np.uint8))
     C = B.Collect()
     M = Machine([Die(0, hbm)], {k: C.wrap(k, f) for k, f in UNITS.items()})
-    M.run(b"", 3, 0, recs=K.swap(True)[:-1] + consumer + K.swap(False), hash_bufs=False)
+    M.run(b"", 3, 0, recs=program(K, consumer, native), hash_bufs=False)
     ps = C.placement()
     assert ps.proof == [] and ps.capacity()["fits"]
     return ps, C
@@ -78,10 +88,12 @@ def execute(rec, die):
 
 
 def check_oracle(hbm, values, pre, slot):
-    # the logical STRIPE4 rule: row o on stack o mod 4 at stack-local COLB + slot * CSTR + o * 64; PRE on stack 0
-    for o in range(320):
-        address = ((o % 4) << 35) + COLB + slot * CSTR + o * 64
-        assert np.array_equal(hbm.view(address, 256).view(np.uint32), values[o].view(np.uint32))
+    # the native layout rule by hand: logical row 80q + j on stack q, 256 B rows packed from stack-local
+    # COLB + slot * CSTR + 64q (the slot's rows q + 4j); PRE on stack 0
+    for q in range(4):
+        for j in range(80):
+            address = (q << 35) + COLB + slot * CSTR + 64 * q + 256 * j
+            assert np.array_equal(hbm.view(address, 256).view(np.uint32), values[80 * q + j].view(np.uint32))
     assert np.array_equal(hbm.view(COLB + slot * CSTR + 81920, 32).view(np.uint32), pre.view(np.uint32))
 
 
@@ -92,15 +104,15 @@ def test_constants_match_the_allocator_and_the_kernels():
 
 def test_real_allocator_yields_mirror_h_and_local0_pre(live):
     K, ps, C = live
-    assert dict(C.modes) == {("DMA", "CENTRAL"): 4, ("SM", "ESPLIT"): 1}
+    assert dict(C.modes) == {("DMA", "NATIVE"): 10, ("SM", "ESPLIT"): 1}
     hb, pb = K.lay.vm["h"], K.lay.vm["PRE"]
     pl = ps.of(0)
     assert set(pl.cls[hb:hb + 20480].tolist()) == {B.MIR}          # read whole by a split record -> MIRROR
-    assert set(pl.cls[pb:pb + 8].tolist()) == {0}                  # central-only -> LOCAL to the home cluster
+    assert set(pl.cls[pb:pb + 8].tolist()) == {0}                  # the PRE singleton's sector -> LOCAL 0
     hs, pre = allocations_from_placement(ps, hb, pb)
     m0 = int(pl.phys[hb])
     assert m0 >= B.LOCAL_W
-    assert hs == {q: MDesc(base=m0 + 64 * q, n=64, m=80, stride=256) for q in range(4)}
+    assert hs == {q: MDesc(base=m0 + 5120 * q, n=64, m=80, stride=64) for q in range(4)}
     assert pre == MDesc(base=int(pl.phys[pb]), n=8)
     # the exported table (placement.json's form) resolves to the same descriptors
     assert allocations_from_placement(json.loads(json.dumps(pl.table(), default=int)), hb, pb) == (hs, pre)
@@ -157,8 +169,8 @@ def test_caller_path_writes_the_legacy_image_all_slots(live):
                 w = d.vm[:B.SLICE_W] != POISON
                 got[e.cluster][w] = d.vm[:B.SLICE_W][w]
         for q in range(4):
-            mine = pl.phys[hrows[q::4]].reshape(-1)
-            assert np.array_equal(got[q][mine], values[q::4].reshape(-1).view(np.uint32))
+            mine = pl.phys[hrows[80 * q:80 * q + 80]].reshape(-1)
+            assert np.array_equal(got[q][mine], values[80 * q:80 * q + 80].reshape(-1).view(np.uint32))
         union = np.full(B.SLICE_W, POISON, np.uint32)
         for q in range(4):
             w = got[q] != POISON
@@ -171,28 +183,112 @@ def test_caller_path_writes_the_legacy_image_all_slots(live):
         assert np.all(union[rest] == POISON)
 
 
-def test_swap_records_alone_are_refused():
-    """DMA is a CENTRAL ring client: with only the swap records the allocator puts ALL of h LOCAL to cluster 0."""
+def test_native_records_alone_place_every_quarter_local_to_its_cluster():
+    """The native program's own records are the allocator's evidence: quarter q is needed by cluster q only."""
     K = kernels()
     ps, C = allocator_run(K, [])
     hb, pb = K.lay.vm["h"], K.lay.vm["PRE"]
+    pl = ps.of(0)
+    assert dict(C.modes) == {("DMA", "NATIVE"): 10}
+    for q in range(4):
+        assert set(pl.cls[hb + 5120 * q:hb + 5120 * (q + 1)].tolist()) == {q}
+    hs, pre = allocations_from_placement(ps, hb, pb)
+    assert hs == {q: MDesc(base=int(pl.phys[hb + 5120 * q]), n=64, m=80, stride=64) for q in range(4)}
+    assert all(d.base + 5120 <= B.LOCAL_W for d in hs.values()) and pre == MDesc(base=int(pl.phys[pb]), n=8)
+
+
+def run_check(K, ps, consumer=(), native=True):
+    hbm = memory()
+    hbm.add(WB, np.zeros(8 * 20480 * 2, np.uint8))
+    chk = B.Check(ps, None)
+    M = Machine([Die(0, hbm)], {k: chk.wrap(k, f) for k, f in UNITS.items()})
+    M.run(b"", 3, 0, recs=program(K, list(consumer), native), hash_bufs=False)
+    return chk
+
+
+def test_b2_check_dispatches_native_members_with_no_ring_word(live):
+    K, ps, _ = live
+    for pset, consumer in ((allocator_run(K, [])[0], []), (ps, whole_h_reader(K))):
+        chk = run_check(K, pset, consumer)
+        assert chk.finish()["violations"] == 0, chk.viol
+        nat = [e for e in chk.recs if e["mode"] == "NATIVE"]
+        assert [e["cluster"] for e in nat] == [0, 1, 2, 3, 0] * 2
+        assert [e["group_last"] for e in nat] == [False, False, False, True, True] * 2
+        assert all(e["ring_read"] == e["ring_write"] == 0 for e in nat)
+        hs, pre = allocations_from_placement(pset, K.lay.vm["h"], K.lay.vm["PRE"])
+        for e in nat[:4]:                           # the swap-in group: O is the cluster's quarter
+            d = hs[e["cluster"]]
+            assert e["sub"][f"O{e['cluster']}"]["phys"] == [d.base, 64, 80, d.stride, 1]
+        assert nat[4]["sub"]["O0"]["phys"][:3] == [pre.base, 8, 1]
+        assert chk.ring["central_remote_read"] == chk.ring["central_remote_write"] == 0
+
+
+def test_b2_check_refuses_a_native_member_on_another_clusters_words():
+    """the check's teeth: quarter 1 placed LOCAL to cluster 2 -> cluster 1's member is refused"""
+    K = kernels()
+    ps, _ = allocator_run(K, [])
+    hb = K.lay.vm["h"]
+    pl = _mutable(ps)
+    pl.cls[hb + 5120:hb + 10240] = 2
+    pl.phys[hb + 5120:hb + 10240] = 30000 + np.arange(5120)
+    chk = run_check(K, pl)
+    assert any("native member of cluster 1 touches 5120 words outside slice 1" in v for v in chk.viol), chk.viol
+
+
+def test_legacy_swap_records_alone_are_refused():
+    """The STRIPE4 record is a CENTRAL ring client: with only the legacy swap records the allocator puts ALL of h
+    LOCAL to cluster 0, and the native lowering is not legal on that placement."""
+    K = kernels()
+    ps, C = allocator_run(K, [], native=False)
+    hb, pb = K.lay.vm["h"], K.lay.vm["PRE"]
     assert dict(C.modes) == {("DMA", "CENTRAL"): 4}
     assert set(ps.of(0).cls[hb:hb + 20480].tolist()) == {0}
-    with pytest.raises(ValueError, match="h row 1: not resident in cluster 1"):
+    with pytest.raises(ValueError, match="h row 80: not resident in cluster 1"):
         allocations_from_placement(ps, hb, pb)
     with pytest.raises(ValueError):                 # the opt-in never falls back silently
         K.swap_bodies(0, lambda r: allocations_from_placement(ps, hb, pb, rank=r))
 
 
-def test_committed_ds_l14_placement_is_refused():
+def test_committed_ds_l14_placement_holds_h_in_the_native_layout():
     """The committed DS layer-14 B2 placement holds h as CONTIGUOUS quarters (cluster q = rows 80q .. 80q + 79,
-    LOCAL q, physical 0, stride 64), not rows q + 4j: the STRIPE4 own-stack lowering is not legal on it."""
+    LOCAL q, physical 0, stride 64): exactly the native layout's owner rule, so the h group lowers on it as it
+    stands.  (That layer program has no swap, so PRE's whole sector is not placed: the PRE descriptor needs the
+    MTP program's placement.)"""
     t = json.loads((ROOT / "results/rtl/hbm_b2_1012/v8_ds_L14/placement.json").read_text())
     lay = DN.Layout()
     hb, pb = lay.vm["h"], lay.vm["PRE"]
     assert [s[:4] for s in t["segments"] if hb <= s[0] < hb + 20480] == [[hb + 5120 * q, 5120, q, 0] for q in range(4)]
-    with pytest.raises(ValueError, match="h row 80: not resident in cluster 0"):
+    assert S.h_allocations_from_placement(t, hb) == {q: MDesc(base=0, n=64, m=80, stride=64) for q in range(4)}
+    with pytest.raises(ValueError, match="PRE: not resident in cluster 0"):
         allocations_from_placement(t, hb, pb)
+
+
+def test_logical_native_program_writes_the_native_image_and_round_trips():
+    """What the HGI simulator runs (Kernels.swap_native on the one logical VM): same image as the per-slice groups."""
+    K = kernels()
+    hb, pb = K.lay.vm["h"], K.lay.vm["PRE"]
+    swapin, swapout = K.swap_bodies(0, "native")
+    assert [(r.unit, r.op, r.param) for r in swapout] == [("DMA", "STORE", 1)] * 3 + [
+        ("DMA", "STORE", 3), ("DMA", "STORE", 3), ("CTL", "FENCE", 0), ("CTL", "END", 0)]
+    assert [S.group_cluster(r) for r in swapin[:5]] == [0, 1, 2, 3, 0]
+    encode_program(swapin), encode_program(swapout)
+    hbm = memory()
+    for slot in (0, 5, 12):
+        values = np.arange(20480, dtype=np.float32).reshape(320, 64) + slot * 32768 + 1
+        pre = np.arange(8, dtype=np.float32) + slot * 8 + 0.5
+        d = Die(0, hbm)
+        d.dyn[3] = slot
+        d.vm[hb:hb + 20480] = values.reshape(-1).view(np.uint32)
+        d.vm[pb:pb + 8] = pre.view(np.uint32)
+        for r in swapout[:5]:
+            execute(r, d)
+        check_oracle(hbm, values, pre, slot)
+        d.vm[hb:hb + 20480] = 0
+        d.vm[pb:pb + 8] = 0
+        for r in swapin[:5]:
+            execute(r, d)
+        assert np.array_equal(d.vm[hb:hb + 20480], values.reshape(-1).view(np.uint32))
+        assert np.array_equal(d.vm[pb:pb + 8], pre.view(np.uint32))
 
 
 def _mutable(ps):
@@ -209,13 +305,13 @@ def test_allocations_the_allocator_did_not_produce_are_refused(live, mutant):
     row = lambda o: slice(hb + 64 * o, hb + 64 * o + 64)       # noqa: E731
     rank = 0
     if mutant == "missing_cluster":        # cluster 3's rows unplaced
-        for o in range(3, 320, 4):
+        for o in range(240, 320):
             pl.cls[row(o)] = -1
     elif mutant == "non_affine":           # two of cluster 2's rows exchanged in physical space
-        a, b = pl.phys[row(2)].copy(), pl.phys[row(6)].copy()
-        pl.phys[row(2)], pl.phys[row(6)] = b, a
+        a, b = pl.phys[row(162)].copy(), pl.phys[row(166)].copy()
+        pl.phys[row(162)], pl.phys[row(166)] = b, a
     elif mutant == "wrong_slice":          # one row of cluster 1 LOCAL to cluster 2
-        pl.cls[row(41)], pl.phys[row(41)] = 2, 4096 + np.arange(64)
+        pl.cls[row(121)], pl.phys[row(121)] = 2, 4096 + np.arange(64)
     elif mutant == "pre_wrong_slice":
         pl.cls[pb:pb + 8] = 1
     elif mutant == "pre_split":            # half the sector elsewhere
@@ -249,9 +345,10 @@ def test_default_path_is_the_legacy_swap_byte_for_byte():
         ("DMA", "STORE", "swapout.h"), ("DMA", "STORE", "swapout.PRE"), ("CTL", "FENCE", "fence"), ("CTL", "END", "end")]
     assert encode_program(swapin) == encode_program(real(K, True))
     assert encode_program(swapout) == encode_program(real(K, False))
-    # the encoded legacy bodies as origin/main 6e5c22c1c emits them (digests taken from that tree's Kernels.swap)
+    # the encoded legacy bodies: origin/main 6e5c22c1c's Kernels.swap with ONE change, the column slot base COLB moved
+    # from stack-local 6 GiB (inside the weight manifest on stack 2) into the reserved data window (20.25 GiB; 2026-10-13); nothing else differs
     assert hashlib.sha256(encode_program(swapin)).hexdigest() == LEGACY_SHA["in"]
     assert hashlib.sha256(encode_program(swapout)).hexdigest() == LEGACY_SHA["out"]
 
 
-LEGACY_SHA = {"in": "f5eb36cbcc35c9ba53b612ef8499e0b48a39392e6199e5d37c6554160f2e14af", "out": "9d0fd1f7de9c135ab7ecc2a30fd2cbff119f6cac8961b01edcd0836d5507c160"}
+LEGACY_SHA = {"in": "13be167c893993ba4832fcf542cbd141383fefe8a189e254431e5b3f6b31c3ba", "out": "0396f34b90d3e15f44543a6d73f5e3d305d0a870c2d73e74cc369ac3867712d1"}

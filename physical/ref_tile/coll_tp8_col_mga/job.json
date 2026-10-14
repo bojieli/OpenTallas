@@ -1,5 +1,5 @@
 {
- "name": "coll_tp8_col_mga-wt2a-COMMIT",
+ "name": "coll_tp8_col_mga-wt2a-81025983b",
  "block": "ot_coll_tp8_col_tile",
  "ref_tile": true,
  "owner": "Claude:q13-coll",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/q13-coll",
-  "commit": "COMMIT"
+  "commit": "81025983b"
  },
  "stages": {
   "bench": [
@@ -106,7 +106,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/coll_tp8_col_cx/coll_tp8_col_mga-wt2a-COMMIT"
+   "to": "results/rtl/ref_tile/coll_tp8_col_cx/coll_tp8_col_mga-wt2a-81025983b"
   }
  ],
  "cycles_added": 0,

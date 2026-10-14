@@ -344,7 +344,10 @@ module ot_dsrom_mtp_hrow_cbcore (
     input  wire [14:0]   f_r,  output wire [14:0]   t_r,
     input  wire [1024:0] f_d,  output wire [1024:0] t_d
 );
-    reg [1038:0] wi, wo; reg [14:0] ri, ro; reg [1024:0] di, dq; reg [3:0] id; reg [1023:0] cap; reg s1, s2;
+    // wi/ri carry keep too: without it yosys opt_merge folds each un-kept chain pin flop into the kept macro launch
+    // copy with the same D (r7 netlist: wi/ri 5 cells each; one flop drove SRAM wd_in AND the forwarding register).
+    (* keep = 1 *) reg [1038:0] wi; (* keep = 1 *) reg [14:0] ri;
+    reg [1038:0] wo; reg [14:0] ro; reg [1024:0] di, dq; reg [3:0] id; reg [1023:0] cap; reg s1, s2;
     wire we = wi[0] && wi[14:11] == id;
     wire re = ri[0] && ri[14:11] == id;
     always @(posedge clk or negedge rn)

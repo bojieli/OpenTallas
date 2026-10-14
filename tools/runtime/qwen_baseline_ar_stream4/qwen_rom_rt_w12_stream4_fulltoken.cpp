@@ -525,6 +525,28 @@ int main(int argc, char** argv) {
         settle(live_all);
         {
             uint32_t cyc = die[0]->cyc;
+#ifdef RT_OPTRACE_PA
+            // rom-layer-tput 10-13 (observation only; link with -DRT_OPTRACE_PA = QROM_OPTRACE=1, run with RT_OPTRACE=1):
+            // die 0's instruction fetch address on every change with the running ME-busy, collective-beat and
+            // issue-stall counters -> the per-class windows of a layer (tools/throughput/qwen_rom_layer.py)
+            {
+                static const bool optrace = getenv("RT_OPTRACE") && atoi(getenv("RT_OPTRACE"));
+                static int prev_pa = -1;
+                static long c_beats = 0, r_beats = 0;
+                if (optrace) {
+                    c_beats += (die[0]->c_valid && die[0]->c_ready);
+                    r_beats += die[0]->r_valid;
+                    int pa = int(die[0]->rootp->ot_qwen_rom_rt_die_w12_stream4_tagged_ar__DOT__prog_a);
+                    if (pa != prev_pa) {
+                        prev_pa = pa;
+                        printf("OPTRACE stage=%s cyc=%u prog_a=%d base=%u me_busy=%ld c_beats=%ld r_beats=%ld stall_kv=%u "
+                               "stall_drain=%u stall_bridge=%u stall_retire=%u stall_mem=%u\n", stages[cur].name.c_str(), cyc, pa,
+                               unsigned(die[0]->prog_base), me_busy[0], c_beats, r_beats, die[0]->st_stall_kv,
+                               die[0]->st_stall_drain, die[0]->st_stall_bridge, die[0]->st_stall_retire, die[0]->st_stall_mem);
+                    }
+                }
+            }
+#endif
             uint8_t all_done = 1;
             for (int d = 0; d < D; d++) all_done &= die[d]->s_done;
             if (!done_armed) {

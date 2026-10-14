@@ -1,5 +1,5 @@
 {
- "name": "qfd_slab_pg_col_mgb-c5b-COMMIT",
+ "name": "qfd_slab_pg_col_mgb-c5b-81025983b",
  "block": "ot_qwen_slab_pg_col",
  "ref_tile": true,
  "owner": "Claude:q13-coll",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/q13-coll",
-  "commit": "COMMIT",
+  "commit": "81025983b",
   "extra_paths": [
    "src",
    "results/floorplan/qwen_o4_rom_placement_w12_tp8_g3072.json",
@@ -146,7 +146,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_slab_pg_col/qfd_slab_pg_col_mgb-c5b-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_slab_pg_col/qfd_slab_pg_col_mgb-c5b-81025983b"
   }
  ],
  "cycles_added": 0,

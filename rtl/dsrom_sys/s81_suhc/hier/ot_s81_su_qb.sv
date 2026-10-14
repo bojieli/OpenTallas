@@ -59,24 +59,30 @@ module ot_s81_su_qbt #(
     // its own cycle) and then every operand cycle S_RD-full from slot 0 (ot_s81_su_hctl: ph 0 then ph 2, QB never
     // throttled, rows_in = c * RPB a multiple of S_RD), so operand row index = rcnt - 1 + s with rcnt - 1 = 0 mod L:
     // spine slot s IS pass position s and every spine cycle is exactly one pass.  No rotation, no hold: the data takes
-    // ONE register (pin flop = registered output, 8,192 b); valid / tags / obase come from a few gates on the control pins.
+    // a pin flop and an output flop (2 x 8,192 b); valid / tags / obase come from the pin flops of the control pins.
     // Any other arrival pattern (a partial operand cycle, a descriptor sharing its cycle) raises o_fo (fault 5).
     generate if (S_RD == L) begin : g_al
-        // boundary depth <= 3 levels: the pins decide only on slot 0 (+ st / kind) against registered state (mine, rnz);
-        // the full-cycle / alignment check runs one cycle later from pin flops of dn_v (a fault, latency irrelevant).
+        // REGISTER AT THE PIN (owner 10-13, die timing by construction): every input pin feeds exactly one flop (q_*) and
+        // nothing else; the tap logic starts from those flops.  The data therefore takes TWO registers (pin flop q_d,
+        // output flop e_d) and the tap is one cycle deeper than the 10-12 version (which decided on the pins: 26
+        // endpoints 4 levels behind dn_st / dn_v[0]).  The full-cycle / alignment check still runs one cycle later.
+        reg q_st, q_fp4; reg [3:0] q_kind; reg [7:0] q_jid; reg [S_RD-1:0] q_v; reg [S_RD*512-1:0] q_d;
+        always @(posedge clk) begin q_kind <= dn_kind_i; q_fp4 <= dn_fp4_i; q_jid <= dn_jid_i; q_d <= dn_d_i; end
+        always @(posedge clk or negedge rst_n) if (!rst_n) begin q_st <= 1'b0; q_v <= 0; end
+                                               else begin q_st <= dn_st_i; q_v <= dn_v_i; end
         reg mine, rnz; reg [7:0] jid; reg [15:0] rcnt, rinc;
         reg dq_m, dq_desc; reg [S_RD-1:0] dq_v;
-        wire v0   = dn_v_i[0] && !dn_st_i;
+        wire v0   = q_v[0] && !q_st;
         wire desc = mine && v0 && !rnz;                                     // the descriptor row
         wire opc  = mine && v0 && rnz;                                      // an operand cycle (one pass)
         wire [15:0] ix0 = rcnt - 16'd1;
         wire [15:0] pp  = (ix0 >> LL) % NPS;
         always @(posedge clk) begin : dreg
             integer j;
-            e_d <= dn_d_i;                                                 // the only data register
+            e_d <= q_d;                                                    // the output register
             for (j = 0; j < L; j = j + 1) e_t[12 * j +: 12] <= {ix0[LR +: 10], pp[1:0]};
-            if (desc) e_ob <= dn_d_i[13:0];                                 // datapath: no reset
-            if (dn_st_i) e_f4 <= dn_fp4_i;
+            if (desc) e_ob <= q_d[13:0];                                    // datapath: no reset
+            if (q_st) e_f4 <= q_fp4;
         end
         always @(posedge clk or negedge rst_n) begin : creg
             integer j;
@@ -84,12 +90,12 @@ module ot_s81_su_qbt #(
                 mine <= 1'b0; rnz <= 1'b0; jid <= 8'd0; rcnt <= 16'd0; e_v <= 0; dq_m <= 1'b0; dq_desc <= 1'b0; rinc <= 16'd0;
                 dq_v <= 0; o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0;
             end else begin
-                // rinc = rcnt + S_RD kept as state (its adder is off the pin paths)
-                if (dn_st_i) begin mine <= (dn_kind_i == K_QB); jid <= dn_jid_i; rcnt <= 16'd0; rnz <= 1'b0; end
+                // rinc = rcnt + S_RD kept as state
+                if (q_st) begin mine <= (q_kind == K_QB); jid <= q_jid; rcnt <= 16'd0; rnz <= 1'b0; end
                 else if (desc) begin rcnt <= 16'd1; rinc <= 16'd1 + S_RD; rnz <= 1'b1; end
                 else if (opc) begin rcnt <= rinc; rinc <= rinc + S_RD; end
                 for (j = 0; j < L; j = j + 1) e_v[j] <= opc;
-                dq_m <= mine && !dn_st_i; dq_desc <= desc; dq_v <= dn_v_i;
+                dq_m <= mine && !q_st; dq_desc <= desc; dq_v <= q_v;
                 o_fu <= 1'b0; o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= jid;
                 o_fo <= dq_m && (|dq_v) && (dq_desc ? (|dq_v[S_RD-1:1]) : !(&dq_v));   // not S_RD-full / aligned
             end
@@ -179,6 +185,89 @@ module ot_s81_su_qbt #(
             end
         end
     end endgenerate
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// TAP, SPLIT (el1013-s81su, 2026-10-13; structural change after the pin-registered single tap measured 16,510 sinks on
+// one root, CTS insertion 774 ps / spread 130 ps: refused by the clock rule).  The rate-aligned tap (S_RD == 2 NPB, the
+// full configuration) as TWO half-taps, each a kvt-shaped column (36.72 x 453.6) with its own clock root:
+//   ot_s81_su_qbtl  slots 0 .. S_RD / 2 - 1 (slot 0 = the descriptor row) + the whole control (job, row counter, valid,
+//                   tags, obase, FP4, status): 8,192 data flops + ~0.33k control;
+//   the high half   slots S_RD / 2 .. S_RD - 1: a pure two-register data stage, which is exactly ot_s81_su_swth -- the
+//                   SW high half-tap is instantiated (and hardened) once and used for both.
+// Every input pin feeds exactly one flop and every output is a flop, as ot_s81_su_qbt's g_al branch, and the pair is
+// that branch cycle for cycle (bench tb_s81_su_qbt_split: lockstep, no delay).  ot_s81_su_qbt stays as the assembling
+// tap of the reduced shapes (S_RD < L) and as the lockstep reference.
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_s81_su_qbtl #(
+    parameter integer QB_NB = 32, S_RD = 16,
+    parameter integer NPB = (S_RD / 2 > 2) ? S_RD / 2 : 2,
+    parameter integer MUT = 0                      // bench negative control: 1 = the pass tag one pass early
+) (
+    input  wire                   clk,
+    input  wire                   rst_in,
+    input  wire                   dn_st_i,
+    input  wire [3:0]             dn_kind_i,
+    input  wire [1:0]             dn_gsel_i,
+    input  wire                   dn_fp4_i,
+    input  wire [7:0]             dn_jid_i,
+    input  wire [S_RD-1:0]        dn_v_i,
+    input  wire [S_RD*256-1:0]    dn_d_i,         // slots 0 .. S_RD / 2 - 1
+    output reg  [2*NPB-1:0]       e_v,
+    output reg  [S_RD*256-1:0]    e_d,            // pass positions 0 .. NPB - 1
+    output reg  [2*NPB*12-1:0]    e_t,
+    output reg  [13:0]            e_ob,
+    output reg                    e_f4,
+    output reg                    o_fu, o_fo, o_alive, o_den, o_rdy,
+    output reg  [7:0]             o_rjid
+);
+    localparam integer L = 2 * NPB, NPS = QB_NB / NPB, RPB = 2 * QB_NB;
+    localparam integer LL = $clog2(L), LR = $clog2(RPB);
+    localparam [3:0] K_QB = 2;
+`ifndef SYNTHESIS
+    initial begin
+        if ((1 << LL) != L || (1 << LR) != RPB) $fatal(1, "ot_s81_su_qbtl: L and RPB powers of two");
+        if (S_RD != L || NPS < 2 || NPS > 4 || QB_NB % NPB) $fatal(1, "ot_s81_su_qbtl: S_RD == L (rate-aligned), 2 <= passes <= 4");
+    end
+`endif
+    reg rr0, rr1;
+    always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
+    wire rst_n = rr1;
+    // pin flops
+    reg q_st, q_fp4; reg [3:0] q_kind; reg [7:0] q_jid; reg [S_RD-1:0] q_v; reg [S_RD*256-1:0] q_d;
+    always @(posedge clk) begin q_kind <= dn_kind_i; q_fp4 <= dn_fp4_i; q_jid <= dn_jid_i; q_d <= dn_d_i; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin q_st <= 1'b0; q_v <= 0; end
+                                           else begin q_st <= dn_st_i; q_v <= dn_v_i; end
+    reg mine, rnz; reg [7:0] jid; reg [15:0] rcnt, rinc;
+    reg dq_m, dq_desc; reg [S_RD-1:0] dq_v;
+    wire v0   = q_v[0] && !q_st;
+    wire desc = mine && v0 && !rnz;                                     // the descriptor row
+    wire opc  = mine && v0 && rnz;                                      // an operand cycle (one pass)
+    wire [15:0] ix0 = rcnt - 16'd1;
+    wire [15:0] pp  = (ix0 >> LL) % NPS;
+    wire [1:0]  ppm = (MUT == 1) ? pp[1:0] + 2'd1 : pp[1:0];
+    always @(posedge clk) begin : dreg
+        integer j;
+        e_d <= q_d;                                                    // the output register
+        for (j = 0; j < L; j = j + 1) e_t[12 * j +: 12] <= {ix0[LR +: 10], ppm};
+        if (desc) e_ob <= q_d[13:0];                                    // datapath: no reset
+        if (q_st) e_f4 <= q_fp4;
+    end
+    always @(posedge clk or negedge rst_n) begin : creg
+        integer j;
+        if (!rst_n) begin
+            mine <= 1'b0; rnz <= 1'b0; jid <= 8'd0; rcnt <= 16'd0; e_v <= 0; dq_m <= 1'b0; dq_desc <= 1'b0; rinc <= 16'd0;
+            dq_v <= 0; o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0;
+        end else begin
+            if (q_st) begin mine <= (q_kind == K_QB); jid <= q_jid; rcnt <= 16'd0; rnz <= 1'b0; end
+            else if (desc) begin rcnt <= 16'd1; rinc <= 16'd1 + S_RD; rnz <= 1'b1; end
+            else if (opc) begin rcnt <= rinc; rinc <= rinc + S_RD; end
+            for (j = 0; j < L; j = j + 1) e_v[j] <= opc;
+            dq_m <= mine && !q_st; dq_desc <= desc; dq_v <= q_v;
+            o_fu <= 1'b0; o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= jid;
+            o_fo <= dq_m && (|dq_v) && (dq_desc ? (|dq_v[S_RD-1:1]) : !(&dq_v));   // not S_RD-full / aligned
+        end
+    end
 endmodule
 
 module ot_s81_su_qbe #(

@@ -21,6 +21,10 @@
 //   ports 1 su, 4 svc, 5 sel, 6 col, 9 hcx (the HC coefficient producers fn/sumsq/rsqrt/pre_post/sinkhorn, which
 //                write the golden coefficient rows at their end), 7, 8, 10, 11: behavioural engines behind REAL
 //                ot_s81_slab_ep endpoints (golden durations, dataflow start).
+//   port 10 eng (Engram layers, e.g. L14: eng.hh / dot / gate / add): BEHAVIOURAL at program duration like the others
+//                (no Engram RTL in this vehicle).  The HIDDEN payload is then the layer-ENTRY h; the op with wrow >= 0
+//                (eng.add) writes the XW golden post-Engram h rows (coef.mem) over the H rows at its end, and the HC
+//                H_LOAD's f_inp waits on that write (eng_h / eng_done) as well as on its eng.add predecessor.
 // Clocks: the die PLL in die 0's collective slab (pll_stream 1.2 GHz = ck for the controller and every stream slab;
 // pll_serial 0.9 GHz = ckv for the gather/capture serial side).
 // CHECKS: (1) capture VM writes = reference per root (multiset); (2) every done at dsfd_sp_ctrl_e is the next op of its
@@ -34,8 +38,27 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_s81_die_layer;
     parameter integer MUT = 0, HMUT = 0, INP1 = 0, NG = 16, TMAX = 45000, EPER = 97, CHB = 60, CHU = 12, TSR = 7;
+    // HC slab structure (defaults = the flat engine).  The production slab is the hierarchical tuple of the HC gate
+    // (tools/s81_suhc/hc_gate.py --hier 3): HIER 1, HALF 1, CSPLIT 1, TAIL_SPLIT 2, HEAD_ROWS 10, CNL_PIN 1, CHAIN_STEP 6
+    // at NG 256; build it with +define+TB_HC_HIER (the probes below then read the slab's sequencer tile).
+    parameter integer HIER = 0, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = 4;
     localparam integer NR = 128, XW = 640, MAXC = 16384, MAXR = 1024, MAXQ = 4096, MAXE = 2048, MAXM = 16, FW = 512,
-                       PW = 547, W = 552, LVM = 10;
+                       PW = 547, W = 552;
+    // LVM: read latency of the bench's behavioural VM (request -> rs_v), <= 63.  A measurement knob for the serial cost of
+    // the VM read round trip in the layer (bgq28 leaf chain / front-end hierarchy add latency, not rate); default unchanged.
+    parameter integer LVM = 10;
+    // rom-layer-tput 2026-10-13 (h transfer): PIPE / PIPE_PD = the HC sequencer's POST issue-order done (ot_s81_hc_cseq);
+    // HST 1 = the H landing streamer ot_s81_hc_hland between the HC and the VM (H_LOAD answered from the landing rows as
+    // they arrive; f_inp of the H_LOAD is then 1), HLMUT its negative control; HTX = the stage hand-off on the real
+    // ot_s81_hop_tx (HIDDEN message, the layer output rows S_BASE.. to a link that takes one flit a cycle):
+    // 0 none, 1 go at the H_STORE done (store and forward), 2 cut-through: go when HWM rows of the H_STORE have been
+    // written (the die's form: the VM ARMN of the hand-off slot armed at HWM rows), 3 negative control: go at the
+    // H_STORE take.  Checked: every flit = the golden layer output row, no row read before it was written.
+    // PGAP: idle cycles between the HIDDEN header and its first payload flit (a legal link gap).  The bench program holds
+    // the HC's two boot GAIN loads (352 cycles) in front of the layer; with PGAP >= 400 they are over before the payload
+    // lands, which is the production condition of a stage entry (HC idle, gain sets loaded at boot).  The h transfer
+    // record then counts the layer from the cycle before the first payload flit (layer_adj / xfer_adj).
+    parameter integer PIPE = 0, PIPE_PD = 40, HST = 0, HLMUT = 0, HTX = 0, HWM = 8, PGAP = 0;
     localparam integer S_RD = 2, S_WR = 8, H_BASE = 0, G_BASE = 1280, GROWS = 320, C_BASE = 2560, S_BASE = 6144;
     string dir;
 `ifdef TB_SEQC
@@ -120,11 +143,24 @@ module tb_s81_die_layer;
     wire hc_inp;
     reg  y_v = 0; wire y_rdy; reg [NG*32-1:0] y_d = 0;
     wire [S_RD-1:0] rq_v; wire [S_RD*14-1:0] rq_row; reg [S_RD-1:0] rs_v = 0; reg [S_RD*512-1:0] rs_d = 0;
+    // HC <-> VM read path: direct, or through the H landing streamer (HST)
+    wire [S_RD-1:0] hrs_v; wire [S_RD*512-1:0] hrs_d; wire [S_RD-1:0] vq_v; wire [S_RD*14-1:0] vq_row;
+    wire hl_flt; wire [3:0] hl_fc; wire [31:0] hl_ns, hl_nv;
+    generate if (HST != 0) begin : g_hst
+        ot_s81_hc_hland #(.S_RD(S_RD), .XW(XW), .RXB(H_BASE), .VWA(14), .FD(64), .MUT(HLMUT)) u_hl (
+            .clk(ck), .rst_n(rst), .lw_v(vwe), .lw_a(vwa), .lw_d(vwd), .h_rq_v(rq_v), .h_rq_row(rq_row),
+            .h_rs_v(hrs_v), .h_rs_d(hrs_d), .v_rq_v(vq_v), .v_rq_row(vq_row), .v_rs_v(rs_v), .v_rs_d(rs_d),
+            .fault(hl_flt), .fault_code(hl_fc), .st_stream(hl_ns), .st_vm(hl_nv));
+    end else begin : g_nhst
+        assign hrs_v = rs_v; assign hrs_d = rs_d; assign vq_v = rq_v; assign vq_row = rq_row;
+        assign hl_flt = 1'b0; assign hl_fc = 4'd0; assign hl_ns = 0; assign hl_nv = 0;
+    end endgenerate
     wire [S_WR-1:0] wq_v; wire [S_WR*14-1:0] wq_row; wire [S_WR*16-1:0] wq_mask; wire [S_WR*512-1:0] wq_d;
-    wire [3:0] hfcode;
-    dsfd_sp_hc_c #(.NG(NG), .D(5120), .S_RD(S_RD), .S_WR(S_WR), .MUT(HMUT)) u_hc (.ck(ck), .rst(rst), .c_cmd(c[2]),
+    dsfd_sp_hc_c #(.NG(NG), .D(5120), .S_RD(S_RD), .S_WR(S_WR), .MUT(HMUT), .HIER(HIER), .HALF(HALF), .CSPLIT(CSPLIT),
+                   .TAIL_SPLIT(TAIL_SPLIT), .HEAD_ROWS(HEAD_ROWS), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP), .PIPE(PIPE), .PIPE_PD(PIPE_PD)) u_hc (.ck(ck), .rst(rst), .c_cmd(c[2]),
         .c_done(d[2]), .c_st(est[2]), .f_inp(hc_inp), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row),
-        .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .fcode(hfcode));
+        .rs_v(hrs_v), .rs_d(hrs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d));
+    wire [3:0] hfcode = u_hc.fcode;      // the fault code is internal to dsfd_sp_hc_c since cdb57463d; the flat engine sits in g_flat
     // ---------------- DUT: the TP4 collective group (port 3 of die 0)
     wire [514:0] rx [0:3][0:7];
     wire [511:0] tx [0:3][0:7];
@@ -221,7 +257,8 @@ module tb_s81_die_layer;
     reg acc_err;
     // HC y bus FIFO (die 0's all-reduce words, in order)
     reg [511:0] yq [0:MAXQ-1];
-    integer ywr = 0, yrd = 0, y_ok = 0, y_bad = 0;
+    integer ywr = 0, yrd = 0, y_ok = 0, y_bad = 0, yi;
+    localparam integer YB = NG / 16;
     function automatic integer ready_op(input integer jb, input integer op);
         integer i, r;
         begin
@@ -282,14 +319,16 @@ module tb_s81_die_layer;
     end
     // y bus to the HC: in order, valid while a word is buffered
     always @(posedge ck) begin
-        if (y_v && y_rdy) yrd = yrd + 1;
-        y_v <= (yrd < ywr);
-        y_d <= yq[yrd];
+        // one HC y beat = NG lanes x 32 b = YB all-reduce words of 16 (NG 16: one word a beat; NG 256: 16 words a beat)
+        if (y_v && y_rdy) yrd = yrd + YB;
+        y_v <= (yrd + YB <= ywr);
+        for (yi = 0; yi < YB; yi = yi + 1) y_d[512 * yi +: 512] <= yq[yrd + yi];
     end
     // ---------------- bench VM (HC rows, HIDDEN payload, coefficient rows) + row-completion state
     reg [511:0] vm [0:16383];
     reg vm_ok [0:16383];
     integer hcnt = 0, gcnt [0:1];
+    reg eng_h = 0, eng_done = 0;         // eng_h: the program has an Engram h write (a port-10 op with wrow >= 0)
     reg clr_req = 0;
     task automatic mark(input integer r);
         begin
@@ -307,29 +346,43 @@ module tb_s81_die_layer;
         if (clr_req) begin
             for (i2 = H_BASE; i2 < H_BASE + XW; i2 = i2 + 1) vm_ok[i2] = 1'b0;
             for (i2 = C_BASE; i2 < C_BASE + 4; i2 = i2 + 1) vm_ok[i2] = 1'b0;
-            hcnt = 0; clr_req = 0;
+            hcnt = 0; clr_req = 0; eng_done = 0;
         end
         if (vwe) begin vm[vwa] = vwd; mark(vwa); nwr = nwr + 1; end
         if (g_eng[9].g_b.jdone_r && o_wr[g_eng[9].g_b.dop_r] >= 0) begin
             vm[o_wr[g_eng[9].g_b.dop_r]] = coefm[o_wr[g_eng[9].g_b.dop_r]]; mark(o_wr[g_eng[9].g_b.dop_r]); end
+        if (g_eng[10].g_b.jdone_r && o_wr[g_eng[10].g_b.dop_r] >= 0) begin
+            for (i2 = 0; i2 < XW; i2 = i2 + 1) begin
+                vm[o_wr[g_eng[10].g_b.dop_r] + i2] = coefm[o_wr[g_eng[10].g_b.dop_r] + i2]; mark(o_wr[g_eng[10].g_b.dop_r] + i2); end
+            eng_done = 1;
+        end
         for (s = 0; s < S_WR; s = s + 1) if (wq_v[s]) begin vm[wq_row[14 * s +: 14]] = wq_d[512 * s +: 512]; mark(wq_row[14 * s +: 14]); end
         for (i2 = 63; i2 > 0; i2 = i2 - 1) begin dl_v[i2] = dl_v[i2 - 1]; dl_a[i2] = dl_a[i2 - 1]; end
-        dl_v[0] = rq_v; dl_a[0] = rq_row;
+        dl_v[0] = vq_v; dl_a[0] = vq_row;
         rs_v <= dl_v[LVM - 1];
         for (s = 0; s < S_RD; s = s + 1) rs_d[512 * s +: 512] <= vm[dl_a[LVM - 1][14 * s +: 14]];
     end
     // f_inp: the head descriptor's operands are complete in the VM (dropped on the take cycle)
-    wire [83:0] hq = u_hc.u_hc.u_ad.rq;
-    wire        hrv = u_hc.u_hc.u_ad.rv;
+`ifdef TB_HC_HIER
+`define HCAD u_hc.u_hc.g_hier.u_cb.u_seq.u_ad
+    wire        hdv = u_hc.u_hc.g_hier.u_cb.u_seq.d_v;
+    wire [7:0]  hdt = u_hc.u_hc.g_hier.u_cb.u_seq.d_t;
+`else
+`define HCAD u_hc.u_hc.g_flat.u_ad
+    wire        hdv = u_hc.u_hc.g_flat.d_v;
+    wire [7:0]  hdt = u_hc.u_hc.g_flat.d_t;
+`endif
+    wire [83:0] hq = `HCAD.rq;
+    wire        hrv = `HCAD.rv;
     wire        htake = u_hc.u_hc.e_v && u_hc.u_hc.e_r;
     wire [3:0]  hkind = hq[30:27];
     wire [13:0] hbase = hq[20:7];
     reg hpres;
     always @* begin
         case (hkind)
-            4'd0: hpres = (hbase == H_BASE) && (hcnt == XW);
+            4'd0: hpres = (hbase == H_BASE) ? ((HST != 0) ? !eng_h : ((hcnt == XW) && (!eng_h || eng_done))) : eng_done;
             4'd2: hpres = vm_ok[hbase] && vm_ok[hbase + 1];
-            4'd3: hpres = (yrd < ywr) || y_v;
+            4'd3: hpres = (yrd + YB <= ywr) || y_v;
             4'd5: hpres = (hbase == G_BASE) ? (gcnt[0] == GROWS) : (hbase == G_BASE + GROWS) ? (gcnt[1] == GROWS) : 1'b0;
             default: hpres = 1'b1;
         endcase
@@ -338,7 +391,9 @@ module tb_s81_die_layer;
     // HC job start (the core takes the descriptor)
     always @(posedge ck) if (u_hc.u_hc.e_v && u_hc.u_hc.e_r) stt[cj][u_hc.u_hc.e_d[6:0]] = cyc;
     // HC job end: the core's done (the job's last result committed); the controller-pin done follows through the adapter
-    always @(posedge ck) if (u_hc.u_hc.d_v) endt[cj][u_hc.u_hc.d_t[6:0]] = cyc;
+    // (hierarchical slab: the sequencer tile's done BEFORE its DW-cycle done delay to the adapter: the cycle the next
+    // job can be taken, the same event as the flat core's done)
+    always @(posedge ck) if (hdv) endt[cj][hdt[6:0]] = cyc;
     // ---------------- reference roots (as tb_s81ph_gather_capture)
     reg [NR-1:0] s_v; reg [31:0] s_t [0:NR-1]; reg [31:0] s_d [0:NR-1]; reg [NR-1:0] s_e, s_b;
     wire [NR-1:0] rr_v, rr_e, rr_f;
@@ -504,6 +559,62 @@ module tb_s81_die_layer;
             end
         end
     end
+    // ---------------- the stage hand-off (HTX): the real hop framer reads the layer output rows from the bench VM and
+    // hands them to a link that takes one flit a cycle (the priced hop: 640 payload flits + header)
+    reg [511:0] gs [0:XW-1];             // golden layer output rows by index
+    reg         gs_ok [0:XW-1];
+    integer t_hgo = -1, t_hx0 = -1, t_hx1 = -1, tx_ok = 0, tx_bad = 0, tx_early = 0, tx_n = 0, swr = 0, t_sw0 = -1,
+            t_land1 = -1, tx_lead_min = 1 << 30, tx_rd = 0, hst_take = -1, t_pay0 = -1;
+    reg  hx_cmd = 0, hx_go = 0, hx_go_done = 0;
+    wire hx_re, hx_ov, hx_ol, hx_dn, hx_flt; wire [13:0] hx_ra; reg [511:0] hx_rq = 0; wire [511:0] hx_od;
+    wire [7:0] hx_dt; wire [3:0] hx_fc;
+    generate if (HTX != 0) begin : g_htx
+        ot_s81_hop_tx #(.WINDOW_CONTEXT(0), .MY_ID(2), .FLIT(512), .NW(21), .USER_W(12), .VWA(14), .XW(XW), .TXB(S_BASE),
+                        .CMDW(84), .OPW(7), .ARGW(24), .SUW(10), .USE_VM_RVALID(0), .OUT_DEPTH(8), .QD(8)) u_tx (
+            .clk(ck), .rst_n(rst), .win_ctx_v(1'b0), .win_ctx_slot(1'b0), .win_ctx_user(12'd0), .win_ctx_pos(21'd0),
+            .win_ctx_tok(21'd0), .win_ctx_ids(68'd0), .win_ctx_dead(1'b0),
+            .cmd_v(hx_cmd), .cmd_d({1'b0, 10'd0, 21'd0, 21'd1000, {8'd0, 12'd3, 4'd1}, 7'd0}), .dn_v(hx_dn), .dn_tag(hx_dt),
+            .go(hx_go), .res_v(1'b0), .res_tok(21'd0), .res_val(32'd0), .res_stop(1'b0), .run_eosen(1'b0), .run_eos(21'd0),
+            .run_maxl(22'd0), .vm_re(hx_re), .vm_raddr(hx_ra), .vm_rq(hx_rq), .vm_rvalid(1'b0),
+            .out_valid(hx_ov), .out_ready(1'b1), .out_data(hx_od), .out_last(hx_ol), .fault(hx_flt), .fault_code(hx_fc),
+            .st_msgs());
+    end else begin : g_nhtx
+        assign hx_re = 1'b0; assign hx_ra = 14'd0; assign hx_ov = 1'b0; assign hx_ol = 1'b0; assign hx_dn = 1'b0;
+        assign hx_flt = 1'b0; assign hx_od = 512'd0; assign hx_dt = 8'd0; assign hx_fc = 4'd0;
+    end endgenerate
+    integer sx;
+    always @(posedge ck) begin
+        // landing: the cycle of the last HIDDEN row
+        if (vwe && vwa == H_BASE + XW - 1 && t_land1 < 0) t_land1 = cyc;
+        // H_STORE rows written (the hand-off's input)
+        for (sx = 0; sx < S_WR; sx = sx + 1) if (wq_v[sx] && wq_row[14 * sx +: 14] >= S_BASE) begin
+            swr = swr + 1; if (t_sw0 < 0) t_sw0 = cyc; end
+        if (htake && hkind == 4'd1 && hst_take < 0) hst_take = cyc;
+        hx_cmd <= 1'b0; hx_go <= 1'b0;
+        if (HTX != 0 && rst && ctl_up && cj == 0 && !hx_go_done) begin
+            if (t_hgo == -1) begin hx_cmd <= 1'b1; t_hgo = -2; end                      // the descriptor is queued at the job start
+            else if ((HTX == 1 && t_hstore >= 0) || (HTX == 2 && swr >= HWM) || (HTX == 3 && hst_take >= 0)) begin
+                hx_go <= 1'b1; hx_go_done <= 1'b1; t_hgo = cyc;
+            end
+        end
+        // the VM's registered read (data on vm_rq two edges after the issue)
+        if (hx_re) begin
+            hx_rq <= vm[hx_ra];
+            if (!vm_ok[hx_ra]) begin tx_early = tx_early + 1; if (tx_early < 4) $display("ERR hop TX read row %0d before it was written (cyc %0d)", hx_ra, cyc); end
+            tx_rd = tx_rd + 1;
+            if (swr < XW && swr - tx_rd < tx_lead_min) tx_lead_min = swr - tx_rd;   // rows written ahead of the reader while the store runs
+        end
+        if (hx_ov) begin
+            if (tx_n == 0) t_hx0 = cyc;
+            else if (tx_n <= XW) begin
+                if (gs_ok[tx_n - 1] && hx_od === gs[tx_n - 1]) tx_ok = tx_ok + 1;
+                else begin tx_bad = tx_bad + 1; if (tx_bad < 4) $display("ERR hop TX flit %0d != golden layer output row (cyc %0d)", tx_n - 1, cyc); end
+            end
+            if (hx_ol) t_hx1 = cyc;
+            tx_n = tx_n + 1;
+        end
+        if (hx_flt || hl_flt) begin errors = errors + 1; if (errors < 20) $display("ERR hand-off fault: hop_tx %b code %0d, hland %b code %0d (cyc %0d)", hx_flt, hx_fc, hl_flt, hl_fc, cyc); end
+    end
     // ---------------- main
     task automatic send_flit(input [511:0] dt, input ll);
         begin
@@ -532,7 +643,7 @@ module tb_s81_die_layer;
         while (!$feof(fd)) begin
             rc = $fscanf(fd, "%d %d %d %d %d %d %d %d %d %d %d\n", o_port[nop], o_arg[nop], o_dur[nop], o_np[nop],
                          o_p[nop][0], o_p[nop][1], o_p[nop][2], o_p[nop][3], o_ph[nop], o_cm[nop], o_wr[nop]);
-            if (rc == 11) nop = nop + 1;
+            if (rc == 11) begin if (o_port[nop] == 10 && o_wr[nop] >= 0) eng_h = 1; nop = nop + 1; end
         end
         $fclose(fd);
         fd = $fopen({dir, "/stim.txt"}, "r");
@@ -558,6 +669,9 @@ module tb_s81_die_layer;
         $readmemh({dir, "/expd.mem"}, ed);
         $readmemh({dir, "/vm_boot.mem"}, vm);
         $readmemh({dir, "/coef.mem"}, coefm);
+        // rows present in the VM at job start (written before this layer: boot_ok.txt, empty unless --coef-split)
+        fd = $fopen({dir, "/boot_ok.txt"}, "r");
+        if (fd != 0) begin while ($fscanf(fd, "%d\n", w) == 1) mark(w); $fclose(fd); end
         begin : own_load
             reg [511:0] tmp [0:4*MAXR-1];
             $readmemh({dir, "/coll_own.mem"}, tmp);
@@ -574,6 +688,8 @@ module tb_s81_die_layer;
         m_op[NMSG] = 0;
         for (w = 0; w < nop; w = w + 1) if (o_cm[w] >= 0) m_op[o_cm[w]] = w;
         for (w = G_BASE; w < G_BASE + 2 * GROWS; w = w + 1) mark(w);     // gain sets: boot image
+        for (w = 0; w < XW; w = w + 1) gs_ok[w] = 1'b0;
+        for (w = 0; w < NE; w = w + 1) if (ea[w] >= S_BASE && ea[w] < S_BASE + XW) begin gs[ea[w] - S_BASE] = ed[w]; gs_ok[ea[w] - S_BASE] = 1'b1; end
         if (r0 != TOT) $fatal(1, "coll records %0d != %0d", r0, TOT);
         $display("TB_S81_DIE_LAYER program %0d ops, %0d field phases, %0d partials, %0d coll messages / %0d records, %0d y words, %0d golden rows (%0d H_STORE), MUT %0d HMUT %0d NG %0d",
                  nop, nph, ncl, NMSG, TOT, NY, NE, NST, MUT, HMUT, NG);
@@ -615,10 +731,13 @@ module tb_s81_die_layer;
         hdr = 0; hdr[11:0] = 2; hdr[23:12] = 1; hdr[27:24] = 1; hdr[39:28] = XW; hdr[51:40] = 0; hdr[72:52] = 0;
         hdr[146:126] = 1000;
         send_flit(hdr, 1'b0);
+        i_v = 0; repeat (PGAP) @(negedge ck);
+        t_pay0 = cyc;
         for (w = 0; w < XW; w = w + 1) send_flit(payload[w], w == XW - 1);
         i_v = 0; i_l = 0;
 `endif
         while (jdn < JOBS && cyc < TMAX) @(negedge ck);
+        if (HTX != 0) while (t_hx1 < 0 && cyc < TMAX) @(negedge ck);
         repeat (600) @(negedge ck);
         // ---- compare: capture writes
         bad = 0; tot = 0;
@@ -661,9 +780,19 @@ module tb_s81_die_layer;
 `else
         kit_ok = 1;
 `endif
+        // per-op timing dump (rom-layer-tput 2026-10-13): cycles of every op of job 0, for the per-class throughput record
+        for (w = 0; w < nop; w = w + 1) $display("OPT %0d port %0d dur %0d start %0d end %0d", w, o_port[w], o_dur[w], stt[0][w], endt[0][w]);
         $display("SUMMARY jobs=%0d layer_cycles=%0d (header %0d -> H_STORE done %0d) stage_done_cycle=%0d jobs_done=%0d/%0d dones=%0d/%0d phases_released=%0d field_phases=%0d capture_writes=%0d mismatching_roots=%0d coll_words_die0=%0d coll_errors=%0d coll_incomplete=%0d y_exact=%0d/%0d y_bad=%0d y_consumed=%0d norm_rows_exact=%0d/%0d hstore_rows_exact=%0d/%0d ref_fault=%0d dut_fault=%0d ctrl_flt=%0d fvec=%h stuck=%0d ep_faults=%0d gather_stage_fault=%0d hc_fcode=%0d max_done_latency=%0d errors=%0d first_coll_send=%0d",
                  JOBS, t_hstore - t_layer0, t_layer0, t_hstore, cyc, jdn, JOBS, ndone, JOBS * nop, released, nfp, tot, bad, dn[0], coll_err, xm,
                  y_ok, NY * JOBS, y_bad, yrd, n_ok, NE - NST, st_ok, NST, ref_fault, dst[3], flt, fvec, stk, gst_f, u_g.sf, hfcode, maxlat, errors, first_send_cyc);
+        // h transfer record (rom-layer-tput 2026-10-13)
+        $display("XFER PIPE=%0d HST=%0d HLMUT=%0d HTX=%0d HWM=%0d LVM=%0d | landing last row %0d (header %0d) hland stream=%0d vm=%0d | H_STORE take %0d first row written %0d rows %0d done %0d | hop go %0d first flit %0d last flit %0d flits %0d exact %0d/%0d bad %0d early_reads %0d min_lead_rows %0d | xfer_cycles=%0d (header -> last hand-off flit) | PGAP=%0d first payload flit %0d layer_adj=%0d xfer_adj=%0d (from the cycle before the first payload flit)",
+                 PIPE, HST, HLMUT, HTX, HWM, LVM, t_land1, t_layer0, hl_ns, hl_nv, hst_take, t_sw0, swr, t_hstore, t_hgo, t_hx0, t_hx1, tx_n, tx_ok, XW, tx_bad, tx_early,
+                 (tx_lead_min < (1 << 30)) ? tx_lead_min : -1, (t_hx1 >= 0) ? t_hx1 - t_layer0 : -1,
+                 PGAP, t_pay0, (t_pay0 >= 0) ? t_hstore - (t_pay0 - 1) : t_hstore - t_layer0,
+                 (t_hx1 >= 0) ? t_hx1 - ((t_pay0 >= 0) ? t_pay0 - 1 : t_layer0) : -1);
+        if (HTX != 0 && !(tx_ok == XW && tx_bad == 0 && tx_early == 0 && tx_n == XW + 1 && t_hx1 >= 0)) begin
+            errors = errors + 1; $display("ERR stage hand-off: %0d/%0d flits exact, %0d bad, %0d early reads, %0d flits", tx_ok, XW, tx_bad, tx_early, tx_n); end
         if (bad == 0 && errors == 0 && jdn == JOBS && ndone == JOBS * nop && !ref_fault && !dst[3] && !flt && gst_f == 0 && !u_g.sf &&
             tot > 0 && coll_err == 0 && xm == 0 && y_ok == NY * JOBS && y_bad == 0 && yrd == NY * JOBS && kit_ok && n_ok == NE - NST && st_ok == NST && n_bad == 0 && st_bad == 0)
             $display("TB_S81_DIE_LAYER PASS");

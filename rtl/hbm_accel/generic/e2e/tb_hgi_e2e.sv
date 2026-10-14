@@ -52,6 +52,10 @@ module tb_hgi_e2e;
     // selector + 4 stack scorers + 4 svc IKS stripes on a DRAM controller model of the HBM model (hgi_e2e_idxn.sv);
     // IDX_MUT = the unit's bench mutant (2: the next head's weight, 3: R from the wrong lane; must FAIL)
     parameter integer IDX_NATIVE = 0, IDX_MUT = 0, IDX_LEG = 24;
+    // el1011-hbm-idxs: IDX_IXW = 1 (with IDX_NATIVE) runs IDX.INDEX on ot_hgi_idx_index_w over a dedicated 32-lane VM wide
+    // read / write group (hgi_e2e_vmlanes, grants tied high); the packet client stays for the other IDX ops
+    parameter integer IDX_IXW = 0;
+    parameter integer IDX_TK2 = 0;      // el1013 redesign-idx: 1 = IDX.TOPK on ot_hgi_idx_tk2 (k <= 8, the route.top6 shape)
     parameter integer CP_IKS_I = IDX_NATIVE;   // hbmdie-1011: the CP passes an HBM operand I (IDX.INDEX IKS key region)
     // hgi-1010/h (2026-10-10) MTP=1: the DS DSpark job through the die -- the real native controller hgi_mtp_native, the MX1
     // MTP collar hfd_cmdproc_s_mtp_native_mx1_mtp (job / provider / emit queue / transaction join) and ot_hgi_cp_die MTP=1
@@ -386,9 +390,17 @@ module tb_hgi_e2e;
         wire [337:0] vq; wire [273:0] vr;
         wire [89:0] s_fs; wire [1047:0] s_qb; wire s_qbr; wire [344:0] s_kin; wire [611:0] s_to; wire s_toc;
         wire [71:0] s_co; wire s_coc; wire [1:0] s_ev; wire [511:0] s_iks;
-        ot_hgi_idx_unit #(.MUT(IDX_MUT), .NGLOB(1), .IKS(1), .IKS_EVEN(1)) u_i (.clk(clk), .rst_n(rst_n), .rec(idx_rec), .ret(i_ret),
+        wire [8*16-1:0] i_wrq; wire [7:0] i_wrq_cr, i_wwq_cr, i_wwq_done; wire [8*257-1:0] i_wrr; wire [8*280-1:0] i_wwq;
+        ot_hgi_idx_unit #(.MUT(IDX_MUT), .NGLOB(1), .IKS(1), .IKS_EVEN(1), .IXW(IDX_IXW), .TK2(IDX_TK2)) u_i (.clk(clk), .rst_n(rst_n), .rec(idx_rec), .ret(i_ret),
             .vmq(vq), .vmr(vr), .sel_fs(s_fs), .sel_qb(s_qb), .sel_qbr(s_qbr), .sel_kin(s_kin), .sel_to(s_to),
-            .sel_toc(s_toc), .sel_co(s_co), .sel_coc(s_coc), .sel_ev(s_ev), .iks_e(s_iks));
+            .sel_toc(s_toc), .sel_co(s_co), .sel_coc(s_coc), .sel_ev(s_ev), .iks_e(s_iks),
+            .wrq(i_wrq), .wrq_cr(i_wrq_cr), .wrr(i_wrr), .rg_req(), .rg_gnt(1'b1),
+            .wwq(i_wwq), .wwq_cr(i_wwq_cr), .wwq_done(i_wwq_done), .wg_req(), .wg_gnt(1'b1));
+        // HBM B2: the slice-local 8-lane group (lanes 8..31 of the model idle)
+        wire [31:0] x_rcr, x_wcr, x_wd; wire [32*257-1:0] x_rr;
+        hgi_e2e_vmlanes #(.UNIT(9), .LAT(VLATE), .NLM(8)) u_vml (.clk(clk), .rst_n(rst_n), .rq({384'd0, i_wrq}), .rq_cr(x_rcr), .rr(x_rr),
+            .wq({6720'd0, i_wwq}), .wq_cr(x_wcr), .wq_done(x_wd));
+        assign i_wrq_cr = x_rcr[7:0]; assign i_wwq_cr = x_wcr[7:0]; assign i_wwq_done = x_wd[7:0]; assign i_wrr = x_rr[8*257-1:0];
         hgi_e2e_vmc #(.UNIT(9), .LAT(VLATE)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
         hgi_e2e_idxn #(.LEG(IDX_LEG)) u_idxn (.clk(clk), .rst_n(rst_n), .fs(s_fs), .qb(s_qb), .qbr(s_qbr), .kin(s_kin),
             .to(s_to), .toc(s_toc), .co(s_co), .coc(s_coc), .ev(s_ev), .iks_e(s_iks), .ik_fault_seen(idxn_fault));
@@ -710,7 +722,7 @@ endmodule
 // CRX / WCX / WDX (hbmdie-1011/views, VM_TUNIT): extra edges on rq_cr, w2q_cr and w2q_done (the ot_hgi_vm_tunit latency
 // contract, el1011-hbm-hcvm 20730548c: rq->credit +6, w2q->credit +6, w2q->done +8; rq->rr +8 is carried by LAT)
 module hgi_e2e_vmlanes #(parameter integer UNIT = 2, parameter integer LAT = 5, parameter integer LQ = 8,
-                         parameter integer CRX = 0, parameter integer WCX = 0, parameter integer WDX = 0) (
+                         parameter integer NLM = 32, parameter integer CRX = 0, parameter integer WCX = 0, parameter integer WDX = 0) (
     input wire clk, input wire rst_n, input wire [32*16-1:0] rq, output wire [31:0] rq_cr, output reg [32*257-1:0] rr,
     input wire [32*280-1:0] wq, output wire [31:0] wq_cr, output wire [31:0] wq_done);
     reg [31:0] rq_cr0, wq_cr0, wq_done0;
@@ -734,7 +746,7 @@ module hgi_e2e_vmlanes #(parameter integer UNIT = 2, parameter integer LAT = 5, 
         if (rst_n) for (int b = 0; b < 32; b++) begin
             if (rq[b*16 + 15]) begin : rd
                 bit [255:0] d; longint dd; int sec; sec = int'(rq[b*16 +: 15]);
-                if (sec % 32 != b) $fatal(1, "E2E FAIL: VM wide read lane %0d got sector %0d of bank %0d (unit %0d)", b, sec, sec % 32, UNIT);
+                if (sec % NLM != b) $fatal(1, "E2E FAIL: VM wide read lane %0d got sector %0d of bank %0d (unit %0d)", b, sec, sec % 32, UNIT);
                 // the client's LQ credits return at the bank pop (rq_cr, next edge): queue occupancy stays <= 1 here; the
                 // response ring (64) bounds the in-flight reads (LAT + jitter) -- overflow is a model failure
                 if (t[b] - h[b] >= 64) $fatal(1, "E2E FAIL: VM wide read lane %0d response ring overflow (unit %0d)", b, UNIT);
@@ -745,7 +757,7 @@ module hgi_e2e_vmlanes #(parameter integer UNIT = 2, parameter integer LAT = 5, 
             if (h[b] < t[b] && due[b][h[b] % 64] <= c) begin rr[b*257 +: 257] <= {1'b1, rd_q[b][h[b] % 64]}; h[b] = h[b] + 1; end
             if (wq[b*280 + 279]) begin : wr
                 bit [255:0] x; bit [31:0] m; int sec; sec = int'(wq[b*280 + 264 +: 15]);
-                if (sec % 32 != b) $fatal(1, "E2E FAIL: VM wide write lane %0d got sector %0d (unit %0d)", b, sec, UNIT);
+                if (sec % NLM != b) $fatal(1, "E2E FAIL: VM wide write lane %0d got sector %0d (unit %0d)", b, sec, UNIT);
                 for (int k = 0; k < 8; k++) m[4*k +: 4] = {4{wq[b*280 + k]}};
                 e2e_vm_sector(UNIT, sec, 1'b1, wq[b*280 + 8 +: 256], m, x);
                 wq_cr0[b] <= 1'b1; wd1[b] <= 1'b1;
