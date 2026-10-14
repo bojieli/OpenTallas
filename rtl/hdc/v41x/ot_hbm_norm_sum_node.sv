@@ -9,7 +9,7 @@ module ot_hbm_norm_sum_node #(parameter integer LAT=6,MUT=0)(
  output reg ready,published,fault,output reg [31:0]data
 );
  wire[0:0]rn;ot_rst_relay #(.REGIONS(1))u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rn));
- reg go_q,lq,rq;reg[31:0]ld,rd;reg issued;reg[1:0]flush;
+ reg go_q,lq,rq;reg[31:0]ld,rd;reg issued;localparam integer FW=$clog2(LAT+3);reg[FW-1:0]flush;
  always @(posedge clk)begin ld<=left_data;rd<=right_data;end
  always @(posedge clk or negedge rn[0])begin
   if(!rn[0])begin go_q<=0;lq<=0;rq<=0;end
@@ -22,13 +22,13 @@ module ot_hbm_norm_sum_node #(parameter integer LAT=6,MUT=0)(
  always @(posedge clk)if(av[LAT])data<=sum;
  always @(posedge clk or negedge rn[0])begin
   if(!rn[0])begin issued<=0;ready<=0;published<=0;fault<=0;flush<=0;end
-  else if(go_q)begin issued<=0;ready<=0;published<=0;fault<=0;flush<=2;end
+  else if(go_q)begin issued<=0;ready<=0;published<=0;fault<=0;flush<=FW'(LAT+2);end
   else begin
    published<=av[LAT]&&flush==0;
    if(flush!=0)flush<=flush-1;
    if(fire)issued<=1;
    if(av[LAT]&&flush==0)ready<=1;
-   if(af)fault<=1;
+   if(af&&flush==0)fault<=1;
   end
  end
 endmodule
