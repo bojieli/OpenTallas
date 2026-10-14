@@ -239,6 +239,8 @@ module ot_qwen_w12_matvec_part #(
     // parent instantiates them).  Per leaf g: lx_d = {rst_l, tx_q} (the leaf's reset relay and its last transmit rung:
     // v, first, split, w, x) and lx_q = {tfault, lfault, t_out}.  Same registers, same edges: a pure re-hierarchy.
     parameter integer LEXT = 0,
+    // Fused carry-save local-X address, same request edge and full AW-bit stride semantics.
+    parameter integer XADDR_FAST = 0,
     parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
     input  wire              clk,
@@ -598,11 +600,31 @@ end endgenerate
             for (gi = 0; gi < G; gi = gi + 1)
                 x_re[gi] <= (gi < NPX) && (((gb + gi) >> split_r) < (GT >> split_r));
     end
+    wire [G*AW-1:0] x_fast_addr;
+    genvar xag, xab;
+    generate if (XADDR_FAST != 0) begin : g_xaddr_fast
+        // An asserted request has ((gb+g)>>split)<(GT>>split), hence gb+g<GT.
+        // Its group offset fits GW bits; no admitted read is truncated.
+        localparam integer GW = $clog2(GT);
+        for(xag=0;xag<NPX;xag=xag+1) begin:g_g
+            wire [GW-1:0] group_bits = gb+xag;
+            wire [(GW+1)*AW-1:0] rows;
+            for(xab=0;xab<GW;xab=xab+1) begin:g_b
+                // Per-bit comparison replaces the 32-bit variable shift/subtract mask.
+                assign rows[AW*xab+:AW] = (group_bits[xab] && split_r > xab) ? (xcs_r << xab) : {AW{1'b0}};
+            end
+            assign rows[AW*GW+:AW] = xc;
+            wire [AW-1:0] cs_s,cs_c;
+            ot_qwen_w12_csa_tree #(.W(AW),.N(GW+1)) u_cs (.rows(rows),.s(cs_s),.c(cs_c));
+            ot_qwen_w12_kadd #(.W(AW)) u_sum (.a(cs_s),.b(cs_c),.s(x_fast_addr[AW*xag+:AW]));
+        end
+    end endgenerate
     always @(posedge clk) begin
         // Pre-update k/j correspond to this exact registered request, including arbitrary xjs.
         x_epoch <= {k, j};
         for (gi = 0; gi < NPX; gi = gi + 1)
-            x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
+            x_addr[gi*AW +: AW] <= (XADDR_FAST != 0) ? x_fast_addr[gi*AW+:AW] :
+                                     xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
     end
     //: KV ops: group g = q*S + c takes tile r*(GT/S) + q, chunk c: its own word
     generate if (LANES && KV_PREP == 0) begin : g_kv_addr
