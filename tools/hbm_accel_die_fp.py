@@ -2948,6 +2948,13 @@ def build_r25gq_net(variant):
                     break
             if fwd_:
                 phys_rec['stations_forwarded'] += 1
+                if V.get('fwd_master_split') and not it_.master.endswith('F'):
+                    # v14 (OWNER NO STUBS): a forwarded-clock station is a different circuit (ot_hbm_stn_fwd / launch /
+                    # meso, clock in its a / b bits) from a common-clock relay of the same width class: own master
+                    om_ = it_.master
+                    it_.master = om_ + 'F'
+                    if om_ in stnf_:
+                        stnf_[it_.master] = dict(stnf_[om_])
                 continue
             ck_sinks[dom_of.get(cur_) or 'stream'].append((it_.name, 'ck'))
             phys_rec['stations_clock_added'] += 1
@@ -7887,6 +7894,7 @@ def r25gq_v14():
         reset is staged down the same tree."""
     v = r25gq_v13()
     v['p2p'] = True
+    v['fwd_master_split'] = True
     v['ck_root'] = 'hb_ckgen'
     v['drop_blocks'] = tuple(v['drop_blocks']) + ('hb_coll',)
     v['drop_buses'] = v['drop_buses'] + (r'|lk_lk_[NS]\d\w*|hb_su_[NS][EW]_coll\w*|hb_coll_su_[NS][EW]\w*|hgi_vmaddr_[NS][EW]\w*'
