@@ -22,8 +22,12 @@ template<class M> void drive(M& m,const Stim& s) {
     for(int i=0;i<6;i++)m.ga_i[i]=s.ga[i];
 }
 template<class M> void tick(M& m) {
-    m.ck_ctl=m.ck_qb=m.ck_fault=0;m.ck_aq=m.ck_ix=m.ck_bc=0;m.eval();
-    m.ck_ctl=m.ck_qb=m.ck_fault=1;m.ck_aq=3;m.ck_ix=15;m.ck_bc=(sizeof(m.ck_bc)>1 ? 65535 : 15);m.eval();
+    m.ck_ctl=m.ck_qb=m.ck_fault=0;m.ck_aq=m.ck_ix=m.ck_bc=0;
+    if constexpr(requires {m.ck_ix_read;}) m.ck_ix_read=0;
+    m.eval();
+    m.ck_ctl=m.ck_qb=m.ck_fault=1;m.ck_aq=3;m.ck_ix=15;m.ck_bc=(sizeof(m.ck_bc)>1 ? 65535 : 15);
+    if constexpr(requires {m.ck_ix_read;}) m.ck_ix_read=65535;
+    m.eval();
 }
 static uint32_t bits(const uint32_t* p,int bit,int n) {
     uint64_t x=p[bit/32]>>(bit%32);

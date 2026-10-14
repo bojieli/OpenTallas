@@ -34,6 +34,7 @@ def main():
     ap.add_argument("--mut", choices=["IX", "QB", "CONSUME", "BC", "AQPIN", "AQPAR"])
     ap.add_argument("--aq-pin", action="store_true")
     ap.add_argument("--ix-pins", action="store_true")
+    ap.add_argument("--ix-split", action="store_true")
     ap.add_argument("--aq-parity", action="store_true")
     ap.add_argument("--bc-sliced", action="store_true")
     ap.add_argument("--bc-mut-slice", type=int, choices=range(4), default=0)
@@ -57,10 +58,12 @@ def main():
         files = srcs + [ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_native.sv"] + ([w / "reference.sv"] if name == "ref" else [CORE,
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_sram.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_pin_variants.sv",
+            ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_split_native.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv"])
         defs = ["+define+OT_PQ_ROM_PORTS", "+define+OT_PQ_BENCH_TELEMETRY"]
         if name == "dut" and a.aq_pin: defs += ["+define+OT_PQ_AQ_PIN_LAUNCH"]
         if name == "dut" and a.aq_parity: defs += ["+define+OT_PQ_AQ_SIDE_PARITY"]
+        if name == "dut" and a.ix_split: defs += ["+define+OT_PQ_IX_PHYS_SPLIT"]
         if name == "dut" and a.ix_pins: defs += ["+define+OT_PQ_IX_PIN_VARIANTS"]
         if name == "dut" and a.bc_sliced: defs += ["+define+OT_PQ_BC_SLICED"]
         if name == "ref": defs += ["+define+OT_PQ_REFERENCE"]

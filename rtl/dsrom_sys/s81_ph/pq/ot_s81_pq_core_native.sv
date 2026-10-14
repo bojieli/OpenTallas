@@ -11,6 +11,9 @@ module ot_s81_pq_core_native (
     input wire ck_ctl, ck_qb, ck_fault,
     input wire [1:0] ck_aq,
     input wire [3:0] ck_ix,
+`ifdef OT_PQ_IX_PHYS_SPLIT
+    input wire [15:0] ck_ix_read,
+`endif
 `ifdef OT_PQ_BC_SLICED
     input wire [15:0] ck_bc,
 `else
@@ -103,7 +106,18 @@ module ot_s81_pq_core_native (
 `else
     genvar z;
     generate for (z = 0; z < 4; z = z + 1) begin : g_coverage
-`ifdef OT_PQ_IX_PIN_VARIANTS
+`ifdef OT_PQ_IX_PHYS_SPLIT
+        assign ix_rows_read[96*z +: 96] =
+            g_ix[z].u_ix.g_rg[0].u_rg.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[0].u_rg.g_bank[1].rows_read &
+            g_ix[z].u_ix.g_rg[1].u_rg.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[1].u_rg.g_bank[1].rows_read &
+            g_ix[z].u_ix.g_rg[2].u_rg.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[2].u_rg.g_bank[1].rows_read &
+            g_ix[z].u_ix.g_rg[3].u_rg.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[3].u_rg.g_bank[1].rows_read;
+        assign ix_rows_written[96*z +: 96] = g_ix[z].u_ix.g_rg[0].u_rg.g_bank[0].written;
+`elsif OT_PQ_IX_PIN_VARIANTS
         if(z < 2) begin : g_l
         assign ix_rows_read[96*z +: 96] =
             g_ix[z].g_left.u_ix.u_native.g_read_group[0].g_bank[0].rows_read & g_ix[z].g_left.u_ix.u_native.g_read_group[0].g_bank[1].rows_read &
@@ -158,7 +172,12 @@ module ot_s81_pq_core_native (
     wire [1023:0] bt_d;
     generate for (g = 0; g < 4; g = g + 1) begin : g_ix
         wire [255:0] d;
-`ifdef OT_PQ_IX_PIN_VARIANTS
+`ifdef OT_PQ_IX_PHYS_SPLIT
+        ot_s81_pq_ix_split_native u_ix (.clk(ck_ix[g]), .clk_read(ck_ix_read[4*g +: 4]),
+            .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
+            .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
+            .bt_d(d), .fault(storage_fault[g]));
+`elsif OT_PQ_IX_PIN_VARIANTS
         if(g < 2) begin : g_left
         ot_s81_pq_ix_left_native u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
             .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
