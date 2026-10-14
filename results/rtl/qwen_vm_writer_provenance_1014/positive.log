@@ -1,0 +1,11 @@
+LEASE_COMPOSITION queries=120 lease_edges=840 request_wait_edges=22152 all_posted_lane/reducer_writes_passed_unchanged
+operand events ref 1188 dut 1188
+lane-out events 1188 / 1188, crom events 786 / 786
+SU_LAT ops=119 ref_avg=95.00 dut_avg=183.10 delta_min=36 delta_max=384 ref_min=24 ref_max=185 (SW=8 IS=1 OS=1 CRX=2 VL=7)
+SU_COMPONENT_CYCLES benchmark_cyc=454 accepted=120 samples=119 ref_sum=11305 dut_sum=21789
+WRITER_QUIESCENT checks=5742 future_write_hazards=0
+PASS qfd_su_vm_bv SW=8 IS=1 OS=1 CRX=2 VL=7 ops=120 va/vb/vc/crom/vm/red/kv events 1013/638/589/786/147/202/362
+- rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_provenance.sv:528: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 28us; walltime 11.777 s; speed 2.361 us/s
+- Verilator: cpu 11.776 s on 1 threads; allocated 33 MB
