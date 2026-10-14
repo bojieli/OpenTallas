@@ -16250,3 +16250,14 @@ def hbm_qdq_ordered_one_row_front_model():
             "macs_per_cycle": 0,
             "slot_requests_um": [(129.6, 71.28), (172.8, 103.68)],
             "parent_pin_clock_pg_status": "unassigned; no native qualification"}
+
+
+def hbm_qdq_pin_capture_front_model():
+    """S2 emits final payload; early metadata preserves four-edge ordered fast return."""
+    return {"price_cycles": 168, "fast_edges": 4, "general_extra_edges": 2,
+            "records_per_cycle": 1, "slots": 16, "max_inflight_bound": 9,
+            "payload_slot_bits": 3040, "first_capture_payload_bits": 380,
+            "first_capture_control_bits": 3, "fast_launch_bits": 190,
+            "memory_bytes_per_cycle": 0, "macs_per_cycle": 0,
+            "replicas": 4, "slot_requests_um": [(129.6,71.28),(172.8,103.68)],
+            "pin_budget_status": "must measure P190/Q220 and actual per-pair L-H100"}
