@@ -1,0 +1,6 @@
+{
+  "mutation": "parent_word_order_mutant",
+  "before": ".x_response(x_response)",
+  "after": ".x_response({x_response[95:0],x_response[127:96]})",
+  "sha256": "57ff31317f5c88b81bc59ed6e2b2b091287467c6888f86d07becabd1e53b3fe4"
+}

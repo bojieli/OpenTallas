@@ -115,3 +115,23 @@ and records exact mutant source hashes. Logs and manifests are archived;
 generated build directories are excluded. These fixtures use deterministic
 operands and drain between instructions; they do not supply whole-layer Qwen
 operands, golden token results or a qualified back-to-back instruction scheduler.
+
+Physical split-cache parent local wiring receipt
+-----------------------------------------------
+
+Immutable1ac31de60 actual ot_qwen_tile_tp8_cached_split now passes the same
+real RPS0 parent arithmetic gate:680 outputs/684 requests/144 misses, and
+raw split diagnostic936 outputs/876 requests. Wrong store-row selection and
+response-word rotation in the actual split parent fail arithmetic. Unit
+oth-ubuntu-596622-1791959630 completed exit0 on EPYC4. Artifacts and exact
+source hashes are results/rtl/qwen_xcache_split_parent_1013.
+
+Reproduce with xcache_parent_prepare.py --parent-commit 1ac31de60 --split-cache
+--workdir DIRECTORY, copy xcache_split_parent_gate.py as DIRECTORY/run.py,
+then transfer the prepared directory and run through ot-run --mem 32
+--threads 16. The production store leaf uses live load clock and the response
+leaf uses coherent core clock without an extra response edge. This is local
+wiring/arithmetic proof with deterministic operands and the simulation pause
+contract; it does not qualify the combinational hit face as a registered
+physical admission round trip, source context/ACK propagation, complete cache
+CTS or whole-layer throughput. The earlier generic-parent evidence is retained.
