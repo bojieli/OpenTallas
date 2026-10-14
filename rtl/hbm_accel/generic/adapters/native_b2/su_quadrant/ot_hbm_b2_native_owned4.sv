@@ -31,7 +31,11 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,S
  wire [4*683-1:0] qrec_admitted;
  for(genvar z=0;z<4;z=z+1)begin:aperture
   reg sa,san,sm,smn,sf,qa,qan,qm,qmn,qf;
-  wire svalid=|su_rq[z*8*16+:8*16]|| |su_wq[z*8*280+:8*280];
+  wire [7:0] sv;
+  for(genvar b=0;b<8;b=b+1)begin:posted
+   assign sv[b]=SU_NATIVE_RAW?(su_native_rq[(z*8+b)*17+16]||su_native_wq[(z*8+b)*281+280]):(su_rq[(z*8+b)*16+15]||su_wq[(z*8+b)*280+279]);
+  end
+  wire svalid=|sv;
   wire sstart=su_rreq[z]||su_wreq[z]||!su_drained[z]||svalid;
   wire qallow=!qa||quant_mirror[z]==qm;
   wire qaccept=qrec_admitted[z*683]&&qret_raw[z*3];
