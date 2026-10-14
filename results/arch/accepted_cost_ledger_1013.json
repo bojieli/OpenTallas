@@ -368,8 +368,9 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
    "status": "accepted",
-   "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.z_quant)",
-   "accepted_date": "2026-10-13"
+   "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.z_quant)  QUALIFIER (coordinator 2026-10-13): MEASURED unit ratio x MODELLED token share. The unit cycles are a measured run (su_gate full --hier at the slab pins); the 40 critical runs a token and the base 828,866.4 cycles are the token-path model (results/arch/token_path_20261009), NOT a per-layer die run: no measured layer shows this job serial on the critical path yet. Not a fully measured end-to-end loss; re-state from the S81 per-layer die run (el1013-rom-layer-tput-s81.log) when it carries the SU jobs.",
+   "accepted_date": "2026-10-13",
+   "share_basis": "modelled"
   },
   {
    "design": "s81",
@@ -416,8 +417,9 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
    "status": "accepted",
-   "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.normalize)",
-   "accepted_date": "2026-10-13"
+   "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.normalize)  QUALIFIER (coordinator 2026-10-13): MEASURED unit ratio x MODELLED token share. The unit cycles are a measured run (su_gate full --hier at the slab pins); the 40 critical runs a token and the base 828,866.4 cycles are the token-path model (results/arch/token_path_20261009), NOT a per-layer die run: no measured layer shows this job serial on the critical path yet. Not a fully measured end-to-end loss; re-state from the S81 per-layer die run (el1013-rom-layer-tput-s81.log) when it carries the SU jobs.",
+   "accepted_date": "2026-10-13",
+   "share_basis": "modelled"
   },
   {
    "design": "s81",
@@ -464,8 +466,9 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
    "status": "accepted",
-   "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.ffn.quant2)",
-   "accepted_date": "2026-10-13"
+   "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.ffn.quant2)  QUALIFIER (coordinator 2026-10-13): MEASURED unit ratio x MODELLED token share. The unit cycles are a measured run (su_gate full --hier at the slab pins); the 40 critical runs a token and the base 828,866.4 cycles are the token-path model (results/arch/token_path_20261009), NOT a per-layer die run: no measured layer shows this job serial on the critical path yet. Not a fully measured end-to-end loss; re-state from the S81 per-layer die run (el1013-rom-layer-tput-s81.log) when it carries the SU jobs.",
+   "accepted_date": "2026-10-13",
+   "share_basis": "modelled"
   },
   {
    "design": "r25gq",
