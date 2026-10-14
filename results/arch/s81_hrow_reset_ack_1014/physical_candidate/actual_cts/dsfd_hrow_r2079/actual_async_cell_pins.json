@@ -1,0 +1,312 @@
+[
+  {
+    "instance": "\\o[0]$_DFF_PN0_",
+    "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "RESETN",
+    "net": "rn",
+    "classification": "actual asynchronous cell pin",
+    "sequential_semantics": {
+      "clear": "!SETN",
+      "preset": "!RESETN",
+      "next_state": "!D",
+      "clocked_on": "CLK"
+    },
+    "constraint_types": {
+      "SS": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ],
+      "FF": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ]
+    },
+    "routed_SS_FF_recovery_removal": null,
+    "global_reset_driver": null
+  },
+  {
+    "instance": "\\o[0]$_DFF_PN0_",
+    "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "SETN",
+    "net": "_2086_",
+    "classification": "actual asynchronous cell pin",
+    "sequential_semantics": {
+      "clear": "!SETN",
+      "preset": "!RESETN",
+      "next_state": "!D",
+      "clocked_on": "CLK"
+    },
+    "constraint_types": {
+      "SS": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ],
+      "FF": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ]
+    },
+    "routed_SS_FF_recovery_removal": null,
+    "global_reset_driver": null
+  },
+  {
+    "instance": "\\o[1039]$_DFF_PN0_",
+    "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "RESETN",
+    "net": "rn",
+    "classification": "actual asynchronous cell pin",
+    "sequential_semantics": {
+      "clear": "!SETN",
+      "preset": "!RESETN",
+      "next_state": "!D",
+      "clocked_on": "CLK"
+    },
+    "constraint_types": {
+      "SS": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ],
+      "FF": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ]
+    },
+    "routed_SS_FF_recovery_removal": null,
+    "global_reset_driver": null
+  },
+  {
+    "instance": "\\o[1039]$_DFF_PN0_",
+    "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "SETN",
+    "net": "_2086_",
+    "classification": "actual asynchronous cell pin",
+    "sequential_semantics": {
+      "clear": "!SETN",
+      "preset": "!RESETN",
+      "next_state": "!D",
+      "clocked_on": "CLK"
+    },
+    "constraint_types": {
+      "SS": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ],
+      "FF": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ]
+    },
+    "routed_SS_FF_recovery_removal": null,
+    "global_reset_driver": null
+  },
+  {
+    "instance": "\\o[1054]$_DFF_PN0_",
+    "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "RESETN",
+    "net": "rn",
+    "classification": "actual asynchronous cell pin",
+    "sequential_semantics": {
+      "clear": "!SETN",
+      "preset": "!RESETN",
+      "next_state": "!D",
+      "clocked_on": "CLK"
+    },
+    "constraint_types": {
+      "SS": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ],
+      "FF": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ]
+    },
+    "routed_SS_FF_recovery_removal": null,
+    "global_reset_driver": null
+  },
+  {
+    "instance": "\\o[1054]$_DFF_PN0_",
+    "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "SETN",
+    "net": "_2086_",
+    "classification": "actual asynchronous cell pin",
+    "sequential_semantics": {
+      "clear": "!SETN",
+      "preset": "!RESETN",
+      "next_state": "!D",
+      "clocked_on": "CLK"
+    },
+    "constraint_types": {
+      "SS": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ],
+      "FF": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ]
+    },
+    "routed_SS_FF_recovery_removal": null,
+    "global_reset_driver": null
+  },
+  {
+    "instance": "\\u_ack.ack_q$_DFF_PN0_",
+    "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "RESETN",
+    "net": "reset_epoch_n",
+    "classification": "actual asynchronous cell pin",
+    "sequential_semantics": {
+      "clear": "!SETN",
+      "preset": "!RESETN",
+      "next_state": "!D",
+      "clocked_on": "CLK"
+    },
+    "constraint_types": {
+      "SS": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ],
+      "FF": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ]
+    },
+    "routed_SS_FF_recovery_removal": null,
+    "global_reset_driver": null
+  },
+  {
+    "instance": "\\u_ack.ack_q$_DFF_PN0_",
+    "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "SETN",
+    "net": "_2086_",
+    "classification": "actual asynchronous cell pin",
+    "sequential_semantics": {
+      "clear": "!SETN",
+      "preset": "!RESETN",
+      "next_state": "!D",
+      "clocked_on": "CLK"
+    },
+    "constraint_types": {
+      "SS": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ],
+      "FF": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ]
+    },
+    "routed_SS_FF_recovery_removal": null,
+    "global_reset_driver": null
+  },
+  {
+    "instance": "\\u_ack.reset_seen$_DFFE_PN0P_",
+    "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "RESETN",
+    "net": "reset_epoch_n",
+    "classification": "actual asynchronous cell pin",
+    "sequential_semantics": {
+      "clear": "!SETN",
+      "preset": "!RESETN",
+      "next_state": "!D",
+      "clocked_on": "CLK"
+    },
+    "constraint_types": {
+      "SS": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ],
+      "FF": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ]
+    },
+    "routed_SS_FF_recovery_removal": null,
+    "global_reset_driver": null
+  },
+  {
+    "instance": "\\u_ack.reset_seen$_DFFE_PN0P_",
+    "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "SETN",
+    "net": "_2086_",
+    "classification": "actual asynchronous cell pin",
+    "sequential_semantics": {
+      "clear": "!SETN",
+      "preset": "!RESETN",
+      "next_state": "!D",
+      "clocked_on": "CLK"
+    },
+    "constraint_types": {
+      "SS": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ],
+      "FF": [
+        "min_pulse_width",
+        "non_seq_hold_rising",
+        "non_seq_setup_rising",
+        "recovery_rising",
+        "removal_rising"
+      ]
+    },
+    "routed_SS_FF_recovery_removal": null,
+    "global_reset_driver": null
+  }
+]

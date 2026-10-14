@@ -35,7 +35,7 @@ for m,reps in sorted(master_reps.items()):
  count=None;evidence=None;types={}
  if m in files:
   p=files[m];text=gzip.open(p,'rt').read() if p.suffix=='.gz' else p.read_text();types=dict(collections.Counter(t for t,_,body in re.findall(r'^\s*(\w+)\s+(\\\S+|[\w$]+)\s+\((.*?)\);',text,re.M|re.S) if t in seq and re.search(r'\.\w+\s*\(',body)));count=sum(types.values());evidence=ref(p)
- kit='hrow5_'+m.rsplit('_',1)[-1] if m.startswith('dsfd_mtp') else m+'_m5';spec=R/'physical/ref_tile'/kit/'spec.json'
+ kit=('hrow5_'+m.rsplit('_',1)[-1]+('_cx' if m in ['dsfd_mtp_hrow_cbe','dsfd_mtp_hrow_cbw'] else '')) if m.startswith('dsfd_mtp') else m+'_m5';spec=R/'physical/ref_tile'/kit/'spec.json'
  receipt=a.out/'base_spec_receipts'/(kit+'.json')
  if receipt.exists():spec=receipt
  add_per=ackcount[m]//reps

@@ -159,10 +159,10 @@
       "job": "dsfd_hrow_r23_m5_ack1-ack1-COMMIT"
     }
   },
-  "hrow5_cbe_ack1.json": {
+  "hrow5_cbe_cx_ack1.json": {
     "ok": true,
     "preview": {
-      "kit": "physical/ref_tile/hrow5_cbe_ack1",
+      "kit": "physical/ref_tile/hrow5_cbe_cx_ack1",
       "outline": [
         475.2,
         216.0
@@ -187,15 +187,16 @@
         "pre_gpl.tcl",
         "pre_grt.tcl",
         "signoff.sdc",
-        "spec.json"
+        "spec.json",
+        "spine_ins.tcl"
       ],
-      "job": "hrow5_cbe_ack1-ack1-COMMIT"
+      "job": "hrow5_cbe_cx_ack1-ack1-COMMIT"
     }
   },
-  "hrow5_cbw_ack1.json": {
+  "hrow5_cbw_cx_ack1.json": {
     "ok": true,
     "preview": {
-      "kit": "physical/ref_tile/hrow5_cbw_ack1",
+      "kit": "physical/ref_tile/hrow5_cbw_cx_ack1",
       "outline": [
         475.2,
         216.0
@@ -220,9 +221,10 @@
         "pre_gpl.tcl",
         "pre_grt.tcl",
         "signoff.sdc",
-        "spec.json"
+        "spec.json",
+        "spine_ins.tcl"
       ],
-      "job": "hrow5_cbw_ack1-ack1-COMMIT"
+      "job": "hrow5_cbw_cx_ack1-ack1-COMMIT"
     }
   },
   "hrow5_hub_ack1.json": {

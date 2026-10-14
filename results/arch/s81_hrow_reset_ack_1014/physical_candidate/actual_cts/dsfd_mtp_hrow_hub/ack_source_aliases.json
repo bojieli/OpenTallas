@@ -1,0 +1,79 @@
+{
+  "actual_output_drivers": [
+    {
+      "output_pin": "rst_ack[0]",
+      "driver_instance": "_108738_",
+      "cell_type": "BUFx2_ASAP7_75t_R",
+      "connections": {
+        "A": "\\u_ack_c.ack",
+        "Y": "rst_ack[0]"
+      },
+      "actual_source_net": "\\u_ack_c.ack"
+    },
+    {
+      "output_pin": "rst_ack[1]",
+      "driver_instance": "_108739_",
+      "cell_type": "BUFx2_ASAP7_75t_R",
+      "connections": {
+        "A": "\\g_ack_a[0].u_ack.ack",
+        "Y": "rst_ack[1]"
+      },
+      "actual_source_net": "\\g_ack_a[0].u_ack.ack"
+    },
+    {
+      "output_pin": "rst_ack[2]",
+      "driver_instance": "_108740_",
+      "cell_type": "BUFx2_ASAP7_75t_R",
+      "connections": {
+        "A": "\\g_ack_a[0].u_ack.ack",
+        "Y": "rst_ack[2]"
+      },
+      "actual_source_net": "\\g_ack_a[0].u_ack.ack"
+    },
+    {
+      "output_pin": "rst_ack[3]",
+      "driver_instance": "_108741_",
+      "cell_type": "BUFx2_ASAP7_75t_R",
+      "connections": {
+        "A": "\\g_ack_a[0].u_ack.ack",
+        "Y": "rst_ack[3]"
+      },
+      "actual_source_net": "\\g_ack_a[0].u_ack.ack"
+    },
+    {
+      "output_pin": "rst_ack[4]",
+      "driver_instance": "_108742_",
+      "cell_type": "BUFx2_ASAP7_75t_R",
+      "connections": {
+        "A": "\\g_ack_a[0].u_ack.ack",
+        "Y": "rst_ack[4]"
+      },
+      "actual_source_net": "\\g_ack_a[0].u_ack.ack"
+    },
+    {
+      "output_pin": "rst_ack[5]",
+      "driver_instance": "_108743_",
+      "cell_type": "BUFx2_ASAP7_75t_R",
+      "connections": {
+        "A": "\\g_ack_a[0].u_ack.ack",
+        "Y": "rst_ack[5]"
+      },
+      "actual_source_net": "\\g_ack_a[0].u_ack.ack"
+    },
+    {
+      "output_pin": "rst_ack[6]",
+      "driver_instance": "_108744_",
+      "cell_type": "BUFx2_ASAP7_75t_R",
+      "connections": {
+        "A": "\\g_ack_a[0].u_ack.ack",
+        "Y": "rst_ack[6]"
+      },
+      "actual_source_net": "\\g_ack_a[0].u_ack.ack"
+    }
+  ],
+  "distinct_witness_ff": 4,
+  "local_ACK_bits_1_to_6_share_actual_source_net": true,
+  "nominal_hub_witness_ff": 14,
+  "physical_root_clock": "ck, producer unbound",
+  "price_reduction_adopted": false
+}

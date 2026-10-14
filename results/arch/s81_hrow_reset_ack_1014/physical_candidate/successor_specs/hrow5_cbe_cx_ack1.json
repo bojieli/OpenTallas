@@ -1,6 +1,6 @@
 {
-  "name": "hrow5_cbw_ack1",
-  "top": "dsfd_mtp_hrow_cbw",
+  "name": "hrow5_cbe_cx_ack1",
+  "top": "dsfd_mtp_hrow_cbe",
   "kind": "tile",
   "sources": [
     "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv",
@@ -13,12 +13,12 @@
     "rst"
   ],
   "pins": {
-    "S": [
+    "N": [
       "f_w",
       "f_r",
       "f_d"
     ],
-    "N": [
+    "S": [
       "t_w",
       "t_r",
       "t_d"
@@ -46,8 +46,8 @@
     "branch": "codex/s81-vmfe-misc-2240",
     "tag": "ack1",
     "purpose": "Source-candidate genuine consumer reset ACK successor. Old CLOSED master untouched. Pin/contact/ownstate/clock/reset receipts and parent replay required; no native driver inferred.",
-    "views_to": "physical/ref_tile/hrow5_cbw_ack1/views",
-    "record_to": "results/rtl/ref_tile/hrow5_cbw_ack1",
+    "views_to": "physical/ref_tile/hrow5_cbe_cx_ack1/views",
+    "record_to": "results/rtl/ref_tile/hrow5_cbe_cx_ack1",
     "benched_by": "results/arch/s81_hrow_reset_ack_1014/proof.json"
   },
   "outline": {
@@ -92,6 +92,17 @@
   "params": {},
   "children": [],
   "inter": [],
+  "clock": "spine",
+  "spine_macro_leaf": true,
+  "orfs_vars": {
+    "OT_SPINE_LEAF_N": 24,
+    "OT_SPINE_BIN": 40,
+    "OT_SPINE_SEG": 100,
+    "OT_SPINE_ITERS": 6
+  },
+  "boundary_tcl": [
+    "physical/hrow_cx/sram_edge_access.tcl"
+  ],
   "defines": [
     "OT_HROW_RESET_ACK"
   ],

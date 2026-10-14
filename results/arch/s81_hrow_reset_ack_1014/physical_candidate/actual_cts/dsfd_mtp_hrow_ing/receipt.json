@@ -1,0 +1,94 @@
+{
+  "status": "CTS actual ABI/geometry and synthesized mapped cells; routed SSFF/parent OPEN",
+  "gate_verdict": "WARN",
+  "gate_source_commit": "066ec43c5229c57140bcd65cc60e0bd55ef35020",
+  "source_binding_manifest_sha256": "8f2f7c088fc567b4edf628800847b750c11fb9233d9c88977b27cb9d2a74c494",
+  "source_archive_sha256": "01a2ac70be09842ec8e1f6b9e39e0ae508cf436f980b645b2c03ec3e6814a6aa",
+  "tool_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "source_snapshot_schema": "opentallas.ref_tile.source_snapshot.v1",
+  "remote_source_snapshot": "/srv/opentallas-scratch/claude/ref_gate/hrow5_ing_ack1-20261014-054444.source_snapshot.json",
+  "remote_netlist": "_06318_",
+  "netlist_uncompressed_sha256": "93868fba75ca1fbe2cecf517c670f98f0b92dcf712deea49432b43cd80d087f1",
+  "mapped_sequential_cells": 6324,
+  "mapped_sequential_cell_types": {
+    "DFFASRHQNx1_ASAP7_75t_R": 58,
+    "DFFHQNx1_ASAP7_75t_R": 6266
+  },
+  "mapped_ack_witness_connected_cells": [
+    {
+      "instance": "\\u_ack.ack_q$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "connections": {
+        "CLK": "ck",
+        "D": "_08438_",
+        "QN": "_06312_",
+        "RESETN": "rst",
+        "SETN": "_11618_"
+      }
+    },
+    {
+      "instance": "\\u_ack.reset_seen$_DFFE_PN0N_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "connections": {
+        "CLK": "ck",
+        "D": "_08434_",
+        "QN": "_00015_",
+        "RESETN": "rst",
+        "SETN": "_11618_"
+      }
+    }
+  ],
+  "mapped_distinct_ack_witness_ff": 2,
+  "actual_async_cell_pin_count": 116,
+  "ack_pin_names": [
+    "rst_ack"
+  ],
+  "actual_reset_pin_names": [
+    "rst"
+  ],
+  "actual_pin_receipt_sha256": "e7ae19375350cfa34329411b6deede1894f11bf43a2b6898fa46928bda7d9ea6",
+  "clock": {
+    "max_root_sinks": 6324,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 190.9,
+    "tt_spread_ps": 21.8,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "ck",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 1585,
+            "mean": 181.6,
+            "min": 171.8,
+            "max": 190.5
+          },
+          "all": {
+            "n": 6324,
+            "mean": 178.9,
+            "min": 169.1,
+            "max": 190.9
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "6,324 sinks on the largest root <= 15,000; measured TT insertion 190.9 ps, leaf spread 21.8 ps"
+  },
+  "actual_native_clock_source": null,
+  "actual_native_reset_source": null,
+  "actual_native_reset_phase": null,
+  "SS_FF_async_check_receipts": null,
+  "qualification": "No routed or global delivery claim. ACK timing includes real combinational RN/live gating after registered witness; raw epoch reaches actual async witness cells."
+}

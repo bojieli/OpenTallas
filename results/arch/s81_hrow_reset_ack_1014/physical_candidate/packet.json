@@ -350,10 +350,10 @@
       "proposed_raw_epoch_face": null,
       "actual_new_contacts": null,
       "existing_kit_spec": {
-        "path": "physical/ref_tile/hrow5_cbe/spec.json",
-        "sha256": "9cbc5288b133054c1fa8c3dc775a4991db02ee5710c235863bb9ba3684df7da0"
+        "path": "physical/ref_tile/hrow5_cbe_cx/spec.json",
+        "sha256": "fe3057ee08e6af9f5708da3cd8bd65c3ee7ceba54d7b9ef784564a62dac811e8"
       },
-      "successor_kit_name": "hrow5_cbe_ack1",
+      "successor_kit_name": "hrow5_cbe_cx_ack1",
       "successor_params": {},
       "successor_defines": [
         "OT_HROW_RESET_ACK"
@@ -367,8 +367,8 @@
       "gate_launch_owner": "s81_vmfe_misc_2240",
       "gate_launch_status": "REQUEST: separate successor kits/source binding/pin constraints required; no inherited CLOSED qualification",
       "proposed_successor_spec": {
-        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/hrow5_cbe_ack1.json",
-        "sha256": "28406945eecd38ecfef8fcf5c1e5a88c5905f82ab4e598134ae5ebbc7ca5e25c"
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/hrow5_cbe_cx_ack1.json",
+        "sha256": "d9efe78855e4c2069639830b4a4fdbe88a84c0fe244c181306ea4775c25b896e"
       }
     },
     "dsfd_mtp_hrow_cbw": {
@@ -411,10 +411,10 @@
       "proposed_raw_epoch_face": null,
       "actual_new_contacts": null,
       "existing_kit_spec": {
-        "path": "physical/ref_tile/hrow5_cbw/spec.json",
-        "sha256": "e02b744d812b9661d9b678a51dae8d65a2ba0d0c5d0651cb4c46dabb26bc56de"
+        "path": "physical/ref_tile/hrow5_cbw_cx/spec.json",
+        "sha256": "422abd8767fd88bed40ef9df392d583240cd24bf420934b98600cb717b27dfa4"
       },
-      "successor_kit_name": "hrow5_cbw_ack1",
+      "successor_kit_name": "hrow5_cbw_cx_ack1",
       "successor_params": {},
       "successor_defines": [
         "OT_HROW_RESET_ACK"
@@ -428,8 +428,8 @@
       "gate_launch_owner": "s81_vmfe_misc_2240",
       "gate_launch_status": "REQUEST: separate successor kits/source binding/pin constraints required; no inherited CLOSED qualification",
       "proposed_successor_spec": {
-        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/hrow5_cbw_ack1.json",
-        "sha256": "085b1014e04096c8b893511aab1eda0bac7d0291888ad78d441ecb84d2affc63"
+        "path": "results/arch/s81_hrow_reset_ack_1014/physical_candidate/successor_specs/hrow5_cbw_cx_ack1.json",
+        "sha256": "ecc8d6eba9e9ba2dd983e939d6b334210926acbf314dcae5f9a0592be67a7e94"
       }
     },
     "dsfd_mtp_hrow_hub": {

@@ -1,0 +1,518 @@
+[
+  {
+    "instance": "g_part[0]/g_hut/g_r[0]/u_r",
+    "master": "dsfd_hrow_r2079",
+    "source_pin": "g_part[0]/g_hut/g_r[0]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null,
+    "actual_cts_contact_rectangles": [
+      {
+        "layer": "M5",
+        "master_rect_um": [
+          68.304,
+          0.0,
+          68.328,
+          0.084
+        ],
+        "reserved_slot_rect_um": [
+          357.744,
+          172.716,
+          357.76800000000003,
+          172.8
+        ]
+      }
+    ],
+    "actual_pin_odb_sha256": "1e96e1e7a81298706003763277bee3d45e1be22e2e4ac9441fc4c560036a0960",
+    "actual_gate_manifest_sha256": "e7cbe24f037d480ab0b8d16819166978e7ae8fce9ea3ae942570952e6b60e00e",
+    "actual_successor_mapped_sequential_cells": 2081,
+    "actual_successor_distinct_ack_ff": 2,
+    "geometry_status": "actual CTS contacts on reserved historical slot, successor route/adoption OPEN",
+    "production_clock_driver": null,
+    "production_reset_driver": null,
+    "global_die_rectangles": null
+  },
+  {
+    "instance": "g_part[0]/g_hut/g_r[1]/u_r",
+    "master": "dsfd_hrow_r2079",
+    "source_pin": "g_part[0]/g_hut/g_r[1]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null,
+    "actual_cts_contact_rectangles": [
+      {
+        "layer": "M5",
+        "master_rect_um": [
+          68.304,
+          0.0,
+          68.328,
+          0.084
+        ],
+        "reserved_slot_rect_um": [
+          616.944,
+          172.716,
+          616.968,
+          172.8
+        ]
+      }
+    ],
+    "actual_pin_odb_sha256": "1e96e1e7a81298706003763277bee3d45e1be22e2e4ac9441fc4c560036a0960",
+    "actual_gate_manifest_sha256": "e7cbe24f037d480ab0b8d16819166978e7ae8fce9ea3ae942570952e6b60e00e",
+    "actual_successor_mapped_sequential_cells": 2081,
+    "actual_successor_distinct_ack_ff": 2,
+    "geometry_status": "actual CTS contacts on reserved historical slot, successor route/adoption OPEN",
+    "production_clock_driver": null,
+    "production_reset_driver": null,
+    "global_die_rectangles": null
+  },
+  {
+    "instance": "g_part[0]/g_hev/g_ev[0]/u_r",
+    "master": "dsfd_hrow_r23",
+    "source_pin": "g_part[0]/g_hev/g_ev[0]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[0]/g_hev/g_ev[1]/u_r",
+    "master": "dsfd_hrow_r23",
+    "source_pin": "g_part[0]/g_hev/g_ev[1]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[0]/g_hev/g_rc[0]/u_r",
+    "master": "dsfd_hrow_r15",
+    "source_pin": "g_part[0]/g_hev/g_rc[0]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[0]/g_hev/g_rc[1]/u_r",
+    "master": "dsfd_hrow_r15",
+    "source_pin": "g_part[0]/g_hev/g_rc[1]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[0]/g_hev/g_rc[2]/u_r",
+    "master": "dsfd_hrow_r15",
+    "source_pin": "g_part[0]/g_hev/g_rc[2]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[0]/g_hrp/g_r[0]/u_r",
+    "master": "dsfd_hrow_r1025",
+    "source_pin": "g_part[0]/g_hrp/g_r[0]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null,
+    "actual_cts_contact_rectangles": [
+      {
+        "layer": "M5",
+        "master_rect_um": [
+          73.776,
+          0.0,
+          73.8,
+          0.084
+        ],
+        "reserved_slot_rect_um": [
+          847.0559999999999,
+          1542.24,
+          847.0799999999999,
+          1542.324
+        ]
+      }
+    ],
+    "actual_pin_odb_sha256": "9459a1c599d6ec7c258d0b441cee5c4dda3a3bcd5aa2ae604e11c1d44ec1e27a",
+    "actual_gate_manifest_sha256": "64d8a53d5421bc41943f85cc43ae24185aa72a4eabe56f8b21ee50fcd8f2e2c3",
+    "actual_successor_mapped_sequential_cells": 1027,
+    "actual_successor_distinct_ack_ff": 2,
+    "geometry_status": "actual CTS contacts on reserved historical slot, successor route/adoption OPEN",
+    "production_clock_driver": null,
+    "production_reset_driver": null,
+    "global_die_rectangles": null
+  },
+  {
+    "instance": "g_part[0]/g_hrp/g_r[1]/u_r",
+    "master": "dsfd_hrow_r1025",
+    "source_pin": "g_part[0]/g_hrp/g_r[1]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null,
+    "actual_cts_contact_rectangles": [
+      {
+        "layer": "M5",
+        "master_rect_um": [
+          73.776,
+          0.0,
+          73.8,
+          0.084
+        ],
+        "reserved_slot_rect_um": [
+          1296.336,
+          1632.96,
+          1296.36,
+          1633.044
+        ]
+      }
+    ],
+    "actual_pin_odb_sha256": "9459a1c599d6ec7c258d0b441cee5c4dda3a3bcd5aa2ae604e11c1d44ec1e27a",
+    "actual_gate_manifest_sha256": "64d8a53d5421bc41943f85cc43ae24185aa72a4eabe56f8b21ee50fcd8f2e2c3",
+    "actual_successor_mapped_sequential_cells": 1027,
+    "actual_successor_distinct_ack_ff": 2,
+    "geometry_status": "actual CTS contacts on reserved historical slot, successor route/adoption OPEN",
+    "production_clock_driver": null,
+    "production_reset_driver": null,
+    "global_die_rectangles": null
+  },
+  {
+    "instance": "g_part[1]/g_hut/g_r[0]/u_r",
+    "master": "dsfd_hrow_r2079",
+    "source_pin": "g_part[1]/g_hut/g_r[0]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null,
+    "actual_cts_contact_rectangles": [
+      {
+        "layer": "M5",
+        "master_rect_um": [
+          68.304,
+          0.0,
+          68.328,
+          0.084
+        ],
+        "reserved_slot_rect_um": [
+          1351.344,
+          172.716,
+          1351.368,
+          172.8
+        ]
+      }
+    ],
+    "actual_pin_odb_sha256": "1e96e1e7a81298706003763277bee3d45e1be22e2e4ac9441fc4c560036a0960",
+    "actual_gate_manifest_sha256": "e7cbe24f037d480ab0b8d16819166978e7ae8fce9ea3ae942570952e6b60e00e",
+    "actual_successor_mapped_sequential_cells": 2081,
+    "actual_successor_distinct_ack_ff": 2,
+    "geometry_status": "actual CTS contacts on reserved historical slot, successor route/adoption OPEN",
+    "production_clock_driver": null,
+    "production_reset_driver": null,
+    "global_die_rectangles": null
+  },
+  {
+    "instance": "g_part[1]/g_hut/g_r[1]/u_r",
+    "master": "dsfd_hrow_r2079",
+    "source_pin": "g_part[1]/g_hut/g_r[1]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null,
+    "actual_cts_contact_rectangles": [
+      {
+        "layer": "M5",
+        "master_rect_um": [
+          68.304,
+          0.0,
+          68.328,
+          0.084
+        ],
+        "reserved_slot_rect_um": [
+          1610.544,
+          172.716,
+          1610.568,
+          172.8
+        ]
+      }
+    ],
+    "actual_pin_odb_sha256": "1e96e1e7a81298706003763277bee3d45e1be22e2e4ac9441fc4c560036a0960",
+    "actual_gate_manifest_sha256": "e7cbe24f037d480ab0b8d16819166978e7ae8fce9ea3ae942570952e6b60e00e",
+    "actual_successor_mapped_sequential_cells": 2081,
+    "actual_successor_distinct_ack_ff": 2,
+    "geometry_status": "actual CTS contacts on reserved historical slot, successor route/adoption OPEN",
+    "production_clock_driver": null,
+    "production_reset_driver": null,
+    "global_die_rectangles": null
+  },
+  {
+    "instance": "g_part[1]/g_hev/g_ev[0]/u_r",
+    "master": "dsfd_hrow_r23",
+    "source_pin": "g_part[1]/g_hev/g_ev[0]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[1]/g_hev/g_ev[1]/u_r",
+    "master": "dsfd_hrow_r23",
+    "source_pin": "g_part[1]/g_hev/g_ev[1]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[1]/g_hev/g_rc[0]/u_r",
+    "master": "dsfd_hrow_r15",
+    "source_pin": "g_part[1]/g_hev/g_rc[0]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[1]/g_hev/g_rc[1]/u_r",
+    "master": "dsfd_hrow_r15",
+    "source_pin": "g_part[1]/g_hev/g_rc[1]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[1]/g_hev/g_rc[2]/u_r",
+    "master": "dsfd_hrow_r15",
+    "source_pin": "g_part[1]/g_hev/g_rc[2]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[1]/g_hrp/g_r[0]/u_r",
+    "master": "dsfd_hrow_r1025",
+    "source_pin": "g_part[1]/g_hrp/g_r[0]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null,
+    "actual_cts_contact_rectangles": [
+      {
+        "layer": "M5",
+        "master_rect_um": [
+          73.776,
+          0.0,
+          73.8,
+          0.084
+        ],
+        "reserved_slot_rect_um": [
+          1842.816,
+          1483.92,
+          1842.84,
+          1484.0040000000001
+        ]
+      }
+    ],
+    "actual_pin_odb_sha256": "9459a1c599d6ec7c258d0b441cee5c4dda3a3bcd5aa2ae604e11c1d44ec1e27a",
+    "actual_gate_manifest_sha256": "64d8a53d5421bc41943f85cc43ae24185aa72a4eabe56f8b21ee50fcd8f2e2c3",
+    "actual_successor_mapped_sequential_cells": 1027,
+    "actual_successor_distinct_ack_ff": 2,
+    "geometry_status": "actual CTS contacts on reserved historical slot, successor route/adoption OPEN",
+    "production_clock_driver": null,
+    "production_reset_driver": null,
+    "global_die_rectangles": null
+  },
+  {
+    "instance": "g_part[1]/g_hrp/g_r[1]/u_r",
+    "master": "dsfd_hrow_r1025",
+    "source_pin": "g_part[1]/g_hrp/g_r[1]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null,
+    "actual_cts_contact_rectangles": [
+      {
+        "layer": "M5",
+        "master_rect_um": [
+          73.776,
+          0.0,
+          73.8,
+          0.084
+        ],
+        "reserved_slot_rect_um": [
+          2010.6,
+          1630.8,
+          2010.624,
+          1630.884
+        ]
+      }
+    ],
+    "actual_pin_odb_sha256": "9459a1c599d6ec7c258d0b441cee5c4dda3a3bcd5aa2ae604e11c1d44ec1e27a",
+    "actual_gate_manifest_sha256": "64d8a53d5421bc41943f85cc43ae24185aa72a4eabe56f8b21ee50fcd8f2e2c3",
+    "actual_successor_mapped_sequential_cells": 1027,
+    "actual_successor_distinct_ack_ff": 2,
+    "geometry_status": "actual CTS contacts on reserved historical slot, successor route/adoption OPEN",
+    "production_clock_driver": null,
+    "production_reset_driver": null,
+    "global_die_rectangles": null
+  },
+  {
+    "instance": "g_part[2]/g_hut/g_r[0]/u_r",
+    "master": "dsfd_hrow_r2079",
+    "source_pin": "g_part[2]/g_hut/g_r[0]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null,
+    "actual_cts_contact_rectangles": [
+      {
+        "layer": "M5",
+        "master_rect_um": [
+          68.304,
+          0.0,
+          68.328,
+          0.084
+        ],
+        "reserved_slot_rect_um": [
+          2344.944,
+          172.716,
+          2344.968,
+          172.8
+        ]
+      }
+    ],
+    "actual_pin_odb_sha256": "1e96e1e7a81298706003763277bee3d45e1be22e2e4ac9441fc4c560036a0960",
+    "actual_gate_manifest_sha256": "e7cbe24f037d480ab0b8d16819166978e7ae8fce9ea3ae942570952e6b60e00e",
+    "actual_successor_mapped_sequential_cells": 2081,
+    "actual_successor_distinct_ack_ff": 2,
+    "geometry_status": "actual CTS contacts on reserved historical slot, successor route/adoption OPEN",
+    "production_clock_driver": null,
+    "production_reset_driver": null,
+    "global_die_rectangles": null
+  },
+  {
+    "instance": "g_part[2]/g_hut/g_r[1]/u_r",
+    "master": "dsfd_hrow_r2079",
+    "source_pin": "g_part[2]/g_hut/g_r[1]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null,
+    "actual_cts_contact_rectangles": [
+      {
+        "layer": "M5",
+        "master_rect_um": [
+          68.304,
+          0.0,
+          68.328,
+          0.084
+        ],
+        "reserved_slot_rect_um": [
+          2604.1440000000002,
+          172.716,
+          2604.168,
+          172.8
+        ]
+      }
+    ],
+    "actual_pin_odb_sha256": "1e96e1e7a81298706003763277bee3d45e1be22e2e4ac9441fc4c560036a0960",
+    "actual_gate_manifest_sha256": "e7cbe24f037d480ab0b8d16819166978e7ae8fce9ea3ae942570952e6b60e00e",
+    "actual_successor_mapped_sequential_cells": 2081,
+    "actual_successor_distinct_ack_ff": 2,
+    "geometry_status": "actual CTS contacts on reserved historical slot, successor route/adoption OPEN",
+    "production_clock_driver": null,
+    "production_reset_driver": null,
+    "global_die_rectangles": null
+  },
+  {
+    "instance": "g_part[2]/g_hev/g_ev[0]/u_r",
+    "master": "dsfd_hrow_r23",
+    "source_pin": "g_part[2]/g_hev/g_ev[0]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[2]/g_hev/g_ev[1]/u_r",
+    "master": "dsfd_hrow_r23",
+    "source_pin": "g_part[2]/g_hev/g_ev[1]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[2]/g_hev/g_rc[0]/u_r",
+    "master": "dsfd_hrow_r15",
+    "source_pin": "g_part[2]/g_hev/g_rc[0]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[2]/g_hev/g_rc[1]/u_r",
+    "master": "dsfd_hrow_r15",
+    "source_pin": "g_part[2]/g_hev/g_rc[1]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[2]/g_hev/g_rc[2]/u_r",
+    "master": "dsfd_hrow_r15",
+    "source_pin": "g_part[2]/g_hev/g_rc[2]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null
+  },
+  {
+    "instance": "g_part[2]/g_hrp/g_r[0]/u_r",
+    "master": "dsfd_hrow_r1025",
+    "source_pin": "g_part[2]/g_hrp/g_r[0]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null,
+    "actual_cts_contact_rectangles": [
+      {
+        "layer": "M5",
+        "master_rect_um": [
+          73.776,
+          0.0,
+          73.8,
+          0.084
+        ],
+        "reserved_slot_rect_um": [
+          2552.76,
+          1481.76,
+          2552.784,
+          1481.844
+        ]
+      }
+    ],
+    "actual_pin_odb_sha256": "9459a1c599d6ec7c258d0b441cee5c4dda3a3bcd5aa2ae604e11c1d44ec1e27a",
+    "actual_gate_manifest_sha256": "64d8a53d5421bc41943f85cc43ae24185aa72a4eabe56f8b21ee50fcd8f2e2c3",
+    "actual_successor_mapped_sequential_cells": 1027,
+    "actual_successor_distinct_ack_ff": 2,
+    "geometry_status": "actual CTS contacts on reserved historical slot, successor route/adoption OPEN",
+    "production_clock_driver": null,
+    "production_reset_driver": null,
+    "global_die_rectangles": null
+  },
+  {
+    "instance": "g_part[2]/g_hrp/g_r[1]/u_r",
+    "master": "dsfd_hrow_r1025",
+    "source_pin": "g_part[2]/g_hrp/g_r[1]/u_r/reset_epoch_n",
+    "parent_source": "TD.rst",
+    "production_source": null,
+    "actual_rectangles": null,
+    "actual_cts_contact_rectangles": [
+      {
+        "layer": "M5",
+        "master_rect_um": [
+          73.776,
+          0.0,
+          73.8,
+          0.084
+        ],
+        "reserved_slot_rect_um": [
+          1991.1599999999999,
+          1488.24,
+          1991.184,
+          1488.324
+        ]
+      }
+    ],
+    "actual_pin_odb_sha256": "9459a1c599d6ec7c258d0b441cee5c4dda3a3bcd5aa2ae604e11c1d44ec1e27a",
+    "actual_gate_manifest_sha256": "64d8a53d5421bc41943f85cc43ae24185aa72a4eabe56f8b21ee50fcd8f2e2c3",
+    "actual_successor_mapped_sequential_cells": 1027,
+    "actual_successor_distinct_ack_ff": 2,
+    "geometry_status": "actual CTS contacts on reserved historical slot, successor route/adoption OPEN",
+    "production_clock_driver": null,
+    "production_reset_driver": null,
+    "global_die_rectangles": null
+  }
+]

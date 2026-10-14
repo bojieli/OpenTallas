@@ -1,0 +1,132 @@
+[
+  {
+    "master": "dsfd_die_rstsync",
+    "corner": "ss",
+    "exit": 0,
+    "path_counts": {
+      "recovery": 2,
+      "removal": 2
+    },
+    "worst_slack_ps": 56.8183,
+    "rc": "placement estimate, actual CTS ODB",
+    "status": "Diagnostic candidate checks; no routed or global reset timing qualification",
+    "clock_or_reset_pulse_width_report": "OPEN: unsupported report_pulse_width_checks command retained in raw log; no pulse-width qualification"
+  },
+  {
+    "master": "dsfd_die_rstsync",
+    "corner": "ff",
+    "exit": 0,
+    "path_counts": {
+      "recovery": 2,
+      "removal": 2
+    },
+    "worst_slack_ps": 15.1728,
+    "rc": "placement estimate, actual CTS ODB",
+    "status": "Diagnostic candidate checks; no routed or global reset timing qualification",
+    "clock_or_reset_pulse_width_report": "OPEN: unsupported report_pulse_width_checks command retained in raw log; no pulse-width qualification"
+  },
+  {
+    "master": "dsfd_hrow_r1025",
+    "corner": "ss",
+    "exit": 0,
+    "path_counts": {
+      "recovery": 1,
+      "removal": 1
+    },
+    "worst_slack_ps": 54.179,
+    "rc": "placement estimate, actual CTS ODB",
+    "status": "Diagnostic candidate checks; no routed or global reset timing qualification",
+    "clock_or_reset_pulse_width_report": "OPEN: unsupported report_pulse_width_checks command retained in raw log; no pulse-width qualification"
+  },
+  {
+    "master": "dsfd_hrow_r1025",
+    "corner": "ff",
+    "exit": 0,
+    "path_counts": {
+      "recovery": 1,
+      "removal": 1
+    },
+    "worst_slack_ps": 12.2262,
+    "rc": "placement estimate, actual CTS ODB",
+    "status": "Diagnostic candidate checks; no routed or global reset timing qualification",
+    "clock_or_reset_pulse_width_report": "OPEN: unsupported report_pulse_width_checks command retained in raw log; no pulse-width qualification"
+  },
+  {
+    "master": "dsfd_hrow_r2079",
+    "corner": "ss",
+    "exit": 0,
+    "path_counts": {
+      "recovery": 3,
+      "removal": 3
+    },
+    "worst_slack_ps": 73.6955,
+    "rc": "placement estimate, actual CTS ODB",
+    "status": "Diagnostic candidate checks; no routed or global reset timing qualification",
+    "clock_or_reset_pulse_width_report": "OPEN: unsupported report_pulse_width_checks command retained in raw log; no pulse-width qualification"
+  },
+  {
+    "master": "dsfd_hrow_r2079",
+    "corner": "ff",
+    "exit": 0,
+    "path_counts": {
+      "recovery": 3,
+      "removal": 3
+    },
+    "worst_slack_ps": 21.9865,
+    "rc": "placement estimate, actual CTS ODB",
+    "status": "Diagnostic candidate checks; no routed or global reset timing qualification",
+    "clock_or_reset_pulse_width_report": "OPEN: unsupported report_pulse_width_checks command retained in raw log; no pulse-width qualification"
+  },
+  {
+    "master": "dsfd_mtp_hrow_hub",
+    "corner": "ss",
+    "exit": 0,
+    "path_counts": {
+      "recovery": 21,
+      "removal": 21
+    },
+    "worst_slack_ps": 3.4862,
+    "rc": "placement estimate, actual CTS ODB",
+    "status": "Diagnostic candidate checks; no routed or global reset timing qualification",
+    "clock_or_reset_pulse_width_report": "OPEN: unsupported report_pulse_width_checks command retained in raw log; no pulse-width qualification"
+  },
+  {
+    "master": "dsfd_mtp_hrow_hub",
+    "corner": "ff",
+    "exit": 0,
+    "path_counts": {
+      "recovery": 21,
+      "removal": 21
+    },
+    "worst_slack_ps": 34.8079,
+    "rc": "placement estimate, actual CTS ODB",
+    "status": "Diagnostic candidate checks; no routed or global reset timing qualification",
+    "clock_or_reset_pulse_width_report": "OPEN: unsupported report_pulse_width_checks command retained in raw log; no pulse-width qualification"
+  },
+  {
+    "master": "dsfd_mtp_hrow_ing",
+    "corner": "ss",
+    "exit": 0,
+    "path_counts": {
+      "recovery": 18,
+      "removal": 30
+    },
+    "worst_slack_ps": 79.4545,
+    "rc": "placement estimate, actual CTS ODB",
+    "status": "Diagnostic candidate checks; no routed or global reset timing qualification",
+    "clock_or_reset_pulse_width_report": "OPEN: unsupported report_pulse_width_checks command retained in raw log; no pulse-width qualification"
+  },
+  {
+    "master": "dsfd_mtp_hrow_ing",
+    "corner": "ff",
+    "exit": 0,
+    "path_counts": {
+      "recovery": 18,
+      "removal": 30
+    },
+    "worst_slack_ps": 25.6812,
+    "rc": "placement estimate, actual CTS ODB",
+    "status": "Diagnostic candidate checks; no routed or global reset timing qualification",
+    "clock_or_reset_pulse_width_report": "OPEN: unsupported report_pulse_width_checks command retained in raw log; no pulse-width qualification"
+  }
+]
