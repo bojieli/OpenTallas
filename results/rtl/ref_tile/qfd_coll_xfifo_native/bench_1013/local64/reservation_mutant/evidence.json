@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.behavioral_bench.v1",
+  "collected_at": "2026-10-13T23:07:50.583048-07:00",
+  "source_revision": "50b05b2dd",
+  "host": "ot-agidock128",
+  "observed_exit": 1,
+  "verdict": "FAIL native_coll_port sent=307 complete=50 words=288 mismatch=0 engine_mismatch=0 fault_ck=0 fault_ckd=1 pair_mismatch=0",
+  "source_sha256": {
+    "physical/qwen_romio_slots/bench_coll_native.sh": "c7c72021103de5116ce95bc4a2869ccfcd69990e76c81b9e7cad0434f32f35f8",
+    "rtl/test/tb_qfd_coll_xfifo_native.sv": "93f60959ef9358a691a4fcaa6bd9de514e284df374fef1f4ad80a8de13c89c44",
+    "rtl/physical/ot_qwen_coll_xfifo_native.sv": "7e4b40583479fb815362de5e30fdb11eae041a87cee8651773344365de5fad7e",
+    "rtl/physical/ot_qwen_die_coll_xfifo.sv": "00d1758d7660f4740ab29f113d33a22cae04e5f0cb78937a5188bb6c5d0819d9",
+    "rtl/physical/ot_qwen_die_cdc_ch.sv": "48a79ca84a4ded882e1ecd09aad8daa26473eba46030cb73e2c80ef5e5502708",
+    "rtl/physical/ot_qwen_async_fifo_w.sv": "9dd6837d63a092e054859e3ad1058c8f132cdd61919a9f219e8cf5999a48df3b",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/lib/ot_hdly.sv": "8839e0bad5c7289180b736e93ca98d98aab25021d3ddf3a811963e0f52c6e574",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1.v": "319529641eec6c48c61b13987e5f30d62de641c4aa5e753282e3d9064d152499"
+  },
+  "scope": "Native64-bit control groups/current local full vs original enabled flop-store path; original protocol/memory/VALID data edges preserved. Full native composition separate."
+}

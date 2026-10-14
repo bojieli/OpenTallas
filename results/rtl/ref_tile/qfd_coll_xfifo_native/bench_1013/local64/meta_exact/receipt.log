@@ -1,0 +1,5 @@
+ot-run: ot-epyc4       admits  -275 GB (avail 549, growth 446, headroom 48, waiters 1/382 GB) load 177/128 running 26 disk 1227 GB 
+ot-run: -> ot-epyc4 (will queue: admits -275 GB < 2 GB)
+ot-heavy: admitted on regular-crane as oth-ubuntu-440936-1791957932 after 0 s
+PASS native_coll_port messages=512 words=2899 cycles=3218 rank3 exact posted everybeat; data everybit0and1 pair_mismatch=0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-440936-1791957932): exit 0
