@@ -47,6 +47,7 @@ foreach fd_key $mp_order {
   set master [$inst getMaster]
   if {[$master getHeight]!=[$bb yMax]-[$bb yMin]} {error "S81_FORWARD_DRIVE non-single-row stage $fd_key"}
   if {$west} {set x [expr {$x-[$master getWidth]-round(.108*$mp_dbu)}]} else {set x [expr {$x+round(.108*$mp_dbu)}]}
+  $inst setPlacementStatus PLACED
   $inst setOrient [$fd_ff getOrient];$inst setLocation $x $y
   if {$fd_firm} {$inst setPlacementStatus FIRM;puts $fd_keep [$inst getName]} else {$inst setPlacementStatus PLACED}
   lappend names [$inst getName]
