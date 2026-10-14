@@ -52,8 +52,6 @@
 //   QID's lane is driven on output lane QID + 1 (wrong lane).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_mover #(
-    parameter integer NATIVE_WIDE_CREDITS = 0, // source-bound native WL issuance; default legacy behavior
-    parameter integer NATIVE_WLQ = 8,         // honest reservations per global legacy lane
     parameter integer MUT_RNE = 0,        // mutant: BF16 store truncates (no round to nearest even)
     parameter integer MUT = 0,
     parameter integer KOUT = 64,          // HBM writes in flight (the per-stack lanes)
@@ -135,8 +133,7 @@ module ot_hgi_dma_mover #(
     // destination sectors here, one a cycle, never back-pressured, {v, sector 15, wdata 256, word mask 8}; wl_done
     // returns when the write is in the macro (ot_hgi_vm_unit wq / wq_done)
     output reg  [279:0]  wl,
-    input  wire          wl_done,
-    input  wire [31:0]   wl_credit             // independent actual dequeue returns when native mode selected
+    input  wire          wl_done
 );
     // ---- per-stack lanes as the engines see them (ir_*); B2: only lane QID reaches the ports (output lane OL)
     localparam integer OL = (MUT_B2 == 2) ? ((QID + 1) % 4) : QID;
@@ -581,22 +578,11 @@ module ot_hgi_dma_mover #(
     wire [31:0]  put_s = pk_s << pk_dp[4:0];
     // ---- port issue selection
     reg iss_kw, iss_kr, iss_vw, iss_vr;
-    reg [4:0] wl_slots[0:31],wl_slots_n[0:31];reg wl_slot_fault;
-    reg wl_slots_home;
-    always @*begin wl_slots_home=1;for(integer l=0;l<32;l++)if(wl_slots[l]!=NATIVE_WLQ)wl_slots_home=0;end
-    always @(posedge clk or negedge rn)begin
-        if(!rn)begin wl_slot_fault<=0;for(integer l=0;l<32;l++)begin wl_slots[l]<=5'(NATIVE_WLQ);wl_slots_n[l]<=~5'(NATIVE_WLQ);end end
-        else if(NATIVE_WIDE_CREDITS)for(integer l=0;l<32;l++)begin
-            reg[5:0] ns;ns={1'b0,wl_slots[l]}+6'(wl_credit[l])-6'(iss_vw&&wq_a[wq_h][4:0]==5'(l));
-            wl_slots[l]<=ns[4:0];wl_slots_n[l]<=~ns[4:0];
-            if(wl_slots[l]!=~wl_slots_n[l]||ns>NATIVE_WLQ)wl_slot_fault<=1;
-        end
-    end
     always @* begin
         iss_kw = 1'b0; iss_kr = 1'b0; iss_vw = 1'b0; iss_vr = 1'b0;
         if (busy_f && go_q3 && !f_fault) begin
             if (wq_n != 5'd0 && dst_hbm && !lq_v[w_l] && wr_in < 9'(KOUT) && (B2 == 0 || w_l == 2'(QID))) iss_kw = 1'b1;   // a full sector to its stack's lane
-            if (wq_n != 5'd0 && !dst_hbm && (!NATIVE_WIDE_CREDITS || (!wl_slot_fault && wl_slots[wq_a[wq_h][4:0]]!=0 && wr_in<9'(KOUT)))) iss_vw = 1'b1;                      // the wide port: no client slot
+            if (wq_n != 5'd0 && !dst_hbm) iss_vw = 1'b1;                      // the wide port: no client slot
         end
         iss_vr = r_go && !src_hbm && SV == 0; iss_kr = r_go && src_hbm;
     end
@@ -697,7 +683,6 @@ module ot_hgi_dma_mover #(
             if (s_mv_done) begin mv_done <= 1'b1; mv_src <= 1'b1; sel_s <= 1'b0; end   // serial engine: source = done
             if (s_mv_fault) mv_fault <= 1'b1;
             cv_q <= cv_q && !kv_take && !cv_go && !b2_flt;            // held while the KV engine is busy / full
-            if (NATIVE_WIDE_CREDITS && wl_slot_fault) begin mv_fault<=1;f_fault<=1;end
             if (B2 != 0 && (b2_flt || b2_lx || b2_kx)) begin mv_fault <= 1'b1; f_fault <= 1'b1; end
             if (mv_v && mv_rdy) begin cv_q <= 1'b1; cm_q <= mv; end
             if (kv_src) mv_src <= 1'b1;
@@ -978,7 +963,7 @@ module ot_hgi_dma_mover #(
             end
             wq_res <= wq_res + {4'd0, u_go && u_fl} - {4'd0, iss_kw | iss_vw} - {4'd0, p3_v && p3_fl && !p3_keep};
             // ---- completion: everything unpacked, the pipe empty, the queue drained and every write acknowledged
-            if (busy_f && go_q4 && !f_fault && r_done && !u_cv && !cd_v && cf_n == 7'd0 && !lw_v && lq_v == 4'd0 && !p1_v && !pr_v && !px_v && !p2_v && !pa_v && !pe_v && !pk_v && !p3_v && wq_n == 5'd0 && wr_in == 9'd0 && (!NATIVE_WIDE_CREDITS || wl_slots_home) &&
+            if (busy_f && go_q4 && !f_fault && r_done && !u_cv && !cd_v && cf_n == 7'd0 && !lw_v && lq_v == 4'd0 && !p1_v && !pr_v && !px_v && !p2_v && !pa_v && !pe_v && !pk_v && !p3_v && wq_n == 5'd0 && wr_in == 9'd0 &&
                 !(iss_kw | iss_vw) && rd_in == 9'd0 && sf_n == 9'd0) begin
                 busy_f <= 1'b0; mv_done <= 1'b1;
             end
