@@ -129,6 +129,11 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
   // {err, dpre[14], spre[14], dhome, shome, ddone[2], sdone[NSJ]}
   input wire [NSJ+33-1:0] st_in,
   output wire [NSJ+33-1:0] status);
+    // Claude hbm-group-B 10-14 (native pin audit: raw rst_n fanned out before its first flop, lf 460+ ps): the
+    // rst_n PORT drives only this relay (rtl/lib/ot_rst_relay.sv); every region resets from its own registered copy.
+    // Head and leaves use the SAME relay depth, so they still release on one common edge (3 cycles after the port).
+    wire [3:0] rr_lf;
+    ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr_lf (.clk(clk), .rst_n_in(rst_n), .rst_n(rr_lf));
     localparam integer CW = 54 + 28 + NSJ + 1;
     localparam integer QB = $clog2(LQ + 1);                 // credit counter bits (0..LQ)
     localparam integer FB = $clog2(2 * LQ + 32), FD = 1 << FB;   // stage in-flight FIFO (slot ids)
@@ -137,8 +142,8 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
 
     // ---------------- cmd pin flop + load stage
     reg [CW-1:0] cmd_q, cmd_o; reg [3:0] lid_q; reg [NSJ+33-1:0] sti_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cmd_q <= '0; cmd_o <= '0; sti_q <= {1'b0, 14'h3FFF, 14'h3FFF, 4'b1111, {NSJ{1'b1}}}; end
+    always @(posedge clk or negedge rr_lf[0])
+        if (!rr_lf[0]) begin cmd_q <= '0; cmd_o <= '0; sti_q <= {1'b0, 14'h3FFF, 14'h3FFF, 4'b1111, {NSJ{1'b1}}}; end
         else begin cmd_q <= cmd; cmd_o <= cmd_q; sti_q <= st_in; end
     always @(posedge clk) lid_q <= lid;
     assign cmd_r = cmd_o;
@@ -156,8 +161,8 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
     wire        dsel   = cmd_q[82 + NSJ];
     reg ld_v, ld_kind, ld_flag; reg [2:0] ld_slot; reg [14:0] ld_vsec, ld_lsec; reg [13:0] ld_n; reg [3:0] ld_ep;
     reg [4:0] ld_off [0:1];
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) ld_v <= 1'b0; else ld_v <= c_v;
+    always @(posedge clk or negedge rr_lf[1])
+        if (!rr_lf[1]) ld_v <= 1'b0; else ld_v <= c_v;
     always @(posedge clk) begin
         ld_kind <= c_kind; ld_flag <= c_flag; ld_slot <= c_slot; ld_vsec <= c_vsec; ld_lsec <= c_lsec; ld_n <= c_n; ld_ep <= c_ep;
         for (integer g = 0; g < 2; g = g + 1) ld_off[g] <= {lid_q, 1'(g)} - c_vsec[4:0];
@@ -173,8 +178,8 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
     // ---------------- pin flops (VM / bank side)
     reg [1:0] wrq_cr_q, wwq_cr_q, wwq_done_q, wrr_vq, ldr_rv_q;
     reg [2*256-1:0] wrr_dq, ldr_d_q; reg [2*12-1:0] ldr_em_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wrq_cr_q <= 2'd0; wwq_cr_q <= 2'd0; wwq_done_q <= 2'd0; wrr_vq <= 2'd0; ldr_rv_q <= 2'd0; end
+    always @(posedge clk or negedge rr_lf[2])
+        if (!rr_lf[2]) begin wrq_cr_q <= 2'd0; wwq_cr_q <= 2'd0; wwq_done_q <= 2'd0; wrr_vq <= 2'd0; ldr_rv_q <= 2'd0; end
         else begin
             wrq_cr_q <= wrq_cr; wwq_cr_q <= wwq_cr; wwq_done_q <= wwq_done; ldr_rv_q <= ldr_rv;
             wrr_vq <= {wrr[513], wrr[256]};
@@ -235,8 +240,8 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
         end
         wire [13:0] dfr_s [0:1]; assign dfr_s[0] = dfr0; assign dfr_s[1] = dfr1;
 
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin
+        always @(posedge clk or negedge rr_lf[3])
+            if (!rr_lf[3]) begin
                 for (integer q = 0; q < NSJ; q = q + 1) begin s_rem[q] <= 9'd0; s_out[q] <= '0; end
                 for (integer q = 0; q < 2; q = q + 1) begin d_rem[q] <= 9'd0; d_out[q] <= '0; d_need[q] <= 6'd0; end
                 rr <= 3'd0; cr <= QB'(LQ); fn <= '0; wcr <= QB'(LQ); wpend <= 6'd0; dfn <= '0;
@@ -400,8 +405,8 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
         own_dp <= (ln_dp[0] < ln_dp[1]) ? ln_dp[0] : ln_dp[1];
         sl_2 <= sl_l; sl_3 <= sl_2; dl_2 <= dl_l; dl_3 <= dl_2;
     end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
+    always @(posedge clk or negedge rr_lf[0])
+        if (!rr_lf[0]) begin
             st_sdone <= '1; st_ddone <= 2'b11; st_shome <= 1'b1; st_dhome <= 1'b1; st_err <= 1'b0; st_spre <= PMAX; st_dpre <= PMAX;
         end else begin
             st_sdone <= ~(ln_sbusy[0] | ln_sbusy[1] | sl_c | sl_l) & sti_q[NSJ-1:0];
@@ -549,6 +554,11 @@ module ot_hgi_sv_head #(
     input  wire [8*(NSJ+33)-1:0] lf_status,
     output reg  [15:0]   walks                // non-dense O drains (frame walks) since reset
 );
+    // Claude hbm-group-B 10-14 (native pin audit: raw rst_n fanned out before its first flop, hd 460+ ps): the
+    // rst_n PORT drives only this relay (rtl/lib/ot_rst_relay.sv); every region resets from its own registered copy.
+    // Head and leaves use the SAME relay depth, so they still release on one common edge (3 cycles after the port).
+    wire [7:0] rr_hd;
+    ot_rst_relay #(.REGIONS(8), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr_hd (.clk(clk), .rst_n_in(rst_n), .rst_n(rr_hd));
     localparam integer NS = 8, NE = 8, NJQ = 8;
     localparam integer BL = 16;                         // status blanking after a cmd register write (see header)
     localparam [2:0]   LA = 3'd2;                       // stage lookahead: records ahead of RUN
@@ -596,8 +606,8 @@ module ot_hgi_sv_head #(
             scomb[NSJ+32] = a[NSJ+32] | b[NSJ+32];
         end
     endfunction
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rr_hd[0]) begin
+        if (!rr_hd[0]) begin
             for (integer g = 0; g < 8; g = g + 1) lsq[g] <= '0;
             gst[0] <= '0; gst[1] <= '0; hst <= '0;
         end else begin
@@ -610,8 +620,8 @@ module ot_hgi_sv_head #(
     assign lf_cmd = {hc2, hc};
     // the vec's credit counters: pin flops (a stale count is a lower bound; cr_seq travels with it)
     reg [7:0] cr_seq; reg [15:0] cr_cnt;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cr_seq <= 8'd0; cr_cnt <= 16'd0; end else begin cr_seq <= cr_seq_i; cr_cnt <= cr_cnt_i; end
+    always @(posedge clk or negedge rr_hd[1])
+        if (!rr_hd[1]) begin cr_seq <= 8'd0; cr_cnt <= 16'd0; end else begin cr_seq <= cr_seq_i; cr_cnt <= cr_cnt_i; end
     wire [NSJ-1:0] st_sdone = hst[NSJ-1:0];
     wire [1:0]     st_ddone = hst[NSJ +: 2];
     wire           st_shome = hst[NSJ+2], st_dhome = hst[NSJ+3];
@@ -620,8 +630,8 @@ module ot_hgi_sv_head #(
 
     // ================================================================================================= input sync
     reg ready_q, idle_q, vfault_q, rg_q, wg_q, vr_ack, lm_err_q;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rr_hd[2]) begin
+        if (!rr_hd[2]) begin
             ready_q <= 1'b0; idle_q <= 1'b0; vfault_q <= 1'b0; rg_q <= 1'b0; wg_q <= 1'b0; vr_ack <= 1'b0; lm_err_q <= 1'b0;
         end else begin
             ready_q <= ready; idle_q <= idle; vfault_q <= vfault; rg_q <= rg_gnt && rg_req; wg_q <= wg_gnt && wg_req;
@@ -636,7 +646,7 @@ module ot_hgi_sv_head #(
     wire op_v; wire [669:0] op_w; wire [1:0] strm; reg op_rdy_r, su_ret, ret_echo, su_fault_r;
     wire ad_done, ad_fault, ad_halted, ad_drained, ad_lg_rdy;      // (the last two are unused: LEGACY = 0)
     ot_hgi_su_record #(.LEGACY(0), .GLU(GLU), .STREAM_OK(0), .PAYLOAD_RESET(PAYLOAD_RESET), .PIPED(1)) u_rec (
-        .clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
+        .clk(clk), .rst_n(rr_hd[7]), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_a), .rec_b(rec_b), .rec_c(rec_c), .rec_d(rec_d), .rec_o(rec_o),
         .rec_r(rec_r), .rec_i(rec_i), .rec_n_a(rec_n_a), .rec_done(ad_done), .rec_fault(ad_fault), .halted(ad_halted),
         .drained(ad_drained), .op_strm(strm), .lg_v(1'b0), .lg_rdy(ad_lg_rdy), .lg_w(670'd0), .op_v(op_v), .op_rdy(op_rdy_r), .op_w(op_w),
@@ -866,8 +876,8 @@ module ot_hgi_sv_head #(
         fr_rel[f] = fr_st[f] == F_HELD && !fr_tail[f] && fr_pin[f] == 6'd0 && !(d_pin_v && d_pin_f == 2'(f));
 
     // ================================================================================================= [DECODE] seq
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rr_hd[3]) begin
+        if (!rr_hd[3]) begin
             dstt <= D_IDLE; op_rdy_r <= 1'b0; su_ret <= 1'b0; ret_echo <= 1'b0; dfault <= 1'b0; mph <= 4'd0; rk <= 3'd0;
             stallc <= 4'd0; dslot <= 3'd0; jq_wp <= 4'd0; rf_clr <= 4'd0;
             tb_v <= 8'd0; tb_fok <= 8'd0; tb_live <= 8'd0; tb_dense <= 8'd0; tb_stg <= 8'd0;
@@ -1092,8 +1102,8 @@ module ot_hgi_sv_head #(
     end
 
     // ================================================================================================= [BOOK]
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rr_hd[4]) begin
+        if (!rr_hd[4]) begin
             rt <= 3'd0; cnt <= 4'd0; bkfault <= 1'b0;
             s_v <= 8'd0; s_nop <= 8'd0; s_dd <= 8'd0; s_gone <= 8'd0; s_cd <= 8'd0; s_odone <= 8'd0; s_old <= 8'd0;
             s_odsl <= 8'd0; s_rdone <= 8'd0; s_ipg <= 8'd0; stc <= 8'd0;
@@ -1159,8 +1169,8 @@ module ot_hgi_sv_head #(
     assign ev_jd = fd[3] && !sj_scrub[fd[2:0]]; assign jd_slot = sj_own[fd[2:0]]; assign jd_strm = sj_strm[fd[2:0]];
     assign ev_scd = fd[3] && sj_scrub[fd[2:0]]; assign scd_f = sj_fr[fd[2:0]];
     wire vm_stg_busy = (sj_busy & ~sj_scrub) != '0;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rr_hd[5]) begin
+        if (!rr_hd[5]) begin
             jq_rp <= 4'd0; jh_ok <= 1'b0; sh_bl <= 5'd0; rcool <= 3'd0; rg_req <= 1'b0; sc_ld <= 4'd0;
             sj_busy <= '0; sj_strm <= '0; sj_scrub <= '0;
             for (integer j = 0; j < NSJ; j = j + 1) begin sj_own[j] <= 3'd0; sj_fr[j] <= 2'd0; sj_bl[j] <= 5'd0; end
@@ -1208,8 +1218,8 @@ module ot_hgi_sv_head #(
     assign ev_dl = ld_dr; assign dl_d = fdr;
     assign ev_od = dfin_v; assign od_slot = dr_own[dfin];
     wire [1:0] rs;                                                      // RUN state (declared below)
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rr_hd[6]) begin
+        if (!rr_hd[6]) begin
             dp <= 3'd0; dv_v <= 1'b0; dv_tag <= 3'd0; dv_nop <= 1'b0; dv_ov <= 1'b0; dv_rdy <= 1'b0; dv_soon <= 1'b0;
             dv_dense <= 1'b0; dv_live <= 1'b0;
             dr_busy <= 2'd0; dr_live <= 2'd0; dh_bl <= 5'd0; wcool <= 3'd0; wg_req <= 1'b0; walks <= 16'd0;
@@ -1255,8 +1265,8 @@ module ot_hgi_sv_head #(
         hc_n[54 +: 14] = dfr[0]; hc_n[68 +: 14] = dfr[1];
         hc_n[82 +: NSJ] = ssel; hc_n[82+NSJ] = dsel;
     end
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin hc <= '0; hc2 <= '0; end
+    always @(posedge clk or negedge rr_hd[7]) begin
+        if (!rr_hd[7]) begin hc <= '0; hc2 <= '0; end
         else begin hc <= hc_n; hc2 <= hc_n; end
     end
 
@@ -1294,8 +1304,8 @@ module ot_hgi_sv_head #(
     wire [15:0] f_lead = (rvw_lvw >= 4'd3) ? ((16'd1 << (rvw_lvw - 4'd3)) + 16'd1) : 16'd2;
     wire [15:0] f_mul = 16'd32 << rvw_lvw;
     wire ipv_ok = ipv_tag == rp && rvw_cur;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rr_hd[0]) begin
+        if (!rr_hd[0]) begin
             rs_r <= R_IDLE; rp <= 3'd0; wl_v <= 1'b0; q1_v <= 1'b0; go <= 1'b0; wep <= 16'd0; rnfault <= 1'b0;
             x_seq <= 8'd0; x_dseq <= 8'hFF; x_cnt <= 16'd0; xs <= 8'd0; vseq <= 8'd0; vseq_run <= 8'd0; r_seq <= 8'd0;
             idle_ph <= 2'd0; vf_seen <= 1'b0; ssel <= '0; dsel <= 1'b0; sp_bl <= 5'd0; dp_bl <= 5'd0; gs_r <= 14'd0; gi_r <= 14'd0;
@@ -1380,8 +1390,8 @@ module ot_hgi_sv_head #(
     // The live write frontier of the RUN record's O: region sectors [0, frontier) are completely written.
     reg f1_v; reg [23:0] f1; reg [13:0] fr_run;
     wire [26:0] f_words = {24'd0, r_lo3} + ({11'd0, cr_cnt} << r_lvw);
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rr_hd[1]) begin
+        if (!rr_hd[1]) begin
             f1_v <= 1'b0; f1 <= 24'd0; fr_run <= 14'd0; dfr[0] <= 14'd0; dfr[1] <= 14'd0;
         end else begin
             f1_v <= rs_r == R_RUN && r_olive && cr_seq == vseq_run && !ev_go;
@@ -1406,12 +1416,12 @@ module ot_hgi_sv_head #(
     wire [14:0] q_vs = sl_rvsec[rdp] + {11'd0, q_i};
     // rfile read return: pin flops (10-13: the return went straight into the packet register and the FSM)
     reg rrv_q; reg [255:0] rrd_q; reg [7:0] rrm_q;
-    always @(posedge clk or negedge rst_n) if (!rst_n) rrv_q <= 1'b0; else rrv_q <= rf_rrv;
+    always @(posedge clk or negedge rr_hd[2]) if (!rr_hd[2]) rrv_q <= 1'b0; else rrv_q <= rf_rrv;
     always @(posedge clk) begin rrd_q <= rf_rd; rrm_q <= rf_rm; end
     wire q_iss = qs == Q_WT && rrv_q && rrm_q != 8'd0;
     assign ev_rd = qs == Q_ACK && outst == 3'd0;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rr_hd[3]) begin
+        if (!rr_hd[3]) begin
             qs <= Q_IDLE; rdp <= 3'd0; qv_v <= 1'b0; qv_tag <= 3'd0; qv_nop <= 1'b0; qv_rv <= 1'b0; qv_rdy <= 1'b0;
             q_i <= 4'd0; outst <= 3'd0; rf_rv <= 1'b0; rf_rsec <= 5'd0; vmq <= 338'd0;
         end else begin
@@ -1442,8 +1452,8 @@ module ot_hgi_sv_head #(
     // In ring order: compute done, O drain done, R writes acknowledged; the RUN / drain pointers have passed the slot.
     reg ret_ok; reg [2:0] ret_tag;
     assign ev_ret = ret_ok && ret_tag == rh;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rr_hd[4]) begin
+        if (!rr_hd[4]) begin
             rh <= 3'd0; ret_ok <= 1'b0; ret_tag <= 3'd0; rec_done <= 1'b0; rec_fault <= 1'b0; halted <= 1'b0;
             hfault <= 1'b0; su_fault_r <= 1'b0;
         end else begin
@@ -1470,8 +1480,8 @@ module ot_hgi_sv_head #(
     // integration trace (sim only): every head event, the fault causes, a stall dump
     integer dg_cyc, dg_quiet; reg dg_on;
     initial dg_on = !$test$plusargs("svquiet");
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin dg_cyc <= 0; dg_quiet <= 0; end
+    always @(posedge clk or negedge rr_hd[5]) begin
+        if (!rr_hd[5]) begin dg_cyc <= 0; dg_quiet <= 0; end
         else begin
             dg_cyc <= dg_cyc + 1;
             dg_quiet <= (cnt == 4'd0 || take || ev_go || ev_cd || ev_ret || ev_jl || ev_dl || ev_jd || ev_od || ev_rd) ? 0 : dg_quiet + 1;
@@ -1538,8 +1548,8 @@ module ot_hgi_sv_head #(
     integer ph_cyc, ph_num;
     integer ph_rec [0:7]; integer ph_dec [0:7]; integer ph_st0 [0:7]; integer ph_st1 [0:7]; integer ph_go [0:7];
     integer ph_idle [0:7]; integer ph_dr0 [0:7]; integer ph_dr1 [0:7]; reg [7:0] ph_fwd, ph_ip, ph_stc;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin ph_cyc <= 0; ph_num <= 0; ph_fwd <= 8'd0; ph_ip <= 8'd0; ph_stc <= 8'd0; end
+    always @(posedge clk or negedge rr_hd[6]) begin
+        if (!rr_hd[6]) begin ph_cyc <= 0; ph_num <= 0; ph_fwd <= 8'd0; ph_ip <= 8'd0; ph_stc <= 8'd0; end
         else begin
             ph_cyc <= ph_cyc + 1;
             if (take || nop_ev) begin

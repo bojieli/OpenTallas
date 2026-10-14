@@ -3,6 +3,7 @@
  "top": "ot_hgi_sv_lane2",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv"
  ],
  "clock_port": "clk",
