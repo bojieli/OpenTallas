@@ -8,6 +8,7 @@
 module ot_hgi_b2_dma_q #(
     parameter integer MUT_CORE_PIN = 0,
     parameter integer MUT_CORE_LOOK = 0,
+    parameter integer MUT_CORE_ADV = 0,
     parameter integer HARD_CLOCKS = 0, // physical parent: ten independent die-compensated clock entries
     parameter integer FRONT = 0,
     parameter integer VR2 = 1,
@@ -142,9 +143,9 @@ module ot_hgi_b2_dma_q #(
       .kv_wv(kc_wv), .kv_wo(kc_wo), .kv_wa(kc_wa), .kv_wd(kc_wd), .kc_v(kc_v), .kc_vs(kc_vs), .kc_vst(kc_vst), .kc_ds(kc_ds),
       .kc_dst(kc_dst), .kc_ns(kc_ns), .kc_m(kc_m), .kc_gnt(kc_gnt), .credit_source(credit_source), .kc_wrdy(kc_wrdy));
 `ifndef OT_B2_DMA_Q5_HARD
-    ot_hgi_dma_kvw_core_reg_kq #(.OWN_B0(1),.MUT_KQ_ZERO(MUT_CORE_PIN),.MUT_LOOKAHEAD(MUT_CORE_LOOK))
+    ot_hgi_dma_kvw_core_issue_prefix #(.OWN_B0(1),.MUT_KQ_ZERO(MUT_CORE_PIN),.MUT_LOOKAHEAD(MUT_CORE_LOOK),.MUT_ADVANCE(MUT_CORE_ADV))
 `else
-    ot_hgi_dma_kvw_core_reg_kq
+    ot_hgi_dma_kvw_core_issue_prefix
 `endif
     u_kc(.clk(q5_clock[2]), .rn(rst_n), .c_v(kc_v), .c_rdy(kc_rdy), .c_vs(kc_vs), .c_vst(kc_vst),
       .c_ds(kc_ds), .c_dst(kc_dst), .c_ns(kc_ns), .c_m(kc_m), .g_gnt(kc_gnt), .g_cr(kc_cr), .kq(kc_kq), .kq_creq(kc_creq),
