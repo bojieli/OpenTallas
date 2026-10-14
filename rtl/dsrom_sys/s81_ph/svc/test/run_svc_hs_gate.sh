@@ -2,6 +2,7 @@
 # run_svc_hs_gate.sh <src root> <out dir>: exact gate of dsfd_svc_hs (svc HBM-controller status face): base PASS, MUT 8 FAIL;
 # plus a full-RTL elaboration (lint) of the dsfd_svc_c slab with the new hs port.
 set -u
+export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH   # the fleet Verilator (5.050), not the host default
 SRC=$1; OUT=$2; mkdir -p $OUT
 v=PASS
 run() { l=$1; want=$2; shift 2

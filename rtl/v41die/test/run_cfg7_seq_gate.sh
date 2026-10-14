@@ -3,6 +3,7 @@
 # ot_v41_pair_pq_ld_frontend): ot_s81_cfg7_seq PQ 0 / PQ 1 and the BF pair master ot_s81_cfg7_seq_bf (PQ 0), each PASS;
 # mutants STRIDE / BANK (every master) and TAG / NOFAULT / NOHOLD (PQ 1) must FAIL.
 set -u
+export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH   # the fleet Verilator (5.050), not the host default
 SRC=$1; OUT=$2; mkdir -p $OUT
 F="$SRC/rtl/v41die/ot_s81_cfg7_seq.sv $SRC/physical/dsrom_qx10_parent_context/parent_loader/ot_v41_pair_pq_ld_frontend.sv $SRC/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v $SRC/rtl/v41die/test/tb_ot_s81_cfg7_seq.sv"
 v=PASS
