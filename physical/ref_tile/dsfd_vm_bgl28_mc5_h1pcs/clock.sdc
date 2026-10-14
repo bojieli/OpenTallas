@@ -10,10 +10,10 @@ set_output_delay 166.667 -clock core_clk [all_outputs]
 set_max_fanout 32 [current_design]
 set_load 80 [all_outputs]
 set_max_transition 260 [current_design]
-# ---- sdc_extra physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc5.sdc
+# ---- sdc_extra physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc5s.sdc
 # Five RELATED clocks. No asynchronous groups, false paths, multicycle paths,
 # or period relaxation. Internal bank/relay paths remain timed at the real period.
-source /src/physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc5_nominal.tcl
+source /src/physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc5s_measured.tcl
 set ot_mc_period [get_property [get_clocks core_clk] period]
 create_clock -name req_clk -period $ot_mc_period [get_ports ck_req]
 create_clock -name ret_clk -period $ot_mc_period [get_ports ck_ret]

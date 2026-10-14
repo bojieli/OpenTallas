@@ -1,13 +1,13 @@
 {
- "name": "dsfd_vm_bgl28_mc5_h1pcs-mc5-s-entry-resetdelay-COMMIT",
+ "name": "dsfd_vm_bgl28_mc5_h1pcs-mc5s-ownR-COMMIT",
  "block": "dsfd_vm_bgl28_mc5_h1pcs",
  "ref_tile": true,
- "owner": "Codex:bgr28_native_closure",
- "purpose": "UNQUALIFIED true output-root S entries + actual reset removal delay, same MC5 H1 epochs",
+ "owner": "Claude:s81-grpA-r3",
+ "purpose": "DEFAULT-OFF optimized VM-read variant (owner 10-14 ~06:55: current hop-2 stays the die default; hop-1 replaces it only if it closes). H1 PCS kit with clock entries aligned to its OWN measured root insertions (dsfd_vm_bgl28_mc5s_measured.tcl, from its --cts gate BGL_MC_RAW: core 402.8 / req 259.0 / ret 170.8 / fwd0 164.5 / fwd1 318.3 ps TT) instead of the stale UNBOUND W5 nominal (ret -94.9, fwd1 +100.7 ps off) that produced 13,305 inter-root hold endpoints -> 20,547 hold buffers -> DPL-0033. RTL / pins / outline / inter-root uncertainties unchanged.",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "codex/s81-bgr28-native",
+  "branch": "claude/s81-grpA-r3-bgl",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys",
@@ -187,7 +187,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_bgl28_mc5_h1pcs/dsfd_vm_bgl28_mc5_h1pcs-mc5-s-entry-resetdelay-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_bgl28_mc5_h1pcs/dsfd_vm_bgl28_mc5_h1pcs-mc5s-ownR-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -197,5 +197,5 @@
  "notes": "UNQUALIFIED raw nominal clock prototype only; fresh H1PC actual R and true-period gates plus NP28 full native parent/cost/clock-driver/pin proofs required before diagnostic route. No compensated nearzeroR view publication.",
  "merge_target": null,
  "hold_merge": true,
- "structural_change": "Corrected W5 actual phase/ports: source0 f0 219.17/f1 209.68/o220.111ps, FFhold-13.75 (zero-load-32.70) and TT removal-27.98; preserve all negative evidence. Shorten actual output clock entry wires by S-face ck_fwd0 x87.048, ck_fwd1 x217.008, ck_ret x301.968 (M4), retaining W bank/request clocks and40parententries. Actual data chains lead4f/HB3/singlefinal12f drive. Add pureHB2/buffer delay before12actual rawreset conditionerRST pins (ACK rawepoch bypass preserved) and200historyreset consumers; exact reset/cycle graph unchanged, actual normal removal/recovery/crossroot checks required. W5 TT phases are explicitly prototype only for first Srawmeasurement, never an Sbinding/adoption. Widerclockfaces/driverbudget/allocation/export/perpair bindingsOPEN."
+ "structural_change": "r3 (claude s81-grpA): clock entries at the kit OWN measured R per root (mc5s_measured.tcl) replace the stale W5 nominal R; previous: Corrected W5 actual phase/ports: source0 f0 219.17/f1 209.68/o220.111ps, FFhold-13.75 (zero-load-32.70) and TT removal-27.98; preserve all negative evidence. Shorten actual output clock entry wires by S-face ck_fwd0 x87.048, ck_fwd1 x217.008, ck_ret x301.968 (M4), retaining W bank/request clocks and40parententries. Actual data chains lead4f/HB3/singlefinal12f drive. Add pureHB2/buffer delay before12actual rawreset conditionerRST pins (ACK rawepoch bypass preserved) and200historyreset consumers; exact reset/cycle graph unchanged, actual normal removal/recovery/crossroot checks required. W5 TT phases are explicitly prototype only for first Srawmeasurement, never an Sbinding/adoption. Widerclockfaces/driverbudget/allocation/export/perpair bindingsOPEN."
 }
