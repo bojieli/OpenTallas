@@ -56,7 +56,7 @@ def text():
     for r in range(128):
         t, j = lane[r]
         a(f"    assign ln[{69 * r} +: 69] = {t}[{69 * j} +: 69];")
-    a("`ifdef S81PH_MUTANT_LANE_SWAP")
+    a("`ifdef S81PH_GTH_CL_MUT_LANE")
     a("    wire [69*128-1:0] lm = {ln[69*128-1:69*2], ln[0 +: 69], ln[69 +: 69]};   // MUTANT: lanes of roots 0 / 1 swapped")
     a("`else")
     a("    wire [69*128-1:0] lm = ln;")

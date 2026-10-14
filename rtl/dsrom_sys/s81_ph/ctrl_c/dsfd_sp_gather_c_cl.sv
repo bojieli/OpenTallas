@@ -157,7 +157,7 @@ module `S81PH_GTH_CL_NAME #(parameter integer ROOTD = 128, parameter integer MUT
     assign ln[8625 +: 69] = rE5[138 +: 69];
     assign ln[8694 +: 69] = rE5[69 +: 69];
     assign ln[8763 +: 69] = rE5[0 +: 69];
-`ifdef S81PH_MUTANT_LANE_SWAP
+`ifdef S81PH_GTH_CL_MUT_LANE
     wire [69*128-1:0] lm = {ln[69*128-1:69*2], ln[0 +: 69], ln[69 +: 69]};   // MUTANT: lanes of roots 0 / 1 swapped
 `else
     wire [69*128-1:0] lm = ln;

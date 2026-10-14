@@ -4,7 +4,7 @@
 # dsfd_sp_gather_c: rows equal every cycle after the stated shift c + k - 2, control lane / t_xgo / c_done / c_st equal
 # every cycle.  base (PASS): the real field order of each layer in <layers> (trace of root_open_rows.py with
 # --trace-regions all), stress, and ovf (EXPECT 1: capacity fault, fail closed).  refuse: ovf stimulus with the
-# coverage demand -> REFUSED.  Mutants, each must FAIL: lanes of roots 0 / 1 swapped (S81PH_MUTANT_LANE_SWAP), chain
+# coverage demand -> REFUSED.  Mutants, each must FAIL: lanes of roots 0 / 1 swapped (S81PH_GTH_CL_MUT_LANE), chain
 # slots swapped in the leaf (S81PH_MUT_CHAIN), no entry forwarding in the root (S81PH_MUT_NOFWD), wrong phase on t_xgo
 # (S81PH_MUT_XGO), slot overflow not detected (S81PH_MUT_OVF, on ovf).  Verdict: GATHER_CL_GATE PASS|FAIL.
 set -u
@@ -40,7 +40,7 @@ run() { # mode case expect need want
   echo "$1 $2 expect=$3 need=$4 want=$5: $res | $(grep -h '^SUMMARY' $OUT/run_$1_$2.log | tail -1)"
 }
 for m in $MODES; do
-  case $m in base) X="";; lane) X="+define+S81PH_MUTANT_LANE_SWAP";; chain) X="+define+S81PH_MUT_CHAIN";; nofwd) X="+define+S81PH_MUT_NOFWD";;
+  case $m in base) X="";; lane) X="+define+S81PH_GTH_CL_MUT_LANE";; chain) X="+define+S81PH_MUT_CHAIN";; nofwd) X="+define+S81PH_MUT_NOFWD";;
     xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; esac
   ( build $m "$X" ) &
 done
