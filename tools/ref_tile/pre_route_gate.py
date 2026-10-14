@@ -813,14 +813,26 @@ def clock_item(g: Gate, rec: dict) -> None:
         g.add("INFO", "clock_rule", f"root {rec['root']}: {rec['text']}")
 
 
-def kit_gate_evidence(kd: Path, source_commit=None) -> dict | None:
+def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None) -> dict | None:
+    """The kit's gate result when it is bound to this exact source commit and to the daemon overlays the gate executed
+    (SB.validate: route-only helper drift does not invalidate a gate).  why: receives the refusal reason."""
+    def no(reason):
+        if why is not None:
+            why.append(reason)
+        return None
     try:
         d = json.loads((kd / CLOCK_RESULT).read_text())
         binding = d.get("source_binding")
-        ok, _ = SB.validate(binding, ROOT, DAEMON_TREE, source_commit)
-        return d if ok and binding.get("remote_archive_verified") and isinstance(d.get("clock"), dict) else None
-    except (OSError, ValueError, KeyError, AttributeError):
-        return None
+        ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit)
+        if not ok:
+            return no(reason)
+        if not binding.get("remote_archive_verified"):
+            return no("remote archive verification missing")
+        if not isinstance(d.get("clock"), dict):
+            return no("gate result carries no clock record (gate ran without --cts?)")
+        return d
+    except (OSError, ValueError, KeyError, AttributeError) as ex:
+        return no(f"gate result unreadable: {type(ex).__name__}: {ex}"[:300])
 
 
 def kit_clock_evidence(kd: Path, source_commit=None) -> dict | None:
@@ -833,7 +845,8 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
     sink count of this block's latest synthesized design (known_sinks, from the loop's job history) does.  A kit with no
     gate result and no history passes here and is judged by the in-flow lint right after synthesis (FLOORPLAN_MARGIN,
     before placement).  closed_stands: a CLOSED tile is not re-judged."""
-    rec = kit_gate_evidence(kd, source_commit)
+    why = []
+    rec = kit_gate_evidence(kd, source_commit, why)
     ev = rec["clock"] if rec else None
     if rec and not closed_stands:
         frozen = rec["source_binding"].get("route_overlay_plan")
@@ -842,9 +855,18 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
             frozen, _ = HO.capture_plan(DAEMON_TREE, ROOT)
             frozen["gate_verified_paths"] = rec["source_binding"].get("daemon_overlays", [])
             frozen["scope"] = "legacy_gate_exact_overlays_with_current_full_route_plan"
+        else:
+            # Route-only helpers are not bound by the gate: when they moved since the gate, the route freezes today's
+            # effective plan (whose gate-executed rows SB.validate just proved equal to the staged ones).
+            current, _ = HO.capture_plan(DAEMON_TREE, ROOT)
+            if SB.route_only_drift(frozen, current, rec["source_binding"]["files"]):
+                current["gate_verified_paths"] = SB.gate_overlay_paths(rec["source_binding"])
+                current["scope"] = "gate_executed_overlays_verified_route_only_helpers_current"
+                frozen = current
         g.route_overlay_plan = frozen
     if (kd / CLOCK_RESULT).exists() and ev is None and not closed_stands:
-        g.add("FAIL", "source_binding", "gate result is legacy, unverified, or differs from the route source/daemon overlay",
+        g.add("FAIL", "source_binding", "gate result is legacy, unverified, or differs from the route source/daemon overlay"
+              + (f" ({why[0]})" if why else ""),
               "preserve original as unqualified; regenerate the gate for this exact source")
     n = (ev or {}).get("max_root_sinks")
     if not isinstance(n, int):          # the kit's own gate result outranks history (a rebuilt tile proves itself)
