@@ -74,3 +74,31 @@ whole-layer cycle cost must be measured; no <=5% loss or149 ABI claim follows.
 Reproduce: xcache_mode_prepare.py --workdir DIRECTORY, copy xcache_mode_gate.py
 as DIRECTORY/run.py, transfer the prepared source directory to EPYC scratch,
 then run python3 run.py only through ot-run --mem 48 --threads 15.
+
+Immutable production port binding followups
+------------------------------------------
+
+06cf43243 actual core_ctx now supplies read mode/context/version directly from
+its registered production ports, rather than harness metadata. Independent
+reference pre-update state checks >=600 actual query exports; actual op_accept
+and accepted context/version are checked. Native680/684 and raw936/876 arithmetic
+pass; original/live-mode/resident-guard negatives fail. Unit
+oth-ubuntu-1102524-1791964837 exit0; results/rtl/qwen_xcache_production_mode_1014.
+
+a778c2ba6 separately snapshots acceptedIB379 on the actual post-IREG go&&ready
+edge. The fixture checks that snapshot against independently observed reference
+acceptance, and checks its lifetime through an incoming next descriptor while
+old j6 remains pending. Query metadata still comes directly from production
+ports. Both arithmetic positives pass, and replacing acceptedIB with live ib_i
+fails the lifetime assertion. Unit oth-ubuntu-1168503-1791965533 exit0; artifacts
+results/rtl/qwen_xcache_accepted_ib_1014. This preserves each source-specific
+receipt; no source is relabeled as a newer admission/event master.
+
+Prepare using xcache_production_prepare.py --parent-commit 06cf43243 --workdir
+DIRECTORY, or --parent-commit a778c2ba6 --accepted-ib. Copy the matching
+xcache_production_mode_gate.py or xcache_accepted_ib_gate.py into DIRECTORY as
+run.py, transfer prepared sources, and run only through ot-run. The five-case
+port gate uses --mem48/--threads15 and six-case acceptedIB gate --mem48/--threads18
+(with separate argument values). These are local arithmetic/acceptance/query
+bindings, not full VM version/source reservation, all-consumer ACK, physical
+CDC/admission or native cycle qualification.
