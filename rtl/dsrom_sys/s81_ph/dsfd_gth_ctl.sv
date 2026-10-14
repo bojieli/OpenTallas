@@ -20,7 +20,11 @@ module dsfd_gth_ctl #(parameter integer MUT = 0) (
     input  wire [159:0] f_vm,
     input  wire [23:0]  tst,                 // trunk i (rW0..5, rE0..5): [2i +: 2] = {fault, live}
     input  wire [7:0]   roots_ready,          // actual bottom rso, returned through four registered stages
-    input  wire [15:0]  cs,                  // column g: [2g +: 2] = {busy, fault}
+`ifdef S81PH_GTH_V3_CHAIN
+    input  wire [15:0]  cs,                  // v3: column g: [2g +: 2] = {busy, fault} (column OR chain)
+`else
+    input  wire [63:0]  cs,                  // v4: leaf 4 g + k: [2 (4 g + k) +: 2] = {busy, fault}
+`endif
     input  wire [84:0]  c_cmd,
     output wire [8:0]   c_done,
     output wire [1:0]   c_st,
@@ -42,17 +46,24 @@ module dsfd_gth_ctl #(parameter integer MUT = 0) (
         if (!rst) roots_ready_q <= 8'd0;
         else roots_ready_q <= roots_ready;
     // ---- status
-    reg [23:0] tq; reg [15:0] cq_s;
+`ifdef S81PH_GTH_V3_CHAIN
+    localparam integer NCS = 8;
+`else
+    localparam integer NCS = 32;           // v4: one {busy, fault} per leaf, ORed here (after the pin register)
+`endif
+    reg [23:0] tq; reg [2*NCS-1:0] cq_s;
+    reg cs_f, cs_b; integer m;
+    always @* begin cs_f = 1'b0; cs_b = 1'b0; for (m = 0; m < NCS; m = m + 1) begin cs_f = cs_f | cq_s[2*m]; cs_b = cs_b | cq_s[2*m + 1]; end end
     always @(posedge ck) begin tq <= tst; cq_s <= cs; end
     reg g_fault, g_busy, g_live; reg cflt;
     integer i;
     always @(posedge ck or negedge rs_n)
         if (!rs_n) begin g_fault <= 1'b0; g_busy <= 1'b0; g_live <= 1'b0; cflt <= 1'b0; end
         else begin
-            cflt <= cq_s[0] | cq_s[2] | cq_s[4] | cq_s[6] | cq_s[8] | cq_s[10] | cq_s[12] | cq_s[14];
+            cflt <= cs_f;
             g_fault <= g_fault | cflt;
             for (i = 0; i < 12; i = i + 1) if (tq[2*i + 1]) g_fault <= 1'b1;
-            g_busy <= cq_s[1] | cq_s[3] | cq_s[5] | cq_s[7] | cq_s[9] | cq_s[11] | cq_s[13] | cq_s[15];
+            g_busy <= cs_b;
             g_live <= &{tq[22], tq[20], tq[18], tq[16], tq[14], tq[12], tq[10], tq[8], tq[6], tq[4], tq[2], tq[0]};
         end
     // ---- control words from the VM: pin register (serial) -> ratio crossing -> stream

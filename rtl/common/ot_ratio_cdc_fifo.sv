@@ -51,7 +51,15 @@ module ot_ratio_cdc_fifo #(
                                         // window before any read edge can use it: the mem -> sh arcs become a
                                         // max-delay T_w data path with no hold check (capt_x mem -> sh hold -5 at
                                         // +42 setup); +1 write cycle of latency
-    parameter int LOCAL_CTRL = 0       // local same-epoch decode; enabled only by the capture successor
+    parameter int LOCAL_CTRL = 0,      // local same-epoch decode; enabled only by the capture successor
+    parameter bit WALL = 0            // claude s81-grpA r3 2026-10-14 (default 0): WRITE-ALWAYS storage.  The entry at wp is
+                                        // written EVERY write cycle while the writer is live and not full (enable from
+                                        // registers only: w_st, r_st_w, wp, rp_w), not on w_fire = w_v && w_rdy: a w_v /
+                                        // wrst_n that arrives from a falling-edge pin register (hcol / hsel negcap ends:
+                                        // TT -25.78, 1,307 D pins) no longer fans out to DEPTH x W write enables in half a
+                                        // cycle.  Same words, same cycles: entry wp is unpublished until wp advances on
+                                        // w_fire (the reader never uses it before), and is not written again until wp
+                                        // wraps; the full check keeps the oldest unread entry untouched.
 ) (
     input  logic         wclk,
     input  logic         wrst_n,        // synchronous to wclk
@@ -123,7 +131,12 @@ module ot_ratio_cdc_fifo #(
             endcase
         end
     end
-    always_ff @(posedge wclk) if (w_fire) mem[wp[AW-1:0]] <= w_d;
+    generate if (WALL) begin : g_wall
+        wire w_we = (w_st == S_RUN) && (r_st_w != S_DOWN) && ((wp - rp_w) != (AW+1)'(DEPTH));
+        always_ff @(posedge wclk) if (w_we) mem[wp[AW-1:0]] <= w_d;
+    end else begin : g_wfire
+        always_ff @(posedge wclk) if (w_fire) mem[wp[AW-1:0]] <= w_d;
+    end endgenerate
     logic [AW:0]   wp_pub;              // the pointer that crosses (LAG 1: one write cycle behind wp)
     generate if (LAG != 0) begin : g_lag
         always_ff @(posedge wclk) wp_pub <= wp;

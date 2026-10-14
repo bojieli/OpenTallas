@@ -1480,7 +1480,21 @@ DENS_SRC = ('hub/selector/collector logic 1.05 and service 0.385 W/mm2: Qwen ful
             'on 7.5 mm2); PHY and SerDes/UCIe on their own supplies (no core-grid load)')
 
 
+# r5 2026-10-14 (IR release gate): the hardened BF pair (--bf-hier: dsfd_bf_col | dsfd_bf_front | dsfd_bf_col MY) draws
+# its current where its cells are.  c8p put the whole ASSUMED 2 x q (0.507 W) on the 100.224 x 198.72 front (25.4 W/mm2,
+# 178.7 / 193.9 mV field IR) and 0 W on both columns.  MEASURED routed report_power (BC = FF libraries, the higher corner,
+# 833.3 ps clock) of the CLOSED views bound by name: ot_v41_bf_col 0.337 W (bfh_compact199_col_kreg_a1200_05a8d46ee-cl
+# 6_finish.rpt), ot_s81_bf_front 0.0709 W (el1013-bf-front-align-f003d825f-cl 6_finish.rpt) -> 0.745 W per BF pair (> the
+# 0.507 W assumption, kept as the upper of the two), uniform over each block's own outline.
+BF_COL_W = (0.337, 'MEASURED routed ot_v41_bf_col report_power BC (bfh_compact199_col_kreg_a1200_05a8d46ee-cl)')
+BF_FRONT_W_PWR = (0.0709, 'MEASURED routed ot_s81_bf_front report_power BC (el1013-bf-front-align-f003d825f-cl)')
+
+
 def inst_power(it):
+    if it.kind == 'bfcol':
+        return BF_COL_W[0]
+    if it.kind == 'bf' and it.master == 'dsfd_bf_front':
+        return BF_FRONT_W_PWR[0]
     if GEN == 'r8' and it.kind in ('stn', 'hstn', 'rly', 'qbank', 'hend', 'hb_elem', 'hbglue', 'xstg'):
         return it.power_w
     if GEN == 'r8' and it.kind in POWER8:
@@ -2858,6 +2872,7 @@ XB_RGAP_FIRST = False          # --xb-rgap-first (s81-die v17): the x relay site
 # up to 1,244 um from the banks.  An owned site beside the DRIVER station reaches both banks of its slot (<= ~360 um, bank
 # pair limit 407) and the next station's E-end xai / xbi (<= ~290 um, limit 500).  Register counts (cycles) unchanged.
 X_SITE_PAIR = False
+ALIGN_JOGS = False             # --align-jogs (r5 10-14): move a station facing its peer across by the bundle's jog (pin_align FAIL)
 SPLIT_FAR_PINS = False         # --split-far-pins (r5 10-14): a local chain whose assigned target pins split into a run + a far trailing group gets its own chain to that group
 HOP_PLAN_R = {}                # --hop-pair: planned hop -> its effective plan reach (pair limit - margin)
 HOP_ITER = 0                   # --hop-iter N: re-plan the hop fix on the built die up to N times (new over-limit hops)
@@ -2903,6 +2918,16 @@ HC_V2_UM = (1727.976, 9640.0)
 HC_T_UM = None                  # contract v12 sp_hc_t: the HC chain tails in the E-column floor slot below the corridor
 HC_T_COLS = 3                   # HC columns (one chain each); v12 hc_s <-> hc_t crossing buses per column
 HC_T_FWD, HC_T_RET = 1264, 1090   # per column: fd 1128 + fv 7 + rst 1 + cy 128 / rd 1082 + rv 8 (ot_s81_hc_cth ports)
+HC_RTL_WIDTHS = False           # --hc-rtl-widths (r5 10-14, F9 rtlbind decision): per-column crossings from the RTL formula
+
+
+def hc_rtl_widths(ng=256, s_rd=2, s_rt=4):
+    """dsfd_sp_hc_c / dsfd_sp_hc_t localparams TFW / TRW at the production NG 256, S_RD 2, S_RT 4 (3056 / 2164 per column;
+    the 1264 / 1090 die widths were an NG <= 96 cth generation)"""
+    big = ((ng // 8 + 2) // 3) * 8 * 32
+    tfw = (72 + 16 * s_rd) + max(s_rd * 512, big) + s_rd + 5 + 129
+    trw = s_rt + 24 * s_rt + 8 + 512 * s_rt + s_rt + 4
+    return tfw, trw
 HUB_SOUTH_SHIFT = 0.0           # v18 geometry trial: reserve south corridor explicitly
 ASSIGNED_PINS_DIR = None       # exact die-assigned parent pins + per-child clock entries
 CONTRACT_SLABS = {}             # --contract FILE (s81-die-iter): centre slab outlines {name: (w, h)} from the hier contract
@@ -4764,7 +4789,8 @@ def buses_r8(m):
         elif it.kind in ('hub', 'band_blk') and it.name != col:
             d_ = 'serial' if it.domain == 'serial_0p9' else 'stream'
             dom[d_].append((it.name, 'ck'))
-            if not (RTL_BIND and it.master == 'dsfd_sp_hc_t'):     # F9: hc_t's reset is in-band (f_sf reset bit)
+            if not (HC_RTL_WIDTHS and it.master == 'dsfd_sp_hc_t'):
+                # --hc-rtl-widths (F9): the HC chain tails take reset in band (the forward word's sf bit), no die rst net
                 rst[d_].append((it.name, 'rst'))
         elif it.kind == 'hstn':
             dom[HSTN_DOM[it.domain]].append((it.name, 'ck'))
@@ -6350,7 +6376,9 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
             if 'hc_t' in (a_, b_) and mk_:
                 # contract v12: one crossing per HC column, at that column's centre (fwd W of it, return E of it)
                 cp_ = (HC_V2_UM[0] + 43.2) / HC_T_COLS        # 576.72 slot + 43.2 channel = 619.92
-                xx = A.x + cp_ * int(mk_.group(2)) + (cp_ - 43.2) / 2 + (-90.0 if mk_.group(1) == 'tf' else 90.0)
+                # --hc-rtl-widths: the two runs (2 tracks a bit) sit side by side without overlap around the column centre
+                off_ = max(90.0, (HC_T_FWD + HC_T_RET) * 0.048 * LANE_PINS / 4 + 10.0) if HC_RTL_WIDTHS else 90.0
+                xx = A.x + cp_ * int(mk_.group(2)) + (cp_ - 43.2) / 2 + (-off_ if mk_.group(1) == 'tf' else off_)
             path = [(xx, A.y + A.h), (xx, Bk.y)] if A.y < Bk.y else [(xx, A.y), (xx, Bk.y + Bk.h)]
             L = _poly_len(path)
             name = hbn
@@ -7214,7 +7242,62 @@ def finalize_r8(m):
         if it.kind == 'hend':
             it.power_w = 5 * sum(b for d, b in pdir[it.master].values() if d == 'input') * FLOP_CLK_W * 1.5
     apply_view_binding(m, pdir)
+    if ALIGN_JOGS:
+        align_station_jogs(m)
     return pdir
+
+
+STATION_KINDS = ('stn', 'hstn', 'sstn', 'xstg')
+
+
+def align_station_jogs(m, rounds=2):
+    """--align-jogs (r5 2026-10-14, pin_align FAIL bundles of xsp4: station -> hub end block / gather with a 28-430 um
+    sideways jog in a 0.7-38 um channel): a generated station facing its peer straight across is moved along the shared
+    face axis by the bundle's jog, so its pins stand opposite the peer's (the station master's pins are shared by all its
+    instances; the instance moves, not the pins).  Only when the moved box overlaps nothing and stays on the die; the
+    hop gate / pin align gate re-judge the result."""
+    hc = str(ROOT / 'tools' / 'hier_contract')
+    if hc not in sys.path:
+        sys.path.insert(0, hc)
+    import pin_align as PA
+    rp = real_ports()
+
+    def names(it, port, bits):
+        base, lo, _hi = pslice(port)
+        lo = lo or 0
+        t = rp.get(it.master, {}).get(base)
+        return t[lo:lo + bits] if t is not None else [f'{base}[{lo + i}]' for i in range(bits)]
+    by = {it.name: it for it in m['insts']}
+    moved = {}
+    for _ in range(rounds):
+        rec = PA.analyze(m['insts'], m['buses'], die_lef_texts(m), names)
+        todo = [r for r in rec['flagged'] if r['verdict'] == 'FAIL' and r.get('kind') == 'straight']
+        if not todo:
+            break
+        n0 = len(moved)
+        for r in todo:
+            fa = r['face'][0]
+            ax = 0 if fa in 'NS' else 1
+            d = r['at'][2 + ax] - r['at'][ax]
+            for nm, sg in ((r['drv'], 1.0), (r['load'], -1.0)):
+                it = by.get(nm)
+                if it is None or it.kind not in STATION_KINDS or nm in moved:
+                    continue
+                dx, dy = (sg * d, 0.0) if ax == 0 else (0.0, sg * d)
+                nx, ny = up(it.x + dx, GX), up(it.y + dy, GY)
+                bx = (nx, ny, nx + it.w, ny + it.h)
+                if bx[0] < 0 or bx[1] < 0 or bx[2] > DIE[0] or bx[3] > DIE[1]:
+                    continue
+                if any(o is not it and o.x < bx[2] - 1e-6 and bx[0] < o.x + o.w - 1e-6 and o.y < bx[3] - 1e-6
+                       and bx[1] < o.y + o.h - 1e-6 for o in m['insts']):
+                    continue
+                moved[nm] = (round(nx - it.x, 3), round(ny - it.y, 3), r['bus'])
+                it.x, it.y = nx, ny
+                break
+        if len(moved) == n0:
+            break
+    m['station_jog_moves'] = moved
+    print('OT_ALIGN_JOGS moved %d stations: %s' % (len(moved), json.dumps(moved)[:600]), file=sys.stderr)
 
 
 def _lay(M, face, ports, layer, start=None, gap=0.96, length=None, pitch=1):
@@ -8145,7 +8228,10 @@ def glue_rtl(m):
                                     f'.r_rdy(1\'b1), .r_d(rq{j}), .w_live(), .r_live(rl{j}), .w_fault(wf{j}), .r_fault(rf{j}));')
                     else:
                         body.append(f'    assign wf{j} = 1\'b0; assign rf{j} = 1\'b0;')
-                        body.append(f'    ot_ratio_cdc_fifo #(.W({pw})) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), .w_v({wv}), '
+                        # --hend-vr-nobp (s81 grpA r3 2026-10-14, hcol / hsel TT -25.78: negedge pin register -> w_fire ->
+                        # DEPTH x W ratio-FIFO write enables in half a cycle): wide VR r2l ends write the FIFO always (WALL)
+                        wa = ", .WALL(1'b1)" if (HEND_VR_NOBP and vr and pw >= 512) else ''
+                        body.append(f'    ot_ratio_cdc_fifo #(.W({pw}){wa}) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), .w_v({wv}), '
                                     f'.w_rdy(), .w_d({wd}), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv{j}), .r_rdy(1\'b1), '
                                     f'.r_d(rq{j}), .w_live(), .r_live(rl{j}));')
                     pr = HEND_PINREG and kind == 'r2l'
@@ -8451,6 +8537,12 @@ def die_options(ap):
                     'real pair limit (pair_check, the gate\'s limit) minus UM of pin-spread margin; 0 = flat --hop-r-cc only')
     ap.add_argument('--hop-iter', type=int, default=0, help='s81-die v18: re-plan the hop fix on the built die up to N times '
                     '(hops the pass-2 build created over their limit get their stage); 0 = one plan (unchanged)')
+    ap.add_argument('--pdn-field-cov', type=float, default=0.0, help='r5 10-14 IR release gate: per-net die M8/M9 strap '
+                    'coverage over the field / channels (default COV field 0.0439); pitch = bump pitch / odd n (bump-aligned)')
+    ap.add_argument('--hc-rtl-widths', action='store_true', help='r5 10-14 (F9): hc_s <-> hc_t per-column crossings from the '
+                    'RTL TFW / TRW (3056 / 2164 at NG 256), hc_t takes no die reset (in-band)')
+    ap.add_argument('--align-jogs', action='store_true', help='r5 10-14: a station facing its peer straight across moves along '
+                    'the face axis by the bundle jog when the box is free (pin_align FAIL: jog spills past the channel)')
     ap.add_argument('--split-far-pins', action='store_true', help='r5 10-14: a hub local chain (end block -> slab) whose '
                     'die-assigned target pins split into a run and a far trailing group (gather rW*/rE* trunk status '
                     '{fault, live} -> control strip) routes the trailing bits as their own staged die path')
@@ -8571,6 +8663,14 @@ def apply_options(a):
     X_SITE_PAIR = bool(getattr(a, 'x_site_pair', False))
     global SPLIT_FAR_PINS
     SPLIT_FAR_PINS = bool(getattr(a, 'split_far_pins', False))
+    global ALIGN_JOGS
+    ALIGN_JOGS = bool(getattr(a, 'align_jogs', False))
+    global HC_RTL_WIDTHS, HC_T_FWD, HC_T_RET
+    HC_RTL_WIDTHS = bool(getattr(a, 'hc_rtl_widths', False))
+    if HC_RTL_WIDTHS:
+        HC_T_FWD, HC_T_RET = hc_rtl_widths()
+    if getattr(a, 'pdn_field_cov', 0.0):
+        COV['field'] = COV['channel'] = float(a.pdn_field_cov)
     global HOP_PAIR, HOP_ITER
     HOP_PAIR = float(getattr(a, 'hop_pair', 0.0) or 0.0)
     HOP_ITER = int(getattr(a, 'hop_iter', 0) or 0)
@@ -8578,18 +8678,16 @@ def apply_options(a):
     FWD_NEGCAP = bool(getattr(a, 'fwd_negcap', False))
     HEND_VR_NOBP = bool(getattr(a, 'hend_vr_nobp', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
-    global RTL_BIND, HC_T_FWD, HC_T_RET, HOST_CF_BITS, HOST_TC_BITS
+    global RTL_BIND, HC_T_FWD, HC_T_RET, HOST_CF_BITS, HOST_TC_BITS, HC_RTL_WIDTHS
     RTL_BIND = bool(getattr(a, 'rtl_bind', False))
     if RTL_BIND:
         # F6: the collective <-> layer-die host channel at dsfd_host_c's RTL widths: collective -> host {t_cr, h_cls 2,
         # h_d 512, h_v} = 516, host -> collective {st 11, h_crn 5, t_v, t_d 64} = 81 (were 514 / 130 placeholders)
         HOST_CF_BITS, HOST_TC_BITS = 516, 81
-        # F9 (s81-die-rtl-bind 2026-10-14): the hc_s <-> hc_t column buses at the RTL widths of the production HC
-        # (dsfd_sp_hc_c / dsfd_sp_hc_t localparams at NG 256, S_RD 2, S_RT 4, ot_s81_hc_cth FDW / RDW):
-        # TFW = (72 + 16 S_RD) + max(512 S_RD, ceil(NG/8/3) 8 32) + S_RD + 5 + 129 = 3,056 (in-band reset bit included),
-        # TRW = S_RT + 24 S_RT + 8 + 512 S_RT + S_RT + 4 = 2,164.  The 1,264 / 1,090 of contract v12 were an NG <= 96
-        # cth: 3 x (3,056 + 2,164) = 15,660 crossing bits (was 7,062) -> die cut analysis owed (die lead + el1013-s81hc)
-        HC_T_FWD, HC_T_RET = 3056, 2164
+        # F9: one implementation (die lead r5 4f0307291): --rtl-bind implies --hc-rtl-widths = hc_rtl_widths() of the
+        # production HC (3,056 / 2,164 per column, hc_t reset in band) with the fwd / ret runs moved apart
+        HC_RTL_WIDTHS = True
+        HC_T_FWD, HC_T_RET = hc_rtl_widths()
     assert not WFC_PRICED or (WFC_KIT and not getattr(a, 'wfc_crp', False)), '--wfc-priced: the --wfc-kit stage / source kit (not --wfc-crp)'
     global WFC_CRP, STAGE_SEQ
     WFC_CRP = bool(getattr(a, 'wfc_crp', False)) and WFC_KIT

@@ -91,6 +91,24 @@ class BenchTrack(unittest.TestCase):
         dv.assert_not_called()
         self.assertEqual(j["wait"], "benches")
 
+    def test_missing_predecessor_does_not_starve_running_completion(self):
+        j = job(bench_par=True, btrack={"bench_neg": dict(
+            state="running", host="producer", run="/producer", tag="neg.a1", n=1)})
+        launched = []
+        def launch(v, st, cmd):
+            launched.append(st["key"])
+            v["stage_tag"] = "exact.a2"
+        with patch.object(cl, "poll_stage", return_value=("RC", 1)) as poll, \
+                patch.object(cl, "remote_ok", return_value=(True, "")), \
+                patch.object(cl, "stage_tail", return_value="expected mutant failure"), \
+                patch.object(cl, "bench_outcome", return_value=True), \
+                patch.object(cl, "launch_stage", side_effect=launch), patch.object(cl, "log"):
+            self.assertTrue(cl.bench_track(j, Fleet(), cl.stage_list(SPEC)))
+        self.assertEqual(poll.call_args.args[0]["run"], "/producer")
+        self.assertTrue(j["benches"]["bench_neg"]["ok"])
+        self.assertEqual(j["btrack"]["bench_neg"]["state"], "done")
+        self.assertEqual(launched, ["bench_exact"])
+
     def test_route_keys_allow_three(self):
         keys = {"b@c": ["a", "b"]}
         self.assertIsNone(cl.route_key_full(keys, "b@c", "x"))

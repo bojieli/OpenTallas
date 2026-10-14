@@ -91,8 +91,11 @@ module tb_qfd_vm_bv_ports;
     ot_qfd_sp_vector_memory_bv #(.XQT(XQT), .ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(SMIN), .SMAX(SMAX), .XVM(XVM), .BMAX(BMAX),
         .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT), .MEE(MEE), .VMT(VMT), .RV(RV), .RO(RO), .XPR(XPR),
         .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR), .SQD(SQD), .NRBS(NRBS)) dut (
-        .clk(clk), .rst_n(rst_n), .me_en(me_en), .me_en_e(me_en_e), .me_en_t(me_en_t), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
+        .clk(clk), .rst_n(rst_n), .me_en(me_en), .me_en_e(me_en_e),
+`ifndef OT_QFD_VM_NOX
+        .me_en_t(me_en_t), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
         .x_rdy(), .x_fault(x_fault), .x_hazard(x_hazard),
+`endif
         .s_re0(s_re0), .s_re1(s_re1), .s_a0(s_a0), .s_a1(s_a1), .s_q(s_q),
         .sw_mask(sw_mask), .sw_a0(sw_a0), .sw_a1(sw_a1), .sw_data(sw_data),
         .rd_v(rd_v), .rd_addr(rd_addr), .rd_data(rd_data),
@@ -101,6 +104,16 @@ module tb_qfd_vm_bv_ports;
         .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask), .mx_data(mx_data),
         .rb_v(l_v), .rb_end(l_end), .rb_nul(l_nul), .rb_row(l_row), .rb_mask(l_mask), .rb_data(l_data), .rb_cr(l_cr),
         .rb_ok(l_ok), .me_ok(me_ok), .land_cnt(land_cnt), .w_fault(w_fault), .w_hazard(w_hazard));
+`ifdef OT_QFD_VM_NOX
+    // OT_QFD_VM_NOX (trimmed VM, 2026-10-14): the memory has no x read; the bench issues no x tuple, compares no x_q,
+    // and every other port / check is unchanged (SU reads and writes, row reads, skid writes, ME result links, image)
+    localparam integer NOX = 1;
+    assign d_xq = {NX*32{1'b0}};
+    assign x_fault = 1'b0;
+    assign x_hazard = 1'b0;
+`else
+    localparam integer NOX = 0;
+`endif
     // ---- the stall loop: me_ok RSD more edges to the engine clock enable ----
     reg [RSD:0] okd;
     always @(posedge clk or negedge rst_n) if (!rst_n) okd <= 0; else okd <= {okd[RSD-1:0], me_ok};
@@ -405,7 +418,7 @@ module tb_qfd_vm_bv_ports;
                 // x tuples over the static region
                 if (hold > 0) hold = hold - 1;
                 since = since + 1;
-                if (hold == 0) begin
+                if (hold == 0 && NOX == 0) begin
                     if (($random(seed) & 15) == 0) begin x_dv = 0; hold = 1; end
                     else begin
                         s_ = SMIN + (($random(seed) & 32'h7fffffff) % (SMAX - SMIN + 1));
@@ -486,9 +499,9 @@ module tb_qfd_vm_bv_ports;
         if (tree_vac) $display("FAIL qfd_vm_bv_ports TREE-VACUOUS x=%0d", bad_x);
         else
         if (m_ovf == d_ovf && (WDIR != 1 || mo_max[2] == SQD) && bad_me == 0 && bad_x == 0 && bad_s == 0 && bad_r == 0 && bad_land == 0 && bad_img == 0 && !x_fault && !x_hazard && !w_fault &&
-            !w_hazard && !(|l_fault) && land_cnt == nburst[15:0] && nburst > 500 && n_s > 1000 && n_r > 1000 && tuples > 500)
-            $display("PASS qfd_vm_bv_ports NRB=%0d SW=%0d VL=%0d su_reads=%0d row_reads=%0d tuples=%0d bursts=%0d land_steps=%0d cycles=%0d",
-                     NRB, SW, VL, n_s, n_r, tuples, nburst, n_land, CYCLES);
+            !w_hazard && !(|l_fault) && land_cnt == nburst[15:0] && nburst > 500 && n_s > 1000 && n_r > 1000 && (tuples > 500 || NOX != 0))
+            $display("PASS qfd_vm_bv_ports NOX=%0d NRB=%0d SW=%0d VL=%0d su_reads=%0d row_reads=%0d tuples=%0d bursts=%0d land_steps=%0d cycles=%0d",
+                     NOX, NRB, SW, VL, n_s, n_r, tuples, nburst, n_land, CYCLES);
         else
             $display("FAIL qfd_vm_bv_ports x=%0d su=%0d row=%0d land=%0d image=%0d faults x%0d xh%0d w%0d wh%0d ser%b landed=%0d/%0d su_reads=%0d",
                      bad_x, bad_s, bad_r, bad_land, bad_img, x_fault, x_hazard, w_fault, w_hazard, l_fault, land_cnt, nburst, n_s);
