@@ -186,8 +186,10 @@ def load_spec(path: str) -> dict:
         if s["kind"] != "cluster" or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
             raise SpecError('spec: "clock": "entries" needs kind cluster and "clock_ports" [one port per child clock pin] '
                             'with clock_port == clock_ports[0]')
-        if len(set(cps)) != len(cps) or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", c) for c in cps):
-            raise SpecError("spec: clock_ports must be distinct scalar port names")
+        if len(set(cps)) != len(cps) or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*(?:\[\d+\])?", c) for c in cps):
+            raise SpecError("spec: clock_ports must be distinct scalar names or literal bus bits")
+        if s.get("clock_entry_domains") is not None:
+            clock_entry_constraints.domains(s)
     elif s.get("clock_ports"):
         raise SpecError('spec: "clock_ports" is only read with "clock": "entries"')
     if s["pins"] == "auto":   # inputs S, outputs N, clock + resets W (a starting plan; set real faces per the die contract)
