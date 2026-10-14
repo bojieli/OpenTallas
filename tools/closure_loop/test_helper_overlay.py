@@ -96,6 +96,28 @@ class HelperOverlay(unittest.TestCase):
         self.assertFalse(job['helper_overlay_verification']['mutation'])
         self.assertEqual(job['route_overlay_plan']['origin_main'], self.tip)
 
+    def test_bench_relocation_preserves_executed_helpers_after_main_changes(self):
+        job, original = self.installed_job()
+        before = (original / 'cl/orfs_hold_mm.tcl').read_bytes()
+        mtime = (original / 'cl/orfs_hold_mm.tcl').stat().st_mtime_ns
+        self.commit_helper(b'# later main must not enter the old bench\n')
+        destination = Path(self.tmp.name) / 'bench'
+        relocated = dict(job, bench_helper_origin=dict(host='local', run=str(original)))
+        CL.ship_helpers('local', str(destination), relocated)
+        self.assertEqual((destination / 'cl/orfs_hold_mm.tcl').read_bytes(), before)
+        self.assertEqual((original / 'cl/orfs_hold_mm.tcl').stat().st_mtime_ns, mtime)
+        self.assertEqual(HO.verify_installed_plan(destination / 'cl', job['route_overlay_plan'])['status'],
+                         'verified_original')
+
+    def test_bench_relocation_refuses_changed_original_helpers(self):
+        job, original = self.installed_job()
+        (original / 'cl/orfs_hold_mm.tcl').write_bytes(b'# corrupted executed helper\n')
+        destination = Path(self.tmp.name) / 'bench'
+        relocated = dict(job, bench_helper_origin=dict(host='local', run=str(original)))
+        with self.assertRaisesRegex(ValueError, 'FROZEN_HELPER_OVERLAY.*bytes mismatch'):
+            CL.ship_helpers('local', str(destination), relocated)
+        self.assertFalse((destination / 'cl').exists())
+
     def test_unrelated_main_commit_does_not_relabel_or_invalidate_plan(self):
         _, binding = self.gate()
         (self.root / 'unrelated.txt').write_text('unrelated\n')
