@@ -7,9 +7,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cpad_split #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1
+    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1, PHYS_CLK = 0
 ) (
     input  wire                 sk, srs,
+    input  wire [3:0]           sk_leaf,
     input  wire [RDW-1:0]       crd_i,
     output wire [RDW-1:0]       crd_o,
     input  wire [FVW-1:0]       fv_i,
@@ -46,25 +47,25 @@ module ot_s81_hc_cpad_split #(
 `else
     ot_s81_hc_pad_f8 #(.FW(FSW),.VW(FVW),.DEPTH(F0)) u_f8 (
 `endif
-        .sk(sk),.srs(srs),.v_i(fv_i),.d_i(fd_i),.v_o(fm),.d_o(dm));
+        .sk(PHYS_CLK ? sk_leaf[0] : sk),.srs(srs),.v_i(fv_i),.d_i(fd_i),.v_o(fm),.d_o(dm));
 `ifdef OT_S81_HC_PAD_HARD
     ot_s81_hc_pad_f5r1 u_f5r1 (
 `else
     ot_s81_hc_pad_f5r1 #(.FW(FSW),.VW(FVW),.RW(RDW),.DEPTH(F1)) u_f5r1 (
 `endif
-        .sk(sk),.srs(srs),.v_i(fm),.d_i(dm),.v_o(fv_o),.d_o(fd_o),.r_i(crd_i),.r_o(rpin));
+        .sk(PHYS_CLK ? sk_leaf[1] : sk),.srs(srs),.v_i(fm),.d_i(dm),.v_o(fv_o),.d_o(fd_o),.r_i(crd_i),.r_o(rpin));
 `ifdef OT_S81_HC_PAD_HARD
     ot_s81_hc_pad_r6 u_r6 (
 `else
     ot_s81_hc_pad_r6 #(.W(RDW),.DEPTH(R0)) u_r6 (
 `endif
-        .sk(sk),.srs(srs),.d_i(rpin),.d_o(rm));
+        .sk(PHYS_CLK ? sk_leaf[2] : sk),.srs(srs),.d_i(rpin),.d_o(rm));
 `ifdef OT_S81_HC_PAD_HARD
     ot_s81_hc_pad_r5 u_r5 (
 `else
     ot_s81_hc_pad_r5 #(.W(RDW),.DEPTH(R1)) u_r5 (
 `endif
-        .sk(sk),.srs(srs),.d_i(rm),.d_o(crd_o));
+        .sk(PHYS_CLK ? sk_leaf[3] : sk),.srs(srs),.d_i(rm),.d_o(crd_o));
 `ifndef SYNTHESIS
     initial begin
         if (F0<0 || F1<0 || R0<0 || R1<0) $fatal(1,"pad split requires nonnegative soft relay depths");
@@ -116,9 +117,10 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_ccr_align #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1
+    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1, PHYS_CLK = 0
 ) (
     input  wire                 sk, srs,
+    input  wire [1:0]           sk_leaf,
     input  wire [RVW-1:0]       ch_rv,
     input  wire [RDW-1:0]       ch_rd,
     output wire [RDW-1:0]       crd_o,         // stage 0 (the capture), on to ot_s81_hc_cpad
@@ -187,14 +189,14 @@ module ot_s81_hc_ccr_align #(
        .ML(ML),.AL(AL),.MUT(MUT),.AMUT(AMUT),.RF(4),.RT(RT),.RW(RW),.YD(YD),
        .HALF(HALF),.RLY(RLY),.DW(DW),.RET_EXTRA(0)) u_core (
 `endif
-       .sk(sk),.srs(srs),.ch_rv(ch_rv),.ch_rd(ch_rd),.crd_o(crd_o),.crv_o(mv),.cpi_o(mp),.ex1_o(me));
+       .sk(PHYS_CLK ? sk_leaf[0] : sk),.srs(srs),.ch_rv(ch_rv),.ch_rd(ch_rd),.crd_o(crd_o),.crv_o(mv),.cpi_o(mp),.ex1_o(me));
     generate if(EXTRA>0)begin:g_meta
 `ifdef OT_S81_HC_PAD_HARD
        ot_s81_hc_pad_meta2 u_m (
 `else
        ot_s81_hc_pad_meta2 #(.VW(RVW),.EW(NE1*32),.DEPTH(EXTRA)) u_m (
 `endif
-          .sk(sk),.srs(srs),.v_i(mv),.p_i(mp),.e_i(me),.v_o(crv_o),.p_o(cpi_o),.e_o(ex1_o));
+          .sk(PHYS_CLK ? sk_leaf[1] : sk),.srs(srs),.v_i(mv),.p_i(mp),.e_i(me),.v_o(crv_o),.p_o(cpi_o),.e_o(ex1_o));
     end else begin:g_direct
        assign crv_o=mv;assign cpi_o=mp;assign ex1_o=me;
     end endgenerate
