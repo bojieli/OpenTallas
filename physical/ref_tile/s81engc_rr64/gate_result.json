@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "s81engc_rr64",
- "verdict": "FAIL",
- "generated": "2026-10-14T08:00:58-0700",
- "host": "ot-epyc1tb",
+ "verdict": "WARN",
+ "generated": "2026-10-14T08:06:15-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "79a07bfeb4f4a28246952277ee7eca36bf0b3d53",
+  "start_commit": "a02b646a065526b9c0d4b5c6cc6fc9126cb2777b",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "f20512ca23d1ed2ff989bc31c209871336f66ec28e154b18bebd46f31bed03f0",
-  "manifest_sha256": "0c90fd881cd2b8daa7f3c7698719a4fcfd9e55cdca60696e9b117a99dfd02503",
+  "archive_sha256": "a2e74ab707d0c278a709927ddd42b084a9811f5648fd99f392fd55c3c40543b1",
+  "manifest_sha256": "c079dda4f04213a7ded2094ab6a0710946a29442d40dbb0bd6a2b819cad59fd2",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -17123,8 +17123,8 @@
    {
     "path": "physical/ref_tile/s81engc_rr64/floorplan.json",
     "kind": "file",
-    "sha256": "3a1d0ed19e87c7f2e232318707f9586e428cea1626ce65764e60dacea4ce574a",
-    "git_blob": "2e93e360b33cb55dd1756b2f01b53f4cc5252055",
+    "sha256": "1eff190197e9e4902c28c9edef38f95201b4d44351ce119d6d49e5e0fbf450c5",
+    "git_blob": "67176e9614e054329b0598669ffeae02c9a3a227",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17139,8 +17139,8 @@
    {
     "path": "physical/ref_tile/s81engc_rr64/kit.env",
     "kind": "file",
-    "sha256": "99299bea446bb0f5c8eb5c8c5dc3f7ed8ff576a0c66b4b004a4c8f5a944ff2aa",
-    "git_blob": "3bf5b4ec5a480d615e05a29415af1d318a76284f",
+    "sha256": "f5b7a1f8dd21b6d03031cc8860f4304489fea8b1a3a1b5bf5b31d60bf622d186",
+    "git_blob": "374933debaeaefbefb1c64a05bba70315f946749",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17243,8 +17243,8 @@
    {
     "path": "physical/ref_tile/s81engc_rr64/spec.json",
     "kind": "file",
-    "sha256": "b3d480bb8a0500bf0633bb46c4a5e3864fe8ef7511666a7fa9e6e15acc53162d",
-    "git_blob": "4d20ce95f679e496d425ad428dc2bff1bb0ded94",
+    "sha256": "2e989b5ac3055d2a8beba46a3813bd0f3b0699390eee20f29e858bb0281906ba",
+    "git_blob": "5f570671a20a6b29f9312569a4b6f4aed65072f4",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -93579,16 +93579,16 @@
    {
     "path": "tools/ref_tile/specs_s81engc_hl/s81engc_rr256.json",
     "kind": "file",
-    "sha256": "8452fe3fde6e3ce28cd5c0c04c27226f9719af6b49fd6601b1ea23520f941ad0",
-    "git_blob": "35f0e817f035a079e2baf3b774be6c71f3caca2d",
+    "sha256": "bc0daa229bc0b96d03665cc3a062ffd6e581004f0aac81428fc660aa50bed865",
+    "git_blob": "631d12427ee176d3e88e5ac16c27ec657db8cf84",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_s81engc_hl/s81engc_rr64.json",
     "kind": "file",
-    "sha256": "e8debead927c3ebf936e8e101c92a12ea1f324423887e1b466da59b42842ccbe",
-    "git_blob": "b16e29069096fcd60c0bfe147220f01c2e16b1f1",
+    "sha256": "2fd84cc6588d0ba7a7d89f1629cd33bc45ec9085ab04ba257dc6987c933df55e",
+    "git_blob": "b678171f7d940768753ba429db85767204b3aa4d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -114171,7 +114171,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "70092ee65e412b478b813cf6b6f64035d0cc592a",
+   "origin_main": "8d451acc965373538cad93ad90815dc32573a5fa",
    "content_sha256": "d422c33fd7fe5e4ebf90576f2a8c7ac9c2a4595707a1c3fb2709a6cc4610da04",
    "files": [
     {
@@ -114544,11 +114544,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T07:59:59-0700",
-  "remote_script_sha256": "c0a717f3c65a2e2b482fb51acfd39f35df44bd6790e9fbb7bc469e7f434c1d56",
+  "captured": "2026-10-14T08:04:50-0700",
+  "remote_script_sha256": "fe78654548654d39062db16cafc43876ef415ce340fbcf7cfecc02d0e345fe1f",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81engc_rr64-20261014-075900",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81engc_rr64-20261014-080408",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -114556,56 +114556,62 @@
   ]
  },
  "clock": {
-  "max_root_sinks": null,
-  "root": null,
+  "max_root_sinks": 64,
+  "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
+  "tt_insertion_ps": 63.6,
+  "tt_spread_ps": 1.5,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
-  "verdict": "UNKNOWN",
-  "text": "clock sinks unknown; no measured clock tree (no --cts gate evidence)"
+  "clock_measurements": [
+   {
+    "source": "ck",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 64,
+      "mean": 62.8,
+      "min": 62.1,
+      "max": 63.6
+     },
+     "all": {
+      "n": 64,
+      "mean": 62.8,
+      "min": 62.1,
+      "max": 63.6
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
+  "verdict": "PASS",
+  "text": "64 sinks on the largest root <= 15,000; measured TT insertion 63.6 ps, leaf spread 1.5 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "oflop",
-   "message": "N face 6.4 pins/um (q): recipe-2 hold stages take 2.15 um behind the face, the pin flops need gap 2.7 um and 13 columns = 6.21 um, more than 45% of the 4.3 um core behind the face (GRT-0116 class)",
+   "message": "N face 6.4 pins/um (q): recipe-2 hold stages take 2.15 um behind the face, the pin flops need gap 2.7 um and 13 columns = 6.21 um, more than 45% of the 8.6 um core behind the face (GRT-0116 class)",
    "fix": "a longer edge or pins on two layers (lower face density), or drop the pin hold stages of this face (\"outhold\": false + route.hold_delay in RTL)"
   },
   {
-   "severity": "FAIL",
-   "check": "io_place",
-   "message": "IO placement failed: [ERROR GPL-0301] Utilization 191.514 % exceeds 100%.",
-   "fix": "fix the pin plan / pin layers"
-  },
-  {
-   "severity": "FAIL",
+   "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 34 um2 + macros 0 in core 19: util 180%",
+   "message": "synthesized std area 34 um2 + macros 0 in core 112: util 30%",
    "fix": "set \"std_area_um2\": 34 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
-   "severity": "FAIL",
-   "check": "cts_run",
-   "message": "placement / CTS of the kit failed: [ERROR GPL-0301] Utilization 191.514 % exceeds 100%.",
-   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
-  },
-  {
    "severity": "WARN",
-   "check": "cts_calibration",
-   "message": "CTS rc=2 ck_insertion rc=1",
-   "fix": ""
-  },
-  {
-   "severity": "WARN",
-   "check": "clock_rule",
-   "message": "the synthesized netlist's clock sinks were not reported: clock sinks unknown; no measured clock tree (no --cts gate evidence)",
-   "fix": "read the remote log (textbook lint line 'clock_roots')"
+   "check": "textbook.util_channel",
+   "message": "utilisation 32.5% outside 45%-65% (std 36 + macro 0 um2 in 112 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]
 }
