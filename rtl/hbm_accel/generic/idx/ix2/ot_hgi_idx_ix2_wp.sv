@@ -50,11 +50,12 @@ module ot_hgi_idx_ix2_wp #(
     // The CLOSED beat tile has four D link credits. Return a credit when this
     // landing FIFO has reserved space, rather than waiting for the packers to
     // consume the beat through a six-edge round trip (4/6 beats per cycle).
-    // Withhold acknowledgements above 11 queued beats: at most four credited
-    // packets can still arrive, so the sixteen entries cannot overflow.
+    // Acknowledge the pin landing directly. Withhold above nine queued beats;
+    // reserve four outstanding credits plus the registered landing stages,
+    // so sixteen entries cannot overflow even when the packers stall.
     reg [67:0] dq [0:15]; reg [3:0] dqw, dqr; reg [4:0] dqn;
     reg [2:0] dc_pending;
-    wire dc_ack = dc_pending != 3'd0 && dqn < 5'd12;
+    wire dc_ack = (dc_pending != 3'd0 || d_v) && dqn < 5'd10;
     wire [299:0] tqh = tq[tqr]; wire [67:0] dqh = dq[dqr];
     wire [3:0] pk_rdy, pk_ev, pk_empty; wire [59:0] pk_sec; wire [1023:0] pk_d; wire [31:0] pk_m;
     reg [3:0] e_take; reg fl_pend, fl_done;
@@ -109,7 +110,7 @@ module ot_hgi_idx_ix2_wp #(
             for (l = 0; l < 8; l = l + 1) begin wcred[l] <= CB'(LQ); wwq[l*280 + 279] <= 1'b0; end
         end else begin
             t_cr <= t_go; d_cr <= dc_ack;
-            dc_pending <= dc_pending + 3'(dv_q) - 3'(dc_ack);
+            dc_pending <= dc_pending + 3'(d_v) - 3'(dc_ack);
             if (tv_q) tqw <= tqw + 2'd1;
             if (t_go) tqr <= tqr + 2'd1;
             tqn <= tqn + 3'(tv_q) - 3'(t_go);
