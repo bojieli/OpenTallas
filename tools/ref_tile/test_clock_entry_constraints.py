@@ -25,5 +25,33 @@ class BoundData(unittest.TestCase):
             (v/'insertion.json').write_text(json.dumps(broken))
             with self.assertRaisesRegex(ValueError,'ambiguous'):C.generate(spec,root)
 
+    def test_related_domain_mapping_is_mandatory_and_complete(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d); v = root/'view'; v.mkdir()
+            lib = 'library(x){time_unit:"1ps";cell(view){pin(ck){clock:true;}pin(ckv){clock:true;}}}'
+            for c in C.CORNERS: (v/f'view_{c}.lib').write_text(lib)
+            measured = {c: {'boundary': {'n': 7, 'min': 80, 'mean': 90, 'max': 100}} for c in C.CORNERS}
+            (v/'insertion.json').write_text(json.dumps({'clock_measurements': {'ck': measured, 'ckv': measured}}))
+            spec = {'clock': 'entries', 'clock_port': 'ck', 'clock_ports': ['ck', 'ckv'], 'children': [{'view': 'view'}]}
+            with self.assertRaisesRegex(ValueError, 'multi-clock child requires explicit'):
+                C.generate(spec, root)
+            spec['clock_entry_domains'] = {
+                'core': {'ratio': [1, 1], 'ports': ['ck'], 'inputs': ['rst'], 'outputs': []},
+                'serial': {'ratio': [4, 3], 'ports': ['ckv'], 'inputs': ['rsv'], 'outputs': []}}
+            generated = C.generate(spec, root)
+            self.assertIn('io_budget_ps 222.222', generated)
+            self.assertIn('incomplete actual IO domain coverage', generated)
+            clock = C.clocks(spec, 833.333)
+            self.assertIn('ot_io_serial -period 1111.110666667', clock)
+            broken = copy.deepcopy(spec); broken['clock_entry_domains']['serial']['ports'] = ['ck']
+            with self.assertRaisesRegex(ValueError, 'duplicate domain clock port'):
+                C.generate(broken, root)
+            broken = copy.deepcopy(spec); broken['clock_entry_domains']['serial']['ratio'] = [2, 1]
+            with self.assertRaisesRegex(ValueError, 'only related'):
+                C.clocks(broken, 833.333)
+            broken = copy.deepcopy(spec); broken['clock_entry_domains']['serial']['asynchronous'] = True
+            with self.assertRaisesRegex(ValueError, 'no clock exceptions'):
+                C.generate(broken, root)
+
 
 if __name__=='__main__':unittest.main()
