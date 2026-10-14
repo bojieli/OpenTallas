@@ -25,3 +25,10 @@ leaf. The die must deliver compensated phi-R at each pin; the compatibility
 mode ties leaf clocks for behavioural use only. This does not supply routed
 clock insertion evidence. Cluster control relays and assigned v18 bundle
 pins remain owed.
+
+DIE_CLOCKS mode at 543797cbf also completed via ot-run (64 GB, EPYC4,
+unit oth-ubuntu-4063176-1791944806, exit 0): all ten cases pass the same
+requirements, including all five failed mutants. Source hashes and
+verdicts are in die_clock_sources.sha256 and die_clock_verdicts.log.
+Completion payload pin registers were added separately at 6b103146e;
+their full hierarchy positive + xgo mutant regression is pending.
