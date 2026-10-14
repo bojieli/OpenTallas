@@ -187,6 +187,26 @@ def hold_pad_vars(s: dict) -> list:
     return out
 
 
+MACRO_EDGE_GUARD_TCL = f"{QDM}/sram_edge_guard.tcl"          # -> physical/common_flow/macro_edge_via_guard.tcl
+EDGE_GUARD_RE = re.compile(r"(sram_edge_guard|macro_edge_\w*guard)\.tcl$")
+
+
+def macro_edge_guard(s: dict) -> bool:
+    """recipe 2 default (el1014-root-macro-edge): a leaf tile with hard macros routes with the macro-edge via guard
+    (physical/common_flow/macro_edge_via_guard.tcl through qwen_die_masters/sram_edge_guard.tcl: the top routing layer
+    is taken out of the GCells straddling each macro edge before GRT and given back after DRT, so no net is assigned an
+    over-macro track it can only leave by an M4 jog through the macro OBS).  Measured: the M4 Short / Metal Spacing
+    markers at SRAM / ROM pin faces of qkd_sbufp q14, qfd_bl_lane cs2, PARK wide1 Q2/Q3, the slab column and P12 are
+    all this shape; the guard costs no GRT capacity a pin needs (xf n12 GRT replay: 112 overflow with it, 111 without).
+    A spec that already sources its own edge guard (boundary_tcl *edge*guard*.tcl) keeps it; "macro_edge_guard": false
+    opts out (recipe-1 kits regenerate unchanged)."""
+    if s.get("recipe", 1) < 2 or s["kind"] != "tile" or not s.get("macros"):
+        return False
+    if s.get("macro_edge_guard") is False:
+        return False
+    return not any(EDGE_GUARD_RE.search(str(f)) for f in s.get("boundary_tcl", []))
+
+
 def pin_hook_wrapper(s: dict) -> bool:
     """recipe 2: pin flops AND pin hold stages -> one kit-local PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE hook"""
     return bool(s.get("io_flop_at_pins") and (s.get("inhold") or s.get("outhold")) and s.get("recipe", 1) >= 2)
@@ -949,6 +969,10 @@ def gen_hooks(s: dict, kd: str) -> dict:
     post_drt = ["# ref_tile POST_DETAIL_ROUTE: remove the pin-access keepout, restore the plain boundary SDC",
                 "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
                 f"source /src/{QDM}/post_plain.tcl"] + btcl
+    if macro_edge_guard(s):
+        # add before GRT, remove after DRT (the wrapper picks the mode from its caller); the hold ECO re-applies it
+        pre_grt.append(f"source /src/{MACRO_EDGE_GUARD_TCL}")
+        post_drt.append(f"source /src/{MACRO_EDGE_GUARD_TCL}")
     corridor = s.get("pin_access", {}).get("corridor")
     if corridor:
         for post, hook in ((0, pre_grt), (1, post_drt)):
@@ -1197,6 +1221,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
+    if macro_edge_guard(s):
+        out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("io_tcl"):
