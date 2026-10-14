@@ -89,14 +89,36 @@ set ot_seen [dict create]
 # coll lane LCR: anchoring the 1,027 link-side rx/tx gearbox flops as well stretched the endpoint's seq/fill logic across
 # the tile (lcrpe -560 exp_seq -> fill); only the new core-face credit links (li_* / lo_*) need anchoring there.
 set ot_port_re [expr {[info exists ::env(OT_OFLOP_PORT_RE)] ? $::env(OT_OFLOP_PORT_RE) : {}}]
-foreach bt [$ot_blk getBTerms] {
+set ot_bterms [$ot_blk getBTerms]
+set ot_dffe_on [expr {[info exists ::env(OT_OFLOP_DFFE_PAIRS)] && $::env(OT_OFLOP_DFFE_PAIRS) eq "1"}]
+if {$ot_dffe_on} {source /src/physical/qwen_die_masters/dffe_pin_pairs_candidate.tcl}
+foreach bt $ot_bterms {
   set io [$bt getIoType]
   if {$ot_port_re ne "" && ![regexp -- $ot_port_re [$bt getName]]} continue
   set net [$bt getNet]; if {$net eq "NULL"} continue
   set ff ""; set hw 0.0
+  if {$ot_dffe_on && $io eq "INPUT" && [dict exists $ot_dffe_d [$bt getName]]} {
+    puts "OT_DFFE_PAIR input [$bt getName] paired with [dict get $ot_dffe_d [$bt getName]]; one q-face placement"
+    continue
+  }
   if {$io eq "OUTPUT"} {
     set d [ot_of_drv $net]; if {$d eq ""} { incr ot_skip; continue }
     set inst [$d getInst]
+    if {$ot_dffe_on && [dict exists $ot_dffe_q [$bt getName]]} {
+      set ff [dict get $ot_dffe_q [$bt getName]]
+      # Preserve auto-spread accounting for FIRM hold stages on the proven path.
+      for {set hop 0} {$hop < 12 && $inst ne $ff} {incr hop} {
+        if {![ot_of_isbuf $inst]} {error "OT_DFFE_PAIR: runtime path differs from proven netlist"}
+        if {[$inst getPlacementStatus] eq "FIRM"} {set hw [expr {$hw + double([[$inst getMaster] getWidth]) / $ot_dbu}]}
+        set ni ""
+        foreach it [$inst getITerms] {if {[$it isInputSignal]} {set ni $it}}
+        if {$ni eq ""} {error "OT_DFFE_PAIR: missing scalar chain input"}
+        set nd [ot_of_drv [$ni getNet]]
+        if {$nd eq ""} {error "OT_DFFE_PAIR: missing scalar chain driver"}
+        set inst [$nd getInst]
+      }
+      if {$inst ne $ff} {error "OT_DFFE_PAIR: runtime depth differs from proven netlist"}
+    } else {
     for {set hop 0} {$hop < $ot_hops} {incr hop} {
       if {[ot_of_isff $inst]} { set ff $inst; break }
       if {![ot_of_isbuf $inst]} break
@@ -110,6 +132,7 @@ foreach bt [$ot_blk getBTerms] {
       }
       if {$nxt eq ""} break
       set inst $nxt
+    }
     }
   } elseif {$io eq "INPUT"} {
     if {[$net getSigType] eq "CLOCK"} continue

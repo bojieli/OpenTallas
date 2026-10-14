@@ -1,0 +1,62 @@
+{
+  "actual_mapped_512_pairs": "PASS",
+  "mutants": {
+    "feedback_from_other_bit": {
+      "status": "REJECT",
+      "reason": "feedback not exact output state"
+    },
+    "different_enable_root": {
+      "status": "REJECT",
+      "reason": "ambiguous or invalid data/enable inputs"
+    },
+    "same_enable_polarity": {
+      "status": "REJECT",
+      "reason": "ambiguous or invalid data/enable inputs"
+    },
+    "different_data_clock": {
+      "status": "REJECT",
+      "reason": "clock not noninverting actual clk root"
+    },
+    "extra_feedback_sink": {
+      "status": "REJECT",
+      "reason": "unexpected fanout q[334]"
+    },
+    "extra_AND_output_sink": {
+      "status": "REJECT",
+      "reason": "unexpected fanout _1554_"
+    },
+    "extra_FF_D_sink": {
+      "status": "REJECT",
+      "reason": "unexpected fanout _0944_"
+    },
+    "data_is_other_output": {
+      "status": "REJECT",
+      "reason": "ambiguous or invalid data/enable inputs"
+    },
+    "shared_data_input": {
+      "status": "REJECT",
+      "reason": "ambiguous or invalid data/enable inputs"
+    },
+    "wrong_AO21_function": {
+      "status": "REJECT",
+      "reason": "wrong Boolean function _3122_"
+    },
+    "wrong_AND2_function": {
+      "status": "REJECT",
+      "reason": "wrong Boolean function _3121_"
+    },
+    "unknown_function": {
+      "status": "REJECT",
+      "reason": "missing function _3122_"
+    },
+    "wrong_FF_state_polarity": {
+      "status": "REJECT",
+      "reason": "output does not equal FF D state"
+    },
+    "ME_registered_from_other_input": {
+      "status": "REJECT",
+      "reason": "enable root not previous-edge me_e register"
+    }
+  },
+  "mapped_cone_with_separate_hold_chains": "PASS"
+}

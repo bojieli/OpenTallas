@@ -1,0 +1,48 @@
+{
+  "scope": "Isolated opt-in candidate; graph recognition only, no physical anchoring/gate/220 proof. Actual unchanged CTS native graph512pairs PASS;14 negative mutants REJECT; source and with-hold-chain512 positives PASS.",
+  "initial_zero_anchoring_proof": "../place_gp.receipt.log",
+  "actual_odb_sha256": "a30e161d06235f5d8eee9db85a5f7d1c29228ad1bbb2258cd3bf797d707220b1",
+  "me_contract": "Four prior-edge me_e registered replicas remain independent and unanchored; this recognizer does not grant ME ingress placement/timing closure.",
+  "known_feasibility_limits": [
+    "Existing auto site/gap/column allocator reused; no one-row override.",
+    "Actual q pin X span26.748..100.380\u00b5m is narrower than129.6\u00b5m outline; auto depth cap/DPL displacement possible.",
+    "New gate must check placement legality/no overlaps/in-core and actual per-pair final d/q/FF positions.",
+    "Necessary topology remedy may not recover220 even with short wires; mandatory output hold cells stay, same80fF/H100 all-corner max/min required.",
+    "Physical validation waits shared main integration/deployment; no effective shared helper changed."
+  ],
+  "write_verilog_limit": "Actual CTS write_verilog conflates internal q bit net with external buffered q port alias, producing multiple drivers. Candidate adapter uses exact native OpenDB net IDs instead; graph TSV retained.",
+  "dependencies": [
+    "python3 standard library",
+    "tools/dft/liberty.py",
+    "tools/dft/netlist.py",
+    "actual ORFS LIB_FILES loaded in runtime",
+    "physical/qwen_die_masters/dffe_pin_pairs_candidate.tcl",
+    "tools/ref_tile/recognize_dffe_pin_pairs.py"
+  ],
+  "opt_in_env": {
+    "OT_OFLOP_DFFE_PAIRS": "1",
+    "OT_OFLOP_DFFE_EXPECTED_PAIRS": "512"
+  },
+  "runtime_archive_requirement": "Include tools/dft and tools/ref_tile/recognize_dffe_pin_pairs.py plus candidate Tcl in explicit extra_paths/source archive; flag off preserves default traversal.",
+  "actual_liberty_sha256": {
+    "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+    "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+    "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+    "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+    "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+    "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+    "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+    "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+  },
+  "artifacts_sha256": {
+    "recognized_actual_native.json": "f913fec04909b4e2dfd52449fd624c07580c6d537421d4a244f9a06bb7a6bc08",
+    "dump_native_graph.tcl": "8608000a041f5a696aa088edaa11198998bed3e323bf5aca4eed5968862a530e",
+    "recognizer_tests.receipt.log": "2e96ce29915b980eb71876b9779272efc35178a3ca1eb3c7030a9b6dde25f637",
+    "recognizer_libs.receipt.log": "f037b7704c401515edf8f1684a6fdfbf86fb09196303e3dac94bc54fed49dd90",
+    "recognized_actual_native.tsv": "ec7c6f22951f4348b2f47bdce85fb7e11a1d9536e8a4181c2ff35a302c54c644",
+    "actual_native_graph.tsv.gz": "e463a8c4f93203082121dd516640c8840b28af36775fbca31779663ca98bb907",
+    "dump_native_graph.receipt.log": "0dc9b6f3956de8b2790ad54a959b3a1ec685b1fe07dcc44d9b8c0b7e67ead54e",
+    "actual_cts_candidate.v.gz": "c195b710ec355b1978017b53d1b96add81de85354b5c25efc2f061de43914041",
+    "recognizer_tests.json": "2e96ce29915b980eb71876b9779272efc35178a3ca1eb3c7030a9b6dde25f637"
+  }
+}
