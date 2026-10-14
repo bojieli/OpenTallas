@@ -18,6 +18,7 @@ void *native59_create(void);
 void native59_destroy(void *handle);
 // Drive low phase, sample the signals consumed at this rising edge, then clock
 // the real RTL. Every call preserves all DUT state. Reset occurs only if rst_n=0.
+// An active tag with bits above58 set returns-3 without advancing the model.
 int native59_tick(void *handle,const native59_input *input,native59_output *output);
 #ifdef __cplusplus
 }

@@ -17,6 +17,7 @@ extern "C" void *native59_create(){try{return new Native59;}catch(...){return nu
 extern "C" void native59_destroy(void *handle){if(handle){auto *n=static_cast<Native59*>(handle);n->model.final();delete n;}}
 extern "C" int native59_tick(void *handle,const native59_input *input,native59_output *output){
  if(!handle||!input||!output)return -1;
+ for(unsigned r=0;r<8;r++)if((input->valid&(1u<<r)) && (input->tag[r]>>59))return -3;
  auto &n=*static_cast<Native59*>(handle);auto &m=n.model;
  m.clk=0;m.rst_n=input->rst_n;m.in_valid=input->valid;m.in_mode=input->mode;m.in_last=input->last;
  for(unsigned r=0;r<8;r++){for(unsigned l=0;l<16;l++)m.in_data[r*16+l]=input->data[r][l];put_bits(m.in_tag,r*59,59,input->tag[r]);}
