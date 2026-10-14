@@ -40,7 +40,7 @@ module tb_hgi_dma_front_qwen_vm4_13b;
       .clk(clk),.lane_clk({8{clk}}),.rst_n(rst_n),.mv_v(mv_v),.mv_rdy(mv_rdy),.mv(mv),.mv_done(mv_done),.mv_fault(mv_fault),
       .ix_v(ix_v),.ix_rdy(ix_rdy),.ix_cmd(ix_cmd),.id_v(id_v),.id_rdy(id_rdy),.id(id),.dq(dq),.dq_rdy(dq_rdy),.dd(dd),.dd_cr(dd_cr),
       .lease_grant(reset_ready[0]),.lease_busy(leasebusy),.wl_credit(producer_credit[7:0]),.wl_done(producer_done[7:0]),.issue_v(producer_issue),.vm_packet(producer_packet),.vm_bad(vm_bad));
-    ot_hgi_dma_vm_transport10 tr(.source_clk(cclk),.vm_clk(vmclk),.rst_n(rst_n),.lease_grant(4'hf),.producer_busy({3'd0,leasebusy}),
+    ot_hgi_dma_vm_transport10 #(.MUT((MUT==10)?10:0)) tr(.source_clk(cclk),.vm_clk(vmclk),.rst_n(rst_n),.lease_grant(4'hf),.producer_busy({3'd0,leasebusy}),
       .issue_v({24'd0,producer_issue}),.source_packet({{24*281{1'b0}},producer_packet}),.source_credit(producer_credit),.source_done(producer_done),.queue_fault(qfault),.drained(drained),.lease_fault(lfault),
       .dma_q(native_dq),.dma_done(native_done),.router_fault(rfault),.lease_ready(reset_ready));
     // ---- memories
