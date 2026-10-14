@@ -185,6 +185,8 @@ python3 tools/closure_loop/closure_loop.py status
 cat /tmp/claude-review-20261003/CLOSURE_LOOP_STATUS.md   # rewritten every tick
 cat /tmp/claude-review-20261003/CLOSURE_LOOP_LEDGER.md   # one entry per verdict
 python3 tools/closure_loop/closure_loop.py retry <name>  # human: re-queue a NEEDS_HUMAN job
+#   retry on a FLOORPLAN_MARGIN job: re-runs the floorplan + textbook lint with main's current tools on the dump the
+#   stopped stage left; PASS -> requeued from that stage (route slot released), FAIL -> untouched; --force when the dump is gone
 python3 tools/closure_loop/closure_loop.py cancel <name>
 ```
 Job state lives in `~/.local/state/closure_loop/jobs/<name>.json` (events, metrics, calibration, publish result).
