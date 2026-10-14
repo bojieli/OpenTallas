@@ -27,3 +27,33 @@ proc ot_sp_leaf_arrivals {} {
   return $a
 }
 puts "ENGC spine: per-child targets $::ot_engc_ck_target offsets $::ot_engc_ck_offset"
+# The reset conditioner must see the SAME branch as the macro clock pin.
+# Temporarily remove its clocks from spine binning (which intentionally gives
+# ordinary top flops separate leaves), then reconnect to the child's leaf net.
+rename clock_tree_synthesis ot_engc_spine_cts
+proc clock_tree_synthesis {args} {
+  set b [ord::get_db_block]; set reconnect {}
+  foreach child {win io ws pb1 pb0 pb2 lkp sink} {
+    foreach i [$b getInsts] {
+      if {![string match *u_rst_${child}* [$i getName]]} continue
+      foreach it [$i getITerms] {
+        set mt [$it getMTerm]
+        if {[$mt getSigType] ne "CLOCK" && [$mt getName] ni {CLK CK CP}} continue
+        lappend reconnect [list $child $it]
+        $it disconnect
+      }
+    }
+  }
+  if {[llength $reconnect] < 16} { error "ENGC reset sync clocks missing: [llength $reconnect] < 16" }
+  ot_engc_spine_cts {*}$args
+  foreach row $reconnect {
+    lassign $row child it
+    set macro [$b findInst u_$child]
+    set net [[$macro findITerm ck] getNet]
+    if {$net eq "NULL"} { error "ENGC macro clock disconnected: $child" }
+    $it connect $net
+    [$it getInst] setDoNotTouch 1
+    puts "ENGC reset clock [$it getName] = u_${child}/ck net [$net getName]"
+  }
+  estimate_parasitics -placement
+}

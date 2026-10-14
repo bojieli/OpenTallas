@@ -23,3 +23,23 @@ foreach ot_m [$ot_cp_b getInsts] {
   puts "OT_CK_ENTRY place: [$ot_m getName] ck pin ([expr {$ot_x / 1000.0}] [expr {$ot_y / 1000.0}]) chain $ot_c"
 }
 puts "OT_CK_ENTRY place: $ot_cp_k delay cells moved to their child's clock pin"
+# Local reset conditioners sit in legal rows beside each macro reset pin.
+foreach ot_child {win io ws pb1 pb0 pb2 lkp sink} {
+  set ot_macro [$ot_cp_b findInst u_$ot_child]
+  set ot_rpin rst
+  if {$ot_child in {lkp sink}} { set ot_rpin rst_n }
+  set ot_rit [$ot_macro findITerm $ot_rpin]
+  if {$ot_rit eq "NULL"} { error "ENGC reset pin absent: $ot_child/$ot_rpin" }
+  set ot_bb [$ot_rit getBBox]
+  set ot_x [expr {([$ot_bb xMin]+[$ot_bb xMax])/2}]
+  set ot_y [expr {([$ot_bb yMin]+[$ot_bb yMax])/2}]
+  set ot_found 0
+  foreach ot_i [$ot_cp_b getInsts] {
+    if {![string match *u_rst_${ot_child}* [$ot_i getName]]} continue
+    $ot_i setLocation $ot_x $ot_y
+    $ot_i setPlacementStatus PLACED
+    incr ot_found
+  }
+  if {$ot_found == 0} { error "ENGC reset conditioner absent: $ot_child" }
+  puts "ENGC reset place $ot_child cells=$ot_found near ($ot_x,$ot_y)"
+}

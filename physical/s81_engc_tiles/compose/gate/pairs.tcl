@@ -24,5 +24,20 @@ foreach a $ends {
   set s [ot_w $fa [all_outputs] $kind]; if {$s ne ""} { puts "PAIR $C $kind $a OUT $s" }
   set s [ot_w [all_inputs -no_clocks] [get_pins -filter "direction==input" $a/*] $kind]; if {$s ne ""} { puts "PAIR $C $kind IN $a $s" }
 }
+# Dedicated local reset checks: stage-to-stage and conditioner output to
+# hardened child reset are measured without multicycle or false-path waivers.
+foreach child {win io ws pb1 pb0 pb2 lkp sink} {
+  set regs [get_cells -quiet *u_rst_${child}*]
+  if {![llength $regs]} { error "ENGC reset cells missing: $child" }
+  set q [get_pins -of_objects $regs -filter "direction==output"]
+  set d [get_pins -of_objects $regs -filter "direction==input"]
+  set rpin rst
+  if {$child in {lkp sink}} { set rpin rst_n }
+  foreach pair [list [list STAGES $q $d] [list CHILD $q [get_pins u_${child}/$rpin]] [list ASYNC [get_ports {rst[0]}] $d]] {
+    lassign $pair tag from to
+    set v [ot_w $from $to $kind]
+    puts "RESET $C $kind $child $tag $v"
+  }
+}
 puts "PAIR $C $kind WNS [format %.1f [sta::worst_slack -$kind]]"
 exit

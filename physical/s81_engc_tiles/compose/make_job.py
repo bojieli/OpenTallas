@@ -28,7 +28,7 @@ def main():
         f"export OT_CTS_FIX_HOOKS='{C}/spine_engc.tcl physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl {K}'; "
         "export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; "
         "SDCM=physical/s81_ph_views/common/io_vclk_m_${ENGC_VCLK_PS}.sdc " f"SDCX={C}/engc_io.sdc HM=0.05 PD=0.45 SRC={{SRC}} OUT={{RUN}}/routes CORES=16 NEED=32 "
-        f"SRCS='{C}/ot_engc_tiles_bb.v rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/lib/ot_hdly.sv' MACROS='{MACROS}' "
+        f"SRCS='{C}/ot_engc_tiles_bb.v rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/lib/ot_hdly.sv rtl/lib/ot_reset_sync.sv' MACROS='{MACROS}' "
         f"PDN={C}/pdn_engc_t.tcl PRECTS={C}/pre_cts_engc.tcl POSTCTS={C}/post_cts_engc.tcl PREGRT={C}/pre_grt_engc.tcl "
         "CTSA='-sink_clustering_enable -repair_clock_nets -distance_between_buffers 150 -macro_clustering_size 1 -macro_clustering_max_diameter 20' CLK=ck "
         "bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_engram_c rtl/dsrom_sys/engram/dsfd_engram_c.sv "
@@ -38,7 +38,7 @@ def main():
     mv = " ".join("--macro-view " + m.split("=")[1] for m in MACROS.split())
     spec = {
         "name": name, "block": "dsfd_engram_c", "element": "dsfd_engram_c", "owner": "Claude:el1013-s81-engram",
-        "purpose": "S81 layer1e Engram cluster dsfd_engram_c, ALL-TILE composition (slot 1188 x 432): the top level holds no register; "
+        "purpose": "S81 layer1e Engram cluster dsfd_engram_c, ALL-TILE composition (slot 1188 x 432): the top holds only local reset synchronizers; "
                    "8 hardened children (closed lkp / sink leaves + T_WIN / T_IO / T_WS / T_PBB / T_PBC x2, all views child_lint clean) "
                    "clocked by a pre-placed balanced spine with a separate leaf at each child clock pin. CTS-stop gate: "
                    f"{C}/gate (leaf spread <= 80 ps TT and FF). IO against the fixed vclk {a.vclk} ps (no top register to measure).",
@@ -67,11 +67,11 @@ def main():
                     "checks": [{"name": "lef_check_MATCH", "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""}],
                     "post_sdc": ["physical/s81_ph_views/common/signoff_unc60.sdc"]},
         "record": [{"from": "{RUN}/record", "to": "physical/s81_ph_views/closed/dsfd_engram_c"}],
-        "structural_change": "all-tile cluster, no top register, 8 hard clock pins; replaces the soft-tree monolith (12 failed routes: hold stalled "
+        "structural_change": "all-tile cluster with local reset synchronizers and 8 hard clock pins; replaces the soft-tree monolith (12 failed routes: hold stalled "
                              "-206.5 ps at 16,258 sinks/root, SRAM read path -1568.6 ps). New in this submission: pre-placed clock spine with per-child insertion targets "
                              "(g13 measured leaf spread 67.4 ps TT / 64.8 ps FF after CTS, max clock-pin slew 21.7 ps, "
                              "was 400 ps with the bare top tree), children re-routed with face-pin keepout (child_lint 0 pins blocked), sliver rows "
-                             "removed before the PDN, child seams that hold rows opened to >= 12 um (io +4.32 / lkp -4.32 um in y, pb0 -3.456 and sink -2.16 um in x), no port buffers, leaf / die reset release multicycle 2 (rst_mcp2 intent), fixed vclk.",
+                             "removed before the PDN, child seams that hold rows opened to >= 12 um (io +4.32 / lkp -4.32 um in y, pb0 -3.456 and sink -2.16 um in x), no port buffers, local per-child reset synchronizers, no reset multicycle exceptions, fixed vclk.",
     }
     print(json.dumps(spec, indent=1))
 

@@ -93,8 +93,29 @@ module dsfd_engram_c #(
     ot_engc_ck_entry #(.N(CKN_PB2))  u_hdly_ck_pb2  (.a(ck[0]), .y(ck_pb2));
     ot_engc_ck_entry #(.N(CKN_PB1))  u_hdly_ck_pb1  (.a(ck[0]), .y(ck_pb1));
 
+    // Condition the asynchronous die reset at EACH child's actual clock branch.
+    // A reset released in WIN's clock domain cannot condition LKP/SINK's delayed clock.
+    // The two-stage conditioners are placed at the corresponding macro reset pins;
+    // stage-to-stage and final stage-to-child reset timing remain ordinary checks.
+    wire rst_win_n;
+    ot_reset_sync u_rst_win (.clk(ck_win), .async_rst_n(rst[0]), .sync_rst_n(rst_win_n));
+    wire rst_io_n;
+    ot_reset_sync u_rst_io (.clk(ck_io), .async_rst_n(rst[0]), .sync_rst_n(rst_io_n));
+    wire rst_ws_n;
+    ot_reset_sync u_rst_ws (.clk(ck_ws), .async_rst_n(rst[0]), .sync_rst_n(rst_ws_n));
+    wire rst_pb1_n;
+    ot_reset_sync u_rst_pb1 (.clk(ck_pb1), .async_rst_n(rst[0]), .sync_rst_n(rst_pb1_n));
+    wire rst_pb0_n;
+    ot_reset_sync u_rst_pb0 (.clk(ck_pb0), .async_rst_n(rst[0]), .sync_rst_n(rst_pb0_n));
+    wire rst_pb2_n;
+    ot_reset_sync u_rst_pb2 (.clk(ck_pb2), .async_rst_n(rst[0]), .sync_rst_n(rst_pb2_n));
+    wire rst_lkp_n;
+    ot_reset_sync u_rst_lkp (.clk(ck_lkp), .async_rst_n(rst[0]), .sync_rst_n(rst_lkp_n));
+    wire rst_sink_n;
+    ot_reset_sync u_rst_sink (.clk(ck_sink), .async_rst_n(rst[0]), .sync_rst_n(rst_sink_n));
+
     ot_engc_t_win u_win (
-        .ck(ck_win), .rst(rst[0]), .f_win(f_win), .t_collective(t_collective[0]),
+        .ck(ck_win), .rst(rst_win_n), .f_win(f_win), .t_collective(t_collective[0]),
         .lk_wv(lk_wv), .lk_wid(lk_wid), .lk_wcred(lk_wcred), .lk_rel(lk_rel),
         .lk_ov(lk_ov), .lk_stv(lk_stv), .lk_stb(lk_stb), .lk_fault(lk_fault), .lk_oc(lk_oc), .lk_ob(lk_ob), .lk_os(lk_os),
         .lk_sts(lk_sts), .lk_od(lk_od), .t_ag(t_ag), .f_agc(f_agc[0]), .lk_ocred(lk_ocred),
@@ -106,20 +127,20 @@ module dsfd_engram_c #(
 `else
     ot_engc_t_io #(.MUT(MUT), .EPMUT(EPMUT)) u_io (
 `endif
-        .ck(ck_io), .rst(rst[0]), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .f_cfg(f_cfg), .cfg_o(cfg_io),
+        .ck(ck_io), .rst(rst_io_n), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .f_cfg(f_cfg), .cfg_o(cfg_io),
         .f_vm(f_vm), .t_vm(t_vm), .rdy_i(rdy_w), .perr_i(perr_w), .vrel_o(vrel_io), .jn_o(jn), .wn_i(wn), .jf_i(jf),
         .werr_i(werr_w), .r0_oh(r0_oh), .r1_oh(r1_oh), .r2_oh(r2_oh), .r0_a(r0_a), .r1_a(r1_a), .r2_a(r2_a),
         .rd0(rd0), .rd1(rd1), .rd2(rd2w[63:0]));
     ot_engc_t_ws u_ws (
-        .ck(ck_ws), .rst(rst[0]), .wr_v(s_we), .wr_addr(s_wa), .wr_data(s_wd), .werr(werr_ws),
+        .ck(ck_ws), .rst(rst_ws_n), .wr_v(s_we), .wr_addr(s_wa), .wr_data(s_wd), .werr(werr_ws),
         .w_oh(w_oh), .w_a(w_a), .b1_d(b1_d), .x_d(x_d),
         .lk_hqv(lk_hqv), .lk_hqa(lk_hqa), .lk_hqt(lk_hqt), .t_hq(t_hq), .f_hr(f_hr), .lk_hr(lk_hr));
     // prefetch banks: band tile = bank 1 (+ write transit {bank 2, bank 0}); columns = bank 0, bank 2
-    ot_engc_t_pbb u_pb1 (.ck(ck_pb1), .rst(rst[0]), .w_oh(w_oh), .w_a(w_a), .w_d(b1_d), .x_d(x_d),
+    ot_engc_t_pbb u_pb1 (.ck(ck_pb1), .rst(rst_pb1_n), .w_oh(w_oh), .w_a(w_a), .w_d(b1_d), .x_d(x_d),
         .x_oh(x0_oh), .x_a(x0_a), .x_do(x0_d), .r_oh(r1_oh), .r_a(r1_a), .r_d(rd1));
-    ot_engc_t_pbc u_pb0 (.ck(ck_pb0), .rst(rst[0]), .w_oh(x0_oh), .w_a(x0_a), .w_d(x0_d[255:0]), .x_d(x0_d[319:256]),
+    ot_engc_t_pbc u_pb0 (.ck(ck_pb0), .rst(rst_pb0_n), .w_oh(x0_oh), .w_a(x0_a), .w_d(x0_d[255:0]), .x_d(x0_d[319:256]),
         .x_oh(x1_oh), .x_a(x1_a), .x_do(x1_d), .r_oh(r0_oh), .r_a(r0_a), .r_d(rd0));
-    ot_engc_t_pbc u_pb2 (.ck(ck_pb2), .rst(rst[0]), .w_oh(x1_oh), .w_a(x1_a), .w_d({192'd0, x1_d}), .x_d(64'd0),
+    ot_engc_t_pbc u_pb2 (.ck(ck_pb2), .rst(rst_pb2_n), .w_oh(x1_oh), .w_a(x1_a), .w_d({192'd0, x1_d}), .x_d(64'd0),
         .x_oh(), .x_a(), .x_do(), .r_oh(r2_oh), .r_a(r2_a), .r_d(rd2w));
 
     // ---------------- closed leaves (in synthesis: hardened views, built at exactly these parameter values)
@@ -128,7 +149,7 @@ module dsfd_engram_c #(
 `else
     dsfd_engram_lkp #(.PIPE(PIPE), .NSLOT(NSLOT), .HQ_CRED(8), .O_CRED(16), .SLW(SLW)) u_lkp (
 `endif
-        .ck(ck_lkp), .rst_n(rn_lk), .cfg_layer(cfg_lk[0]), .cfg_rank(cfg_lk[2:1]),
+        .ck(ck_lkp), .rst_n(rst_lkp_n), .cfg_layer(cfg_lk[0]), .cfg_rank(cfg_lk[2:1]),
         .win_v(lk_wv), .win_ids(lk_wid), .win_cred(lk_wcred), .rel(lk_rel),
         .hq_v(lk_hqv), .hq_atom(lk_hqa), .hq_tag(lk_hqt), .hq_cred(lk_hr[0]),
         .hr_v(lk_hr[1]), .hr_tag(lk_hr[4:2]), .hr_idx(lk_hr[8:5]), .hr_d(lk_hr[264:9]),
@@ -139,7 +160,7 @@ module dsfd_engram_c #(
 `else
     dsfd_engram_sink #(.PIN_CAPTURE(SINK_PIN), .NSLOT(NSLOT), .SLW(SLW)) u_sink (
 `endif
-        .ck(ck_sink), .rst_n(rn_sk), .in_v(f_ai[3:0]), .in_r(t_air), .in_col(f_ai[23:4]), .in_beat(f_ai[35:24]),
+        .ck(ck_sink), .rst_n(rst_sink_n), .in_v(f_ai[3:0]), .in_r(t_air), .in_col(f_ai[23:4]), .in_beat(f_ai[35:24]),
         .in_slot(f_ai[47:36]), .in_d(f_ai[1103:48]), .st_v(f_ai[1107:1104]), .st_slot(f_ai[1119:1108]),
         .st_bad(f_ai[1123:1120]), .wr_en(s_we), .wr_addr(s_wa), .wr_data(s_wd), .rdy(s_rdy), .perr(s_perr),
         .rel_v(vrel_sk[0]), .rel_slot(vrel_sk[3:1]));
