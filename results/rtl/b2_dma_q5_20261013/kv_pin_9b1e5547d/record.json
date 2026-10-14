@@ -1,0 +1,43 @@
+{
+  "source": "9b1e5547d",
+  "exact": {
+    "checked": 115306,
+    "records": 244,
+    "port_requests": 20359,
+    "streams": 942,
+    "port_order_payload_equivalent": true
+  },
+  "changes": {
+    "kv_request_pin_station": {
+      "active_b2_lanes": 1,
+      "entries": 2,
+      "payload_bits": 293,
+      "registered_ready": true,
+      "registered_valid": true,
+      "added_request_edges": 1
+    },
+    "ilist_input_station": {
+      "owner_and_request_registered": true,
+      "packet_bits": 338,
+      "added_request_edges": 1
+    }
+  },
+  "cycles": [
+    686,
+    362,
+    872
+  ],
+  "prior_repair_cycles": [
+    686,
+    362,
+    871
+  ],
+  "immutable_flat_cycles": [
+    682,
+    356,
+    862
+  ],
+  "throughput_price_status": "UNMEASURED-vs-price; no repricing or throughput qualification claimed",
+  "physical_status": "source-bound CTS running; mapped flop census pending",
+  "qualified": false
+}
