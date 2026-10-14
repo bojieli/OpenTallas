@@ -1,0 +1,11 @@
+{
+ "source_commit": "d33b2782b",
+ "status": "diagnostic_stopped_not_qualified",
+ "source_clock_model": "common pin phase, propagated mixed corner clocks",
+ "before_sequential_max_arrival_mean_ps": {"core_clk": 561.3106114499665, "ser_clk": 790.2906259518597},
+ "physical_balance": {"delayed_root": "core_clk", "buffer_master": "BUFx4_ASAP7_75t_R", "buffers": 6, "final_core_mean_ps": 795.8771275101246},
+ "observed_hold_endpoint": "t_ft[3]",
+ "observed_hold_wns_ps": -629.737,
+ "evidence": "wfc_clock_probe_1013.log",
+ "limitations": ["Probe has superseded RTL and inherited blanket reset exception, removed in 44459bb6f", "This measurement uses active STA maximum arrivals, not an independently validated TT per-domain insertion", "Large output hold defect after root delay is unresolved; do not publish as closure or qualified clock model", "Actual die must deliver each domain clock at phi minus that domain boundary R; source model under coordinator review"]
+}

@@ -1,0 +1,48 @@
+OT_SER hook invoked caller=pre_cts_pre_cts.tcl
+OT_MACRO_CTS 8 clocked macros: -macro_clustering_size 2 -macro_clustering_max_diameter 40
+QDM PINFLOP reference: 1665 input pin flops, median arrival 787.558289 (range 534.638916 .. 823.539673)
+QDM reference pin u_vr.sr_rq[428]$_DFF_P_/CLK clock arrival max 787.558289 min 367.665680 skew 90 hold 50
+QDM boundary referenced to the propagated tree
+OT_SER_SINKS core_clk registers=11752 mean=561.3106114499665 min=516.063721 max=719.59729
+OT_SER_SINKS ser_clk registers=14520 mean=790.2906259518597 min=683.66626 max=911.711121
+OT_SER_SINKS core_clk registers=11752 mean=635.6568598927843 min=590.445862 max=792.749634
+OT_SER_SINKS core_clk registers=11752 mean=667.3204326296789 min=622.109436 max=824.413208
+OT_SER_SINKS core_clk registers=11752 mean=700.2134744158438 min=655.00238 max=857.306335
+OT_SER_SINKS core_clk registers=11752 mean=731.9345446743525 min=686.72345 max=889.027405
+OT_SER_SINKS core_clk registers=11752 mean=763.6571823036068 min=718.446167 max=920.750061
+OT_SER_SINKS core_clk registers=11752 mean=795.8771275101246 min=750.666077 max=952.970032
+OT_SER balance: core_clk mean 561.3106114499665 ps, ser_clk mean 790.2906259518597 ps; core_clk root delayed 561.3106114499665 -> 795.8771275101246 ps with 6 BUFx4 (goal 790.2906259518597)
+QDM PINFLOP reference: 1079 input pin flops, median arrival 798.701111 (range 757.081848 .. 825.508728)
+OT_SER_BOUNDARY referenced: ser pin flop u_vr.sr1_rq[308]$_DFF_P_/CLK arrival max 798.701111 min 375.814636, 2166 in / 1298 out
+OT_HOLD_STALL NEEDS_RTL (stalled: chunk 4 gained 0.00 ps / 0.0% TNS): I2R=654@-455 R2R=1363@-64 -> /work/reports/asap7/opentallas_dsfd_wfc_vmx_p_asap7_ref_gate/base/ot_hold_stall_cts.rpt
+detailed_placement
+[INFO DPL-0006] Core area: 131010.05 um^2
+[INFO DPL-0007] Movable instances area: 20934.75 um^2
+[INFO DPL-0008] Fixed instances area within core: 49263.59 um^2
+[INFO DPL-0009] Utilization: 53.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (4 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 175521 cells
+[INFO DPL-0393]   height 111 row(s): 1 cells
+[INFO DPL-0393]   height 153 row(s): 5 cells
+[INFO DPL-0393]   height 289 row(s): 2 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |      79631 |     10401 |     53565
+        1 |      66673 |      7679 |     40450
+        2 |      56113 |      7097 |     35807
+        3 |      42884 |      7071 |     33223
+        4 |      37404 |      6826 |     29752
+        5 |      33821 |      6581 |     26984
+        6 |      31202 |      6319 |     24728
+        7 |      28483 |      6047 |     22184
+        8 |      25899 |      5638 |     20068
+        9 |      23676 |      5247 |     18354
+       10 |      21998 |      5000 |     16836
+       20 |      10359 |      2925 |      7393
