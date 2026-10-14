@@ -7,7 +7,8 @@
   "inputs": {
     "trace.json": "9a911ab5f7d07ce6312a77aa9d62df5e5cc370db263d1928795307f865dccf64",
     "fe_candidate_s9.json": "af7b0a685fadd4e9e01f1d80594039f2e1bacd9a3a0f5122a6ba5b6e494fba75",
-    "provisional_geometry.json": "3a75926340c1a68a448dc8db7d9ccab26b2150c9c6253c391b4c7a7e2efc4819"
+    "provisional_geometry.json": "3a75926340c1a68a448dc8db7d9ccab26b2150c9c6253c391b4c7a7e2efc4819",
+    "f16_actual_pins.json": "9614f81d2ea776c498c44d0cd13ab56bcd390c380d07b3b49bc3923d2412d288"
   },
   "cells": [
     {
@@ -22,8 +23,9 @@
         32.4
       ],
       "bits": 16,
-      "actual_LEF": null,
-      "actual_ETM": null
+      "actual_LEF_sha256": "e2c38c93743f536445414c2812cb4d5d759b4e444cf94e61b6efa671d026bf9d",
+      "actual_view_commit": "9375370dc",
+      "actual_parent_placement": null
     },
     {
       "instance": "u_be.g_fault.g_stage[1].u_r",
@@ -37,8 +39,9 @@
         32.4
       ],
       "bits": 16,
-      "actual_LEF": null,
-      "actual_ETM": null
+      "actual_LEF_sha256": "e2c38c93743f536445414c2812cb4d5d759b4e444cf94e61b6efa671d026bf9d",
+      "actual_view_commit": "9375370dc",
+      "actual_parent_placement": null
     },
     {
       "instance": "u_be.g_fault.g_stage[2].u_r",
@@ -52,8 +55,9 @@
         32.4
       ],
       "bits": 16,
-      "actual_LEF": null,
-      "actual_ETM": null
+      "actual_LEF_sha256": "e2c38c93743f536445414c2812cb4d5d759b4e444cf94e61b6efa671d026bf9d",
+      "actual_view_commit": "9375370dc",
+      "actual_parent_placement": null
     },
     {
       "instance": "u_be.g_fault.g_stage[3].u_r",
@@ -67,8 +71,9 @@
         32.4
       ],
       "bits": 16,
-      "actual_LEF": null,
-      "actual_ETM": null
+      "actual_LEF_sha256": "e2c38c93743f536445414c2812cb4d5d759b4e444cf94e61b6efa671d026bf9d",
+      "actual_view_commit": "9375370dc",
+      "actual_parent_placement": null
     },
     {
       "instance": "u_be.g_fault.g_stage[4].u_r",
@@ -82,8 +87,9 @@
         32.4
       ],
       "bits": 16,
-      "actual_LEF": null,
-      "actual_ETM": null
+      "actual_LEF_sha256": "e2c38c93743f536445414c2812cb4d5d759b4e444cf94e61b6efa671d026bf9d",
+      "actual_view_commit": "9375370dc",
+      "actual_parent_placement": null
     },
     {
       "instance": "u_be.g_fault.g_stage[5].u_r",
@@ -97,8 +103,9 @@
         32.4
       ],
       "bits": 16,
-      "actual_LEF": null,
-      "actual_ETM": null
+      "actual_LEF_sha256": "e2c38c93743f536445414c2812cb4d5d759b4e444cf94e61b6efa671d026bf9d",
+      "actual_view_commit": "9375370dc",
+      "actual_parent_placement": null
     },
     {
       "instance": "u_be.g_fault.g_stage[6].u_r",
@@ -112,8 +119,9 @@
         32.4
       ],
       "bits": 16,
-      "actual_LEF": null,
-      "actual_ETM": null
+      "actual_LEF_sha256": "e2c38c93743f536445414c2812cb4d5d759b4e444cf94e61b6efa671d026bf9d",
+      "actual_view_commit": "9375370dc",
+      "actual_parent_placement": null
     },
     {
       "instance": "u_be.g_fault.g_stage[7].u_r",
@@ -127,8 +135,9 @@
         32.4
       ],
       "bits": 16,
-      "actual_LEF": null,
-      "actual_ETM": null
+      "actual_LEF_sha256": "e2c38c93743f536445414c2812cb4d5d759b4e444cf94e61b6efa671d026bf9d",
+      "actual_view_commit": "9375370dc",
+      "actual_parent_placement": null
     },
     {
       "instance": "u_be.g_fault.g_stage[8].u_r",
@@ -142,8 +151,9 @@
         32.4
       ],
       "bits": 16,
-      "actual_LEF": null,
-      "actual_ETM": null
+      "actual_LEF_sha256": "e2c38c93743f536445414c2812cb4d5d759b4e444cf94e61b6efa671d026bf9d",
+      "actual_view_commit": "9375370dc",
+      "actual_parent_placement": null
     }
   ],
   "pairs": [
@@ -155,10 +165,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3212.6040000000003
+        545.642,
+        3211.356
       ],
-      "Manhattan_route_request_um": 426.402,
+      "Manhattan_route_request_um": 427.596,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -174,14 +184,14 @@
       "bit": 0,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3212.6040000000003
+        577.9580000000001,
+        3212.8920000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2845.8360000000002
+        473.642,
+        2844.588
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -197,14 +207,14 @@
       "bit": 0,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2845.8360000000002
+        505.958,
+        2846.1240000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2425.8360000000002
+        473.642,
+        2424.588
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -220,14 +230,14 @@
       "bit": 0,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2425.8360000000002
+        505.958,
+        2426.1240000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2005.836
+        473.642,
+        2004.588
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -243,14 +253,14 @@
       "bit": 0,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2005.836
+        505.958,
+        2006.124
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1585.836
+        473.642,
+        1584.588
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -266,14 +276,14 @@
       "bit": 0,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1585.836
+        505.958,
+        1586.124
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1165.836
+        473.642,
+        1164.588
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -289,14 +299,14 @@
       "bit": 0,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1165.836
+        505.958,
+        1166.124
       ],
       "destination_requested_VM_um": [
-        473.696,
-        745.836
+        473.642,
+        744.5880000000001
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -312,14 +322,14 @@
       "bit": 0,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        745.836
+        505.958,
+        746.124
       ],
       "destination_requested_VM_um": [
-        473.696,
-        375.804
+        473.642,
+        374.556
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -335,14 +345,14 @@
       "bit": 0,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        375.804
+        505.958,
+        376.092
       ],
       "destination_requested_VM_um": [
-        220.096,
-        219.948
+        220.042,
+        218.70000000000002
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -358,14 +368,14 @@
       "bit": 0,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        219.948
+        252.358,
+        220.236
       ],
       "destination_requested_VM_um": [
         64.848,
         51.228
       ],
-      "Manhattan_route_request_um": 356.176,
+      "Manhattan_route_request_um": 356.518,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -385,10 +395,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3212.652
+        545.642,
+        3211.452
       ],
-      "Manhattan_route_request_um": 414.906,
+      "Manhattan_route_request_um": 416.052,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -404,14 +414,14 @@
       "bit": 1,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3212.652
+        577.9580000000001,
+        3212.9880000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2845.884
+        473.642,
+        2844.684
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -427,14 +437,14 @@
       "bit": 1,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2845.884
+        505.958,
+        2846.2200000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2425.884
+        473.642,
+        2424.684
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -450,14 +460,14 @@
       "bit": 1,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2425.884
+        505.958,
+        2426.2200000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2005.884
+        473.642,
+        2004.684
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -473,14 +483,14 @@
       "bit": 1,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2005.884
+        505.958,
+        2006.22
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1585.884
+        473.642,
+        1584.684
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -496,14 +506,14 @@
       "bit": 1,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1585.884
+        505.958,
+        1586.22
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1165.884
+        473.642,
+        1164.684
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -519,14 +529,14 @@
       "bit": 1,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1165.884
+        505.958,
+        1166.22
       ],
       "destination_requested_VM_um": [
-        473.696,
-        745.884
+        473.642,
+        744.6840000000001
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -542,14 +552,14 @@
       "bit": 1,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        745.884
+        505.958,
+        746.22
       ],
       "destination_requested_VM_um": [
-        473.696,
-        375.852
+        473.642,
+        374.652
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -565,14 +575,14 @@
       "bit": 1,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        375.852
+        505.958,
+        376.188
       ],
       "destination_requested_VM_um": [
-        220.096,
-        219.996
+        220.042,
+        218.796
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -588,14 +598,14 @@
       "bit": 1,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        219.996
+        252.358,
+        220.332
       ],
       "destination_requested_VM_um": [
         64.848,
         51.612
       ],
-      "Manhattan_route_request_um": 355.84,
+      "Manhattan_route_request_um": 356.23,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -615,10 +625,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3212.7000000000003
+        545.642,
+        3211.5480000000002
       ],
-      "Manhattan_route_request_um": 403.446,
+      "Manhattan_route_request_um": 404.544,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -634,14 +644,14 @@
       "bit": 2,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3212.7000000000003
+        577.9580000000001,
+        3213.0840000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2845.9320000000002
+        473.642,
+        2844.78
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -657,14 +667,14 @@
       "bit": 2,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2845.9320000000002
+        505.958,
+        2846.3160000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2425.9320000000002
+        473.642,
+        2424.78
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -680,14 +690,14 @@
       "bit": 2,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2425.9320000000002
+        505.958,
+        2426.3160000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2005.932
+        473.642,
+        2004.78
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -703,14 +713,14 @@
       "bit": 2,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2005.932
+        505.958,
+        2006.316
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1585.932
+        473.642,
+        1584.78
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -726,14 +736,14 @@
       "bit": 2,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1585.932
+        505.958,
+        1586.316
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1165.932
+        473.642,
+        1164.78
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -749,14 +759,14 @@
       "bit": 2,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1165.932
+        505.958,
+        1166.316
       ],
       "destination_requested_VM_um": [
-        473.696,
-        745.932
+        473.642,
+        744.7800000000001
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -772,14 +782,14 @@
       "bit": 2,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        745.932
+        505.958,
+        746.316
       ],
       "destination_requested_VM_um": [
-        473.696,
-        375.9
+        473.642,
+        374.748
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -795,14 +805,14 @@
       "bit": 2,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        375.9
+        505.958,
+        376.284
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.044
+        220.042,
+        218.892
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -818,14 +828,14 @@
       "bit": 2,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.044
+        252.358,
+        220.428
       ],
       "destination_requested_VM_um": [
         64.848,
         51.996
       ],
-      "Manhattan_route_request_um": 355.504,
+      "Manhattan_route_request_um": 355.942,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -845,10 +855,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3212.748
+        545.642,
+        3211.6440000000002
       ],
-      "Manhattan_route_request_um": 391.986,
+      "Manhattan_route_request_um": 393.036,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -864,14 +874,14 @@
       "bit": 3,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3212.748
+        577.9580000000001,
+        3213.1800000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2845.98
+        473.642,
+        2844.876
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -887,14 +897,14 @@
       "bit": 3,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2845.98
+        505.958,
+        2846.4120000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2425.98
+        473.642,
+        2424.876
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -910,14 +920,14 @@
       "bit": 3,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2425.98
+        505.958,
+        2426.4120000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2005.98
+        473.642,
+        2004.876
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -933,14 +943,14 @@
       "bit": 3,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2005.98
+        505.958,
+        2006.412
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1585.98
+        473.642,
+        1584.876
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -956,14 +966,14 @@
       "bit": 3,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1585.98
+        505.958,
+        1586.412
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1165.98
+        473.642,
+        1164.876
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -979,14 +989,14 @@
       "bit": 3,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1165.98
+        505.958,
+        1166.412
       ],
       "destination_requested_VM_um": [
-        473.696,
-        745.98
+        473.642,
+        744.8760000000001
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1002,14 +1012,14 @@
       "bit": 3,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        745.98
+        505.958,
+        746.412
       ],
       "destination_requested_VM_um": [
-        473.696,
-        375.948
+        473.642,
+        374.844
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1025,14 +1035,14 @@
       "bit": 3,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        375.948
+        505.958,
+        376.38
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.092
+        220.042,
+        218.988
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1048,14 +1058,14 @@
       "bit": 3,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.092
+        252.358,
+        220.524
       ],
       "destination_requested_VM_um": [
         64.848,
         52.38
       ],
-      "Manhattan_route_request_um": 355.168,
+      "Manhattan_route_request_um": 355.654,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1075,10 +1085,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3212.7960000000003
+        545.642,
+        3211.7400000000002
       ],
-      "Manhattan_route_request_um": 380.526,
+      "Manhattan_route_request_um": 381.528,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1094,14 +1104,14 @@
       "bit": 4,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3212.7960000000003
+        577.9580000000001,
+        3213.2760000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2846.0280000000002
+        473.642,
+        2844.972
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1117,14 +1127,14 @@
       "bit": 4,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2846.0280000000002
+        505.958,
+        2846.5080000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2426.0280000000002
+        473.642,
+        2424.972
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1140,14 +1150,14 @@
       "bit": 4,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2426.0280000000002
+        505.958,
+        2426.5080000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2006.028
+        473.642,
+        2004.972
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1163,14 +1173,14 @@
       "bit": 4,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2006.028
+        505.958,
+        2006.5079999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1586.028
+        473.642,
+        1584.972
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1186,14 +1196,14 @@
       "bit": 4,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1586.028
+        505.958,
+        1586.5079999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1166.028
+        473.642,
+        1164.972
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1209,14 +1219,14 @@
       "bit": 4,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1166.028
+        505.958,
+        1166.5079999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        746.028
+        473.642,
+        744.9720000000001
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1232,14 +1242,14 @@
       "bit": 4,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        746.028
+        505.958,
+        746.508
       ],
       "destination_requested_VM_um": [
-        473.696,
-        375.996
+        473.642,
+        374.94
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1255,14 +1265,14 @@
       "bit": 4,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        375.996
+        505.958,
+        376.476
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.14000000000001
+        220.042,
+        219.084
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1278,14 +1288,14 @@
       "bit": 4,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.14000000000001
+        252.358,
+        220.62
       ],
       "destination_requested_VM_um": [
         64.848,
         52.764
       ],
-      "Manhattan_route_request_um": 354.832,
+      "Manhattan_route_request_um": 355.366,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1305,10 +1315,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3212.844
+        545.642,
+        3211.8360000000002
       ],
-      "Manhattan_route_request_um": 369.066,
+      "Manhattan_route_request_um": 370.02,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1324,14 +1334,14 @@
       "bit": 5,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3212.844
+        577.9580000000001,
+        3213.3720000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2846.076
+        473.642,
+        2845.068
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1347,14 +1357,14 @@
       "bit": 5,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2846.076
+        505.958,
+        2846.6040000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2426.076
+        473.642,
+        2425.068
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1370,14 +1380,14 @@
       "bit": 5,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2426.076
+        505.958,
+        2426.6040000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2006.076
+        473.642,
+        2005.068
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1393,14 +1403,14 @@
       "bit": 5,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2006.076
+        505.958,
+        2006.6039999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1586.076
+        473.642,
+        1585.068
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1416,14 +1426,14 @@
       "bit": 5,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1586.076
+        505.958,
+        1586.6039999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1166.076
+        473.642,
+        1165.068
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1439,14 +1449,14 @@
       "bit": 5,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1166.076
+        505.958,
+        1166.6039999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        746.076
+        473.642,
+        745.068
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1462,14 +1472,14 @@
       "bit": 5,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        746.076
+        505.958,
+        746.604
       ],
       "destination_requested_VM_um": [
-        473.696,
-        376.044
+        473.642,
+        375.036
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1485,14 +1495,14 @@
       "bit": 5,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        376.044
+        505.958,
+        376.572
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.18800000000002
+        220.042,
+        219.18
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1508,14 +1518,14 @@
       "bit": 5,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.18800000000002
+        252.358,
+        220.716
       ],
       "destination_requested_VM_um": [
         64.848,
         53.148
       ],
-      "Manhattan_route_request_um": 354.496,
+      "Manhattan_route_request_um": 355.078,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1535,10 +1545,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3212.8920000000003
+        545.642,
+        3211.9320000000002
       ],
-      "Manhattan_route_request_um": 357.606,
+      "Manhattan_route_request_um": 358.512,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1554,14 +1564,14 @@
       "bit": 6,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3212.8920000000003
+        577.9580000000001,
+        3213.4680000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2846.1240000000003
+        473.642,
+        2845.164
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1577,14 +1587,14 @@
       "bit": 6,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2846.1240000000003
+        505.958,
+        2846.7000000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2426.1240000000003
+        473.642,
+        2425.164
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1600,14 +1610,14 @@
       "bit": 6,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2426.1240000000003
+        505.958,
+        2426.7000000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2006.124
+        473.642,
+        2005.164
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1623,14 +1633,14 @@
       "bit": 6,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2006.124
+        505.958,
+        2006.6999999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1586.124
+        473.642,
+        1585.164
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1646,14 +1656,14 @@
       "bit": 6,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1586.124
+        505.958,
+        1586.6999999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1166.124
+        473.642,
+        1165.164
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1669,14 +1679,14 @@
       "bit": 6,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1166.124
+        505.958,
+        1166.6999999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        746.124
+        473.642,
+        745.164
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1692,14 +1702,14 @@
       "bit": 6,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        746.124
+        505.958,
+        746.7
       ],
       "destination_requested_VM_um": [
-        473.696,
-        376.092
+        473.642,
+        375.132
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1715,14 +1725,14 @@
       "bit": 6,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        376.092
+        505.958,
+        376.668
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.23600000000002
+        220.042,
+        219.276
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1738,14 +1748,14 @@
       "bit": 6,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.23600000000002
+        252.358,
+        220.812
       ],
       "destination_requested_VM_um": [
         64.848,
         53.532000000000004
       ],
-      "Manhattan_route_request_um": 354.16,
+      "Manhattan_route_request_um": 354.79,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1765,10 +1775,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3212.94
+        545.642,
+        3212.0280000000002
       ],
-      "Manhattan_route_request_um": 346.146,
+      "Manhattan_route_request_um": 347.004,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1784,14 +1794,14 @@
       "bit": 7,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3212.94
+        577.9580000000001,
+        3213.5640000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2846.172
+        473.642,
+        2845.26
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1807,14 +1817,14 @@
       "bit": 7,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2846.172
+        505.958,
+        2846.7960000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2426.172
+        473.642,
+        2425.26
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1830,14 +1840,14 @@
       "bit": 7,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2426.172
+        505.958,
+        2426.7960000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2006.172
+        473.642,
+        2005.26
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1853,14 +1863,14 @@
       "bit": 7,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2006.172
+        505.958,
+        2006.7959999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1586.172
+        473.642,
+        1585.26
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1876,14 +1886,14 @@
       "bit": 7,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1586.172
+        505.958,
+        1586.7959999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1166.172
+        473.642,
+        1165.26
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1899,14 +1909,14 @@
       "bit": 7,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1166.172
+        505.958,
+        1166.7959999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        746.172
+        473.642,
+        745.26
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1922,14 +1932,14 @@
       "bit": 7,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        746.172
+        505.958,
+        746.796
       ],
       "destination_requested_VM_um": [
-        473.696,
-        376.14
+        473.642,
+        375.228
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1945,14 +1955,14 @@
       "bit": 7,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        376.14
+        505.958,
+        376.764
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.28400000000002
+        220.042,
+        219.372
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1968,14 +1978,14 @@
       "bit": 7,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.28400000000002
+        252.358,
+        220.90800000000002
       ],
       "destination_requested_VM_um": [
         64.848,
         53.916000000000004
       ],
-      "Manhattan_route_request_um": 353.824,
+      "Manhattan_route_request_um": 354.502,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -1995,10 +2005,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3212.9880000000003
+        545.642,
+        3212.1240000000003
       ],
-      "Manhattan_route_request_um": 345.812,
+      "Manhattan_route_request_um": 346.73,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2014,14 +2024,14 @@
       "bit": 8,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3212.9880000000003
+        577.9580000000001,
+        3213.6600000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2846.2200000000003
+        473.642,
+        2845.356
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2037,14 +2047,14 @@
       "bit": 8,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2846.2200000000003
+        505.958,
+        2846.8920000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2426.2200000000003
+        473.642,
+        2425.356
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2060,14 +2070,14 @@
       "bit": 8,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2426.2200000000003
+        505.958,
+        2426.8920000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2006.22
+        473.642,
+        2005.356
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2083,14 +2093,14 @@
       "bit": 8,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2006.22
+        505.958,
+        2006.8919999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1586.22
+        473.642,
+        1585.356
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2106,14 +2116,14 @@
       "bit": 8,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1586.22
+        505.958,
+        1586.8919999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1166.22
+        473.642,
+        1165.356
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2129,14 +2139,14 @@
       "bit": 8,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1166.22
+        505.958,
+        1166.8919999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        746.22
+        473.642,
+        745.356
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2152,14 +2162,14 @@
       "bit": 8,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        746.22
+        505.958,
+        746.892
       ],
       "destination_requested_VM_um": [
-        473.696,
-        376.188
+        473.642,
+        375.324
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2175,14 +2185,14 @@
       "bit": 8,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        376.188
+        505.958,
+        376.86
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.332
+        220.042,
+        219.46800000000002
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2198,14 +2208,14 @@
       "bit": 8,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.332
+        252.358,
+        221.00400000000002
       ],
       "destination_requested_VM_um": [
         64.848,
         54.300000000000004
       ],
-      "Manhattan_route_request_um": 353.488,
+      "Manhattan_route_request_um": 354.214,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2225,10 +2235,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3213.036
+        545.642,
+        3212.2200000000003
       ],
-      "Manhattan_route_request_um": 357.176,
+      "Manhattan_route_request_um": 358.046,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2244,14 +2254,14 @@
       "bit": 9,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3213.036
+        577.9580000000001,
+        3213.7560000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2846.268
+        473.642,
+        2845.452
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2267,14 +2277,14 @@
       "bit": 9,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2846.268
+        505.958,
+        2846.9880000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2426.268
+        473.642,
+        2425.452
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2290,14 +2300,14 @@
       "bit": 9,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2426.268
+        505.958,
+        2426.9880000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2006.268
+        473.642,
+        2005.452
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2313,14 +2323,14 @@
       "bit": 9,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2006.268
+        505.958,
+        2006.9879999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1586.268
+        473.642,
+        1585.452
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2336,14 +2346,14 @@
       "bit": 9,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1586.268
+        505.958,
+        1586.9879999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1166.268
+        473.642,
+        1165.452
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2359,14 +2369,14 @@
       "bit": 9,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1166.268
+        505.958,
+        1166.9879999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        746.268
+        473.642,
+        745.452
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2382,14 +2392,14 @@
       "bit": 9,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        746.268
+        505.958,
+        746.988
       ],
       "destination_requested_VM_um": [
-        473.696,
-        376.236
+        473.642,
+        375.42
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2405,14 +2415,14 @@
       "bit": 9,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        376.236
+        505.958,
+        376.956
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.38
+        220.042,
+        219.564
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2428,14 +2438,14 @@
       "bit": 9,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.38
+        252.358,
+        221.1
       ],
       "destination_requested_VM_um": [
         64.848,
         54.684000000000005
       ],
-      "Manhattan_route_request_um": 353.152,
+      "Manhattan_route_request_um": 353.926,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2455,10 +2465,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3213.0840000000003
+        545.642,
+        3212.3160000000003
       ],
-      "Manhattan_route_request_um": 368.54,
+      "Manhattan_route_request_um": 369.362,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2474,14 +2484,14 @@
       "bit": 10,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3213.0840000000003
+        577.9580000000001,
+        3213.8520000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2846.3160000000003
+        473.642,
+        2845.5480000000002
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2497,14 +2507,14 @@
       "bit": 10,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2846.3160000000003
+        505.958,
+        2847.0840000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2426.3160000000003
+        473.642,
+        2425.5480000000002
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2520,14 +2530,14 @@
       "bit": 10,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2426.3160000000003
+        505.958,
+        2427.0840000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2006.316
+        473.642,
+        2005.548
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2543,14 +2553,14 @@
       "bit": 10,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2006.316
+        505.958,
+        2007.0839999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1586.316
+        473.642,
+        1585.548
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2566,14 +2576,14 @@
       "bit": 10,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1586.316
+        505.958,
+        1587.0839999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1166.316
+        473.642,
+        1165.548
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2589,14 +2599,14 @@
       "bit": 10,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1166.316
+        505.958,
+        1167.0839999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        746.316
+        473.642,
+        745.548
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2612,14 +2622,14 @@
       "bit": 10,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        746.316
+        505.958,
+        747.0840000000001
       ],
       "destination_requested_VM_um": [
-        473.696,
-        376.284
+        473.642,
+        375.516
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2635,14 +2645,14 @@
       "bit": 10,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        376.284
+        505.958,
+        377.052
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.428
+        220.042,
+        219.66
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2658,14 +2668,14 @@
       "bit": 10,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.428
+        252.358,
+        221.196
       ],
       "destination_requested_VM_um": [
         64.848,
         55.068000000000005
       ],
-      "Manhattan_route_request_um": 352.816,
+      "Manhattan_route_request_um": 353.638,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2685,10 +2695,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3213.132
+        545.642,
+        3212.4120000000003
       ],
-      "Manhattan_route_request_um": 379.904,
+      "Manhattan_route_request_um": 380.678,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2704,14 +2714,14 @@
       "bit": 11,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3213.132
+        577.9580000000001,
+        3213.9480000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2846.364
+        473.642,
+        2845.6440000000002
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2727,14 +2737,14 @@
       "bit": 11,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2846.364
+        505.958,
+        2847.1800000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2426.364
+        473.642,
+        2425.6440000000002
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2750,14 +2760,14 @@
       "bit": 11,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2426.364
+        505.958,
+        2427.1800000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2006.364
+        473.642,
+        2005.644
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2773,14 +2783,14 @@
       "bit": 11,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2006.364
+        505.958,
+        2007.1799999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1586.364
+        473.642,
+        1585.644
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2796,14 +2806,14 @@
       "bit": 11,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1586.364
+        505.958,
+        1587.1799999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1166.364
+        473.642,
+        1165.644
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2819,14 +2829,14 @@
       "bit": 11,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1166.364
+        505.958,
+        1167.1799999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        746.364
+        473.642,
+        745.644
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2842,14 +2852,14 @@
       "bit": 11,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        746.364
+        505.958,
+        747.1800000000001
       ],
       "destination_requested_VM_um": [
-        473.696,
-        376.332
+        473.642,
+        375.612
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2865,14 +2875,14 @@
       "bit": 11,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        376.332
+        505.958,
+        377.148
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.476
+        220.042,
+        219.756
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2888,14 +2898,14 @@
       "bit": 11,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.476
+        252.358,
+        221.292
       ],
       "destination_requested_VM_um": [
         64.848,
         55.452000000000005
       ],
-      "Manhattan_route_request_um": 352.48,
+      "Manhattan_route_request_um": 353.35,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2915,10 +2925,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3213.1800000000003
+        545.642,
+        3212.5080000000003
       ],
-      "Manhattan_route_request_um": 391.268,
+      "Manhattan_route_request_um": 391.994,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2934,14 +2944,14 @@
       "bit": 12,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3213.1800000000003
+        577.9580000000001,
+        3214.0440000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2846.4120000000003
+        473.642,
+        2845.7400000000002
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2957,14 +2967,14 @@
       "bit": 12,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2846.4120000000003
+        505.958,
+        2847.2760000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2426.4120000000003
+        473.642,
+        2425.7400000000002
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -2980,14 +2990,14 @@
       "bit": 12,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2426.4120000000003
+        505.958,
+        2427.2760000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2006.412
+        473.642,
+        2005.74
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3003,14 +3013,14 @@
       "bit": 12,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2006.412
+        505.958,
+        2007.2759999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1586.412
+        473.642,
+        1585.74
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3026,14 +3036,14 @@
       "bit": 12,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1586.412
+        505.958,
+        1587.2759999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1166.412
+        473.642,
+        1165.74
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3049,14 +3059,14 @@
       "bit": 12,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1166.412
+        505.958,
+        1167.2759999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        746.412
+        473.642,
+        745.74
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3072,14 +3082,14 @@
       "bit": 12,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        746.412
+        505.958,
+        747.2760000000001
       ],
       "destination_requested_VM_um": [
-        473.696,
-        376.38
+        473.642,
+        375.708
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3095,14 +3105,14 @@
       "bit": 12,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        376.38
+        505.958,
+        377.244
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.524
+        220.042,
+        219.852
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3118,14 +3128,14 @@
       "bit": 12,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.524
+        252.358,
+        221.388
       ],
       "destination_requested_VM_um": [
         64.848,
         55.836
       ],
-      "Manhattan_route_request_um": 352.144,
+      "Manhattan_route_request_um": 353.062,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3145,10 +3155,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3213.228
+        545.642,
+        3212.6040000000003
       ],
-      "Manhattan_route_request_um": 402.632,
+      "Manhattan_route_request_um": 403.31,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3164,14 +3174,14 @@
       "bit": 13,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3213.228
+        577.9580000000001,
+        3214.1400000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2846.46
+        473.642,
+        2845.8360000000002
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3187,14 +3197,14 @@
       "bit": 13,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2846.46
+        505.958,
+        2847.3720000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2426.46
+        473.642,
+        2425.8360000000002
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3210,14 +3220,14 @@
       "bit": 13,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2426.46
+        505.958,
+        2427.3720000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2006.46
+        473.642,
+        2005.836
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3233,14 +3243,14 @@
       "bit": 13,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2006.46
+        505.958,
+        2007.3719999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1586.46
+        473.642,
+        1585.836
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3256,14 +3266,14 @@
       "bit": 13,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1586.46
+        505.958,
+        1587.3719999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1166.46
+        473.642,
+        1165.836
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3279,14 +3289,14 @@
       "bit": 13,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1166.46
+        505.958,
+        1167.3719999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        746.46
+        473.642,
+        745.836
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3302,14 +3312,14 @@
       "bit": 13,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        746.46
+        505.958,
+        747.3720000000001
       ],
       "destination_requested_VM_um": [
-        473.696,
-        376.428
+        473.642,
+        375.804
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3325,14 +3335,14 @@
       "bit": 13,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        376.428
+        505.958,
+        377.34
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.572
+        220.042,
+        219.948
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3348,14 +3358,14 @@
       "bit": 13,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.572
+        252.358,
+        221.484
       ],
       "destination_requested_VM_um": [
         64.848,
         56.22
       ],
-      "Manhattan_route_request_um": 351.808,
+      "Manhattan_route_request_um": 352.774,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3375,10 +3385,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3213.2760000000003
+        545.642,
+        3212.7000000000003
       ],
-      "Manhattan_route_request_um": 413.996,
+      "Manhattan_route_request_um": 414.626,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3394,14 +3404,14 @@
       "bit": 14,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3213.2760000000003
+        577.9580000000001,
+        3214.2360000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2846.5080000000003
+        473.642,
+        2845.9320000000002
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3417,14 +3427,14 @@
       "bit": 14,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2846.5080000000003
+        505.958,
+        2847.4680000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2426.5080000000003
+        473.642,
+        2425.9320000000002
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3440,14 +3450,14 @@
       "bit": 14,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2426.5080000000003
+        505.958,
+        2427.4680000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2006.508
+        473.642,
+        2005.932
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3463,14 +3473,14 @@
       "bit": 14,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2006.508
+        505.958,
+        2007.4679999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1586.508
+        473.642,
+        1585.932
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3486,14 +3496,14 @@
       "bit": 14,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1586.508
+        505.958,
+        1587.4679999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1166.508
+        473.642,
+        1165.932
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3509,14 +3519,14 @@
       "bit": 14,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1166.508
+        505.958,
+        1167.4679999999998
       ],
       "destination_requested_VM_um": [
-        473.696,
-        746.508
+        473.642,
+        745.932
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3532,14 +3542,14 @@
       "bit": 14,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        746.508
+        505.958,
+        747.4680000000001
       ],
       "destination_requested_VM_um": [
-        473.696,
-        376.476
+        473.642,
+        375.9
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3555,14 +3565,14 @@
       "bit": 14,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        376.476
+        505.958,
+        377.436
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.62
+        220.042,
+        220.044
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3578,14 +3588,14 @@
       "bit": 14,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.62
+        252.358,
+        221.58
       ],
       "destination_requested_VM_um": [
         64.848,
         56.604
       ],
-      "Manhattan_route_request_um": 351.472,
+      "Manhattan_route_request_um": 352.486,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3605,10 +3615,10 @@
         3553.2189999999996
       ],
       "destination_requested_VM_um": [
-        545.696,
-        3213.324
+        545.642,
+        3212.7960000000003
       ],
-      "Manhattan_route_request_um": 425.396,
+      "Manhattan_route_request_um": 425.978,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3624,14 +3634,14 @@
       "bit": 15,
       "segment": 1,
       "source_requested_VM_um": [
-        577.904,
-        3213.324
+        577.9580000000001,
+        3214.3320000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2846.556
+        473.642,
+        2846.0280000000002
       ],
-      "Manhattan_route_request_um": 470.976,
+      "Manhattan_route_request_um": 472.62,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3647,14 +3657,14 @@
       "bit": 15,
       "segment": 2,
       "source_requested_VM_um": [
-        505.904,
-        2846.556
+        505.958,
+        2847.5640000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2426.556
+        473.642,
+        2426.0280000000002
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3670,14 +3680,14 @@
       "bit": 15,
       "segment": 3,
       "source_requested_VM_um": [
-        505.904,
-        2426.556
+        505.958,
+        2427.5640000000003
       ],
       "destination_requested_VM_um": [
-        473.696,
-        2006.556
+        473.642,
+        2006.028
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3693,14 +3703,14 @@
       "bit": 15,
       "segment": 4,
       "source_requested_VM_um": [
-        505.904,
-        2006.556
+        505.958,
+        2007.5639999999999
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1586.556
+        473.642,
+        1586.028
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3716,14 +3726,14 @@
       "bit": 15,
       "segment": 5,
       "source_requested_VM_um": [
-        505.904,
-        1586.556
+        505.958,
+        1587.5639999999999
       ],
       "destination_requested_VM_um": [
-        473.696,
-        1166.556
+        473.642,
+        1166.028
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3739,14 +3749,14 @@
       "bit": 15,
       "segment": 6,
       "source_requested_VM_um": [
-        505.904,
-        1166.556
+        505.958,
+        1167.5639999999999
       ],
       "destination_requested_VM_um": [
-        473.696,
-        746.556
+        473.642,
+        746.028
       ],
-      "Manhattan_route_request_um": 452.208,
+      "Manhattan_route_request_um": 453.852,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3762,14 +3772,14 @@
       "bit": 15,
       "segment": 7,
       "source_requested_VM_um": [
-        505.904,
-        746.556
+        505.958,
+        747.5640000000001
       ],
       "destination_requested_VM_um": [
-        473.696,
-        376.524
+        473.642,
+        375.996
       ],
-      "Manhattan_route_request_um": 402.24,
+      "Manhattan_route_request_um": 403.884,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3785,14 +3795,14 @@
       "bit": 15,
       "segment": 8,
       "source_requested_VM_um": [
-        505.904,
-        376.524
+        505.958,
+        377.532
       ],
       "destination_requested_VM_um": [
-        220.096,
-        220.668
+        220.042,
+        220.14000000000001
       ],
-      "Manhattan_route_request_um": 441.664,
+      "Manhattan_route_request_um": 443.308,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3808,14 +3818,14 @@
       "bit": 15,
       "segment": 9,
       "source_requested_VM_um": [
-        252.304,
-        220.668
+        252.358,
+        221.67600000000002
       ],
       "destination_requested_VM_um": [
         64.848,
         56.988
       ],
-      "Manhattan_route_request_um": 351.136,
+      "Manhattan_route_request_um": 352.198,
       "source_qualified": false,
       "capture_qualified": false,
       "actual_launch_clock_driver": null,
@@ -3860,8 +3870,492 @@
     "adopted": false
   },
   "FE_first_stage_rectangle_channel_violations": [],
-  "maximum_requested_data_segment_um": 470.976,
+  "maximum_requested_data_segment_um": 472.62,
   "requested_data_segments": 160,
+  "Manhattan_request_is_routed_reach_proof": false,
+  "FE_first_stage_requested_route_obstacles": [
+    {
+      "bit": 0,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 0,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 0,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 0,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 0,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 1,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 1,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 1,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 1,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 1,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 2,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 2,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 2,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 2,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 2,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 3,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 3,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 3,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 3,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 3,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 4,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 4,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 4,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 4,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 4,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 5,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 5,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 5,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 5,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 5,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 6,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 6,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 6,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 6,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 6,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 7,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 7,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 7,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 7,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 7,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 8,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 8,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 8,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 8,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 8,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 9,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 9,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 9,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 9,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 9,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 10,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 10,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 10,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 10,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 10,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 11,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 11,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 11,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 11,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 11,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 12,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 12,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 12,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 12,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 12,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 13,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 13,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 13,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 13,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 13,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 14,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 14,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 14,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 14,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 14,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 15,
+      "macro": "fxs1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 15,
+      "macro": "fsr1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 15,
+      "macro": "flt0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 15,
+      "macro": "c1s0r0",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    },
+    {
+      "bit": 15,
+      "macro": "c1s1r1",
+      "segment": 0,
+      "requires_detour_or_new_stage": true
+    }
+  ],
+  "obstacle_aware_geometry_pass": false,
   "cut_receipt": {
     "scope": "additional fault bundle only; existing full-parent cuts must be rerun",
     "tracks": 208.33333333333334,
@@ -3883,7 +4377,8 @@
   },
   "required": [
     "fresh N9 native gold/TP and observed mutant",
-    "actual mapped f16 routed pins/SS/FF/AP/DRC",
+    "bind actual CLOSED f16 9375370dc contacts/ETMs to requested parent",
+    "obstacle-aware FE escape path; extra stages/repack if required",
     "current helper intake",
     "actual FE output master/pin/launchclock binding",
     "full parent all-net cuts and route length",

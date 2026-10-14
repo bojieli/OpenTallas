@@ -1,0 +1,455 @@
+{
+  "source_commit": "585558587",
+  "master": "dsfd_be_f16",
+  "outline_um": [
+    32.4,
+    32.4
+  ],
+  "lef_sha256": "e2c38c93743f536445414c2812cb4d5d759b4e444cf94e61b6efa671d026bf9d",
+  "view_qualification": "Standalone M5 diagnostic SS/FF/TT/AP/DRC PASS; parent placement/clock/reset ACK OPEN",
+  "actual_parent_placement": null,
+  "pins": {
+    "ck": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          14.448,
+          0.084,
+          14.472
+        ]
+      ]
+    },
+    "i[0]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          14.544,
+          0.084,
+          14.568
+        ]
+      ]
+    },
+    "i[10]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          15.504,
+          0.084,
+          15.528
+        ]
+      ]
+    },
+    "i[11]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          15.6,
+          0.084,
+          15.624
+        ]
+      ]
+    },
+    "i[12]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          15.696,
+          0.084,
+          15.72
+        ]
+      ]
+    },
+    "i[13]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          15.792,
+          0.084,
+          15.816
+        ]
+      ]
+    },
+    "i[14]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          15.888,
+          0.084,
+          15.912
+        ]
+      ]
+    },
+    "i[15]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          15.984,
+          0.084,
+          16.008
+        ]
+      ]
+    },
+    "i[1]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          14.64,
+          0.084,
+          14.664
+        ]
+      ]
+    },
+    "i[2]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          14.736,
+          0.084,
+          14.76
+        ]
+      ]
+    },
+    "i[3]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          14.832,
+          0.084,
+          14.856
+        ]
+      ]
+    },
+    "i[4]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          14.928,
+          0.084,
+          14.952
+        ]
+      ]
+    },
+    "i[5]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          15.024,
+          0.084,
+          15.048
+        ]
+      ]
+    },
+    "i[6]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          15.12,
+          0.084,
+          15.144
+        ]
+      ]
+    },
+    "i[7]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          15.216,
+          0.084,
+          15.24
+        ]
+      ]
+    },
+    "i[8]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          15.312,
+          0.084,
+          15.336
+        ]
+      ]
+    },
+    "i[9]": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          15.408,
+          0.084,
+          15.432
+        ]
+      ]
+    },
+    "o[0]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          16.08,
+          32.4,
+          16.104
+        ]
+      ]
+    },
+    "o[10]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          17.04,
+          32.4,
+          17.064
+        ]
+      ]
+    },
+    "o[11]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          17.136,
+          32.4,
+          17.16
+        ]
+      ]
+    },
+    "o[12]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          17.232,
+          32.4,
+          17.256
+        ]
+      ]
+    },
+    "o[13]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          17.328,
+          32.4,
+          17.352
+        ]
+      ]
+    },
+    "o[14]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          17.424,
+          32.4,
+          17.448
+        ]
+      ]
+    },
+    "o[15]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          17.52,
+          32.4,
+          17.544
+        ]
+      ]
+    },
+    "o[1]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          16.176,
+          32.4,
+          16.2
+        ]
+      ]
+    },
+    "o[2]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          16.272,
+          32.4,
+          16.296
+        ]
+      ]
+    },
+    "o[3]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          16.368,
+          32.4,
+          16.392
+        ]
+      ]
+    },
+    "o[4]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          16.464,
+          32.4,
+          16.488
+        ]
+      ]
+    },
+    "o[5]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          16.56,
+          32.4,
+          16.584
+        ]
+      ]
+    },
+    "o[6]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          16.656,
+          32.4,
+          16.68
+        ]
+      ]
+    },
+    "o[7]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          16.752,
+          32.4,
+          16.776
+        ]
+      ]
+    },
+    "o[8]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          16.848,
+          32.4,
+          16.872
+        ]
+      ]
+    },
+    "o[9]": {
+      "use": "SIGNAL",
+      "direction": "OUTPUT",
+      "rects": [
+        [
+          "M4",
+          32.316,
+          16.944,
+          32.4,
+          16.968
+        ]
+      ]
+    },
+    "rn": {
+      "use": "SIGNAL",
+      "direction": "INPUT",
+      "rects": [
+        [
+          "M4",
+          0.0,
+          16.08,
+          0.084,
+          16.104
+        ]
+      ]
+    }
+  }
+}
