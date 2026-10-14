@@ -1171,13 +1171,29 @@ module ot_hgi_sfu_ctl_extract #(
         wire [74:0] ops_hi,ops_lo;
         wire [59:0] meta_hi,meta_lo;
         wire ohv,olv,mhv,mlv,ohc,olc,mhc,mlc,ohb,olb,mhb,mlb;
+        `ifdef OT_HARD_CHILDREN
+        ot_hgi_sfu_ctl75hi u_oph
+`else
         ot_hgi_sfu_ctl_chunk #(.W(75),.OFFSET(138),.PIN_CAPTURE(1),.STATUS_REG(1)) u_oph
+`endif
             (.clk(clk_s_ops_hi),.rst_n(rst_n),.v(vi),.sfu(i_s),.d(ops_in),.tail_d(75'd0),.tail_v(1'b0),.q(ops_hi),.vo(ohv),.coll(ohc),.busy(ohb));
+        `ifdef OT_HARD_CHILDREN
+        ot_hgi_sfu_ctl75lo u_opl
+`else
         ot_hgi_sfu_ctl_chunk #(.W(75),.OFFSET(0),.PIN_CAPTURE(1),.STATUS_REG(1)) u_opl
+`endif
             (.clk(clk_s_ops_lo),.rst_n(rst_n),.v(vi),.sfu(i_s),.d(ops_in),.tail_d(ops_hi),.tail_v(ohv),.q(ops_lo),.vo(olv),.coll(olc),.busy(olb));
+        `ifdef OT_HARD_CHILDREN
+        ot_hgi_sfu_ctl60hi u_mth
+`else
         ot_hgi_sfu_ctl_chunk #(.W(60),.OFFSET(138),.PIN_CAPTURE(1),.STATUS_REG(1)) u_mth
+`endif
             (.clk(clk_s_meta_hi),.rst_n(rst_n),.v(vi),.sfu(i_s),.d(cwi[59:0]),.tail_d(60'd0),.tail_v(1'b0),.q(meta_hi),.vo(mhv),.coll(mhc),.busy(mhb));
+        `ifdef OT_HARD_CHILDREN
+        ot_hgi_sfu_ctl60lo u_mtl
+`else
         ot_hgi_sfu_ctl_chunk #(.W(60),.OFFSET(0),.PIN_CAPTURE(1),.STATUS_REG(1)) u_mtl
+`endif
             (.clk(clk_s_meta_lo),.rst_n(rst_n),.v(vi),.sfu(i_s),.d(cwi[59:0]),.tail_d(meta_hi),.tail_v(mhv),.q(meta_lo),.vo(mlv),.coll(mlc),.busy(mlb));
         wire now=vi&&(i_s==SFU_NONE);
         wire [74:0] ops=now?ops_in:ops_lo;

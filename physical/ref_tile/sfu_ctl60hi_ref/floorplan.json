@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
  "name": "sfu_ctl60hi_ref",
- "top": "ot_hgi_sfu_ctl_chunk",
+ "top": "ot_hgi_sfu_ctl60hi",
  "kind": "tile",
  "die": [
   0,
@@ -53,6 +53,7 @@
  "findings": [],
  "referenced": [
   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_ctl_chunk.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_ctl_masters.sv",
   "physical/ref_tile/sfu_ctl60hi_ref/kit.env",
   "physical/ref_tile/sfu_ctl60hi_ref/clock.sdc",
   "physical/ref_tile/sfu_ctl60hi_ref/signoff.sdc",

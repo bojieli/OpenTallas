@@ -1,18 +1,12 @@
 {
   "name": "sfu_ctl75lo_ref",
-  "top": "ot_hgi_sfu_ctl_chunk",
+  "top": "ot_hgi_sfu_ctl75lo",
   "kind": "tile",
   "sources": [
-    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_ctl_chunk.sv"
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_ctl_chunk.sv",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_ctl_masters.sv"
   ],
-  "params": {
-    "W": 75,
-    "OFFSET": 0,
-    "STAGES": 138,
-    "MUT_BOUNDARY": 0,
-    "PIN_CAPTURE": 1,
-    "STATUS_REG": 1
-  },
+  "params": {},
   "clock_port": "clk",
   "reset_ports": [
     "rst_n"
@@ -83,6 +77,6 @@
     ]
   },
   "cycles_added": 0,
-  "structural_change": "Partition original276-stage variable insertion pipe into chronological138-stage chunks and75/60bit live-field groups, four separate roots with payload<=10350/8280FF. First capture at injection face uses compensateddepth-1; all data/valid/status exports registered. No original CLOSED source edited, no SDC relaxation.",
+  "structural_change": "Partition original276-stage variable insertion pipe into chronological138-stage chunks and75/60bit live-field groups, four separate roots with payload<=10350/8280FF. First capture at injection face uses compensateddepth-1; all data/valid/status exports registered. No original CLOSED source edited, no SDC relaxation. Unique top master per75/60bit andlo/hi parameter set prevents four distinct physical views sharing one cell/module name; HARD_CHILDREN binds exact alias withoutparameter override.",
   "slot_change_request": "UNASSIGNED SLOT CHANGE REQUEST r25gq v12 hfd_sfu: add real control pipe leaf sfu_ctl75lo_ref,216x172.8, Wtail/Elaunch/Sinjection, M5 PG. Proposed independently routed alternative; die-owner rectangles, cuts, clocks, hops and throughput contract remain OPEN."
 }

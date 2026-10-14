@@ -1,13 +1,14 @@
 {
   "source_sha256": "2ee06447a5adbf1b8ba3cd40ba0b856d97292e2eba5a2b2d7bd70be26e95b6a3",
-  "candidate_sha256": "fd83a524e9f8e36bf57dbba9b0405ab2d8ef8bfc171e1105ecb6cc235aaa4e7b",
+  "candidate_sha256": "bf6d7ada62e4bb3ebb68cf7f1721cdd903f6d73a8e3d9d127afef6b9a5fe3a2b",
   "changes": [
     "module rename and exact physical defaults",
     "ENABLE_NATIVE default0 and refuse reduction/side/unsupported destination",
     "external real-lane interface",
     "LN4 to LN10 zero-padding",
     "RET5 metadata but RET0 payload because grid adds5 plus original LEAF1",
-    "SPLIT_S_PIPE default0 adds four separate chronological75/60x138roots; actual source gate pending"
+    "SPLIT_S_PIPE default0 adds four separate chronological75/60x138roots; actual source gate pending",
+    "Unique hard masters75lo/75hi/60lo/60hi without # overrides; generic soft path unchanged"
   ],
   "control_fields": [
     "tr_ld",

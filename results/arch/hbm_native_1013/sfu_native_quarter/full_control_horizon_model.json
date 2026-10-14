@@ -129,5 +129,15 @@
     "physical_scope": "fresh leaf slots/pins/clockphi-R route open; wrapperselect and ensuing capture placement stillneedactualboundary proof",
     "status": "PIN1 shifts insertion collision observation1edge; STATUS_REG1 adds1; generic no-collision issue protocol remainsrequired, fault/status integration open",
     "functional_gate": "pending source-exact fullfrozen16lane arithmetic oracle inSPLIT1mode; default0 passesr3"
+  },
+  "physical_master_identity": {
+    "masters": [
+      "ot_hgi_sfu_ctl75lo",
+      "ot_hgi_sfu_ctl75hi",
+      "ot_hgi_sfu_ctl60lo",
+      "ot_hgi_sfu_ctl60hi"
+    ],
+    "binding": "OT_HARD_CHILDREN exact unique master names with no # overrides; soft branch chronological genericchunk exact params",
+    "reason": "one top name cannot represent distinct W75/W60 and OFFSET0/138 ETMs simultaneously"
   }
 }
