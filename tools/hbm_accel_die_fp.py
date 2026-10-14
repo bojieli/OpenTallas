@@ -3655,6 +3655,14 @@ def build_r25gq_net(variant):
                                                            if e[0].startswith('hb_hc_') and re.fullmatch(r'ck\d', e[1]) else [e])])
                     if c_.startswith('clock') else (b_, c_, w_, e_) for b_, c_, w_, e_ in buses]
         m['link_endpoints'] = dict(ep_of)
+    if V.get('ck_root') and V.get('ck_root_inputs'):    # v14: the die clock root's own inputs are die top pins (bumps)
+        ck_ = next(i for i in insts if i.name == V['ck_root'])
+        m['top_input_ports'] = dict(m.get('top_input_ports') or {})
+        for n_, (pin_, use_) in V['ck_root_inputs'].items():
+            buses.append((f'top_{n_}', 'ctl_top', 1, [('TOP', n_), (V['ck_root'], pin_)]))
+            m['top_input_ports'][n_] = dict(direction='input', use=use_, layer='M5', size_um=[0.024, 0.084],
+                                            center_um=[round(ck_.x + ck_.w / 2, 3), 0.042], domain='ref',
+                                            note='bump-fed at the ckgen site; DEF pin on the S edge below it')
     return m
 
 
@@ -7839,34 +7847,40 @@ P2P_LINKS = dict(S0=('SW', 0), S1=('SW', 1), S2=('SW', 2), S3=('SE', 0), S4=('SE
                  N0=('NW', 0), N1=('NW', 1), N2=('NE', 0), N3=('NE', 1))       # links rail-aligned 3 / 2 / 2 / 2
 P2P_RING = (('SW', 'SE'), ('SE', 'NE'), ('NE', 'NW'), ('NW', 'SW'))            # clockwise 2 x 2 ring, no diagonals
 COLLQ_H = 864.0                     # one row of closed ot_hcoll_port (406.08 x 401.76) + the engine core band
-COLLQ_WH = dict(q3=(4 * 45.36 + 3 * 406.08, COLLQ_H), q2=(950.4, COLLQ_H))   # 1,399.68 / 950.4 x 864 (slot estimate)
+COLLQ_WH = dict(hfd_coll_q3=(2255.04, 1844.64 + COLLQ_H),    # SW: engine band + the 32-tile TKM array (TKM_WH) above it
+                hfd_coll_q2=(950.4, COLLQ_H))                   # 2 hcoll ports + engine core
+P2P_COLL = dict(SW=('hfd_coll_q3', (8700.0, 7950.0)), SE=('hfd_coll_q2', (18960.0, 6960.0)),
+                NW=('hfd_coll_q2', (12150.0, 18135.0)), NE=('hfd_coll_q2', (19500.0, 18135.0)))
 CKGEN_WH = (216.0, 216.0)           # die clock root: PLL (behavioural analog core) + per-domain POR / reset release
 PR_BITS, RC_BITS, RR_BITS = 280, 261, 261   # ot_hfd_coll_q RW = 280; RED_CARRY {v, tag 3, mode, d 256} / {v, tag 3, d 256, rdy}
 
 
 def r25gq_v14():
-    """contract v14 (hbmdie 10-14, owner-approved P2P step 1) = v13 (pin-to-pin hops, IDX corner bands) +
-      * four quadrant COLL engines (ot_hfd_coll_q, one parameterised RTL: hfd_coll_q3 for SW = links S0-S2, hfd_coll_q2
-        for SE / NW / NE = 2 links each) at their link edges; the central hb_coll is gone.  Each engine talks to its own
-        lk_ep rail, its own SU quarter (inject / delivery / vmaddr / RED_CARRY) and its own VM slice (vcb, VM packet).
-      * 2 x 2 registered peer ring between the engines (280 b a direction: CTRL credits / done / fault, RED_CARRY,
-        RESULT bcast); the SU <-> SU 8 x 1,024 b cross links are REMOVED (RED_CARRY rides the ring, B2 sec 4).
-      * TKM: the 32-tile cluster stays ONE cluster (TOPK_MERGE k = 2,048 is not exact over 4 x 8 tiles; COLL RTL
-        finding 07:50, option (a)) beside the SW engine (QSOLO = SW), not 7.6 mm away in the NW HC column.
-      * VM8 union (25 closed tiles, cross buses abutted) moves into the centre spine void (centre at the die y centre).
+    """contract v14 (hbmdie 10-14, owner-approved P2P step 1, HANDOFF 0ab) = v13 (pin-to-pin hops, IDX corner bands) +
+      * four quadrant COLL engines at their link edges, one parameterised RTL (ot_hfd_coll_q, COLL agent
+        el1014-hbm-p2p-coll.log) under two die masters that bind it (rtl/hbm_accel/generic/collective/p2p/hfd_coll_q.sv):
+        hfd_coll_q3 = SW (links S0-S2, HOME + QSOLO, the 32-tile TOPK_MERGE array INSIDE the master: TOPK_MERGE k = 2,048
+        is not exact over 4 x 8 tiles, COLL finding 07:50 option (a)), hfd_coll_q2 = SE / NW / NE (2 links each).  The
+        central hb_coll and the separate hb_tkm slot are gone.
+      * every COLL die net is ONE RTL port of the master (no invented width): own SU quarter (inject, delivery,
+        RED_CARRY), own lk_ep rail (the 1,120-b f_lk bundle of hfd_lk_ep split per direction: llk_t 571 b / llk_r 549 b),
+        the command processor record (968 + 554 + 40 to every engine, ret 3 from SW only), the RGX lanes (SW: loader x
+        lanes, SW slice VM queue + W2 lane client), the TOPK_MERGE writes (SW slice).
+      * 2 x 2 registered peer ring between the engines (280 b a direction, pr_cw / pr_ccw); the SU <-> SU 8 x 1,024 b
+        cross links are REMOVED (RED_CARRY rides the ring, B2 sec 4).
+      * VM8 union (25 closed tiles, cross buses abutted) moves into the centre spine void.
       * hb_hc_eng leaves the E equator band (it walled the SU_SE | SU_NE crossing: GRT r4 overflow there) for the
         freed N spine band; its ring-client tap moves to the NE slice.
-      * die clock root hb_ckgen (PLL + POR, no longer on hb_coll) at the spine centre below VM8: the H-tree's first
-        two levels are the four quadrant roots (per-quadrant phi - R), reset staged down the same tree.
-      * cmdproc fans its COLL record (968 + recx 554 + cfg 40) to the four engines; only SW (HOME) returns.
-      * RGX lanes stay on HOME (SW)."""
+      * die clock root hb_ckgen (hfd_ckgen: the PLL hard macro + per-domain POR release, rtl/hbm_accel/control/
+        hfd_ckgen.sv) at the spine centre below VM8: the trees start there (per-quadrant phi - R at the pins), the
+        reset is staged down the same tree."""
     v = r25gq_v13()
     v['p2p'] = True
     v['ck_root'] = 'hb_ckgen'
     v['drop_blocks'] = tuple(v['drop_blocks']) + ('hb_coll',)
     v['drop_buses'] = v['drop_buses'] + (r'|lk_lk_[NS]\d\w*|hb_su_[NS][EW]_coll\w*|hb_coll_su_[NS][EW]\w*|hgi_vmaddr_[NS][EW]\w*'
                                          r'|hgi_coll_(cmd|ret)\w*|hgi_cfg_coll\w*|hgi_rgx[qrwa][01]\w*|hgi_vm[qr]_coll\w*'
-                                         r'|hb_su_[NS][EW]_su_[NS][EW]\w*')
+                                         r'|hb_su_[NS][EW]_su_[NS][EW]\w*|vcb_coll\w*')
     v['vm_b2'] = dict(v['vm_b2'], coll_tree=(),
                       clients=tuple((c, t, 'NE' if c == 'hb_hc_eng' else q) for c, t, q in v['vm_b2']['clients']))
     # hb_hc_eng to the N spine band (x 14,304-18,689 / y 17,064-18,630; the preset y is before svc_ch_dh)
@@ -7875,50 +7889,54 @@ def r25gq_v14():
     v['block_xy'] = {n_: (x_, y_ + dy_) for n_, (x_, y_) in dict(
         hb_vm_sw=(14736.384, 16908.48), hb_vm_se=(15436.224, 16908.48),
         hb_vm_nw=(14736.384, 17908.536), hb_vm_ne=(15436.224, 17908.536)).items()}
-    cq_ = dict(SW=('hfd_coll_q3', (10580.0, 6940.0)), SE=('hfd_coll_q2', (18960.0, 6960.0)),
-               NW=('hfd_coll_q2', (12150.0, 18135.0)), NE=('hfd_coll_q2', (19500.0, 18135.0)))
     ds = [ds_ for ds_ in v['die_slots'] if ds_['name'] != 'hb_tkm']
-    for q, (mst_, xy_) in cq_.items():
-        ds.append(dict(name=f'hb_coll_{q}', master=mst_, xy=xy_, wh=COLLQ_WH[mst_[-2:]], clear=60.0))
-    ds.append(dict(name='hb_tkm', master='hfd_coll_tkm', xy=(8700.0, 8000.0), wh=TKM_WH, clear=100.0))
+    for q, (mst_, xy_) in P2P_COLL.items():
+        ds.append(dict(name=f'hb_coll_{q}', master=mst_, xy=xy_, wh=COLLQ_WH[mst_], clear=60.0))
     ds.append(dict(name='hb_ckgen', master='hfd_ckgen', xy=(15328.0, 11500.0), wh=CKGEN_WH, clear=20.0, no_tree=True))
+    v['ck_root_inputs'] = dict(refclk=('refclk', 'CLOCK'), por_n=('por_n', 'SIGNAL'))
     nets = [n_ for n_ in v['die_slot_nets'] if not n_[0].startswith('tkm_')]
-    for l_, (q, k) in P2P_LINKS.items():
-        nets.append((f'lk_lk_{l_}', 'link_flit', 1122, (f'hb_coll_{q}', f'llk_{k}'), (f'ep_{l_}', 'f_lk')))
+    for l_, (q, k) in P2P_LINKS.items():        # hfd_lk_ep f_lk: [546:0] + [1117:1094] in, [1093:547] + [1119:1118] out
+        nets += [(f'llk_t_{l_}', 'hub', 571, (f'hb_coll_{q}', f'llk_t{k}'), (f'ep_{l_}', 'f_lk@0:546,1094:1117')),
+                 (f'llk_r_{l_}', 'hub', 549, (f'ep_{l_}', 'f_lk@547:1093,1118:1119'), (f'hb_coll_{q}', f'llk_r{k}'))]
     for q in ('SW', 'SE', 'NW', 'NE'):
-        c_, su_, vs_ = f'hb_coll_{q}', f'hb_su_{q}', f'hb_vms_{q}'
-        nets += [(f'hb_su_{q}_coll', 'hub', 1024, (su_, 't_coll'), (c_, 'f_su')),
-                 (f'hb_coll_su_{q}', 'hub', 620, (c_, 't_su'), (su_, 'f_coll')),
-                 (f'hgi_vmaddr_{q}', 'hub', 80, (c_, 't_hgi_vmaddr'), (su_, 'f_hgi_vmaddr')),
-                 (f'rc_{q}', 'hub', RC_BITS, (su_, 't_rc'), (c_, 'f_rc')),             # RED_CARRY in (v, tag, mode, d)
-                 (f'rr_{q}', 'hub', RR_BITS, (c_, 't_rr'), (su_, 'f_rr')),             # carry result + rc_rdy
-                 (f'vcb_coll_{q}', 'hub', 1088, (c_, 't_vcb'), (vs_, 'f_vcb')),
-                 (f'vcb_coll_{q}_c', 'hub', 2, (vs_, 't_vcbc'), (c_, 'f_vcbc')),
-                 (f'hgi_vmq_coll_{q}', 'hub', 338, (c_, 't_hgi_vmq'), (vs_, 'f_hgi_coll')),
-                 (f'hgi_vmr_coll_{q}', 'hub', 274, (vs_, 't_hgi_coll'), (c_, 'f_hgi_vmr')),
-                 (f'hgi_coll_cmd_{q}', 'hub', 968, ('hb_cmdproc', f't_hgi_coll_{q}'), (c_, 'f_hgi_cmdproc')),
-                 (f'hgi_coll_recx_{q}', 'hub', 554, ('hb_cmdproc', f't_hgi_collx_{q}'), (c_, 'f_hgi_recx')),
-                 (f'hgi_cfg_coll_{q}', 'hub', 40, ('hb_cmdproc', f't_hgi_cfg_coll_{q}'), (c_, 'f_hgi_cfg'))]
-    nets.append(('hgi_coll_ret', 'hub', 3, ('hb_coll_SW', 't_hgi_cmdproc'), ('hb_cmdproc', 'f_hgi_coll')))
-    for a_, b_ in P2P_RING:     # cw a -> b, ccw b -> a (RTL ports pr_cw_o / pr_cw_i / pr_ccw_o / pr_ccw_i)
+        c_, su_ = f'hb_coll_{q}', f'hb_su_{q}'
+        nets += [(f'coll_inj_{q}', 'hub', 34, (c_, 't_inj'), (su_, 'f_coll_inj')),
+                 (f'coll_inja_{q}', 'hub', 160, (c_, 't_inj_addr'), (su_, 'f_coll_inj_addr')),
+                 (f'coll_vma_{q}', 'hub', 80, (c_, 't_vmaddr'), (su_, 'f_hgi_vmaddr')),
+                 (f'coll_injd_{q}', 'hub', 1024, (su_, 't_coll_inj_d'), (c_, 'f_inj_d')),
+                 (f'coll_del_{q}', 'hub', 2344, (c_, 't_del'), (su_, 'f_coll_del')),
+                 (f'coll_rc_{q}', 'hub', RC_BITS, (su_, 't_rc'), (c_, 'f_rc')),
+                 (f'coll_rr_{q}', 'hub', RR_BITS, (c_, 't_rr'), (su_, 'f_rr')),
+                 (f'coll_rec_{q}', 'hub', 968, ('hb_cmdproc', f't_coll_rec_{q}'), (c_, 'f_hgi_rec')),
+                 (f'coll_recx_{q}', 'hub', 554, ('hb_cmdproc', f't_coll_recx_{q}'), (c_, 'f_hgi_recx')),
+                 (f'coll_cfg_{q}', 'hub', 40, ('hb_cmdproc', f't_coll_cfg_{q}'), (c_, 'f_hgi_cfg'))]
+    nets.append(('coll_ret', 'hub', 3, ('hb_coll_SW', 't_hgi_ret'), ('hb_cmdproc', 'f_coll_ret')))
+    for a_, b_ in P2P_RING:     # cw a -> b, ccw b -> a
         nets += [(f'pr_cw_{a_}_{b_}', 'hub', PR_BITS, (f'hb_coll_{a_}', 'pr_cw_o'), (f'hb_coll_{b_}', 'pr_cw_i')),
                  (f'pr_ccw_{b_}_{a_}', 'hub', PR_BITS, (f'hb_coll_{b_}', 'pr_ccw_o'), (f'hb_coll_{a_}', 'pr_ccw_i'))]
-    nets += [('tkm_del', 'hub', 2180, ('hb_coll_SW', 't_tkm_del'), ('hb_tkm', 'f_del')),
-             ('tkm_w', 'hub', 545, ('hb_tkm', 't_w'), ('hb_coll_SW', 'f_tkm_w')),
-             ('tkm_cfg', 'hub', 40, ('hb_coll_SW', 't_tkm_cfg'), ('hb_tkm', 'f_cfg')),
-             ('tkm_st', 'hub', 8, ('hb_tkm', 't_st'), ('hb_coll_SW', 'f_tkm_st'))]
-    for k in (0, 1):            # RGX row-gather lanes: HOME engine
-        nets += [(f'hgi_rgxq{k}', 'hub', 38, ('hb_coll_SW', f't_hgi_rgxq{k}'), ('hb_loader', f'f_hgi_rgxq{k}')),
-                 (f'hgi_rgxr{k}', 'hub', 257, ('hb_loader', f't_hgi_rgxr{k}'), ('hb_coll_SW', f'f_hgi_rgxr{k}')),
-                 (f'hgi_rgxw{k}', 'hub', 326, ('hb_coll_SW', f't_hgi_rgxw{k}'), ('hb_loader', f'f_hgi_rgxw{k}')),
-                 (f'hgi_rgxa{k}', 'hub', 1, ('hb_loader', f't_hgi_rgxa{k}'), ('hb_coll_SW', f'f_hgi_rgxa{k}'))]
+    # SW only (QSOLO): TOPK_MERGE writes and the RGX lanes
+    nets += [('coll_tkw', 'hub', 569, ('hb_coll_SW', 't_tkw'), ('hb_vms_SW', 'f_coll_tkw')),
+             ('coll_tkw_rdy', 'hub', 1, ('hb_vms_SW', 't_coll_tkw_rdy'), ('hb_coll_SW', 'f_tkw_rdy')),
+             ('coll_rgx_xq', 'hub', 76, ('hb_coll_SW', 't_rgx_xq'), ('hb_loader', 'f_coll_rgx_xq')),
+             ('coll_rgx_xr', 'hub', 514, ('hb_loader', 't_coll_rgx_xr'), ('hb_coll_SW', 'f_rgx_xr')),
+             ('coll_rgx_xw', 'hub', 652, ('hb_coll_SW', 't_rgx_xw'), ('hb_loader', 'f_coll_rgx_xw')),
+             ('coll_rgx_xwa', 'hub', 2, ('hb_loader', 't_coll_rgx_xwa'), ('hb_coll_SW', 'f_rgx_xwa')),
+             ('coll_rgx_vmq', 'hub', 338, ('hb_coll_SW', 't_rgx_vmq'), ('hb_vms_SW', 'f_hgi_coll')),
+             ('coll_rgx_vmr', 'hub', 274, ('hb_vms_SW', 't_hgi_coll'), ('hb_coll_SW', 'f_rgx_vmr')),
+             ('coll_rgx_c', 'hub', 8961, ('hb_coll_SW', 't_rgx_c'), ('hb_vms_SW', 'f_coll_rgx_c')),
+             ('coll_rgx_cr', 'hub', 65, ('hb_vms_SW', 't_coll_rgx_c'), ('hb_coll_SW', 'f_rgx_c'))]
     v['die_slots'], v['die_slot_nets'] = tuple(ds), tuple(nets)
+    v['die_straps'] = {f'hb_coll_{q}': dict(qid=i) for i, q in enumerate(('SW', 'SE', 'NW', 'NE'))}
     v['dense_face_masters'] = tuple(m_ for m_ in v['dense_face_masters'] if m_ != 'hfd_coll') + ('hfd_coll_q3', 'hfd_coll_q2')
     cs_ = dict(v['child_slots'])
     cs_.pop('hfd_coll', None)
+    tkm_ = cs_.pop('hfd_coll_tkm')
     for mq_, n_ in (('hfd_coll_q3', 3), ('hfd_coll_q2', 2)):
-        cs_[mq_] = [dict(name=f'u_port[{c}]', cell='ot_hcoll_port', wh=HCOLL_WH,
+        cs_[mq_] = [dict(name=f'u_q.u_ep.u_port[{c}]', cell='ot_hcoll_port', wh=HCOLL_WH,
                          xy=(45.36 + c * (HCOLL_WH[0] + 45.36), 21.6), orient='R0') for c in range(n_)]
+    # SW: the TOPK_MERGE array (closed tiles, serpentine) above the engine band
+    cs_['hfd_coll_q3'] += [dict(c_, name='u_q.u_ep.g_tkm.u_tkm.' + c_['name'], xy=(c_['xy'][0], c_['xy'][1] + COLLQ_H))
+                           for c_ in tkm_]
     v['child_slots'] = cs_
     c_ = os.environ.get('OT_HBMDIE_CONG', V14_CONG)
     if c_:
