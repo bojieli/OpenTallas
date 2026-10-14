@@ -162,16 +162,6 @@
    "orient": "R0"
   },
   {
-   "view": "physical/ref_tile/qkd_ke_wf_ref/views/ot_qkvd_ke_wf",
-   "count": 1,
-   "inst": "*u_wf",
-   "at": [
-    22.464,
-    246.24
-   ],
-   "orient": "R0"
-  },
-  {
    "view": "physical/ref_tile/qkd_ke_tm_ref/views/ot_qkvd_ke_tm",
    "count": 1,
    "inst": "*u_tm",
@@ -251,7 +241,7 @@
   "owner": "Claude:q13-kvleaves",
   "branch": "claude/q13b-kvend",
   "tag": "q16",
-  "purpose": "q13-kvleaves: ot_qkvd_kv_end SPL=1 = thin cluster over 19 hard children (12 KV-end tiles + 7 pin-registered link buffers), no parent register; replaces the flat kv_end parents (q10, pf q13) whose clock spine diverged.",
+  "purpose": "q13-kvleaves: ot_qkvd_kv_end SPL=1 = thin cluster over 18 hard children (11 KV-end tiles + 7 pin-registered link buffers); the parent keeps only ten W-face flops (reset synchroniser + fault face flops, its IO clock reference); replaces the flat kv_end parents (q10, pf q13) whose clock spine diverged.",
   "benches": [
    {
     "name": "ke_eq_exact",
@@ -268,6 +258,17 @@
    {
     "name": "ke_eq_mut_ctl",
     "cmd": "NCYC=12000 bash tools/qwen_kv_die/ke_eq_bench.sh {RUN}/bench/ke_mut CTL",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^KE_EQ PASS"
+   },
+   {
+    "name": "ke_eq_mut_wf",
+    "cmd": "NCYC=12000 bash tools/qwen_kv_die/ke_eq_bench.sh {RUN}/bench/ke_mut_wf WF",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -299,7 +300,7 @@
   ],
   "views_to": "physical/ref_tile/qkd_d2d_p2_ref/views",
   "record_to": "results/rtl/ref_tile/qkd_d2d_p2_ref",
-  "structural_change": "thin cluster: ot_qkvd_d2d's 11.5k own registers are hardened into pin-registered tiles with their own clock roots (ke_ti x3, ke_rq, ke_tm, ke_tf, ke_ro x4, ke_ctl, ke_wf: TT insertion 50-131 ps, spread <= 24 ps at the --cts gate) next to the pin-registered link buffers (sbufp x4, fbuf8p x3); the parent holds NO register and only distributes the clock to 19 child clock pins with entry offsets from the children's insertion.json (flat parents: qkd_d2d_ref-q10 TT -134.7 / FF -215.8 / DRC 35, qkd_d2d_pf_ref-q13 TT -129.5 / FF -141.6 / DRC 31, 11,497 registers on one root, boundary clock 2,072 ps TT); r_cr, tx_up and fault each one cycle later, everything else cycle-exact",
+  "structural_change": "thin cluster: ot_qkvd_d2d's 11.5k own registers are hardened into pin-registered tiles with their own clock roots (ke_ti x3, ke_rq, ke_tm, ke_tf, ke_ro x4, ke_ctl: TT insertion 50-131 ps, spread <= 24 ps at the --cts gate) next to the pin-registered link buffers (sbufp x4, fbuf8p x3); the parent keeps ten W-face flops (reset synchroniser + fault face flops = the block's IO clock reference, balanced by the spine to the registers inside the children) and otherwise only distributes the clock to 18 child clock pins with entry offsets from the children's insertion.json (flat parents: qkd_d2d_ref-q10 TT -134.7 / FF -215.8 / DRC 35, qkd_d2d_pf_ref-q13 TT -129.5 / FF -141.6 / DRC 31, 11,497 registers on one root, boundary clock 2,072 ps TT); r_cr, tx_up and fault each one cycle later, everything else cycle-exact",
   "extra_paths": [
    "rtl/test/qwen_kv_die",
    "rtl/lib",
@@ -308,9 +309,10 @@
   ]
  },
  "io_flop_at_pins": false,
- "structural_change": "thin cluster: ot_qkvd_d2d's 11.5k own registers are hardened into pin-registered tiles with their own clock roots (ke_ti x3, ke_rq, ke_tm, ke_tf, ke_ro x4, ke_ctl, ke_wf: TT insertion 50-131 ps, spread <= 24 ps at the --cts gate) next to the pin-registered link buffers (sbufp x4, fbuf8p x3); the parent holds NO register and only distributes the clock to 19 child clock pins with entry offsets from the children's insertion.json (flat parents: qkd_d2d_ref-q10 TT -134.7 / FF -215.8 / DRC 35, qkd_d2d_pf_ref-q13 TT -129.5 / FF -141.6 / DRC 31, 11,497 registers on one root, boundary clock 2,072 ps TT); r_cr, tx_up and fault each one cycle later, everything else cycle-exact",
+ "structural_change": "thin cluster: ot_qkvd_d2d's 11.5k own registers are hardened into pin-registered tiles with their own clock roots (ke_ti x3, ke_rq, ke_tm, ke_tf, ke_ro x4, ke_ctl: TT insertion 50-131 ps, spread <= 24 ps at the --cts gate) next to the pin-registered link buffers (sbufp x4, fbuf8p x3); the parent keeps ten W-face flops (reset synchroniser + fault face flops = the block's IO clock reference, balanced by the spine to the registers inside the children) and otherwise only distributes the clock to 18 child clock pins with entry offsets from the children's insertion.json (flat parents: qkd_d2d_ref-q10 TT -134.7 / FF -215.8 / DRC 35, qkd_d2d_pf_ref-q13 TT -129.5 / FF -141.6 / DRC 31, 11,497 registers on one root, boundary clock 2,072 ps TT); r_cr, tx_up and fault each one cycle later, everything else cycle-exact",
  "child_lattice_um": 0.432,
  "inhold": false,
  "outhold": false,
- "floorplan_note": "q13-kvleaves 2026-10-13: thin cluster, no parent register.  S strip y 23.76: ti0 ro1 ti2 ro3 ti1 ro0 ro2 (pitch 106.704, each under its buffer); TX row y 73.44: sbufp tb0, fbuf8p tb2, sbufp tb1 (din S, dout N); mid channel y 246.24: wf (W face), tm (head mux, under-N of the TX row), ctl (x 367: <= 480 um Manhattan to every pop pin and seam); RX row y 291.6 / 345.6 (MX: din N, dout S): sbufp rb1, rb3, fbuf8p rb0, rb2; N strip y 464.4: tf, rq. Every child >= 20 um from the core edge and from its neighbours (x on the 0.432 lattice, y on 2.16: M5-cap leaf children, pins M4/M5).  RX heads cross the TX row and TX tf0 crosses the RX row on M7 (cut <= 0.25 of the M7 tracks over a row)."
+ "floorplan_note": "q13-kvleaves 2026-10-13: thin cluster; parent registers = ten W-face flops (reset synchroniser + fault face flops) only.  S strip y 23.76: ti0 ro1 ti2 ro3 ti1 ro0 ro2 (pitch 106.704, each under its buffer); TX row y 73.44: sbufp tb0, fbuf8p tb2, sbufp tb1 (din S, dout N); mid channel y 246.24: tm (head mux, under-N of the TX row), ctl (x 367: <= 480 um Manhattan to every pop pin and seam); RX row y 291.6 / 345.6 (MX: din N, dout S): sbufp rb1, rb3, fbuf8p rb0, rb2; N strip y 464.4: tf, rq. Every child >= 20 um from the core edge and from its neighbours (x on the 0.432 lattice, y on 2.16: M5-cap leaf children, pins M4/M5).  RX heads cross the TX row and TX tf0 crosses the RX row on M7 (cut <= 0.25 of the M7 tracks over a row).  Pins (tools/qwen_kv_die/ke_parent_pins.py): every cluster pin on the track of the face-tile pin it is wired to (S / N M5, W M4), clk on W mid-height; rq is 280.8 wide (x 302.4-583.2).",
+ "io_tcl": "physical/ref_tile_specs/qkd_ke/qkd_d2d_p2_pins.tcl"
 }
