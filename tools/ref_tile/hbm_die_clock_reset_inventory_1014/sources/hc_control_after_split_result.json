@@ -1,0 +1,14 @@
+{
+  "netlist_sha256": "8e52108d6f0337c8e8256c0c1710e1e908d7867cb127f1d5bcab433d1d1e38a8",
+  "generic_flipflops_by_clock": {
+    "clk[0]": 11188,
+    "clk_quarter_link[0]": 2952,
+    "clk_quarter_link[1]": 2952,
+    "clk_quarter_link[2]": 2952,
+    "clk_quarter_link[3]": 2952
+  },
+  "total_classified_flipflops": 22996,
+  "unclassified_ff": [],
+  "scope": "Generic synthesis clock/state census only; blackboxed child bodies excluded. No measured outline, clock span, insertion, timing or physical qualification.",
+  "source_commit": "8100796b3"
+}

@@ -1,0 +1,253 @@
+{
+  "schema": "opentallas.slot_partition_request.v1",
+  "source_commit": "a0f403d93",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_scan5.sv": "eeb730b3838be7abbf7f2485fb0f33de06592f6692b18f596852e871c51ba6f0",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_store32.sv": "21a1d284d674cae7eb62ef6e2e69b532034e15316688f5f94690238f0f70e37a",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_coeff_bank.sv": "97a1878dfb3631170a20f7b0a6e2a966d356a05b791c151ed37160b9195a7050",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv": "0228e9c5bf8a35254b33cab335c6881f28e48a7bab8499d9851fb44d3fb9726d",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_ll.sv": "5df326d47fe5f662e64804b51a1d90285dc367673642b6ba6ad359fc5b235955",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv": "6e6b5c15961d533bfdc0c8178da126be7004292a9f5e6b8a4ab444aa1a4c8811",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_quarter_link6.sv": "c25692e6edff07584e803ef55c98ceb3d6067e6e65e95fadb7f3b2ffdec9fe7a",
+    "rtl/hbm_accel/generic/peers/run_hc_eng_b2.sh": "2924d6a3fc44b30283ca8481a7b8edf76e5bc7a9257ca90589fa27d5f22dc795",
+    "rtl/hbm_accel/generic/peers/tb_hgi_hc_eng_b2.sv": "4f935f497131f9d85df9844276221d470f2cf82befa41aa4b19464112345557f",
+    "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "9119d052dec52368a11694abf479934f9f95eafaef0bd865c4af61370fbca554",
+    "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": "be6ab417e31a36500e04f1577b2978717134c45efa1acb7d84ea28f10cb1dfa9",
+    "tools/hgi_adapters/hc_coll_b2_bench.py": "8fac714c438fe5b8886a4a581a8f99bea868858ba816b3c3a3273dd417d80fc8",
+    "tools/hgi_adapters/hc_eng_bench.py": "5dd977ed6244c23f81b8eacb25f4ed669b63661d3a7d0e6862c928c1d06ff536"
+  },
+  "contract_of_record": "results/arch/hier_contract_1011/r25gq.json",
+  "contract_version": 12,
+  "published_contract_changed": false,
+  "requests": [
+    {
+      "master": "native_hc_b2",
+      "replaces": [
+        "hfd_hc_eng",
+        "hfd_hgi_hc interface formerly routed on hfd_hc quarters"
+      ],
+      "slot_status": "UNASSIGNED: v12 maps only legacy HC tiles; private proofs do not grant new masters or die pins",
+      "logical_composition": {
+        "ot_hgi_hc_ctl_b2": 1,
+        "ot_hgi_hc_qst_b2": 4,
+        "ot_hgi_hc_lane_b2": 32,
+        "ot_hgi_hc_lane_sl": 256,
+        "ot_hgi_hc_cat_b2": 4,
+        "ot_hgi_hc_coll_b2": 1
+      },
+      "hierarchy_note": "Counts include transitive children; do not add their outlines or area twice. qst and lane wrappers are candidate RTL, not closed macros. Die may flatten accepted slice leaves and hardened new control leaves into direct die composition, avoiding a third hard hierarchy.",
+      "requirements": [
+        "Use the 4 LOCAL8 native VM slice endpoints with real 17/281-bit addresses and configured ten credits at relay3",
+        "Exact D5120 and detected association/arithmetic/retirement/gain mutants before adoption",
+        "Per-child clock entries for every closed arithmetic slice and hardened new own-logic leaf, using real insertion metadata",
+        "Assign outline, pin order/face/layer and adjacent native VM reach from classified die path/cut geometry",
+        "Publish slots for window/control scalar SYS bank and residual child masters together; 88 legacy shells are not coverage"
+      ],
+      "outline_um": null,
+      "clock_evidence": "CLOSED SL body/source equal6656; raw archived DB/SPEF hashes verified and checked export reproducesTT142.89/FF0.72. RoutedTTmean212.6/spread22.2. Exact ownstub/pocket correction leaves224 above-layer blocked face pins; unqualified views under results/rtl/hbm_hc_b2_1013/closed_sl_recovery, cannot yet bind parent.",
+      "physical_partition_progress": {
+        "window": "window_partition_request.json;32ctl+128sector actual measured roots, no die-assigned pins",
+        "collector_block_store": {
+          "master": "ot_hgi_hc_chunk_store32",
+          "proposed_count": 20,
+          "integrated_in_native_collector": true,
+          "outline_um": [
+            51.84,
+            49.68
+          ],
+          "std_area_um2": 1078,
+          "clock_sinks": 1398,
+          "TT_boundary_mean_ps": 99.8,
+          "TT_spread_ps": 4.2,
+          "source": "7d84495f0",
+          "actual_gates": "results/rtl/hbm_hc_b2_1013/chunk_store32/receipt.json",
+          "integration_source": "24b3831d7 opt-in STORELEAF1 native exactPASS4/6432 and scanmutFAIL1280; POST221/PRE508 cycles"
+        },
+        "remaining": "32lane own-state incl PRE buffers and7chunk adders/lane;4quarter station own-state;4concentrators;central ingress/selector/control;shared31chunk and19heap arithmetic nodes;scalarSYS control andSinkhorn",
+        "explicit_clock_API": {
+          "source": "24b3831d7",
+          "accepted_SL_clock_pins": 256,
+          "chunk_adder_clock_pins": 224,
+          "mode": "594declared/582active child entries tied to related equal logical clocks; actual native exact/mutant/cycle receipt results/rtl/hbm_hc_b2_1013/native_collector_stores/receipt.json. Physical phi-R and parent assembly remain unqualified.",
+          "clock_entries_declared": 594,
+          "heap_entries_pruned": 12
+        },
+        "collector_scan": {
+          "source": "dbd8e138d",
+          "new_mux2_count": 16,
+          "closed_relay304_WE_count": 16,
+          "mux_outline_um": [
+            38.88,
+            38.88
+          ],
+          "mux_raw_std_area_um2": 296,
+          "mux_clock_sinks": 797,
+          "TT_boundary_mean_ps": 101.3,
+          "TT_spread_ps": 7.0,
+          "status": "ClockCTS OK797sinks/spread7.0; raw synthutil25% WARN but actual mandatory pinhold+CTS area582.85/core1194.39=48.8%. No route/pin/slot/fit adoption.",
+          "clock_evidence": "chunk_scan2_remote_gate3.json",
+          "transaction_proof": "results/rtl/hbm_hc_b2_1013/collector_stores2/receipt.json",
+          "mux_measured_postIOhold_std_area_um2": 561.797,
+          "mux_measured_postCTS_std_area_um2": 582.85,
+          "mux_compact_candidate_outline_um": [
+            38.88,
+            38.88
+          ],
+          "mux_postCTS_utilization": 0.487988
+        }
+      },
+      "native_clock_split_evidence": "results/rtl/hbm_hc_b2_1013/native_ownroots/receipt.json",
+      "ownstate_census": {
+        "source_commit": "6dbf2bc57",
+        "lane_parent_ff": 14828,
+        "coefficient_ff": 640,
+        "chunk_ff": [
+          538,
+          730,
+          922,
+          1114,
+          1306,
+          1498,
+          1690
+        ],
+        "generic_synthesis_only": true,
+        "physical_parent_qualified": false
+      },
+      "coefficient_leaf_candidate": {
+        "master": "ot_hgi_hc_coeff_bank",
+        "count": 32,
+        "source_commit": "faac01895",
+        "requested_outline_um": [
+          45.36,
+          45.36
+        ],
+        "slot_status": "UNASSIGNED",
+        "prior_probe": {
+          "outline_um": [
+            38.88,
+            38.88
+          ],
+          "std_area_after_cts_um2": 826.511,
+          "actual_core_util": 0.691992,
+          "sinks": 775,
+          "TT_boundary_mean_ps": 100.1,
+          "TT_spread_ps": 3.6
+        },
+        "expanded_probe_status": "COMPLETE clock PASS, rawutil WARN; actualpostCTS49.2%",
+        "native_exact_mutant_status": "faac01895 exact PASS4/6432 POST221/PRE508; nativeM15 INVALID PASS because quarter omitted forwarding; correctedfe03391e3 exact/M15 RUNNING",
+        "clock_pins": [
+          "clk"
+        ],
+        "input_pins": [
+          "rst_n",
+          "wr_v",
+          "wr_index[2:0]",
+          "wr_data[127:0]"
+        ],
+        "output_pins": [
+          "coef0[127:0]",
+          "coef1[127:0]",
+          "coef2[127:0]",
+          "coef3[127:0]",
+          "coef4[127:0]"
+        ],
+        "measured_outline_um": [
+          45.36,
+          45.36
+        ],
+        "clock_evidence": {
+          "sinks": 775,
+          "TT_boundary_mean_ps": 103.9,
+          "TT_all_max_ps": 106.2,
+          "TT_spread_ps": 4.0,
+          "FF_boundary_mean_ps": 78.5,
+          "SS_boundary_mean_ps": 148.7,
+          "actual_postCTS_std_area_um2": 828.523,
+          "actual_core_util": 0.491915,
+          "setup_diagnostic_ps": 220.4,
+          "hold_diagnostic_ps": 27.88,
+          "probe": "coeff_bank_remote_gate3.json",
+          "actual_CTS_area": "coeff_bank_actual_cts.json"
+        }
+      },
+      "ownlogic_clock_API": {
+        "source_commit": "8100796b3",
+        "separate_lane_roots": 32,
+        "quarter_roots": 4,
+        "cat_roots": 4,
+        "controller_roots": 1,
+        "collector_roots": 1,
+        "default": "CLOCKED0 retains legacy wiring",
+        "status": "New actualnative exact/M15 running; independent ownstate census running; no physical master or assigned slot.",
+        "prior_gap": "6dbf2bc57 census isolated a single lane; its own clk was still shared in parent instantiation, so <=15000 lane count did not qualify the parent clock.",
+        "quarter_link_roots": 4,
+        "total_child_clock_entries": 672,
+        "pruned_heap_entries": 12,
+        "control_ff": 11188,
+        "quarter_link_ff": 2952,
+        "quarter_ff": 6051,
+        "cat_ff": 10953,
+        "generic_state_count_only": true,
+        "collector_census_status": "COMPLETE sourcefe03391e3,31 block+19 heap add roots538FF each; store/scan/closedrelay child state excluded",
+        "prior_oversized_root_ff": 20566,
+        "split_total_ff": 22996,
+        "physical_area_note": "Four independently clocked command links cease common-clock cross-quarter register merging; generic state grows2430FF. No fit/cost credit.",
+        "collector_ff": 9483
+      }
+    },
+    {
+      "master": "ot_hbm_norm_split_view_g8pc",
+      "slot_status": "NO_SLOT_IN_V12",
+      "candidate_outline_um": [
+        1612.656,
+        972.0
+      ],
+      "accepted_children": {
+        "master": "ot_hbm_norm_gtile8",
+        "count": 8,
+        "outline_um": [
+          365.04,
+          365.04
+        ],
+        "origins": "results/arch/hier_contract_1011/handoff/r25gq_norm_g8p_child_origins.json"
+      },
+      "requirements": [
+        "First confirm the norm engine is instantiated by actual native production decode",
+        "Reserve die slot and publish assigned pins before a route",
+        "Keep accepted gtile8 routes unchanged",
+        "Harden split-core own logic into bounded leaves; expand parent with independent child clock pins",
+        "Audit MX power-pin mirror or use legal new parent orientations without changing child abstract geometry",
+        "Exact composition and all protocol mutants; measure throughput at native VM endpoint composition"
+      ],
+      "candidate_partition": {
+        "source": "e71f1dde9 composition with01f83170b node abort repair; exactPASS4rows645streamlines identical, detected partial/broadcast mutants; node in-flight abort PASS5cases, operandmutFAIL7",
+        "accepted_tiles": 8,
+        "accepted_relay_leaves": {
+          "hbfd_rly_136_WE": 24,
+          "hbfd_rly_48_WE": 48
+        },
+        "new_sum_nodes": 79,
+        "declared_vector_clock_entries": 127,
+        "pruned_vector_entries": 48,
+        "node_outline_um": [
+          36.288,
+          34.56
+        ],
+        "node_abortfix_CTS": "PASS648sinks,TTboundary98.6ps/spread6.0; norm_node_abortfix_gate.json",
+        "remaining_unhardened_arithmetic_roots": {
+          "chunk_adders": 7,
+          "scalar": 3,
+          "quant": 2
+        },
+        "remaining_parent_ownstate": "source extraction/measured sink count pending",
+        "production_binding": "No actual production RTL instantiation of standalone norm engine found; native SU record path uses its own microsequence. Candidate cannot cover historical monolith until assigned successor binding is proven."
+      }
+    }
+  ],
+  "contract_sha256": "f1c9332f12fd679b53f9536f8fd94265a8d028be31bba7d494793f5d5a504f94",
+  "source_binding_scope": "One explicit immutable implementation tree a0f403d93. Prior component receipt commits remain provenance only; no current source grant inferred from historical gates.",
+  "candidate_v13": {
+    "path": "results/arch/hbm_native_1013/die_v13/candidate.json",
+    "status": "Separate candidate reported by die owner; basecontract v12 remains. No placement or pin grant."
+  }
+}

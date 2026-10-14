@@ -1,0 +1,102 @@
+{
+  "main_snapshot": "bb9fa3a2766ef179666bb01892f7c0088d3911a1",
+  "scope": "Read-only source/metadata inventory, no new heavy jobs, no CTS/topology/physical source/reset qualification",
+  "sources": {
+    "results/arch/hbm_native_1013/die_v13/candidate.json": {
+      "git_commit": "bb9fa3a2766ef179666bb01892f7c0088d3911a1",
+      "sha256": "b8f1dfec4e73b8bc9ee68b6b3976a8881e01c6b1739e388f3b9367ba77ca38f2"
+    },
+    "results/arch/hbm_native_1013/die_v13/clock_pins.json": {
+      "git_commit": "bb9fa3a2766ef179666bb01892f7c0088d3911a1",
+      "sha256": "ca373833b678a997d41a2a92eea9836c5d8527d8b909cf6e0109178465bf5000"
+    },
+    "results/arch/hbm_native_1013/die_v13/receipt.json": {
+      "git_commit": "bb9fa3a2766ef179666bb01892f7c0088d3911a1",
+      "sha256": "3628886472285d3d8ac7592b30aa3e94481a3da60452f0e0e9970223c1b345b4"
+    },
+    "/home/ubuntu/wt/codex-qwen-native-service-glue-1013/results/arch/native_idx_parent_1014/full_08d7579e5/census_summary.json": {
+      "sha256": "9100e856f9ad096ae67531abc8405fb91ef78da2dbc6d46ad09d7bae6ce35452"
+    },
+    "/home/ubuntu/wt/codex-qwen-native-service-glue-1013/results/arch/native_idx_parent_1014/full_08d7579e5/evidence.json": {
+      "sha256": "4b97c50d1aa0c236d778f5432913631e5fd874c6652a88fd55c66f835b8d4c28"
+    },
+    "/home/ubuntu/wt/codex-qwen-native-service-glue-1013/results/arch/native_idx_parent_1014/full_08d7579e5/source_binary.sha256": {
+      "sha256": "41a00f484d46dfe3c1130143b6dbc6f9041c3eb9885ce042bbac0311379b3277"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/arch/hbm_native_1013/hc_norm_takeover/slot_partition_request.json": {
+      "sha256": "564e36b5fecadba8ba76d77095689c6522c675136cff6879fa71508e30263369"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/rtl/hbm_hc_b2_1013/native_allroots/receipt.json": {
+      "sha256": "7033f0effe3de1918f1cac7720e5719f344daf73afd3d77cabdf8e66596d1ae0"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/rtl/hbm_hc_b2_1013/native_collector_stores/receipt.json": {
+      "sha256": "196d39acce57af9d53672e43b02dcc662e608af85375fabe7f689dc24e147f9f"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/rtl/hbm_hc_b2_1013/ownstate_census/after_census_after_split.json": {
+      "sha256": "f717b6631801f956cda2061a0b5650ecb1193e09654507cc08aaeeb9ed58df27"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/rtl/hbm_hc_b2_1013/control_census/binding_after.json": {
+      "sha256": "d1196f850639b2407e511cedf36b03a7652d3d65ca5a8159ca43e36c374f5331"
+    },
+    "/home/ubuntu/wt/codex-hbm-vm-sm-2240/results/arch/hbm_native_1013/native_parent_1014/source_clock_reset_inventory.json": {
+      "sha256": "391d51924081736cd872a71c412e474b424e75d9298730d7f132d5a954c74855"
+    },
+    "/home/ubuntu/wt/codex-hbm-quant-sfu-2240/results/arch/hbm_native_1013/uncovered_structural_2240/quant_sfu_actual_inventory.json": {
+      "sha256": "4f6b9c20a2756d195316ea0552c023820bbf5c536d46875e3978cbd08ac8e388"
+    },
+    "/home/ubuntu/wt/codex-sm-gate-structural-1014/results/arch/hbm_native_1013/sm_local_icg_1014/manifest.json": {
+      "sha256": "5c3327a20625932cc2c6756695e4ecf0b6662bec073c2d5476b18995ca2d2db4"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/rtl/hbm_hc_b2_1013/control_census/control_after_split_result.json": {
+      "sha256": "1ea994e3f82ff677a72e0861688036fe4d5de0fa208e9f69a0efa96305ff9f91"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/rtl/hbm_hc_b2_1013/control_census/cat_result.json": {
+      "sha256": "6bb06f27c370b846f122be5aa55425625629d6e2d6e68f8b8fde6394f4e6c72e"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/rtl/hbm_hc_b2_1013/control_census/control_result.json": {
+      "sha256": "a554ecec226da1c414cf79795688ed698667eaf3f9235fe4d782618e536df82e"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/rtl/hbm_hc_b2_1013/control_census/quarter_result.json": {
+      "sha256": "2ae1959ab740393e7b2d3f6f65fcca39263b54e17b0e230baf06904a3c858ec1"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/rtl/hbm_hc_b2_1013/control_census/collector_result.json": {
+      "sha256": "293a76f38791f2b21b452489223112abb0dfae5db2ce99159ab0fe8993354c42"
+    },
+    "/home/ubuntu/wt/codex-hbm-front-leaves-1013/rtl/hbm_accel/generic/peers/ot_hgi_dma_front_lane2.sv": {
+      "sha256": "cdb02f0e99b9a65f525babceb9e752aa179e93b022cbdadf4570c73b64a63eed",
+      "tree_HEAD": "5efe7158105cdffb5c1377ccc56e6bd37d1b963c",
+      "scope": "Read current source; owner supplied native census, not independent netlist proof"
+    },
+    "/home/ubuntu/wt/codex-hbm-front-leaves-1013/rtl/hbm_accel/generic/peers/ot_hgi_dma_front_ctrl6b.sv": {
+      "sha256": "59a8725dfb3858e5d10d39f6ca524d4163cd4ca9523453d19a1d9e9019e56944",
+      "tree_HEAD": "5efe7158105cdffb5c1377ccc56e6bd37d1b963c",
+      "scope": "Read current source; owner supplied native census, not independent netlist proof"
+    },
+    "/home/ubuntu/wt/codex-hbm-front-leaves-1013/rtl/hbm_accel/generic/peers/ot_hgi_dma_vm_bank9.sv": {
+      "sha256": "8151de670c23c3f84c826314fed2719f062595681c2583e4a720535c0524f22e",
+      "tree_HEAD": "5efe7158105cdffb5c1377ccc56e6bd37d1b963c",
+      "scope": "Read current source; owner supplied native census, not independent netlist proof"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/arch/hbm_native_1013/hc_norm_takeover/physical_pin_demand.json": {
+      "sha256": "8dd1b9a4f6f960f06aa8124c24bf4010f030ccc699ce13e4d1e4cd1c47db1f8d"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_win_ctl_ref/clock_insertion_cts.json": {
+      "sha256": "374d1a1d045d5178db25a3e22a6b9b0d2ab7a418d8667ef0c049c9f0d2824c97"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_win_sector_ref/clock_insertion_cts.json": {
+      "sha256": "78ac272aefecc2a494e4559c5ad8b1a7d9b157d91a31001d743b55da34379dcb"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_chunk_store32_ref/clock_insertion_cts.json": {
+      "sha256": "9e8221a676e8ef8299b1b818e95d682dea2008f92d7b72756059d3ceef3aafe8"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_chunk_scan2_ref/clock_insertion_cts.json": {
+      "sha256": "d160ee8c1c06e90c1002a992514ff55073b99f9488e8d752b6bf55ba2eaa4718"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_coeff_bank_ref/clock_insertion_cts.json": {
+      "sha256": "1b86cfc81e0a5eda67e8df37245386c4f7cd38cf72f597385a709052ac6c3c02"
+    },
+    "/home/ubuntu/wt/hbm-hc-norm-takeover-1013/results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_quarter_link6_ref/clock_insertion_cts.json": {
+      "sha256": "fc1fd8c62791b11726c11f4900c396332af579aac65d17d5481f8f4b733b7524"
+    }
+  }
+}

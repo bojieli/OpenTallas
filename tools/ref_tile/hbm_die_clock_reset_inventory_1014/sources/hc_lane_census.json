@@ -1,0 +1,17 @@
+{
+  "source_commit": "6dbf2bc57",
+  "generic_flipflops_by_clock": {
+    "clk[0]": 14828,
+    "clk_chunk[0]": 538,
+    "clk_chunk[1]": 730,
+    "clk_chunk[2]": 922,
+    "clk_chunk[3]": 1114,
+    "clk_chunk[4]": 1306,
+    "clk_chunk[5]": 1498,
+    "clk_chunk[6]": 1690,
+    "clk_coeff[0]": 640
+  },
+  "total_own_flipflops": 23266,
+  "excluded_children": "8acceptedSL13176sink roots + realSRAM internal state; exactSL module body blackboxed",
+  "scope": "Count only; no physical span/insertion/outline/timing/slot qualification"
+}

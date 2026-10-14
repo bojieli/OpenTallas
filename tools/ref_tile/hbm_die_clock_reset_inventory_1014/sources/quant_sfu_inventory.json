@@ -1,0 +1,307 @@
+{
+  "schema": "opentallas.quant_sfu.actual_inventory.v1",
+  "source": "b415845f8",
+  "current_required_contract": "r25gq v12; dielead owns new v13 actualassignment",
+  "quant": {
+    "master": "ot_hgi_qdq_q_pin4",
+    "outline_um": [
+      622.08,
+      596.16
+    ],
+    "outer_pins": {
+      "W": [
+        "wrq",
+        "wrq_cr",
+        "wrr_p0",
+        "wrr_p1",
+        "wrr_p2",
+        "wrr_p3",
+        "rg_req",
+        "rg_gnt"
+      ],
+      "N": [
+        "wwq",
+        "wwq_cr",
+        "wwq_done",
+        "wg_req",
+        "wg_gnt"
+      ],
+      "S": [
+        "clk",
+        "rst_n",
+        "rec",
+        "ret"
+      ]
+    },
+    "current_source_spec": "tools/ref_tile/specs_hbmb2vm/qdq_q_ref.json",
+    "stale_generated_floorplan": "physical/ref_tile/qdq_q_ref/floorplan.json still has olddirectSRAM hierarchy; not authoritative new11childcomposition",
+    "existing_rectangles": [
+      {
+        "inst": "u_qdq.g_d3.u_dec.u_dxl",
+        "master": "ot_hgi_qw_dxl",
+        "xy": [
+          302.4,
+          259.2
+        ],
+        "wh": [
+          120.96,
+          120.96
+        ],
+        "view": "physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl",
+        "orientation": "R0",
+        "closed_stands": true
+      },
+      {
+        "inst": "u_qdq.g_d3.u_dec.u_dbq",
+        "master": "ot_hgi_qw_dbq",
+        "xy": [
+          475.2,
+          259.2
+        ],
+        "wh": [
+          120.96,
+          120.96
+        ],
+        "view": "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq",
+        "orientation": "R0",
+        "closed_stands": true
+      },
+      {
+        "inst": "u_qdq.g_d3.u_dec.u_daq",
+        "master": "ot_hgi_qw_daq",
+        "xy": [
+          302.4,
+          86.4
+        ],
+        "wh": [
+          129.6,
+          129.6
+        ],
+        "view": "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq",
+        "orientation": "R0",
+        "closed_stands": true
+      },
+      {
+        "inst": "u_qdq.g_lq[0].u_lq",
+        "master": "ot_hgi_qdq_lq",
+        "xy": [
+          25.92,
+          43.2
+        ],
+        "wh": [
+          114.48,
+          114.48
+        ],
+        "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+        "orientation": "R0",
+        "closed_stands": true
+      },
+      {
+        "inst": "u_qdq.g_lq[1].u_lq",
+        "master": "ot_hgi_qdq_lq",
+        "xy": [
+          25.92,
+          181.44
+        ],
+        "wh": [
+          114.48,
+          114.48
+        ],
+        "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+        "orientation": "R0",
+        "closed_stands": true
+      },
+      {
+        "inst": "u_qdq.g_lq[2].u_lq",
+        "master": "ot_hgi_qdq_lq",
+        "xy": [
+          25.92,
+          319.68
+        ],
+        "wh": [
+          114.48,
+          114.48
+        ],
+        "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+        "orientation": "R0",
+        "closed_stands": true
+      },
+      {
+        "inst": "u_qdq.g_lq[3].u_lq",
+        "master": "ot_hgi_qdq_lq",
+        "xy": [
+          25.92,
+          457.92
+        ],
+        "wh": [
+          114.48,
+          114.48
+        ],
+        "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+        "orientation": "R0",
+        "closed_stands": true
+      },
+      {
+        "inst": "u_qdq.u_fr",
+        "master": "ot_hgi_qdq_fr",
+        "xy": [
+          172.8,
+          25.92
+        ],
+        "wh": [
+          86.4,
+          71.28
+        ],
+        "view": "physical/ref_tile/qdq_fr_ref/views/ot_hgi_qdq_fr",
+        "orientation": "R0",
+        "closed_stands": true
+      },
+      {
+        "inst": "u_qdq.u_core",
+        "master": "ot_hgi_qdq_core",
+        "xy": [
+          172.8,
+          120.96
+        ],
+        "wh": [
+          86.4,
+          77.76
+        ],
+        "view": "physical/ref_tile/qdq_core_ref/views/ot_hgi_qdq_core",
+        "orientation": "R0",
+        "closed_stands": true
+      },
+      {
+        "inst": "u_qdq.u_asm",
+        "master": "ot_hgi_qdq_asm",
+        "xy": [
+          172.8,
+          224.64
+        ],
+        "wh": [
+          69.12,
+          129.6
+        ],
+        "view": "physical/ref_tile/qdq_asm_ref/views/ot_hgi_qdq_asm",
+        "orientation": "R0",
+        "closed_stands": true
+      }
+    ],
+    "existing_overlap_pairs": [],
+    "actual_native_proof": {
+      "source": "3430b8aac",
+      "common_VM": "64fced1f9",
+      "phases": [
+        61,
+        487
+      ],
+      "words": 13312,
+      "records": 32,
+      "cycles": 184,
+      "price": 168,
+      "physical_parent_fit": "OPEN"
+    },
+    "current_boundary_candidate": {
+      "source": "90b0971bf",
+      "FRONTFAST": 2,
+      "FINFLAGS": 1,
+      "FASTFIN": 1,
+      "DRAIN": 1,
+      "phase61": "13,312exactwords184/168+all32drains; phase487/mutantsrunning",
+      "fast_payload": "CLOSEDbody129.6x71.28 but1bitQ224.6>220; newreal peroutputkeptFF variantchildowned",
+      "retire": "CLOSED172.8x103.68,P153.3/Q208.7,R299.2TT239.5FF spread28.2",
+      "general": "originalCLOSED86.4x71.28,P154.4/Q217.6,R139.1TT",
+      "CORE": "newFIN1maskbody86.4x77.76 CTS4132sinksTT140.4spread13.9; actualexportP190/Q220pending",
+      "WR": "oldmonolithic ACKflags gate rawinputnegFF-258ps; notrouted; newPAY259.2x125.28/FIN86.4x86.4 sourceb874 childowned, snapshot/actualcommits split; actualproductionintegrationnext"
+    },
+    "clock": "Each actualphysicalleaf needs separate phi-R delivery entry; softwarelogicalclk ties are not a physicalclocktree",
+    "M6_PORT": "No newgrant claimed; CLOSEDdecoder M6 bodies stand"
+  },
+  "sfu": {
+    "required_parent_outline_um": [
+      2016.144,
+      1095.12
+    ],
+    "body": "16xCLOSEDot_su12_sfu perquarter, frozenLANE5/GSH1/KIMM1/DENR1/DRING3/SFUT0; existing46,532rootstands",
+    "body_clock_ps": {
+      "TT_R": 331.5,
+      "TT_spread": 23.4,
+      "FF_R": 268.9
+    },
+    "mapper": "16xruntime lane_j mapper; m2CLOSEDbut1bitQ222.7>220 and26/657 actual setup pairs fail. M5pinw103.68x54 allmappedoutputsW gatep2refusedbadslotcitation; requires actualdieleadslotchange string, noM6grant",
+    "controller": "child real c12 N16, BS1/RET5 plusmapper4 andCLOSED b_q1/LEAF1, frozenwordoracle15090exactwrites/39193checks; VM0/NONE/EXP/SIGM/SILU alternative only; nativecache/groupassignment/ACKdrain/productionprice open",
+    "new_control_roots": "Full276 future75/retire60 bits chronological138chunks: 10350,10350,8280,8280 dataFF ownroots; proposed4x216x172.8 M5slotsunassigned; no monolithic52kroot route",
+    "model_paths": [
+      "results/arch/hbm_native_1013/uncovered_structural_2240/sfu_quarter_composition_request.json",
+      "results/arch/hbm_native_1013/uncovered_structural_2240/sfu_mapper_lane_actual_pairs.json"
+    ],
+    "source_owner": "/root/hbm_quant_sfu_2240/sfu_native_quarter"
+  },
+  "OV_alternative": "Unselected WQ3; RFsharedregisteredpayload and4META source625 leafroutes; lgr/lgw existingM5facecut~.75 unsignedM6PORT alternative notaccepted; M5 taller/privateRQsource alternative modeling next, no invalidparentroute",
+  "live_handles": [
+    {
+      "job": "qdq_wr_ref-q8e-85c81f4c2",
+      "status": "NEEDS_RTL",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qdq_wr_ref-q8e-85c81f4c2",
+      "TT_ps": -14.95,
+      "FF_ps": -13.06,
+      "DRC": 0
+    },
+    {
+      "job": "qdq_fr_one_payload_ref-p1-403ec081d",
+      "status": "CLOSED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qdq_fr_one_payload_ref-p1-403ec081d",
+      "TT_ps": 133.8,
+      "FF_ps": 21.99,
+      "DRC": 0
+    },
+    {
+      "job": "qdq_fr_capture_retire_ref-p1-403ec081d",
+      "status": "CLOSED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qdq_fr_capture_retire_ref-p1-403ec081d",
+      "TT_ps": 152.22,
+      "FF_ps": 25.0,
+      "DRC": 0
+    },
+    {
+      "job": "qw_ovg_ref-s5-625507b68",
+      "status": "CLOSED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qw_ovg_ref-s5-625507b68",
+      "TT_ps": 249.04,
+      "FF_ps": 2.86,
+      "DRC": 0
+    },
+    {
+      "job": "qw_ovr_ref-r2-625507b68",
+      "status": "CLOSED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qw_ovr_ref-r2-625507b68",
+      "TT_ps": 65.67,
+      "FF_ps": 19.61,
+      "DRC": 0
+    },
+    {
+      "job": "qw_ovmeta_ref-r1-625507b68",
+      "status": "CLOSED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qw_ovmeta_ref-r1-625507b68",
+      "TT_ps": 286.28,
+      "FF_ps": 24.76,
+      "DRC": 0
+    },
+    {
+      "job": "sfu_lane_map_ref-m2-f3256f609",
+      "status": "CLOSED",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/sfu_lane_map_ref-m2-f3256f609",
+      "TT_ps": 193.19,
+      "FF_ps": 23.91,
+      "DRC": 0
+    }
+  ],
+  "norm": "ROW_NORM productionSVmicrosequence now hc_normowner; standaloneengineunboundalternative, no cancellationclosurecredit"
+}

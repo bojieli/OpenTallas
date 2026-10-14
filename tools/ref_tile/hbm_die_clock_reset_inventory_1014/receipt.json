@@ -1,0 +1,999 @@
+{
+  "status": "REJECT_CURRENT_V13_AS_NATIVE_CLOCK_RESET_FEASIBILITY_EVIDENCE",
+  "main_snapshot": "bb9fa3a2766ef179666bb01892f7c0088d3911a1",
+  "measurement_scope": "Source/interface census only; declarations and source-net ties are not delivered physical roots. No new heavy jobs or producer edits.",
+  "legacy_v13": {
+    "children_and_clock_sinks": 5773,
+    "no_LEF_centres": 536,
+    "collapsed_SM_tiles": 512,
+    "other_no_LEF_centres": 24,
+    "clock_pins_status": "INPUT ONLY: no spine, tap, insertion delay or skew is planned or claimed here.",
+    "HC_reservations_not_placed": 4,
+    "missing_components": [
+      "IDX owned array",
+      "current quant/SFU composition",
+      "current native DMA front/VM bank",
+      "current HC own roots"
+    ],
+    "no_reset_driver_inventory": true
+  },
+  "rows": [
+    {
+      "subsystem": "SM tile",
+      "source": "Actual closed OWN + six child binding; gating fc7529c51; distinct structural candidate9a6aa5e3e unqualified",
+      "v13": 512,
+      "current_request_per_tile": {
+        "OWN_RAW": 1,
+        "child_RAW": 12,
+        "real_ICG_GCLK_outputs": 12
+      },
+      "baseline_external_requests_at512_tiles": 6656,
+      "baseline_scoped_request_delta": 6144,
+      "sum_with_v13_if_only_SM_replaced_not_new_census": 11917,
+      "closed_reference": {
+        "OWN_cut_2_R_ps": {
+          "tt": 149.2,
+          "ff": 116.9,
+          "ss": 207.0
+        },
+        "child_clk_R_ps": {
+          "bdc": [
+            180.9,
+            148.0,
+            236.9
+          ],
+          "tcl": [
+            171.4,
+            139.6,
+            225.5
+          ],
+          "tct": [
+            175.8,
+            143.1,
+            231.1
+          ],
+          "xs": [
+            315.0,
+            261.4,
+            402.8
+          ],
+          "pt_e": [
+            339.6,
+            281.0,
+            434.8
+          ],
+          "pt_w": [
+            429.0,
+            350.8,
+            557.0
+          ]
+        },
+        "corner_order": [
+          "tt",
+          "ff",
+          "ss"
+        ],
+        "source_slew_ps": 0,
+        "source_context": "actual saved SDC, optimistic tool ideal; real gated slew conditional childR uncalibrated"
+      },
+      "reset": "parent rst_n bit3 to OWNcut3; scalar accepted leaf reset interface, no die driver/release network bound",
+      "reject_reason": "Collapsed one-root tile is not OWN+12 child RAW/real GCLK clock contract; actual optimistic gating TT and SS fails. New local-ICG mirrored enable/commit pins are structural request, not granted replacement source ABI."
+    },
+    {
+      "subsystem": "Native VM/CDC",
+      "source_commit": "669eb2232",
+      "logical_leaf_count": 128,
+      "owned_leaf_count": 96,
+      "probe_leaf_count": 32,
+      "logical_C_V_requests": 256,
+      "current_functional_C_net_labels": {
+        "SU_C0": 8,
+        "SU_C1": 8,
+        "SU_C2": 8,
+        "SU_C3": 8,
+        "quant_C0": 8,
+        "quant_C1": 8,
+        "quant_C2": 8,
+        "quant_C3": 8,
+        "DMA_peer_C0": 8,
+        "DMA_peer_C1": 8,
+        "DMA_peer_C2": 8,
+        "DMA_peer_C3": 8,
+        "probe_group0_C0": 8,
+        "probe_group0_C1": 8,
+        "probe_group0_C2": 8,
+        "probe_group0_C3": 8
+      },
+      "current_functional_C_distinct": 16,
+      "current_functional_V_distinct": 1,
+      "owned96_functional_C_distinct": 12,
+      "period_ps": {
+        "C": 833.33325,
+        "V": 1111.111
+      },
+      "station_clock_requests": 32,
+      "station_policy": "Topstation_clk32,HARD_CLOCKS1 maps32realbankstationroots; defaultHARD_CLOCKS0functionalusesvclk. Actualgate1079Q TTmax211.9spread42.3/diagnosticsetup101.9hold40.5; rgrant533/Wgrant285fanout and4levelrcreditcapturedefects OPEN.",
+      "source_slew_and_physical_roots": "UNBOUND",
+      "reset": "shared rst_n direct asynchronous assertion/deassertion in functional CDC; regional synchronized release and drivers unbound",
+      "reject_reason": "128 per-leaf C/V requests cannot inherit 16 functional quarter-shared C labels and globally shared V as delivered root proof. Behavioral payload arrays/no ECC and NC1 hub variant do not inherit other closed variants."
+    },
+    {
+      "subsystem": "IDX NS16/NK4",
+      "source_commit": "08d7579e5",
+      "source_sha256": "156ec762fd7f1e4f768a072643a715f6a5d89eaa97d3d5834845ca383b0a98eb",
+      "owned_active_inputs": 2160,
+      "owned_input_breakdown": {
+        "engine": 16,
+        "meta": 16,
+        "tail": 16,
+        "chunk": 64,
+        "hslice": 2048
+      },
+      "glue_generic_FF": 566992,
+      "glue_active_roots": 112,
+      "glue_max_FF_per_root": 9905,
+      "legacy_hslice_sinks_lowerbound": 15334,
+      "new_ready_ACK_FF_each": 1,
+      "period_slew_driver_reference": "No actual physical driver/period/slew/delivered CTS binding; functional benchmark common phase does not define delivery",
+      "reset": "one global rst_n; chunk5-region ot_rst_relay and leaf1-region local reset, rs/rn_p and registered ACK; no per-root external reset arrays or qualified physical reset driver policy",
+      "reject_reason": "Not placed in v13; actual2048 new-ready leaf variants have no new physical view. Cold/warm drained functional clock stopping does not prove arbitrary running-clock pause/release."
+    },
+    {
+      "subsystem": "HC",
+      "historical_arithmetic_only": {
+        "source": "24b3831d7",
+        "declared": 594,
+        "pruned": 12,
+        "active": 582
+      },
+      "proven_native_allroots": {
+        "source": "fe03391e3",
+        "declared": 668,
+        "pruned": 12,
+        "active": 656,
+        "receipt": "sources/hc_native_allroots.json"
+      },
+      "latest_source_request": {
+        "source": "8100796b3/a0f403d93",
+        "declared": 672,
+        "pruned": 12,
+        "active": 660,
+        "native_hardlink_exact_M16": "pending at owner response; no completed verdict inferred"
+      },
+      "latest_slot_request_source": "a0f403d93",
+      "slot_source_hash_mismatches": [],
+      "slot_embedded_historical_API": "Latest refreshed API explicitly declares672/660 and pending hardlink proof. Legacy clock_entries_declared594 remains a historical arithmetic subfield; do not treat it as full total.",
+      "period_ps": {
+        "route": 770,
+        "signoff": 833.333
+      },
+      "source_slew_driver_phase": "UNBOUND; equal related functional test clocks do not deliver physical phase",
+      "reset": "scalar rst_n with local ot_rst_relay REGIONS1/SYNC2/TREE1 for new own logic; acceptedSL interface unchanged; die reset release/source drivers unbound",
+      "reject_reason": "v13 HC reservations are not placed masters. Obsolete582 omits proven74 own roots and current4 quarter-link roots; no global root sum with unresolved native hierarchy.",
+      "private_CTS_reference_inventory": [
+        {
+          "master": "ot_hgi_hc_win_ctl",
+          "count": 32,
+          "reference_pins": [
+            {
+              "name": "clk",
+              "direction": "INPUT",
+              "bits": 1,
+              "layers": [
+                "M4"
+              ],
+              "provisional_face": "W"
+            }
+          ],
+          "all_corner_metrics": {
+            "tt": {
+              "boundary": {
+                "n": 202,
+                "mean": 97.7,
+                "min": 95.9,
+                "max": 100.3
+              },
+              "all": {
+                "n": 461,
+                "mean": 97.5,
+                "min": 95.4,
+                "max": 100.3
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ff": {
+              "boundary": {
+                "n": 202,
+                "mean": 73.6,
+                "min": 71.8,
+                "max": 76.1
+              },
+              "all": {
+                "n": 461,
+                "mean": 73.4,
+                "min": 71.2,
+                "max": 76.1
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ss": {
+              "boundary": {
+                "n": 202,
+                "mean": 141.0,
+                "min": 139.0,
+                "max": 144.3
+              },
+              "all": {
+                "n": 461,
+                "mean": 141.0,
+                "min": 138.4,
+                "max": 144.3
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          },
+          "status": "PRIVATE_CTS_ONLY_UNASSIGNED; no routed/exported hard view",
+          "qualification": "PRIVATE_CTS_ONLY unless exact published closed view separately bound; source waveform/slew/driver not inferred"
+        },
+        {
+          "master": "ot_hgi_hc_win_sector",
+          "count": 128,
+          "reference_pins": [
+            {
+              "name": "clk",
+              "direction": "INPUT",
+              "bits": 1,
+              "layers": [
+                "M4"
+              ],
+              "provisional_face": "W"
+            }
+          ],
+          "all_corner_metrics": {
+            "tt": {
+              "boundary": {
+                "n": 540,
+                "mean": 175.6,
+                "min": 160.1,
+                "max": 191.0
+              },
+              "all": {
+                "n": 799,
+                "mean": 176.7,
+                "min": 156.5,
+                "max": 191.2
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 176.7,
+                "max_slew": 13.6,
+                "max_late": -17.8,
+                "pins": [
+                  {
+                    "pin": "u_mem/clk",
+                    "arr": 158.9,
+                    "slew": 13.6,
+                    "late": -17.8,
+                    "net": "clknet_1_0__leaf_clk"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            },
+            "ff": {
+              "boundary": {
+                "n": 540,
+                "mean": 147.7,
+                "min": 132.8,
+                "max": 162.6
+              },
+              "all": {
+                "n": 799,
+                "mean": 148.8,
+                "min": 122.8,
+                "max": 162.8
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 148.8,
+                "max_slew": 11.5,
+                "max_late": -26.0,
+                "pins": [
+                  {
+                    "pin": "u_mem/clk",
+                    "arr": 122.8,
+                    "slew": 11.5,
+                    "late": -26.0,
+                    "net": "clknet_1_0__leaf_clk"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            },
+            "ss": {
+              "boundary": {
+                "n": 540,
+                "mean": 220.5,
+                "min": 204.4,
+                "max": 236.2
+              },
+              "all": {
+                "n": 799,
+                "mean": 221.6,
+                "min": 201.0,
+                "max": 236.4
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 221.6,
+                "max_slew": 18.4,
+                "max_late": -0.8,
+                "pins": [
+                  {
+                    "pin": "u_mem/clk",
+                    "arr": 220.8,
+                    "slew": 18.4,
+                    "late": -0.8,
+                    "net": "clknet_1_0__leaf_clk"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          },
+          "status": "PRIVATE_CTS_ONLY_UNASSIGNED; no routed/exported hard view",
+          "qualification": "PRIVATE_CTS_ONLY unless exact published closed view separately bound; source waveform/slew/driver not inferred"
+        },
+        {
+          "master": "ot_hgi_hc_chunk_store32",
+          "count": 20,
+          "reference_pins": [
+            {
+              "name": "clk",
+              "direction": "INPUT",
+              "bits": 1,
+              "layers": [
+                "M4"
+              ],
+              "provisional_face": "W"
+            }
+          ],
+          "all_corner_metrics": {
+            "tt": {
+              "boundary": {
+                "n": 342,
+                "mean": 99.8,
+                "min": 98.2,
+                "max": 101.7
+              },
+              "all": {
+                "n": 1398,
+                "mean": 99.8,
+                "min": 97.5,
+                "max": 101.7
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ff": {
+              "boundary": {
+                "n": 342,
+                "mean": 79.1,
+                "min": 77.2,
+                "max": 81.0
+              },
+              "all": {
+                "n": 1398,
+                "mean": 78.9,
+                "min": 76.8,
+                "max": 81.0
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ss": {
+              "boundary": {
+                "n": 342,
+                "mean": 136.7,
+                "min": 135.0,
+                "max": 138.5
+              },
+              "all": {
+                "n": 1398,
+                "mean": 136.9,
+                "min": 134.5,
+                "max": 138.7
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          },
+          "status": "PRIVATE_CTS_ONLY_UNASSIGNED; no routed/exported hard view",
+          "qualification": "PRIVATE_CTS_ONLY unless exact published closed view separately bound; source waveform/slew/driver not inferred"
+        },
+        {
+          "master": "ot_hgi_hc_chunk_scan2",
+          "count": 16,
+          "reference_pins": [
+            {
+              "name": "clk",
+              "direction": "INPUT",
+              "bits": 1,
+              "layers": [
+                "M4"
+              ],
+              "provisional_face": "W"
+            }
+          ],
+          "all_corner_metrics": {
+            "tt": {
+              "boundary": {
+                "n": 797,
+                "mean": 101.3,
+                "min": 96.3,
+                "max": 103.3
+              },
+              "all": {
+                "n": 797,
+                "mean": 101.3,
+                "min": 96.3,
+                "max": 103.3
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ff": {
+              "boundary": {
+                "n": 797,
+                "mean": 76.5,
+                "min": 72.0,
+                "max": 78.5
+              },
+              "all": {
+                "n": 797,
+                "mean": 76.5,
+                "min": 72.0,
+                "max": 78.5
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ss": {
+              "boundary": {
+                "n": 797,
+                "mean": 145.5,
+                "min": 138.5,
+                "max": 148.2
+              },
+              "all": {
+                "n": 797,
+                "mean": 145.5,
+                "min": 138.5,
+                "max": 148.2
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          },
+          "status": "PRIVATE_CTS_ONLY_UNASSIGNED; no routed/exported hard view",
+          "qualification": "PRIVATE_CTS_ONLY unless exact published closed view separately bound; source waveform/slew/driver not inferred"
+        },
+        {
+          "master": "ot_hgi_hc_coeff_bank",
+          "count": 32,
+          "reference_pins": [
+            {
+              "name": "clk",
+              "direction": "INPUT",
+              "bits": 1,
+              "layers": [
+                "M4"
+              ],
+              "provisional_face": "W"
+            }
+          ],
+          "all_corner_metrics": {
+            "tt": {
+              "boundary": {
+                "n": 775,
+                "mean": 103.9,
+                "min": 102.2,
+                "max": 106.2
+              },
+              "all": {
+                "n": 775,
+                "mean": 103.9,
+                "min": 102.2,
+                "max": 106.2
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ff": {
+              "boundary": {
+                "n": 775,
+                "mean": 78.5,
+                "min": 76.7,
+                "max": 80.9
+              },
+              "all": {
+                "n": 775,
+                "mean": 78.5,
+                "min": 76.7,
+                "max": 80.9
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ss": {
+              "boundary": {
+                "n": 775,
+                "mean": 148.7,
+                "min": 146.5,
+                "max": 151.2
+              },
+              "all": {
+                "n": 775,
+                "mean": 148.7,
+                "min": 146.5,
+                "max": 151.2
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          },
+          "status": "PRIVATE_CTS_ONLY_UNASSIGNED; no routed/exported hard view",
+          "qualification": "PRIVATE_CTS_ONLY unless exact published closed view separately bound; source waveform/slew/driver not inferred"
+        },
+        {
+          "master": "ot_hgi_hc_quarter_link6",
+          "count": 4,
+          "reference_pins": [
+            {
+              "name": "clk",
+              "direction": "INPUT",
+              "bits": 1,
+              "layers": [
+                "M4"
+              ],
+              "provisional_face": "W"
+            }
+          ],
+          "all_corner_metrics": {
+            "tt": {
+              "boundary": {
+                "n": 997,
+                "mean": 118.3,
+                "min": 115.4,
+                "max": 122.2
+              },
+              "all": {
+                "n": 2985,
+                "mean": 118.1,
+                "min": 114.2,
+                "max": 122.2
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ff": {
+              "boundary": {
+                "n": 997,
+                "mean": 93.5,
+                "min": 90.9,
+                "max": 97.5
+              },
+              "all": {
+                "n": 2985,
+                "mean": 93.3,
+                "min": 89.6,
+                "max": 97.5
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ss": {
+              "boundary": {
+                "n": 997,
+                "mean": 162.4,
+                "min": 158.9,
+                "max": 166.3
+              },
+              "all": {
+                "n": 2985,
+                "mean": 162.2,
+                "min": 157.6,
+                "max": 166.3
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          },
+          "status": "PRIVATE_CTS_ONLY_UNASSIGNED; no routed/exported hard view",
+          "qualification": "PRIVATE_CTS_ONLY unless exact published closed view separately bound; source waveform/slew/driver not inferred"
+        },
+        {
+          "master": "hbfd_rly_304_WE",
+          "count": 16,
+          "reference_pins": "ck",
+          "all_corner_metrics": {
+            "tt": {
+              "boundary": {
+                "n": 308,
+                "mean": 82.3,
+                "min": 80.1,
+                "max": 85.3
+              },
+              "all": {
+                "n": 308,
+                "mean": 82.3,
+                "min": 80.1,
+                "max": 85.3
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ff": {
+              "boundary": {
+                "n": 308,
+                "mean": 62.9,
+                "min": 60.6,
+                "max": 66.1
+              },
+              "all": {
+                "n": 308,
+                "mean": 62.9,
+                "min": 60.6,
+                "max": 66.1
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ss": {
+              "boundary": {
+                "n": 308,
+                "mean": 116.9,
+                "min": 114.7,
+                "max": 119.9
+              },
+              "all": {
+                "n": 308,
+                "mean": 116.9,
+                "min": 114.7,
+                "max": 119.9
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          },
+          "status": "REUSE_CLOSED; actual die placement/pins pending",
+          "qualification": "PRIVATE_CTS_ONLY unless exact published closed view separately bound; source waveform/slew/driver not inferred"
+        }
+      ],
+      "additional_window_scope": "32window control +128window sector entries are separate window demand; no global root addition performed against collector660."
+    },
+    {
+      "subsystem": "DMA front/bank",
+      "owner_source": "front_split5efe71581 current tree sources hashbound in binding",
+      "lane_roots": {
+        "per_frontend": 8,
+        "instances": 32,
+        "FF_each": 2436,
+        "routed_TT_R_ps": 240
+      },
+      "control_roots": {
+        "instances": 4,
+        "FF_each": 6763,
+        "routed_boundary_R_ps": {
+          "tt_mean": 169.4,
+          "tt_min": 158.7,
+          "tt_max": 184.2,
+          "ff_mean": 138,
+          "ff_min": 128.2,
+          "ff_max": 152.7
+        },
+        "TT_lib_clock_insertion_max_ps": 197
+      },
+      "bank9_per_master_roots": {
+        "source_clk": 4,
+        "vm_clk": 1,
+        "source_FF_each": 4532,
+        "vm_FF": 10670
+      },
+      "fused_main10_actual_RAW_FF": 15497,
+      "fused_main10_status": "unclosed/priceFAIL, not legacy closure inheritance",
+      "period_ps": {
+        "source": 833.33325,
+        "VM": 1111.111
+      },
+      "source_slew_driver_phase": "UNBOUND; functional PHASE+17q clocks do not define die source taps",
+      "reset": "lane relay REGIONS1/SYNC2/TREE1 local release3edges; ctrl relayREGIONS3 plus grant/lease direct async clear; bank9 direct async queues/Gray/router/event controls with no domain-specific release bound; formatter validityflush5cycles not reset driver proof",
+      "reject_reason": "Native per-lane/control/bank roots are absent from v13 old centre/quarter-root planning; no physical source/reset/pin grant."
+    },
+    {
+      "subsystem": "Quant/SFU",
+      "source": "quant90b0971bf, b415845f8 structural inventory, split clk_pay/clk_fin b874/d536",
+      "software_clocks": {
+        "cclk_count": 4,
+        "cclk_period_ps": 833.333,
+        "vclk_period_ps": 1111.111
+      },
+      "quant_current_inventory": {
+        "master": "ot_hgi_qdq_q_pin4",
+        "outline_um": [
+          622.08,
+          596.16
+        ],
+        "outer_pins": {
+          "W": [
+            "wrq",
+            "wrq_cr",
+            "wrr_p0",
+            "wrr_p1",
+            "wrr_p2",
+            "wrr_p3",
+            "rg_req",
+            "rg_gnt"
+          ],
+          "N": [
+            "wwq",
+            "wwq_cr",
+            "wwq_done",
+            "wg_req",
+            "wg_gnt"
+          ],
+          "S": [
+            "clk",
+            "rst_n",
+            "rec",
+            "ret"
+          ]
+        },
+        "current_source_spec": "tools/ref_tile/specs_hbmb2vm/qdq_q_ref.json",
+        "stale_generated_floorplan": "physical/ref_tile/qdq_q_ref/floorplan.json still has olddirectSRAM hierarchy; not authoritative new11childcomposition",
+        "existing_rectangles": [
+          {
+            "inst": "u_qdq.g_d3.u_dec.u_dxl",
+            "master": "ot_hgi_qw_dxl",
+            "xy": [
+              302.4,
+              259.2
+            ],
+            "wh": [
+              120.96,
+              120.96
+            ],
+            "view": "physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl",
+            "orientation": "R0",
+            "closed_stands": true
+          },
+          {
+            "inst": "u_qdq.g_d3.u_dec.u_dbq",
+            "master": "ot_hgi_qw_dbq",
+            "xy": [
+              475.2,
+              259.2
+            ],
+            "wh": [
+              120.96,
+              120.96
+            ],
+            "view": "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq",
+            "orientation": "R0",
+            "closed_stands": true
+          },
+          {
+            "inst": "u_qdq.g_d3.u_dec.u_daq",
+            "master": "ot_hgi_qw_daq",
+            "xy": [
+              302.4,
+              86.4
+            ],
+            "wh": [
+              129.6,
+              129.6
+            ],
+            "view": "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq",
+            "orientation": "R0",
+            "closed_stands": true
+          },
+          {
+            "inst": "u_qdq.g_lq[0].u_lq",
+            "master": "ot_hgi_qdq_lq",
+            "xy": [
+              25.92,
+              43.2
+            ],
+            "wh": [
+              114.48,
+              114.48
+            ],
+            "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+            "orientation": "R0",
+            "closed_stands": true
+          },
+          {
+            "inst": "u_qdq.g_lq[1].u_lq",
+            "master": "ot_hgi_qdq_lq",
+            "xy": [
+              25.92,
+              181.44
+            ],
+            "wh": [
+              114.48,
+              114.48
+            ],
+            "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+            "orientation": "R0",
+            "closed_stands": true
+          },
+          {
+            "inst": "u_qdq.g_lq[2].u_lq",
+            "master": "ot_hgi_qdq_lq",
+            "xy": [
+              25.92,
+              319.68
+            ],
+            "wh": [
+              114.48,
+              114.48
+            ],
+            "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+            "orientation": "R0",
+            "closed_stands": true
+          },
+          {
+            "inst": "u_qdq.g_lq[3].u_lq",
+            "master": "ot_hgi_qdq_lq",
+            "xy": [
+              25.92,
+              457.92
+            ],
+            "wh": [
+              114.48,
+              114.48
+            ],
+            "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+            "orientation": "R0",
+            "closed_stands": true
+          },
+          {
+            "inst": "u_qdq.u_fr",
+            "master": "ot_hgi_qdq_fr",
+            "xy": [
+              172.8,
+              25.92
+            ],
+            "wh": [
+              86.4,
+              71.28
+            ],
+            "view": "physical/ref_tile/qdq_fr_ref/views/ot_hgi_qdq_fr",
+            "orientation": "R0",
+            "closed_stands": true
+          },
+          {
+            "inst": "u_qdq.u_core",
+            "master": "ot_hgi_qdq_core",
+            "xy": [
+              172.8,
+              120.96
+            ],
+            "wh": [
+              86.4,
+              77.76
+            ],
+            "view": "physical/ref_tile/qdq_core_ref/views/ot_hgi_qdq_core",
+            "orientation": "R0",
+            "closed_stands": true
+          },
+          {
+            "inst": "u_qdq.u_asm",
+            "master": "ot_hgi_qdq_asm",
+            "xy": [
+              172.8,
+              224.64
+            ],
+            "wh": [
+              69.12,
+              129.6
+            ],
+            "view": "physical/ref_tile/qdq_asm_ref/views/ot_hgi_qdq_asm",
+            "orientation": "R0",
+            "closed_stands": true
+          }
+        ],
+        "existing_overlap_pairs": [],
+        "actual_native_proof": {
+          "source": "3430b8aac",
+          "common_VM": "64fced1f9",
+          "phases": [
+            61,
+            487
+          ],
+          "words": 13312,
+          "records": 32,
+          "cycles": 184,
+          "price": 168,
+          "physical_parent_fit": "OPEN"
+        },
+        "current_boundary_candidate": {
+          "source": "90b0971bf",
+          "FRONTFAST": 2,
+          "FINFLAGS": 1,
+          "FASTFIN": 1,
+          "DRAIN": 1,
+          "phase61": "13,312exactwords184/168+all32drains; phase487/mutantsrunning",
+          "fast_payload": "CLOSEDbody129.6x71.28 but1bitQ224.6>220; newreal peroutputkeptFF variantchildowned",
+          "retire": "CLOSED172.8x103.68,P153.3/Q208.7,R299.2TT239.5FF spread28.2",
+          "general": "originalCLOSED86.4x71.28,P154.4/Q217.6,R139.1TT",
+          "CORE": "newFIN1maskbody86.4x77.76 CTS4132sinksTT140.4spread13.9; actualexportP190/Q220pending",
+          "WR": "oldmonolithic ACKflags gate rawinputnegFF-258ps; notrouted; newPAY259.2x125.28/FIN86.4x86.4 sourceb874 childowned, snapshot/actualcommits split; actualproductionintegrationnext"
+        },
+        "clock": "Each actualphysicalleaf needs separate phi-R delivery entry; softwarelogicalclk ties are not a physicalclocktree",
+        "M6_PORT": "No newgrant claimed; CLOSEDdecoder M6 bodies stand"
+      },
+      "SFU_current_inventory": {
+        "required_parent_outline_um": [
+          2016.144,
+          1095.12
+        ],
+        "body": "16xCLOSEDot_su12_sfu perquarter, frozenLANE5/GSH1/KIMM1/DENR1/DRING3/SFUT0; existing46,532rootstands",
+        "body_clock_ps": {
+          "TT_R": 331.5,
+          "TT_spread": 23.4,
+          "FF_R": 268.9
+        },
+        "mapper": "16xruntime lane_j mapper; m2CLOSEDbut1bitQ222.7>220 and26/657 actual setup pairs fail. M5pinw103.68x54 allmappedoutputsW gatep2refusedbadslotcitation; requires actualdieleadslotchange string, noM6grant",
+        "controller": "child real c12 N16, BS1/RET5 plusmapper4 andCLOSED b_q1/LEAF1, frozenwordoracle15090exactwrites/39193checks; VM0/NONE/EXP/SIGM/SILU alternative only; nativecache/groupassignment/ACKdrain/productionprice open",
+        "new_control_roots": "Full276 future75/retire60 bits chronological138chunks: 10350,10350,8280,8280 dataFF ownroots; proposed4x216x172.8 M5slotsunassigned; no monolithic52kroot route",
+        "model_paths": [
+          "results/arch/hbm_native_1013/uncovered_structural_2240/sfu_quarter_composition_request.json",
+          "results/arch/hbm_native_1013/uncovered_structural_2240/sfu_mapper_lane_actual_pairs.json"
+        ],
+        "source_owner": "/root/hbm_quant_sfu_2240/sfu_native_quarter"
+      },
+      "source_slew_driver_phase": "UNBOUND; software engine ties are not physical pin assignments",
+      "reset": "held scalar rst_n async on current software domains; die launch/slew/release dispatch unbound",
+      "reject_reason": "Current split leaf clocks and SFU wheel/mapper roots cannot inherit quarter-shared placeholders; source/context hashes remain per leaf and all unclosed repair variants separate."
+    }
+  ],
+  "policy": {
+    "domains": "True stream C833.333 and serial V1111.111 related3:4 when real source proves common origin; retain actual source833.33325 distinct rounding. Existing old die model also declares HBM1024/link833.333: not silently aliased to C/V.",
+    "R": "Per exact source pin and corner only; entry/gate wire must be measured separately. No zeroR or sibling variant substitution.",
+    "source_abi": "driver locations/cells/cap/slew/jitter/phase/power and package/root costs remain unbound",
+    "reset_abi": "assertion polarity/source, local release owner, per-domain timing/recovery/removal/drain/lease and stopped clock behavior require binding, no reset waiver",
+    "next_independent_action": "Expand v13 flattened instance/pin inventory using exact admitted producer variants and semantic connections, each RAW/GCLK/ref/reset binding; compute geometry/load/reach demand before CTS submission. Preserve pending actual gated childR/source calibration and native running-clock release proof.",
+    "global_count": "No total new die root count claimed: subsystem logical requests overlap parent/hierarchy scopes and unresolved native replacements are not adopted."
+  }
+}
