@@ -28,7 +28,7 @@ FILES="$SRC/rtl/lib/ot_reset_sync.sv $SRC/rtl/lib/ot_async_fifo.sv $SRC/rtl/comm
  $C/ot_s81_engine_adapter.sv $C/ot_s81_slab_ep.sv
  $P/ot_s81ph_ret_root_p.sv $P/ot_s81ph_root_blk.sv $P/ot_s81ph_root_tile.sv $P/ot_s81ph_gather.sv $P/dsfd_sp_gather.sv
  $P/ctrl_c/dsfd_sp_gather_c.sv
- $P/ot_s81ph_ret_root_s.sv $P/ot_s81ph_root_leaf.sv $P/dsfd_gth_ctl.sv $P/dsfd_gth_strip.sv $SRC/rtl/dsrom_sys/s81_glue/ot_s81_rly.sv $SRC/rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv $SRC/rtl/dsrom_sys/s81_glue/gather_rly_lane.sv $SRC/rtl/dsrom_sys/s81_glue/gather_rly_res.sv $SRC/rtl/dsrom_sys/s81_glue/gather_rly_strip.sv $P/ctrl_c/dsfd_sp_gather_c_cl.sv
+ $P/ot_s81ph_ret_root_s.sv $P/ot_s81ph_root_leaf.sv $P/dsfd_gth_ctl.sv $P/dsfd_gth_strip.sv $SRC/rtl/dsrom_sys/s81_glue/ot_s81_rly.sv $SRC/rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv $SRC/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_lane.sv $SRC/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_res.sv $SRC/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_strip.sv $P/ctrl_c/dsfd_sp_gather_c_cl.sv
  $M/ot_sram_1r1w_128x66_m1_r2c2/ot_sram_1r1w_128x66_m1_r2c2.v $M/ot_sram_1r1w_256x34_m2_r2c2/ot_sram_1r1w_256x34_m2_r2c2.v
  $M/ot_sram_1r1w_512x34_m4_r2c2/ot_sram_1r1w_512x34_m4_r2c2.v
  $P/test/tb_s81ph_gather_cl.sv"
