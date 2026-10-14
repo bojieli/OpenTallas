@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.s81.native_integration_source_request.v1",
-  "source_commit": "72de5eb2f",
+  "source_commit": "b3e561c1c",
   "physical_admission": false,
   "canonical_whole_field_assembly": null,
   "source_sha256": {
@@ -10,7 +10,7 @@
     "rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv": "5088b726e17245248c9e0547c15eafe704d663c6d03a50ed5a7701448d924123",
     "rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv": "1f67fdb4e27aac34e26d4ebd300bf7e3dabe268bfab39f388030b02bce610a53",
     "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv": "debe9df8faa0e0bcaca1e8dc30c6a9f9b0a90b7b7792835e5c9051907a24cb72",
-    "rtl/dsrom_sys/s81_ctrl/ot_s81_startup_barrier.sv": "5f16c97eba129eb46b4eccdfe1937814e6eaac9e4bd30b9b5ec54d9fdbfeca97",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_startup_barrier.sv": "816c798b4b553fda26c418ee294acfbe4e3f9a0297e30777dd72b721cc665e83",
     "rtl/dsrom_sys/s81_ctrl/test/tb_s81_die_layer.sv": "c126dea0642ecfae04f2bc9eb2696a79026409bde7c6e39ce07f98fe6892d521"
   },
   "clock_producer": {
@@ -95,11 +95,11 @@
       "parameter": "STARTUP_BARRIER=1",
       "default": 0,
       "local_release": "two real clocked synchronizer FFs; startup_local_ready output",
-      "barrier": "four local rising edges after the last genuine final release acknowledgment",
+      "barrier": "Each real producer ACK is separately sampled through two retained synchronizer FFs; reduction then two stable local edges. Any source/reset assertion clears admission asynchronously. Four local rising edges after final ACK.",
       "blocked_action": "j_r operation admission",
       "unblocked_action": "configuration/programming after local reset release",
       "physical_recovery_removal": null,
-      "functional_receipt": "results/rtl/s81_startup_20261014/functional_72de5/gate.json: baseline/startup/forge/barrier positive PASS and actual EARLY/STOP/NOSRC mutants FAIL",
+      "functional_receipt": "results/rtl/s81_startup_20261014/functional_perack/gate.json: fresh default/startup/forge/barrier positives PASS and actual EARLY/STOP/NOSRC mutants FAIL",
       "wrapper_propagation": "OPEN: physical controller wrappers do not propagate new parameter/ports"
     }
   },
@@ -120,7 +120,8 @@
     "vm": "No all-leaf readiness output. FE FLT9 internal release at24 ideal serial edges from asynchronous release; t_rdy is service completion, not reset readiness.",
     "hrow": "No actual hrow instance in native207/c7; no production role/origin/source can be bound.",
     "host_boot": "boot_ok gates SOURCE host launch, not all inbound non-SOURCE operation admissions.",
-    "reference_bench": "tb_s81_die_layer manually delays10stream edges then releases reference reset and waits60; bench-only, not hardware barrier."
+    "reference_bench": "tb_s81_die_layer manually delays10stream edges then releases reference reset and waits60; bench-only, not hardware barrier.",
+    "vm_partial_ack": "Candidate FE113serial+4stream and BE4+4 acknowledge these actual consumers only; BGQ16/bank final states remain required. No whole-VM-ready reduction."
   },
   "retained_geometry": {
     "plan": "v18_screen_native_envelopes207/plan.json.gz",
