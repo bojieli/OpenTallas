@@ -57,8 +57,11 @@ module qfd_link_adp128_p12 #(parameter integer MUT=0)(
  input wire ck,rst_n,c_v,input wire[127:0]c_d,output wire c_cr,r_v,
  output wire[127:0]r_d,input wire r_cr,tx_up,output wire tx_v,
  output wire[146:0]tx_flit,input wire rx_v,input wire[146:0]rx_flit,output wire fault);
+ // Creditreturn is a registered input boundary, like capturedDATA/FDI.
+ reg r_cr_q;
+ always @(posedge ck or negedge rst_n)if(!rst_n)r_cr_q<=0;else r_cr_q<=r_cr;
  ot_qfd_link_adapter #(.W(128),.IBUF(12),.OCRED(12),.RXD(512),.SRAM(1),.PINREG(1),.NG(1),.MUT(MUT))u_body
- (.clk(ck),.rst_n(rst_n),.c_v(c_v),.c_d(c_d),.c_cr(c_cr),.r_v(r_v),.r_d(r_d),.r_cr(r_cr),
+ (.clk(ck),.rst_n(rst_n),.c_v(c_v),.c_d(c_d),.c_cr(c_cr),.r_v(r_v),.r_d(r_d),.r_cr(r_cr_q),
  .tx_up(tx_up),.tx_v(tx_v),.tx_flit(tx_flit),.rx_v(rx_v),.rx_flit(rx_flit),.fault(fault));
 endmodule
 module qfd_proxy_phy_guard(input wire ck,rst_n,input wire[1042:0]d,

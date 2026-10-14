@@ -35,9 +35,10 @@
     "max_estimated_root_flops": 9300,
     "shared_forwarded_clock": false,
     "physical_reference": "phi-minusR peractualrouted insertion, perpin O-R/S+R/cornerbudget pending",
-    "aggregate_sequential_bits": 66575,
+    "aggregate_sequential_bits": 66583,
     "max_measured_generic_root_sinks": 9275,
-    "census": "proxy/census.json, Yosys generic bit synthesis noabc, not physical"
+    "census": "proxy/census.json, Yosys generic bit synthesis noabc, not physical",
+    "census_note": "Prioractual66575 genericcensus + eight newlyadded independentcreditFFs; refreshedactualcensus pending."
   },
   "registered_transport": {
     "C_each_branch_stages": 3,
@@ -46,7 +47,9 @@
     "PHY_TX_header_guard_stages": 2,
     "PHY_RX_common": 1,
     "PHY_RX_each_branch": 1,
-    "R_full_word_collector": "registeredinput+FIFOreadoutput; refusespartial2-halfcommit"
+    "R_full_word_collector": "registeredinput+FIFOreadoutput; refusespartial2-halfcommit",
+    "leaf_R_credit_capture_edges": 1,
+    "leaf_R_credit_capture_reason": "P12gatefound r_cr->counter4logic levels, nowregisteratleaf boundary; rate+blocked+reset proofs rerun, allfivemutants stillobserved."
   },
   "candidate_parent_outline_um": [
     237.6,
