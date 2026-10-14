@@ -281,6 +281,9 @@
  "sdc_extra": [
   "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc.sdc"
  ],
+ "boundary_tcl": [
+  "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc_boundary.tcl"
+ ],
  "params": {},
  "children": [],
  "inter": [],
