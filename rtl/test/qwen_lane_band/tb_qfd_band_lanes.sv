@@ -16,6 +16,7 @@ module tb_qfd_band_lanes;
     parameter integer NL = 4, LNK = 0, MUT = 0, NOPS = 3000, SEED = 1;
     parameter integer RDMEM = 0, BANR = 0;   // el1011-q-seq: DUT delay lines in SRAM (2 = one-edge-short mutant) / valid-only adder resets
     parameter integer NBP = 6;               // bands: 6 (TP4, GT 6,144) or 3 (TP8, GT 3,072)
+    parameter integer CDLY = 2;              // CL=1: leaf c-tap delay of the cluster (1 = the hardened leaf, selects one edge late)
     parameter integer CL = 0;                // el1013-qwen-small-masters: 1 = the tree top is the die CLUSTER cell qfd_tt_up4 (NL 16, NBP 3, LNK 1:
                                              // its two pin stages ARE the one link relay stage; no u_l1..u_l4 delay on its links, sel undelayed)
     localparam integer NB = NBP, LG = $clog2(NB * 1024), LAT_L = 41, LAT_B = 46 + 2 * LNK;
@@ -60,9 +61,16 @@ module tb_qfd_band_lanes;
         // the cluster through its own die bundles; packing as documented in rtl/physical/ot_qwen_tt_up4_cluster.sv
         wire [1537:0] cty;
         initial if (NL != 16 || NB != 3 || LNK != 1) begin $display("FAIL qfd_band_lanes CL=1 needs NL 16, NBP 3, LNK 1"); $fatal(1); end
-        qfd_tt_up4 #(.NB(NB), .LG(LG), .DLY(2), .LMUT((MUT == 2 || MUT == 3) ? MUT : 0)) u_up (
+        // CDLY = the cluster leaves' c-tap delay.  2: the selects reach the cluster with the band words (this bench's
+        // own timing).  1 = the HARDENED leaf (kit qfd_tt_up4_leaf, die lead's cell definition): the die's control tile
+        // delivers the selects one edge later (its output station), modelled here by one flop on sel / tv.
+        reg [2*(LG+1)-1:0] sel_st;
+        always @(posedge clk or negedge rst_n) if (!rst_n) sel_st <= {2*(LG+1){1'b0}}; else sel_st <= {tv[LG:0], sel[LG:0]};
+        wire [2*(LG+1)-1:0] sel_c = (CDLY == 1) ? sel_st : {tv[LG:0], sel[LG:0]};
+        initial if (CDLY != 1 && CDLY != 2) begin $display("FAIL qfd_band_lanes CDLY must be 1 or 2"); $fatal(1); end
+        qfd_tt_up4 #(.NB(NB), .LG(LG), .DLY(CDLY), .LMUT((MUT == 2 || MUT == 3) ? MUT : 0)) u_up (
             .ck(clk), .rst_n(rst_n), .pw0({pv[0], pw[0*512 +: 512]}), .pw1({pv[1], pw[1*512 +: 512]}), .pw2({pv[2], pw[2*512 +: 512]}),
-            .lf0(bf[0]), .lf1(bf[1]), .lf2(bf[2]), .sel({tv[LG:0], sel[LG:0]}), .ty(cty), .flt(uf));
+            .lf0(bf[0]), .lf1(bf[1]), .lf2(bf[2]), .sel(sel_c), .ty(cty), .flt(uf));
         assign tt_r = cty[1535:0];
         assign tu_r = cty[1536];
         assign tv_r2 = cty[1537];
