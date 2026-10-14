@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 out=${1:?output};mkdir -p "$out";out=$(cd "$out"&&pwd)
-for mut in 0 1 2;do
+for mut in 0 1 2 3;do
  iverilog -g2012 -s tb_qkd_host_native_token_endpoint -Ptb_qkd_host_native_token_endpoint.MUT="$mut" -o "$out/m$mut" rtl/qwen_sys/host_20261013/qkd_host_native_token_endpoint.sv rtl/test/qwen_host/tb_qkd_host_native_token_endpoint.sv > "$out/build-$mut.log" 2>&1
  if [[ $mut == 0 ]];then
   vvp "$out/m$mut" | tee "$out/positive.log"

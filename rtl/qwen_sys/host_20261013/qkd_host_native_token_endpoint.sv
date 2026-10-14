@@ -38,7 +38,7 @@ module qkd_host_native_token_endpoint #(parameter integer ENABLE_NATIVE=0,MUT=0)
  reg[1:0]gen_q;reg[17:0]token_q,pos_q,next_q;reg[3:0]cause_q;
  wire start=ENABLE_NATIVE&&hc_q[38]&&!protocol_fault&&!fault_q;
  wire accept=start&&!active&&!pending&&epoch_valid_q&&epoch_q!=0&&hc_q[17:13]==0;
- wire issue=ENABLE_NATIVE&&pending&&credit&&!protocol_fault&&!fault_q;
+ wire issue=ENABLE_NATIVE&&pending&&(credit||MUT==3)&&!protocol_fault&&!fault_q;
  wire[58:0]terminal_tag={job_epoch,6'd37,token_q,pos_q[12:0],6'd0};
  wire result_ok=rv&&active&&issued&&!seen&&(MUT==2||(rtag==terminal_tag&&rg==gen_q));
  wire retire=active&&seen&&done_q&&(MUT==1||(kq&&vq&&cq&&hq))&&!protocol_fault;
