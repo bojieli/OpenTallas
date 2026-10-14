@@ -1,0 +1,80 @@
+ot-run: ot-epyc1tb     skipped: no /tmp/sm-frontc-parent-1014
+ot-run: ot-epyc4       admits   447 GB (avail 674, growth 154, headroom 48, waiters 0/0 GB) load 50/128 running 9 disk 514 GB 
+ot-run: ot-pve1        skipped: no /tmp/sm-frontc-parent-1014
+ot-run: ot-agidock128  skipped: no /tmp/sm-frontc-parent-1014
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2611294-1791981668 after 0 s
+
+-- Executing script file `results/arch/hbm_native_1013/frontc_parent_1014/census.ys' --
+
+1. Executing Verilog-2005 frontend: results/arch/hbm_native_1013/frontc_parent_1014/frontc_parent.sv
+Parsing SystemVerilog input from `results/arch/hbm_native_1013/frontc_parent_1014/frontc_parent.sv' to AST representation.
+Generating RTLIL representation for module `\ot_smh_frontc_native_parent'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: results/arch/hbm_native_1013/frontc_parent_1014/frontc_blackboxes.sv
+Parsing SystemVerilog input from `results/arch/hbm_native_1013/frontc_parent_1014/frontc_blackboxes.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_accel_smh_fc_b'.
+Generating RTLIL representation for module `\ot_hbm_accel_smh_fc_bc'.
+Generating RTLIL representation for module `\ot_hbm_accel_smh_fc_is'.
+Generating RTLIL representation for module `\ot_hbm_accel_smh_fc_t'.
+Generating RTLIL representation for module `\ot_hbm_accel_smh_fc_xl'.
+Generating RTLIL representation for module `\ot_hbm_accel_smh_fc_xr'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_smh_frontc_native_parent
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_smh_frontc_native_parent
+Removed 0 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_smh_frontc_native_parent.$proc$results/arch/hbm_native_1013/frontc_parent_1014/frontc_parent.sv:0$1'.
+Removing empty process `ot_smh_frontc_native_parent.$proc$results/arch/hbm_native_1013/frontc_parent_1014/frontc_parent.sv:0$1'.
+Cleaned up 1 empty switch.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_smh_frontc_native_parent.
+
+5. Executing FLATTEN pass (flatten design).
+
+6. Executing CHECK pass (checking for obvious problems).
+Checking module ot_smh_frontc_native_parent...
+Found and reported 0 problems.
+
+7. Executing JSON backend.
+
+End of script. Logfile hash: ac7772070b, CPU: user 0.04s system 0.00s, MEM: 24.43 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 36% 1x check (0 sec), 27% 2x write_json (0 sec), ...
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2611294-1791981668): exit 0

@@ -1,0 +1,50 @@
+ot-run: ot-epyc1tb     skipped: no /tmp/sm-frontc-parent-1014
+ot-run: ot-epyc4       admits   476 GB (avail 702, growth 168, headroom 48, waiters 0/0 GB) load 45/128 running 12 disk 513 GB 
+ot-run: ot-pve1        skipped: no /tmp/sm-frontc-parent-1014
+ot-run: ot-agidock128  skipped: no /tmp/sm-frontc-parent-1014
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2649864-1791982157 after 0 s
+FRONTC_EXACT checked=8159 mismatches=0 xbeats=4662 descriptors=32 ops=22 requests=512 responses=512
+FRONTC_ACTIVITY rout_l1 14
+FRONTC_ACTIVITY rout_r1 14
+FRONTC_ACTIVITY rout_l2 14
+FRONTC_ACTIVITY rout_r2 14
+FRONTC_ACTIVITY bout_l1 8159
+FRONTC_ACTIVITY bout_r1 8159
+FRONTC_ACTIVITY fs_ret 4
+FRONTC_ACTIVITY fo_row0 14
+FRONTC_ACTIVITY fo_pbz 5
+FRONTC_ACTIVITY fd_ret 64
+FRONTC_ACTIVITY fq_v 64
+FRONTC_ACTIVITY fq_d 514
+FRONTC_ACTIVITY fo_row3 14
+- frontc_tb.sv:87: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 0.073 s; speed 93.719 us/s
+- Verilator: cpu 0.073 s on 1 threads; allocated 8 MB
+FRONTC_MISMATCH cycle=33 port=bout_l1
+FRONTC_MISMATCH cycle=33 port=bout_r1
+FRONTC_MISMATCH cycle=33 port=fo_row0
+FRONTC_MISMATCH cycle=34 port=bout_l1
+FRONTC_MISMATCH cycle=34 port=bout_r1
+FRONTC_MISMATCH cycle=34 port=fo_row0
+FRONTC_MISMATCH cycle=35 port=bout_l1
+FRONTC_EXACT checked=8159 mismatches=24477 xbeats=4662 descriptors=32 ops=22 requests=512 responses=512
+FRONTC_ACTIVITY rout_l1 14
+FRONTC_ACTIVITY rout_r1 14
+FRONTC_ACTIVITY rout_l2 14
+FRONTC_ACTIVITY rout_r2 14
+FRONTC_ACTIVITY bout_l1 8159
+FRONTC_ACTIVITY bout_r1 8159
+FRONTC_ACTIVITY fs_ret 4
+FRONTC_ACTIVITY fo_row0 14
+FRONTC_ACTIVITY fo_pbz 5
+FRONTC_ACTIVITY fd_ret 64
+FRONTC_ACTIVITY fq_v 64
+FRONTC_ACTIVITY fq_d 514
+FRONTC_ACTIVITY fo_row3 14
+[6832000] %Fatal: frontc_tb.sv:87: Assertion failed in tb: frontC literal comparison mismatch
+%Error: frontc_tb.sv:87: Verilog $stop
+Aborting...
+FRONTC_SUITE_PASS positive exact and observed wrong RAW mapping mutant
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2649864-1791982157): exit 0

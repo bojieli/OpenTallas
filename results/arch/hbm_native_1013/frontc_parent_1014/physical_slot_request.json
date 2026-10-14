@@ -1,0 +1,184 @@
+{
+  "status": "DIAGNOSTIC_PARENT_REQUEST_NO_NATIVE_SLOT_OR_CLOCK_GRANT",
+  "source": "49b00f711",
+  "source_graph": "manifest.json",
+  "die_candidate_geometry_sha256": "b8f1dfec4e73b8bc9ee68b6b3976a8881e01c6b1739e388f3b9367ba77ca38f2",
+  "candidate": "v13 SW0 actual nine children; rigid translation only",
+  "raw_envelope_um": [
+    892.056,
+    1088.64
+  ],
+  "requested_outer_margin_um": 21.6,
+  "nominal_parent_um": [
+    935.256,
+    1131.84
+  ],
+  "actual_spec_outline_um": [
+    941.7600000000001,
+    1131.84
+  ],
+  "children": [
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_bc",
+      "count": 1,
+      "at": [
+        272.16,
+        26.016
+      ],
+      "orient": "R0",
+      "inst": "u_bc"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_is",
+      "count": 1,
+      "at": [
+        272.16,
+        516.384
+      ],
+      "orient": "R0",
+      "inst": "u_is"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_xl",
+      "count": 1,
+      "at": [
+        315.36,
+        807.84
+      ],
+      "orient": "R0",
+      "inst": "u_xl"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_t",
+      "count": 1,
+      "at": [
+        21.6,
+        894.24
+      ],
+      "orient": "R0",
+      "inst": "u_tw"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_t",
+      "count": 1,
+      "at": [
+        695.496,
+        894.24
+      ],
+      "orient": "MY",
+      "inst": "u_te"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_xr",
+      "count": 1,
+      "at": [
+        21.6,
+        540.0
+      ],
+      "orient": "R0",
+      "inst": "u_rw"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_xr",
+      "count": 1,
+      "at": [
+        695.496,
+        540.0
+      ],
+      "orient": "MY",
+      "inst": "u_re"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_b",
+      "count": 1,
+      "at": [
+        21.6,
+        21.6
+      ],
+      "orient": "R0",
+      "inst": "u_bw"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_b",
+      "count": 1,
+      "at": [
+        695.496,
+        21.6
+      ],
+      "orient": "MY",
+      "inst": "u_be"
+    }
+  ],
+  "view_hashes": {
+    "ot_hbm_accel_smh_fc_bc": {
+      "lef": "273d07e9c3e5395ab7e2d5b545b4f828fdcdd27195d1a17345834ec134b3b5c9",
+      "tt": "dc16a275304536a651e7a1a10663d0a106aaffe7a14a9f2fa3ceea91b0df1eb9",
+      "ff": "7b49252371f2641945955fc9650feb1d6a19004a9177a35acf9fd412b53907f0",
+      "ss": "900d112c64e76a73a511bf1b0688b83b08c9ffed337f21062100932930b800a5",
+      "insertion.json": "23ed02bec2fdfc0946ea49f495a683c8983640bc90133d9215f0f735e1f51d53",
+      "abstract.json": "84c22e125842eae588000882887366a3cf89f0ef18b0a42133c5b1eeebaea977",
+      "child_lint.json": "09ab13d223d80f065d996a0b2d3ea5c1fe9f53008ede88022dfc966b3695be3a"
+    },
+    "ot_hbm_accel_smh_fc_is": {
+      "lef": "6b1b0b262cb362b66fc8f34d1b0bae67da0b829515d2059353daf988f86162e5",
+      "tt": "d25d5715a6f84dd2e37c3895513b6ed4958a3a8bf6fccc995416f670fd2e35f3",
+      "ff": "83906321108e0fb98f6eb822d2f8dc4e55516de9a2d969fe1df40c5d4efaeb8a",
+      "ss": "82ab3a4159f3e5e4f0412d3bb5a55b6cc90c073dcb1ad2da8f93caa4fade81ac",
+      "insertion.json": "9cb3055a10defe4f6866efb976f5dfc684c7b1a0bd2a0a1af7f4066cf730858d",
+      "abstract.json": "a49130e51705c4b68b3c3546afddf184e6d0e68235946afaf70bd904ca797e28",
+      "child_lint.json": "be406e648db01170f86b3474cb9e80ec4ec936e5a30a07b4d055a10793c017a5"
+    },
+    "ot_hbm_accel_smh_fc_xl": {
+      "lef": "deef4ba716f12f70538bfdc4cefb7511aefa1f96edf226637ce3d458f0b664a3",
+      "tt": "ba7d5224b68ef853ea816fad5ed21a22c02622bf337596d04b8183a700c36858",
+      "ff": "4eb167256d46dd8d6f4739eb88967187962b620852e13c1a87143909078c39fd",
+      "ss": "d5e7386598571b4ec10eb39ba8e251acc8a8302b78a28ba5f094e361e8f4d8d8",
+      "insertion.json": "570adebb3512bc8f9c9a2450878ae5894f2b5725307c0a0ab07e62c18bb3395a",
+      "abstract.json": "6d22dd7cc66c746afa5190656115a3934ae60e4292dcca4974bf4d08be3417b5",
+      "child_lint.json": "201e2a0d140653f1b1fd26a70dee2414a1af6b4cc580aa469ab80f72173c4b27"
+    },
+    "ot_hbm_accel_smh_fc_t": {
+      "lef": "3b030e001d227536610c983faf5a437b501440e46cd9a8687cbecbf86b5b4476",
+      "tt": "93ae9849b1952bfe9725c6c076cd0b1af05ffdf5ecdf5ec4aa49da8d67eb0b19",
+      "ff": "e40209a947eb684340288cd205bffcd35df1987d43e6bc77062090b249eef1a3",
+      "ss": "ae27f279d5182df0f4d2995ea5bb22e53bc752bd1bef8326a25631e597220f23",
+      "insertion.json": "a97a3529419c9386ceb459265c2ad5e127f1e1d6d2972740d4c84a99a247a5a7",
+      "abstract.json": "5705051e0f7f29d143aa24c78e0f9f8d879529849162a5ba0c3e8799f029abe5",
+      "child_lint.json": "8d2fd1b578eaa89a1c218311ac42d3c6e249cd0d390fa1dea1fdd61cf5aa391c"
+    },
+    "ot_hbm_accel_smh_fc_xr": {
+      "lef": "ce2dbc1a40490581f9e402bc50d494ab5d69188b892d2aa41e39128634dcc1bd",
+      "tt": "d4c0fd49a9a9f1f32ac966595709e8bbab546f35e10631f0612cce9ce994bff5",
+      "ff": "caf8f851f905f3f1cbb7c34fbe8e88a9b9c8e298c0231e8f21c2de46cf056916",
+      "ss": "999e671125facd736273148152d579e29177c63bc9f96db1f3450492d0ad850a",
+      "insertion.json": "a1620fb1526f796268a55742cfc4e77be799aac8d9783f8c65feac716794fc36",
+      "abstract.json": "291ec68f1c640f6a06176ea0dc6a87b28fa799f1810d0ae7cdecb20d2a71365a",
+      "child_lint.json": "74c213831342fceac4676a1634d0070297fd3f96e72d0a587853417bf3a51a3e"
+    },
+    "ot_hbm_accel_smh_fc_b": {
+      "lef": "f68208a449167893be300f5a6e09732f8f0dca2acbfc9a848747f68ab9f489c0",
+      "tt": "cbeac4833f6e10bb751847878d062daef8c901f465db721fd243d6c1324b467d",
+      "ff": "da350b0cdfc3fc267ae0460467f2c071f98bb80394887187d06bb8f3a83c21b4",
+      "ss": "36923fbca25a6574f0a4d961258d4af19ebafc6f396846c64cdc4fba0cf814e5",
+      "insertion.json": "66dc0e45ed88a7f4f72b32cc594a15abd4ad89921ab1da3266e324ec20799b3e",
+      "abstract.json": "f865a9e35f8accf465996e289378ba8ae4f4d0bd3309a96fcb262672fbdc2647",
+      "child_lint.json": "52a668f5e4c72bca3c09ed27ca6d9e7038600252db5f765247351317b16ce217"
+    }
+  },
+  "own_state": 0,
+  "real_children": 9,
+  "entry_roots": 9,
+  "reset_entries": 9,
+  "layer_obligations": "realchildrenM6 PG; parentM7 signals/PG; native dieM8 strap/M9 distribution continuity open",
+  "known_geometry_dependencies": [
+    "BC-IS and IS-XL inherited10.8um channels may fail minimum20um gate; do not waive",
+    "Actual generated DB outline/pin geometry supersedes requested rectangle",
+    "v13 eightview_sha256 fields stale although bytes match bound LEFs; sharedmetadata not edited"
+  ],
+  "native_obligations": [
+    "actual measured RAW source and wirephase minus childR once; common boundaryphi, no phase grant",
+    "both-direction setup/H100 hold, real source0 slew calibration and resetrelease/epoch reach",
+    "registered source seam proof and source-bound parent physical gate",
+    "no parenthardening/die adoption or production/cost claim"
+  ]
+}

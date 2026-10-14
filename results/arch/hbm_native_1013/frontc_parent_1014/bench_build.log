@@ -1,0 +1,712 @@
+%Warning-DEFOVERRIDE: frontc_parent.sv:2:1: Overriding define: 'OT_SMH_FC_HIER' with value: '' to existing command line define value: ''
+                      ... Location of previous definition, with value: ''
+                      ... For warning description see https://verilator.org/warn/DEFOVERRIDE?v=5.050
+                      ... Use "/* verilator lint_off DEFOVERRIDE */" and lint_on around source to disable this message.
+%Warning-DEFOVERRIDE: frontc_parent.sv:3:1: Overriding define: 'SYNTHESIS' with value: '' to existing command line define value: ''
+                      ... Location of previous definition, with value: ''
+%Warning-WIDTHTRUNC: source_literal.sv:1704:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ENABLE_INT8' generates 32 bits.
+                                              : ... note: In instance 'tb.u_gold.u_is'
+ 1704 |     generate if (ENABLE_INT8) begin : g_int8
+      |              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: source_literal.sv:1712:9: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PIPE_INT8' generates 32 bits.
+                                             : ... note: In instance 'tb.u_gold.u_is'
+ 1712 |         if (PIPE_INT8) begin : g_credit
+      |         ^~
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1543:1536 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1551:1544 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1559:1552 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1567:1560 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1575:1568 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1583:1576 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1591:1584 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1599:1592 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1607:1600 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1615:1608 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1623:1616 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1631:1624 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1639:1632 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1647:1640 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1655:1648 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1663:1656 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1671:1664 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1679:1672 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1687:1680 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1695:1688 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1703:1696 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1711:1704 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1719:1712 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1727:1720 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1735:1728 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1743:1736 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1751:1744 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1759:1752 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1767:1760 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1775:1768 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1783:1776 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1791:1784 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1799:1792 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1807:1800 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1815:1808 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1823:1816 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1831:1824 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1839:1832 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1847:1840 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1855:1848 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1863:1856 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1871:1864 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1879:1872 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1887:1880 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1895:1888 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1903:1896 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1911:1904 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1919:1912 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1927:1920 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1935:1928 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1943:1936 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1951:1944 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1959:1952 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1967:1960 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1975:1968 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1983:1976 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1991:1984 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1999:1992 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 2007:2000 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 2015:2008 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 2023:2016 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 2031:2024 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 2039:2032 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 2047:2040 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-WIDTHTRUNC: source_literal.sv:1866:54: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_INT8' generates 32 bits.
+                                              : ... note: In instance 'tb.u_gold.u_be.u_u3'
+ 1866 |     wire bf_op = (fr[33:32] == 2'd0) || (ENABLE_INT8 && fr[33:32] == 2'd3);
+      |                                                      ^~
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1095:1088 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1103:1096 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1111:1104 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1119:1112 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1127:1120 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1135:1128 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1143:1136 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1151:1144 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1159:1152 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1167:1160 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1175:1168 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1183:1176 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1191:1184 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1199:1192 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1207:1200 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1215:1208 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1223:1216 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1231:1224 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1239:1232 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1247:1240 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1255:1248 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1263:1256 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1271:1264 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1279:1272 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1287:1280 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1295:1288 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1303:1296 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1311:1304 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1319:1312 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1327:1320 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1335:1328 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1343:1336 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1351:1344 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1359:1352 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1367:1360 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1375:1368 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1383:1376 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1391:1384 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1399:1392 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1407:1400 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1415:1408 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1423:1416 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1431:1424 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1439:1432 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1447:1440 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1455:1448 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1463:1456 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1471:1464 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1479:1472 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1487:1480 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1495:1488 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1503:1496 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1511:1504 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1519:1512 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1527:1520 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: source_literal.sv:1860:43: Selection index out of range: 1535:1528 outside 1087:0
+                                            : ... note: In instance 'tb.u_gold.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:107:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ph' generates 3 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  107 |     wire [SW-1:0] ph_nx = (ph == IL - 1) ? {SW{1'b0}} : ph + 1'b1;
+      |                               ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:108:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'si' generates 3 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  108 |     wire [SW-1:0] si_nx = (si == IL - 1) ? {SW{1'b0}} : si + 1'b1;
+      |                               ^~
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:109:34: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rows_q' generates 13 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  109 |     wire [SW:0] rs_sat = (rows_q >= IL) ? IL[SW:0] : rows_q[SW:0];
+      |                                  ^~
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:110:31: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'g_q' generates 8 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  110 |     wire [SW:0] gq_sat = (g_q >= IL) ? IL[SW:0] : g_q[SW:0];
+      |                               ^~
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:119:61: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rb_n' generates 13 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  119 |     (* keep *) wire [RW:0] rb_n_inc; assign rb_n_inc = rb_n + IL;
+      |                                                             ^
+%Warning-WIDTHTRUNC: bench_deps/26_ot_hbm_accel_issue_pq.sv:119:54: Operator ASSIGNW expects 13 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                  : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  119 |     (* keep *) wire [RW:0] rb_n_inc; assign rb_n_inc = rb_n + IL;
+      |                                                      ^
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:120:63: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wb_n' generates 21 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  120 |     (* keep *) wire [RW+8:0] wb_n_inc; assign wb_n_inc = wb_n + IL;
+      |                                                               ^
+%Warning-WIDTHTRUNC: bench_deps/26_ot_hbm_accel_issue_pq.sv:120:56: Operator ASSIGNW expects 21 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                  : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  120 |     (* keep *) wire [RW+8:0] wb_n_inc; assign wb_n_inc = wb_n + IL;
+      |                                                        ^
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:123:20: Operator ADD expects 17 bits on the LHS, but LHS's VARREF 'pp0' generates 15 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  123 |         s01 <= pp0 + {pp1, 2'b0};
+      |                    ^
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:124:20: Operator ADD expects 17 bits on the LHS, but LHS's VARREF 'pp2' generates 15 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  124 |         s23 <= pp2 + {pp3, 2'b0};
+      |                    ^
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:125:24: Operator ADD expects 21 bits on the LHS, but LHS's VARREF 's01' generates 17 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  125 |         items_q <= s01 + {s23, 4'b0};
+      |                        ^
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:127:42: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wb_n' generates 21 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  127 |             next_mask[f] <= gs_q ? (wb_n + f < items_q) : (rb_n + f < rows_q);
+      |                                          ^
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:127:65: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rb_n' generates 13 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  127 |             next_mask[f] <= gs_q ? (wb_n + f < items_q) : (rb_n + f < rows_q);
+      |                                                                 ^
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:150:21: Operator ADD expects 32 or 21 bits on the RHS, but RHS's VARREF 'si' generates 3 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  150 |         (gs_q ? (wb + si + 1 == items_q) : (row_now + 1 == rows_q));
+      |                     ^
+%Warning-WIDTHTRUNC: bench_deps/26_ot_hbm_accel_issue_pq.sv:176:27: Operator ASSIGNW expects 8 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                  : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  176 |     wire [DWD-1:0] d_head = (op_bf ? DBF : 0) + SLAT * lvl(op_g);
+      |                           ^
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:189:67: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'on' generates 3 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  189 |     assign launch = start_v && hv_q && !init_q && !issuing && (on < NOUT) && gap_ok;
+      |                                                                   ^
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:190:68: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'on' generates 3 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  190 |     assign hz_wait = start_v && hv_q && !init_q && !issuing && (on < NOUT) && !gap_ok;
+      |                                                                    ^
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:193:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'oh' generates 2 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  193 |     wire [NW-1:0]  oh_nx = (oh == NOUT - 1) ? {NW{1'b0}} : oh + 1'b1;
+      |                                ^~
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:194:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ot' generates 2 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  194 |     wire [NW-1:0]  ot_nx = (ot == NOUT - 1) ? {NW{1'b0}} : ot + 1'b1;
+      |                                ^~
+%Warning-WIDTHTRUNC: bench_deps/26_ot_hbm_accel_issue_pq.sv:220:18: Operator ASSIGNDLY expects 13 bits on the Assign RHS, but Assign RHS's VARREF 'IL' generates 32 bits.
+                                                                  : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  220 |             rb_n <= IL; gi_n <= 1; ti_n <= 1; xa_n <= 1; wb_n <= IL; cr_n <= 1; cxb_n <= 0;
+      |                  ^~
+%Warning-WIDTHTRUNC: bench_deps/26_ot_hbm_accel_issue_pq.sv:220:63: Operator ASSIGNDLY expects 21 bits on the Assign RHS, but Assign RHS's VARREF 'IL' generates 32 bits.
+                                                                  : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  220 |             rb_n <= IL; gi_n <= 1; ti_n <= 1; xa_n <= 1; wb_n <= IL; cr_n <= 1; cxb_n <= 0;
+      |                                                               ^~
+%Warning-WIDTHEXPAND: bench_deps/26_ot_hbm_accel_issue_pq.sv:234:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'si_nx' generates 3 bits.
+                                                                   : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  234 |                 ls_q <= (si_nx == IL - 1);
+      |                                ^~
+%Warning-WIDTHTRUNC: bench_deps/26_ot_hbm_accel_issue_pq.sv:247:22: Operator ASSIGNDLY expects 13 bits on the Assign RHS, but Assign RHS's VARREF 'IL' generates 32 bits.
+                                                                  : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  247 |                 rb_n <= IL; gi_n <= 1; ti_n <= 1; xa_n <= 1; wb_n <= IL; cr_n <= 1;
+      |                      ^~
+%Warning-WIDTHTRUNC: bench_deps/26_ot_hbm_accel_issue_pq.sv:247:67: Operator ASSIGNDLY expects 21 bits on the Assign RHS, but Assign RHS's VARREF 'IL' generates 32 bits.
+                                                                  : ... note: In instance 'tb.u_gold.u_is.u_issue'
+  247 |                 rb_n <= IL; gi_n <= 1; ti_n <= 1; xa_n <= 1; wb_n <= IL; cr_n <= 1;
+      |                                                                   ^~
+%Warning-WIDTHEXPAND: source_literal.sv:647:29: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wp' generates 4 bits.
+                                              : ... note: In instance 'tb.u_gold.u_is.u_sch'
+  647 |     wire [AW-1:0] wp1 = (wp == DEPTH - 1) ? {AW{1'b0}} : wp + 1'b1;
+      |                             ^~
+%Warning-WIDTHEXPAND: source_literal.sv:648:30: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rp1' generates 4 bits.
+                                              : ... note: In instance 'tb.u_gold.u_is.u_sch'
+  648 |     wire [AW-1:0] rp2 = (rp1 == DEPTH - 1) ? {AW{1'b0}} : rp1 + 1'b1;
+      |                              ^~
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:87:29: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'q_cnt' generates 3 bits.
+                                                                       : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+   87 |     assign d_ready = (q_cnt < DQ);
+      |                             ^
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:126:26: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'used' generates 11 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  126 |     wire free_up = (used + 1'b1 < DEPTH), free_eq = (used < DEPTH), free_dn = (used - 1'b1 < DEPTH);
+      |                          ^
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:126:59: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'used' generates 11 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  126 |     wire free_up = (used + 1'b1 < DEPTH), free_eq = (used < DEPTH), free_dn = (used - 1'b1 < DEPTH);
+      |                                                           ^
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:126:85: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'used' generates 11 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  126 |     wire free_up = (used + 1'b1 < DEPTH), free_eq = (used < DEPTH), free_dn = (used - 1'b1 < DEPTH);
+      |                                                                                     ^
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:127:33: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 10 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  127 |     wire cred_up = (outstanding + 1 < MAX_OUT), cred_eq = (outstanding < MAX_OUT), cred_dn = (outstanding - 1 < MAX_OUT);
+      |                                 ^
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:127:72: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 10 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  127 |     wire cred_up = (outstanding + 1 < MAX_OUT), cred_eq = (outstanding < MAX_OUT), cred_dn = (outstanding - 1 < MAX_OUT);
+      |                                                                        ^
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:127:107: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 10 bits.
+                                                                         : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  127 |     wire cred_up = (outstanding + 1 < MAX_OUT), cred_eq = (outstanding < MAX_OUT), cred_dn = (outstanding - 1 < MAX_OUT);
+      |                                                                                                           ^
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:183:75: Operator AND expects 32 bits on the LHS, but LHS's ARRAYSEL generates 7 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  183 |                     bf1[bk*NBG + bg] <= full[(((bg << PL) | (bank_ptr[bk] & ((1 << PL) - 1))) << BB) | bk];
+      |                                                                           ^
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:185:66: Operator SHIFTR expects 32 bits on the LHS, but LHS's SEL generates 7 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  185 |                 bank_full[bk] <= bf1[bk*NBG + (bp_d[bk*PB +: PB] >> PL)];
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:186:48: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 3 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  186 |                 if (take_c[1] && cslot[BB-1:0] == bk) bank_ptr[bk] <= bank_ptr[bk] + 1'b1;
+      |                                                ^~
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:199:57: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  199 |                 set_hi[k] <= rsp_v && (rsp_tag[TW-1:LO] == k);
+      |                                                         ^~
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:200:59: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  200 |                 clr_hi[k] <= take_c[0] && (cslot[TW-1:LO] == k);
+      |                                                           ^~
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:203:47: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  203 |                 set_lo[k] <= (rsp_tag[LO-1:0] == k);
+      |                                               ^~
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:204:45: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  204 |                 clr_lo[k] <= (cslot[LO-1:0] == k);
+      |                                             ^~
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:324:51: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_wp' generates 2 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  324 |             if (d_valid && d_ready) q_wp <= (q_wp == DQ - 1) ? 0 : q_wp + 1'b1;
+      |                                                   ^~
+%Warning-WIDTHEXPAND: bench_deps/22_ot_hbm_accel_bulk_copy_oq5.sv:327:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_rp' generates 2 bits.
+                                                                        : ... note: In instance 'tb.u_gold.u_bc.u_bc'
+  327 |                 q_rp <= (q_rp == DQ - 1) ? 0 : q_rp + 1'b1;
+      |                               ^~
+%Warning-WIDTHTRUNC: source_literal.sv:1530:59: Operator ASSIGN expects 3 bits on the Assign RHS, but Assign RHS's VARREF 'b' generates 32 bits.
+                                              : ... note: In instance 'tb.u_gold.u_is.g_int8.g_ob.u_unpack'
+ 1530 |             for (b = 0; b < 8; b = b + 1) if (mag[b]) top = b;
+      |                                                           ^
+%Warning-WIDTHEXPAND: source_literal.sv:1537:31: Operator ADD expects 8 bits on the RHS, but RHS's SEL generates 3 bits.
+                                               : ... note: In instance 'tb.u_gold.u_is.g_int8.g_ob.u_unpack'
+ 1537 |             exponent = 8'd127 + field[11:9];
+      |                               ^
+%Warning-WIDTHTRUNC: source_literal.sv:1775:60: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_INT8' generates 32 bits.
+                                              : ... note: In instance 'tb.u_gold.u_is'
+ 1775 |         .op_gs(h_gs), .op_bf(h_fmt == 2'd0 || (ENABLE_INT8 && h_fmt == 2'd3)),
+      |                                                            ^~
+make: Entering directory '/tmp/sm-frontc-parent-1014/results/arch/hbm_native_1013/frontc_parent_1014/work_bench'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb___024root__2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb___024root__3.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb___024root__4.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb___024root__5.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb___024root__6.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb___024root__7.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb__main.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__2__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb__ALL.a    -pthread -lpthread -latomic   -o Vtb
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/sm-frontc-parent-1014/results/arch/hbm_native_1013/frontc_parent_1014/work_bench'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 10.303 MB sources in 131 modules, into 9.666 MB in 16 C++ files needing 0.027 MB
+- Verilator: Walltime 7.086 s (elab=0.106, cvt=1.387, bld=5.442); cpu 1.742 s on 4 threads; allocated 138.438 MB

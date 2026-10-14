@@ -1,0 +1,6 @@
+read_verilog -sv results/arch/hbm_native_1013/frontc_parent_1014/frontc_parent.sv results/arch/hbm_native_1013/frontc_parent_1014/frontc_blackboxes.sv
+hierarchy -check -top ot_smh_frontc_native_parent
+proc
+flatten
+check
+write_json results/arch/hbm_native_1013/frontc_parent_1014/census.json
