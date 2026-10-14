@@ -1,0 +1,235 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "dsfd_wfc_vmx_p",
+ "verdict": "WARN",
+ "generated": "2026-10-13T20:11:52-0700",
+ "host": "ot-epyc1tb",
+ "cts": true,
+ "commit": "737d5ac2a",
+ "clock": {
+  "max_root_sinks": 14589,
+  "root": "port:ckv[0]",
+  "cts": true,
+  "tt_insertion_ps": 524.7,
+  "tt_spread_ps": 136.1,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "clock_measurements": [
+   {
+    "source": "ck[0]",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 1265,
+      "mean": 477.1,
+      "min": 405.0,
+      "max": 551.9
+     },
+     "all": {
+      "n": 11834,
+      "mean": 428.7,
+      "min": 393.1,
+      "max": 551.9
+     },
+     "errors": [],
+     "macros": {
+      "n": 8,
+      "nets": 8,
+      "max_per_net": 1,
+      "reg_mean": 428.7,
+      "max_slew": 221.3,
+      "max_late": 28.1,
+      "pins": [
+       {
+        "pin": "u_hep.u_m/clk",
+        "arr": 421.8,
+        "slew": 123.5,
+        "late": -6.9,
+        "net": "clknet_3_6__leaf_ckv[0]"
+       },
+       {
+        "pin": "u_vr.u_rq.g_tile[0].genblk1.genblk1.g_m2.u_m/clk",
+        "arr": 404.9,
+        "slew": 57.5,
+        "late": -23.8,
+        "net": "clknet_3_0__leaf_ckv[0]"
+       },
+       {
+        "pin": "u_vr.u_rq.g_tile[1].genblk1.genblk1.g_m2.u_m/clk",
+        "arr": 432.0,
+        "slew": 150.4,
+        "late": 3.3,
+        "net": "clknet_3_2__leaf_ckv[0]"
+       },
+       {
+        "pin": "u_vr.u_rq.g_tile[2].genblk1.genblk1.g_m2.u_m/clk",
+        "arr": 388.6,
+        "slew": 13.1,
+        "late": -40.1,
+        "net": "clknet_3_1__leaf_ckv[0]"
+       },
+       {
+        "pin": "u_vr.u_rq.g_tile[3].genblk1.genblk1.g_m2.u_m/clk",
+        "arr": 391.3,
+        "slew": 22.6,
+        "late": -37.4,
+        "net": "clknet_3_4__leaf_ckv[0]"
+       },
+       {
+        "pin": "u_vr.u_rq.g_tile[4].genblk1.genblk1.g_m2.u_m/clk",
+        "arr": 456.8,
+        "slew": 221.3,
+        "late": 28.1,
+        "net": "clknet_3_5__leaf_ckv[0]"
+       },
+       {
+        "pin": "u_vr.u_se/clk",
+        "arr": 394.3,
+        "slew": 64.7,
+        "late": -34.4,
+        "net": "clknet_1_0_0_ck[0]"
+       },
+       {
+        "pin": "u_vr.u_so/clk",
+        "arr": 393.1,
+        "slew": 62.3,
+        "late": -35.6,
+        "net": "clknet_1_1_0_ck[0]"
+       }
+      ]
+     },
+     "macro_libs": 3
+    }
+   },
+   {
+    "source": "ckv[0]",
+    "clock": "ser_clk",
+    "tt": {
+     "boundary": {
+      "n": 1714,
+      "mean": 465.0,
+      "min": 424.2,
+      "max": 516.8
+     },
+     "all": {
+      "n": 14572,
+      "mean": 442.7,
+      "min": 388.6,
+      "max": 524.7
+     },
+     "errors": [],
+     "macros": {
+      "n": 8,
+      "nets": 8,
+      "max_per_net": 1,
+      "reg_mean": 442.7,
+      "max_slew": 221.3,
+      "max_late": 14.1,
+      "pins": [
+       {
+        "pin": "u_hep.u_m/clk",
+        "arr": 421.8,
+        "slew": 123.5,
+        "late": -20.9,
+        "net": "clknet_3_6__leaf_ckv[0]"
+       },
+       {
+        "pin": "u_vr.u_rq.g_tile[0].genblk1.genblk1.g_m2.u_m/clk",
+        "arr": 404.9,
+        "slew": 57.5,
+        "late": -37.8,
+        "net": "clknet_3_0__leaf_ckv[0]"
+       },
+       {
+        "pin": "u_vr.u_rq.g_tile[1].genblk1.genblk1.g_m2.u_m/clk",
+        "arr": 432.0,
+        "slew": 150.4,
+        "late": -10.7,
+        "net": "clknet_3_2__leaf_ckv[0]"
+       },
+       {
+        "pin": "u_vr.u_rq.g_tile[2].genblk1.genblk1.g_m2.u_m/clk",
+        "arr": 388.6,
+        "slew": 13.1,
+        "late": -54.1,
+        "net": "clknet_3_1__leaf_ckv[0]"
+       },
+       {
+        "pin": "u_vr.u_rq.g_tile[3].genblk1.genblk1.g_m2.u_m/clk",
+        "arr": 391.3,
+        "slew": 22.6,
+        "late": -51.4,
+        "net": "clknet_3_4__leaf_ckv[0]"
+       },
+       {
+        "pin": "u_vr.u_rq.g_tile[4].genblk1.genblk1.g_m2.u_m/clk",
+        "arr": 456.8,
+        "slew": 221.3,
+        "late": 14.1,
+        "net": "clknet_3_5__leaf_ckv[0]"
+       },
+       {
+        "pin": "u_vr.u_se/clk",
+        "arr": 394.3,
+        "slew": 64.7,
+        "late": -48.4,
+        "net": "clknet_1_0_0_ck[0]"
+       },
+       {
+        "pin": "u_vr.u_so/clk",
+        "arr": 393.1,
+        "slew": 62.3,
+        "late": -49.6,
+        "net": "clknet_1_1_0_ck[0]"
+       }
+      ]
+     },
+     "macro_libs": 3
+    }
+   }
+  ],
+  "measured_clock": "ser_clk",
+  "verdict": "PASS",
+  "text": "14,589 sinks on the largest root <= 15,000; measured TT insertion 524.7 ps, leaf spread 136.1 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "clock_span",
+   "message": "781.92 x 172.8 um: one clock root over > 600 um",
+   "fix": "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1-bit vector ports ['ck', 'ckv', 'rst', 'rsv', 't_vc', 'f_pf']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])",
+   "fix": "declare them scalar in RTL"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port ckv[0]: 14,583 flops > 8,000 spread over a 778 x 168 um outline (> 600 um) (+0 ICGs, 6 macro clock pins; e.g. _171723_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port ck[0]: 11,849 flops > 8,000 spread over a 778 x 168 um outline (> 600 um) (+0 ICGs, 2 macro clock pins; e.g. _171721_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "1 input->register endpoint(s) > 3 levels (worst f_vr[15]->u_vr.pred[1]$_SDFFE_PN0P_/D 4 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  }
+ ],
+ "qualification": "UNQUALIFIED: pre-reset exploratory gate, invalid completion-HEAD binding, partial retrospective source hashes only",
+ "reported_commit_is_not_staged_source": true,
+ "actual_base_stamp": "45e003790+wt",
+ "actual_source_binding_evidence": "wfc_p3_pre_reset_partial_source_1013.json"
+}
