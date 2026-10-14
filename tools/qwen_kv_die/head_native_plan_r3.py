@@ -96,7 +96,19 @@ def plan():
         hops.extend([(f'lane{t}->nb1_{t}',a),(f'nb1_{t}->nb2_{t}',b),(f'nb2_{t}->die_nb',c)])
         children[f'lane{t}']=lane
         rows.append(dict(lane=t,lane_xy_um=list(lane[:2]),stin=list(sin),stk=list(stk),nb1=list(n1),nb2=list(n2)))
-    hops.extend([('ktree->score',bound(face(kt,'E'),face(score,'W')))])
+    # Keep every parent data pin fixed. Front inputs use identical x coordinates
+    # on its S face, so the bound is bit matched rather than cross-bus diameter.
+    parent_inputs={'ti':[224.508,673.212], 'e':[686.076,687.516]}
+    for name,span in parent_inputs.items():
+        assert front[0]<=span[0]<=span[1]<=front[0]+front[2]
+        hops.append((f'die_{name}->front (bit matched)',front[1]))
+    score_target=[(706.092,0.),(709.26,0.)]
+    # pack_fault is an independent scalar connection, not part of f_t.
+    pack_pin=[(550.8,front[1]+front[3])]
+    hops.extend([('ktree->score',bound(face(kt,'E'),face(score,'W'))),
+                 ('front.pack_fault->score',bound(pack_pin,face(score,'N'))),
+                 ('score->die_s',bound(face(score,'S'),score_target)),
+                 ('score.kt_rst_n->ktree',bound(face(score,'W'),face(kt,'E')))])
     ov=[(a,b) for a,b in itertools.combinations(children,2) if overlap(children[a],children[b])]
     outside=[n for n,r in children.items() if r[0]<0 or r[1]<0 or r[0]+r[2]>W+1e-6 or r[1]+r[3]>H+1e-6]
     clocks=[dict(child=n,rtl_clock=('ck_'+n if n in ['front','score'] else 'ck_kt' if n=='ktree' else
@@ -112,6 +124,10 @@ def plan():
         overlaps=ov,outside=outside,front_port_order_W_to_E=front_order,
         shared_children={n:list(children[n]) for n in ['front','ktree','score']},lanes=sorted(rows,key=lambda r:r['lane']),
         children={n:list(r) for n,r in children.items()},clock_entries=clocks,
+        parent_data_pin_assignments=dict(front_S_bit_matched=parent_inputs,
+            front_pack_fault_N=list(pack_pin[0]),score_output_S=list(score_target)),
+        reset_rule='preserve the RTL reset topology; assign the external asynchronous reset distribution '
+                   'and measure recovery/removal and native reset paths before physical qualification',
         hops=[dict(name=n,um=round(d,3)) for n,d in hops],
         qualification='geometry assignment proposal; fresh leaf physical views, actual clock pins and native pair reach required')
 
