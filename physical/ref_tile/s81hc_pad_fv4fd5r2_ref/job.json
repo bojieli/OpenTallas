@@ -1,14 +1,14 @@
 {
- "name": "s81hc_pad_fv4fd5r2_ref-v6-nativeM2-existing-driver-strip-0230dea68",
+ "name": "s81hc_pad_fv4fd5r2_ref-v7-nativeM2-sized-driver-strip-6aabed703",
  "block": "ot_s81_hc_pad_fv4fd5r2",
  "ref_tile": true,
  "owner": "Codex:s81_hc_ccf",
- "purpose": "Keep native M2 geometry and unchanged RTL/hold constraints; anchor all existing dedicated output INV/BUF chains beside pins, standard FFs behind a separate band. No added cells/nets in preflight; actual CTS TT/FF gate required.",
+ "purpose": "Retain sized BUF24 final pin drivers and INV5 upstream, reserve32umregisterband and keep side driver cells out of N/S corners. Connectivity/counts unchanged; original MIN/hold repair remains enabled before final drivers. Require fresh actual TT/FF clock/pin windows.",
  "threads": 8,
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex-s81-ccf-pinreg-1013",
-  "commit": "0230dea68"
+  "commit": "6aabed703"
  },
  "stages": {
   "bench": [
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_pad_fv4fd5r2_ref/s81hc_pad_fv4fd5r2_ref-v6-nativeM2-existing-driver-strip-0230dea68"
+   "to": "results/rtl/ref_tile/s81hc_pad_fv4fd5r2_ref/s81hc_pad_fv4fd5r2_ref-v7-nativeM2-sized-driver-strip-6aabed703"
   }
  ],
  "cycles_added": 0,
