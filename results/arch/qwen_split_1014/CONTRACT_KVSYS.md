@@ -98,3 +98,12 @@ The link cost is unchanged (K_ST 1: `lx` / `lr` one relay each): +65 cycles / la
 Head team (reach rules in `pins/qkd_rhead.json`): inside the 1,080-um head every register hop must stay <= 500 um; the
 native station (one leaf, D 2 co-located) cannot reach both a far-column lane and the E face: split its nb stage into
 station D 1 + an nb relay leaf D 1 at the E side (latency unchanged), and keep every station within 500 um of the front.
+
+### Die chain kvs2 on v1.1 (2026-10-14 13:00, `kvsys_v1_1/kvs2/`)
+
+Real case legal (2,230 instances), PDN VDD + VSS PASS, full-die GRT overflow 0, STA with phi - R clocks (6,772 sinks):
+TT setup WNS -431.3 ps, FF hold WNS -56.7 ps, SS -681.7 (sensitivity only). Real-to-real paths PASS (TT +170.5 / FF +124.2).
+TT violators: the closed `qkd_cdc_wleaf` launch (native audit FAIL) into the landing frame over 450-620-um unbuffered
+hops; KV-row relay hops detoured by GRT in one corridor above the N groups (kvn / emf / krs). FF violators: only paths with
+an ASSUMED placeholder end (frames, relays) against the 100-ps H1 hold budget. Classified table and ranked queue:
+`el1014-qwen-split-kvsys.log` (top); `kvs2/classes.json`, `kvs2/grt_<c>_paths.rpt`.
