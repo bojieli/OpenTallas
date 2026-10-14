@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""Extract production controller/tree at existing two-edge station chains.
+The source's own module remains the flat reference; each direction moves one
+of its existing two enabled registers into each hardened leaf (zero new edges).
+"""
+import re,json
+from pathlib import Path
+src=Path('rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i.sv').read_text()
+s=src[src.index('module ot_qfd_tt_ctlm_i #('):]
+param,tail=s.split(') (',1);ph,body=tail.split(');',1);body=body.rsplit('endmodule',1)[0]
+ph=re.sub(r'//[^\n]*','',ph)
+ports={};direction=width=None
+for item in ph.split(','):
+ item=item.strip()
+ m=re.fullmatch(r'(input|output)\s+wire\s*(\[[^\]]+\])?\s*(\w+)',item)
+ if m:direction,width,name=m.groups();width=width or '';ports[name]=(direction,width)
+ else:ports[item]=(direction,width)
+cmdnames=['go','i_nout','i_tiles','i_k','i_wsrc','i_wbase','i_ts','i_ks','i_js','i_xbase','i_xks','i_xjs','i_xcs','i_jsh','i_split','i_wcs','i_round','i_obase','i_ots','i_ojs','i_mmode','i_oen','i_amax','i_rmax','i_mbase']
+cmdwidth=[1,18,18,18,1,24,24,24,24,24,24,24,24,3,4,24,1,24,24,24,1,1,1,1,24]
+retnames=['ready','idle','wrom_re','wrom_addr','am_idx','am_val','am_any','progress','fault'];retwidth=[1,1,1,24,18,32,1,16,1]
+CW,RW=sum(cmdwidth),sum(retwidth)
+headnames=['clk','rst_n','h_start','token','pos','prog_base','pw_v','pw_addr','pw_data','x_oacc','x_oidle','x_oprog','x_orows','kv_ok','kv_write_drained','me_mem_ok','m_fin_o','m_fidx_o','m_fval_o','me_clk_en','c_fault']+[n for n in ports if n.startswith('kvd_')]
+treenames=['clk','rst_n','me_mem_ok']+[n for n in ports if n not in headnames]
+head=body[:body.index('    ot_qfd_issue_shell')]
+# The tree-facing pin capture belongs to the tree leaf, not the head.
+a=head.index('    wire up_fault_c');b=head.index('    (* keep',a)
+dpin=head[a:b];head=head[:a]+head[b:]
+# Controller never sees/produces the clock of another hardened leaf.
+head=head.replace('.ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1)', '.ME_IDLE_GATE(0)')
+shell=body[body.index('    ot_qfd_issue_shell'):body.index('    ot_hdc_delay #(.W(1), .D(DCU_M)')]
+head+=shell
+for line in body.splitlines():
+ if 'ot_hdc_delay' in line and 'u_sd_me_' in line:
+  head+=line.replace('.D(DCU_M)','.D(1)')+'\n'
+ if 'ot_hdc_delay' in line and 'u_su_me_' in line:
+  head+=line.replace('.D(DUC_M)','.D(1)')+'\n'
+head+='    assign cmd = {'+', '.join('u_me_'+n for n in reversed(cmdnames))+'};\n'
+head+='    assign {'+', '.join('u_me_'+n for n in reversed(retnames))+'} = ret;\n'
+head+='    ot_hdc_delay #(.W(1),.D(OS),.RESET(1)) u_os_fin (.clk(clk),.rst_n(rsv[4]),.d(m_fin),.q(m_fin_o));\n'
+a=body.index('    ot_hdc_delay #(.W(18 + 32)');b=body.index('    ot_qfd_tt_ctl #',a)
+head+=body[a:b]
+# Each independent clock root captures the same early me_mem_ok pin and
+# creates its own local gate. Idle-only gating is disabled, as in AUD64.
+tree='''    wire rs;
+    ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk),.rst_n(rst_n),.rst_q(rs));
+    reg mo_p;
+    (* keep="true", dont_touch="true" *) reg mo_m, en_r;
+    always @(posedge clk) begin mo_p<=me_mem_ok; mo_m<=mo_p; en_r<=!rs || mo_m; end
+    wire ec;
+    ot_hdc_cg u_cg (.clk(clk),.en(en_r),.gclk(ec));
+'''+dpin
+for n,w in zip(cmdnames,cmdwidth):tree+=f'    wire [{w-1}:0] u_me_{n};\n'
+for n,w in zip(retnames,retwidth):tree+=f'    wire [{w-1}:0] u_me_{n};\n'
+tree+=f'''    reg [{CW-1}:1] cmd_data;
+    reg cmd_go;
+    always @(posedge ec) cmd_data<=cmd[{CW-1}:1];
+    always @(posedge ec or negedge rs) if(!rs) cmd_go<=0; else cmd_go<=cmd[0];
+    wire [{CW-1}:0] cq_raw={{cmd_data,cmd_go}};
+`ifdef OT_TT_SPLIT_MUT
+    wire [{CW-1}:0] cq=cq_raw ^ (cmd_go ? ({{{CW}{{1'b0}}}} | ({CW}'d1 << 19)) : {CW}'d0);
+`else
+    wire [{CW-1}:0] cq=cq_raw;
+`endif
+    assign {{'''+', '.join('u_me_'+n for n in reversed(cmdnames))+'} = cq;\n'
+tree+=f'    reg [{RW-1}:0] ret_q;\n    always @(posedge ec or negedge rs) if(!rs) ret_q<=0; else ret_q<={{'+', '.join('u_me_'+n for n in reversed(retnames))+'};\n    assign ret=ret_q;\n'
+a=body.index('    ot_qfd_tt_ctl #');b=body.index('    assign u_me_mx_we',a)
+tree+=body[a:b].replace('.clk(c_me_clk)', '.clk(ec)').replace('.rst_n(rsv[0])','.rst_n(rs)')
+tree+='''    reg [XW-1:0] me_acc;
+    always @(posedge ec or negedge rs) if(!rs) me_acc<=0; else if(u_me_go) me_acc<=me_acc+1'b1;
+    ot_hdc_delay #(.W(XW+17),.D(OS),.RESET(1)) u_snap(.clk(clk),.rst_n(rs),.d({me_acc,u_me_idle,u_me_progress}),.q({me_acc_o,me_idle_o,me_prog_o}));
+'''
+# No tree-source macro or controller is replaced with a behavioral stand-in.
+params=['DCU_M','DUC_M','XW','IS','OS','PSRAM','PMUT','HQ2','MEREG','RRG','PCUT','G','TPMUT','AUD']
+param=param.replace('parameter integer PSRAM = 0','parameter integer PSRAM = 1').replace('parameter integer HQ2 = 0','parameter integer HQ2 = 1').replace('parameter integer MEREG = 0','parameter integer MEREG = 3').replace('parameter integer RRG = 0','parameter integer RRG = 1').replace('parameter integer PCUT = 0','parameter integer PCUT = 1').replace('parameter integer G = 6144','parameter integer G = 3072').replace('parameter integer AUD = 0','parameter integer AUD = 34039')
+def emit(name,names,extra,b):
+ h=param.replace('ot_qfd_tt_ctlm_i',name,1)
+ pp=[f'    {ports[n][0]} wire {ports[n][1]} {n}' for n in names]+extra
+ return h+') (\n'+',\n'.join(pp)+'\n);\n'+b+'endmodule\n'
+text='''`timescale 1ns/1ps
+// Generated by tools/qwen_tt_split/gen_split.py from production ctlm_i.
+// Split across the EXISTING DCU2/DUC2 stations: one launch and one capture
+// stage per direction. No clock is forwarded. Head/tree have independent
+// roots and identical local supply-only MEREG3 gates (AUD64 idle-gate form).
+// Full G3072 tree control, tag SRAMs, all operation fields/18-bit rows retained.
+'''
+text+=emit('qfd_tt_ctlm_head',headnames,[f'    output wire [{CW-1}:0] cmd',f'    input wire [{RW-1}:0] ret'],head)
+text+=emit('qfd_tt_ctlm_tree',treenames,[f'    input wire [{CW-1}:0] cmd',f'    output wire [{RW-1}:0] ret'],tree)
+pp=[]
+for n in ports:
+ if n=='clk':pp+=['    input wire ck_head','    input wire ck_tree']
+ else:pp.append(f'    {ports[n][0]} wire {ports[n][1]} {n}')
+text+=param.replace('ot_qfd_tt_ctlm_i','ot_qfd_tt_ctlm_split',1)+') (\n'+',\n'.join(pp)+f'\n);\n    wire [{CW-1}:0] cmd; wire [{RW-1}:0] ret;\n'
+for module,names,clock in [('qfd_tt_ctlm_head',headnames,'ck_head'),('qfd_tt_ctlm_tree',treenames,'ck_tree')]:
+ text+='    '+module+' #('+', '.join(f'.{p}({p})' for p in params)+') u_'+('head' if 'head' in module else 'tree')+' (\n'+',\n'.join(f'        .{n}({clock if n=="clk" else n})' for n in names)+',\n        .cmd(cmd),.ret(ret));\n'
+text+='endmodule\n'
+Path('rtl/physical/ot_qfd_tt_ctlm_split.sv').write_text(text)
+Path('physical/qfd_tt_ctlm_split/seam.json').write_text(json.dumps({'command_bits':CW,'return_bits':RW,'command_lsb_first':dict(zip(cmdnames,cmdwidth)),'return_lsb_first':dict(zip(retnames,retwidth)),'station_cycles':{'head_launch':1,'tree_capture':1,'tree_launch':1,'head_capture':1},'original_DCU':2,'original_DUC':2,'added_station_cycles':0,'clock':'independent roots/local supply-only MEREG3 ICGs; no clock forwarding'},indent=1)+'\n')
+print(CW,RW,headnames,treenames)

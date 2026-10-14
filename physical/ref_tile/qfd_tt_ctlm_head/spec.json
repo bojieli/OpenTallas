@@ -1,0 +1,332 @@
+{
+ "name": "qfd_tt_ctlm_head",
+ "top": "qfd_tt_ctlm_head",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+  "rtl/physical/ot_qfd_tt_ctlm_slot.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm_tp8.sv",
+  "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_split.sv",
+  "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+  "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fp.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "G": 3072,
+  "PSRAM": 1,
+  "HQ2": 1,
+  "MEREG": 3,
+  "RRG": 1,
+  "PCUT": 1,
+  "AUD": 34039
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 237.6,
+  "h": 237.6
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "h_start",
+   "pos",
+   "pw_v",
+   "pw_data",
+   "me_mem_ok",
+   "m_fval_o",
+   "kvd_v",
+   "kvd_ks",
+   "kvd_split",
+   "kvd_k",
+   "kvd_pos"
+  ],
+  "N": [
+   "cmd",
+   "ret"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "x_oidle",
+   "x_oprog",
+   "kv_ok",
+   "m_fin_o",
+   "me_clk_en",
+   "kvd_wbase",
+   "kvd_js",
+   "kvd_jsh",
+   "kvd_nout"
+  ],
+  "E": [
+   "token",
+   "prog_base",
+   "pw_addr",
+   "x_oacc",
+   "x_orows",
+   "kv_write_drained",
+   "m_fidx_o",
+   "c_fault",
+   "kvd_ts",
+   "kvd_wcs",
+   "kvd_tiles",
+   "kvd_kindk"
+  ]
+ },
+ "pin_ranges": {
+  "cmd": [
+   10,
+   54
+  ],
+  "ret": [
+   65,
+   77
+  ],
+  "clk": [
+   8,
+   9
+  ],
+  "rst_n": [
+   13,
+   14
+  ],
+  "h_start": [
+   6.0,
+   7.5
+  ],
+  "token": [
+   6.0,
+   7.98
+  ],
+  "pos": [
+   9.5,
+   11.48
+  ],
+  "prog_base": [
+   9.98,
+   11.48
+  ],
+  "pw_v": [
+   13.48,
+   14.98
+  ],
+  "pw_addr": [
+   13.48,
+   14.98
+  ],
+  "pw_data": [
+   16.98,
+   24.02
+  ],
+  "x_oacc": [
+   16.98,
+   19.62
+  ],
+  "x_oidle": [
+   18.0,
+   19.5
+  ],
+  "x_oprog": [
+   21.5,
+   23.26
+  ],
+  "x_orows": [
+   21.62,
+   23.38
+  ],
+  "kv_ok": [
+   25.26,
+   26.76
+  ],
+  "kv_write_drained": [
+   25.38,
+   26.88
+  ],
+  "me_mem_ok": [
+   26.02,
+   27.52
+  ],
+  "m_fin_o": [
+   28.76,
+   30.26
+  ],
+  "m_fidx_o": [
+   28.88,
+   30.86
+  ],
+  "m_fval_o": [
+   29.52,
+   33.04
+  ],
+  "me_clk_en": [
+   32.26,
+   33.76
+  ],
+  "c_fault": [
+   32.86,
+   34.36
+  ],
+  "kvd_v": [
+   35.04,
+   36.54
+  ],
+  "kvd_wbase": [
+   35.76,
+   38.4
+  ],
+  "kvd_ts": [
+   36.36,
+   39.0
+  ],
+  "kvd_ks": [
+   38.54,
+   41.18
+  ],
+  "kvd_js": [
+   40.4,
+   43.04
+  ],
+  "kvd_wcs": [
+   41.0,
+   43.64
+  ],
+  "kvd_split": [
+   43.18,
+   44.68
+  ],
+  "kvd_jsh": [
+   45.04,
+   46.54
+  ],
+  "kvd_tiles": [
+   45.64,
+   47.62
+  ],
+  "kvd_k": [
+   46.68,
+   48.66
+  ],
+  "kvd_nout": [
+   48.54,
+   50.52
+  ],
+  "kvd_kindk": [
+   49.62,
+   51.12
+  ],
+  "kvd_pos": [
+   50.66,
+   52.64
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    23.76,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    23.76,
+    129.6
+   ],
+   "orient": "R0"
+  }
+ ],
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "Candidate controller/tree split below qfd_tt_ctlm in existing 475.2-square slot; independent roots, no parent flops/CTS/forwarded clock. qfd_tt_ctlm_head candidate outline {'w': 237.6, 'h': 237.6}, N/S facing cmd380+ret95 seam at matching x10..54/65..77um. Provisional other pins pending die top-down assignment. Existing DCU2/DUC2 split one enabled register per child, zero added stages. AUD64 supply-only local ICG candidate pending owner power review; NOT adopted production view. Head2programSRAMs, tree4tagSRAMs, complete TP8 G3072/18-bit operation fields preserved. Parent qfd_tt_ctlm_s source is wires-only with ck_head and ck_tree; head at(0,0),tree at(0,259.2),parent259.2x475.2 inside originalslot.",
+ "job": {
+  "owner": "Codex:qwen-tt-split",
+  "branch": "claude/el1013-qwen-r3b-host",
+  "tag": "split1",
+  "purpose": "Independent-root controller/tree structural candidate; original full operation fields and 18-bit rows remain. NOT authorized adoption until idle-gating power tradeoff measured/reviewed.",
+  "extra_paths": [
+   "physical/qfd_tt_ctlm_split",
+   "rtl/test/tb_qfd_tt_ctlm_i_psram.sv",
+   "rtl/test/run_tt_ctlm_i_lockstep.sh"
+  ],
+  "benches": [
+   {
+    "name": "split_cycle_exact",
+    "cmd": "bash physical/qfd_tt_ctlm_split/bench.sh {RUN}/bench/strict strict",
+    "expect": "pass",
+    "pass_regex": "^PASS tt_ctlm_split strict",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "split_mutant",
+    "cmd": "bash physical/qfd_tt_ctlm_split/bench.sh {RUN}/bench/neg strict mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL tt_ctlm_split strict mut",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "split_native",
+    "cmd": "bash physical/qfd_tt_ctlm_split/bench.sh {RUN}/bench/native native",
+    "expect": "pass",
+    "pass_regex": "^PASS tt_ctlm_split native",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "split_argmax",
+    "cmd": "bash physical/qfd_tt_ctlm_split/bench.sh {RUN}/bench/argmax argmax",
+    "expect": "pass",
+    "pass_regex": "^PASS tt_ctlm_split argmax",
+    "threads": 4,
+    "peak_ram_gb": 8
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}
