@@ -8,7 +8,7 @@ R=$(cd "$(dirname "$0")/../.." && pwd)
 mkdir -p "$OUT"
 D=""; [ -n "$MUT" ] && D="-DOT_QKD_SLOT_MUT"
 case "$CELL" in
-  kvwq_ctl_bin) TB=tb_qkd_kvwq_ctl_bin_slot; SRC="$R/rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_ctl_binary.sv" ;;
+  kvwq_ctl_bin) TB=tb_qkd_kvwq_ctl_bin_slot; SRC="$R/rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_ctl_binary.sv $R/rtl/lib/ot_rst_relay.sv" ;;
   *) echo "FAIL kv_slots $CELL unknown cell"; exit 1 ;;
 esac
 iverilog -g2012 $D -o "$OUT/tb_$CELL" "$R/rtl/test/$TB.sv" "$R/rtl/physical/ot_qwen_kv_slot_wrappers.sv" $SRC \
