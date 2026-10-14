@@ -17,7 +17,7 @@ module tb_qwen_xepoch_cache;
             px={32'hdeadbeef ^ (32'(t)%32'd128),32'h13572468 ^ k,32'ha55aa55a ^ (k*32'd8191),32'h12345678 ^ ((32'(t)%32'd128)+k)};
         endfunction
         wire qv,f;wire [127:0] q;
-        ot_qwen_xepoch_cache #(.MUT_STALE_BANK(MUT)) dut(clk,rst_n,lv,le,px(le),rv,re,qv,q,f);
+        ot_qwen_xepoch_cache #(.MUT_STALE_BANK(MUT)) dut(clk,rst_n,1'b0,lv,le,px(le),rv,re,qv,q,f);
         reg expected_v;reg [127:0] expected;
         always @(posedge clk) begin
             expected_v=rv;expected=px(re);

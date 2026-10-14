@@ -55,7 +55,10 @@ flops. DEPTH64 approximately8192 data+1024 tag+64 valid+130 output/control
 flops, below15000 sinks, but no CTS evidence yet. Use a separate leaf rather
 than adding9k flops to an already14k-flop ctl clock root. Parent stays wires
 only. Core exposes local x read timing/epoch to cache and takes the response
-through its memory alignment path. Reset invalidates every cache entry.
+through its memory alignment path. Reset invalidates every cache entry. Pulse clear before each new instruction
+preload (before its first LOAD) to invalidate prior instruction entries;
+clear suppresses both loading and reading on its edge. Epoch tags must travel
+with the packet rather than being inferred from an unqualified local cycle.
 
 Physical lower bounds for32 roots (exclude clock/reset/credit/epoch, tree):
   VM source data:4096bits; shared phase4+epoch16+valid adds21bits.
