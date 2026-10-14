@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Opt-in native TP8 masters. Fresh core/xs views required; historical CLOSED views stand.
-module qkd_seq_core_tp8 
+module qkd_seq_core_tp8 (
     input  wire          ck,
     input  wire          rst_n,
     input  wire          x3_v,
@@ -72,7 +72,7 @@ module qkd_seq_core_tp8
  .tk(tk),
  .kst(kst));
 endmodule
-module qkd_seq_xs_tp8 
+module qkd_seq_xs_tp8 (
     input  wire          ck,
     input  wire          rst_n,
     input  wire          x_v,
