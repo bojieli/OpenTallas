@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.fence.actual_successor.slot_clock_request.v1",
+  "status": "REQUESTED_UNGRANTED",
+  "master": "hbm_native_fence_clocked_parent_1014",
+  "outline": {
+    "w": 648,
+    "h": 648
+  },
+  "signal_cap": "M7",
+  "PG_pins": "M7",
+  "child_signal_and_PG_cap": "M5",
+  "child_strap": "M6",
+  "active_roots": 165,
+  "own_root_logical_sinks": 8499,
+  "child_roots": 164,
+  "clock_source_delivery": "Related same-period core_clk and 164 child sources; phase child source=actual own median boundary arrival minus measured entry wire minus actual routed child boundary mean for each actual loaded corner. No ETM insertion add-back.",
+  "unused_declared_clock": "bank_clks[34] has zero active state; no dummy loads.",
+  "production_slot_mapping": "OPEN: former monolithic frame and parent M5 contract cannot inherit this larger M7 cluster.",
+  "price_ratio": 1.6061893203883495,
+  "price_adopted": false
+}
