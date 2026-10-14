@@ -1,0 +1,50 @@
+{
+  "status": "DISTINCT_SEQ40_NATIVE_CANDIDATE_SOURCE_BOUND_COUNTER_AND_EVENT_UNIT_ONLY",
+  "SEQ_W": 40,
+  "native_parameters": {
+    "GT": 3072,
+    "NW": 18,
+    "IL": 8,
+    "FAST_ISSUE": 1,
+    "TG": 4,
+    "XLOCAL": 1
+  },
+  "max_native_queries_per_operation": 549755813888,
+  "max_nonzero_ROM_fields_queries": 549751619592,
+  "bound_derivation": "WSRC0 k_r=i_k18 direct, t/roundcount18, jperiodIL8. FAST1 k_2/t_2 truncate toNW18, hence evenzeroencodedfullperiod<=2^18 peraxis. One activeissue/CC; nonzeroactual4lanequery subset gives<=2^18*2^18*8=2^39. WSRC1 ceilnin/split doesnotraisebound. Fortybits representsnextcounter2^39 withoutwrap.",
+  "query_rate": "actualx_re nonzero on EVERY activeCCedge whenGBASE/splitmaskadmits;notonlyj0. Max1query/tile/CCedge,128bits jointly captured.",
+  "native_program_max_query_counts": {
+    "PC1_qkv": 64,
+    "PC16_o": 48,
+    "PC19_gu": 256,
+    "PC23_down": 144
+  },
+  "query_event": "seq40/toggle assignedsameactual preupdategenerationedge asx_re/address/epoch/context/mode; ACKmeansrequestrecorded, notretired; pausedreadvlevels cannotcreateevents",
+  "sequence_reset": "actualacceptedgo&&ready only; no mid-operation rollover fence/pause orfaultlimit",
+  "response_sequence": "CURRENT read_query_seq40 capturedwithq_x; neverresidentfillqueryseq",
+  "fill_sequence": "provider/load_query_seq40 echoedonactualacceptedfill event;notstored/reused asfuturequeryidentity",
+  "extra_query_control_FF": 82,
+  "cache_event_tuple_bits": 247,
+  "cache_leaf_logical_FF": {
+    "store": 11000,
+    "response": 377
+  },
+  "node_sequence_bits": 40,
+  "node_tuple_bits": 88,
+  "node_leaf_logical_FF": 1048,
+  "node_producer_bound": "UNBOUND actualfield/tree mustsupply40bitidentity/sourcecount/seal;componentdoesnotinfercurrentIB",
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "c06698f0f4f35b4354d90d5a1777e63330ba8d7fa35730a0843dc4c11251be40",
+    "rtl/physical/ot_qwen_tile_ctl.sv": "92afb4c700f7efd9d433e5b99e9fee9fe2ec79c45a7df45c595d62ab1707a76e",
+    "rtl/physical/ot_qwen_xcache_context32_events.sv": "9696d349cde35bd8460f13161df53e09c23c9260b905384f83625f521c04f29f",
+    "rtl/physical/ot_qwen_tile_node_lifetime.sv": "1d8ad88942b5cb009cb3857fb3b995ce33e4c47cfdba6c3c41b0c908d3f2b7e8"
+  },
+  "pending": [
+    "actualnativequerysequence/arithmetic/acceptedop productionjoin",
+    "actual49step/outstandingpeak trace",
+    "queued/pipelinedeventRTT/throughput",
+    "newseq40 CTS/corners/faces",
+    "physicalregisteredstatus/lookahead/CDC",
+    "allrecipientglobalproducerseal/retirement"
+  ]
+}

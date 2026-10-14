@@ -1,0 +1,34 @@
+{
+  "status": "UNIT_TIMER_AND_ACTUAL_FIXED_NODE_VALID_METADATA_GATES_NOT_FULL_NATIVE_ARITHMETIC_OR_PHYSICAL",
+  "cases": {
+    "drain_positive": {
+      "exit": 0,
+      "source_sha256": "3fd67bf46b44aae1cd1850bfc16a4ffe1a55feea0a07a87bc5a221527fa933d5"
+    },
+    "drain_early": {
+      "exit": 1,
+      "source_sha256": "0b3faf6cecddecfde21f1d23fcd82203bc7806fdc77a3fdaa8206f4e019f3970"
+    },
+    "node_positive": {
+      "exit": 0,
+      "source_sha256": "1d8ad88942b5cb009cb3857fb3b995ce33e4c47cfdba6c3c41b0c908d3f2b7e8"
+    },
+    "node_latest_offer": {
+      "exit": 1,
+      "source_sha256": "1cd6d5a8a698f58c34815aa582e642950124c6a49e2ff1f371c8f75e224d5d4f"
+    },
+    "node_no_seal": {
+      "exit": 1,
+      "source_sha256": "b1352de50abac3874fc641dd4833c0ebf80c2128f45a53a68ab70682b7f2c652"
+    },
+    "node_early": {
+      "exit": 1,
+      "source_sha256": "61ad726eddf8917d210992208fb2de472cb1e41d0e2ae2c8ec1cfbbb3937785c"
+    }
+  },
+  "sources": {
+    "rtl/physical/ot_qwen_tile_local_drain.sv": "3fd67bf46b44aae1cd1850bfc16a4ffe1a55feea0a07a87bc5a221527fa933d5",
+    "rtl/physical/ot_qwen_tile_node_lifetime.sv": "1d8ad88942b5cb009cb3857fb3b995ce33e4c47cfdba6c3c41b0c908d3f2b7e8",
+    "rtl/physical/ot_qwen_tile_node.sv": "d1fba7b72537236dc78668b793424f8c83c8a0801b96ca066fce388ff867bd1d"
+  }
+}

@@ -185,6 +185,9 @@ module ot_qwen_rom_tile_logic_w12 #(
     input wire [31:0] vm_version,
     output wire [15:0] cx_xcontext,
     output wire [31:0] cx_xversion,
+    input wire query_ack_toggle,
+    output wire [39:0] cx_query_seq,
+    output wire cx_query_toggle,cx_query_credit,cx_query_fault,
     input wire accept_ack_toggle,accept_transport_fence,
     output wire cx_accept_toggle,cx_admission_fault,
     output wire cx_op_accept,
@@ -219,7 +222,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     wire go_core;
     generate if (XADMIT != 0) begin:g_admission
       ot_qwen_context_admission u_admit (.clk(clk),.rst_n(rst_n),.offer_go(go_i),
-       .core_ready(me_ready),.core_idle(cx_core_idle),.offered_identity(op_meta_i),
+       .core_ready(me_ready&&cx_query_credit),.core_idle(cx_core_idle),.offered_identity(op_meta_i),
        .accepted_identity({cx_accepted_version,cx_accepted_context}),
        .accept_ack_toggle(accept_ack_toggle),.transport_fence(accept_transport_fence),
        .core_go(go_core),.accept_toggle(cx_accept_toggle),.fault(cx_admission_fault));
@@ -312,7 +315,8 @@ module ot_qwen_rom_tile_logic_w12 #(
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .scale_re(), .scale_gre(), .scale_addr(), .scale_q({TG*W*16{1'b0}}),
         .kv_re(me_kv_re), .kv_addr(me_kv_addr), .kv_q(me_kv_q),
-        .x_re(cx_xre), .x_addr(cx_xaddr), .x_epoch(cx_xepoch), .x_jrepeat(cx_xjrepeat), .i_op_context(op_meta_i[15:0]), .i_vm_version(op_meta_i[47:16]), .x_op_context(cx_xcontext), .x_vm_version(cx_xversion), .accepted_op_context(cx_accepted_context), .accepted_vm_version(cx_accepted_version), .op_accept(cx_op_accept), .x_issue_last(cx_issue_last), .x_q(xl_i),
+        .x_re(cx_xre), .x_addr(cx_xaddr), .x_epoch(cx_xepoch), .x_jrepeat(cx_xjrepeat), .i_op_context(op_meta_i[15:0]), .i_vm_version(op_meta_i[47:16]), .x_op_context(cx_xcontext), .x_vm_version(cx_xversion), .accepted_op_context(cx_accepted_context), .accepted_vm_version(cx_accepted_version), .op_accept(cx_op_accept), .x_issue_last(cx_issue_last), .i_query_ack_toggle(query_ack_toggle),
+ .x_query_seq(cx_query_seq),.x_query_toggle(cx_query_toggle),.x_query_credit(cx_query_credit),.x_query_fault(cx_query_fault), .x_q(xl_i),
         .ov(), .o_we(), .o_addr(), .o_mask(), .o_data(),
         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
         .progress(), .fault(me_fault),

@@ -1,0 +1,14 @@
+{
+  "status": "EXACT_PRODUCTION_COUNTER_BLOCK_UNIT_ONLY_FULL_CORE_PENDING",
+  "source_sha256": "c06698f0f4f35b4354d90d5a1777e63330ba8d7fa35730a0843dc4c11251be40",
+  "cases": {
+    "positive": {
+      "exit": 0,
+      "block_sha256": "00e731ee5ddd7128a2bd6913da93498c85e96ced3e49700a52b2c65ee2202d47"
+    },
+    "truncated32": {
+      "exit": 1,
+      "block_sha256": "c4664077c6061968e453da4c6b9730e04b86fc0fd4e9d0733948a4157054b976"
+    }
+  }
+}

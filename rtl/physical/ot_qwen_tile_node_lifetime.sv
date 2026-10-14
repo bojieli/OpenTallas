@@ -5,7 +5,8 @@
 module ot_qwen_tile_node_lifetime (
  input wire core_clk,rst_n,clear_context,
  input wire node_va,
- input wire [15:0] node_context,node_sequence,
+ input wire [15:0] node_context,
+ input wire [39:0] node_sequence,
  input wire [31:0] node_version,
  input wire producer_seal_v,
  input wire [15:0] producer_seal_context,
@@ -13,18 +14,18 @@ module ot_qwen_tile_node_lifetime (
  input wire node_retire_ack_toggle,
  output wire node_credit,
  output reg node_produced_toggle,
- output reg [63:0] node_produced_tuple,
- output wire [63:0] node_output_tuple,
+ output reg [87:0] node_produced_tuple,
+ output wire [87:0] node_output_tuple,
  output wire node_output_valid,
  output reg node_accept_toggle,
- output reg [63:0] node_accept_tuple,
+ output reg [87:0] node_accept_tuple,
  input wire node_accept_ack_toggle,
  output wire node_accept_credit,
  output reg node_drained,
  output wire [47:0] node_active_identity,
  output reg fault
 );
- reg [63:0] metadata[0:8];reg [8:0] valid;
+ reg [87:0] metadata[0:8];reg [8:0] valid;
  reg [47:0] active_identity;
  reg identity_valid,sealed,seen_retire;
  reg [15:0] outstanding;
