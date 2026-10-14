@@ -843,7 +843,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     reg          n_run_s;
     reg [2:0]    n_q_s, n_pos_s, n_b_s, n_j_s;
     reg [SW-1:0] n_c_s;
-    reg [UW+2:0] nN_r;                  // WRT: {run, q, b, c, j, pos} on a match, registered
+    wire [UW+2:0] nN_r;                 // WRT: {run, q, b, c, j, pos} on a match, registered
     wire         n_run;
     wire [2:0]   n_q, n_pos, n_b, n_j;
     wire [SW-1:0] n_c;
@@ -1043,7 +1043,34 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             assign hit_k[hc] = d_run && !d_fam && xs_v_e && (|cm) && xs_b_e == d_b && xs_pos_e == d_pos;
             if (WRT != 0) begin : g_wrt
                 ot_v41_kreg #(.W(1), .AR(1)) u_hp (.clk(wclk), .arst_n(rst_n), .d(wen ? (hit_k[hc] && !go_e) : (d_hp)), .q(d_hp));
-                ot_v41_kreg #(.W(UW + 3)) u_nr (.clk(wclk), .arst_n(1'b1), .d(wen ? (d_nc) : (d_nr)), .q(d_nr));
+                if (QS >= 6) begin : g_next_decision
+                    // Store both operands and the restart decision at the same
+                    // edge. The selected candidate is therefore exactly d_nc
+                    // from the preceding enabled edge, including back-to-back
+                    // matches. Keep the end decision out of the position adder
+                    // and the wide candidate-register enable cone.
+                    reg restart_d;
+                    reg [UW+2:0] step_d, restart_state_d;
+                    always @(posedge wclk) if (wen) begin
+                        restart_d <= d_rs;
+                        step_d <= {n_nx, d_pos};
+                        restart_state_d <= {d_run, 3'd0, 3'd0, c_live, 3'd0, d_pos + 3'd1};
+                    end
+`ifdef QS6_MUTANT_RESTART
+                    assign d_nr = step_d;
+`else
+                    assign d_nr = restart_d ? restart_state_d : step_d;
+`endif
+`ifdef QP_CHECK
+                    reg [UW+2:0] reference_d;
+                    always @(posedge wclk) if (wen) reference_d <= d_nc;
+                    always @(negedge wclk) if (rst_n && qy_seen && d_nr !== reference_d) begin
+                        $display("QS6_CHECK FAIL: copied next-state %h != %h", d_nr, reference_d); $fatal(1);
+                    end
+`endif
+                end else begin : g_next_encoded
+                    ot_v41_kreg #(.W(UW + 3)) u_nr (.clk(wclk), .arst_n(1'b1), .d(wen ? (d_nc) : (d_nr)), .q(d_nr));
+                end
             end else begin : g_nwrt
                 assign d_hp = 1'b0; assign d_nr = '0;
             end
@@ -1406,7 +1433,31 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire n_more = n_pos != plast;
     // the walker's value on a match (WRT: registered every cycle; else loaded on the match)
     wire [UW+2:0] nN_c = (!n_nx[UW-1] && n_more) ? {n_run, 3'd0, 3'd0, c_live, 3'd0, n_pos + 3'd1} : {n_nx, n_pos};
-    always @(posedge wclk) if (wen) nN_r <= nN_c;
+    if (QS >= 6) begin : g_next_decision
+        reg restart_d;
+        reg [UW+2:0] step_d, restart_state_d;
+        always @(posedge wclk) if (wen) begin
+            restart_d <= !n_nx[UW-1] && n_more;
+            step_d <= {n_nx, n_pos};
+            restart_state_d <= {n_run, 3'd0, 3'd0, c_live, 3'd0, n_pos + 3'd1};
+        end
+`ifdef QS6_MUTANT_RESTART
+        assign nN_r = step_d;
+`else
+        assign nN_r = restart_d ? restart_state_d : step_d;
+`endif
+`ifdef QP_CHECK
+        reg [UW+2:0] reference_d;
+        always @(posedge wclk) if (wen) reference_d <= nN_c;
+        always @(negedge wclk) if (rst_n && qy_seen && nN_r !== reference_d) begin
+            $display("QS6_CHECK FAIL: next-state %h != %h", nN_r, reference_d); $fatal(1);
+        end
+`endif
+    end else begin : g_next_encoded
+        reg [UW+2:0] value_d;
+        always @(posedge wclk) if (wen) value_d <= nN_c;
+        assign nN_r = value_d;
+    end
     wire w_more = w_pos != plast;
     wire w_restart = issue && w_cls_last && ((QX != 0) ? !qx_same && qx_endq : !w_nx[UW-1]) && w_more;
     // QX = 5: hazard_r's next value (above).  On an issue w_cnt restarts at 0 exactly when the class's last word
