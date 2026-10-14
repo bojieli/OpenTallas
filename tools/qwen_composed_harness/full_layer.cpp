@@ -117,6 +117,7 @@ int main(int argc,char**argv){try{
   if(x.vm.accepted.size()!=22||x.vm.retired!=std::vector<unsigned>{13,21,24}||x.receiver.commit_acks!=32||x.writes.committed!=8||!x.reads.drained()||!x.writes.drained())throw std::runtime_error("missing executed layer effects rank "+std::to_string(rank));
   std::ofstream f(fs::path(argv[6])/("rank"+std::to_string(rank)+"_VM.hex"));for(auto bits:x.vm.vm)f<<std::hex<<std::setfill('0')<<std::setw(8)<<bits<<"\n";
   std::ofstream a(fs::path(argv[6])/("rank"+std::to_string(rank)+"_accepted.txt"));for(auto op:x.vm.accepted)a<<op.global_pc<<" "<<op.unit<<" "<<op.edge<<"\n";
+  std::ofstream bits(fs::path(argv[6])/("rank"+std::to_string(rank)+"_accepted_source_words.hex"));for(auto op:x.vm.accepted){for(unsigned word=0;word<32;word++)bits<<std::hex<<std::setfill('0')<<std::setw(8)<<op.instruction[31-word];bits<<"\n";}
   std::ofstream k(fs::path(argv[6])/("rank"+std::to_string(rank)+"_KV.txt"));for(auto w:x.kv_commits)k<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.pc<<"\n";
   std::ofstream v(fs::path(argv[6])/("rank"+std::to_string(rank)+"_VM_commits.txt"));for(auto w:x.vm.commits)v<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.port<<"\n";
   std::ofstream e(fs::path(argv[6])/("rank"+std::to_string(rank)+"_operation_commits.txt"));for(auto w:x.effects)e<<w.pc<<" "<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.port<<"\n";
