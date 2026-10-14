@@ -1,0 +1,68 @@
+{
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv": "c1fbe955248218349f483c8e554feb5658a2474bb5169c2a198b8306d3601553",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_be_rcdc_gray.sv": "b05493659e8e023df596d2ae71ad3923c886c25d37a29a30afebf5909cf2fb5a",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+  },
+  "cases": [
+    {
+      "tag": "phase0_gold",
+      "phase": 0,
+      "mutant": null,
+      "expected": "pass",
+      "observed_rc": 0,
+      "pass_": true
+    },
+    {
+      "tag": "phase1_gold",
+      "phase": 1,
+      "mutant": null,
+      "expected": "pass",
+      "observed_rc": 0,
+      "pass_": true
+    },
+    {
+      "tag": "phase5_gold",
+      "phase": 5,
+      "mutant": null,
+      "expected": "pass",
+      "observed_rc": 0,
+      "pass_": true
+    },
+    {
+      "tag": "phase8_gold",
+      "phase": 8,
+      "mutant": null,
+      "expected": "pass",
+      "observed_rc": 0,
+      "pass_": true
+    },
+    {
+      "tag": "phase1_OT_BE_RCDC_MUT_WRONG_ENTRY",
+      "phase": 1,
+      "mutant": "OT_BE_RCDC_MUT_WRONG_ENTRY",
+      "expected": "fail",
+      "observed_rc": 1,
+      "pass_": true
+    },
+    {
+      "tag": "phase1_OT_BE_RCDC_MUT_EARLY_PUB",
+      "phase": 1,
+      "mutant": "OT_BE_RCDC_MUT_EARLY_PUB",
+      "expected": "fail",
+      "observed_rc": 1,
+      "pass_": true
+    },
+    {
+      "tag": "phase1_OT_BE_RCDC_MUT_MISS_EPOCH",
+      "phase": 1,
+      "mutant": "OT_BE_RCDC_MUT_MISS_EPOCH",
+      "expected": "fail",
+      "observed_rc": 1,
+      "pass_": true
+    }
+  ],
+  "pass_": true,
+  "physical_qualified": false,
+  "native_parent_proof": null
+}

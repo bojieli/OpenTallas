@@ -1,0 +1,48 @@
+{
+  "status": "DEFAULT_OFF_CANDIDATE_NATIVE_AND_PHYSICAL_PROOF_PENDING",
+  "enable_macro": "OT_BE_RCDC_GRAY",
+  "selected_parent": "55740b883 default EP2/MD12",
+  "publication": "register each accepted binary pointer as Gray every write edge with LAG1; reserve all accepted slots with local wp",
+  "pointer_crossing": "registered Gray; two async_reg flop stages each direction",
+  "online_crossing": "independent registered local DOWN/RUN state bits; two async_reg flop stages; DOWN priority during disagreements",
+  "selected_capture": "only mem[rp] when r_take; no all-slot sh",
+  "raw_reset": "new BE_SL raw_epoch_n input combines parent raw rst[0]&rss[0]; local serial/stream conditioners per FIFO preserve pulses under stopped clocks; forwarded rn/rns alone are insufficient",
+  "new_leaf_ABI": [
+    "raw_epoch_n",
+    "cdc_rst_ack[1:0]",
+    "cdc_rst_ack_s[1:0]"
+  ],
+  "new_BE_ACK_outputs": [
+    "cdc_rst_ack[7:0]",
+    "cdc_rst_ack_s[7:0]"
+  ],
+  "ACK_parent_collector_binding": null,
+  "old_CLOSED_supports_new_ABI": false,
+  "per_queue_state_delta_estimate": {
+    "removed_shadow_FF": 1024,
+    "removed_read_select_FF": 16,
+    "added_pointer_FF": 12,
+    "added_online_FF": 4,
+    "added_raw_conditioner_FF": 4,
+    "net_FF_delta": -1020
+  },
+  "per_leaf_FF_delta_estimate": -2040,
+  "all_four_FF_delta_estimate": -8160,
+  "actual_mapped_census": null,
+  "latency_fixed_delta_claim": null,
+  "clock_driver_R_phase_RC": null,
+  "raw_reset_driver_master_pin_reference_clock": null,
+  "setup_hold_constraints_changed": false,
+  "correlated_peer_credit": false,
+  "source_sha256": "c1fbe955248218349f483c8e554feb5658a2474bb5169c2a198b8306d3601553",
+  "required": [
+    "fullnative default gold/TP on exactsource",
+    "selected successor native gold/TP +wrongentry mutant",
+    "phase-dependent return latency receipt",
+    "reset/epoch/ACKcollector proof",
+    "actualmappedcensus/rawphysicalSS/FF/DRC/AP on newABI",
+    "source-slot/clock/resetassignment"
+  ],
+  "physical_qualified": false,
+  "parent_closed": false
+}

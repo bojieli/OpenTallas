@@ -1,0 +1,13 @@
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv:1332:23: Operator VAR 'DP' expects 4 bits on the Initial value, but Initial value's VARREF 'DEPTH' generates 32 bits.
+                                                                  : ... note: In instance 'dsfd_vm_be_rcdc_gray'
+ 1332 |     localparam [AW:0] DP = DEPTH;
+      |                       ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv:1333:25: Operator VAR 'HL' expects 2 bits on the Initial value, but Initial value's VARREF 'HOLD' generates 32 bits.
+                                                                  : ... note: In instance 'dsfd_vm_be_rcdc_gray'
+ 1333 |     localparam [CW-1:0] HL = HOLD;
+      |                         ^~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.217 MB sources in 25 modules, into 0.070 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.039 s (elab=0.009, cvt=0.008, bld=0.000); cpu 0.039 s on 1 threads; allocated 39.148 MB
