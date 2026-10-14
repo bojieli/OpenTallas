@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.s81.hc.ccf_two_face_return_retime_cost.v1",
+  "source_commit": "803fec7ea",
+  "scope": "Exact soft and hard-pad NG256 HIER3 CNL_PIN1 CHAIN_STEP6 LANE_SPECIALIZE1 PIPE0 fixture; final native/die throughput remains pending",
+  "baseline_source": "origin/main:results/rtl/s81_suhc_20261013/cryys_split_189c83072/run_ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_probe.json",
+  "baseline_sha256": "bd865ef20020d568b61d0ce29ed6bad5cc20ccfc805dffdb4deef4a81972bac3",
+  "measured_local_cycle_loss_percent": 0,
+  "rows": [
+    {
+      "mode": "bench_0",
+      "run": "golden_L0_L2",
+      "jobs": 20,
+      "rows": 1940,
+      "cycles": 6392,
+      "all_start_done_pairs_identical": true,
+      "delta_cycles": 0
+    },
+    {
+      "mode": "bench_0",
+      "run": "stress_0",
+      "jobs": 20,
+      "rows": 1940,
+      "cycles": 6392,
+      "all_start_done_pairs_identical": true,
+      "delta_cycles": 0
+    },
+    {
+      "mode": "bench_0",
+      "run": "stress_1",
+      "jobs": 20,
+      "rows": 1940,
+      "cycles": 6392,
+      "all_start_done_pairs_identical": true,
+      "delta_cycles": 0
+    },
+    {
+      "mode": "bench_1",
+      "run": "golden_L0_L2",
+      "jobs": 20,
+      "rows": 1940,
+      "cycles": 6392,
+      "all_start_done_pairs_identical": true,
+      "delta_cycles": 0
+    },
+    {
+      "mode": "bench_1",
+      "run": "stress_0",
+      "jobs": 20,
+      "rows": 1940,
+      "cycles": 6392,
+      "all_start_done_pairs_identical": true,
+      "delta_cycles": 0
+    },
+    {
+      "mode": "bench_1",
+      "run": "stress_1",
+      "jobs": 20,
+      "rows": 1940,
+      "cycles": 6392,
+      "all_start_done_pairs_identical": true,
+      "delta_cycles": 0
+    }
+  ],
+  "retime": "FV4/FD5/R2 plus CLOSED R5/R5 preserves all original transaction and return epochs; two existing closed relay instances and14 parent children",
+  "ledger_row_added": false
+}
