@@ -1,0 +1,5 @@
+PAY_LAUNCH_TRACE empty_mode=0 beats=1024 grant_delay=41 first=43 last=1066
+PAY_LAUNCH_TRACE empty_mode=0 beats=128 grant_delay=41 first=43 last=170
+PAY_LAUNCH_TRACE empty_mode=0 beats=128 grant_delay=0 first=28 last=155
+PAY_LAUNCH_TRACE empty_mode=0 beats=128 grant_delay=0 first=28 last=155
+PASS QDQ_WR_PAY words=45056 snapshots=352 metadata_wraps=18 counter_wraps=16 reset=1 real_macro=1 array_writes=1148 array_reads=1148 bypassed=0 fault_reset=1

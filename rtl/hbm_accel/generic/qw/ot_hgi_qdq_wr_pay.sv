@@ -4,7 +4,8 @@
 module ot_hgi_qdq_wr_pay #(
     parameter integer LQ  = 10,
     parameter integer OD  = 64,
-    parameter integer RQ  = 16
+    parameter integer RQ  = 16,
+    parameter integer EMPTY_BYPASS = 0 // opt-in registered input result bypass
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -62,8 +63,34 @@ module ot_hgi_qdq_wr_pay #(
             if (w_hit[b] && wcr[b] == 0) w_cr_ok = 1'b0;
         end
     end
-    wire w_fire = wg_ok && !bad && od_hv && w_cr_ok;
-    ot_fifo_sram_fwft #(.W(512), .DEPTH(OD), .MACRO(0), .ESL(128)) u_od (.clk(clk), .rst_n(rr_n[1]), .push(vo_f),
+    wire result_empty,tracker_bad;
+    wire bypass_eligible=(EMPTY_BYPASS!=0)&&result_empty&&!od_hv&&vo_f&&!qf_f&&!df_f&&!f_bi&&!od_ovf;
+    wire w_fire = wg_ok && !bad && !tracker_bad && (od_hv||bypass_eligible) && w_cr_ok;
+    wire bypass_fire=w_fire&&!od_hv&&bypass_eligible;
+    wire [511:0] result_head=(EMPTY_BYPASS!=0)&&!od_hv?y_f:od_head;
+    generate if(EMPTY_BYPASS!=0)begin:g_result_tracker
+        // Accepted registered VO minus actual WWQ launches counts every SRAM,
+        // prefetch-head and read-pending obligation. Complement rails refuse a
+        // shortcut if mutable tracking state disagrees; no raw VO/Y bypass.
+        (* keep="true" *) reg [OW:0] outstanding,outstanding_n;
+        wire [OW:0] next_outstanding=outstanding+(OW+1)'(vo_f)-(OW+1)'(w_fire);
+        assign tracker_bad=outstanding!=~outstanding_n;
+        assign result_empty=(outstanding==0)&&!tracker_bad;
+        always @(posedge clk or negedge rr_n[0])
+            if(!rr_n[0])begin outstanding<=0;outstanding_n<='1;end
+            else begin outstanding<=next_outstanding;outstanding_n<=~next_outstanding;end
+`ifndef SYNTHESIS
+        always @(negedge clk)if(rr_n[0]&&rr_n[1]&&!tracker_bad)begin
+            if(outstanding !== u_od.in_arr+u_od.oc+u_od.inflight)
+                $fatal(1,"PAY outstanding tracker does not equal real SRAM/head/read-pending obligations");
+            if(bypass_fire&&(u_od.in_arr!=0||u_od.oc!=0||u_od.inflight))
+                $fatal(1,"PAY bypass with stored result obligation");
+        end
+`endif
+    end else begin:g_no_result_tracker
+        assign result_empty=1'b0;assign tracker_bad=1'b0;
+    end endgenerate
+    ot_fifo_sram_fwft #(.W(512), .DEPTH(OD), .MACRO(0), .ESL(128)) u_od (.clk(clk), .rst_n(rr_n[1]), .push(vo_f&&!bypass_fire),
         .wdata(y_f), .pop(w_fire), .hv(od_hv), .head(od_head), .ovf(od_ovf));
     wire snapshot_push = w_fire && mh_z;
     wire [63:0] snapshot_counts;
@@ -78,8 +105,8 @@ module ot_hgi_qdq_wr_pay #(
             if (f_m_v) mq_t <= mq_t + 1'b1;
             if (w_fire) mq_h <= mq_h + 1'b1;
             infl <= infl + (OW+1)'(f_m_v) - (OW+1)'(vo_f);
-            if ((vo_f && qf_f) || df_f || od_ovf || f_bi) bad <= 1'b1;
-            if ((vo_f && qf_f) || df_f || od_ovf) o_bad <= 1'b1;
+            if ((vo_f && qf_f) || df_f || od_ovf || f_bi || tracker_bad) bad <= 1'b1;
+            if ((vo_f && qf_f) || df_f || od_ovf || tracker_bad) o_bad <= 1'b1;
             o_wf <= w_fire; snapshot_v <= snapshot_push;
             o_idle <= infl == 0 && !f_m_v;
         end
@@ -105,8 +132,8 @@ module ot_hgi_qdq_wr_pay #(
             if (w_fire && w_hit[b]) begin
                 reg [255:0] d; reg [1:0] s; reg [127:0] c; s = 2'(3'(b - w_sec0[2:0]));
                 // decoded constant-index sector select (one-hot AND-OR, no runtime part-select)
-                c = ({128{s == 2'd0}} & od_head[127:0]) | ({128{s == 2'd1}} & od_head[255:128]) |
-                    ({128{s == 2'd2}} & od_head[383:256]) | ({128{s == 2'd3}} & od_head[511:384]);
+                c = ({128{s == 2'd0}} & result_head[127:0]) | ({128{s == 2'd1}} & result_head[255:128]) |
+                    ({128{s == 2'd2}} & result_head[383:256]) | ({128{s == 2'd3}} & result_head[511:384]);
                 for (integer k = 0; k < 8; k = k + 1) d[k*32 +: 32] = {c[k*16 +: 16], 16'd0};
                 wwq[b*280 +: 279] <= {15'(w_sec0 + 15'(s)), d, 8'hff};
             end

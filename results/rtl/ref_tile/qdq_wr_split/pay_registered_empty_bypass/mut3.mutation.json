@@ -1,0 +1,6 @@
+{
+  "source_sha256": "b6d7e367395fcd03fb012d240c7a4099217139fba91e72543b22b523900ef296",
+  "mutant_sha256": "17934e7e1d0bfba693c96ed63b5addc409abd2e96e10a8b2d1530dfa3c09ac6f",
+  "from": "outstanding_n<=~next_outstanding;",
+  "to": "outstanding_n<=~next_outstanding ^ (OW+1)'(1);"
+}
