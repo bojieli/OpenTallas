@@ -1,6 +1,7 @@
 # Place each bit's small OR cone between its real fixed input and output flops.
 # No net, cell or timing constraint changes. Real routing still decides signoff.
 source /src/physical/qwen_die_masters/io_flop_at_pins.tcl
+global gocc gxstep gystep gbasey gminx gmaxx gnrow
 set gb [ord::get_db_block]
 set gd [[ord::get_db_tech] getDbUnitsPerMicron]
 set gc [$gb getCoreArea]
