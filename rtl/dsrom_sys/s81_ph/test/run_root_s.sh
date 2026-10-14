@@ -19,6 +19,10 @@ P=$SRC/rtl/dsrom_sys/s81_ph; M=$SRC/physical/s81_ph_views/macros
 FILES="$SRC/rtl/hdc/ot_hdc_prefix.sv $SRC/rtl/gpu/ot_fp32_add_rne_deep.sv $P/ot_s81ph_ret_root_p.sv $P/ot_s81ph_ret_root_s.sv
  $M/ot_sram_1r1w_128x66_m1_r2c2/ot_sram_1r1w_128x66_m1_r2c2.v $M/ot_sram_1r1w_512x34_m4_r2c2/ot_sram_1r1w_512x34_m4_r2c2.v $M/ot_sram_1r1w_256x34_m2_r2c2/ot_sram_1r1w_256x34_m2_r2c2.v
  $P/test/tb_s81ph_root_s.sv"
+if [ "${FP32_PREEXP:-0}" = 1 ]; then
+ LOCAL_DEF="$LOCAL_DEF +define+S81PH_FP32_PREEXP"
+ FILES="$FILES $P/ot_s81ph_fp32_add_rne_preexp.sv"
+fi
 sha256sum $FILES $P/test/gen_root_stim.py $TRACE > $OUT/sources.sha256
 G="python3 $P/test/gen_root_stim.py"
 for s in 1 2 3; do $G stress $s $OUT/stress$s.txt --S $S; done

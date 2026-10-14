@@ -3,7 +3,12 @@ module tb_s81ph_fp32_exact;
  reg clk=0,rst_n=0,v=0;reg[31:0] a=0,b=0;
  always #0.5 clk=~clk;
  wire[31:0] y;wire[1:0] err;wire vo;
- ot_fp32_add_rne_deep #(.SPLIT(7),.KS(1)) dut(.clk(clk),.rst_n(rst_n),.valid_in(v),.a(a),.b(b),.y(y),.err(err),.valid_out(vo));
+ `ifdef S81PH_FP32_PREEXP
+ ot_s81ph_fp32_add_rne_preexp #(
+`else
+ ot_fp32_add_rne_deep #(
+`endif
+.SPLIT(7),.KS(1)) dut(.clk(clk),.rst_n(rst_n),.valid_in(v),.a(a),.b(b),.y(y),.err(err),.valid_out(vo));
  reg[7:0] vh=0;reg[33:0] expected[0:7];reg[31:0] ey=0;integer ee=0;
  integer i,checked=0,fd,rc,iv,phase,nvalid;
  reg[31:0] ia,ib,iy;integer ie;reg[4095:0] vectors;

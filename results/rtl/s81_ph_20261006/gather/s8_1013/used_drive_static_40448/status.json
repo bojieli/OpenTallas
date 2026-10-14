@@ -68,6 +68,53 @@
         "data_reported_worst_ps": 172.83,
         "asynchronous_reported_worst_ps": 333.93
       }
+    },
+    "full": {
+      "ss": {
+        "setup_wns_ps": -49.4531082750882,
+        "hold_wns_ps": 43.922310233313056
+      },
+      "ff": {
+        "setup_wns_ps": 246.3552140063996,
+        "hold_wns_ps": 3.8057890172638054
+      },
+      "tt": {
+        "setup_wns_ps": 172.83136033441338,
+        "hold_wns_ps": 25.22793085546482
+      }
+    },
+    "exp": {
+      "ss": {
+        "setup_wns_ps": -62.65543639472071,
+        "hold_wns_ps": 43.922310233313056
+      },
+      "ff": {
+        "setup_wns_ps": 246.3552140063996,
+        "hold_wns_ps": 3.8057890172638054
+      },
+      "tt": {
+        "setup_wns_ps": 172.83136033441338,
+        "hold_wns_ps": 25.22793085546482
+      }
+    },
+    "branch2": {
+      "ss": {
+        "setup_wns_ps": -44.74287607081351,
+        "hold_wns_ps": 43.922310233313056
+      },
+      "ff": {
+        "setup_wns_ps": 246.3552140063996,
+        "hold_wns_ps": 3.8057890172638054
+      },
+      "tt": {
+        "setup_wns_ps": 172.83136033441338,
+        "hold_wns_ps": 25.22793085546482
+      }
+    },
+    "branch": {
+      "terminal_exit": 1,
+      "failure": "real load _58046_ dont_touch disallowed disconnect; original failure retained, exact state restored in branch2"
     }
-  }
+  },
+  "chosen_fresh_gate_candidate": null
 }

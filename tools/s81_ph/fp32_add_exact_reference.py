@@ -26,7 +26,7 @@ def reference(a,b):
     return sign|((exponent+127)<<23)|(mantissa&0x7fffff),0
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('out');ap.add_argument('--n',type=int,default=100000);ap.add_argument('--tree',type=Path,required=True);a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
+    ap=argparse.ArgumentParser();ap.add_argument('out');ap.add_argument('--n',type=int,default=100000);ap.add_argument('--source',type=Path);ap.add_argument('--tree',type=Path,required=True);a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
     pairs=[]
     def add(x,y,c):pairs.append((x&0xffffffff,y&0xffffffff,c))
     directed=[0,0x80000000,1,0x80000001,0x007fffff,0x807fffff,0x00800000,0x80800000,0x3f800000,0xbf800000,0x7f7fffff,0xff7fffff,0x7f800000,0xff800000,0x7fc00000,0x7f800001,0xffc12345]
@@ -56,7 +56,7 @@ def main():
         z,err=reference(x,y);counts[c]=counts.get(c,0)+1;lines.append(f'1 {x:08x} {y:08x} {z:08x} {err}\n');valid+=1
         if i%53==0:lines.append('0 00000000 80000000 00000000 0\n')
     vectors=out/'vectors.txt';vectors.write_text(''.join(lines))
-    source=a.tree/'rtl/gpu/ot_fp32_add_rne_deep.sv';body=source.read_text();old="wire        s5_inc = s4_val[2] && ((|s4_val[1:0]) || s4_val[3]);";assert body.count(old)==1
+    source=a.source or a.tree/'rtl/gpu/ot_fp32_add_rne_deep.sv';body=source.read_text();old="wire        s5_inc = s4_val[2] && ((|s4_val[1:0]) || s4_val[3]);";assert body.count(old)==1
     mutant=out/'deep_rne_tie_away_mutant.sv';mutant.write_text(body.replace(old,"wire        s5_inc = s4_val[2]; // owned arithmetic negative: ties away, not ties even"))
     receipt={'reference':'exact Python integers in units2^-149; one final RNE quantization, no imported RTL/rootgold model','policy':{'RNE':True,'gradual_underflow':True,'signed_zero':'canonical +0','infinity_or_NaN_operand':'y=0 err=1','rounded_overflow':'y=0 err=2'},'source':str(source),'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'vectors_sha256':hashlib.sha256(vectors.read_bytes()).hexdigest(),'valid_vectors':valid,'classes':counts,'pipeline':'SPLIT7 KS1 exactly8 existing edges, valid bubbles and6 drained short-reset phases','owned_mutation':'s5 RNE tie decision replaced by guard-only ties-away in isolated copied source; historical original untouched','mutant_sha256':hashlib.sha256(mutant.read_bytes()).hexdigest()}
     (out/'reference.json').write_text(json.dumps(receipt,indent=2)+'\n');print(f'FP32_EXACT_REFERENCE vectors={valid} expected_checked={valid+6}')

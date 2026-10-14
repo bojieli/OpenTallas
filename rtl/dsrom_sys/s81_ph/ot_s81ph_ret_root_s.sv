@@ -400,7 +400,12 @@ module ot_s81ph_ret_root_s #(
         end
         tag_in <= {a4_t, b_q[32] | a4_e};
     end
-    ot_fp32_add_rne_deep #(.SPLIT(3'b111), .KS(1)) u_add (.clk(clk), .rst_n(rst_n), .valid_in(add), .a(add_a), .b(add_b),
+`ifdef S81PH_FP32_PREEXP
+    ot_s81ph_fp32_add_rne_preexp #(.SPLIT(3'b111), .KS(1)) u_add
+`else
+    ot_fp32_add_rne_deep #(.SPLIT(3'b111), .KS(1)) u_add
+`endif
+       (.clk(clk), .rst_n(rst_n), .valid_in(add), .a(add_a), .b(add_b),
         .y(sum), .err(err), .valid_out(sv_add));
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin dv <= 0; sv <= 1'b0; end
