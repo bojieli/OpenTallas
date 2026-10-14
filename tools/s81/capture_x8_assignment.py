@@ -92,7 +92,6 @@ def main(request):
         rows[13312+i]=['S',ly,round(xg[3]-11.52+c,3),d]
     assert all(rows)
     capture['ports']['t_vm']=spec(rows)
-    reserve_clocks(capture)
     capture['data_clock_bits'] = {
         'f_gather': ['ck_g[%d]'%(i//848) if i<6784 else 'ck_c[0]' for i in range(6947)],
         't_vm': ['ckv_x[%d]'%(i//832) if i<13312 else 'ckv_x[6]' for i in range(13376)],
@@ -110,7 +109,24 @@ def main(request):
     capture['source']='tools/s81/capture_x8_assignment.py;68clock per-child capture; exact x8 output map'
     vm['source']='tools/s81/capture_x8_assignment.py;bitwise facing capture peer'
     assert sum(map(len,capture['clock_entries'].values()))==68
-    for record in [leaf,capture,vm]:
+    # Reviewed bundle shifts preserve ordering but their centroids are not
+    # necessarily native tracks. Put all M5 boundary points on actual tracks
+    # and mirror the data assignment to the facing gather, not independently.
+    for s in capture['ports'].values():
+        for row in s['per_bit']:
+            if row[1]=='M5':
+                row[2]=round(.012+round((row[2]-.012)/.048)*.048,3)
+    reserve_clocks(capture)
+    gather=json.loads((OUT/'dsfd_sp_gather_c.json').read_text())
+    gather['ports']['t_capture']=spec([['S',ly,c,d] for _,ly,c,d in capture['ports']['f_gather']['per_bit']])
+    gather['ports']['f_cd']=spec([['S',ly,c,d] for _,ly,c,d in capture['ports']['t_cd']['per_bit']])
+    for port,s in gather['ports'].items():
+        for row in s['per_bit']:
+            if port.startswith('ck'):
+                row[1]='M5' if row[0] in 'NS' else 'M4'
+            if row[1] in ('M4','M5'):
+                row[2]=round(.012+round((row[2]-.012)/.048)*.048,3)
+    for record in [leaf,capture,vm,gather]:
         (OUT/(record['master']+'.json')).write_text(json.dumps(record,separators=(',',':'))+'\n')
     print('x8 pins',sum(s['bits'] for s in ports.values()),'capture clocks',68,'capture/VM matched bits',len(rows))
 
