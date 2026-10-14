@@ -2,8 +2,8 @@
   "schema": "opentallas.slot_partition_request.v1",
   "source_commit": "f7fad067c HC scalar;43fb197fd native residual;01f83170b norm node abort repair",
   "source_sha256": {
-    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv": "f44350897d0c6d771992d7dbe96f79e8aa667085225b0de57e40d598a7f76dec",
-    "rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv": "b1077be2bcbd1a129b4d521e4cd968e81e820c963586be862dbf3d699bdf7db5",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv": "524acac534020c9c03fab9564ca1b844b4fbda3247eab2e207a44fba7df56dce",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv": "1da6dbe69de3d2dfed2abda5105269a1d3b5eb131696f7eb19b46d36a9afbae9",
     "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "9119d052dec52368a11694abf479934f9f95eafaef0bd865c4af61370fbca554",
     "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": "be6ab417e31a36500e04f1577b2978717134c45efa1acb7d84ea28f10cb1dfa9"
   },
@@ -53,7 +53,13 @@
           "source": "7d84495f0",
           "actual_gates": "results/rtl/hbm_hc_b2_1013/chunk_store32/receipt.json"
         },
-        "remaining": "32lane own-state incl PRE buffers and7chunk adders/lane;4quarter station own-state;4concentrators;central ingress/selector/control;shared31chunk and19heap arithmetic nodes;scalarSYS control andSinkhorn"
+        "remaining": "32lane own-state incl PRE buffers and7chunk adders/lane;4quarter station own-state;4concentrators;central ingress/selector/control;shared31chunk and19heap arithmetic nodes;scalarSYS control andSinkhorn",
+        "explicit_clock_API": {
+          "source": "81b095ce0",
+          "accepted_SL_clock_pins": 256,
+          "chunk_adder_clock_pins": 224,
+          "mode": "CLOCKED1 actual native exact/m2 jobs live; related equal clock proof only until physical pin/phase closure"
+        }
       }
     },
     {
@@ -81,7 +87,7 @@
         "Exact composition and all protocol mutants; measure throughput at native VM endpoint composition"
       ],
       "candidate_partition": {
-        "source": "e71f1dde9 composition with01f83170b node abort repair; full repair composition gates running",
+        "source": "e71f1dde9 composition with01f83170b node abort repair; exactPASS4rows645streamlines identical, detected partial/broadcast mutants; node in-flight abort PASS5cases, operandmutFAIL7",
         "accepted_tiles": 8,
         "accepted_relay_leaves": {
           "hbfd_rly_136_WE": 24,
@@ -94,7 +100,7 @@
           36.288,
           34.56
         ],
-        "node_abortfix_CTS": "running; prior node646sink TT99.3/spread4.6 is old-source evidence",
+        "node_abortfix_CTS": "PASS648sinks,TTboundary98.6ps/spread6.0; norm_node_abortfix_gate.json",
         "remaining_unhardened_arithmetic_roots": {
           "chunk_adders": 7,
           "scalar": 3,

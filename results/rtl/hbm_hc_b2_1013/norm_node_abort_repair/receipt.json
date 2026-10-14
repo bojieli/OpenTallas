@@ -1,0 +1,21 @@
+{
+  "source_commit": "01f83170b node; b07177a91 final bench",
+  "actual_source_sha256": {
+    "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": "be6ab417e31a36500e04f1577b2978717134c45efa1acb7d84ea28f10cb1dfa9",
+    "rtl/test/tb_hbm_norm_sum_node.sv": "050311d68d796c08b37ed63cd25590b4854a9e5f1f20e2b25511b79c8caf4d94"
+  },
+  "matches_current": true,
+  "old_abort_positive": "FAIL8; stale sum3 published after rowclear and held instead of new16",
+  "fixed_first_probe": "Data16 correct, publication monitor sampled before its update caused FAIL1; observation ordering fixed in final bench",
+  "final_exact": {
+    "cases": 5,
+    "errors": 0
+  },
+  "operand_mutant_errors": 7,
+  "clock_probe": "results/arch/hbm_native_1013/hc_norm_takeover/norm_node_abortfix_gate.json",
+  "sink_count": 648,
+  "TT_boundary_mean_ps": 98.6,
+  "TT_spread_ps": 6.0,
+  "whole_layer_qualified": false,
+  "ledger_eligible": false
+}
