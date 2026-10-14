@@ -102,6 +102,7 @@
 module ot_hbm_accel_tu_endpoint_psg_cluster #(
     parameter integer HARD_CLOCKS=1,
     parameter integer COLUMN_HARD=0,
+    parameter integer REDUCE_HARD=0,
     parameter integer ENABLE = 0,
     parameter integer REARM = 0, // opt-in; production pclk must equal clk
     parameter integer RGX = 0,     // 1: ROW_GATHER hardware mode available (rgx pin, stream inject, K*F delivery set)
@@ -133,6 +134,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
 ) (
     input wire[NPT-1:0]port_clk,
     input wire[NC-1:0]column_clk,
+    input wire[LANES-1:0]reduce_clk,
     input  wire                 clk,
     input  wire                 rst_n,
     input  wire                 pclk,            // this die's PHY (serializer) clock
@@ -460,6 +462,22 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
             assign lvl[0][c] = opsel[c];
         end
         assign lvv[0] = COLUMN_HARD ? (&column_reply) : issue;
+        wire ti_v;wire[15:0]ti_d;
+        if(REDUCE_HARD)begin:g_reduce_hard
+            wire[LANES-1:0]reply_v;
+            wire[LANES*16-1:0]reply_indices;
+            for(genvar ln=0;ln<LANES;ln=ln+1)begin:g_lane
+                wire[255:0]op;
+                for(genvar c=0;c<8;c=c+1)begin:g_operand
+                    assign op[32*c+:32]=opsel[c][32*ln+:32];
+                end
+                ot_hcoll_reduce_lane8 #(.LAT(LAT))u_lane(.clk(reduce_clk[ln]),.rst_n(rst_n),
+                    .valid(lvv[0]),.operands(op),.index(issue_index),
+                    .reply_v(reply_v[ln]),.reply(lvl[LV][0][32*ln+:32]),
+                    .reply_index(reply_indices[16*ln+:16]),.reply_err());
+            end
+            assign lvv[LV]=&reply_v;assign ti_v=&reply_v;assign ti_d=reply_indices[0+:16];
+        end else begin:g_reduce_original
         for (genvar l = 1; l <= LV; l = l + 1) begin : g_lv
             localparam integer NN = NC >> l;
             wire [NN*LANES-1:0] vv;
@@ -473,10 +491,11 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
             end
             assign lvv[l] = vv[0];
         end
-        wire        ti_v;
-        wire [15:0] ti_d;
+        
+        
         (* keep_hierarchy *) ot_hcoll_shdelay #(.W(16), .D(LAT * LV)) u_tidx (.clk(clk), .rst_n(rst_n), .v_in(issue_return), .d_in(issue_index),
             .v_out(ti_v), .d_out(ti_d));
+        end
         function automatic [15:0] bf16(input [31:0] b);
             reg [32:0] s;
             s = {1'b0, b} + 33'h7FFF + {32'b0, b[16]};

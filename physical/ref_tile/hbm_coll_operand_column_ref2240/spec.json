@@ -14,7 +14,7 @@
  "reset_ports": [
   "rst_n"
  ],
- "clock": "cts",
+ "clock": "spine",
  "layer_cap": "M5",
  "outline": {
   "w": 220.32,
@@ -56,7 +56,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "Replace one retained64x512 operand column flop array with2actual128x256 SRAMs; pin-captured requests and localread/boundarypublication3edge reply.8columns haveexplicitindependentclockpins in evolvedTU/EP/body/face; matchingissue/index/inactive4FF parent epoch, numericalintegration/price unresolved. Actual2macro R2 GPL-0305 failed and37.8%util channel debt; successor usesoneexact64x512 catalogSRAM171.288x77.76 (larger13320um2 area, explicit dielead tradeoff). No capacity/function/clock/price relaxation.",
+ "structural_change": "Replace one retained64x512 operand column flop array with2actual128x256 SRAMs; pin-captured requests and localread/boundarypublication3edge reply.8columns haveexplicitindependentclockpins in evolvedTU/EP/body/face; matchingissue/index/inactive4FF parent epoch, numericalintegration/price unresolved. Actual2macro R2 GPL-0305 failed and37.8%util channel debt; successor usesoneexact64x512 catalogSRAM171.288x77.76 (larger13320um2 area, explicit dielead tradeoff). No capacity/function/clock/price relaxation. ActualR3boundary290.8..409.8=119ps violates80ps despitegatePASS; R4realbalancedlocalspine bindsallactualFF+macroclockpins beforeboundaryremeasure.",
  "job": {
   "owner": "Codex:coll_clusters2240",
   "branch": "codex/hbm-coll-clusters-2240",
@@ -101,5 +101,10 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_LEAF_N": "8",
+  "OT_SPINE_ITERS": "6"
+ }
 }

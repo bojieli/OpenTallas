@@ -1,0 +1,93 @@
+{
+ "name": "hbm_coll_reduce_lane_ref2240",
+ "top": "ot_hcoll_reduce_lane8",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/tu/ot_hcoll_reduce_lane8.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv"
+ ],
+ "params": {
+  "LAT": 7,
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "clock": "cts",
+ "layer_cap": "M5",
+ "outline": {
+  "w": 54,
+  "h": 54
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "operands",
+   "valid",
+   "index"
+  ],
+  "E": [
+   "reply_v",
+   "reply",
+   "reply_index",
+   "reply_err"
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "hold_merge": true,
+ "structural_change": "16ownclock seven-adder ordered8contributor32bitFP32 lanes replace retained112adder tree. OriginalLAT7 and pairwise order unchanged; requestcapture+replypub2explicit proposededges; matchingnativeindex and valid. Prototype numerical219replies and bitmut proof; actualparentfullproof/price/die fit unresolved.",
+ "job": {
+  "owner": "Codex:coll_clusters2240",
+  "branch": "codex/hbm-coll-clusters-2240",
+  "tag": "r1",
+  "purpose": "Measure actual ordered reducer ownroot before parent adoption",
+  "extra_paths": [
+   "rtl/hbm_accel/tu"
+  ],
+  "benches": [
+   {
+    "name": "ordered_lane",
+    "cmd": "bash rtl/hbm_accel/tu/run_reduce_lane.sh {RUN}/bench/exact",
+    "expect": "pass",
+    "pass_regex": "REDUCE_LANE PASS orderedFP32 replies=219",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ordered_bit_mutant",
+    "cmd": "bash rtl/hbm_accel/tu/run_reduce_lane.sh {RUN}/bench/mut 1",
+    "expect": "fail",
+    "fail_regex": "REDUCE_LANE FAIL ordered numeric",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

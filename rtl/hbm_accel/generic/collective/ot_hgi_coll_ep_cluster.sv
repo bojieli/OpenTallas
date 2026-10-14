@@ -9,6 +9,7 @@
 module ot_hgi_coll_ep_cluster #(
     parameter integer PARK_HARD_CLOCKS=1,
     parameter integer COLUMN_HARD=0,
+    parameter integer REDUCE_HARD=0,
     parameter integer NOG = 12,       // 12 x 8 = the 96-rank TU fabric (DS TP96: rank = die mod 96)
     parameter integer PFMAX = 512,    // F4 (hgi-e2e): flits per contributor (Qwen all-reduce 256, DS gathers 80 / 144 / 320); was the PSG default 64
     parameter integer RXAW = 8,
@@ -36,6 +37,7 @@ module ot_hgi_coll_ep_cluster #(
 ) (
     input wire[NPT-1:0]port_clk,
     input wire[7:0]column_clk,
+    input wire[LANES-1:0]reduce_clk,
     input wire[EQ-1:0]park_clk_q,input wire park_fault_clk,
     input  wire               clk,
     input  wire               rst_n,
@@ -178,7 +180,7 @@ module ot_hgi_coll_ep_cluster #(
         else if (r_go) tkm_run <= (TKM != 0) && r_tkm; else if (go) tkm_run <= 1'b0;
     wire tkm_now = tkm_run | (r_go & r_tkm & (TKM != 0));
     ot_hbm_accel_tu_endpoint_psg_cluster #(.ENABLE(1), .REARM(1), .RGX(RGXHW), .DELCRED((RGXHW != 0 || TKM != 0) ? 1 : 0), .PFMAX(PFMAX), .BF16RT(1), .NOG(NOG), .RXAW(RXAW), .QAW(QAW), .TXAW(TXAW), .NPT(NPT), .INJ(INJ),
-        .DEL(DEL), .LANES(LANES), .PIPE(PIPE), .SWCRED(SWCRED),.COLUMN_HARD(COLUMN_HARD)) u_ep (.column_clk(column_clk),.port_clk(port_clk),.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n),
+        .DEL(DEL), .LANES(LANES), .PIPE(PIPE), .SWCRED(SWCRED),.COLUMN_HARD(COLUMN_HARD),.REDUCE_HARD(REDUCE_HARD)) u_ep (.reduce_clk(reduce_clk),.column_clk(column_clk),.port_clk(port_clk),.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n),
         .rank(sel ? r_rank : rank), .mcast_group_size(sel ? r_mg : 8'd96), .mcast_all(sel & r_mall),
         .gsz(sel ? r_gsz : 4'hF), .byp(sel & r_byp), .res_bf16(sel ? r_bf16 : 1'b1), .pf(sel ? r_pf : pf), .go(r_go | go), .start_ready(start_ready),
         .done_valid(done_valid), .done_ready(done_ready), .fault_ack(1'b0),
