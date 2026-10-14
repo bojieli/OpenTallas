@@ -10,6 +10,16 @@ case "$top" in
  qkd_host_service_guard) params=();;
  *) echo "unsupported HOST callable top: $top" >&2;exit 2;;
 esac
+python3 - "$io" <<'PYSOURCE'
+import hashlib,json,pathlib,sys
+j=json.loads(pathlib.Path('physical/qkd_host_integration/native_callable_manifest.json').read_text())
+for prefix,group in [(pathlib.Path('.'),'sources'),(pathlib.Path(sys.argv[1]),'io_sources')]:
+ for name,want in j[group].items():
+  path=prefix/name
+  if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=want:
+   raise SystemExit('HOST callable source hash mismatch: '+str(path))
+print('PASS HOST_CALLABLE_SOURCE_HASHES')
+PYSOURCE
 vlt=${VERILATOR:-verilator}
 "$vlt" --cc --build -O1 --output-split 10000 --output-split-cfuncs 100 -CFLAGS -O0 -j "${HOST_BUILD_JOBS:-8}" --top-module "$top" --Mdir "$out/obj" -Wno-fatal "${params[@]}" \
  rtl/qwen_sys/host_20261013/*.sv rtl/physical/ot_qkd_host_prompt_capture_pins.sv rtl/physical/ot_qfd_prompt_sram_capture.sv rtl/physical/ot_qwen_host_ctl.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_async_fifo_w.sv \
