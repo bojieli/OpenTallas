@@ -1,5 +1,5 @@
 {
- "name": "dscoll_cesn_pc-pc1-COMMIT",
+ "name": "dscoll_cesn_pc-pc1-dfd768a17",
  "block": "dsfd_coll_cesn_pc",
  "ref_tile": true,
  "owner": "Claude:s81-cesn-1013",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/s81-cesn-1013",
-  "commit": "COMMIT",
+  "commit": "dfd768a17",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/lib",
@@ -236,7 +236,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_cesn_pc/dscoll_cesn_pc-pc1-COMMIT"
+   "to": "results/rtl/ref_tile/dscoll_cesn_pc/dscoll_cesn_pc-pc1-dfd768a17"
   }
  ],
  "cycles_added": 0,
