@@ -1,0 +1,93 @@
+# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.
+set ::ot_ce_refs [dict create {dsfd_coll_cesx/ck} {tt {123.0 127.3 131.0} ff {98.7 102.8 106.1} ss {166.3 171.0 175.3}} {dsfd_coll_cescn/ck} {tt {284.7 312.1 374.1} ff {228.8 254.9 315.3} ss {379.3 408.8 470.8}} {dsfd_coll_cesl/ck} {tt {107.8 113.7 116.3} ff {81.5 87.0 89.4} ss {154.9 161.7 164.5}} {dsfd_coll_ceso/ck} {tt {91.9 98.2 104.0} ff {72.3 78.9 85.0} ss {126.4 132.6 138.9}} {dsfd_coll_cespn/ck} {tt {140.6 151.7 166.4} ff {113.6 124.9 139.8} ss {186.4 197.6 212.0}}]
+set ::ot_ce_counts [dict create {dsfd_coll_cesx} 3 {dsfd_coll_cescn} 1 {dsfd_coll_cesl} 4 {dsfd_coll_ceso} 1 {dsfd_coll_cespn} 1]
+set ::ot_ce_ports {{ck_x1} {ck_x2} {ck_x3} {ck_core} {ck_l0} {ck_l1} {ck_l2} {ck_l3} {ck_o} {ck_pt}}
+
+proc ot_ce_corner {} {
+  if {[info exists ::ot_ioref_scene] && $::ot_ioref_scene eq "BC"} { return ff }
+  if {[info exists ::ot_ce_corner]} { return $::ot_ce_corner }
+  foreach key {OT_MM_SETUP_CORNER CORNER} {
+    if {[info exists ::env($key)]} {
+      switch -nocase -- $::env($key) { TC - tt {return tt} BC - ff {return ff} WC - ss {return ss} }
+    }
+  }
+  error "OT_ENTRIES: actual library corner is unknown (set ot_ce_corner tt/ff/ss)"
+}
+proc ot_ce_apply {} {
+  set corner [ot_ce_corner]
+  set clk [get_clocks core_clk]
+  if {[llength $clk] != 1} { error "OT_ENTRIES: core_clk missing" }
+  set sources {}; set names {}
+  foreach c [get_clocks ot_entry_*] {
+    foreach p [get_property $c sources] { lappend sources $p; lappend names [get_full_name $p] }
+  }
+  if {[lsort $names] ne [lsort $::ot_ce_ports]} { error "OT_ENTRIES: source clock coverage differs from spec" }
+  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }
+  sta::worst_slack_cmd max
+  set rows {}; set seen {}; set counts {}
+  foreach cell [get_cells -quiet -hierarchical *] {
+    set master [get_property $cell ref_name]
+    if {![dict exists $::ot_ce_counts $master]} continue
+    dict incr counts $master
+    foreach pin [get_pins -quiet -of_objects $cell] {
+      set key "$master/[get_property $pin lib_pin_name]"
+      if {![dict exists $::ot_ce_refs $key]} continue
+      set ports [get_ports -quiet -of_objects [get_nets -quiet -of_objects $pin]]
+      if {[llength $ports] != 1} { error "OT_ENTRIES: [get_full_name $pin] lacks one direct top clock port" }
+      set port [lindex $ports 0]; set name [get_full_name $port]
+      if {$name ni $::ot_ce_ports || [dict exists $seen $name]} { error "OT_ENTRIES: duplicate or undeclared source $name" }
+      dict set seen $name 1
+      set wire [get_property $pin arrival_max_rise]
+      if {![string is double -strict $wire]} { error "OT_ENTRIES: missing entry wire clock arrival on [get_full_name $pin]" }
+      lassign [dict get $::ot_ce_refs $key $corner] lo mean hi
+      set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      if {[llength $clock] != 1} { error "OT_ENTRIES: $name has no unique related clock" }
+      set ttmean [lindex [dict get $::ot_ce_refs $key tt] 1]
+      lappend rows [list $port $pin $wire $lo $mean $hi $clock $ttmean]
+    }
+  }
+  dict for {m n} $::ot_ce_counts {
+    if {![dict exists $counts $m] || [dict get $counts $m] != $n} { error "OT_ENTRIES: bound child count mismatch $m" }
+  }
+  if {[dict size $seen] != [llength $::ot_ce_ports]} { error "OT_ENTRIES: incomplete actual child/source coverage" }
+  set ref 0
+  foreach row $rows { lassign $row p pin wire lo mean hi; set ref [expr {max($ref, $wire + $mean)}] }
+  set low {}; set high {}; set lowclocks {}; set highclocks {}
+  foreach row $rows {
+    lassign $row p pin wire lo mean hi clock ttmean
+    if {$ttmean > 300} { lappend highclocks $clock } else { lappend lowclocks $clock }
+    set latency [expr {$ref - $wire - $mean}]
+    set_clock_latency -source $latency $clock
+    lappend low [expr {$ref + $lo - $mean}]; lappend high [expr {$ref + $hi - $mean}]
+    puts "OT_ENTRIES COMP $corner [get_full_name $p] -> [get_full_name $pin] wire=$wire R=$mean latency=$latency phi=$ref"
+  }
+  # Every entry is synchronous and related. Reserve die skew on internal hops;
+  # no asynchronous groups, false paths or ETM insertion add-back.
+  set_clock_uncertainty -setup 150 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
+  # H1 authoritative pair_check.HOLD_TREE =50ps hold margin+50ps die skew.
+  # Tile-local25ps uncertainty is not the composed pair margin.
+  set_clock_uncertainty -hold 100 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
+  if {[llength $lowclocks] && [llength $highclocks]} {
+    set_clock_uncertainty -setup 210 -from $lowclocks -to $highclocks
+    set_clock_uncertainty -setup 210 -from $highclocks -to $lowclocks
+  }
+  # Preserve measured boundary spread: balancing the mean does not erase the
+  # earliest/latest physical boundary arrivals or change ETM setup/hold arcs.
+  set lmin [lindex [lsort -real $low] 0]; set lmax [lindex [lsort -real $high] end]
+  unset_input_delay [all_inputs]; unset_output_delay [all_outputs]
+  set sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}]
+  set hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]
+  set_input_delay [expr {166.667+$lmax+$sk}] -max -clock $clk [all_inputs -no_clocks]
+  set hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]
+  set_input_delay [expr {$lmin-$hki}] -min -clock $clk [all_inputs -no_clocks]
+  set_output_delay [expr {166.667-$lmax+$sk}] -max -clock $clk [all_outputs]
+  set_output_delay [expr {-$lmin-$hk}] -min -clock $clk [all_outputs]
+  if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
+    foreach pattern [split $::env(OT_IO_INTER) ","] {
+      set_input_delay [expr {166.667+$lmax+150}] -max -clock $clk [get_ports -quiet $pattern -filter "direction == input"]
+      set_output_delay [expr {166.667-$lmax+150}] -max -clock $clk [get_ports -quiet $pattern -filter "direction == output"]
+    }
+  }
+  puts "OT_ENTRIES COMP DONE $corner [llength $rows] entries phi=$ref boundary=$lmin..$lmax"
+}
+ot_ce_apply

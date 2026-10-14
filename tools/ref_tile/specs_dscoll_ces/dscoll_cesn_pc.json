@@ -269,12 +269,6 @@
  },
  "structural_change": "flat lane-slice (22,816 sinks on one clock root; three routes missed hold) split into hardened leaves with their own roots under a wires-only parent: 4 FP32 lane leaves, 3 xl relay leaves, 1 pass-through relay leaf, 1 output-stage leaf and the core (ces0 14,519 / cesn 13,919 sinks); one seam latency LSEAM in all four slices (lockstep asserted); every seam is leaf flop -> wire -> leaf flop; remove the shared parent clock spine: ten face entries each drive one hard-child clock pin, die delivers phi-R_i at each entry",
  "child_clock_ref": "boundary",
- "sdc_extra": [
-  "physical/redesign_ds/coll_split/dscoll_cesn_pc_child_ioref.sdc"
- ],
- "boundary_tcl": [
-  "physical/redesign_ds/coll_split/dscoll_cesn_pc_child_ioref.sdc"
- ],
  "slot_change_request": "el1011-s81die.log 2026-10-13 07:37 + 17:40 (s81-cesn): sp_collective/ce_s* slot 302.4 x 341.28 (flat lane-slice, M5) -> 432.0 x 345.6 hardened cluster of M5 leaves (parent routes M6 / M7 over them, PG M7, strap M8); pin faces N q / W xl / E tx+pt / S bw",
  "why_floorplan": "wires-only parent: 10 hard leaves, no register and no logic of its own; outline set by the leaves and their >= 20 um channels (see gen_specs.py CLUSTER)",
  "job": {

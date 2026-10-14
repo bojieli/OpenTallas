@@ -33,46 +33,9 @@ for zero in [True, False]:
             b['cmd'] += ' +define+OT_S81PH_COLL_CES_ENTRIES'
     s['reroute_reason'] = {'kind':'rtl_change','why':'ten distinct clock ports replace the shared clock spine; child RTL unchanged'}
     path=HERE/(s['name']+'.json')
-    ref='physical/redesign_ds/coll_split/'+s['name']+'_child_ioref.sdc'
-    s['sdc_extra']=[ref];s['boundary_tcl']=[ref]
+    # The shared generator binds each actual child clock pin at TT/FF/SS.
+    # It reserves 90/150 ps setup skew and the authoritative 100 ps H1 hold budget.
+    s.pop('sdc_extra', None)
+    s.pop('boundary_tcl', None)
     path.write_text(json.dumps(s,indent=1)+'\n')
-    import subprocess,sys
-    subprocess.run([sys.executable,str(ROOT/'tools/ref_tile/wires_only_ioref.py'),str(path),str(ROOT/ref)],check=True)
-    # ETM calibration must see one external source per clock. All entries remain synchronous:
-    # equal periods and phases, every cross-clock path timed, no async groups or false paths.
-    clocks = {port: ('core_clk' if port == 'ck_core' else 'entry_' + port) for port in PORTS}
-    constraint = ['# Independent synchronous source clocks; preserve the current route/signoff period.',
-        'set ot_pc_period [get_property [get_clocks core_clk] period]',
-        'delete_clock [get_clocks core_clk]']
-    for port, cname in clocks.items():
-        constraint.append(f'create_clock -name {cname} -period $ot_pc_period [get_ports {port}]')
-    constraint += ['set_propagated_clock [all_clocks]',
-        'set_clock_uncertainty -setup 60 [all_clocks]', 'set_clock_uncertainty -hold 25 [all_clocks]',
-        'set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]',
-        'set_output_delay 166.667 -clock core_clk [all_outputs]',
-        'set ::ot_wc_clocks [dict create ' + ' '.join(port+' '+cname for port,cname in clocks.items()) + ']']
-    generated = (ROOT/ref).read_text()
-    generated = generated.replace('foreach src [get_property [get_clocks core_clk] sources] { set_clock_latency -source 0.0 -clock [get_clocks core_clk] $src }',
-        'dict for {entry cname} $::ot_wc_clocks { set_clock_latency -source 0.0 -clock [get_clocks $cname] [get_ports $entry] }')
-    generated = generated.replace('set_clock_latency -source $lat -clock [get_clocks core_clk] $tp',
-        'set_clock_latency -source $lat -clock [get_clocks [dict get $::ot_wc_clocks $tn]] $tp')
-    # Enforce the fixed die budget in the actual route/signoff constraints, not only in the probe.
-    generated += r"""
-catch {rename ot_wc_apply_before_pair_budget {}}
-rename ot_wc_apply ot_wc_apply_before_pair_budget
-proc ot_wc_apply {} {
-    ot_wc_apply_before_pair_budget
-    foreach a [all_clocks] {
-      foreach b [all_clocks] {
-        if {$a eq $b} continue
-        set an [get_full_name $a]; set bn [get_full_name $b]
-        set skew [expr {$an eq "core_clk" || $bn eq "core_clk" ? 150.0 : 90.0}]
-        set_clock_uncertainty -setup [expr {60.0 + $skew}] -from $a -to $b
-      }
-    }
-}
-# Apply the pair budget with the same hook lifecycle as the child reference.
-if {$ot_wc_stage ne "skip"} { ot_wc_apply }
-"""
-    (ROOT/ref).write_text('\n'.join(constraint) + '\n' + generated)
     print(path)
