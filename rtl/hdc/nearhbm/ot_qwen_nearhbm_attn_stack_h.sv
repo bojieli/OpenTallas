@@ -744,7 +744,13 @@ module ot_qwen_nearhbm_ectl_h #(
     reg             er_pend;
     wire [63:0]     e_word;
     wire            e_ne;
+`ifdef KVD_ERL
+    reg [`KVD_ERL-1:0] er_dl;
+    always @(posedge clk or negedge rc) if (!rc) er_dl <= {`KVD_ERL{1'b0}}; else er_dl <= {er_dl, `ECTL_ERP};
+    always @* er_pend = er_dl[`KVD_ERL-1];
+`else
     always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= `ECTL_ERP;
+`endif
     generate if (DQ > 32) begin : g_rows2
         ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ), .D1(`ECTL_D1)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
                                                  .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));

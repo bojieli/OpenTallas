@@ -165,13 +165,26 @@ def load_spec(path: str) -> dict:
         raise SpecError("spec: a cluster needs hard children (children[])")
     if s["kind"] == "tile" and s["children"]:
         raise SpecError("spec: a leaf tile has no hard children (use kind cluster)")
+    # "clock": "entries" (coordinator 2026-10-13, die clock delivery rule): a WIRES-ONLY cluster has no tree; every hard
+    # child gets its clock from its OWN port on the cluster face ("clock_ports": one scalar port per child clock pin, the
+    # RTL wires port -> child clock pin).  The die delivers phi - R_i at each entry (R_i = entry wire + the child's routed
+    # boundary insertion).  "clock_port" stays the first entry (kit CLKPORT, legacy readers).
+    if s.get("clock") == "entries":
+        cps = s.get("clock_ports")
+        if s["kind"] != "cluster" or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
+            raise SpecError('spec: "clock": "entries" needs kind cluster and "clock_ports" [one port per child clock pin] '
+                            'with clock_port == clock_ports[0]')
+        if len(set(cps)) != len(cps) or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", c) for c in cps):
+            raise SpecError("spec: clock_ports must be distinct scalar port names")
+    elif s.get("clock_ports"):
+        raise SpecError('spec: "clock_ports" is only read with "clock": "entries"')
     if s["pins"] == "auto":   # inputs S, outputs N, clock + resets W (a starting plan; set real faces per the die contract)
         import textbook_lint as TL  # noqa: E402
         mods = TL.rtl_modules([(ROOT / f).read_text(errors="replace") for f in s["sources"] if (ROOT / f).exists()])
         if s["top"] not in mods:
             raise SpecError(f"pins auto: top {s['top']} not found in the sources")
         dirs = TL.module_port_dirs(mods[s["top"]])
-        side = set([s["clock_port"]] + list(s["reset_ports"]))
+        side = set(clock_ports(s) + list(s["reset_ports"]))
         s["pins"] = {"S": [p for p, d in dirs.items() if d == "input" and p not in side],
                      "N": [p for p, d in dirs.items() if d != "input" and p not in side],
                      "W": [p for p in dirs if p in side]}
@@ -394,6 +407,8 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
     og = TRACK_LATTICE_UM if s["kind"] == "cluster" else GRID_Y
     if s.get("outline"):
         o = s["outline"]
+        if o.get("exact"):      # a drop-in replacement of a closed view inside a fixed sub-slot (dsfd_vm_clt 80.64 x 230.04)
+            return float(o["w"]), float(o["h"]), "spec outline (exact: the closed view's sub-slot)"
         return snap_up(float(o["w"]), og), snap_up(float(o["h"]), og), "spec outline"
     area = area_um2 or s.get("std_area_um2")
     if not area:
@@ -419,7 +434,7 @@ def blocks_of(s: dict) -> list:
             m = read_view_lef(it["view"])
             out.append({"kind": kind, "view": it["view"], "master": m["name"], "inst": it.get("inst"),
                         "w": m["W"], "h": m["H"], "at": it.get("at"), "orient": it.get("orient", "R0"),
-                        "count": int(it.get("count", 1))})
+                        "count": int(it.get("count", 1)), "exact": bool(it.get("at_exact"))})
     # expand counts (identical instances placed in a row)
     exp = []
     for b in out:
@@ -430,6 +445,32 @@ def blocks_of(s: dict) -> list:
                 raise SpecError(f"{b['master']}: count > 1 with a fixed 'at' -- give one entry per instance")
             exp.append(c)
     return exp
+
+
+ABUT_UM = 0.1           # two macros this close in one axis (and overlapping in the other) are one abutted stack
+
+
+def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
+    """two MACROS stacked N-S with no cell row between them (0 <= gap <= ABUT_UM, overlapping in x) and no signal /
+    clock pin of either on the two touching faces (memory arrays with their pins on W / E: a bank of arrays).  Only R0;
+    hard children and side-by-side macros keep the channel rule (their touching faces carry pins / need straps)."""
+    if a["kind"] != "macro" or b["kind"] != "macro" or a.get("orient", "R0") != "R0" or b.get("orient", "R0") != "R0":
+        return False
+    if not (-1e-6 <= gy <= ABUT_UM + 1e-6 and gx < -1e-6):
+        return False
+    lo, hi = (a, b) if a["y"] < b["y"] else (b, a)
+    for blk, edge in ((lo, "top"), (hi, "bottom")):
+        if blk.get("_tm") is None:
+            blk["_tm"] = track_macro(blk["view"])
+        tm = blk["_tm"]
+        for pin in tm["pins"]:
+            if pin["use"] not in ("SIGNAL", "CLOCK"):
+                continue
+            for _layer, (x0, y0, x1, y1) in pin["rects"]:
+                on_w_e = x0 <= 200 or x1 >= tm["W"] - 200          # nm: a W / E face pin reaches the side edge
+                if (y1 >= tm["H"] - 200 if edge == "top" else y0 <= 200) and not on_w_e:
+                    return False
+    return True
 
 
 def on_track(b: dict, x: float, y: float) -> tuple[float, float, int]:
@@ -489,6 +530,13 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
             off = sum(v["offtrack"] for v in r["layers"].values())
             if off:   # off-lattice view (not built by this flow): nearest on-track origin instead
                 bx, by, off = on_track(b, bx, by)
+        elif b.get("exact") and b.get("at"):
+            # macro item "at_exact": the origin as given, not snapped to the (0.432, 2.16) macro lattice: an abutted
+            # N-S stack needs pitch = array height + 0.024 (abutted_stack); the pins must already be on track there
+            bx, by = float(b["at"][0]), float(b["at"][1])
+            r = cmta.check_placement(track_macro(b["view"]) if b.get("_tm") is None else b["_tm"], b["orient"],
+                                     round(bx * 1000), round(by * 1000))
+            off = sum(v["offtrack"] for v in r["layers"].values())
         else:
             bx, by = snap(b["_xy"][0], GRID_X), snap(b["_xy"][1], GRID_Y)
             bx, by, off = on_track(b, bx, by)
@@ -526,9 +574,11 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
             gx = max(b["x"] - (a["x"] + a["w"]), a["x"] - (b["x"] + b["w"]))
             gy = max(b["y"] - (a["y"] + a["h"]), a["y"] - (b["y"] + b["h"]))
             gap = max(gx, gy)
+            if gap < CHANNEL_UM - 1e-6 and abutted_stack(a, b, gx, gy):
+                continue    # the deliberate abutment this check names as its fix: one macro stack, no cells between
             if gap < CHANNEL_UM - 1e-6:
                 out.append(("FAIL", "channel", f"{a['master']}#{a['idx']} / {b['master']}#{b['idx']} channel {gap:.1f} um "
-                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros or abut them deliberately (gap 0, no cells)"))
+                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0, no pin on the touching faces: abutted_stack)"))
     core = (x1c - x0c) * (y1c - y0c)
     mac = sum(b["w"] * b["h"] for b in blocks)
     if std_area:
@@ -545,6 +595,16 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
 
 
 # --------------------------------------------------------------------------------------------- generation
+def clock_ports(s: dict) -> list:
+    """the clock source ports: every entry of a "clock": "entries" cluster, else the one clock_port"""
+    return list(s["clock_ports"]) if s.get("clock") == "entries" else [s["clock_port"]]
+
+
+def clock_ports_sdc(s: dict) -> str:
+    cps = clock_ports(s)
+    return cps[0] if len(cps) == 1 else "{" + " ".join(cps) + "}"
+
+
 def pin_regex(names) -> str:
     return "^(" + "|".join(re.escape(n) for n in names) + r")(\[|$)"
 
@@ -596,7 +656,7 @@ def gen_sdc(s: dict, period_ps: float) -> str:
     return (f"# generated by tools/ref_tile/ref_tile.py ({s['name']}): route SDC (over-constrained {period_ps} ps; sign-off\n"
             f"# 833.333 in signoff.sdc), 60 / 25 ps uncertainty, boundary {fin} / {fout} x 833.333 ps outside the block.\n"
             f"# After CTS the hooks re-reference the boundary to the propagated tree (qwen_die_masters/io_ref_skew.sdc).\n"
-            f"create_clock -name core_clk -period {period_ps} [get_ports {s['clock_port']}]\n"
+            f"create_clock -name core_clk -period {period_ps} [get_ports {clock_ports_sdc(s)}]\n"
             "set_clock_uncertainty -setup 60 [all_clocks]\nset_clock_uncertainty -hold 25 [all_clocks]\n"
             f"set_input_delay {833.333 * fin:.3f} -clock core_clk [all_inputs -no_clocks]\n"
             f"set_output_delay {833.333 * fout:.3f} -clock core_clk [all_outputs]\n"
@@ -619,7 +679,7 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
     return (f"# {s['name']}: sign-off at 833.333 ps (generated by tools/ref_tile/ref_tile.py; same form as\n"
             f"# {QDM}/jobs/signoff_sdc.py): clock re-created at the real period, propagated, 60 / 25 ps uncertainty,\n"
             f"# die-context boundary io_ref_skew.sdc with this block's REFGLOB / INTER bound.\n"
-            f"create_clock -name core_clk -period 833.333 [get_ports {s['clock_port']}]\n"
+            f"create_clock -name core_clk -period 833.333 [get_ports {clock_ports_sdc(s)}]\n"
             "set_propagated_clock [all_clocks]\nset_clock_uncertainty -setup 60 [all_clocks]\n"
             "set_clock_uncertainty -hold 25 [all_clocks]\nset ::env(OT_IO_SKEW) 90\nset ::env(OT_IO_HOLD_SKEW) 50\n"
             f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
@@ -631,6 +691,16 @@ def child_insertions(s: dict) -> dict:
     out = {}
     for ch in s["children"]:
         v = ch["view"]
+        # spec "child_clock_ref": "boundary" (s81 parents 2026-10-13, die clock delivery rule): the target is the child's
+        # ROUTED boundary-register insertion R (views/<child>/insertion.json tt.boundary.mean, the sign-off reference of
+        # every hop), not the lib's max_clock_tree_path (latest sink of the whole tree: dsfd_coll_cesc0 415 vs R 322 ps,
+        # which would hand the core its clock ~90 ps early against the leaves it talks to).  Lib max when no record exists.
+        ij = ROOT / v / "insertion.json"
+        if s.get("child_clock_ref") == "boundary" and ij.exists():
+            b = json.loads(ij.read_text()).get("tt", {}).get("boundary", {})
+            if b.get("n") and b.get("mean") is not None:
+                out[view_name(v)] = round(float(b["mean"]), 1)
+                continue
         p = ROOT / v / f"{view_name(v)}_tt.lib"
         ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
         vals = [x["max_ps"] for x in ins.values() if x]
@@ -678,6 +748,9 @@ def gen_hooks(s: dict, kd: str) -> dict:
                + ("; cluster: balanced clock spine with child-insertion leaf targets (sourced FIRST, so the io_ref wrapper"
                   " below wraps it)" if spine else "")]
     files = {}
+    if s.get("clock") == "entries":
+        pre_cts[0] += "; clock entries: no tree, one port per child clock pin (sourced FIRST)"
+        pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
@@ -913,6 +986,8 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append(HDLY_TCL)
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
+    if s.get("clock") == "entries":
+        out.append("physical/common_flow/clock_entries.tcl")
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]
@@ -1061,6 +1136,7 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
           "die": [0, 0, W, H], "core": [CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN], "why": why,
           "std_area_um2": std, "layer_contract": {k: (list(v) if isinstance(v, tuple) else v) for k, v in lc.items()},
           "pins": s["pins"], "clock_port": s["clock_port"],
+          **({"clock_ports": clock_ports(s)} if s.get("clock") == "entries" else {}),
           "blocks": [{k: b[k] for k in ("kind", "view", "master", "inst", "idx", "x", "y", "w", "h", "orient", "offtrack")}
                      for b in blocks],
           "findings": [list(f) for f in findings], "referenced": referenced_paths(s, kd)}

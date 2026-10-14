@@ -5,9 +5,9 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_IN
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
-read_db /work/results/asap7/opentallas_qkd_kvwq_ctl_bin_asap7_ref_qkd_kvwq_ctl_bin_sl1_ecdaf6345/base/6_final.odb
-read_sdc /work/results/asap7/opentallas_qkd_kvwq_ctl_bin_asap7_ref_qkd_kvwq_ctl_bin_sl1_ecdaf6345/base/6_final.sdc
-read_spef /work/results/asap7/opentallas_qkd_kvwq_ctl_bin_asap7_ref_qkd_kvwq_ctl_bin_sl1_ecdaf6345/base/6_final.spef
+read_db /work/results/asap7/opentallas_qkd_kvwq_ctl_bin_asap7_ref_qkd_kvwq_ctl_bin_sl2_41cb45a13/base/6_final.odb
+read_sdc /work/results/asap7/opentallas_qkd_kvwq_ctl_bin_asap7_ref_qkd_kvwq_ctl_bin_sl2_41cb45a13/base/6_final.sdc
+read_spef /work/results/asap7/opentallas_qkd_kvwq_ctl_bin_asap7_ref_qkd_kvwq_ctl_bin_sl2_41cb45a13/base/6_final.spef
 set_propagated_clock [all_clocks]
 read_sdc /work/w18_extra.sdc
 read_sdc /meas/app0_io_ref_routed.sdc

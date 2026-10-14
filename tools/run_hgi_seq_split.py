@@ -32,7 +32,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SEAM_MUT = ['OT_HGI_SEQ_MUT_SEAM_CRED', 'OT_HGI_SEQ_MUT_SEAM_QPOP', 'OT_HGI_SEQ_MUT_SEAM_HOLD', 'OT_HGI_SEQ_MUT_SEAM_RST']
-FLAT_MUT = ['OT_HGI_SEQ_MUT_WAIT', 'OT_HGI_SEQ_MUT_LOOP', 'OT_HGI_SEQ_MUT_IDXL', 'OT_HGI_SEQ_MUT_TOKX']
+FLAT_MUT = ['OT_HGI_SEQ_MUT_WAIT', 'OT_HGI_SEQ_MUT_LOOP', 'OT_HGI_SEQ_MUT_IDXL', 'OT_HGI_SEQ_MUT_TOKX', 'OT_HGI_SEQ_MUT_DRAIN']
 CORRUPT = {1: 'dispatch descriptor bit', 2: 'VM read address', 3: 'dropped dispatch', 4: 'completion token',
            5: 'fetch first address', 6: 'doorbell payload'}
 ENV = dict(os.environ)
