@@ -29,7 +29,7 @@
 // OT_QKD_SEQ_MUT (bench only): the parent swaps two store slices on the E copies of the q word.
 // OT_QKD_RSTSEQ_MUT (bench only): the quadrant resets follow the die reset instead of the HBM reset.
 // ---------------------------------------------------------------------------------------------------------------------
-module qkd_seq_core (
+module qkd_seq_core #(parameter integer HEADS=2, Q_FP32=0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire          x3_v,
@@ -67,7 +67,7 @@ module qkd_seq_core (
 );
     wire rr;
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
-    ot_qkvd_seq_m_ctl #(.XS(40), .KD(8), .KWC(4), .OCR_AR(64), .NS(38), .KDESC(1), .KD_PMID(0), .KD_PTOK(0), .MUT(0)) u_body (
+    ot_qkvd_seq_m_ctl #(.HEADS(HEADS), .Q_FP32(Q_FP32), .XS(40), .KD(8), .KWC(4), .OCR_AR(64), .NS(38), .KDESC(1), .KD_PMID(0), .KD_PTOK(0), .MUT(0)) u_body (
         .clk(ck), .rst_n(rr), .x3_v(x3_v), .x3_tag(x3_tag), .x3_cr(x3_cr), .sd(r_sd), .kvd(r_kvd),
         .ar_v(t_ar_d[519]), .ar_d(t_ar_d[518:0]), .ar_cr(t_ar_cr), .ds(t_ds), .pw(t_pw),
         .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo),
@@ -124,7 +124,7 @@ module qkd_seq_fan (
 endmodule
 
 // wires-only parent on the contract slot `seq`: no cell, no flop of its own
-module qkd_seq (
+module qkd_seq #(parameter integer HEADS=2, Q_FP32=0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [523:0]  r_x3_d,
@@ -175,7 +175,7 @@ module qkd_seq (
     wire [3:0]    f_cr, f_af, f_mf;
     wire [255:0]  sq  [0:3];
     wire [511:0]  skw [0:3];
-    qkd_seq_core u_core (.ck(ck), .rst_n(rst_n), .x3_v(r_x3_d[523]), .x3_tag(r_x3_d[522:512]), .x3_cr(r_x3_cr), .r_sd(r_sd),
+    qkd_seq_core #(.HEADS(HEADS), .Q_FP32(Q_FP32)) u_core (.ck(ck), .rst_n(rst_n), .x3_v(r_x3_d[523]), .x3_tag(r_x3_d[522:512]), .x3_cr(r_x3_cr), .r_sd(r_sd),
         .r_kvd(r_kvd), .t_ar_d(t_ar_d), .t_ar_cr(t_ar_cr), .t_ds(t_ds), .t_pw(t_pw),
         .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo), .s_kwn(s_kwn), .f_aqm_w(f_aqm[0]),
         .f_aqm_e(f_aqm[1]), .f_kwm_w(f_kwm[0]), .f_kwm_e(f_kwm[1]), .f_kc_w(f_kc[0]), .f_kc_e(f_kc[1]), .f_cr_w(f_cr[1:0]),
