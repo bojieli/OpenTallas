@@ -69,20 +69,34 @@ module ot_hgi_qdq_wr_pay #(
     // entry is written >= 20 cycles (decode latency) before its result can fire, so the one-edge-late copy is always current.
     reg [14:0] mh_o; reg [2:0] mh_n; reg mh_z;
     wire [OW-1:0] mq_h1 = mq_h + 1'b1;
+    // p12b (p12 gate: mq_h[1] drove 3,642 mux loads): the head is also kept as a REGISTERED one-hot hoh (rotated on fire,
+    // hoh == 1 << mq_h always); every head read is a one-hot AND-OR (no binary 64:1 mux tree on the pointer bits).
+    reg [OD-1:0] hoh; wire [OD-1:0] hoh1 = {hoh[OD-2:0], hoh[OD-1]};
+    reg [18:0] rd_h0, rd_h1; reg [3:0] rd_o0, rd_o1; reg [12:0] rd_p0, rd_p1; reg [7:0] rd_v0, rd_v1;
+    always @* begin
+        rd_h0 = '0; rd_h1 = '0; rd_o0 = '0; rd_o1 = '0; rd_p0 = '0; rd_p1 = '0; rd_v0 = '0; rd_v1 = '0;
+        for (integer e = 0; e < OD; e = e + 1) begin
+            rd_h0 = rd_h0 | ({19{hoh[e]}} & {mq_o[e], mq_n[e], mq_z[e]}); rd_h1 = rd_h1 | ({19{hoh1[e]}} & {mq_o[e], mq_n[e], mq_z[e]});
+            rd_o0 = rd_o0 | ({4{hoh[e]}} & mq_oh[e]);   rd_o1 = rd_o1 | ({4{hoh1[e]}} & mq_oh[e]);
+            rd_p0 = rd_p0 | ({13{hoh[e]}} & mq_p1[e]);  rd_p1 = rd_p1 | ({13{hoh1[e]}} & mq_p1[e]);
+            rd_v0 = rd_v0 | ({8{hoh[e]}} & mq_hv[e]);   rd_v1 = rd_v1 | ({8{hoh1[e]}} & mq_hv[e]);
+        end
+    end
     // q8e: independent head reads stay in parallel with the fire cone. Keeping the
     // read outputs prevents synthesis from moving fire in front of the 64:1 mux.
-    (* keep = 1 *) wire [18:0] mq_head0 = {mq_o[mq_h], mq_n[mq_h], mq_z[mq_h]};
-    (* keep = 1 *) wire [18:0] mq_head1 = {mq_o[mq_h1], mq_n[mq_h1], mq_z[mq_h1]};
+    (* keep = 1 *) wire [18:0] mq_head0 = rd_h0;
+    (* keep = 1 *) wire [18:0] mq_head1 = rd_h1;
     wire [14:0] w_sec0 = mh_o; wire [2:0] w_n = mh_n;
-    (* keep = 1 *) wire [3:0] mq_oh0 = mq_oh[mq_h];
-    (* keep = 1 *) wire [3:0] mq_oh1 = mq_oh[mq_h1];
-    (* keep = 1 *) wire [12:0] mq_hp0 = mq_p1[mq_h], mq_hp1 = mq_p1[mq_h1];
-    (* keep = 1 *) wire [7:0] mq_hv0 = mq_hv[mq_h], mq_hv1 = mq_hv[mq_h1];
+    (* keep = 1 *) wire [3:0] mq_oh0 = rd_o0;
+    (* keep = 1 *) wire [3:0] mq_oh1 = rd_o1;
+    (* keep = 1 *) wire [12:0] mq_hp0 = rd_p0, mq_hp1 = rd_p1;
+    (* keep = 1 *) wire [7:0] mq_hv0 = rd_v0, mq_hv1 = rd_v1;
     // p12: the lane hits and each lane's credit-zero flag are REGISTERED with the same next-state as mh_o / wcr (one
     // explicit AO22 on fire, ot_qdq_pay_sel); w_hit[b] == (b - mh_o[2:0]) < mh_n and wcr_z[b] == (wcr[b] == 0) always.
-    reg [7:0] w_hit_q, wcr_z;
+    reg [7:0] w_hit_q, wcr_z; reg cr_ok_q;
     wire [7:0] w_hit = w_hit_q;
-    wire w_cr_ok = ~|(w_hit & wcr_z);
+    // p12b: w_cr_ok itself registered (== ~|(w_hit & wcr_z) of the same edge, loaded through the fire AO22 bank)
+    wire w_cr_ok = cr_ok_q;
     wire result_empty,tracker_bad;
     wire re_nf,re_f; // p11: result_empty of the NEXT cycle without / with a fire this cycle (registered payload select)
     wire bypass_eligible=(EMPTY_BYPASS!=0)&&result_empty&&!od_hv&&byp2&&!od_ovf;
@@ -124,11 +138,11 @@ module ot_hgi_qdq_wr_pay #(
     end
     always @(posedge clk or negedge rr_n[0]) begin
         if (!rr_n[0]) begin
-            mq_t <= 0; mq_h <= 0; infl <= 0; bad <= 0; wg_ok <= 0; o_wf <= 0; snapshot_v <= 0; o_bad <= 0; o_idle <= 0;
+            mq_t <= 0; mq_h <= 0; hoh <= {{(OD-1){1'b0}}, 1'b1}; infl <= 0; bad <= 0; wg_ok <= 0; o_wf <= 0; snapshot_v <= 0; o_bad <= 0; o_idle <= 0;
         end else begin
             wg_ok <= f_act && f_wg;
             if (f_m_v) mq_t <= mq_t + 1'b1;
-            if (w_fire) mq_h <= mq_h + 1'b1;
+            if (w_fire) begin mq_h <= mq_h + 1'b1; hoh <= hoh1; end
             infl <= infl + (OW+1)'(f_m_v) - (OW+1)'(vo2);
             if ((vo_f && qf_f) || df_f || od_ovf || f_bi || tracker_bad) bad <= 1'b1;
             if ((vo_f && qf_f) || df_f || od_ovf || tracker_bad) o_bad <= 1'b1;
@@ -139,7 +153,7 @@ module ot_hgi_qdq_wr_pay #(
     always @(posedge clk or negedge rr_n[2]) begin
         if (!rr_n[2]) begin
             for (integer b = 0; b < 8; b = b + 1) begin wwq_q[b*280 + 279] <= 1'b0; wcr[b] <= LQ[CW-1:0]; wcnt[b] <= 0; end
-            wcr_z <= (LQ == 0) ? 8'hff : 8'h00;
+            wcr_z <= (LQ == 0) ? 8'hff : 8'h00; cr_ok_q <= (LQ != 0);
         end else begin
             for (integer b = 0; b < 8; b = b + 1) begin : lanes
                 reg wr; wr = w_fire && w_hit[b];
@@ -147,7 +161,7 @@ module ot_hgi_qdq_wr_pay #(
                 wcr[b] <= wcr[b] + CW'(f_wcr[b]) - CW'(wr);
                 wcnt[b] <= wcnt[b] + 8'(wr);
             end
-            wcr_z <= wcr_z_n;
+            wcr_z <= wcr_z_n; cr_ok_q <= cr_ok_n;
         end
     end
     localparam integer REP = 4;                        // kept select copies per lane (32 payload bits each)
@@ -156,9 +170,9 @@ module ot_hgi_qdq_wr_pay #(
     (* keep="true",dont_touch="true" *) reg [12:0] pl_hi, pl_hi1;
     // p12: every fire-selected next state is formed from registered state for BOTH outcomes and picked by one explicit
     // AO22 a bit (ot_qdq_pay_sel): fire is the only late signal and it is never re-folded into the candidate cones.
-    localparam integer NSEL = 8*REP*8 + 8 + 13 + 13 + 19 + 8 + 8;
+    localparam integer NSEL = 8*REP*8 + 8 + 13 + 13 + 19 + 8 + 8 + 1;
     reg  [8*REP*8-1:0] sel_a0, sel_a1; reg [7:0] lt_a0, lt_a1, z_a0, z_a1;
-    wire [7:0] wcr_z_n;
+    wire [7:0] wcr_z_n; wire cr_ok_n;
     always @* begin
         for (integer b = 0; b < 8; b = b + 1) begin
             for (integer g = 0; g < REP; g = g + 1)
@@ -177,9 +191,9 @@ module ot_hgi_qdq_wr_pay #(
     end
     wire [NSEL-1:0] sel_y;
     ot_qdq_pay_sel #(.W(NSEL)) u_fire_sel (.s(w_fire),
-        .a0({sel_a0, lt_a0, mq_head0[18:6], mq_hp0, mq_head0, mq_hv0, z_a0}),
-        .a1({sel_a1, lt_a1, mq_head1[18:6], mq_hp1, mq_head1, mq_hv1, z_a1}), .y(sel_y));
-    assign wcr_z_n = sel_y[7:0];
+        .a0({sel_a0, lt_a0, mq_head0[18:6], mq_hp0, mq_head0, mq_hv0, z_a0, ~|(mq_hv0 & z_a0)}),
+        .a1({sel_a1, lt_a1, mq_head1[18:6], mq_hp1, mq_head1, mq_hv1, z_a1, ~|(mq_hv1 & z_a1)}), .y(sel_y));
+    assign wcr_z_n = sel_y[8:1]; assign cr_ok_n = sel_y[0];
     // Address/payload flops are written separately from resettable valid strobes (no ALDFF feedback on payload bits).
     always @(posedge clk) begin
         if (f_m_v) begin
@@ -187,7 +201,7 @@ module ot_hgi_qdq_wr_pay #(
             mq_p1[mq_t] <= f_m[18:6] + 13'd1;
             for (integer b = 0; b < 8; b = b + 1) mq_hv[mq_t][b] <= 3'(b - f_m[6:4]) < f_m[3:1];
         end
-        {pl_sel, pl_lt, pl_hi, pl_hi1, mh_o, mh_n, mh_z, w_hit_q} <= sel_y[NSEL-1:8];
+        {pl_sel, pl_lt, pl_hi, pl_hi1, mh_o, mh_n, mh_z, w_hit_q} <= sel_y[NSEL-1:9];
         snapshot <= snapshot_counts; // first registered launch, same edge as WWQ
         // p10 (Claude 10-14): payload flops load every edge; the fire cone drives only the 8 valid bits.
         // p11 (Claude group-B3 10-14, p10 route TT -94.77: u_od.oc / ESL oh_c / mh_o -> wwq 14-17 levels = the 512-wide
