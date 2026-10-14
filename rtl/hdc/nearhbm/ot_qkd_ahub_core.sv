@@ -139,13 +139,14 @@ module qkd_ahub_core #(
             assign we_h[gh][ge] = zs_we_n[{ge[6], gh[1:0], ge[5:0]}];
         end
     end endgenerate
+    // zh_we has no reset: it re-captures we_h (0 while siv_b is held in reset) on every edge, and the tiles clear their
+    // valid bits on start (gate 1014 hd1: 569-load reset net)
     always @(posedge clk or negedge rl[0])
-        if (!rl[0]) begin zh_start <= 4'd0; zh_we <= 512'd0; end
-        else begin
-            zh_start <= {4{start_b}};
-            for (h_ = 0; h_ < 4; h_ = h_ + 1) zh_we[128*h_ +: 128] <= we_h[h_];
-        end
-    always @(posedge clk) zh_sid <= {4{sid_b}};
+        if (!rl[0]) zh_start <= 4'd0; else zh_start <= {4{start_b}};
+    always @(posedge clk) begin
+        for (h_ = 0; h_ < 4; h_ = h_ + 1) zh_we[128*h_ +: 128] <= we_h[h_];
+        zh_sid <= {4{sid_b}};
+    end
 
     // ---- max (unchanged) -------------------------------------------------------------------------------------------
     reg [31:0] lm [0:31];
@@ -435,11 +436,11 @@ module ot_qwen_nearhbm_attn_hub_d #(
     // Z heads
     genvar g;
     generate for (g = 0; g < 4; g = g + 1) begin : g_zh
-        wire [268:0] zi;  wire [67:0] zo;  wire [67:0] zo_t;
-        ot_qkd_drly #(.W(269), .N(ZW_RLY)) u_ri (.clk(clk),
+        wire [267:0] zi;  wire [67:0] zo;  wire [67:0] zo_t;
+        ot_qkd_drly #(.W(268), .N(ZW_RLY)) u_ri (.clk(clk),
             .d({zh_start[g], zh_we[128*g +: 128], zh_sid[128*g +: 128], zh_iv[4*g +: 4], zh_g[g], zh_p[6*g +: 6]}), .q(zi));
-        ot_nhb_zh u_zh (.clk(clk), .rst_n(rst_n), .start(zi[268]), .zs_we(zi[267:140]), .sid(zi[139:12]), .ziv(zi[11:8]),
-                        .zg(zi[7]), .zp(zi[5:0]), .root(zo_t[63:0]), .zerr(zo_t[67:64]));
+        ot_nhb_zh u_zh (.clk(clk), .rst_n(rst_n), .start(zi[267]), .zs_we(zi[266:139]), .sid(zi[138:11]), .ziv(zi[10:7]),
+                        .zg(zi[6]), .zp(zi[5:0]), .root(zo_t[63:0]), .zerr(zo_t[67:64]));
         ot_qkd_drly #(.W(68), .N(ZR_RLY)) u_ro (.clk(clk), .d(zo_t), .q(zo));
         assign zh_root[64*g +: 64] = zo[63:0];
         assign zh_err[4*g +: 4] = zo[67:64];

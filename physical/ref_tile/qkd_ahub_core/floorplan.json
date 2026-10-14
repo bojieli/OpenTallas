@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  216.0,
-  302.4
+  151.2,
+  151.2
  ],
  "core": [
   2.16,
   2.16,
-  213.84,
-  300.23999999999995
+  149.04,
+  149.04
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -29,7 +29,7 @@
   "cap_basis": "contract"
  },
  "pins": {
-  "W": [
+  "N": [
    "zh_start",
    "zh_we",
    "zh_sid",
@@ -38,6 +38,9 @@
    "zh_p",
    "zh_root",
    "zh_err",
+   "clk"
+  ],
+  "W": [
    "pl_v",
    "pl_rz",
    "pl_y",
@@ -57,7 +60,7 @@
    "pi_g",
    "rst_n"
   ],
-  "N": [
+  "E": [
    "mo_valid",
    "mo_g",
    "mo_hh",
@@ -68,9 +71,6 @@
    "out_data",
    "fault",
    "ev",
-   "clk"
-  ],
-  "E": [
    "rc_v",
    "rc_x",
    "rc_y",

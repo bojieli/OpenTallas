@@ -1,5 +1,5 @@
 {
- "name": "qkd_ahub_core-hd1-COMMIT",
+ "name": "qkd_ahub_core-hd2-COMMIT",
  "block": "qkd_ahub_core",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -38,6 +38,52 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "qkd_ahub_d_eq_exact",
+    "cmd": "bash rtl/test/nearhbm/run_qkd_ahub_d_eq.sh pos {RUN}/bench/eq_pos",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_ahub_d eq all",
+    "note": "die-leaf hub (core + 13 tiles, 3 die relay configurations) vs hub_t on identical random layer traffic, 3 seeds x 6 layers: every mo / out word equal, no fault"
+   },
+   {
+    "name": "qkd_ahub_d_eq_mutant",
+    "cmd": "bash rtl/test/nearhbm/run_qkd_ahub_d_eq.sh neg {RUN}/bench/eq_neg",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ahub_d mutant detected",
+    "note": "one pl_rz bit forced at the core"
+   },
+   {
+    "name": "hubd_layer_exact",
+    "cmd": "HUBD=1 DQ=128 bash tools/qwen_kv_die/bench_gate.sh pos {RUN}/bench/hubd_pos",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 128,
+    "needs": [
+     "verilator"
+    ],
+    "note": "the layer-step bench (14 runs, 7 vectors x VM stall 0/1) with the hub as die leaves"
+   },
+   {
+    "name": "hubd_layer_pbmut",
+    "cmd": "HUBD=1 PBMUT=1 DQ=128 bash tools/qwen_kv_die/bench_gate.sh pos {RUN}/bench/hubd_pbmut",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 128,
+    "needs": [
+     "verilator"
+    ],
+    "note": "beat-store read one beat off (KVD_PBMUT)"
    }
   ],
   "calibrate": {
@@ -88,7 +134,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_ahub_core/qkd_ahub_core-hd1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_ahub_core/qkd_ahub_core-hd2-COMMIT"
   }
  ],
  "cycles_added": 0,
