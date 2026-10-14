@@ -217,6 +217,7 @@ module ot_lkep_sinkq #(parameter integer W = 545, parameter integer D = 4, param
 endmodule
 
 module ot_hbm_lk_ep #(
+    parameter integer HARD_CLOCKS = 0,     // physical parent delivers one compensated clock at each hard child pin
     parameter integer NS     = 3,          // retry pipelines (sub-channels) per link, 1..3
     parameter integer W      = 545,
     parameter integer TXQ    = 32,         // local TX queue depth (= the die sender's credits; covers the ~24-cycle die credit loop)
@@ -237,6 +238,7 @@ module ot_hbm_lk_ep #(
     parameter integer MAX_RETRY = 8
 ) (
     input  wire            clk,
+    input  wire [NS*4-1:0] clk_sub,
     input  wire            rst_n,
     input  wire [23:0]     session,
     input  wire            t_v,
@@ -315,8 +317,10 @@ module ot_hbm_lk_ep #(
         ot_lkep_sub #(.W(W), .SW(SW), .EW(EW), .QD(QD), .RL(RL), .PBD(PBD), .TFD(TFD), .OFD(OFD), .SQ(SQ), .SL(SL),
             .TIMEOUT(TIMEOUT), .MAX_RETRY(MAX_RETRY), .NAKH_HW(NAKH_HW)) u_t (
 `endif
-            .clk(clk), .rst_n(rst_n), .session(session),
-            .clk_ti(clk), .clk_ts(clk), .clk_rp(clk),       // el1013-lkep-split: one clock entry per hard child of the sub
+            .clk(HARD_CLOCKS != 0 ? clk_sub[g*4] : clk), .rst_n(rst_n), .session(session),
+            .clk_ti(HARD_CLOCKS != 0 ? clk_sub[g*4+1] : clk),
+            .clk_ts(HARD_CLOCKS != 0 ? clk_sub[g*4+2] : clk),
+            .clk_rp(HARD_CLOCKS != 0 ? clk_sub[g*4+3] : clk),       // el1013-lkep-split: one clock entry per hard child of the sub
             .rst_n_r(rst_n), .session_r(session),           // N-face copies for the RX leaf
             .w_d(w_d), .w_oh(w_oh[g*NSL*QD +: NSL*QD]), .adm(l0_v[g]), .icr_ret(icr_ret[g]),
             .tx_v(th_vt[g]), .tx_d(th_dt[g]), .tx_cr(tcrq[g]),
