@@ -213,8 +213,8 @@
       "clock_root_rule": [],
       "actual_path_classes": [],
       "requested_outline_um": {
-        "w": 172.8,
-        "h": 32.4
+        "w": 237.6,
+        "h": 43.2
       },
       "original_outline_preserved": {
         "w": 172.8,
@@ -222,7 +222,9 @@
       },
       "collected_current_status": "EARLY_FAIL_CONGESTION",
       "collected_current_reason": "global route finished with congestion (GRT-0116): hgi_xp_sps_recover2h32_9eee23566/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
-      "collected_job": "hgi_xp_sps-recover2h32-9eee23566"
+      "collected_job": "hgi_xp_sps-recover2h32-9eee23566",
+      "next_job": "hgi_xp_sps-recover3balance-563c6f1b7",
+      "next_action": "sourcebindingTrue/validateOK; submitted under intake lock after actualcongestion geometry/pin repair"
     },
     {
       "element": "ot_hgi_xp_xwm",
