@@ -606,12 +606,20 @@ end endgenerate
         // An asserted request has ((gb+g)>>split)<(GT>>split), hence gb+g<GT.
         // Its group offset fits GW bits; no admitted read is truncated.
         localparam integer GW = $clog2(GT);
+        // Decode the invariant split mask on instruction acceptance, alongside
+        // split_r/xcs_r. It is valid before the first active request and removes
+        // split comparisons from each address carry-save stage, with no new edge.
+        reg [GW-1:0] split_mask;
+        for(xab=0;xab<GW;xab=xab+1) begin:g_mask
+            always @(posedge clk)
+                if (go && ready) split_mask[xab] <= (i_split > xab);
+        end
         for(xag=0;xag<NPX;xag=xag+1) begin:g_g
             wire [GW-1:0] group_bits = gb+xag;
             wire [(GW+1)*AW-1:0] rows;
             for(xab=0;xab<GW;xab=xab+1) begin:g_b
                 // Per-bit comparison replaces the 32-bit variable shift/subtract mask.
-                assign rows[AW*xab+:AW] = (group_bits[xab] && split_r > xab) ? (xcs_r << xab) : {AW{1'b0}};
+                assign rows[AW*xab+:AW] = (group_bits[xab] && split_mask[xab]) ? (xcs_r << xab) : {AW{1'b0}};
             end
             assign rows[AW*GW+:AW] = xc;
             wire [AW-1:0] cs_s,cs_c;
