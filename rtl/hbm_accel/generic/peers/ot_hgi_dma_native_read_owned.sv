@@ -108,7 +108,7 @@ endmodule
 // The actual parent owns all4 R leases; no hardcoded group permission is valid.
 // HARD_CLOCKS0 is shared-clock functional simulation; physical clock closure OPEN.
 module ot_hgi_dma_native_read_owned #(
- parameter integer HARD_CLOCKS=0,LEGACY_SLOTS=32,MUT=0,TW=$clog2(LEGACY_SLOTS)
+ parameter integer HARD_CLOCKS=0,LEGACY_SLOTS=32,REQUIRE_GRANT=1,MUT=0,TW=$clog2(LEGACY_SLOTS)
 )(
  input wire clk,rst_n,input wire [63:0] leaf_clk,
  input wire [512:0] legacy_q,output wire [8256:0] legacy_r,
@@ -146,7 +146,7 @@ module ot_hgi_dma_native_read_owned #(
  end else for(integer l=0;l<32;l++)begin:ledger
   reg [TW+1:0] np;
   np={1'b0,pending[l]}+legacy_q[l*16+15]-legacy_r[l*257+256];
-  if(pending[l]!=~pending_n[l]||np>LEGACY_SLOTS||(legacy_q[l*16+15]&&(!( &rgrant)||legacy_q[l*16+:5]!=5'(l))))sf<=1;
+  if(pending[l]!=~pending_n[l]||np>LEGACY_SLOTS||(legacy_q[l*16+15]&&((REQUIRE_GRANT&&!( &rgrant))||legacy_q[l*16+:5]!=5'(l))))sf<=1;
   pending[l]<=np[TW:0];pending_n[l]<=~np[TW:0];
  end
  assign fault[64]=sf;

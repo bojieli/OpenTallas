@@ -54,9 +54,9 @@ module tb_hbm_native_threeproducer;
     for(genvar aq=0;aq<4;aq++)for(genvar ab=0;ab<8;ab++)begin:admission_mutant
       assign admitted_su_wq[(aq*8+ab)*280+:280]={su_wq[(aq*8+ab)*280+279]&&((MUT!=11)||su_wg[aq]),su_wq[(aq*8+ab)*280+:279]};
     end
-    ot_hbm_b2_native_owned4 #(.MUT(MUT==10?1:MUT==13?3:0),.FASTFIN(1),.FRONTFAST(1)) vehicle(
-      .su_clk(cclk),.quant_clk(cclk),.dma_clk({4{clk}}),.vclk(vmclk),.rst_n(rst_n),
-      .su_rreq(su_read_req),.su_wreq(su_write_req),.su_drained(stdn&drdn&~stgo&~drgo),.su_mirror(su_mirror),
+    ot_hbm_b2_native_owned4 #(.MUT(MUT==10?1:MUT==13?3:0),.FASTFIN(1),.FRONTFAST(1),.HARD_CLOCKS(1)) vehicle(
+      .su_clk(cclk),.quant_clk(cclk),.dma_clk({4{clk}}),.vclk(vmclk),.rst_n(rst_n),.station_clk({32{vmclk}}),
+      .su_native_rq(544'b0),.su_native_wq(8992'b0),.su_rreq(su_read_req),.su_wreq(su_write_req),.su_drained(stdn&drdn&~stgo&~drgo),.su_mirror(su_mirror),
       .su_rq(su_rq),.su_rcredit(su_rc),.su_rr(su_rr),.su_wq(admitted_su_wq),.su_wcredit(su_wc),.su_done(su_done),
       .su_rgrant(su_rg),.su_wgrant(su_wg),.su_rack(su_ra),.su_wack(su_wa),
       .quant_rec(quant_rec),.quant_mirror(4'b0),.quant_ret(quant_ret),.quant_drained(quant_drained),
@@ -133,7 +133,7 @@ module tb_hbm_native_threeproducer;
     end
     always @(posedge vmclk)if(rst_n)begin
       if(qfault||rfault||lfault||parent_fault||dma_bridge_fault||bank_status||su_ov)
-        $fatal(1,"FATAL actual native hardware queue%h router%h lease%h vehicle%h status%h su%h",qfault,rfault,lfault,vehicle_fault,bank_status,su_ov);
+        $fatal(1,"FATAL actual native hardware queue%h router%h lease%h parent%h DMAbridge%h status%h su%h",qfault,rfault,lfault,parent_fault,dma_bridge_fault,bank_status,su_ov);
     end
     integer mirror_checked=0,mirror_posts=0,mirror_commits=0,mirror_macro_writes=0;
     integer dma_read_owner_edges=0,read_handoffs=0;reg [11:0] seen_read_owners=0,previous_rowner=0;
@@ -194,7 +194,12 @@ module tb_hbm_native_threeproducer;
         repeat(2)@(negedge clk);stgo=0;drgo=0;start=cyc;
         if(park_admission)begin
           while(su_write_posts==0)begin @(negedge clk);if(cyc-start>1000)$fatal(1,"THREEPRODUCER actual SU never posted into reserved admission");end
-          repeat(6)@(negedge clk);park_admission=0;
+          if(MUT==14)begin
+            repeat(2)@(negedge clk);su_mirror=4'hf;
+            $display("THREEOWNER_BAD_APERTURE offered_new_mirror%h held_metadata%h pending_SU_writes%0d before_returned_ACK",su_mirror,vehicle.smeta,su_write_posts-su_write_commits);$fflush();
+            repeat(4)@(negedge clk);
+          end else repeat(6)@(negedge clk);
+          park_admission=0;
           $display("THREEPRODUCER_PARKED_POSTS observed%0d before_grant retained_positive_requires_fullcommit",parked_su_posts);
         end
         while((wr && ((dr_seen&su_mask)!=su_mask||(drdn&su_mask)!=su_mask)) || (rd && ((st_seen&su_mask)!=su_mask||(stdn&su_mask)!=su_mask||read_count[0]!=(last-first+1)/8||read_count[1]!=(last-first+1)/8||read_count[2]!=(last-first+1)/8||read_count[3]!=(last-first+1)/8)))begin
