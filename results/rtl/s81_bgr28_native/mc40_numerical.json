@@ -1,0 +1,28 @@
+{
+  "status": "FUNCTIONAL_ONLY_PHYSICAL_CLOCK_DELIVERY_OPEN",
+  "source_commit": "e999ecb83",
+  "archive_sha256": "54e593c6a20b2fb899aa8a2cdfcb9b99bb8dcc5e4c8cab1071cca62d3d3b890e",
+  "roots_per_parent": 40,
+  "NP": 28,
+  "NPR": 10,
+  "case_census": [
+    "gold",
+    "gold_s2",
+    "stress",
+    "cov_refuse",
+    "mut_RELAY",
+    "mut_ID",
+    "mut_J0",
+    "mut_ORDER",
+    "mut_MASK",
+    "mut_HIT"
+  ],
+  "log_sha256": "bbaaa3cc403397adad4edf7a4e233569c701c99607659a673e232a17be0bd92f",
+  "cycles": "H1sameedge/EP2ED3 unchanged; roots tied trueck only in numerical bench",
+  "output_root_ownership": {
+    "ck_fwd0": "request ports0..13",
+    "ck_fwd1": "request ports14..27",
+    "ck_ret": "all return/status output ports"
+  },
+  "forward_root_conditioners": "two actual two-stage raw epoch conditioners (4FF total)"
+}

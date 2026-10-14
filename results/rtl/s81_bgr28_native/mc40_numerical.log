@@ -1,0 +1,65 @@
+ot-run: ot-epyc1tb     admits   641 GB (avail 867, growth 64, headroom 64, waiters 0/0 GB) load 46/128 running 12 disk 804 GB 
+ot-run: ot-epyc4       admits   458 GB (avail 685, growth 140, headroom 48, waiters 0/0 GB) load 48/128 running 13 disk 967 GB 
+ot-run: ot-pve1        admits   161 GB (avail 208, growth 6, headroom 32, waiters 0/0 GB) load 34/28 running 2 disk 1312 GB 
+ot-run: ot-agidock128  admits   -90 GB (avail 87, growth 10, headroom 24, waiters 2/152 GB) load 26/64 running 4 disk 239 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2758885-1791977336 after 0 s
+RESULT cycles 200000 ops 700875 own_reads 31253 returned 124712 same_cycle_same_bank_reads 305 status 9 max_occ 4 errors 0
+BGL_gold: PASS
+MC40_CASE gold EXPECTED_OK
+RESULT cycles 200000 ops 700874 own_reads 31147 returned 124723 same_cycle_same_bank_reads 292 status 9 max_occ 4 errors 0
+BGL_gold_s2: PASS
+MC40_CASE gold_s2 EXPECTED_OK
+RESULT cycles 200000 ops 1866279 own_reads 83250 returned 333854 same_cycle_same_bank_reads 1919 status f max_occ 4 errors 0
+BGL_stress: PASS
+MC40_CASE stress EXPECTED_OK
+RESULT cycles 300 ops 1057 own_reads 50 returned 211 same_cycle_same_bank_reads 0 status 0 max_occ 3 errors 0
+COVERAGE_REFUSED 10 items
+BGL_cov_refuse: FAIL
+MC40_CASE cov_refuse EXPECTED_OK
+MISMATCH f_v cyc 48
+MISMATCH f_v cyc 49
+MISMATCH f_v cyc 50
+MISMATCH f_v cyc 51
+RESULT cycles 40000 ops 140121 own_reads 6241 returned 162031 same_cycle_same_bank_reads 63 status 9 max_occ 4 errors 219579
+BGL_mut_RELAY: FAIL
+MC40_CASE mut_RELAY EXPECTED_OK
+MISMATCH o_v/o_d cyc 346
+MISMATCH o_v/o_d cyc 569
+MISMATCH o_v/o_d cyc 676
+MISMATCH o_v/o_d cyc 782
+RESULT cycles 40000 ops 140121 own_reads 6241 returned 25156 same_cycle_same_bank_reads 63 status 9 max_occ 4 errors 740
+BGL_mut_ID: FAIL
+MC40_CASE mut_ID EXPECTED_OK
+MISMATCH o_v/o_d cyc 1410
+MISMATCH o_v/o_d cyc 2002
+MISMATCH o_v/o_d cyc 2324
+MISMATCH o_v/o_d cyc 2612
+MISMATCH status flat 9/4 leaf b/4
+RESULT cycles 40000 ops 140121 own_reads 6241 returned 25156 same_cycle_same_bank_reads 63 status b max_occ 4 errors 62
+BGL_mut_J0: FAIL
+MC40_CASE mut_J0 EXPECTED_OK
+MISMATCH o_v/o_d cyc 1410
+MISMATCH o_v/o_d cyc 2002
+MISMATCH o_v/o_d cyc 2324
+MISMATCH o_v/o_d cyc 2612
+MISMATCH status flat 9/4 leaf b/4
+RESULT cycles 40000 ops 140121 own_reads 6241 returned 25156 same_cycle_same_bank_reads 63 status b max_occ 4 errors 82
+BGL_mut_ORDER: FAIL
+MC40_CASE mut_ORDER EXPECTED_OK
+MISMATCH o_v/o_d cyc 170
+MISMATCH o_v/o_d cyc 173
+MISMATCH o_v/o_d cyc 187
+MISMATCH o_v/o_d cyc 189
+RESULT cycles 40000 ops 140121 own_reads 6241 returned 25156 same_cycle_same_bank_reads 63 status 9 max_occ 4 errors 5429
+BGL_mut_MASK: FAIL
+MC40_CASE mut_MASK EXPECTED_OK
+MISMATCH o_v/o_d cyc 170
+MISMATCH o_v/o_d cyc 173
+MISMATCH o_v/o_d cyc 187
+MISMATCH o_v/o_d cyc 189
+MISMATCH status flat 9/4 leaf f/4
+RESULT cycles 40000 ops 140121 own_reads 6241 returned 25156 same_cycle_same_bank_reads 63 status f max_occ 4 errors 10631
+BGL_mut_HIT: FAIL
+MC40_CASE mut_HIT EXPECTED_OK
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2758885-1791977336): exit 0
