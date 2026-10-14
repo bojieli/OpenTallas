@@ -31,33 +31,33 @@
  "pins": {
   "W": [
    "f_vw",
-   "f_cs",
-   "f_vr",
    "t_vq",
+   "f_cs",
    "t_cd",
+   "f_vr",
    "f_pf"
   ],
   "E": [
-   "t_vc",
-   "f_lf",
-   "t_swv",
    "t_swd",
-   "f_swr",
-   "f_swa",
-   "t_srv",
-   "t_srd",
-   "f_srr",
-   "f_srq",
-   "t_ks",
-   "f_kd",
-   "t_hep",
-   "t_ft"
+   "f_srq"
   ],
   "S": [
    "ck",
    "ckv",
    "rst",
-   "rsv"
+   "rsv",
+   "f_kd",
+   "t_ks",
+   "t_hep",
+   "t_srd",
+   "t_ft",
+   "t_srv",
+   "f_srr",
+   "f_swr",
+   "f_swa",
+   "t_swv",
+   "t_vc",
+   "f_lf"
   ]
  },
  "clock_port": "ck",
