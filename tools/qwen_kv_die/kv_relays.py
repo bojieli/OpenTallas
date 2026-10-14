@@ -87,15 +87,18 @@ def crosscheck(rel, die_v, split=True):
             hdr[mst] = P.header(f.read_text(errors='replace'), b['module']) if f.exists() else (None, None)
         params, ports = hdr[mst]
         if ports is None:
-            return None
+            raise ValueError(f'{mst}: bound RTL header could not be parsed')
         params = dict(params or {}, **{k: str(v) for k, v in (b.get('parameters') or {}).items()})
         base = (b.get('sliced') or {}).get(port, port)
         if base not in b['ports']:
-            return None
+            raise ValueError(f'{mst}.{port}: no bound RTL port mapping')
         bits = []
         for rp in b['ports'][base]:
             d, w = ports[rp]
-            bits += [d] * (P.evalw(w, params) or 0)
+            width = P.evalw(w, params)
+            if width is None:
+                raise ValueError(f'{mst}.{rp}: unresolved RTL width {w}')
+            bits += [d] * width
         if base != port:      # k-th slice of the base concatenation (slices in die-port order)
             sl = [base] + sorted(k for k, v in b['sliced'].items() if v == base)
             n = len(bits) // len(sl)
@@ -103,42 +106,44 @@ def crosscheck(rel, die_v, split=True):
             bits = bits[k * n:(k + 1) * n]
         return bits
 
-    def end(net, side):
-        """the non-relay endpoint across the chain from a relay's a (side 'a') or b (side 'b') net"""
-        seen = 0
-        while seen < 500:
-            seen += 1
-            others = [(i, p) for i, p in by_net.get(net, []) if not (inst_m[i].startswith('qkd_rly') and p == side)]
-            nxt = [(i, p) for i, p in others if inst_m[i].startswith('qkd_rly')]
-            if not nxt:
-                return others[0] if len(others) == 1 else None
-            i, p = nxt[0]
-            net = next(c.group(2).strip() for mst_, ii, conns in [x for x in insts if x[1] == i]
-                       for c in re.finditer(r'\.(\S+?)\(([^()]*)\)', conns) if c.group(1) == side)
-        return None
     conf, checked = [], 0
     relays = [(mst, inst, conns) for mst, inst, conns in insts if mst.startswith('qkd_rly')]
+    relay_conns = {i: c for _, i, c in relays}
     heads = [x for x in relays if not any(inst_m[i].startswith('qkd_rly') for i, _ in
              by_net.get(re.search(r'\.a\(([^()]*)\)', x[2]).group(1).strip(), []) if i != x[1])]
+    visited = set()
     for mst, inst, conns in heads:
         r = rel[mst]
         na = re.search(r'\.a\(([^()]*)\)', conns).group(1).strip()
         ea = [(i, p) for i, p in by_net.get(na, []) if i != inst]
-        if len(ea) != 1:
-            continue
+        if len(ea) > 1:
+            raise ValueError(f'{inst}: multiple upstream endpoints need a bit-level direction check')
         cur, tail = inst, conns
+        chain = set()
         while True:
+            if cur in chain:
+                raise ValueError(f'{inst}: cyclic relay chain at {cur}')
+            chain.add(cur)
+            visited.add(cur)
+            other = rel[inst_m[cur]]
+            if other['w'] != r['w'] or other['fwd'] != r['fwd'] or other['rev'] != r['rev']:
+                raise ValueError(f'{inst}: relay direction changes at {cur}')
             nb = re.search(r'\.b\(([^()]*)\)', tail).group(1).strip()
             nx = [(i, p) for i, p in by_net.get(nb, []) if i != cur]
             if len(nx) == 1 and inst_m[nx[0][0]].startswith('qkd_rly'):
+                if nx[0][1] != 'a':
+                    raise ValueError(f'{cur}: relay b connects to {nx[0][0]}.{nx[0][1]}, expected a')
                 cur = nx[0][0]
-                tail = next(x[2] for x in relays if x[1] == cur)
+                tail = relay_conns[cur]
                 continue
+            if len(nx) > 1:
+                raise ValueError(f'{cur}: branched relay net needs a bit-level direction check')
             eb = nx[0] if len(nx) == 1 else None
             break
-        for (i, p), side in ((ea[0], 'a'), (eb, 'b')):
-            if i is None:
+        for endpoint, side in ((ea[0] if ea else None, 'a'), (eb, 'b')):
+            if endpoint is None:
                 continue
+            i, p = endpoint
             d = rtl_dirs(inst_m[i], p.lstrip('\\'))
             if d is None:
                 continue
@@ -148,6 +153,9 @@ def crosscheck(rel, die_v, split=True):
                 want_fwd = (dk == 'output') if side == 'a' else (dk == 'input')
                 if dk in ('input', 'output') and fwd != want_fwd:
                     conf.append((inst, f'{i}.{p}', k, 'fwd' if fwd else 'rev', dk))
+    missed = set(relay_conns) - visited
+    if missed:
+        raise ValueError(f'relay chains without an upstream head: {sorted(missed)[:6]}')
     return conf, checked
 
 

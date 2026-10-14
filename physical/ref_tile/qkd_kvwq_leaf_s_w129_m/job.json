@@ -1,5 +1,5 @@
 {
- "name": "qkd_kvwq_leaf_s_w129_m-np1-COMMIT",
+ "name": "qkd_kvwq_leaf_s_w129_m-np1-02ee93f57",
  "block": "qkd_kvwq_leaf_s_w129_m",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/qwen-kvsys-strip-1014",
-  "commit": "COMMIT",
+  "commit": "02ee93f57",
   "extra_paths": [
    "physical/qkd_kvwq_leaf_slot",
    "rtl/test/tb_qkd_kvwq_leaf_slot.sv",
@@ -100,7 +100,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_kvwq_leaf_s_w129_m/qkd_kvwq_leaf_s_w129_m-np1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_kvwq_leaf_s_w129_m/qkd_kvwq_leaf_s_w129_m-np1-02ee93f57"
   }
  ],
  "cycles_added": 0,

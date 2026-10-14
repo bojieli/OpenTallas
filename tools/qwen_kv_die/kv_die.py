@@ -834,7 +834,7 @@ def _buses(m, T, r):
         # DESC / GO words ~320 hclk ahead of each layer's go; one registered copy per stack runs on relays (core clock) to
         # the stack's controller element, whose W-face kc port enters the async FIFO and the hclk tap chain to the 32
         # per-PC heads (ot_qkvd_kcmd_tap).  No ready: the issuer bounds its outstanding layers.
-        add((f'kc_{st}', 'kvn', 1 + 32, [('seq', f'kc_{st}'), (f'ctrl_{st}', 'kc')]))
+        add((f'kc_{st}', 'kv_oneway', 1 + 32, [('seq', f'kc_{st}'), (f'ctrl_{st}', 'kc')]))
         add((f'emf_{st}', 'kvn', W + 2, [('embgw', f'emf_{st}'), (f'land_{st}', 'emf')]))
         add((f'emr_{st}', 'kvn', W + 2, [(f'land_{st}', 'emr'), ('embgw', f'emr_{st}')]))
         add((f'ing_{st}', 'kvn', W + 2, [('host', f'ing_{st}'), (f'land_{st}', 'ing')]))
@@ -848,13 +848,13 @@ def _buses(m, T, r):
         add((f'mf_{st}', 'spine_local', 1, [(f'land_{st}', 'mf'), ('seq', f'mf_{st}')]))
     if split:   # EMBQ / EMBD: the SU's embedding face crosses the link and ends on the gateway (LINK.md classes 3 / 5)
         add(('gq', 'kvn', 1 + 1 + 24 + 1, [('lnk', 'gq'), ('embgw', 'gq')]))
-        add(('gr', 'kvn', 1 + 512, [('embgw', 'gr'), ('lnk', 'gr')]))
+        add(('gr', 'kv_oneway', 1 + 512, [('embgw', 'gr'), ('lnk', 'gr')]))
         add(('lflt', 'spine_local', 1, [('lnk', 'flt'), ('host', 'lflt')]))          # link + bridge fault -> host status (LINK.md open item 1)
     else:
         add(('gq', 'kvn', W + 2, [('seq', 'gq'), ('embgw', 'gq')]))
         add(('gr', 'kvn', W + 2, [('embgw', 'gr'), ('seq', 'gr')]))
-    add(('hc', 'kvn', 182 if split else W + 2, [('host', 'hc'), ('seq', 'hc')]))      # split: the merged sequencer's hc / tk levels
-    add(('tk', 'kvn', 93 if split else W + 2, [('seq', 'tk'), ('host', 'tk')]))
+    add(('hc', 'kv_oneway' if split else 'kvn', 182 if split else W + 2, [('host', 'hc'), ('seq', 'hc')]))
+    add(('tk', 'kv_oneway' if split else 'kvn', 93 if split else W + 2, [('seq', 'tk'), ('host', 'tk')]))
     add(('host_fdi', 'd2d_fdi', FDI_SERDES, [('host', 'fdi'), ('serdes_host', 'fdi')]))
 
 

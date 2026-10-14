@@ -1,5 +1,5 @@
 {
- "name": "qkh_native_score_1014-r2-COMMIT",
+ "name": "qkh_native_score_1014-r2-4d79e59c1",
  "block": "ot_qkh_head_score_native",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/qwen-kvsys-el-1014",
-  "commit": "COMMIT"
+  "commit": "4d79e59c1"
  },
  "stages": {
   "bench": [
@@ -88,7 +88,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkh_native_score_1014/qkh_native_score_1014-r2-COMMIT"
+   "to": "results/rtl/ref_tile/qkh_native_score_1014/qkh_native_score_1014-r2-4d79e59c1"
   }
  ],
  "cycles_added": 0,
