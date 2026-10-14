@@ -84,7 +84,7 @@ and complete production composition gates remain explicit.
 
 The implemented CTRL v1 layout is opcode21 STATUS or22 COMMAND, version1,
 source die18:16, reserved23:19=0, one-hot destination mask31:24,
-per-source sequence47:32. STATUS carries tk140:48 and boot150:141;
+per-source sequence47:32. STATUS carries tk140:48, raw kst150:141 and {boot_ok,boot_done}152:151;
 COMMAND carries entire original hc229:48 (including original posted pw/dw).
 Unused upper bits are zero. Die0 emits seven individually addressed copies of
 each command, with the same sequence number; each recipient sees consecutive
@@ -92,9 +92,10 @@ commands. Nonzero dies send status changes to die0. Status low32 cycle counter
 alone does not trigger traffic, but is preserved in every snapshot, including
 final done. Initial sequence is0; replay/gap and wrong source/destination fault.
 Initial receiver/transmitter/command credits are4. `seen[7:0]` must be all ones
-before package-ready and boot-ok may assert. Shared boot10 bit assignment must
-be bound to the existing sequencer `kst` and reset-controller meanings before
-composition; this endpoint preserves the bits rather than interpreting them.
+before package-ready and boot-ok may assert. The existing sequencer `kst` is fault/fault_cause10, not boot state. It is
+preserved separately in kst8. Boot2 must come from the actual per-die boot
+checksum/visibility check, never from kst or an engine done level. Die0 reads
+boot8[2d] as boot_done and boot8[2d+1] as boot_ok for the original reset sequencer.
 No arbitrary multicast delivery is assumed.
 
 `qkd_host_static_pc` consumes unchanged embedding es288 and host write es288
@@ -153,3 +154,76 @@ ACK vectors with a registered popcount into ack_n. Required production proof
 includes the actual32-hop chains and relays, hot-PC backpressure, boot checksum,
 layer throughput and die timing. Short-loop component throughput is evidence
 about the mapper only, not the full physical chain.
+
+Production CTRL endpoint sets STRAPPED1 and captures die_id[2:0], stable for
+the reset epoch, from the package identity strap. One die RTL/mask serves all
+eight locations. Compile-time DIE is retained only as the bench/reset default;
+STRAPPED0 is a fixed-role component option, not the production package binding.
+Every live role decodes the same packet ABI, while only role0 aggregates ND8
+and originates commands. Changing die_id during a live epoch is forbidden.
+
+The original sysctl32-bit FAULT_STATUS layout reserves bits16..21 for package
+faults and explicitly truncates c_fault_vec to16 bits. With D8 this drops
+dies4..7 detailed diagnostics. A full TP8 composition must bank peer diagnostics
+separately from global ctl faults; simply changing its D parameter is not a
+correct TP8 CSR implementation. The independent qkd_host_ctl ND8 aggregate
+and its120-bit result retain the actual package fault flags. This is a required
+CSR binding task; component packet tests do not prove the full BAR reset/boot
+namespace or host descriptor execution.
+
+The physical HOST PHY binding from die generator T21 is **FDI_FW1043**, not
+historical554. The adapter's actual typed flit is
+`{valid1,DATA1024,credit_count10,sequence8}` (W1024,RXD512). The complete host
+class word is528 bits: class527:524, reserved523:512=0, data511:0. Adapter
+DATA1023:528 is zero padding, checked after a full pin capture by
+`qkd_host_rx_pad`; a nonzero pad faults and the packet is withheld. The host
+requires its own two W546 CDC leaves (528 plus18 known-zero bits), separate
+from the ten allocated collective/UCIe XF leaves. TX constant extension is
+478 zero bits above the complete CDC word546. All actual FDI fields retain
+their original width and position. No real host W1024 view is currently bound.
+
+Class0 carries AXI HOST,1 addressed CTRL,2 ingest CSR,3 ingest descriptor,4
+full512-bit payload,5 completion64,6 IRQ level (bit0),7 logical-credit returns.
+Class2/3/4 share the original ingest receive window16. HOST and CTRL receive
+windows are4 each. Physical adapter credits are a separate window (IBUF4).
+Class7 has three byte counts [7:0]HOST,[15:8]CTRL,[23:16]INGEST. Host-to-board
+credit words replenish board's ingress windows4/4/16; board-to-host credit
+words replenish host's outgoing HOST/CTRL/completion windows4/4/4. Credit
+packets use only physical credits. IRQ level updates coalesce to the newest
+level; MSI remains the original host_if DMA write. The board resets all
+windows with the link epoch. `qkd_host_rx_class` preserves every original
+512-bit ingest payload and class. `qkd_host_tx_class` arbitrates independent
+four-entry source queues, prioritizes returned capacity, then IRQ changes,
+then round robin data. These are separate clock-root leaves. They live on
+core ck; the dedicated host CDC pair handles the FDI/core crossing.
+
+Native prefill uses opt-in `NATIVE_ROWS1` on the original32-macro QPIPE2
+provider. Original QKV descriptors still encode K/V bases and strides for
+CTX8192,HD128,1/2heads. The K drain reads the two words of one token's32-byte
+row sector, rather than two dimension bytes from16 different positions. It
+uses the same registered macro read/capture stages and original quantization.
+Native addresses follow qkd_kv_wq.sec_of exactly. Invalid partial-window rows
+are not written, preserving older positions without RMW; completion marks the
+last valid sector. The original default NATIVE_ROWS0 is unchanged. Reduced or
+malformed descriptor layouts fault (code7) instead of being reinterpreted.
+
+Measured native provider evidence: original BF16 production fixture2layers x
+64positions x2heads x128dimensions,2048sectors,5117core cycles,exact. The
+immutable QPIPE1 reference remains5105cycles (authoritative old QM report);
+ratio1.0024. The old CLOSED QM also took5117, so native format conversion adds
+zero cycles to that provider. One-head native exact864sectors; two-head edge
+fixture exact1728sectors across layers0/17/35 and partial positions near8192.
+The K-lane mutant fails, and default-off original generic image regression is
+exact2048sectors/5117cycles. These results qualify provider behavior/cost only;
+new NATIVE_ROWS1 physical view, mapper/station/actual-controller composition,
+board PHY/CDC and host-end-to-end price remain required. No accepted-cost row
+or changed price is implied.
+
+The misleadingly named `qfd_link_adp512` already wraps W1024,RXD512,NG8 and
+1043-bit FDI in r3b-io. Its current m5c job is preserved; do not duplicate that
+adapter. Reuse its eventual CLOSED view when it fits, or the owning IO stream's
+structural slice repair if it fails. The current237.6x777.6 adapter outline
+cannot be assumed to fit the host777.576x518.376 reservation. Place it in an
+explicit adjacent host adapter strip/slot request, then assign pins from the
+actual PHY1043 face. Host CDC pair is additional to the ten collective XF
+leaves. A typed1043↔1024↔546↔528 binding with zero-extension checks is mandatory.

@@ -56,6 +56,7 @@ module ot_rom_host_ingest #(
     // QPIPE = 1 (qwen-1010/c 2026-10-10, qfd_io_host): the engine's pipelined, lane-banked QKV path (ot_hdc_kv_ingest
     // QPIPE).  It is write-only, so it implies RMW_EN 0 here (an rmw descriptor fails closed, code 2).  MUT 3 / 4 = the
     // engine's QMUT 1 (K lane bank) / 2 (stale slot fields).
+    parameter integer NATIVE_ROWS=0,
     parameter integer QPIPE  = 0
 ) (
     input  wire              rst_n,
@@ -117,6 +118,16 @@ module ot_rom_host_ingest #(
     wire         dq_qkv = hdesc[3:0] == 4'd1;
     wire         bad_qkv = (QKV_EN == 0) && dq_qkv;
     wire         bad_rmw = (RMW_EN == 0 || QPIPE != 0) && dq_qkv && hdesc[6];
+    // Native K/V rows require production CTX8192/HD128 descriptor strides.
+    // Reduced-layout descriptors must not be silently reinterpreted.
+    wire[31:0]native_kspan=(hdesc[219:216]==1)?32'd1179648:32'd2359296;
+    wire bad_native=NATIVE_ROWS&&dq_qkv&&(
+        hdesc[171:168]!=7||hdesc[219:216]<1||hdesc[219:216]>2||
+        hdesc[111:80]!=32'd32768||hdesc[143:112]!=32'd32768||
+        hdesc[47:16]>=native_kspan||hdesc[21:16]!=0||
+        (hdesc[219:216]==2&&hdesc[31])||
+        hdesc[79:48]!=(hdesc[47:16]+native_kspan));
+
     // engine
     wire         e_drdy, e_inrdy, e_wv, e_rv, e_done, e_busy;
     wire [AW-1:0] e_waddr, e_raddr;
@@ -129,10 +140,10 @@ module ot_rom_host_ingest #(
     reg  [3:0]   pcnt;                      // payload beats seen (MUT 1)
     wire [511:0] pay = (MUT == 1 && pcnt == 4'd6) ? (hx_head[511:0] ^ (512'd1 << 30)) : hx_head[511:0];
     wire         hv_i = !hx_empty;
-    wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw;
+    wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw && !bad_native;
     wire         take_p = hv_i && !f_any && hcl == 2'd2;
     ot_hdc_kv_ingest #(.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX), .QKV((ENG_TRIM != 0 && QKV_EN == 0) ? 0 : 1), .APIPE(APIPE),
-                      .QPIPE(QPIPE), .QMUT((MUT >= 3) ? MUT - 2 : 0)) u_eng (
+                      .QPIPE(QPIPE), .NATIVE_ROWS(NATIVE_ROWS), .QMUT((MUT >= 3) ? MUT - 2 : 0)) u_eng (
         .clk(clk_i), .rst_n(rn_i),
         .d_v(take_d), .d_rdy(e_drdy), .d_data(hdesc),
         .in_v(take_p), .in_rdy(e_inrdy), .in_data(pay),
@@ -145,7 +156,7 @@ module ot_rom_host_ingest #(
             if (f_any) hx_pop = 1'b1;                                   // fail closed: drain and drop
             else case (hcl)
                 2'd0: hx_pop = (hx_head[7:0] == 8'd2) ? mark_go : 1'b1;
-                2'd1: hx_pop = (bad_qkv || bad_rmw) ? 1'b1 : e_drdy;
+                2'd1: hx_pop = (bad_qkv || bad_rmw || bad_native) ? 1'b1 : e_drdy;
                 2'd2: hx_pop = e_inrdy;
                 default: hx_pop = 1'b1;
             endcase
@@ -197,6 +208,7 @@ module ot_rom_host_ingest #(
             if (!f_any) begin
                 if (hv_i && hcl == 2'd1 && bad_qkv)      f_code <= 8'd1;
                 else if (hv_i && hcl == 2'd1 && bad_rmw) f_code <= 8'd2;
+                else if (hv_i && hcl == 2'd1 && bad_native) f_code <= 8'd7;
                 else if (hv_i && hcl == 2'd3)            f_code <= 8'd3;
                 else if (hx_ovf_i)                        f_code <= 8'd4;
                 else if (cx_ovf)                          f_code <= 8'd5;

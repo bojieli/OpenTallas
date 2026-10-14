@@ -29,8 +29,8 @@
     },
     {
       "master": "qkd_host_ctrl_packet",
-      "flop_bits": 5467,
-      "role": "DIE0 ND8 transport; peer configuration measured separately",
+      "flop_bits": 5595,
+      "role": "same die type runtime die_id: role0 ND8, peers send status",
       "instances_per_die": 1,
       "clock_entries": [
         "ck"
@@ -44,7 +44,10 @@
       "layer_cap": "M5",
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_ctrl_packet.sv",
-      "sha256": "d28949933e86bfc0ff9b04155bebeba732794018772a9bf769f2f57a7dbc3d17"
+      "sha256": "03930adffaae5d3b0d8cb8f198bdb3b13f6fb8b6921ff0abf521cf27ed3580f0",
+      "params": {
+        "STRAPPED": 1
+      }
     },
     {
       "master": "qkd_host_ingest_map",
@@ -106,7 +109,7 @@
     },
     {
       "master": "qkd_host_ingest_station",
-      "flop_bits": null,
+      "flop_bits": 1006,
       "role": "at each logical PC registered forward/credit/ACK seam",
       "instances_per_die": 128,
       "clock_entries": [
@@ -151,7 +154,14 @@
         "TT": 32.28,
         "FF": 1.92
       },
-      "throughput_ratio": 1.002
+      "throughput_ratio": 1.002,
+      "native_variant": {
+        "NATIVE_ROWS": 1,
+        "price_reference_cycles": 5105,
+        "measured_cycles": 5117,
+        "ratio": 1.0023506366307542,
+        "closed_default_view_reusable": false
+      }
     },
     {
       "master": "ot_host_if FMT1 / physical prompt / CSR reset",
@@ -184,5 +194,25 @@
     "boot checksum/marker and reset sequence peer binding",
     "full ingest composition benchmark against closed price5117 and production layer measurement",
     "CTS gates/route/real views and die timing for every new component"
-  ]
+  ],
+  "physical_adapter": {
+    "actual_phy_fdi_bits": 1043,
+    "adapter_master": "qfd_link_adp512",
+    "actual_params": {
+      "W": 1024,
+      "RXD": 512,
+      "NG": 8,
+      "PINREG": 1
+    },
+    "live_job_preserved": "qfd_link_adp512-m5c-5f353edf0",
+    "outline_um": [
+      237.6,
+      777.6
+    ],
+    "data528_zero_extension": 496,
+    "host_cdc_pairs": 1,
+    "host_cdc_W": 546,
+    "borrow_collective_xf_leaves": false,
+    "fit": "UNPROVEN_NEW_HOST_ADAPTER_SLOT_REQUIRED"
+  }
 }

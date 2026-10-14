@@ -2,9 +2,10 @@
 set -euo pipefail
 cd "$(dirname "$0")/../..";out=${1:?out};mkdir -p "$out";out=$(cd "$out"&&pwd)
 y=${YOSYS:-$HOME/.local/opentallas-tools/yosys/bin/yosys};[[ -x "$y" ]]||y=$(command -v yosys)
-for top in qkd_host_axi_packet qkd_host_ctrl_packet qkd_host_static_pc qkd_host_ingest_map qkd_host_visibility_fence;do
+for top in qkd_host_rx_class qkd_host_tx_class qkd_host_rx_pad qkd_host_axi_packet qkd_host_ctrl_packet qkd_host_static_pc qkd_host_ingest_map qkd_host_ingest_station qkd_host_visibility_fence;do
  file=rtl/qwen_sys/host_20261013/$top.sv
- "$y" -Q -T -p "read_verilog -sv $file; hierarchy -top $top; proc; opt; memory_map; opt; write_json $out/$top.json" > "$out/$top.log" 2>&1
+ opts="";[[ "$top" != qkd_host_ctrl_packet ]]||opts="chparam -set STRAPPED 1 qkd_host_ctrl_packet;"
+ "$y" -Q -T -p "read_verilog -sv $file; $opts hierarchy -top $top; proc; opt; memory_map; opt; write_json $out/$top.json" > "$out/$top.log" 2>&1
 done
 python3 - "$out" <<'PY'
 import json,sys,pathlib
