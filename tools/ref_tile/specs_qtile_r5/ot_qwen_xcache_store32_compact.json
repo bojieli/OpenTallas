@@ -1,0 +1,52 @@
+{
+  "name": "ot_qwen_xcache_store32_compact",
+  "top": "ot_qwen_xcache_store32",
+  "kind": "tile",
+  "sources": [
+    "rtl/physical/ot_qwen_xcache_split32.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 77.76,
+    "h": 86.4
+  },
+  "pins": {
+    "ANY": [
+      "clk",
+      "rst_n",
+      "clear",
+      "j_repeat",
+      "load_v",
+      "load_epoch",
+      "load_x",
+      "read_epoch",
+      "found",
+      "read_x"
+    ]
+  },
+  "inter": [],
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "pin_h": "M4",
+    "pin_v": "M5",
+    "pin_balance": {
+      "group_max": 32,
+      "h": "M4",
+      "v": "M5"
+    },
+    "pin_min_tracks": 1
+  },
+  "std_area_um2_measured": 3000,
+  "job": {
+    "owner": "Codex:q23-tile",
+    "branch": "claude/q14-tile-parent",
+    "tag": "compact2",
+    "purpose": "Default-off compact aspect CTS sizing; footprint candidate after exactnecessaryheightbound; ANYpins unassigned; no closedview/globalprotocoladoption."
+  },
+  "structural_change": "Separate live-loader indexed storage and coherent-core response into fixed single-root leaves; no extra response edge."
+}
