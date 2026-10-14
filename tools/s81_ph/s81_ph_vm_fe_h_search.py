@@ -22,7 +22,9 @@ def search(height, seed, sweeps, assigned_capture=None, width=1520.064, fsr_pitc
         F.assign_capture(p, assigned_capture)
     initial=np.array([[v[1],v[2]] for v in p.inst.values()]); xy=initial.copy()
     size=np.array([[F.MP[v[0]][0],F.MP[v[0]][1]] for v in p.inst.values()])
-    movable=[i for i,n in enumerate(names) if not n.startswith(('clt','fxs','fsr'))]
+    # Capture launch pins anchor CLT; FXS are independent hard children whose
+    # positions must be solved from their real CLT/relay/status pin reaches.
+    movable=[i for i,n in enumerate(names) if not n.startswith(('clt','fsr'))]
     signs=np.array([[1,1],[1,-1],[-1,1],[-1,-1]])
     edges=[]; incident=[[] for n in names]
     for cls,a,b,aa,bb in p.hops:
