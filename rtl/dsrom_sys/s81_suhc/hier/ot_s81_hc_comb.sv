@@ -23,9 +23,11 @@ module ot_s81_hc_comb #(
     parameter integer WIN = 2, WOUT = 2, MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16,
     parameter integer HALF = 0, RLY = 1,            // the chains' sub-tiles: half octets (2 a slot), RLY relays a hop
     parameter integer DW = 3 + RW, RET_EXTRA = 0,   // the write path to the pins (send + capture + relays + pin flop)
+    parameter integer PHYS_CLK = 0,
     parameter integer PIPE = 0, PIPE_PD = 40        // ot_s81_hc_cseq: POST issue-order done (0 = return-event done)
 ) (
     input  wire                 cck, crs, sk, srs,
+    input  wire [13:0]           sk_leaf, // PHYS_CLK: one insertion-compensated die root per closed child
     // centre pin tile seam
     input  wire                 n_cmd_v,
     input  wire [83:0]          n_cmd_d,
@@ -111,7 +113,7 @@ module ot_s81_hc_comb #(
 `ifdef OT_S81_HC_COMB_HARD
  `define OT_HCC_P
  `define OT_HCC_F
- `define OT_HCC_R
+ `define OT_HCC_R #(.PHYS_CLK(PHYS_CLK))
 `ifndef SYNTHESIS
     initial if (NG != 256 || D != 5120 || NCOL != 3 || GS != 8 || S_RD != 2 || S_WR != 8 || S_RT != 4 || ML != 5 ||
                 AL != 4 || MUT != 0 || AMUT != 0 || RF != 1 || RT != 1 || RW != 2 || YD != 16 || HALF != 0 ||
@@ -122,10 +124,18 @@ module ot_s81_hc_comb #(
  `define OT_HCC_P #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL), \
      .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW))
  `define OT_HCC_R #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL), \
-     .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW), .RET_EXTRA(RET_EXTRA))
+     .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW), .RET_EXTRA(RET_EXTRA), .PHYS_CLK(PHYS_CLK))
  `define OT_HCC_F #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL), \
      .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW), \
      .FIFO_SLICE(512), .KEEP_POP(1), .Y_RELAY(1))
+`endif
+    // Fixed leaf order is native_comb_packing_request_1013.json.
+    // PHYS_CLK is an elaboration constant: this creates wires, no parent clock mux.
+    wire [13:0] ck = PHYS_CLK ? sk_leaf : {14{sk}};
+`ifndef SYNTHESIS
+    initial if (PHYS_CLK && (NG != 256 || NCOL != 3 || GS != 8 || S_RD != 2 || S_RT != 4 ||
+                            HALF != 1 || RLY != 2 || RF != 5 || RT != 1 || DW != 6 || RET_EXTRA != 1))
+        $fatal(1, "native HC clock map requires the 14-child production comb tuple");
 `endif
     // ---------------------------------------------------------------- seam nets (tile to tile)
     wire              ngo, t_ssv, t_flt, j_v, j_fq, j_fy, j_end, j_flt, j_civ, x_wdone, x_pob, x_f1, x_f4, c_yfl;
@@ -157,7 +167,7 @@ module ot_s81_hc_comb #(
         .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW),
         .PIPE(PIPE), .PD(PIPE_PD)) u_seq (
 `endif
-        .cck(cck), .crs(crs), .sk(sk), .srs(srs), .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v),
+        .cck(cck), .crs(crs), .sk(ck[3]), .srs(srs), .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v),
         .n_done_tag(n_done_tag), .n_inp(n_inp), .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d),
         .n_flt(n_flt), .n_online(n_online), .n_fcode(n_fcode), .n_yacc(n_yacc), .n_ypop(n_ypop),
         .w_flt(w_flt), .e_flt(e_flt), .w_fv(w_fv), .e_fv(e_fv), .c_fv(c_fv), .w_fd(w_fd), .e_fd(e_fd), .c_fd(c_fd),
@@ -166,7 +176,7 @@ module ot_s81_hc_comb #(
         .x_wdone(x_wdone), .x_pob(x_pob), .x_f1(x_f1), .x_f4(x_f4), .c_yfl(c_yfl));
 
     ot_s81_hc_crx `OT_HCC_P u_rx (
-        .sk(sk), .srs(srs), .w_rv(w_rv), .e_rv(e_rv), .w_rd(w_rd[P_D-1:0]), .e_rd(e_rd[P_D-1:0]), .c_rv(r_crv),
+        .sk(ck[7]), .srs(srs), .w_rv(w_rv), .e_rv(e_rv), .w_rd(w_rd[P_D-1:0]), .e_rd(e_rd[P_D-1:0]), .c_rv(r_crv),
         .c_rd(p_crd[P_D-1:0]),
         .j_v(j_v), .j_kind(j_kind), .j_base(j_base), .j_fq(j_fq), .j_fy(j_fy), .j_end(j_end), .j_flt(j_flt),
         .j_civ(j_civ), .a_vo(a_vo), .a_f(a_f), .a_e(a_e), .a_iq(a_iq),
@@ -175,7 +185,7 @@ module ot_s81_hc_comb #(
 
     genvar u;
     generate for (u = 0; u < S_RT; u = u + 1) begin : g_aq
-        ot_s81_hc_caq u_caq (.sk(sk), .srs(srs), .run(o_run), .kind(o_kind), .rv_u(o_rv[u]), .t_u(o_rd[P_T + u]),
+        ot_s81_hc_caq u_caq (.sk(ck[10+u]), .srs(srs), .run(o_run), .kind(o_kind), .rv_u(o_rv[u]), .t_u(o_rd[P_T + u]),
             .w_d(w_rd[P_D + 512 * u +: 512]), .e_d(e_rd[P_D + 512 * u +: 512]),
             .c_d((L1 > 0) ? p_crd[P_D + 512 * u +: 512] : 512'd0), .wd(a_wd[512 * u +: 512]), .odd(u % 2 == 1),
             .cq(a_cq[256 * u +: 256]),
@@ -188,18 +198,18 @@ module ot_s81_hc_comb #(
                   a_cq[256 +: 256], a_cq[0 +: 256], e_h[0 +: WSL - 512]};
 
     ot_s81_hc_cntree `OT_HCC_P u_nt (
-        .sk(sk), .srs(srs), .w_rvt(w_rv[S_RT]), .e_rvt(e_rv[S_RT]), .w_pi(w_rd[P_PI +: 8]), .e_pi(e_rd[P_PI +: 8]),
+        .sk(ck[9]), .srs(srs), .w_rvt(w_rv[S_RT]), .e_rvt(e_rv[S_RT]), .w_pi(w_rd[P_PI +: 8]), .e_pi(e_rd[P_PI +: 8]),
         .w_ex(w_ex), .e_ex(e_ex), .c_rvt(r_crv[S_RT]), .c_pi(r_cpi), .c_ex(r_ex1), .ngo_i(ngo),
         .ss_v(t_ssv), .ss(t_ss), .tflt(t_flt));
 
     ot_s81_hc_ccr_align `OT_HCC_R u_cr (
-        .sk(sk), .srs(srs), .ch_rv(ch_rv), .ch_rd(ch_rd), .crd_o(r_crd), .crv_o(r_crv), .cpi_o(r_cpi), .ex1_o(r_ex1));
+        .sk(sk), .sk_leaf({ck[8],ck[4]}), .srs(srs), .ch_rv(ch_rv), .ch_rd(ch_rd), .crd_o(r_crd), .crv_o(r_crv), .cpi_o(r_cpi), .ex1_o(r_ex1));
 
     ot_s81_hc_cpad_split `OT_HCC_R u_pd (
-        .sk(sk), .srs(srs), .crd_i(r_crd), .crd_o(p_crd), .fv_i(c_fv), .fd_i(c_fd), .fv_o(p_fv), .fd_o(p_fd));
+        .sk(sk), .sk_leaf({ck[6],ck[5],ck[1],ck[2]}), .srs(srs), .crd_i(r_crd), .crd_o(p_crd), .fv_i(c_fv), .fd_i(c_fd), .fv_o(p_fv), .fd_o(p_fd));
 
     ot_s81_hc_ccf `OT_HCC_F u_cf (
-        .sk(sk), .srs(srs), .fv_i(p_fv), .fd_i(p_fd), .n_yacc(n_yacc), .n_y(n_y), .ch_rst(ch_rst), .ch_fv(ch_fv),
+        .sk(ck[0]), .srs(srs), .fv_i(p_fv), .fd_i(p_fd), .n_yacc(n_yacc), .n_y(n_y), .ch_rst(ch_rst), .ch_fv(ch_fv),
         .ch_fd(ch_fd), .yfl(c_yfl));
 `ifndef SYNTHESIS
     // bench observability (dsfd_sp_hc reads u_cb.e_v / e_r / e_d: tb job start cycles)

@@ -114,7 +114,7 @@ TILES.update({
     "ot_s81_hc_caq":      dict(src=_H + "ot_s81_hc_caq.sv", routed=[{}], mut=("x_q <= rdd;", "x_q <= rdd ^ 512'h8000;")),
     "ot_s81_hc_crx":      dict(src=_H + "ot_s81_hc_crx.sv", routed=[_H2], mut=("jb <= j_base;", "jb <= j_base ^ 14'd1;")),
     "ot_s81_hc_ccr":      dict(src=_H + "ot_s81_hc_ccr.sv", routed=[{}], mut=("crd <= ch_rd;", "crd <= ch_rd ^ " + _BIT("RDW", "P_D + 15") + ";")),
-    "ot_s81_hc_cseq":     dict(src=_H + "ot_s81_hc_cseq.sv", routed=[_H2], mut=("ssq <= t_ss;", "ssq <= t_ss ^ 32'h00800000;")),
+    "ot_s81_hc_cseq":     dict(src=_H + "ot_s81_hc_cseq.sv", routed=[dict(_H2, PIPE=0, PD=40)], mut=("ssq <= t_ss;", "ssq <= t_ss ^ 32'h00800000;")),
     "ot_s81_hc_cntree":   dict(src=_H + "ot_s81_hc_cntree.sv", routed=[_H2], mut=("ss <= nv_[1];", "ss <= nv_[1] ^ 32'h00800000;")),
     "ot_s81_hc_ctfn":     dict(src=_CTH, routed=[{}], mut=("fd <= fd_in;", "fd <= fd_in ^ " + _BIT("FDW", "O_D + 15") + ";")),
     "ot_s81_hc_ctfx":     dict(src=_CTH, routed=[{}], mut=("fdx <= fd_in;", "fdx <= fd_in ^ " + _BIT("FXW", "O_D + 15") + ";")),
