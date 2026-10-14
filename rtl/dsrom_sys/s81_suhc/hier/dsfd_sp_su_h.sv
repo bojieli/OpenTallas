@@ -655,7 +655,7 @@ module dsfd_sp_su_h #(
                 // here relays the spines only
                 // taps read slots 0..4 only (QR: 5 parameter rows on slots 0..4; operand pairs on slots 0 / 1): the
                 // hardened tile dsfd_su_t_rx carries 5 x 512 b of down tap, not S_RD x 512
-                ot_s81_su_rxt #(.S_RD(5), .LM(LM), .LA(LA), .XMUT(XMUT), .QW(2)) u_rxt (
+                ot_s81_su_rxh #(.S_RD(5), .LM(LM), .LA(LA), .XMUT(XMUT)) u_rxt (
                     .clk(sk), .rst_in(rst[0]), .dn_st_i(dst[0]), .dn_kind_i(dkd[0]), .dn_jid_i(dji[0]), .dn_v_i(dv[0][4:0]),
                     .dn_d_i(dd[0][5 * 512 - 1:0]), .o_v(rx_v), .o_a(rx_a), .o_m(rx_m), .o_d(rx_d), .o_v2(rx_v2), .o_a2(rx_a2), .o_d2(rx_d2),
                     .o_fu(rx_fu), .o_fo(rx_fo),

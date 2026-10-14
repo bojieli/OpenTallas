@@ -155,7 +155,7 @@ module dsfd_su_t_rx (
     output wire          o_v2, output wire [13:0] o_a2, output wire [511:0] o_d2,
     output wire          o_fu, o_fo, o_alive, o_den, o_rdy, output wire [7:0] o_rjid
 );
-    ot_s81_su_rxt #(.S_RD(5), .RAL(16), .LM(5), .LA(4), .QW(2)) u_t (
+    ot_s81_su_rxh #(.S_RD(5), .LM(5), .LA(4), .L(4)) u_t (
         .clk(ck), .rst_in(rst), .dn_st_i(dn_st), .dn_kind_i(dn_kind), .dn_jid_i(dn_jid), .dn_v_i(dn_v), .dn_d_i(dn_d),
         .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_v2(o_v2), .o_a2(o_a2), .o_d2(o_d2),
         .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
