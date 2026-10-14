@@ -832,7 +832,7 @@ function elementQualification(q) {
   const st = x => x && x.status || 'unrecorded', e = q.exactness || {};
   return `source ${q.source.commit} · RTL ${st(q.implementation)} · model ${st(q.model)} · exact +${st(e.positive)} / -${st(e.negative)} · physical ${st(q.physical)} · corners ${JSON.stringify(q.physical && q.physical.corners || {})} · dependencies ${(q.dependencies || []).join(', ')} · integration ${st(q.integration)} · ${q.registry_path}`;
 }
-const NOCOUNT = new Set(['superseded', 'cancelled only']);   // owner 10-11: count only useful elements
+const NOCOUNT = new Set(['superseded']);   // cancellation ends a job, not its outstanding requirement
 function renderElements() {
   if (!ED) return;
   if ($('elPanel').hidden) $('elPanel').hidden = false; lsw('ef', EF);
