@@ -1,0 +1,3 @@
+PASS: 1505 requests, 1505 results bit-exact vs ot_hdc_fmul; 751 argmax tops; GT 3072 GID 47: 1021 in range
+SLAB_LATENCY words=1505 baseline=1505 delta_min=2 delta_max=2
+rtl/test/tb_qwen_slab_port_group.sv:249: $finish called at 3067500 (1ps)

@@ -96,33 +96,433 @@
  "job": {
   "owner": "Claude:el1013-qwen-small-masters r3b",
   "branch": "claude/el1013-qwen-r3b-spine",
-  "tag": "gd2",
-  "purpose": "Slab original parent registers in local core leaf, input pin capture of scale/multiplier returns adds two clocks; exact TP8 values and mutant",
+  "tag": "gd3",
+  "purpose": "Common registered GID7/NW18 slab core, all48 production groups exact and detected scale/group/row mutants; registered child returns add exactly2 clocks",
   "extra_paths": [
    "physical/qwen_slab_structural"
   ],
   "benches": [
    {
-    "name": "core_composition_exact",
-    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --out {RUN}/bench/entries",
+    "name": "group_0_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 0 --out {RUN}/bench/gid0",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 2,
     "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
    },
    {
-    "name": "core_composition_scale_mutant",
-    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --entry-mutant --out {RUN}/bench/entries_mut",
+    "name": "group_1_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 1 --out {RUN}/bench/gid1",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_2_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 2 --out {RUN}/bench/gid2",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_3_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 3 --out {RUN}/bench/gid3",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_4_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 4 --out {RUN}/bench/gid4",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_5_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 5 --out {RUN}/bench/gid5",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_6_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 6 --out {RUN}/bench/gid6",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_7_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 7 --out {RUN}/bench/gid7",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_8_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 8 --out {RUN}/bench/gid8",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_9_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 9 --out {RUN}/bench/gid9",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_10_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 10 --out {RUN}/bench/gid10",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_11_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 11 --out {RUN}/bench/gid11",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_12_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 12 --out {RUN}/bench/gid12",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_13_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 13 --out {RUN}/bench/gid13",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_14_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 14 --out {RUN}/bench/gid14",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_15_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 15 --out {RUN}/bench/gid15",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_16_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 16 --out {RUN}/bench/gid16",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_17_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 17 --out {RUN}/bench/gid17",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_18_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 18 --out {RUN}/bench/gid18",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_19_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 19 --out {RUN}/bench/gid19",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_20_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 20 --out {RUN}/bench/gid20",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_21_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 21 --out {RUN}/bench/gid21",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_22_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 22 --out {RUN}/bench/gid22",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_23_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 23 --out {RUN}/bench/gid23",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_24_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 24 --out {RUN}/bench/gid24",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_25_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 25 --out {RUN}/bench/gid25",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_26_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 26 --out {RUN}/bench/gid26",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_27_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 27 --out {RUN}/bench/gid27",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_28_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 28 --out {RUN}/bench/gid28",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_29_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 29 --out {RUN}/bench/gid29",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_30_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 30 --out {RUN}/bench/gid30",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_31_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 31 --out {RUN}/bench/gid31",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_32_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 32 --out {RUN}/bench/gid32",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_33_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 33 --out {RUN}/bench/gid33",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_34_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 34 --out {RUN}/bench/gid34",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_35_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 35 --out {RUN}/bench/gid35",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_36_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 36 --out {RUN}/bench/gid36",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_37_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 37 --out {RUN}/bench/gid37",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_38_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 38 --out {RUN}/bench/gid38",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_39_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 39 --out {RUN}/bench/gid39",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_40_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 40 --out {RUN}/bench/gid40",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_41_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 41 --out {RUN}/bench/gid41",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_42_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 42 --out {RUN}/bench/gid42",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_43_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 43 --out {RUN}/bench/gid43",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_44_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 44 --out {RUN}/bench/gid44",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_45_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 45 --out {RUN}/bench/gid45",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_46_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 46 --out {RUN}/bench/gid46",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "group_47_fullrows_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 47 --out {RUN}/bench/gid47",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^PASS: 1505 requests, 1505 results bit-exact"
+   },
+   {
+    "name": "scale_mutant",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --entry-mutant --out {RUN}/bench/mut_scale",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 2,
     "fail_regex": "^FAIL: [1-9][0-9]* errors$"
+   },
+   {
+    "name": "group_mutant",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid-mutant --out {RUN}/bench/mut_group",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "fail_regex": "^FAIL: [1-9][0-9]* errors$"
+   },
+   {
+    "name": "row_mutant",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --row-mutant --out {RUN}/bench/mut_row",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "fail_regex": "^FAIL: [1-9][0-9]* errors$"
+   },
+   {
+    "name": "latency_vs_original",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --fullrows --gid 47 --latency --out {RUN}/bench/latency",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "^SLAB_LATENCY words=1505 baseline=1505 delta_min=2 delta_max=2$"
    }
   ],
   "views_to": "physical/ref_tile/qfd_slab_pg_core/views",
   "record_to": "results/rtl/ref_tile/qfd_slab_pg_core_gid"
  },
- "structural_change": "Original slab parent gate6761ownflops sharedclockspine insertion1771.3/spread510.7 fails dieclock requirement. Existing parent request/tag/scale merge/argmax/output registers extracted unchanged into hardened core leaf. Four scale columns+four multiplier leaves retain ownroots; new parent onlywires andoneentry perchild. No latency change; exact original TP8 golden bench and scale-return bit-swap mutant prove extraction. Core boundary correction: register all 1,024 scale-return bits and 512 data/16 valid/32 error multiplier-return bits at their input pins; delay residual operand, tags and valid stages accordingly. +2 result edges, unchanged values/order; avoids input lane_err four-level control path and column OR before a pin capture. Sparse-core placement fix after GPL0305: remove inert BW_FIFO0 ports from core (constant BW outputs remain thin-parent wires); shrink outline129.6square to reduce filler/pin-row and clock-span burden. Sparse-core placement fix after GPL0305: remove inert BW_FIFO0 ports from core (constant BW outputs remain thin-parent wires); shrink outline129.6square to reduce filler/pin-row and clock-span burden. Sparse-core placement fix after GPL0305: remove inert BW_FIFO0 ports from core (constant BW outputs remain thin-parent wires); shrink outline129.6square to reduce filler/pin-row and clock-span burden. Sparse-core placement fix after GPL0305: remove inert BW_FIFO0 ports from core (constant BW outputs remain thin-parent wires); shrink outline129.6square to reduce filler/pin-row and clock-span burden. Replace per-GID frozen constants by registered static gid7; one master handles all48groups instead of incorrectly binding GID47 to every slot. Preserve actual controller18-bit row fields and51-bit argmax record; previous slab proxyNW16 did not match this interface. Fullrows pin bench includes65536/131072 crossings and151936nout.",
+ "structural_change": "Original 6761-flop slab parent clock spine1771.3ps/spread510.7 fails. Extract original parent registers into core with its own root; four scale columns and four multiplier leaves have independent entries and thin parent only wires. Register all1024scale and512data/16valid/32error return bits; preserve operands/tags/valid, adding exactly2 clocks to all1505 measured results. Remove inactive BW_FIFO0 ports and use129.6square outline. Registered GID7 strap makes one view cover48groups. Preserve actual NW18 row fields/51-bit argmax, GT3072. Exact all48groups72240words/36048argmax includes65536/131072 row crossings and151936nout; detected scale208/group12689/narrowrow7241 errors. Slot-change request remains pending die geometry.",
  "slot_change_request": "Common core129.6square in172.8middleband. ONE physical core implements all48groups through registered gid7 staticstrap; GT3072 and BANDF0 fixedproduction. Fullslab/porttile geometry still needs die revision. Pins are provisional until die assigns childfile.",
  "macros": [],
  "inter": [],

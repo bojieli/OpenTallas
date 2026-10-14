@@ -19,6 +19,7 @@ module ot_rom_4096x266_m8 (input wire clk, input wire ce_in, input wire [11:0] a
                 // qwen-tp8/slab3: the column is a hardened sub-tile (g_col[c].u_col); the bank still comes from the
                 // generate position, so a wrong cid tie on a column reads another bank's words and fails the compare
                 else if (n == $sformatf("tb_qwen_slab_port_group.dut.g_col[%0d].u_col.g_bank[%0d].u_rom.p_name", c, b)) bank = c * 4 + b;
+                else if (n == $sformatf("tb_qwen_slab_port_group.g_base.baseline.g_col[%0d].u_col.g_bank[%0d].u_rom.p_name", c, b)) bank = c * 4 + b;
         if (bank < 0) begin $display("FAIL: cannot parse bank from %s", n); $fatal(1, "EQUIVALENCE_TERMINAL_SETUP_FAIL"); end
     end
     function automatic [265:0] word(input integer bank, input [11:0] a);
@@ -48,7 +49,7 @@ module tb_qwen_slab_port_group;
     //   SPR 1:      the split is random in 5..7 (BANDF 0), so the range test is exercised on both sides.
     //   NOUT_REL 1: nout is drawn near GID*W*IL (partial masks for any GID, as the TP4 default draws them for GID 95).
     //   DUT_GT / DUT_GID (> 0 / >= 0): mutants -- the element is built with another GT / GID than the golden expects.
-    parameter integer SPR = 0, NOUT_REL = 0, DUT_GT = 0, DUT_GID = -1, FULLROWS = 0;
+    parameter integer SPR = 0, NOUT_REL = 0, DUT_GT = 0, DUT_GID = -1, FULLROWS = 0, COMPARE_LATENCY = 0;
     localparam integer GT_D = (DUT_GT > 0) ? DUT_GT : GT;
     localparam integer GID_D = (DUT_GID >= 0) ? DUT_GID : GID;
     localparam integer TB = TCUT + 3;
@@ -106,6 +107,31 @@ module tb_qwen_slab_port_group;
         .o_we(o_we), .o_addr(o_addr), .o_mask(o_mask), .o_data(o_data), .ov(ov),
         .am_tv(am_tv), .am_top(am_top), .am_rmax(am_rmax), .fault(fault),
         .bw_w_fault(wf), .bw_r_fault(rf), .bw_w_live(wl), .bw_r_live(rl));
+
+    integer edge_cycle=0, base_words=0, staged_words=0;
+    integer base_edge [0:4095];
+    integer delta_min=100000, delta_max=-100000;
+    wire base_ov;
+    always @(posedge clk) edge_cycle <= edge_cycle + 1;
+    generate if(COMPARE_LATENCY != 0) begin:g_base
+        ot_qwen_slab_port_group #(.NW(NW),.GID(GID_D),.GT(GT_D),.BANDF(BANDF),.TCUT(TCUT),.SMIN(SMIN),.SMAX(SMAX),
+          .MUL_LAT(MUL_LAT),.BW_FIFO(0),.IN_STAGE(IN_STAGE),.AM_SPLIT(AM_SPLIT),.S5_CTL(S5_CTL),.SCALE_PAIR(SCALE_PAIR),.OREG(OREG),.MUL_KCP(MUL_KCP)) baseline (
+          .clk(clk),.rst_n(rst_n),.bw_clk(clk),.bw_rst_n(rst_n),.bw_v(1'b0),.bw_rdy(),.bw_d({W*32{1'b0}}),
+          .tw_v(),.tw_rdy(1'b1),.tw_d(),.p_v(p_v),.p_last(p_last),.p_oen(p_oen),.p_amax(p_amax),.p_rmax(p_rmax),.p_wsrc(p_wsrc),
+          .p_mmode(p_mmode),.p_split(p_split),.p_nb(p_nb),.p_lb(p_lb),.p_nout(p_nout),.p_sbase(p_sbase),.p_oa(p_oa),.p_ots(p_ots),.res_in(res_in),
+          .o_we(),.o_addr(),.o_mask(),.o_data(),.ov(base_ov),.am_tv(),.am_top(),.am_rmax(),.fault(),.bw_w_fault(),.bw_r_fault(),.bw_w_live(),.bw_r_live());
+        always @(posedge clk) begin
+            if(base_ov) begin base_edge[base_words]=edge_cycle; base_words=base_words+1; end
+            if(ov) begin
+                if(staged_words >= base_words) $fatal(1,"latency baseline missing result");
+                if(edge_cycle-base_edge[staged_words] < delta_min) delta_min=edge_cycle-base_edge[staged_words];
+                if(edge_cycle-base_edge[staged_words] > delta_max) delta_max=edge_cycle-base_edge[staged_words];
+                staged_words=staged_words+1;
+            end
+        end
+    end else begin:g_no_base
+        assign base_ov=1'b0;
+    end endgenerate
 
     // reference: the RTL's own post-scale multiplier, fed the same operands at the same time
     reg  [W*32-1:0] ra = 0, rb = 0;
@@ -215,6 +241,10 @@ module tb_qwen_slab_port_group;
         else if (errors == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops; BANDF slot %0d: %0d in range",
                                        nreq, nd, na, GID, nok);
         else $display("FAIL: %0d errors", errors);
+        if(COMPARE_LATENCY != 0) begin
+            $display("SLAB_LATENCY words=%0d baseline=%0d delta_min=%0d delta_max=%0d",staged_words,base_words,delta_min,delta_max);
+            if(staged_words != base_words || staged_words < 1500 || delta_min != 2 || delta_max != 2) $fatal(1,"latency capture alignment failed");
+        end
         if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end

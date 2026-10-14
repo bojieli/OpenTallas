@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     admits   540 GB (avail 766, growth 37, headroom 64, waiters 0/0 GB) load 49/128 running 10 disk 1161 GB 
+ot-run: ot-epyc4       admits   689 GB (avail 915, growth 119, headroom 48, waiters 0/0 GB) load 45/128 running 22 disk 1254 GB 
+ot-run: ot-pve1        admits   139 GB (avail 186, growth 23, headroom 32, waiters 0/0 GB) load 88/28 running 9 disk 1316 GB 
+ot-run: ot-agidock128  admits    69 GB (avail 95, growth 18, headroom 24, waiters 0/0 GB) load 13/64 running 6 disk 367 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3305348-1791949559 after 0 s
+PASS: 1505 requests, 1505 results bit-exact vs ot_hdc_fmul; 751 argmax tops; GT 3072 GID 47: 1021 in range
+SLAB_LATENCY words=1505 baseline=1505 delta_min=2 delta_max=2
+rtl/test/tb_qwen_slab_port_group.sv:249: $finish called at 3067500 (1ps)
+
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3305348-1791949559): exit 0

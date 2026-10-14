@@ -1,0 +1,38 @@
+ot-run: ot-epyc1tb     admits   511 GB (avail 738, growth 54, headroom 64, waiters 0/0 GB) load 47/128 running 13 disk 1160 GB 
+ot-run: ot-epyc4       admits   467 GB (avail 693, growth 135, headroom 48, waiters 0/0 GB) load 64/128 running 19 disk 1260 GB 
+ot-run: ot-pve1        admits   137 GB (avail 194, growth 30, headroom 32, waiters 0/0 GB) load 84/28 running 11 disk 1317 GB 
+ot-run: ot-agidock128  admits    45 GB (avail 90, growth 38, headroom 24, waiters 0/0 GB) load 16/64 running 8 disk 369 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3293943-1791948973 after 0 s
+454
+FAIL: result 1299 lane 0 got cf34c435 want cf360c68
+FAIL: result 1332 lane 0 got c498a1f7 want c4994c98
+FAIL: result 1341 lane 0 got b3d09cb8 want b3d1e86d
+FAIL: result 1348 lane 0 got b97492dc want b975d745
+FAIL: result 1355 lane 0 got cab9cddf want cab88814
+FAIL: result 1356 lane 0 got 45dd3b0c want 45de73f3
+FAIL: result 1369 lane 0 got 41ac6d1f want 41ad6681
+FAIL: result 1389 lane 0 got becc7e1f want becba951
+FAIL: result 1397 lane 0 got ca2420dd want ca2358c9
+FAIL: result 1398 lane 0 got cded64b9 want cdec52f9
+FAIL: result 1420 lane 0 got 4b25575a want 4b26838b
+FAIL: result 1430 lane 0 got 4672c680 want 467158e9
+FAIL: result 1439 lane 0 got ba8e249e want ba8d2b61
+FAIL: result 1445 lane 0 got 47338dd5 want 4732aa47
+FAIL: result 1449 lane 0 got 4a7843af want 4a769bfb
+FAIL: result 1453 lane 0 got 4c03b85f want 4c02ed3c
+FAIL: result 1454 lane 0 got b33f7d70 want b33e2dad
+FAIL: result 1457 lane 0 got ba420903 want ba409651
+FAIL: result 1458 lane 0 got cb48e337 want cb49d947
+FAIL: result 1459 lane 0 got c154eb12 want c1536017
+FAIL: result 1465 lane 0 got 428713f0 want 42865df0
+FAIL: result 1471 lane 0 got cea3ede7 want cea2f70b
+FAIL: result 1496 lane 0 got bee0668f want bee1616b
+FAIL: result 1499 lane 0 got c6c99b39 want c6ca84c2
+FAIL: result 1500 lane 0 got 3eaf5b33 want 3eb06b44
+FAIL: result 1503 lane 0 got c4b0d766 want c4b1a09b
+FAIL: 208 errors
+FATAL: rtl/test/tb_qwen_slab_port_group.sv:218: EQUIVALENCE_TERMINAL_FAIL
+       Time: 3067500  Scope: tb_qwen_slab_port_group
+
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3293943-1791948973): exit 1

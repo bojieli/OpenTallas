@@ -66,6 +66,7 @@ def main():
     p.add_argument('--negative',action='store_true')
     p.add_argument('--entries',action='store_true',help='use core-leaf/eight-child clock-entry slab parent (same cycles)')
     p.add_argument('--entry-mutant',action='store_true',help='swap two scale-return bits in the entries wrapper')
+    p.add_argument('--latency',action='store_true',help='measure staged core versus original slab at the same actual pins')
     p.add_argument('--row-mutant',action='store_true',help='force old16-bit core under18-bit golden row interface')
     p.add_argument('--fullrows',action='store_true',help='18-bit production row boundary checks:65536/131072 and151936 nout')
     p.add_argument('--gid',type=int,help='exact group identity override for a common core view')
@@ -90,7 +91,7 @@ def main():
         if a.mutant: a.negative=True;neg=MUTANTS[a.mutant]
         elif a.entry_mutant or a.gid_mutant or a.row_mutant: neg=['LEAD=9']
         else: neg=(['BMUT=1','LEAD=9'] if bf else ['LEAD=8']) if a.negative else ['LEAD=9']
-        for kv in [f"MUL_LAT={v['mul_lat']}",f"MUL_KCP={v['kcp']}",'OREG=1','IN_STAGE=1','AM_SPLIT=1','S5_CTL=1','SCALE_PAIR=1']+bf+(TP8 if a.tp==8 else [])+([f'GID={a.gid}'] if a.gid is not None else [])+(['NW=18','FULLROWS=1'] if a.fullrows else [])+neg:
+        for kv in [f"MUL_LAT={v['mul_lat']}",f"MUL_KCP={v['kcp']}",'OREG=1','IN_STAGE=1','AM_SPLIT=1','S5_CTL=1','SCALE_PAIR=1']+bf+(TP8 if a.tp==8 else [])+([f'GID={a.gid}'] if a.gid is not None else [])+(['NW=18','FULLROWS=1'] if a.fullrows else [])+(['COMPARE_LATENCY=1'] if a.latency else [])+neg:
             cmd+=['-P','tb_qwen_slab_port_group.'+kv]
         cmd+=BENCH_SOURCES
         proc=subprocess.run(cmd,capture_output=True,text=True,cwd=ROOT)

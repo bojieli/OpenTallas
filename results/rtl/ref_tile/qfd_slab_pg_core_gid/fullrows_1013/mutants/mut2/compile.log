@@ -1,0 +1,8 @@
+rtl/physical/ot_qwen_slab_pg_entries.sv:486: warning: Port 12 (p_nb) of ot_qwen_slab_pg_core expects 17 bits, got 19.
+rtl/physical/ot_qwen_slab_pg_entries.sv:486:        : Pruning 2 high bits of the expression.
+rtl/physical/ot_qwen_slab_pg_entries.sv:486: warning: Port 13 (p_lb) of ot_qwen_slab_pg_core expects 17 bits, got 19.
+rtl/physical/ot_qwen_slab_pg_entries.sv:486:        : Pruning 2 high bits of the expression.
+rtl/physical/ot_qwen_slab_pg_entries.sv:486: warning: Port 14 (p_nout) of ot_qwen_slab_pg_core expects 17 bits, got 19.
+rtl/physical/ot_qwen_slab_pg_entries.sv:486:        : Pruning 2 high bits of the expression.
+rtl/physical/ot_qwen_slab_pg_entries.sv:486: warning: Port 25 (am_top) of ot_qwen_slab_pg_core expects 49 bits, got 51.
+rtl/physical/ot_qwen_slab_pg_entries.sv:486:        : Padding 2 high bits of the expression.
