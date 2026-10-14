@@ -1,16 +1,10 @@
 `timescale 1ns/1ps
 `default_nettype none
-// ---------------------------------------------------------------------------------------------------------------------
-// el1011-hbm-b2 (2026-10-12): the DMA unit of B2 cluster QID (QID = the qid STRAP pin: one hardened unit for all four clusters, core = cluster 0 behind ot_hgi_b2_qrot) (HBM die B2: four clusters, one per HBM stack, each with a
-// LOCAL VM slice).  = ot_hgi_dma_record (B2: fail-closed on a record of another stack) + ot_hgi_dma_engines (B2: the mover /
-// front / back serve only stack QID; STRIPE4 and indexed-stream rows of other stacks are skipped -- the B2 dispatcher sends
-// those two forms to all four clusters, every other record to onehot(stack of its HBM-side descriptor)).
-// Ports: the cluster station's legacy DMA record bus (704 b) + return {wr_quiet, fault, done, ready}; ONE HBM read/write
-// burst lane (stack QID's kport lane) + the mover's single-sector kport lane (stack QID addresses only); the local VM
-// slice's packet client (vmq / vmr), DMA wide-read group (vr2q / vr2r) and wide write port (wl / wl_done), today's formats
-// (the b2-vm stream's slice-port spec replaces them when it lands).  Die configuration: FRONT 0 (the svc DMA stream is not
-// adopted; every move on the mover), VR2 1, KVW 1, BACK 0.
-// ---------------------------------------------------------------------------------------------------------------------
+// B2 five-leaf cluster: request/record+I-list, sector+serial mover, CLOSED KV core, two CLOSED16-lane hold leaves.
+// Every parent connection is wiring; the VM receiver expands compact wl into its bank.
+// Read-group32-lane format remains the current contract while the local8-lane die interface is unresolved.
+// BACK1 belongs to its separate CLOSED NS1/NB8 engine beside each VM slice; integration is still owed.
+// No physical qualification until child views, assigned pins, slot/hop gates and measured CTS have passed.
 module ot_hgi_b2_dma_q #(
     parameter integer FRONT = 0,
     parameter integer VR2 = 1,
@@ -77,8 +71,8 @@ module ot_hgi_b2_dma_q #(
 `endif
     u_rq(
       .clk(clk), .rst_n(rst_n), .qid(qid), .dma_rec(dma_rec), .dma_ret(dma_ret),
-      .mover_v(mover_v), .mover_cmd(mover_cmd), .pin_m_rdy(mover_rdy), .m_done(mover_done), .m_fault(mover_fault), .m_src(mover_src),
-      .mover_fv(mover_fv), .m_fence_rdy(mover_frdy), .m_fence_done(mover_fdone),
+      .mover_v(mover_v), .mover_cmd(mover_cmd), .pin_m_rdy(mover_rdy), .pin_m_done(mover_done), .pin_m_fault(mover_fault), .pin_m_src(mover_src),
+      .mover_fv(mover_fv), .pin_m_fence_rdy(mover_frdy), .pin_m_fence_done(mover_fdone),
       .il_vmq(il_vmq), .il_active(il_active), .vmr(mover_vmr));
 `ifndef OT_B2_DMA_Q5_HARD
     ot_hgi_b2_dma_mv #(.VR2(VR2), .KVW(KVW), .SVR2(0), .MUT_SEAM(MUT_SEAM), .PX(2), .B2(1), .QID(0), .MUT_B2(MUT_B2))
@@ -92,7 +86,7 @@ module ot_hgi_b2_dma_q #(
       .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we), .k_rsp_data(k_rsp_data), .k_fault(1'b0),
       .r_req_v(rv), .r_req_rdy({3'd0,r_req_rdy}), .r_req_addr(ra), .r_req_len(rl), .r_req_tag(rt), .r_req_we(rwe), .r_req_wdata(rwd), .r_req_wstrb(rws),
       .r_rsp_v({3'd0,r_rsp_v}), .r_rsp_we({3'd0,r_rsp_we}), .r_rsp_rdy(rrr), .r_rsp_tag({48'd0,r_rsp_tag}), .r_rsp_last({3'd0,r_rsp_last}), .r_rsp_data({768'd0,r_rsp_data}),
-      .vr2q(vr2q), .vr2r(vr2r), .vmq(vmq), .vmr(vmr), .wl(wl), .wl_done(wl_done),
+      .vr2q(vr2q), .vr2r_ctrl(vr2r[8256:8224]), .vmq(vmq), .vmr(vmr), .wl(wl), .wl_done(wl_done),
       .kv_c_rdy(kc_rdy), .kv_idle_w(kc_idle), .kv_creq(kc_creq), .kv_src(kc_src), .kv_done(kc_done), .kv_kq(kc_kq),
       .kv_wv(kc_wv), .kv_wo(kc_wo), .kv_wa(kc_wa), .kv_wd(kc_wd), .kc_v(kc_v), .kc_vs(kc_vs), .kc_vst(kc_vst), .kc_ds(kc_ds),
       .kc_dst(kc_dst), .kc_ns(kc_ns), .kc_m(kc_m), .kc_gnt(kc_gnt), .kc_cr(kc_cr), .kc_wrdy(kc_wrdy), .kc_rv(kc_rv), .kc_rwe(kc_rwe));

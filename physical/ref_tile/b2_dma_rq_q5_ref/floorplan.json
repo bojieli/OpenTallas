@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  172.8,
-  129.6
+  86.4,
+  86.4
  ],
  "core": [
   2.16,
   2.16,
-  170.64000000000001,
-  127.44
+  84.24000000000001,
+  84.24000000000001
  ],
  "why": "spec outline",
- "std_area_um2": null,
+ "std_area_um2": 3534,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -40,12 +40,12 @@
    "mover_v",
    "mover_cmd",
    "pin_m_rdy",
-   "m_done",
-   "m_fault",
-   "m_src",
+   "pin_m_done",
+   "pin_m_fault",
+   "pin_m_src",
    "mover_fv",
-   "m_fence_rdy",
-   "m_fence_done"
+   "pin_m_fence_rdy",
+   "pin_m_fence_done"
   ],
   "N": [
    "il_vmq",

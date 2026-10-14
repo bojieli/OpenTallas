@@ -134,7 +134,7 @@ module ot_hgi_b2_dma_mv #(
     // {c_gnt, credits 32, 32 lanes x {v, data 256}}; lane b serves sectors s[4:0] = b, in order a lane, LQ credits a lane;
     // c_req is held until every credit is home (burst ownership).  The mover keeps one sector in flight a lane.
     output wire [512:0]  vr2q,
-    input  wire [8256:0] vr2r,
+    input wire [32:0] vr2r_ctrl,
     // VM packet client
     output wire [337:0]  vmq,
     input  wire [273:0]  vmr,
@@ -144,6 +144,8 @@ module ot_hgi_b2_dma_mv #(
     output reg  [279:0]  wl,
     input  wire          wl_done
 );
+    // SVR2=0: sector engine receives group grant/credits only; data pins belong to closed hold leaves.
+    wire [8256:0] vr2r = {vr2r_ctrl,8224'd0};
     // ---- per-stack lanes as the engines see them (ir_*); B2: only lane QID reaches the ports (output lane OL)
     localparam integer OL = (MUT_B2 == 2) ? ((QID + 1) % 4) : QID;
     wire [3:0] ir_req_v, ir_req_we, ir_req_rdy, ir_rsp_v, ir_rsp_we, ir_rsp_rdy, ir_rsp_last;
