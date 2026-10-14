@@ -1,0 +1,22 @@
+Gate inputs staged on lowest normalized load admitting host: ot-agidock128
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['ck', 'rst', 'ckv', 'rsv', 't_ho']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])  -> FIX: declare them scalar in RTL
+GATE INFO oflop: N face 10.5 pins/um (ckv, rsv, t_st): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (ck, f_sn, f_w): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsfd_capt_x8_dual_20261014-022711.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsfd_capt_x8_dual_20261014-022711.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8_dual-20261014-022711
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 56 s (gate total 421 s)
+GATE WARN util: synthesized std area 5341 um2 + macros 0 in core 15653: util 34%  -> FIX: set "std_area_um2": 5341 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN dsfd_capt_x8_dual cells 33,376 flops 11,047 depth 281.7 ps util 0.3417 reach 0.0 um (0.7 s)
+GATE WARN textbook.util_channel: utilisation 34.2% outside 45%-65% (std 5349 + macro 0 um2 in 15653 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 251.0..267.1 ps (spread 16.1), boundary mean 258.8; tt insertion all 192.6..207.4 ps (spread 14.8), boundary mean 200.0; ff insertion all 157.0..170.7 ps (spread 13.7), boundary mean 164.2; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.450 vs spec PD 0.45
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/dsfd_capt_x8_dual/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      897 paths, worst slack 90.7 ps (e.g. u_half.g_r[4].g_local_row.u_row/u_x.r_st_w[1]$_DFF_P_/D)
+GATE INFO path_classes: reg->out        1 paths, worst slack 252.9 ps (e.g. t_ho[0])
+GATE INFO path_classes: in->reg         2 paths, worst slack 403.8 ps (e.g. u_half.rst_s[1]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 9.07023900431625e-11 hold WNS 2.744839078250294e-11
+GATE INFO clock_rule: root port:ck[0]: 6,368 sinks on the largest root <= 15,000; measured TT insertion 207.4 ps, leaf spread 14.8 ps
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/s81-capture-ss-1013/physical/ref_tile/dsfd_capt_x8_dual/source_binding_history/ab44104637f3bef713c95c81f1258a25ec9794623ba5ac94d957b55e979cfa2f.json
+GATE: dsfd_capt_x8_dual/gate_result.json written (exact staged source binding; commit it with the kit)
