@@ -1764,6 +1764,13 @@ RELAY_PITCH_UM = 300.0  # ... at a conservative ~300 um pitch
 # RELAY_REACH_UM; clock / reset trees are built by CTS / the reset tree and are not data hops.
 RELAY_REACH_UM = 500.0
 RELAY_REACH_OK = 490.0
+# split-compute C4 (2026-10-14, compute-die lead r2): under the reach gate a relay chain is judged PIN TO PIN only (the
+# owner rule, TT sign-off).  The centre-to-centre RMAX + 25 proxy came from the SS-measured 430.56-um corridor pitch (SS is
+# a sensitivity, owner option B) and made every corridor -> corridor hop of a 472.6 / 522.3-um column pitch illegal (pin
+# to pin 420 / 470 um): horizontal tree / block words detoured to the IO channel (C3: 222 unrepaired, bword 149 stages).
+# The relay masters must meet the reach: o + s <= 683.3 - 0.76 x 490 = 310.9 ps TT (relay element, compute queue).
+import os as _os_r
+P2P_REACH = _os_r.environ.get('OT_RELAY_P2P', '1') != '0'
 RELAY_NEVER = ('clock_trunk', 'reset')
 
 
@@ -2904,7 +2911,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             # corridor 19220, placed down the KVc|E gap and back over t_24_8: 0.92).  Instead the stretch where the
             # chain failed gets a phantom full load and the allocator picks again (<= 2 tries; the best chain wins).
             def _bad(fr):
-                pl_ = dict(P0=P0, P1=P1, frames=fr)
+                pl_ = dict(P0=P0, P1=P1, frames=fr, bits=bits)
+                if GATE and P2P_REACH:
+                    return max(p2p_hops(pl_)) > RELAY_REACH_OK or backtracks(pl_)
                 return max(hops_of(pl_)) > RMAX + 25.0 or backtracks(pl_)
             for _try_n in range(2):
                 if not _bad(frames):
@@ -3006,6 +3015,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     hop_chk = [None]     # r6: the load test of the span search (None outside it)
 
     def needs_repair(pl):
+        if GATE and P2P_REACH:
+            return backtracks(pl) or reach_bad(pl)
         hs = hops_of(pl)
         return not (max(hs) <= RMAX + 25.0 and not backtracks(pl) and not reach_bad(pl))
 
@@ -3025,6 +3036,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for r_ in own:
             rm_rect(r_)
         D = RMAX - max(W, H) / 2 + 26.0
+        if GATE and P2P_REACH:
+            # split-compute C4: the reach is PIN TO PIN (owner rule; RELAY_REACH_OK): two frames face to face on the
+            # dominant axis are up to one frame extent nearer than their centres
+            D = RELAY_REACH_OK + max(W, H)
         P0, P1 = pl['P0'], pl['P1']
         ctr = arr + np.array([W / 2, H / 2])
         # qwendie-1011: every hop of the searched chain makes progress toward the load (no doubling back)
@@ -3064,16 +3079,26 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 ok_cache[i] = (near is None or bool(near[i])) and free((x0, y0, x0 + W, y0 + H))
             return ok_cache[i]
         near_cons = near
+        def _e_pin(pt, i):            # block pin point -> frame i face (pin to pin estimate)
+            dx_, dy_ = abs(ctr[i][0] - pt[0]), abs(ctr[i][1] - pt[1])
+            return dx_ + dy_ - (W / 2 if dx_ >= dy_ else H / 2)
+
+        def _e_ff(i, j):              # frame i -> frame j, facing faces on the dominant axis
+            dx_, dy_ = abs(ctr[i][0] - ctr[j][0]), abs(ctr[i][1] - ctr[j][1])
+            return dx_ + dy_ - (W if dx_ >= dy_ else H)
+        p2p_on = GATE and P2P_REACH
+        RCH = RELAY_REACH_OK - 5.0
+
         def bfs(De, mono):
             if not _relay_terminal_possible(ctr, P1, De, ok, hop_chk[0]):
                 return None, {}, []
-            start = [i for i in tree.query_ball_point(P0, De, p=1) if ok(i) and (
+            start = [i for i in tree.query_ball_point(P0, De, p=1) if ok(i) and (not p2p_on or _e_pin(P0, i) <= RCH) and (
                 hop_chk[0] is None or hop_chk[0](P0, (float(ctr[i][0]), float(ctr[i][1]))))]
             par = {i: -1 for i in start}
             front, hit = start, None
             while front and hit is None and len(par) < 400000:
                 for i in front:
-                    if abs(ctr[i][0] - P1[0]) + abs(ctr[i][1] - P1[1]) <= De and (
+                    if abs(ctr[i][0] - P1[0]) + abs(ctr[i][1] - P1[1]) <= De and (not p2p_on or _e_pin(P1, i) <= RCH) and (
                             hop_chk[0] is None or hop_chk[0]((float(ctr[i][0]), float(ctr[i][1])), P1)):
                         hit = i
                         break
@@ -3082,7 +3107,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 nxt = []
                 for i, nb in zip(front, tree.query_ball_point(ctr[front], D, p=1)):
                     for j in nb:
-                        if j not in par and (not mono or dP1[j] < dP1[i]) and ok(j) and (
+                        if j not in par and (not mono or dP1[j] < dP1[i]) and ok(j) and (not p2p_on or _e_ff(i, j) <= RCH) and (
                                 not GATE or abs(arr[j][0] - arr[i][0]) >= W or abs(arr[j][1] - arr[i][1]) >= H) and (
                                 hop_chk[0] is None or hop_chk[0]((float(ctr[i][0]), float(ctr[i][1])),
                                                                  (float(ctr[j][0]), float(ctr[j][1])))):
@@ -3099,7 +3124,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             return [(float(arr[i][0]), float(arr[i][1]), w, h) for i in c_[::-1]]
         # qwendie-1011: a monotone chain (each relay closer to the load: no doubling back) first; the unconstrained
         # search only when the pass-1 hops are too long; a pass-1 chain whose hops pass is never replaced by a worse one
-        need = max(hs) > RMAX + 25.0 or reach_bad(pl)
+        need = reach_bad(pl) if (GATE and P2P_REACH) else (max(hs) > RMAX + 25.0 or reach_bad(pl))
         found, why = None, ''
         tries = [(D, True), (D, False), (430.0 - max(W, H) / 2, True), (430.0 - max(W, H) / 2, False)]
         unbooked = False
@@ -3121,7 +3146,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 unbooked = True
             nfr = len(pl['frames'])
             hp_, hc_ = p2p_hops(pl), hops_of(pl)
-            badk = [k_ for k_ in range(nfr + 1) if hp_[k_] > RELAY_REACH_OK or hc_[k_] > RMAX + 25.0]
+            badk = [k_ for k_ in range(nfr + 1) if hp_[k_] > RELAY_REACH_OK or (hc_[k_] > RMAX + 25.0 and not P2P_REACH)]
             spans_ = []
             if badk and not backtracks(pl):
                 for mg_ in (1, 3):
@@ -3298,7 +3323,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         hp_, hc_ = p2p_hops(pl) if GATE else hops_of(pl), hops_of(pl)
         out = []
         for k_ in range(len(hc_)):
-            if hc_[k_] > RMAX + 25.0 or (GATE and hp_[k_] > RELAY_REACH_OK):
+            if (hc_[k_] > RMAX + 25.0 and not (GATE and P2P_REACH)) or (GATE and hp_[k_] > RELAY_REACH_OK):
                 out += [pts_[k_], pts_[k_ + 1]]
         return out or [pl['P0'], pl['P1']]
 
@@ -3414,7 +3439,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                             if not free((x1, y1, x1 + w_ + v.SHAVE, y1 + h_ + v.SHAVE)):
                                 continue
                             tr = dict(pl, frames=pl['frames'][:fk] + [(x1, y1, w_, h_)] + pl['frames'][fk + 1:])
-                            if max(p2p_hops(tr)) > RELAY_REACH_OK or max(hops_of(tr)) > RMAX + 25.0:
+                            if max(p2p_hops(tr)) > RELAY_REACH_OK or (max(hops_of(tr)) > RMAX + 25.0 and not P2P_REACH):
                                 continue
                             nb = jog_bad(tr)
                             if len(nb) < len(bad) and not any(q_ in nb for q_ in (fk, fk + 1) if q_ not in bad):

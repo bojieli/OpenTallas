@@ -3,14 +3,18 @@
 Called from tools/qwen_kv_die/tp8b_v5.apply (OT_TP8_SPLIT=compute) after every v5 rule and before the overlap / reticle
 gate and the relay plan, so the relays, cuts, reset tree, pin_align and the assigned pin files are made on THIS placement.
 
-Layout (top-down, generous margins; el1014-qwen-split-compute.log, contract v1):
-  * tile field W / E of the spine (tp8b F2, 48 x 16, slot from OT_TP8_SPLIT_TILE), IO band on the S edge (unchanged).
+Layout (top-down, generous margins; el1014-qwen-split-compute.log, contract v1 / C4):
+  * tile field W / E of the spine (tp8b F2, 48 x 16, slot from OT_TP8_SPLIT_TILE, C4 449.28 x 1,442.88 / pitch 522.288),
+    IO band on the S edge (unchanged).
   * spine = [x0, x1] between the W field's last station and the E field's first tile; MARGIN relay channel on each side.
-  * W sub-area: per band b one slab group at the band's tile centroid: column A = res_ser / port_tiles_b / band_lanes_b
-    (N -> S), column B = port_tiles_b_f1; slab frames sized to the measured need (2.536 mm2 per port frame, blockers G7)
-  * E sub-area, N -> S: the die link (ucie_kv PHY on the N edge, qfd_d2d_rom below it, forwarded-clock bump + reset sync
-    beside), the SU slot with the constant group (seq_su, 8 cbuf_g, 8 crom_g) E of it, the VM envelope (accepted
-    4,838.4 x 2,546.64, M9 cap), the tree top (tt_ctlm + tt_up4), then the clock receiver + reset leaf at the die centre.
+  * W slab column: per band b the W-half slab stack at the band's tile centroid, centred on the port column (res_ser /
+    port_tiles_b / band_lanes_b); E slab column (spine E edge): port_tiles_b_f1 at the band centroid (E-field block words
+    land without crossing the spine; one 512-b pfrag word per band crosses).
+  * middle, N -> S: the die link (ucie_kv PHY on the N edge, qfd_d2d_rom below it, forwarded-clock bump + reset sync
+    beside), the SU slot with the constant group (seq_su, 8 cbuf_g, 8 crom_g) E of it and the x tap qfd_xs_tap E of
+    that, the TRIMMED VM (4,708.8 x 2,203.2, M7 cap) abutted under the SU, the tree top (tt_ctlm + tt_up4), then the
+    clock receiver + reset leaf at the die centre.
+  * distributed x slices (owner 10-14): qfd_xcol_e/w in each column corridor on the head row, qfd_xcst_n/s stations.
 Everything is a slot of the contract: a master that does not fit its slot files a slot change request in the log.
 """
 import json
@@ -25,6 +29,80 @@ VM_WH = (4708.8, 2203.2)        # TRIMMED central VM (owner 08:20 PT 10-14: dist
 CTLM_WH = (777.6, 1814.4)
 UP4_WH = (345.6, 388.8)
 CLKRX_WH = (412.488, 412.488)
+# ---- C4 (2026-10-14, compute-die lead r2): owner-adopted distributed x slices (HANDOFF 0aa, el1014-qwen-dvm-build.log)
+DVM = os.environ.get('OT_SPLIT_DVM', '1') != '0'
+XCOL_WH = (64.8, 1313.28)       # qfd_xcol_e/w: xhead + 8 x qfd_xs_leaf (two write chains N / S), in the column corridor,
+                                # centred on the head row; 604.8 N + 103.68 head + 604.8 S (contract v1 slice slots)
+TAP_WH = (345.6, 345.6)         # qfd_xs_tap at the VM N face, E of the constant group (SU write tap + attention write tap)
+XCOR_D = 516                    # corridor word {go 1, ib 379, xl 128, tag 8} (qfd_xcst / qfd_xcol n_d / s_d)
+XHEAD_D = 1567                  # head-row word {go 1, ib 379, desc 73, fill 1114} (qfd_xcol w_d / e_d)
+TAP_SW, TAP_AW, TAP_PF, TAP_GI = 1 + 24 + 64 + 2048, 1 + 24 + 16 + 512, 74, 380
+
+
+def _dvm(v, m, put, rec, vm, su, xt):
+    """Distributed x slices in the die (C4): stations -> qfd_xcst_n/s (516-b corridor word), column heads ->
+    qfd_xcol_e/w (one cluster slot per column in the corridor, centred on the head row), the x tap qfd_xs_tap at the VM
+    N face.  The two head roots take ONE word each from the tap (hw / he = {go, ib, desc, fill}); the tree top's go / ib
+    (tt_ib, was ctlm -> VM) goes to the tap, which aligns it with the fill in its own pipeline (DIE REQUEST to the DVM
+    builder: tap RTL takes gi[379:0] and drives two registered copies hw / he; the central VM loses its x ports xw / xe /
+    ib).  Straps (constant ties of strap ports, as the RTL wrappers declare): xcst sidx = station index from the head
+    outward, xcol tid0 = column * 16, tile_id = column * 16 + (N half: die row - 8, S half: 15 - die row)."""
+    S = v.SHAVE
+    by = {i.name: i for i in m['insts']}
+    mid = m['geo']['mid']
+    heads = sorted((i for i in m['insts'] if i.kind == 'head'), key=lambda i: i.x)
+    half = len(heads) // 2
+    ties = m.setdefault('ties', [])
+    for c, h in enumerate(heads):
+        cy = h.y + h.h / 2
+        h.master = 'qfd_xcol_w' if c < half else 'qfd_xcol_e'
+        h.w, h.h = XCOL_WH[0] - S, XCOL_WH[1] - S
+        h.y = round(v.dn(cy - XCOL_WH[1] / 2, v.GY), 4)
+        ties.append((h.name, 'tid0', 16, c * 16))
+    rows = {}
+    for i in m['insts']:
+        if i.kind == 'station':
+            i.master = 'qfd_xcst_n' if i.y >= mid else 'qfd_xcst_s'
+            c, r = (int(q) for q in i.name.split('_')[1:3])
+            rows.setdefault(c, []).append(r)
+    nr = max(max(q) for q in rows.values()) + 1
+    for i in m['insts']:
+        if i.kind == 'station':
+            c, r = (int(q) for q in i.name.split('_')[1:3])
+            ties.append((i.name, 'sidx', 3, (r - nr // 2) if r >= nr // 2 else (nr // 2 - 1 - r)))
+        elif i.kind == 'tile' and i.name.startswith('t_'):
+            c, r = (int(q) for q in i.name.split('_')[1:3])
+            ties.append((i.name, 'tile_id', 16, c * 16 + ((r - nr // 2) if r >= nr // 2 else (nr - 1 - r))))
+    tap = v.Inst('xs_tap', 'qfd_xs_tap', 0.0, 0.0, TAP_WH[0] - S, TAP_WH[1] - S, kind='spine', region='hub',
+                 domain=vm.domain)
+    m['insts'].append(tap)
+    tap.x, tap.y = _snap(v, xt, v.GX), _snap(v, su.y, v.GY)
+    rec['slots']['xs_tap'] = [tap.x, tap.y, round(tap.w, 3), round(tap.h, 3)]
+    roots = {}
+    nb = []
+    for b, c, n, e in m['buses']:
+        if c == 'corridor':
+            n = XCOR_D if n > 1 else n
+        elif c == 'head_chain':
+            e = [(('xs_tap', {'xw': 'hw', 'xe': 'he'}[p.rsplit('_', 1)[0]] + '_' + p.rsplit('_', 1)[1])
+                  if i == 'sp_vector_memory' else (i, p)) for i, p in e]
+            n = XHEAD_D if n > 1 else n
+            if any(i == 'xs_tap' for i, p in e):
+                roots[b] = e
+        elif b == 'tt_ib':
+            e = [(i, p) if i != 'sp_vector_memory' else ('xs_tap', 'gi') for i, p in e]
+        nb.append((b, c, n, e))
+    nb += [('xs_sw', 'spine_local', TAP_SW, [('sp_su64_sfu', 'xsw'), ('xs_tap', 'sw')]),
+           ('xs_aw', 'spine_local', TAP_AW, [('sp_vector_memory', 'xaw'), ('xs_tap', 'aw')]),
+           ('xs_pf', 'sequencer', TAP_PF, [('tt_ctlm', 'xpf'), ('xs_tap', 'xpf')]),
+           ('xs_fault', 'spine_local', 1, [('xs_tap', 'fault'), ('tt_ctlm', 'xflt')])]
+    # xcol 'fault' outputs (48): NOT wired (port-bind lists them as unread outputs); die request to the DVM builder: chain
+    # the column fault inward along the head row (fault_i input) so one fault per root reaches the tap
+    m['buses'] = nb
+    rec['dvm'] = dict(xcol=len(heads), xcst=sum(1 for i in m['insts'] if i.kind == 'station'), tap=list(rec['slots']['xs_tap']),
+                      xcol_wh=list(XCOL_WH), corridor_bits=XCOR_D, head_bits=XHEAD_D, roots=sorted(roots),
+                      straps=dict(sidx='station index from the head outward', tid0='column*16',
+                                  tile_id='column*16 + (N: row-8, S: 15-row)'))
 
 
 def _snap(v, x, g):
@@ -68,9 +146,15 @@ def place(v, m, G):
         rec['slots'][name] = [i.x, i.y, round(i.w, 3), round(i.h, 3)]
         return i
 
-    # ---- W sub-area: band slab groups at the band centroids
+    # ---- W column: the band's W-half slab stack (C4: band_lanes / port_tiles / res_ser CENTRED on the port column so
+    # the abutted tw / ty / rq faces stand face to face; v1-a left them off-centre and the 8,192-b tw / ty pair read as a
+    # 1.485 horizontal cut).  E column (C4, as the merged tp8b): the band's E-half slab port_tiles_<b>_f1 on the spine's E
+    # edge at the band centroid, so the 24 E-field block words land without crossing the VM / SU sub-area (v1-a put
+    # _f1 in the W sub-area: 24 x 512 b across the spine); only the band's one 512-b pfrag word crosses.
     xa = x0 + CH
-    xb = xa + PORT_WH[0] + CH
+    xf = x1 - CH - PORT_WH[0]
+    dl = (PORT_WH[0] - LANES_WH[0]) / 2
+    dr = (PORT_WH[0] - RES_WH[0]) / 2
     bands = getattr(v, 'BAND_BLOCKS', None) or {}
     cents = []
     for b in range(3):
@@ -78,20 +162,25 @@ def place(v, m, G):
         cents.append(sum(cy) / len(cy))
     gh = RES_WH[1] + PORT_WH[1] + LANES_WH[1] + 2 * 4.32
     lo = io_top + CH
+    lo_f = io_top + CH
     for b in range(3):
         y0 = max(lo, cents[b] - gh / 2)
         y0 = min(y0, top - gh) if b == 2 else y0
-        put(f'sp_band_lanes_{b}', xa, y0, LANES_WH)
+        put(f'sp_band_lanes_{b}', xa + dl, y0, LANES_WH)
         put(f'sp_port_tiles_{b}', xa, y0 + LANES_WH[1] + 4.32, PORT_WH)
-        put(f'sp_res_ser_{b}', xa, y0 + LANES_WH[1] + PORT_WH[1] + 8.64, RES_WH)
-        put(f'sp_port_tiles_{b}_f1', xb, y0 + (gh - PORT_WH[1]) / 2, PORT_WH)
+        put(f'sp_res_ser_{b}', xa + dr, y0 + LANES_WH[1] + PORT_WH[1] + 8.64, RES_WH)
+        yf = max(lo_f, cents[b] - PORT_WH[1] / 2)
+        yf = min(yf, top - PORT_WH[1])
+        put(f'sp_port_tiles_{b}_f1', xf, yf, PORT_WH)
         rec.setdefault('band_centroid_y', []).append(round(cents[b], 1))
         lo = y0 + gh + CH
-    xw_end = xb + PORT_WH[0] + CH
-    # ---- E sub-area
+        lo_f = yf + PORT_WH[1] + CH
+    xw_end = xa + PORT_WH[0] + CH
+    # ---- E sub-area (between the W slab column and the E slab column)
     xe = xw_end
-    we = x1 - CH - xe
+    we = xf - CH - xe
     rec['e_area'] = [round(xe, 3), round(we, 3)]
+    rec['slab_cols'] = dict(W=round(xa, 3), E=round(xf, 3))
     if we < VM_WH[0]:
         raise SystemExit(f'split compute spine: E sub-area {we:.1f} um < VM {VM_WH[0]} (raise OT_TP8_SPLIT_SPINE)')
     cx = xe + we / 2
@@ -115,13 +204,15 @@ def place(v, m, G):
     sq = by.get('seq_su')
     if sq is not None:
         put('seq_su', gx, yq - sq.h)
-    if gx + 2 * (cr[0].w + 4.32) > x1 - CH + 1e-3 or (sq is not None and sq.y < su.y - 1e-3):
-        raise SystemExit(f'split compute spine: constant group does not fit E of the SU (gx {gx:.1f}, x1 {x1:.1f})')
+    if gx + 2 * (cr[0].w + 4.32) > xf - CH + 1e-3 or (sq is not None and sq.y < su.y - 1e-3):
+        raise SystemExit(f'split compute spine: constant group does not fit E of the SU (gx {gx:.1f}, xf {xf:.1f})')
     # The VM was placed with the SU above: S(SU) and N(VM) are abutted,
     # matching the existing zero-relay registered seam and its latency.
     # tree top below the VM, clock receiver + reset leaf at the die centre
     ct = put('tt_ctlm', cx - CTLM_WH[0] - 2.16, vm.y - CH - CTLM_WH[1], CTLM_WH)
     put('tt_up4_0', ct.x + CTLM_WH[0] + 4.32, ct.y + CTLM_WH[1] - UP4_WH[1], UP4_WH)
+    if DVM:
+        _dvm(v, m, put, rec, vm, su, gx + max(2 * (cr[0].w + 4.32), sq.w if sq is not None else 0.0) + CH)
     ymid = (io_top + top) / 2
     ck = put('clk_rx', cx - CLKRX_WH[0] / 2, min(ymid - CLKRX_WH[1] / 2, ct.y - CH - CLKRX_WH[1]))
     put('rstseq_rom', ck.x + ck.w + 4.32, ck.y)

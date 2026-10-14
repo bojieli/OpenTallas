@@ -167,8 +167,10 @@ if os.environ.get('OT_TP8_TILE'):
 # link end (ucie_kv PHY + qfd_d2d_rom + ckb_rom forwarded-clock bump + rs_bump reset sync) stays, the KV die's PLL forwards
 # the clock.  Slot (contract v1-a = Codex split candidate codex/qwen-split-feasibility-1013): tile 399.6 x 1,442.88, column
 # pitch 472.608, row gap 43.2 (row pitch 1,486.08 as tp8b), spine sub-column OT_TP8_SPLIT_SPINE um (default 5,200 total).
+# C4 / contract v1 (compute lead r2, 2026-10-14): tile slot 449.28 x 1,442.88 (q-tile r6 option (a): ctl + TX + node +
+# 2 lsl columns with 20-um channels need 444.9 um), column pitch 522.288 (73-um corridor kept), die 32.41 x 25.94 mm.
 if os.environ.get('OT_TP8_SPLIT') == 'compute':
-    _tb, _th, _rg, _cp = (float(q) for q in os.environ.get('OT_TP8_SPLIT_TILE', '399.6,1442.88,43.2,472.608').split(','))
+    _tb, _th, _rg, _cp = (float(q) for q in os.environ.get('OT_TP8_SPLIT_TILE', '449.28,1442.88,43.2,522.288').split(','))
     QWEN_TP8B['tp8'] = dict(QWEN_TP8B['tp8'], tile_body=_tb, tile_h=_th, row_gap=_rg, split='compute',
                             f2=dict(QWEN_TP8B['tp8']['f2'], col_pitch=_cp, kv=False, kv_w=0.0, kv_ch=0.0, host_serdes=False, io_chan=400.0,
                                     spine_w=float(os.environ.get('OT_TP8_SPLIT_SPINE', '6700'))))

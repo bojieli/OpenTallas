@@ -1329,18 +1329,25 @@ def _wrap(v, m, G, peers):
                 else:
                     n.ports[p] = sp
                 n.order.append(p)
-            for p in ('xw', 'xe'):
-                n.face(p + '_d', DW, 'S', 'M5', 0.0, 1)
-                n.face(p + '_r', 1, 'S', 'M5', 0.0, 1)
-            if 'ib' not in n.ports:
-                n.face('ib', 380, 'S', 'M5', 0.0, 1)
-            else:
-                n.ports['ib'] = ('face', 380) + tuple(n.ports['ib'][2:])
+            # C4 split compute + distributed x slices: the trimmed VM has no x head-root words (xw / xe) and no ib
+            # (the tree top's go / ib goes to the x tap); compute_spine._dvm re-routes those buses
+            dvm = SPLIT_COMPUTE and _os.environ.get('OT_SPLIT_DVM', '1') != '0'
+            if not dvm:
+                for p in ('xw', 'xe'):
+                    n.face(p + '_d', DW, 'S', 'M5', 0.0, 1)
+                    n.face(p + '_r', 1, 'S', 'M5', 0.0, 1)
+                if 'ib' not in n.ports:
+                    n.face('ib', 380, 'S', 'M5', 0.0, 1)
+                else:
+                    n.ports['ib'] = ('face', 380) + tuple(n.ports['ib'][2:])
+            elif 'ib' in n.ports:
+                n.ports.pop('ib')
+                n.order[:] = [x for x in n.order if x != 'ib']
             M[vmm.name] = n
             # ready pins ride beside their data group: planned as one group, then split
-            replan(model, M, 'sp_vector_memory', skip=('sa', 'sq', 'xw_r', 'xe_r'),
+            replan(model, M, 'sp_vector_memory', skip=('sa', 'sq') + (() if dvm else ('xw_r', 'xe_r')),
                    keep_extra={'N': [(si.x - vi.x - 4.0, si.x + si.w - vi.x + 4.0)]})
-            for p in ('xw', 'xe'):
+            for p in (() if dvm else ('xw', 'xe')):
                 d = n.ports[p + '_d']
                 n.ports[p + '_r'] = ('face', 1, d[2], d[3], round(d[4] + DW * 0.048 / 2 + 0.6, 4), 1)
         for inst, mn, kw in (('seq_su', 'qfd_seq_su', {}),
@@ -1363,7 +1370,7 @@ def _wrap(v, m, G, peers):
                     q.face(f'rf{j}', 1, 'W', 'M4', 0.0, 1)
                 add_face(q, 'rsi', 1, 'W', 944.0, 1)     # r9: reset entry at the W face (was an area pin at the centre)
                 kw = dict(ports=tuple(p for p in q.ports if 'sp_vector_memory' in peers.get((inst, p), ())
-                                      or p.startswith(('mer', 'rf'))))
+                                      or 'xs_tap' in peers.get((inst, p), ()) or p.startswith(('mer', 'rf'))))
             replan(model, M, inst, **kw)
         final(model, M, k)
         return M
