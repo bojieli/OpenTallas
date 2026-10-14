@@ -1,0 +1,5 @@
+PASS full16bit token wrap transactions65537 held_entry1 no_reuse_until_ACK1
+- rtl/test/qwen_kv_die/tb_qwen_xcontext_wrap.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 0.063 s; speed 31.155 ms/s
+- Verilator: cpu 0.063 s on 1 threads; allocated 7 MB

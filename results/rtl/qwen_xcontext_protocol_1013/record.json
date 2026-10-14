@@ -1,0 +1,28 @@
+{
+  "status": "PASS default-off protocol miter, not source/fabric qualification",
+  "unit": "oth-ubuntu-561523-1791959259",
+  "host": "ot-epyc4",
+  "exit": 0,
+  "checks": 640,
+  "contexts": 23,
+  "roots": 32,
+  "phases": 16,
+  "wrap_allocations": 65537,
+  "default_storage_bits": 29142,
+  "entry_storage_bits": 3593,
+  "control_storage_bits": 398,
+  "interface": "single-root return and ACK ports",
+  "min_final_ACK_edge": 33,
+  "min_same_slot_reallocation_edge": 34,
+  "phase_token_scope": "one token per phase transaction",
+  "unclosed": [
+    "actual32parallel interface",
+    "production VM key/token/version generator",
+    "all downstream consumer ACK aggregation",
+    "global replay/reset drain",
+    "back-to-back arithmetic context",
+    "physical banks/CTS/pins",
+    "native layer cycles",
+    "149-bit ABI qualification"
+  ]
+}

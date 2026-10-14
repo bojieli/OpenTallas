@@ -1,0 +1,133 @@
+{
+  "source_claim": "default-off dictionary miter; production IB379 descriptors, synthetic full32-root keys",
+  "sources": {
+    "rtl/physical/ot_qwen_xcontext_protocol.sv": "9927d3cb7c8ac48357a36479d89fd337fc1346ef6303da5a0ff33a07af360188",
+    "rtl/test/qwen_kv_die/tb_qwen_xcontext_protocol.sv": "7757f2ea10463479b9174187274720d5c3e3893ebea490967bdf20069afda2c7",
+    "rtl/test/qwen_kv_die/tb_qwen_xcontext_wrap.sv": "9c2ea755b4a3cf3c328ec2f1832df559531a0b69f9da119548eb182e14f8cbb7"
+  },
+  "program": {
+    "commit": "14065c8c7",
+    "path": "results/rtl/ref_tile/qfd_su_vreduce/native_profile_1013/candidate_tp8_layer0.hex",
+    "sha256": "120b42a583db68fb9faaa32d2076f1515d5c07e41787bf47533a1d230b4d1903",
+    "status": "candidate_profile_only_not_checkpoint_or_token_qualification",
+    "profiles": [
+      {
+        "pc": 1,
+        "fields": {
+          "me_nout": 768,
+          "me_tiles": 1,
+          "me_k": 8,
+          "me_wsrc": 0,
+          "me_wbase": 0,
+          "me_ts": 64,
+          "me_ks": 8,
+          "me_js": 1,
+          "me_xbase": 4096,
+          "me_xks": 1,
+          "me_xjs": 0,
+          "me_xcs": 8,
+          "me_jsh": 0,
+          "me_split": 9,
+          "me_wcs": 0,
+          "me_round": 1,
+          "me_obase": 768,
+          "me_ots": 8,
+          "me_ojs": 1,
+          "me_mmode": 0,
+          "me_oen": 1,
+          "me_amax": 0,
+          "me_rmax": 0,
+          "me_mbase": 0
+        }
+      },
+      {
+        "pc": 16,
+        "fields": {
+          "me_nout": 4096,
+          "me_tiles": 3,
+          "me_k": 2,
+          "me_wsrc": 0,
+          "me_wbase": 64,
+          "me_ts": 16,
+          "me_ks": 8,
+          "me_js": 1,
+          "me_xbase": 50672,
+          "me_xks": 1,
+          "me_xjs": 0,
+          "me_xcs": 2,
+          "me_jsh": 0,
+          "me_split": 8,
+          "me_wcs": 48,
+          "me_round": 1,
+          "me_obase": 0,
+          "me_ots": 8,
+          "me_ojs": 1,
+          "me_mmode": 0,
+          "me_oen": 1,
+          "me_amax": 0,
+          "me_rmax": 0,
+          "me_mbase": 0
+        }
+      },
+      {
+        "pc": 19,
+        "fields": {
+          "me_nout": 3072,
+          "me_tiles": 1,
+          "me_k": 32,
+          "me_wsrc": 0,
+          "me_wbase": 112,
+          "me_ts": 256,
+          "me_ks": 8,
+          "me_js": 1,
+          "me_xbase": 4096,
+          "me_xks": 1,
+          "me_xjs": 0,
+          "me_xcs": 32,
+          "me_jsh": 0,
+          "me_split": 7,
+          "me_wcs": 304,
+          "me_round": 1,
+          "me_obase": 2975,
+          "me_ots": 8,
+          "me_ojs": 1,
+          "me_mmode": 0,
+          "me_oen": 1,
+          "me_amax": 0,
+          "me_rmax": 0,
+          "me_mbase": 0
+        }
+      },
+      {
+        "pc": 23,
+        "fields": {
+          "me_nout": 4096,
+          "me_tiles": 3,
+          "me_k": 6,
+          "me_wsrc": 0,
+          "me_wbase": 368,
+          "me_ts": 48,
+          "me_ks": 8,
+          "me_js": 1,
+          "me_xbase": 55280,
+          "me_xks": 1,
+          "me_xjs": 0,
+          "me_xcs": 6,
+          "me_jsh": 0,
+          "me_split": 8,
+          "me_wcs": 496,
+          "me_round": 1,
+          "me_obase": 0,
+          "me_ots": 8,
+          "me_ojs": 1,
+          "me_mmode": 0,
+          "me_oen": 1,
+          "me_amax": 0,
+          "me_rmax": 0,
+          "me_mbase": 0
+        }
+      }
+    ]
+  },
+  "profiles_sha256": "e299e296edd170f9cabe20024c5b32a7b3fb6997dd9b160479b49a8ed3e2d5d7"
+}
