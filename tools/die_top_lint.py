@@ -688,7 +688,39 @@ def real_blocks_r8(die):
             pm = parse_module(f, mst)
             out[mst] = dict(module=mst, file=f, kind='glue RTL (S81-DIE)', params={}, ports=pm['ports'],
                             binding={p: (_bus(p, w) if w > 1 or True else [p]) for p, (d, w) in pm['ports'].items()})
+    if FULL_RTL[0]:
+        # s81-die-rtl-bind 2026-10-14 (owner NO STUBS rule): every other die master binds by ITS OWN RTL module (same
+        # name, rtl/ tree, the hardened elaboration parameters of tools/dsrom_s81_fulldie.py die_master_params) -- the
+        # hub / compute slab masters, the link macros' link-layer RTL, the ROM macro's bit-array model.  A master with
+        # no RTL stays a stub and the record's verilog.stubs counts it (a FAIL of the full-RTL lint).
+        sys.path.insert(0, str(ROOT / 'tools'))
+        import die_port_bind as DPB
+        idx, _amb = DPB.rtl_index(['rtl'], [_glue_path(), S.CFG7_RTL] + list(FULL_RTL_MODELS.values()),
+                                  {d_: '' for d_ in FULL_RTL_DEFINES}, [])
+        mpar = S.die_master_params(m)
+        for mst in sorted(used):
+            if mst in out and not out[mst]['file'].endswith('_bb.v'):
+                continue
+            mod = idx.get(mst)
+            if mod is None:
+                continue            # no RTL: a stub (or a black box) -- counted as a full-RTL failure
+            prm = {k_: v_ for k_, v_ in mpar.get(mst, {}).items() if not k_.startswith('_')}
+            env = mod.env(prm)
+            ports = {p_: (d_, mod.width(p_, env) or 1) for p_, (d_, _) in mod.ports.items()}
+            rel_ = str(Path(mod.path).resolve().relative_to(ROOT)) if str(Path(mod.path).resolve()).startswith(str(ROOT)) else mod.path
+            bnd_ = {p_: _bus(p_, w_) for p_, (d_, w_) in ports.items()}
+            if mst in out:          # a macro with a generator pin map (e.g. link ck -> clk): keep it over the identity
+                bnd_.update(out[mst]['binding'])
+            out[mst] = dict(module=mst, file=rel_, kind='RTL (full-RTL die lint)', params=prm, ports=ports, binding=bnd_)
     return out
+
+
+FULL_RTL = [True]       # s81r8: bind every master by its RTL (False: the legacy placeholder-stub lint)
+FULL_RTL_DEFINES = ('OT_S81PH_COLL_JOB',)
+FULL_RTL_MODELS = {     # hard-macro behavioural models allowed under real RTL (owner rule: analog / bit-array cores)
+    'ot_rom_4096x72_m8': 'physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v',
+}
+FULL_RTL_KEEP_BB = ()
 
 
 class SplitIO(list):
@@ -1680,17 +1712,18 @@ def emit_verilog(die, m, real, ports_w, out_dir, top):
                         i += 1
                 if segs:
                     outs.append((p, w, segs))
-            decl.append(f'    {d} wire [{w - 1}:0] {p}')
+            decl.append(f'    {d} wire [{w - 1}:0] {vid(p)}')
         ck = 'ck' if 'ck' in ports else None
         body = [f'module {mst} (', ',\n'.join(decl), ');' + ('  // NO PORTS: reservation slab, no die net' if not decl else ''),
                 '    wire lint_clk = ' + (ck + '[0]' if ck else "1'b0") + ';  // '
                 + ('stub clock = abstract ck port' if ck else 'NO CLOCK PORT ON THIS ABSTRACT')]
-        red = ', '.join(f'^{p}' for p, _ in ins) or "1'b0"
+        red = ', '.join(f'^{vid(p)} ' for p, _ in ins) or "1'b0"
         body.append(f'    wire lint_in = ^{{{red}}};')
         for p, w, segs in outs:
+            pr_ = re.sub(r'\W', '_', p)
             for a, b in segs:
-                body.append(f'    reg [{b - a - 1}:0] r_{p}_{a}; always @(posedge lint_clk) r_{p}_{a} <= {{{b - a}{{lint_in}}}};'
-                            f' assign {p}[{b - 1}:{a}] = r_{p}_{a};')
+                body.append(f'    reg [{b - a - 1}:0] r_{pr_}_{a}; always @(posedge lint_clk) r_{pr_}_{a} <= {{{b - a}{{lint_in}}}};'
+                            f' assign {vid(p)} [{b - 1}:{a}] = r_{pr_}_{a};')
         body.append('endmodule\n')
         stubs.append('\n'.join(body))
     (out_dir / f'{top}_stubs.sv').write_text('\n'.join(stubs))
@@ -1752,11 +1785,11 @@ def emit_verilog(die, m, real, ports_w, out_dir, top):
             V.append(f'  {rb["module"]} ' + (f'#({prm}) ' if prm else '') + f'{vid(it.name)} (\n    ' + ',\n    '.join(parts) + ');')
         else:
             for port, net, bits, j, bus in conns.get(it.name, []):
-                parts.append(f'.{port}({net})')
+                parts.append(f'.{vid(port)} ({net})')
             V.append(f'  {mst} {vid(it.name)} (' + ', '.join(parts) + ');')
     V.append('endmodule\n')
     (out_dir / f'{top}.sv').write_text('\n'.join(V))
-    return dict(top=top, stubs=len(pdir), nc_wires=nfl)
+    return dict(top=top, stubs=len(pdir), stub_masters=sorted(pdir), nc_wires=nfl)
 
 
 def write_shells(real, path):
@@ -2675,7 +2708,10 @@ def run_lint(die, out, top_fix=False, tag=''):
         margin_lint=margin(die, m),
         abstract_ports_without_net=ports_without_net(m, M, pw),
         top_fixes=TOP_FIXES if top_fix else {},
-        verilog=dict(em, filelist=f'{top}.f', rtl_files=len(files), unresolved_modules=unresolved))
+        verilog=dict(em, filelist=f'{top}.f', rtl_files=len(files), unresolved_modules=unresolved),
+        full_rtl=dict(verdict='PASS' if (FULL_RTL[0] and not em['stubs'] and not bb) else 'FAIL', stub_masters=em['stub_masters'],
+                      black_boxes=bb, rule='owner 2026-10-14 08:05 NO STUBS: every die master elaborates from its RTL '
+                      '(hard analog / bit-array cores as behavioural models under real digital RTL)') if R8_ACTIVE[0] else None)
     if die == 'hbm':
         rec['wrapper_ledgers'] = hbm_wrapper_ledgers({it.master for it in m['insts']})
     try:        # pin alignment of the die bundles (owner 2026-10-13); the full record: mode pin_align

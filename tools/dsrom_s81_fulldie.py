@@ -1330,15 +1330,17 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
     by = {it.name: it for it in m['insts']}
     conns = defaultdict(list)
     tops = [b for b in m['buses'] if b[1] == 'top_in']        # r8: die top input ports (refclk, por_n)
+    touts = [b for b in m['buses'] if b[1] == 'top_out']      # --rtl-bind: link pads out
     V = [f'// tools/dsrom_s81_fulldie.py: die-level nets only (k = {k})',
-         f'module {top} (' + ', '.join(b[0] for b in tops) + ');']
-    V += [f'  input {b[0]};' for b in tops]
+         f'module {top} (' + ', '.join(b[0] for b in tops + touts) + ');']
+    V += [f'  input {b[0]};' if b[2] == 1 else f'  input [{b[2] - 1}:0] {b[0]};' for b in tops]
+    V += [f'  output {b[0]};' if b[2] == 1 else f'  output [{b[2] - 1}:0] {b[0]};' for b in touts]
     for bid, cls, bits, eps in m['buses']:
         if cls in skip:
             continue
         n = bits if k == 1 else max(1, math.ceil(bits / k))
-        net = bid if cls == 'top_in' else f'n_{bid}'
-        if cls != 'top_in':
+        net = bid if cls in ('top_in', 'top_out') else f'n_{bid}'
+        if cls not in ('top_in', 'top_out'):
             V.append(f'  wire [{n - 1}:0] {net};')
         for inst, port in eps:
             if inst == 'TOP':
@@ -3452,7 +3454,7 @@ def MESO_P():
 
 
 HOP_FWD_CLS = ('lane',)
-HOP_SKIP = ('clock_trunk', 'reset', 'reset_tree', 'clock', 'col_clock', 'col_reset', 'top_in', 'fclk', 'phy_dfi',
+HOP_SKIP = ('clock_trunk', 'reset', 'reset_tree', 'clock', 'col_clock', 'col_reset', 'top_in', 'top_out', 'fclk', 'phy_dfi',
             'hbm_read', 'hbm_req', 'bfh')    # hbm_req (s81-gen --ctrl-rq): abutting controller faces, as hbm_read
 
 
@@ -4693,6 +4695,17 @@ def buses_r8(m):
                 d_ = 'serial' if spec['kind'] == 'r2l' else 'stream'
                 dom[d_].append((it.name, 'ck'))
                 rst[d_].append((it.name, 'rs'))
+    if RTL_BIND:
+        # F10 (--rtl-bind): the link macros are real link layers (rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv): a stream
+        # reset, and their PMA lanes leave the die as top pads {pma_tx, pma_tck} out / {pma_rx, pma_rck} in
+        for it in m['insts']:
+            if it.kind == 'link':
+                pw_ = 544 if it.master == real_lef(SERDES_LEF)['name'] else 513
+                rst['stream'].append((it.name, 'rst'))
+                bus(f'pad_{it.name}_tx', 'top_out', pw_, [(it.name, 'pma_tx'), ('TOP', f'pad_{it.name}_tx')])
+                bus(f'pad_{it.name}_tck', 'top_out', 1, [(it.name, 'pma_tck'), ('TOP', f'pad_{it.name}_tck')])
+                bus(f'pad_{it.name}_rx', 'top_in', pw_, [('TOP', f'pad_{it.name}_rx'), (it.name, 'pma_rx')])
+                bus(f'pad_{it.name}_rck', 'top_in', 1, [('TOP', f'pad_{it.name}_rck'), (it.name, 'pma_rck')])
     for d_ in ('stream', 'serial', 'hbm'):
         bus(f'clk_{d_}', 'clock', 1, [(col, f'pll_{d_}')] + dom[d_])
         bus(f'rst_{d_}', 'reset', 1, [(col, f'rst_{d_}')] + rst[d_])
