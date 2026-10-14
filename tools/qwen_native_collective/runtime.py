@@ -12,7 +12,7 @@ def read_words(p):
  return words
 
 def run(exe,ranks,out,words,nmsg=1,mode=0,expected=None,gap=0,skew=0):
- if len(ranks)!=8 or mode not in (0,1) or words<1 or nmsg<1 or nmsg*8*words>65536 or (mode==0 and words%2):raise ValueError('invalid real collective shape')
+ if len(ranks)!=8 or mode not in (0,1) or words<1 or nmsg<1 or nmsg>4096 or not 0<=gap<=100 or skew<0 or nmsg*8*words>65536 or (mode==0 and words%2):raise ValueError('invalid real collective shape')
  out.mkdir(parents=True,exist_ok=False);vec=out/'input';vec.mkdir()
  payload=[read_words(p) for p in ranks]
  if any(len(p)!=words*nmsg for p in payload):raise ValueError('rank file length differs from shape')
