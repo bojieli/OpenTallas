@@ -32,9 +32,7 @@
   "W": [
    "qid",
    "clk",
-   "rst_n"
-  ],
-  "E": [
+   "rst_n",
    "kv_c_rdy",
    "kv_idle_w",
    "kv_creq",
@@ -256,7 +254,8 @@
    "rtl/link",
    "rtl/model/hbm_pc40_native_sim_20261003",
    "physical/asap7_memory_macros"
-  ]
+  ],
+  "structural_change": " Serial engine split into a sixth independent root after actual SRAM MV gate15494 sinks/565.9ps refusal; command/response/status pin registers and two-entry registered serial HBM request station; no reset on wide MV payloads. Provisional control/KV/serial face moved W facing rq, serial, core siblings; former E face had a562um minimum rq hop beyond500um."
  },
  "macros": [
   {
