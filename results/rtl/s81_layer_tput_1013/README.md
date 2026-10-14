@@ -212,3 +212,10 @@ for changed-h transfers, not a measured deployed H_LOAD/H_STORE count: native
 stage schedules for the full 120-stage allocation are still owed. Hop-only stages
 can forward landing rows without an HC copy; gratuitous H_LOAD/H_STORE jobs
 there would create extra serial work that is absent from the price.
+
+Early r6_pA/B/C/D/E script hashes predate the additive `--su-sched` CLI and
+HC-gate flags committed at f83703651; their RTL hashes match the preserved
+candidate. The pE2/L14/L14b and NG256 HC gate use the final scripts. The
+`--su-sched` replay itself remains unmeasured; only its in-order model was
+regenerated. Generated controller source files in `sources.sha256` are generated
+artifacts, rather than missing authored source.

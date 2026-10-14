@@ -216,5 +216,23 @@
   }
  },
  "adoption": "Original PIPE parameters default0; landing and cut-through exist in bench only. Default-on deda9c6ca and hardened landing8a3a18070 are separate unqualified candidates and excluded from this evidence-only record.",
- "ledger": "No accepted-cost rows changed; token shares remain modelled. Immutable prices and 5% unit/15% design limits unchanged."
+ "ledger": "No accepted-cost rows changed; token shares remain modelled. Immutable prices and 5% unit/15% design limits unchanged.",
+ "source_snapshot_limits": {
+  "early_runs": [
+   "r6_pA",
+   "r6_pB",
+   "r6_pC",
+   "r6_pD",
+   "r6_pE"
+  ],
+  "early_script_hashes": "These runs predate the additive f83703651 die_layer_stim.py --su-sched and hc_gate.py flags. Their preserved RTL hashes match candidate source; they do not validate the latest scheduler option.",
+  "final_script_runs": [
+   "r6_pE2",
+   "r6_pL14",
+   "r6_pL14b",
+   "r6_hg256p"
+  ],
+  "su_sched": "Model regenerated exactly by inorder_sched.py; no --su-sched die replay is preserved in r6, so that option is unmeasured.",
+  "generated_sources": "physical/s81_ctrl/rtl/dsfd_sp_ctrl_core.sv and dsfd_sp_ctrl_e.sv are generated artifacts listed in sources.sha256, not missing authored source."
+ }
 }
