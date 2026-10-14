@@ -1083,7 +1083,12 @@ module dsfd_vm_fe #(
     always @* begin : p_l691 integer kk;
         for (kk = 0; kk < NSLOT; kk = kk + 1) begin
 `ifdef OT_VMFE_FCN_SUM_PIPE
-            inc[kk] = k3_inc[kk]; hit_r[kk] = k3_hr[kk];
+`ifdef OT_VMFE_FCN_SUM_PIPE_MUT
+            inc[kk] = k3_inc[kk] ^ 10'd1;
+`else
+            inc[kk] = k3_inc[kk];
+`endif
+            hit_r[kk] = k3_hr[kk];
 `else
             inc[kk] = ({2'd0, k2_g[kk*4]} + {2'd0, k2_g[kk*4 + 1]}) + ({2'd0, k2_g[kk*4 + 2]} + {2'd0, k2_g[kk*4 + 3]});
             hit_r[kk] = k2_hr[kk];
