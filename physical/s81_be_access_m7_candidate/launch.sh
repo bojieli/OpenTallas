@@ -4,6 +4,7 @@ set -euo pipefail
 : "${SRC:?frozen source snapshot with SOURCE_COMMIT is required}"
 : "${OUT:?immutable route output base is required}"
 label=${1:?fresh unique label is required}
+test -f "$SRC/SOURCE_COMMIT"
 kit=physical/s81_be_access_m7_candidate
 # The route helper consumes this isolated pin directory; published views/ports stand.
 mkdir -p "$SRC/physical/s81_ph_views/ports/be_access_m7_candidate/dsfd_vm_be_sl"
