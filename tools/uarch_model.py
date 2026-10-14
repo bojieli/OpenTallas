@@ -16137,7 +16137,7 @@ def hbm_qdq_write_completion_split_model():
         "routing_tracks": {"pay_fin_m5":65,"fin_ack_m5":8,"fin_core_m5":1,"m6_grant":False},
         "clock_roots": {"pay":"private payload/SRAM root","fin":"distinct private completion root, estimated <1500 sinks"},
         "timing_contract": {"period_ps":833.333,"launch_max_ps":220,"capture_max_ps":190,"clock_delivery":"phi-R","wire_um_max":500,"hold_min_ps":100},
-        "latency": {"snapshot_admission_extra_edges":1,"generic_cycle_equivalence":False,
+        "latency": {"snapshot_admission_extra_edges":1,"generic_cycle_equivalence":False,"minimum_finish_pulse_interval_edges":2,"snapshot_pop_after_finish_edges":1,
             "native_min_ack_argument":"WWQ registered launch -> client CDC write capture -> two VM pointer sync edges -> VM WWQ output register -> VM commit -> return FIFO -> two client pointer sync edges -> client ACK output register; even zero-time VM commit cannot return by second engine edge",
             "safe_snapshot_deadline":"FIN snapshot captured at edge1, FIFO/head flags admitted edge2 after PAY launch edge0; ACK cannot return before admission on actual CDC",
             "native_measured_cycles":None,"immutable_production_cycles":168,"maximum_integer_cycles":184},

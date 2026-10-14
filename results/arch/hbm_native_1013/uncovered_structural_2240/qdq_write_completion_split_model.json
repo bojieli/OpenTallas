@@ -64,7 +64,14 @@
     "safe_snapshot_deadline": "FIN snapshot captured at edge1, FIFO/head flags admitted edge2 after PAY launch edge0; ACK cannot return before admission on actual CDC",
     "native_measured_cycles": null,
     "immutable_production_cycles": 168,
-    "maximum_integer_cycles": 184
+    "maximum_integer_cycles": 184,
+    "minimum_finish_pulse_interval_edges": 2,
+    "snapshot_pop_after_finish_edges": 1,
+    "measured_fastest_actual_CDC_ack_edges": 8,
+    "ack_phases_measured_ps": [
+      61,
+      487
+    ]
   },
   "communication_intensity_bits_per_payload_byte": 1.015625,
   "fanout": "eight local count comparators; snapshot 64bits two FIFO candidate reads, no payload clock/control feedback",
