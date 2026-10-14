@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.qwen.vm-band-production-miter.v1",
+ "status": "NATIVE_AND_MUTANTS_PASS_FALLBACK_LIVE",
+ "qualification": false,
+ "source_sha256": {
+  "tools/qwen_tp8/vm_band_cluster.py": "f0930d43ce5be0bd21aa39b239e0e13c0176112a64c874164451046403e319e9",
+  "tools/qwen_tp8/vm_band_miter.sh": "53b425d8e0f3765e546d68e1fe13cf1e318399ae3f3230557da281200ddde72e",
+  "rtl/qwen_sys/vm_plane_20261013/band/ot_qfd_vm_band.sv": "6163c327878be116db043826f20cbab75d806e050ecd7d3e321f66bec702b895",
+  "rtl/qwen_sys/vm_plane_20261013/band/tb_qfd_vm_band.sv": "c95aee01fd670a6728c276e4ffe06a880f01f6defc15a8cbc0be642026e281a7",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xcol_roots.sv": "c09ba46c0220cef6d255071e500f207c614c3b94f2d43b626abe7432f92a54d3",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv": "2a7a6d3a3ec95a9c419b6c9f4baae57033e4b154d3f0a32022f15ba3664a1827"
+ },
+ "native": "PASS4000cycles all32columns/32roots 4096payload;16216064lanechecks126688columnchecks; all1024col/root nibble changes>=16 and all4phases; stalls1017",
+ "mutants": {
+  "lane_bypass": "FAIL1992errors",
+  "root_index": "FAIL82094errors"
+ },
+ "fallback": {
+  "status": "live",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-3279677-1791948748",
+  "local_session": 52400,
+  "peak_prior_verilator_allocated_mb": 8948.789,
+  "request_gb": 16
+ },
+ "open": "actualrootgather/controldistribution/boundaries, newsourceviewpins, congestion and realroutedtiming/hold"
+}

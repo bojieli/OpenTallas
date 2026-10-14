@@ -1,0 +1,4 @@
+FAIL fullband SMAX=9 MUT=2 errors=82094 checks=126688 lane_checks=16216064
+[40007000] %Fatal: tb_qfd_vm_band.sv:21634: Assertion failed in tb_qfd_vm_band: FAIL
+%Error: rtl/qwen_sys/vm_plane_20261013/band/tb_qfd_vm_band.sv:21634: Verilog $stop
+Aborting...

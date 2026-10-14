@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.qwen.vm-band-pin-bit-order.v1",
+ "before": {
+  "pair_failed_bits": 2,
+  "max_um": 498.564
+ },
+ "after": {
+  "pair_failed_bits": 0,
+  "max_um": 498.564
+ },
+ "rounds": [
+  {
+   "iteration": 0,
+   "moves": 3,
+   "pair_failed_bits": 0,
+   "max_um": 498.564
+  },
+  {
+   "iteration": 1,
+   "moves": 0,
+   "pair_failed_bits": 0,
+   "max_um": 498.564
+  }
+ ],
+ "physical_bit_permutations": {
+  "vm_g0_b2_xf1>p12|3|5|272": [
+   0,
+   2,
+   4,
+   6,
+   3,
+   7,
+   5,
+   1
+  ],
+  "vm_g2_b7_xf1>p6|3|5|248": [
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   1,
+   0
+  ],
+  "vm_g2_b7_xf1>p7|3|5|256": [
+   0,
+   1,
+   4,
+   5,
+   3,
+   6,
+   2,
+   7
+  ]
+ },
+ "structural_change": "local8pinpermutations with exact logicalbit unpack; sameallstages andtileinstances"
+}

@@ -1,0 +1,199 @@
+#!/usr/bin/env python3
+"""All-bit closed-pin audit and combined band routing demand model.
+
+Known lane stages use real exported LEF pins. Column d pins of the OLD view
+are explicitly provisional until xcol_roots closes. Root transport may only
+enter this model through a supplied actual-pin contract, never guessed stations.
+The model reports unresolved requirements and cannot qualify a physical band.
+"""
+import argparse
+import collections
+import gzip
+import hashlib
+import json
+import math
+from pathlib import Path
+from vm_lef_pins import read
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools/hier_contract'))
+from pinreg_audit import parse_lib, clock_refs, pin_metrics
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def union(intervals):
+    total, end = 0., -math.inf
+    for lo, hi in sorted(intervals):
+        if hi > end:
+            total += hi-max(lo,end)
+            end = hi
+    return total
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--root-contract', type=Path)
+    a = ap.parse_args()
+    file = 'results/arch/qwen_tp8_1012/vm_band_composition_codex.json'
+    comp = json.loads((ROOT/file).read_text())
+    x0,y0=comp['origin_um'];W,H=comp['outline_um']
+    children = {(c['bay'],c['slot']):c for c in comp['children'] if 'bay' in c}
+    colchildren={int(c['inst'][3:]):c for c in comp['children'] if c['inst'].startswith('u_c')}
+    viewpins={}; hashes={}
+    for c in children.values():
+        if c['view'] not in viewpins:
+            f=next((ROOT/c['view']).glob('*.lef'))
+            viewpins[c['view']]=read(f)[1]
+            hashes[str(f.relative_to(ROOT))]=hashlib.sha256(f.read_bytes()).hexdigest()
+    old=ROOT/'physical/ref_tile/qfd_vm_xcol_t/views/ot_qfd_vm_xcol_t/ot_qfd_vm_xcol_t.lef'
+    oldpins=read(old)[1];hashes[str(old.relative_to(ROOT))]=hashlib.sha256(old.read_bytes()).hexdigest()
+    def pin(stage,port,bit):
+        c=children[stage['bay'],stage['slot']]
+        p=viewpins[c['view']][f'{port}[{stage["bit0"]+stage.get("bit_permutation",list(range(8)))[bit]}]']
+        return [round(x0+c['at'][0]+p['x'],4),round(y0+c['at'][1]+p['y'],4)]
+    edges=[];boundary=[]
+    for s in comp['segments']:
+        path=s['path']; col=int(s['output'][0].split('_')[0][3:])
+        port='d_hi' if s['output'][0].endswith('hi') else 'd_lo'
+        for bit in range(8):
+            # Boundary inputs lack assigned physical pins: record, do not certify.
+            boundary.append(dict(lane=s['lane'],bit=bit,port=s['input'],peer=s['predecessor'],
+                                 first_visit=s['first_visit'],destination=pin(path[0],'d',bit)))
+            for k in range(len(path)-1):
+                edges.append(dict(kind='closed_tile_to_closed_tile',lane=s['lane'],bit=bit,
+                    A=pin(path[k],'q',bit),B=pin(path[k+1],'d',bit),
+                    launch=path[k],capture=path[k+1]))
+            cp=oldpins[f'{port}[{s["output"][1]+bit}]'];c=colchildren[col]
+            edges.append(dict(kind='provisional_column_input',lane=s['lane'],bit=bit,
+                launch=path[-1],
+                A=pin(path[-1],'q',bit),B=[x0+c['at'][0]+cp['x'],y0+c['at'][1]+cp['y']]))
+    root_edges=[]; root_coverage=None
+    if a.root_contract:
+        root=json.loads(a.root_contract.read_text())
+        assert root['schema']=='opentallas.qwen.vm-band-actual-root-paths.v1'
+        assert root['pin_assignment']=='die-assigned'
+        root_edges=root['edges']
+        root_coverage={(e['column'],e['root'],e['bit']) for e in root_edges if e['kind']=='root_source'}
+        assert root_coverage=={(c,r,b) for c in range(32) for r in range(32) for b in range(4)}
+        # Include every transport stage, tags and controls in the SAME demand model.
+        assert {'root_source','root_transport','root_tags','root_control'} <= {e['kind'] for e in root_edges}
+        edges+=root_edges
+    for e in edges:
+        e['length_um']=round(abs(e['A'][0]-e['B'][0])+abs(e['A'][1]-e['B'][1]),4)
+    timing={}
+    def metrics(view):
+        if view not in timing:
+            vd=ROOT/view;lib=next(vd.glob('*_tt.lib'));ins=json.loads((vd/'insertion.json').read_text())
+            parsed=parse_lib(lib);refs=clock_refs(parsed,ins,'tt')
+            timing[view]=(pin_metrics(parsed,refs),refs)
+            hashes[str(lib.relative_to(ROOT))]=hashlib.sha256(lib.read_bytes()).hexdigest()
+            hashes[str((vd/'insertion.json').relative_to(ROOT))]=hashlib.sha256((vd/'insertion.json').read_bytes()).hexdigest()
+        return timing[view]
+    missing_timing=[];pair_failures=[]
+    for e in edges:
+        if e['kind']!='closed_tile_to_closed_tile':continue
+        la,ca=e['launch'],e['capture'];lc=children[la['bay'],la['slot']];cc=children[ca['bay'],ca['slot']]
+        lm,lr=metrics(lc['view']);cm,cr=metrics(cc['view'])
+        lp=lm[f'q[{la["bit0"]+la.get("bit_permutation",list(range(8)))[e["bit"]]}]'];cp=cm[f'd[{ca["bit0"]+ca.get("bit_permutation",list(range(8)))[e["bit"]]}]']
+        if lp['out'] is None or cp['inp'] is None or not lp['clk'] or not cp['clk']:
+            missing_timing.append(dict(lane=e['lane'],bit=e['bit']));continue
+        lref=lr[lp['clk'][0]];cref=cr[cp['clk'][0]]
+        # Boundary spread is inside the pair cost, in addition to die skew.
+        o=lp['out']+lref['bmax']-lref['rise']
+        s=cp['inp']+cref['rise']-cref['bmin']
+        skew=90 if max(lref['rise'],cref['rise'])<=300 else 150
+        available=833.3333333333-60-skew
+        reach=min(500,(available-o-s)/.76)
+        e['pair_reach_um']=round(reach,4)
+        e['pair_slack_ps']=round(available-o-s-.76*e['length_um'],4)
+        if e['length_um']>reach:pair_failures.append(e)
+    bykind=collections.defaultdict(list)
+    for e in edges:bykind[e['kind']].append(e)
+    # Closed M5 children block lower routing layers. Cap upper layers for BOTH
+    # net-specific 0.48/9.091 stripes. This conservative occupancy is 10.56%,
+    # pending resolution of the grant's 5.3% versus actual net-specific geometry.
+    pg_fraction=2*.48/9.091
+    blocks=[(x0+c['at'][0],y0+c['at'][1],x0+c['at'][0]+c['outline_um'][0],
+             y0+c['at'][1]+c['outline_um'][1]) for c in comp['children']]
+    horizontal=[];vertical=[]
+    # One explicit L route per edge; it is a demand candidate, not routed proof.
+    for e in edges:
+        ax,ay=e['A'];bx,by=e['B']
+        horizontal.append((min(ax,bx),max(ax,bx),ay))
+        vertical.append((min(ay,by),max(ay,by),bx))
+    worst={};windows=[]
+    for axis in ('x','y'):
+        length=W if axis=='x' else H
+        cross=H if axis=='x' else W
+        alongorigin=x0 if axis=='x' else y0
+        otherorigin=y0 if axis=='x' else x0
+        segs=horizontal if axis=='x' else vertical
+        layers=('M8','M6','M4') if axis=='x' else ('M9','M7','M5')
+        tpu=(12.5,15.625,20.8333333333)
+        maximum=dict(ratio=0)
+        # Scan every 2.16um cut and 130um windows with 260um span, including
+        # the short final edge window. Lower-layer capacity uses union coverage.
+        for ix in range(1,int(length/2.16)):
+            cp=alongorigin+ix*2.16
+            crossings=sorted(s[2] for s in segs if s[0]<cp<s[1])
+            for start in range(0,int(cross),130):
+                lo=otherorigin+start;hi=min(lo+260,otherorigin+cross)
+                demand=sum(lo<=at<hi for at in crossings)
+                if not demand:continue
+                cover=[]
+                for b in blocks:
+                    a,z=(b[0],b[2]) if axis=='x' else (b[1],b[3])
+                    if a<cp<z:
+                        l,h=(b[1],b[3]) if axis=='x' else (b[0],b[2])
+                        if min(h,hi)>max(l,lo):cover.append((max(l,lo),min(h,hi)))
+                cov=union(cover);span=hi-lo
+                cap={layers[0]:.75*(1-pg_fraction)*span*tpu[0],
+                     layers[1]:.75*span*tpu[1],layers[2]:.5*(span-cov)*tpu[2]}
+                capacity=sum(cap.values());ratio=demand/capacity
+                rec=dict(axis=axis,cut_um=round(cp,4),span_um=[lo,hi],demand_bits=demand,
+                    capacity_tracks=round(capacity,2),ratio=round(ratio,6),layer_capacity=cap)
+                if ratio>maximum['ratio']:maximum=rec
+                if ratio>.6:windows.append(rec)
+        worst[axis]=maximum
+    # Geometry checks cover every placed child, not sampled bays.
+    outside=[c['inst'] for c in comp['children'] if c['at'][0]<0 or c['at'][1]<0 or
+             c['at'][0]+c['outline_um'][0]>W+1e-6 or c['at'][1]+c['outline_um'][1]>H+1e-6]
+    channel_failures=[]
+    for i,c in enumerate(comp['children']):
+        for d in comp['children'][i+1:]:
+            dx=max(c['at'][0],d['at'][0])-min(c['at'][0]+c['outline_um'][0],d['at'][0]+d['outline_um'][0])
+            dy=max(c['at'][1],d['at'][1])-min(c['at'][1]+c['outline_um'][1],d['at'][1]+d['outline_um'][1])
+            if max(dx,dy)<2.16-1e-6:channel_failures.append(dict(a=c['inst'],b=d['inst'],x_gap=dx,y_gap=dy))
+    report=dict(schema='opentallas.qwen.vm-band-bit-paths.v1',status='INCOMPLETE_PHYSICAL_CONTRACT',
+        qualification=False,source=file,source_sha256=hashlib.sha256((ROOT/file).read_bytes()).hexdigest(),
+        lef_sha256=hashes,children=len(comp['children']),outside_children=outside,
+        geometry=dict(pair_checks=len(comp['children'])*(len(comp['children'])-1)//2,minimum_channel_um=2.16,failures=channel_failures),
+        lanes=len(comp['segments']),boundary_bits=len(boundary),
+        path_bits_by_kind={k:len(es) for k,es in bykind.items()},
+        max_length_by_kind={k:max(e['length_um'] for e in es) for k,es in bykind.items()},
+        over500=[e for e in edges if e['length_um']>500],
+        pair_setup=dict(corner='tt',wire_ps_per_um=.76,clock='phi-R compensated; boundary spread included',
+                        missing=len(missing_timing),failed_bits=len(pair_failures),
+                        worst_slack_ps=min((e['pair_slack_ps'] for e in edges if 'pair_slack_ps' in e),default=None),
+                        failures=pair_failures,hold='not yet measured on band routed parasitics'),
+        pg_occupancy=pg_fraction,pg_note='conservative bothnet9.091pitch; actual die-phase contract pending',
+        combined_cut_model=dict(route='explicit x-then-y L, no router claim',worst=worst,over_limit=windows),
+        unresolved=['boundary assigned pins and pair-specific timing reach',
+                    'new column real input/output pins','4096bit gather plus tags and controls'] if not root_edges else
+                    ['boundary assigned pins and pair-specific timing reach','new column real input pins'],
+        root_payload_coverage=len(root_coverage) if root_coverage else 0,
+        edges=edges,boundary_requests=boundary)
+    out=ROOT/'results/arch/qwen_tp8_1012/vm_band_paths_codex.json'
+    detail=dict(edges=report.pop('edges'),boundary_requests=report.pop('boundary_requests'))
+    details=out.with_suffix('.details.json.gz')
+    with gzip.open(details,'wt') as f:json.dump(detail,f,separators=(',',':'))
+    report['all_bit_details']=dict(path=str(details.relative_to(ROOT)),sha256=hashlib.sha256(details.read_bytes()).hexdigest())
+    # Failure examples are capped in the summary; all edges remain in details.
+    report['over500_count']=len(report['over500']);report['over500']=report['over500'][:16]
+    report['pair_setup']['failures']=report['pair_setup']['failures'][:16]
+    out.write_text(json.dumps(report,indent=1)+'\n')
+    print({k:report[k] for k in ('children','lanes','boundary_bits','path_bits_by_kind','max_length_by_kind','root_payload_coverage')})
+    print('over500',report['over500_count'],'pair_setup',report['pair_setup']['failed_bits'],'cut',worst)
+
+
+if __name__=='__main__':main()
