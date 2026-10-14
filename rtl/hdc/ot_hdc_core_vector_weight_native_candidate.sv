@@ -267,7 +267,7 @@ module ot_hdc_core_vector_weight_native_candidate #(
     reg          me_kindk;
     wire me_en;
     wire unit_ready = (d_unit == 2'd1) ? (me_ready && me_en) :
-                      (su_ready && ((NATIVE_ATTENTION == 0) || su_descriptor_reserved) && (!KV_VEC_WRITE_BRIDGE || (su_idle && kv_write_drained)));
+                      (su_ready && ((NATIVE_ATTENTION != 0) ? (su_descriptor_reserved && su_idle) : (!KV_VEC_WRITE_BRIDGE || (su_idle && kv_write_drained))));
     //: KV_HBM: a KV op waits for the streamer; never on the cycle its
     //: descriptor is announced, when kv_ok may still describe the previous op.
     wire kv_gate = (NATIVE_ATTENTION != 0) || (KV_HBM == 0) || !(d_unit == 2'd1 && me_wsrc) || (kv_ok && !kvd_v);
@@ -275,7 +275,7 @@ module ot_hdc_core_vector_weight_native_candidate #(
                   (me_wsrc || (w_ok && !wd_v)) : (!a_src || emb_ok));
     //: the units' idle and progress are registered and cleared on the edge
     //: that accepts an op, so a go needs no guard term here
-    wire drained = me_idle && su_idle && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
+    wire drained = me_idle && su_idle && ((NATIVE_ATTENTION != 0) || !KV_VEC_WRITE_BRIDGE || kv_write_drained);
     assign kv_write_flush = su_idle && !(|kv_we);
     //: A chasing op waits only until the OTHER unit's latest op has made
     //: chase_n progress.
@@ -286,7 +286,7 @@ module ot_hdc_core_vector_weight_native_candidate #(
                  && unit_ready && kv_gate && w_gate;
     assign me_go = issue && (d_unit == 2'd1);
     assign su_go = issue && (d_unit == 2'd2);
-    wire fin = (st == S_RUN) && nx_v && (d_unit == 2'd0) && drained;
+    wire fin = (st == S_RUN) && nx_v && (d_unit == 2'd0) && drained && ((NATIVE_ATTENTION == 0) || kv_write_drained);
     //: decode the FIFO head into NEXT when NEXT is empty or issuing
     wire load = (st == S_RUN) && (fq_n != 0) && (!nx_v || issue);
     wire push = (st == S_RUN) && pend1;
@@ -486,7 +486,7 @@ module ot_hdc_core_vector_weight_native_candidate #(
     wire descriptor_native, dispatch_fault;
     ot_qwen_tp8_me_provider_dispatch #(.NATIVE_ATTENTION(NATIVE_ATTENTION)) u_dispatch (
         .clk(clk), .rst_n(rst_n), .ctrl_go(me_go), .ctrl_wsrc(me_wsrc),
-        .native_contract_ready(native_contract_ready),
+        .native_contract_ready(native_contract_ready && kv_write_drained),
         .rom_ready(rom_ready), .rom_idle(rom_idle), .rom_progress(rom_progress), .rom_fault(rom_fault),
         .attn_ready(native_ready), .attn_idle(native_idle), .attn_progress(native_progress), .attn_fault(native_fault),
         .rom_go(rom_go), .attn_go(native_go), .ctrl_ready(me_ready), .ctrl_idle(me_idle),
