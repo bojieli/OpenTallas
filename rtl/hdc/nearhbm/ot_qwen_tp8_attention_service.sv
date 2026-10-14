@@ -27,7 +27,7 @@ module ot_qwen_tp8_attention_service (
  reg [2:0] state;reg start_qk,start_pv;reg [15:0] ep;reg [5:0] layer;
  reg [13:0] ctx;reg [5:0] qnext;reg [4:0] beat;reg local_fault,cleared;
  wire [31:0] raw_req,raw_v,raw_g,checked_rsp,kbad;wire [415:0] raw_t;
- wire [3:0] sf,scdone;wire [63:0] edone;wire [255:0] edata;wire [43:0] eaddr;
+ wire [3:0] sf,scdone,nonempty,exp_ready;wire [63:0] edone;wire [255:0] edata;wire [43:0] eaddr;
  wire [3:0] eread;wire [3:0] sv,sg,sa,pv_dummy,pg_dummy;
  wire [7:0] st,sh;wire [15:0] sk;wire [127:0] sd;
  wire mv,mg,hf,rzok;wire [1:0] mh;wire [31:0] md;wire [127:0] rz;
@@ -53,20 +53,18 @@ module ot_qwen_tp8_attention_service (
    if(fault)state<=BAD;
    else case(state)
     IDLE:if(request_valid)begin
-     // Small contexts need an explicitly zero-filled PV residue implementation;
-     // refuse rather than using stale SRAM contents as zero residues.
-     if(!fused_program_capability||request_position>8191||request_position<255||`KVD_HEADS!=1||!`KVD_Q_FP32||!`KVD_QK_ONLY)begin local_fault<=1;state<=BAD;end
+     if(!fused_program_capability||request_position>8191||`KVD_HEADS!=1||!`KVD_Q_FP32||!`KVD_QK_ONLY)begin local_fault<=1;state<=BAD;end
      else begin ep<=request_epoch;layer<=request_layer;ctx<=request_position+1'b1;qnext<=0;beat<=0;cleared<=0;cycles<=0;start_qk<=1;state<=QLOAD;end
     end
     QLOAD:begin
-     if(!( |scdone)&&!rzok)cleared<=1;
+     if(!( |(scdone&nonempty))&&!rzok)cleared<=1;
      if(q_valid&&q_ready)begin
       if(q_beat!=qnext[4:0])begin local_fault<=1;state<=BAD;end
       else if(qnext==31)state<=QK;
       else qnext<=qnext+1'b1;
      end
     end
-    QK:if(cleared&&(&scdone)&&(&edone)&&rzok)begin start_pv<=1;state<=PVSTART;end
+    QK:if(cleared&&(&scdone)&&(&exp_ready)&&rzok)begin start_pv<=1;state<=PVSTART;end
     PVSTART:state<=PV;
     PV:if(fvalid)begin state<=EMIT;beat<=0;end
     EMIT:if(result_valid&&result_ready)begin if(beat==31)begin result_done<=1;state<=RELEASE;end else beat<=beat+1'b1;end
@@ -77,6 +75,14 @@ module ot_qwen_tp8_attention_service (
  end
  genvar s,e;
  generate for(s=0;s<4;s=s+1)begin:gs
+  wire [13:0] base=128*s;
+  wire [13:0] tail={5'd0,ctx[8:0]};
+  wire [13:0] part=tail>base ? (tail-base>128 ? 14'd128 : tail-base) : 14'd0;
+  wire [11:0] owned={ctx[13:9],7'd0}+part[11:0];
+  wire [4:0] groups=owned>=128 ? 5'd16 : ((owned+7)>>3);
+  wire [15:0] exp_mask=(17'd1<<groups)-1'b1;
+  assign nonempty[s]=owned!=0;
+  assign exp_ready[s]=(edone[16*s+:16]&exp_mask)==exp_mask;
   wire [31:0] unused_ev;wire [1:0] unused_done;wire [5:0] unused_pb;wire [511:0] unused_pd;
   ot_qwen_nearhbm_attn_stack_h #(.S(s),.R(8),.DQ(128)) u_h (
    .clk(clk),.rst_n(rst_n),.start(start_qk),.T(ctx),.q_valid(q_valid&&q_ready&&q_beat==qnext[4:0]),.q_beat({1'b0,q_beat}),.q_data(q_data),
@@ -129,7 +135,7 @@ module ot_qwen_tp8_attention_service (
   end
   always @(posedge clk or negedge rst_n)begin
    if(!rst_n)begin want_t<=0;want_run<=0;end
-   else if(start_pv)begin want_t<=s*128;want_run<=1;end
+   else if(start_pv)begin want_t<=s*128;want_run<=ctx>s*128;end
    else if(want_run&&want_ready)begin
     if(want_t[6:0]==127)begin if(want_t+129>=ctx)want_run<=0;else want_t<=want_t+129;end
     else if(want_t+1>=ctx)want_run<=0;else want_t<=want_t+1'b1;

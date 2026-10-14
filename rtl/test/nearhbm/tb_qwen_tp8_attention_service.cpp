@@ -17,7 +17,7 @@ int main(int argc,char**argv){
  std::vector<uint32_t>q,gold;std::vector<std::vector<uint8_t>>kv;
  for(auto spec:{std::make_pair("q.hex",&q),std::make_pair("gold.hex",&gold)}){std::ifstream f(d+"/"+spec.first);std::string x;while(f>>x)spec.second->push_back(strtoul(x.c_str(),0,16));}
  std::ifstream f(d+"/kv.hex");std::string x;while(f>>x){if(x.size()!=256)return 2;std::vector<uint8_t>r(128);for(int j=0;j<128;j++)r[j]=strtoul(x.substr(2*(127-j),2).c_str(),0,16);kv.push_back(r);}
- int ctx=kv.size()/2;if(q.size()!=512||gold.size()!=512||kv.size()!=size_t(2*ctx)||ctx<256||ctx>8192)return 2;
+ int ctx=kv.size()/2;if(q.size()!=512||gold.size()!=512||kv.size()!=size_t(2*ctx)||ctx<1||ctx>8192)return 2;
  Vot_qwen_tp8_attention_service t;uint64_t cy=0;auto tick=[&](){t.clk=0;t.eval();t.clk=1;t.eval();cy++;};
  t.rst_n=0;t.request_valid=0;t.q_valid=0;t.k_rsp_valid=0;t.v_rsp_valid=0;t.k_req_ready=0;t.v_req_ready=0;t.result_ready=0;t.fused_program_capability=1;
  for(int i=0;i<8;i++)tick();t.rst_n=1;for(int i=0;i<80;i++)tick();
