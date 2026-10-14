@@ -18,18 +18,18 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_lb_v_ser_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ser_clk can not be propagated.
-QDM PINFLOP reference: 188 input pin flops, median arrival 253.567200 (range 109.997574 .. 257.089539)
-QDM reference pin fv[83]$_DFF_PN0_/CLK clock arrival max 253.567200 min 80.681229 skew 90 hold 50
+QDM PINFLOP reference: 139 input pin flops, median arrival 254.004868 (range 112.622192 .. 257.616058)
+QDM reference pin fv[42]$_DFF_PN0_/CLK clock arrival max 254.004868 min 80.999374 skew 90 hold 50
 OT_IO_INTER 0 inputs 0 outputs at 150 ps
-QDM PINFLOP reference: 160 input pin flops, median arrival 254.198517 (range 247.108780 .. 257.089539)
-OT_SER_BOUNDARY referenced: ser pin flop fv[84]$_DFF_PN0_/CLK arrival max 254.198517 min 81.195404, 320 in / 0 out
+QDM PINFLOP reference: 123 input pin flops, median arrival 254.277069 (range 247.916321 .. 257.616058)
+OT_SER_BOUNDARY referenced: ser pin flop fv[123]$_DFF_PN0_/CLK arrival max 254.277069 min 81.093407, 320 in / 0 out
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ser_clk can not be propagated.
 OT_IOREF clock-port ck (core_clk): data input delays dropped
 OT_IOREF clock-port ckv (ser_clk): data input delays dropped
-OT_IOREF_EDGE core_clk boundary 265 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE core_clk boundary 320 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ser_clk boundary 160 negedge 0 noarc 0 inverted 0
-OT_IOREF ot_lb_v_core_clk core_clk mean 115.5 min 110.0 max 120.3 n 265 boundary
-OT_IOREF ot_lb_v_ser_clk ser_clk mean 86.6 min 80.4 max 90.4 n 160 boundary
-OT_WS max 9.306634629613342e-11 min 2.638549101430243e-11
+OT_IOREF ot_lb_v_core_clk core_clk mean 117.4 min 109.1 max 125.8 n 320 boundary
+OT_IOREF ot_lb_v_ser_clk ser_clk mean 87.5 min 81.2 max 90.9 n 160 boundary
+OT_WS max 8.988149113875465e-11 min 2.5074997633822704e-11
 OT_EXPORT_DONE

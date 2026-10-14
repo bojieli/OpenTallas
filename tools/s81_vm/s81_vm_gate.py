@@ -61,6 +61,16 @@ LOCK_SET = ['gold_s1', 'gold_s2', 'tp', 'burst_r128', 'burst_r128_np2', 'land_at
 _base = dict(CASES)
 for _bgl_case in ['bgl_gold_s1','bgl_gold_s2','bgl_tp','bgl_burst_r128','bgl_mut_stale','bgl_mut_id']:
     CASES['h1_' + _bgl_case] = dict(CASES[_bgl_case], defines=CASES[_bgl_case]['defines'] + ['OT_VMBGL_HOP1'])
+# claude s81-grpA r3: XGOS (XGO armed on the producer slot, default-off OT_SPVM_XGOS): the tp shape + a dependent X read of
+# the captured region (XCH rows).  xch_base = today's contract (XGO after the ARMN done), xch_xgos = armed XGO issued with
+# the ARMN; xch_mut_early = the armed XGO ignores its slot (must FAIL: early-read fault / stale rows); lk_ / h_ = hierarchy.
+_XCH = dict(MODE=1, TP_ROWS=56, XCH=128)
+CASES['xch_base'] = dict(params=dict(_XCH, XGOS=0), expect='pass', regex='XCHAIN')
+CASES['xch_xgos'] = dict(params=dict(_XCH, XGOS=1), defines=['OT_SPVM_XGOS'], expect='pass', regex='XCHAIN')
+CASES['xch_mut_early'] = dict(params=dict(_XCH, XGOS=1), defines=['OT_SPVM_XGOS', 'OT_SPVM_MUT_XGOS_EARLY'], expect='fail')
+CASES['lk_xch_xgos'] = dict(params=dict(_XCH, XGOS=1), defines=LK + ['OT_SPVM_XGOS'], expect='pass', regex='XCHAIN', regex2='LOCKSTEP_OK')
+CASES['lk_xch_base'] = dict(params=dict(_XCH, XGOS=0), defines=LK + ['OT_SPVM_XGOS'], expect='pass', regex='XCHAIN', regex2='LOCKSTEP_OK')
+CASES['h_xch_xgos'] = dict(params=dict(_XCH, XGOS=1), defines=SUB + ['OT_SPVM_XGOS'], expect='pass', regex='XCHAIN', regex2='LOCKSTEP_OK')
 CASES['ref_gold_s1'] = dict(_base['gold_s1'], defines=REF)
 CASES['ref_tp'] = dict(_base['tp'], defines=REF)
 CASES['ref_land_attn'] = dict(_base['land_attn'], defines=REF)
@@ -155,7 +165,7 @@ def one(name, out):
     r = subprocess.run([str(exe)], capture_output=True, text=True, cwd=out)   # cwd: bg_trace.txt of the *_trace cases
     log = r.stdout + r.stderr
     (out / f'run_{name}.log').write_text(log)
-    keep = [l for l in log.splitlines() if l.startswith(('RESULT', 'THROUGHPUT', 'PASS', 'FAIL', 'MISMATCH', 'FAULT', 'MIRROR', '%Error', 'ALIGN', 'LOCKSTEP'))
+    keep = [l for l in log.splitlines() if l.startswith(('RESULT', 'THROUGHPUT', 'PASS', 'FAIL', 'MISMATCH', 'FAULT', 'MIRROR', '%Error', 'ALIGN', 'LOCKSTEP', 'XCHAIN'))
             or 'EARLY_READ' in l]
     passed = any(l.strip() == 'PASS' for l in log.splitlines())
     ok = (passed and (not c.get('regex') or re.search(c['regex'], log) is not None)) if c['expect'] == 'pass' else (not passed and (not c.get('regex') or re.search(c['regex'], log) is not None))

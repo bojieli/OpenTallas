@@ -62,7 +62,9 @@
 // credit of the store it feeds (the cell above: lci; a lane: that lane's credit bit, which travels against the
 // stream) and answers its own producers when its stores are free again (the engines: cra / crb).
 // Frame: N is the hub end (the cell is flipped MX in the stacks whose hub is to the S).
-module qkd_astk_pv (
+module qkd_astk_pv #(
+    parameter integer HEADS = `KVD_HEADS   // kvsys-elements r2: native TP8 = 1 (one group: items {round} only)
+) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [17:0]   cfg,
@@ -176,7 +178,8 @@ module qkd_astk_pv (
     wire         gi  = l7 ? it[0] : it[1];
     wire         pa  = l7 ? (gmax != 5'd0) : (gmax > {1'b0, rho, ath});
     wire         pb  = l7 ? (gmax > 5'd8)  : (gmax > {1'b0, rho, bth});
-    wire         active = run && quiet && (l7 ? !it[1] : !it[2]);
+    // HEADS 1 (native TP8): one group -- the items are {round} (l7: one item), as the golden's P.V tree stops after group 0
+    wire         active = run && quiet && (l7 ? (HEADS == 1 ? !it[0] : !it[1]) : (HEADS == 1 ? !it[1] : !it[2]));
     wire         awv = !l4 && sa[0] && !(l7 && l7b) && quiet;
     wire         bwv = !l4 && (l7 ? (sa[0] && l7b) : sb[0]) && quiet;
     wire [SW-1:0] bws = l7 ? sa : sb;
@@ -321,6 +324,46 @@ module qkd_astk_pv (
         if (l7 && issue && jn == 0) $display("AKDBG %m t=%0t emit g=%b h=%0d", $time, gi, h);
     end
 `endif
+endmodule
+
+// kvsys-elements r2 2026-10-14: native TP8 master of the P.V tree cell (HEADS 1 fixed in RTL); the historical qkd_astk_pv
+// view is the HEADS 2 build (it emits a second group's P.V beats on an empty stack: bench T=1 / T=129, 64 vs 32 beats).
+module qkd_astk_pv_tp8 (
+    input  wire            ck,
+    input  wire            rst_n,
+    input  wire [17:0]     cfg,
+    input  wire [511:0]    wa,
+    input  wire [511:0]    wb,
+    input  wire [9:0]      nc,
+    input  wire [9:0]      nd,
+    output wire [9:0]      nco,
+    output wire [9:0]      ndo,
+    output wire            cra,
+    output wire            crb,
+    input  wire [133:0]    li,
+    output wire [133:0]    lo,
+    input  wire [535:0]    ui,
+    output wire [535:0]    uo,
+    input  wire [535:0]    di,
+    output wire [535:0]    do_,
+    input  wire [262:0]    pi,
+    output wire [262:0]    po,
+    input  wire [5:0]      ci,
+    output wire [5:0]      co,
+    input  wire            lci,
+    output wire            lco,
+    input  wire [3:0]      kui,
+    output wire [3:0]      kuo,
+    input  wire [3:0]      kdi,
+    output wire [3:0]      kdo,
+    input  wire            tui,
+    output wire            tuo,
+    input  wire            tdi,
+    output wire            tdo,
+    input  wire            fi,
+    output wire            fo
+);
+    qkd_astk_pv #(.HEADS(1)) u (.ck(ck), .rst_n(rst_n), .cfg(cfg), .wa(wa), .wb(wb), .nc(nc), .nd(nd), .nco(nco), .ndo(ndo), .cra(cra), .crb(crb), .li(li), .lo(lo), .ui(ui), .uo(uo), .di(di), .do_(do_), .pi(pi), .po(po), .ci(ci), .co(co), .lci(lci), .lco(lco), .kui(kui), .kuo(kuo), .kdi(kdi), .kdo(kdo), .tui(tui), .tuo(tuo), .tdi(tdi), .tdo(tdo), .fi(fi), .fo(fo));
 endmodule
 
 // ---- one column's lanes through a leaf that only passes them (qkd_astk_ep / qkd_astk_ex) ---------------------------
@@ -783,7 +826,9 @@ endmodule
 // qo [571:0] out / xi [266:0] in   the engine chain;  co [5:0] out  the tree cells' {gmax, start};
 // px / py [262:0] in  the two P.V lanes;  zi [137:0] in  the Z tree's block sums {sum 128, slot 4, k 4, g, v};
 // fx / fy / fz in: tree and Z faults
-module qkd_astk_ctl (
+module qkd_astk_ctl #(
+    parameter integer HEADS = `KVD_HEADS   // kvsys-elements r2: the die profile as a parameter (native TP8 = 1)
+) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [1:0]    st,
@@ -839,7 +884,7 @@ module qkd_astk_ctl (
     reg  [1:0]   kdone, lsent, zsent, pvd;
     reg  [2:0]   lh, mc0, mc1;
     reg  [4:0]   zn0, zn1;                             // block sums sent
-    wire [1:0]   qgo = {(`KVD_HEADS == 2) && kdone[1] && mc1 == 3'd4, kdone[0] && mc0 == 3'd4};
+    wire [1:0]   qgo = {(HEADS == 2) && kdone[1] && mc1 == 3'd4, kdone[0] && mc0 == 3'd4};
     // ---- Z block sums: a 16-entry queue, 4 messages each ---------------------------------------------------------------
     reg  [132:0] zf_m [0:15];                          // {sum 128, k 4, g}
     reg  [4:0]   zfw, zfr;
@@ -848,10 +893,10 @@ module qkd_astk_ctl (
     wire         z_ne = zfw != zfr;
     wire [132:0] z_hd = zf_m[zfr[3:0]];
     always @(posedge ck) if (zq[0] && stl == 7'd0) zf_m[zfw[3:0]] <= {zq[137:10], zq[5:2], zq[1]};
-    wire         l_pend = (kdone[0] && !lsent[0]) || (`KVD_HEADS == 2 && kdone[1] && lsent[0] && !lsent[1]);
+    wire         l_pend = (kdone[0] && !lsent[0]) || (HEADS == 2 && kdone[1] && lsent[0] && !lsent[1]);
     wire         lg = lsent[0];
     wire         zd0 = !zsent[0] && qgo[0] && zn0 == nblk && !z_ne;
-    wire         zd1 = (`KVD_HEADS == 2) && !zsent[1] && zsent[0] && qgo[1] && zn1 == nblk && !z_ne;
+    wire         zd1 = (HEADS == 2) && !zsent[1] && zsent[0] && qgo[1] && zn1 == nblk && !z_ne;
     // ---- P.V: the two lanes carry the two halves of a beat on the same edge ---------------------------------------------
     reg  [6:0]   stl;                                  // restart: 96 cycles in which the lanes and the Z nodes drain
     wire         quiet = stl == 7'd0;
@@ -884,7 +929,7 @@ module qkd_astk_ctl (
             if (pv_v && pxq[5:1] == 5'd31) pvd[pxq[6]] <= 1'b1;
             sc0 <= sc0 + {8'd0, xq[4:1]}; sc1 <= sc1 + {8'd0, xq[8:5]};
             if (sc0 == n_s) kdone[0] <= 1'b1;
-            if (`KVD_HEADS == 2 && sc1 == n_s) kdone[1] <= 1'b1;
+            if (HEADS == 2 && sc1 == n_s) kdone[1] <= 1'b1;
             if (am_q[0]) begin if (am_q[1]) mc1 <= mc1 + 3'd1; else mc0 <= mc0 + 3'd1; end
             if (stl != 7'd0) stl <= stl - 7'd1;
             if (z_in) begin zfw <= zfw + 5'd1; if (zfw[3:0] == zfr[3:0] && zfw[4] != zfr[4]) zovf <= 1'b1; end
@@ -926,4 +971,29 @@ module qkd_astk_ctl (
         if (start) $display("AKDBG %m t=%0t start T=%0d", $time, T);
     end
 `endif
+endmodule
+
+// kvsys-elements r2 2026-10-14: native TP8 master of the aggregator control leaf (HEADS 1 fixed in RTL, like
+// qkd_ectl_a/b/c_tp8): the historical qkd_astk_ctl view is the HEADS 2 build and is not a native view.
+module qkd_astk_ctl_tp8 (
+    input  wire          ck,
+    input  wire          rst_n,
+    input  wire [1:0]    st,
+    input  wire [539:0]  aq,
+    output wire [20:0]   lt,
+    input  wire [35:0]   am,
+    output wire [564:0]  ap,
+    output wire          af,
+    output wire [571:0]  qo,
+    input  wire [266:0]  xi,
+    output wire [5:0]    co,
+    input  wire [262:0]  px,
+    input  wire [262:0]  py,
+    input  wire [137:0]  zi,
+    input  wire          fx,
+    input  wire          fy,
+    input  wire          fz
+);
+    qkd_astk_ctl #(.HEADS(1)) u (.ck(ck), .rst_n(rst_n), .st(st), .aq(aq), .lt(lt), .am(am), .ap(ap), .af(af), .qo(qo), .xi(xi),
+        .co(co), .px(px), .py(py), .zi(zi), .fx(fx), .fy(fy), .fz(fz));
 endmodule

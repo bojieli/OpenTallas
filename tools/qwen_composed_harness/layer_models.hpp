@@ -1,4 +1,6 @@
 #pragma once
+#include <cstring>
+#include <cstdlib>
 // Candidate executed-layer harness. No fixture QR/current-KV writes exist here.
 // Expected vectors are observers; all collective inputs come from actual VM.
 #include "Vot_hdc_core_vector_weight_native_candidate.h"
@@ -45,9 +47,53 @@ struct Rank {
  core(&context,("rank"+std::to_string(r)+"_core").c_str()),front(&context,("rank"+std::to_string(r)+"_front").c_str()),
  kernel(&context,("rank"+std::to_string(r)+"_kernel").c_str()),sector(&context,("rank"+std::to_string(r)+"_sector").c_str()),
  receiver(vm.vm),reads(backend),writes(backend){
+  if(const char*e=std::getenv("OT_SPLIT_LINK_LATENCY"))receiver.link_latency=unsigned(std::stoul(e));
   core.clk=front.clk=kernel.clk=sector.clk=0;core.rst_n=front.rst_n=kernel.rst_n=sector.rst_n=0;
   core.start=0;core.token=0;core.pos=layer.position;front.epoch=layer.epoch;front.layer=layer.number;front.pos=layer.position;front.token=0;front.epoch_begin=0;front.fused_program_capability=1;
   enqueue_history();
+ }
+ // Input-memoised core evaluation: a Verilated eval whose 28 input ports all
+ // equal those of its previous eval (and with no clock change) re-settles the
+ // same combinational state and fires no process, so it is skipped. Exactly
+ // equivalent; it removes the redundant second eval of each settle iteration.
+ // The port list is the LV6 public header's complete VL_IN set (header sha
+ // d1de5265...; core_input_ports_complete() re-checks the count at link time).
+ std::vector<uint32_t> core_in_last,core_in_now;bool core_in_valid=false;uint64_t core_evals=0,core_evals_skipped=0;
+ template<class T>static void push_port(std::vector<uint32_t>&v,const T&x){const uint32_t*p=reinterpret_cast<const uint32_t*>(&x);size_t n=(sizeof(T)+3)/4;
+  if(sizeof(T)%4){uint32_t w=0;std::memcpy(&w,&x,sizeof(T)<4?sizeof(T):4);v.push_back(w);if(sizeof(T)<4)return;}
+  v.insert(v.end(),p,p+sizeof(T)/4);}
+ void core_eval(){
+  auto&v=core_in_now;v.clear();auto&c=core;
+  push_port(v,c.clk);
+  push_port(v,c.rst_n);
+  push_port(v,c.start);
+  push_port(v,c.native_contract_ready);
+  push_port(v,c.native_ready);
+  push_port(v,c.native_idle);
+  push_port(v,c.native_fault);
+  push_port(v,c.su_descriptor_reserved);
+  push_port(v,c.kv_write_drained);
+  push_port(v,c.kv_ok);
+  push_port(v,c.w_ok);
+  push_port(v,c.emb_ok);
+  push_port(v,c.me_mem_ok);
+  push_port(v,c.token);
+  push_port(v,c.pos);
+  push_port(v,c.native_progress);
+  push_port(v,c.embed_scale_q);
+  push_port(v,c.prog_q);
+  push_port(v,c.wrom_q);
+  push_port(v,c.int8_wrom_q);
+  push_port(v,c.scale_q);
+  push_port(v,c.embed_code_q);
+  push_port(v,c.crom_q);
+  push_port(v,c.kv_q);
+  push_port(v,c.vx_q);
+  push_port(v,c.va_q);
+  push_port(v,c.vb_q);
+  push_port(v,c.vc_q);
+  if(core_in_valid&&v==core_in_last){++core_evals_skipped;return;}
+  core.eval();++core_evals;core_in_last.swap(core_in_now);core_in_valid=true;
  }
  void enqueue_history(){
   prior_target=backend.write_acks+8*active.position;
@@ -59,7 +105,7 @@ struct Rank {
   }
  }
  void switch_layer(const Layer&layer){
-  if(!core.done||!front.native_idle||!core.su_is_idle||!reads.drained()||!writes.drained()||!receiver.acks.empty()||!receiver.responses.empty()||rom_written!=rom_expected)
+  if(!core.done||!front.native_idle||!core.su_is_idle||!reads.drained()||!writes.drained()||!receiver.acks.empty()&&receiver.inflight.empty()||!receiver.responses.empty()||rom_written!=rom_expected)
    throw std::runtime_error("actual layer switch before provider drain");
   if(layer.position!=active.position||layer.number!=active.number+1||layer.epoch!=active.epoch)throw std::runtime_error("invalid warm layer identity");
   auto actual_vm=vm.vm; // equality check only; never an oracle/reference state
@@ -70,7 +116,7 @@ struct Rank {
   epoch_reserved=false;collector_cycles=0;enqueue_history();
  }
  void switch_head(const std::string&image,const std::string&program){
-  if(!core.done||!front.native_idle||!core.su_is_idle||!reads.drained()||!writes.drained()||!receiver.acks.empty()||!receiver.responses.empty()||rom_written!=rom_expected)
+  if(!core.done||!front.native_idle||!core.su_is_idle||!reads.drained()||!writes.drained()||!receiver.acks.empty()&&receiver.inflight.empty()||!receiver.responses.empty()||rom_written!=rom_expected)
    throw std::runtime_error("actual head switch before layer provider drain");
   auto actual_vm=vm.vm;vm.writes.clear();
   vm.switch_banks(image+"/die"+std::to_string(rank),program+"/die"+std::to_string(rank)+"/program.hex",1600,0,1200);
@@ -101,7 +147,7 @@ struct Rank {
   // Every model eval repeats at least twice. Check all cross-model admission,
   // valid and payload faces; preserve same-edge nonblocking read semantics.
   auto face=[&](){std::vector<uint32_t>v={unsigned(core.native_go),unsigned(core.su_issue),unsigned(core.su_descriptor_reserved),unsigned(front.native_ready),unsigned(front.native_idle),unsigned(front.kv_admit_ready),unsigned(front.row_v),unsigned(front.row_ready),unsigned(sector.row_ready),unsigned(kernel.result_valid),unsigned(kernel.q_ready)};for(unsigned j=0;j<32;j++)v.push_back(front.row_data[j]);for(unsigned j=0;j<37;j++)v.push_back(sector.commands[j]);return v;};
-  bool stable=false;for(unsigned n=0;n<24;n++){auto before=face();connect_core();core.eval();connect_core();SectorWrites::connect(sector,front);sector.eval();settle(front,kernel);SectorWrites::connect(sector,front);sector.eval();connect_core();core.eval();if(n>0&&before==face()){stable=true;break;}}
+  bool stable=false;for(unsigned n=0;n<24;n++){auto before=face();connect_core();core_eval();connect_core();SectorWrites::connect(sector,front);sector.eval();settle(front,kernel);SectorWrites::connect(sector,front);sector.eval();connect_core();core_eval();if(n>0&&before==face()){stable=true;break;}}
   if(!stable)throw std::runtime_error("actual core/frontend interfaces did not settle");
   // Read-only witness of the actual FIFO word captured by NEXT. Sample old
   // NEXT ownership before a simultaneous load replaces it on this rising edge.
@@ -129,12 +175,12 @@ struct Rank {
   }
  }
  void rise(){
-  backend.core_edge(true);core.clk=front.clk=kernel.clk=sector.clk=1;core.eval();front.eval();kernel.eval();sector.eval();
+  backend.core_edge(true);core.clk=front.clk=kernel.clk=sector.clk=1;core_eval();front.eval();kernel.eval();sector.eval();
   vm.commit_after_edge();for(auto&w:vm.writes)receiver.observe_write(w.address);
-  receiver.store_after_edge();if(!receiver.writes.empty()&&receiver.writes.back().edge+1==receiver.edge){auto&w=receiver.writes.back();for(unsigned j=0;j<16;j++){vm.external_commit(w.address+j,w.data[j],"NATIVE_ATTN");effects.push_back({11,w.address+j,w.data[j],vm.edge,"NATIVE_ATTN"});}}
+  receiver.store_after_edge();for(auto&w:receiver.landed){for(unsigned j=0;j<16;j++){vm.external_commit(w.address+j,w.data[j],"NATIVE_ATTN");effects.push_back({11,w.address+j,w.data[j],vm.edge,"NATIVE_ATTN"});}}
   if(core.fault||front.fault||kernel.fault||sector.fault)throw std::runtime_error("actual RTL fault rank "+std::to_string(rank));
  }
- void fall(){backend.core_edge(false);core.clk=front.clk=kernel.clk=sector.clk=0;core.eval();front.eval();kernel.eval();sector.eval();}
+ void fall(){backend.core_edge(false);core.clk=front.clk=kernel.clk=sector.clk=0;core_eval();front.eval();kernel.eval();sector.eval();}
 };
 static fs::path layer_output(const Layer&layer,const fs::path&root,size_t count){return count==1?root:root/("layer"+std::to_string(layer.number));}
 static unsigned save_layer(std::array<std::unique_ptr<Rank>,8>&r,const Layer&layer,const fs::path&output){

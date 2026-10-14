@@ -39,7 +39,7 @@ SRC = [ROOT / p for p in (
     "rtl/rom/ot_rom_oneshot_die_m.sv", "rtl/rom/ot_coll_fold_slice.sv", "rtl/rom/ot_coll_rst_leaf.sv", "rtl/rom/ot_coll_col_tile.sv", "rtl/rom/ot_coll_col_tile_d64.sv", "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v", "rtl/lib/ot_hdly.sv",
     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
     "rtl/rom/ot_rom_oneshot_allreduce.sv", "rtl/rom/ot_coll_tp8_die.sv", "rtl/rom/ot_coll_tp8_col_tile.sv",
-    "rtl/rom/ot_coll_tp8_col_tile_r.sv", "rtl/rom/ot_coll_link_end.sv", "rtl/test/tb_coll_tp8.sv")]
+    "rtl/rom/ot_coll_tp8_col_tile_r.sv", "rtl/rom/ot_coll_tp8_col3.sv", "rtl/rom/ot_coll_link_end.sv", "rtl/test/tb_coll_tp8.sv")]
 RES = re.compile(r"TP8COLL dies=8 latu=(\d+) lats=(\d+) msgs=(\d+) words=(\d+) gap=(\d+) skew=(\d+) inject=(-?\d+) "
                  r"mismatches=(\d+) out_err=(\d+) fault=(\d+) code=(\d+) words_out=(\d+) first=(-?\d+) last=(\d+)")
 
@@ -116,7 +116,8 @@ def main():
     ap.add_argument("--lats", type=int, default=40, help="SerDes board link, cycles")
     ap.add_argument("--production", action="store_true", help="Qwen3-8B TP8 shapes (256-word all-reduce, argmax)")
     ap.add_argument("--wrapper-columns", nargs="?", type=int, const=1, default=0,
-                    help="WT: 1 = closed column leaves, 2 = registered-return column leaves (qwen-coll-io 10-14)")
+                    help="WT: 1 = closed column leaves, 2 = registered-return column leaves (qwen-coll-io 10-14), "
+                         "3 = pin-registered data leaves + flat metadata column (qwen-coll-io r2 10-14)")
     ap.add_argument("--leb", type=int, default=0, help="1: ot_coll_link_end on every SerDes port (link-level credits)")
     ap.add_argument("--lc", type=int, default=128, help="link credits = receive buffer words with --leb 1")
     ap.add_argument("--eng", default="", help="depth sweep, WT 0 only: comma list of EDEPTH=,EPR=,EMEMM=,ECT=,QLQD=,QTQD=")
@@ -124,8 +125,8 @@ def main():
     ap.add_argument("--only", default=None, help="regex on case names")
     a = ap.parse_args()
     a.out = a.out.resolve()
-    if a.wrapper_columns == 2 and not a.eng:
-        a.eng = "EDEPTH=64,QLQD=128,QTQD=128"   # the WT 2 production shape (DEPTH 64 engine leaves, 128-word result queues)
+    if a.wrapper_columns in (2, 3) and not a.eng:
+        a.eng = "EDEPTH=64,QLQD=128,QTQD=128"   # the WT 2 / 3 production shape (DEPTH 64 engine leaves, 128-word result queues)
     cases = PRODUCTION_CASES if a.production else UNIT_CASES
     if a.only:
         cases = [c for c in cases if re.search(a.only, c[0])]

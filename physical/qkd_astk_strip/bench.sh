@@ -2,6 +2,7 @@
 # Aggregator strip masters (el1013-qwen-kvstrips): exact bench against the golden aggregator (stack_h minus engines).
 #   bench.sh OUT_DIR [MUT [RL [STACKS]]]   MUT 0 | 1 pv | 2 ep | 3 zn | 4 ctl | 5 ex; RL relay stations a die net (1);
 #                                         STACKS "0 1 2 3" (mutant runs: stack 0, the T = 8192 layer only)
+#   env ASTK_DEFS: extra +define+ profile (native TP8: "+define+KVD_HEADS=1 +define+KVD_Q_FP32=1")
 # Prints "PASS qkd_astk all <n> stacks exact" (rc 0) or "FAIL qkd_astk mutant <m> detected ..." (rc 1).
 set -u
 OUT=$1; MUT=${2:-0}; RL=${3:-1}; STACKS=${4:-"0 1 2 3"}; [ "$MUT" != 0 ] && STACKS=${4:-0}
@@ -27,7 +28,7 @@ CPP="$W/test/nearhbm/sim_nhb_fp_lat_dpi.cpp $W/test/sim_hdc_v41x_fastfp_dpi.cpp"
 : > "$OUT/all.log"
 for s in $STACKS; do
   ( $V --binary --timing -O2 -j ${JOBS:-8} -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-TIMESCALEMOD -Wno-MODDUP \
-      --x-assign fast --x-initial fast +define+KVD_LFB=4 +define+KVD_ND=1 +define+KVD_AKMUT=$MUT +define+KVD_AKRL=$RL \
+      --x-assign fast --x-initial fast +define+KVD_LFB=4 +define+KVD_ND=1 +define+KVD_AKMUT=$MUT +define+KVD_AKRL=$RL ${ASTK_DEFS:-} \
       --top-module tb_qkd_astk -GS=$s --Mdir "$OUT/obj_s$s" -CFLAGS "-O1" $SRC $CPP > "$OUT/build_s$s.log" 2>&1 \
       || { grep -m 12 -E '%Error' "$OUT/build_s$s.log" | cut -c1-300; tail -3 "$OUT/build_s$s.log" | cut -c1-300; echo "FAIL qkd_astk build S=$s"; exit 0; }
     "$OUT/obj_s$s/Vtb_qkd_astk" ${TARG:+ +T=$TARG} > "$OUT/run_s$s.log" 2>&1

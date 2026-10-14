@@ -9,7 +9,7 @@ def main():
   bits=x['ports'][n]['per_bit'][:160] if n=='f_vm' else x['ports'][n]['per_bit']
   ports[n]=[[f,l,round(c-oy,6),d] for f,l,c,d in bits]
   assert all(0<b[2]<43.2 for b in ports[n]),n
- for n,w,start,face in [('tc',163,12.108,'S'),('f_cd',12,30.06,'S'),('tst',24,42.156,'N'),('cs',16,45.036,'N'),('rc',8,47.004,'N'),('roots_ready',8,48.924,'N')]:
+ for n,w,start,face in [('tc',163,12.108,'S'),('f_cd',12,30.06,'S'),('tst',24,42.156,'N'),('cs',64,45.036,'N'),('rc',8,51.564,'N'),('roots_ready',8,53.484,'N')]:
   ports[n]=[[face,'M5',round(start+.096*i,6),.192] for i in range(w)]
  ports['rst']=[['W','M4',3.468,.192]];ports['rsv']=[['W','M4',3.66,.192]]
  d=ROOT/'physical/s81_ph_views/gather/control_strip';d.mkdir(parents=True,exist_ok=True)

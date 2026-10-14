@@ -11,7 +11,7 @@ SRC="$W/test/qwen_split/tb_qwen_split_link.sv \
  $W/qwen_sys/split_20261014/ot_qfd_split_romlink.sv \
  $K/ot_qkvd_fifo.sv $K/ot_qkvd_fifo_sb.sv $K/ot_qkvd_fifo_sl.sv $K/ot_qkvd_buf_tiles.sv $K/ot_qkvd_d2d.sv \
  $K/ot_qkvd_rom_end.sv $K/ot_qkvd_kv_end.sv $K/ot_qkvd_ke_cluster.sv $K/ot_qkvd_ke_tiles.sv \
- $K/ot_qkvd_kv_seq_merged.sv $K/ot_qkvd_kv_desc.sv $W/qwen_sys/system_20261008/ot_qfd_dctl.sv \
+ $W/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv $K/ot_qkvd_kv_seq_merged.sv $K/ot_qkvd_kv_desc.sv $W/qwen_sys/system_20261008/ot_qfd_dctl.sv \
  $W/lib/ot_rst_relay.sv $W/hdc/ot_hdc_delay.sv \
  $P/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv \
  $P/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"

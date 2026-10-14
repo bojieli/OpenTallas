@@ -18,21 +18,17 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
-QDM REFGLOB *g_pin.wd_q* reference: 256 registers, median arrival 266.228516 (range 248.371902 .. 277.118317)
-QDM reference pin u_cdc.g_pin.wd_q[177]$_DFF_P_/CLK clock arrival max 266.228516 min 248.562317 skew 90 hold 50
+QDM REFGLOB *g_pin.wd_q* reference: 256 registers, median arrival 287.563385 (range 277.538147 .. 315.013885)
+QDM reference pin u_cdc.g_pin.wd_q[240]$_DFF_P_/CLK clock arrival max 287.563385 min 271.944977 skew 90 hold 50
 OT_IO_INTER 0 inputs 0 outputs at 150 ps
-QKD_CDC_WLEAF hclk reference u_cdc.g_pin.hld_q[7]$_DFF_P_/CLK of 259 pin flops: clock arrival max 529.347534 min 347.292389 skew 90 hold 50
+QKD_CDC_WLEAF hclk reference u_cdc.g_pin.hls_q[1]$_DFF_P_/CLK of 298 pin flops: clock arrival max 504.001343 min 319.780212 skew 90 hold 50
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
 OT_IOREF clock-port clk (core_clk): data input delays dropped
 OT_IOREF clock-port hclk (hclk): data input delays dropped
 OT_IOREF_EDGE core_clk boundary 585 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE hclk boundary 632 negedge 0 noarc 0 inverted 0
-OT_IOREF ot_lb_v_core_clk core_clk mean 269.2 min 248.4 max 297.7 n 585 boundary
-OT_IOREF ot_lb_v_hclk hclk mean 366.2 min 354.5 max 403.2 n 632 boundary
-OT_IOREF clock-port clk (core_clk): data input delays dropped
-OT_IOREF clock-port hclk (hclk): data input delays dropped
-OT_IOREF_EDGE core_clk boundary 585 negedge 0 noarc 0 inverted 0
-OT_IOREF_EDGE hclk boundary 632 negedge 0 noarc 0 inverted 0
-OT_IOREF ot_lb_v_core_clk core_clk mean 269.2 min 248.4 max 297.7 n 585 boundary
-OT_IOREF ot_lb_v_hclk hclk mean 366.2 min 354.5 max 403.2 n 632 boundary
-OT_WS max -1.757082257469733e-10 min 6.663100626802532e-11
+OT_IOREF ot_lb_v_core_clk core_clk mean 287.6 min 273.6 max 315.0 n 585 boundary
+OT_IOREF ot_lb_v_hclk hclk mean 329.5 min 314.4 max 347.4 n 632 boundary
+OT_WS max -1.975902774731253e-10 min 3.433819895093393e-11
 OT_EXPORT_DONE
