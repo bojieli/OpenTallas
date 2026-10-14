@@ -1,0 +1,53 @@
+{
+  "schema": "native18-tag-source-audit-v1",
+  "source_hashes": {
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_bi.sv": "84fbd3975bf4ccbe436f3864057fcf42e89b9f1f6fa6bfd62e6ebe4447d40597",
+    "rtl/physical/ot_qwen_coll_xfifo_native.sv": "06972853127dc81f303fdbe4c3a04d11f21ea7031240ce78bd07f15cb5d5da4d"
+  },
+  "legacy_truncation_examples": [
+    {
+      "token_a": 1,
+      "token_b": 65537,
+      "position": 8191,
+      "segment": 0,
+      "legacy_tag": 130816,
+      "compact_a": 32704,
+      "compact_b": 1073774528
+    },
+    {
+      "token_a": 65535,
+      "token_b": 131071,
+      "position": 8191,
+      "segment": 63,
+      "legacy_tag": 4294967103,
+      "compact_a": 1073741823,
+      "compact_b": 2147483647
+    },
+    {
+      "token_a": 20863,
+      "token_b": 151935,
+      "position": 8191,
+      "segment": 63,
+      "legacy_tag": 1367342911,
+      "compact_a": 341835775,
+      "compact_b": 2489319423
+    }
+  ],
+  "compact_packing": "token18 + position_low8 + segment6",
+  "compact_vocabulary_verified": 151936,
+  "compact_full_position_safe": false,
+  "position_collision": {
+    "token": 151935,
+    "position_a": 8191,
+    "position_b": 7935,
+    "segment": 0,
+    "tag": 2489319360
+  },
+  "minimum_full_identity_bits": 37,
+  "minimum_plus_stage6_epoch16_bits": 59,
+  "full_token_position_reconstruction_cases": 40960,
+  "return_has_tag": false,
+  "required_contract": "A distinct native transport must carry full identity (or prove a source-bound stage/position/epoch/drain fence) and prevent stale return acceptance before native18 TAG32 can qualify.",
+  "physical_qualified": false,
+  "ring_lifecycle_qualified": false
+}
