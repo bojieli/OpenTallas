@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qw_ovg_ref",
- "verdict": "FAIL",
- "generated": "2026-10-14T00:15:53-0700",
- "host": "ot-epyc1tb",
+ "verdict": "WARN",
+ "generated": "2026-10-14T00:23:36-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "9e24185c2bebce7a1f2d5b02d02cf5509f84cbc5",
+  "start_commit": "6dd6ec4268f01641beff2593db7bbbacca8a46b4",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "bb547e75048745c62072b954033fb61dedc3d4e65ac269f084b755cfc8341050",
-  "manifest_sha256": "bae85e88c0b36b6025b484181fd8b8070f512441619f50c9766c875f964451d1",
+  "archive_sha256": "6a2a1a59be6e2549dd37df0ccff39495ffa89c05cf083bff3f683df39d6ea13d",
+  "manifest_sha256": "5556b612f9ca629070c3058c01d0aa065bf24999755ffc00aec97c0ff4936ca1",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -379,10 +379,10 @@
    {
     "path": "physical/hbm_quant_gather_1014/bit_place.tcl",
     "kind": "file",
-    "sha256": "4aff75fbbd445c616dab1bb44d3b959c8a66cb90d56ab2f96b3239ec0d6eb4a9",
-    "git_blob": "a15556a7f2d99e52083a08013ed5711c094f1bb3",
+    "sha256": "b1e23ccd5de3d1806be196e9d6fac50548faae9e910b492684263ad9d49ca036",
+    "git_blob": "924e703a574508fab15574dbf9cf8a86b156fe8f",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "physical/qwen_die_masters/README.md",
@@ -105817,11 +105817,11 @@
     "matches_provenance_commit": true
    }
   ],
-  "captured": "2026-10-14T00:15:03-0700",
-  "remote_script_sha256": "06d231cfbc530a5cb21b23f70d456deff46222c8b49b9bd8cecb4bf4b80ca235",
+  "captured": "2026-10-14T00:18:33-0700",
+  "remote_script_sha256": "a178a9e0619c03cc8806d8bc25c770d9049a0b682061c97c36aa13da3911e40a",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qw_ovg_ref-20261014-001436",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qw_ovg_ref-20261014-001808",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -105832,16 +105832,40 @@
   "max_root_sinks": 5145,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
+  "tt_insertion_ps": 534.4,
+  "tt_spread_ps": 33.1,
   "declared_clock": "spine",
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
+  "clock_measurements": [
+   {
+    "source": "clk",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 5141,
+      "mean": 521.8,
+      "min": 501.3,
+      "max": 534.4
+     },
+     "all": {
+      "n": 5144,
+      "mean": 521.8,
+      "min": 501.3,
+      "max": 534.4
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "5,145 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+  "text": "5,145 sinks on the largest root <= 15,000; measured TT insertion 534.4 ps, leaf spread 33.1 ps"
  },
  "items": [
   {
@@ -105855,18 +105879,6 @@
    "check": "textbook.util_channel",
    "message": "utilisation 2.6% outside 45%-65% (std 1711 + macro 0 um2 in 64777 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
-  },
-  {
-   "severity": "FAIL",
-   "check": "cts_run",
-   "message": "placement / CTS of the kit failed: ",
-   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
-  },
-  {
-   "severity": "WARN",
-   "check": "cts_calibration",
-   "message": "CTS rc=2 ck_insertion rc=1",
-   "fix": ""
   }
  ]
 }
