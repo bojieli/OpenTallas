@@ -47,6 +47,12 @@ module ot_hgi_idx_unit #(
     // ot_hgi_vm_lanestation client format; tie the grants high for a dedicated group).  IXW = 0 ties them off.
     parameter integer IXW = 0,
     parameter integer IXLQ = 8,        // wide lane credit capacity; B2 RRS3 requires 10
+    // el1013 redesign-idx (opt-in, default 0 = unchanged): TK2 = 1 runs IDX.TOPK records with 1 <= k <= 8, a unit inner
+    // stride and m >= 1 on ot_hgi_idx_tk2 (4 sorted register lanes, 4 VM requests outstanding, whole-sector writes).
+    // k > 8 or a non-unit inner stride keeps the engine / reader selected by PREF / TOPKW (OPEN: no tk2 path for them).
+    // MUT_TK2 = the tk2 bench mutant (ot_hgi_idx_tk2 MUT).
+    parameter integer TK2 = 0,
+    parameter integer MUT_TK2 = 0,
     parameter integer IXNL = 8         // IXW lanes (HBM B2 slice-local lane group)
 ) (
     input  wire          clk,
@@ -82,7 +88,8 @@ module ot_hgi_idx_unit #(
     reg [337:0] vmq_t;
     wire [337:0] vmq_x, vmq_m, vmq_w;
     reg x_active, m_active, w_active;
-    assign vmq = x_active ? vmq_x : m_active ? vmq_m : w_active ? vmq_w : vmq_t;
+    wire [337:0] vmq_k; reg t_go, t_active; wire t_done, t_fault;        // TK2
+    assign vmq = x_active ? vmq_x : m_active ? vmq_m : w_active ? vmq_w : t_active ? vmq_k : vmq_t;
     // ---------------------------------------------------------------- record station
     reg busy, started, eng_done, eng_err;
     reg [31:0] w_sc;
@@ -170,7 +177,16 @@ module ot_hgi_idx_unit #(
                    dB[1:0] == 2'd1 && dB[4:2] == 3'd0 && dO[1:0] == 2'd1 && dO[4:2] == 3'd5 &&
                    (!has_r || (dR[1:0] == 2'd1 && dR[4:2] == 3'd0)) && (!x_keep || (opnd[2] && dC[1:0] == 2'd1 && dC[67:48] != 20'd0 && dC[67:48] <= 20'd2048)) &&
                    (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0 && x_iks_ok && x_n_ok;
-    generate if (IXW != 0) begin : g_ixw
+    generate if (IXW == 3) begin : g_ix2          // hbm-redesign-idx 2026-10-13: the regional ix2 adapter (same ports as index_w)
+    assign vmq_x = 338'd0;
+    ot_hgi_idx_ix2 #(.MUT(MUT >= 2 ? MUT - 1 : 0), .NL(IXNL), .LQ(IXLQ)) u_index (.clk(clk), .rst_n(rst_n), .go_i(NGLOB != 0 ? x_go2 : x_go), .k_i(k), .cand_en_i(x_cand),
+        .keep_en_i(x_keep), .n_i(NGLOB != 0 ? {18'd0, x_ndie} : hdr[63:32]), .rank_i(x_rank),
+        .pos_i(NGLOB != 0 ? x_newest : rpos), .a_base_i(a_base[17:0]), .b_base_i(dB_b), .c_base_i(dC_b), .o_base_i(o_base[17:0]), .r_base_i(r_base[17:0]),
+        .d_base_i(dD_b), .d_stride_i(dD_s), .c_stride_i(dC[105:88]), .c_n_i(dC[59:48]), .has_r_i(has_r), .done(x_done), .fault(x_fault),
+        .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr), .rg_req(rg_req), .rg_gnt(rg_gnt), .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done),
+        .wg_req(wg_req), .wg_gnt(wg_gnt),
+        .fs(sel_fs), .qb(sel_qb), .qbr(sel_qbr), .kin(sel_kin), .to(sel_to), .toc(sel_toc), .co(sel_co), .coc(sel_coc), .ev(sel_ev));
+    end else if (IXW != 0) begin : g_ixw
     assign vmq_x = 338'd0;
     ot_hgi_idx_index_w #(.MUT(MUT >= 2 ? MUT - 1 : 0), .NL(IXNL), .LQ(IXLQ)) u_index (.clk(clk), .rst_n(rst_n), .go_i(NGLOB != 0 ? x_go2 : x_go), .k_i(k), .cand_en_i(x_cand),
         .keep_en_i(x_keep), .n_i(NGLOB != 0 ? {18'd0, x_ndie} : hdr[63:32]), .rank_i(x_rank),
@@ -207,6 +223,16 @@ module ot_hgi_idx_unit #(
     ot_hgi_idx_owned u_owned (.clk(clk), .rst_n(rst_n), .go(w_go), .blk(hdr[71:64]), .grp(hdr[79:72]), .die(rdie), .batch(hdr[87:80]),
         .k(a_n), .a_base(a_base[17:0]), .o_base(o_base[17:0]), .r_base(r_base[17:0]), .d_base(dD[25:8]),
         .done(w_done), .fault(w_fault), .vmq(vmq_w), .vmr(w_active ? vmr : 274'd0));
+    // ---------------------------------------------------------------- IDX.TOPK on tk2 (TK2 = 1: k <= 8, unit inner stride)
+    wire t_route = TK2 != 0 && legal && k != 12'd0 && k <= 12'd8 && a_is == 16'd1 && a_m != 20'd0;
+    generate if (TK2 != 0) begin : g_tk2
+        ot_hgi_idx_tk2 #(.MUT(MUT_TK2)) u_tk2 (.clk(clk), .rst_n(rst_n), .go(t_go), .k(k[3:0]), .order(order), .n(a_n), .m(a_m),
+            .a_base(a_base[17:0]), .a_str(a_str[17:0]), .o_base(o_base[17:0]), .o_str(o_str[17:0]),
+            .r_base(r_base[17:0]), .r_str(r_str[17:0]), .has_r(has_r), .done(t_done), .fault(t_fault),
+            .vmq(vmq_k), .vmr(t_active ? vmr : 274'd0));
+    end else begin : g_no_tk2
+        assign vmq_k = 338'd0; assign t_done = 1'b0; assign t_fault = 1'b0;
+    end endgenerate
     // ---------------------------------------------------------------- output buffer (order = 1: k <= 8 ascending ids)
     reg [31:0] b_id [0:7]; reg [31:0] b_sc [0:7]; reg [7:0] b_v; reg [3:0] b_n; reg [31:0] b_row; reg b_full;
     // write queue entry being written: {is_r, word address, data}
@@ -254,13 +280,13 @@ module ot_hgi_idx_unit #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            busy <= 1'b0; ret <= 3'b001; e_cmd_v <= 1'b0; e_in_v <= 1'b0; vmq_t <= 338'd0; vm_pend <= 1'b0; x_go <= 1'b0; x_active <= 1'b0; m_go <= 1'b0; m_active <= 1'b0; w_go <= 1'b0; w_active <= 1'b0;
+            busy <= 1'b0; ret <= 3'b001; e_cmd_v <= 1'b0; e_in_v <= 1'b0; vmq_t <= 338'd0; vm_pend <= 1'b0; x_go <= 1'b0; x_active <= 1'b0; m_go <= 1'b0; m_active <= 1'b0; w_go <= 1'b0; w_active <= 1'b0; t_go <= 1'b0; t_active <= 1'b0;
             b_v <= 8'd0; b_n <= 4'd0; b_full <= 1'b0; w_v <= 1'b0; c_ok <= 1'b0; r_done <= 1'b1;
             started <= 1'b0; eng_done <= 1'b0; eng_err <= 1'b0; w_cnt <= 32'd0;
             pf_act <= 1'b0; pf_done <= 1'b1; pf_out <= 3'd0; pf_cnt <= 3'd0; pf_h <= 2'd0; pf_t <= 2'd0; pf_it <= 2'd0;
             pk_v[0] <= 1'b0; pk_v[1] <= 1'b0; pk_seal[0] <= 1'b0; pk_seal[1] <= 1'b0; pk_m0 <= 32'd0; pk_m1 <= 32'd0;
         end else begin
-            ret[2:1] <= 2'b00; vmq_t[337] <= 1'b0; x_go <= 1'b0; m_go <= 1'b0; w_go <= 1'b0;
+            ret[2:1] <= 2'b00; vmq_t[337] <= 1'b0; x_go <= 1'b0; m_go <= 1'b0; w_go <= 1'b0; t_go <= 1'b0;
             if (e_cmd_v && e_cmd_r) e_cmd_v <= 1'b0;
             if (e_in_v && e_in_r) e_in_v <= 1'b0;
             // record intake
@@ -273,6 +299,7 @@ module ot_hgi_idx_unit #(
                 if (op == 6'd0 && x_legal) begin x_go <= 1'b1; x_active <= 1'b1; started <= 1'b1; r_done <= 1'b1; end
                 else if (op == 6'd1 && m_legal) begin m_go <= 1'b1; m_active <= 1'b1; started <= 1'b1; r_done <= 1'b1; end
                 else if (op == 6'd3 && w_legal) begin w_go <= 1'b1; w_active <= 1'b1; started <= 1'b1; r_done <= 1'b1; end
+                else if (t_route) begin t_go <= 1'b1; t_active <= 1'b1; started <= 1'b1; r_done <= 1'b1; end
                 else if (!legal) begin busy <= 1'b0; ret <= 3'b101; r_done <= 1'b1; end
                 else begin e_cmd_v <= 1'b1; started <= 1'b1;
                     pf_act <= PREF != 0 && a_is == 16'd1; pf_done <= 1'b0; pf_row <= 20'd0; pf_rb <= a_base;
@@ -376,6 +403,9 @@ module ot_hgi_idx_unit #(
                     w_a <= r_base + b_row * r_str + w_idx;
                 end else w_v <= 1'b0;
             end
+            if (t_active && (t_done || t_fault)) begin
+                t_active <= 1'b0; busy <= 1'b0; started <= 1'b0; ret <= t_fault ? 3'b101 : 3'b011;
+            end
             if (w_active && (w_done || w_fault)) begin
                 w_active <= 1'b0; busy <= 1'b0; started <= 1'b0; ret <= w_fault ? 3'b101 : 3'b011;
             end
@@ -385,7 +415,7 @@ module ot_hgi_idx_unit #(
             if (x_active && (x_done || x_fault)) begin
                 x_active <= 1'b0; busy <= 1'b0; started <= 1'b0; ret <= x_fault ? 3'b101 : 3'b011;
             end
-            if (vmr[273] && !x_active && !m_active && !w_active && !(pf_on && pf_out != 3'd0)) begin
+            if (vmr[273] && !x_active && !m_active && !w_active && !t_active && !(pf_on && pf_out != 3'd0)) begin
                 vm_pend <= 1'b0;
                 if (vm_rd) begin c_ok <= 1'b1; c_sec <= rw_now[17:3]; c_dat <= vmr[255:0]; end
             end
