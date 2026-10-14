@@ -4,12 +4,12 @@ import argparse,hashlib,json,pathlib,subprocess,sys
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/qwen_kv_die'))
 from xcache_actual_tile_bench import PARENT_FILES
-p=argparse.ArgumentParser(description=__doc__);p.add_argument('--parent-commit',required=True);p.add_argument('--workdir',type=pathlib.Path,required=True);p.add_argument('--context-mailbox',action='store_true');p.add_argument('--split-cache',action='store_true');a=p.parse_args()
-if a.context_mailbox and a.split_cache:p.error('select one parent harness mode')
+p=argparse.ArgumentParser(description=__doc__);p.add_argument('--parent-commit',required=True);p.add_argument('--workdir',type=pathlib.Path,required=True);p.add_argument('--context-mailbox',action='store_true');p.add_argument('--split-cache',action='store_true');p.add_argument('--grouped-tx',action='store_true');a=p.parse_args()
+if sum([a.context_mailbox,a.split_cache,a.grouped_tx])>1:p.error('select one parent harness mode')
 out=a.workdir.resolve();src=out/'src';src.mkdir(parents=True,exist_ok=True)
 parent=PARENT_FILES+['rtl/physical/ot_qwen_rom_tile_nkt.sv','rtl/physical/ot_qwen_tile_rpair.sv']
-parent+=['rtl/physical/ot_qwen_tile_tp8_cached_split.sv','rtl/physical/ot_qwen_xcache_split32.sv'] if a.split_cache else ['rtl/physical/ot_qwen_tile_tp8_cached.sv','rtl/physical/ot_qwen_xcache_indexed.sv']
-local=['rtl/test/qwen_kv_die/tb_qwen_xcache_split_parent.sv'] if a.split_cache else ['rtl/test/qwen_kv_die/tb_qwen_xcache_parent.sv'] if not a.context_mailbox else ['rtl/test/qwen_kv_die/tb_qwen_xcontext_parent.sv','rtl/physical/ot_qwen_xcontext_protocol.sv']
+parent+=['rtl/physical/ot_qwen_tile_tp8_cached_grouped.sv','rtl/physical/ot_qwen_rom_tile_nkt_tp8_core_grouped.sv','rtl/physical/ot_qwen_tile_kids_grouped.sv','rtl/physical/ot_qwen_tile_tx8_capture.sv','rtl/physical/ot_qwen_xcache_split32.sv'] if a.grouped_tx else ['rtl/physical/ot_qwen_tile_tp8_cached_split.sv','rtl/physical/ot_qwen_xcache_split32.sv'] if a.split_cache else ['rtl/physical/ot_qwen_tile_tp8_cached.sv','rtl/physical/ot_qwen_xcache_indexed.sv']
+local=['rtl/test/qwen_kv_die/tb_qwen_xcache_grouped_parent.sv'] if a.grouped_tx else ['rtl/test/qwen_kv_die/tb_qwen_xcache_split_parent.sv'] if a.split_cache else ['rtl/test/qwen_kv_die/tb_qwen_xcache_parent.sv'] if not a.context_mailbox else ['rtl/test/qwen_kv_die/tb_qwen_xcontext_parent.sv','rtl/physical/ot_qwen_xcontext_protocol.sv']
 commit=subprocess.check_output(['git','rev-parse',a.parent_commit],cwd=ROOT,text=True).strip()
 manifest={'parent_commit':commit,'actual_tile_GT':3072,'NW':18,'CEXT':2,'ME_EXTRA':8,'physical_claim':False,'sources':{}}
 for f in parent+local:

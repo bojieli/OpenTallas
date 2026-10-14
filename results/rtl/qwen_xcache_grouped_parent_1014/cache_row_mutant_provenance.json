@@ -1,0 +1,6 @@
+{
+  "mutation": "cache_row_mutant",
+  "before": "assign read_x=data[ri];",
+  "after": "assign read_x=data[ri ^ 5'd1];",
+  "sha256": "ac4104349350d66c5c79ba3b63923311b10cdbdc2d4e1d5f16560e6643d6797c"
+}
