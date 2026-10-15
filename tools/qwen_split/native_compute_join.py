@@ -31,6 +31,12 @@ def profile_config(path=None):
     unknown=set(profile.get("nodes",{}))-set(specs)
     if unknown:raise ValueError(f"unknown actual node overrides: {unknown}")
     specs.update(profile.get("nodes",{}))
+    # added_nodes: further real source masters joined by explicit added_joins;
+    # never a replacement of an existing node and never a tie-off.
+    added=profile.get("added_nodes",{})
+    clash=set(added)&set(specs)
+    if clash:raise ValueError(f"added node names collide with existing nodes: {clash}")
+    specs.update(added)
     return profile,specs
 
 
@@ -52,7 +58,7 @@ def load_nodes(specs=None):
     return nodes
 
 
-def build(nodes):
+def build(nodes,added_joins=()):
     # Each expression is checked against its real source ports. Ordered slices
     # are explicit wire connections, never inferred arithmetic or status.
     joins=[];assigned={};used_outputs=set()
@@ -96,6 +102,10 @@ def build(nodes):
     for label,p,hi,lo in [('payload','in_data',511,0),('last','in_last',512,512),('mode','in_mode',513,513),('tag','in_tag',545,514),('valid','in_valid',546,546)]:w('coll_'+label,'seq.cd_d','io.'+p,(hi,lo))
     for label,p,hi,lo in [('v','cmd_v',49,49),('mode','cmd_mode',16,16),('words','cmd_words',15,0),('tag','cmd_tag',48,17)]:w('coll_cmd_'+label,'seq.coll_cmd','io.'+p,(hi,lo))
     w('coll_cmd_observed_free','io.cmd_free','seq.coll_cmd_free')
+    # Profile-declared joins to added real masters (same width/direction checks).
+    for j in added_joins:
+        label,src,dst=j[:3];sel=tuple(j[3])if len(j)>3 and j[3] is not None else None
+        w(label,src,dst,sel)
     # The return word is concatenated once from actual source outputs below.
     assigned[('seq','cc')]='coll_return'
     ret=[('out_valid',1),('out_err',1),('out_rank',3),('out_last',1),('out_data',512)]
@@ -177,7 +187,7 @@ def graph_metadata(model,external):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--profile',type=Path);p.add_argument('--rtl',type=Path,default=ROOT/'rtl/qwen_split/qfd_native_compute_join.sv');a=p.parse_args()
     profile,specs=profile_config(a.profile)
-    m=build(load_nodes(specs));rtl,ext=render(m,profile);a.out.mkdir(parents=True,exist_ok=True)
+    m=build(load_nodes(specs),profile.get('added_joins',()));rtl,ext=render(m,profile);a.out.mkdir(parents=True,exist_ok=True)
     a.rtl.parent.mkdir(parents=True,exist_ok=True);a.rtl.write_text(rtl)
     manifest=dict(schema='opentallas.qwen.actual-native-compute-join.v1',qualified=False,
       scope='real source-output to source-input wires; no physical roots/homes/route ages or whole-die workload qualification',
