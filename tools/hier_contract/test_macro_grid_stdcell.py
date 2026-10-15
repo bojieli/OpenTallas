@@ -34,6 +34,14 @@ class StandardCellClassification(unittest.TestCase):
         self.assertTrue(M.has_macro_move('# ' + SAFE))
         self.assertTrue(M.has_macro_move('# continued comment \\\n' + SAFE))
 
+    def test_runtime_guard_refuses_a_real_macro_object_before_moving_it(self):
+        master = M.cmta.parse_lef(SRAM)[0]
+        script = 'set cell [[ord::get_db_block] findInst u_macro]\n' + SAFE
+        placed, error = M.run_mock('guard.tcl', {master['name']: master},
+                                   {master['name']: 1}, (100, 100), {}, {'guard.tcl': script})
+        self.assertEqual(placed, [])
+        self.assertEqual(error, 'standard cells only')
+
     def test_no_lef_proven_cells_skip_but_unknown_move_stays_warn(self):
         spec = place_spec('cells.tcl')
         spec['stages']['route']['cmd'] = ('run --step-tcl pre_global_place=/src/physical/x/cells.tcl')
