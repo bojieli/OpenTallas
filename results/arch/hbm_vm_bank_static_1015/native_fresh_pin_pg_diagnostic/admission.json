@@ -1,0 +1,16 @@
+{
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1498708-1792055362",
+  "result": "RAN exit0",
+  "scope": "ActualfreshuniformIOODBfromfullrun020655,notpreviouslycorrectedpins",
+  "fix": "ReadoldfacelocationsandactualPGfirst;destroyallsignalBPinshapesasacompleteset;placerealtrackswith1DBUlowerrequest;assertactualplacedcentersforeachport",
+  "actual_results": {
+    "pins": 4742,
+    "PG_contacts": 144,
+    "shifted_centers": 0,
+    "PG_clearance_violations": 0,
+    "signal_pitch_violations": 0
+  },
+  "prior_fullrun020655": "Source26596b650failedIOreadbackassertbeforeCTS;remoteunit1493271continuedGPLbecauseflowwroteIOODBbeforehookerror.Noqualifiedfullgateclaim.",
+  "next": "Needonefullnativegatewithcompletesignalpinreplacement afterpreviousknown-invalidjobterminal/cancelledbycoordinator.NoRTLfunctionalchange."
+}
