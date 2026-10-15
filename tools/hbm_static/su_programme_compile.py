@@ -53,14 +53,17 @@ def lower(source, out, extra=None, extra_bits=0):
           'tools/hbm_static/su_programme_compile.py',
           'rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv',
           'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']
+    m['clock_roots']={'controller':'clk', 'macros':base,
+        'index_groups':[{'first_macro':g*ib,'count':ib} for g in range(groups)],
+        'dictionary_columns':[{'first_macro':groups*ib+sum(db[:c]),'count':db[c]} for c in range(cols)]}
     m['source_pins']={p:sha(ROOT/p) for p in pins}
     (out/'manifest.json').write_text(json.dumps(m,indent=2)+'\n')
     dbstr="'{"+','.join(map(str,db))+"}"
     (out/'programme_params.svh').write_text(
-        f'localparam integer PROGRAMME_BITS={bits}, PROGRAMME_COLS={cols}, PROGRAMME_WRITES={len(config)};\n'
+        f'localparam integer PROGRAMME_BITS={bits}, PROGRAMME_COLS={cols}, PROGRAMME_WRITES={len(config)}, PROGRAMME_MACROS={base};\n'
         f'localparam integer PROGRAMME_DICT_BANKS[0:PROGRAMME_COLS-1]={dbstr};\n')
     (out/'tb.sv').write_text(TB.replace('@BITS@',str(bits)).replace('@EDGES@',str(len(rows)))
-        .replace('@WRITES@',str(len(config))).replace('@DB@',dbstr).replace('@DICT@',str(groups*ib)))
+        .replace('@WRITES@',str(len(config))).replace('@DB@',dbstr).replace('@DICT@',str(groups*ib)).replace('@MACROS@',str(base)))
     return m
 
 TB='''`timescale 1ns/1ps
@@ -72,8 +75,8 @@ logic [15:0] cfg_bank=0; logic [6:0] cfg_row=0; logic[255:0] cfg_data=0;
 wire busy,valid,done,fault; wire[15:0] edge_index; wire[B-1:0] command;
 reg[279:0] config_words[0:W-1]; reg[B-1:0] expected_words[0:N-1];
 string dir; integer data_mut,addr_mut,phase_mut;
-ot_hbm_su_programme #(.LINE_BITS(B),.EDGES(N),.DICT_BANKS(@DB@)) dut(
- .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_bank(cfg_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
+ot_hbm_su_programme #(.LINE_BITS(B),.EDGES(N),.DICT_BANKS(@DB@),.MACROS(@MACROS@)) dut(
+ .clk(clk),.clk_macro({@MACROS@{clk}}),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_bank(cfg_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
  .start(start),.length(16'(N)),.busy(busy),.valid(valid),.done(done),.fault(fault),
  .edge_index(edge_index),.command(command));
 task automatic tick; @(posedge clk); #1; endtask

@@ -22,7 +22,7 @@ pins the original image and lowering/RTL/memory sources and records capacity.
 Changing latency or command layout requires regenerating the compiler image.
 
 Use `.EDGES(manifest.edges)`, `.LINE_BITS(manifest.line_bits)`, and
-`.DICT_BANKS('{...manifest.dictionary_banks...})` at elaboration. Capacity is a
+`.DICT_BANKS('{...manifest.dictionary_banks...})`, and `.MACROS(manifest.total_macros)` at elaboration. Capacity is a
 physical compile-time property. A different programme can be loaded only if its
 column dictionaries and edge table fit that elaborated capacity. Rerunning the
 lowerer chooses the required capacities; physical implementation must accommodate
@@ -65,3 +65,10 @@ compiled calendars, and pass numerical/memory/relay checks using this producer.
 The standalone bench can use external expected programme words. Physical mapping
 here means explicit instantiation of target SRAM models; placement, routing,
 clock delivery, TT setup, FF hold, and DRC gates remain unproven.
+
+Every macro has a distinct `clk_macro[MACROS-1:0]` input wired directly to that
+physical SRAM instance. `clk` drives controller, boundary and bank-select flops.
+The manifest records the exact index-group and dictionary-column root mapping.
+Benches tie all these ports to one logical clock; physical integration must
+provide coherent compensated clocks preserving the declared read-edge timing.
+This interface alone does not prove clock tree insertion or skew closure.
