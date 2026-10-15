@@ -1,0 +1,97 @@
+`timescale 1ns/1ps
+`default_nettype none
+// Fixed-calendar QDQ beat engine. One compiler instruction = 32 FP32 values,
+// four contiguous VM sectors. No ready, credits, queues, arbitration or rescheduling.
+// Source/destination addresses are canonical 16-bit sector addresses, including SID.
+// The compiler reserves all four read/write bank slots and excludes RAW/WAR/WAW
+// until real macro commit. RL includes bank+station edges, measured at these pins.
+// Faults report an invalid calendar; they never stall or extend that calendar.
+// The actual released decoder is retained verbatim. Physical reuse of its views
+// is conditional on matching phase and pin contract; this transport has no views yet.
+module ot_hgi_qdq_static #(
+    parameter integer RL=7,
+    parameter integer DL=25, // pipeline stages; post-input edge delta = 24
+    parameter integer WC=4, // outgoing bank acceptance1 + actual macro commit3
+    parameter integer MUT=0 // 1 wrong input sector permutation; 2 wrong write lane
+) (
+    input wire clk, rst_n,
+    input wire cmd_v,
+    input wire [5:0] cmd_op,
+    input wire [7:0] cmd_block,
+    input wire [15:0] cmd_src, cmd_dst,
+    input wire cmd_last,
+    output reg [8*17-1:0] rq,
+    input wire [8*257-1:0] rr,
+    output reg [8*281-1:0] wq,
+    output reg beat_done, record_done,
+    output reg fault
+);
+    localparam integer NP=RL+1;
+    reg [NP-1:0] vp, lp;
+    reg [15:0] sp [0:NP-1], dp [0:NP-1];
+    reg [13:0] hp [0:NP-1];
+    reg gv, gl;
+    reg [15:0] gd;
+    reg [127:0] gh;
+    reg [1023:0] gx;
+    reg [DL-1:0] dv, dl;
+    reg [WC-1:0] donep,lastp;
+    reg [15:0] dst [0:DL-1];
+    wire vo, qfault, decode_fault;
+    wire [511:0] y;
+    ot_hgi_qw_dec3 decoder(.clk(clk),.rst_n(rst_n),.v(gv),.header(gh),.x(gx),
+        .vo(vo),.y(y),.fault(qfault),.decode_fault(decode_fault));
+    integer i,j,b;
+    reg [7:0] expected;
+    reg bad;
+    reg [15:0] sec;
+    always @* begin
+        expected='0;
+        for(integer t=0;t<4;t=t+1) if(vp[NP-1]) expected[(sp[NP-1][2:0]+t)&7]=1'b1;
+        bad=1'b0;
+        for(integer t=0;t<8;t=t+1) if(rr[t*257+256]!=expected[t]) bad=1'b1;
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if(!rst_n) begin
+            rq<='0; wq<='0; vp<='0; lp<='0; gv<=0; gl<=0;
+            dv<='0; dl<='0; donep<='0; lastp<='0; beat_done<=0; record_done<=0; fault<=0;
+        end else begin
+            vp<={vp[NP-2:0],cmd_v}; lp<={lp[NP-2:0],cmd_last};
+            dv<={dv[DL-2:0],gv}; dl<={dl[DL-2:0],gl};
+            rq<='0;
+            for(j=0;j<4;j=j+1) begin
+                sec=cmd_src+16'(j); b=int'(sec[2:0]);
+                rq[b*17+:17]<={cmd_v,sec};
+            end
+            gv<=vp[NP-1]; gl<=lp[NP-1];
+            // Validates the fixed expected return cycle, including unexpected idle responses.
+            if(bad || decode_fault || (vo && qfault) || vo!=dv[DL-1]) fault<=1;
+            if(cmd_v && (!(cmd_op==4 || cmd_op==5 || (cmd_op==6 && cmd_block==16)) ||
+                cmd_src[15:3] != ((cmd_src+16'd3)>>3) ||
+                cmd_dst[15:3] != ((cmd_dst+16'd3)>>3))) fault<=1;
+            wq<='0;
+            for(j=0;j<4;j=j+1) begin
+                sec=dst[DL-1]+16'(j); b=int'(sec[2:0])^(MUT==2?1:0);
+                wq[b*281+:281]<={dv[DL-1],sec,256'd0,8'hff};
+                for(i=0;i<8;i=i+1)
+                    wq[b*281+8+i*32+:32]<={y[(j*8+i)*16+:16],16'd0};
+            end
+            donep<={donep[WC-2:0],dv[DL-1]};
+            lastp<={lastp[WC-2:0],dv[DL-1]&&dl[DL-1]};
+            beat_done<=donep[WC-1]; record_done<=lastp[WC-1];
+        end
+    end
+    // No reset on datapath payload. Registers are bounded latency state, not memory substitutes.
+    always @(posedge clk) begin
+        sp[0]<=cmd_src; dp[0]<=cmd_dst; hp[0]<={cmd_op,cmd_block};
+        for(integer k=1;k<NP;k=k+1) begin sp[k]<=sp[k-1]; dp[k]<=dp[k-1]; hp[k]<=hp[k-1]; end
+        gd<=dp[NP-1]; gh<='0; gh[127:124]<=4'd4;
+        gh[123:118]<=hp[NP-1][13:8]; gh[71:64]<=hp[NP-1][7:0];
+        for(integer k=0;k<4;k=k+1)
+            gx[k*256+:256]<=rr[(((int'(sp[NP-1][2:0])+k)&7)^(MUT==1?1:0))*257+:256];
+        dst[0]<=gd;
+        for(integer k=1;k<DL;k=k+1) dst[k]<=dst[k-1];
+    end
+    initial if(RL<1 || DL<2 || WC<2) $fatal(1,"invalid measured QDQ pipeline");
+endmodule
+`default_nettype wire
