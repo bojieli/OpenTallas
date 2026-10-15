@@ -1,13 +1,13 @@
 {
-  "status": "SCREEN11_LIVE_ALL_SERVICE_STREET_PATHS",
-  "source_commit": "20e23fe66",
+  "status": "SCREEN12_LIVE_ALL_SERVICE_STREET_PATHS",
+  "source_commit": "ae2651806",
   "host": "ot-epyc4",
-  "pid": 1744200,
-  "unit": "oth-ubuntu-1744172-1792059609",
-  "local_systemd_unit": "canonical-gen-1015-screen11.service",
-  "local_log": "/home/ubuntu/canonical-gen-1015-screen11.log",
+  "pid": 1753885,
+  "unit": "oth-ubuntu-1753863-1792059827",
+  "local_systemd_unit": "canonical-gen-1015-screen12.service",
+  "local_log": "/home/ubuntu/canonical-gen-1015-screen12.log",
   "remote_source": "/srv/opentallas-scratch/codex-canonical-gen-1015/src",
-  "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen11",
+  "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen12",
   "scope": "Actual full2417 typed generator. No native timing or placement success claim while active. All sourcepairIDs2417/BF519 andPHW10 metadata preserved.",
   "first_failure": "Historical slot_geometry required uniform BF_PER_REGION; canonical exactperframe slot inventory now replaces only canonical restriction. Failed screen1 remains immutable.",
   "artifacts_expected": {
@@ -42,7 +42,7 @@
     "local_systemd_unit": "canonical-gen-1015-screen3.service",
     "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen3"
   },
-  "updated_utc": "2026-10-15T10:20:58.629514+00:00",
+  "updated_utc": "2026-10-15T10:26:40.887930+00:00",
   "screen7": {
     "status": "GEN_FAIL",
     "exit_code": 1,
@@ -80,9 +80,17 @@
     "error": "All128 root broadcast paths (two shared trees), all128 root return paths, qSW514 and aSW1026 construct; ixSW fails legacyshorestrip at(12718,3433). Movedactual32969childboxes0overlap/outside."
   },
   "screen11": {
-    "status": "LIVE",
+    "status": "GEN_FAIL",
     "source": "20e23fe66",
     "capacity_sha256": "2d1fa10aa7e3136a4fece04b2b9b1d094a99391dcd5c7a6726991061ff540995",
-    "structural_change": "Allfour q/a/ix/co service paths use actual irregularstreet/gap graph; externalS14spine placed outside movedinnercolumn outline; actual per-chain polylines/stationboxes and broadcasttree injectors/parents exported for system optimizer."
+    "structural_change": "Allfour q/a/ix/co service paths use actual irregularstreet/gap graph; externalS14spine placed outside movedinnercolumn outline; actual per-chain polylines/stationboxes and broadcasttree injectors/parents exported for system optimizer.",
+    "error": "NameError in moved-column spine lookup; fixed local cols[i] reference. No physical verdict inferred. Undefined-name lint and py_compile pass."
+  },
+  "screen12": {
+    "status": "LIVE",
+    "source": "ae2651806",
+    "capacity_sha256": "2d1fa10aa7e3136a4fece04b2b9b1d094a99391dcd5c7a6726991061ff540995",
+    "structural_change": "Allfour q/a/ix/co service paths use actual irregularstreet/gap graph; externalS14spine placed outside movedinnercolumn outline; actual per-chain polylines/stationboxes and broadcasttree injectors/parents exported for system optimizer.",
+    "fix": "Use actual cols[i] for moved-column lookup; previous local name was undefined."
   }
 }
