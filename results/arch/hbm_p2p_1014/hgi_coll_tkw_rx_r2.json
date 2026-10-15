@@ -1,0 +1,69 @@
+{
+  "kind": "tile",
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "layer_cap": "M5",
+  "route": {
+    "peak_ram_gb": 24,
+    "threads": 8
+  },
+  "job": {
+    "owner": "Codex:H-COLL",
+    "branch": "claude/hbm-p2p-coll-1014",
+    "tag": "r2",
+    "hold_merge": "Individual leaf route only; native parent pin/reset/clock integration qualification remains required.",
+    "purpose": "Official-pin FIFO with retained per-64-bit pointer copies eliminating reset and head-select fanout",
+    "benches": [
+      {
+        "name": "native_vm_r20",
+        "cmd": "JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/native_vm_r20 -GRLY=20",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 64,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "native_vm_early_credit",
+        "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/native_vm_early_credit -GRLY=20 -GMUT=1; then exit 0; elif test -s {RUN}/native_vm_early_credit/run.log && grep -q \"premature credit drain\" {RUN}/native_vm_early_credit/run.log; then exit 1; else exit 0; fi",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 64,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ]
+  },
+  "name": "hgi_coll_tkw_rx_r2",
+  "top": "ot_hgi_coll_rx_native",
+  "sources": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_crl.sv"
+  ],
+  "params": {
+    "W": 568,
+    "CRD": 8
+  },
+  "pins": {
+    "S": [
+      "t_v",
+      "t_d"
+    ],
+    "N": [
+      "out_v",
+      "out_d",
+      "out_rdy",
+      "epoch",
+      "fault"
+    ],
+    "W": [
+      "clk",
+      "rst_n"
+    ]
+  },
+  "std_area_um2": 3537,
+  "io_tcl": "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_tkw_rx_n3_io.tcl"
+}

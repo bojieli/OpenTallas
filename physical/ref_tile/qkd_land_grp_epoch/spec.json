@@ -137,10 +137,10 @@
  "recipe": 2,
  "slot_change_request": "el1013-qwen-kvstrips 2026-10-13 (table in el1011-qwen-tp8.log): qwen_rom_tp8 strip slots land_<q> (cells qkd_land / qkd_land_n, 172.776 x 12,141.312; one 26,789-flop KV merge + one 39,613-flop embedding engine, both over the clock rule, and a landing crossbar with no RTL) are replaced by 32 slots landpc_<q>_<k> of qkd_land_pc (86.4 x 172.8 in the E half, strip x 86.4, y = 378 k + 190.08: level with the PC's CDC and qkd_ctrl_pc; the down / up / credit / fault chains hop 205.2 um between leaves, flop to flop), 8 slots landgrp_<q>_<i> of qkd_land_grp (86.4 x 302.4 in the W half, y = 1,512 i + 691.2: the middle of its four PCs; gw / gc of the inner PCs run ~95 um and of the outer PCs ~440 um along the free W half, flop to flop, which also takes the die's relay stations) and one slot landemb_<q> of qkd_land_emb (172.8 x 64.8 at y = 12,074.4).  SLOT ORDER: strip slot 4 i + q hosts LOGICAL PC {q, G(i)} (kv_die.LAND_GROUP_ORDER 4 5 0 1 2 3 6 7): the lane strap of the write-queue leaf and lpc of qkd_land_pc follow it, the write feed chains hop 4 slots; the physical PC (qkd_ctrl_pc strap pc, PHY slice) stays the slot.  Pins: per PC li[281:0] / lp / cf = the CDC co bus + c_fault (was c<k>i[282:0] / cf<k>), es / er to qkd_ctrl_pc (NEW die buses, over the CDC column); per group rq[15:0] / rs[1024:0] of its engine (was rq<e> / rs<e>), lt[20:0], NEW kn[1046:0] = the posted K / V rows {kvw_d, kvw_layer, kvw_t, kvw_vg, kvw_v} (the contract sends kvn to wctl only: the merge slices need a tap); strip emf / emr on the N face of qkd_land_emb with the link credits in bit 529; mf = the strip fault.  NOT bound (no RTL consumer in the landing): ing[529:0] (prefill ingest: belongs with the write queue wctl), wdurable[22:0], wfault, crst.",
  "job": {
-  "owner": "Codex:Q-KVSYS-ELEM",
+  "owner": "Claude:Q-KVSYS-ELEM",
   "branch": "claude/qwen-kvsys-el-r3-1014",
-  "tag": "ep1",
-  "purpose": "Native rq17 layer-parity successor for die landing fence race; fresh pin/clock qualification.",
+  "tag": "ep3",
+  "purpose": "Static-schedule landing lt race fix (owner 10-14 18:59): rq17 parity CHECKED (sticky fault) against compiled layer context, no hold queue; merge queues RH1 head registers; fresh native view.",
   "extra_paths": [
    "rtl/test/qwen_split",
    "rtl/test/qwen_kv_die",
@@ -163,8 +163,19 @@
     ]
    },
    {
+    "name": "land_epoch_schedule_fault",
+    "cmd": "bash tools/qwen_kv_die/land_epoch_bench.sh {RUN}/bench/schedfault 0 1 12 12 11 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PASS qkd_land_rd schedule fault detected",
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
     "name": "land_epoch_mutant",
-    "cmd": "bash tools/qwen_kv_die/land_epoch_bench.sh {RUN}/bench/mutant 4 1 12",
+    "cmd": "bash tools/qwen_kv_die/land_epoch_bench.sh {RUN}/bench/mutant 4 1 12 12 11 1",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -175,7 +186,7 @@
    }
   ]
  },
- "structural_change": "Landing future-layer request race: parity bit16 added to request wire; ingress128-entry queue holds requests until matching layer context, DQ128 matches actual native ECTL credits. Production named-native KL12 PASS2471 exact responses/16384words and parity-bypass GM4 FAIL; producer36layers9170requests PASS and inverted-parity FAIL1005. Same-input local cost9596->9597cycles; fresh native successor, no alias of old16-bit views. Assigned die pins403f9a8f6 results/arch/qwen_split_1014/kvsys_v1_3_candidate/pins/qkd_land_grp_epoch.json",
+ "structural_change": "ep3 (owner static-schedule rule 2026-10-14 18:59): the ep1/ep2 128-entry ingress hold queue (a runtime readiness wait) is withdrawn. rq17 is pin-registered and goes straight to the unchanged merge; bit16 parity is CHECKED against the registered layer context and a request before its lt (or an old-layer request after it) latches the sticky group fault. Compiler constraint: the layer's first request reaches the rq pin no earlier than the edge lt reaches the lt pin (bench boundary LEAD=KL PASS, KL-1 fault detected before any response). Merge request/pending-tag queues use ot_qkvd_fifo RH1 head registers (cycle-identical) to remove the PD128:1 head mux behind ep2's TT -37.4 (u_q.rp -> head_last/go -> u_p.mem). Same pins/outline as ep2. Previous: Landing future-layer request race: parity bit16 added to request wire; ingress128-entry queue holds requests until matching layer context, DQ128 matches actual native ECTL credits. Production named-native KL12 PASS2471 exact responses/16384words and parity-bypass GM4 FAIL; producer36layers9170requests PASS and inverted-parity FAIL1005. Same-input local cost9596->9597cycles; fresh native successor, no alias of old16-bit views. Assigned die pins403f9a8f6 results/arch/qwen_split_1014/kvsys_v1_3_candidate/pins/qkd_land_grp_epoch.json ep2: release uses registered ls_q/context only; raw lt[0] guard was redundant under parity and introduced a seven-level input->FIFO rp cone (ep1 CTS gate), violating pin capture. Every functional lt/rq bit now lands at a pin flop; no added data stage.",
  "children": [],
  "inter": [],
  "io_flop_at_pins": {

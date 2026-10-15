@@ -16218,3 +16218,64 @@ def hbm_qdq_dedicated_face_ff_model():
             "clock_sink_estimate":823,"replicas":4,"shape_um":[129.6,71.28],
             "launch_bits_per_cycle":190,"MACs_per_cycle":0,"memory_bytes_per_cycle":0,
             "default_off":True,"actual_pin_requirement":"P190/Q220 and per-pairL-H100"}
+
+
+def s81_native_functional_homes_1014_model():
+    """Real missing functional homes, unchanged prices, explicit physical debt.
+
+    This sizes the actual native leaf architecture rather than treating a
+    behavioral whole-token component as a placed engine. It grants no timing,
+    bandwidth or token-rate qualification. The static compiler must account for
+    actual relay phases, bank conflicts and write visibility before adoption.
+    """
+    homes = json.loads((ROOT / 'physical/s81_die_pins/v20_functional/homes.json').read_text())
+    mix = json.loads((ROOT / 'physical/s81_die_pins/v20_functional/dsfd_engram_mix_c.json').read_text())
+    hcp = homes['hc_projection']
+    return dict(schema='opentallas.s81-native-functional-homes-model.v1',
+        pricing='existing immutable unit/layer prices unchanged; no new acceptance ledger claim',
+        scheduling='compiled fixed cycles; no normal-runtime credit/backpressure/ready arbitration',
+        engram_mix=dict(
+            MACs_per_cycle=32, multiplier_roots=8, multiplier_lanes_per_root=4,
+            reduction_chunk_roots=12, add_roots=4,
+            clock_roots=mix['ports']['ck']['bits'],
+            measured_max_flop_sinks_per_root=11519,
+            measured_hierarchical_flop_sinks=268167,
+            source_census='Engram owner elaborated census33; later direct-payload successor must refresh census; final area/CTS remains OPEN',
+            peak_read_rows_per_cycle=5, peak_read_bytes_per_cycle=320,
+            peak_write_rows_per_cycle=1, peak_write_bytes_per_cycle=64,
+            production_read_rows=5120, production_write_rows=640,
+            format='H/out packedBF16; K/W/V nativeFP32',
+            boundary_bits=sum(p['bits'] for p in mix['ports'].values()),
+            outline_um=mix['outline_um'], outline_mm2=1152*864/1e6,
+            endpoint_shape_um=[561.6,129.6],
+            child_grid=dict(columns=6, rows=6, cell_um=[181.44,129.6], gap_um=8.64,
+                            occupied_cells=35, available_cells=36),
+            bank_capacity_debt='H stride1 and K/W stride2 collide under naive row%128 allocation within160beats; real compiler mapping/calendar required',
+            qualification='OPEN child area, pin cuts, native clocks, real VM calendar and e2e cost'),
+        hc_projection=dict(
+            outputs_per_tp4_die=6, outputs_total=24,
+            leaf_MACs_per_cycle=256, die_MACs_per_cycle=1536,
+            ROMs_per_leaf=64, SRAMs_per_leaf=16,
+            ROM_macro='ot_rom_4096x266_m8',
+            SRAM_macro='ot_sram_1r1w_128x256_m1_r2c2',
+            resident_sets=43, logical_weight_bits_per_leaf=43*2*20480*32,
+            physical_ROM_bits_per_leaf=64*4096*266,
+            ROM_mm2_per_leaf=.49049266,
+            X_SRAM_mm2_per_leaf=16*94.824*41.040/1e6,
+            MAC_cell_mm2_per_leaf=256*1168.791/1e6,
+            logic_utilization_target=.55,
+            floorplan_mm2_per_leaf=1728*864/1e6,
+            provisional_non_MAC_margin_mm2=(1728*864/1e6 - .49049266
+                -16*94.824*41.040/1e6 -256*1168.791/1e6/.55),
+            native_prefetch_rows_per_serial_cycle=8,
+            native_prefetch_bytes_per_serial_cycle=512,
+            native_prefetch_cycles=80,
+            measured_pin_registered_leaf_cycles=264,
+            nominal_fast_cycles_before_physical_transport=(80+264)*4/3,
+            broadcast_payload_bits=4096, raw_result_bits=192,
+            slots=hcp,
+            qualification='OPEN synthesis/CTS of full43-set capacity, full 4096b cuts, per-leaf fixed3:4 forward/return and fullallgather/posttail calendar'),
+        other_native_homes=dict(
+            embedding='physical/s81_die_pins/v20_embedding/home.json: actual2SRAM expander, upstream full table and S000 source role OPEN',
+            probability='physical/s81_die_pins/v20_svc_native/ingress_layout.json: actual 1030 closed-pin joins max25.464um; native full parent OPEN',
+            capture='physical/s81_die_pins/v20_hc_capture/cpl_geometry.json: 9080 actual CPL joins <=499.782um, first-stage M5 preserved, local capture M3; actual leaf routes pending'))

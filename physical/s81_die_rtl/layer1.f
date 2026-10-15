@@ -31,6 +31,12 @@ rtl/v41rom/ot_v41_bf_col.sv
 rtl/v41rom/ot_v41_bf_front_core.sv
 # BF weight ROM macro model (bit array; the macro is hard IP)
 physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v
+# stage sequencer (--rtl-bind): the STATIC issuer (owner 2026-10-14 18:59: calendar-fixed issue, no credits); layer1
+# die name dsfd_stage_seq_static_c8 = engines 0..7 + VM engine 12 (gate rtl/dsrom_sys/s81_static_control/test/run_static_c8.sh)
+rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv
+rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv
+rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv
+rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv
 # PQ core slot (--rtl-bind master dsfd_sp_pq_n): the production native core cluster + ROM register / x-lane leaves.
 # Core leaf set = these OT_PQ_* defines (tools/dsrom_s81_fulldie.py pq_rtl_clock_ports() reads them: one source).  The
 # PQ's pinned-only modules come from its pinned tree; the repo copies of the shared float modules are supersets whose

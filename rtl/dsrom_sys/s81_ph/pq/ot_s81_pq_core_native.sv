@@ -66,6 +66,7 @@ module ot_s81_pq_core_native (
 `endif
 );
     wire aq_vin, ba_v;
+    wire [1:0] ba_wv;                  // per-parity stage A write enables (controller registers): IX tiles hold no parity constant
     wire [1:0] aqf;
     wire [9:0] aqi;
     wire [7:0] ba_blk;
@@ -91,7 +92,7 @@ module ot_s81_pq_core_native (
         .i_xps(i_xps), .i_obase(i_obase), .i_ops(i_ops), .i_fmt(i_fmt),
         .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr), .x_rv(x_rv), .f_fault(fault_to_ctl),
         .fault(fault), .phase_cycles(phase_cycles), .ev_go(ev_go), .ev_end(ev_end), .ev_tag(ev_tag),
-        .aq_vin(aq_vin), .aqf(aqf), .q_consume(q_consume), .b_consume(b_consume), .aqi_o(aqi), .ba_v_o(ba_v), .ba_blk_o(ba_blk),
+        .aq_vin(aq_vin), .aqf(aqf), .q_consume(q_consume), .b_consume(b_consume), .aqi_o(aqi), .ba_v_o(ba_v), .ba_wv_o(ba_wv), .ba_blk_o(ba_blk),
         .hw_o(hw), .h_hi_o(h_hi), .h_b0_o(h_b0), .h_b1_o(h_b1), .mdr_o(mdr_o),
         .q2f_i(q2f_i), .ga_i(ga_i), .bc_hr_o(bc_hr),
         .rom_pa0(rom_pa0), .rom_pa1(rom_pa1), .rom_pq0(rom_pq0), .rom_pq1(rom_pq1),
@@ -250,22 +251,22 @@ module ot_s81_pq_core_native (
 `else
             .clk_read(ck_ix_read[4*g +: 4]),
 `endif
-            .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
-            .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
+            .rst_n(rst_n), .consume(b_consume),
+            .xw(x_q[1024*(g % 2) +: 1024]), .ba_wv(ba_wv[g >= 2]), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
             .bt_d(d), .fault(storage_fault[g]));
 `elsif OT_PQ_IX_PIN_VARIANTS
         if(g < 2) begin : g_left
-        ot_s81_pq_ix_left_native u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
-            .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
+        ot_s81_pq_ix_left_native u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume),
+            .xw(x_q[1024*(g % 2) +: 1024]), .ba_wv(ba_wv[g >= 2]), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
             .bt_d(d), .fault(storage_fault[g]));
         end else begin : g_right
-        ot_s81_pq_ix_right_native u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
-            .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
+        ot_s81_pq_ix_right_native u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume),
+            .xw(x_q[1024*(g % 2) +: 1024]), .ba_wv(ba_wv[g >= 2]), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
             .bt_d(d), .fault(storage_fault[g]));
         end
 `else
-        ot_s81_pq_ix_sram u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
-            .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
+        ot_s81_pq_ix_sram u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume),
+            .xw(x_q[1024*(g % 2) +: 1024]), .ba_wv(ba_wv[g >= 2]), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
             .bt_d(d), .fault(storage_fault[g]));
 `endif
         genvar u;

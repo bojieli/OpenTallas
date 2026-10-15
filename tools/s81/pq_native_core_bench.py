@@ -31,7 +31,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--jobs", type=int, default=8)
-    ap.add_argument("--mut", choices=["IX", "QB", "CONSUME", "BC", "AQPIN", "AQPAR", "AQMEM", "AQMAX", "QBBANK", "QBHEAD", "QBPRE", "FAULT", "QBX", "QBW"])
+    ap.add_argument("--mut", choices=["IX", "QB", "CONSUME", "BC", "AQPIN", "AQPAR", "AQMEM", "AQMAX", "QBBANK", "QBHEAD", "QBPRE", "FAULT", "QBX", "QBW", "WV"])
     ap.add_argument("--aq-pin", action="store_true")
     ap.add_argument("--aq-split", action="store_true")
     ap.add_argument("--qb-split", action="store_true")
@@ -50,8 +50,10 @@ def main():
     ref = ref.replace("ot_s81_pq_qb_sram u_qb", "ot_v41_pqc_qb #(.KMAX(6144)) u_qb")
     ref = ref.replace(",\n        .fault(storage_fault[4])", "")
     ref = ref.replace("ot_s81_pq_ix_sram u_ix", "ot_v41_pqc_ix #(.KMAX(6144), .VRD(64)) u_ix")
+    # the reference IX (pinned ot_v41_pqc_ix) still compares its parity: give it the tie it was built with
+    ref = ref.replace(".ba_wv(ba_wv[g >= 2])", ".par(g >= 2), .ba_v(ba_v)")
     ref = ref.replace(", .fault(storage_fault[g])", "")
-    ref = ref.replace(".consume(q_consume), ", "").replace(".consume(b_consume), ", "")
+    ref = ref.replace(".consume(q_consume), ", "").replace(".consume(b_consume), ", "").replace(".consume(b_consume),\n", "\n")
     ref = ref.replace("wire [4:0] storage_fault;", "wire [4:0] storage_fault = 5'd0;")
     # Each model builds separately, so the common fault leaf is defined once.
     (w / "reference.sv").write_text(ref)

@@ -1,0 +1,5 @@
+FAIL cyc 124: credit for job 0 (client 1) with 0 of 64 rows written
+FAIL cyc 132: credit for job 1 (client 0) with 0 of 22 rows written
+[398000] %Error: dsfd_sp_vm.sv:1222: Assertion failed in tb_dsfd_vm_seq.u_vm.u_fe: SPVM EARLY_READ: read into slot 0 range [0, +64) at 0 of 1024 elements (ports 0000000000000000000000001000)
+%Error: /srv/opentallas-scratch/claude/s81grpA6-codex/src/rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv:1222: Verilog $stop
+Aborting...

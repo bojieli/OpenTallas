@@ -32,6 +32,7 @@ module tb_spvm_relay #(parameter integer W = 1, parameter integer N = 0) (input 
 endmodule
 
 module tb_dsfd_sp_vm;
+    parameter integer BANK_XOR = 0;
     parameter integer SEED = 1;
     parameter integer NCYC = 60000;
     parameter integer MODE = 0;
@@ -65,7 +66,7 @@ module tb_dsfd_sp_vm;
     reg vwe = 0, vre = 0, cv = 0, c_wr = 0, c_l0r = 0; reg [13:0] vwa = 0, vra = 0; reg [511:0] vwd = 0; reg [83:0] cd = 0;
     reg [NSVC*1027-1:0] f_svc = 0; reg [2099:0] f_coll = 0; reg [514:0] f_sel = 0, f_col = 0; reg [1025:0] f_hc = 0;
     reg [13375:0] f_cap = 0;
-    dsfd_sp_vm_m #(.MACRO(1), .VF(VF), .VR(VR), .P2D(P2D), .LA(LA), .NSVC(NSVC)) dut (
+    dsfd_sp_vm_m #(.BANK_XOR(BANK_XOR), .MACRO(1), .VF(VF), .VR(VR), .P2D(P2D), .LA(LA), .NSVC(NSVC)) dut (
         .ck(clk), .rst(rst_n), .cks(cks), .rss(rss_n),
         .f_swv(p_swv), .f_swd(p_swd), .t_swg(t_swg), .f_srv(p_srv), .f_srd(p_srd), .t_srg(t_srg),
         .t_ks(t_ks), .t_srq(t_srq), .t_err(t_err), .f_cap(f_cap),
@@ -149,6 +150,13 @@ module tb_dsfd_sp_vm;
             if (b_we[p]) begin
                 old = gm[rw]; nd = b_d[p*512 +: 512];
                 for (e = 0; e < 16; e = e + 1) mk[32*e +: 32] = {32{b_m[p*16 + e]}};
+`ifdef OT_SPVM_SLOC
+                // capture lane (FE (a)): virtual slot e of lane g = actual word 4 (g / 4) + (e % 4) of row {key, g % 4, e / 4}
+                if (p >= CP) begin
+                    for (e = 0; e < 16; e = e + 1) if (b_m[p*16 + e])
+                        gm[(rw / 16) * 16 + 4 * ((p - CP) % 4) + e / 4][32 * (4 * ((p - CP) / 4) + e % 4) +: 32] = nd[32*e +: 32];
+                end else
+`endif
                 gm[rw] = (old & ~mk) | (nd & mk);
             end else if (p == 2 || p >= 6 && p <= 9) begin
                 // X streamer read: expected at its bus lane (id in the data field)
@@ -167,7 +175,11 @@ module tb_dsfd_sp_vm;
                 else begin lan_ops = lan_ops + 1; if (lan_first < 0) lan_first = cyc; lan_last = cyc; end
                 if (p >= CP && rw % 16 != p - CP) begin $display("FAIL cyc %0d: capture lane %0d wrote row %0d", cyc, p - CP, rw); nbad = nbad + 1; end
                 for (e = 0; e < 16; e = e + 1) if (b_m[p*16 + e]) begin
+`ifdef OT_SPVM_SLOC
+                    a = (p >= CP) ? ((rw / 16) * 16 + 4 * ((p - CP) % 4) + e / 4) * 16 + 4 * ((p - CP) / 4) + e % 4 : rw * 16 + e;
+`else
                     a = rw * 16 + e;
+`endif
                     if (!exp_el.exists(a)) begin $display("FAIL cyc %0d: capture element %0d not expected", cyc, a); nbad = nbad + 1; end
                     else if (landed.exists(a)) begin $display("FAIL cyc %0d: capture element %0d written twice", cyc, a); nbad = nbad + 1; end
                     else begin
@@ -338,7 +350,13 @@ module tb_dsfd_sp_vm;
             for (r_ = 0; r_ < NR; r_ = r_ + 1) begin
                 r_gap[r_] = skew ? rnd(50) % (skew + 1) : 0;
                 for (j_ = 0; j_ < R; j_ = j_ + 1) for (p_ = 0; p_ < npos; p_ = p_ + 1) begin
+`ifdef OT_SPVM_SLOC
+                    // VM FE (a) capture-slice locality (claude s81-grpA r5): root r = 8g + i of lane g (quadrant q = g / 4)
+                    // writes only column slice q: row-in-block 4 (g % 4) + (i >> 1), word 4 q + 2 (i & 1) + b
+                    row = 256 * (j_ >> 1) + 16 * (4 * ((r_ >> 3) % 4) + ((r_ % 8) >> 1)) + 4 * ((r_ >> 3) / 4) + 2 * ((r_ % 8) & 1) + (j_ & 1);
+`else
                     row = 256 * (j_ >> 1) + 2 * r_ + (j_ & 1);
+`endif
                     addr = obase + row + p_ * ops;
                     dd = mix(addr, salt);
                     rq_a[r_].push_back(addr); rq_d[r_].push_back(dd);
