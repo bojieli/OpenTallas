@@ -45,6 +45,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--revision', default='c1b3073f4')
     ap.add_argument('--output', required=True)
+    ap.add_argument('--calendar-directory', type=Path, help='Write immutable midpoint K/V request starts only if every group fits')
     ap.add_argument('--fixture-directory', type=Path, help='Local p137/p637 fixture tree from a separate compiler execution')
     args = ap.parse_args()
     fixtures = {}
@@ -86,6 +87,18 @@ def main():
                             'K group II1; V group 16 requests spaced8, next burst256',
                             'no scheduling from actual return valid or readiness'],
                groups=rows, infeasible_groups=sum(not r['feasible'] for r in rows))
+    if args.calendar_directory:
+        if out['infeasible_groups']:
+            raise ValueError('refusing to compile requests: landing lifetime infeasible')
+        args.calendar_directory.mkdir(parents=True, exist_ok=True)
+        for phase in (137, 637):
+            lines = []
+            for stack in range(4):
+                for group in range(8):
+                    bb = {r['kind']: (r['first_request_min_core'] + r['first_request_max_core']) // 2
+                          for r in rows if r['phase_ps'] == phase and r['stack'] == stack and r['group'] == group}
+                    lines.append(f"{bb['K']} {bb['V']}")
+            (args.calendar_directory / f'p{phase}.mem').write_text('\n'.join(lines) + '\n')
     with open(args.output, 'w') as f:
         json.dump(out, f, indent=2)
         f.write('\n')
