@@ -18,8 +18,10 @@ kernel=$d/qwen-composed-harness-f460-1014/kernel
 kso=${KERNEL_SO_DIR:-$stage/kernel_pic}
 # Opt-in during migration: fail closed when a supposedly RTL attention kernel
 # still links host arithmetic. Other components are audited independently.
+core_kernel_flags=()
 if [[ "${ATTN_RTL_ONLY:-0}" == 1 ]]; then
  python3 "$(dirname "$0")/attention_rtl_library_check.py" "$kso"
+ core_kernel_flags=(-DOT_KERNEL_HIERARCHICAL=1)
 fi
 helper=$d/qwen-full-layer-sequence-1014/native59_helper/obj
 collector=$d/qwen-full-layer-sequence-1014/libnative59.so
@@ -42,7 +44,7 @@ r=json.loads((Path(sys.argv[1]).parent/'receipt.json').read_text())
 assert r['exit']==0 and '-GLV=6' in r['command'] and '-GG=3072' in r['command'], r
 PY
 # LV6_HIER=1: hierarchical LV6 build (hier FP blocks are separate archives).
-core_flags=()
+core_flags=("${core_kernel_flags[@]}")
 if [[ "${LV6_HIER:-0}" == 1 ]]; then
  [[ -n "${PROBE_OBJ:-}" ]] || { echo 'hierarchical core requires a probe rebuilt against its own generated root' >&2; exit 2; }
  python3 - "$lv6" "$probe" <<'PYPROBE'
@@ -54,7 +56,7 @@ for f in (core/'Vot_hdc_core_vector_weight_native_candidate___024root.h',probe):
  h=hashlib.sha256(f.read_bytes()).hexdigest()
  assert any(line.split(maxsplit=1)==[h,str(f)] for line in manifest), f'probe provenance mismatch: {f}'
 PYPROBE
- core_flags=(-DOT_CORE_HIERARCHICAL=1)
+ core_flags+=(-DOT_CORE_HIERARCHICAL=1)
  python3 "$stage/src/core_arithmetic_receipt.py" --core "$lv6" --output "$out/core_arithmetic.json"
  mapfile -t lv6a < <(find "$lv6" -name '*.a' ! -name libverilated.a | sort); else lv6a=("$lv6/Vot_hdc_core_vector_weight_native_candidate__ALL.a"); fi
 arch=("${lv6a[@]}" "$front/Vot_qwen_tp8_native_services_frontend_native59__ALL.a"

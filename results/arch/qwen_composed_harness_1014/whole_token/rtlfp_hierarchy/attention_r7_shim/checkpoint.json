@@ -1,0 +1,12 @@
+{
+  "schema": "opentallas.qwen_attention_rtlfp_build.v1",
+  "time": "2026-10-15T05:45-07:00",
+  "r6_failure": "parent Verilation of ot_qwen_tp8_attention_service OOM-killed at 200 GB (EPYC4 scope oth-ubuntu-1004940, 01:23 PT): stack_h hier blocks were built (4 x 4.37 GB C++, 107.5 GB each) but the parent still elaborated stack bodies (WIDTHCONCAT at gs[3].u_h.u_pv in the parent run)",
+  "r7_structural_fix": "build-only overlay renames the frozen stack_h module (body byte-identical, diff-checked) and a parameter shim of the same name instantiates the four compiled r6 protect-lib variants (S=0/1/2/3 -> c/a/d/3, R=8, DQ=128; all other parameters asserted default, otherwise $fatal). Parent lint 23.8 GB / 3.6 min; parent Verilation 11.8 GB / 126 s; total ~9 min reusing r6 stacks",
+  "link_fix": "Verilator's parent archive already bundles some child objects; archives are added only when none of their members are present (partial overlap fails)",
+  "library_sha256": "293259f520a5e4f27f960add9d198fb528acd59362a751bd5cdf6078fe54d259",
+  "provenance_check": "attention_rtl_library_check.py PASS: no nhb_fadd/nhb_fmul/ot_v41x_* symbols, no unresolved protectlib symbol, RTL FP sources pinned",
+  "harness_fix": "OT_KERNEL_HIERARCHICAL: serial kernel.eval() at time zero (clk/reset low) before rank workers; first launch deadlocked (136 threads in futex wait, 0 progress in 9 min), raw stderr in hung_r7a_concurrent_first_eval",
+  "live": "EPYC4 attn_r7_positive (seeded layer0) and attn_r7_mutant_l0r3, ot-heavy 48 GB, 1000 edges/301 s at launch",
+  "scope": "attention arithmetic RTL (historical f460 credit design, C++ ROM/VM, modeled links) => NOT native full-layer; static production schedule NOT qualified"
+}

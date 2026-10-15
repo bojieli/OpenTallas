@@ -58,6 +58,13 @@ struct Rank {
   if(context.time()!=0)throw std::runtime_error("hierarchical rank initialization requires time zero");
   core.eval();
 #endif
+#ifdef OT_KERNEL_HIERARCHICAL
+  // Same for a hierarchical (RTL-FP, protect-lib stack) attention service: its
+  // children register on the first eval; concurrent first evals from the rank
+  // workers deadlocked (all threads in futex wait, 10-15 attn_r7 runs).
+  if(context.time()!=0)throw std::runtime_error("hierarchical kernel initialization requires time zero");
+  kernel.eval();
+#endif
   enqueue_history();
  }
  // Input-memoised core evaluation: a Verilated eval whose 28 input ports all

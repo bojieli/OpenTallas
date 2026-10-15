@@ -68,11 +68,15 @@ $vl --cc --hierarchical -j 1 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEM
  "$out/hier_attn_shim.vlt" $src stack_h_shim.sv $wr > "$out/build.log" 2>&1
 cd "$out/obj"
 make -f Vot_qwen_tp8_attention_service_hier.mk -j1 "MAKE=make -j${JOBS:-16}" hier_build >> "$out/build.log" 2>&1
-# Libraries: r7 blocks, plus r6 stack libraries and any r6 block the stacks need that r7 did not build.
-mapfile -t libs < <(find . -name '*.a' ! -name libverilated.a | sort)
-have=$(printf '%s\n' "${libs[@]}" | xargs -n1 basename)
-for a in $(find "$r6" -name 'lib*.a' ! -name libverilated.a | sort); do
- b=$(basename "$a"); grep -qx "$b" <<<"$have" || { libs+=("$a"); echo "reused $a" >> "$out/build.log"; }
+# Libraries: Verilator's parent archive already bundles some child objects, so each archive is
+# added only if none of its members is already present (partial overlap is a hard error).
+cands=(./libVot_qwen_tp8_attention_service.a $(find . -mindepth 2 -name 'lib*.a' ! -name libverilated.a | sort) $(find "$r6" -name 'libot_qwen_nearhbm_attn_stack_h_?.a' | sort) $(find "$r6" -mindepth 2 -name 'lib*.a' ! -name 'libot_qwen_nearhbm_attn_stack_h_*' | sort))
+libs=(); seen=$(mktemp)
+for a in "${cands[@]}"; do
+ ar t "$a" | sort -u > "$seen.m"; n=$(wc -l < "$seen.m"); d=$(comm -12 "$seen.m" <(sort -u "$seen") | wc -l)
+ if [[ $d == 0 ]]; then libs+=("$a"); cat "$seen.m" >> "$seen"; echo "link $a ($n members)" >> "$out/build.log"
+ elif [[ $d == "$n" ]]; then echo "skip $a (all $n members already linked)" >> "$out/build.log"
+ else echo "partial archive overlap $a: $d of $n" >&2; exit 5; fi
 done
 g++ -shared -o "$out/libot_qwen_tp8_attention_service.so" -Wl,--whole-archive "${libs[@]}" -Wl,--no-whole-archive >> "$out/build.log" 2>&1
 nm -D "$out/libot_qwen_tp8_attention_service.so" > "$out/dynamic-symbols.txt"
