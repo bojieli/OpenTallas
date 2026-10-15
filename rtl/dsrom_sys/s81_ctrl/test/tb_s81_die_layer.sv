@@ -921,11 +921,15 @@ module tb_s81_die_layer;
         $fwrite(vm_trace_fd, "time_ns,stream_cycle,job,client,event,slot,row,mask,tag\n");
     end
     always @(posedge ck) if (vm_trace_fd && rst) begin
+        if (d[2][8]) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,hc,done,0,-1,0000,%0d\n",$realtime,cyc,cj,d[2][7:0]);
+`ifdef TB_SU_REAL
+        if (d[1][8]) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,su,done,0,-1,0000,%0d\n",$realtime,cyc,cj,d[1][7:0]);
+`endif
         if (htake) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,hc,start,0,-1,0000,%0d\n",$realtime,cyc,cj,{u_hc.u_hc.e_d[83],u_hc.u_hc.e_d[6:0]});
-        if (hdv) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,hc,done,0,-1,0000,%0d\n",$realtime,cyc,cj,hdt);
+        if (hdv) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,hc,core_done,0,-1,0000,%0d\n",$realtime,cyc,cj,hdt);
 `ifdef TB_SU_REAL
         if (su_take) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,su,start,0,-1,0000,%0d\n",$realtime,cyc,cj,{u_su.u_ctl.e_d[83],u_su.u_ctl.e_d[6:0]});
-        if (u_su.u_ctl.d_v) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,su,done,0,-1,0000,%0d\n",$realtime,cyc,cj,u_su.u_ctl.d_t);
+        if (u_su.u_ctl.d_v) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,su,core_done,0,-1,0000,%0d\n",$realtime,cyc,cj,u_su.u_ctl.d_t);
 `endif
         for (integer z = 0; z < S_RD; z = z + 1) begin
             if (vq_v[z]) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,hc,read,%0d,%0d,ffff,%0d\n", $realtime, cyc, cj, z, vq_row[14*z+:14], vm_trace_hc_tag);

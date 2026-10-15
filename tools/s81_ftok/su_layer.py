@@ -107,6 +107,8 @@ def build(snap_path, layer, check_layer=True):
     su.gain(f"{L}.su.gain_q", "GQ", 1, wq)
     su.gain(f"{L}.su.gain_k", "GK", 2, wk)
     jexp = {}
+    footprints = {}
+    from su_footprints import footprint
 
     def job(name, fn, *args, n=1, **kw):
         k0 = len(r.prog)
@@ -115,6 +117,14 @@ def build(snap_path, layer, check_layer=True):
         for j, a in enumerate(su._last_args(n)):
             nm = name if n == 1 else name[j]
             su.arg[nm] = a
+            kind = next(kind for kind, code in su.SG.K.items() if code == (a >> 20))
+            owned = {}
+            if k0+j in r.jexp:
+                first, count_out = r.jexp[k0+j]
+                # QR outputs are strided. Resolve its exact output addresses from
+                # the descriptor in footprint; other jobs use the expected span.
+                owned = {row:value for row,value in r.exp.items() if first <= row < first+count_out}
+            footprints[nm] = footprint(kind, a, r.vm, r.sh, owned)
             if k0 + j in r.jexp:
                 jexp[nm] = r.jexp[k0 + j]
         return out
@@ -194,12 +204,16 @@ def build(snap_path, layer, check_layer=True):
     if rw_fits:
         w_rw = job(f"{L}.ffn.weights", r.rw, np.asarray(rt["scores"], F), list(rt["ids"]), F(s["route_scale"]), r.sw_desc)
         chk["RW weights == golden route weights"] = same(w_rw, np.asarray(rt["weights"], F))
+    for name, arg in su.arg.items():
+        if name not in footprints:
+            kind = next(kind for kind, code in su.SG.K.items() if code == (arg >> 20))
+            footprints[name] = footprint(kind, arg, r.vm, r.sh, {})
     assert all(chk.values()), {k: v for k, v in chk.items() if not v}
     alias = {}
     for tail, (_k, al) in JOBS.items():
         if f"{L}.{tail}" in su.arg:
             for x in al:
                 alias[f"{L}.{x}"] = f"{L}.{tail}"
-    return dict(run=r, arg=su.arg, alias=alias, vm=dict(r.vm), exp=dict(r.exp), jexp=jexp, checks=chk, T=T,
+    return dict(run=r, arg=su.arg, alias=alias, footprints=footprints, vm=dict(r.vm), exp=dict(r.exp), jexp=jexp, checks=chk, T=T,
                 softmax_fits=sm_ok, qb_fits=qb_ok, router_fits=router_fits, rw=rw_fits, top=r.top,
                 sw_fit=dict(lanes=W, rows_per_expert=ROWS_DIE, lane_ratio=round(W / ROWS_DIE, 3)))

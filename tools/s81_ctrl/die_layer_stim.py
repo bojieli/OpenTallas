@@ -375,8 +375,9 @@ def main():
         import su_layer
         sub = su_layer.build(a.su_snap, L, check_layer=not a.program_layer)
         su_alias = sub['alias']
-        add(f'{L}.su.gain_q', 1, 0, [], sub['arg'][f'{L}.su.gain_q'], eng='su', order=-2.8)
-        add(f'{L}.su.gain_k', 1, 0, [], sub['arg'][f'{L}.su.gain_k'], eng='su', order=-2.7)
+        for gain_index, (gain_name, gain_arg) in enumerate((name, arg) for name, arg in sub['arg'].items()
+                                                         if '.su.gain_' in name):
+            add(gain_name, 1, 0, [], gain_arg, eng='su', order=-2.8 + 0.01 * gain_index)
         su_members = {}
         for k_, v_ in su_alias.items():
             su_members.setdefault(v_, []).append(k_)
@@ -520,7 +521,7 @@ def main():
                        aliased=su_alias, behavioural_sux=sux, exp_rows=len(sub['exp']), vm_rows=len(sub['vm']),
                        T=sub['T'], softmax_fits=sub['softmax_fits'], qb_fits=sub['qb_fits'],
                        router_fits=sub['router_fits'], checks=sub['checks'],
-                       sw_fit=sub['sw_fit'], jexp={k: list(v) for k, v in sub['jexp'].items()})
+                       sw_fit=sub['sw_fit'], footprints=sub['footprints'], native_allocation=False, jexp={k: list(v) for k, v in sub['jexp'].items()})
         print(f"{L}: REAL SU {len(real)} jobs ({len(sub['exp'])} expected rows), behavioural su.x {sux}")
     (a.out / 'boot_ok.txt').write_text(''.join(f'{r}\n' for r in boot_ok))
     (a.out / 'payload.mem').write_text(''.join(f'{v:0128x}\n' for v in payload))

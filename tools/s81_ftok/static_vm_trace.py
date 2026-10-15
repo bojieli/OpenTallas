@@ -14,7 +14,7 @@ from collections import defaultdict, deque
 from pathlib import Path
 
 
-def convert(path, metadata=None):
+def convert(path, metadata=None, done_boundary="engine_pin"):
     with path.open() as stream:
         raw = list(csv.DictReader(stream))
     events, jobs, pending = [], [], defaultdict(deque)
@@ -31,7 +31,9 @@ def convert(path, metadata=None):
                                         native_producer_bound=False)
             continue
         key = (job, client, slot)
-        if kind in ('start', 'done'):
+        if kind in ('start', 'done', 'core_done'):
+            if kind == 'done' and done_boundary == 'legacy_internal_core':
+                kind = 'core_done'
             jobs.append(dict(client=client, tag=tag, job=job, **{kind+'_cycle': cycle}))
             continue
         if kind == 'response':
@@ -65,18 +67,23 @@ def convert(path, metadata=None):
         unresolved += [e['id'] for e in queue]
     if unresolved:
         raise ValueError(f'{len(unresolved)} requests lack model responses: {unresolved[:8]}')
-    done = {(j['job'], j['client'], j['tag']): j['done_cycle'] for j in jobs if 'done_cycle' in j}
+    done_key = 'done_cycle' if done_boundary == 'engine_pin' else 'core_done_cycle'
+    done = {(j['job'], j['client'], j['tag']): j[done_key] for j in jobs if done_key in j}
     for event in events:
         if event['kind'] == 'write':
             key=(event['job'], event['client'], event['tag'])
             if key not in done:
                 raise ValueError(f'write has no job-done boundary {event["id"]}')
-            event['deadline_cycle'] = done[key]
+            if done_boundary == 'engine_pin':
+                event['deadline_cycle'] = done[key]
+            else:
+                event['observed_core_done_cycle'] = done[key]
+                event['native_done_deadline_missing'] = True
     if not events or not any(e['client']=='su' for e in events) or not any(e['client']=='hc' for e in events):
         raise ValueError('full SU/HC trace missing')
     return dict(schema='opentallas.s81.static_vm_trace.v1',
                 trace_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
-                source_metadata=metadata or {}, events=events, jobs=jobs,
+                source_metadata=metadata or {}, events=events, jobs=jobs, done_boundary=done_boundary,
                 observed_rows=len(raw), client_row_requests=len(events),
                 qualified=False, complete_actual_trace=False,
                 required=['actual native row producer bindings', 'fixed VM ingress/service edges',
@@ -91,9 +98,11 @@ def main():
     p.add_argument('--trace',type=Path,required=True)
     p.add_argument('--meta',type=Path)
     p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--done-boundary',choices=('engine_pin','legacy_internal_core'),default='engine_pin',
+                   help='legacy captures before ABI observers must explicitly remain internal-core-only')
     a=p.parse_args()
     meta=json.loads(a.meta.read_text()) if a.meta else {}
-    result=convert(a.trace, meta)
+    result=convert(a.trace, meta, a.done_boundary)
     a.out.write_text(json.dumps(result,indent=1)+'\n')
     print('STATIC_VM_TRACE',result['client_row_requests'],'requests; native qualification INCOMPLETE')
 

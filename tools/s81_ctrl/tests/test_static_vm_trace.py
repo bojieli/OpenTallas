@@ -35,6 +35,21 @@ class StaticTrace(unittest.TestCase):
         self.assertNotIn("service_cycle",r["events"][0])
         self.assertEqual(r["events"][0]["observed_producer"]["client"],"BOOT_OR_GOLDEN")
 
+    def test_legacy_core_done_is_not_an_engine_deadline(self):
+        p=self.trace([
+            ["8",10,0,"su","read",0,9216,"ffff",2],
+            ["8",10,0,"hc","read",0,1280,"ffff",1],
+            ["16",20,0,"su","response",0,9216,"ffff",2],
+            ["16",20,0,"hc","response",0,1280,"ffff",1],
+            ["21",25,0,"su","write",0,9408,"001f",2],
+            ["24",30,0,"su","done",0,-1,"0000",2]])
+        r=convert(p,done_boundary="legacy_internal_core")
+        w=r["events"][-1]
+        self.assertNotIn("deadline_cycle",w)
+        self.assertEqual(w["observed_core_done_cycle"],30)
+        self.assertTrue(w["native_done_deadline_missing"])
+        self.assertTrue(all("done_cycle" not in j for j in r["jobs"]))
+
     def test_partial_or_unpaired_capture_fails(self):
         p=self.trace([["8",10,0,"su","read",0,9216,"ffff",2]])
         with self.assertRaisesRegex(ValueError,"lack model responses"):
