@@ -1604,6 +1604,13 @@ def _wrap(v, m, G, peers):
                 if val > 31:
                     raise RuntimeError(f'{inst}: measured far-ROM latency {val} exceeds f_lat[4:0]')
                 ties[j] = (inst, port, bits, val)
+            elif port == 'lnk' and inst.startswith('sp_band_lanes_'):
+                # split compute C11: the band's relay stages toward the tree top (its control word tt_lc<b>)
+                b_ = int(inst.rsplit('_', 1)[1])
+                val = max(0, stages.get(f'tt_lc{b_}', 1) - 1)
+                if val > 63:
+                    raise RuntimeError(f'{inst}: {val} relay stages exceed lnk[5:0]')
+                ties[j] = (inst, port, bits, val)
         byi = {it.name: it for it in model['insts']}
         conns = {it.name: [] for it in model['insts']}
         joined = {}

@@ -83,6 +83,25 @@ def _link_words(m, rec):
     for mst, d in LINK_SPLIT.items():
         split.setdefault(mst, {}).update({k: list(q) for k, q in d.items()})
     rec['link_words'] = dict(bits=LINK_BITS, credits=[x[0] for x in LINK_CREDITS], rtl='rtl/qwen_split/qfd_link_slots.sv')
+    # C11: band lanes (rtl/physical/ot_qwen_band_lanes_slots.sv): reset from the spine domain; straps b0 (band 0) and
+    # lnk[5:0] (relay stages on the band <-> tree-top links: written by the netlist writer from the build's stage count,
+    # as the cbuf f_lat); tt (the tree-top word) reaches band 0 only, bands 1 / 2 take it as the strap-gated 0 the RTL
+    # contract names (b0 = 0 ignores it)
+    bands = sorted(i.name for i in m['insts'] if i.master == 'qfd_sp_band_lanes')
+    nb = []
+    for b, c, n, e in m['buses']:
+        if b == 'rst_spine' or any(i == 'sp_res_ser_0' and p == 'rst_n' for i, p in e) and c == 'reset':
+            e = list(e) + [(x, 'rst_n') for x in bands if (x, 'rst_n') not in e]
+        nb.append((b, c, n, e))
+    m['buses'] = nb
+    ties = m.setdefault('ties', [])
+    have_tt = {i for b, c, n, e in m['buses'] for i, p in e if p == 'tt'}
+    for x in bands:
+        k = int(x.rsplit('_', 1)[1])
+        ties.append((x, 'b0', 1, 1 if k == 0 else 0))
+        ties.append((x, 'lnk', 6, 0))                  # value set by the netlist writer (stage count)
+        if x not in have_tt:
+            ties.append((x, 'tt', 1538, 0))
 
 
 def _child_clocks(m, rec):
