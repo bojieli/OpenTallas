@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.hbm.lg-eight-leaf.v1",
+  "source": "exact bank-independent loop extraction from actual ot_hbm_vm_lg_static_tap; unchanged payload/valid calendar",
+  "replicas": 96,
+  "per_quadrant": {
+    "stages": 3,
+    "bank_leaves_per_stage": 8,
+    "actual_roots": 24
+  },
+  "leaf_scalar_pins": 1673,
+  "per_leaf_faces": {
+    "near": 556,
+    "far": 556,
+    "local": 556,
+    "select_clock_reset_fault": 5
+  },
+  "interface_perbank": {
+    "rq": 17,
+    "wq": 281,
+    "rr": 257,
+    "done": 1
+  },
+  "timing": "Same two edges per direction; actual near/mid/far read10/14/18 and write7/11/15 retained",
+  "model_area": "No SRAM added; same data/state bits partitioned across8hardened leaves. Each leaf approximate2kregisterbits plus return masks, exact synthesis must establish area/CTS",
+  "placement": "Three face bundles each556pins need actualnativeescape; fourth controlface. 556\u00d7.192=106.752um grossface beforePG/headroom; nativeleafslotrequested fromgeometryowner",
+  "bank_group_throughput": "eight sectors per edge aggregate, one perbank, fixedcompilerowner",
+  "qualification": "Real24-SRAM three-stage proof + unchanged-phase comparison; physicalclosure/faceplacement required"
+}
