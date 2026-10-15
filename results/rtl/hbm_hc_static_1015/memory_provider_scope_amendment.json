@@ -6,7 +6,10 @@
     "38e3091a7",
     "d8ab42dac",
     "3d3f96b5a",
-    "1847dfec7"
+    "1847dfec7",
+    "9bfe62710",
+    "37dbcf164",
+    "9919bf1d2"
   ],
   "provider": "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
   "provider_sha256": "af5e2377cfbf5bd0ac524f58bb6597cb853eed7f41e097e419354eb931728762",
@@ -19,5 +22,21 @@
     "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
     "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
   },
-  "required_successor": "generated128 macro source + warmed masked-poison write positive and mask-enable mutant through real SYS1 arithmetic; independent leaf SRAM semantics proof"
+  "required_successor": "generated128 macro source + warmed masked-poison write positive and mask-enable mutant through real SYS1 arithmetic; independent leaf SRAM semantics proof",
+  "applicability_rule": "Every receipt whose source_sha256 pins this exact ideal provider/hash is diagnostic-only for the HC weight memories, regardless of other arithmetic passes or historical macro-count wording.",
+  "affected_tracked_receipts_source_verified": [
+    "results/rtl/hbm_hc_static_1015/checkpoint_native_de0/receipt.json",
+    "results/rtl/hbm_hc_static_1015/engine_60fc/receipt.json",
+    "results/rtl/hbm_hc_static_1015/engine_967/receipt.json",
+    "results/rtl/hbm_hc_static_1015/mtp_b9/receipt.json",
+    "results/rtl/hbm_hc_static_1015/native_vm_repeat_ed625/receipt.json",
+    "results/rtl/hbm_hc_static_1015/native_vm_writeback_ed10/receipt.json",
+    "results/rtl/hbm_hc_static_1015/native_wrapper_refresh_51b/receipt.json",
+    "results/rtl/hbm_hc_static_1015/one_image_native_a5b/receipt.json",
+    "results/rtl/hbm_hc_static_1015/owned_command_native_bc677/receipt.json",
+    "results/rtl/hbm_hc_static_1015/programmed_259/receipt.json",
+    "results/rtl/hbm_hc_static_1015/projection_d30/receipt.json",
+    "results/rtl/hbm_hc_static_1015/sys1_shared_766/receipt.json",
+    "results/rtl/hbm_hc_static_1015/sys1_split92_ee1/receipt.json"
+  ]
 }
