@@ -120,5 +120,11 @@
   "reroute_reason": {
     "kind": "rtl_change",
     "why": "Native failing combinational lfault/tfault ORs now capture in real boundary flops, unchanged arithmetic. New master preserves canonical CLOSED legacy."
-  }
+  },
+  "pin_access": {
+    "frac": 0,
+    "above_only": true,
+    "faces": "E"
+  },
+  "legacy_pin_access_reason": "Exact legacy lsl6 OT_PK_FRAC=0 full pin-depth above-only E keepout; half-pin defaults cannot preserve inherited multi-PORT stubs access. GRT/DRT-only change from initial CTS smoke, no RTL/clock/pin coordinate changes."
 }
