@@ -1,0 +1,692 @@
+{
+  "schema": "opentallas.s81.actual-field.tensor-slices.v1",
+  "source_sha256": {
+    "/srv/opentallas-scratch/claude/s81-ftok/r5/field/L00_r0/plan.json": "cc69ba91b9ba9a1b4a5e63479793a4c12a56f8abf25c394673956195090e285d",
+    "/srv/opentallas-scratch/claude/s81-ftok/r5/field/L00_r1/plan.json": "bf82b382a93dc53b6171562381493953b2dc6cae6ee0381d2dff6fb09c673cf6",
+    "/srv/opentallas-scratch/claude/s81-ftok/r5/field/L00_r2/plan.json": "054dc9556271c4791792f2a0966f7cf7b16e2d8f76efa803d0746d2780a4d48c",
+    "/srv/opentallas-scratch/claude/s81-ftok/r5/field/L00_r3/plan.json": "1ccf2e0a5669a0bd20b7f1505367316a6b9276f73e3dcf466a0f6e3850a8206b",
+    "/srv/opentallas-scratch/claude/s81-ftok/r5/field/L02_r0/plan.json": "6665641efbbbf1629a84f9be5989541c0e876e5b217d88cbfb5143744eacb629",
+    "/srv/opentallas-scratch/claude/s81-ftok/r5/field/L02_r1/plan.json": "6fcf89d8ba336a0aad552a38805751661885f26adbc336490405e1ad3a600c02",
+    "/srv/opentallas-scratch/claude/s81-ftok/r5/field/L02_r2/plan.json": "8d31f2c30e95c2daa35570e082c2f993cafb135614738f53be04094cd4c698a4",
+    "/srv/opentallas-scratch/claude/s81-ftok/r5/field/L02_r3/plan.json": "51da8163bc4bec83aa751f6925a0ae950b9423b363df74cfdf719df04b328158"
+  },
+  "slices": [
+    {
+      "layer": 0,
+      "rank": 0,
+      "phase": "L0.a_proj.fp8@s0",
+      "matrix": "layers.0.attn.wq_a",
+      "alias": "wq_a",
+      "rows": [
+        0,
+        320
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 320,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 0,
+      "rank": 0,
+      "phase": "L0.a_proj.fp8@s0",
+      "matrix": "layers.0.attn.wkv",
+      "alias": "wkv",
+      "rows": [
+        0,
+        128
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 0,
+      "rank": 1,
+      "phase": "L0.a_proj.fp8@s0",
+      "matrix": "layers.0.attn.wq_a",
+      "alias": "wq_a",
+      "rows": [
+        320,
+        640
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 320,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 0,
+      "rank": 1,
+      "phase": "L0.a_proj.fp8@s0",
+      "matrix": "layers.0.attn.wkv",
+      "alias": "wkv",
+      "rows": [
+        128,
+        256
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 0,
+      "rank": 2,
+      "phase": "L0.a_proj.fp8@s0",
+      "matrix": "layers.0.attn.wq_a",
+      "alias": "wq_a",
+      "rows": [
+        640,
+        960
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 320,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 0,
+      "rank": 2,
+      "phase": "L0.a_proj.fp8@s0",
+      "matrix": "layers.0.attn.wkv",
+      "alias": "wkv",
+      "rows": [
+        256,
+        384
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 0,
+      "rank": 3,
+      "phase": "L0.a_proj.fp8@s0",
+      "matrix": "layers.0.attn.wq_a",
+      "alias": "wq_a",
+      "rows": [
+        960,
+        1280
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 320,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 0,
+      "rank": 3,
+      "phase": "L0.a_proj.fp8@s0",
+      "matrix": "layers.0.attn.wkv",
+      "alias": "wkv",
+      "rows": [
+        384,
+        512
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 0,
+      "phase": "L2.a_proj.fp8@s6",
+      "matrix": "layers.2.attn.wq_a",
+      "alias": "wq_a",
+      "rows": [
+        0,
+        320
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 320,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 0,
+      "phase": "L2.a_proj.fp8@s6",
+      "matrix": "layers.2.attn.wkv",
+      "alias": "wkv",
+      "rows": [
+        0,
+        128
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 0,
+      "phase": "L2.a_proj.bf16@s6.indexer.weights_proj",
+      "matrix": "layers.2.attn.indexer.weights_proj",
+      "alias": "indexer.weights_proj",
+      "rows": [
+        0,
+        32
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 32,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 0,
+      "phase": "L2.wq_b@s6.indexer.wq_b.rows0+indexer.wq_b.rows2560",
+      "matrix": "layers.2.attn.indexer.wq_b",
+      "alias": "indexer.wq_b.rows0",
+      "rows": [
+        0,
+        2560
+      ],
+      "cols": [
+        0,
+        1280
+      ],
+      "entry_rows": 2560,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 0,
+      "phase": "L2.wq_b@s6.indexer.wq_b.rows0+indexer.wq_b.rows2560",
+      "matrix": "layers.2.attn.indexer.wq_b",
+      "alias": "indexer.wq_b.rows2560",
+      "rows": [
+        2560,
+        4096
+      ],
+      "cols": [
+        0,
+        1280
+      ],
+      "entry_rows": 1536,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 0,
+      "phase": "L2.cmp.wk@s6",
+      "matrix": "layers.2.attn.indexer.wk",
+      "alias": "indexer.wk",
+      "rows": [
+        0,
+        128
+      ],
+      "cols": [
+        0,
+        512
+      ],
+      "entry_rows": 128,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 1,
+      "phase": "L2.a_proj.fp8@s6",
+      "matrix": "layers.2.attn.wq_a",
+      "alias": "wq_a",
+      "rows": [
+        320,
+        640
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 320,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 1,
+      "phase": "L2.a_proj.fp8@s6",
+      "matrix": "layers.2.attn.wkv",
+      "alias": "wkv",
+      "rows": [
+        128,
+        256
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 1,
+      "phase": "L2.a_proj.bf16@s6.indexer.weights_proj",
+      "matrix": "layers.2.attn.indexer.weights_proj",
+      "alias": "indexer.weights_proj",
+      "rows": [
+        0,
+        32
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 32,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 1,
+      "phase": "L2.wq_b@s6.indexer.wq_b.rows0+indexer.wq_b.rows2560",
+      "matrix": "layers.2.attn.indexer.wq_b",
+      "alias": "indexer.wq_b.rows0",
+      "rows": [
+        0,
+        2560
+      ],
+      "cols": [
+        0,
+        1280
+      ],
+      "entry_rows": 2560,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 1,
+      "phase": "L2.wq_b@s6.indexer.wq_b.rows0+indexer.wq_b.rows2560",
+      "matrix": "layers.2.attn.indexer.wq_b",
+      "alias": "indexer.wq_b.rows2560",
+      "rows": [
+        2560,
+        4096
+      ],
+      "cols": [
+        0,
+        1280
+      ],
+      "entry_rows": 1536,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 1,
+      "phase": "L2.cmp.wk@s6",
+      "matrix": "layers.2.attn.indexer.wk",
+      "alias": "indexer.wk",
+      "rows": [
+        0,
+        128
+      ],
+      "cols": [
+        0,
+        512
+      ],
+      "entry_rows": 128,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 2,
+      "phase": "L2.a_proj.fp8@s6",
+      "matrix": "layers.2.attn.wq_a",
+      "alias": "wq_a",
+      "rows": [
+        640,
+        960
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 320,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 2,
+      "phase": "L2.a_proj.fp8@s6",
+      "matrix": "layers.2.attn.wkv",
+      "alias": "wkv",
+      "rows": [
+        256,
+        384
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 2,
+      "phase": "L2.a_proj.bf16@s6.indexer.weights_proj",
+      "matrix": "layers.2.attn.indexer.weights_proj",
+      "alias": "indexer.weights_proj",
+      "rows": [
+        0,
+        32
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 32,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 2,
+      "phase": "L2.wq_b@s6.indexer.wq_b.rows0+indexer.wq_b.rows2560",
+      "matrix": "layers.2.attn.indexer.wq_b",
+      "alias": "indexer.wq_b.rows0",
+      "rows": [
+        0,
+        2560
+      ],
+      "cols": [
+        0,
+        1280
+      ],
+      "entry_rows": 2560,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 2,
+      "phase": "L2.wq_b@s6.indexer.wq_b.rows0+indexer.wq_b.rows2560",
+      "matrix": "layers.2.attn.indexer.wq_b",
+      "alias": "indexer.wq_b.rows2560",
+      "rows": [
+        2560,
+        4096
+      ],
+      "cols": [
+        0,
+        1280
+      ],
+      "entry_rows": 1536,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 2,
+      "phase": "L2.cmp.wk@s6",
+      "matrix": "layers.2.attn.indexer.wk",
+      "alias": "indexer.wk",
+      "rows": [
+        0,
+        128
+      ],
+      "cols": [
+        0,
+        512
+      ],
+      "entry_rows": 128,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 3,
+      "phase": "L2.a_proj.fp8@s6",
+      "matrix": "layers.2.attn.wq_a",
+      "alias": "wq_a",
+      "rows": [
+        960,
+        1280
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 320,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 3,
+      "phase": "L2.a_proj.fp8@s6",
+      "matrix": "layers.2.attn.wkv",
+      "alias": "wkv",
+      "rows": [
+        384,
+        512
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 3,
+      "phase": "L2.a_proj.bf16@s6.indexer.weights_proj",
+      "matrix": "layers.2.attn.indexer.weights_proj",
+      "alias": "indexer.weights_proj",
+      "rows": [
+        0,
+        32
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 32,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 3,
+      "phase": "L2.wq_b@s6.indexer.wq_b.rows0+indexer.wq_b.rows2560",
+      "matrix": "layers.2.attn.indexer.wq_b",
+      "alias": "indexer.wq_b.rows0",
+      "rows": [
+        0,
+        2560
+      ],
+      "cols": [
+        0,
+        1280
+      ],
+      "entry_rows": 2560,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 3,
+      "phase": "L2.wq_b@s6.indexer.wq_b.rows0+indexer.wq_b.rows2560",
+      "matrix": "layers.2.attn.indexer.wq_b",
+      "alias": "indexer.wq_b.rows2560",
+      "rows": [
+        2560,
+        4096
+      ],
+      "cols": [
+        0,
+        1280
+      ],
+      "entry_rows": 1536,
+      "field_output_format": "bf16",
+      "weight_format": "fp8",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 3,
+      "phase": "L2.cmp.wk@s6",
+      "matrix": "layers.2.attn.indexer.wk",
+      "alias": "indexer.wk",
+      "rows": [
+        0,
+        128
+      ],
+      "cols": [
+        0,
+        512
+      ],
+      "entry_rows": 128,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    }
+  ],
+  "notes": [
+    "Actual production1792 binding plans, not private fixtureVM allocation",
+    "Rows and cols are literal global tensor slices; repeated indexer matrices on fourranks are replicated, not headsharded",
+    "a_proj allgather448words/rank = wq_a320 + wkv128. Fullcombined1280+512 =1792words; nativecapturelanepermutation and TPvisibility remainunimplemented here."
+  ]
+}
