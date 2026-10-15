@@ -47,7 +47,7 @@ module qfd_res_ser_static #(
     wire [CW-1:0] slot = age - T0[CW-1:0];
     wire in_win = pend && (age >= T0) && (age < T0 + 8);
     wire [2:0] j0 = slot[2:0];
-    wire [2:0] j = (MUT != 0 && j0 < 2) ? ~j0[0] : j0;  // MUT: slots 0/1 swapped
+    wire [2:0] j = (MUT != 0 && j0 < 3'd2) ? {2'b00, ~j0[0]} : j0;  // MUT: slots 0/1 swapped
     wire [551:0] w = buf_s[rp][j];
     wire row_beat = in_win && buf_we[rp][j];
     wire end_beat = in_win && LAST && (j0 == 3'd7);
