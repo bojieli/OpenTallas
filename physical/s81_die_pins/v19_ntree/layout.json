@@ -52,7 +52,7 @@
    ],
    "cncla_C1": [
     150.12,
-    1159.2,
+    957.96,
     138.24,
     151.2
    ],
@@ -70,7 +70,7 @@
    ],
    "cnclb_C1": [
     288.36,
-    1159.2,
+    957.96,
     138.24,
     151.2
    ],
@@ -82,13 +82,13 @@
    ],
    "cntree (CLOSED h2 view, R0)": [
     197.64,
-    957.6,
+    1130.4,
     181.44,
     181.44
    ],
    "cnrsq": [
     0.0,
-    957.6,
+    1130.4,
     138.24,
     138.24
    ]
@@ -108,7 +108,8 @@
    "C1 ex (512) S face -> cntree S face around the cntree (~20 + 181 + 60 = ~260 um, W or E side)",
    "cntree N ss/ss_v/tflt -> cnrsq E face (~200 um)",
    "far tiles -> collector N inputs and cnrsq N (f_fv/f_fc/f_eps, ul back): parent wiring, <= 500 um to be measured on the HC parent placement (relay only if over)"
-  ]
+  ],
+  "verification": "7ae73171b actual CLOSED TT/FF faces:1332dynamic bits0fail max392.784um,minsetup57.6069/minhold70.3381ps; newngo pending routedview"
  },
  "pin_files": [
   "physical/s81_die_pins/v19_ntree/ot_s81_hc_ctfx_nt.json",
