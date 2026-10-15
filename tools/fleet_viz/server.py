@@ -429,7 +429,7 @@ def ticker():
             log('snapshot: %s' % e)
 
 # ---------------------------------------------------------------- http
-STATIC = {'/explorer_chip_dataflow.js': ('explorer_chip_dataflow.js', 'text/javascript; charset=utf-8'), '/explorer/dataflow.js': ('explorer/dataflow.js', 'text/javascript; charset=utf-8'), '/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
+STATIC = {'/explorer/flow_layout.js': ('explorer/flow_layout.js', 'text/javascript; charset=utf-8'), '/explorer_chip_dataflow.js': ('explorer_chip_dataflow.js', 'text/javascript; charset=utf-8'), '/explorer/dataflow.js': ('explorer/dataflow.js', 'text/javascript; charset=utf-8'), '/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
           '/replay': ('index.html', 'text/html; charset=utf-8'), '/explorer': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.html': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.js': ('explorer.js', 'text/javascript; charset=utf-8'),
@@ -557,6 +557,17 @@ def with_sent(body):
 
 class H(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
+    def end_headers(self):
+        # Apply to static files, APIs, redirects, errors and event streams alike.
+        # Cloudflare consumes its own header; CDN-Cache-Control also travels
+        # downstream, while Cache-Control prevents browser storage.
+        self.send_header('Cache-Control', 'no-store, no-cache, max-age=0, must-revalidate')
+        self.send_header('Cloudflare-CDN-Cache-Control', 'no-store')
+        self.send_header('CDN-Cache-Control', 'no-store')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
+        super().end_headers()
+
     def safe(self, q):
         local = self.client_address[0] in ('127.0.0.1', '::1')
         proxied = any(self.headers.get(k) for k in ('X-Forwarded-For', 'X-Real-IP', 'Forwarded', 'CF-Connecting-IP'))
@@ -565,7 +576,7 @@ class H(BaseHTTPRequestHandler):
     def send(self, code, body, ctype, extra=()):
         self.send_response(code); self.send_header('Content-Type', ctype); self.send_header('Content-Length', str(len(body)))
         for k, v in extra: self.send_header(k, v)
-        self.send_header('Cache-Control', 'no-store'); self.send_header('X-Content-Type-Options', 'nosniff'); self.end_headers()
+        self.send_header('X-Content-Type-Options', 'nosniff'); self.end_headers()
         if self.command != 'HEAD': self.wfile.write(body)
 
     def do_HEAD(self): self.do_GET()
@@ -641,7 +652,7 @@ class H(BaseHTTPRequestHandler):
             return self.explorer(u.path[len('/api/explorer/'):], q, safe)
         if u.path == '/api/stream':
             self.send_response(200); self.send_header('Content-Type', 'text/event-stream')
-            self.send_header('Cache-Control', 'no-store'); self.send_header('X-Accel-Buffering', 'no'); self.end_headers()
+            self.send_header('X-Accel-Buffering', 'no'); self.end_headers()
             self.close_connection = True
             try:
                 with _cond: body = _snap.get('live', {}).get(safe)
@@ -706,7 +717,7 @@ class H(BaseHTTPRequestHandler):
                 import gzip as _gz
                 return self.send(200, _gz.decompress(b), 'application/json')
             self.send_response(200); self.send_header('Content-Type', 'application/json'); self.send_header('Content-Encoding', 'gzip')
-            self.send_header('Content-Length', str(len(b))); self.send_header('Cache-Control', 'no-store'); self.end_headers()
+            self.send_header('Content-Length', str(len(b))); self.end_headers()
             if self.command != 'HEAD': self.wfile.write(b)
             return
         if what == 'geom':
@@ -716,7 +727,7 @@ class H(BaseHTTPRequestHandler):
                 import gzip as _gz
                 return self.send(200, _gz.decompress(b), 'application/json')
             self.send_response(200); self.send_header('Content-Type', 'application/json'); self.send_header('Content-Encoding', 'gzip')
-            self.send_header('Content-Length', str(len(b))); self.send_header('Cache-Control', 'no-store'); self.end_headers()
+            self.send_header('Content-Length', str(len(b))); self.end_headers()
             if self.command != 'HEAD': self.wfile.write(b)
             return
         if what == 'card':

@@ -47,6 +47,15 @@ set ot_au_cols_h 1.5
 set ot_au_depth_max 0.45
 set ot_hops [expr {[info exists ::env(OT_OFLOP_HOPS)] && $::env(OT_OFLOP_HOPS) ne "" ? $::env(OT_OFLOP_HOPS) : 4}]
 set ot_allow_none [expr {[info exists ::env(OT_OFLOP_ALLOW_NONE)] && $::env(OT_OFLOP_ALLOW_NONE) eq "1"}]
+# Optional source-bound hard-face audit. The sourced audit must inspect every
+# actual boundary endpoint and rehash its registered leaf/view binding. A count
+# is produced by that audit, never accepted from a caller-supplied environment
+# boolean. Own standard-cell endpoints continue through the ordinary anchoring.
+set ot_verified_hard_faces 0
+if {[info exists ::env(OT_OFLOP_HARD_FACE_AUDIT)]} {
+  source $::env(OT_OFLOP_HARD_FACE_AUDIT)
+  if {$ot_verified_hard_faces <= 0} { error "OT_IOFLOP: hard-face audit verified no ports" }
+}
 proc ot_of_drv {net} {
   foreach it [$net getITerms] { if {[$it isOutputSignal]} { return $it } }
   return ""
@@ -380,4 +389,4 @@ set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt w]
 foreach n $ot_list { puts $fh $n }
 close $fh
 puts "OT_IOFLOP fixed $ot_n output-port and $ot_ni input-port flops at their pins ($ot_skip ports not single-flop)"
-if {$ot_n + $ot_ni == 0 && !$ot_allow_none} { error "OT_IOFLOP: no pin flop found (netlist changed?)" }
+if {$ot_n + $ot_ni == 0 && !$ot_allow_none && $ot_verified_hard_faces == 0} { error "OT_IOFLOP: no pin flop found (netlist changed?)" }
