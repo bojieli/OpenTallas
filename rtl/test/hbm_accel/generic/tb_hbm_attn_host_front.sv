@@ -81,7 +81,7 @@ module tb_hbm_attn_host_front;
   assign rr[b*257+:257]=arr[3*257+:257];
  end
  function automatic[15:0]word(input integer ep,h,e);word=16'h3b00+16'(ep*4096+h*131+e*3);endfunction
- reg[222:0]cfg[0:255],outer[0:255];reg[6:0]cal[0:255];integer mut=0,profile=0,checked=0,heads=0,seen=0,eventcycles=0;
+ reg[222:0]cfg[0:255],outer[0:255];reg[6:0]cal[0:255];integer mut=0,profile=0,selected_profile=0,checked=0,heads=0,seen=0,eventcycles=0;
  integer ep,h,s,b,w,i;string dir,fn;reg active=0;
  always @(posedge clk)if(active)begin
   if(fault||host_fault||loader_fault||(|program_fault))$fatal(1,"ATT_FRONT source/calendar fault");
@@ -110,7 +110,7 @@ module tb_hbm_attn_host_front;
  endtask
  reg[255:0]word_;
  initial begin
-  if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR");void'($value$plusargs("MUT=%d",mut));
+  if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR");void'($value$plusargs("MUT=%d",mut));void'($value$plusargs("PROFILE=%d",selected_profile));
   repeat(8)@(negedge clk);rst_n=1;
   for(ep=0;ep<2;ep++)for(h=0;h<16;h++)for(s=0;s<8;s++)begin
    @(negedge clk);pwq=0;
@@ -126,7 +126,7 @@ module tb_hbm_attn_host_front;
    for(integer ww=0;ww<8;ww++)write32(12'hf04,word_[ww*32+:32]);
    write32(12'hf08,32'(1<<10));write32(12'hf0c,1);
   end
-  for(profile=0;profile<4;profile++)begin
+  for(profile=selected_profile;profile<selected_profile+1;profile++)begin
    fn=$sformatf("%s/outer%0d.hex",dir,profile);$readmemh(fn,outer);fn=$sformatf("%s/event%0d.hex",dir,profile);$readmemh(fn,cal);
    heads=0;seen=0;active=1;
    write32(12'hf20,49);
@@ -140,9 +140,9 @@ module tb_hbm_attn_host_front;
    write32(12'hf28,32'((182+(profile%2?1:138))<<12));write32(12'hf2c,1);
    write32(12'hc10,1);
    repeat(600)@(negedge clk);
-   if(seen!=1||heads!=(profile%2?0:16))$fatal(1,"ATT_FRONT event/head accounting");
+   if(seen!=1||heads!=(profile%2?0:16))$fatal(1,"ATT_FRONT event/head accounting profile%0d seen%0d heads%0d",profile,seen,heads);
    $display("ATT_FRONT_PROFILE PASS profile%0d heads%0d",profile,heads);active=0;
   end
-  $display("PASS ATT_HOST_PROGRAM_QUERY_FRONT profiles=4 heads=32 words=%0d event_cycles=%0d native_RG=3 native_RG_total=7 real_query_macros=64 actual_VM_macros=24 actual_programme_macros=6 real_AXI_loaderCP_target=49",checked,eventcycles);$finish;
+  $display("PASS ATT_HOST_PROGRAM_QUERY_FRONT cold_boot_profiles=1 words=%0d event_cycles=%0d native_RG=3 native_RG_total=7 real_query_macros=64 actual_VM_macros=24 actual_programme_macros=6 real_AXI_loaderCP_target=49",checked,eventcycles);$finish;
  end
 endmodule

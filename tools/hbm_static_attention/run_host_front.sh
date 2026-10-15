@@ -14,8 +14,12 @@ python3 tools/hbm_static_attention/prepare_front.py --out "$out/vectors"
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v \
  physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v \
  rtl/test/hbm_accel/generic/tb_hbm_attn_host_front.sv > "$out/build.log" 2>&1
-for m in 0 1 2;do
- set +e;"$out/obj/sim" +DIR="$out/vectors" +MUT=$m > "$out/m$m.log" 2>&1;rc=$?;set -e;echo "$rc" > "$out/m$m.rc"
- if [ "$m" = 0 ];then grep -q 'PASS ATT_HOST_PROGRAM_QUERY_FRONT' "$out/m$m.log";else grep -qE 'ATT_FRONT (source/calendar fault|wrong actual event profile)' "$out/m$m.log";fi
+for profile in 0 1 2 3;do
+ "$out/obj/sim" +DIR="$out/vectors" +MUT=0 +PROFILE=$profile > "$out/profile$profile.log" 2>&1
+ grep -q "PASS ATT_HOST_PROGRAM_QUERY_FRONT" "$out/profile$profile.log"
+done
+for m in 1 2;do
+ set +e;"$out/obj/sim" +DIR="$out/vectors" +MUT=$m +PROFILE=0 > "$out/m$m.log" 2>&1;rc=$?;set -e;echo "$rc" > "$out/m$m.rc"
+ grep -qE 'ATT_FRONT (source/calendar fault|wrong actual event profile)' "$out/m$m.log"
 done
 echo 'PASS actual AXI host/loaderCP/target49/resident programme/query producer +2 mutations' > "$out/gate"
