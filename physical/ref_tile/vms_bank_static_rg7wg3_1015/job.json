@@ -3,7 +3,7 @@
  "block": "hfd_vms_bank_static_rg7wg3",
  "ref_tile": true,
  "owner": "Codex:H-VM static bank native physical",
- "purpose": "Native static bank RG7WG3; unchanged real3SRAM core, dedicated COLL+IDX readgroups; pre-route synthesis/CTS first, no route until die cuts approved",
+ "purpose": "Native static bank RG7WG3; unchanged real3SRAM core, dedicated COLL+IDX readgroups; pre-route synthesis/CTS first, no route until die cuts approved; structural successor: qualified independent face payloads, bounded CE prefix,393.12x339.12 body,midfaceN clock/reset; actual-track and actual-PG contact audit before placement",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {

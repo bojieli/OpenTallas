@@ -1,0 +1,20 @@
+{
+  "source_fix_commit": "9b6420df2",
+  "shape": "RG7WG3",
+  "outline_um": [
+    393.12,
+    339.12
+  ],
+  "required_scalar_pins": 4742,
+  "face_scalar_pins": {
+    "N": 1145,
+    "S": 1383,
+    "E": 1107,
+    "W": 1107
+  },
+  "PG_audit": "POST_IO hook usesactualODB routingtracks andVDD/VSSPORTrectangles; projectsandexpandsPGcolumns byactualpinhalfwidth+0.072um, reserves>=5.4umcorners andsignalcenters>=2halfwidth+0.072um",
+  "expected_ff_increase": "1536 additionalrr payloadDFF plusdistincteg boundarypayload, below15000root; post-synthesis audit required",
+  "utilization": "previous mapped std2305+macro36952 over newcore(388.8*334.8)=30.16% beforeaddingdistinctpayloadflops; actualarea measuredafter synthesis",
+  "timing": "unchanged833.333ps,60/25uncertainty,0.2TIO; reset/flt remainactual endpoints withnoexceptions",
+  "route": "not authorizeduntilactualsourceclock/pinPG/facecutverified"
+}
