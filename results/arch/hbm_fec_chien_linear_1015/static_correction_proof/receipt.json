@@ -1,0 +1,40 @@
+{
+  "scope": "ACTUAL_STATIC_SYMBOL_CORRECTION_NUMERICAL_ONLY",
+  "provenance": {
+    "base_decoder_sha256": "aacfd559c3cbbd690d7feba90837b623560b20b8dfe425d9051ba87e6bef8ba6",
+    "base_wrapper_sha256": "83d68a75b1e283f7c0dfe9170517ddc7d0e73819d45f25fdf5824df2f5bfc763",
+    "generator_sha256": "63e427dc6ba098d0af757108ed3ff15f0c2756fad9b7c0c9c9eaea3d9af131bf",
+    "added_pipeline_edges": 0,
+    "state_changes": 0,
+    "structural_change": "symbol-owned fixed correction slices and balanced exact popcount",
+    "outputs_sha256": {
+      "ot_hbm_kp4_correction55_static.sv": "0dcb8cb5511abbd9d945b986f74ae7b74c287acb1a523356862391dc252f5b67",
+      "ot_hbm_kp4_dec_static_correction.sv": "2a5adfcefb97385e1d1fdfda75b6d1ddc75ce8cdefe8dd44f755f1efd7339125",
+      "hfd_serdes487_static_correction_window.sv": "60e3fe50d357c76655b87cea0179cffb2c53570344ab7ba7ff3a3bdc1261d5db"
+    }
+  },
+  "core_vectors": 16144,
+  "core_mutant": "REJECTED_PHASE0_VECTOR0",
+  "full_fec_words": 2048,
+  "full_fec_age": 102,
+  "decoded_words_checked": 2376,
+  "actual_forney_mutant_rejected_cycle": 302,
+  "terminal_runner_exit": 0,
+  "units": {
+    "core": "oth-ubuntu-1795626-1792060681",
+    "core_mutant": "oth-ubuntu-1795627-1792060681",
+    "full_fec": "oth-ubuntu-1795651-1792060681",
+    "forney_mutant": "oth-ubuntu-1795628-1792060681"
+  },
+  "source_sha256": {
+    "tools/hbm_io/run_fec_static_correction.sh": "fb70c61854e872098f6706637dd77c56a0926989671d521233f27986c96122dd",
+    "rtl/hbm_accel/io_native_20261014/tb_static_correction.sv": "b2e89024170235b346ad98c7eb52d0c2d56e6d8f74f40d050eb8fda7f4838a25"
+  },
+  "physical_qualified": false,
+  "new_full_census": "PASS_GENERIC_SYNTHESIS_AND_12_ROOT_COUNT_ONLY",
+  "scalar_map": "LIVE_NEW_SOURCE_UNIT_1830755",
+  "full_census_receipt": "../static_correction_census/receipt.json",
+  "new_full_census_unit": "oth-ubuntu-1799123-1792060811",
+  "unchanged_total_flop_bits": 86152,
+  "unchanged_all_12_root_counts": true
+}

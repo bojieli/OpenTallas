@@ -1,0 +1,179 @@
+{
+ "schema": "opentallas.qwen.collective.production_boundary.v2",
+ "top": "qfd_collective_static_io_production",
+ "source": "rtl/physical/ot_qfd_collective_static_io_production.sv",
+ "source_closure": [
+  "rtl/physical/ot_qfd_collective_static_io_production.sv",
+  "rtl/physical/ot_qfd_collective_static_io.sv",
+  "rtl/physical/ot_qfd_coll_static_face.sv",
+  "rtl/physical/ot_qfd_ucie_static_share.sv",
+  "rtl/physical/ot_qfd_ucie_six_five.sv",
+  "rtl/physical/ot_qfd_io_collective_static.sv",
+  "rtl/rom/ot_coll_tp8_static.sv",
+  "rtl/rom/ot_coll_static_linkcal.sv"
+ ],
+ "defaults": {
+  "PU": 20,
+  "PS": 339,
+  "LU": 53,
+  "LS": 376,
+  "RU": 5,
+  "RS0": 0,
+  "RS1": 0,
+  "RS2": 5
+ },
+ "compile_defines": [
+  "OT_QFDS_LU=53",
+  "OT_QFDS_LS=376"
+ ],
+ "physical_boundary": {
+  "UCIe": {
+   "TX": "shared_tx[1042:0]",
+   "TXvalid": "shared_tx_valid",
+   "RX": "shared_rx[1042:0]",
+   "RXvalid": "shared_rx_valid",
+   "UP": "ucie_up",
+   "clock": "fdi_ck",
+   "selected_PHY": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy",
+   "port_map": {
+    "shared_tx": "tx_flit",
+    "shared_tx_valid": "tx_v",
+    "shared_rx": "rx_flit",
+    "shared_rx_valid": "rx_v",
+    "ucie_up": "tx_up",
+    "fdi_ck": "clk"
+   }
+  },
+  "SerDes": {
+   "count": 3,
+   "frame_bits": 597,
+   "TX": "serdes_tx[1790:0]",
+   "RX": "serdes_rx[1790:0]",
+   "TXvalid": "serdes_tx_valid[2:0]",
+   "RXvalid": "serdes_rx_valid[2:0]",
+   "UP": "serdes_up[2:0]"
+  }
+ },
+ "clock_roots": {
+  "total": 108,
+  "collective": 18,
+  "faces": 55,
+  "relay": 30,
+  "gearbox_core_ck": {
+   "period_ps": 833.3333333333334,
+   "scope": "stage 3588FF + core output 598FF + frame/reset/fault control"
+  },
+  "fdi_ck": {
+   "period_ps": 1000,
+   "scope": "TX FDI output 1044FF + beat counter/fault control"
+  },
+  "fdi_rx_ck": {
+   "period_ps": 1000,
+   "scope": "RX beat registers 3588FF + 6 reset valid FF"
+  },
+  "blk_ck[0] (gearbox blk_tx_ck)": {
+   "period_ps": 5000,
+   "scope": "TX block register 3588FF + reset sync + frame toggle"
+  },
+  "blk_ck[1] (gearbox blk_rx_ck)": {
+   "period_ps": 5000,
+   "scope": "RX block register 3588FF + 6 valid FF"
+  }
+ },
+ "rational_clock_relationship": "core 1.2 GHz, FDI 1 GHz and block 200 MHz from one PLL, phase-aligned at the 5 ns frame. NO core<->FDI path exists; every crossing is integer core:blk 6:1 or FDI:blk 5:1 (min ordinary setup relation 833.3 ps, no exceptions). PLL/phase source and native CTS binding OPEN.",
+ "steady_state_transport": {
+  "captured_input_to_output_core_edges": 19,
+  "registered_codec_launch_to_receiver_pin_core_edges": 20,
+  "PHY_FDI_cycles": 4,
+  "six_core_words_bits": 3588,
+  "FDI_beats_per5cycles": 4,
+  "FDI_bits": 1043,
+  "calendar": "stage C(6m+j); TX block B(m+1); FDI beat F(5m+6+k); RX beat F(5m+11+k); RX block B(m+3); out C(6m+19+j)"
+ },
+ "fault": "fault aggregatescollective+sharedgearbox+20CDC+5abort, fault_code retainscollectiveclass; faultsneverchangecompiledschedule",
+ "baseline_production_cycles": {
+  "AR256": 795,
+  "two_AR256": 1533,
+  "argmax": 444,
+  "two_AR256_argmax": 1541,
+  "r9_for_reference": {
+   "AR256": 805,
+   "two_AR256": 1548,
+   "argmax": 449,
+   "two_AR256_argmax": 1556
+  }
+ },
+ "physical_homes": null,
+ "bench_status": "PASS 24 production (6 FDI phases x 4) + 6 unit at LU53/LS376; LU52 FAIL (collective fault all 8 dies) = LU53 minimal; unsafe non-shared calendar FAIL 16 mismatches/all 8 fault; component 180 positive (6 phases x 30 reset offsets) + 4 mutants rejected; ordinary STA probe min cross-root relation 833.3 ps, worst cross-root setup +335.1 ps TT, worst hold +5.0 ps FF, 51,676 cells (r9 166.7 ps)",
+ "physical_qualified": false,
+ "native_system_qualified": false,
+ "PHY_license_qualified": false,
+ "source_sha256": {
+  "rtl/physical/ot_qfd_collective_static_io_production.sv": "e63db189627cb3fb2c3b993b42e543fba404c378bd88f3e6ca8af75152df87b4",
+  "rtl/physical/ot_qfd_collective_static_io.sv": "880d813e6e5c174894ce3071f318c647059c5fbcf04cb5e2e0e48086b202198d",
+  "rtl/physical/ot_qfd_coll_static_face.sv": "09ac11db5f0810a6e5c0de9a33df7aaf655fbb75ce742d3120881ccef61819c4",
+  "rtl/physical/ot_qfd_ucie_static_share.sv": "fd8d3b0c901a6810674ad209036977903a138c67d9dfe96137bbdd509fec027b",
+  "rtl/physical/ot_qfd_ucie_six_five.sv": "9e311fda11ef09bea1b1da7cc4a34f1afa21381654b6345bbcdf1bec0d14aa86",
+  "rtl/physical/ot_qfd_io_collective_static.sv": "32e51fe1aa7ba1120e7cefc33d3345095350e9c9c1e0b24a570e8cb89d604447",
+  "rtl/rom/ot_coll_tp8_static.sv": "8b32e6a42e3e68d8ba46ca1f9df8163da197faac898027c12548b5f618a0bcba",
+  "rtl/rom/ot_coll_static_linkcal.sv": "504a41b54f540f7275e90b60411ec9e73661ce9522c449101df4a645a2ae2fff"
+ },
+ "evidence": "results/rtl/qwen_coll_io_1014/production_block_stage_r10_1015",
+ "component_evidence": "results/rtl/qwen_coll_io_1014/block_stage_component_r10_1015",
+ "source_commit": "1e991bc08",
+ "elaboration_source_closure": {
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+  "rtl/rom/ot_coll_fold_slice.sv": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+  "rtl/rom/ot_coll_rst_leaf.sv": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916",
+  "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+  "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "df23697e8d58e67ae3209eac9162d1393bed3a510a6e090149c2694bea9eacd8",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "3b4d10d5d8f86557f3a6a342d9964ecad6d99579c90fc9438d469b14a5da478c",
+  "rtl/physical/ot_qfd_static_transport.sv": "1ce0011bd1adba3b44829431a34de3b93317ed94a5b0cb3f36021e3b92d7f0ee",
+  "rtl/physical/ot_qfd_io_xfifo_static.sv": "572eccedb96536760d1cda089df7a00870f388aab7085bbe640957622946eecf",
+  "rtl/physical/ot_qfd_io_links_static.sv": "88e53cea3345d51d8e99ea6ee6bd1b9d3e09fd86338729aa69e2aab56b2660fc",
+  "rtl/physical/ot_qfd_coll_static_face.sv": "09ac11db5f0810a6e5c0de9a33df7aaf655fbb75ce742d3120881ccef61819c4",
+  "rtl/physical/ot_qfd_ucie_static_share.sv": "fd8d3b0c901a6810674ad209036977903a138c67d9dfe96137bbdd509fec027b",
+  "rtl/physical/ot_qfd_ucie_six_five.sv": "9e311fda11ef09bea1b1da7cc4a34f1afa21381654b6345bbcdf1bec0d14aa86",
+  "rtl/physical/ot_qfd_collective_static_io.sv": "880d813e6e5c174894ce3071f318c647059c5fbcf04cb5e2e0e48086b202198d",
+  "rtl/physical/ot_qfd_collective_static_io_production.sv": "e63db189627cb3fb2c3b993b42e543fba404c378bd88f3e6ca8af75152df87b4",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+  "rtl/rom/ot_coll_tp8_static.sv": "8b32e6a42e3e68d8ba46ca1f9df8163da197faac898027c12548b5f618a0bcba",
+  "rtl/physical/ot_qfd_io_collective_static.sv": "32e51fe1aa7ba1120e7cefc33d3345095350e9c9c1e0b24a570e8cb89d604447",
+  "rtl/rom/ot_coll_static_linkcal.sv": "504a41b54f540f7275e90b60411ec9e73661ce9522c449101df4a645a2ae2fff",
+  "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
+  "rtl/test/tb_coll_tp8_static_links.sv": "db653ca80bce39f1bfbe466a9852655ab49194cad27c27a62ce7d707b05ea06c"
+ },
+ "compiler_helper_sha256": {
+  "tools/qwen_coll_tp8_static_links_bench.py": "4ef1932623463b4d71dee1ca62b00970a81a54251309fb324fa0d1653e86cf17",
+  "tools/qwen_coll_tp8_static_bench.py": "792ebb71e298265f206b9f09d403aaa216dd210b41e5ac0c2f8ae8e4fd45d84f",
+  "tools/qwen_coll_tp8_bench.py": "2e7afe167dfb5485615db26f9d8df023ad6f5612e67737f0f874e5dae4601f44",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+ },
+ "compiled_commands": {
+  "qwen_ar_256w": [
+   46
+  ],
+  "qwen_layer_2x256w": [
+   46,
+   784
+  ],
+  "qwen_argmax_1w": [
+   46
+  ],
+  "qwen_layer_2x256w_argmax": [
+   46,
+   784,
+   1143
+  ]
+ },
+ "supersedes": "results/arch/qwen_coll_io_1014/shared_ucie_1015/production_boundary.json (r9 direct 6:5 gearbox; historical)",
+ "sta_evidence": "results/rtl/qwen_coll_io_1014/block_stage_sta_r10_1015",
+ "physical_leaf_kit": "physical/ref_tile/qfd_ucie_gearbox_r10 (spec tools/ref_tile/specs_qcollio/qfd_ucie_gearbox_r10.json)"
+}

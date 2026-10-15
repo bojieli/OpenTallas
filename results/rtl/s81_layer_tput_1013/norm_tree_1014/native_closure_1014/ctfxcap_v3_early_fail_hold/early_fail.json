@@ -1,0 +1,123 @@
+{
+ "name": "s81hc_ctfxcap_ref-v3-assigned-reset-d9f350600",
+ "verdict": "EARLY_FAIL_HOLD",
+ "why": [
+  "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -41.4 ps (start -41.43), 8960 it / 16293 buffers, 3342 endpoints in margin, 0.3 h in step, HM guard present"
+ ],
+ "orfs": "/srv/opentallas/claude/closure-loop/s81hc_ctfxcap_ref-v3-assigned-reset-d9f350600/routes/s81hc_ctfxcap_ref_v3_assigned_reset_d9f350600/work/orfs",
+ "corner": "TT",
+ "step": "4_1_cts",
+ "setup": {
+  "stage": "place",
+  "ws": 473.39099999999996,
+  "raw_ws": 410.058,
+  "period": 770.0,
+  "count": 0,
+  "tns": 0
+ },
+ "hold": {
+  "found": [
+   5623,
+   3342
+  ],
+  "guard": true,
+  "hm_auto": [],
+  "sync": [
+   [
+    "95.24",
+    "-41.43"
+   ]
+  ],
+  "stall": true,
+  "rows": 900,
+  "first": [
+   "0",
+   0,
+   -41.433,
+   -35321.137
+  ],
+  "cur_first": [
+   "0",
+   0,
+   -41.433,
+   -287.168
+  ],
+  "cur_last": [
+   "final",
+   4888,
+   -41.433,
+   -287.168
+  ],
+  "dwns_1000": 0.0,
+  "chunks": [
+   [
+    1,
+    -41.43,
+    99.2
+   ],
+   [
+    2,
+    -41.43,
+    0.0
+   ]
+  ]
+ },
+ "congestion": [],
+ "drt": [],
+ "paths": [
+  {
+   "cls": "input->reg",
+   "slack_ps": 410.06,
+   "group": "core_clk",
+   "dominated": "logic",
+   "wire_ps": 22.4,
+   "cell_ps": 80.8,
+   "max_fanout": 2,
+   "start": "fd_in[1022]",
+   "end": "ot_prs_00025_ff",
+   "check": "rising edge-triggered flip-flop clocked by core_clk"
+  },
+  {
+   "cls": "input->reg",
+   "slack_ps": 522.45,
+   "group": "asynchronous",
+   "dominated": "wire",
+   "wire_ps": 44.8,
+   "cell_ps": 0.0,
+   "max_fanout": 8,
+   "start": "rst_in",
+   "end": "fv_local[5]$_DFF_PN0_",
+   "check": "recovery check against rising-edge clock core_clk"
+  }
+ ],
+ "block": "ot_s81_hc_ctfx_cap",
+ "owner": "Codex:S-NORM",
+ "gates": {
+  "setup_cts_ws_ps": -400.0,
+  "setup_cts_count": 500,
+  "setup_tns_ps": -1000000.0,
+  "setup_place_ws_ps": -900.0,
+  "setup_place_count": 2000,
+  "hold_buf_cap": 100000,
+  "hold_buf_frac": 0.3,
+  "hold_buf_min": 20000,
+  "hold_buf_improve_dwns": 5.0,
+  "hold_buf_improve_frac": 0.6,
+  "hold_buf_improve_min": 60000,
+  "hold_stall_it": 2000,
+  "hold_stall_dwns": 1.0,
+  "hold_stall_tns_pct": 2.0,
+  "hold_real_ws_ps": -150.0,
+  "hold_real_after_s": 3600,
+  "hold_deep_it": 2000,
+  "hold_deep_dwns": 5.0,
+  "hold_nearmiss_ps": -15.0,
+  "grt_min_iter": 20,
+  "grt_markers": 1000,
+  "grt_flat": 0.95,
+  "drt_min_iter": 20,
+  "drt_k": 8,
+  "drt_min_viol": 100,
+  "stall_after_s": 10800
+ }
+}

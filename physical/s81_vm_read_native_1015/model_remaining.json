@@ -1,0 +1,336 @@
+{
+  "schema": "s81.native-read-leaves.v1",
+  "scope": "Source-bound representatives, no physical/throughput qualification",
+  "period_ps": 833.333,
+  "route_period_ps": 770,
+  "whole_vm512": {
+    "read_data_roots": 64,
+    "read_valid_roots": 8,
+    "read_data_valid_age": 13,
+    "FSR_roots": 16,
+    "FSR_pin_to_bank_age": 1,
+    "global_fault_age": null
+  },
+  "types": {
+    "dsfd_vm_static_read_q2": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "cc630f3d3bed535b83ceb0b80ad300d454e8ab1de34c6b7fc306bd14e1de0c26",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets.sv": "1cec3b7b079c991022786827685ddb7d980061f631297b322c42492313f0c962"
+      },
+      "signal_pins": 799,
+      "outline_um": [
+        155.52,
+        237.6
+      ],
+      "pin_face_counts": {
+        "N": 2,
+        "S": 0,
+        "E": 521,
+        "W": 276
+      },
+      "RTL_FF_before_constant_optimization": 1035,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_read_q3": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "cc630f3d3bed535b83ceb0b80ad300d454e8ab1de34c6b7fc306bd14e1de0c26",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets.sv": "1cec3b7b079c991022786827685ddb7d980061f631297b322c42492313f0c962"
+      },
+      "signal_pins": 799,
+      "outline_um": [
+        155.52,
+        237.6
+      ],
+      "pin_face_counts": {
+        "N": 2,
+        "S": 0,
+        "E": 521,
+        "W": 276
+      },
+      "RTL_FF_before_constant_optimization": 1035,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_read_q4": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "cc630f3d3bed535b83ceb0b80ad300d454e8ab1de34c6b7fc306bd14e1de0c26",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets.sv": "1cec3b7b079c991022786827685ddb7d980061f631297b322c42492313f0c962"
+      },
+      "signal_pins": 399,
+      "outline_um": [
+        103.68,
+        129.6
+      ],
+      "pin_face_counts": {
+        "N": 2,
+        "S": 0,
+        "E": 131,
+        "W": 266
+      },
+      "RTL_FF_before_constant_optimization": 261,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_read_q5": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "cc630f3d3bed535b83ceb0b80ad300d454e8ab1de34c6b7fc306bd14e1de0c26",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets.sv": "1cec3b7b079c991022786827685ddb7d980061f631297b322c42492313f0c962"
+      },
+      "signal_pins": 799,
+      "outline_um": [
+        155.52,
+        237.6
+      ],
+      "pin_face_counts": {
+        "N": 2,
+        "S": 0,
+        "E": 521,
+        "W": 276
+      },
+      "RTL_FF_before_constant_optimization": 1035,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_read_q6": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "cc630f3d3bed535b83ceb0b80ad300d454e8ab1de34c6b7fc306bd14e1de0c26",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets.sv": "1cec3b7b079c991022786827685ddb7d980061f631297b322c42492313f0c962"
+      },
+      "signal_pins": 527,
+      "outline_um": [
+        103.68,
+        129.6
+      ],
+      "pin_face_counts": {
+        "N": 2,
+        "S": 0,
+        "E": 261,
+        "W": 264
+      },
+      "RTL_FF_before_constant_optimization": 519,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_read_q7": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "cc630f3d3bed535b83ceb0b80ad300d454e8ab1de34c6b7fc306bd14e1de0c26",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets.sv": "1cec3b7b079c991022786827685ddb7d980061f631297b322c42492313f0c962"
+      },
+      "signal_pins": 527,
+      "outline_um": [
+        103.68,
+        129.6
+      ],
+      "pin_face_counts": {
+        "N": 2,
+        "S": 0,
+        "E": 261,
+        "W": 264
+      },
+      "RTL_FF_before_constant_optimization": 519,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_read_v1": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "760df76d673e6b34f1686235a1dbfc54814bff6bf605fc58e521d43363dbb6d7",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets.sv": "3ed0e312a60cabfa87ecf725f864e9cb303d31a963cd89870641b82bafb76d79"
+      },
+      "signal_pins": 145,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "pin_face_counts": {
+        "N": 56,
+        "S": 0,
+        "E": 9,
+        "W": 80
+      },
+      "RTL_FF_before_constant_optimization": 21,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_read_v2": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "760df76d673e6b34f1686235a1dbfc54814bff6bf605fc58e521d43363dbb6d7",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets.sv": "3ed0e312a60cabfa87ecf725f864e9cb303d31a963cd89870641b82bafb76d79"
+      },
+      "signal_pins": 131,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "pin_face_counts": {
+        "N": 50,
+        "S": 0,
+        "E": 9,
+        "W": 72
+      },
+      "RTL_FF_before_constant_optimization": 20,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_read_v3": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "760df76d673e6b34f1686235a1dbfc54814bff6bf605fc58e521d43363dbb6d7",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets.sv": "3ed0e312a60cabfa87ecf725f864e9cb303d31a963cd89870641b82bafb76d79"
+      },
+      "signal_pins": 131,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "pin_face_counts": {
+        "N": 50,
+        "S": 0,
+        "E": 9,
+        "W": 72
+      },
+      "RTL_FF_before_constant_optimization": 20,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_read_v4": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "760df76d673e6b34f1686235a1dbfc54814bff6bf605fc58e521d43363dbb6d7",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets.sv": "3ed0e312a60cabfa87ecf725f864e9cb303d31a963cd89870641b82bafb76d79"
+      },
+      "signal_pins": 41,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "pin_face_counts": {
+        "N": 14,
+        "S": 0,
+        "E": 3,
+        "W": 24
+      },
+      "RTL_FF_before_constant_optimization": 8,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_read_v5": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "760df76d673e6b34f1686235a1dbfc54814bff6bf605fc58e521d43363dbb6d7",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets.sv": "3ed0e312a60cabfa87ecf725f864e9cb303d31a963cd89870641b82bafb76d79"
+      },
+      "signal_pins": 128,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "pin_face_counts": {
+        "N": 50,
+        "S": 0,
+        "E": 6,
+        "W": 72
+      },
+      "RTL_FF_before_constant_optimization": 17,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_read_v6": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "760df76d673e6b34f1686235a1dbfc54814bff6bf605fc58e521d43363dbb6d7",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets.sv": "3ed0e312a60cabfa87ecf725f864e9cb303d31a963cd89870641b82bafb76d79"
+      },
+      "signal_pins": 71,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "pin_face_counts": {
+        "N": 26,
+        "S": 0,
+        "E": 5,
+        "W": 40
+      },
+      "RTL_FF_before_constant_optimization": 12,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_read_v7": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "760df76d673e6b34f1686235a1dbfc54814bff6bf605fc58e521d43363dbb6d7",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets.sv": "3ed0e312a60cabfa87ecf725f864e9cb303d31a963cd89870641b82bafb76d79"
+      },
+      "signal_pins": 71,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "pin_face_counts": {
+        "N": 26,
+        "S": 0,
+        "E": 5,
+        "W": 40
+      },
+      "RTL_FF_before_constant_optimization": 12,
+      "cycles_added": 1,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_fsr_b1": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_bank8.sv": "a02a1ec9d39a836d548977d5468453e0dce95d9cf648b89881700251a2219204",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_quartets.sv": "d052e9945f47c5e5829c4d1607c47d27e56ceb60fa51098d52f4ed78585d7b3a"
+      },
+      "signal_pins": 690,
+      "outline_um": [
+        155.52,
+        246.24
+      ],
+      "pin_face_counts": {
+        "N": 2,
+        "S": 0,
+        "E": 145,
+        "W": 543
+      },
+      "RTL_FF_before_constant_optimization": 690,
+      "cycles_added": 0,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_fsr_b2": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_bank8.sv": "a02a1ec9d39a836d548977d5468453e0dce95d9cf648b89881700251a2219204",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_quartets.sv": "d052e9945f47c5e5829c4d1607c47d27e56ceb60fa51098d52f4ed78585d7b3a"
+      },
+      "signal_pins": 690,
+      "outline_um": [
+        155.52,
+        246.24
+      ],
+      "pin_face_counts": {
+        "N": 2,
+        "S": 0,
+        "E": 145,
+        "W": 543
+      },
+      "RTL_FF_before_constant_optimization": 690,
+      "cycles_added": 0,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    },
+    "dsfd_vm_static_fsr_b3": {
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_bank8.sv": "a02a1ec9d39a836d548977d5468453e0dce95d9cf648b89881700251a2219204",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_quartets.sv": "d052e9945f47c5e5829c4d1607c47d27e56ceb60fa51098d52f4ed78585d7b3a"
+      },
+      "signal_pins": 690,
+      "outline_um": [
+        155.52,
+        246.24
+      ],
+      "pin_face_counts": {
+        "N": 2,
+        "S": 0,
+        "E": 145,
+        "W": 543
+      },
+      "RTL_FF_before_constant_optimization": 690,
+      "cycles_added": 0,
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK"
+    }
+  }
+}

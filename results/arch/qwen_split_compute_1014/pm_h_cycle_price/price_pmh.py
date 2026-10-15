@@ -2,7 +2,7 @@ import json, re, sys
 from pathlib import Path
 from orientation_search import Graph, load
 from pair_mirror import build
-d, sha = load(Path(sys.argv[1])); g = Graph(d, d['constraints']['per_hop_um'])
+d, sha = load(Path(sys.argv[1] if len(sys.argv) > 1 else "/home/ubuntu/claude-takeover-20261007/qwen-native-controller-geometry-1015.json")); g = Graph(d, d['constraints']['per_hop_um'])
 base = {n: dict(i) for n, i in g.inst.items()}
 def stagemap(m):
     ev = g.evaluate(m)
@@ -47,8 +47,9 @@ def cost(S, B):
         tree = max(tree, max(out.values()))
     bw = max((v for b, v in S.items() if re.match(r'bword_\d+$', b)), default=None)
     return dict(bd=bd, bd_at=at, bd_side=side, tree=tree, bword_max=bw)
-S0, B = stagemap(base); m, _ = build(base, keep_rows=(7, 8)); S1, _ = stagemap(m)
-c0, c1 = cost(S0, B), cost(S1, B)
-print(json.dumps(dict(input_sha256=sha, baseline=c0, pm_h=c1), default=str))
-print('missing names', [n for n in ('head_0','cor_0_6','tap_0_0','tree_0_0_0a') if n not in S0])
-#, B[next(b for b in S0 if b.startswith('tree_'))]['ends'] if any(b.startswith('tree_') for b in S0) else None)
+if __name__ == "__main__":
+  S0, B = stagemap(base); m, _ = build(base, keep_rows=(7, 8)); S1, _ = stagemap(m)
+  c0, c1 = cost(S0, B), cost(S1, B)
+  print(json.dumps(dict(input_sha256=sha, baseline=c0, pm_h=c1), default=str))
+  print('missing names', [n for n in ('head_0','cor_0_6','tap_0_0','tree_0_0_0a') if n not in S0])
+  #, B[next(b for b in S0 if b.startswith('tree_'))]['ends'] if any(b.startswith('tree_') for b in S0) else None)

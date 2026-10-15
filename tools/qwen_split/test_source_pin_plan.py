@@ -87,6 +87,19 @@ class RealSourcePinPlan(unittest.TestCase):
                 n+=1
         self.assertGreater(n,30)
 
+    def test_tree_words_interleave_one_slot_apart(self):
+        # GEO-Q PM-H-S: t_out[k] / n_b[k] and n_y[k] / n_a[k] are 0.096 apart on the W face M4, on track
+        M={'qfd_tile_nk':Master('qfd_tile_nk',449.28,1442.88,7,'')}
+        P.apply(M)
+        q=M['qfd_tile_nk']
+        for a,b in (('t_out','n_b'),('n_y','n_a')):
+            A,B=q.ports[a],q.ports[b]
+            self.assertEqual((A[0],A[2],A[3],B[2]),('pins','W','M4','W'))
+            self.assertEqual(len(A[4]),514)
+            for k in (0,257,513):
+                self.assertAlmostEqual(B[4][k]-A[4][k],.096,places=6)
+            self.assertAlmostEqual(((A[4][0]-.012)/.048)%1.0,0.0,places=6)
+
     def test_off_track_mutant_is_detected(self):
         self.assertNotEqual(P.on_track('M5',(22.506,1.0))[0],22.506)
         self.assertEqual(P.on_track('M5',(22.524,1.0))[0],22.524)

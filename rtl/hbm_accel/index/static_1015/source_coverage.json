@@ -68,6 +68,18 @@
       "path": "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv",
       "sha256": "622f92c2f9eb3f4a7f2eb28c55b00bd71c524be93ac58857112362204f4c423b",
       "evidence": "source-only actualissuer\u2192parent; nativeexecutionOPEN"
+    },
+    {
+      "module": "ot_hbm_idx_keypack_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_keypack_static.sv",
+      "sha256": "82b99f5cb15fac1470a5ef94b99779f75847cf4d2d098a1115b023f72968a191",
+      "evidence": "32canonicalPREquantKR keys exact68B +3negativecases inclstackboundary, actualproducerjoinOPEN"
+    },
+    {
+      "module": "ot_hbm_idx_keystore_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_keystore_static.sv",
+      "sha256": "772d172e864c6762d0497578db0a8e871132abc1f0d67a81265e3dc8fd428b0f",
+      "evidence": "8keys24sectorwrites544bytes exactbyte masks +2negativecases, declaredPHYmodelonly"
     }
   ],
   "internal_parent_memory": {
@@ -83,22 +95,27 @@
   },
   "measured_scope": "component and actual operand/selector-toTX compositions only; no fullnative/physical qualification",
   "live": {
-    "host": "ot-epyc1tb",
-    "unit": "oth-ubuntu-530439-1792052594",
-    "local_service": "codex-idx-parent-static-1015.service",
-    "source": "9c42a778d",
-    "dir": "/srv/opentallas-scratch/codex/idx-parent-static-1015",
-    "preserve": "actual2048hslice fullshape binary build and vectors; do notduplicate/restart"
+    "status": "none; EPYC1 idx-parent-static-1015 run terminal and collected"
   },
   "open": [
-    "fullparent positive10928+512 result; scoremetadata cycle/IDjoin",
-    "fullparent actual negativecases using operand/cycle/data faults",
     "realmappedprogram issuer\u2192parent execution; tune conservative100edgequeryguard using fullshape measurements",
     "realstaged HBM keyservice\u2192all32lineports samecompiledslots",
     "candidateL20actualparentbinding and exactglobalK2048COLLconsumer",
     "typed512TXstation/qslots\u2192actualnativeTKM arithmetic proof (HCOLLowner)",
     "allphysicalslots/pins/nativephi-R clocks/CTS/TTFF/DRC/GRT",
-    "productionINDEXandTOPK costs vs immutable prices; 1388instruction prototype exceeds1.1*1212, noacceptance"
+    "productionINDEXandTOPK costs vs immutable prices; 1388instruction prototype exceeds1.1*1212, noacceptance",
+    "actualKRproducer SM512\u2192128 projection+SU k_norm/k_rope\u2192canonicalkeypack\u2192PHYstore\u2192service stagedread; legacyC++stateik store nothardware"
   ],
-  "qualification": false
+  "qualification": false,
+  "full_parent_audit": {
+    "initial_source": "9c42a778d",
+    "initial_unit": 530439,
+    "initial_result": "10928scores512records727errorsfault1",
+    "tagfix_source": "5502d8458",
+    "tagfix_result": "10928scores512records0errorsfault1",
+    "cause": "tag10 overflow atline1024 contaminatedkeybit0; remainingfaultactualflushissued1edgebeforefinalselected\u2192compactor capture",
+    "fix_source": "5c4eb5b3a",
+    "fix_scope": "compilerbench/program addactualfixedcaptureedge, notRTLfaultmask",
+    "current": "TERMINAL PASS (collected by Claude H-IDX): GAP100/GAP4 10928 scores/512 records/64 flits errors0 fault0; MUT1/2/3 FAIL. receipt rtl/test/hbm_idx_static/evidence/parent_corrected/receipt.json. Serial frame 1282 edges vs L20 price 1212 = 1.058x."
+  }
 }

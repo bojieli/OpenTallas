@@ -5,10 +5,10 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_IN
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
-read_db /work/results/asap7/opentallas_ot_s81_pq_calendar_reader_asap7_ref_s81_pq_reader75_capture_r1_0aff42a1c/base/6_final.odb
+read_db /work/results/asap7/opentallas_ot_s81_pq_calendar_reader_asap7_ref_s81_pq_reader75_rstrelay_r3_182180c59/base/6_final.odb
 set ::ot_ce_corner ss
-read_sdc /work/results/asap7/opentallas_ot_s81_pq_calendar_reader_asap7_ref_s81_pq_reader75_capture_r1_0aff42a1c/base/6_final.sdc
-read_spef /work/results/asap7/opentallas_ot_s81_pq_calendar_reader_asap7_ref_s81_pq_reader75_capture_r1_0aff42a1c/base/6_final.spef
+read_sdc /work/results/asap7/opentallas_ot_s81_pq_calendar_reader_asap7_ref_s81_pq_reader75_rstrelay_r3_182180c59/base/6_final.sdc
+read_spef /work/results/asap7/opentallas_ot_s81_pq_calendar_reader_asap7_ref_s81_pq_reader75_rstrelay_r3_182180c59/base/6_final.spef
 set_propagated_clock [all_clocks]
 read_sdc /work/w18_extra.sdc
 read_sdc /meas/app0_io_ref_routed.sdc

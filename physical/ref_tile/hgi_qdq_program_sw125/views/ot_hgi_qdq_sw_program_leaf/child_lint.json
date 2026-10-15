@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/ref_gate/hgi_qdq_program_sw125-20261015-044918/native_route/views/ot_hgi_qdq_sw_program_leaf/ot_hgi_qdq_sw_program_leaf.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 317 of 407 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. cfg_addr[0] M4 (0.060,11.136), cfg_addr[10] M4 (0.060,11.136), cfg_addr[11] M4 (0.060,11.136))"
+ ],
+ "summary": "ot_hgi_qdq_sw_program_leaf 220.32 x 129.6: PG M5 VDD 40 stripes (96% spread, 100% cov) / VSS 40 stripes (96% spread, 100% cov); strap M6; face pins 407 blocked-above 0 blocked-same 0; clock clk insertion 289 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_hgi_qdq_sw_program_leaf",
+  "W": 220.32,
+  "H": 129.6,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 40,
+     "dir": "V",
+     "spread": 0.956,
+     "coverage": 1.0,
+     "shapes_on_top": 40
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 40,
+     "dir": "V",
+     "spread": 0.956,
+     "coverage": 1.0,
+     "shapes_on_top": 40
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 407,
+   "blocked_above": 0,
+   "covered_below": 4,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 317,
+   "band_examples": [
+    "cfg_addr[0] M4 (0.060,11.136)",
+    "cfg_addr[10] M4 (0.060,11.136)",
+    "cfg_addr[11] M4 (0.060,11.136)",
+    "cfg_addr[1] M4 (0.060,11.136)",
+    "cfg_addr[2] M4 (0.060,11.136)",
+    "cfg_addr[3] M4 (0.060,11.136)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 289.05,
+    "min_ps": 201.24
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 165
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

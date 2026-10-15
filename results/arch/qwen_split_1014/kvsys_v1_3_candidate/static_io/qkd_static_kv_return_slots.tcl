@@ -633,7 +633,7 @@ place_pin -pin_name {actual_data[254]} -layer M4 -location {129.600 203.868} -pi
 place_pin -pin_name {actual_data[255]} -layer M4 -location {129.600 204.492} -pin_size {.144 .024}
 place_pin -pin_name {fault_hbm} -layer M4 -location {129.600 205.116} -pin_size {.144 .024}
 place_pin -pin_name {fault_core} -layer M4 -location {129.600 205.692} -pin_size {.144 .024}
-place_pin -pin_name {pll_hbm} -layer M5 -location {25.896 0.000} -pin_size {.024 .144}
-place_pin -pin_name {ck} -layer M5 -location {51.816 0.000} -pin_size {.024 .144}
-place_pin -pin_name {hrst} -layer M5 -location {77.736 0.000} -pin_size {.024 .144}
-place_pin -pin_name {rsi} -layer M5 -location {103.704 0.000} -pin_size {.024 .144}
+place_pin -pin_name {pll_hbm} -layer M5 -location {25.980 0.000} -pin_size {.024 .144}
+place_pin -pin_name {ck} -layer M5 -location {51.900 0.000} -pin_size {.024 .144}
+place_pin -pin_name {hrst} -layer M5 -location {77.820 0.000} -pin_size {.024 .144}
+place_pin -pin_name {rsi} -layer M5 -location {103.740 0.000} -pin_size {.024 .144}

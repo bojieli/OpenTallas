@@ -1,0 +1,95 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc1tb for 24 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hgi_qdq_program_sw125_20261015-044918.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hgi_qdq_program_sw125_20261015-044918.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/hgi_qdq_program_sw125-20261015-044918",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc1tb in 19 s (gate total 154 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 762 um2 + macros 12314 in core 27060: util 48%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hgi_qdq_sw_program_leaf cells 4,905 flops 1,516 depth 501.8 ps util 0.4839 reach 0.0 um (0.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "reset port rst_n: 527 loads (121 flops, e.g. ordinal[0]$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 282.5..351.5 ps (spread 69.0), boundary mean 311.2; tt insertion all 213.7..275.8 ps (spread 62.1), boundary mean 240.1; ff insertion all 172.2..228.3 ps (spread 56.1), boundary mean 196.8; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hgi_qdq_program_sw125/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      176 paths, worst slack 26.5 ps (e.g. target.program_cfg_data[134]$_DFFE_PP_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg       280 paths, worst slack 35.6 ps (e.g. ot_prs_00026_ff/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 2.6529556329535353e-11 hold WNS 2.0858065274964588e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 1,517 sinks on the largest root <= 15,000; measured TT insertion 275.8 ps, leaf spread 62.1 ps",
+   "fix": ""
+  }
+ ]
+}

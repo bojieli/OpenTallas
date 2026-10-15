@@ -1,0 +1,202 @@
+{
+ "schema": "opentallas.qwen.qcoll.gearbox_ordinary_sta.v1",
+ "variant": "r10",
+ "rev": "ot_qfd_ucie_six_five.sv",
+ "gearbox_sha256": "9e311fda11ef09bea1b1da7cc4a34f1afa21381654b6345bbcdf1bec0d14aa86",
+ "tool_sha256": "ce4f44cd14327523b0550df95b27d51abee75c8ce32fd99e6679ee73c7f64d0f",
+ "image": "openroad/orfs:latest",
+ "cells": 51676,
+ "exceptions": "none",
+ "clocks": "ideal, generated from 200 MHz",
+ "setup_tt": {
+  "blk0->blk0": {
+   "slack_ps": 4784.787,
+   "relation_ps": 5000.0,
+   "startpoint": "rst_n",
+   "endpoint": "_73366_"
+  },
+  "blk0->blk1": {
+   "slack_ps": 4872.412,
+   "relation_ps": 5000.0,
+   "startpoint": "_73367_",
+   "endpoint": "_73357_"
+  },
+  "blk0->core": {
+   "slack_ps": 618.12,
+   "relation_ps": 833.333,
+   "startpoint": "rst_n",
+   "endpoint": "_77976_"
+  },
+  "blk0->fdi": {
+   "slack_ps": 784.787,
+   "relation_ps": 1000.0,
+   "startpoint": "rst_n",
+   "endpoint": "_80465_"
+  },
+  "blk0->fdirx": null,
+  "blk1->blk0": null,
+  "blk1->blk1": null,
+  "blk1->core": {
+   "slack_ps": 335.132,
+   "relation_ps": 833.333,
+   "startpoint": "_71211_",
+   "endpoint": "_73853_"
+  },
+  "blk1->fdi": null,
+  "blk1->fdirx": null,
+  "core->blk0": {
+   "slack_ps": 688.385,
+   "relation_ps": 833.333,
+   "startpoint": "_80464_",
+   "endpoint": "_74685_"
+  },
+  "core->blk1": null,
+  "core->core": {
+   "slack_ps": 663.439,
+   "relation_ps": 833.333,
+   "startpoint": "_77976_",
+   "endpoint": "_74026_"
+  },
+  "core->fdi": null,
+  "core->fdirx": null,
+  "fdi->blk0": null,
+  "fdi->blk1": null,
+  "fdi->core": null,
+  "fdi->fdi": {
+   "slack_ps": 816.982,
+   "relation_ps": 1000.0,
+   "startpoint": "_85431_",
+   "endpoint": "_85426_"
+  },
+  "fdi->fdirx": {
+   "slack_ps": 846.046,
+   "relation_ps": 1000.0,
+   "startpoint": "_85431_",
+   "endpoint": "_80467_"
+  },
+  "fdirx->blk0": null,
+  "fdirx->blk1": {
+   "slack_ps": 854.12,
+   "relation_ps": 1000.0,
+   "startpoint": "_80468_",
+   "endpoint": "_73357_"
+  },
+  "fdirx->core": null,
+  "fdirx->fdi": {
+   "slack_ps": 654.794,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_valid",
+   "endpoint": "_80465_"
+  },
+  "fdirx->fdirx": {
+   "slack_ps": 291.104,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[305]",
+   "endpoint": "_80469_"
+  },
+  "all->all": {
+   "slack_ps": 618.12,
+   "relation_ps": 1000.0,
+   "startpoint": "rst_n",
+   "endpoint": "_77976_"
+  }
+ },
+ "hold_ff": {
+  "blk0->blk0": {
+   "slack_ps": 10.189,
+   "relation_ps": 0.0,
+   "startpoint": "_73367_",
+   "endpoint": "_85432_"
+  },
+  "blk0->blk1": {
+   "slack_ps": 10.189,
+   "relation_ps": 0.0,
+   "startpoint": "_73367_",
+   "endpoint": "_73357_"
+  },
+  "blk0->core": {
+   "slack_ps": 124.764,
+   "relation_ps": 0.0,
+   "startpoint": "rst_n",
+   "endpoint": "_77976_"
+  },
+  "blk0->fdi": {
+   "slack_ps": 124.764,
+   "relation_ps": 0.0,
+   "startpoint": "rst_n",
+   "endpoint": "_80465_"
+  },
+  "blk0->fdirx": null,
+  "blk1->blk0": null,
+  "blk1->blk1": null,
+  "blk1->core": {
+   "slack_ps": 9.474,
+   "relation_ps": 0.0,
+   "startpoint": "_73362_",
+   "endpoint": "_73365_"
+  },
+  "blk1->fdi": null,
+  "blk1->fdirx": null,
+  "core->blk0": {
+   "slack_ps": 5.045,
+   "relation_ps": 0.0,
+   "startpoint": "_79867_",
+   "endpoint": "_74028_"
+  },
+  "core->blk1": null,
+  "core->core": {
+   "slack_ps": 19.257,
+   "relation_ps": 0.0,
+   "startpoint": "_77976_",
+   "endpoint": "_72450_"
+  },
+  "core->fdi": null,
+  "core->fdirx": null,
+  "fdi->blk0": null,
+  "fdi->blk1": null,
+  "fdi->core": null,
+  "fdi->fdi": {
+   "slack_ps": 23.508,
+   "relation_ps": 0.0,
+   "startpoint": "_85431_",
+   "endpoint": "_77975_"
+  },
+  "fdi->fdirx": {
+   "slack_ps": 23.508,
+   "relation_ps": 0.0,
+   "startpoint": "_85431_",
+   "endpoint": "_80467_"
+  },
+  "fdirx->blk0": null,
+  "fdirx->blk1": {
+   "slack_ps": 5.045,
+   "relation_ps": 0.0,
+   "startpoint": "_84328_",
+   "endpoint": "_70713_"
+  },
+  "fdirx->core": null,
+  "fdirx->fdi": {
+   "slack_ps": 27.545,
+   "relation_ps": 0.0,
+   "startpoint": "_85433_",
+   "endpoint": "_80465_"
+  },
+  "fdirx->fdirx": {
+   "slack_ps": 10.227,
+   "relation_ps": 0.0,
+   "startpoint": "_80473_",
+   "endpoint": "_80473_"
+  },
+  "all->all": {
+   "slack_ps": 10.189,
+   "relation_ps": 0.0,
+   "startpoint": "_73367_",
+   "endpoint": "_73357_"
+  }
+ },
+ "min_cross_clock_setup_relation_ps": 833.333,
+ "worst_setup_slack_ps": 291.104,
+ "worst_hold_slack_ps": 5.045,
+ "worst_cross_clock_setup_slack_ps": 335.132,
+ "scope": "pre-placement zero-wire ideal-clock ordinary STA; not physical closure"
+}

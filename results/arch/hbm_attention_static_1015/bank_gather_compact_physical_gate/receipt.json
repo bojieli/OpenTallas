@@ -1,0 +1,51 @@
+{
+  "schema": "attention_gather_physical_receipt_v1",
+  "status": "ROUTED_TIMING_PASS_DRV_OPEN",
+  "source_sha256": "44202cac77465eb48be352f7f43b21d00127165413fb8826e643c5e934dc3f2d",
+  "outline_um": [
+    140.4,
+    225.18
+  ],
+  "registered_edges": 2,
+  "ff_count": 2386,
+  "ports": 2383,
+  "baseline_remote": "/srv/opentallas-scratch/claude/ref_gate/hbm_att_bank_gather_compact_1015-20261015-041541/native_route/native",
+  "route": {
+    "drc": 0,
+    "antenna": 0,
+    "wirelength_um": 282098,
+    "vias": 122683
+  },
+  "native_routed_slack_ps": {
+    "tt_setup": 245.26,
+    "ff_hold": 3.94,
+    "ss_setup": 72.52
+  },
+  "native_drv_violations": {
+    "tt_slew": 5,
+    "ff_slew": 4,
+    "capacitance": 0,
+    "fanout": 0
+  },
+  "acceptance_blocker": "Actual native slew violations require physical ECO with fresh extraction and timing/DRV/DRC checks. No full-parent adoption.",
+  "eco_attempts": [
+    {
+      "name": "five-buffer-ECO",
+      "result": "GRT repair_design EST-0104 after exact replacements; preserved"
+    },
+    {
+      "name": "five-buffer-ECO-r2",
+      "unit": "oth-ubuntu-2186437-1792064961",
+      "result": "LIVE; placement parasitics rebuilt after master/placement edits"
+    }
+  ],
+  "artifacts_sha256": {
+    "actual_pin_pg.json": "2a7ee3a15b2431161d178f593dcf8f97cb5099f210b0bd3a0d0cc4e36d48c7ce",
+    "routed_corner_sta.json": "aae6418b018974d6fb5d18d93ebe66ad55f73c2612c5ceebc5afba89aec19a4b",
+    "remote.log": "6d2383d5c3840efcaec0dc624f9a34c4fdf68ec87ce05110f04273e089389cdd",
+    "routed_native_FF_DRV.log": "5bc966c3caf931e399f75a37673b333babb762a3c7fb5ae389094652ac3ac4c5",
+    "actual_PG_escape_cut_model.json": "9343e46faf9f1e4b7e469e3fd8e55e85d761934afcddd6f8cd466277c3eb5b48",
+    "routed_native_TT_DRV.log": "0f57fd58889d7ee37fa9b050818b9ff2617b51aecd0285e6e125cdfbfaa56cd1",
+    "gate_summary.json": "f5da431768d589d6fdff126d959e59dec819d17d953c53c1d44a1633c4eaa749"
+  }
+}

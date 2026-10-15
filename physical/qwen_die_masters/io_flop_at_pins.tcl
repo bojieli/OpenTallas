@@ -170,6 +170,9 @@ foreach bt [$ot_blk getBTerms] {
   set fn [$ff getName]
   if {[dict exists $ot_seen $fn]} continue
   dict set ot_seen $fn 1
+  # el1013-smh-r14 2026-10-13: a pin flop the kit already fixed at its own station (FIRM before global placement: the SM
+  # tile cluster's strap stage 0 and reset pin flop, placed by its POST_TAPCELL stations) stays there (ODB-0359 otherwise)
+  if {[$ff isFixed]} { if {![info exists ot_kept]} { set ot_kept 0 }; incr ot_kept; continue }
   set bb [$bt getBBox]
   set px [expr {double([$bb xMin] + [$bb xMax]) / 2.0 / $ot_dbu}]
   set py [expr {double([$bb yMin] + [$bb yMax]) / 2.0 / $ot_dbu}]
@@ -233,6 +236,7 @@ foreach c $cand {
     B { set x $px; set y [expr {$cy0 + $sg + $col * $h}] }
     T { set x $px; set y [expr {$cy1 - $sg - ($col + 1) * $h}] }
   }
+  if {[[$ff getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
   $ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
   $ff setPlacementStatus FIRM
   lappend ot_list [$ff getName]
@@ -315,6 +319,7 @@ if {[llength $ot_extra]} {
     if {$best eq ""} { error "OT_IOFLOP: no legal capture site for $name ($port)" }
     lassign $best ri x y orient
     $ff setOrient $orient
+    if {[[$ff getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
     $ff setLocation $x $y
     $ff setPlacementStatus FIRM
     dict lappend ot_occupied $ri [list $x [expr {$x + $width}]]
@@ -375,6 +380,7 @@ if {[info exists ::env(OT_MPFLOP_PINS)] && $::env(OT_MPFLOP_PINS) ne ""} {
       } elseif {$dbo == $dm} { set x $px; set y [expr {$my0 - $mgap - $h}]
       } else { set x $px; set y [expr {$my1 + $mgap}] }
       set x [expr {max($cx0, min($x, $cx1 - $w))}]; set y [expr {max($cy0, min($y, $cy1 - $h))}]
+      if {[[$ff getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
       $ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
       $ff setPlacementStatus FIRM
       lappend ot_list $fn
@@ -403,4 +409,5 @@ set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt w]
 foreach n $ot_list { puts $fh $n }
 close $fh
 puts "OT_IOFLOP fixed $ot_n output-port and $ot_ni input-port flops at their pins ($ot_skip ports not single-flop)"
+if {[info exists ot_kept]} { puts "OT_IOFLOP kept $ot_kept pin flops the kit had already fixed at their own stations" }
 if {$ot_n + $ot_ni == 0 && !$ot_allow_none && $ot_verified_hard_faces == 0} { error "OT_IOFLOP: no pin flop found (netlist changed?)" }

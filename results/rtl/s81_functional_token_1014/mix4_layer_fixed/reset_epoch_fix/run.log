@@ -1,0 +1,5 @@
+MIX_FIXED_CLOCK PASS cmd_negedge_cycle=1908 phase=0 op2=1 landing_write_pin=1892 commit_bound=1903
+- profile.sv:18: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.001 s; speed 5.996 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 6 MB

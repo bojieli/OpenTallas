@@ -42,6 +42,13 @@ def related_data(spec):
         if relationship is not None:
             raise ValueError('independent leaf datapaths do not consume a clock_relationship declaration')
         return False
+    if policy == 'related_pll_ratio':
+        # One die PLL, stream /3 and serial /4 of the VCO, common epoch origin (3 serial = 4 stream cycles): the
+        # serial domain declares ratio 4/3 of the core period.  Ordinary STA times every crossing at the actual
+        # related edge windows (VCO-tick setup window, coincident-edge hold); no exception is generated.
+        if relationship != dict(kind='same_pll_fixed_phase', ratio=[4, 3], phase_ps=0):
+            raise ValueError('related_pll_ratio leaf datapaths require explicit same_pll_fixed_phase ratio4/3 phase0 relationship')
+        return True
     if policy != 'related_same_frequency' or relationship != dict(kind='same_pll_fixed_phase', ratio=[1, 1], phase_ps=0):
         raise ValueError('related leaf datapaths require explicit same_pll_fixed_phase ratio1/1 phase0 relationship')
     return True
@@ -71,8 +78,10 @@ def domains(spec):
         ratio = data.get('ratio')
         if ratio not in ([1, 1], [4, 3]):
             raise ValueError('entries: only related CK1/1 and CKV4/3 are supported')
-        if leaf and (ratio != [1, 1] or len(data.get('ports', [])) != 1):
-            raise ValueError('multiple_cts_roots requires one actual related samefrequency phase0 root per domain')
+        pll = leaf and spec.get('clock_data_paths') == 'related_pll_ratio'
+        if leaf and (ratio != [1, 1] and not (pll and ratio == [4, 3] and name != 'core') or len(data.get('ports', [])) != 1):
+            raise ValueError('multiple_cts_roots requires one actual related phase0 root per domain '
+                             '(samefrequency, or a non-core 4/3 domain under related_pll_ratio)')
         if name == 'core' and ratio != [1, 1]:
             raise ValueError('entries: core ratio must be1/1')
         for field in ('ports', 'inputs', 'outputs'):
@@ -87,6 +96,8 @@ def domains(spec):
                 raise ValueError(f'entries: duplicate domain clock port {port}')
             owners[port] = name
         out[name] = data
+    if leaf and spec.get('clock_data_paths') == 'related_pll_ratio' and not any(d['ratio'] == [4, 3] for d in out.values()):
+        raise ValueError('related_pll_ratio requires at least one actual 4/3 domain (else use related_same_frequency)')
     if set(owners) != set(spec['clock_ports']):
         raise ValueError('entries: domain clock coverage differs from actual source ports')
     if owners[spec['clock_port']] != 'core':
@@ -513,6 +524,74 @@ ot_ce_apply
 
 
 LEAF_OWNERSHIP = r'''
+# Constants are proved from actual OpenDB connectivity and the loaded Liberty
+# output functions. Cell/port names, case analysis and timing-graph constant
+# pruning are never proofs. A cell output is constant when every loaded corner
+# gives its master the same Liberty function and that function is a literal, or a
+# combinational expression whose every variable is an input pin of the same
+# instance on a net with no input port and exactly one driver that is itself
+# constant (TIEHI/TIELO prove themselves through their literal function; a
+# synthesis buffer/inverter or any gate of constants follows). Registers never
+# qualify; unknown or unparsable functions fail closed.
+proc ot_ce_constant_net {net seen remaining} {
+  if {$remaining <= 0 || $net in {"" NULL}} {return 0}
+  foreach port [$net getBTerms] {if {[$port getIoType] ne "OUTPUT"} {return 0}}
+  set drivers {}
+  foreach pin [$net getITerms] {if {[$pin isOutputSignal]} {lappend drivers $pin}}
+  if {[llength $drivers] != 1} {return 0}
+  return [ot_ce_constant_iterm [lindex $drivers 0] $seen $remaining]
+}
+proc ot_ce_constant_iterm {pin seen remaining} {
+  if {$remaining <= 0 || ![$pin isOutputSignal]} {return 0}
+  set inst [$pin getInst];set name "[$inst getName]/[[$pin getMTerm] getName]"
+  if {[dict exists $seen $name]} {return 0}
+  if {[info exists ::ot_ce_const_memo] && [dict exists $::ot_ce_const_memo $name]} {return [dict get $::ot_ce_const_memo $name]}
+  dict set seen $name 1
+  set result [ot_ce_constant_iterm_eval $inst $pin $seen $remaining]
+  dict set ::ot_ce_const_memo $name $result
+  return $result
+}
+proc ot_ce_constant_iterm_eval {inst pin seen remaining} {
+  if {[info exists ::ot_ce_register_cells] && [dict exists $::ot_ce_register_cells [$inst getName]]} {return 0}
+  set master [[$inst getMaster] getName];set output [[$pin getMTerm] getName]
+  set functions {};set matched 0
+  foreach library [get_libs -quiet *] {
+    set cell [$library find_liberty_cell $master]
+    if {$cell in {"" NULL}} continue
+    set lp [$cell find_liberty_port $output]
+    if {$lp in {"" NULL} || [sta::liberty_port_direction $lp] ne "output"} {return 0}
+    dict set functions [string map {" " "" "\t" "" "\n" ""} [$lp function]] 1
+    incr matched
+  }
+  if {!$matched || [dict size $functions] != 1} {return 0}
+  set function [lindex [dict keys $functions] 0]
+  if {$function in {0 1}} {return 1}
+  if {$function eq "" || ![regexp {^[A-Za-z0-9_!'*&+|^()]+$} $function]} {return 0}
+  set inputs [lsort -unique [regexp -all -inline {[A-Za-z_][A-Za-z0-9_]*} $function]]
+  if {![llength $inputs]} {return 0}
+  foreach input $inputs {
+    set in [$inst findITerm $input]
+    if {$in in {"" NULL} || ![$in isInputSignal]} {return 0}
+    if {![ot_ce_constant_net [$in getNet] $seen [expr {$remaining-1}]]} {return 0}
+  }
+  return 1
+}
+# Timing startpoint -> constant proof. An output-port startpoint is followed to
+# its net driver; an input port is never constant.
+proc ot_ce_constant_cone {start} {
+  set block [ord::get_db_block]
+  if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+    set port [$block findBTerm [get_full_name $start]]
+    if {$port in {"" NULL} || [$port getIoType] ne "OUTPUT"} {return 0}
+    return [ot_ce_constant_net [$port getNet] {} 64]
+  }
+  if {[sta::object_type $start] ne "Pin"} {return 0}
+  set inst [$block findInst [get_full_name [$start instance]]]
+  if {$inst in {"" NULL}} {return 0}
+  set pin [$inst findITerm [get_property $start lib_pin_name]]
+  if {$pin in {"" NULL}} {return 0}
+  return [ot_ce_constant_iterm $pin {} 64]
+}
 # A multi-root leaf contains independent synchronous datapaths. Domain declarations
 # are checked against the real synthesized timing graph, not trusted as metadata.
 proc ot_ce_leaf_ownership {inputs outputs} {
@@ -537,6 +616,9 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     set cell [get_full_name [get_cells -of_objects $pin]]
     if {![dict exists $cells $cell]} { error "OT_MULTI_ROOT: unowned register $cell" }
   }
+  set ::ot_ce_register_cells {}
+  foreach r [all_registers -cells] {dict set ::ot_ce_register_cells [get_full_name $r] 1}
+  set ::ot_ce_const_memo {}
   # OpenSTA's -data_pins population includes asynchronous clear/preset
   # controls. Classify these from the actual loaded Liberty sequential arcs,
   # never from port names or reset_ports. They retain recovery/removal timing;
@@ -557,6 +639,10 @@ proc ot_ce_leaf_ownership {inputs outputs} {
       } else {
         set source [get_full_name [get_cells -quiet -of_objects $start]]
         if {![dict exists $cells $source]} {
+          if {[ot_ce_constant_cone $start]} {
+            puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> [get_full_name $pin]"
+            continue
+          }
           error "OT_MULTI_ROOT: unowned data path $source -> $cell"
         }
         set source_domain [dict get $cells $source]
@@ -569,12 +655,19 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   }
   dict for {name domain} $outputs {
     foreach start [get_fanin -flat -startpoints_only -to [get_ports $name]] {
+      # A die-strap tie output (contract v1.2 tie_hi/tie_lo), possibly
+      # synthesis-buffered, has no clock and no data domain to own; it must be
+      # proved constant above. Registers and ports keep their domain checks.
+      if {[sta::object_type $start] eq "Pin" && [$start is_top_level_port]} {
+        if {[ot_ce_constant_cone $start]} {
+          puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
+          continue
+        }
+        error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]"
+      }
       set source [get_full_name [get_cells -quiet -of_objects $start]]
-      # A die strap tie output (contract v1.2 tie_hi/tie_lo) is a library
-      # TIEHI/TIELO constant: it has no clock and no data domain to own.
-      set source_cell [get_cells -quiet -of_objects $start]
-      if {[llength $source_cell] == 1 && [regexp {^TIE(HI|LO)} [get_property $source_cell ref_name]]} {
-        puts "OT_MULTI_ROOT constant output $name <- [get_property $source_cell ref_name] $source"
+      if {![dict exists $cells $source] && [ot_ce_constant_cone $start]} {
+        puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
         continue
       }
       if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {
