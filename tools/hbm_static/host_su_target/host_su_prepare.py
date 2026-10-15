@@ -3,9 +3,10 @@
 import argparse, hashlib, importlib.util, json, re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
-p=argparse.ArgumentParser();p.add_argument('source',type=Path);p.add_argument('out',type=Path);p.add_argument('--extra-mem',type=Path);p.add_argument('--extra-bits',type=int,default=0);p.add_argument('--lowerer',type=Path,default=ROOT/'tools/hbm_static/su_programme_compile.py');p.add_argument('--line-bits',type=int,default=9688);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('source',type=Path);p.add_argument('out',type=Path);p.add_argument('--extra-mem',type=Path);p.add_argument('--extra-bits',type=int,default=0);p.add_argument('--lowerer',type=Path,default=ROOT/'tools/hbm_static/su_programme_compile.py');p.add_argument('--lowerer-root',type=Path);p.add_argument('--line-bits',type=int,default=9688);a=p.parse_args()
 spec=importlib.util.spec_from_file_location('lower',a.lowerer)
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+if a.lowerer_root:m.ROOT=a.lowerer_root
 kw={'line_bits':a.line_bits} if a.line_bits!=9688 else {}
 r=m.lower(a.source,a.out,a.extra_mem,a.extra_bits,**kw)
 entries="'{"+','.join(map(str,r['dictionary_entries']))+"}"

@@ -32,7 +32,7 @@ module host_su_axi_install #(
  assign s_awready=rst_n&&!aw_pending&&!s_bvalid;
  assign s_wready=rst_n&&!w_pending&&!s_bvalid;
  assign s_arready=rst_n&&!s_rvalid;
- host_su_target #(.LINE_BITS(LINE_BITS),.EDGES(EDGES),.DICT_ENTRIES(DICT_ENTRIES),.DICT_BANKS(DICT_BANKS),.MACROS(MACROS),.MUT_READY(MUT_READY)) target(
+ host_su_target #(.LINE_BITS(LINE_BITS),.EDGES(EDGES),.COLS(COLS),.DICT_ENTRIES(DICT_ENTRIES),.DICT_BANKS(DICT_BANKS),.MACROS(MACROS),.MUT_READY(MUT_READY)) target(
   .clk(clk),.rst_n(rst_n),.clk_macro(clk_macro),.cfg_v(cfg_v),.cfg_bank(selector[15:0]),.cfg_row(selector[22:16]),.cfg_data(cfg_data),
   .cfg_ready(cfg_ready),.cfg_accept(cfg_accept),.validate_v(validate_v),.launch_v(launch_v),.length(length),
   .block_ready(block_ready),.busy(busy),.valid(valid),.done(done),.fault(fault),.edge_index(edge_index),.command(command));

@@ -56,7 +56,7 @@ module host_su_target #(
  assign cfg_accept=cfg_v&&cfg_ready&&address_ok&&!index_bad&&!validate_v&&!launch_v;
  assign block_ready=validated&&!scanning&&commit_guard==0&&!busy&&!fault;
  wire native_start=launch_v&&block_ready&&!cfg_v&&!validate_v&&length!=0&&length<=EDGES;
- ot_hbm_su_programme #(.LINE_BITS(LINE_BITS),.EDGES(EDGES),.DICT_BANKS(DICT_BANKS),.MACROS(MACROS)) programme(
+ ot_hbm_su_programme #(.LINE_BITS(LINE_BITS),.EDGES(EDGES),.COLS(COLS),.DICT_BANKS(DICT_BANKS),.MACROS(MACROS)) programme(
   .clk(clk),.rst_n(rst_n),.clk_macro(clk_macro),
   .cfg_we(cfg_accept),.cfg_bank(cfg_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
   .start(native_start),.length(length),.busy(busy),.valid(valid),.done(done),.fault(native_fault),

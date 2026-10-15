@@ -8,7 +8,7 @@ wire cfg_ready,cfg_accept,block_ready,busy,valid,done,fault;
 wire[15:0] edge_index;wire[B-1:0] command;
 reg[279:0] config_words[0:W-1];reg[B-1:0] expected_words[0:N-1];
 string dir;integer data_mut,addr_mut,phase_mut,mode;
-host_su_target #(.LINE_BITS(B),.EDGES(N),.DICT_ENTRIES(@ENTRIES@),.DICT_BANKS(@BANKS@),.MACROS(M),.MUT_READY(MUT_READY)) dut(
+host_su_target #(.LINE_BITS(B),.EDGES(N),.COLS((B+255)/256),.DICT_ENTRIES(@ENTRIES@),.DICT_BANKS(@BANKS@),.MACROS(M),.MUT_READY(MUT_READY)) dut(
  .clk(clk),.rst_n(rst_n),.clk_macro({M{clk}}),.cfg_v(cfg_v),.cfg_bank(cfg_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
  .cfg_ready(cfg_ready),.cfg_accept(cfg_accept),.validate_v(validate_v),.launch_v(launch_v),.length(length),
  .block_ready(block_ready),.busy(busy),.valid(valid),.done(done),.fault(fault),.edge_index(edge_index),.command(command));
