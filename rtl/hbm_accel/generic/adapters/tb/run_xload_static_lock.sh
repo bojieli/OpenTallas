@@ -12,5 +12,5 @@ verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style -j 8 ${MUT:+-D$MUT} 
   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v \
   physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v \
   rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_static_lock.sv > "$OUT/build${MUT:+_$MUT}.log" 2>&1 || { tail -30 "$OUT/build${MUT:+_$MUT}.log"; exit 1; }
-"$B/Vtb_xload_static_lock" | tee "$OUT/slock${MUT:+_$MUT}.log" | tail -6
+"$B/Vtb_xload_static_lock" | tee "$OUT/slock${MUT:+_$MUT}.log" | grep -E "static first|ERR|cmd|PASS|FAIL" | tail -20
 grep -q 'XLOAD_STATIC_LOCK PASS' "$OUT/slock${MUT:+_$MUT}.log"

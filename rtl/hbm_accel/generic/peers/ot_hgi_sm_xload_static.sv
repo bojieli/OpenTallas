@@ -24,7 +24,7 @@
 module ot_hgi_sm_xload_static #(
     parameter integer PMAX   = 8,
     parameter integer RD_LAT = 6,       // VM read group: rq output edge -> rr valid edge (bank n+6 + slice/station edges)
-    parameter integer MUT    = 0        // 1: lane rotation off by one (must fail); 2: emission one edge early (must fail)
+    parameter integer MUT    = 0        // 1: lane rotation off by one (must fail); 2: emission overlaps the landing window (must fail)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -101,7 +101,7 @@ module ot_hgi_sm_xload_static #(
             gn <= 8'(((c_n - 21'd1) >> 9) + 21'd1);
             nb <= 7'((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11);
             ew <= 11'(((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11) * 8);
-            em_off <= 11'({c_p, 3'd0} + RD_LAT + LAND + 1 - ((MUT == 2) ? 3 : 0));
+            em_off <= (MUT == 2) ? 11'(RD_LAT) : 11'({c_p, 3'd0} + RD_LAT + LAND + 1);
             ig <= 8'd0; iw <= 11'd0; tc <= 11'd0; eg <= 8'd0; et <= 3'd0; eb <= 7'd0;
         end else begin
             if (iss_on) begin
