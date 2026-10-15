@@ -26,11 +26,11 @@
   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv": "54e65855af142d95248e7d14df42fabdc404f9d1316446c0f21253c1829a4e70",
   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
   "rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv": "6ddcdcd4f3c56c56b27130cc0fa25a636fa1de1dc194c0732e537e77ad0d85a5",
-  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv": "e9fcc0f4d7a1a264cd0acc9a8f88c5ff29212bde184086159b1ccf342b09f223",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv": "43c4a6baf9e40d9d67043dd044e0848ba6c59433ecdd02788084a3c270704607",
   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv": "fd3c9a703e8de821595e38468f608b97337932aa34f2d8529189ced1102cd991",
   "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv": "11389d87c141c8a0e3c4ba3c1e5f0c2cafd88dce2c48f16c2e4d2356c2ffbf5f",
   "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "0dfabc97c63b91db654c393c8f8f79fb6fdc8b9a72087b589e825ea5465f81c9",
-  "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv": "622f92c2f9eb3f4a7f2eb28c55b00bd71c524be93ac58857112362204f4c423b",
+  "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv": "fb49f2b113afdfdec17017f7ba74d843725ee638f8e31e7a455de6ed8c4735ad",
   "rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_quad_local.sv": "0a95a1c6688a3933fa3b73de2b8b6fe98f07e1fa7e9c75c39b3a04cdeb29b791"
  },
  "dependency_inventory_sha256": {
@@ -11730,8 +11730,8 @@
    }
   },
   "hb_idx": {
-   "master": "ot_hbm_idx_scheduled_static",
-   "source": "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv",
+   "master": "ot_hbm_idx_client_static",
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv",
    "params": {},
    "ports": {
     "clk_program": {
@@ -11826,6 +11826,14 @@
      "direction": "input",
      "bits": 8
     },
+    "clk_pair": {
+     "direction": "input",
+     "bits": 4
+    },
+    "clk_topk": {
+     "direction": "input",
+     "bits": 1
+    },
     "rst_n": {
      "direction": "input",
      "bits": 1
@@ -11899,6 +11907,90 @@
      "bits": 1
     },
     "fault": {
+     "direction": "output",
+     "bits": 1
+    },
+    "topk_go": {
+     "direction": "input",
+     "bits": 1
+    },
+    "topk_k": {
+     "direction": "input",
+     "bits": 4
+    },
+    "topk_order": {
+     "direction": "input",
+     "bits": 1
+    },
+    "topk_n": {
+     "direction": "input",
+     "bits": 20
+    },
+    "topk_m": {
+     "direction": "input",
+     "bits": 20
+    },
+    "topk_a_mirror": {
+     "direction": "input",
+     "bits": 1
+    },
+    "topk_a_base": {
+     "direction": "input",
+     "bits": 18
+    },
+    "topk_a_str": {
+     "direction": "input",
+     "bits": 18
+    },
+    "topk_o_mirror": {
+     "direction": "input",
+     "bits": 1
+    },
+    "topk_o_base": {
+     "direction": "input",
+     "bits": 18
+    },
+    "topk_o_str": {
+     "direction": "input",
+     "bits": 18
+    },
+    "topk_has_r": {
+     "direction": "input",
+     "bits": 1
+    },
+    "topk_r_base": {
+     "direction": "input",
+     "bits": 18
+    },
+    "topk_r_str": {
+     "direction": "input",
+     "bits": 18
+    },
+    "cq": {
+     "direction": "output",
+     "bits": 338
+    },
+    "cq_seq": {
+     "direction": "output",
+     "bits": 2
+    },
+    "cr": {
+     "direction": "input",
+     "bits": 274
+    },
+    "topk_busy": {
+     "direction": "output",
+     "bits": 1
+    },
+    "topk_done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "topk_fault": {
+     "direction": "output",
+     "bits": 1
+    },
+    "share_fault": {
      "direction": "output",
      "bits": 1
     }
@@ -14903,6 +14995,42 @@
     "vm_rr",
     0,
     2056
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "idx_cq",
+   "bits": 338,
+   "source": [
+    "hb_idx",
+    "cq",
+    0,
+    338
+   ],
+   "sink": [
+    "hb_vms_SW",
+    "cq",
+    1352,
+    1690
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "idx_cr",
+   "bits": 274,
+   "source": [
+    "hb_vms_SW",
+    "cr",
+    1096,
+    1370
+   ],
+   "sink": [
+    "hb_idx",
+    "cr",
+    0,
+    274
    ],
    "clock": "stream",
    "ready_or_credit": false
@@ -53264,6 +53392,61 @@
    "status": "NEEDS_REAL_CTS_VIEW"
   },
   {
+   "instance": "hb_idx",
+   "port": "clk_pair",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "clk_pair",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "clk_pair",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "clk_pair",
+   "bit": 3,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "clk_topk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
    "instance": "hb_attn_pv",
    "port": "clk",
    "bit": 0,
@@ -55136,13 +55319,13 @@
     "0": "lg_SW_0..2 (SU hb_su_SW/SFU hb_sfu_SW/HC)"
    },
    "records": {
-    "0": "UNBOUND: record client \"argmax\" has no static cq338/cr274 source",
-    "1": "UNBOUND: record client \"coll\" has no static cq338/cr274 source",
-    "2": "UNBOUND: record client \"dma\" has no static cq338/cr274 source",
-    "3": "UNBOUND: record client \"hc\" has no static cq338/cr274 source",
-    "4": "UNBOUND: record client \"idx\" has no static cq338/cr274 source",
-    "5": "UNBOUND: record client \"sfu\" has no static cq338/cr274 source",
-    "6": "UNBOUND: record client \"su\" has no static cq338/cr274 source"
+    "0": "OPEN: needed for MTP; no static argmax RTL yet; owner H-IDX",
+    "1": "DEAD (static COLL uses RG3/kq): remove from VM ABI",
+    "2": "PENDING: DMA owner decides (static DMA back uses RG1)",
+    "3": "DEAD pending HC owner confirmation: remove from VM ABI when confirmed",
+    "4": "hb_idx (ot_hbm_idx_client_static TOPK O/R writes)",
+    "5": "DEAD (static SFU uses LG taps): remove from VM ABI",
+    "6": "DEAD (static SU uses LG taps): remove from VM ABI"
    }
   },
   "SE": {
@@ -55303,6 +55486,23 @@
     "required_port_groups": 4,
     "physical_port_groups": null,
     "status": "OPEN: engine not yet bound in contract"
+   },
+   "ATT_NE": {
+    "tap": null,
+    "instance": "hb_attn_pv",
+    "owner": "H-ATTQ",
+    "required_port_groups": 4,
+    "physical_port_groups": null,
+    "status": "RTL groups present (H-ATTQ); physical leaves open"
+   },
+   "QUANT_SW": {
+    "tap": null,
+    "instance": null,
+    "owner": "H-ATTQ",
+    "required_port_groups": 5,
+    "physical_port_groups": 5,
+    "bank_group": "0x43221100 (same provisional SW/SE map as SU; H-ATTQ bench PASS 152 cy)",
+    "status": "RTL groups present (H-ATTQ); physical leaves open; quant not yet a contract instance"
    }
   }
  },
@@ -55317,6 +55517,19 @@
    "cost": "OPEN: bit-um / relay stages / compiler edges for the non-NE quadrants pending GEO-H D2 corridor measurement",
    "alternative": "per-quadrant attention write group (WG+1 on SW/SE/NW, 4 serializer outputs): bank port/area cost vs removed long drain -> GEO-H + H-ATTQ to price",
    "status": "OPEN_LONG_RETURN"
+  }
+ ],
+ "vm_abi_change_requests": [
+  {
+   "change": "SW NC 7 -> 3 (keep idx, argmax, dma-pending; drop su/sfu/coll/hc)",
+   "source": "H-IDX 40e9f801e",
+   "owner": "H-ELEM-A (VM slice)"
+  },
+  {
+   "change": "remove IDX read group in SE/NW/NE (RG 5->4 SE, 7->6 NW/NE); IDX reads only SW group 4",
+   "condition": "SU route.scores_bias.O must be REPL (H-ELEM-B)",
+   "source": "H-IDX 40e9f801e",
+   "owner": "H-ELEM-A (VM slice)"
   }
  ],
  "registered_station_masters": [
@@ -55438,11 +55651,15 @@
    "direction": "input",
    "bits": 2366,
    "required_owner": "actual static client source migration",
-   "bound_bits": 0,
-   "unbound_bits": 2366,
+   "bound_bits": 338,
+   "unbound_bits": 2028,
    "unbound_ranges_half_open": [
     [
      0,
+     1352
+    ],
+    [
+     1690,
      2366
     ]
    ],
@@ -55454,11 +55671,15 @@
    "direction": "output",
    "bits": 1918,
    "required_owner": "actual static client source migration",
-   "bound_bits": 0,
-   "unbound_bits": 1918,
+   "bound_bits": 274,
+   "unbound_bits": 1644,
    "unbound_ranges_half_open": [
     [
      0,
+     1096
+    ],
+    [
+     1370,
      1918
     ]
    ],
@@ -81361,6 +81582,310 @@
    "status": "UNBOUND_FAIL"
   },
   {
+   "instance": "hb_idx",
+   "port": "topk_go",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_k",
+   "direction": "input",
+   "bits": 4,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 4,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     4
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_order",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_n",
+   "direction": "input",
+   "bits": 20,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 20,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     20
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_m",
+   "direction": "input",
+   "bits": 20,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 20,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     20
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_mirror",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_base",
+   "direction": "input",
+   "bits": 18,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 18,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     18
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_str",
+   "direction": "input",
+   "bits": 18,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 18,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     18
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_mirror",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_base",
+   "direction": "input",
+   "bits": 18,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 18,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     18
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_str",
+   "direction": "input",
+   "bits": 18,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 18,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     18
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_has_r",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_r_base",
+   "direction": "input",
+   "bits": 18,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 18,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     18
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_r_str",
+   "direction": "input",
+   "bits": 18,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 18,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     18
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "cq_seq",
+   "direction": "output",
+   "bits": 2,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 2,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_busy",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_done",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_fault",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "share_fault",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
    "instance": "hb_attn_pv",
    "port": "capture_v",
    "direction": "input",
@@ -81606,7 +82131,7 @@
   "actual mapped PHY address/endian/PC striping proof required",
   "historical PC leaf rejected for address/clock semantics; actual block CDC replacement required"
  ],
- "unbound_count": 1634,
+ "unbound_count": 1653,
  "pin_only_placeholder_count": 0,
  "legacy_failures_disposition": "77 legacy station failures remain historical; v15 validates actual source ports independently",
  "qualification": {

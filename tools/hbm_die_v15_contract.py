@@ -20,10 +20,25 @@ LG_SOURCE = 'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv'
 # where its source documents the exact VM face it was built and benched against.
 SFU_SOURCE = 'rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv'      # LG mid tap 14/11
 DBK_SOURCE = 'rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv'    # direct RG, bank n+1/n+7
-IDX_SOURCE = 'rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv'              # direct RG, bank n+1/n+7
+IDX_SOURCE = 'rtl/hbm_accel/index/ot_hbm_idx_client_static.sv'                 # H-IDX 40e9f801e: INDEX+TOPK, RG4 + record client 4
 ATT_PV_SOURCE = 'rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_quad_local.sv'  # D local PV (owner-approved 10-15)
 SU_SOURCE = 'rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv'  # LG near tap 10/7, 4 bank-pair groups
 SID = ('SW','SE','NW','NE')
+# H-IDX answer 2026-10-15 (main 40e9f801e): SW record clients 7 -> 3.
+RECORD_DISPOSITION = {
+    ('SW','idx'): 'hb_idx (ot_hbm_idx_client_static TOPK O/R writes)',
+    ('SW','su'): 'DEAD (static SU uses LG taps): remove from VM ABI',
+    ('SW','sfu'): 'DEAD (static SFU uses LG taps): remove from VM ABI',
+    ('SW','coll'): 'DEAD (static COLL uses RG3/kq): remove from VM ABI',
+    ('SW','hc'): 'DEAD pending HC owner confirmation: remove from VM ABI when confirmed',
+    ('SW','dma'): 'PENDING: DMA owner decides (static DMA back uses RG1)',
+    ('SW','argmax'): 'OPEN: needed for MTP; no static argmax RTL yet; owner H-IDX',
+}
+VM_ABI_CHANGE_REQUESTS = [
+    dict(change='SW NC 7 -> 3 (keep idx, argmax, dma-pending; drop su/sfu/coll/hc)', source='H-IDX 40e9f801e', owner='H-ELEM-A (VM slice)'),
+    dict(change='remove IDX read group in SE/NW/NE (RG 5->4 SE, 7->6 NW/NE); IDX reads only SW group 4',
+         condition='SU route.scores_bias.O must be REPL (H-ELEM-B)', source='H-IDX 40e9f801e', owner='H-ELEM-A (VM slice)'),
+]
 
 
 def generate(out):
@@ -75,7 +90,7 @@ def generate(out):
         swse=q in ('SW','SE')
         module('hb_su_'+q,SU_SOURCE,'ot_hbm_su_static_vm_ports',dict(QID=SID.index(q),READ_RETURN=10,WRITE_RETURN=7,
                NPG=5 if swse else 4,BANK_GROUP=0x43221100 if swse else 0x33221100))
-    module('hb_idx',IDX_SOURCE,'ot_hbm_idx_scheduled_static')
+    module('hb_idx',IDX_SOURCE,'ot_hbm_idx_client_static')
     module('hb_attn_pv',ATT_PV_SOURCE,'ot_hbm_attn_pv_native_output_quad_local',dict(ACTIVE_HEADS=16))
     edges=[]; connected=set(); parts={}; logical_constants=[]
     def edge(name,src,dst):
@@ -165,6 +180,11 @@ def generate(out):
     slice_edge('idx_vm_rq',('hb_idx','vm_rq',0),('hb_vms_SW','rq',136*g),136)
     slice_edge('idx_vm_rr',('hb_vms_SW','rr',2056*g),('hb_idx','vm_rr',0),2056)
     slice_bind['SW']['read_groups'][str(g)]='hb_idx'
+    # TOPK O/R sector writes through SW record client 'idx'. client_seq stays calendar-owned
+    # (one source for VM schedule signals, as the LG selects); hb_idx.cq_seq is an open duplicate.
+    c=abi['clients']['SW']['records'].index('idx')
+    slice_edge('idx_cq',('hb_idx','cq',0),('hb_vms_SW','cq',338*c),338)
+    slice_edge('idx_cr',('hb_vms_SW','cr',274*c),('hb_idx','cr',0),274)
     logical_constants.append(dict(sink=['hb_idx','sid'],bits=2,value=0,
         reason='INDEX operand face reads the SW slice (sid order SW,SE,NW,NE)',physical_tie_cells_qualified=False))
     connected.add(('hb_idx','sid'))
@@ -188,7 +208,7 @@ def generate(out):
         for i,name in enumerate(writes):
             rec['write_groups'].setdefault(str(i),'UNBOUND: no static producer for "%s"'%name)
         for i,name in enumerate(abi['clients'][q]['records']):
-            rec['records'][str(i)]='UNBOUND: record client "%s" has no static cq338/cr274 source'%name
+            rec['records'][str(i)]=RECORD_DISPOSITION.get((q,name),'UNBOUND: record client "%s" has no static cq338/cr274 source'%name)
     # Coordinator structural rule 2026-10-15 (GEO-H bank<->LG geometry): every SU/SFU/HC
     # engine exposes >=4 LG port groups per quadrant (one per bank pair; 5 on SW/SE) so
     # each LG link stays <500 um at the fixed tap return latencies. A single connection
@@ -209,6 +229,12 @@ def generate(out):
                 rec=engine_rule['engines'][f'SU_{q}'];rec['physical_port_groups']=need
                 rec['status']=('SOURCE MET (%d pg_clk groups, db4f2facb)%s; pins open'%(need,
                                '' if need==4 else ', BANK_GROUP 0x43221100 provisional (bank 7 alone) pending GEO-H RG5 readback'))
+    # H-ATTQ request 2026-10-15T07:17: other LG-attached engines carry the same rule.
+    engine_rule['engines']['ATT_NE']=dict(tap=None,instance='hb_attn_pv',owner='H-ATTQ',required_port_groups=4,
+        physical_port_groups=None,status='RTL groups present (H-ATTQ); physical leaves open')
+    engine_rule['engines']['QUANT_SW']=dict(tap=None,instance=None,owner='H-ATTQ',required_port_groups=5,
+        physical_port_groups=5,bank_group='0x43221100 (same provisional SW/SE map as SU; H-ATTQ bench PASS 152 cy)',
+        status='RTL groups present (H-ATTQ); physical leaves open; quant not yet a contract instance')
     qs=('SW','SE','NE','NW')
     for i,q in enumerate(qs):
         edge('ring_cw_'+q,('hb_vms_'+q,'cw_out'),('hb_vms_'+qs[(i+1)%4],'cw_in'))
@@ -316,7 +342,7 @@ def generate(out):
                 abi_sha256=hashlib.sha256(abi_path.read_bytes()).hexdigest(),
                 instances=modules,known_actual_edges=edges,clock_roots=roots,vm_slice_bind=slice_bind,
                 engine_lg_port_group_rule=engine_rule,floorplan_direction='HBM D local PV (owner-approved 2026-10-15)',
-                long_returns=long_returns,
+                long_returns=long_returns,vm_abi_change_requests=VM_ABI_CHANGE_REQUESTS,
                 registered_station_masters=generated,logical_constant_requests=logical_constants,unbound_ports=unresolved,
                 boundary_gaps=['actual 1.024ns PHY to 0.833333ns stream block CDC absent',
                                'actual mapped PHY address/endian/PC striping proof required',
