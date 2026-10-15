@@ -190,7 +190,10 @@ module ot_vms_bank_static #(
         s1w_p <= 4'(wslot_d); s1w_row <= wr_decode[274:264];
         s1w_d <= wr_decode[263:8]; s1w_m <= wr_decode[275] ? 8'd0 : wr_decode[7:0]; s1w_tag <= wr_tag;
         s1r_p <= 4'(read_owner); s1r_row <= rd_decode[10:0]; s1r_tag <= rd_tag;
-        eg_d <= wr_decode[274:0];
+        // Dedicated boundary state: invalid egress payload is unspecified.
+        // A qualified capture prevents merging it into the internal S1 data.
+        if (selected_write && int'(wslot_d) < WG && wr_decode[274] && !wr_decode[275])
+            eg_d <= wr_decode[274:0];
     end
     // ------------------------------------------------------------------ S2: macro pins
     reg [9:0] m_ra, m_wa; reg m_rA, m_rC, m_rB, m_wA, m_wB, m_wC; reg [311:0] m_wd; reg [7:0] m_mA, m_mC; reg [15:0] m_mB;
@@ -278,6 +281,21 @@ module ot_vms_bank_static #(
             end
         end
     end
+    // nce is bounded by eight codewords. Split the low-nibble add from a
+    // carry-prefix increment of the upper bits; preserve exact saturation and
+    // the existing response/count edge without a full16bit add+compare path.
+    function automatic [15:0] sat_ce_add(input [15:0] count, input [3:0] step);
+        reg [4:0] low;
+        reg [11:0] upper, prefix_mask;
+        begin
+            low = {1'b0,count[3:0]} + {1'b0,step};
+            for (integer b = 0; b < 12; b = b + 1) begin
+                prefix_mask = (12'd1 << b) - 12'd1;
+                upper[b] = count[b+4] ^ (low[4] && ((count[15:4] & prefix_mask) == prefix_mask));
+            end
+            sat_ce_add = (low[4] && (&count[15:4])) ? 16'hffff : {upper,low[3:0]};
+        end
+    endfunction
     reg [15:0] ce; reg ue;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin rr_v <= '0; pr_v <= 1'b0; ce <= 16'd0; ue <= 1'b0; status <= 18'd0; end
@@ -286,13 +304,16 @@ module ot_vms_bank_static #(
             // a packet read (d_p == RG) and a packet write echo are never on the same edge (one packet op a cycle)
             pr_v <= (d_v && d_p == 4'(RG)) || dw_v;
             if (d_v) begin
-                ce <= (ce + {12'd0, nce} < ce) ? 16'hffff : ce + {12'd0, nce};
+                ce <= sat_ce_add(ce,nce);
                 if (nue) ue <= 1'b1;
             end
             status <= {flt, ue, ce};
         end
     always @(posedge clk) begin
-        for (integer g = 0; g < RG; g = g + 1) rr_d[g*256 +: 256] <= cor;
+        // Each face/group retains its own last valid payload. These registers
+        // must not collapse to one shared256bit state across all four faces.
+        for (integer g = 0; g < RG; g = g + 1)
+            if (d_v && d_p == 4'(g)) rr_d[g*256 +: 256] <= cor;
         pr_d <= (d_v && d_p == 4'(RG)) ? {1'b0, d_tag, cor} : {1'b1, dw_tag, 256'd0};
     end
 endmodule
