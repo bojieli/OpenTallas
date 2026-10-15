@@ -1,0 +1,53 @@
+{
+  "qualification": "component only; no native physical or whole-token qualification",
+  "read_added_cycles": 2,
+  "kr_accept_to_published_status_added_cycles": 2,
+  "write_ack_to_published_status_added_cycles": 2,
+  "declared_boundary_register_bits": 1313,
+  "constant_request_bits_before_mapping": 36,
+  "cases": [
+    {
+      "name": "positive",
+      "result": "PASS",
+      "returncode": 0,
+      "log": "/home/ubuntu/artifacts/svc-pc-boundary-1015/positive.log"
+    },
+    {
+      "name": "sram_read_address",
+      "result": "rejected",
+      "returncode": 1,
+      "log": "/home/ubuntu/artifacts/svc-pc-boundary-1015/sram_read_address.log"
+    },
+    {
+      "name": "response_stage_bypass",
+      "result": "rejected",
+      "returncode": 1,
+      "log": "/home/ubuntu/artifacts/svc-pc-boundary-1015/response_stage_bypass.log"
+    },
+    {
+      "name": "write_ack_stage_bypass",
+      "result": "rejected",
+      "returncode": 1,
+      "log": "/home/ubuntu/artifacts/svc-pc-boundary-1015/write_ack_stage_bypass.log"
+    },
+    {
+      "name": "write_ack_without_accept",
+      "result": "rejected",
+      "returncode": 1,
+      "log": "/home/ubuntu/artifacts/svc-pc-boundary-1015/write_ack_without_accept.log"
+    },
+    {
+      "name": "kr_tag_corruption",
+      "result": "rejected",
+      "returncode": 1,
+      "log": "/home/ubuntu/artifacts/svc-pc-boundary-1015/kr_tag_corruption.log"
+    }
+  ],
+  "sources": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_pc.sv": "c8fc0f734883cb419a6854d3aa90205785deeb08f9b3490dd67b54cbfe2b6d5b",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_pc_boundary.sv": "52ee1ae48c7db866b8bd84596f55bb0a2ada3d66f654a8d77b419994fd38ef41",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_pc_boundary.sv": "47e9ae4716505cdeb33b7ccf8036b80d093059d2104a1f90de476efe55887a20",
+    "tools/hbm_v15_harden/run_svc_pc_boundary.py": "5394da1a84ed4f74ab19c4acbb099fecf880508ffd99b7c2b4906397956931f2"
+  }
+}
