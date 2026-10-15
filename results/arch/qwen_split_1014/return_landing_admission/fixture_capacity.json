@@ -260,7 +260,7 @@
     "results/rtl/qwen_static_kv_1015/full128_return/true_host_dual_clock/fixtures/p637/pc31_stack3.mem": "d8f68931bed57587dce3b864159ba0a417c9511cfd38d67eeceb9f702dc70496"
   },
   "calendar_source": "4749ff96e",
-  "quarter_pc_mapping": "logical PC = group + 8*quarter; physical slots permute GROUP_ORDER",
+  "quarter_pc_mapping": "fixture PC is physical controller strap: 4*GROUP_ORDER.index(group)+quarter; logical landing PC=group+8*quarter",
   "landing_source": "qkd_static_kv_landing_physical_grp: seven edges",
   "assumptions": [
     "source-bound nominal common leaf phase; physical insertion unqualified",
@@ -283,75 +283,15 @@
       "stack": 0,
       "group": 0,
       "kind": "V",
-      "first_request_min_core": 1938,
-      "first_request_max_core": 251,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 137,
-      "stack": 0,
-      "group": 1,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 0,
-      "group": 1,
-      "kind": "V",
-      "first_request_min_core": 1942,
-      "first_request_max_core": 254,
-      "feasible": false,
-      "slack_core_edges": -1688
-    },
-    {
-      "phase_ps": 137,
-      "stack": 0,
-      "group": 2,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 0,
-      "group": 2,
-      "kind": "V",
-      "first_request_min_core": 1982,
-      "first_request_max_core": 296,
-      "feasible": false,
-      "slack_core_edges": -1686
-    },
-    {
-      "phase_ps": 137,
-      "stack": 0,
-      "group": 3,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 0,
-      "group": 3,
-      "kind": "V",
-      "first_request_min_core": 1989,
+      "first_request_min_core": 1946,
       "first_request_max_core": 227,
       "feasible": false,
-      "slack_core_edges": -1762
+      "slack_core_edges": -1719
     },
     {
       "phase_ps": 137,
       "stack": 0,
-      "group": 4,
+      "group": 1,
       "kind": "K",
       "first_request_min_core": 514,
       "first_request_max_core": 612,
@@ -361,116 +301,16 @@
     {
       "phase_ps": 137,
       "stack": 0,
-      "group": 4,
+      "group": 1,
       "kind": "V",
-      "first_request_min_core": 1918,
+      "first_request_min_core": 1824,
       "first_request_max_core": 231,
       "feasible": false,
-      "slack_core_edges": -1687
+      "slack_core_edges": -1593
     },
     {
       "phase_ps": 137,
       "stack": 0,
-      "group": 5,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 0,
-      "group": 5,
-      "kind": "V",
-      "first_request_min_core": 1925,
-      "first_request_max_core": 235,
-      "feasible": false,
-      "slack_core_edges": -1690
-    },
-    {
-      "phase_ps": 137,
-      "stack": 0,
-      "group": 6,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 0,
-      "group": 6,
-      "kind": "V",
-      "first_request_min_core": 1928,
-      "first_request_max_core": 241,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 137,
-      "stack": 0,
-      "group": 7,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 0,
-      "group": 7,
-      "kind": "V",
-      "first_request_min_core": 1932,
-      "first_request_max_core": 245,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 0,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 0,
-      "kind": "V",
-      "first_request_min_core": 1938,
-      "first_request_max_core": 251,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 1,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 1,
-      "kind": "V",
-      "first_request_min_core": 1942,
-      "first_request_max_core": 254,
-      "feasible": false,
-      "slack_core_edges": -1688
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
       "group": 2,
       "kind": "K",
       "first_request_min_core": 514,
@@ -480,177 +320,17 @@
     },
     {
       "phase_ps": 137,
-      "stack": 1,
+      "stack": 0,
       "group": 2,
-      "kind": "V",
-      "first_request_min_core": 1982,
-      "first_request_max_core": 296,
-      "feasible": false,
-      "slack_core_edges": -1686
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 3,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 3,
       "kind": "V",
       "first_request_min_core": 1989,
-      "first_request_max_core": 227,
-      "feasible": false,
-      "slack_core_edges": -1762
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 4,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 4,
-      "kind": "V",
-      "first_request_min_core": 1918,
-      "first_request_max_core": 231,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 5,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 5,
-      "kind": "V",
-      "first_request_min_core": 1925,
-      "first_request_max_core": 235,
-      "feasible": false,
-      "slack_core_edges": -1690
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 6,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 6,
-      "kind": "V",
-      "first_request_min_core": 1928,
-      "first_request_max_core": 241,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 7,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 1,
-      "group": 7,
-      "kind": "V",
-      "first_request_min_core": 1932,
-      "first_request_max_core": 245,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 137,
-      "stack": 2,
-      "group": 0,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 2,
-      "group": 0,
-      "kind": "V",
-      "first_request_min_core": 1938,
       "first_request_max_core": 251,
       "feasible": false,
-      "slack_core_edges": -1687
+      "slack_core_edges": -1738
     },
     {
       "phase_ps": 137,
-      "stack": 2,
-      "group": 1,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 2,
-      "group": 1,
-      "kind": "V",
-      "first_request_min_core": 1942,
-      "first_request_max_core": 254,
-      "feasible": false,
-      "slack_core_edges": -1688
-    },
-    {
-      "phase_ps": 137,
-      "stack": 2,
-      "group": 2,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 2,
-      "group": 2,
-      "kind": "V",
-      "first_request_min_core": 1982,
-      "first_request_max_core": 296,
-      "feasible": false,
-      "slack_core_edges": -1686
-    },
-    {
-      "phase_ps": 137,
-      "stack": 2,
+      "stack": 0,
       "group": 3,
       "kind": "K",
       "first_request_min_core": 514,
@@ -660,17 +340,17 @@
     },
     {
       "phase_ps": 137,
-      "stack": 2,
+      "stack": 0,
       "group": 3,
       "kind": "V",
-      "first_request_min_core": 1989,
-      "first_request_max_core": 227,
+      "first_request_min_core": 1869,
+      "first_request_max_core": 269,
       "feasible": false,
-      "slack_core_edges": -1762
+      "slack_core_edges": -1600
     },
     {
       "phase_ps": 137,
-      "stack": 2,
+      "stack": 0,
       "group": 4,
       "kind": "K",
       "first_request_min_core": 514,
@@ -680,17 +360,17 @@
     },
     {
       "phase_ps": 137,
-      "stack": 2,
+      "stack": 0,
       "group": 4,
       "kind": "V",
-      "first_request_min_core": 1918,
-      "first_request_max_core": 231,
+      "first_request_min_core": 1915,
+      "first_request_max_core": 322,
       "feasible": false,
-      "slack_core_edges": -1687
+      "slack_core_edges": -1593
     },
     {
       "phase_ps": 137,
-      "stack": 2,
+      "stack": 0,
       "group": 5,
       "kind": "K",
       "first_request_min_core": 514,
@@ -700,57 +380,57 @@
     },
     {
       "phase_ps": 137,
-      "stack": 2,
+      "stack": 0,
       "group": 5,
-      "kind": "V",
-      "first_request_min_core": 1925,
-      "first_request_max_core": 235,
-      "feasible": false,
-      "slack_core_edges": -1690
-    },
-    {
-      "phase_ps": 137,
-      "stack": 2,
-      "group": 6,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 2,
-      "group": 6,
-      "kind": "V",
-      "first_request_min_core": 1928,
-      "first_request_max_core": 241,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 137,
-      "stack": 2,
-      "group": 7,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 2,
-      "group": 7,
       "kind": "V",
       "first_request_min_core": 1932,
-      "first_request_max_core": 245,
+      "first_request_max_core": 339,
       "feasible": false,
-      "slack_core_edges": -1687
+      "slack_core_edges": -1593
     },
     {
       "phase_ps": 137,
-      "stack": 3,
+      "stack": 0,
+      "group": 6,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 0,
+      "group": 6,
+      "kind": "V",
+      "first_request_min_core": 1886,
+      "first_request_max_core": 286,
+      "feasible": false,
+      "slack_core_edges": -1600
+    },
+    {
+      "phase_ps": 137,
+      "stack": 0,
+      "group": 7,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 0,
+      "group": 7,
+      "kind": "V",
+      "first_request_min_core": 1906,
+      "first_request_max_core": 306,
+      "feasible": false,
+      "slack_core_edges": -1600
+    },
+    {
+      "phase_ps": 137,
+      "stack": 1,
       "group": 0,
       "kind": "K",
       "first_request_min_core": 514,
@@ -760,57 +440,57 @@
     },
     {
       "phase_ps": 137,
-      "stack": 3,
+      "stack": 1,
       "group": 0,
       "kind": "V",
-      "first_request_min_core": 1938,
+      "first_request_min_core": 1946,
+      "first_request_max_core": 227,
+      "feasible": false,
+      "slack_core_edges": -1719
+    },
+    {
+      "phase_ps": 137,
+      "stack": 1,
+      "group": 1,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 1,
+      "group": 1,
+      "kind": "V",
+      "first_request_min_core": 1824,
+      "first_request_max_core": 231,
+      "feasible": false,
+      "slack_core_edges": -1593
+    },
+    {
+      "phase_ps": 137,
+      "stack": 1,
+      "group": 2,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 1,
+      "group": 2,
+      "kind": "V",
+      "first_request_min_core": 1989,
       "first_request_max_core": 251,
       "feasible": false,
-      "slack_core_edges": -1687
+      "slack_core_edges": -1738
     },
     {
       "phase_ps": 137,
-      "stack": 3,
-      "group": 1,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 3,
-      "group": 1,
-      "kind": "V",
-      "first_request_min_core": 1942,
-      "first_request_max_core": 254,
-      "feasible": false,
-      "slack_core_edges": -1688
-    },
-    {
-      "phase_ps": 137,
-      "stack": 3,
-      "group": 2,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 3,
-      "group": 2,
-      "kind": "V",
-      "first_request_min_core": 1982,
-      "first_request_max_core": 296,
-      "feasible": false,
-      "slack_core_edges": -1686
-    },
-    {
-      "phase_ps": 137,
-      "stack": 3,
+      "stack": 1,
       "group": 3,
       "kind": "K",
       "first_request_min_core": 514,
@@ -820,17 +500,17 @@
     },
     {
       "phase_ps": 137,
-      "stack": 3,
+      "stack": 1,
       "group": 3,
       "kind": "V",
-      "first_request_min_core": 1989,
-      "first_request_max_core": 227,
+      "first_request_min_core": 1869,
+      "first_request_max_core": 269,
       "feasible": false,
-      "slack_core_edges": -1762
+      "slack_core_edges": -1600
     },
     {
       "phase_ps": 137,
-      "stack": 3,
+      "stack": 1,
       "group": 4,
       "kind": "K",
       "first_request_min_core": 514,
@@ -840,17 +520,17 @@
     },
     {
       "phase_ps": 137,
-      "stack": 3,
+      "stack": 1,
       "group": 4,
       "kind": "V",
-      "first_request_min_core": 1918,
-      "first_request_max_core": 231,
+      "first_request_min_core": 1915,
+      "first_request_max_core": 322,
       "feasible": false,
-      "slack_core_edges": -1687
+      "slack_core_edges": -1593
     },
     {
       "phase_ps": 137,
-      "stack": 3,
+      "stack": 1,
       "group": 5,
       "kind": "K",
       "first_request_min_core": 514,
@@ -860,377 +540,377 @@
     },
     {
       "phase_ps": 137,
-      "stack": 3,
+      "stack": 1,
       "group": 5,
-      "kind": "V",
-      "first_request_min_core": 1925,
-      "first_request_max_core": 235,
-      "feasible": false,
-      "slack_core_edges": -1690
-    },
-    {
-      "phase_ps": 137,
-      "stack": 3,
-      "group": 6,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 3,
-      "group": 6,
-      "kind": "V",
-      "first_request_min_core": 1928,
-      "first_request_max_core": 241,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 137,
-      "stack": 3,
-      "group": 7,
-      "kind": "K",
-      "first_request_min_core": 514,
-      "first_request_max_core": 612,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 137,
-      "stack": 3,
-      "group": 7,
       "kind": "V",
       "first_request_min_core": 1932,
-      "first_request_max_core": 245,
+      "first_request_max_core": 339,
       "feasible": false,
-      "slack_core_edges": -1687
+      "slack_core_edges": -1593
     },
     {
-      "phase_ps": 637,
-      "stack": 0,
+      "phase_ps": 137,
+      "stack": 1,
+      "group": 6,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 1,
+      "group": 6,
+      "kind": "V",
+      "first_request_min_core": 1886,
+      "first_request_max_core": 286,
+      "feasible": false,
+      "slack_core_edges": -1600
+    },
+    {
+      "phase_ps": 137,
+      "stack": 1,
+      "group": 7,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 1,
+      "group": 7,
+      "kind": "V",
+      "first_request_min_core": 1906,
+      "first_request_max_core": 306,
+      "feasible": false,
+      "slack_core_edges": -1600
+    },
+    {
+      "phase_ps": 137,
+      "stack": 2,
       "group": 0,
       "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
       "feasible": true,
       "slack_core_edges": 98
     },
     {
-      "phase_ps": 637,
-      "stack": 0,
+      "phase_ps": 137,
+      "stack": 2,
       "group": 0,
       "kind": "V",
-      "first_request_min_core": 1938,
-      "first_request_max_core": 250,
-      "feasible": false,
-      "slack_core_edges": -1688
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 1,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 1,
-      "kind": "V",
-      "first_request_min_core": 1941,
-      "first_request_max_core": 254,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 2,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 2,
-      "kind": "V",
-      "first_request_min_core": 1982,
-      "first_request_max_core": 296,
-      "feasible": false,
-      "slack_core_edges": -1686
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 3,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 3,
-      "kind": "V",
-      "first_request_min_core": 1988,
+      "first_request_min_core": 1946,
       "first_request_max_core": 227,
       "feasible": false,
-      "slack_core_edges": -1761
+      "slack_core_edges": -1719
     },
     {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 4,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 4,
-      "kind": "V",
-      "first_request_min_core": 1918,
-      "first_request_max_core": 230,
-      "feasible": false,
-      "slack_core_edges": -1688
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 5,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 5,
-      "kind": "V",
-      "first_request_min_core": 1924,
-      "first_request_max_core": 234,
-      "feasible": false,
-      "slack_core_edges": -1690
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 6,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 6,
-      "kind": "V",
-      "first_request_min_core": 1928,
-      "first_request_max_core": 240,
-      "feasible": false,
-      "slack_core_edges": -1688
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 7,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 0,
-      "group": 7,
-      "kind": "V",
-      "first_request_min_core": 1931,
-      "first_request_max_core": 244,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 637,
-      "stack": 1,
-      "group": 0,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 1,
-      "group": 0,
-      "kind": "V",
-      "first_request_min_core": 1938,
-      "first_request_max_core": 250,
-      "feasible": false,
-      "slack_core_edges": -1688
-    },
-    {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 2,
       "group": 1,
       "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
       "feasible": true,
       "slack_core_edges": 98
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 2,
       "group": 1,
       "kind": "V",
-      "first_request_min_core": 1941,
-      "first_request_max_core": 254,
+      "first_request_min_core": 1824,
+      "first_request_max_core": 231,
       "feasible": false,
-      "slack_core_edges": -1687
+      "slack_core_edges": -1593
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 2,
       "group": 2,
       "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
       "feasible": true,
       "slack_core_edges": 98
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 2,
       "group": 2,
       "kind": "V",
-      "first_request_min_core": 1982,
-      "first_request_max_core": 296,
+      "first_request_min_core": 1989,
+      "first_request_max_core": 251,
       "feasible": false,
-      "slack_core_edges": -1686
+      "slack_core_edges": -1738
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 2,
       "group": 3,
       "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
       "feasible": true,
       "slack_core_edges": 98
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 2,
       "group": 3,
       "kind": "V",
-      "first_request_min_core": 1988,
+      "first_request_min_core": 1869,
+      "first_request_max_core": 269,
+      "feasible": false,
+      "slack_core_edges": -1600
+    },
+    {
+      "phase_ps": 137,
+      "stack": 2,
+      "group": 4,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 2,
+      "group": 4,
+      "kind": "V",
+      "first_request_min_core": 1915,
+      "first_request_max_core": 322,
+      "feasible": false,
+      "slack_core_edges": -1593
+    },
+    {
+      "phase_ps": 137,
+      "stack": 2,
+      "group": 5,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 2,
+      "group": 5,
+      "kind": "V",
+      "first_request_min_core": 1932,
+      "first_request_max_core": 339,
+      "feasible": false,
+      "slack_core_edges": -1593
+    },
+    {
+      "phase_ps": 137,
+      "stack": 2,
+      "group": 6,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 2,
+      "group": 6,
+      "kind": "V",
+      "first_request_min_core": 1886,
+      "first_request_max_core": 286,
+      "feasible": false,
+      "slack_core_edges": -1600
+    },
+    {
+      "phase_ps": 137,
+      "stack": 2,
+      "group": 7,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 2,
+      "group": 7,
+      "kind": "V",
+      "first_request_min_core": 1906,
+      "first_request_max_core": 306,
+      "feasible": false,
+      "slack_core_edges": -1600
+    },
+    {
+      "phase_ps": 137,
+      "stack": 3,
+      "group": 0,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 3,
+      "group": 0,
+      "kind": "V",
+      "first_request_min_core": 1946,
       "first_request_max_core": 227,
       "feasible": false,
-      "slack_core_edges": -1761
+      "slack_core_edges": -1719
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 3,
+      "group": 1,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 3,
+      "group": 1,
+      "kind": "V",
+      "first_request_min_core": 1824,
+      "first_request_max_core": 231,
+      "feasible": false,
+      "slack_core_edges": -1593
+    },
+    {
+      "phase_ps": 137,
+      "stack": 3,
+      "group": 2,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 3,
+      "group": 2,
+      "kind": "V",
+      "first_request_min_core": 1989,
+      "first_request_max_core": 251,
+      "feasible": false,
+      "slack_core_edges": -1738
+    },
+    {
+      "phase_ps": 137,
+      "stack": 3,
+      "group": 3,
+      "kind": "K",
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 137,
+      "stack": 3,
+      "group": 3,
+      "kind": "V",
+      "first_request_min_core": 1869,
+      "first_request_max_core": 269,
+      "feasible": false,
+      "slack_core_edges": -1600
+    },
+    {
+      "phase_ps": 137,
+      "stack": 3,
       "group": 4,
       "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
       "feasible": true,
       "slack_core_edges": 98
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 3,
       "group": 4,
       "kind": "V",
-      "first_request_min_core": 1918,
-      "first_request_max_core": 230,
+      "first_request_min_core": 1915,
+      "first_request_max_core": 322,
       "feasible": false,
-      "slack_core_edges": -1688
+      "slack_core_edges": -1593
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 3,
       "group": 5,
       "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
       "feasible": true,
       "slack_core_edges": 98
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 3,
       "group": 5,
       "kind": "V",
-      "first_request_min_core": 1924,
-      "first_request_max_core": 234,
+      "first_request_min_core": 1932,
+      "first_request_max_core": 339,
       "feasible": false,
-      "slack_core_edges": -1690
+      "slack_core_edges": -1593
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 3,
       "group": 6,
       "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
       "feasible": true,
       "slack_core_edges": 98
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 3,
       "group": 6,
       "kind": "V",
-      "first_request_min_core": 1928,
-      "first_request_max_core": 240,
+      "first_request_min_core": 1886,
+      "first_request_max_core": 286,
       "feasible": false,
-      "slack_core_edges": -1688
+      "slack_core_edges": -1600
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 3,
       "group": 7,
       "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
+      "first_request_min_core": 514,
+      "first_request_max_core": 612,
       "feasible": true,
       "slack_core_edges": 98
     },
     {
-      "phase_ps": 637,
-      "stack": 1,
+      "phase_ps": 137,
+      "stack": 3,
       "group": 7,
       "kind": "V",
-      "first_request_min_core": 1931,
-      "first_request_max_core": 244,
+      "first_request_min_core": 1906,
+      "first_request_max_core": 306,
       "feasible": false,
-      "slack_core_edges": -1687
+      "slack_core_edges": -1600
     },
     {
       "phase_ps": 637,
-      "stack": 2,
+      "stack": 0,
       "group": 0,
       "kind": "K",
       "first_request_min_core": 513,
@@ -1240,78 +920,18 @@
     },
     {
       "phase_ps": 637,
-      "stack": 2,
+      "stack": 0,
       "group": 0,
       "kind": "V",
-      "first_request_min_core": 1938,
-      "first_request_max_core": 250,
-      "feasible": false,
-      "slack_core_edges": -1688
-    },
-    {
-      "phase_ps": 637,
-      "stack": 2,
-      "group": 1,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 2,
-      "group": 1,
-      "kind": "V",
-      "first_request_min_core": 1941,
-      "first_request_max_core": 254,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 637,
-      "stack": 2,
-      "group": 2,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 2,
-      "group": 2,
-      "kind": "V",
-      "first_request_min_core": 1982,
-      "first_request_max_core": 296,
-      "feasible": false,
-      "slack_core_edges": -1686
-    },
-    {
-      "phase_ps": 637,
-      "stack": 2,
-      "group": 3,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 2,
-      "group": 3,
-      "kind": "V",
-      "first_request_min_core": 1988,
+      "first_request_min_core": 1945,
       "first_request_max_core": 227,
       "feasible": false,
-      "slack_core_edges": -1761
+      "slack_core_edges": -1718
     },
     {
       "phase_ps": 637,
-      "stack": 2,
-      "group": 4,
+      "stack": 0,
+      "group": 1,
       "kind": "K",
       "first_request_min_core": 513,
       "first_request_max_core": 611,
@@ -1320,117 +940,17 @@
     },
     {
       "phase_ps": 637,
-      "stack": 2,
-      "group": 4,
+      "stack": 0,
+      "group": 1,
       "kind": "V",
-      "first_request_min_core": 1918,
+      "first_request_min_core": 1823,
       "first_request_max_core": 230,
       "feasible": false,
-      "slack_core_edges": -1688
+      "slack_core_edges": -1593
     },
     {
       "phase_ps": 637,
-      "stack": 2,
-      "group": 5,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 2,
-      "group": 5,
-      "kind": "V",
-      "first_request_min_core": 1924,
-      "first_request_max_core": 234,
-      "feasible": false,
-      "slack_core_edges": -1690
-    },
-    {
-      "phase_ps": 637,
-      "stack": 2,
-      "group": 6,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 2,
-      "group": 6,
-      "kind": "V",
-      "first_request_min_core": 1928,
-      "first_request_max_core": 240,
-      "feasible": false,
-      "slack_core_edges": -1688
-    },
-    {
-      "phase_ps": 637,
-      "stack": 2,
-      "group": 7,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 2,
-      "group": 7,
-      "kind": "V",
-      "first_request_min_core": 1931,
-      "first_request_max_core": 244,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 637,
-      "stack": 3,
-      "group": 0,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 3,
-      "group": 0,
-      "kind": "V",
-      "first_request_min_core": 1938,
-      "first_request_max_core": 250,
-      "feasible": false,
-      "slack_core_edges": -1688
-    },
-    {
-      "phase_ps": 637,
-      "stack": 3,
-      "group": 1,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 3,
-      "group": 1,
-      "kind": "V",
-      "first_request_min_core": 1941,
-      "first_request_max_core": 254,
-      "feasible": false,
-      "slack_core_edges": -1687
-    },
-    {
-      "phase_ps": 637,
-      "stack": 3,
+      "stack": 0,
       "group": 2,
       "kind": "K",
       "first_request_min_core": 513,
@@ -1440,37 +960,37 @@
     },
     {
       "phase_ps": 637,
-      "stack": 3,
+      "stack": 0,
       "group": 2,
-      "kind": "V",
-      "first_request_min_core": 1982,
-      "first_request_max_core": 296,
-      "feasible": false,
-      "slack_core_edges": -1686
-    },
-    {
-      "phase_ps": 637,
-      "stack": 3,
-      "group": 3,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 3,
-      "group": 3,
       "kind": "V",
       "first_request_min_core": 1988,
-      "first_request_max_core": 227,
+      "first_request_max_core": 250,
       "feasible": false,
-      "slack_core_edges": -1761
+      "slack_core_edges": -1738
     },
     {
       "phase_ps": 637,
-      "stack": 3,
+      "stack": 0,
+      "group": 3,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 0,
+      "group": 3,
+      "kind": "V",
+      "first_request_min_core": 1868,
+      "first_request_max_core": 269,
+      "feasible": false,
+      "slack_core_edges": -1599
+    },
+    {
+      "phase_ps": 637,
+      "stack": 0,
       "group": 4,
       "kind": "K",
       "first_request_min_core": 513,
@@ -1480,17 +1000,17 @@
     },
     {
       "phase_ps": 637,
-      "stack": 3,
+      "stack": 0,
       "group": 4,
       "kind": "V",
-      "first_request_min_core": 1918,
-      "first_request_max_core": 230,
+      "first_request_min_core": 1914,
+      "first_request_max_core": 321,
       "feasible": false,
-      "slack_core_edges": -1688
+      "slack_core_edges": -1593
     },
     {
       "phase_ps": 637,
-      "stack": 3,
+      "stack": 0,
       "group": 5,
       "kind": "K",
       "first_request_min_core": 513,
@@ -1500,53 +1020,533 @@
     },
     {
       "phase_ps": 637,
-      "stack": 3,
+      "stack": 0,
       "group": 5,
-      "kind": "V",
-      "first_request_min_core": 1924,
-      "first_request_max_core": 234,
-      "feasible": false,
-      "slack_core_edges": -1690
-    },
-    {
-      "phase_ps": 637,
-      "stack": 3,
-      "group": 6,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 3,
-      "group": 6,
-      "kind": "V",
-      "first_request_min_core": 1928,
-      "first_request_max_core": 240,
-      "feasible": false,
-      "slack_core_edges": -1688
-    },
-    {
-      "phase_ps": 637,
-      "stack": 3,
-      "group": 7,
-      "kind": "K",
-      "first_request_min_core": 513,
-      "first_request_max_core": 611,
-      "feasible": true,
-      "slack_core_edges": 98
-    },
-    {
-      "phase_ps": 637,
-      "stack": 3,
-      "group": 7,
       "kind": "V",
       "first_request_min_core": 1931,
-      "first_request_max_core": 244,
+      "first_request_max_core": 339,
       "feasible": false,
-      "slack_core_edges": -1687
+      "slack_core_edges": -1592
+    },
+    {
+      "phase_ps": 637,
+      "stack": 0,
+      "group": 6,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 0,
+      "group": 6,
+      "kind": "V",
+      "first_request_min_core": 1885,
+      "first_request_max_core": 286,
+      "feasible": false,
+      "slack_core_edges": -1599
+    },
+    {
+      "phase_ps": 637,
+      "stack": 0,
+      "group": 7,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 0,
+      "group": 7,
+      "kind": "V",
+      "first_request_min_core": 1905,
+      "first_request_max_core": 305,
+      "feasible": false,
+      "slack_core_edges": -1600
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 0,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 0,
+      "kind": "V",
+      "first_request_min_core": 1945,
+      "first_request_max_core": 227,
+      "feasible": false,
+      "slack_core_edges": -1718
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 1,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 1,
+      "kind": "V",
+      "first_request_min_core": 1823,
+      "first_request_max_core": 230,
+      "feasible": false,
+      "slack_core_edges": -1593
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 2,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 2,
+      "kind": "V",
+      "first_request_min_core": 1988,
+      "first_request_max_core": 250,
+      "feasible": false,
+      "slack_core_edges": -1738
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 3,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 3,
+      "kind": "V",
+      "first_request_min_core": 1868,
+      "first_request_max_core": 269,
+      "feasible": false,
+      "slack_core_edges": -1599
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 4,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 4,
+      "kind": "V",
+      "first_request_min_core": 1914,
+      "first_request_max_core": 321,
+      "feasible": false,
+      "slack_core_edges": -1593
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 5,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 5,
+      "kind": "V",
+      "first_request_min_core": 1931,
+      "first_request_max_core": 339,
+      "feasible": false,
+      "slack_core_edges": -1592
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 6,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 6,
+      "kind": "V",
+      "first_request_min_core": 1885,
+      "first_request_max_core": 286,
+      "feasible": false,
+      "slack_core_edges": -1599
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 7,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 1,
+      "group": 7,
+      "kind": "V",
+      "first_request_min_core": 1905,
+      "first_request_max_core": 305,
+      "feasible": false,
+      "slack_core_edges": -1600
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 0,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 0,
+      "kind": "V",
+      "first_request_min_core": 1945,
+      "first_request_max_core": 227,
+      "feasible": false,
+      "slack_core_edges": -1718
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 1,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 1,
+      "kind": "V",
+      "first_request_min_core": 1823,
+      "first_request_max_core": 230,
+      "feasible": false,
+      "slack_core_edges": -1593
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 2,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 2,
+      "kind": "V",
+      "first_request_min_core": 1988,
+      "first_request_max_core": 250,
+      "feasible": false,
+      "slack_core_edges": -1738
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 3,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 3,
+      "kind": "V",
+      "first_request_min_core": 1868,
+      "first_request_max_core": 269,
+      "feasible": false,
+      "slack_core_edges": -1599
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 4,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 4,
+      "kind": "V",
+      "first_request_min_core": 1914,
+      "first_request_max_core": 321,
+      "feasible": false,
+      "slack_core_edges": -1593
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 5,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 5,
+      "kind": "V",
+      "first_request_min_core": 1931,
+      "first_request_max_core": 339,
+      "feasible": false,
+      "slack_core_edges": -1592
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 6,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 6,
+      "kind": "V",
+      "first_request_min_core": 1885,
+      "first_request_max_core": 286,
+      "feasible": false,
+      "slack_core_edges": -1599
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 7,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 2,
+      "group": 7,
+      "kind": "V",
+      "first_request_min_core": 1905,
+      "first_request_max_core": 305,
+      "feasible": false,
+      "slack_core_edges": -1600
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 0,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 0,
+      "kind": "V",
+      "first_request_min_core": 1945,
+      "first_request_max_core": 227,
+      "feasible": false,
+      "slack_core_edges": -1718
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 1,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 1,
+      "kind": "V",
+      "first_request_min_core": 1823,
+      "first_request_max_core": 230,
+      "feasible": false,
+      "slack_core_edges": -1593
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 2,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 2,
+      "kind": "V",
+      "first_request_min_core": 1988,
+      "first_request_max_core": 250,
+      "feasible": false,
+      "slack_core_edges": -1738
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 3,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 3,
+      "kind": "V",
+      "first_request_min_core": 1868,
+      "first_request_max_core": 269,
+      "feasible": false,
+      "slack_core_edges": -1599
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 4,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 4,
+      "kind": "V",
+      "first_request_min_core": 1914,
+      "first_request_max_core": 321,
+      "feasible": false,
+      "slack_core_edges": -1593
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 5,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 5,
+      "kind": "V",
+      "first_request_min_core": 1931,
+      "first_request_max_core": 339,
+      "feasible": false,
+      "slack_core_edges": -1592
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 6,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 6,
+      "kind": "V",
+      "first_request_min_core": 1885,
+      "first_request_max_core": 286,
+      "feasible": false,
+      "slack_core_edges": -1599
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 7,
+      "kind": "K",
+      "first_request_min_core": 513,
+      "first_request_max_core": 611,
+      "feasible": true,
+      "slack_core_edges": 98
+    },
+    {
+      "phase_ps": 637,
+      "stack": 3,
+      "group": 7,
+      "kind": "V",
+      "first_request_min_core": 1905,
+      "first_request_max_core": 305,
+      "feasible": false,
+      "slack_core_edges": -1600
     }
   ],
   "infeasible_groups": 64

@@ -60,7 +60,7 @@ def main():
         for stack in range(4):
             for group in range(8):
                 channels = [core_slots(fixtures[f'{ROOT}/p{phase}/pc{pc:02d}_stack{stack}.mem'], phase)
-                            for pc in (group + 8 * q for q in range(4))]
+                            for pc in (4 * (4, 5, 0, 1, 2, 3, 6, 7).index(group) + q for q in range(4))]
                 for kind in ('K', 'V'):
                     bb = [bounds(slots, kind) for slots in channels]
                     lo = max(b[0] for b in bb)
@@ -70,7 +70,7 @@ def main():
                                      feasible=lo <= hi, slack_core_edges=hi - lo))
     out = dict(scope='ANALYTICAL_CAPACITY_ONLY; frozen full128 component fixtures, not production schedule',
                fixture_revision=args.revision, fixture_sha256=hashes,
-               calendar_source='4749ff96e', quarter_pc_mapping='logical PC = group + 8*quarter; physical slots permute GROUP_ORDER', landing_source='qkd_static_kv_landing_physical_grp: seven edges',
+               calendar_source='4749ff96e', quarter_pc_mapping='fixture PC is physical controller strap: 4*GROUP_ORDER.index(group)+quarter; logical landing PC=group+8*quarter', landing_source='qkd_static_kv_landing_physical_grp: seven edges',
                assumptions=['source-bound nominal common leaf phase; physical insertion unqualified',
                             'K group II1; V group 16 requests spaced8, next burst256',
                             'no scheduling from actual return valid or readiness'],
