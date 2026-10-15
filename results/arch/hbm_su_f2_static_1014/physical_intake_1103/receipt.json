@@ -17,7 +17,38 @@
     "qcores": 4,
     "rf_banks_per_qcore": 64,
     "reducer_sram_per_qcore": 2,
-    "total_srams": 3080
+    "total_srams": 3080,
+    "per_quarter_pgslices": [
+      {
+        "G": 0,
+        "store_banks": 32,
+        "light": 16,
+        "heavy": 16,
+        "known_outline_mm2": 2.0382326784
+      },
+      {
+        "G": 1,
+        "store_banks": 32,
+        "light": 16,
+        "heavy": 16,
+        "known_outline_mm2": 2.0382326784
+      },
+      {
+        "G": 2,
+        "store_banks": 32,
+        "light": 32,
+        "heavy": 0,
+        "known_outline_mm2": 2.2893539328
+      },
+      {
+        "G": 3,
+        "store_banks": 32,
+        "light": 32,
+        "heavy": 0,
+        "known_outline_mm2": 2.2893539328
+      }
+    ],
+    "physical_distribution_note": "Actual lid(n) maps G0/G1 to16heavy+16LIGHT; G2/G3 to32LIGHT. Existing kind0 spec prose24LIGHT per slice is only average and must not drive placement. Q0G0 heavy includes1FULL+15SFU, other heavy slices16SFU."
   },
   "leaves": [
     {
@@ -592,5 +623,13 @@
     "CTS physical.json carries floorplan metrics; no routed FF/DRC qualification inferred.",
     "LIGHT PC TT placement setup -127.7ps in->reg and -19ps reg->reg; bank insertion/spread exceed hard native limits.",
     "Do not route without actual current slot and pins."
-  ]
+  ],
+  "clock_census_lat4_logic_upper_bound": {
+    "light_live_roots_per_lane": 7,
+    "sfu_live_roots_per_lane": 10,
+    "full_live_roots_per_lane": 12,
+    "live_lane_roots": 3970,
+    "lane_abi_clock_pins": 6144,
+    "basis": "existing lat4_census/clock_census.json source register inventory; only LIGHT nativeCTS measured here; SFU/FULL not nativeCTS-qualified"
+  }
 }
