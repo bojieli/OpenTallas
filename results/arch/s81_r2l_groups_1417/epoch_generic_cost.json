@@ -1,0 +1,15 @@
+{
+  "source_commit": "93f483267",
+  "tool": "yosys generic proc; opt; memory_map; opt; stat (not mapped RVT)",
+  "scope": "Count independent actual sequential bits and root assignment only; no area or physical claim",
+  "register_bits_per_leaf": {
+    "clk_serial": 133,
+    "clk_epoch": 222,
+    "clk_source": 363
+  },
+  "register_bits_per_leaf_total": 718,
+  "parent_total_including3status": 5747,
+  "inferred_memories": 0,
+  "json_sha256": "5cf35a54a642c6213c9a4d639cb9f94ccddc75e62c37a42e84c2c79e7d9e4195",
+  "log_sha256": "9ec38d227aa45ecda70d3e1bd34337235dee0a0196999bccc64879f47e1057f2"
+}
