@@ -19,6 +19,10 @@ set ::env(OT_IO_SKEW_INTER) 150
 # OT_IO_HOLD_SKEW (50).  Margin rule 2026-10-06 (+ clarification: 150 ps only across clock regions).
 set ot_sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}]
 set ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]
+# Outside share of the boundary (default 0.2 T = 166.667 ps of 833.333).  A ref_tile spec "io_budget" {in,out} may only
+# TIGHTEN it: tools/ref_tile/ref_tile.py exports OT_IO_IN_BUDGET_PS / OT_IO_OUT_BUDGET_PS to the route and the sign-off SDC.
+set ot_ib [expr {[info exists ::env(OT_IO_IN_BUDGET_PS)] ? $::env(OT_IO_IN_BUDGET_PS) : 166.667}]
+set ot_ob [expr {[info exists ::env(OT_IO_OUT_BUDGET_PS)] ? $::env(OT_IO_OUT_BUDGET_PS) : 166.667}]
 set ot_glob [expr {[info exists ::env(OT_REF_GLOB)] ? $::env(OT_REF_GLOB) : "*go_q*"}]
 unset_input_delay [all_inputs]
 unset_output_delay [all_outputs]
@@ -103,14 +107,14 @@ set qdm_w [sta::worst_slack_cmd max]
 set qdm_lmax [get_property $qdm_ref arrival_max_rise]
 set qdm_lmin [get_property $qdm_ref arrival_min_rise]
 puts "QDM reference pin [get_full_name $qdm_ref] clock arrival max $qdm_lmax min $qdm_lmin skew $ot_sk hold $ot_hk"
-set_input_delay [expr 166.667 + $qdm_lmax + $ot_sk] -max -clock core_clk [all_inputs -no_clocks]
+set_input_delay [expr $ot_ib + $qdm_lmax + $ot_sk] -max -clock core_clk [all_inputs -no_clocks]
 # RULE H1 (flow-hold 2026-10-07): a die link's hold budget (die clock-arrival term OT_IO_HOLD_SKEW + hold uncertainty) is
 # carried ONCE, by the SENDER's output min delay below.  The receiver's input check keeps only its own tree offset from the
 # reference register (+ hold time + uncertainty): input min = L_min - OT_IO_IN_HOLD_SKEW (default 0).  Counting the 50 ps on
 # both sides demanded ~150 ps of hold delay per link for a 50 ps skew (the FF -30..-45 ps input band of every master).
 set ot_hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]
 set_input_delay [expr $qdm_lmin - $ot_hki] -min -clock core_clk [all_inputs -no_clocks]
-set_output_delay [expr 166.667 - $qdm_lmax + $ot_sk] -max -clock core_clk [all_outputs]
+set_output_delay [expr $ot_ob - $qdm_lmax + $ot_sk] -max -clock core_clk [all_outputs]
 set_output_delay [expr 0 - $qdm_lmin - $ot_hk] -min -clock core_clk [all_outputs]
 if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
   set ot_ski [expr {[info exists ::env(OT_IO_SKEW_INTER)] ? $::env(OT_IO_SKEW_INTER) : 150}]
@@ -118,8 +122,8 @@ if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
   foreach g [split $::env(OT_IO_INTER) ","] {
     foreach p [get_ports -quiet $g] { if {[get_property $p direction] eq "input"} { lappend ot_ii $p } else { lappend ot_io $p } }
   }
-  if {[llength $ot_ii]} { set_input_delay [expr 166.667 + $qdm_lmax + $ot_ski] -max -clock core_clk $ot_ii }
-  if {[llength $ot_io]} { set_output_delay [expr 166.667 - $qdm_lmax + $ot_ski] -max -clock core_clk $ot_io }
+  if {[llength $ot_ii]} { set_input_delay [expr $ot_ib + $qdm_lmax + $ot_ski] -max -clock core_clk $ot_ii }
+  if {[llength $ot_io]} { set_output_delay [expr $ot_ob - $qdm_lmax + $ot_ski] -max -clock core_clk $ot_io }
   puts "OT_IO_INTER [llength $ot_ii] inputs [llength $ot_io] outputs at $ot_ski ps"
 }
 if {[llength [get_ports -quiet tile_id*]]} { set_false_path -from [get_ports tile_id*] }
@@ -181,6 +185,45 @@ if {$ot_rs_prop} {
 } else {
   set_input_delay  204.800 -clock hclk $ot_rs_hi
   set_output_delay 204.800 -clock hclk $ot_rs_ho
+}
+
+# r2: core inputs must use their own clock tree, rather than the global input
+# median dominated by 291 hclk capture flops. Keep the same 90/50 ps skew
+# envelope and all cross-clock checks. Every selected pin is checked against
+# the actual owning clock's register census; swapped domains fail closed.
+proc ot_rs_owned_ref {clock_name ports} {
+  set owned [dict create]
+  foreach pin [all_registers -clock $clock_name -clock_pins] {
+    dict set owned [get_full_name $pin] 1
+  }
+  set candidates {}
+  foreach pin [ot_pf_clks $ports] {
+    if {![dict exists $owned [get_full_name $pin]]} {
+      error "QKD_RETURN_DOMAIN: boundary capture [get_full_name $pin] is not owned by $clock_name"
+    }
+    set a [get_property $pin arrival_max_rise]
+    set b [get_property $pin arrival_min_rise]
+    if {![string is double -strict $a] || ![string is double -strict $b]} {
+      error "QKD_RETURN_DOMAIN: missing propagated clock arrival $clock_name [get_full_name $pin]"
+    }
+    lappend candidates [list $a $b [get_full_name $pin]]
+  }
+  if {![llength $candidates]} {error "QKD_RETURN_DOMAIN: no owned boundary captures for $clock_name"}
+  set m [lindex [lsort -real -index 0 $candidates] [expr {[llength $candidates]/2}]]
+  puts "QKD_RETURN_DOMAIN $clock_name n=[llength $candidates] max=[lindex $m 0] min=[lindex $m 1] reference=[lindex $m 2]"
+  return [lrange $m 0 1]
+}
+set ot_rs_ci [get_ports {expected_put expected_sector[*] expected_epoch[*] expected_layer[*] rsi}]
+set ot_rs_co [get_ports {actual_valid actual_sector[*] actual_epoch[*] actual_layer[*] actual_data[*] fault_core}]
+if {$ot_rs_prop} {
+  lassign [ot_rs_owned_ref core_clk $ot_rs_ci] ot_rs_cmax ot_rs_cmin
+  unset_input_delay $ot_rs_ci
+  unset_output_delay $ot_rs_co
+  set ot_rs_cb [expr {0.2*[get_property [get_clocks core_clk] period]}]
+  set_input_delay [expr {$ot_rs_cb+$ot_rs_cmax+$ot_rs_sk}] -max -clock core_clk $ot_rs_ci
+  set_input_delay [expr {$ot_rs_cmin-$ot_rs_hki}] -min -clock core_clk $ot_rs_ci
+  set_output_delay [expr {$ot_rs_cb-$ot_rs_cmax+$ot_rs_sk}] -max -clock core_clk $ot_rs_co
+  set_output_delay [expr {-$ot_rs_cmin-$ot_rs_hk}] -min -clock core_clk $ot_rs_co
 }
 
 set_propagated_clock [all_clocks]

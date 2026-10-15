@@ -69,4 +69,43 @@ if {$ot_rs_prop} {
   set_input_delay  204.800 -clock hclk $ot_rs_hi
   set_output_delay 204.800 -clock hclk $ot_rs_ho
 }
+
+# r2: core inputs must use their own clock tree, rather than the global input
+# median dominated by 291 hclk capture flops. Keep the same 90/50 ps skew
+# envelope and all cross-clock checks. Every selected pin is checked against
+# the actual owning clock's register census; swapped domains fail closed.
+proc ot_rs_owned_ref {clock_name ports} {
+  set owned [dict create]
+  foreach pin [all_registers -clock $clock_name -clock_pins] {
+    dict set owned [get_full_name $pin] 1
+  }
+  set candidates {}
+  foreach pin [ot_pf_clks $ports] {
+    if {![dict exists $owned [get_full_name $pin]]} {
+      error "QKD_RETURN_DOMAIN: boundary capture [get_full_name $pin] is not owned by $clock_name"
+    }
+    set a [get_property $pin arrival_max_rise]
+    set b [get_property $pin arrival_min_rise]
+    if {![string is double -strict $a] || ![string is double -strict $b]} {
+      error "QKD_RETURN_DOMAIN: missing propagated clock arrival $clock_name [get_full_name $pin]"
+    }
+    lappend candidates [list $a $b [get_full_name $pin]]
+  }
+  if {![llength $candidates]} {error "QKD_RETURN_DOMAIN: no owned boundary captures for $clock_name"}
+  set m [lindex [lsort -real -index 0 $candidates] [expr {[llength $candidates]/2}]]
+  puts "QKD_RETURN_DOMAIN $clock_name n=[llength $candidates] max=[lindex $m 0] min=[lindex $m 1] reference=[lindex $m 2]"
+  return [lrange $m 0 1]
+}
+set ot_rs_ci [get_ports {expected_put expected_sector[*] expected_epoch[*] expected_layer[*] rsi}]
+set ot_rs_co [get_ports {actual_valid actual_sector[*] actual_epoch[*] actual_layer[*] actual_data[*] fault_core}]
+if {$ot_rs_prop} {
+  lassign [ot_rs_owned_ref core_clk $ot_rs_ci] ot_rs_cmax ot_rs_cmin
+  unset_input_delay $ot_rs_ci
+  unset_output_delay $ot_rs_co
+  set ot_rs_cb [expr {0.2*[get_property [get_clocks core_clk] period]}]
+  set_input_delay [expr {$ot_rs_cb+$ot_rs_cmax+$ot_rs_sk}] -max -clock core_clk $ot_rs_ci
+  set_input_delay [expr {$ot_rs_cmin-$ot_rs_hki}] -min -clock core_clk $ot_rs_ci
+  set_output_delay [expr {$ot_rs_cb-$ot_rs_cmax+$ot_rs_sk}] -max -clock core_clk $ot_rs_co
+  set_output_delay [expr {-$ot_rs_cmin-$ot_rs_hk}] -min -clock core_clk $ot_rs_co
+}
 set_input_transition 150 [all_inputs -no_clocks]

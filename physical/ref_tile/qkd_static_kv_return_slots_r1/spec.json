@@ -61,9 +61,9 @@
  },
  "slot_change_request": "Q-KVSYS-DIE v1.3 OFFICIAL static_io slot 129.6x216 (main a5da000bc, 639 pins; native_return_{WS,WN,ES,EN}_{0..31} = 128 homes): no-credit successor of historical qkd_static_kv_return_cdc (FIFO ready-gating, pin file removed). S-face pll_hbm/ck/hrst/rsi snapped to the ASAP7 M5 track lattice (.060+.192k: 25.98/51.90/77.82/103.74; the published 25.896.. were 36 nm off-track = DRT-0255 class, same defect as the writer r2 route crash).",
  "job": {
-  "owner": "Claude:el1014-qwen-kvsys-elements",
-  "branch": "claude/qwen-kvsys-el-r5-1015",
-  "tag": "r1",
+  "owner": "Codex:takeover_qwen_elements_0757",
+  "branch": "codex/takeover-qvm-bank-0808",
+  "tag": "r2",
   "purpose": "Static KV return ring (no credits/ready): both ring addresses advance on compiler slots (compiled_hbm_put from the controller read calendar on pll_hbm 1024 ps; expected_put on ck 833 ps), DEPTH 8 x 288-bit storage, per-entry toggle publication/consumption synchronised as fault checks only (never stall). Two async roots constrained like the closed CDC wleaf (no false paths on crossings).",
   "benches": [
    {
@@ -95,7 +95,8 @@
    "results/arch/qwen_split_1014/kvsys_v1_3_candidate/static_io"
   ],
   "views_to": "physical/ref_tile/qkd_static_kv_return_slots_r1/views",
-  "record_to": "results/rtl/ref_tile/qkd_static_kv_return_slots_r1"
+  "record_to": "results/rtl/ref_tile/qkd_static_kv_return_slots_r1",
+  "structural_change": "Correct actual per-domain core boundary clock reference: old global input median379.5ps from HBM-domain captures was applied to143.5ps core launch, forcing13 hold buffers. New core ref checks real owning clock registers; retains all90/50skew, cross-clock constraints, same RTL/outline/edges."
  },
  "macros": [],
  "children": [],
@@ -111,5 +112,13 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/qwen_split_1014/kvsys_native_audit_1015/static_writer_return_0810.json",
+  "cell": "qkd_static_kv_return_slots",
+  "launch_ps": 268.8,
+  "capture_ps": 131.6,
+  "fix": "Correct actual per-domain core boundary clock reference: old global input median379.5ps from HBM-domain captures was applied to143.5ps core launch, forcing13 hold buffers. New core ref checks real owning clock registers; retains all90/50skew, cross-clock constraints, same RTL/outline/edges."
  }
 }
