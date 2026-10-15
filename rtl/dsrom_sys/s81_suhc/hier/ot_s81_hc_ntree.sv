@@ -130,6 +130,59 @@ module ot_s81_hc_ctfx_nt #(
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
+// LOCAL SPLIT (S-NORM 2026-10-15, cth_nt LOCAL_SPLIT 1): the measured ctfx_nt S face carries THREE 1,128-bit registered
+// boundaries in one 115-um pin span (fdx M5 + fdx_local M3 out, fd_in N): every routed attempt overflowed GRT there (v5
+// BUFx2 pads 26,013, v6 HB4 pads 6,874 overflow, all inside x 227-343 / y 0-11).  The fdx_local re-register (d / v of
+// g_local_capture) is the SAME register moved into its own strip, so the pin span of each strip carries one bus per face:
+//   ot_s81_hc_ctfxs_nt = ot_s81_hc_ctfx_nt without the local outputs (synthesis drops d / v; the ctq replica stays);
+//   ot_s81_hc_ctfl_nt  = fv_local / fdx_local <= fv / fdx, reset from its own rst_in pin capture (rst_c + 1 = the old rr).
+// Cycle-identical (same register count on every path, 0 added cycles); costs one 1,135-bit strip of area.
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_s81_hc_ctfxs_nt #(
+    parameter integer NG = 256, D = 5120, S_RD = 2, ML = 5, AL = 4, CHAIN_STEP = AL
+) (
+    input  wire               clk,
+    input  wire               rst_in,
+    input  wire [S_RD+4:0]    fv_in,
+    input  wire [FXW-1:0]     fd_in,
+    output wire [S_RD+4:0]    fv,
+    output wire [FXW-1:0]     fdx,
+    input  wire [7:0]         tid,
+    input  wire [63:0]        cs_n,
+    input  wire [63:0]        cs_s,
+    input  wire [DLW-1:0]     dl_in,
+    output wire [DLW-1:0]     dl_out,
+    input  wire [32:0]        ul_in,
+    output wire [32:0]        ul_out
+);
+    localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD * 512, DLW = 2 * 137 + 1;
+    wire [S_RD+4:0] fv_local_nc;
+    wire [FXW-1:0]  fdx_local_nc;
+    ot_s81_hc_ctfx_nt #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .LOCAL_EPOCH(1)) u_x (
+        .clk(clk), .rst_in(rst_in), .fv_in(fv_in), .fd_in(fd_in), .fv(fv), .fdx(fdx), .fv_local(fv_local_nc),
+        .fdx_local(fdx_local_nc), .tid(tid), .cs_n(cs_n), .cs_s(cs_s), .dl_in(dl_in), .dl_out(dl_out), .ul_in(ul_in),
+        .ul_out(ul_out));
+endmodule
+
+module ot_s81_hc_ctfl_nt #(
+    parameter integer S_RD = 2
+) (
+    input  wire               clk,
+    input  wire               rst_in,
+    input  wire [S_RD+4:0]    fv,
+    input  wire [FXW-1:0]     fdx,
+    output reg  [S_RD+4:0]    fv_local,
+    output reg  [FXW-1:0]     fdx_local
+);
+    localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD * 512;
+    reg rr;
+    always @(posedge clk) rr <= rst_in;
+    always @(posedge clk or negedge rr)
+        if (!rr) fv_local <= 0; else fv_local <= fv;
+    always @(posedge clk) fdx_local <= fdx;
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
 // Bottom collector of chain C, split by BANK HALF into two hardened leaves with their own clock roots
 // (el1014-s81-norm-tree r2, 2026-10-14): the single-root collector ot_s81_hc_cnclt measured 19,155 / 16,082 / 19,155
 // sinks (C 0 / 1 / 2) with TT insertion 407.0 / 365.0 / 362.7 ps > 300 (clock rule REFUSE).  Every node the chain owns
@@ -644,7 +697,7 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cth_nt #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, WIN = 2, WOUT = 2, ML = 5, AL = 4,
-    parameter integer RLY = 2, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0
+    parameter integer RLY = 2, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0, LOCAL_SPLIT = 1
 ) (
     input  wire                       clk,
     input  wire                       rst_in,
@@ -721,9 +774,17 @@ module ot_s81_hc_cth_nt #(
         .clk(clk), .rst_in(rst_in), .rst_c(rst_c), .fv_in(fv_in), .fd_in(fd_in), .fvm(fvm), .fdm(fdm));
     wire [DLW-1:0] dl_m;
     wire [32:0]    ul_m;
-    ot_s81_hc_ctfx_nt #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .LOCAL_EPOCH(CNL_PIN)) u_fx (
-        .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx), .fv_local(fv_local), .fdx_local(fdx_local),
-        .tid(tid), .cs_n(cs[63:0]), .cs_s(cs[127:64]), .dl_in(dl_in), .dl_out(dl_m), .ul_in(ul_m), .ul_out(ul_out));
+    generate if (LOCAL_SPLIT && CNL_PIN) begin : g_fxs
+        ot_s81_hc_ctfxs_nt #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP)) u_fx (
+            .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx),
+            .tid(tid), .cs_n(cs[63:0]), .cs_s(cs[127:64]), .dl_in(dl_in), .dl_out(dl_m), .ul_in(ul_m), .ul_out(ul_out));
+        ot_s81_hc_ctfl_nt #(.S_RD(S_RD)) u_fl (
+            .clk(clk), .rst_in(rst_c), .fv(fv), .fdx(fdx), .fv_local(fv_local), .fdx_local(fdx_local));
+    end else begin : g_fx
+        ot_s81_hc_ctfx_nt #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .LOCAL_EPOCH(CNL_PIN)) u_fx (
+            .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx), .fv_local(fv_local), .fdx_local(fdx_local),
+            .tid(tid), .cs_n(cs[63:0]), .cs_s(cs[127:64]), .dl_in(dl_in), .dl_out(dl_m), .ul_in(ul_m), .ul_out(ul_out));
+    end endgenerate
     ot_s81_hc_ctfs_nt #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .RLY(RLY)) u_fs (
         .clk(clk), .rst_in(rst_c), .rst_out(rst_out), .fvm(fvm), .fdm(fdm), .fv_out(fv_out), .fd_out(fd_out),
         .dl_in(dl_m), .dl_out(dl_out), .ul_in(ul_in), .ul_out(ul_m));

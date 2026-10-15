@@ -144,6 +144,9 @@ TILES.update({
     "ot_s81_hc_cncla":   dict(src=_NT, routed=[dict(C=0), dict(C=1), dict(C=2)], mut=("pi <= {5'd0, i_q}; ex <= ex_w;", "pi <= {5'd0, i_q}; ex <= ex_w ^ (1 << 29);")),
     "ot_s81_hc_cnclb":   dict(src=_NT, routed=[dict(C=0), dict(C=1), dict(C=2)], mut=("always @(posedge sk) ex <= ex_w;", "always @(posedge sk) ex <= ex_w ^ (1 << 29);")),
     "ot_s81_hc_cnrsq":   dict(src=_NT, routed=[{}], mut=("else ngo <= f_fv[S_RD + 1];", "else ngo <= 1'b0;")),
+    # LOCAL SPLIT (S-NORM 10-15): the ctfx_nt local re-register moved into its own strip
+    "ot_s81_hc_ctfxs_nt": dict(src=_NT, routed=[dict(CHAIN_STEP=6)], mut=(".fv(fv), .fdx(fdx), .fv_local(fv_local_nc)", ".fv(fv), .fdx(fdx ^ (1128'd1 << 119)), .fv_local(fv_local_nc)")),
+    "ot_s81_hc_ctfl_nt":  dict(src=_NT, routed=[{}], mut=("always @(posedge clk) fdx_local <= fdx;", "always @(posedge clk) fdx_local <= fdx ^ (1128'd1 << 119);")),
 })
 TILE_RE = re.compile(r"^HCTILE (\w+) (\S+) ?(.*)$", re.M)
 
