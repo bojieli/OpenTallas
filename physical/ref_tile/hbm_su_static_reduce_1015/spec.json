@@ -51,7 +51,7 @@
   "peak_ram_gb": 24,
   "period_ps": 833.333,
   "pin_h": "M4",
-  "pin_v": "M3 M5",
+  "pin_v": "M5",
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
@@ -63,7 +63,7 @@
   "owner": "Codex:HBM-SU-structural",
   "branch": "codex/hbm-su-reducer-r3-1320",
   "tag": "r4",
-  "purpose": "r4 structural successor to r3: adder DRST0 resets valid only, unconditional tag/address/data pipes remove measured1263-load reset/enable cone; one local reset relay and registered ingress remain. LAT9/RAW10 and exact arithmetic/SRAMs unchanged. Route AND signoff833.333ps; parent serial900/stream1200 phase integration remains OPEN. Exact suite, mutants and CTS required.",
+  "purpose": "r4 structural successor to r3: adder DRST0 resets valid only, unconditional tag/address/data pipes remove measured1263-load reset/enable cone; one local reset relay and registered ingress remain. LAT9/RAW10 and exact arithmetic/SRAMs unchanged. Route AND signoff833.333ps; parent serial900/stream1200 phase integration remains OPEN. Exact suite, mutants and CTS required. Exact die-assigned port windows from H-DIE0d0068a17 (parent-local17.28,21.6; final peer paths OPEN).",
   "views_to": "physical/ref_tile/hbm_su_static_reduce_1015/views",
   "record_to": "results/arch/hbm_su_f2_static_1014/reduction/physical",
   "benches": [
@@ -90,13 +90,74 @@
      "verilator"
     ]
    }
-  ]
+  ],
+  "auto_merge": false,
+  "hold_merge": "Native parent phase, actual peer paths and production cost OPEN."
  },
  "outline": {
   "w": 216.0,
   "h": 151.2
  },
  "structural_change": "r4 structural successor to r3: adder DRST0 resets valid only, unconditional tag/address/data pipes remove measured1263-load reset/enable cone; one local reset relay and registered ingress remain. LAT9/RAW10 and exact arithmetic/SRAMs unchanged. Route AND signoff833.333ps; parent serial900/stream1200 phase integration remains OPEN. Exact suite, mutants and CTS required.",
+ "pin_ranges": {
+  "clk": [
+   107.904,
+   108.0
+  ],
+  "rst_n": [
+   108.0,
+   108.096
+  ],
+  "cmd_valid": [
+   70.896,
+   70.992
+  ],
+  "cmd_op": [
+   70.992,
+   71.28
+  ],
+  "cmd_a": [
+   71.28,
+   72.24
+  ],
+  "cmd_b": [
+   72.24,
+   73.2
+  ],
+  "cmd_dst": [
+   73.2,
+   74.16
+  ],
+  "operand_fp32": [
+   74.16,
+   77.232
+  ],
+  "cmd_tag": [
+   77.232,
+   80.304
+  ],
+  "scalar_valid": [
+   71.664,
+   71.76
+  ],
+  "scalar_tag": [
+   71.76,
+   74.832
+  ],
+  "scalar_fp32": [
+   74.832,
+   77.904
+  ],
+  "scalar_bf16": [
+   77.904,
+   79.44
+  ],
+  "fault": [
+   79.44,
+   79.536
+  ]
+ },
+ "slot_change_request": "H-DIE typed diagnostic sucore_<q>_reducer slots at17.28,21.6 from0d0068a17; exact pin ranges results/arch/hbm_die_v15/reducer_leaf_pins_1319.json; R4 source-ref refresh pending; phase and full qcore fit OPEN.",
  "children": [],
  "inter": [],
  "io_flop_at_pins": {
