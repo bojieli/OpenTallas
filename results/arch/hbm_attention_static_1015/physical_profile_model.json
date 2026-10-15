@@ -55,7 +55,8 @@
     ],
     "macro_area_total_um2": 418683.12912,
     "source_legacy_NL4_256macro_area_um2": 482236.416,
-    "source_note": "Only256/1024x256 real library masters exist; macro storage area is smaller than previous68x256 allocation but placement and route remain unqualified."
+    "source_note": "Only256/1024x256 real library masters exist; macro storage area is smaller than previous68x256 allocation but placement and route remain unqualified.",
+    "instances_per_full_H16_engine": 34
   },
   "headgroup_source_inventory": {
     "functional_full_tile_count": 32,
@@ -64,7 +65,47 @@
     "heads_per_hard_group": 1,
     "full_H16_headgroups": 512,
     "mapping_to_quadrant_half_parents": "pending exact H-DIE instance inventory; no additional physical replication authorized",
-    "inflight_6656d5af7": "HG4 functional organization; proves arithmetic/control only"
+    "inflight_6656d5af7": "HG4 functional organization; proves arithmetic/control only",
+    "quad_heads": {
+      "0": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "2": [
+        2,
+        3,
+        6,
+        7
+      ],
+      "8": [
+        8,
+        9,
+        12,
+        13
+      ],
+      "10": [
+        10,
+        11,
+        14,
+        15
+      ]
+    },
+    "hard_quads_per_half": 2,
+    "hard_quads_per_pair": 4,
+    "hard_quads_total": 128,
+    "baseline_hard_quad": {
+      "master": "ot_attn_tile_m6h1q",
+      "lef": "physical/hbm_attn_tile_r/quad_b_tc/04424cd9f_pka/view/ot_attn_tile_m6h1q.lef",
+      "lef_sha256": "ac510d59eafc85b5b516f40e21227e532fbe63527e23d772e5ebc357cf6b89f4",
+      "bbox_um": [
+        514.89,
+        562.95
+      ],
+      "qualification": "Current baseline hard macro; exactnewnativepipeline/profile binding stillopen"
+    },
+    "standalone_HG1_views": "No substitution authority; geometry must match exact source/view hash and area, not arbitrary fmax variant"
   },
   "functional_native_boundary": {
     "source": "rtl/hdc/v41x/static/ot_hbm_attention_physical_static_engine.sv",
@@ -89,5 +130,6 @@
     "clock_sink_count": null,
     "candidate_bbox": null,
     "qualification": false
-  }
+  },
+  "system_geometry_direction": "User requests whole-system grouping/rearrangement; historical54child translations onlylocalbaseline. Newowner /root/geometry_hbm_system"
 }
