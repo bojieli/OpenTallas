@@ -28,7 +28,9 @@
       "exit": 0,
       "scope": "Current96SRAM production candidate elaboration only; full simulation/timing unqualified"
     },
-    "lint_log_sha256": "cccbf22c4a24518cfeaabe7d80a2b99d8433273ce61419cc381c180fce80a6dc"
+    "lint_log_sha256": "cccbf22c4a24518cfeaabe7d80a2b99d8433273ce61419cc381c180fce80a6dc",
+    "complete_source_manifest": "programmed_engine.manifest.json",
+    "source_manifest_entries": 36
   },
   "sources_sha256": {
     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_static.sv": "863b63106f0963a85365e4a26a31ca2c1bbcf22a6c6fe9088a5d067d139e1ce8",
