@@ -3471,6 +3471,10 @@ def stn_dims(lanes, horiz):
     """station size: pins of every lane (fclk + data) on the input and the output face; ~0.7 um2 a stage bit"""
     pins = sum(w + 1 for w in lanes)
     bits = sum(lanes)
+    if STN_FOOTPRINTS and len(lanes) == 1 and ('h' if horiz else 'v', bits) in STN_FOOTPRINTS:
+        # --stn-footprints (S-DIE r12 grant 10-15): FILL-S measured recipe-2 content > util 0.55 of the generator slot;
+        # depth-only growth (flow direction), every data-pin coordinate unchanged
+        return STN_FOOTPRINTS[('h' if horiz else 'v', bits)]
     face = face_need([b for w in lanes for b in (1, w)])
     if STN_WIDE_SQUARE and bits >= 1000:
         # S-BIND r6 --stn-wide-square: a >= 1,000-b station (the packed 1,102-b static x lane) as a square of the same
@@ -3497,6 +3501,102 @@ def relay_dims(bits, horiz):
     if RLY_REAL_DIMS and bits in (266, 283):
         return 34.56, 30.24
     return stn_dims([bits], horiz)
+
+
+def _split_multi_lane_stations(m):
+    """--stn70-split (coordinator 10-15, FILL-S finding 3): a dsfd_stn{h,v}_70x{2,3,4} carries K INDEPENDENT forwarded
+    lanes (fi_k/fo_k each); a hardened tile cannot hold K forwarded roots.  Each becomes K instances of the 70x1 master
+    (hardened once), stacked across the flow direction at the original site (else the nearest legal box), lane k ->
+    sub-instance k port 0.  Same stage count, same wiring order; only the cell boundary changes."""
+    pat = re.compile(r'dsfd_stn([hv])_70x([234])$')
+    victims = [it for it in m['insts'] if pat.match(it.master)]
+    if not victims:
+        return
+    keep = [it for it in m['insts'] if not pat.match(it.master)]
+    m['insts'][:] = keep
+    P = Placer(m)
+    W, H = DIE
+    ren = {}
+    rec = []
+    for it in victims:
+        hv, K = pat.match(it.master).groups()
+        K = int(K)
+        horiz = hv == 'h'
+        w1, h1 = stn_dims([70], horiz)
+        subs = []
+        for k in range(K):
+            if horiz:      # flow W->E: stack in y
+                x0, y0 = it.x, up(it.y + k * (h1 + 0.864 + SHAVE), GY)
+            else:
+                x0, y0 = up(it.x + k * (w1 + 0.864 + SHAVE), GX), it.y
+            box = (x0, y0, x0 + w1, y0 + h1)
+            if not (P.occ.free(box, 0.432) and box[2] <= W and box[3] <= H):
+                pl = P.near(x0 + w1 / 2, y0 + h1 / 2, w1, h1, [(0.0, 0.0, W, H)], horiz=not horiz, span=120.0, rows=12)
+                assert pl, ('--stn70-split: no box for lane', it.name, k)
+                x0, y0 = pl
+            sub = P.add(Inst(f'{it.name}_k{k}', f'dsfd_stn{hv}_70x1', x0, y0, w1, h1, it.orient, kind=it.kind,
+                             region=it.region, domain=it.domain, power_w=it.power_w / K))
+            subs.append(sub)
+            ren[it.name, k] = sub.name
+        rec.append(dict(inst=it.name, master=it.master, lanes=K, at=[it.x, it.y], subs=[s_.name for s_ in subs],
+                        moved=[[round(s_.x - it.x, 3), round(s_.y - it.y, 3)] for s_ in subs]))
+    vic = {it.name for it in victims}
+    lane_re = re.compile(r'^(fi|di|fo|do|fn)(\d+)(.*)$')
+    def _ep(inst, port):
+        if inst not in vic:
+            return (inst, port)
+        mm = lane_re.match(port)
+        assert mm, ('--stn70-split: unexpected port', inst, port)
+        return (ren[inst, int(mm.group(2))], mm.group(1) + '0' + mm.group(3))
+    for i_, b_ in enumerate(m['buses']):
+        if any(e_[0] in vic for e_ in b_[3]):
+            m['buses'][i_] = type(b_)(list(b_[:3]) + [[_ep(*e_) for e_ in b_[3]]] + list(b_[4:]))
+    for key in ('chain_tail',):
+        for name_, tail in list(m.get(key, {}).items()):
+            if tail and tail[0] in vic:
+                mm = lane_re.match(tail[1])
+                k = int(mm.group(2)) if mm else 0
+                m[key][name_] = tuple([ren[tail[0], k]] + [lane_re.sub(lambda q: q.group(1) + '0' + q.group(3), t_)
+                                                            if isinstance(t_, str) else t_ for t_ in tail[1:]])
+    m['stn70_split'] = rec
+    m.setdefault('notes', []).append('--stn70-split: %d multi-lane 70-b stations -> %d x dsfd_stn*_70x1'
+                                     % (len(victims), sum(r_['lanes'] for r_ in rec)))
+
+
+def _station_pin_layers(M):
+    """--stn-pin-alt (coordinator 10-15 grant): station faces denser than 12 b/um/layer alternate layers bit by bit at
+    the SAME coordinates: N/S faces M5 <-> M3, W/E faces M4 <-> M6 (M6 PORT-only pins, no M6 routing in the tile)."""
+    alt = {'M5': 'M3', 'M4': 'M6'}
+    out = {}
+    for name, Mx in M.items():
+        if not name.startswith(('dsfd_stn', 'dsfd_hstn')):
+            continue
+        rects = pin_rects(Mx, 1, {})
+        dens = defaultdict(int)
+        for pn, ly, r in rects:
+            face = 'W' if r[0] <= 1e-6 and r[2] < Mx.w / 2 else 'E' if r[2] >= Mx.w - 1e-6 else 'S' if r[1] <= 1e-6 else 'N'
+            dens[(face, ly)] += 1
+        worst = max((n / (Mx.h if f in 'EW' else Mx.w), f, ly) for (f, ly), n in dens.items())
+        if worst[0] <= 12.0:
+            continue
+        byface = defaultdict(list)
+        for pn, ly, r in rects:
+            face = 'W' if r[0] <= 1e-6 and r[2] < Mx.w / 2 else 'E' if r[2] >= Mx.w - 1e-6 else 'S' if r[1] <= 1e-6 else 'N'
+            byface[face].append([pn, ly, r])
+        for face, lst in byface.items():
+            lst.sort(key=lambda q: (q[2][1] + q[2][3]) if face in 'EW' else (q[2][0] + q[2][2]))
+            for i, q in enumerate(lst):
+                if i % 2 and q[1] in alt and len(lst) > 8:
+                    q[1] = alt[q[1]]
+        ports = defaultdict(list)
+        for lst in byface.values():
+            for pn, ly, r in lst:
+                ports[pn.split('[')[0]].append((pn, ly, r))
+        order = list(Mx.order)
+        Mx.ports = {p_: ('rects', sorted(v, key=lambda q: int(q[0].split('[')[1][:-1]))) for p_, v in ports.items()}
+        Mx.order = [p_ for p_ in order if p_ in Mx.ports] + [p_ for p_ in Mx.ports if p_ not in order]
+        out[name] = round(worst[0], 2)
+    return out
 
 
 def stn_master(lanes, horiz):
@@ -4467,6 +4567,8 @@ def build_r8(variant=None):
                                        collective_master=hub['collective'].master if 'collective' in hub else None)
     m['buses'] = []
     buses_r8(m)
+    if STN70_SPLIT:
+        _split_multi_lane_stations(m)
     if RTL_HUB_WIDTHS and 'wfc' in hub and hub['wfc'].master in WFC_FIELD_SPLIT:
         _split_fields(m, hub['wfc'].name, (WFC_FIELD_SPLIT_PRICED if WFC_PRICED else WFC_FIELD_SPLIT)[hub['wfc'].master])
     return m
@@ -5419,6 +5521,10 @@ def _apply_pin_overrides(Mx, it):
         PIN_OVERRIDES_APPLIED[(Mx.name, port)] = dict(inst=it.name, cand=r['cand'], face=f2, old=round(c, 3), new=round(c2, 3))
 
 
+LKCK_WIRE = False               # --lkck-wire (coordinator 10-15, FILL-S): link forwarded-clock feedthrough = die-top wire
+STN70_SPLIT = False             # --stn70-split (coordinator 10-15): dsfd_stn*_70xK (K independent forwarded lanes) -> K x 70x1
+STN_FOOTPRINTS = {}             # --stn-footprints DIR: granted station outlines (FILL-S specs slot_change_request), (h|v, bits)
+STN_PIN_ALT = False             # --stn-pin-alt: station faces > 12 b/um/layer alternate layers at the same coordinates
 HUB_LAYOUT = None               # --hub-layout FILE: block-level hub floorplan (GLOBAL-FP-S SA_2x2_RP adoption, S-DIE r12)
 RETURN_TREES = None             # --return-trees FILE: frame -> logical return tree (half, tier) re-partition (same sizes)
 MIX4_SLOT = None                # --mix4-slot X,Y,W,H: Engram MIX4 home reservation (screen; real master pins pending sizing)
@@ -7915,7 +8021,7 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
                 CH8.bus(f'{nm}ts_o{lo}', 'lane', hi - lo + 1, [(it.name, 'do0'), (lk.name, f'tx[{lo}:{hi}]')])
             ckd = (txs[-1][0].name, 'fo0')
             rxs = _split_stations(P, CH8, lk, nm, 'rx', allc, lx, side)
-        if LINK_FIX:      # the macro's clock source stands on its ck face: a forwarded-clock relay at the ck pin
+        if LINK_FIX and not LKCK_WIRE:      # the macro's clock source stands on its ck face: a forwarded-clock relay at the ck pin
             ck = P.add(link_ck_relay(m, P, lk, cor, nm, next(it for it in m['insts'] if it.name == ckd[0])))
             CH8.bus(f'{nm}_ckf', 'fclk', 1, [ckd, (ck.name, 'fi')])
             ckd = (ck.name, 'fo')
@@ -8544,19 +8650,30 @@ def _lay_fixed(Mx, face, ports, layer, pitch, fixed, gap=0.96, pitch_of=None):
     rest = [(n_, b) for n_, b in ports if n_ not in fixed]
     pof = pitch_of or {}
     tot = sum(sp(b, pof.get(n_, pitch)) for n_, b in rest) + gap * max(0, len(rest) - 1)
-    pos = max(2 * p + 0.2, (L - tot - sum(r1 - r0 + gap for r0, r1 in resv)) / 2)
-    placed = {}
-    for name, b in rest:
-        w_ = sp(b, pof.get(name, pitch))
-        for r0, r1 in sorted(resv):
-            if pos < r1 + gap and pos + w_ > r0 - gap:
-                pos = r1 + gap
-        assert pos + w_ <= L - 2 * p, (Mx.name, face, name, 'no room beside the pinned groups',
-                                       dict(face_um=round(L, 3), demand_um=round(tot + sum(r1 - r0 + gap for r0, r1 in resv), 3),
-                                            pinned=[(n_, fixed[n_]) for n_, _ in ports if n_ in fixed],
-                                            ports=[(n_, b_, pof.get(n_, pitch)) for n_, b_ in ports]))
-        placed[name] = (pos + w_ / 2, pof.get(name, pitch))
-        pos += w_ + gap
+    centred = max(2 * p + 0.2, (L - tot - sum(r1 - r0 + gap for r0, r1 in resv)) / 2)
+
+    def pack(pos):
+        placed = {}
+        for name, b in rest:
+            w_ = sp(b, pof.get(name, pitch))
+            for r0, r1 in sorted(resv):
+                if pos < r1 + gap and pos + w_ > r0 - gap:
+                    pos = r1 + gap
+            if pos + w_ > L - 2 * p:
+                return None, name
+            placed[name] = (pos + w_ / 2, pof.get(name, pitch))
+            pos += w_ + gap
+        return placed, None
+    placed, bad_ = pack(centred)
+    if placed is None:
+        # S-BIND r6 (bind15 dsfd_sstn_e0c0sinf_x2 N face: 113.6 of 172.8 um needed, but the centred start pushed xa past
+        # the pinned x2 relay group and left xb no room): when the centred packing fails, first-fit from the face's
+        # left margin; a layout that already fits keeps its centred pins
+        placed, bad_ = pack(2 * p + 0.2)
+    assert placed is not None, (Mx.name, face, bad_, 'no room beside the pinned groups',
+                                dict(face_um=round(L, 3), demand_um=round(tot + sum(r1 - r0 + gap for r0, r1 in resv), 3),
+                                     pinned=[(n_, fixed[n_]) for n_, _ in ports if n_ in fixed],
+                                     ports=[(n_, b_, pof.get(n_, pitch)) for n_, b_ in ports]))
     for name, b in ports:           # port order kept (pin_rects / LEF order)
         c_, pt_ = fixed[name] if name in fixed else placed[name]
         Mx.face(name, b, face, layer, c_, pt_)
@@ -8692,6 +8809,8 @@ def masters_r8(m, k=1):
             m['_laid_all'][mst] = Mx
         if CK_RULE:
             _ck_rule(Mx)
+    if STN_PIN_ALT and k == 1:
+        m['stn_pin_alt'] = _station_pin_layers(M)
     if k > 1:
         for name, ports in real_ports_r8().items():
             M[name] = _spread_ports(_real_master_bundled(REAL_FILES[name], k, ports), k)
@@ -9921,6 +10040,10 @@ def die_options(ap):
     ap.add_argument('--static-seams', action='store_true', help='S-DIE r11 2026-10-15: static VM<->collective seam (t_vm 2204, t_crq 15, t_crs 513), drop vm.t_collective/tcs credit and hc_s.y_rdy, add collective.t_hc_tag -> hc_s.y_tag')
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
     ap.add_argument('--mix4-slot', help='X,Y,W,H um: Engram MIX4 home reservation (screen)')
+    ap.add_argument('--lkck-wire', action='store_true', help='link forwarded-clock feedthrough as die-top wire (no dsfd_lkck)')
+    ap.add_argument('--stn70-split', action='store_true', help='dsfd_stn*_70xK -> K x dsfd_stn*_70x1')
+    ap.add_argument('--stn-footprints', help='DIR of FILL-S station specs: granted slot_change_request outlines')
+    ap.add_argument('--stn-pin-alt', action='store_true', help='station faces > 12 b/um/layer alternate M5/M3 (N/S), M4/M6 (W/E)')
     ap.add_argument('--hub-layout', help='JSON: block-level hub floorplan (blocks{name:[x,y,w,h,reshape]}, corridor, e_stack)')
     ap.add_argument('--return-trees', help='JSON: return-tree re-partition (trees[{half,tier,roots}])')
     ap.add_argument('--pin-overrides', help='S-DIE r11: JSON (opentallas.s81.pin_overrides.v1) of adopted die pin re-assignments '
@@ -9960,7 +10083,23 @@ def apply_options(a):
     BF_X2_PAIR = bool(getattr(a, 'bf_x2_pair', False)) and BF_X2_STATIC
     LSW = X0B + X1B + CCB + (X2B if BF_X2_STATIC else 0)
     MIX4_SLOT = tuple(float(v) for v in a.mix4_slot.split(',')) if getattr(a, 'mix4_slot', None) else None
-    global HUB_LAYOUT, RETURN_TREES
+    global HUB_LAYOUT, RETURN_TREES, LKCK_WIRE, STN70_SPLIT, STN_FOOTPRINTS, STN_PIN_ALT
+    LKCK_WIRE = bool(getattr(a, 'lkck_wire', False))
+    STN70_SPLIT = bool(getattr(a, 'stn70_split', False))
+    STN_PIN_ALT = bool(getattr(a, 'stn_pin_alt', False))
+    STN_FOOTPRINTS = {}
+    if getattr(a, 'stn_footprints', None):
+        dp_ = Path(a.stn_footprints); dp_ = dp_ if dp_.is_absolute() else ROOT / dp_
+        for f_ in sorted(dp_.glob('*.json')):
+            sp_ = json.loads(f_.read_text())
+            if not sp_.get('slot_change_request'):
+                continue
+            mm_ = re.fullmatch(r'dsfd_h?stn([hv])_(\d+)(?:x1)?', sp_['top'])
+            if not mm_:
+                continue
+            key_ = (mm_.group(1), int(mm_.group(2)))
+            o_ = tuple(sp_['slot_change_request']['outline'])
+            STN_FOOTPRINTS[key_] = tuple(max(a_, b_) for a_, b_ in zip(o_, STN_FOOTPRINTS.get(key_, o_)))
     HUB_LAYOUT = RETURN_TREES = None
     for opt_, nm_ in (('hub_layout', 'HUB_LAYOUT'), ('return_trees', 'RETURN_TREES')):
         if getattr(a, opt_, None):
