@@ -935,9 +935,89 @@ STRUCTURE_REPEAT_MAX = 2
 HOLD_RERUN_RE = re.compile(r"-hs(-[a-z0-9]{1,4})?$")
 
 
+def _only_serial_bench_failed(j):
+    """Require retained launch evidence that no physical stage was attempted.
+
+    Missing/truncated history, retries, parallel tracks and mixed physical/bench
+    failures remain counted. A bench failure can abort a route already in flight.
+    """
+    spec = j.get("spec") or {}
+    if (spec.get("bench_first") is not True or j.get("bench_par") is not False
+            or j.get("attempt") != 1 or j.get("retries_used") != 0):
+        return False
+    events = j.get("events")
+    if (not isinstance(events, list) or not events
+            or " ingested from " not in str(events[0])):
+        return False  # event() retains only the last 60: absence is not evidence
+    if any(j.get(k) for k in ("btrack", "ctrack", "crashes", "metrics", "eco", "eco_history")):
+        return False
+    idx = j.get("stage_idx")
+    benches = (spec.get("stages") or {}).get("bench")
+    if not isinstance(benches, list) or type(idx) is not int or not 0 <= idx < len(benches):
+        return False
+    key = bench_key(benches[idx].get("name", ""))
+    receipt = (j.get("benches") or {}).get(key) or {}
+    if (j.get("stage_key") != key or j.get("stage_tag") != f"{key}.a1"
+            or receipt.get("ok") is not False or receipt.get("track") is not None
+            or "rc" not in receipt
+            or j.get("reason") != f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"):
+        return False
+    launches = [str(e).split(" launched ", 1)[1] for e in events if " launched " in str(e)]
+    if not launches or not any(e.startswith(f"{key} (attempt 1) on ") for e in launches):
+        return False
+    allowed = {bench_key(b.get("name", "")) for b in benches[:idx + 1]}
+    return (all(e.split(" ", 1)[0] in allowed and " (attempt 1) on " in e for e in launches)
+            and not any(re.search(r"\b(?:route|calibrate|signoff|eco)[.-]a?\d|launched (?:route|calibrate|signoff)\b",
+                                  str(e)) for e in events))
+
+
+
+def _bench_cancelled_physical_track(j):
+    """Only a witnessed bench-caused cancellation, with no physical failure record.
+
+    This does not erase route attempts or release route-key accounting. In-flight
+    work stopped by a wrong bench verdict is distinct from a failed physical run.
+    """
+    if (j.get("bench_par") is not True or j.get("attempt") != 1
+            or j.get("retries_used") != 0 or j.get("stage_key") != "route"
+            or j.get("stage_tag") != "route.a1" or j.get("textbook_seen") != {}):
+        return False
+    if any(j.get(k) for k in ("metrics", "early_fail", "crashes", "eco", "eco_history", "ctrack")):
+        return False
+    events = j.get("events")
+    if (not isinstance(events, list) or not events
+            or " ingested from " not in str(events[0])):
+        return False
+    why = str(j.get("reason") or "")
+    failed = []
+    for key, receipt in (j.get("benches") or {}).items():
+        if (receipt.get("ok") is False and receipt.get("track") == "parallel" and "rc" in receipt
+                and why == f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"):
+            failed.append(key)
+    if len(failed) != 1:
+        return False
+    key = failed[0]
+    entry = (j.get("btrack") or {}).get(key) or {}
+    declared = {bench_key(b.get("name", "")) for b in (j.get("spec", {}).get("stages", {}).get("bench") or [])}
+    if key not in declared or entry.get("state") != "done" or entry.get("tag") != f"{key}.a1b1":
+        return False
+    # Full retained history must show launch -> successful orchestrator stop ->
+    # this bench verdict, without any failed/completed physical-track event.
+    launch = [i for i, e in enumerate(events) if " launched route (attempt 1) on " in str(e)]
+    stop = [i for i, e in enumerate(events) if str(e).endswith(" bench failed: stopped route (route.a1)")]
+    terminal = [i for i, e in enumerate(events) if str(e).endswith(f" NEEDS_RTL: {why}")]
+    if len(launch) != 1 or len(stop) != 1 or len(terminal) != 1 or not launch[0] < stop[0] < terminal[0]:
+        return False
+    bad = re.compile(r"EARLY_FAIL|route crashed|route failed|route done|route rc=|could not stop|HOLD-STOP|"
+                     r"launched (?:calibrate|signoff)|(?:route|calibrate) \(attempt [2-9]")
+    return not any(bad.search(str(e)) for e in events)
+
+
 def terminal_route_failure(j):
     st, why = j.get("status"), str(j.get("reason") or "")
-    if st == "NEEDS_RTL" or st in EARLY_FAIL:
+    if st == "NEEDS_RTL":
+        return not (_only_serial_bench_failed(j) or _bench_cancelled_physical_track(j))
+    if st in EARLY_FAIL:
         return True
     return st == "NEEDS_HUMAN" and why.startswith("route crashed") and "LOST:" not in why[:80]
 
