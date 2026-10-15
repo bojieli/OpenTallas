@@ -1,0 +1,87 @@
+{
+  "schema": "opentallas.hc.prefetch.resource-bandwidth-model.v1",
+  "scope": "source-pinnednativeHCweightrefillcomponent; noimmutablepricechange/noareaqualification",
+  "source_commit": "0f8c8b224",
+  "evidence": "results/rtl/hbm_hc_static_1015/weight_prefetch_wide4/receipt.json",
+  "workload": {
+    "K": 20480,
+    "FP32_bytes_perrow": 81920,
+    "rows_per_tensor": 24,
+    "HC_banks": 8,
+    "source_sectors_per_bank": 320,
+    "HC_read_rows_perbank": 80,
+    "HC_row_stripe_bytes": 81920,
+    "local_base_bytes": 21474836480,
+    "stack_count": 4,
+    "source_bytes_each_stack_per_row": 20480
+  },
+  "physical_resources_unqualified": {
+    "source_mapped_128x256_SRAMs": 128,
+    "source_bytes": 524288,
+    "HC_aperture_mapped_128x256_SRAMs": 64,
+    "HC_aperture_bytes": 262144,
+    "component_macros": 192,
+    "parent_native_VM_HC_chain_macros": 306,
+    "owner_entries": 1024,
+    "owner_state_bits_per_entry": 46,
+    "owner_state_bits": 47104,
+    "tagcounter_bits": 68,
+    "acceptedmask_bits": 16,
+    "capture_bits": 8192,
+    "response_CDC_FIFO_storage_bits": 36352,
+    "descriptor_CDC_FIFO_storage_bits": 976,
+    "control_state_and_pointers_extra_unmeasured": true
+  },
+  "ports": {
+    "PHY_request_sectors_per_HBM_edge_perstack_peak": 4,
+    "HBM_period_ps": 1024,
+    "aggregate_PHY_request_peak_GB_s": 500.0,
+    "max_outstanding_requests_per_PC": 8,
+    "PCs_per_stack": 32,
+    "source_to_HC_lanes_per_stream_cycle": 4,
+    "source_to_HC_bytes_per_stream_cycle": 128,
+    "stream_Hz_nominal": 1200000000,
+    "onchip_transfer_peak_GB_s": 153.6,
+    "onchip_data_cycles_per_row": 640,
+    "HC_actual_store_complete_age": 655
+  },
+  "immutable_calendar_cases": [
+    {
+      "positions": 6,
+      "cycles_per_row": 1080,
+      "required_source_GB_s": 91.02222222222223,
+      "direct_transfer_utilization": 0.5925925925925926,
+      "verdict": "PASSactualpublishedrefreshPHY24rows"
+    },
+    {
+      "positions": 8,
+      "cycles_per_row": 1400,
+      "required_source_GB_s": 70.21714285714285,
+      "direct_transfer_utilization": 0.45714285714285713,
+      "verdict": "PASSactualpublishedrefreshPHY24rows"
+    }
+  ],
+  "fixed_timeline": {
+    "drain_half0": 0,
+    "drain_half1": 330,
+    "nextrow_reserve_half0": 330,
+    "nextrow_reserve_half1": 660,
+    "weight_complete": 655,
+    "initial_prefetch_plus_setup_to_first_drain_actual_PHY": 575,
+    "dynamicflowcontrol": "offchipPHYboundaryonly",
+    "production_drains_never_extended": true
+  },
+  "rejected_predecessors": {
+    "intermediate_copy": "640reshape+192padding+512delivery=1344minimumonchipcycles; removed",
+    "one_PHY_issue_per_cycle": "bounded80edgecasePASSbutpublishedrefresh1080row4half1FAIL; width4fix",
+    "ready_dependent_prefix": "functionalPASSbutUNOPTFLAT; registeredacceptedmaskfix"
+  },
+  "integration_and_physical_gaps": [
+    "Parent306SRAMactualarithmetic/nativeVMchainwiththisprefetchsource",
+    "Actualcompiler/staticsequencercalendarbinding",
+    "All43layer2064rowimageexport/loadACK",
+    "Physicalslot/clockroots/TTsetup/FFhold/DRC0",
+    "Fullendtoendmodelandtokenratewithoutrepricing"
+  ],
+  "full_native_qualified": false
+}
