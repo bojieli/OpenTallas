@@ -54,6 +54,32 @@ def scalar_destination(matrix,rank,global_row):
                 scalar_index=scalar)
 
 
+def quantized_block_view(kind, block):
+    """Actual SU output ABI for a field operand block of32 FP8 values.
+
+    This supplies addresses/bit slices only. The native VM reader must fetch
+    both records on its assigned cycles and drive the actual field input pins.
+    There is no FP32 recomputation or unpacked C++ activation array here.
+    """
+    limit={'QN':40,'KV':16}.get(kind)
+    if limit is None or type(block) is not int or not 0<=block<limit:
+        raise ValueError('actual QN/KV block within compiled shape required')
+    if kind=='QN':
+        group,within=divmod(block,8)
+        code_row=4176+5*group+within//2
+        exponent_row=4176+5*group+4
+        exponent_lsb=16*within
+    else:
+        code_row=4256+block//2
+        exponent_row=4264
+        exponent_lsb=16*block
+    return dict(code_row=code_row,code_lsb=256*(block%2),code_bits=256,
+                exponent_row=exponent_row,exponent_lsb=exponent_lsb,exponent_bits=16,
+                scalar_begin=32*block,scalar_count=32,
+                required_native_reads=sorted({code_row,exponent_row}),
+                native_transport_bound=False)
+
+
 def source_matrices(path=MATRIX):
     if hashlib.sha256(path.read_bytes()).hexdigest()!=MATRIX_SHA:
         raise ValueError('released source matrix metadata changed')
@@ -99,8 +125,10 @@ def generate(matrices):
             raise ValueError('incomplete actual consumer row coverage')
     return dict(schema='opentallas.s81.first-native-operand-layout.v1',layout=LAYOUT,
                 source_evidence=dict(path=str(MATRIX.relative_to(ROOT)),sha256=MATRIX_SHA),
+                abi_evidence=[dict(path=rel,sha256=hashlib.sha256((ROOT/rel).read_bytes()).hexdigest()) for rel in ('rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv','tools/s81_suhc/su_gate.py')],
                 status='PRODUCTION_ALLOCATION_REQUIRES_NATIVE_PRODUCER_INTEGRATION',
                 source_matrices=len(matrices),rank_fragments=len(joins),joins=joins,
+                field_quantized_operand_views={kind:[quantized_block_view(kind,b) for b in range(count)] for kind,count in [('QN',40),('KV',16)]},
                 descriptors=dict(QN=dict(row=12288,opcode=0,gain_set=1,input_row=4096,output_row=4176),
                                  KV=dict(row=12304,opcode=1,gain_set=2,input_row=4224,output_row=4256),
                                  QR=dict(row=12320,opcode=10,input_row=4304,output_row=4304,heads=16)),

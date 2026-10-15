@@ -1,6 +1,6 @@
 import copy
 import unittest
-from operand_layout import generate, scalar_destination, source_matrices, LAYOUT
+from operand_layout import generate, scalar_destination, source_matrices, quantized_block_view, LAYOUT
 
 
 class ReleasedOperandLayoutTest(unittest.TestCase):
@@ -46,6 +46,20 @@ class ReleasedOperandLayoutTest(unittest.TestCase):
         wrong=copy.deepcopy(matrix);wrong['alias']='unknown-reference-producer'
         with self.assertRaisesRegex(ValueError,'unbound source tensor'):
             scalar_destination(wrong,0,0)
+
+    def test_field_reads_actual_interleaved_qn_code_and_exponent_rows(self):
+        views=[quantized_block_view('QN',b) for b in range(40)]
+        self.assertEqual(views[7]['code_row'],4179)
+        self.assertEqual(views[7]['exponent_row'],4180)
+        self.assertEqual(views[8]['code_row'],4181)
+        self.assertEqual(views[8]['exponent_row'],4185)
+        code_slices={(v['code_row'],v['code_lsb']) for v in views}
+        exponent_slices={(v['exponent_row'],v['exponent_lsb']) for v in views}
+        self.assertEqual(len(code_slices),40);self.assertEqual(len(exponent_slices),40)
+        self.assertEqual({v['scalar_begin'] for v in views},set(range(0,1280,32)))
+        self.assertEqual(quantized_block_view('KV',15)['exponent_row'],4264)
+        with self.assertRaises(ValueError):
+            quantized_block_view('QN',40)
 
     def test_missing_actual_fragment_rejected(self):
         with self.assertRaisesRegex(ValueError,'incomplete actual consumer|producer scope|gapped'):
