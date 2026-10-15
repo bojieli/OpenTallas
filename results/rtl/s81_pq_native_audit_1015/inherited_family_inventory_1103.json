@@ -1,0 +1,61 @@
+{
+  "observed_at": "2026-10-15T11:36:35.605634-07:00",
+  "basis": [
+    "latestel1011-ds-bf",
+    "latestel1011-ds-wfc",
+    "latestel1013-s81-gather",
+    "latestel1013-s81-wfcstg",
+    "latestel1015-s81-bf-programme",
+    "latestel1014-s81-functional-token",
+    "closureAPIstate",
+    "liveagentAPI",
+    "VMandNORMowner confirmations"
+  ],
+  "scope": "boundedread-onlyinventory; no newfamilyjob or ownershipqualification",
+  "families": [
+    {
+      "family": "BF front/column",
+      "current_owner": "Historical s_elements/bf_physical absent fromliveAPI; inherited parent1103 mapping required",
+      "source": "916d74683 staticfront f_prog38/io_clk recoveredmainfc29; programmeconsumerpresent",
+      "actual_blocker": "OldCPINgate16824sinks329psFAIL; freshsplitcore/io3269pinplannotgranted; column35captures215.7+96blockedabove; canonicalBF519perpairprogramme source bindingOPEN",
+      "ready_exactslot_independent_leaf": false
+    },
+    {
+      "family": "Selector/collector",
+      "current_owner": "No activeAPIowner/job; legacyds-selector/ds-coll ownership historical",
+      "source": "Selectorclosed4b0140c9a and9ac26e269;collectorclosed e96dd1e56/cd3337221",
+      "actual_blocker": "Publishedchosenviews have TTlibs/abstracts but no insertion.json; fresh actualphiR/nativeaudit needed before inheritance. Actualstaticproducer/peer-rank/calendar integration notproven by oldclosures. No current assignednewleafkit found",
+      "latest_closed": "selt_q2 TT5.71/FF6.57; selt_c11.01/10.69;colt_laneSS4.10/FF4.18;mrgSS54.28/22;DRC0",
+      "ready_exactslot_independent_leaf": false
+    },
+    {
+      "family": "WFC staging",
+      "current_owner": "Confirmed /root/s81_vm_1103 inherits F7static2",
+      "source": "s81-wfc-static2-1015 actual dsfd_wfc_stg_static.sv07:44;ss_t/ss_s+4CDC halves,3SRAMs,RLAT17/START_GAP4",
+      "actual_blocker": "Nohardkits/physicalref_tile; layer1.f stilldsfd_wfc_stg_cl+staticadapter, notstatic2. Explicitproduction source/calendar/home gap. LegacyVMX_p superseded bystructuralsuccessor, do notreplay",
+      "ready_exactslot_independent_leaf": false
+    },
+    {
+      "family": "Gather tree",
+      "current_owner": "Leafclosurecomplete; /root/s81_die_1103 ownsflattenGEN/seams",
+      "source": "RWpinrepair e74771a9c closedmain6c879be51;REtransverse d399415d2 closed56e4857f2;fold46ce57d97/ec4e1ae89",
+      "actual_blocker": "214childflattenGEN andactualperpinseam/reset/clock timing; nohardparentroutebyselectedwires-onlyflatten decision",
+      "latest_closed": "RWTT103.47/FF15.17/DRC0 nativeclean;RETT187.63/FF19.29/DRC0 nativeclean",
+      "ready_exactslot_independent_leaf": false
+    },
+    {
+      "family": "HC gatherpack",
+      "current_owner": "Historical S-FUNC/qfunc notliveAPI; rootfunctionalownership needed",
+      "source": "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_gatherpack.sv;home216sq at15600,22770",
+      "actual_blocker": "Noactualhardkit; physicalcut/pin/clock/returnflights R_CYC andVMwriteageWL bindingOPEN. LatestchainmeasureGP_DONE24; noactualproduction physicalbinding",
+      "ready_exactslot_independent_leaf": false
+    },
+    {
+      "family": "HC projection",
+      "current_owner": "Historical S-FUNC/qfunc notliveAPI; norm1103 confirmsnotowner",
+      "source": "10:32latestfunctionalchain FAST483/PROJ_DONE484/GP_DONE24, pinlat1254;HLAYOUTtranspose adds4settle/~20Kbit/rank",
+      "actual_blocker": "Actualmappedsourceclockpartition92roots, area, realhomes/pins/phiR/native+TTFFDRC+production; old46HCP notqualification. Existingdeclared20eventHCconsumerproof remainscomponent only",
+      "ready_exactslot_independent_leaf": false
+    }
+  ]
+}

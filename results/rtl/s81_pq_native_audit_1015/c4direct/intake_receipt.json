@@ -1,0 +1,17 @@
+{
+  "name": "s81_pq_ctl_state_calcap-c4direct-ac647b77b",
+  "source_commit": "ac647b77b",
+  "source_branch": "codex/s81-pq-physical-1103",
+  "root_reviewed_source_main": "4c39bc34c",
+  "drop": "/tmp/claude-review-20261003/closure_jobs/s81_pq_ctl_state_calcap-c4direct-ac647b77b.json",
+  "validated": true,
+  "closed_stands": "PASS pin_register measuredcapture297.1 andactualRTLcapture fix",
+  "status_observed": "RUNNING",
+  "observed_at": "2026-10-15T11:36:35.605634-07:00",
+  "production_profile_obligations": [
+    "GO->CFG>=4localedges",
+    "controlresetpriming>=6edges",
+    "legacy endpoint/readerbootPW3 unchanged"
+  ],
+  "qualification": "OPEN actualrouteTT/FF/DRC/nativeallpin; no fullnative/SS/parentfit/production claim"
+}
