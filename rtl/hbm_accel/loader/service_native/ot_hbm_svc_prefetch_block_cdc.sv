@@ -3,7 +3,7 @@
 // Variable waits are entirely on the HBM side. Delivery begins only after a
 // whole block is resident and then emits ceil(total/8) fixed stream cycles.
 // Performance, routing, and physical CDC timing remain unqualified.
-module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0)(
+module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter integer DELIVERY_II=1)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire reserve_v,output wire reserve_ready,input wire [31:0] reserve_base,
  input wire [11:0] reserve_total,input wire reserve_bank,input wire [15:0] reserve_epoch,
@@ -19,6 +19,7 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0)(
  input wire [31:0] kr_v,output reg [31:0] kr_rdy,input wire [543:0] kr_tag,
  input wire [127:0] kr_beat,input wire [8191:0] kr_data
 );
+ initial if(DELIVERY_II<1)$fatal(1,"DELIVERY_II must be positive");
  wire reset_both=stream_rst_n&&hbm_rst_n;
  wire srst,hrst;
  ot_reset_sync u_stream_reset(.clk(stream_clk),.async_rst_n(reset_both),.sync_rst_n(srst));
@@ -128,14 +129,15 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0)(
   end
  end
  assign fifo_rd_ready={8{srst&&!fault}}&fifo_rd_valid;
- reg draining,drain_bank;reg [7:0] drain_row;reg [1:0] read_chip_q;
+ reg draining,drain_bank;integer drain_gap;
+ wire drain_issue=draining && drain_gap==0;reg [7:0] drain_row;reg [1:0] read_chip_q;
  wire [255:0] macro_data[0:7][0:3];
  generate for(g=0;g<8;g=g+1)begin:payload_lane
   wire [10:0] ordinal_w=fifo_rd_data[g][283:273];
   wire bank_w=fifo_rd_data[g][272];
   for(c=0;c<4;c=c+1)begin:chip
    ot_sram_1r1w_128x256_m1_r2c2 u_payload(
-    .clk(stream_clk),.r_ce_in(draining&&!fault&&{drain_bank,drain_row[7]}==c),
+    .clk(stream_clk),.r_ce_in(drain_issue&&!fault&&{drain_bank,drain_row[7]}==c),
     .r_addr_in(drain_row[6:0]),.rd_out(macro_data[g][c]),
     .w_ce_in(landing_write[g]&&{bank_w,ordinal_w[10]}==c),
     .w_addr_in(ordinal_w[9:3]),.wd_in(fifo_rd_data[g][255:0]),.w_mask_in({256{1'b1}}),
@@ -148,7 +150,7 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0)(
   if(!srst)begin
    allocated<=0;ready_q<=0;announced<=0;stream_fault<=0;hbf1<=0;hbf2<=0;
    block_ready_v<=0;block_ready_bank<=0;block_ready_epoch<=0;
-   draining<=0;drain_bank<=0;drain_row<=0;read_chip_q<=0;
+   draining<=0;drain_gap<=0;drain_bank<=0;drain_row<=0;read_chip_q<=0;
    out_v<=0;out_mask<=0;out_ordinal<=0;out_bank<=0;out_epoch<=0;out_last<=0;
    for(sb=0;sb<2;sb=sb+1)begin bank_epoch[sb]<=0;bank_total[sb]<=0;received[sb]<=0;seen[sb]<=0;end
   end else begin
@@ -178,9 +180,11 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0)(
    end
    if(start_v)begin
     if(draining||!ready_q[start_bank]||start_epoch!=bank_epoch[start_bank]||fault)stream_fault<=1;
-    else begin draining<=1;drain_bank<=start_bank;drain_row<=0;ready_q[start_bank]<=0;end
+    else begin draining<=1;drain_gap<=0;drain_bank<=start_bank;drain_row<=0;ready_q[start_bank]<=0;end
    end
-   if(draining&&!fault)begin
+   if(draining && drain_gap>0)drain_gap<=drain_gap-1;
+   if(drain_issue&&!fault)begin
+    drain_gap<=DELIVERY_II-1;
     out_v<=1;out_bank<=drain_bank;out_epoch<=bank_epoch[drain_bank];out_ordinal<={drain_row,3'b0};
     read_chip_q<={drain_bank,drain_row[7]};
     for(si=0;si<8;si=si+1)if({drain_row,3'b0}+si<bank_total[drain_bank])out_mask[si]<=1;
