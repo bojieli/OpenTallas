@@ -1,0 +1,21 @@
+{
+  "verdict": "FAIL",
+  "scope": "Actual routed LEF signal pin names, exact assigned center and layer; clock insertion separately measured in exported insertion.json. Does not qualify parent seams.",
+  "pins": 1033,
+  "expected_pins": 1033,
+  "missing": [],
+  "extra": [],
+  "moved": [
+    "clk",
+    "rst_n",
+    "fault"
+  ],
+  "outline": [
+    129.6,
+    86.4
+  ],
+  "lef": "physical/ref_tile/s81_svc_probability_native_ref/views/ot_s81_svc_probability_frame/ot_s81_svc_probability_frame.lef",
+  "lef_sha256": "e00b5faa29f7a8c9db57bd13a99f66297244b17262c45c51f7b70aac7f53a621",
+  "assigned_tcl": "physical/s81_die_pins/v20_svc_native/ot_s81_svc_probability_frame.tcl",
+  "assigned_tcl_sha256": "4dfc1dc84c1687a694444e25d3113fa96cb18b07dfa36af2e87f4433f7ac18ee"
+}

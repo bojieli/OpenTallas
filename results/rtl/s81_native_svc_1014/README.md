@@ -67,3 +67,23 @@ the pipeline. No overlap, token-rate loss, or free transpose is assumed.
 Real source-side BF16 packing is an alternative to evaluate before adoption.
 Input accepted on edge C yields q_o after C+2; an upstream registered launch
 just after edge L yields q_o just after L+3, then downstream capture L+4.
+
+
+## Routed probability leaf, 20:13 PDT
+
+The exact assigned-pin probability successor is CLOSED in job
+`s81_svc_probability_native_ref-native2-eb1c52d15`: TT setup +157.00 ps,
+FF hold +22.16 ps, DRC 0. SS sensitivity is -136.30 ps. Published record
+b29719b17, main merge 6fccf1992; local record cherry-pick 45da9bf8e.
+Actual routed clock boundary insertion is TT 136.3..152.7 ps (mean145.0),
+FF110.5..126.0 ps; all-sink TTmax157.2 ps. No reset/clock waiver.
+
+`routed_pins.json` separately checks the exact requested Tcl center coordinates.
+All 1,033 signal names and layers are present; all 1,030 q/q_o data centers
+match exactly. Three scalar side pins were quantized by the pin placer:
+clk/rst_n/fault rectangle centers are 0.012um higher than the supplied center.
+Their actual boundary rectangles must be consumed by the parent pin contract;
+the exact-center audit intentionally records this discrepancy and does not
+relabel it as an exact match. Full parent clock/reset/raw input seams remain
+OPEN. The payload-completion fix and its successor are detailed in
+`payload_done/README.md`; those changes do not modify the probability leaf.
