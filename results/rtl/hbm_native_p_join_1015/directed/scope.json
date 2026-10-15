@@ -1,0 +1,19 @@
+{
+  "golden": "actual hgi_sim.machine.u_su_vop three canonical records",
+  "rawSC": "seed15101571 random finite moderate scores",
+  "scale_bits": "3d3504f3",
+  "full_head_dim": 512,
+  "T": [
+    128,
+    640
+  ],
+  "head": 0,
+  "nontrivial_RNE_words_T640": 639,
+  "mutants": [
+    "MAX actual source index0",
+    "SUM actual source index0",
+    "EXP disabled in actual arithmetic programme",
+    "RNE disabled in actual IO programme"
+  ],
+  "native_whole_kernel_qualified": false
+}

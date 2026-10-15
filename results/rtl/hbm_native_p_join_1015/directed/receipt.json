@@ -1,0 +1,129 @@
+{
+  "RTL_source_commit": "b63651aa6",
+  "runner_commit": "2c82e3237",
+  "fixture_generator_commit": "f3449a0ad",
+  "source_manifest": "../producer_build_sources.json",
+  "binary": "ot-agidock128:/tmp/p-native-producer-build-b636/obj/Vtb_hbm_p_native_producer_static",
+  "same_binary_all_cases": true,
+  "actual_RTL_products": [
+    "FP32 scaledSC",
+    "FP32 MB/MAX",
+    "FP32 rawE/EXP",
+    "FP32 SE/SUM goldenchunk8",
+    "BF16RNE expandedEB",
+    "actualmaskedMB/SE VMstorage including7neighbors"
+  ],
+  "cases": {
+    "t128_directed": {
+      "unit": "oth-ubuntu-3892356-1792058836",
+      "harness_exit": 0,
+      "expected_status": "PASS",
+      "files_sha256": {
+        "arithmetic.hex": "7803d99c839b8f196a739ddb67d6064098c39d87da5daea41f50df0ddebe3ef7",
+        "aux.hex": "fd8144e6b2bbf56a2276c42cf4fe93eb12eeb6bac81dbb36ee5699edf11d5561",
+        "calendar.json": "de51e27813aa1f4d75520cae34786c30276d2119e8e3223c40a9693b87eabb74",
+        "config.txt": "e6c56a3430af0ce6f810dc7ceff3c00461918db0cce017c7e0205665ead4cb8c",
+        "expected_e.hex": "294f1d3915e344846d79ee56114cabbb21f6f088f3a042bf6db534bb538f4c06",
+        "expected_eb.hex": "64eb7391ed80eea28700a1605b7d85450891289111e15c872419aacdaa3c90b1",
+        "expected_mb.hex": "9ba5465bbf47833c5ea7b04f8c28114f41bbd10f3ef9782408a7610b451dd53d",
+        "expected_scaled.hex": "3914da832baf5f9ffa1f87551d600235c67132ad54d40f87570a0bd227e3ada6",
+        "expected_se.hex": "a840ceb281924c2da4539207f29f9748a1d20acc69412c926f1f77c5864b50f2",
+        "io.hex": "54ae4ab56a5bb1779684dd86f48a68c1f9e0f734d93e81706bdb061fa0c68e0d",
+        "raw_sc_sectors.hex": "3f89c27c809e272b5a98dbf84ef8dd720f03cfd53ad52ce463537a1aa382b781"
+      }
+    },
+    "t640_directed": {
+      "unit": "oth-ubuntu-3892358-1792058836",
+      "harness_exit": 0,
+      "expected_status": "PASS",
+      "files_sha256": {
+        "arithmetic.hex": "ebff6c392319cef723967f8cd3d2001abd6465d6cc0754c4a7302d324566ba88",
+        "aux.hex": "754c335a83714caf6a4848a3392b9990fe6c347eaa073e515a7eafecd5759b80",
+        "calendar.json": "8872b49f9da0bb135d896c5f7b2bc4aa7ca795a64e1088b3c93e63ff28336359",
+        "config.txt": "633ab015ddd8dcf14829832d907d7b1e9ea07649710876c368bfe9f3962d5f9e",
+        "expected_e.hex": "651d256a84383f69e62d179a5df91658097b8f75363eb3f871f30bef68a6d03f",
+        "expected_eb.hex": "e09a7b1d375e44b5c275ef810c985238228bbf9d25272d980618426a68b81bc9",
+        "expected_mb.hex": "b965793efd2a5a700a528f739480da83a8dc8181a19cd2a2a9409a32a60ea9bb",
+        "expected_scaled.hex": "b309be3e3a7e874d4dbaf57cc1fc20e895fd8d5ee3517139851c747c3aa42f55",
+        "expected_se.hex": "1fde5cb08f8650db445598e0432fb744bdf4e6d8ec2f5a275b3d86cf5ccc15fd",
+        "io.hex": "ce79a06d635979ed744461730037016b5b4a4efb7f4b6d36f95af372bb1a68ef",
+        "raw_sc_sectors.hex": "4831b815dff8b8bf2afc3b2ae16ea8ee1f9d752a48722675706c0e072d432a45"
+      }
+    },
+    "mutant_max": {
+      "unit": "oth-ubuntu-3892361-1792058836",
+      "harness_exit": 0,
+      "expected_status": "FAIL",
+      "files_sha256": {
+        "arithmetic.hex": "ebff6c392319cef723967f8cd3d2001abd6465d6cc0754c4a7302d324566ba88",
+        "aux.hex": "9ae11cafbec109665d62c5dca86e5c3782fa4bd24b9b0a08c4876c0012415c30",
+        "calendar.json": "8872b49f9da0bb135d896c5f7b2bc4aa7ca795a64e1088b3c93e63ff28336359",
+        "config.txt": "633ab015ddd8dcf14829832d907d7b1e9ea07649710876c368bfe9f3962d5f9e",
+        "expected_e.hex": "651d256a84383f69e62d179a5df91658097b8f75363eb3f871f30bef68a6d03f",
+        "expected_eb.hex": "e09a7b1d375e44b5c275ef810c985238228bbf9d25272d980618426a68b81bc9",
+        "expected_mb.hex": "b965793efd2a5a700a528f739480da83a8dc8181a19cd2a2a9409a32a60ea9bb",
+        "expected_scaled.hex": "b309be3e3a7e874d4dbaf57cc1fc20e895fd8d5ee3517139851c747c3aa42f55",
+        "expected_se.hex": "1fde5cb08f8650db445598e0432fb744bdf4e6d8ec2f5a275b3d86cf5ccc15fd",
+        "io.hex": "ce79a06d635979ed744461730037016b5b4a4efb7f4b6d36f95af372bb1a68ef",
+        "raw_sc_sectors.hex": "4831b815dff8b8bf2afc3b2ae16ea8ee1f9d752a48722675706c0e072d432a45"
+      }
+    },
+    "mutant_sum": {
+      "unit": "oth-ubuntu-3892365-1792058836",
+      "harness_exit": 0,
+      "expected_status": "FAIL",
+      "files_sha256": {
+        "arithmetic.hex": "ebff6c392319cef723967f8cd3d2001abd6465d6cc0754c4a7302d324566ba88",
+        "aux.hex": "68ed9fc6da56d226327389b9b2ac821c29e695bc60781b1c7940b196ac1d4f78",
+        "calendar.json": "8872b49f9da0bb135d896c5f7b2bc4aa7ca795a64e1088b3c93e63ff28336359",
+        "config.txt": "633ab015ddd8dcf14829832d907d7b1e9ea07649710876c368bfe9f3962d5f9e",
+        "expected_e.hex": "651d256a84383f69e62d179a5df91658097b8f75363eb3f871f30bef68a6d03f",
+        "expected_eb.hex": "e09a7b1d375e44b5c275ef810c985238228bbf9d25272d980618426a68b81bc9",
+        "expected_mb.hex": "b965793efd2a5a700a528f739480da83a8dc8181a19cd2a2a9409a32a60ea9bb",
+        "expected_scaled.hex": "b309be3e3a7e874d4dbaf57cc1fc20e895fd8d5ee3517139851c747c3aa42f55",
+        "expected_se.hex": "1fde5cb08f8650db445598e0432fb744bdf4e6d8ec2f5a275b3d86cf5ccc15fd",
+        "io.hex": "ce79a06d635979ed744461730037016b5b4a4efb7f4b6d36f95af372bb1a68ef",
+        "raw_sc_sectors.hex": "4831b815dff8b8bf2afc3b2ae16ea8ee1f9d752a48722675706c0e072d432a45"
+      }
+    },
+    "mutant_exp": {
+      "unit": "oth-ubuntu-3892359-1792058836",
+      "harness_exit": 0,
+      "expected_status": "FAIL",
+      "files_sha256": {
+        "arithmetic.hex": "e9bc9b9105a4d66d723a71134a5b079c11da766b26e336e7e01d5e3bc78d7a33",
+        "aux.hex": "754c335a83714caf6a4848a3392b9990fe6c347eaa073e515a7eafecd5759b80",
+        "calendar.json": "8872b49f9da0bb135d896c5f7b2bc4aa7ca795a64e1088b3c93e63ff28336359",
+        "config.txt": "633ab015ddd8dcf14829832d907d7b1e9ea07649710876c368bfe9f3962d5f9e",
+        "expected_e.hex": "651d256a84383f69e62d179a5df91658097b8f75363eb3f871f30bef68a6d03f",
+        "expected_eb.hex": "e09a7b1d375e44b5c275ef810c985238228bbf9d25272d980618426a68b81bc9",
+        "expected_mb.hex": "b965793efd2a5a700a528f739480da83a8dc8181a19cd2a2a9409a32a60ea9bb",
+        "expected_scaled.hex": "b309be3e3a7e874d4dbaf57cc1fc20e895fd8d5ee3517139851c747c3aa42f55",
+        "expected_se.hex": "1fde5cb08f8650db445598e0432fb744bdf4e6d8ec2f5a275b3d86cf5ccc15fd",
+        "io.hex": "ce79a06d635979ed744461730037016b5b4a4efb7f4b6d36f95af372bb1a68ef",
+        "raw_sc_sectors.hex": "4831b815dff8b8bf2afc3b2ae16ea8ee1f9d752a48722675706c0e072d432a45"
+      }
+    },
+    "mutant_rne": {
+      "unit": "oth-ubuntu-3892422-1792058837",
+      "harness_exit": 0,
+      "expected_status": "FAIL",
+      "files_sha256": {
+        "arithmetic.hex": "ebff6c392319cef723967f8cd3d2001abd6465d6cc0754c4a7302d324566ba88",
+        "aux.hex": "754c335a83714caf6a4848a3392b9990fe6c347eaa073e515a7eafecd5759b80",
+        "calendar.json": "8872b49f9da0bb135d896c5f7b2bc4aa7ca795a64e1088b3c93e63ff28336359",
+        "config.txt": "633ab015ddd8dcf14829832d907d7b1e9ea07649710876c368bfe9f3962d5f9e",
+        "expected_e.hex": "651d256a84383f69e62d179a5df91658097b8f75363eb3f871f30bef68a6d03f",
+        "expected_eb.hex": "e09a7b1d375e44b5c275ef810c985238228bbf9d25272d980618426a68b81bc9",
+        "expected_mb.hex": "b965793efd2a5a700a528f739480da83a8dc8181a19cd2a2a9409a32a60ea9bb",
+        "expected_scaled.hex": "b309be3e3a7e874d4dbaf57cc1fc20e895fd8d5ee3517139851c747c3aa42f55",
+        "expected_se.hex": "1fde5cb08f8650db445598e0432fb744bdf4e6d8ec2f5a275b3d86cf5ccc15fd",
+        "io.hex": "8dbf71a5742a5ff806e49b9fa802fe65359993ed5d2ed3f0431e21c3b0581e74",
+        "raw_sc_sectors.hex": "4831b815dff8b8bf2afc3b2ae16ea8ee1f9d752a48722675706c0e072d432a45"
+      }
+    }
+  },
+  "native_whole_kernel_qualified": false,
+  "physical_qualified": false,
+  "production_qualified": false
+}
