@@ -108,6 +108,22 @@ module ot_hgi_dma_back_static_vp4_controller #(
     output reg [255:0] bank_read_addr,
     input wire [11:0] wa
 );
+    // Reset is exceptional initialization: async assertion, two fixed release
+    // edges, then normal compiler-scheduled commands. Only this two-flop leaf
+    // touches the external reset pin; no normal command or data cycle is added.
+    (* async_reg = "true" *) reg reset_meta,reset_ready;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)begin reset_meta<=0;reset_ready<=0;end
+        else begin reset_meta<=1;reset_ready<=reset_meta;end
+    wire local_rst_n=reset_ready;
+    // A response-valid pin capture already supplies the landing write enables.
+    // Compare its captured value with the equally delayed expected mask; only
+    // malformed response fault reporting gains one edge, never execution stalls.
+    reg [7:0] expect_response_q;
+    reg response_check_q;
+    always @(posedge clk or negedge local_rst_n)
+        if(!local_rst_n)begin expect_response_q<=0;response_check_q<=0;end
+        else begin expect_response_q<=expect_mask[7];response_check_q<=1;end
     // Pin captures. Normal execution advances the absolute input cycle once per
     // related clock edge; this is checked, never used to reschedule execution.
     function automatic [31:0] inc32(input [31:0] x);
@@ -118,11 +134,11 @@ module ot_hgi_dma_back_static_vp4_controller #(
     wire [31:0] cycle=inc32(cycle_q);
     reg cycle_valid_q,wa_valid_q;reg [11:0] wa_q;
     always @(posedge clk)cycle_q<=cycle_in;
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n)begin cycle_valid_q<=0;wa_valid_q<=0;wa_q<=0;end
+    always @(posedge clk or negedge local_rst_n)
+        if(!local_rst_n)begin cycle_valid_q<=0;wa_valid_q<=0;wa_q<=0;end
         else begin cycle_valid_q<=1;wa_valid_q<=1;wa_q<=wa;end
 `ifndef SYNTHESIS
-    always @(posedge clk)if(rst_n&&cycle_valid_q&&cycle_in!==cycle)
+    always @(posedge clk)if(local_rst_n&&cycle_valid_q&&cycle_in!==cycle)
         $fatal(1,"DMA absolute cycle did not advance by one");
 `endif
     // ---- descriptor pipeline (stage A capture, stage B products + static checks) ----
@@ -137,8 +153,8 @@ module ot_hgi_dma_back_static_vp4_controller #(
     reg [14:0] p_nchunk,q_nchunk;reg [7:0] p_rchunk,q_rchunk;
     reg [17:0] p_total,q_total;reg p_static_ok,q_static_ok;
     reg [18:0] b_vbase_end;reg [40:0] b_hbase_end;
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n) begin a_v<=0;p_valid<=0;q_valid<=0;b_v<=0;end
+    always @(posedge clk or negedge local_rst_n)
+        if(!local_rst_n) begin a_v<=0;p_valid<=0;q_valid<=0;b_v<=0;end
         else begin a_v<=mv_v;p_valid<=a_v;q_valid<=p_valid;b_v<=q_valid;end
     always @(posedge clk) begin
         a_mv<=mv;a_ci<=issue_at;a_cd<=drain_at;a_cb<=mv_wb_bank;a_ce<=mv_wb_epoch;
@@ -262,10 +278,10 @@ module ot_hgi_dma_back_static_vp4_controller #(
         expect_tag[0]<=issue_index[6:0];
         for(integer b=0;b<8;b=b+1) rq_payload[b]<={issue_sec[15:3],3'(b)};
     end
-    always @(posedge clk or negedge rst_n) begin:CONTROL
+    always @(posedge clk or negedge local_rst_n) begin:CONTROL
         integer nsec,rchunk,nchunk,nland;
         reg valid_move;reg [40:0] vend;reg [40:0] hend;
-        if(!rst_n)begin
+        if(!local_rst_n)begin
             cv<=0;busy<=0;quiet<=1;dirty<=0;src_sent<=0;mv_src<=0;mv_done<=0;mv_fault<=0;
             wb_reserve_v<=0;wb_reserve_sectors<=0;wb_reserve_base<=0;wb_fill_start<=0;wb_reserve_bank<=0;wb_fill_bank<=0;wb_reserve_epoch<=0;wb_fill_epoch<=0;bank_read_en<=0;read_mask_q<=0;output_mask_q<=0;rr_valid<=0;
             issue_index<=0;drain_index<=0;chunks<=0;column<=0;landed<=0;
@@ -291,7 +307,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
             for(integer b=0;b<8;b=b+1)begin
                 rq_v[b]<=issue_slot&&issue_mask[b];
                 rr_valid[b]<=rr_valid_i[b];
-                if(rr_valid_i[b]!==expect_mask[7][b])mv_fault<=1;
+                if(response_check_q && rr_valid[b]!==expect_response_q[b])mv_fault<=1;
             end
             read_mask_q<=drain_slot?drain_mask:8'd0;
             output_mask_q<=read_mask_q;

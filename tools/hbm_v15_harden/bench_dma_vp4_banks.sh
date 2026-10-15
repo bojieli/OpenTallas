@@ -41,7 +41,7 @@ import pathlib,sys
 s=pathlib.Path(sys.argv[1]).read_text()
 a='while(cycle<drain_at+84)';b='while(cycle<drain_at+82)'
 assert s.count(a)==1
-pathlib.Path(sys.argv[2]).write_text(s.replace(a,b))
+pathlib.Path(sys.argv[2]).write_text(s.replace(a,b).replace("clear();repeat(3)@(negedge clk);rst_n=1;", "clear();repeat(3)@(negedge clk);rst_n=1;repeat(3)@(negedge clk);"))
 PYCODE
 echo STATIC_DESC_LAT4_PRE_COMMAND_ADVANCE_2_DATA_CALENDAR_UNCHANGED
 mr=physical/asap7_memory_macros
