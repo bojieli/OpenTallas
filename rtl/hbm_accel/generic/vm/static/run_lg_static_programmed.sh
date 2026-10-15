@@ -5,7 +5,7 @@ root=$(cd "$here/../../../../.." && pwd)
 out=$(realpath -m "${1:?output directory}")
 mkdir -p "$out"
 cp "$root/results/arch/hbm_vm_lg_split_1015/programme/NE_812.hex" "$out/NE_812.hex"
-sources=("$here/ot_hbm_vm_lg_static_bank.sv" "$here/ot_hbm_vm_lg_static_split.sv"
+sources=("$here/ot_hbm_vm_lg_static_bank.sv" "$here/physical/hfd_vm_lg_su10.sv" "$here/physical/hfd_vm_lg_sfu14.sv" "$here/ot_hbm_vm_lg_static_split.sv"
  "$here/ot_vms_bank_static.sv" "$here/ot_vms_calendar_static.sv" "$here/hfd_hgi_vm_calendar_static.sv"
  "$root/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
  "$here/tb_hbm_vm_lg_static_programmed.sv")

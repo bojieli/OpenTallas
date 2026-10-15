@@ -19,7 +19,8 @@ module ot_hbm_vm_lg_static_split #(
     output wire [7:0] bank_fault
 );
     for(genvar b=0;b<8;b=b+1)begin:g_bank
-        ot_hbm_vm_lg_static_bank #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT)) leaf(
+        if (READ_RETURN==10 && WRITE_RETURN==7) begin:su
+            hfd_vm_lg_su10 #(.MUT(MUT)) leaf(
             .clk(clk[b]),.rst_n(rst_n),.local_rq(local_rq[b*17+:17]),.far_rq(far_rq[b*17+:17]),
             .local_wq(local_wq[b*281+:281]),.far_wq(far_wq[b*281+:281]),
             .local_read(local_read[b]),.local_write(local_write[b]),
@@ -27,6 +28,25 @@ module ot_hbm_vm_lg_static_split #(
             .near_rr(near_rr[b*257+:257]),.near_w_done(near_w_done[b]),
             .local_rr(local_rr[b*257+:257]),.far_rr(far_rr[b*257+:257]),
             .local_w_done(local_w_done[b]),.far_w_done(far_w_done[b]),.fault(bank_fault[b]));
+        end else if (READ_RETURN==14 && WRITE_RETURN==11) begin:sfu
+            hfd_vm_lg_sfu14 #(.MUT(MUT)) leaf(
+            .clk(clk[b]),.rst_n(rst_n),.local_rq(local_rq[b*17+:17]),.far_rq(far_rq[b*17+:17]),
+            .local_wq(local_wq[b*281+:281]),.far_wq(far_wq[b*281+:281]),
+            .local_read(local_read[b]),.local_write(local_write[b]),
+            .near_rq(near_rq[b*17+:17]),.near_wq(near_wq[b*281+:281]),
+            .near_rr(near_rr[b*257+:257]),.near_w_done(near_w_done[b]),
+            .local_rr(local_rr[b*257+:257]),.far_rr(far_rr[b*257+:257]),
+            .local_w_done(local_w_done[b]),.far_w_done(far_w_done[b]),.fault(bank_fault[b]));
+        end else begin:parameterized
+            ot_hbm_vm_lg_static_bank #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT)) leaf(
+            .clk(clk[b]),.rst_n(rst_n),.local_rq(local_rq[b*17+:17]),.far_rq(far_rq[b*17+:17]),
+            .local_wq(local_wq[b*281+:281]),.far_wq(far_wq[b*281+:281]),
+            .local_read(local_read[b]),.local_write(local_write[b]),
+            .near_rq(near_rq[b*17+:17]),.near_wq(near_wq[b*281+:281]),
+            .near_rr(near_rr[b*257+:257]),.near_w_done(near_w_done[b]),
+            .local_rr(local_rr[b*257+:257]),.far_rr(far_rr[b*257+:257]),
+            .local_w_done(local_w_done[b]),.far_w_done(far_w_done[b]),.fault(bank_fault[b]));
+        end
     end
 endmodule
 `default_nettype wire

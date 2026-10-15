@@ -4,7 +4,7 @@ OUT=$(realpath -m "${1:?output directory}")
 INPUTS=$(realpath "${2:?directory containing actual static bank and SRAM model}")
 HERE=$(cd "$(dirname "$0")" && pwd)
 mkdir -p "$OUT"
-SOURCES=("$HERE/ot_hbm_vm_lg_static_bank.sv" "$HERE/ot_hbm_vm_lg_static_split.sv" "$HERE/tb_hbm_vm_lg_static_split.sv"
+SOURCES=("$HERE/ot_hbm_vm_lg_static_bank.sv" "$HERE/physical/hfd_vm_lg_su10.sv" "$HERE/physical/hfd_vm_lg_sfu14.sv" "$HERE/ot_hbm_vm_lg_static_split.sv" "$HERE/tb_hbm_vm_lg_static_split.sv"
     "$INPUTS/ot_vms_bank_static.sv" "$INPUTS/ot_sram_1r1w_1024x256_m2_r2c2.v")
 for mutant in 0 1; do
     /usr/bin/time -v -o "$OUT/m$mutant.compile.time" \

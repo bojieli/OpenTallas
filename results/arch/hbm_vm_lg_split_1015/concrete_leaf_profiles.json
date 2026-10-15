@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.hbm.lg-concrete-physical-profiles.v1",
+  "core_sha256": "31acf6679c2fcd95c2abd3897daae041710f7c7a5f318d9d2e1f8541c8b377a4",
+  "profiles": [
+    {
+      "master": "hfd_vm_lg_su10",
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vm_lg_su10.sv",
+      "source_sha256": "5256bfd6bcdcb5e21c2fdfebdafc39dcabe66063562b216a911486189577e0a2",
+      "READ_RETURN": 10,
+      "WRITE_RETURN": 7,
+      "clock_roots_per_quadrant": 8,
+      "instances_per_die": 32,
+      "signal_pins": 1673,
+      "provisional_outline_um": [
+        150.336,
+        151.2
+      ],
+      "orientation": "R0",
+      "actual_physical_status": "UNMEASURED; independent nativegate thenroute required"
+    },
+    {
+      "master": "hfd_vm_lg_sfu14",
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vm_lg_sfu14.sv",
+      "source_sha256": "7d9cb7f552baec49400fbf36e0f2705c43f47226c8c261e468c3a353fc44fffa",
+      "READ_RETURN": 14,
+      "WRITE_RETURN": 11,
+      "clock_roots_per_quadrant": 8,
+      "instances_per_die": 32,
+      "signal_pins": 1673,
+      "provisional_outline_um": [
+        150.336,
+        151.2
+      ],
+      "orientation": "R0",
+      "actual_physical_status": "UNMEASURED; independent nativegate thenroute required"
+    }
+  ],
+  "HC_existing": "ot_hbm_vm_lg_static_bank READ18/WRITE15 native_route_1015 receipt93dd47d9e; preserved",
+  "model_basis": "HC actual finalroot1705 and1509um2 routedstdarea. Near/middle have16/8 fewer RTL calendar FF respectively; reference is not an actual measurement of new concrete masters. Pin-limited outline/clock/PG/DRC independently checked.",
+  "aggregate_96_leaf_planning_area_mm2": 2.1821571072
+}

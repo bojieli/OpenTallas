@@ -1,0 +1,157 @@
+{
+ "name": "vm_lg_bank_sfu14_static_1015",
+ "top": "hfd_vm_lg_sfu14",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vm_lg_sfu14.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "fault",
+   "local_read",
+   "local_write"
+  ],
+  "S": [
+   "local_rq",
+   "local_wq",
+   "local_rr",
+   "local_w_done"
+  ],
+  "E": [
+   "near_rq",
+   "near_wq",
+   "near_rr",
+   "near_w_done"
+  ],
+  "W": [
+   "far_rq",
+   "far_wq",
+   "far_rr",
+   "far_w_done"
+  ]
+ },
+ "outline": {
+  "w": 150.336,
+  "h": 151.2,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-VM actual split LG leaf",
+  "branch": "codex/hbm-vm-static-1014",
+  "tag": "sfu14native1015",
+  "purpose": "Concrete sfu14 source-bound LG physical master. Same1673pins/150.336x151.20planningoutline; HCroute is a measured upper-bound reference only, not timing qualification.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static"
+  ],
+  "benched_by": "results/arch/hbm_vm_lg_split_1015/programmed_gate/receipt.json",
+  "record_to": "results/rtl/ref_tile/vm_lg_bank_sfu14_static_1015"
+ },
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "rtl/hbm_accel/generic/vm/static/physical/native_bank_pin_audit.tcl"
+ },
+ "structural_change": "Replaces flat eight-bank13k-pin tap with actual independent one-bank 1673pin leaf; no added edge and no historical view changes.",
+ "pin_ranges": {
+  "clk": [
+   5.4,
+   33.3072
+  ],
+  "rst_n": [
+   33.3072,
+   61.2144
+  ],
+  "fault": [
+   61.2144,
+   89.1216
+  ],
+  "local_read": [
+   89.1216,
+   117.0288
+  ],
+  "local_write": [
+   117.0288,
+   144.936
+  ],
+  "local_rq": [
+   5.4,
+   9.666388
+  ],
+  "local_wq": [
+   9.666388,
+   80.187281
+  ],
+  "local_rr": [
+   80.187281,
+   144.685036
+  ],
+  "local_w_done": [
+   144.685036,
+   144.936
+  ],
+  "near_rq": [
+   5.4,
+   9.692806
+  ],
+  "near_wq": [
+   9.692806,
+   80.65036
+  ],
+  "near_rr": [
+   80.65036,
+   145.547482
+  ],
+  "near_w_done": [
+   145.547482,
+   145.8
+  ],
+  "far_rq": [
+   5.4,
+   9.692806
+  ],
+  "far_wq": [
+   9.692806,
+   80.65036
+  ],
+  "far_rr": [
+   80.65036,
+   145.547482
+  ],
+  "far_w_done": [
+   145.547482,
+   145.8
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
