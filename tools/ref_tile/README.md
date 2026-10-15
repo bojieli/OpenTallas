@@ -289,3 +289,9 @@ ownership walk and from synchronous crossing witnesses. Recovery/removal timing
 stays enabled. Names and `reset_ports` never exempt a real D path. The regression
 uses actual DFFASRHQN cells with a shared reset and rejects a mutant connecting
 that same reset port to the other domain's D input.
+
+Leaf corner inference uses the actual sequential clock-sink cells. Physical-only
+LEF taps and endcaps have no Liberty association and cannot identify a timing
+corner. Missing or unknown Liberty associations on actual sequential cells still
+fail. The physical regression includes a real LEF-only ASAP7 tap and replays the
+complete generated CTS and later boundary hooks.

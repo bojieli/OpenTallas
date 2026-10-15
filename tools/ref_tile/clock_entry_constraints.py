@@ -562,7 +562,20 @@ def leaf_body():
     body = BODY
     substitutions = [
         ('  set found {}\n  foreach cell [get_cells -quiet -hierarchical *] {\n    set master [get_property $cell ref_name]\n    if {![dict exists $::ot_ce_counts $master]} continue\n',
-         '  set found {}\n  foreach cell [get_cells -quiet -hierarchical *] {\n    set master [get_property $cell ref_name]\n    if {![dict exists $::ot_ce_counts $master] && !$::ot_ce_leaf_roots} continue\n'),
+         r'''  set found {}; set clock_cells {}
+  # Physical-only taps/endcaps have no Liberty association. The clock corner
+  # belongs to actual sequential clock sinks, not every physical instance.
+  foreach pin [all_registers -clock_pins] {
+    set cell [get_cells -quiet -of_objects $pin]
+    if {[llength $cell] != 1 || $cell eq "NULL"} {error "OT_MULTI_ROOT: clock sink lacks one actual sequential cell"}
+    dict set clock_cells [get_full_name $cell] $cell
+  }
+  if {![dict size $clock_cells]} {error "OT_MULTI_ROOT: no actual sequential cells for corner inference"}
+  foreach cell [dict values $clock_cells] {
+    set master [get_property $cell ref_name]
+'''),
+        ('    if {![llength $libcells]} { error "OT_ENTRIES: $master has no loaded Liberty association" }\n',
+         '    if {![llength $libcells] || "NULL" in $libcells} { error "OT_MULTI_ROOT: actual sequential cell $master has no loaded Liberty association" }\n'),
         ('      if {![regexp -nocase {_(tt|ff|ss)/} $full -> corner]} { error "OT_ENTRIES: unknown actual child Liberty corner $full" }\n',
          '      if {![regexp -nocase {_(tt|ff|ss)/|_(tt|ff|ss)_} $full -> corner alt]} { error "OT_ENTRIES: unknown actual Liberty corner $full" }\n      if {$corner eq ""} {set corner $alt}\n'),
         ('      foreach p [get_ports -quiet $pattern -filter "direction == input"] {\n',
