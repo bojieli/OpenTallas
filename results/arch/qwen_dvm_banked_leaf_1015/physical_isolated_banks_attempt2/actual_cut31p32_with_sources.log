@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       admits   519 GB (avail 745, growth 94, headroom 48, waiters 0/0 GB) load 29/128 running 19 disk 462 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1748913-1792059656 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{"cut_y_um": 31.32, "net_count": 1687, "class_counts": {"common_only/registered": 168, "common_only/combinational": 163, "multiple_banks/combinational": 688, "bank_to_common/combinational": 392, "multiple_banks/clock": 1, "within_one_bank/combinational": 236, "within_one_bank/registered": 39}, "bank_incidence": {"2": 405, "4": 374, "6": 368, "0": 708, "1": 550, "3": 285, "5": 279, "7": 277}, "source_class_incidence": {"multiple_banks/wd": 667, "bank_to_common/wd": 365, "multiple_banks/cep": 1, "multiple_banks/cv": 1, "multiple_banks/other_register": 16, "bank_to_common/other_register": 2, "multiple_banks/wep": 1, "bank_to_common/wm": 24, "multiple_banks/woff": 1, "multiple_banks/wv": 1, "bank_to_common/woff": 1}, "routing_qualified": false}
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1748913-1792059656): exit 0

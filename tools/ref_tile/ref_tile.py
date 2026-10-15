@@ -410,11 +410,14 @@ def cluster_signal_cap(s: dict, slot: dict | None = None) -> tuple[str, dict | N
 The grant carries the no-through-traffic and phase-aligned PG obligations. A
 probe may measure routing before the phase audit exists, but cannot auto-merge.
 """
-    cap = s.get("signal_max_layer", "M7")
-    if cap == "M7":
+    cap = s.get("signal_max_layer") or (slot or {}).get("signal_max_layer") or "M7"
+    slot_cap = (slot or {}).get("signal_max_layer")
+    if slot_cap is not None and (metal(slot_cap) is None or metal(cap) is None or metal(cap) > metal(slot_cap)):
+        raise SpecError(f"cluster signal cap {cap} exceeds contract slot signal_max_layer {slot_cap}")
+    if cap in ("M6", "M7"):
         return cap, None
     if cap not in ("M8", "M9"):
-        raise SpecError(f"cluster signal cap must be M7, or die-granted M8/M9, not {cap}")
+        raise SpecError(f"cluster signal cap must be M6/M7, or die-granted M8/M9, not {cap}")
     g = s.get("cluster_layer_grant") or (slot or {}).get("cluster_layer_grant")
     if not isinstance(g, dict) or not g.get("source") or not g.get("sha256"):
         raise SpecError("cluster M8/M9 needs cluster_layer_grant {source, sha256}")
@@ -491,6 +494,10 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
         raise SpecError("layer contract: a cluster's PG layer is M7 (straps over M5/M6 children; M8/M9 die only)")
     cap, grant = cluster_signal_cap(s, slot)
     out.update(pg_layer="M7", rlayers=("M2", cap), strap_layer="M8")
+    if cap == "M6":
+        # Signal restriction is independent of the cluster's PG mesh. Export
+        # must prove the actual routed signal/clock wires stop below M7 PG.
+        out["signal_max_layer"] = cap
     if grant:
         out["cluster_layer_grant"] = grant
     if slot and slot.get("pg_layer") and slot["pg_layer"] != out["pg_layer"]:
@@ -1124,7 +1131,8 @@ def gen_hooks(s: dict, kd: str) -> dict:
         # add before GRT, remove after DRT (the wrapper picks the mode from its caller); the hold ECO re-applies it
         pre_grt.append(f"source /src/{MACRO_EDGE_GUARD_TCL}")
         post_drt.append(f"source /src/{MACRO_EDGE_GUARD_TCL}")
-    if s["kind"] == "tile" and s.get("signal_max_layer"):
+    if ((s["kind"] == "tile" and s.get("signal_max_layer")) or
+            (s["kind"] == "cluster" and cluster_signal_cap(s, contract_slot(s))[0] == "M6")):
         lc = layer_contract(s, contract_slot(s))
         post_drt += ["source /src/tools/ref_tile/signal_layer_audit.tcl",
                      f"ot_ref_audit_signal_layers {lc['rlayers'][1]} {lc['pg_layer']} [file join $::env(RESULTS_DIR) signal_layer_audit.json]"]
@@ -1388,7 +1396,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
     if macro_edge_guard(s):
         out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]
-    if s["kind"] == "tile" and s.get("signal_max_layer"):
+    if ((s["kind"] == "tile" and s.get("signal_max_layer")) or
+            (s["kind"] == "cluster" and cluster_signal_cap(s, contract_slot(s))[0] == "M6")):
         out.append("tools/ref_tile/signal_layer_audit.tcl")
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
