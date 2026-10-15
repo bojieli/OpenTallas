@@ -23,6 +23,7 @@ foreach qdq_bt [$qdq_blk getBTerms] {
     set qdq_dead [list $qdq_net [[$qdq_tail findITerm A] getNet] [[$qdq_mid findITerm A] getNet]]
     $qdq_bt disconnect
     $qdq_bt connect $qdq_source
+    foreach qdq_n $qdq_dead {$qdq_n setDoNotTouch 0}
     foreach qdq_i [list $qdq_tail $qdq_mid $qdq_lead] {
         catch {unset_dont_touch [get_cells [$qdq_i getName]]}
         $qdq_i setDoNotTouch 0
