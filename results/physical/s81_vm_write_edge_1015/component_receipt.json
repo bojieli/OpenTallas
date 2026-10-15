@@ -1,0 +1,57 @@
+{
+  "schema": "opentallas.s81.vm-write-roots-component.v1",
+  "status": "COMPONENT_EXACT_AND_MUTANT_PASS_NOT_NATIVE_PHYSICAL_QUALIFICATION",
+  "source_hashes": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_w0.sv": "4baa6926cec55bafa02e25fbd5a98513c3c95850d8db69536f598e05b7da147d",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wcontrol.sv": "3690b2d8ba93e4c725411b056c66cfbf7a46cccff013902e1a9cba7aba288dc1",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wsched.sv": "25497cee3da8a7910869f5c35e8b5df23c02e6899f0f61f98b1746aa0a9151be",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv": "28bd561ffe0bf79ccd9de80b657f5ac04c1f2678741233eb6f19240c4d82ea81",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wstage128.sv": "effa6053cf176b39cc7e237045c8505c4ee8343ea979cd22ef3bc542cd989457",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_wsched_roots.sv": "0245c1afe1195a8a760129fc464bd321b3f36940cec2edf710bb276f4958d84e",
+    "tools/s81_write_edge/component_gate.sh": "9542d865d8dd2da76eac32c6db8618f473755fbe0fbdc7ff130a70cab29b4bc0"
+  },
+  "ot_run": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-831367-1792058422",
+    "reserved_mem_gb": 48,
+    "threads": 4,
+    "returncode": 0
+  },
+  "source_sources": 53,
+  "actual_dispatch_leaves": 16,
+  "actual_stage_leaves": 128,
+  "clock_ports": 150,
+  "edgecheck": "Every scatter sample must match independent compiler P+4+same-bank-prefix-lane scoreboard; all512data/16mask/14row/8tag/valid checked; no referenceDUT",
+  "normal": {
+    "source_writes": 11024,
+    "exact_scatter_writes": 11024,
+    "errors": 0,
+    "fault": 0
+  },
+  "datapath_mutant": {
+    "define": "OT_VM_W0_MUT_SLICE",
+    "expected": "FAIL",
+    "actual": "FAIL"
+  },
+  "clock_fault": {
+    "mode": 1,
+    "mechanism": "Suppress one real payload-root edge; observation-only epoch mismatch must latch control fault",
+    "expected": "CLOCK_FAULT_PASS",
+    "actual": "CLOCK_FAULT_PASS"
+  },
+  "prior_harness_failure": {
+    "unit": "oth-ubuntu-821502-1792058249",
+    "returncode": 127,
+    "reason": "Remote running shell source was overwritten during extraction of controlleaf; Bash later read inconsistent line offsets. BaselinePASS and mutationFAIL occurred before harness command1notfound. Preserved immutable output; allfinal proof2 inputs frozen and hashes matched."
+  },
+  "log_hashes": {
+    "run_clock_fault.log": "eab78c0a4ee9f94ace12489eac98772e72653f81ba64ba596653a36aa2f2c3c0",
+    "run_mutant.log": "44e020eb5b428010774763169041b7b72640df97ef2594d91b4f12001ecb3319",
+    "run_base.log": "953e728daee020df73cabbbc748df3fbd39dbd0364277b64e1518419c5eeea95"
+  },
+  "next_gates": [
+    "Parentnative150root ABI and phase/insertion/STA/TTFFDRC0",
+    "Allglobalpayload/control/capture/storage-bank facehop paths and compiler uniformstage updates",
+    "No production calendar/throughput qualification inferred from componenttest"
+  ]
+}

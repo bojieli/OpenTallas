@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.s81.vm-write-edge-map.v1",
+  "top": "dsfd_vm_static_wcontrol",
+  "parameters": {
+    "NSRC": 53
+  },
+  "returncode": 1,
+  "source_sha256": "4baa6926cec55bafa02e25fbd5a98513c3c95850d8db69536f598e05b7da147d",
+  "libraries": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    }
+  ],
+  "command": [
+    "yosys",
+    "-s",
+    "/measure/control/map.ys"
+  ],
+  "status": "MAPPED_AREA_ONLY_NOT_CTS_TIMING_OR_PHYSICAL_QUALIFICATION",
+  "artifacts": {
+    "input.sv": "4baa6926cec55bafa02e25fbd5a98513c3c95850d8db69536f598e05b7da147d",
+    "map.ys": "7436d1712e6d995d15d41e6c4a9b1b810ffc291ed76b5fe68ee07d5a44e8b1d2",
+    "map.log": "6e9094a711ebc826ceedca8a1eb751cb056d828fb2785bb594bde741078ff161",
+    "mapped.lib": "b0baab48ad649ed5fc13ce2264e3e64427cf7450f7fdc87710c70ba0c167c3d0"
+  }
+}
