@@ -42,7 +42,8 @@
   "threads": 4,
   "peak_ram_gb": 8,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "m5_pg_pitch": 2.7
  },
  "recipe": 2,
  "inhold": true,
@@ -50,10 +51,10 @@
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "job": {
-  "owner": "Codex:q_compute_die",
+  "owner": "Claude:q_compute_die",
   "branch": "claude/qwen-split-compute-1014",
-  "tag": "raw1",
-  "purpose": "39real raw SRAM consume observers banks24..62; independent root at each actual macro consumeedge",
+  "tag": "raw2",
+  "purpose": "39real raw SRAM consume observers banks24..62; independent root at each actual macro consumeedge; raw2: M5 PG pitch 2.7 (raw1 CLOSED TT+343.68/FF+28.97 but export child_lint (b) FAIL: 2 M5 stripes/net span 42% < 50% of the 12.96-um width, collect crashed twice)",
   "views_to": "physical/ref_tile/qfd_vm_qcommit/views",
   "record_to": "results/rtl/ref_tile/qfd_vm_qcommit",
   "extra_paths": [
