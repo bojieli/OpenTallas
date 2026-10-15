@@ -1,0 +1,4710 @@
+{
+  "schema": "opentallas.qwen-native-kv-programme-all36.v2",
+  "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+  "qualified_stage_count": 36,
+  "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+  "reset_pin_release_edges": 1,
+  "start_origin": "SEGMENT0_CORE_START",
+  "external_start_before_internal_origin_edges": 1,
+  "boot_pin_capture_edges": 1,
+  "slot_interval_shift_edges": 0,
+  "cycle_origin": "cycle0 interval immediately after INTERNAL accepted start, one edge after external start capture; start binds segment0 core-start, not stage-start. Absolute segment core_start_cycle is not added to relative word ages.",
+  "stages": [
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 1,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "1f8fd7a623e8ef7820c21e11b3422233929b206216d4e39314b3880c92d3137d",
+      "word_cycles": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "stop_cycle": 17,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000011"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 2,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "dea26683336cdac632e5894c69353c012e64c3b33bb4c3e7f06c162e3074d7e0",
+      "word_cycles": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "stop_cycle": 18,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000d"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000012"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 3,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "81ee855ee0b349f1ebf829e0ae7e7073e16c072ae673a9703cf2d4ec58fdb89b",
+      "word_cycles": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stop_cycle": 16,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000008"
+        },
+        {
+          "address": 1,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000010"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 4,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "ef5fe2427fe9f6cdf9b06d5b509399322649aa7ed159f85e15d059e7c5d62dbd",
+      "word_cycles": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "stop_cycle": 17,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000011"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 5,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "4c8f23a5ca7346140fdee2d9ec34b2cd9b32dc6bb7e966faf0361e55ab3a77db",
+      "word_cycles": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "stop_cycle": 18,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000d"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000012"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 6,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "69f3cd671713e689fc5453df338d0b5c84db9eef06af42d8c35fccc32efa1b7a",
+      "word_cycles": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stop_cycle": 16,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000008"
+        },
+        {
+          "address": 1,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000010"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 7,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "512499f232cad63b52546dc53b9b0b709b9b389271eb22e6c842caa2c38f6931",
+      "word_cycles": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "stop_cycle": 17,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000011"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 8,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "d00a88350808974f16dc49d81c1ecb840e07965b131c4c719fd2dd7cd1939152",
+      "word_cycles": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "stop_cycle": 18,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000d"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000012"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 9,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "62d479e48490b30b9e902e7909f3454a510d24ea1454d58081c8c0c337f5be95",
+      "word_cycles": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stop_cycle": 16,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000008"
+        },
+        {
+          "address": 1,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000010"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 10,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "cec042ec3b0fc5f09fb8cd429763e13ee48dee7a75ce920c54a745bf446977a2",
+      "word_cycles": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "stop_cycle": 17,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000011"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 11,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "3a643020a34839e67b94da30bb907c69ec758bfceee74f7f3e22e007705afb61",
+      "word_cycles": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "stop_cycle": 18,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000d"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000012"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 12,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "2f33eca3c58fbfc3ceae2b8a895f819063d8ac7098e7ececeffd07fc115289a2",
+      "word_cycles": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stop_cycle": 16,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000008"
+        },
+        {
+          "address": 1,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000010"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 13,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "ea3388c51cd45ba242368257a5b278ea73594a20854589c400d83893b666ddb1",
+      "word_cycles": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "stop_cycle": 17,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000011"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 14,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "50cbf67ae0c2c2f5d6ec9d5e8483f891dd231876e035efd7d26ff435a0afd553",
+      "word_cycles": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "stop_cycle": 18,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000d"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000012"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 15,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "1982623f6870d77b581699dd1ca1ec9de0fc79d47db1afbb2be47cfe85bb5c2f",
+      "word_cycles": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stop_cycle": 16,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000008"
+        },
+        {
+          "address": 1,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000010"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 16,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "b9b63b111194c1b52366bfe06d70cad4f54852c198ff8790f4658411898f30cc",
+      "word_cycles": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "stop_cycle": 17,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000011"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 17,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "01f3a65bf2184de480b3e42dd9530ae6a4e2b656e297cdcba1308085a94f728d",
+      "word_cycles": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "stop_cycle": 18,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000d"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000012"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 18,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "e276c44bc0bca1b478af10055a015879526f5f9a0e74a74b3321bdcaccd1ab08",
+      "word_cycles": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stop_cycle": 16,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000008"
+        },
+        {
+          "address": 1,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000010"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 19,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "9c3bce9ad4011353ee2d0e15ff78c7e228cf39897072e620757f5871c41cd979",
+      "word_cycles": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "stop_cycle": 17,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000011"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 20,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "21406fe64b8638f6f9818af9d66cb1fd540ff3980b41fdec9a8f7c12f9be61d5",
+      "word_cycles": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "stop_cycle": 18,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000d"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000012"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 21,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "72c513e699770d3707b242d34adbcd9ac42aad8b5a2988ef21bdd9357c15696e",
+      "word_cycles": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stop_cycle": 16,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000008"
+        },
+        {
+          "address": 1,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000010"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 22,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "3210a742456276240949617cbc1fa763ce439572d227f3f04fb705762c080494",
+      "word_cycles": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "stop_cycle": 17,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000011"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 23,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "da17107228b9182d9348036d2eeb93fa3278c51393ecde189359d1eb0c6b8c87",
+      "word_cycles": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "stop_cycle": 18,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000d"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000012"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 24,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "6d20b8a356b87172073b425b3f9d97f6eacfc203bea19593b75e510516869170",
+      "word_cycles": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stop_cycle": 16,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000008"
+        },
+        {
+          "address": 1,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000010"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 25,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "687c7a48e7dfaab4c96ab31edbb373ba2b7813764c2a54b8b61f627cca3c951f",
+      "word_cycles": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "stop_cycle": 17,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000011"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 26,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "3ebd46369ee9f225f88c2275f6d8e7027c6ca0304993366930a9e18904f1c12e",
+      "word_cycles": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "stop_cycle": 18,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000d"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000012"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 27,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "31bd262f611502d097a3be2d93f885b02f7e73254028dba62f49a414f3f16bfd",
+      "word_cycles": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stop_cycle": 16,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000008"
+        },
+        {
+          "address": 1,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000010"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 28,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "f9fffc1339a9752f79567c5382d6f0b750bcc4b4076cd830cc901efbe9087b0c",
+      "word_cycles": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "stop_cycle": 17,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000011"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 29,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "9811415d99b0ed3101f637202ae6bed4776cc269677dc810f9d054cf1345ad10",
+      "word_cycles": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "stop_cycle": 18,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000d"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000012"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 30,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "954d6f29a8d49d0f4d2284e4bdb405f92c14020da92ff97bdb1174e3ff497e15",
+      "word_cycles": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stop_cycle": 16,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000008"
+        },
+        {
+          "address": 1,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000010"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 31,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "eab780e89ad4ccb1f1894b0d4212be0be667c3c009474dfa4b37dc0a5da4e856",
+      "word_cycles": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "stop_cycle": 17,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000011"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 32,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "90a599fc2631ea53156f151cd37a97eeea93663c6c1721fda5bb9860162b7438",
+      "word_cycles": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "stop_cycle": 18,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000d"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000012"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 33,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "7f66113ebc585996c4491438bddd8e3eab74580925f5f1a641d943dc5451cde8",
+      "word_cycles": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stop_cycle": 16,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000008"
+        },
+        {
+          "address": 1,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000010"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 34,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "35faf6576b79418e85911a85e43fa014fda21ddfd14208c36a2c113a02557b3c",
+      "word_cycles": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "stop_cycle": 17,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000011"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 35,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "88e42510a21db22ca4a82c98e14f68cadb0bf1966c34cf0b35bde08e93f2ada9",
+      "word_cycles": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "stop_cycle": 18,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 1,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000c"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000d"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000012"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    },
+    {
+      "schema": "opentallas.qwen-native-kv-programme.v1",
+      "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+      "start_pin_capture_edges": 1,
+      "boot_pin_capture_edges": 1,
+      "reset_pin_release_edges": 1,
+      "minimum_reset_fill_edges": 5,
+      "external_start_before_internal_origin_edges": 1,
+      "absolute_internal_core_start_cycle": null,
+      "absolute_external_start_cycle": null,
+      "slot_output_predecode_edges": 1,
+      "slot_interval_shift_edges": 0,
+      "qualified_stage_count": 1,
+      "stage": 36,
+      "segment": 0,
+      "native_pc": 11,
+      "word_order": [
+        "K_low",
+        "K_high",
+        "V_low",
+        "V_high"
+      ],
+      "source_kv_pcs": [
+        3,
+        8,
+        10
+      ],
+      "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+      "profile_sha256": "add130a824245a2258181a0f0682b210f3112d19cb71ae0b3c274d7fe1f010dd",
+      "word_cycles": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stop_cycle": 16,
+      "writes": [
+        {
+          "address": 0,
+          "data_hex": "0000000000000008"
+        },
+        {
+          "address": 1,
+          "data_hex": "0000000000000009"
+        },
+        {
+          "address": 2,
+          "data_hex": "000000000000000a"
+        },
+        {
+          "address": 3,
+          "data_hex": "000000000000000b"
+        },
+        {
+          "address": 4,
+          "data_hex": "0000000000000010"
+        }
+      ],
+      "root_fields": {
+        "epoch": 16,
+        "token": 18,
+        "position": 13,
+        "generation": 2
+      },
+      "tag_fields": {
+        "epoch": [
+          58,
+          43
+        ],
+        "stage": [
+          42,
+          37
+        ],
+        "token": [
+          36,
+          19
+        ],
+        "position": [
+          18,
+          6
+        ],
+        "segment": [
+          5,
+          0
+        ]
+      },
+      "implementation_source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+      "expectation_inputs": [
+        "compiled_word_slot",
+        "compiled_word_index",
+        "compiled_identity",
+        "compiled_generation"
+      ],
+      "unsupported": [
+        "controller command/refresh/reservations",
+        "HBM front blk_go",
+        "ring return slots",
+        "full-stage timing and token performance"
+      ],
+      "production_qualified": false
+    }
+  ],
+  "writes": [
+    {
+      "address": 0,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 1,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 2,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 3,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 4,
+      "data_hex": "0000000000000011"
+    },
+    {
+      "address": 5,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 6,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 7,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 8,
+      "data_hex": "000000000000000d"
+    },
+    {
+      "address": 9,
+      "data_hex": "0000000000000012"
+    },
+    {
+      "address": 10,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 11,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 12,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 13,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 14,
+      "data_hex": "0000000000000010"
+    },
+    {
+      "address": 15,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 16,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 17,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 18,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 19,
+      "data_hex": "0000000000000011"
+    },
+    {
+      "address": 20,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 21,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 22,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 23,
+      "data_hex": "000000000000000d"
+    },
+    {
+      "address": 24,
+      "data_hex": "0000000000000012"
+    },
+    {
+      "address": 25,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 26,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 27,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 28,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 29,
+      "data_hex": "0000000000000010"
+    },
+    {
+      "address": 30,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 31,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 32,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 33,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 34,
+      "data_hex": "0000000000000011"
+    },
+    {
+      "address": 35,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 36,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 37,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 38,
+      "data_hex": "000000000000000d"
+    },
+    {
+      "address": 39,
+      "data_hex": "0000000000000012"
+    },
+    {
+      "address": 40,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 41,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 42,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 43,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 44,
+      "data_hex": "0000000000000010"
+    },
+    {
+      "address": 45,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 46,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 47,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 48,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 49,
+      "data_hex": "0000000000000011"
+    },
+    {
+      "address": 50,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 51,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 52,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 53,
+      "data_hex": "000000000000000d"
+    },
+    {
+      "address": 54,
+      "data_hex": "0000000000000012"
+    },
+    {
+      "address": 55,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 56,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 57,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 58,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 59,
+      "data_hex": "0000000000000010"
+    },
+    {
+      "address": 60,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 61,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 62,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 63,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 64,
+      "data_hex": "0000000000000011"
+    },
+    {
+      "address": 65,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 66,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 67,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 68,
+      "data_hex": "000000000000000d"
+    },
+    {
+      "address": 69,
+      "data_hex": "0000000000000012"
+    },
+    {
+      "address": 70,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 71,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 72,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 73,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 74,
+      "data_hex": "0000000000000010"
+    },
+    {
+      "address": 75,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 76,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 77,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 78,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 79,
+      "data_hex": "0000000000000011"
+    },
+    {
+      "address": 80,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 81,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 82,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 83,
+      "data_hex": "000000000000000d"
+    },
+    {
+      "address": 84,
+      "data_hex": "0000000000000012"
+    },
+    {
+      "address": 85,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 86,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 87,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 88,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 89,
+      "data_hex": "0000000000000010"
+    },
+    {
+      "address": 90,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 91,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 92,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 93,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 94,
+      "data_hex": "0000000000000011"
+    },
+    {
+      "address": 95,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 96,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 97,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 98,
+      "data_hex": "000000000000000d"
+    },
+    {
+      "address": 99,
+      "data_hex": "0000000000000012"
+    },
+    {
+      "address": 100,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 101,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 102,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 103,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 104,
+      "data_hex": "0000000000000010"
+    },
+    {
+      "address": 105,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 106,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 107,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 108,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 109,
+      "data_hex": "0000000000000011"
+    },
+    {
+      "address": 110,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 111,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 112,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 113,
+      "data_hex": "000000000000000d"
+    },
+    {
+      "address": 114,
+      "data_hex": "0000000000000012"
+    },
+    {
+      "address": 115,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 116,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 117,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 118,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 119,
+      "data_hex": "0000000000000010"
+    },
+    {
+      "address": 120,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 121,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 122,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 123,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 124,
+      "data_hex": "0000000000000011"
+    },
+    {
+      "address": 125,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 126,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 127,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 128,
+      "data_hex": "000000000000000d"
+    },
+    {
+      "address": 129,
+      "data_hex": "0000000000000012"
+    },
+    {
+      "address": 130,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 131,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 132,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 133,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 134,
+      "data_hex": "0000000000000010"
+    },
+    {
+      "address": 135,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 136,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 137,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 138,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 139,
+      "data_hex": "0000000000000011"
+    },
+    {
+      "address": 140,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 141,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 142,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 143,
+      "data_hex": "000000000000000d"
+    },
+    {
+      "address": 144,
+      "data_hex": "0000000000000012"
+    },
+    {
+      "address": 145,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 146,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 147,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 148,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 149,
+      "data_hex": "0000000000000010"
+    },
+    {
+      "address": 150,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 151,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 152,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 153,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 154,
+      "data_hex": "0000000000000011"
+    },
+    {
+      "address": 155,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 156,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 157,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 158,
+      "data_hex": "000000000000000d"
+    },
+    {
+      "address": 159,
+      "data_hex": "0000000000000012"
+    },
+    {
+      "address": 160,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 161,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 162,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 163,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 164,
+      "data_hex": "0000000000000010"
+    },
+    {
+      "address": 165,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 166,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 167,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 168,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 169,
+      "data_hex": "0000000000000011"
+    },
+    {
+      "address": 170,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 171,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 172,
+      "data_hex": "000000000000000c"
+    },
+    {
+      "address": 173,
+      "data_hex": "000000000000000d"
+    },
+    {
+      "address": 174,
+      "data_hex": "0000000000000012"
+    },
+    {
+      "address": 175,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 176,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 177,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 178,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 179,
+      "data_hex": "0000000000000010"
+    },
+    {
+      "address": 180,
+      "data_hex": "514b565052473336"
+    }
+  ],
+  "boot_writes": 181,
+  "boot_bytes": 1448,
+  "production_qualified": false,
+  "full_token_qualified": false,
+  "unsupported": [
+    "controller command/refresh/reservations",
+    "HBM front blk_go",
+    "ring return slots",
+    "full-token execution and performance"
+  ]
+}

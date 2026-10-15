@@ -50,7 +50,7 @@ Reproduce source and component evidence with:
     QWEN_O4_TP=8 QWEN_O4_GROUPS=3072 QWEN_O4_AR_WORDS=256 python tools/qwen_tp8_fulltoken_plan.py --snapshot /path/to/b968826d9c46dd6066d109eabc6255188de91218 --out /fresh/source
     python tools/qwen_static_kv/run_native_programme_gate.py --source-dir /fresh/source --out /fresh/gate
 
-Latest evidence is in results/rtl/qwen_native_kv_programme_1103/pin_v3; all36_v2 is the preceding functional revision. The regression
+Latest evidence is in results/rtl/qwen_native_kv_programme_1103/reset_v4; pin_v3 and all36_v2 are preceding structural/functional revisions. The regression
 uses one reset, one 181-write boot and one seal, then executes all36 stages for
 two tokens over 16 boundary positions per stage: 1152 cohorts, 4608 fixed word
 slots and 9216 physical sectors. Stage-table selection and stage-identity
@@ -67,7 +67,7 @@ decoder. Native PC11, K/V source PCs3/8/10 and descriptors are unchanged.
 The historical plan has stale current ISA source pins and is refused. The
 regenerated candidate is not an installed-programme replacement.
 
-The unified model counts 6291 logical state bits per writer, including 5760
+The unified model counts 6292 logical state bits per writer, including 5760
 boot-table bits and 160 selected timing roots, plus 1448 bytes of exceptional
 boot traffic. The 36-way root selection, replica count and boundary widths are
 explicit. Area, slot fit, routing capacity and SS/FF timing remain unmeasured.
@@ -90,8 +90,8 @@ compiled_identity59 and compiled_generation2 directly originate at captured
 transaction-root FFs; no received writer identity is used. All expected
 descriptor outputs and status/cycle outputs remain FF outputs. A Yosys
 read/proc/memory_map/opt_clean audit checks all functional input consumers are
-FF D pins and every output bit is a direct FF Q. It counts exactly 6291 FF
-bits: 5887 synchronous data bits and 404 asynchronously reset bits. This is a
+FF D pins and every output bit is a direct FF Q. It counts exactly 6292 FF
+bits: 5887 synchronous data bits and 405 asynchronously reset bits. This is a
 structural audit, not technology mapping or physical timing evidence.
 
 The proposed physical envelope remains 86.4 by 194.4 micrometres with a single
@@ -100,3 +100,19 @@ qualification. Added input capture ownership is 129 FF bits, and registered
 slot ownership is four FF bits. No slot interval or writer capture latency is
 added; start capture adds one explicitly declared edge before the internal
 origin and boot capture adds one exceptional flush edge.
+
+External rst_n now terminates at exactly one kept one-bit reset pin FF.
+It asserts asynchronously and releases synchronously after one clock edge;
+its Q owns every internal asynchronous reset pin, including the input valid
+capture flags. The structural audit explicitly requires the external reset to
+have exactly one one-bit FF ARST sink. The reset pin adds one logical FF bit
+to pin_v3, giving 6292 total bits. Normal start and slot intervals after reset
+release are unchanged.
+
+The compiler requires reset_pin_release_edges=1 and adds that edge to the
+downstream reset-release/fill budget. Its reset_release path age describes the
+downstream reset network from the reset pin Q; the source's one-edge pin release
+is accounted separately. With the existing four-edge minimum downstream fill,
+minimum_reset_fill_edges is now five. Missing/reset-bypass profiles are refused.
+The external ABI, physical pin count, boot image layout, start capture latency
+and slot predecode latency are unchanged.

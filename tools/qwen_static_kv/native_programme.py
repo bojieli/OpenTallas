@@ -43,7 +43,7 @@ def source_contract(program, descriptors, plan, stage):
 
 def ages(profile, program, component_test):
     required = ('period_fs', 'phase_fs', 'start_origin', 'word_producer_age_fs',
-                'word_stride_fs', 'stop_cycle', 'start_pin_capture_edges', 'source_sha256')
+                'word_stride_fs', 'stop_cycle', 'start_pin_capture_edges', 'reset_pin_release_edges', 'source_sha256')
     missing = [k for k in required if profile.get(k) is None]
     if not component_test:
         missing += [k for k in ('receipt_path', 'receipt_sha256') if profile.get(k) is None]
@@ -102,6 +102,8 @@ def compile_stage(program, descriptors, plan, profile, stage, *, component_test=
     period = profile['period_fs']; phase = profile['phase_fs']
     if period <= 0 or not 0 <= phase < period or profile['word_producer_age_fs'] < 0 or profile['word_stride_fs'] <= 0:
         raise ScheduleError('invalid source writer clock/timeline')
+    if profile['reset_pin_release_edges'] != 1 or type(profile['reset_pin_release_edges']) is not int:
+        raise ScheduleError('implemented reset pin release is exactly one edge')
     if profile['start_pin_capture_edges'] != 1 or type(profile['start_pin_capture_edges']) is not int:
         raise ScheduleError('implemented start pin capture is exactly one edge')
     if path_ages['start_capture_to_root'] >= period:
@@ -115,7 +117,7 @@ def compile_stage(program, descriptors, plan, profile, stage, *, component_test=
     if any(t < phase or (t-phase) % period for t in times):
         raise ScheduleError('actual formatter words do not land on assigned writer edges')
     cycles = [(t-phase)//period for t in times]
-    reset_edges = max(4, (path_ages['reset_release'] + period-1)//period)
+    reset_edges = 1 + max(4, (path_ages['reset_release'] + period-1)//period)
     expectation_age = path_ages['expectation_to_writer']
     # This revision has a direct registered root next to the writer. A routed
     # expectation hop must be represented in RTL, rather than subtracted away.
@@ -131,7 +133,7 @@ def compile_stage(program, descriptors, plan, profile, stage, *, component_test=
     writes += [dict(address=4, data_hex=f'{stop:016x}')]
     return dict(schema='opentallas.qwen-native-kv-programme.v1',
                 status='COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE' if component_test else 'SOURCE_AND_PHYSICAL_PROFILE_BOUND_RECEIVER_WITNESS_REQUIRED',
-                start_pin_capture_edges=1,boot_pin_capture_edges=1,
+                start_pin_capture_edges=1,boot_pin_capture_edges=1,reset_pin_release_edges=1,minimum_reset_fill_edges=reset_edges,
                 external_start_before_internal_origin_edges=1,
                 absolute_internal_core_start_cycle=absolute_core_start,
                 absolute_external_start_cycle=None if absolute_core_start is None else absolute_core_start-1,
@@ -161,7 +163,7 @@ def compile_programme(program, descriptors, plan, profile, *, component_test=Fal
     return dict(schema='opentallas.qwen-native-kv-programme-all36.v2',
         status='COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE' if component_test else 'SOURCE_AND_PHYSICAL_PROFILE_BOUND_RECEIVER_WITNESS_REQUIRED',
         qualified_stage_count=36,source_program_sha256=images[0]['source_program_sha256'],
-        start_origin='SEGMENT0_CORE_START',external_start_before_internal_origin_edges=1,boot_pin_capture_edges=1,slot_interval_shift_edges=0,
+        reset_pin_release_edges=1,start_origin='SEGMENT0_CORE_START',external_start_before_internal_origin_edges=1,boot_pin_capture_edges=1,slot_interval_shift_edges=0,
         cycle_origin='cycle0 interval immediately after INTERNAL accepted start, one edge after external start capture; start binds segment0 core-start, not stage-start. Absolute segment core_start_cycle is not added to relative word ages.',
         stages=images,writes=writes,boot_writes=181,boot_bytes=1448,
         production_qualified=False,full_token_qualified=False,

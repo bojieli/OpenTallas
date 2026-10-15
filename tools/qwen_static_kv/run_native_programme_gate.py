@@ -24,7 +24,7 @@ def main():
     paths=[PRODUCER,WRITER,'rtl/qwen_split/qfd_kvn_static_transport.sv',
            'rtl/qwen_split/qfd_native59_compute_service.sv','rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv',
            'rtl/physical/ot_qkd_kv_static_writer_native.sv','rtl/lib/ot_rst_relay.sv']
-    profile=dict(period_fs=833334,phase_fs=137000,start_origin="SEGMENT0_CORE_START",start_pin_capture_edges=1,
+    profile=dict(period_fs=833334,phase_fs=137000,start_origin="SEGMENT0_CORE_START",start_pin_capture_edges=1,reset_pin_release_edges=1,
                  word_producer_age_fs=8*833334,word_stride_fs=833334,stop_cycle=16,
                  source_sha256={p:sha(ROOT/p) for p in paths},
                  component_path_ages_fs=dict(formatter_to_writer=0,expectation_to_writer=100000,reset_release=4*833334,start_capture_to_root=100000))
@@ -57,6 +57,7 @@ def main():
     try:compile_programme(program,descriptors,plan,dict(stages=profiles[:-1]),component_test=True)
     except MissingPhysicalProfile as e:negative.append(dict(name='missing_stage36',refused=True,error=str(e)))
     else:raise AssertionError('partial stage table escaped')
+    p=copy.deepcopy(profile);p['reset_pin_release_edges']=0;refuse('missing_reset_pin_release',contract=p)
     p=copy.deepcopy(profile);p['start_pin_capture_edges']=0;refuse('missing_start_pin_capture',contract=p)
     p=copy.deepcopy(profile);p['component_path_ages_fs']['start_capture_to_root']=833334;refuse('unimplemented_start_root_pipeline',contract=p)
     # An absolute outer core-start timestamp must never be added to relative

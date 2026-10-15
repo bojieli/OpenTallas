@@ -39,7 +39,7 @@ def qwen_native_kv_programme_candidate_model(replicas=1):
     """Writer-only fixed roots; no measured route or token-rate credit."""
     if type(replicas) is not int or replicas < 1:
         raise ValueError('actual positive writer replica count required')
-    state = dict(pin_input_capture=129, registered_slot_outputs=4, stage_table=5760, selected_cycle_roots=160, stage_and_loader=23, transaction_roots=61,
+    state = dict(reset_pin_capture=1, pin_input_capture=129, registered_slot_outputs=4, stage_table=5760, selected_cycle_roots=160, stage_and_loader=23, transaction_roots=61,
                  run_flags=4, elapsed_cycle=32, expectation_pipeline=2,
                  expected_descriptor=116)
     return dict(schema='opentallas.qwen-native-kv-programme-candidate.v1',
@@ -55,6 +55,7 @@ def qwen_native_kv_programme_candidate_model(replicas=1):
         root_input_bits_per_start=55,
         maximum_word_slots_per_cycle=1, word_slots_per_cohort=4,
         high_half_sectors_per_slot=4, sectors_per_cohort=8,
+        reset_pin_release_edges=1, minimum_reset_fill_edges=5,
         start_pin_capture_edges=1, boot_pin_capture_edges=1,
         slot_output_predecode_edges=1, slot_interval_shift_edges=0,
         external_start_to_internal_origin_edges=1,

@@ -21,6 +21,11 @@ module qkd_kv_native_programme #(parameter integer MUT=0)(
  output reg[1:0]expected_stack,output reg[58:0]expected_identity,
  output reg[1:0]expected_generation,output reg[28:0]expected_address
 );
+ // Sole external reset sink: immediate assertion, one-edge synchronous
+ // release. All internal reset pins are driven by this kept pin FF's Q.
+ (* keep = "true" *) reg reset_pin_n;
+ always @(posedge ck or negedge rst_n)
+  if(!rst_n)reset_pin_n<=0;else reset_pin_n<=1;
  // Every functional input first lands at a dedicated pin register. Valid
  // flags reset; captured data are consumed only with their matching valid.
  (* keep = "true" *) reg cfg_we_p,start_p;
@@ -36,8 +41,8 @@ module qkd_kv_native_programme #(parameter integer MUT=0)(
   stage_p<=stage;epoch_p<=epoch;token_p<=token;
   position_p<=position;generation_p<=generation;
  end
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)begin cfg_we_p<=0;start_p<=0;end
+ always @(posedge ck or negedge reset_pin_n)
+  if(!reset_pin_n)begin cfg_we_p<=0;start_p<=0;end
   else begin cfg_we_p<=cfg_we;start_p<=start;end
  reg[31:0]t0,t1,t2,t3,stop_q;
  reg[5:0]stage_q;reg[7:0]next_cfg;
@@ -83,8 +88,8 @@ module qkd_kv_native_programme #(parameter integer MUT=0)(
  endfunction
  wire[12:0]pos=identity_q[18:6];
  wire[2:0]group_q=group_of(pos[2:0]);
- always @(posedge ck or negedge rst_n)begin
-  if(!rst_n)begin
+ always @(posedge ck or negedge reset_pin_n)begin
+  if(!reset_pin_n)begin
    t0<=0;t1<=0;t2<=0;t3<=0;stop_q<=0;stage_q<=0;next_cfg<=0;cfg_stage<=0;cfg_word<=0;
    identity_q<=0;generation_q<=0;configured<=0;active<=0;done<=0;
    cycle<=0;word_slot_q<=0;kvn_slot_q<=0;word_index_q<=0;fault<=0;pending<=0;kind_q<=0;expected_valid<=0;
