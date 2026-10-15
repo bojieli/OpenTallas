@@ -2,7 +2,9 @@
 // tb_s81_su_rxh_eq (S-ELEM-C 2026-10-15): the hardened RX cluster ot_s81_su_rxh (v2: control + 16 RA front/back lane
 // leaves + 4 QR leaves + RB/RW leaf) against the flat tile ot_s81_su_rxt (the production reference of the same units),
 // both at S_RD 5 / QW 2, on one random job stream of every RX kind (RA 8, RB 9, QR 10, RW 11): parameter rows several a
-// cycle on any slot, operand rows behind them in the same cycle, RB / QR pairs, RW ids + score rows, idle gaps, special
+// cycle on any slot, RA / RB operand rows behind them in the same cycle (not RW / QR: the flat tile reads the RW
+// configuration / QR tables registered BEFORE that cycle, a flat-tile hazard the calendar never schedules; the
+// cluster's stage B reads the fresh rows), RB / QR pairs, RW ids + score rows, idle gaps, special
 // operands (zeros, subnormals, infinities, NaN).  Every result row (address, mask, data; both write slots) must match
 // in order; sticky faults must match.  The per-kind first-result latency difference is printed (the cluster's added
 // fixed stages).  XMUT (cluster only): 1 RA returns sp, 2 RB drops the bias, 3 QR inverse rotation, 4 RW skips the
@@ -114,7 +116,7 @@ module tb_s81_su_rxh_eq;
                     per = 1 + (rng() % 5);
                     while (r < np && per > 0 && slot < 5) begin dv[slot] = 1; dd[512 * slot +: 512] = rows[r]; r = r + 1; slot = slot + 1; per = per - 1; end
                 end
-                if (r >= np && slot < 5 && (slot == 0 || (rng() % 2))) begin
+                if (r >= np && slot < 5 && (slot == 0 || ((kk == K_RA || kk == K_RB) && (rng() % 2)))) begin
                     pairsz = (kk == K_RB || kk == K_QR) ? 2 : 1;
                     if (slot + pairsz <= 5 && r + pairsz <= nrows) begin
                         for (j = 0; j < pairsz; j = j + 1) begin dv[slot] = 1; dd[512 * slot +: 512] = rows[r]; r = r + 1; slot = slot + 1; end

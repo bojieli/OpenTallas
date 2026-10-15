@@ -4,7 +4,7 @@
 # Run from the repository root (via ot-run on a fleet host).  Writes OUT/receipt.json with the source hashes.
 set -u
 OUT=${1:?out dir}; SEEDS=${2:-"1 2 3 4"}; NJOB=${NJOB:-48}
-mkdir -p "$OUT"
+mkdir -p "$OUT"  # XLIST (env) selects the variants
 SRC="rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv
  rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv rtl/hdc/v41x/ot_hdc_v41x_spshort.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv
  rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv
@@ -12,7 +12,7 @@ SRC="rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv rtl/dsrom_sys/s81_suhc/hier/ot
  rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/dsrom_sys/s81_suhc/test/tb_s81_su_rxh_eq.sv"
 sha256sum $SRC > "$OUT/sources.sha256"
 rc_all=0; : > "$OUT/summary.txt"
-for X in 0 1 2 3 4; do
+for X in ${XLIST:-0 1 2 3 4}; do
   obj="$OUT/obj_x$X"
   verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --top-module tb_s81_su_rxh_eq -Mdir "$obj" -j 16 \
       -GXMUT=$X -GNJOB=$NJOB $SRC > "$OUT/build_x$X.log" 2>&1 || { echo "BUILD FAIL x$X" | tee -a "$OUT/summary.txt"; rc_all=1; continue; }
