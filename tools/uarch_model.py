@@ -16411,3 +16411,32 @@ def hbm_vm_static_calendar_host_model():
       clocks='hostconfigurationclock mustsharedefinedcompilerphase atlaunch or getexplicitstaticcrossing',
       physical='newnativeproducer requiresdiepin/slot/clock qualification; no closedloaderalias',
       qualification='realexistingloaderCP→LCPdoorbell→real4programmeSRAMs composition test required')
+def hgi_coll_tkm_static_calendar(G=96, n=512, k=2048, kmax=2048, has_r=True):
+    """Fixed production TKM calendar; no data-dependent survivor pruning or admission.
+
+    Four lanes each deliver eight pairs every eight edges. Every pair, including
+    padding, owns an insertion slot; four comparators' inputs enter per edge.
+    Two passes reuse the actual 64-position hardened tile arithmetic and SRAM
+    pass buffer. All phase lengths depend only on configuration. The immutable
+    prior price is retained for comparison, never replaced by this schedule.
+    """
+    assert 1 <= G <= 96 and 1 <= n <= 2048 and 1 <= k <= kmax <= 2048
+    flits = G * ((n + 7) // 8)
+    groups = (flits + 3) // 4
+    cells = (min(k, G*n) + 3) // 4
+    tiles = (kmax + 63) // 64
+    settle = 3*tiles + 8  # three registered insertion edges per tile, plus root pipeline
+    ingress = groups*8
+    # Initial clear, ingress, settle, first conveyor+capture, second clear,
+    # SRAM read+insert, settle, final conveyor+pack/drain.
+    cycles = 8 + ingress + settle + cells + 5 + 5 + cells + 6 + settle + cells + 8 + 1
+    return dict(flits=flits, groups=groups, ingress_cycles=ingress,
+                pairs_per_cycle=4, lane_beat_period=8, tile_count=tiles,
+                tile_positions=64, insertion_settle_cycles=settle,
+                selected_cells=cells, pass_buffer_bytes=1024*512//8,
+                ingress_register_bits=4*545, chain_bits_per_cycle=340,
+                root_sink_plan='sequencer, ingress, buffer, packer and each tile own clock roots; phi-R per root',
+                record_cycles=cycles, exact_done_cycle=cycles,
+                output_lines=(min(k,G*n)+15)//16*(2 if has_r else 1),
+                schedule='fixed all-element insertion; fixed value conveyor; fixed SRAM reinsertion; fixed id conveyor',
+                price_comparison='historical estimate retained separately; static throughput remains unqualified until measured')
