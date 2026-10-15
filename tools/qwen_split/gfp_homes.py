@@ -21,7 +21,11 @@ def source_fingerprint(model):
     payload = dict(die=model['die'], insts=sorted(insts, key=lambda i: i['n']),
                    buses=sorted(buses, key=lambda b: b['b']),
                    port_join=model.get('port_join', {}),
-                   port_split=model.get('port_split', {}))
+                   port_split=model.get('port_split', {}),
+                   ties=model.get('ties', []),
+                   source_bindings={k: model[k] for k in
+                       ('native_control_contract', 'native_graph_bind', 'static_link_bind',
+                        'res_train_bind', 'native_static_io_bind') if k in model})
     return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
 
