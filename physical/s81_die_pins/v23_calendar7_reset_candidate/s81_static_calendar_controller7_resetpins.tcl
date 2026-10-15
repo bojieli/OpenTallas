@@ -573,6 +573,6 @@ place_pin -pin_name {clk_rom[2]} -layer M4 -location {0.042 199.548} -force_to_d
 place_pin -pin_name {clk_outputs[0]} -layer M4 -location {237.558 38.364} -force_to_die_boundary
 place_pin -pin_name {clk_outputs[1]} -layer M4 -location {237.558 48.348} -force_to_die_boundary
 place_pin -pin_name {clk_outputs[2]} -layer M4 -location {237.558 115.164} -force_to_die_boundary
-place_pin -pin_name {rst_outputs_n[0]} -layer M4 -location {237.558 38.460} -force_to_die_boundary
-place_pin -pin_name {rst_outputs_n[1]} -layer M4 -location {237.558 48.444} -force_to_die_boundary
-place_pin -pin_name {rst_outputs_n[2]} -layer M4 -location {237.558 115.260} -force_to_die_boundary
+place_pin -pin_name {rst_outputs0_n} -layer M4 -location {237.558 38.460} -force_to_die_boundary
+place_pin -pin_name {rst_outputs1_n} -layer M4 -location {237.558 48.444} -force_to_die_boundary
+place_pin -pin_name {rst_outputs2_n} -layer M4 -location {237.558 115.260} -force_to_die_boundary
