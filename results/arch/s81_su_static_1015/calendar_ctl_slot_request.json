@@ -1,0 +1,81 @@
+{
+ "schema": "opentallas.slot_change_request.v1",
+ "kind": "new_independent_leaf",
+ "design": "s81",
+ "master": "ot_s81_su_calendar_ctl",
+ "parameters": {},
+ "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl.sv",
+ "source_sha256": "ee79596b363a1d757689ba2806dfe7085c331d83591905a8c124bc388c4b96c0",
+ "requester": "Codex S81SUstaticowner1103",
+ "die_owner": "s81_die_1103",
+ "grant": "S-DIE owner message 2026-10-15: independent129.6um square candidate; absoluteparentincidentplacementOPEN",
+ "outline_um": [
+  129.6,
+  129.6
+ ],
+ "pin_faces": {
+  "N": [
+   "calendar_word[1023:0]"
+  ],
+  "S": [
+   "rq_v",
+   "rq_row",
+   "dn_st",
+   "dn_kind",
+   "dn_gsel",
+   "dn_fp4",
+   "dn_jid",
+   "moe_v",
+   "moe_row",
+   "done",
+   "done_tag"
+  ],
+  "W": [
+   "rs_v",
+   "wq_v",
+   "wq_row",
+   "wq_mask"
+  ],
+  "E": [
+   "calendar_valid",
+   "calendar_cycle",
+   "cycle",
+   "arm",
+   "up_fu",
+   "up_fo",
+   "up_alive",
+   "up_den",
+   "up_rdy",
+   "up_rjid",
+   "fault",
+   "fault_code",
+   "running",
+   "clk",
+   "rst_n"
+  ]
+ },
+ "clock": {
+  "port": "clk",
+  "logical_domain": "serial_sk_900MHz",
+  "provisional_gate_period_ps": 833.333,
+  "insertion_ps": null
+ },
+ "model": {
+  "input_bits_per_edge": 1024,
+  "output_words_per_edge": 1,
+  "face_N_bits": 1024,
+  "face_N_length_um": 129.6,
+  "face_N_capacity_pitch_um": 0.072,
+  "face_N_cut": 0.5688888888888889,
+  "logical_registered_bits": 318,
+  "cycles_added": 0
+ },
+ "parent_homes_qualified": false,
+ "route_eligible": false,
+ "release_requires": [
+  "Actualassignedpins/kitandsource-boundCTSgate",
+  "Default4096x1024real128SRAMpositiveandactualDUTmutants",
+  "TTsetup/FFhold/DRC0/nativepinlaunch/capture/spread",
+  "Currentparent clock/programme/geometrybinding"
+ ]
+}

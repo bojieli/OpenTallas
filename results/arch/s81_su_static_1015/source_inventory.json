@@ -1,0 +1,75 @@
+{
+ "schema": "opentallas.s81.su-static-source-inventory.v1",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_static_programmed.sv": "34f9a1b225a8a407849d99f106fd8e305f72bbebbd6178f016936f1ff1090c6b",
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_static.sv": "59b0d29a8ebf20049a9e92fdca1a2e60063ee8c7fc2622ec767ca92b56a26efd",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_store.sv": "5a461f769106ca90365395a1fa2ac7a2dc21854cd8cd62914a7601d8516a103b",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl.sv": "ee79596b363a1d757689ba2806dfe7085c331d83591905a8c124bc388c4b96c0",
+  "rtl/hdc/ot_sram_bank.sv": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+  "tools/s81_suhc/static_su_calendar.py": "d3e22394593d49f2f25c49292fa9c6838dab4ce6d50272beb7f7a04538048952",
+  "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_calendar_store.sv": "34945e203114d25a629702c0bf7840cbcc701cf5dffc039bd19392cfcba80691"
+ },
+ "programme": {
+  "wrapper": "dsfd_sp_su_static_programmed",
+  "default_depth": 4096,
+  "width": 1024,
+  "AW": 12,
+  "capacity_bits": 4194304,
+  "capacity_bytes": 524288,
+  "macro_count": 128,
+  "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+  "macro_size_um": [
+   171.288,
+   77.784
+  ],
+  "macro_area_mm2": 1.7054036213760004,
+  "read_words_per_edge": 1,
+  "boot_write_width": 64,
+  "boot_write_lanes_per_word": 16,
+  "boot_edges_full_capacity": 65536,
+  "clock": "sk",
+  "logical_clock_MHz": 900,
+  "logical_bytes_per_second": 115200000000.0,
+  "physical_qualification": false
+ },
+ "controller": {
+  "master": "ot_s81_su_calendar_ctl",
+  "parameters": {},
+  "parent_instance": "dsfd_sp_su_static_programmed.u_su.u_calendar",
+  "port_bits": 1903,
+  "calendar_input_bits": 1024,
+  "logical_registered_bits": 318,
+  "clock_port": "clk",
+  "reset_port": "rst_n",
+  "requested_signoff_period_ps": 833.333,
+  "reason_for_period": "Conservative existing SU leaf physical target retained; production serial domain is900MHz and actual3:4 phase join remains required."
+ },
+ "parent": {
+  "master": "dsfd_sp_su_static",
+  "default_S_RD": 16,
+  "default_S_WR": 16,
+  "default_NTL": 37,
+  "default_NQE": 32,
+  "default_NQQ": 8,
+  "default_NKE": 64,
+  "default_NKQ": 16,
+  "default_NPB": 8,
+  "default_NSWQ": 8,
+  "default_SNE": 128,
+  "default_NSM": 8,
+  "default_NPO": 4,
+  "default_RXH": 1,
+  "external_clock_entries": 1,
+  "clock_port": "sk",
+  "native_clock_delivery_qualified": false
+ },
+ "evidence_gaps": [
+  "Existing calendar_store_gate onlyDEPTH64/twoSRAMs, notdefault4096/128SRAM",
+  "No actualcanonical fullstage calendar length/capacity receipt",
+  "Programme64-way512b muxes perhalf and128macro homes/clocks lackphysical proof",
+  "WholeSUstatic parent ties every operator/relay to scalar sk; no source-bound independentclock delivery map",
+  "Programmedwrapper arm/boot ABI isnotdie legacyc_cmd/done adapter; actualdie sourceelaboration/producerjoin required",
+  "Actual3:4 SU/VM phase lowering and allsource-bound perop native events required",
+  "FullSU arithmetic/availability/fault/reset/relays notqualified byprogrammecomponent"
+ ]
+}
