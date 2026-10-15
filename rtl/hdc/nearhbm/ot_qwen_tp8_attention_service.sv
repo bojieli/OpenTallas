@@ -20,7 +20,8 @@ module ot_qwen_tp8_attention_service #(
  parameter integer STATIC_K_TRANSPORT=0,
  parameter integer K_RETURN_LATENCY=16,
  parameter integer STATIC_V_TRANSPORT=0,
- parameter integer V_RETURN_LATENCY=17
+ parameter integer E_READ_LATENCY=1,
+ parameter integer V_RETURN_LATENCY=16+E_READ_LATENCY
 ) (
  input wire clk,rst_n,
  input wire request_valid,output wire request_ready,
@@ -149,7 +150,7 @@ module ot_qwen_tp8_attention_service #(
   wire want_ready;reg [13:0] want_t;reg want_run;
   wire [2:0] slot;wire [13:0] req_t;wire [15:0] req_ep;
   wire ov,ordy,first,last;wire [1023:0] vdata;wire [63:0] expdata;wire [13:0] ot;wire [15:0] oep;
-  reg [1:0] rv;reg [5:0] slots;reg [27:0] ts;reg [31:0] eps;reg [2047:0] rows;
+  wire [1:0] rv;wire [5:0] slots;wire [27:0] ts;wire [31:0] eps;wire [2047:0] rows;
   wire [1:0] rsp_good;
   wire [1:0] rsp_ready;
   assign v_rsp_ready[s]=rsp_ready[0]&&state==PV&&!fault;
@@ -162,15 +163,21 @@ module ot_qwen_tp8_attention_service #(
   assign eaddr[11*(s+2)+:11]={v_rsp_t[14*(s+2)+9+:4],v_rsp_t[14*(s+2)+:7]};
   reg bad0,bad1;assign vbad[s]=bad0;assign vbad[s+2]=bad1;
   always @(posedge clk or negedge rst_n)begin
-   if(!rst_n)begin rv<=0;slots<=0;ts<=0;eps<=0;rows<=0;bad0<=0;bad1<=0;end
+   if(!rst_n)begin bad0<=0;bad1<=0;end
    else begin
-    rv<={eread[s+2],eread[s]};
     if(v_rsp_valid[s]&&((v_rsp_ready[s]&&!rsp_good[0])||(STATIC_V_TRANSPORT&&!v_rsp_ready[s])))bad0<=1;
     if(v_rsp_valid[s+2]&&((v_rsp_ready[s+2]&&!rsp_good[1])||(STATIC_V_TRANSPORT&&!v_rsp_ready[s+2])))bad1<=1;
-    slots<={v_rsp_slot[3*(s+2)+:3],v_rsp_slot[3*s+:3]};ts<={v_rsp_t[14*(s+2)+:14],v_rsp_t[14*s+:14]};
-    eps<={v_rsp_epoch[16*(s+2)+:16],v_rsp_epoch[16*s+:16]};rows<={v_rsp_data[1024*(s+2)+:1024],v_rsp_data[1024*s+:1024]};
    end
   end
+  // Native ASTK EP reads take3 edges; the historical functional profile1.
+  // E_READ_LATENCY must match the actually instantiated memory service.
+  ot_qwen_tp8_vrow_capture #(.LATENCY(E_READ_LATENCY)) u_capture(
+   .clk(clk),.rst_n(rst_n),.in_valid({eread[s+2],eread[s]}),
+   .in_slot({v_rsp_slot[3*(s+2)+:3],v_rsp_slot[3*s+:3]}),
+   .in_t({v_rsp_t[14*(s+2)+:14],v_rsp_t[14*s+:14]}),
+   .in_epoch({v_rsp_epoch[16*(s+2)+:16],v_rsp_epoch[16*s+:16]}),
+   .in_rows({v_rsp_data[1024*(s+2)+:1024],v_rsp_data[1024*s+:1024]}),
+   .out_valid(rv),.out_slot(slots),.out_t(ts),.out_epoch(eps),.out_rows(rows));
   always @(posedge clk or negedge rst_n)begin
    if(!rst_n)begin want_t<=0;want_run<=0;end
    else if(start_pv)begin want_t<=s*128;want_run<=ctx>s*128;end
