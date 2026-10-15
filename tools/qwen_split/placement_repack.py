@@ -55,7 +55,9 @@ def propose(dump):
     modified = copy.deepcopy(original)
     ix = {i['n']: i for i in modified}
     lane, port, res = [ix[f'sp_{k}_0'] for k in ['band_lanes', 'port_tiles', 'res_ser']]
-    bottom = lane['y']
+    if {i['o'] for i in [lane, port, res]} not in ({'R0'}, {'MX'}):
+        raise ValueError('band-0 repack requires uniformly R0 or MX stack')
+    bottom = min(i['y'] for i in [lane, port, res])
     res['y'] = bottom
     port['y'] = bottom+518.4+4.32
     lane['y'] = bottom+518.4+2462.4+8.64
@@ -67,7 +69,12 @@ def propose(dump):
     flip_score = score([parent], ix)
     fixed = [i for i in modified if i['n'] != parent['n']]
     vm = ix['sp_vector_memory']
-    f1right = max(i['x']+i['w'] for i in fixed if i['n'].startswith('sp_port_tiles_') and i['n'].endswith('_f1'))
+    east_slabs = [i for i in fixed if i['n'].startswith('sp_port_tiles_') and i['n'].endswith('_f1')]
+    if not east_slabs:
+        raise ValueError('west VM channel requires actual paired F1 slab rectangles')
+    f1right = max(i['x']+i['w'] for i in east_slabs)
+    if vm['x']-f1right < 64.8+2*4.32:
+        raise ValueError(f'west VM channel too narrow: {vm["x"]-f1right:.3f} um; need >=73.44 um')
     x = math.floor((f1right+vm['x']-64.8)/2/.216)*.216
     best = None
     for ytick in range(2200, 4000):
@@ -91,7 +98,7 @@ def propose(dump):
     return dict(schema='opentallas.qwen.placement-repack-projection.v1',
                 evidence_scope='legal source rectangle proposal; geometric lower bounds only',
                 die=dump['die'], baseline=baseline, band0_flip_only=flip_score,
-                candidate=metrics, placements=changed, retired=['tt_up4_0'],
+                candidate=metrics, candidate_leaves=leaves, placements=changed, retired=['tt_up4_0'],
                 baseline_geometry_errors=baseline_errors, candidate_geometry_errors=errors,
                 saved_critical_stages=baseline['critical_roundtrip_relays']-metrics['critical_roundtrip_relays'],
                 cuts=dict(qualified=False, reason='exact per-bit paths and relay sites absent; cannot infer <=0.60 from rectangles'),
@@ -99,6 +106,30 @@ def propose(dump):
                 warnings=['MX band-0 pins/clocks must be regenerated from actual child orientations.',
                           'Vertical direct-leaf stack requires exact per-leaf pin/clock joins and equal fixed ages.',
                           'Global rectangle validity does not prove pin access or relay-frame fit.'])
+
+
+def apply(v, m):
+    """Repack existing source rectangles before direct_up4 constructs its leaves.
+
+    The original upper parent remains in the model until direct_up4 replaces it.
+    The complete validated leaf proposal is returned and recorded on the actual
+    model; no qualification is inferred from the geometry projection.
+    """
+    dump = dict(die=copy.deepcopy(m['die']), insts=[
+        dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient)
+        for i in m['insts']])
+    result = propose(dump)
+    if result['candidate_geometry_errors']:
+        raise ValueError(f'placement repack invalid: {result["candidate_geometry_errors"][:8]}')
+    by = {i.name: i for i in m['insts']}
+    for rect in result['placements']:
+        if rect['n'] in by:
+            i = by[rect['n']]
+            i.x, i.y, i.orient = rect['x'], rect['y'], rect['o']
+    result['application_state'] = 'existing rectangles applied; direct_up4 must consume candidate_leaves'
+    result['source_pin_clock_qualification'] = 'OPEN: regenerate actual oriented pins/clocks and route'
+    m['placement_repack'] = result
+    return result
 
 
 def main():

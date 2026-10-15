@@ -35,6 +35,44 @@
     "return_relays": 13,
     "critical_roundtrip_relays": 26
   },
+  "candidate_leaves": [
+    {
+      "n": "tt_up4_leaf0",
+      "m": "ot_qfd_band_upper",
+      "x": 14753.016,
+      "y": 13422.24,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf1",
+      "m": "ot_qfd_band_upper",
+      "x": 14753.016,
+      "y": 13646.88,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf2",
+      "m": "ot_qfd_band_upper",
+      "x": 14753.016,
+      "y": 13871.52,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf3",
+      "m": "ot_qfd_band_upper",
+      "x": 14753.016,
+      "y": 14096.16,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    }
+  ],
   "placements": [
     {
       "n": "sp_res_ser_0",
@@ -128,7 +166,10 @@
     "Vertical direct-leaf stack requires exact per-leaf pin/clock joins and equal fixed ages.",
     "Global rectangle validity does not prove pin access or relay-frame fit."
   ],
+  "application_state": "existing rectangles applied; direct_up4 must consume candidate_leaves",
+  "source_pin_clock_qualification": "OPEN: regenerate actual oriented pins/clocks and route",
   "input_dump_sha256": "91a04e4307a5f5162ccc91581f2b36ee353e83e687e23de4d160c446d28f9e7d",
   "input_dump_path": "/tmp/claude-1000/qsc/v13_dump.json",
-  "input_dump_time_scope": "historical local v13 no-relay geometry, 2026-10-14 23:16"
+  "input_dump_time_scope": "historical local v13 no-relay geometry, 2026-10-14 23:16",
+  "full_model_repeat_application": "PASS: existing model rectangles stable; same four candidate leaves"
 }
