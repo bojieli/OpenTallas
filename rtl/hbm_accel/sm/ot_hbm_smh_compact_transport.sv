@@ -21,7 +21,14 @@ module ot_hbm_smh_transport_slice #(
 `endif
     genvar b;
     generate for (b=0; b<W; b=b+1) begin: g_bit
+`ifdef OT_SMH_TRANSPORT_KEEP
+        // Distinct N/S launch copies must survive synth. ot_keep_regs.tcl
+        // moves this wire attribute onto the driving per-bit flop cells.
+        (* keep = 1 *) reg q1;
+        reg q2;
+`else
         reg q1, q2;
+`endif
         if (RESET_MASK[b]) begin: g_valid
             always @(posedge clk or negedge rn)
                 if (!rn) begin q1<=0; q2<=0; end
