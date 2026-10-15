@@ -4,7 +4,7 @@ cd "$(dirname "$0")"
 out="${1:?output directory}"
 mkdir -p "$out"
 variant="${WB_PIPELINE:-0}"
-sources=(ot_hgi_dma_back_static.sv ot_hgi_b2_swap_disp_static.sv ot_hgi_b2_swap_grp_static.sv ot_hgi_b2_swap_wb_grp_static.sv ot_vms_bank_static.sv ot_hbm_svc_wb_block_cdc.sv ot_hbm_svc_wb_pipeline_cdc.sv ot_hbm_svc_phy_mux.sv ot_reset_sync.sv ot_async_fifo.sv ot_hbm_accel_cdc_fifo.sv ot_sram_1r1w_128x256_m1_r2c2.v ot_sram_1r1w_1024x256_m2_r2c2.v ot_hdc_v41x_idx_hbm.sv ot_hdc_hbm_model.sv ot_chip_v41x_hbm3e_phy.sv tb_dma_wb_phy_static.sv)
+sources=(ot_hgi_dma_back_static.sv ot_hgi_b2_swap_disp_static.sv ot_hgi_b2_swap_grp_static.sv ot_hgi_b2_swap_wb_grp_static.sv ot_vms_bank_static.sv ot_hbm_svc_wb_block_cdc.sv ot_hbm_svc_wb_pipeline_cdc.sv ot_hbm_svc_wb_cutthrough_cdc.sv ot_hbm_svc_phy_mux.sv ot_reset_sync.sv ot_async_fifo.sv ot_hbm_accel_cdc_fifo.sv ot_sram_1r1w_128x256_m1_r2c2.v ot_sram_1r1w_1024x256_m2_r2c2.v ot_hdc_v41x_idx_hbm.sv ot_hdc_hbm_model.sv ot_chip_v41x_hbm3e_phy.sv tb_dma_wb_phy_static.sv)
 # A co-located source snapshot is used by remote gates. In a checkout,
 # SERVICE_RTL may point to the service owner snapshot before serial collection.
 if [[ ! -f ot_chip_v41x_hbm3e_phy.sv ]]; then

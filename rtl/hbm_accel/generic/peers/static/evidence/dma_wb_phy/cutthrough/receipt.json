@@ -1,0 +1,72 @@
+{
+  "stage": "TERMINAL",
+  "candidate_commit": "77c8175b8",
+  "candidate_sha256": "0635dc22ba0a625f4bfe861d797a5e2b80450ee7cab442ec71df165b2425de91",
+  "functional": "PASS MAIN/MIRROR each2561 actualmutableHBM exactsectors/truePHYACKs/sourceoverwrite",
+  "performance": "FAIL both campaigns; no adoption or model/calendar/price change",
+  "immutable_price": 248,
+  "limit": 272,
+  "campaigns": [
+    {
+      "mode": "MAIN",
+      "fence_stream_cycles": 443,
+      "first_phy_hbm_edge": [
+        105,
+        105,
+        105,
+        105
+      ],
+      "last_issue_hbm_edge": [
+        416,
+        169,
+        169,
+        169
+      ],
+      "last_ack_hbm_edge": [
+        427,
+        408,
+        408,
+        406
+      ]
+    },
+    {
+      "mode": "MIRROR",
+      "fence_stream_cycles": 446,
+      "first_phy_hbm_edge": [
+        738,
+        738,
+        738,
+        738
+      ],
+      "last_issue_hbm_edge": [
+        1052,
+        802,
+        802,
+        802
+      ],
+      "last_ack_hbm_edge": [
+        1063,
+        1044,
+        1044,
+        1020
+      ]
+    }
+  ],
+  "interpretation": "cutthrough reduces firstPHYlaunch61HBMedges but does not establishREFavoidance or boundedfullfence; candidate regresses original423/207 inthissame declaredinitialstate",
+  "changed": "WB_PIPELINE2 selects newactualWBmodule only; unchangedbench defaultTRACE0 andsame fullnativeCOLB/VMmirror/clocks/calendar/PHYmodel",
+  "ot_run": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3806890-1792054905",
+    "memGB": 4,
+    "threads": 4,
+    "path": "/tmp/hbm-dma-wb-phy-cutthrough-run1",
+    "exit": 0,
+    "terminal": true
+  },
+  "limitations": [
+    "actualSRAM/CDCcomposition into repositorybehavioralHBM model; nativeDRAMcontrollerqualification remains separate gap",
+    "slot0 only; no full13SM/globalEngramallocator qualification",
+    "physical cuts/CTS/route unqualified"
+  ],
+  "negative": "PASS premature fillDone-asACK mutant fails: fence before actual HBM drain ACK"
+}
