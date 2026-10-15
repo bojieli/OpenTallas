@@ -515,6 +515,20 @@ module qfd_tt_ctlm_gate_predictor #(
         assign rsv = {8{rs}};
         assign rrv = {8{rst_n}};
     end endgenerate
+    // q14 r11 (tr3 EARLY_FAIL_HOLD: CTS hold repair stuck at -33.9 ps on u_shadow.u_su_me_idle RESETN): the ret_clk (gated
+    // ec tree) return flops took their async reset from the shared dont_touch copies rsv (primary tree), so the removal
+    // check against the later gated leaves could not be repaired on that net.  They now reset from their OWN copy rrt
+    // (same IS-edge release as rsv, kept register, plain output net the hold repair may buffer).
+    wire rrt;
+    generate if (RRG != 0 && IS > 0) begin : g_rrt
+        (* keep = "true" *) reg [IS-1:0] r_ret;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) r_ret <= {IS{1'b0}};
+            else r_ret <= {r_ret, 1'b1};
+        assign rrt = r_ret[IS-1];
+    end else begin : g_rrt0
+        assign rrt = rrv[2];
+    end endgenerate
     // die-facing input pin stations (registered boundary); kv_ok / kv_write_drained / me_mem_ok stay direct (readiness
     // the controller pairs with its own same-edge state, and the ICG enable path)
     wire q_h_start; wire [18-1:0] q_token, q_pos; wire [11:0] q_prog_base; wire q_pw_v; wire [9:0] q_pw_addr; wire [63:0] q_pw_data;
@@ -806,8 +820,8 @@ module qfd_tt_ctlm_gate_predictor #(
         .c_me_ready(s_me_ready), .c_me_idle(s_me_idle), .c_me_progress(s_me_progress),
         .c_su_ready(), .c_su_idle(), .c_su_progress(), .c_su_rows());
     ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_sd_me_go (.clk(clk), .en(me_clk_en), .rst_n(rrv[6]), .d(c_me_go), .q(u_me_go));
-    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_ready (.clk(ret_clk), .rst_n(rrv[7]), .d(u_me_ready), .q(c_me_ready));
-    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_idle (.clk(ret_clk), .rst_n(rrv[2]), .d(u_me_idle), .q(c_me_idle));
+    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_ready (.clk(ret_clk), .rst_n(rrt), .d(u_me_ready), .q(c_me_ready));
+    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_idle (.clk(ret_clk), .rst_n(rrt), .d(u_me_idle), .q(c_me_idle));
     ot_tt_ce_delay #(.W(18), .D(1)) u_sd_me_i_nout (.clk(clk), .en(me_clk_en), .rst_n(rrv[3]), .d(c_me_i_nout), .q(u_me_i_nout));
     ot_tt_ce_delay #(.W(18), .D(1)) u_sd_me_i_tiles (.clk(clk), .en(me_clk_en), .rst_n(rrv[4]), .d(c_me_i_tiles), .q(u_me_i_tiles));
     ot_tt_ce_delay #(.W(18), .D(1)) u_sd_me_i_k (.clk(clk), .en(me_clk_en), .rst_n(rrv[5]), .d(c_me_i_k), .q(u_me_i_k));
@@ -832,13 +846,13 @@ module qfd_tt_ctlm_gate_predictor #(
     ot_tt_ce_delay #(.W(1), .D(1)) u_sd_me_i_amax (.clk(clk), .en(me_clk_en), .rst_n(rrv[6]), .d(c_me_i_amax), .q(u_me_i_amax));
     ot_tt_ce_delay #(.W(1), .D(1)) u_sd_me_i_rmax (.clk(clk), .en(me_clk_en), .rst_n(rrv[7]), .d(c_me_i_rmax), .q(u_me_i_rmax));
     ot_tt_ce_delay #(.W(24), .D(1)) u_sd_me_i_mbase (.clk(clk), .en(me_clk_en), .rst_n(rrv[2]), .d(c_me_i_mbase), .q(u_me_i_mbase));
-    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_wrom_re (.clk(ret_clk), .rst_n(rrv[3]), .d(u_me_wrom_re), .q(c_me_wrom_re));
-    ot_hdc_delay #(.W(24), .D(1)) u_su_me_wrom_addr (.clk(ret_clk), .rst_n(rrv[4]), .d(u_me_wrom_addr), .q(c_me_wrom_addr));
-    ot_hdc_delay #(.W(18), .D(1)) u_su_me_am_idx (.clk(ret_clk), .rst_n(rrv[5]), .d(u_me_am_idx), .q(c_me_am_idx));
-    ot_hdc_delay #(.W(32), .D(1)) u_su_me_am_val (.clk(ret_clk), .rst_n(rrv[6]), .d(u_me_am_val), .q(c_me_am_val));
-    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_am_any (.clk(ret_clk), .rst_n(rrv[7]), .d(u_me_am_any), .q(c_me_am_any));
-    ot_hdc_delay #(.W(16), .D(1), .RESET(1)) u_su_me_progress (.clk(ret_clk), .rst_n(rrv[2]), .d(u_me_progress), .q(c_me_progress));
-    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_fault (.clk(ret_clk), .rst_n(rrv[3]), .d(u_me_fault), .q(c_me_fault));
+    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_wrom_re (.clk(ret_clk), .rst_n(rrt), .d(u_me_wrom_re), .q(c_me_wrom_re));
+    ot_hdc_delay #(.W(24), .D(1)) u_su_me_wrom_addr (.clk(ret_clk), .rst_n(rrt), .d(u_me_wrom_addr), .q(c_me_wrom_addr));
+    ot_hdc_delay #(.W(18), .D(1)) u_su_me_am_idx (.clk(ret_clk), .rst_n(rrt), .d(u_me_am_idx), .q(c_me_am_idx));
+    ot_hdc_delay #(.W(32), .D(1)) u_su_me_am_val (.clk(ret_clk), .rst_n(rrt), .d(u_me_am_val), .q(c_me_am_val));
+    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_am_any (.clk(ret_clk), .rst_n(rrt), .d(u_me_am_any), .q(c_me_am_any));
+    ot_hdc_delay #(.W(16), .D(1), .RESET(1)) u_su_me_progress (.clk(ret_clk), .rst_n(rrt), .d(u_me_progress), .q(c_me_progress));
+    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_su_me_fault (.clk(ret_clk), .rst_n(rrt), .d(u_me_fault), .q(c_me_fault));
     assign cmd = {u_me_i_mbase, u_me_i_rmax, u_me_i_amax, u_me_i_oen, u_me_i_mmode, u_me_i_ojs, u_me_i_ots, u_me_i_obase, u_me_i_round, u_me_i_wcs, u_me_i_split, u_me_i_jsh, u_me_i_xcs, u_me_i_xjs, u_me_i_xks, u_me_i_xbase, u_me_i_js, u_me_i_ks, u_me_i_ts, u_me_i_wbase, u_me_i_wsrc, u_me_i_k, u_me_i_tiles, u_me_i_nout, u_me_go};
     assign {u_me_fault, u_me_progress, u_me_am_any, u_me_am_val, u_me_am_idx, u_me_wrom_addr, u_me_wrom_re, u_me_idle, u_me_ready} = ret;
     ot_hdc_delay #(.W(1),.D(OS),.RESET(1)) u_os_fin (.clk(clk),.rst_n(rsv[4]),.d(m_fin),.q(m_fin_o));
