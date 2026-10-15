@@ -1,0 +1,2068 @@
+{
+  "schema": "opentallas.qwen.gateway-physical-projection.v1",
+  "qualified": false,
+  "logical_top": "qfd_native_compute_join_957",
+  "logical_graph_sha256": "c24e1ce78f539cec1ab0377624d4589f0306dd69e28416b4675448859f277d1c",
+  "actual_nested_gateway": {
+    "instance": "u_seq.u_seq.u_ctrl.u_a_gateway",
+    "master": "ot_qwen_a_operand_gateway_v1",
+    "source": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv",
+    "source_ref": "d8fdf94f1",
+    "source_sha256": "a794f1f47a2f273e32397062e87b71da7bbd2edc0a36b23451c40b15786e0239",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "start_idle": {
+        "direction": "input",
+        "bits": 1
+      },
+      "su_go": {
+        "direction": "input",
+        "bits": 1
+      },
+      "a_src": {
+        "direction": "input",
+        "bits": 1
+      },
+      "token": {
+        "direction": "input",
+        "bits": 18
+      },
+      "tok_r": {
+        "direction": "input",
+        "bits": 18
+      },
+      "a_re": {
+        "direction": "input",
+        "bits": 64
+      },
+      "a_addr": {
+        "direction": "input",
+        "bits": 1536
+      },
+      "a_q": {
+        "direction": "output",
+        "bits": 2048
+      },
+      "vm_re": {
+        "direction": "output",
+        "bits": 64
+      },
+      "vm_addr": {
+        "direction": "output",
+        "bits": 1536
+      },
+      "vm_q": {
+        "direction": "input",
+        "bits": 2048
+      },
+      "embed_code_re": {
+        "direction": "output",
+        "bits": 1
+      },
+      "embed_code_addr": {
+        "direction": "output",
+        "bits": 24
+      },
+      "embed_code_q": {
+        "direction": "input",
+        "bits": 512
+      },
+      "embed_scale_re": {
+        "direction": "output",
+        "bits": 1
+      },
+      "embed_scale_addr": {
+        "direction": "output",
+        "bits": 18
+      },
+      "embed_scale_q": {
+        "direction": "input",
+        "bits": 16
+      },
+      "embed_faults": {
+        "direction": "output",
+        "bits": 64
+      }
+    },
+    "clock_source": "seq.ck_gateway",
+    "physical_home": null,
+    "native_pin_timing": null,
+    "clock_phase_binding": null
+  },
+  "physical_root_ownership": {
+    "tt": 4,
+    "seq": 2,
+    "su": 347,
+    "vm": 488,
+    "native": 6,
+    "io": 108,
+    "embed": 1,
+    "gateway": 1
+  },
+  "logical_parent_pin_aliases_removed": [
+    {
+      "edge": "su_a_request",
+      "side": "sink",
+      "logical_alias": [
+        "seq",
+        "su_va_re"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "a_re"
+      ],
+      "bits": 64
+    },
+    {
+      "edge": "su_a_address",
+      "side": "sink",
+      "logical_alias": [
+        "seq",
+        "su_va_addr"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "a_addr"
+      ],
+      "bits": 1536
+    },
+    {
+      "edge": "su_a_value",
+      "side": "source",
+      "logical_alias": [
+        "seq",
+        "su_va_q"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "a_q"
+      ],
+      "bits": 2048
+    },
+    {
+      "edge": "su_vm_a_request",
+      "side": "source",
+      "logical_alias": [
+        "seq",
+        "su_vm_va_re"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "vm_re"
+      ],
+      "bits": 64
+    },
+    {
+      "edge": "su_vm_a_address",
+      "side": "source",
+      "logical_alias": [
+        "seq",
+        "su_vm_va_addr"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "vm_addr"
+      ],
+      "bits": 1536
+    },
+    {
+      "edge": "su_vm_a_values",
+      "side": "sink",
+      "logical_alias": [
+        "seq",
+        "su_vm_va_q"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "vm_q"
+      ],
+      "bits": 2048
+    },
+    {
+      "edge": "embed_code_re",
+      "side": "source",
+      "logical_alias": [
+        "seq",
+        "embed_code_re"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "embed_code_re"
+      ],
+      "bits": 1
+    },
+    {
+      "edge": "embed_code_addr",
+      "side": "source",
+      "logical_alias": [
+        "seq",
+        "embed_code_addr"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "embed_code_addr"
+      ],
+      "bits": 24
+    },
+    {
+      "edge": "embed_scale_re",
+      "side": "source",
+      "logical_alias": [
+        "seq",
+        "embed_scale_re"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "embed_scale_re"
+      ],
+      "bits": 1
+    },
+    {
+      "edge": "embed_scale_addr",
+      "side": "source",
+      "logical_alias": [
+        "seq",
+        "embed_scale_addr"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "embed_scale_addr"
+      ],
+      "bits": 18
+    },
+    {
+      "edge": "embed_code_q",
+      "side": "sink",
+      "logical_alias": [
+        "seq",
+        "embed_code_q"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "embed_code_q"
+      ],
+      "bits": 512
+    },
+    {
+      "edge": "embed_scale_q",
+      "side": "sink",
+      "logical_alias": [
+        "seq",
+        "embed_scale_q"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "embed_scale_q"
+      ],
+      "bits": 16
+    },
+    {
+      "edge": "embed_start",
+      "side": "source",
+      "logical_alias": [
+        "seq",
+        "embed_scale_re"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "embed_scale_re"
+      ],
+      "bits": 1
+    },
+    {
+      "edge": "embed_token",
+      "side": "source",
+      "logical_alias": [
+        "seq",
+        "embed_scale_addr"
+      ],
+      "actual_nested_pin": [
+        "gateway",
+        "embed_scale_addr"
+      ],
+      "bits": 18
+    }
+  ],
+  "directed_edges": [
+    {
+      "name": "copy_active",
+      "source": [
+        "su",
+        "cp_active"
+      ],
+      "source_select": null,
+      "sink": [
+        "tt",
+        "cp_active"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "copy_command",
+      "source": [
+        "tt",
+        "cp"
+      ],
+      "source_select": null,
+      "sink": [
+        "su",
+        "cp"
+      ],
+      "bits": 56
+    },
+    {
+      "name": "su_image_ready",
+      "source": [
+        "seq",
+        "cfg_image_ready"
+      ],
+      "source_select": null,
+      "sink": [
+        "tt",
+        "su_image_ready"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "su_issue_observer",
+      "source": [
+        "seq",
+        "su_observe"
+      ],
+      "source_select": null,
+      "sink": [
+        "tt",
+        "su_observe"
+      ],
+      "bits": 16
+    },
+    {
+      "name": "me_status",
+      "source": [
+        "tt",
+        "xm"
+      ],
+      "source_select": null,
+      "sink": [
+        "seq",
+        "xm"
+      ],
+      "bits": 92
+    },
+    {
+      "name": "su_status",
+      "source": [
+        "seq",
+        "xs"
+      ],
+      "source_select": null,
+      "sink": [
+        "tt",
+        "xs"
+      ],
+      "bits": 57
+    },
+    {
+      "name": "me_start",
+      "source": [
+        "seq",
+        "st"
+      ],
+      "source_select": null,
+      "sink": [
+        "tt",
+        "st"
+      ],
+      "bits": 49
+    },
+    {
+      "name": "su_command",
+      "source": [
+        "seq",
+        "su"
+      ],
+      "source_select": null,
+      "sink": [
+        "su",
+        "si"
+      ],
+      "bits": 482
+    },
+    {
+      "name": "su_result_status",
+      "source": [
+        "su",
+        "sd"
+      ],
+      "source_select": null,
+      "sink": [
+        "seq",
+        "sd"
+      ],
+      "bits": 108
+    },
+    {
+      "name": "su_accepted",
+      "source": [
+        "su",
+        "acc"
+      ],
+      "source_select": null,
+      "sink": [
+        "seq",
+        "acc"
+      ],
+      "bits": 24
+    },
+    {
+      "name": "su_a_request",
+      "source": [
+        "su",
+        "external_a_re"
+      ],
+      "source_select": null,
+      "sink": [
+        "gateway",
+        "a_re"
+      ],
+      "bits": 64
+    },
+    {
+      "name": "su_a_address",
+      "source": [
+        "su",
+        "external_a_addr"
+      ],
+      "source_select": null,
+      "sink": [
+        "gateway",
+        "a_addr"
+      ],
+      "bits": 1536
+    },
+    {
+      "name": "su_a_value",
+      "source": [
+        "gateway",
+        "a_q"
+      ],
+      "source_select": null,
+      "sink": [
+        "su",
+        "external_a_q"
+      ],
+      "bits": 2048
+    },
+    {
+      "name": "su_vm_a_request",
+      "source": [
+        "gateway",
+        "vm_re"
+      ],
+      "source_select": null,
+      "sink": [
+        "su",
+        "external_vm_a_re"
+      ],
+      "bits": 64
+    },
+    {
+      "name": "su_vm_a_address",
+      "source": [
+        "gateway",
+        "vm_addr"
+      ],
+      "source_select": null,
+      "sink": [
+        "su",
+        "external_vm_a_addr"
+      ],
+      "bits": 1536
+    },
+    {
+      "name": "su_vm_request",
+      "source": [
+        "su",
+        "va"
+      ],
+      "source_select": null,
+      "sink": [
+        "vm",
+        "sa"
+      ],
+      "bits": 2367
+    },
+    {
+      "name": "su_vm_values",
+      "source": [
+        "vm",
+        "sq"
+      ],
+      "source_select": null,
+      "sink": [
+        "su",
+        "vq"
+      ],
+      "bits": 6144
+    },
+    {
+      "name": "su_vm_a_values",
+      "source": [
+        "vm",
+        "sq"
+      ],
+      "source_select": [
+        2047,
+        0
+      ],
+      "sink": [
+        "gateway",
+        "vm_q"
+      ],
+      "bits": 2048
+    },
+    {
+      "name": "me_vm_write",
+      "source": [
+        "tt",
+        "mx"
+      ],
+      "source_select": null,
+      "sink": [
+        "vm",
+        "mx"
+      ],
+      "bits": 553
+    },
+    {
+      "name": "me_land_count",
+      "source": [
+        "vm",
+        "ld"
+      ],
+      "source_select": null,
+      "sink": [
+        "tt",
+        "ld"
+      ],
+      "bits": 16
+    },
+    {
+      "name": "me_memory_ready",
+      "source": [
+        "vm",
+        "mo"
+      ],
+      "source_select": null,
+      "sink": [
+        "tt",
+        "meok"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "me_vm_enable",
+      "source": [
+        "tt",
+        "mee"
+      ],
+      "source_select": [
+        0,
+        0
+      ],
+      "sink": [
+        "vm",
+        "mee"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "seq_vm_read",
+      "source": [
+        "seq",
+        "vrd"
+      ],
+      "source_select": null,
+      "sink": [
+        "vm",
+        "svr"
+      ],
+      "bits": 21
+    },
+    {
+      "name": "seq_vm_value",
+      "source": [
+        "vm",
+        "svq"
+      ],
+      "source_select": null,
+      "sink": [
+        "seq",
+        "vrq"
+      ],
+      "bits": 512
+    },
+    {
+      "name": "seq_vm_read_valid",
+      "source": [
+        "vm",
+        "svq_v"
+      ],
+      "source_select": null,
+      "sink": [
+        "seq",
+        "svq_v"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "seq_vm_write",
+      "source": [
+        "seq",
+        "vwr"
+      ],
+      "source_select": null,
+      "sink": [
+        "vm",
+        "svw"
+      ],
+      "bits": 533
+    },
+    {
+      "name": "native_native_cmd",
+      "source": [
+        "tt",
+        "native_cmd"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "native_cmd"
+      ],
+      "bits": 380
+    },
+    {
+      "name": "native_native_tok",
+      "source": [
+        "tt",
+        "native_tok"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "native_token"
+      ],
+      "bits": 18
+    },
+    {
+      "name": "native_native_pos",
+      "source": [
+        "tt",
+        "native_pos"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "native_position"
+      ],
+      "bits": 18
+    },
+    {
+      "name": "native_layer_context_v",
+      "source": [
+        "tt",
+        "layer_context_v"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "layer_context_v"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "native_command_stage",
+      "source": [
+        "tt",
+        "command_stage"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "command_stage"
+      ],
+      "bits": 6
+    },
+    {
+      "name": "native_return",
+      "source": [
+        "native",
+        "native_ret"
+      ],
+      "source_select": null,
+      "sink": [
+        "tt",
+        "native_ret"
+      ],
+      "bits": 95
+    },
+    {
+      "name": "native_native_issue",
+      "source": [
+        "su",
+        "native_issue"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "native_issue"
+      ],
+      "bits": 63
+    },
+    {
+      "name": "native_kv_we",
+      "source": [
+        "su",
+        "kv_we"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "kv_we"
+      ],
+      "bits": 64
+    },
+    {
+      "name": "native_kv_waddr",
+      "source": [
+        "su",
+        "kv_waddr"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "kv_waddr"
+      ],
+      "bits": 1536
+    },
+    {
+      "name": "native_kv_wdata",
+      "source": [
+        "su",
+        "kv_wdata"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "kv_wdata"
+      ],
+      "bits": 2048
+    },
+    {
+      "name": "native_vm_write",
+      "source": [
+        "native",
+        "vm_ar"
+      ],
+      "source_select": null,
+      "sink": [
+        "vm",
+        "ar"
+      ],
+      "bits": 520
+    },
+    {
+      "name": "native_q_epoch",
+      "source": [
+        "native",
+        "vm_q_epoch"
+      ],
+      "source_select": null,
+      "sink": [
+        "vm",
+        "q_epoch"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "native_q_start",
+      "source": [
+        "native",
+        "vm_q_start"
+      ],
+      "source_select": null,
+      "sink": [
+        "vm",
+        "q_start"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "vm_native_q_committed",
+      "source": [
+        "vm",
+        "q_committed"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "q_committed"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "vm_native_q",
+      "source": [
+        "vm",
+        "q"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "q"
+      ],
+      "bits": 524
+    },
+    {
+      "name": "vm_native_write_commit_v",
+      "source": [
+        "vm",
+        "write_commit_v"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "write_commit_v"
+      ],
+      "bits": 39
+    },
+    {
+      "name": "vm_native_write_commit_line",
+      "source": [
+        "vm",
+        "write_commit_line"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "write_commit_line"
+      ],
+      "bits": 312
+    },
+    {
+      "name": "vm_native_write_commit_mask",
+      "source": [
+        "vm",
+        "write_commit_mask"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "write_commit_mask"
+      ],
+      "bits": 624
+    },
+    {
+      "name": "vm_native_fault",
+      "source": [
+        "vm",
+        "fault"
+      ],
+      "source_select": null,
+      "sink": [
+        "native",
+        "q_fault"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "embed_code_re",
+      "source": [
+        "gateway",
+        "embed_code_re"
+      ],
+      "source_select": null,
+      "sink": [
+        "embed",
+        "embed_code_re"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "embed_code_addr",
+      "source": [
+        "gateway",
+        "embed_code_addr"
+      ],
+      "source_select": null,
+      "sink": [
+        "embed",
+        "embed_code_addr"
+      ],
+      "bits": 24
+    },
+    {
+      "name": "embed_scale_re",
+      "source": [
+        "gateway",
+        "embed_scale_re"
+      ],
+      "source_select": null,
+      "sink": [
+        "embed",
+        "embed_scale_re"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "embed_scale_addr",
+      "source": [
+        "gateway",
+        "embed_scale_addr"
+      ],
+      "source_select": null,
+      "sink": [
+        "embed",
+        "embed_scale_addr"
+      ],
+      "bits": 18
+    },
+    {
+      "name": "embed_code_q",
+      "source": [
+        "embed",
+        "embed_code_q"
+      ],
+      "source_select": null,
+      "sink": [
+        "gateway",
+        "embed_code_q"
+      ],
+      "bits": 512
+    },
+    {
+      "name": "embed_scale_q",
+      "source": [
+        "embed",
+        "embed_scale_q"
+      ],
+      "source_select": null,
+      "sink": [
+        "gateway",
+        "embed_scale_q"
+      ],
+      "bits": 16
+    },
+    {
+      "name": "embed_start",
+      "source": [
+        "gateway",
+        "embed_scale_re"
+      ],
+      "source_select": null,
+      "sink": [
+        "embed",
+        "core_start"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "embed_token",
+      "source": [
+        "gateway",
+        "embed_scale_addr"
+      ],
+      "source_select": null,
+      "sink": [
+        "embed",
+        "core_token"
+      ],
+      "bits": 18
+    },
+    {
+      "name": "embed_fault",
+      "source": [
+        "embed",
+        "fault"
+      ],
+      "source_select": null,
+      "sink": [
+        "su",
+        "external_embed_fault"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "coll_payload",
+      "source": [
+        "seq",
+        "cd_d"
+      ],
+      "source_select": [
+        511,
+        0
+      ],
+      "sink": [
+        "io",
+        "in_data"
+      ],
+      "bits": 512
+    },
+    {
+      "name": "coll_last",
+      "source": [
+        "seq",
+        "cd_d"
+      ],
+      "source_select": [
+        512,
+        512
+      ],
+      "sink": [
+        "io",
+        "in_last"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "coll_mode",
+      "source": [
+        "seq",
+        "cd_d"
+      ],
+      "source_select": [
+        513,
+        513
+      ],
+      "sink": [
+        "io",
+        "in_mode"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "coll_tag",
+      "source": [
+        "seq",
+        "cd_d"
+      ],
+      "source_select": [
+        545,
+        514
+      ],
+      "sink": [
+        "io",
+        "in_tag"
+      ],
+      "bits": 32
+    },
+    {
+      "name": "coll_valid",
+      "source": [
+        "seq",
+        "cd_d"
+      ],
+      "source_select": [
+        546,
+        546
+      ],
+      "sink": [
+        "io",
+        "in_valid"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "coll_cmd_v",
+      "source": [
+        "seq",
+        "coll_cmd"
+      ],
+      "source_select": [
+        49,
+        49
+      ],
+      "sink": [
+        "io",
+        "cmd_v"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "coll_cmd_mode",
+      "source": [
+        "seq",
+        "coll_cmd"
+      ],
+      "source_select": [
+        16,
+        16
+      ],
+      "sink": [
+        "io",
+        "cmd_mode"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "coll_cmd_words",
+      "source": [
+        "seq",
+        "coll_cmd"
+      ],
+      "source_select": [
+        15,
+        0
+      ],
+      "sink": [
+        "io",
+        "cmd_words"
+      ],
+      "bits": 16
+    },
+    {
+      "name": "coll_cmd_tag",
+      "source": [
+        "seq",
+        "coll_cmd"
+      ],
+      "source_select": [
+        48,
+        17
+      ],
+      "sink": [
+        "io",
+        "cmd_tag"
+      ],
+      "bits": 32
+    },
+    {
+      "name": "coll_cmd_observed_free",
+      "source": [
+        "io",
+        "cmd_free"
+      ],
+      "source_select": null,
+      "sink": [
+        "seq",
+        "coll_cmd_free"
+      ],
+      "bits": 1
+    },
+    {
+      "name": "coll_return_out_valid",
+      "source": [
+        "io",
+        "out_valid"
+      ],
+      "source_select": null,
+      "sink": [
+        "seq",
+        "cc"
+      ],
+      "sink_select": [
+        517,
+        517
+      ],
+      "bits": 1,
+      "assembly": "coll_return"
+    },
+    {
+      "name": "coll_return_out_err",
+      "source": [
+        "io",
+        "out_err"
+      ],
+      "source_select": null,
+      "sink": [
+        "seq",
+        "cc"
+      ],
+      "sink_select": [
+        516,
+        516
+      ],
+      "bits": 1,
+      "assembly": "coll_return"
+    },
+    {
+      "name": "coll_return_out_rank",
+      "source": [
+        "io",
+        "out_rank"
+      ],
+      "source_select": null,
+      "sink": [
+        "seq",
+        "cc"
+      ],
+      "sink_select": [
+        515,
+        513
+      ],
+      "bits": 3,
+      "assembly": "coll_return"
+    },
+    {
+      "name": "coll_return_out_last",
+      "source": [
+        "io",
+        "out_last"
+      ],
+      "source_select": null,
+      "sink": [
+        "seq",
+        "cc"
+      ],
+      "sink_select": [
+        512,
+        512
+      ],
+      "bits": 1,
+      "assembly": "coll_return"
+    },
+    {
+      "name": "coll_return_out_data",
+      "source": [
+        "io",
+        "out_data"
+      ],
+      "source_select": null,
+      "sink": [
+        "seq",
+        "cc"
+      ],
+      "sink_select": [
+        511,
+        0
+      ],
+      "bits": 512,
+      "assembly": "coll_return"
+    },
+    {
+      "name": "gateway_control_start_idle",
+      "source": [
+        "seq",
+        "internal:u_ctrl.start && st == S_IDLE"
+      ],
+      "sink": [
+        "gateway",
+        "start_idle"
+      ],
+      "bits": 1,
+      "evidence": "Actual leaf input expression in source clock variant; thin-controller physical boundary pin not yet assigned.",
+      "physical_source_pin": null
+    },
+    {
+      "name": "gateway_control_su_go",
+      "source": [
+        "seq",
+        "internal:u_ctrl.su_go"
+      ],
+      "sink": [
+        "gateway",
+        "su_go"
+      ],
+      "bits": 1,
+      "evidence": "Actual leaf input expression in source clock variant; thin-controller physical boundary pin not yet assigned.",
+      "physical_source_pin": null
+    },
+    {
+      "name": "gateway_control_a_src",
+      "source": [
+        "seq",
+        "internal:u_ctrl.a_src"
+      ],
+      "sink": [
+        "gateway",
+        "a_src"
+      ],
+      "bits": 1,
+      "evidence": "Actual leaf input expression in source clock variant; thin-controller physical boundary pin not yet assigned.",
+      "physical_source_pin": null
+    },
+    {
+      "name": "gateway_control_token",
+      "source": [
+        "seq",
+        "internal:u_ctrl.token"
+      ],
+      "sink": [
+        "gateway",
+        "token"
+      ],
+      "bits": 18,
+      "evidence": "Actual leaf input expression in source clock variant; thin-controller physical boundary pin not yet assigned.",
+      "physical_source_pin": null
+    },
+    {
+      "name": "gateway_control_tok_r",
+      "source": [
+        "seq",
+        "internal:u_ctrl.tok_r"
+      ],
+      "sink": [
+        "gateway",
+        "tok_r"
+      ],
+      "bits": 18,
+      "evidence": "Actual leaf input expression in source clock variant; thin-controller physical boundary pin not yet assigned.",
+      "physical_source_pin": null
+    },
+    {
+      "name": "gateway_faults",
+      "source": [
+        "gateway",
+        "embed_faults"
+      ],
+      "sink": [
+        "seq",
+        "internal:u_ctrl.embed_faults"
+      ],
+      "bits": 64,
+      "evidence": "Actual existing core fault register observes OR(embed_faults); no extra error/data edge.",
+      "physical_sink_pin": null
+    }
+  ],
+  "directed_edge_count": 75,
+  "controller_interior_boundaries": "Named existing expressions/nets are explicit unresolved physical cut endpoints, not invented source ports.",
+  "activity_source_ref": "1680c684e",
+  "activity": {
+    "status": "ACTUAL_PROGRAMME_SOURCE_BOUND_DEMAND",
+    "lane_width": 64,
+    "programmes": [
+      {
+        "program": "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/embedding_program.hex",
+        "program_sha256": "37033bec53b5c33bdd5674d8451d1250ca5275ba6190619d775bebcfde69e8d0",
+        "operations": [
+          {
+            "pc": 0,
+            "unit": 2,
+            "instruction_sha256": "91d25a26780b67db65a9fc71a9ec0b9f3d855b4b6d320bcfdeb64c1e74782106",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 4096,
+            "vector_issue_edges": 64,
+            "active_lane_reads": 4096,
+            "A_source": "embedding",
+            "A_base": 0,
+            "A_inner_stride": 1,
+            "A_outer_stride": 0,
+            "dynamic_A_base_selector": 1,
+            "A_VM_vector_requests": 0,
+            "A_embedding_vector_requests": 64,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 131072,
+            "provider_code_read_bus_bits": 512,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 1,
+            "unit": 0,
+            "instruction_sha256": "39b7d126a1d8354c283f65278adbd1f315a5cf4e2459e6a534df035c48b986ad",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "END",
+            "dependencies": [
+              "fixed owner END calendar and actual observation fault checks"
+            ]
+          }
+        ],
+        "totals": {
+          "SU_vector_issue_edges": 64,
+          "A_lane_reads": 4096,
+          "A_VM_vector_requests": 0,
+          "A_embedding_vector_requests": 64,
+          "A_return_payload_bits": 131072
+        },
+        "physical_scheduled_cycles": null,
+        "qualification": "SOURCE_DEMAND_ONLY_NOT_MEASURED_EXECUTION_OR_PRODUCTION_PROFILE"
+      },
+      {
+        "program": "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/layer_candidate_program.hex",
+        "program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+        "operations": [
+          {
+            "pc": 0,
+            "unit": 2,
+            "instruction_sha256": "7a77a2078e51d1d06d1dc933d032d036e232ad2231572c0d912e1241a61af247",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 4096,
+            "vector_issue_edges": 64,
+            "active_lane_reads": 4096,
+            "A_source": "VM",
+            "A_base": 4096,
+            "A_inner_stride": 1,
+            "A_outer_stride": 0,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 64,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 131072,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 1,
+            "unit": 1,
+            "instruction_sha256": "0cc5b1a4546d4714ae7d418a3759064785f7fe62fe2f937f80051848bdfff3c6",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "ME",
+            "descriptor": {
+              "me_nout": 768,
+              "me_tiles": 1,
+              "me_k": 8,
+              "me_xbase": 4096,
+              "me_obase": 768,
+              "me_wbase": 0
+            },
+            "dependencies": [
+              "actual fixed TT command -> physical ME operand/ROM producer -> actual registered result -> VM visibility"
+            ],
+            "missing_fields": [
+              "actual ME stage calendar and qualified physical transport ages"
+            ]
+          },
+          {
+            "pc": 2,
+            "unit": 2,
+            "instruction_sha256": "82505ae794e9b88bb38852c0359c8a5a7bf8ce844b3ca15f599ffd4606094504",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 1,
+            "vector_issue_edges": 1,
+            "active_lane_reads": 1,
+            "A_source": "VM",
+            "A_base": 14240,
+            "A_inner_stride": 0,
+            "A_outer_stride": 0,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 1,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 32,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 3,
+            "unit": 2,
+            "instruction_sha256": "d99f697b7ccfc393d374be7b5ab2150d84478944e20a8df4a85cdb640298dcb0",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 128,
+            "vector_issue_edges": 2,
+            "active_lane_reads": 128,
+            "A_source": "VM",
+            "A_base": 12928,
+            "A_inner_stride": 1,
+            "A_outer_stride": 128,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 2,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 4096,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 4,
+            "unit": 2,
+            "instruction_sha256": "00dd68199d8c0543f7b55a6838d0f76878a47a2764af78a1c363cb0391d4a47c",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 5,
+            "nin": 128,
+            "vector_issue_edges": 10,
+            "active_lane_reads": 640,
+            "A_source": "VM",
+            "A_base": 12288,
+            "A_inner_stride": 1,
+            "A_outer_stride": 128,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 10,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 20480,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 5,
+            "unit": 2,
+            "instruction_sha256": "0cc567dfb0a19a83f3c53444826e40c188c02faca7d070e18fa217fe67885174",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 5,
+            "vector_issue_edges": 1,
+            "active_lane_reads": 5,
+            "A_source": "VM",
+            "A_base": 14208,
+            "A_inner_stride": 1,
+            "A_outer_stride": 0,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 1,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 160,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 6,
+            "unit": 2,
+            "instruction_sha256": "7c7ed76b05e6ece49cb24b203c5f7a6b035cd8c2695dd8680ca93a99a4bf4bbb",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 5,
+            "nin": 128,
+            "vector_issue_edges": 10,
+            "active_lane_reads": 640,
+            "A_source": "VM",
+            "A_base": 12288,
+            "A_inner_stride": 1,
+            "A_outer_stride": 128,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 10,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 20480,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "CROM"
+          },
+          {
+            "pc": 7,
+            "unit": 2,
+            "instruction_sha256": "32808aa0912ce241288ff3f031514102cbaad81331d0355bd4a1a3a8d987fec9",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 4,
+            "nin": 64,
+            "vector_issue_edges": 4,
+            "active_lane_reads": 256,
+            "A_source": "VM",
+            "A_base": 13056,
+            "A_inner_stride": 1,
+            "A_outer_stride": 128,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 4,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 8192,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "CROM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 8,
+            "unit": 2,
+            "instruction_sha256": "57f3d842fbdd7e90a39835d95d727ad7e166a40031213377392a0cd083900aca",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 64,
+            "vector_issue_edges": 1,
+            "active_lane_reads": 64,
+            "A_source": "VM",
+            "A_base": 13568,
+            "A_inner_stride": 1,
+            "A_outer_stride": 128,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 1,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 2048,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "CROM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 9,
+            "unit": 2,
+            "instruction_sha256": "e34ddbb54cd4de67d428d997cc633d3cffd2467385f1c514d552ffd7cffdcf6f",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 4,
+            "nin": 64,
+            "vector_issue_edges": 4,
+            "active_lane_reads": 256,
+            "A_source": "VM",
+            "A_base": 13120,
+            "A_inner_stride": 1,
+            "A_outer_stride": 128,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 4,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 8192,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "CROM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 10,
+            "unit": 2,
+            "instruction_sha256": "73e4d2d6fcadc34ac78d2c00ac52d5f6aef4e22d9c4e5e775ac3b511eeb459ff",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 64,
+            "vector_issue_edges": 1,
+            "active_lane_reads": 64,
+            "A_source": "VM",
+            "A_base": 13632,
+            "A_inner_stride": 1,
+            "A_outer_stride": 128,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 1,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 2048,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "CROM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 11,
+            "unit": 1,
+            "instruction_sha256": "c47aac75e940fae1e10c1875ebe84968489021ad67a6653f5a3242609dea839f",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "ME",
+            "descriptor": {
+              "me_nout": 512,
+              "me_tiles": 1,
+              "me_k": 128,
+              "me_xbase": 13696,
+              "me_obase": 3167,
+              "me_wbase": 0
+            },
+            "dependencies": [
+              "actual fixed TT command -> physical ME operand/ROM producer -> actual registered result -> VM visibility"
+            ],
+            "missing_fields": [
+              "actual ME stage calendar and qualified physical transport ages"
+            ]
+          },
+          {
+            "pc": 12,
+            "unit": 1,
+            "instruction_sha256": "43dcfdba1c0ba0ee654d933feaa3847fe60054d97849d7535247b1fcb2d11984",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "ME",
+            "descriptor": {
+              "me_nout": 4096,
+              "me_tiles": 3,
+              "me_k": 2,
+              "me_xbase": 50672,
+              "me_obase": 0,
+              "me_wbase": 64
+            },
+            "dependencies": [
+              "actual fixed TT command -> physical ME operand/ROM producer -> actual registered result -> VM visibility"
+            ],
+            "missing_fields": [
+              "actual ME stage calendar and qualified physical transport ages"
+            ]
+          },
+          {
+            "pc": 13,
+            "unit": 0,
+            "instruction_sha256": "39b7d126a1d8354c283f65278adbd1f315a5cf4e2459e6a534df035c48b986ad",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "END",
+            "dependencies": [
+              "fixed owner END calendar and actual observation fault checks"
+            ]
+          },
+          {
+            "pc": 14,
+            "unit": 2,
+            "instruction_sha256": "5ea44d01bb5c68a9a865172e30b437d547a45a4c078716ac551efb6e48ef49b2",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 4096,
+            "vector_issue_edges": 64,
+            "active_lane_reads": 4096,
+            "A_source": "VM",
+            "A_base": 0,
+            "A_inner_stride": 1,
+            "A_outer_stride": 0,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 64,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 131072,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "CROM"
+          },
+          {
+            "pc": 15,
+            "unit": 2,
+            "instruction_sha256": "3c61e936bac852afd904b29b6523bb91330988de7b25b013c341d25bced50b19",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 4096,
+            "vector_issue_edges": 64,
+            "active_lane_reads": 4096,
+            "A_source": "VM",
+            "A_base": 4096,
+            "A_inner_stride": 1,
+            "A_outer_stride": 0,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 64,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 131072,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 16,
+            "unit": 1,
+            "instruction_sha256": "d1bdf0fd6cef357e370b24f72ef34a0a8d335eb9267f19888696891fd5a81d75",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "ME",
+            "descriptor": {
+              "me_nout": 3072,
+              "me_tiles": 1,
+              "me_k": 32,
+              "me_xbase": 4096,
+              "me_obase": 2975,
+              "me_wbase": 112
+            },
+            "dependencies": [
+              "actual fixed TT command -> physical ME operand/ROM producer -> actual registered result -> VM visibility"
+            ],
+            "missing_fields": [
+              "actual ME stage calendar and qualified physical transport ages"
+            ]
+          },
+          {
+            "pc": 17,
+            "unit": 2,
+            "instruction_sha256": "82505ae794e9b88bb38852c0359c8a5a7bf8ce844b3ca15f599ffd4606094504",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 1,
+            "vector_issue_edges": 1,
+            "active_lane_reads": 1,
+            "A_source": "VM",
+            "A_base": 14240,
+            "A_inner_stride": 0,
+            "A_outer_stride": 0,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 1,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 32,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 18,
+            "unit": 2,
+            "instruction_sha256": "bbc5da53b1b945ad06111964dcb51f529647991e168dc443461b9d2e2ceb7524",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 3072,
+            "vector_issue_edges": 48,
+            "active_lane_reads": 3072,
+            "A_source": "VM",
+            "A_base": 47600,
+            "A_inner_stride": 1,
+            "A_outer_stride": 0,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 48,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 98304,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 19,
+            "unit": 2,
+            "instruction_sha256": "0257074a5c37a2efaf93321e53aaeb76d22ba4b090b0db8fc0fc4bc0a1f58b6c",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 12,
+            "nin": 128,
+            "vector_issue_edges": 24,
+            "active_lane_reads": 1536,
+            "A_source": "VM",
+            "A_base": 47600,
+            "A_inner_stride": 1,
+            "A_outer_stride": 256,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 24,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 49152,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 20,
+            "unit": 1,
+            "instruction_sha256": "b654982b3b533c474793724a6fb42ddf2d6a88b86c2b67e954a17022a64ea682",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "ME",
+            "descriptor": {
+              "me_nout": 4096,
+              "me_tiles": 3,
+              "me_k": 6,
+              "me_xbase": 55280,
+              "me_obase": 0,
+              "me_wbase": 368
+            },
+            "dependencies": [
+              "actual fixed TT command -> physical ME operand/ROM producer -> actual registered result -> VM visibility"
+            ],
+            "missing_fields": [
+              "actual ME stage calendar and qualified physical transport ages"
+            ]
+          },
+          {
+            "pc": 21,
+            "unit": 0,
+            "instruction_sha256": "39b7d126a1d8354c283f65278adbd1f315a5cf4e2459e6a534df035c48b986ad",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "END",
+            "dependencies": [
+              "fixed owner END calendar and actual observation fault checks"
+            ]
+          },
+          {
+            "pc": 22,
+            "unit": 2,
+            "instruction_sha256": "c43c2d239591eead3a5cbaeb0551bf3848d774116eab161591671251c5dfb861",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 4096,
+            "vector_issue_edges": 64,
+            "active_lane_reads": 4096,
+            "A_source": "VM",
+            "A_base": 0,
+            "A_inner_stride": 1,
+            "A_outer_stride": 0,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 64,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 131072,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "CROM"
+          },
+          {
+            "pc": 23,
+            "unit": 2,
+            "instruction_sha256": "3c61e936bac852afd904b29b6523bb91330988de7b25b013c341d25bced50b19",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "SU",
+            "nout": 1,
+            "nin": 4096,
+            "vector_issue_edges": 64,
+            "active_lane_reads": 4096,
+            "A_source": "VM",
+            "A_base": 4096,
+            "A_inner_stride": 1,
+            "A_outer_stride": 0,
+            "dynamic_A_base_selector": 0,
+            "A_VM_vector_requests": 64,
+            "A_embedding_vector_requests": 0,
+            "request_mask_address_bus_bits": 1600,
+            "return_bus_bits": 2048,
+            "active_return_payload_bits": 131072,
+            "provider_code_read_bus_bits": 0,
+            "dependencies": [
+              "actual SU lane A request -> gateway registered select/index -> selected VM/embedding result -> actual SU alignment"
+            ],
+            "B_source": "VM",
+            "C_source": "VM"
+          },
+          {
+            "pc": 24,
+            "unit": 0,
+            "instruction_sha256": "39b7d126a1d8354c283f65278adbd1f315a5cf4e2459e6a534df035c48b986ad",
+            "compiled_issue_cycle": null,
+            "completion_cycle": null,
+            "command": "END",
+            "dependencies": [
+              "fixed owner END calendar and actual observation fault checks"
+            ]
+          }
+        ],
+        "totals": {
+          "SU_vector_issue_edges": 427,
+          "A_lane_reads": 27143,
+          "A_VM_vector_requests": 427,
+          "A_embedding_vector_requests": 0,
+          "A_return_payload_bits": 868576
+        },
+        "physical_scheduled_cycles": null,
+        "qualification": "SOURCE_DEMAND_ONLY_NOT_MEASURED_EXECUTION_OR_PRODUCTION_PROFILE"
+      }
+    ],
+    "source_sha256": {
+      "tools/hdc_qwen_fullshape_isa_w12.py": "83350ecc688d25b3fa7eea276156f2def5a8a402944a422f826b4d5705d15e6b",
+      "rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv": "a794f1f47a2f273e32397062e87b71da7bbd2edc0a36b23451c40b15786e0239",
+      "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "ff68725d44e125c666863bfa6a1cacfe1eb075eb086a542198a63975a5431d77",
+      "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+      "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+      "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba"
+    },
+    "boundary_ownership": {
+      "before": [
+        "SU requests1600 -> seq gateway",
+        "gateway VM requests1600 -> SU compact pack -> VM",
+        "VM return2048 -> seq gateway",
+        "gateway selected return2048 -> SU"
+      ],
+      "after": [
+        "SU requests1600 -> local gateway",
+        "local gateway VM requests1600 -> local SU compact pack -> VM",
+        "VM return2048 -> local gateway",
+        "local gateway selected return2048 -> SU"
+      ],
+      "controller_to_gateway": "start_idle1 + current token18 + captured token18 + su_go1 + a_src1; same source clock observations",
+      "gateway_to_controller": "64 fault bits; original registered sticky fault capture unchanged"
+    },
+    "unknown_fields": [
+      "global issue cycles",
+      "actual ME completion cycles",
+      "physical root phases",
+      "gateway outline/home/route ages",
+      "complete token/MTP schedule"
+    ]
+  },
+  "limits": [
+    "All original source parent aliases remain logical wires; never place/count them as another physical interface.",
+    "Real gateway still includes combinational VM return passthrough and decoding; physical preflight pending.",
+    "Possible removal of unobservable nonembedding return branch requires separate complete selected-SU proof.",
+    "No geometry distances/rates/globalcycles or registered-face qualification inferred."
+  ]
+}
