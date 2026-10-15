@@ -225,9 +225,13 @@
     "t_hc_yv": {
       "bits": 1,
       "direction": "output"
+    },
+    "t_hc_tag": {
+      "bits": 32,
+      "direction": "output"
     }
   },
-  "total_port_bits": 20912,
+  "total_port_bits": 20944,
   "source_sha256": {
     "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
     "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv": "29c8509ea4b4c18b8f7a5a1d2b2e0c437b5844f1faba764b026977521a1a1299",
@@ -236,9 +240,9 @@
     "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv": "1f67fdb4e27aac34e26d4ebd300bf7e3dabe268bfab39f388030b02bce610a53",
     "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv": "5088b726e17245248c9e0547c15eafe704d663c6d03a50ed5a7701448d924123",
     "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv": "bcd4b251ecdddf7740cf652a1198950d2790e06d3618bc9c537a8a7257bb36af",
-    "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv": "e2a0b394d02742fca19b94f5b5593b3ba2edcf9f9703dbd47ee7256383ca6163",
+    "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv": "9b2178bd28ba81f3875dcf65980e18b93e4f891ab3cb6370138dca61f5404fc3",
     "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv": "67ba78bda301e8aa383629099871ad03f3358e5adb42b169e7bcf71d01e3a15a",
-    "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv": "20e54f4032c4bcf54d8529c038cedea9fe6329a73cff2dd45292b44e75fca403",
+    "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv": "c310f4a6984d7a017fa9d22ffc0af47f71845911106bf3ed4b6ce3526173e7b0",
     "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv": "6cc808bf448d0961a9c9915983f047885105bc0a65ce4be0a814a6adb53ef3c3",
     "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv": "0a876ede4169e7d8a08d24a2abc84dc6b01f419cf6fe310aca5477225a653348",
     "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv": "e0a1f6bbb2ead12198c873fb924a16e7c8e6bdcaeb2d957fb19c48889f7e0527",

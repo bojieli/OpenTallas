@@ -1,8 +1,8 @@
 {
   "top": "dsfd_sp_collective_static_c",
   "source_sha256": {
-    "rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv": "e2a0b394d02742fca19b94f5b5593b3ba2edcf9f9703dbd47ee7256383ca6163",
-    "rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv": "20e54f4032c4bcf54d8529c038cedea9fe6329a73cff2dd45292b44e75fca403",
+    "rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv": "9b2178bd28ba81f3875dcf65980e18b93e4f891ab3cb6370138dca61f5404fc3",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv": "c310f4a6984d7a017fa9d22ffc0af47f71845911106bf3ed4b6ce3526173e7b0",
     "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv": "67ba78bda301e8aa383629099871ad03f3358e5adb42b169e7bcf71d01e3a15a",
     "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv": "d6bbf3f20edc12b235bc44f3051f7f0f55dfe1f4e4aced6fdd70d8edfe7c05be",
     "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv": "e0a1f6bbb2ead12198c873fb924a16e7c8e6bdcaeb2d957fb19c48889f7e0527",
@@ -27,7 +27,7 @@
     "rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv": "1f67fdb4e27aac34e26d4ebd300bf7e3dabe268bfab39f388030b02bce610a53",
     "rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv": "ce6385c2372da04cc9203cd75ffe4712094b50dc7fbf3a37118ce8293f6077df"
   },
-  "qualification": "native source candidate only; extracted boundary integrated gate running; physical gate unqualified",
+  "qualification": "native source candidate; existing assembler row-tag register exposed without added logic/latency; physical/profile binding open",
   "clock_delivery": {
     "ck_control": 5,
     "ck_lane": 8,
@@ -53,6 +53,7 @@
     "t_hc_yv": 1,
     "t_wfc": 514,
     "t_host": 515,
-    "tv": 8
+    "tv": 8,
+    "t_hc_tag": 32
   }
 }

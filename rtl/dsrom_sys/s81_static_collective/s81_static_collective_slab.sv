@@ -16,7 +16,7 @@ module s81_static_collective_slab #(
  output wire[7:0]phy_tx_valid,output wire[4095:0]phy_tx_data,
  input wire[513:0]f_wfc,output wire[513:0]t_wfc,
  input wire[76:0]f_host,output wire[514:0]t_host,
- output wire[8191:0]t_hc_y,output wire t_hc_yv
+ output wire[8191:0]t_hc_y,output wire t_hc_yv,output wire[31:0]t_hc_tag
 );
  wire read_slot;
  wire [13:0]read_row;
@@ -159,6 +159,7 @@ module s81_static_collective_slab #(
  .word_valid(reduced_valid),.word_data(reduced_data),.word_tag(reduced_tag),
  .word_seq(reduced_seq),.word_last(reduced_last),.word_error(reduced_error),.fault(reduce_fault));
  wire[31:0]row_tag;
+ assign t_hc_tag=row_tag;
  s81_static_hc_assemble_clocked assemble(
  .clk_lane(ck_hc_lane),.clk_control(ck_control[4]),.rst_n(rn_control[4]),.write_slot(hc_assemble_slot),
  .word_index(hc_word_index),.word_valid(reduced_valid&&hc_assemble_slot),
