@@ -46,18 +46,17 @@ module ot_hgi_coll_crl_rx #(
     input  wire          t_v,
     input  wire [W-1:0]  t_d,
     output reg           f_cr,
-    output wire          out_v,
-    output wire [W-1:0]  out_d,
+    output reg           out_v,
+    output reg  [W-1:0]  out_d,
     input  wire          out_rdy,
     output reg           fault
 );
     localparam integer AW = (CRD > 1) ? $clog2(CRD) : 1;
     reg v_q; reg [W-1:0] d_q;
     reg [W-1:0] fq [0:CRD-1]; reg [AW-1:0] hd, tl; reg [AW:0] n;
-    assign out_v = (n != '0); assign out_d = fq[hd];
     wire pop = out_v && out_rdy;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin v_q <= 1'b0; d_q <= '0; hd <= '0; tl <= '0; n <= '0; f_cr <= 1'b0; fault <= 1'b0; end
+        if (!rst_n) begin v_q <= 1'b0; d_q <= '0; hd <= '0; tl <= '0; n <= '0; f_cr <= 1'b0; fault <= 1'b0; out_v <= 1'b0; end
         else begin
             v_q <= t_v; d_q <= t_d;
             if (v_q) begin
@@ -66,6 +65,9 @@ module ot_hgi_coll_crl_rx #(
             end
             if (pop) hd <= (hd == AW'(CRD - 1)) ? '0 : hd + 1'b1;
             n <= n + (AW+1)'(v_q) - (AW+1)'(pop);
+            out_v <= (n + (AW+1)'(v_q) - (AW+1)'(pop)) != '0;
+            if ((n == 0 && v_q) || (n == 1 && pop && v_q)) out_d <= d_q;
+            else if (pop && n > 1) out_d <= fq[(hd == AW'(CRD - 1)) ? '0 : hd + 1'b1];
             f_cr <= pop || (MUT == 1 && v_q);
         end
 endmodule

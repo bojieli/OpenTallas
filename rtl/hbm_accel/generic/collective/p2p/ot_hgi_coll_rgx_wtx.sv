@@ -72,9 +72,9 @@ module ot_hgi_coll_rgx_rx_lane #(
     input wire [39:0] t_addr,
     input wire [FW-1:0] t_data,
     output reg f_cr,
-    output wire w_v,
-    output wire [39:0] w_addr,
-    output wire [FW-1:0] w_data,
+    output reg w_v,
+    output reg [39:0] w_addr,
+    output reg [FW-1:0] w_data,
     input wire w_rdy,
     output reg fault
 );
@@ -82,12 +82,9 @@ module ot_hgi_coll_rgx_rx_lane #(
     reg v_q; reg [39:0] a_q; reg [FW-1:0] d_q;
     reg [40+FW-1:0] fq [0:CRD-1];
     reg [AW-1:0] hd, tl; reg [AW:0] n;
-    assign w_v = (n != '0);
-    assign w_addr = fq[hd][40+FW-1 -: 40];
-    assign w_data = fq[hd][FW-1:0];
     wire pop = w_v && w_rdy;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin v_q <= 1'b0; hd <= '0; tl <= '0; n <= '0; f_cr <= 1'b0; fault <= 1'b0; end
+        if (!rst_n) begin v_q <= 1'b0; hd <= '0; tl <= '0; n <= '0; f_cr <= 1'b0; fault <= 1'b0; w_v <= 1'b0; end
         else begin
             v_q <= t_v; a_q <= t_addr; d_q <= t_data;
             if (v_q) begin
@@ -96,6 +93,13 @@ module ot_hgi_coll_rgx_rx_lane #(
             end
             if (pop) hd <= (hd == AW'(CRD - 1)) ? '0 : hd + 1'b1;
             n <= n + (AW+1)'(v_q) - (AW+1)'(pop);
+            w_v <= (n + (AW+1)'(v_q) - (AW+1)'(pop)) != '0;
+            // The visible head is a pin register, including empty->push and last-pop+push bypasses.
+            // Its edge is identical to the old asynchronous FIFO head; no delivery cycle is added.
+            if ((n == 0 && v_q) || (n == 1 && pop && v_q)) begin w_addr <= a_q; w_data <= d_q; end
+            else if (pop && n > 1) begin
+                {w_addr, w_data} <= fq[(hd == AW'(CRD - 1)) ? '0 : hd + 1'b1];
+            end
             f_cr <= pop || (MUT == 1 && v_q);
         end
 endmodule
