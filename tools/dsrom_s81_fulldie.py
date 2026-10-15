@@ -87,8 +87,9 @@ def configure(die, gen='r7'):
     """'layer': the S81 layer die (L20 scan die = the hottest).  'head': one of the 12 head dies (coordinator
     decision 2026-10-04, main 57e041e74): 1,682 content pairs (embed + lm-head + norm + DSpark drafter), of which the
     210 lm-head pairs carry the NV5 batched draft head; the drafter/embed pairs keep the layer die's BF share."""
-    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN, CFG_LEF, HEAD_BUNDLES, HOP_PLAN, BF_EXPLICIT_IDS
+    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN, CFG_LEF, HEAD_BUNDLES, HOP_PLAN, BF_EXPLICIT_IDS, CANONICAL_LAYOUT
     BF_EXPLICIT_IDS = None
+    CANONICAL_LAYOUT = None
     DIE_KIND, GEN = die, gen
     HOP_PLAN = None                  # --hop-fix plans are per die
     # r8 uses the mirror-legal v2 cfg ROM view (ROM inventory note 2); r7 keeps the v1 view it was run with
