@@ -1,0 +1,69 @@
+{
+ "schema": "opentallas.hbm.native-service-source-join.v1",
+ "source_commit": "8a4735880",
+ "source_hashes": {
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_stack_native.sv": "b89cf62353682bfcf5cd69eaf1662633405c48c4725f79140feb568a571f59b2",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_stack_programmed.sv": "4a8e454fd1e67004156470848af38d33a28e2463711316148db581c8ab33fdf6",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed.sv": "60b4c3af8cc80785f5d72a46362765350d89e03926765a2f6d58d175abeaf115",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc.sv": "ce93ef5deba686357d76240dbdc587547a047c86ea1ab19a52f8a71db0c43291",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank.sv": "c942d942e6f1a922003687da535bdafb8d8ef484c2e5d10735f36fbf0adde2eb",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_stack.sv": "e64cfb071eb16aca278f75bb0a5bdba6793b8fb74e4928c1a5d217f87697e65d",
+  "rtl/hbm_accel/loader/service_native/tb_hbm_svc_sm_stack_native.sv": "07a1b04fc9eb89a12823f1f4ec52736ea405c30ebad9adb3f30fd4c2f04c8211",
+  "rtl/hbm_accel/loader/service_native/run_sm_stack_native.sh": "fe2601042260b50d5afcfed164d6c13dcdfc25514b2c13070dfc46b9e5ba2b3f"
+ },
+ "real_digital_controller": true,
+ "modeled_boundary": "Physical off-chip DRAM row/column timing and external data only",
+ "per_stack": {
+  "physical_PC_owners": 32,
+  "native_response_SRAM": 32,
+  "landing_SRAM": 64,
+  "cache_SRAM": 40,
+  "programme_SRAM": 8,
+  "total_SRAM": 144
+ },
+ "per_die_total_SRAM": 576,
+ "dual_word_programme_increment_die": 32,
+ "dedicated_PV_stager_increment_die": 64,
+ "runs": [
+  {
+   "stack": 0,
+   "active_SM_mask_hex": "ff",
+   "actual_records": 320,
+   "host": "ot-agidock128",
+   "unit": "oth-ubuntu-1713253-1792101234",
+   "exit_code": 0,
+   "positive_log_sha256": "ee2c7ceb7fe60e5da89767f36cf0fd7b8e5ad4d523b4abf1aedf3330701876f9",
+   "early_calendar_mutant_log_sha256": "1ed48ae912bee8f7379990d574fb3c276cde6faf4bb9bdc9f9f6db4452869646",
+   "early_calendar_mutant_rejected": true,
+   "cold_prefetch_ps": 112082.288,
+   "copy_ps": 44166.649,
+   "fixed_programme_ps": 37499.985,
+   "installed_programme_words": 41
+  },
+  {
+   "stack": 1,
+   "active_SM_mask_hex": "1f",
+   "actual_records": 200,
+   "host": "ot-epyc1tb",
+   "unit": "oth-ubuntu-2725124-1792101249",
+   "exit_code": 0,
+   "positive_log_sha256": "4155dc07b6da9f618eff8bf0cc5ec9ed76606e5a33059baf29f88760629febbe",
+   "early_calendar_mutant_log_sha256": "0041a40455276d6948b0fe9d4f42fb16ac981187df27a0a9468412b348973b6c",
+   "early_calendar_mutant_rejected": true,
+   "cold_prefetch_ps": 112082.288,
+   "copy_ps": 44166.649,
+   "fixed_programme_ps": 37499.985,
+   "installed_programme_words": 41
+  }
+ ],
+ "physical_qualified": false,
+ "arithmetic_join_qualified": false,
+ "price_qualified": false,
+ "open": [
+  "64-row maximum actual record capacity replay",
+  "double-buffer/epoch steady-state overlap and measured throughput",
+  "PV lease/write/read arbitration and finite native return-stall bound",
+  "actual attention command paired programme source join",
+  "source-exact physical views and whole die route"
+ ]
+}
