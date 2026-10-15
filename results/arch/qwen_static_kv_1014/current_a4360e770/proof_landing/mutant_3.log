@@ -1,0 +1,6 @@
+BAD row c109 group0 t1040 expected1040
+BAD row c691 group0 t528 expected528
+FAIL staticlanding ctx8192 rows16384 errors2 fault00000001 mode3
+[3769000] %Fatal: tb_static_landing.sv:100: Assertion failed in tb_static_landing
+%Error: rtl/test/qwen_static_kv/tb_static_landing.sv:100: Verilog $stop
+Aborting...

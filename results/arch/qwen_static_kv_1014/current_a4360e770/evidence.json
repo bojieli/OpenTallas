@@ -1,0 +1,65 @@
+{
+  "source_commit": "a4360e770",
+  "native_qualified": false,
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "e6906f8e2e2480f47899c91340f7d55b0a0191da2631b5a0759b2704c81353ae",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "ac25a7c24710e0f67979ef1f1e7388278b009cf8d8abba8b5e65ab0107bd1ad5",
+    "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv": "6549e9dadbc9ec3ae1fff02801005c123edde178b03316a173968a8c036d6ad1",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv": "bb42751da94485054b71d5d29db3107294a9c86055da6be2211b1e78328ae755",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv": "7268b35c9f47d41fa00a94dfda6f2367c143aa870bafef8496c382482767acc8",
+    "rtl/test/qwen_static_kv/tb_static_host_controller.sv": "4a5dd2d1d9d2f4a1443bfcf7a191d86924d321d6373063e4b10c1543fbeb851e",
+    "rtl/test/qwen_static_kv/tb_static_kv_timing.sv": "2f024490c421785e357ac3731e2216c57a2a27e21a1bb6e9e22c4780ca72f5c6",
+    "rtl/test/qwen_static_kv/tb_static_landing.sv": "bafe84c0c6054221b7d228a9908cca1926b066b31989be9b807272ea9c87c7c9",
+    "rtl/test/qwen_static_kv/tb_static_return_cdc.sv": "7df504cb0cd33a3a3b23a1181ea3b1861d0dd19a5cfaa2f30cc319b383f5a844"
+  },
+  "host_controller": {
+    "unit": "oth-ubuntu-3426545-1792035630",
+    "positive": "PASS",
+    "raw_phy_model_cycles": 23,
+    "external_host_read_backing": "actual physical PHY write data storage, not expected-expression read data",
+    "scope": "host actual write/read plus K256/V256 on one persistent controller; common-clock only",
+    "negative": [
+      "shifted fixed reservations",
+      "wrong V first sector",
+      "missing raw response",
+      "two-bit host memory corruption including UE status"
+    ],
+    "all_negative_rejected": true
+  },
+  "landing": {
+    "unit": "oth-ubuntu-3426547-1792035630",
+    "positive": "PASS",
+    "groups": 32,
+    "actual_SRAMs": 128,
+    "rows": 16384,
+    "sectors": 65536,
+    "common_clock_latency": 5,
+    "pin_registered_identity_straps": true,
+    "all_four_negative_rejected": true
+  },
+  "return_cdc": {
+    "unit_depth16": "oth-ubuntu-3426546-1792035630",
+    "unit_depth8_phase137": "oth-ubuntu-3433854-1792035723",
+    "unit_depth8_phase637": "oth-ubuntu-3433822-1792035723",
+    "unit_depth4": "oth-ubuntu-3433857-1792035723",
+    "rows": 512,
+    "core_ps": 833.334,
+    "hbm_ps": 1024,
+    "depth16_phase137": "PASS",
+    "depth8_phase137": "PASS",
+    "depth8_phase637": "PASS",
+    "depth4_phase137": "FAIL expected capacity counterexample",
+    "three_negative_rejected_for_each_passing_case": true,
+    "depth8_storage_flops_per_PC": 2304,
+    "depth16_storage_flops_per_PC": 4608,
+    "scope": "declared component phases; not measured die clock insertion/relay phase"
+  },
+  "remaining": [
+    "actual native59 TAG59/gen2 write context through KVN to physical PC descriptor",
+    "expected write CMD/data/physicalcommit visibility before actual completion",
+    "full-program repeated-token refresh-aware calendar",
+    "actual native ECC/CDC/landing/service composition with die clock phases",
+    "new physical macro/CDC/control masters and native routing qualification",
+    "whole-token C++ internal backing removal"
+  ]
+}

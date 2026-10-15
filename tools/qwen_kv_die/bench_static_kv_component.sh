@@ -2,6 +2,7 @@
 # Run through ot-run with explicit memory/threads. These are component proofs,
 # not production schedule, native phase, routed view or whole-token release.
 set -euo pipefail
+ulimit -c 0
 kind=${1:?landing|controller|cdc}; out=${2:?output directory}; shift 2
 root=$(cd "$(dirname "$0")/../.." && pwd)
 cd "$root"
