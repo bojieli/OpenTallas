@@ -189,6 +189,17 @@
    "native_qualified": false,
    "defect": "Fixture a_allgather uses12 records/rank and router_allgather4. Actual native a_proj QN/KV subflow alone needs28, with compressor branches44 on L2/L8/L14 and36 on L20; actual main router96 FP32 values/rank needs6 records.",
    "progress": "Native field/compiler owners pinned actual matrix slices and landing views; full native gather must replace count/timing/packing, including compressor fragments. Historical SU/HC traces exclude actual field/collective demand; DSpark router partition still needs actual MTP plan evidence."
+  },
+  {
+   "item": "SVC_internal_static_calendar",
+   "source": "rtl/dsrom_sys/s81_ph/svc/h/ot_s81_svch_attq.sv",
+   "line": 298,
+   "source_sha256": "477510dd471a10da14fd7d8ee1b4db24b9ff1d8b350921d1e09b2130366a0b99",
+   "evidence_excerpt": "            if (s_v && s_r) begin scr <= scr + 1'b1; sc_cr <= 1'b1; end",
+   "owner": "S-NATIVE-SVC + S-COMPILE-SCHEDULE; broad inherited-flow owner needed",
+   "native_qualified": false,
+   "defect": "Actual inherited service uses s_r/p_or/w_ready, SC_CRED/PV_CRED and home/comb credit flows; scheduling external inputs alone does not make internal issue static",
+   "progress": "Probability/completion leaves add no backpressure, but full service requires real compiled internal calendars and availability-fault assertions. Full service native/static qualification remains false."
   }
  ]
 }
