@@ -87,8 +87,9 @@ def configure(die, gen='r7'):
     """'layer': the S81 layer die (L20 scan die = the hottest).  'head': one of the 12 head dies (coordinator
     decision 2026-10-04, main 57e041e74): 1,682 content pairs (embed + lm-head + norm + DSpark drafter), of which the
     210 lm-head pairs carry the NV5 batched draft head; the drafter/embed pairs keep the layer die's BF share."""
-    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN, CFG_LEF, HEAD_BUNDLES, HOP_PLAN, BF_EXPLICIT_IDS
+    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN, CFG_LEF, HEAD_BUNDLES, HOP_PLAN, BF_EXPLICIT_IDS, CANONICAL_LAYOUT
     BF_EXPLICIT_IDS = None
+    CANONICAL_LAYOUT = None
     DIE_KIND, GEN = die, gen
     HOP_PLAN = None                  # --hop-fix plans are per die
     # r8 uses the mirror-legal v2 cfg ROM view (ROM inventory note 2); r7 keeps the v1 view it was run with
@@ -119,6 +120,7 @@ def configure(die, gen='r7'):
 # (pair (2j+1)n/(2N) of the region's n, j < N); 0 = the q-only die flavour.
 BF_PER_REGION = None
 BF_EXPLICIT_IDS = None
+CANONICAL_LAYOUT = None               # immutable full2417 root-keyed irregular field candidate
 
 
 def parse_bf_pair_ranges(text, pairs):
@@ -3018,6 +3020,12 @@ FRAME_H8 = SLOTS8 * SLOT_H8
 
 def slot_geometry(elem_frame_h=None, field_margin=None):
     global ELEM_FRAME_H, SLOT_H8, SLOTS8, FIELD_MARGIN, FRAME_H8
+    if CANONICAL_LAYOUT is not None:
+        # Canonical frames carry their exact packed slot heights independently.
+        # Keep the established hub scaffold; never derive a symmetric field
+        # or crop these frames through the historical uniform-slot count.
+        SLOTS8 = max(f['packed_slots'] for f in CANONICAL_LAYOUT['placements'])
+        return SLOT_H8, SLOTS8
     if elem_frame_h:
         ELEM_FRAME_H = float(elem_frame_h)
     if field_margin is not None:
@@ -3100,6 +3108,8 @@ def frame_slots_needed(npairs_frame, bf_frac, nv_frac=0.0):
 def capacity_report():
     """pairs per die that fit the r8 field at the current slot height, and the die count for the S81 deployment"""
     sh, sl = slot_geometry()
+    if CANONICAL_LAYOUT is not None:
+        return dict(scope='Canonical immutable full2417 typed frame inventory; actual native binding and transport gates are separate', pairs=2417, bf_double=519, ordinary=1898, bf_pair_ids=sorted(BF_EXPLICIT_IDS), source_sha256=CANONICAL_LAYOUT['sha256'], frames=128, typed_frame_inventory_complete=True)
     if BF_EXPLICIT_IDS is not None:
         # The typed head inventory is fixed; layer capacity sweeps would
         # change pair identity and omit its dedicated Markov engines.
@@ -3451,9 +3461,13 @@ class Chains:
     def bus(self, bid, cls, bits, eps):
         self.B.append((bid, cls, bits, eps))
 
-    def run(self, name, lanes, path, allowed, src, forced=(), first_prev=None, kind='stn', reach=None):
+    def run(self, name, lanes, path, allowed, src, forced=(), first_prev=None, kind='stn', reach=None, force_horiz=False):
         """Place stations along polyline `path` for a chain of `lanes` (list of data widths).  `forced`: path lengths
         where a station MUST stand (taps / branches).  Returns [(inst, s_along)].  src: (x, y) of the source pin."""
+        path_receipt=None
+        if self.m.get('canonical_layout'):
+            path_receipt=dict(chain=name,lanes=list(lanes),path=list(path),source=src,forced_stops=list(forced),force_horiz=force_horiz,stations=[],status='BUILDING')
+            self.m.setdefault('chain_paths',[]).append(path_receipt)
         L = _poly_len(path)
         stops = sorted(set(round(s, 3) for s in forced if 0 < s <= L + 1e-6))
         out, pos, cur = [], 0.0, src
@@ -3480,7 +3494,7 @@ class Chains:
                 continue                     # the previous station stands at this stop
             while placed is None and (t_ > pos + 20.0 or must):
                 (cx, cy), d = _poly_at(path, t_)
-                horiz = d in 'EW'
+                horiz = force_horiz or d in 'EW'
                 w, h = stn_dims(lanes, horiz)
                 # --relay-progress: the LAST station of a chain (its target is the chain end) may not slide past the end
                 PL_ = dict(nxt=end, nreach=_mh(cur, end) + 15.0) if RELAY_PROGRESS and L - t_ <= step else {}
@@ -3504,7 +3518,7 @@ class Chains:
             if placed is None:            # widen the search (still within reach of the previous station)
                 t_ = max(pos + 20.0, target - 150.0)
                 (cx, cy), d = _poly_at(path, t_)
-                horiz = d in 'EW'
+                horiz = force_horiz or d in 'EW'
                 w, h = stn_dims(lanes, horiz)
                 placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, span=300.0, rows=24, reach=reach)
             if placed is None:
@@ -3518,10 +3532,12 @@ class Chains:
             self.P.add(it)
             c = (x + w / 2, y + h / 2)
             out.append((it, max(t_, pos + 1.0), _mh(cur, c)))
+            if path_receipt is not None:path_receipt['stations'].append(dict(inst=it.name,master=it.master,box=list(it.box()),center=c,orientation=it.orient))
             cur, pos = c, max(t_, pos + 1.0)
         self.rec.append(dict(chain=name, lanes=list(lanes), stations=len(out), length_um=round(L, 1),
                              max_hop_um=round(max([h_ for _, _, h_ in out] + [_mh(cur, end)]), 1),
                              last_hop_um=round(_mh(cur, end), 1)))
+        if path_receipt is not None:path_receipt['status']='CONSTRUCTED'
         return out
 
 
@@ -3694,12 +3710,21 @@ def build_r8(variant=None):
     order = [(h, t, c) for h in 'WE' for t in range(TIERS) for c in range(TIER_COLS8[t])]
     assert len(order) == ROOTS
     rng, hbf = frame_plan_r8()
+    canonical_frames = None
+    if CANONICAL_LAYOUT is not None:
+        from s81.canonical_layout import geometry as canonical_geometry
+        canonical_frames = canonical_geometry(sys.modules[__name__], CANONICAL_LAYOUT, order)
     RSV_RECTS.clear()
     XSITES.clear()
     for r, (half, t, c) in enumerate(order):
         x0, y0 = col_x(half, c), tier_y[t]
+        frame_h = FRAME_H
         frames[r] = dict(half=half, tier=t, col=c, x=x0, y=y0)
-        regions.append(dict(name=f'frame_{r}', kind='field', rect=[x0, y0, x0 + COL_W8, y0 + FRAME_H]))
+        if canonical_frames is not None:
+            frames[r].update(canonical_frames[r])
+            x0, y0, frame_h = frames[r]['x'], frames[r]['y'], frames[r]['h']
+        frame_street_top = y0 if canonical_frames is not None else ch_y[t] + chh(t)
+        regions.append(dict(name=f'frame_{r}', kind='field', rect=[x0, y0, x0 + COL_W8, y0 + frame_h]))
         if r in hbf:
             # head-bundle frame: per bundle a row (B element + glue) under a row of the 4 A elements
             ra_, rb_ = real_lef(HEAD_A_LEF), real_lef(HEAD_B_LEF)
@@ -3714,16 +3739,16 @@ def build_r8(variant=None):
                 for q in range(4):
                     insts.append(Inst(f'{g}a{q}', ra_['name'], x0 + 4.32 + q * HB_PITCH[0], yb + HB_PITCH[1],
                                       ra_['w'], ra_['h'], kind='hb_elem', region=f'frame_{r}', power_w=HEAD_ELEM_W['A']))
-            insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + chh(t) - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
+            insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, frame_street_top - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
                               CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
             continue
         pairs = list(range(*rng[r]))
         elems, offsets, heights = pack_frame(pairs, bfs, nvs)
         slot = len(heights) - 1
-        assert sum(heights) <= FRAME_H + 1e-6, f'frame {r}: mixed slots exceed field height'
+        assert sum(heights) <= frame_h + 1e-6, f'frame {r}: mixed slots exceed field height'
         frames[r].update(slot_offsets=offsets, slot_heights=heights)
         assert slot < SLOTS, f'frame {r}: {len(pairs)} pairs need {slot + 1} slots > {SLOTS} at slot height {SLOT_H}'
-        assert 2 * len(pairs) - 1 <= int(FRAME_H / NODE_FRAME[1] + 1e-6), f'frame {r}: return strip overflow'
+        assert 2 * len(pairs) - 1 <= int(frame_h / NODE_FRAME[1] + 1e-6), f'frame {r}: return strip overflow'
         frames[r]['elems'] = elems
         frames[r]['last_slot'] = slot
         for p, kind, s, ln in elems:
@@ -3819,12 +3844,12 @@ def build_r8(variant=None):
         # column FIFO: entry meso + column clock / reset root + return register, top band of the channel below
         # (--pq-place: below the root row, which takes the channel's top PQ_ROOT_ROW)
         pq_dy = PQ_ROOT_ROW if PQ_ROOTS else 0.0
-        insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + chh(t) - pq_dy - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
+        insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, frame_street_top - pq_dy - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
                           CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
         if PQ_ROOTS:
             # S81-DIE PQ root row: N station (tree word in) / ret_root_r128 / S station (root word out), centred in the
             # 142.56 um return strip (node strip + rstg sub-column) directly under the frame
-            yr = ch_y[t] + chh(t) - PQ_ROOT_ROW
+            yr = frame_street_top - PQ_ROOT_ROW
             xr = up(x0 + LANES_W + (NS_W + RSC_W - PQ_ROOT_WH[0]) / 2, GX)
             insts.append(Inst(f'pqs{r}', 'dsfd_rstg_pq%d' % PQ_RO, xr, yr + 4.32, PQ_ROOT_WH[0] - SHAVE, PQ_STN_H - SHAVE,
                               kind='pqstn', region=f'frame_{r}'))
@@ -4276,6 +4301,13 @@ def build_r8(variant=None):
             # ... and its selector the SW lane with the three absent quarters synthesised empty (dsfd_bk_selector_c1)
             if 'selector' in hub:
                 hub['selector'].master = 'dsfd_bk_selector_c1'
+    if CANONICAL_LAYOUT is not None:
+        m['canonical_layout'] = CANONICAL_LAYOUT
+        variant['canonical_layout'] = dict(path=CANONICAL_LAYOUT['path'], sha256=CANONICAL_LAYOUT['sha256'], pair_count=2417, bf_pairs=519, root_count=128, phase_width_by_stage=CANONICAL_LAYOUT['stages'], supplemental_homes_status='unbound reservations, not substituted native masters')
+        # Preserve exact supplemental HCP geometry against all station searches.
+        for home in CANONICAL_LAYOUT['hcp_homes']:
+            xx, yy = home['at_um']; oo = home['outline']
+            RSV_RECTS.append((xx, yy, xx + oo['w'], yy + oo['h'], 'canonical_hcp_home'))
     m['buses'] = []
     buses_r8(m)
     if RTL_HUB_WIDTHS and 'wfc' in hub and hub['wfc'].master in WFC_FIELD_SPLIT:
@@ -4390,6 +4422,9 @@ def _corridors(m):
         cor['hrowS'] = (e_.x + 4.32, e_.y + e_.h + 4.32, e_.x + PHY_W - 4.32, g['band_depth'] + 4.32)
     for t, c in enumerate(g['ch_y']):
         cor[f'ch{t}'] = (g['x_lw'] + LINK_COL + 4.32, c + 4.32, g['x_le'] - 4.32, c + chh(t) - 4.32 - CF_WH[1] - 2.16)
+    if CANONICAL_LAYOUT is not None:
+        from s81.canonical_layout import corridors as canonical_corridors
+        canonical_corridors(sys.modules[__name__], m, cor)
     return cor
 
 
@@ -4640,96 +4675,100 @@ def buses_r8(m):
     def tap_x(half, c, off):
         return g['col_x'](half, c) + off
 
-    for half in 'WE':
-        st = starts[half]
-        src_xy = (st.x + st.w / 2, st.y + st.h / 2)
-        # path from the start block to the half's S14 channel at the VM's y
-        for dirn, tiers in (('dn', [2, 1, 0]), ('up', [3, 4, 5])):
-            sx_ = s14_x(m, half, f'x{dirn}')
-            if half == 'W':
-                p0 = [src_xy, (sx_, src_xy[1])]
-            else:
-                cy_ = corr_y(m, f'x{dirn}')
-                p0 = [src_xy, (src_xy[0], cy_), (sx_, cy_)]
-            ys = [g['ch_y'][t] + rowx + 15.0 for t in tiers]
-            path = _dedup(p0 + [(sx_, y_) for y_ in ys])
-            forced = [_poly_len(path[:path.index((sx_, y_)) + 1]) for y_ in ys]
-            allowed = [cor['s14W'] if half == 'W' else cor['s14E'], cor['vch'], cor['hcc']] + \
-                      [cor[f'ch{t}'] for t in tiers]
-            sts = CH8.run(f'x{half}{dirn}', [LSW + 2], path, allowed, src_xy, forced=forced)
-            br = {}
-            chain_nets(CH8, f'x{half}{dirn}', (st.name, 'fo', 'od'), [it for it, _, _ in sts], [LSW + 2])
-            for t, s_f in zip(tiers, forced):
-                junc = min(sts, key=lambda q: abs(q[1] - s_f))[0]
-                br[t] = junc
-            # horizontal branch per tier
-            for t in tiers:
-                ncol = TIER_COLS8[t]
-                y_ = g['ch_y'][t] + rowx + 15.0
-                xs_ = [tap_x(half, c, SSTN_X + SSTN_WH[0] / 2) for c in range(ncol)]
-                far = xs_[-1]
-                hp = [(br[t].x + br[t].w / 2, br[t].y + br[t].h / 2), (sx_, y_), (far, y_)]
-                hp = _dedup(hp)
-                forced_h = [abs(x_ - sx_) + _mh(hp[0], hp[1]) for x_ in xs_]
-                sts_h = CH8.run(f'x{half}{t}', [LSW + 2], hp, [cor[f'ch{t}'], cor['s14W'] if half == 'W' else cor['s14E']],
-                                hp[0], forced=forced_h)
-                chain_nets(CH8, f'x{half}{t}', (br[t].name, 'fo0', 'do0'), [it for it, _, _ in sts_h], [LSW + 2])
-                kv = 1 + next(i_ for i_, q in enumerate(sts) if q[0] is br[t])
-                for c in range(ncol):
-                    r = _frame_of(m, half, t, c)
-                    ih = min(range(len(sts_h)), key=lambda i_: abs((sts_h[i_][0].x + sts_h[i_][0].w / 2) - xs_[c]))
-                    if CFIFO_FALL:     # r6: the cfifo's xf = the station's non-inverted clock copy fn0 (falling-edge launch)
-                        st_ = sts_h[ih][0]
-                        _add_tap(m, st_, 0, (f'cf{r}', None, 'xd'))
-                        fb = [i_ for i_, b_ in enumerate(m['buses']) if b_[3][0] == (st_.name, 'fn0')]
-                        if fb:
-                            b_ = m['buses'][fb[0]]
-                            m['buses'][fb[0]] = (b_[0], b_[1], b_[2], b_[3] + [(f'cf{r}', 'xf')])
+    if CANONICAL_LAYOUT is not None:
+        from s81.canonical_layout import trunks as canonical_trunks
+        canonical_trunks(sys.modules[__name__], m, CH8, cor, starts, ga, end_spec, hub_block, bus)
+    else:
+        for half in 'WE':
+            st = starts[half]
+            src_xy = (st.x + st.w / 2, st.y + st.h / 2)
+            # path from the start block to the half's S14 channel at the VM's y
+            for dirn, tiers in (('dn', [2, 1, 0]), ('up', [3, 4, 5])):
+                sx_ = s14_x(m, half, f'x{dirn}')
+                if half == 'W':
+                    p0 = [src_xy, (sx_, src_xy[1])]
+                else:
+                    cy_ = corr_y(m, f'x{dirn}')
+                    p0 = [src_xy, (src_xy[0], cy_), (sx_, cy_)]
+                ys = [g['ch_y'][t] + rowx + 15.0 for t in tiers]
+                path = _dedup(p0 + [(sx_, y_) for y_ in ys])
+                forced = [_poly_len(path[:path.index((sx_, y_)) + 1]) for y_ in ys]
+                allowed = [cor['s14W'] if half == 'W' else cor['s14E'], cor['vch'], cor['hcc']] + \
+                          [cor[f'ch{t}'] for t in tiers]
+                sts = CH8.run(f'x{half}{dirn}', [LSW + 2], path, allowed, src_xy, forced=forced)
+                br = {}
+                chain_nets(CH8, f'x{half}{dirn}', (st.name, 'fo', 'od'), [it for it, _, _ in sts], [LSW + 2])
+                for t, s_f in zip(tiers, forced):
+                    junc = min(sts, key=lambda q: abs(q[1] - s_f))[0]
+                    br[t] = junc
+                # horizontal branch per tier
+                for t in tiers:
+                    ncol = TIER_COLS8[t]
+                    y_ = g['ch_y'][t] + rowx + 15.0
+                    xs_ = [tap_x(half, c, SSTN_X + SSTN_WH[0] / 2) for c in range(ncol)]
+                    far = xs_[-1]
+                    hp = [(br[t].x + br[t].w / 2, br[t].y + br[t].h / 2), (sx_, y_), (far, y_)]
+                    hp = _dedup(hp)
+                    forced_h = [abs(x_ - sx_) + _mh(hp[0], hp[1]) for x_ in xs_]
+                    sts_h = CH8.run(f'x{half}{t}', [LSW + 2], hp, [cor[f'ch{t}'], cor['s14W'] if half == 'W' else cor['s14E']],
+                                    hp[0], forced=forced_h)
+                    chain_nets(CH8, f'x{half}{t}', (br[t].name, 'fo0', 'do0'), [it for it, _, _ in sts_h], [LSW + 2])
+                    kv = 1 + next(i_ for i_, q in enumerate(sts) if q[0] is br[t])
+                    for c in range(ncol):
+                        r = _frame_of(m, half, t, c)
+                        ih = min(range(len(sts_h)), key=lambda i_: abs((sts_h[i_][0].x + sts_h[i_][0].w / 2) - xs_[c]))
+                        if CFIFO_FALL:     # r6: the cfifo's xf = the station's non-inverted clock copy fn0 (falling-edge launch)
+                            st_ = sts_h[ih][0]
+                            _add_tap(m, st_, 0, (f'cf{r}', None, 'xd'))
+                            fb = [i_ for i_, b_ in enumerate(m['buses']) if b_[3][0] == (st_.name, 'fn0')]
+                            if fb:
+                                b_ = m['buses'][fb[0]]
+                                m['buses'][fb[0]] = (b_[0], b_[1], b_[2], b_[3] + [(f'cf{r}', 'xf')])
+                            else:
+                                m['buses'].append((f'{st_.name}_tn0', 'fclk', 1, [(st_.name, 'fn0'), (f'cf{r}', 'xf')]))
                         else:
-                            m['buses'].append((f'{st_.name}_tn0', 'fclk', 1, [(st_.name, 'fn0'), (f'cf{r}', 'xf')]))
-                    else:
-                        _add_tap(m, sts_h[ih][0], 0, (f'cf{r}', 'xf', 'xd'))
-                    m.setdefault('x_stages', {})[r] = kv + ih + 1
-    # ---------------- return trunks: per tier-half one multi-lane chain (one lane per column) -> gather end block
-    for half in 'WE':
-        for t in range(TIERS):
-            ncol = TIER_COLS8[t]
-            y_ = g['ch_y'][t] + rowr + 20.0
-            xs_ = [tap_x(half, c, CF_X + CF_WH[0] - 30.0) for c in range(ncol)]
-            sx_ = s14_x(m, half, f'r{t}')
-            path = [(xs_[-1], y_), (sx_, y_)]
-            gy = ga.y + ga.h * (0.15 + 0.7 * t / (TIERS - 1))
-            if half == 'W':
-                path += [(sx_, gy)]
-            else:
-                cy_, vx_ = corr_y(m, f'r{t}'), vch_x(m, f'r{t}')
-                path += [(sx_, cy_), (vx_, cy_), (vx_, gy)]
-            endb = None
-            if RELAY_PROGRESS:
-                # --relay-progress: the end block stands first, and the trunk ends on its facing (trunk-side) pin face
-                # (placed after the trunk, hr_W4 slid 256 um off the path end and the last station overshot it)
-                nm, w, h = end_spec('m2l', [CRET] * ncol, 'vr')
-                endb = hub_block(f'hr_{half}{t}', nm, 'hend', w, h, ga.x if half == 'W' else ga.x + ga.w, gy, half,
-                                 [cor['s14W'] if half == 'W' else cor['vch']])
-                ey_ = endb.y + endb.h / 2
-                ex_ = endb.x + endb.w if path[-1][0] >= endb.x + endb.w / 2 else endb.x
-                path = path[:-1] + [(path[-1][0], ey_), (ex_, ey_)]
-            path = _dedup(path)
-            forced = [abs(xs_[-1] - x_) for x_ in xs_[::-1]]
-            lanes_at = []
-            allowed = [cor[f'ch{t}'], cor['s14W'] if half == 'W' else cor['s14E'], cor['vch'], cor['hcc']]
-            # lanes: column c joins at its tap; a station carries every lane that has joined so far
-            sts = _run_multi(CH8, f'r{half}{t}', path, allowed, forced, ncol)
-            if endb is None:
-                nm, w, h = end_spec('m2l', [CRET] * ncol, 'vr')
-                endb = hub_block(f'hr_{half}{t}', nm, 'hend', w, h, ga.x if half == 'W' else ga.x + ga.w, gy, half,
-                                 [cor['s14W'] if half == 'W' else cor['vch']])
-            _multi_nets(m, CH8, f'r{half}{t}', sts, ncol, [_frame_of(m, half, t, c) for c in range(ncol)], endb)
-            if REV == 'r9':
-                _local_chain(m, CH8, [cor['s14W'] if half == 'W' else cor['vch']], endb, 'o', ga, f'r{half}{t}',
-                             ncol * (CRET + 1) + 2, f'hr_{half}{t}_o', 'stream_1p2')
-            else:
-                bus(f'hr_{half}{t}_o', 'local', ncol * (CRET + 1) + 2, [(endb.name, 'o'), (ga.name, f'r{half}{t}')])
+                            _add_tap(m, sts_h[ih][0], 0, (f'cf{r}', 'xf', 'xd'))
+                        m.setdefault('x_stages', {})[r] = kv + ih + 1
+        # ---------------- return trunks: per tier-half one multi-lane chain (one lane per column) -> gather end block
+        for half in 'WE':
+            for t in range(TIERS):
+                ncol = TIER_COLS8[t]
+                y_ = g['ch_y'][t] + rowr + 20.0
+                xs_ = [tap_x(half, c, CF_X + CF_WH[0] - 30.0) for c in range(ncol)]
+                sx_ = s14_x(m, half, f'r{t}')
+                path = [(xs_[-1], y_), (sx_, y_)]
+                gy = ga.y + ga.h * (0.15 + 0.7 * t / (TIERS - 1))
+                if half == 'W':
+                    path += [(sx_, gy)]
+                else:
+                    cy_, vx_ = corr_y(m, f'r{t}'), vch_x(m, f'r{t}')
+                    path += [(sx_, cy_), (vx_, cy_), (vx_, gy)]
+                endb = None
+                if RELAY_PROGRESS:
+                    # --relay-progress: the end block stands first, and the trunk ends on its facing (trunk-side) pin face
+                    # (placed after the trunk, hr_W4 slid 256 um off the path end and the last station overshot it)
+                    nm, w, h = end_spec('m2l', [CRET] * ncol, 'vr')
+                    endb = hub_block(f'hr_{half}{t}', nm, 'hend', w, h, ga.x if half == 'W' else ga.x + ga.w, gy, half,
+                                     [cor['s14W'] if half == 'W' else cor['vch']])
+                    ey_ = endb.y + endb.h / 2
+                    ex_ = endb.x + endb.w if path[-1][0] >= endb.x + endb.w / 2 else endb.x
+                    path = path[:-1] + [(path[-1][0], ey_), (ex_, ey_)]
+                path = _dedup(path)
+                forced = [abs(xs_[-1] - x_) for x_ in xs_[::-1]]
+                lanes_at = []
+                allowed = [cor[f'ch{t}'], cor['s14W'] if half == 'W' else cor['s14E'], cor['vch'], cor['hcc']]
+                # lanes: column c joins at its tap; a station carries every lane that has joined so far
+                sts = _run_multi(CH8, f'r{half}{t}', path, allowed, forced, ncol)
+                if endb is None:
+                    nm, w, h = end_spec('m2l', [CRET] * ncol, 'vr')
+                    endb = hub_block(f'hr_{half}{t}', nm, 'hend', w, h, ga.x if half == 'W' else ga.x + ga.w, gy, half,
+                                     [cor['s14W'] if half == 'W' else cor['vch']])
+                _multi_nets(m, CH8, f'r{half}{t}', sts, ncol, [_frame_of(m, half, t, c) for c in range(ncol)], endb)
+                if REV == 'r9':
+                    _local_chain(m, CH8, [cor['s14W'] if half == 'W' else cor['vch']], endb, 'o', ga, f'r{half}{t}',
+                                 ncol * (CRET + 1) + 2, f'hr_{half}{t}_o', 'stream_1p2')
+                else:
+                    bus(f'hr_{half}{t}_o', 'local', ncol * (CRET + 1) + 2, [(endb.name, 'o'), (ga.name, f'r{half}{t}')])
     # ---------------- scan services <-> VM, band links, selector / collector -> VM
     _svc_chains(m, CH8, P, cor, end_spec, hub_block)
     # ---------------- links: collective <-> link macros
@@ -6834,7 +6873,7 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         y0 = yS if sv.orient == 'R0' else yN
         return y0 + (i - 2.5) * 55.0
 
-    def single(name, payload, fmt, src, src_xy, path, sink_end):
+    def single(name, payload, fmt, src, src_xy, path, sink_end, canonical_access=None):
         """src: (inst, fclk port, data port); sink_end: (end inst) -> lane 0 ports fi0/di0"""
         lw = payload + (2 if fmt == 'vr' else 0)
         if HUB_SOUTH_SHIFT:
@@ -6851,7 +6890,21 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                     m.setdefault('south_su_bypass_chains', []).append(name)
                 detour.append(b_)
             path = detour
-        sts = CH8.run(name, [lw], _dedup(path), allc, src_xy)
+        narrow_service = CANONICAL_LAYOUT and (canonical_access is not None or re.fullmatch(r'(q|a|ix|co)[NS][WE]',name))
+        if narrow_service:
+            from s81.canonical_layout import service_path
+            endpoint=(sink_end.x+sink_end.w/2,sink_end.y+sink_end.h/2)
+            side,service_source=canonical_access or (name[-1],name[0]!='q')
+            if not service_source:
+                path=service_path(sys.modules[__name__],m,cor,src_xy,endpoint,side)
+            else:
+                path=list(reversed(service_path(sys.modules[__name__],m,cor,endpoint,src_xy,side)))
+        # A wide service record uses its real W/E-face station in an RSC
+        # vertical access lane; its17.256um body fits, its54.84um N/S-face
+        # alternative does not. Actual pin turns/reach remain to be audited.
+        sts = CH8.run(name, [lw], _dedup(path), allc, src_xy,
+                      force_horiz=bool(narrow_service and not CANONICAL_LAYOUT.get('service_access_corridors')
+                                       and stn_dims([lw],False)[0]>RSC_W-.864))
         chain_nets(CH8, name, src, [it for it, _, _ in sts], [lw])
         tail = m['chain_tail'][name]
         CH8.bus(f'{name}_fe', 'fclk', 1, [(tail[0], tail[1]), (sink_end.name, 'fi0')])
@@ -7037,7 +7090,8 @@ def _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, 
             path = [a, (sx, a[1]), (sx, sy), (b[0], sy), b]
         else:
             path = [a, (sx, a[1]), (sx, b[1]), b]
-        single(tag, payload, 'vr', srcp, a, path, he)
+        access=(side,band(src)) if band(src)!=band(dst) else None
+        single(tag, payload, 'vr', srcp, a, path, he, canonical_access=access)
         CH8.bus(f'he_{tag}_o', 'local', payload + 3, [(he.name, 'o'), (dst.name, dport)])
 
     if HOST_SLAB and CTRL_RQ and not _svc_c_host():
@@ -7157,7 +7211,8 @@ def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, stri
             path = [a, (sx, a[1]), (sx, sy), (b[0], sy), b]
         else:
             path = [a, (sx, a[1]), (sx, b[1]), b]
-        single(tag, w_i - 1, 'vr', (st_.name, 'fo', 'od'), a, path, he)
+        access=(side,band(sa)) if band(sa)!=band(da) else None
+        single(tag, w_i - 1, 'vr', (st_.name, 'fo', 'od'), a, path, he, canonical_access=access)
         CH8.bus(f'he_{tag}_o', 'local', w_i, [(he.name, f'o[0:{w_i - 1}]'), (dst.name, dport)])
 
     def bind_slab(e, slab, side, at=None):
@@ -7344,6 +7399,15 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
             sx_ = s14_x(m, 'E', nm)
             core = [(cx, yy), (vx_, yy), (vx_, cy_), (sx_, cy_), (sx_, ry)]
         path = _dedup(core + [(edge[side], ry), (edge[side], ly_t), (lx, ly_t)])
+        if CANONICAL_LAYOUT is not None:
+            from s81.canonical_layout import Roadmap
+            road = Roadmap(sys.modules[__name__], m, cor)
+            ci = 0 if side == 'W' else 21
+            roots = [r for r, f in m['frames'].items() if f['column_index'] == ci]
+            rr = min(roots, key=lambda r: abs(m['frames'][r]['street'][1] + 79.8 - ly_t))
+            field_path = _dedup(core + road.to_root(side, core[-1], rr, 'x'))
+            ry = field_path[-1][1]
+            path = _dedup(field_path + [(edge[side], ry), (edge[side], ly_t), (lx, ly_t)])
         nm = f'K{side}{i}'
         # tx: collective -> macro tx (raw 512); the macro's parallel clock is the chain's forwarded clock
         # LINK_FIX: a station MUST stand at the path end = the centre of the macro's tx pin span
@@ -8911,7 +8975,7 @@ def plan_record_r8(m):
         instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
         placed_footprint_mm2=round(sum(area.values()), 2),
         utilisation=dict(placed_over_die=round(sum(area.values()) / (DIE[0] * DIE[1] / 1e6), 4),
-                         field_frames_mm2=round(ROOTS * COL_W8 * g['frame_h'] / 1e6, 2)),
+                         field_frames_mm2=round(sum(COL_W8 * f.get('h', g['frame_h']) for f in fr.values()) / 1e6, 2)),
         geometry={k: (round(v, 3) if isinstance(v, float) else v) for k, v in g.items() if k != 'col_x'},
         forwarded=dict(stations=len(stn), ot_fwd_link_stage_instances=slices, chains=len(ch),
                        max_hop_um=max(c['max_hop_um'] for c in ch), hops_over_430p56=len(over),
@@ -8960,6 +9024,7 @@ def _stn_lanes(m, it):
 
 def die_options(ap):
     """die-variant options shared by main and tools/die_top_lint.py (--s81-opts)"""
+    ap.add_argument('--canonical-layout', help='Source-pinned full2417 capacity JSON; exact519 BF IDs and128 root bounds, irregular local streets/RSC transit and per-root actual flight calendar')
     ap.add_argument('--die', default='layer', choices=['layer', 'layer1', 'layer1e', 'head'])
     ap.add_argument('--ctrl-rq', action='store_true', help='s81-gen 2026-10-09: every stack controller\'s request '
                     'side bound (dsfd_ctrl rq 10,912 / rk 32 / wd 32 to its client: the svc, or the Engram service on '
@@ -9215,6 +9280,7 @@ def die_options(ap):
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
     global CTRL_SLAB, CTRL_ROLE, CTRL_BINDINGS, VIEW_BINDING
+    global CANONICAL_LAYOUT, PAIRS, BF_PAIRS, NV_PAIRS
     if getattr(a, 'view_binding', None):
         VIEW_BINDING = a.view_binding
     CTRL_SLAB = bool(getattr(a, 'ctrl_slab', False))
@@ -9528,6 +9594,18 @@ def apply_options(a):
         slot_geometry()
     else:
         assert getattr(a, 'bf_pair_ranges', None) is None, '--bf-pair-ranges requires r8'
+
+
+    CANONICAL_LAYOUT = None
+    if getattr(a, 'canonical_layout', None):
+        assert a.gen == 'r8' and a.die in LAYER_KINDS and not HEAD_BUNDLES
+        from s81.canonical_layout import load as canonical_load
+        CANONICAL_LAYOUT = canonical_load(a.canonical_layout, ROOT)
+        assert ROOTS == 128 and CFG_PER_PAIR == 7
+        PAIRS, BF_PAIRS, NV_PAIRS = 2417, 519, 0
+        BF_PER_REGION = None
+        BF_EXPLICIT_IDS = frozenset(CANONICAL_LAYOUT['bf_ids'])
+        slot_geometry()
 
 
 def main(argv=None):

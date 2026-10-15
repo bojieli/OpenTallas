@@ -570,6 +570,13 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   dict for {name domain} $outputs {
     foreach start [get_fanin -flat -startpoints_only -to [get_ports $name]] {
       set source [get_full_name [get_cells -quiet -of_objects $start]]
+      # A die strap tie output (contract v1.2 tie_hi/tie_lo) is a library
+      # TIEHI/TIELO constant: it has no clock and no data domain to own.
+      set source_cell [get_cells -quiet -of_objects $start]
+      if {[llength $source_cell] == 1 && [regexp {^TIE(HI|LO)} [get_property $source_cell ref_name]]} {
+        puts "OT_MULTI_ROOT constant output $name <- [get_property $source_cell ref_name] $source"
+        continue
+      }
       if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {
         error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source"
       }
