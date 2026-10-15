@@ -87,7 +87,7 @@ def figure(die, cands, path, top=8):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('out', type=Path); ap.add_argument('--sa', nargs='*', default=[])
-    ap.add_argument('--rtlmp', type=Path); ap.add_argument('--rtlmp-coarse', type=Path); ap.add_argument('--swap-iters', type=int, default=0)
+    ap.add_argument('--rtlmp', type=Path); ap.add_argument('--rtlmp-coarse', type=Path); ap.add_argument('--rtlmp-big', type=Path); ap.add_argument('--swap-iters', type=int, default=0)
     a = ap.parse_args(); a.out.mkdir(parents=True, exist_ok=True); (a.out / 'links').mkdir(exist_ok=True)
     die = C.Die(); C.attach_ports(die); base = die.base
     B = G.Blocks(die); FR = S.FastReduction(die, B)
@@ -134,6 +134,18 @@ def main():
         add('rtlmp_cluster', 'OpenROAD rtl_macro_placer (Hier-RTLMP) on 89 clusters (36 rigid field macros = 12 block columns x '
             '3 row bands, hub/band/KV instances free, IO band + KV PHY fixed), nets = width x traffic; + logical block remap',
             m_c, fast_P(m_c), cost=dict(note='raw tool output, no legaliser beyond RTL-MP; field macros keep tile pitch internally'))
+    if a.rtlmp_big and (a.rtlmp_big / 'placed.def').exists():
+        import copy as _cp, re as _re, gfp_rtlmp_coarse as RC
+        m_b = RC.read_back(die, a.rtlmp_big)
+        v_b = _cp.copy(die); v_b.die = dict(die.die)
+        da = _re.search(r'DIEAREA \( (\d+) (\d+) \) \( (\d+) (\d+) \)', (a.rtlmp_big / 'placed.def').read_text())
+        u = int(_re.search(r'UNITS DISTANCE MICRONS (\d+)', (a.rtlmp_big / 'placed.def').read_text()).group(1))
+        v_b.die['w'], v_b.die['h'] = int(da.group(3)) / u, int(da.group(4)) / u
+        v_b.die['mm2'] = round(v_b.die['w'] * v_b.die['h'] / 1e6, 3)
+        add('rtlmp_cluster_diag', 'DIAGNOSTIC: OpenROAD rtl_macro_placer on 149 clusters (48 rigid 4x4 reduction blocks, 48 head '
+            'columns and every hub instance free, IO band fixed), nets = width x traffic, die enlarged 10% per side because '
+            'RTL-MP finds no legal packing in the real 840.7 mm2 outline (MPL-0040 twice); + logical block remap',
+            m_b, fast_P(m_b), cost=dict(die_delta_mm2=round(v_b.die['mm2'] - die.die['mm2'], 1), note='over budget; topology reference only'), view=v_b)
     for stacked in (True, False):
         v_t, m_t, info_t = G.tri_spine(die, base, band_y=9000.0, stacked=stacked)
         ds_t = G.downstream_stages(v_t, m_t); P_t, *_ = FR.assign(m_t, ds_t)

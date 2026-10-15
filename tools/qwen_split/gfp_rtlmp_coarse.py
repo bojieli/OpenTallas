@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """GLOBAL-FP-Q candidate (a'): OpenROAD RTL-MP on a CLUSTERED die (the flat 1637-macro run did not finish in 2 h).
 
-Clusters: the tile field is cut into 36 rigid field macros (12 block columns x {rows 0-3, rows 4-11 + the head
-column strip, rows 12-15}; tiles + stations + head columns keep their relative placement, which preserves every
-in-block tree and corridor pitch); every hub/band/KV/IO instance is its own macro.  Every inter-cluster bus becomes
+Clusters: 48 rigid 4x4 reduction-block macros (tiles + stations keep their relative placement, so every in-block
+tree is preserved); the 48 head columns and every hub/band/KV/IO instance are free macros (a first try with 36
+row-band field macros failed MPL-0040 at the root cluster: rigid 12-mm macros at 79% utilisation).  Every inter-cluster bus becomes
 k parallel nets, k = bits x activations/token / (217 x 64), clipped to 1..64 (net weight = width x traffic).  Pins sit
 at the member's real assigned pin centroids.  IO band + KV PHY fixed.  No flips (macros keep their current
 orientation).  The placement is expanded back to instances and scored by gfp_core.score like every candidate.
@@ -21,18 +21,16 @@ FIXED = ('io_collective', 'io_ucie', 'io_serdes', 'io_serdes_1', 'io_serdes_2', 
 
 
 def cluster_of(n, i):
-    if i['m'] in C.FIELD_MASTERS:
-        c = int(n.split('_')[1])
-        if n.startswith('h_'):
-            g = 1
-        else:
-            r = int(n.split('_')[2]); g = 0 if r < 4 else 2 if r >= 12 else 1
-        return f'F{c // 4}_{g}'
+    """48 rigid 4x4 reduction-block macros (tiles + their stations); head columns and hub instances are free macros."""
+    if i['m'] in C.FIELD_MASTERS and not n.startswith('h_'):
+        c, r = int(n.split('_')[1]), int(n.split('_')[2])
+        return f'F{c // 4}_{r // 4}'
     return n
 
 
 def region_of(cl):
     if cl.startswith('F'): return 'field_w' if int(cl[1:].split('_')[0]) < 6 else 'field_e'
+    if cl.startswith('h_'): return 'field_w' if int(cl[2:]) < 24 else 'field_e'
     if cl.startswith('io_'): return 'io'
     m = re.search(r'_(\d)(_f1)?$', cl)
     if cl.startswith(('sp_port_tiles', 'sp_res_ser', 'sp_band_lanes')) and m: return 'band_' + m.group(1)
@@ -114,7 +112,7 @@ initialize_floorplan -die_area "0 0 {W:.3f} {H:.3f}" -core_area "0 0 {W:.3f} {H:
 {chr(10).join(fix)}
 foreach n {{{' '.join(f'u_{reg[n]}/{n}' for n in FIXED)}}} {{ [[ord::get_db_block] findInst $n] setPlacementStatus FIRM }}
 place_pins -hor_layers M4 -ver_layers M5
-rtl_macro_placer -halo_width 10.8 -halo_height 10.8 -target_util 0.95 -report_directory {out}/rpt -write_macro_placement {out}/placement.tcl
+rtl_macro_placer -halo_width 5.4 -halo_height 5.4 -target_util 0.95 -report_directory {out}/rpt -write_macro_placement {out}/placement.tcl
 write_def {out}/placed.def
 """
     (out / 'run.tcl').write_text(tcl)
