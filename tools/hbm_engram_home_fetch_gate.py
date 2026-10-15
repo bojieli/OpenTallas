@@ -131,7 +131,7 @@ endmodule
 '''
     return t
 
-def run(out,inputs,li,compact=False,return_edges=6,local_reads=False,mutant_return_row=False,programme=False,grouped=False,phase_delay=0,mutant_head_block=False):
+def run(out,inputs,li,compact=False,return_edges=6,local_reads=False,mutant_return_row=False,programme=False,grouped=False,phase_delay=0,mutant_head_block=False,strict_timing=False,guarded=False,shared_vehicle=False):
     out=Path(out);out.mkdir(parents=True,exist_ok=True);inputs=Path(inputs)
     binding=json.loads((inputs/'receipt.json').read_text());raw=(inputs/'external_hbm_sectors.hex').read_bytes()
     assert hashlib.sha256(raw).hexdigest()==binding['data_sha256']['external_hbm_sectors.hex']
@@ -195,6 +195,20 @@ end
         testbench=testbench[:begin]+''.join(body)+testbench[end:]
         testbench=testbench.replace('repeat(4)tick;@(negedge core_clk);rst_n=1;', '\n'.join(initial)+'\nrepeat(4)tick;@(negedge core_clk);rst_n=1;')
         testbench=testbench.replace('task tick;', ''.join(meta)+'\ntask tick;')
+    if strict_timing:
+        # Same read-only physical timing policy as the service owner's strict
+        # command fixture: no internal scheduler/bank arbitration is modeled.
+        testbench=testbench.replace('function[29:0]inverse', 'integer read_at[0:7][0:31][0:31],last_act[0:7][0:31],ref_at[0:7][0:31];\ninteger last_act_bg[0:7][0:31][0:3],last_col_bg[0:7][0:31][0:3],faw[0:7][0:31][0:3];\nfunction[29:0]inverse')
+        testbench=testbench.replace('hbm_edge<ref_until[h][p][b])$fatal(1,"externalACTtiming', 'hbm_edge<ref_until[h][p][b] || hbm_edge-last_act[h][p]<3 || hbm_edge-last_act_bg[h][p][b&3]<4 || hbm_edge-faw[h][p][0]<15 || hbm_edge-ref_at[h][p]<8)$fatal(1,"externalACTtiming')
+        testbench=testbench.replace('act_at[h][p][b]=hbm_edge;', 'act_at[h][p][b]=hbm_edge;last_act[h][p]=hbm_edge;last_act_bg[h][p][b&3]=hbm_edge;for(integer f=0;f<3;f=f+1)faw[h][p][f]=faw[h][p][f+1];faw[h][p][3]=hbm_edge;')
+        testbench=testbench.replace('hbm_edge-act_at[h][p][b]<28)', '(hbm_edge-act_at[h][p][b]<28 || hbm_edge-read_at[h][p][b]<6))')
+        testbench=testbench.replace('hbm_edge<ref_until[h][p][b])$fatal(1,"externalREFtiming', 'hbm_edge<ref_until[h][p][b] || hbm_edge-last_act[h][p]<8 || hbm_edge-ref_at[h][p]<8)$fatal(1,"externalREFtiming')
+        testbench=testbench.replace('refreshes=refreshes+1;', 'refreshes=refreshes+1;ref_at[h][p]=hbm_edge;')
+        testbench=testbench.replace('end else if(op!=5)$fatal(1,"unexpectedrowcommand");', 'end else if(op==5)begin for(integer bb=0;bb<32;bb=bb+1)begin if(opened[h][p][bb] && (hbm_edge-act_at[h][p][bb]<28 || hbm_edge-read_at[h][p][bb]<6))$fatal(1,"externalPREALLtiming");opened[h][p][bb]=0;pre_at[h][p][bb]=hbm_edge;end end else $fatal(1,"unexpectedrowcommand");')
+        testbench=testbench.replace('hbm_edge<ref_until[h][p][b])$fatal(1,"externalillegalRD', 'hbm_edge<ref_until[h][p][b] || hbm_edge-last_col_bg[h][p][b&3]<3)$fatal(1,"externalillegalRD')
+        testbench=testbench.replace('s=inverse(p,b,', 'read_at[h][p][b]=hbm_edge;last_col_bg[h][p][b&3]=hbm_edge;\n    s=inverse(p,b,')
+        testbench=testbench.replace('due_read[h][p]=0;','last_act[h][p]=-1000;ref_at[h][p]=-1000;for(integer g=0;g<4;g=g+1)begin last_act_bg[h][p][g]=-1000;last_col_bg[h][p][g]=-1000;faw[h][p][g]=-1000;end\n   due_read[h][p]=0;')
+        testbench=testbench.replace('opened[h][p][b]=0;physical_row[h][p][b]=0;', 'read_at[h][p][b]=-1000;opened[h][p][b]=0;physical_row[h][p][b]=0;')
     if phase_delay:
         assert not programme and phase_delay>=0
         testbench=testbench.replace('@(negedge core_clk);fetch_start=1;',f'repeat({phase_delay})tick;@(negedge core_clk);fetch_start=1;')
@@ -247,6 +261,15 @@ ot_hbm_engram_fetch_program #(.FETCH_EDGES(2624)) fetch_program(
         assert old in testbench
         testbench=testbench.replace(old,'wait(prog_fetch);tick;fetch_edge=core_edge;')
         testbench=testbench.replace('repeat(4)tick;\n for(j=', 'repeat(4)tick;\n if(!prog_done && fetch_program.busy)$fatal(1,"actual programme kernel completion");\n for(j=')
+    if guarded:
+        assert grouped and strict_timing
+        testbench=testbench.replace('ot_hbm_engram_home_fetch_grouped #','ot_hbm_engram_home_fetch_grouped_guarded #')
+    if shared_vehicle:
+        assert guarded
+        testbench=testbench.replace('ot_hbm_engram_home_fetch_grouped_guarded #','ot_hbm_engram_home_fetch_shared_vehicle #')
+        for h in range(8):
+            for field in ['collected','request_present','request_pc','row_locked','request_address','selected_row','kv']:
+                testbench=testbench.replace(f'home{h}.{field}',f'home{h}.client.{field}')
     tb.write_text(testbench)
     paths=['physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v',
         'rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv','rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv','rtl/hdc/v41/ot_hdc_engram_gather.sv',
@@ -257,19 +280,27 @@ ot_hbm_engram_fetch_program #(.FETCH_EDGES(2624)) fetch_program(
     if compact:paths[-1]=paths[-1].replace('home_fetch.sv','home_fetch_compact_slots.sv' if local_reads else 'home_fetch_compact.sv')
     if local_reads:paths[5]='rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_stack.sv'
     if grouped:paths[-1]=paths[-1].replace('home_fetch_compact_slots.sv','home_fetch_grouped.sv')
+    if guarded:
+        paths[4]='rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc.sv'
+        paths[5]='rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_guarded_stack.sv'
+        paths[-1]=paths[-1].replace('home_fetch_grouped.sv','home_fetch_grouped_guarded.sv')
     if programme:paths.insert(-1,'rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_fetch_program.sv')
+    if shared_vehicle:
+        paths[-1]='rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_client.sv'
+        paths.append('rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_fetch_shared_vehicle.sv')
     compiled_paths=[str(ROOT/p) for p in paths]
+    mutant_index=-2 if shared_vehicle else -1
     mutation=None
     if mutant_return_row:
-        original=Path(compiled_paths[-1]).read_text();old='.write_row(response_core[264:260])';new=".write_row(response_core[264:260] ^ 5'd16)"
+        original=Path(compiled_paths[mutant_index]).read_text();old='.write_row(response_core[264:260])';new=".write_row(response_core[264:260] ^ 5'd16)"
         assert original.count(old)==1
-        variant=(out/'return_row_mutant.sv').resolve();variant.write_text(original.replace(old,new));compiled_paths[-1]=str(variant)
+        variant=(out/'return_row_mutant.sv').resolve();variant.write_text(original.replace(old,new));compiled_paths[mutant_index]=str(variant)
         mutation=dict(name='actual_DUT_return_row_bit4',source_sha256=hashlib.sha256(variant.read_bytes()).hexdigest())
     if mutant_head_block:
         assert grouped and not mutant_return_row
-        original=Path(compiled_paths[-1]).read_text();old='kv[p]=1;ka[p*30+:30]';new='kv[p]=!(|kv);ka[p*30+:30]'
+        original=Path(compiled_paths[mutant_index]).read_text();old='kv[p]=1;ka[p*30+:30]';new='kv[p]=!(|kv);ka[p*30+:30]'
         assert original.count(old)==1
-        variant=(out/'head_block_mutant.sv').resolve();variant.write_text(original.replace(old,new));compiled_paths[-1]=str(variant)
+        variant=(out/'head_block_mutant.sv').resolve();variant.write_text(original.replace(old,new));compiled_paths[mutant_index]=str(variant)
         mutation=dict(name='actual_DUT_global_request_head_block',source_sha256=hashlib.sha256(variant.read_bytes()).hexdigest())
     start=time.monotonic();cp=subprocess.run(['iverilog' ,'-g2012','-s','tb','-o',str((out/'sim').resolve()),*compiled_paths,str(tb)],capture_output=True,text=True)
     (out/'build.log').write_text(cp.stdout+cp.stderr);assert cp.returncode==0,cp.stdout+cp.stderr
@@ -279,8 +310,8 @@ ot_hbm_engram_fetch_program #(.FETCH_EDGES(2624)) fetch_program(
     receipt=dict(schema='opentallas.hbm.engram.native_home_fetch.v1',status='detected_mutant' if (mutant_return_row or mutant_head_block) else 'pass',mutation=mutation,layer=[1,14][li],homes=list(range(li*8,li*8+8)),
         rows=24,sectors=216,core_clock_ps=833.334,hbm_clock_ps=1024,external_HBM='physical DRAM row/column command/data only; original releasedtable bytes',
         fixed_fetch_core_edges=(8228 if grouped else 2624 if local_reads else 18944) if compact else 111104,compact_home_calendar=compact,output=rp.stdout.strip(),wall_seconds=time.monotonic()-start,
-        external_return_latency_edges=return_edges,local_slot_read_metadata=local_reads,source_binding=binding['data_sha256'],refresh_phase_setup_core_edges=phase_delay,row_grouped_per_PC=grouped,actual_programme_join=programme,collective_decode_join=False,full_layer_qualified=False,physical_qualified=False,
+        external_return_latency_edges=return_edges,local_slot_read_metadata=local_reads,source_binding=binding['data_sha256'],production_Kport_client=shared_vehicle,guarded_common_controller=guarded,strict_external_read_timing=strict_timing,refresh_phase_setup_core_edges=phase_delay,row_grouped_per_PC=grouped,actual_programme_join=programme,collective_decode_join=False,full_layer_qualified=False,physical_qualified=False,
         source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in paths})
     (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');return receipt
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--inputs',required=True);ap.add_argument('--layer-index',type=int,choices=[0,1],required=True);ap.add_argument('--compact',action='store_true');ap.add_argument('--return-edges',type=int,default=6);ap.add_argument('--local-reads',action='store_true');ap.add_argument('--mutant-return-row',action='store_true');ap.add_argument('--programme',action='store_true');ap.add_argument('--grouped',action='store_true');ap.add_argument('--phase-delay',type=int,default=0);ap.add_argument('--mutant-head-block',action='store_true');a=ap.parse_args();print(json.dumps(run(a.out,a.inputs,a.layer_index,a.compact,a.return_edges,a.local_reads,a.mutant_return_row,a.programme,a.grouped,a.phase_delay,a.mutant_head_block),indent=2))
+    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--inputs',required=True);ap.add_argument('--layer-index',type=int,choices=[0,1],required=True);ap.add_argument('--compact',action='store_true');ap.add_argument('--return-edges',type=int,default=6);ap.add_argument('--local-reads',action='store_true');ap.add_argument('--mutant-return-row',action='store_true');ap.add_argument('--programme',action='store_true');ap.add_argument('--grouped',action='store_true');ap.add_argument('--phase-delay',type=int,default=0);ap.add_argument('--mutant-head-block',action='store_true');ap.add_argument('--strict-timing',action='store_true');ap.add_argument('--guarded',action='store_true');ap.add_argument('--shared-vehicle',action='store_true');a=ap.parse_args();print(json.dumps(run(a.out,a.inputs,a.layer_index,a.compact,a.return_edges,a.local_reads,a.mutant_return_row,a.programme,a.grouped,a.phase_delay,a.mutant_head_block,a.strict_timing,a.guarded,a.shared_vehicle),indent=2))
