@@ -1,0 +1,208 @@
+{
+  "schema": "opentallas.hc.resident-prefetch.native-controller.component.v1",
+  "status": "PASS_NINE_FULL_ROW_PHASE_CASES_AND_THREE_MUTANTS_COMPONENT_ONLY",
+  "DUT_source_commit": "29272fdde",
+  "bench_fix_commit": "cad2e3b94",
+  "canonical_current_source_sha256": {
+    "rtl/hbm_accel/generic/peers/hc_prefetch_static/ot_hgi_hc_prefetch_resident_static.sv": "2f48b7acfbc645bb919e3e33b2b90cdb080e24c821b966088e3806d548b603a3",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_region_cdc.sv": "2dda0c920f3c295bb27507ef08da28e8ab418864e86cef56a68bbf8b7b9a6f96",
+    "rtl/hbm_accel/generic/peers/hc_prefetch_static/tb_hgi_hc_prefetch_resident_controller_static.sv": "6b15ad4bba74c2d56a4253ba5439f8afc515d7d35b973c7c8d090b4728a57059"
+  },
+  "all_compiled_inputs_sha256": {
+    "ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "ot_hbm_svc_native_sector_owned_stack.sv": "53774057356d0d09c4b6687bcd2760dec8a8a23c6ac02caf522fd72a587869c1",
+    "ot_hbm_svc_native_sector_prefetch_stack.sv": "fc9556d64d5da9b2da90acb838a880f162f8e8aaae2ffd286f913afc14cf316f",
+    "ot_hbm_svc_native_stream_pc_lease.sv": "c16adc653eff8bce34ace00d6b4753b6937e758604b8d809183e14e85ea8be4c",
+    "ot_hbm_svc_prefetch_block_cdc.sv": "4c5d6dd620e17a11d36e9217bdcba492cd2e2fe4d595343f2fd957d9fc6376fb",
+    "ot_hbm_svc_prefetch_region_cdc.sv": "2dda0c920f3c295bb27507ef08da28e8ab418864e86cef56a68bbf8b7b9a6f96",
+    "ot_hgi_hc_aperture_static.sv": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae",
+    "ot_hgi_hc_prefetch_direct_static.sv": "c5245b01bcb5c3df19d283ec6c1ffa3e92f1c1383ff82aabc642d1469df134c4",
+    "ot_hgi_hc_prefetch_resident_static.sv": "2f48b7acfbc645bb919e3e33b2b90cdb080e24c821b966088e3806d548b603a3",
+    "ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "tb_hbm_svc_command_dram_pipeline_fixture.sv": "3bb69a5cd9d058bfd28df57acee4fb24e2a3d4992b4a468dbb638c4e5c8ade8f",
+    "tb_hgi_hc_prefetch_direct_controller_static.sv": "6b15ad4bba74c2d56a4253ba5439f8afc515d7d35b973c7c8d090b4728a57059"
+  },
+  "compiled_source_count": 14,
+  "DUT_source_hash_match_all_cases": true,
+  "bench_fix_normalization": "Only added else to suppress expected-fault fallthrough; old compiled bench saved and exact SHA verified; all other compiled sources byte-identical",
+  "baseline_gate": {
+    "session": 30658,
+    "scope": "oth-ubuntu-1999410-1792062656",
+    "exit": 1,
+    "result": "All8positive cases PASS; stale full-epoch rejected then bench erroneously fatal after finish. Preserved logs and cache; not a clean gate."
+  },
+  "followup_gate": {
+    "session": 33264,
+    "scope": "oth-ubuntu-2028906-1792062975",
+    "exit": 0,
+    "result": "Critical absolute-phase positive +same-region full16epoch stale mutation +wrong17tag +actualoffchip payload mutation allPASS"
+  },
+  "positive_cases": [
+    {
+      "file": "baseline/period1080-phase0-idle12.log",
+      "sha256": "2f1750e54c480a819fb051337fa9c01713a14ac628241da5ac383327e7ba5a52",
+      "rows": 24,
+      "readbacks": 61440,
+      "store_age_all_rows": 655,
+      "cold_start": 17,
+      "cold_ready": 1262,
+      "cold_cycles": 1245
+    },
+    {
+      "file": "baseline/period1080-phase0-idle3871.log",
+      "sha256": "d18fe1518f5c046c066c1048d77003643ce66d396fc1cc6db1a2c838ef209474",
+      "rows": 24,
+      "readbacks": 61440,
+      "store_age_all_rows": 655,
+      "cold_start": 3876,
+      "cold_ready": 6362,
+      "cold_cycles": 2486
+    },
+    {
+      "file": "baseline/period1080-phase137-idle3871.log",
+      "sha256": "78727badb2c43c2960b52cde2d238805589e9f525f108a0680891c2c9405e491",
+      "rows": 24,
+      "readbacks": 61440,
+      "store_age_all_rows": 655,
+      "cold_start": 3876,
+      "cold_ready": 6362,
+      "cold_cycles": 2486
+    },
+    {
+      "file": "baseline/period1080-phase773-idle3871.log",
+      "sha256": "da7d5b5a9c8b43ad6e2e05f1641147e67dfb1c306779641f31b5ed23f1bd06b3",
+      "rows": 24,
+      "readbacks": 61440,
+      "store_age_all_rows": 655,
+      "cold_start": 3876,
+      "cold_ready": 6362,
+      "cold_cycles": 2486
+    },
+    {
+      "file": "baseline/period1400-phase0-idle12.log",
+      "sha256": "6b50e459df77e6190e33cf4241bfedf7232114851e72ddf065f470f61c75aab7",
+      "rows": 24,
+      "readbacks": 61440,
+      "store_age_all_rows": 655,
+      "cold_start": 17,
+      "cold_ready": 1262,
+      "cold_cycles": 1245
+    },
+    {
+      "file": "baseline/period1400-phase0-idle3871.log",
+      "sha256": "03f11a13bbfa2ddd595c82f7247ca05149f80b72edf7e013a7c75bf6599527dd",
+      "rows": 24,
+      "readbacks": 61440,
+      "store_age_all_rows": 655,
+      "cold_start": 3876,
+      "cold_ready": 6362,
+      "cold_cycles": 2486
+    },
+    {
+      "file": "baseline/period1400-phase137-idle3871.log",
+      "sha256": "f9441d06e2ac6f377af42cab566e325f3249890936eaeded91ef00626f54159a",
+      "rows": 24,
+      "readbacks": 61440,
+      "store_age_all_rows": 655,
+      "cold_start": 3876,
+      "cold_ready": 6362,
+      "cold_cycles": 2486
+    },
+    {
+      "file": "baseline/period1400-phase773-idle3871.log",
+      "sha256": "efd7005548210bd63ececc81bc6d9444cef5292eca8254c7c67271dc55b43aa9",
+      "rows": 24,
+      "readbacks": 61440,
+      "store_age_all_rows": 655,
+      "cold_start": 3876,
+      "cold_ready": 6362,
+      "cold_cycles": 2486
+    },
+    {
+      "file": "ownerfix/period1080-phase27-idle3871.log",
+      "sha256": "6eeea2dbcf287467ec5c0fea032ed611bad10633991ec937a0a852512140a122",
+      "rows": 24,
+      "readbacks": 61440,
+      "store_age_all_rows": 655,
+      "cold_start": 3876,
+      "cold_ready": 6362,
+      "cold_cycles": 2486
+    }
+  ],
+  "actual_controller": "4xa7b86347d owned stack FAST_IDLE_DESC1/AQ_ROW_LEASE1/COLUMN_CLOSE_GUARD1, commonleaf unchangedc16",
+  "offchip_fixture": "canonical command-only23HBM-edge DRAM pipeline + ACT/PRE/REF/RD timing/address guard, no request controller insidefixture",
+  "actual_SRAMs": {
+    "source": 128,
+    "native_controller_response": 128,
+    "HC_store": 64,
+    "total": 320,
+    "total_bytes": 1310720
+  },
+  "calendar": {
+    "periods": [
+      1080,
+      1400
+    ],
+    "drains": [
+      0,
+      330
+    ],
+    "reserve_row_plus4": [
+      330,
+      660
+    ],
+    "row_store_complete": 655,
+    "AP_lanes": 4,
+    "region_bits": 3,
+    "regions_per_stack": 8,
+    "sectors_per_region": 512,
+    "full_epoch_bits": 16,
+    "tag_bits": 17
+  },
+  "critical_drain_sample_edges": [
+    7470,
+    8550,
+    8880
+  ],
+  "structural_warnings": {
+    "UNOPTFLAT": 0,
+    "LATCH": 0,
+    "MULTIDRIVEN": 0
+  },
+  "cold_cycle_range": [
+    1245,
+    2486
+  ],
+  "remote_host": "ot-epyc4",
+  "remote_root": "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen",
+  "canonical_P1_G25_qualified": false,
+  "full_SYS1_native_VM_arithmetic_composition_qualified": false,
+  "physical_qualified": false,
+  "hardware_install_ACK_proven": false,
+  "full_native_chip_qualified": false,
+  "artifact_sha256": {
+    "baseline/period1400-phase0-idle12.log": "6b50e459df77e6190e33cf4241bfedf7232114851e72ddf065f470f61c75aab7",
+    "baseline/stale_epoch.log": "1d2e193d3f12becdf04f968a13402753f7cbf2dbc1ad4c3d6ecd3b62d6225940",
+    "baseline/compile.log": "187a6b4c870b911eb030ca2f0997016f2fc5883affdcc83435640d1042b53c19",
+    "baseline/period1400-phase773-idle3871.log": "efd7005548210bd63ececc81bc6d9444cef5292eca8254c7c67271dc55b43aa9",
+    "baseline/period1080-phase137-idle3871.log": "78727badb2c43c2960b52cde2d238805589e9f525f108a0680891c2c9405e491",
+    "baseline/source.json": "366d070a7716df7f40d5644b6a4c02bfa96050bfcc9f4486c72724c10c8959d9",
+    "baseline/period1080-phase0-idle12.log": "2f1750e54c480a819fb051337fa9c01713a14ac628241da5ac383327e7ba5a52",
+    "baseline/bench-before-ownerfix.sv": "e4626728b8d72379abb27cfe8370aefa5e795a7e83c6069b5b6a9334063e98f6",
+    "baseline/period1080-phase773-idle3871.log": "da7d5b5a9c8b43ad6e2e05f1641147e67dfb1c306779641f31b5ed23f1bd06b3",
+    "baseline/period1080-phase0-idle3871.log": "d18fe1518f5c046c066c1048d77003643ce66d396fc1cc6db1a2c838ef209474",
+    "baseline/period1400-phase137-idle3871.log": "f9441d06e2ac6f377af42cab566e325f3249890936eaeded91ef00626f54159a",
+    "baseline/period1400-phase0-idle3871.log": "03f11a13bbfa2ddd595c82f7247ca05149f80b72edf7e013a7c75bf6599527dd",
+    "ownerfix/payload_mutant.log": "43ac54a14bd53a59b4b3b4ae4d7db7c1531f448ca0994cb03c48b6a18fdd1999",
+    "ownerfix/stale_epoch.log": "e9017f5610d6901bc6a60b2a292dd24037bdaf2c75f99cda8d8051d1b06e38c3",
+    "ownerfix/compile.log": "955bf17b4af878af5cde2a92ade28dbb5a3a8df5852ac6c78e4182d7cc9164d8",
+    "ownerfix/period1080-phase27-idle3871.log": "6eeea2dbcf287467ec5c0fea032ed611bad10633991ec937a0a852512140a122",
+    "ownerfix/receipt.json": "6a26d009fc29fa26ca756ae69d19c6483609766714c485342b70473cb25e83f8",
+    "ownerfix/source.json": "ca4030c5d455ac6753382d59a24c12f735d7ad3bc076341ee261b5eacc97605b",
+    "ownerfix/wrongtag.log": "a3ccff14c9ada25e6ccfb6534d2f7716f1f59bf486da6430983214cb04a35e88"
+  },
+  "runner_sha256": "2a67a49550dccfc2e02f7ce67107f0b620d9b9fa11e8f928c2dc0077ad99d63f",
+  "runner_remote_hash_match": true
+}

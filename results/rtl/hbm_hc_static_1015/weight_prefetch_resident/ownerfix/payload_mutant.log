@@ -1,0 +1,4 @@
+HC_REGION_COLD_BOUNDARY start=3876 ready=6362 cold_cycles=2486 resident=ffffffff
+[5927076000] %Fatal: tb_hgi_hc_prefetch_direct_controller_static.sv:121: Assertion failed in tb_hgi_hc_prefetch_direct_controller_static.run: actual aperture memory mismatch row0 bank5 position319
+%Error: /srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/tb_hgi_hc_prefetch_direct_controller_static.sv:121: Verilog $stop
+Aborting...

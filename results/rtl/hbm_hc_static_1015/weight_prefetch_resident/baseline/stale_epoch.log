@@ -1,0 +1,6 @@
+HC_REGION_COLD_BOUNDARY start=3876 ready=6362 cold_cycles=2486 resident=ffffffff
+HC_REGION_OWNER_MUTANT PASS full_epoch_or_wrong_tag_rejected stale=1 wrongtag=0
+- /srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/tb_hgi_hc_prefetch_direct_controller_static.sv:67: Verilog $finish
+[5303742000] %Fatal: tb_hgi_hc_prefetch_direct_controller_static.sv:69: Assertion failed in tb_hgi_hc_prefetch_direct_controller_static: actual direct prefetch/aperture fault cycle6365
+%Error: /srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/tb_hgi_hc_prefetch_direct_controller_static.sv:69: Verilog $stop
+Aborting...

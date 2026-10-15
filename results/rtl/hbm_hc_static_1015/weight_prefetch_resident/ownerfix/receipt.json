@@ -1,0 +1,89 @@
+{
+  "status": "PASS_NATIVE_CONTROLLER_COMPONENT_ONLY",
+  "source_sha256": {
+    "ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "ot_hbm_svc_native_sector_owned_stack.sv": "53774057356d0d09c4b6687bcd2760dec8a8a23c6ac02caf522fd72a587869c1",
+    "ot_hbm_svc_native_sector_prefetch_stack.sv": "fc9556d64d5da9b2da90acb838a880f162f8e8aaae2ffd286f913afc14cf316f",
+    "ot_hbm_svc_native_stream_pc_lease.sv": "c16adc653eff8bce34ace00d6b4753b6937e758604b8d809183e14e85ea8be4c",
+    "ot_hbm_svc_prefetch_block_cdc.sv": "4c5d6dd620e17a11d36e9217bdcba492cd2e2fe4d595343f2fd957d9fc6376fb",
+    "ot_hbm_svc_prefetch_region_cdc.sv": "2dda0c920f3c295bb27507ef08da28e8ab418864e86cef56a68bbf8b7b9a6f96",
+    "ot_hgi_hc_aperture_static.sv": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae",
+    "ot_hgi_hc_prefetch_direct_static.sv": "c5245b01bcb5c3df19d283ec6c1ffa3e92f1c1383ff82aabc642d1469df134c4",
+    "ot_hgi_hc_prefetch_resident_static.sv": "2f48b7acfbc645bb919e3e33b2b90cdb080e24c821b966088e3806d548b603a3",
+    "ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "tb_hbm_svc_command_dram_pipeline_fixture.sv": "3bb69a5cd9d058bfd28df57acee4fb24e2a3d4992b4a468dbb638c4e5c8ade8f",
+    "tb_hgi_hc_prefetch_direct_controller_static.sv": "6b15ad4bba74c2d56a4253ba5439f8afc515d7d35b973c7c8d090b4728a57059"
+  },
+  "source_hashes_match": true,
+  "owner_only_followup": true,
+  "cases": [
+    {
+      "name": "period1080-phase27-idle3871",
+      "exit": 0,
+      "log_sha256": "6eeea2dbcf287467ec5c0fea032ed611bad10633991ec937a0a852512140a122"
+    },
+    {
+      "name": "stale_epoch",
+      "exit": 0,
+      "expected": "HC_REGION_OWNER_MUTANT PASS",
+      "log_sha256": "e9017f5610d6901bc6a60b2a292dd24037bdaf2c75f99cda8d8051d1b06e38c3"
+    },
+    {
+      "name": "wrongtag",
+      "exit": 0,
+      "expected": "HC_REGION_OWNER_MUTANT PASS",
+      "log_sha256": "a3ccff14c9ada25e6ccfb6534d2f7716f1f59bf486da6430983214cb04a35e88"
+    },
+    {
+      "name": "payload_mutant",
+      "exit": -6,
+      "expected": "actual aperture memory mismatch row0 bank5 position319",
+      "log_sha256": "43ac54a14bd53a59b4b3b4ae4d7db7c1531f448ca0994cb03c48b6a18fdd1999"
+    }
+  ],
+  "build_command": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-j",
+    "4",
+    "-Wno-fatal",
+    "--top-module",
+    "tb_hgi_hc_prefetch_direct_controller_static",
+    "--Mdir",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/out-ownerfix/obj",
+    "-o",
+    "sim",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_async_fifo.sv",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_hbm_loader_kport_address.sv",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_hbm_svc_native_sector_owned_stack.sv",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_hbm_svc_native_sector_prefetch_stack.sv",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_hbm_svc_native_stream_pc_lease.sv",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_hbm_svc_prefetch_block_cdc.sv",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_hbm_svc_prefetch_region_cdc.sv",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_hgi_hc_aperture_static.sv",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_hgi_hc_prefetch_direct_static.sv",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_hgi_hc_prefetch_resident_static.sv",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_reset_sync.sv",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/tb_hbm_svc_command_dram_pipeline_fixture.sv",
+    "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/tb_hgi_hc_prefetch_direct_controller_static.sv"
+  ],
+  "structural_warnings": {
+    "UNOPTFLAT": 0,
+    "LATCH": 0,
+    "MULTIDRIVEN": 0
+  },
+  "actual_SRAMs": 320,
+  "source_SRAMs": 128,
+  "regions_per_stack": 8,
+  "released_rows_per_case": 24,
+  "readbacks_per_case": 61440,
+  "periods": [
+    1080,
+    1400
+  ],
+  "full_native_chip_qualified": false
+}

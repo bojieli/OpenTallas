@@ -1,0 +1,6 @@
+HC_REGION_COLD_BOUNDARY start=3876 ready=6362 cold_cycles=2486 resident=ffffffff
+HC_REGION_OWNER_MUTANT PASS full_epoch_or_wrong_tag_rejected stale=1 wrongtag=0
+- /srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/tb_hgi_hc_prefetch_direct_controller_static.sv:67: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 5us; walltime 2.900 s; speed 1.828 us/s
+- Verilator: cpu 2.901 s on 1 threads; alloced 1042 MB

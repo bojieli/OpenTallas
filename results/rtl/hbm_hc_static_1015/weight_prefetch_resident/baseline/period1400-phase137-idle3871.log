@@ -1,0 +1,30 @@
+HC_REGION_COLD_BOUNDARY start=3876 ready=6362 cold_cycles=2486 resident=ffffffff
+HC_DIRECT_ROW row=0 fixed_start=6499 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=1 fixed_start=7899 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=2 fixed_start=9299 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=3 fixed_start=10699 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=4 fixed_start=12099 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=5 fixed_start=13499 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=6 fixed_start=14899 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=7 fixed_start=16299 last_actual_store_age=655 next_ready=41
+HC_DIRECT_ROW row=8 fixed_start=17699 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=9 fixed_start=19099 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=10 fixed_start=20499 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=11 fixed_start=21899 last_actual_store_age=655 next_ready=15
+HC_DIRECT_ROW row=12 fixed_start=23299 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=13 fixed_start=24699 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=14 fixed_start=26099 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=15 fixed_start=27499 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=16 fixed_start=28899 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=17 fixed_start=30299 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=18 fixed_start=31699 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=19 fixed_start=33099 last_actual_store_age=655 next_ready=55
+HC_DIRECT_ROW row=20 fixed_start=34499 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=21 fixed_start=35899 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=22 fixed_start=37299 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=23 fixed_start=38699 last_actual_store_age=655 next_ready=00
+HC_PREFETCH_RESIDENT_ACTUAL_CONTROLLER PASS rows=24 actualPHYrequests=61440 responses=61440 actualSRAMreadbacks=61440 steady_row_period=1400 production_edges=33600 actualSRAMs=320 HBM1024 stream833 strictcommandDRAM23
+- /srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/tb_hgi_hc_prefetch_direct_controller_static.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 33us; walltime 17.231 s; speed 1.939 us/s
+- Verilator: cpu 17.232 s on 1 threads; alloced 1042 MB

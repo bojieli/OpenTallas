@@ -101,5 +101,22 @@
   ],
   "hardware_install_ACK": false,
   "full_native_qualified": false,
-  "canonical_P1_gap": "Current four-AP640-cycle row cannot meet canonical G25 P1 stride0 ~355-cycle budget; P6/P8 are separate component/MTP profiles. Future P1 dual-half reads require new actual proof; current packing only makes distinct macro read ports structurally possible."
+  "canonical_P1_gap": "Current four-AP640-cycle row cannot meet canonical G25 P1 stride0 ~355-cycle budget; P6/P8 are separate component/MTP profiles. Future P1 dual-half reads require new actual proof; current packing only makes distinct macro read ports structurally possible.",
+  "subsequent_component_evidence": {
+    "source": "29272fdde",
+    "benchfix": "cad2e3b94",
+    "receipt": "results/rtl/hbm_hc_static_1015/weight_prefetch_resident/receipt.json",
+    "positive_cases": 9,
+    "rows_per_case": 24,
+    "actual_store_readbacks_per_case": 61440,
+    "mutants": 3,
+    "cold_cycles_measured": [
+      1245,
+      2486
+    ],
+    "SYS1_composition_qualified": false,
+    "physical_qualified": false,
+    "physical_source_diff_model": "8f3e3f828",
+    "additional_declared_state_bits": 3403
+  }
 }
