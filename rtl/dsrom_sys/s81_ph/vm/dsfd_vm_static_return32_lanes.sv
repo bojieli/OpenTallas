@@ -3,7 +3,7 @@
 // Wires only: independent clocks, statically partitioned bank records/slots.
 // Faults and groups stay per-leaf for the parent's actual registered fault tree.
 module dsfd_vm_static_return32_lanes #(parameter integer DW=128)(
- input wire [3:0] ck,input wire rst_n,
+ input wire [3:0] ck,input wire [3:0] rst_n,
  input wire [31:0] i_v,input wire [255:0] i_tag,input wire [32*DW-1:0] i_data,
  input wire release_v,input wire [2:0] release_group,input wire [31:0] release_mask,
  input wire prepare_v,input wire [2:0] prepare_group,input wire [31:0] prepare_mask,
@@ -21,7 +21,7 @@ module dsfd_vm_static_return32_lanes #(parameter integer DW=128)(
    assign o_v[l+4*k]=ov[k];assign o_data[DW*(l+4*k)+:DW]=od[DW*k+:DW];
   end
   dsfd_vm_static_return_bank8 #(.DW(DW),.LANE(l)) u(
-   .ck(ck[l]),.rst_n(rst_n),.i_v(iv),.i_tag(it),.i_data(id),
+   .ck(ck[l]),.rst_n(rst_n[l]),.i_v(iv),.i_tag(it),.i_data(id),
    .release_v(release_v),.release_group(release_group),.release_mask(rm),
    .prepare_v(prepare_v),.prepare_group(prepare_group),.prepare_mask(pm),
    .peer_token(tokens),.completion_token(tokens[5*l+:5]),.o_v(ov),.o_data(od),

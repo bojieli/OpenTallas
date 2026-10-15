@@ -23,6 +23,7 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
  reg [DW-1:0] data[0:15];
  wire [15:0] hit;
  reg [7:0] prepared_mask;
+ reg [7:0] prepared_parity;
  reg bad,complete,prepare_complete;
  integer j,idx,s,p;
  always @*begin
@@ -59,9 +60,17 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
    prepared_mask<=prepare_mask;
   end
  end
- always @(posedge ck)begin : outputs integer q;
-  if(release_v)for(q=0;q<8;q=q+1)o_data[DW*q+:DW]<=data[8*release_group[0]+q];
- end
+ // Eight genuinely separate row controls: conditional mask enables prevent
+ // synthesis from merging the parity registers. Each drives one128b row.
+ // Data on invalid rows is unobserved; only valid release rows are sampled.
+ genvar row;
+ generate for(row=0;row<8;row=row+1)begin:row_output
+  always @(posedge ck)begin
+   if(prepare_v && prepare_mask[row])prepared_parity[row]<=prepare_group[0];
+   if(completion_token[4] && prepared_mask[row])
+    o_data[DW*row+:DW]<=data[8*prepared_parity[row]+row];
+  end
+ end endgenerate
  genvar g;
  generate for(g=0;g<16;g=g+1)begin:slot_store
   reg h,incoming_valid;reg [DW-1:0] nd;reg [2:0] ng;integer k;

@@ -5,7 +5,7 @@ from pathlib import Path
 
 def model():
     dw=128
-    ff=16*dw+16*3+16+8*dw+8+3+1+2+8+5
+    ff=16*dw+16*3+16+8*dw+8+3+1+2+8+5+8
     return dict(schema='opentallas.s81.return-bank8-model.v1', macs_per_cycle=0,
       memory_bytes_per_cycle=0, sram_macros=0, incoming_records_per_cycle=8,
       input_record_bits_per_cycle=8*(dw+8+1), output_bits_per_cycle=8*(dw+1),
@@ -17,6 +17,7 @@ def model():
       mux_cost='16 entries x 8 sources x128 bits OR-mask selectors; lane invariant removes cross-lane matrix',
       maximum_data_ports_per_face=512, pin_pitch_um=.192,nominal_face_slots=675,
       extra_cycle=0, storage_edge='E9',release_edge='E10',
+      row_output_control='8 conditionally clocked parity registers; registered mask/token row enables; <=256 parityloads and128enableloads perrow',
       release_prediction='stage9 prepare metadata; compute from next valid/groups AFTER current release and arrivals',
       completeness_peer_bits=20, peer_requirement='four 5-bit registered tokens; local AND inside each leaf',
       production_budget='8 rows/leaf/edge;32 rows/slice/edge; no stalls/ready/credits',

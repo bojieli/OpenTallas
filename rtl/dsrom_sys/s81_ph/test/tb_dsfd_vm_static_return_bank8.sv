@@ -6,7 +6,7 @@ module tb_dsfd_vm_static_return_bank8;
  wire [31:0] oldv,newv;wire [4095:0] oldd,newd;wire [2:0] oldg;wire [11:0] newg;wire oldf;wire [3:0] newf;
  dsfd_vm_static_return #(.NROW(32)) old(.ck(ck),.rst_n(rn),.i_v(iv),.i_tag(it),.i_data(id),
  .release_v(rv),.release_group(rg),.release_mask(rm),.o_v(oldv),.o_data(oldd),.o_group(oldg),.fault(oldf));
- dsfd_vm_static_return32_lanes dut(.ck({4{ck}}),.rst_n(rn),.i_v(iv),.i_tag(it),.i_data(id),
+ dsfd_vm_static_return32_lanes dut(.ck({4{ck}}),.rst_n({4{rn}}),.i_v(iv),.i_tag(it),.i_data(id),
  .release_v(rv),.release_group(rg),.release_mask(rm),.prepare_v(pv),.prepare_group(pg),.prepare_mask(pm),
  .o_v(newv),.o_data(newd),.o_group(newg),.fault(newf));
  integer errors=0,checks=0,releases=0,words=0,atomic_missing=0,seed=1,mode=0;
