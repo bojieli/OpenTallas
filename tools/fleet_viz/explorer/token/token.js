@@ -118,6 +118,11 @@ export async function mountTokenExplorer(el, opts = {}) {
     if (!data._cov || data._cov.v !== covV) {
       try { const c = await attachCoverage(data, covKey); covV = c.v; covErr = null; } catch (e) { covErr = e.message; }
     }
+    let native;
+    try { native = await loadRecord('/api/native/coverage?design=' + encodeURIComponent(covKey)); }
+    catch (e) { native = { native_qualified: false, nodes: {}, operations: [], defects: [{ edge: 'live_source', reason: e.message }] }; }
+    for (const n of data.nodes) n.native = native.nodes?.[n.id] || { native_qualified: false, operations: [], defects: [{ edge: 'token_node->operation', reason: 'CURRENT_PROGRAM_MAPPING_UNAVAILABLE' }] };
+    const nativePanel = nativeProvenancePanel(native);
     const p = P(data);
     if (state.group && !p.groups[state.group]) state.group = null;
     o.onState && o.onState({ ...state });
@@ -142,7 +147,7 @@ export async function mountTokenExplorer(el, opts = {}) {
         h('span', {}, h('span', { class: 'big' }, hd.tok_s.toLocaleString(undefined, { minimumFractionDigits: 1 })), h('span', { class: 'u' }, mtp ? ` tok/s per user (MTP, tau ${tt.tau})` : ' tok/s per user (AR)')),
         mtp ? h('span', { class: 'kv' }, 'step ', h('b', {}, fmtCyc(tt.cycles)), ' = ', h('b', {}, fmtUs(tt.cycles)), ' · per accepted token ', h('b', {}, fmtCyc(tt.per_accepted_cycles)))
           : h('span', { class: 'kv' }, 'token ', h('b', {}, fmtCyc(tt.cycles)), ' = ', h('b', {}, fmtUs(tt.cycles))),
-        h('span', { class: 'kv' }, 'status ', h('b', {}, hd.status))),
+        h('span', { class: 'kv' }, 'status ', h('b', {}, `${hd.status} · historical numerical/priced scope`))),
       mtp ? mtpPanel(data) : (mtpInfo.available ? h('div', { class: 'kv', style: 'margin-top:6px' }, 'MTP: ', h('b', {}, `${mtpInfo.tok_s.toLocaleString(undefined, { minimumFractionDigits: 1 })} tok/s`), ` at tau ${mtpInfo.tau} (switch to MTP above for the speculative step)`)
         : h('div', { class: 'arnote' }, h('b', {}, 'AR only. '), mtpInfo.reason || '', mtpInfo.source ? h('div', { class: 'tp-src' }, mtpInfo.source) : null)),
       h('div', { class: 'kv', style: 'margin-top:6px' }, 'reproduces: ', h('b', {}, tt.reproduces)),
@@ -189,7 +194,7 @@ export async function mountTokenExplorer(el, opts = {}) {
     const selP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Selected operator')), sel);
     const shareP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, mtp ? 'Share of the MTP step' : 'Share of the token latency'), h('span', {}, 'by stage and by element class')), shareTables(data, p, (gid) => { state.group = gid; render(); }));
     const notes = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'How the numbers are built')), h('ul', { class: 'notes' }, ...data.notes.map((n) => h('li', {}, n))));
-    const parts = [tabs, banner, h('div', { class: 'panel' }, ctl), flowP, ganttP, h('div', { class: 'two' }, dieP, selP)];
+    const parts = [tabs, banner, nativePanel, h('div', { class: 'panel' }, ctl), flowP, ganttP, h('div', { class: 'two' }, dieP, selP)];
     if (mtp) parts.push(hwPanel(data, (n) => { state.group = n.group; render(); }));
     root.replaceChildren(...parts, shareP, notes);
     const onSelect = (n) => {
@@ -306,4 +311,35 @@ function hwPanel(data, open) {
         h('td', {}, `${p.groups[r.group]?.label || r.group} (${r.count})`),
         h('td', { class: 'n' }, fmtCyc(r.cycles)),
         h('td', { style: 'font-family:Inter,system-ui,sans-serif;font-size:11.5px;color:#8a97b8' }, r.note)))));
+}
+
+// Authoritative operation/RTL/physical edges, independent of old coverage labels.
+function nativeProvenancePanel(n) {
+  const panel = h('div', { class: 'panel' },
+    h('div', { class: 'pt' }, h('b', {}, `Native lifecycle: ${n.native_qualified ? 'QUALIFIED' : 'INCOMPLETE'}`),
+      h('a', { href: '/api/native/coverage?design=' + encodeURIComponent(n.design || '') }, 'source-bound JSON →')),
+    h('p', { class: 'kv' }, `${n.summary?.operations || 0} emitted operations · ${n.summary?.native_operations || 0} have the complete RTL → routed leaf → die chain. Historical numerical PASS and priced cycles remain separate.`));
+  const missing = Object.entries(n.summary?.missing_edges || {});
+  if (missing.length) panel.append(h('div', { class: 'kv' }, missing.map(([edge, count]) => `${edge}: ${count}`).join(' · ')));
+  const input = h('input', { placeholder: 'Filter operation, instance, missing edge or reason', 'aria-label': 'native provenance filter', style: 'width:95%;margin:8px 0' });
+  const list = h('div', {});
+  const entries = [
+    ...(n.defects || []).map(d => ({id: 'target inventory', instance: '', defects: [d]})),
+    ...(n.operations || []),
+    ...Object.entries(n.nodes || {}).filter(([,r]) => r.defects?.length && !r.operations?.length).map(([id,r]) => ({id, instance: '', defects:r.defects})),
+  ];
+  function draw() {
+    const query = input.value.toLowerCase();
+    const rows = entries.filter(r => JSON.stringify(r).toLowerCase().includes(query));
+    list.replaceChildren(h('div', { class: 'kv' }, `${rows.length} matching records; first 50 shown. Select an operator for its exact token mapping.`),
+      ...rows.slice(0, 50).map(r => h('details', { class: 'tp-cov' },
+        h('summary', {}, `${r.id} · ${r.instance || 'no elaborated instance'} · ${r.native_qualified ? 'qualified' : (r.defects?.[0]?.reason || 'unproven')}`),
+        h('div', { class: 'tp-src' }, r.instruction_sha256 ? `instruction SHA256 ${r.instruction_sha256}` : ''),
+        ...r.defects.map(d => h('div', { class: 'tp-covr' }, `${d.edge}: ${d.reason}`)))));
+  }
+  input.addEventListener('input', draw); draw();
+  panel.append(input, list);
+  if (n.current_gap_groups?.length) panel.append(h('details', {}, h('summary', {}, 'Current die gaps and owners'),
+    ...n.current_gap_groups.map(g => h('p', { class:'kv' }, `${g.die}: ${g.masters.join(', ')} · ${g.owner || 'UNASSIGNED'} · ${g.detail}`))));
+  return panel;
 }
