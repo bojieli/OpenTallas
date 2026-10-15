@@ -62,12 +62,12 @@
   "routing_tracks_capacity": "OPEN actual pin/reach/cut grant; no prior500x1020slot timinggrant",
   "area_fit": "OPEN nativeCTS/hardenedmaster dimensions+census required",
   "qualification": {
-    "functional": false,
+    "functional": true,
     "physical": false,
     "native_whole_kernel": false,
     "leaf_functional": true,
-    "functional_scope": "actual80SRAM+32MAC P6/P8 full24row+tail equal-phase component only",
-    "provider_diagnostic_only": true
+    "functional_scope": "actual generated128+1024 SRAMs, fullshape P6/P8 24rows/tail, equalphase only",
+    "provider_diagnostic_only": false
   },
   "clock_phases": "all roots synchronous, independent physical insertion/reach SS/FF proofrequired; functionalbench equalphase only",
   "leaf_source": "473756fb3",
@@ -86,7 +86,7 @@
     }
   },
   "leaf_functional_proof": "all32 bank/quarter combinations 512reads each+masks/wrongslot/wrongIDmutants; residual1280reads/640 measured+1writecommits+bypassmutant; controller1027cycle/tapmutant PASS",
-  "functional_receipt": "results/rtl/hbm_hc_static_1015/sys1_split92_ee1/receipt.json",
+  "functional_receipt": "results/rtl/hbm_hc_static_1015/sys1_mapped92_925/receipt.json",
   "SYS_LAT_verified": 86,
   "row_periods_verified": {
     "nominal6": 1153,
@@ -94,6 +94,8 @@
     "early6": 1133,
     "early8": 1453
   },
-  "memory_provider_amendment": "results/rtl/hbm_hc_static_1015/memory_provider_scope_amendment.json",
-  "mapped_memory_qualified": false
+  "mapped_memory_qualified": true,
+  "mapped_memory_scope": "component functional only; physical/native wholekernel false",
+  "generated_provider_source": "473756fb3, physical128dba76986 and physical1024 6530a2ef",
+  "prior_diagnostic_amendment": "results/rtl/hbm_hc_static_1015/memory_provider_scope_amendment.json"
 }

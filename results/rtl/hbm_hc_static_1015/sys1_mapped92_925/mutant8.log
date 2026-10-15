@@ -1,0 +1,12 @@
+MTP_ROW_MISMATCH row0 pos0 got=3da0de84 exp=3c702489
+MTP_ROW_MISMATCH row0 pos1 got=3c702489 exp=3da0de84
+MTP_ROW_MISMATCH row0 pos2 got=3db14d83 exp=bd6da7c4
+MTP_ROW_MISMATCH row0 pos3 got=bd6da7c4 exp=3db14d83
+MTP_ROW_MISMATCH row0 pos4 got=bd7b2b84 exp=be0eeb53
+MTP_ROW_MISMATCH row0 pos5 got=be0eeb53 exp=bd7b2b84
+MTP_ROW_MISMATCH row0 pos6 got=3e2f0663 exp=bd8608a3
+MTP_ROW_MISMATCH row0 pos7 got=bd8608a3 exp=3e2f0663
+HC_MTP_DONE npos=8 rows=192 tail=8 errors=384 rowperiod=1453 cycles=39842
+[0] %Fatal: tb_hgi_hc_engine_sys1_mapped_mtp_static.sv:106: Assertion failed in TOP.tb_hgi_hc_engine_sys1_mapped_mtp_static: MTP exact mismatch
+%Error: /srv/opentallas-scratch/claude/codex-hc-sys1-mapped92-1015/rtl/test/tb_hgi_hc_engine_sys1_mapped_mtp_static.sv:106: Verilog $stop
+Aborting...

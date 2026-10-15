@@ -1,0 +1,163 @@
+{
+  "scope": "actual SYS1 32weightquarter16residualhalf8control32LG8MAC plus actualtail, equalphase functional roots; no physical/native wholechip qualification",
+  "SYS_LAT_candidate": 86,
+  "leaf_source": "473756fb3",
+  "weight_provider": "generated physical128 macro dba76986",
+  "masked_poison_write_positive": true,
+  "projection_clock_pins": 91,
+  "residual_write_edge_delta": 1,
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_engine_sys1_split_mtp_static.sv": "2aac707f4fa35908186986aed976d18d229cf2caf565078b0fddc594dcec96c1",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv": "2c46f5896bf69561d0b3c4d3e08dd8c7a67bdaf03297559a9de17be7e5984c69",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_projection_sys1_split_static.sv": "30a38ea6d4522a51254e2810d419e7f50e1eb68d42107f5b379a1143fea4718f",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv": "31623c863d461c38f417c8c15ecd1bbec22b2d3a947aedd1daa4e5c7f5e6676b",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_weight_quarter_static.sv": "6569bacf6214971df87729b313e5a5cb277bf3878ace3f6583c0acb3c2fdfc07",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_half_static.sv": "5eac3afeb1b426e222437ba0983d4d4bffa66ba4f9bfa85066e7f7a4265908b8",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_control_static.sv": "beb5b944112d9771b9e0a74c5c3aa0b17f82d0988c2572cdac8e9394f8732209",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_aperture_static.sv": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fastfp_lat.sv": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "a719521c87012ec5117e6b92f2089ade75b1a6faf727193543b758cf3ee8989f",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+    "rtl/test/tb_hgi_hc_engine_sys1_mapped_mtp_static.sv": "800bafd0baf1d2ca37d6abbc7a3a7c33de0e983203f7cf5de4c5f67092c0b481",
+    "rtl/test/hgi_hc_engine_sys1_mapped_mtp_static_harness.cpp": "85de24db8fd95cff7af6ef2877ff012156a8184c81fbe76ca8a4c736f95e3e79",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+    "tools/rtl_hgi_hc_engine_sys1_mapped_mtp_static_gate.py": "9a3d3dc832d51d1be58a3c9a89e14bf9be83b98b60ed703ebc101d89f16f5400",
+    "tools/rtl_hdc_v41x_hcp_campaign.py": "99606af2292c827d5ebe935cdd4f2ddc1e06bf5744b95d555985af6853585b41"
+  },
+  "fixture_sha256": {
+    "hc_static_w.mem": "fee4ae2ebc607a73508c18934d4abac57134f68dbd7f1ada25d8b4aae7a3ad5f",
+    "hc_static_exp.mem": "2b1d80979711c041981feeb8d80da428154735bccf80f6073e4a52a960e31a38",
+    "hc_static_x.mem": "5eae9cb9cbcf2bb426a7bc22b109815e3e06bcfcf61556ccf9ab6a9fbf6329f0",
+    "engine_scale.mem": "2004b0ccf47d710b55058a36be10e495599db45819f5238841fb9e2d4bea62cc",
+    "engine_tail_exp.mem": "c8a7d5cf1dcd4050df62e318456f14fded3818aa8ab50bb7a84b7a685b9f4f8f",
+    "engine_base.mem": "366a8a5262ae8bb9a836722f9d2fff72bb1c7dac64fb99a5bc8782fa2f12e5fe"
+  },
+  "K": 20480,
+  "positions": [
+    6,
+    8
+  ],
+  "projection_rows": 24,
+  "tail_words_per_position": 24,
+  "sink_clock_divisor": 7,
+  "nominal_row_result_ages": [
+    342,
+    502,
+    662,
+    822,
+    982,
+    1142,
+    1302,
+    1462
+  ],
+  "nominal_row_periods": {
+    "6": 1153,
+    "8": 1473
+  },
+  "early_row_result_ages": [
+    322,
+    482,
+    642,
+    802,
+    962,
+    1122,
+    1282,
+    1442
+  ],
+  "early_row_periods": {
+    "6": 1133,
+    "8": 1453
+  },
+  "exact6": {
+    "exit_code": 0,
+    "log_sha256": "fb0d76fa37fcfe28ca811edbf2dcb32e18ff343a8413c11e405c207ac62e27ef"
+  },
+  "exact8": {
+    "exit_code": 0,
+    "log_sha256": "98ea3a3b80667c4b1f4f7eea41fb33584c6a8bb4734184d6c97cac8319bb53e8"
+  },
+  "exact_early6": {
+    "exit_code": 0,
+    "log_sha256": "7b0b5a85e0a8ac28ebefe9e53898478540f8630336c1f0604db7dd9f8c9416e5"
+  },
+  "exact_early8": {
+    "exit_code": 0,
+    "log_sha256": "3be9fec0ccd202a1696780a68e09dfed0804120df681e7fdd4b0339b5f7c0a47"
+  },
+  "mutant8": {
+    "exit_code": -6,
+    "log_sha256": "456d5c76d287df460a5bd82e4258255f52619672712ce1d04e21c4ca1fc0a4ae"
+  },
+  "mask_mutant8": {
+    "exit_code": -6,
+    "log_sha256": "e8ebff7d87659bfff0aafcd48eaefd865fc80712b80826d39768591f68102fdc"
+  },
+  "verified_source_owners": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_engine_sys1_split_mtp_static.sv": "92588650d",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv": "92588650d",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_projection_sys1_split_static.sv": "92588650d",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv": "92588650d",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_weight_quarter_static.sv": "473756fb3",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_half_static.sv": "473756fb3",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_control_static.sv": "473756fb3",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_aperture_static.sv": "473756fb3",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "92588650d",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "92588650d",
+    "rtl/hdc/ot_hdc_prefix.sv": "92588650d",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "92588650d",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "92588650d",
+    "rtl/hdc/ot_hdc_fastfp.sv": "92588650d",
+    "rtl/hdc/ot_hdc_fastfp_lat.sv": "92588650d",
+    "rtl/hdc/ot_hdc_delay.sv": "92588650d",
+    "rtl/hdc/ot_hdc_sfu.sv": "92588650d",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "92588650d",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "92588650d",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "92588650d",
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "92588650d",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": "92588650d",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "92588650d",
+    "rtl/test/tb_hgi_hc_engine_sys1_mapped_mtp_static.sv": "92588650d",
+    "rtl/test/hgi_hc_engine_sys1_mapped_mtp_static_harness.cpp": "92588650d",
+    "tools/hdc_golden.py": "92588650d",
+    "tools/hdc_golden_v41.py": "92588650d",
+    "tools/rtl_hgi_hc_engine_sys1_mapped_mtp_static_gate.py": "92588650d",
+    "tools/rtl_hdc_v41x_hcp_campaign.py": "92588650d"
+  },
+  "source_files_verified": 29,
+  "all_four_positive_cases_pass": true,
+  "actual_SRAMs": 80,
+  "generated128_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+  "generated1024_sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+  "actual_weight_quarters": 32,
+  "actual_residual_halves": 16,
+  "actual_bank_controllers": 8,
+  "parameterless_LG8_instances": 32,
+  "engine_source_root_minimum_including_Sinkhorn": 92,
+  "independent_generated_memory_source_audit": "74c1d934e",
+  "actual_residual_SRAM_address_mutant_mismatches": 384,
+  "actual_mask_enable_mutant_mismatches": 16,
+  "mapped_memory_functional_scope": "PASS actual generated64weight+16residual macros and actual arithmetic/tail, equal-phase source-root test; not native programme/VM/PHY or physical qualification",
+  "physical_qualified": false,
+  "native_programme_VM_qualified": false,
+  "remote_artifacts": "/srv/opentallas-scratch/claude/codex-hc-sys1-mapped92-1015/run_hc_sys1_mapped_mtp",
+  "timing_assertions": {
+    "row_results": "age322+160p early and342+160p nominal every result",
+    "tail": "fixed sink capture edge and position every result",
+    "memory": "473 independent same-source generated models prove TML3 macroread\u2192downstream MAC capture, residual write+1, mask retention;74c independent compiled SHA audit",
+    "clock": "functional roots equalphase, separate physical92 CTS/SS/FF phase closure pending"
+  },
+  "fixture_provenance": "synthetic fullshape weights/residual/bases/scales; no checkpoint claim"
+}
