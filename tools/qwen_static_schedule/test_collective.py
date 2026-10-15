@@ -4,7 +4,7 @@ from tools.qwen_static_schedule.calendar import ScheduleError
 
 class Collective(unittest.TestCase):
  def event(self):
-  return dict(rtl_instance='seq_su.u_seq.u_tp',rtl_module='ot_qwen_tp_seq_w12_vrl',cmd_pin_cycle=117,words=256,mode=0,tag=0x12345678)
+  return dict(rtl_instance='seq_su.u_seq.u_tp',rtl_module='ot_qwen_tp_seq_w12_vrl',core_cmd_cycle=118,words=256,mode=0,tag=0x12345678)
  def test_actual_window_and_route(self):
   out=pw_image([self.event()],100,8,20,59)
   self.assertEqual([x['address'] for x in out],[944,945,946,947,960])

@@ -81,7 +81,7 @@ def qwen_seq_collective_calendar_model():
         pw_config_words=17,pw_first=944,pw_last=960,max_program_instructions=59,
         calendar_rows=8,command_rows_max=7,descriptor_state_bits=8*(32+16+1+1+32),
         arithmetic_macs=0,memory_macros_added=0,pw_bytes_per_cycle=8,
-        latency='command pin edge=start+row_cycle+1+D_seq; D_seq actual physical relay count required',
+        latency='collective core command edge=start+row_cycle+1+D_seq+1pin; D_seq actual physical relay count required',
         source='qfd_seq_su dh[42]/PW118/117:108/107:44; ot_coll_cmd_issue owns fixed issue',
         track_bits=51,slot_fit='inside sequencer; source ABI changed, area/pin/CTS contract unmeasured',
         replica_fanout='one issuer; one50bit destination command bus; no data mux/ready launch gate',

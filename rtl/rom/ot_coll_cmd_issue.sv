@@ -63,6 +63,13 @@ module ot_coll_cmd_issue #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin header_loaded <= 0; tag_loaded <= 0; sealed <= 1'b0; stop_q <= 0; count_q <= 0; cfg_fault <= 1'b0; end
         else begin
+            // Nonzero BASE shares the dense controller image: PW0 begins
+            // a new image. Active images are never replaced mid-timeline.
+            if (BASE != 0 && pw_v && pw_addr == 0) begin
+                if (run) cfg_fault <= 1'b1;
+                else begin header_loaded <= 0; tag_loaded <= 0;
+                    sealed <= 1'b0; count_q <= 0; stop_q <= 0; end
+            end
             if (in_rows) begin
                 if (off[0]) tag_loaded[ri] <= 1'b1; else header_loaded[ri] <= 1'b1;
                 if (sealed || run) cfg_fault <= 1'b1;

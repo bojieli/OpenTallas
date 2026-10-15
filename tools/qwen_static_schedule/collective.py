@@ -1,6 +1,6 @@
 """PW image for the actual qfd_seq_su collective command calendar.
 
-Events must name their real producer and actual collective command pin edge.
+Events must name their real producer and actual collective core command edge (after its new pin register).
 No observation traces or readiness values choose issue times.
 """
 from .calendar import ScheduleError
@@ -8,10 +8,10 @@ BASE = 944
 DEPTH = 8
 
 
-def pw_image(events, stage_start_cycle, relay_edges, stop_cycle, program_words):
+def pw_image(events, stage_start_cycle, relay_edges, stop_cycle, program_words, command_pin_edges=1):
     if not 0 < program_words < 60:
         raise ScheduleError('native instructions overlap reserved PW944 collective window')
-    if stage_start_cycle < 0 or relay_edges < 0 or stop_cycle < 2:
+    if stage_start_cycle < 0 or relay_edges < 0 or stop_cycle < 2 or command_pin_edges != 1:
         raise ScheduleError('invalid actual stage/relay/stop calendar')
     if not 1 <= len(events) < DEPTH:
         raise ScheduleError('collective calendar requires one to seven actual commands and END')
@@ -20,7 +20,7 @@ def pw_image(events, stage_start_cycle, relay_edges, stop_cycle, program_words):
     for k, event in enumerate(events):
         if not event.get('rtl_instance') or not event.get('rtl_module'):
             raise ScheduleError('collective command lacks actual producer attribution')
-        cycle = event['cmd_pin_cycle'] - stage_start_cycle - relay_edges - 1
+        cycle = event['core_cmd_cycle'] - stage_start_cycle - relay_edges - 1 - command_pin_edges
         words, mode, tag = event['words'], event['mode'], event['tag']
         if not previous < cycle < stop_cycle or not 0 < words < 65536 or mode not in (0, 1) or not 0 <= tag < 1 << 32:
             raise ScheduleError('collective command exceeds counter/descriptor/ordering bounds')
