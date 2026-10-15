@@ -1,5 +1,5 @@
 {
- "name": "qkd_land_emb_ifw-if4-COMMIT",
+ "name": "qkd_land_emb_ifw-if4-0389349bb",
  "block": "qkd_land_emb_ifw",
  "ref_tile": true,
  "owner": "Codex:qwen_elements_1319",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "codex/qwen-elements-1319",
-  "commit": "COMMIT",
+  "commit": "0389349bbd9d8de5185a311cabb1165a191944e5",
   "extra_paths": [
    "physical/qkd_land_strip",
    "rtl/test/qwen_kv_die/tb_qkd_land_emb_ifw.sv",
@@ -101,7 +101,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_land_emb_ifw/qkd_land_emb_ifw-if4-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_land_emb_ifw/qkd_land_emb_ifw-if4-0389349bb"
   }
  ],
  "cycles_added": 0,
