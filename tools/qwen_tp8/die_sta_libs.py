@@ -138,6 +138,16 @@ def main():
         vd = vd if vd.is_absolute() else root / vd
         if set(libs) != {'tt', 'ff', 'ss'}:
             raise ValueError(f'{mst}: real view requires actual TT, FF, SS Liberty, got {sorted(libs)}')
+        sheet = vd / f'{mst}.json'
+        if sheet.exists() and str(json.loads(sheet.read_text()).get('schema', '')).startswith(
+                'opentallas.qwen-missing.link-phy-abstract'):
+            # licensed link-PHY hard macro (tools/qwen_missing/link_phy_gen.py): its Liberty IS the boundary model
+            # (registered FDI pins, ASSUMED timing); there is no routed clock tree to measure, as for HARD
+            for c, rel in libs.items():
+                shutil.copy(root / rel, out / f'qfd_etm_{mst}_{c}.lib')
+            views['hard_macro'][mst] = str(r['view'])
+            skip.add(mst)
+            continue
         leaves[mst] = {c: measured_clock_refs(root / libs[c], vd / 'insertion.json', c) for c in ('tt', 'ff', 'ss')}
         for c, rel in libs.items():
             shutil.copy(root / rel, out / f'qfd_etm_{mst}_{c}.lib')

@@ -22,7 +22,18 @@ module ot_hbm_attn_pv_bank_gather_binary(
    bank_flags<=flags_q[select_q*8+:8];
   end
  end
- always @(posedge clk or negedge rst_n)if(!rst_n)begin valid_q<=0;output_v<=0;end
+ // Local reset release at the rst_n pin (native capture repair, 2026-10-15): rst_n lands on ONE async-clear
+ // flop at the pin face (assert async, release synchronous). The control flops clear from rst_q, a reg->recovery
+ // path inside the leaf, so the pin capture budget sees a single pin flop instead of two late-leaf control flops
+ // (measured S+R 196.2 > 190 ps). Release is one edge later; no operation edge changes.
+ reg rst_q;
+ always @(posedge clk or negedge rst_n)if(!rst_n)rst_q<=1'b0;else
+`ifdef ATT_GATHER_RESET_MUTANT
+  rst_q<=1'b0;   // mutant: local release never happens
+`else
+  rst_q<=1'b1;
+`endif
+ always @(posedge clk or negedge rst_q)if(!rst_q)begin valid_q<=0;output_v<=0;end
  else begin valid_q<=capture_v;output_v<=valid_q;end
 endmodule
 `default_nettype wire

@@ -1772,7 +1772,10 @@ def _wrap(v, m, G, peers):
                 if mine[p][0] == 'xy':
                     _, n0, layer, poss, _ = mine[p]
                     for i, (x, y) in enumerate(poss[:wmap.get(p, n0)]):
-                        out.append((f'{p}[{i}]', layer, (x-.012,y-.012,x+.012,y+.012)))
+                        # >= the layer's min area (M5 2000 nm2): a 24 x 24 nm interior square had no DRT access
+                        # point (C19s DRT-0073 on every interior clock entry); 24 x 96 nm along the preferred direction
+                        hx, hy = (.012, .048) if layer in ('M1', 'M3', 'M5', 'M7', 'M9') else (.048, .012)
+                        out.append((f'{p}[{i}]', layer, (x-hx,y-hy,x+hx,y+hy)))
                     continue
                 _, n0, f, layer, poss, _ = mine[p]
                 n = min(wmap.get(p, n0), len(poss))
