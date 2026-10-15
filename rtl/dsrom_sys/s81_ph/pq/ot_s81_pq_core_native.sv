@@ -2,7 +2,7 @@
 `ifndef OT_S81_PQ_BC_MUT_SLICE_K
 `define OT_S81_PQ_BC_MUT_SLICE_K 0
 `endif
-// Production PQ core, PHW9/SAW11/KMAX6144/R128. Wiring only at this level.
+// Production PQ core, PHW10/SAW14/KMAX6144/R128. Wiring only at this level.
 // Returns stay die-placed in twelve tier/half groups; ga_i contains four
 // 4-bit tag counts per group. The core owns no 128-region return registers.
 // Each child has its own die clock entry; the die must deliver phi-R.
@@ -31,10 +31,10 @@ module ot_s81_pq_core_native (
 `endif
     input wire rst_n, go,
 `ifdef OT_PQ_CTL_STATIC
-    input wire calendar_v,input wire[71:0] calendar_action,
+    input wire calendar_v,input wire[74:0] calendar_action,
     output wire stream_end_v,output wire[1:0] stream_end_tag,
 `endif
-    input wire [8:0] i_ph,
+    input wire [9:0] i_ph,
     input wire [2:0] i_np,
     input wire [18:0] i_xbase, i_xps, i_obase, i_ops,
     input wire [1:0] i_fmt,
@@ -52,10 +52,10 @@ module ot_s81_pq_core_native (
     output wire [31:0] phase_cycles,
     output wire ev_go, ev_end,
     output wire [1:0] ev_tag,
-    output wire [1632:0] f_bus,
-    output wire [9:0] rom_pa0, rom_pa1,
+    output wire [1633:0] f_bus,
+    output wire [10:0] rom_pa0, rom_pa1,
     input wire [63:0] rom_pq0, rom_pq1,
-    output wire [10:0] rom_sa,
+    output wire [13:0] rom_sa,
     input wire [47:0] rom_sq
 `ifdef OT_PQ_BENCH_TELEMETRY
     , output wire [1:0] read_consumed, read_speculative
@@ -77,7 +77,7 @@ module ot_s81_pq_core_native (
     wire [47:0] hw;
     wire [35:0] h_hi;
     wire [15:0] h_b0, h_b1;
-    wire [608:0] bc_hr;
+    wire [609:0] bc_hr;
     wire [4:0] storage_fault;
     wire q_consume, b_consume;
     wire fault_to_ctl;
@@ -93,8 +93,8 @@ module ot_s81_pq_core_native (
 `elsif OT_PQ_CTL_FIXED
     ot_s81_pq_ctl_fixed_native u_ctl (
 `else
-    ot_s81_pq_ctl_native #(.PHW(9), .SAW(11), .R(128), .VAW(19), .VRD(64), .KMAX(6144),
-        .BST(2), .NSEG(8), .PQ(1), .RG(11), .XRV(1), .XCAP(16), .RPT(2), .BW(1633)) u_ctl (
+    ot_s81_pq_ctl_native #(.PHW(10), .SAW(14), .R(128), .VAW(19), .VRD(64), .KMAX(6144),
+        .BST(2), .NSEG(8), .PQ(1), .RG(11), .XRV(1), .XCAP(16), .RPT(2), .BW(1634)) u_ctl (
 `endif
         .clk(ck_ctl), .rst_n(rst_n), .go(go), .i_ph(i_ph), .i_np(i_np), .i_xbase(i_xbase),
         .i_xps(i_xps), .i_obase(i_obase), .i_ops(i_ops), .i_fmt(i_fmt),
@@ -291,20 +291,20 @@ module ot_s81_pq_core_native (
             assign bt_d[256*u + 64*g +: 64] = d[64*u +: 64];
         end
     end endgenerate
-    wire [1632:0] bc [0:4];
+    wire [1633:0] bc [0:4];
 `ifdef OT_PQ_QB_PIPE
-    wire[608:0] bc_hr_q;wire[1023:0] bt_d_q;
+    wire[609:0] bc_hr_q;wire[1023:0] bt_d_q;
     ot_s81_pq_qb_align_native u_qb_align (.clk(ck_qb),.rst_n(rst_n),.bc_hr(bc_hr),.bt_d(bt_d),
       .bc_hr_q(bc_hr_q),.bt_d_q(bt_d_q));
-    assign bc[0] = {bc_hr_q[608:578], hq0, he0, hq1, he1, bc_hr_q[45:0], bt_d_q};
+    assign bc[0] = {bc_hr_q[609:578], hq0, he0, hq1, he1, bc_hr_q[45:0], bt_d_q};
 `else
-    assign bc[0] = {bc_hr[608:578], hq0, he0, hq1, he1, bc_hr[45:0], bt_d};
+    assign bc[0] = {bc_hr[609:578], hq0, he0, hq1, he1, bc_hr[45:0], bt_d};
 `endif
     generate for (g = 0; g < 4; g = g + 1) begin : g_bc
 `ifdef OT_PQ_BC_SLICED
-        wire [408:0] qs0;
+        wire [409:0] qs0;
         ot_s81_pq_bc_slice0 u_s0 (.clk(ck_bc[4*g+0]), .rst_n(rst_n),
-            .d({bc[g][1626], bc[g][1622], bc[g][1618], bc[g][1614], bc[g][1610], bc[g][1606], bc[g][1602], bc[g][1409], bc[g][1408], bc[g][1407], bc[g][1406], bc[g][1405], bc[g][1404], bc[g][1403], bc[g][1402], bc[g][1401], bc[g][1400], bc[g][1399], bc[g][1398], bc[g][1397], bc[g][1396], bc[g][1395], bc[g][1394], bc[g][1393], bc[g][1392], bc[g][1391], bc[g][1390], bc[g][1389], bc[g][1388], bc[g][1387], bc[g][1386], bc[g][1385], bc[g][1384], bc[g][1383], bc[g][1382], bc[g][1381], bc[g][1380], bc[g][1379], bc[g][1378], bc[g][1377], bc[g][1376], bc[g][1375], bc[g][1374], bc[g][1373], bc[g][1372], bc[g][1371], bc[g][1370], bc[g][1369], bc[g][1368], bc[g][1367], bc[g][1366], bc[g][1365], bc[g][1364], bc[g][1363], bc[g][1362], bc[g][1361], bc[g][1360], bc[g][1359], bc[g][1358], bc[g][1357], bc[g][1356], bc[g][1355], bc[g][1354], bc[g][1353], bc[g][1352], bc[g][1351], bc[g][1350], bc[g][1349], bc[g][1348], bc[g][1347], bc[g][1346], bc[g][1344], bc[g][1340], bc[g][1336], bc[g][1143], bc[g][1142], bc[g][1141], bc[g][1140], bc[g][1139], bc[g][1138], bc[g][1137], bc[g][1136], bc[g][1135], bc[g][1134], bc[g][1133], bc[g][1132], bc[g][1131], bc[g][1130], bc[g][1129], bc[g][1128], bc[g][1127], bc[g][1126], bc[g][1125], bc[g][1124], bc[g][1123], bc[g][1122], bc[g][1121], bc[g][1120], bc[g][1119], bc[g][1118], bc[g][1117], bc[g][1116], bc[g][1115], bc[g][1114], bc[g][1113], bc[g][1112], bc[g][1111], bc[g][1110], bc[g][1109], bc[g][1108], bc[g][1107], bc[g][1106], bc[g][1105], bc[g][1104], bc[g][1103], bc[g][1102], bc[g][1101], bc[g][1100], bc[g][1099], bc[g][1098], bc[g][1097], bc[g][1096], bc[g][1095], bc[g][1094], bc[g][1093], bc[g][1092], bc[g][1091], bc[g][1090], bc[g][1089], bc[g][1088], bc[g][1087], bc[g][1086], bc[g][1085], bc[g][1084], bc[g][1083], bc[g][1082], bc[g][1081], bc[g][1080], bc[g][1078], bc[g][1074], bc[g][1070], bc[g][1068], bc[g][1064], bc[g][1060], bc[g][1056], bc[g][1052], bc[g][1048], bc[g][1044], bc[g][1040], bc[g][1036], bc[g][1032], bc[g][1028], bc[g][1024], bc[g][831], bc[g][830], bc[g][829], bc[g][828], bc[g][827], bc[g][826], bc[g][825], bc[g][824], bc[g][823], bc[g][822], bc[g][821], bc[g][820], bc[g][819], bc[g][818], bc[g][817], bc[g][816], bc[g][815], bc[g][814], bc[g][813], bc[g][812], bc[g][811], bc[g][810], bc[g][809], bc[g][808], bc[g][807], bc[g][806], bc[g][805], bc[g][804], bc[g][803], bc[g][802], bc[g][801], bc[g][800], bc[g][799], bc[g][798], bc[g][797], bc[g][796], bc[g][795], bc[g][794], bc[g][793], bc[g][792], bc[g][791], bc[g][790], bc[g][789], bc[g][788], bc[g][787], bc[g][786], bc[g][785], bc[g][784], bc[g][783], bc[g][782], bc[g][781], bc[g][780], bc[g][779], bc[g][778], bc[g][777], bc[g][776], bc[g][775], bc[g][774], bc[g][773], bc[g][772], bc[g][771], bc[g][770], bc[g][769], bc[g][768], bc[g][575], bc[g][574], bc[g][573], bc[g][572], bc[g][571], bc[g][570], bc[g][569], bc[g][568], bc[g][567], bc[g][566], bc[g][565], bc[g][564], bc[g][563], bc[g][562], bc[g][561], bc[g][560], bc[g][559], bc[g][558], bc[g][557], bc[g][556], bc[g][555], bc[g][554], bc[g][553], bc[g][552], bc[g][551], bc[g][550], bc[g][549], bc[g][548], bc[g][547], bc[g][546], bc[g][545], bc[g][544], bc[g][543], bc[g][542], bc[g][541], bc[g][540], bc[g][539], bc[g][538], bc[g][537], bc[g][536], bc[g][535], bc[g][534], bc[g][533], bc[g][532], bc[g][531], bc[g][530], bc[g][529], bc[g][528], bc[g][527], bc[g][526], bc[g][525], bc[g][524], bc[g][523], bc[g][522], bc[g][521], bc[g][520], bc[g][519], bc[g][518], bc[g][517], bc[g][516], bc[g][515], bc[g][514], bc[g][513], bc[g][512], bc[g][319], bc[g][318], bc[g][317], bc[g][316], bc[g][315], bc[g][314], bc[g][313], bc[g][312], bc[g][311], bc[g][310], bc[g][309], bc[g][308], bc[g][307], bc[g][306], bc[g][305], bc[g][304], bc[g][303], bc[g][302], bc[g][301], bc[g][300], bc[g][299], bc[g][298], bc[g][297], bc[g][296], bc[g][295], bc[g][294], bc[g][293], bc[g][292], bc[g][291], bc[g][290], bc[g][289], bc[g][288], bc[g][287], bc[g][286], bc[g][285], bc[g][284], bc[g][283], bc[g][282], bc[g][281], bc[g][280], bc[g][279], bc[g][278], bc[g][277], bc[g][276], bc[g][275], bc[g][274], bc[g][273], bc[g][272], bc[g][271], bc[g][270], bc[g][269], bc[g][268], bc[g][267], bc[g][266], bc[g][265], bc[g][264], bc[g][263], bc[g][262], bc[g][261], bc[g][260], bc[g][259], bc[g][258], bc[g][257], bc[g][256], bc[g][63], bc[g][62], bc[g][61], bc[g][60], bc[g][59], bc[g][58], bc[g][57], bc[g][56], bc[g][55], bc[g][54], bc[g][53], bc[g][52], bc[g][51], bc[g][50], bc[g][49], bc[g][48], bc[g][47], bc[g][46], bc[g][45], bc[g][44], bc[g][43], bc[g][42], bc[g][41], bc[g][40], bc[g][39], bc[g][38], bc[g][37], bc[g][36], bc[g][35], bc[g][34], bc[g][33], bc[g][32], bc[g][31], bc[g][30], bc[g][29], bc[g][28], bc[g][27], bc[g][26], bc[g][25], bc[g][24], bc[g][23], bc[g][22], bc[g][21], bc[g][20], bc[g][19], bc[g][18], bc[g][17], bc[g][16], bc[g][15], bc[g][14], bc[g][13], bc[g][12], bc[g][11], bc[g][10], bc[g][9], bc[g][8], bc[g][7], bc[g][6], bc[g][5], bc[g][4], bc[g][3], bc[g][2], bc[g][1], bc[g][0]}), .q(qs0));
+            .d({bc[g][1633], bc[g][1626], bc[g][1622], bc[g][1618], bc[g][1614], bc[g][1610], bc[g][1606], bc[g][1602], bc[g][1409], bc[g][1408], bc[g][1407], bc[g][1406], bc[g][1405], bc[g][1404], bc[g][1403], bc[g][1402], bc[g][1401], bc[g][1400], bc[g][1399], bc[g][1398], bc[g][1397], bc[g][1396], bc[g][1395], bc[g][1394], bc[g][1393], bc[g][1392], bc[g][1391], bc[g][1390], bc[g][1389], bc[g][1388], bc[g][1387], bc[g][1386], bc[g][1385], bc[g][1384], bc[g][1383], bc[g][1382], bc[g][1381], bc[g][1380], bc[g][1379], bc[g][1378], bc[g][1377], bc[g][1376], bc[g][1375], bc[g][1374], bc[g][1373], bc[g][1372], bc[g][1371], bc[g][1370], bc[g][1369], bc[g][1368], bc[g][1367], bc[g][1366], bc[g][1365], bc[g][1364], bc[g][1363], bc[g][1362], bc[g][1361], bc[g][1360], bc[g][1359], bc[g][1358], bc[g][1357], bc[g][1356], bc[g][1355], bc[g][1354], bc[g][1353], bc[g][1352], bc[g][1351], bc[g][1350], bc[g][1349], bc[g][1348], bc[g][1347], bc[g][1346], bc[g][1344], bc[g][1340], bc[g][1336], bc[g][1143], bc[g][1142], bc[g][1141], bc[g][1140], bc[g][1139], bc[g][1138], bc[g][1137], bc[g][1136], bc[g][1135], bc[g][1134], bc[g][1133], bc[g][1132], bc[g][1131], bc[g][1130], bc[g][1129], bc[g][1128], bc[g][1127], bc[g][1126], bc[g][1125], bc[g][1124], bc[g][1123], bc[g][1122], bc[g][1121], bc[g][1120], bc[g][1119], bc[g][1118], bc[g][1117], bc[g][1116], bc[g][1115], bc[g][1114], bc[g][1113], bc[g][1112], bc[g][1111], bc[g][1110], bc[g][1109], bc[g][1108], bc[g][1107], bc[g][1106], bc[g][1105], bc[g][1104], bc[g][1103], bc[g][1102], bc[g][1101], bc[g][1100], bc[g][1099], bc[g][1098], bc[g][1097], bc[g][1096], bc[g][1095], bc[g][1094], bc[g][1093], bc[g][1092], bc[g][1091], bc[g][1090], bc[g][1089], bc[g][1088], bc[g][1087], bc[g][1086], bc[g][1085], bc[g][1084], bc[g][1083], bc[g][1082], bc[g][1081], bc[g][1080], bc[g][1078], bc[g][1074], bc[g][1070], bc[g][1068], bc[g][1064], bc[g][1060], bc[g][1056], bc[g][1052], bc[g][1048], bc[g][1044], bc[g][1040], bc[g][1036], bc[g][1032], bc[g][1028], bc[g][1024], bc[g][831], bc[g][830], bc[g][829], bc[g][828], bc[g][827], bc[g][826], bc[g][825], bc[g][824], bc[g][823], bc[g][822], bc[g][821], bc[g][820], bc[g][819], bc[g][818], bc[g][817], bc[g][816], bc[g][815], bc[g][814], bc[g][813], bc[g][812], bc[g][811], bc[g][810], bc[g][809], bc[g][808], bc[g][807], bc[g][806], bc[g][805], bc[g][804], bc[g][803], bc[g][802], bc[g][801], bc[g][800], bc[g][799], bc[g][798], bc[g][797], bc[g][796], bc[g][795], bc[g][794], bc[g][793], bc[g][792], bc[g][791], bc[g][790], bc[g][789], bc[g][788], bc[g][787], bc[g][786], bc[g][785], bc[g][784], bc[g][783], bc[g][782], bc[g][781], bc[g][780], bc[g][779], bc[g][778], bc[g][777], bc[g][776], bc[g][775], bc[g][774], bc[g][773], bc[g][772], bc[g][771], bc[g][770], bc[g][769], bc[g][768], bc[g][575], bc[g][574], bc[g][573], bc[g][572], bc[g][571], bc[g][570], bc[g][569], bc[g][568], bc[g][567], bc[g][566], bc[g][565], bc[g][564], bc[g][563], bc[g][562], bc[g][561], bc[g][560], bc[g][559], bc[g][558], bc[g][557], bc[g][556], bc[g][555], bc[g][554], bc[g][553], bc[g][552], bc[g][551], bc[g][550], bc[g][549], bc[g][548], bc[g][547], bc[g][546], bc[g][545], bc[g][544], bc[g][543], bc[g][542], bc[g][541], bc[g][540], bc[g][539], bc[g][538], bc[g][537], bc[g][536], bc[g][535], bc[g][534], bc[g][533], bc[g][532], bc[g][531], bc[g][530], bc[g][529], bc[g][528], bc[g][527], bc[g][526], bc[g][525], bc[g][524], bc[g][523], bc[g][522], bc[g][521], bc[g][520], bc[g][519], bc[g][518], bc[g][517], bc[g][516], bc[g][515], bc[g][514], bc[g][513], bc[g][512], bc[g][319], bc[g][318], bc[g][317], bc[g][316], bc[g][315], bc[g][314], bc[g][313], bc[g][312], bc[g][311], bc[g][310], bc[g][309], bc[g][308], bc[g][307], bc[g][306], bc[g][305], bc[g][304], bc[g][303], bc[g][302], bc[g][301], bc[g][300], bc[g][299], bc[g][298], bc[g][297], bc[g][296], bc[g][295], bc[g][294], bc[g][293], bc[g][292], bc[g][291], bc[g][290], bc[g][289], bc[g][288], bc[g][287], bc[g][286], bc[g][285], bc[g][284], bc[g][283], bc[g][282], bc[g][281], bc[g][280], bc[g][279], bc[g][278], bc[g][277], bc[g][276], bc[g][275], bc[g][274], bc[g][273], bc[g][272], bc[g][271], bc[g][270], bc[g][269], bc[g][268], bc[g][267], bc[g][266], bc[g][265], bc[g][264], bc[g][263], bc[g][262], bc[g][261], bc[g][260], bc[g][259], bc[g][258], bc[g][257], bc[g][256], bc[g][63], bc[g][62], bc[g][61], bc[g][60], bc[g][59], bc[g][58], bc[g][57], bc[g][56], bc[g][55], bc[g][54], bc[g][53], bc[g][52], bc[g][51], bc[g][50], bc[g][49], bc[g][48], bc[g][47], bc[g][46], bc[g][45], bc[g][44], bc[g][43], bc[g][42], bc[g][41], bc[g][40], bc[g][39], bc[g][38], bc[g][37], bc[g][36], bc[g][35], bc[g][34], bc[g][33], bc[g][32], bc[g][31], bc[g][30], bc[g][29], bc[g][28], bc[g][27], bc[g][26], bc[g][25], bc[g][24], bc[g][23], bc[g][22], bc[g][21], bc[g][20], bc[g][19], bc[g][18], bc[g][17], bc[g][16], bc[g][15], bc[g][14], bc[g][13], bc[g][12], bc[g][11], bc[g][10], bc[g][9], bc[g][8], bc[g][7], bc[g][6], bc[g][5], bc[g][4], bc[g][3], bc[g][2], bc[g][1], bc[g][0]}), .q(qs0));
 `ifdef OT_S81_PQ_BC_MUT_SLICE
         assign bc[g+1][0] = qs0[0] ^ (g == 0 && `OT_S81_PQ_BC_MUT_SLICE_K == 0);
 `else
@@ -718,6 +718,7 @@ module ot_s81_pq_core_native (
         assign bc[g+1][1618] = qs0[406];
         assign bc[g+1][1622] = qs0[407];
         assign bc[g+1][1626] = qs0[408];
+        assign bc[g+1][1633] = qs0[409];
         wire [407:0] qs1;
         ot_s81_pq_bc_slice1 u_s1 (.clk(ck_bc[4*g+1]), .rst_n(rst_n),
             .d({bc[g][1623], bc[g][1619], bc[g][1615], bc[g][1611], bc[g][1607], bc[g][1603], bc[g][1473], bc[g][1472], bc[g][1471], bc[g][1470], bc[g][1469], bc[g][1468], bc[g][1467], bc[g][1466], bc[g][1465], bc[g][1464], bc[g][1463], bc[g][1462], bc[g][1461], bc[g][1460], bc[g][1459], bc[g][1458], bc[g][1457], bc[g][1456], bc[g][1455], bc[g][1454], bc[g][1453], bc[g][1452], bc[g][1451], bc[g][1450], bc[g][1449], bc[g][1448], bc[g][1447], bc[g][1446], bc[g][1445], bc[g][1444], bc[g][1443], bc[g][1442], bc[g][1441], bc[g][1440], bc[g][1439], bc[g][1438], bc[g][1437], bc[g][1436], bc[g][1435], bc[g][1434], bc[g][1433], bc[g][1432], bc[g][1431], bc[g][1430], bc[g][1429], bc[g][1428], bc[g][1427], bc[g][1426], bc[g][1425], bc[g][1424], bc[g][1423], bc[g][1422], bc[g][1421], bc[g][1420], bc[g][1419], bc[g][1418], bc[g][1417], bc[g][1416], bc[g][1415], bc[g][1414], bc[g][1413], bc[g][1412], bc[g][1411], bc[g][1410], bc[g][1345], bc[g][1341], bc[g][1337], bc[g][1207], bc[g][1206], bc[g][1205], bc[g][1204], bc[g][1203], bc[g][1202], bc[g][1201], bc[g][1200], bc[g][1199], bc[g][1198], bc[g][1197], bc[g][1196], bc[g][1195], bc[g][1194], bc[g][1193], bc[g][1192], bc[g][1191], bc[g][1190], bc[g][1189], bc[g][1188], bc[g][1187], bc[g][1186], bc[g][1185], bc[g][1184], bc[g][1183], bc[g][1182], bc[g][1181], bc[g][1180], bc[g][1179], bc[g][1178], bc[g][1177], bc[g][1176], bc[g][1175], bc[g][1174], bc[g][1173], bc[g][1172], bc[g][1171], bc[g][1170], bc[g][1169], bc[g][1168], bc[g][1167], bc[g][1166], bc[g][1165], bc[g][1164], bc[g][1163], bc[g][1162], bc[g][1161], bc[g][1160], bc[g][1159], bc[g][1158], bc[g][1157], bc[g][1156], bc[g][1155], bc[g][1154], bc[g][1153], bc[g][1152], bc[g][1151], bc[g][1150], bc[g][1149], bc[g][1148], bc[g][1147], bc[g][1146], bc[g][1145], bc[g][1144], bc[g][1079], bc[g][1075], bc[g][1071], bc[g][1069], bc[g][1065], bc[g][1061], bc[g][1057], bc[g][1053], bc[g][1049], bc[g][1045], bc[g][1041], bc[g][1037], bc[g][1033], bc[g][1029], bc[g][1025], bc[g][895], bc[g][894], bc[g][893], bc[g][892], bc[g][891], bc[g][890], bc[g][889], bc[g][888], bc[g][887], bc[g][886], bc[g][885], bc[g][884], bc[g][883], bc[g][882], bc[g][881], bc[g][880], bc[g][879], bc[g][878], bc[g][877], bc[g][876], bc[g][875], bc[g][874], bc[g][873], bc[g][872], bc[g][871], bc[g][870], bc[g][869], bc[g][868], bc[g][867], bc[g][866], bc[g][865], bc[g][864], bc[g][863], bc[g][862], bc[g][861], bc[g][860], bc[g][859], bc[g][858], bc[g][857], bc[g][856], bc[g][855], bc[g][854], bc[g][853], bc[g][852], bc[g][851], bc[g][850], bc[g][849], bc[g][848], bc[g][847], bc[g][846], bc[g][845], bc[g][844], bc[g][843], bc[g][842], bc[g][841], bc[g][840], bc[g][839], bc[g][838], bc[g][837], bc[g][836], bc[g][835], bc[g][834], bc[g][833], bc[g][832], bc[g][639], bc[g][638], bc[g][637], bc[g][636], bc[g][635], bc[g][634], bc[g][633], bc[g][632], bc[g][631], bc[g][630], bc[g][629], bc[g][628], bc[g][627], bc[g][626], bc[g][625], bc[g][624], bc[g][623], bc[g][622], bc[g][621], bc[g][620], bc[g][619], bc[g][618], bc[g][617], bc[g][616], bc[g][615], bc[g][614], bc[g][613], bc[g][612], bc[g][611], bc[g][610], bc[g][609], bc[g][608], bc[g][607], bc[g][606], bc[g][605], bc[g][604], bc[g][603], bc[g][602], bc[g][601], bc[g][600], bc[g][599], bc[g][598], bc[g][597], bc[g][596], bc[g][595], bc[g][594], bc[g][593], bc[g][592], bc[g][591], bc[g][590], bc[g][589], bc[g][588], bc[g][587], bc[g][586], bc[g][585], bc[g][584], bc[g][583], bc[g][582], bc[g][581], bc[g][580], bc[g][579], bc[g][578], bc[g][577], bc[g][576], bc[g][383], bc[g][382], bc[g][381], bc[g][380], bc[g][379], bc[g][378], bc[g][377], bc[g][376], bc[g][375], bc[g][374], bc[g][373], bc[g][372], bc[g][371], bc[g][370], bc[g][369], bc[g][368], bc[g][367], bc[g][366], bc[g][365], bc[g][364], bc[g][363], bc[g][362], bc[g][361], bc[g][360], bc[g][359], bc[g][358], bc[g][357], bc[g][356], bc[g][355], bc[g][354], bc[g][353], bc[g][352], bc[g][351], bc[g][350], bc[g][349], bc[g][348], bc[g][347], bc[g][346], bc[g][345], bc[g][344], bc[g][343], bc[g][342], bc[g][341], bc[g][340], bc[g][339], bc[g][338], bc[g][337], bc[g][336], bc[g][335], bc[g][334], bc[g][333], bc[g][332], bc[g][331], bc[g][330], bc[g][329], bc[g][328], bc[g][327], bc[g][326], bc[g][325], bc[g][324], bc[g][323], bc[g][322], bc[g][321], bc[g][320], bc[g][127], bc[g][126], bc[g][125], bc[g][124], bc[g][123], bc[g][122], bc[g][121], bc[g][120], bc[g][119], bc[g][118], bc[g][117], bc[g][116], bc[g][115], bc[g][114], bc[g][113], bc[g][112], bc[g][111], bc[g][110], bc[g][109], bc[g][108], bc[g][107], bc[g][106], bc[g][105], bc[g][104], bc[g][103], bc[g][102], bc[g][101], bc[g][100], bc[g][99], bc[g][98], bc[g][97], bc[g][96], bc[g][95], bc[g][94], bc[g][93], bc[g][92], bc[g][91], bc[g][90], bc[g][89], bc[g][88], bc[g][87], bc[g][86], bc[g][85], bc[g][84], bc[g][83], bc[g][82], bc[g][81], bc[g][80], bc[g][79], bc[g][78], bc[g][77], bc[g][76], bc[g][75], bc[g][74], bc[g][73], bc[g][72], bc[g][71], bc[g][70], bc[g][69], bc[g][68], bc[g][67], bc[g][66], bc[g][65], bc[g][64]}), .q(qs1));
@@ -1964,7 +1965,7 @@ module ot_s81_pq_core_native (
         assign bc[g+1][1629] = qs3[406];
         assign bc[g+1][1631] = qs3[407];
 `else
-        ot_v41_pqc_bcrel #(.W(1633), .RT(18), .RB(1063)) u_rel (
+        ot_v41_pqc_bcrel #(.W(1634), .RT(19), .RB(1063)) u_rel (
             .clk(ck_bc[g]), .rst_n(rst_n), .d(bc[g]), .q(bc[g + 1]));
 `endif
     end endgenerate
@@ -1991,7 +1992,7 @@ module ot_s81_pq_fault_pin (
 endmodule
 
 // Native BC physical slice0: 409 bits, exact source permutation in bc_slice_request_2250.json.
-module ot_s81_pq_bc_slice0 (input wire clk, rst_n, input wire [408:0] d, output wire [408:0] q);
+module ot_s81_pq_bc_slice0 (input wire clk, rst_n, input wire [409:0] d, output wire [409:0] q);
     wire [0:0] rst_l;
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rst_l));
     reg r0;
@@ -3221,6 +3222,10 @@ module ot_s81_pq_bc_slice0 (input wire clk, rst_n, input wire [408:0] d, output 
     reg r408;
     always @(posedge clk or negedge rst_l[0]) if (!rst_l[0]) r408 <= 0; else r408 <= d[408];
     assign q[408] = r408;
+    reg r409;
+    always @(posedge clk or negedge rst_l[0]) if (!rst_l[0]) r409<=0;else r409<=d[409];
+    assign q[409]=r409;
+
 endmodule
 
 // Native BC physical slice1: 408 bits, exact source permutation in bc_slice_request_2250.json.
