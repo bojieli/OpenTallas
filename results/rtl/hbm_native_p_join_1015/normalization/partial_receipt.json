@@ -1,0 +1,30 @@
+{
+  "status": "T128 terminal PASS, T640 and remaining gate handles still live",
+  "T128": {
+    "heads": 16,
+    "canonical": "PASS",
+    "directed_DIV_BF16_ties": "PASS 16 even+16 odd",
+    "VM_checks": 10752,
+    "OUT_words": 8192,
+    "DEN_meaningful_words": 16,
+    "actual_MB_SE_scalars": 32,
+    "external_starts": 1,
+    "between_head_host_reconfiguration": false,
+    "IO_edges": 19440,
+    "pin_observer_events": 578,
+    "ack_errors": 0
+  },
+  "mutants": {
+    "omit_SE": "REJECTED actual SFU fault",
+    "bypass_DIV": "LIVE",
+    "disable_output_RNE": "LIVE"
+  },
+  "boundary_only_DUT_initialization": [
+    "rawSC",
+    "rawPV",
+    "SINK"
+  ],
+  "native_whole_kernel_qualified": false,
+  "physical_qualified": false,
+  "production_qualified": false
+}
