@@ -11,7 +11,7 @@ C=rtl/hbm_accel/generic/collective
 build() { local ob=$O/$1; shift
   ( cd "$R" && $V --binary --timing -j 8 -O2 --x-assign fast --x-initial fast -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD \
     -Wno-MULTIDRIVEN -Wno-WIDTHCONCAT --top-module tb_hgi_coll_qtkm -Mdir "$ob" -Irtl/hbm_accel/generic "$@" \
-    $C/p2p/tb_hgi_coll_qtkm.sv $C/p2p/ot_hgi_coll_qep.sv $C/p2p/ot_hgi_coll_qrec.sv $C/p2p/ot_hgi_coll_crl.sv $C/p2p/ot_hgi_coll_rgx_wtx.sv \
+    $C/p2p/tb_hgi_coll_qtkm.sv $C/p2p/ot_hgi_coll_qep.sv $C/p2p/ot_hbm_accel_tu_endpoint_qpsg.sv $C/p2p/ot_hgi_coll_qrec.sv $C/p2p/ot_hgi_coll_crl.sv $C/p2p/ot_hgi_coll_rgx_wtx.sv \
     $C/tkm/ot_hgi_coll_tkm.sv rtl/lib/ot_rst_relay.sv $C/rgx/ot_hgi_coll_rgx_src.sv $C/rgx/ot_hgi_coll_rgx_sink.sv $C/rgx/ot_hgi_coll_rgx_snk.sv \
     rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv rtl/hbm_accel/tu/ot_hcoll_port.sv rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv \
     rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv rtl/link/ot_link_afifo.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv \

@@ -11,6 +11,7 @@
 //   ot_hfd_coll_q2  SE (S3-S4), NW (N0-N1), NE (N2-N3) quadrants, NPT 2, strap qid 1 / 2 / 3 (a die strap like the TKM
 //                   tile's tid).  Never HOME, never QSOLO: no hgi_ret, no hgi_recx, no RGX lanes, no TOPK sink.
 module ot_hfd_coll_q3 #(
+    parameter integer INJLAT = 12,
     parameter integer TKM = 1,
     parameter integer TKM_KMAX = 2048,
     parameter integer MUT_Q = 0, parameter integer MUT_CARRY = 0, parameter integer MUT_ORDER = 0
@@ -67,7 +68,7 @@ module ot_hfd_coll_q3 #(
     input  wire [3:0]        rgx_f_cr,
     input  wire              rgx_f_fault
 );
-    ot_hfd_coll_q #(.NPT(3), .HOME(0), .QSOLO(0), .SOLO_CAP(1), .TKM(TKM), .TKM_KMAX(TKM_KMAX),
+    ot_hfd_coll_q #(.INJLAT(INJLAT), .NPT(3), .HOME(0), .QSOLO(0), .SOLO_CAP(1), .TKM(TKM), .TKM_KMAX(TKM_KMAX),
                     .MUT_Q(MUT_Q), .MUT_CARRY(MUT_CARRY), .MUT_ORDER(MUT_ORDER)) u_q (
         .clk(clk), .rst_n(rst_n), .qid(2'd0),
         .hgi_rec(hgi_rec), .hgi_recx(hgi_recx), .hgi_ret(hgi_ret), .hgi_cfg(hgi_cfg), .hgi_vmaddr(hgi_vmaddr),
@@ -83,6 +84,7 @@ module ot_hfd_coll_q3 #(
 endmodule
 
 module ot_hfd_coll_q2 #(
+    parameter integer INJLAT = 12,
     parameter integer MUT_Q = 0, parameter integer MUT_CARRY = 0, parameter integer MUT_ORDER = 0
 ) (
     input  wire              clk,
@@ -126,7 +128,7 @@ module ot_hfd_coll_q2 #(
 `ifndef SYNTHESIS
     always @(posedge clk) if (rst_n && qid == 2'd0) $fatal(1, "ot_hfd_coll_q2: strap qid 0 is the SW master ot_hfd_coll_q3");
 `endif
-    ot_hfd_coll_q #(.NPT(2), .HOME(0), .QSOLO(0), .SOLO_CAP(0), .TKM(0),
+    ot_hfd_coll_q #(.INJLAT(INJLAT), .NPT(2), .HOME(0), .QSOLO(0), .SOLO_CAP(0), .TKM(0),
                     .MUT_Q(MUT_Q), .MUT_CARRY(MUT_CARRY), .MUT_ORDER(MUT_ORDER)) u_q (
         .clk(clk), .rst_n(rst_n), .qid(qid),
         .hgi_rec(hgi_rec), .hgi_recx(554'd0), .hgi_ret(), .hgi_cfg(hgi_cfg), .hgi_vmaddr(hgi_vmaddr),

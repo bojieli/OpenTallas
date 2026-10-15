@@ -21,6 +21,12 @@
 `ifndef G
 `define G 8
 `endif
+`ifndef INJLAT
+`define INJLAT 12
+`endif
+`ifndef INJSU
+`define INJSU `INJLAT
+`endif
 `ifndef RLY
 `define RLY 12
 `endif
@@ -37,7 +43,7 @@ module tb_hgi_coll_p2p;
 `else
     localparam integer NRK = `G, RR = 0;
 `endif
-    localparam integer G = `G, NL = 9, INJ = 2, DEL = 4, LANES = 16, FW = 32 * LANES, PWT = FW + 33, RW = 280, RLY = `RLY;
+    localparam integer G = `G, NL = 9, INJ = 2, DEL = 4, LANES = 16, FW = 32 * LANES, PWT = FW + 33, RW = 280, RLY = `RLY, INJL = `INJLAT, INJS = `INJSU;   // +define+INJSU=<n> != INJLAT: SU latency mutant (must FAIL)
     localparam integer MQ = `ifdef MUT_Q 1 `else 0 `endif;
     localparam integer MC = `ifdef MUT_CARRY 1 `else 0 `endif;
     localparam integer MO = `ifdef MUT_ORDER 1 `else 0 `endif;
@@ -140,7 +146,7 @@ module tb_hgi_coll_p2p;
             localparam integer NP = (q == 0) ? 3 : 2, B = (q == 0) ? 0 : (q == 1) ? 3 : (q == 2) ? 5 : 7;
             // the die masters: SW = ot_hfd_coll_q3 (HOME, QSOLO), SE / NW / NE = ot_hfd_coll_q2 (strap qid)
             if (q == 0) begin : g_m3
-                ot_hfd_coll_q3 #(.TKM(TKQ), .MUT_Q(MQ), .MUT_CARRY(MC), .MUT_ORDER(MO)) u_q (.clk(clk), .rst_n(rst_n),
+                ot_hfd_coll_q3 #(.INJLAT(INJL), .TKM(TKQ), .MUT_Q(MQ), .MUT_CARRY(MC), .MUT_ORDER(MO)) u_q (.clk(clk), .rst_n(rst_n),
                     .hgi_rec(p_rec[d][q]), .hgi_recx(554'd0), .hgi_ret(p_ret[d][q]), .hgi_cfg(cfgb), .hgi_vmaddr(), .hgi_inj_addr(p_ia[d][q]),
                     .inj_idx(p_ii[d][q]), .inj_rd(p_ir[d][q]), .inj_d(p_iq[d][q]), .del_valid(p_dv[d][q]), .del_flit(p_df[d][q]),
                     .hgi_del_obase(p_dob[d][q]), .fault(p_flt[d][q]), .stat_credit_stall(),
@@ -157,7 +163,7 @@ module tb_hgi_coll_p2p;
                     always @(posedge clk) if (dump_req) `P2P_DUMP(u_q.u_q)
                 end
             end else begin : g_m2
-                ot_hfd_coll_q2 #(.MUT_Q(MQ), .MUT_CARRY(MC), .MUT_ORDER(MO)) u_q (.clk(clk), .rst_n(rst_n), .qid(2'(q)),
+                ot_hfd_coll_q2 #(.INJLAT(INJL), .MUT_Q(MQ), .MUT_CARRY(MC), .MUT_ORDER(MO)) u_q (.clk(clk), .rst_n(rst_n), .qid(2'(q)),
                     .hgi_rec(p_rec[d][q]), .hgi_cfg(cfgb), .hgi_vmaddr(), .hgi_inj_addr(p_ia[d][q]),
                     .inj_idx(p_ii[d][q]), .inj_rd(p_ir[d][q]), .inj_d(p_iq[d][q]), .del_valid(p_dv[d][q]), .del_flit(p_df[d][q]),
                     .hgi_del_obase(p_dob[d][q]), .fault(p_flt[d][q]), .stat_credit_stall(),
@@ -191,13 +197,23 @@ module tb_hgi_coll_p2p;
             for (integer j = 0; j < 16; j = j + 1) c_iq[d][i*FW + 32*j +: 32] = vmc.exists(ky(d, a + j)) ? vmc[ky(d, a + j)] : 32'd0;
         end
         for (integer q = 0; q < 4; q = q + 1) begin
-            p_iq[d][q] = '0;
+            p_iqn[d][q] = '0;
             for (integer i = 0; i < INJ; i = i + 1) if (p_ir[d][q][i]) begin : pi
                 longint a; a = longint'(p_ia[d][q][80*i +: 40]);
-                for (integer j = 0; j < 16; j = j + 1) p_iq[d][q][i*FW + 32*j +: 32] = vmp.exists(ky(d, a + j)) ? vmp[ky(d, a + j)] : 32'd0;
+                for (integer j = 0; j < 16; j = j + 1) p_iqn[d][q][i*FW + 32*j +: 32] = vmp.exists(ky(d, a + j)) ? vmp[ky(d, a + j)] : 32'd0;
             end
         end
     end
+    // P2P SU model: reads VM at the request it sees at the engine's (registered) pins and answers INJLAT - 1 edges later
+    // (fixed latency: die relays + the SU's fixed VM read), the contract of ot_hbm_accel_tu_endpoint_qpsg
+    reg [INJ*FW-1:0] p_iqn [0:G-1][0:3];
+    reg [INJ*FW-1:0] p_iqd [0:G-1][0:3][0:31];
+    always @(posedge clk) for (integer d = 0; d < G; d = d + 1) for (integer q = 0; q < 4; q = q + 1) begin
+        p_iqd[d][q][0] <= p_iqn[d][q];
+        for (integer j = 1; j < 32; j = j + 1) p_iqd[d][q][j] <= p_iqd[d][q][j-1];
+    end
+    always @* for (integer d = 0; d < G; d = d + 1) for (integer q = 0; q < 4; q = q + 1)
+        p_iq[d][q] = (INJS <= 1) ? p_iqn[d][q] : p_iqd[d][q][INJS - 2];
     // the central r25gq wrapper does not export hgi_inj_addr: A base (PIPE: latched a_run, the vmaddr low half) + 16 f
     function automatic longint PIPE_A(input [79:0] vma, input [INJ*16-1:0] ii, input integer i);
         PIPE_A = longint'(vma[39:0]) + longint'(ii[16*i +: 16]) * 16;
@@ -474,8 +490,9 @@ module tb_hgi_coll_p2p;
             for (integer i = 0; i < 7; i = i + 1) addrec(1, 2304, 0, 0, 0);
             addrec(1, 5120, 0, 0, 0); addrec(1, 2304, 0, 0, 0);
             addrec(3, 2, 0, 5, 0);                     // ARGMAX_MERGE over the 96
-        end else if (tcase == "grm") begin            // DS hidden 5,120 GROUP_REDUCE_MCAST on an 8-die fabric: groups of 4 / 2
-            addrec(4, 5120, 0, 1, 4); addrec(4, 5120, 0, 0, 2); addrec(0, 5120, 0, 1, 0);
+        end else if (tcase == "grm") begin            // GROUP_REDUCE_MCAST on a G >= 4 fabric, several groups (s 4 / 2):
+            // the endpoint's owner fraction pf / s <= PFMAX / NC = 64 flits bounds n at 1,024 s (s 4: 4,096; s 2: 2,048)
+            addrec(4, 4096, 0, 1, 4); addrec(4, 2048, 0, 0, 2); addrec(0, 1024 * G, 0, 1, 0);
         end else if (tcase == "ds") begin             // DS TP96: the layer's sliced FP32 gathers + group-of-8 reduce-multicast
             // the layer's 13 FP32 gathers in tag order (tb_hgi_coll_pipe: qa 1,280, kvraw 512, y 5,120, gsc 384,
             // expert intermediates 7 x 2,304, yf 5,120, 2,304); priced (token_path_20261009 hbm_gen_ds) 3,991.2 cycles

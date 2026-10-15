@@ -30,6 +30,7 @@ module ot_hfd_coll_q #(
     parameter integer FW = 32 * LANES,
     parameter integer PWT = FW + 33,
     parameter integer RQD = 2,              // record queue depth a quadrant
+    parameter integer INJLAT = 12,          // SU inject answer latency (die relays out + SU fixed VM read + relays back)
     parameter integer HOME = 0,
     parameter integer QSOLO = 0,
     parameter integer SOLO_CAP = 1,         // 0: never QSOLO (NPT-2 master): no RGX lanes, no whole ops
@@ -49,10 +50,11 @@ module ot_hfd_coll_q #(
     output reg  [2:0]           hgi_ret,
     input  wire [39:0]          hgi_cfg,
     output wire [79:0]          hgi_vmaddr,
-    output wire [INJ*80-1:0]    hgi_inj_addr,
-    // this quadrant's SU quarter: inject and delivery
-    output wire [INJ*16-1:0]    inj_idx,
-    output wire [INJ-1:0]       inj_rd,
+    output reg  [INJ*80-1:0]    hgi_inj_addr,
+    // this quadrant's SU quarter: inject (request registered at the pins; the SU answers on inj_d INJLAT edges after the
+    // engine's request edge, i.e. INJLAT - 1 edges after it sees the request) and delivery
+    output reg  [INJ*16-1:0]    inj_idx,
+    output reg  [INJ-1:0]       inj_rd,
     input  wire [INJ*FW-1:0]    inj_d,
     output wire [DEL-1:0]       del_valid,
     output wire [DEL*PWT-1:0]   del_flit,
@@ -124,16 +126,20 @@ module ot_hfd_coll_q #(
     wire [RQW-1:0] hd = rq[rq_h];
     // ---- body ---------------------------------------------------------------------------------------------------------
     wire ep_fault, snk_fault;
+    wire [INJ*16-1:0] e_inj_idx; wire [INJ-1:0] e_inj_rd; wire [INJ*80-1:0] e_inj_addr;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin inj_rd <= '0; inj_idx <= '0; hgi_inj_addr <= '0; end
+        else begin inj_rd <= e_inj_rd; inj_idx <= e_inj_idx; hgi_inj_addr <= e_inj_addr; end
     wire tk_w_v, tk_w_rdy, tk_w_idle, tkw_fault; wire [39:0] tk_w_addr; wire [15:0] tk_w_mask; wire [FW-1:0] tk_w_data;
     wire rg_lq_v, rg_lq_rdy, rg_lr_v, rg_w_vm, rg_w_idle;
     wire [31:0] rg_lq_addr; wire [511:0] rg_lr_data, rg_hr_data;
     wire [1:0] rg_hq_v, rg_hq_rdy, rg_hr_v; wire [69:0] rg_hq_addr; wire [15:0] rg_hq_tag, rg_hr_tag;
     wire [DEL-1:0] rg_w_v, rg_w_rdy; wire [DEL*40-1:0] rg_w_addr; wire [DEL*FW-1:0] rg_w_data;
     wire [93:0] rowfmt_o;
-    ot_hgi_coll_qep #(.QSOLO(QSOLO), .SOLO_CAP(SOLO_CAP), .MUT_Q(MUT_Q), .NPT(NPT), .SWCRED(SWCRED), .RXAW(8), .QAW(7), .TXAW(3), .PIPE(1),
+    ot_hgi_coll_qep #(.INJLAT(INJLAT), .QSOLO(QSOLO), .SOLO_CAP(SOLO_CAP), .MUT_Q(MUT_Q), .NPT(NPT), .SWCRED(SWCRED), .RXAW(8), .QAW(7), .TXAW(3), .PIPE(1),
                       .RGXHW(1), .RFMT(0), .TKM(TKM), .TKM_KMAX(TKM_KMAX), .INJ(INJ), .DEL(DEL), .LANES(LANES)) u_ep (
         .clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .qid(qid_q), .rank(8'd0), .pf(16'd0), .go(1'b0),
-        .inj_idx(inj_idx), .inj_rd(inj_rd), .inj_q({{(3*INJ*FW){1'b0}}, inj_d}),
+        .inj_idx(e_inj_idx), .inj_rd(e_inj_rd), .inj_q({{(3*INJ*FW){1'b0}}, inj_d}),
         .ph_tx_v(lk_tx_v), .ph_tx_flit(lk_tx_flit), .sw_cr_ret(lk_sw_cr), .ph_rx_v(lk_rx_v), .ph_rx_flit(lk_rx_flit),
         .rx_credit(lk_rx_credit), .del_valid(del_valid), .del_flit(del_flit), .fault(ep_fault),
         .stat_credit_stall(stat_credit_stall), .hgi_rec({hd[966:0], head_v}), .hgi_ret(e_ret), .hgi_cfg(hgi_cfg),
@@ -142,7 +148,7 @@ module ot_hfd_coll_q #(
         .rg_hq_v(rg_hq_v), .rg_hq_rdy(rg_hq_rdy), .rg_hq_addr(rg_hq_addr), .rg_hq_tag(rg_hq_tag),
         .rg_hr_v(rg_hr_v), .rg_hr_tag(rg_hr_tag), .rg_hr_data(rg_hr_data),
         .rg_w_v(rg_w_v), .rg_w_addr(rg_w_addr), .rg_w_vm(rg_w_vm), .rg_w_data(rg_w_data), .rg_w_rdy(rg_w_rdy), .rg_w_idle(rg_w_idle),
-        .hgi_recx(hd[RQW-1 -: 554]), .hgi_inj_addr(hgi_inj_addr),
+        .hgi_recx(hd[RQW-1 -: 554]), .hgi_inj_addr(e_inj_addr),
         .tk_w_v(tk_w_v), .tk_w_addr(tk_w_addr), .tk_w_mask(tk_w_mask), .tk_w_data(tk_w_data), .tk_w_rdy(tk_w_rdy),
         .tk_w_idle(tk_w_idle));
     // TOPK line writes: credit flow to the VM port (a valid / ready pair can not cross relays)

@@ -6,7 +6,8 @@
 //   * the delivery formatter's table holds {end, start} per rank (sliced gathers: lanes = min(16, end - w), the rank's
 //     sub-slice end instead of the next rank's start) or a gi offset (whole-row gathers: gi' = gi + table[src - gbase],
 //     the global flit index), in the classic and the pipelined (per-epoch) formatter alike;
-//   * NPT is the quadrant's rail (3 SW / 2 SE, NW, NE), the SU inject is the local SU quarter only;
+//   * NPT is the quadrant's rail (3 SW / 2 SE, NW, NE), the SU inject is the local SU quarter only, answered INJLAT
+//     edges after the request (ot_hbm_accel_tu_endpoint_qpsg: the data joins the HUBW line at stage INJLAT, 0 cycles);
 //   * ROW_GATHER drained also waits for rg_w_idle, the TOPK done for tk_w_idle (both write streams cross to
 //     ot_hgi_coll_vmport by credit flow).
 // Everything else (endpoint, PIPE epochs, parking, RGX, TKM, ARGMAX) is the central block's logic, unchanged.
@@ -20,6 +21,7 @@ module ot_hgi_coll_qep #(
     parameter integer QSOLO = 0,       // quadrant running ARGMAX / TOPK / ROW_GATHER whole
     parameter integer SOLO_CAP = 1,    // 0: never the QSOLO quadrant (ot_hgi_coll_qrec)
     parameter integer MUT_Q = 0,       // bench mutant: wrong quadrant quarter
+    parameter integer INJLAT = 0,      // SU inject data latency (edges after inj_rd), ot_hbm_accel_tu_endpoint_qpsg
     parameter integer NOG = 12,       // 12 x 8 = the 96-rank TU fabric (DS TP96: rank = die mod 96)
     parameter integer PFMAX = 512,    // F4 (hgi-e2e): flits per contributor (Qwen all-reduce 256, DS gathers 80 / 144 / 320); was the PSG default 64
     parameter integer RXAW = 8,
@@ -132,12 +134,21 @@ module ot_hgi_coll_qep #(
     // stream padded to the group's pf) is sent as the PAD pair {FFFFFFFF, FFFFFFFF}, and every NaN value as the canonical
     // 7FC00000 (it still faults at every sink), so the sinks tell a pad slot from data without knowing the sender's n
     reg  [INJ*FW-1:0] inj_tk;
+    // P2P: the SU's data arrives INJLAT edges after its request: the TOPK pad check uses that request's index
+    wire [INJ*16-1:0] inj_idx_l;
+    generate if (INJLAT == 0) begin : g_il0
+        assign inj_idx_l = inj_idx;
+    end else begin : g_il
+        reg [INJ*16-1:0] il [0:INJLAT-1];
+        always @(posedge clk) begin il[0] <= inj_idx; for (integer j = 1; j < INJLAT; j = j + 1) il[j] <= il[j-1]; end
+        assign inj_idx_l = il[INJLAT-1];
+    end endgenerate
     wire [11:0] tk_n_w = tk_n;
     always @* begin : tkpad
         reg [15:0] f_; reg [31:0] v_;
         inj_tk = inj_data;
         for (integer h = 0; h < INJ; h = h + 1) begin
-            f_ = inj_idx[16*h +: 16];
+            f_ = inj_idx_l[16*h +: 16];                  // the index of the flit whose data arrives now
             for (integer s_ = 0; s_ < 8; s_ = s_ + 1) begin
                 v_ = inj_data[h*FW + 32*s_ +: 32];
                 if ({f_, 3'(s_)} >= 19'(tk_n_w)) begin
@@ -188,7 +199,7 @@ module ot_hgi_coll_qep #(
     always @(posedge clk or negedge rst_n) if (!rst_n) tkm_run <= 1'b0;
         else if (r_go) tkm_run <= (TKM != 0) && r_tkm; else if (go) tkm_run <= 1'b0;
     wire tkm_now = tkm_run | (r_go & r_tkm & (TKM != 0));
-    ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1), .REARM(1), .RGX(RGXHW), .DELCRED((RGXHW != 0 || TKM != 0) ? 1 : 0), .PFMAX(PFMAX), .BF16RT(1), .NOG(NOG), .RXAW(RXAW), .QAW(QAW), .TXAW(TXAW), .NPT(NPT), .INJ(INJ),
+    ot_hbm_accel_tu_endpoint_qpsg #(.INJLAT(INJLAT), .ENABLE(1), .REARM(1), .RGX(RGXHW), .DELCRED((RGXHW != 0 || TKM != 0) ? 1 : 0), .PFMAX(PFMAX), .BF16RT(1), .NOG(NOG), .RXAW(RXAW), .QAW(QAW), .TXAW(TXAW), .NPT(NPT), .INJ(INJ),
         .DEL(DEL), .LANES(LANES), .PIPE(PIPE), .SWCRED(SWCRED)) u_ep (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n),
         .rank(sel ? r_rank : rank), .mcast_group_size(sel ? r_mg : 8'd96), .mcast_all(sel & r_mall),
         .gsz(sel ? r_gsz : 4'hF), .byp(sel & r_byp), .res_bf16(sel ? r_bf16 : 1'b1), .pf(sel ? r_pf : pf), .go(r_go | go), .start_ready(start_ready),
