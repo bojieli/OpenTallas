@@ -1,0 +1,68 @@
+{
+  "schema": "opentallas.hc.prefetch.canonical-sram-abi-audit.v1",
+  "legacy_path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+  "canonical_v2_path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+  "RTL_behavior_identical_after_comment_whitespace_removal": true,
+  "legacy_rtl_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+  "v2_rtl_sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "v2_blackbox_sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+  "LEF_all_named_pin_blocks_byteidentical": true,
+  "named_pin_blocks_count": 821,
+  "legacy_lef_sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+  "v2_lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf",
+  "LEF_changed_fields": [
+    "headercomment",
+    "symmetry X Y R90 -> X Y",
+    "sizeheight41.040 ->41.064",
+    "M1..M4obstructionheight41.040 ->41.064"
+  ],
+  "corners": {
+    "tt": {
+      "legacy_sha256": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94",
+      "v2_sha256": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48",
+      "equal_after_only_comment_area_leakage_excluded": true
+    },
+    "ss": {
+      "legacy_sha256": "2f308628d401c6ac7fed7846148293b2e758f3da104609691f892d14c84979b0",
+      "v2_sha256": "1b82c8597f1113bfb9e256cfab01630d79e2032c29ecae4a5aca1203f7efe7ff",
+      "equal_after_only_comment_area_leakage_excluded": true
+    },
+    "ff": {
+      "legacy_sha256": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84",
+      "v2_sha256": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49",
+      "equal_after_only_comment_area_leakage_excluded": true
+    }
+  },
+  "physical_geometry": {
+    "legacy_um": [
+      94.824,
+      41.04
+    ],
+    "v2_um": [
+      94.824,
+      41.064
+    ],
+    "v2_symmetry": "X Y only; noR90",
+    "signal_and_clock_layer": "M4",
+    "v2_prefetch128_macro_area_um2": 498413.150208,
+    "v2_perstack_halo_4x8_grid_um": [
+      422.496,
+      414.91200000000003
+    ]
+  },
+  "port_identity_from_actual_RTL": [
+    "clk1",
+    "r_ce_in1",
+    "r_addr_in7",
+    "rd_out256",
+    "w_ce_in1",
+    "w_addr_in7",
+    "wd_in256",
+    "w_mask_in256",
+    "rr_en2",
+    "rr_addr14",
+    "cr_en2",
+    "cr_sel16"
+  ],
+  "limits": "File-level ABI/behavior/view consistency audit only. No placement, powergrid, CTS, or SSFF/DRC qualification, no inherited routedview. Future source still needs actualmacrointegration and contracts."
+}
