@@ -690,6 +690,16 @@ def absent_working_inputs(seeds):
     return sorted(p for p in seen - soft - overlaid if not (ROOT / p).is_file())
 
 
+def gate_route_clock_hooks(script: str, spec: dict) -> str:
+    """Run the same supported physical clock hooks as a multi-root route job."""
+    if spec.get("clock") != "multiple_cts_roots":
+        return script
+    marker = "export OT_ORFS_CORNER_OVERRIDE=TC\n"
+    if script.count(marker) != 1:
+        raise ValueError("remote gate clock-hook insertion marker changed")
+    return script.replace(marker, marker + "export OT_CTS_FIX_HOOKS=" + shlex.quote(RT.clock_fix_hooks(spec)) + "\n", 1)
+
+
 def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool):
     fp = json.loads((kd / "floorplan.json").read_text())
     absent = absent_working_inputs(set(fp["referenced"]))
@@ -729,6 +739,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
+    sh = gate_route_clock_hooks(sh, spec)
     import hashlib
     binding["remote_script_sha256"] = hashlib.sha256(sh.encode()).hexdigest()
     binding["tool_image_requested"] = "openroad/orfs:latest"

@@ -1375,6 +1375,21 @@ ROUTE_PREFIX = ("export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/
                 "physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; ")
 
 
+def clock_fix_hooks(s: dict) -> str:
+    """Explicit multi-root boundaries own IO timing; retain physical clock fixes."""
+    hooks = ["physical/common_flow/cg_pushdown.tcl", "physical/common_flow/clk_net_protect.tcl"]
+    if s.get("clock") != "multiple_cts_roots":
+        hooks.append("physical/common_flow/link_budget_hook.tcl")
+    return " ".join(hooks)
+
+
+def route_prefix(s: dict) -> str:
+    if s.get("clock") != "multiple_cts_roots":
+        return ROUTE_PREFIX  # existing job command bytes stay unchanged
+    return ROUTE_PREFIX.replace("physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl",
+                                "physical/common_flow/clk_net_protect.tcl")
+
+
 def lint_cmd(s: dict) -> str:
     """the auto 'lint' bench: Verilator over exactly what the route synthesises -- the same sources, -DSYNTHESIS (run_abi3's
     VERILOG_DEFINES) plus the spec defines, the top's params, the include dirs of orfs_vars VERILOG_INCLUDE_DIRS.
@@ -1425,7 +1440,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
             "calibrate": {"enabled": False, "reason": "ref_tile: boundary referenced in-run to the propagated tree "
                                                       "(io_ref_skew.sdc), as the Qwen die masters"},
             "route": {
-                "cmd": ROUTE_PREFIX + f"HM={hm} OT_MM_FF_SDC='{kd}/{'signoff_ffrepair.sdc' if io_hold_relief_ps(s) else 'signoff.sdc'}' SRC={{SRC}} OT_PIN_GROUP_MAX={pin_group_max(s)} "
+                "cmd": route_prefix(s) + f"HM={hm} OT_MM_FF_SDC='{kd}/{'signoff_ffrepair.sdc' if io_hold_relief_ps(s) else 'signoff.sdc'}' SRC={{SRC}} OT_PIN_GROUP_MAX={pin_group_max(s)} "
                        f"bash tools/ref_tile/ref_route.sh {kd}/kit.env {{LABEL}} {{RUN}}/routes",
                 "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
                 "logs": ["{RUN}/routes/{LABEL}/flow.log"],
