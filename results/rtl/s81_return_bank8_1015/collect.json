@@ -1,10 +1,10 @@
 {
   "schema": "opentallas.s81.return-store-collect.v1",
-  "utc": "2026-10-15T12:05:29.911846+00:00",
+  "utc": "2026-10-15T12:12:30.426604+00:00",
   "worktree": "/home/ubuntu/wt/s81-return-lanes-1015",
   "branch": "codex/s81-return-lanes-1015",
   "published_head": "7830e9597",
-  "local_head": "ee9c0f5e5",
+  "local_head": "3e0d991a1",
   "source": "0cf1bf906",
   "profile_proof": "results/rtl/s81_return_bank8_1015/rowflags_receipt.json",
   "physical_gate_source": "ee9c0f5e5",
@@ -83,7 +83,7 @@
   "native4": [
     {
       "lane": 0,
-      "status": "LIVE",
+      "status": "TERMINAL",
       "host": "ot-epyc1tb",
       "bash_pid": 1632013,
       "session": 37005,
@@ -91,11 +91,59 @@
       "threads": 8,
       "remote": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_static_return_bank8_l0_1015_r4-20261015-050335",
       "log": "/home/ubuntu/claude-takeover-20261007/s81-return-bank8-native4-l0-1015.log",
-      "kit": "physical/ref_tile/dsfd_vm_static_return_bank8_l0_1015_r4"
+      "kit": "physical/ref_tile/dsfd_vm_static_return_bank8_l0_1015_r4",
+      "unit": "oth-ubuntu-1632013-1792065834",
+      "gate_verdict": "WARN",
+      "actual_qualification": "FAIL_TIMING_MARGIN",
+      "setup_tt_placement_ps": 18.57147768902223,
+      "hold_tt_placement_ps": 27.602808927440492,
+      "clock": {
+        "max_root_sinks": 3178,
+        "root": "port:ck",
+        "cts": true,
+        "tt_insertion_ps": 203.3,
+        "tt_spread_ps": 23.9,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "ck",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 3180,
+                "mean": 190.4,
+                "min": 179.4,
+                "max": 203.3
+              },
+              "all": {
+                "n": 4204,
+                "mean": 191.2,
+                "min": 179.4,
+                "max": 203.3
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "3,178 sinks on the largest root <= 15,000; measured TT insertion 203.3 ps, leaf spread 23.9 ps"
+      },
+      "gate_result": "physical/ref_tile/dsfd_vm_static_return_bank8_l0_1015_r4/gate_result.json",
+      "FF_signoff": false,
+      "DRC": null,
+      "critical": "ot_prs_00001_ff/D"
     },
     {
       "lane": 1,
-      "status": "LIVE",
+      "status": "TERMINAL",
       "host": "ot-epyc1tb",
       "bash_pid": 1632764,
       "session": 88601,
@@ -103,11 +151,59 @@
       "threads": 8,
       "remote": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_static_return_bank8_l1_1015_r4-20261015-050335",
       "log": "/home/ubuntu/claude-takeover-20261007/s81-return-bank8-native4-l1-1015.log",
-      "kit": "physical/ref_tile/dsfd_vm_static_return_bank8_l1_1015_r4"
+      "kit": "physical/ref_tile/dsfd_vm_static_return_bank8_l1_1015_r4",
+      "unit": "oth-ubuntu-1632764-1792065834",
+      "gate_verdict": "WARN",
+      "actual_qualification": "FAIL_TIMING_MARGIN",
+      "setup_tt_placement_ps": -15.32507454271581,
+      "hold_tt_placement_ps": 28.51752167742916,
+      "clock": {
+        "max_root_sinks": 3178,
+        "root": "port:ck",
+        "cts": true,
+        "tt_insertion_ps": 206.1,
+        "tt_spread_ps": 23.2,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "ck",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 3180,
+                "mean": 192.0,
+                "min": 182.9,
+                "max": 206.1
+              },
+              "all": {
+                "n": 4204,
+                "mean": 192.7,
+                "min": 182.9,
+                "max": 206.1
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "3,178 sinks on the largest root <= 15,000; measured TT insertion 206.1 ps, leaf spread 23.2 ps"
+      },
+      "gate_result": "physical/ref_tile/dsfd_vm_static_return_bank8_l1_1015_r4/gate_result.json",
+      "FF_signoff": false,
+      "DRC": null,
+      "critical": "release_group[0] -> ot_prs_00001_ff/D (E10 exactgroup/control)"
     },
     {
       "lane": 2,
-      "status": "LIVE",
+      "status": "TERMINAL",
       "host": "ot-epyc1tb",
       "bash_pid": 1632920,
       "session": 94850,
@@ -115,11 +211,59 @@
       "threads": 8,
       "remote": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_static_return_bank8_l2_1015_r4-20261015-050335",
       "log": "/home/ubuntu/claude-takeover-20261007/s81-return-bank8-native4-l2-1015.log",
-      "kit": "physical/ref_tile/dsfd_vm_static_return_bank8_l2_1015_r4"
+      "kit": "physical/ref_tile/dsfd_vm_static_return_bank8_l2_1015_r4",
+      "unit": "oth-ubuntu-1632920-1792065835",
+      "gate_verdict": "WARN",
+      "actual_qualification": "FAIL_TIMING_MARGIN",
+      "setup_tt_placement_ps": -21.46294253435599,
+      "hold_tt_placement_ps": 28.58106806780114,
+      "clock": {
+        "max_root_sinks": 3178,
+        "root": "port:ck",
+        "cts": true,
+        "tt_insertion_ps": 204.4,
+        "tt_spread_ps": 22.7,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "ck",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 3180,
+                "mean": 191.4,
+                "min": 181.7,
+                "max": 204.4
+              },
+              "all": {
+                "n": 4204,
+                "mean": 192.2,
+                "min": 181.7,
+                "max": 204.4
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "3,178 sinks on the largest root <= 15,000; measured TT insertion 204.4 ps, leaf spread 22.7 ps"
+      },
+      "gate_result": "physical/ref_tile/dsfd_vm_static_return_bank8_l2_1015_r4/gate_result.json",
+      "FF_signoff": false,
+      "DRC": null,
+      "critical": "u.fault/D"
     },
     {
       "lane": 3,
-      "status": "LIVE",
+      "status": "TERMINAL",
       "host": "ot-epyc1tb",
       "bash_pid": 1632917,
       "session": 45994,
@@ -127,14 +271,62 @@
       "threads": 8,
       "remote": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_static_return_bank8_l3_1015_r4-20261015-050335",
       "log": "/home/ubuntu/claude-takeover-20261007/s81-return-bank8-native4-l3-1015.log",
-      "kit": "physical/ref_tile/dsfd_vm_static_return_bank8_l3_1015_r4"
+      "kit": "physical/ref_tile/dsfd_vm_static_return_bank8_l3_1015_r4",
+      "unit": "oth-ubuntu-1632917-1792065835",
+      "gate_verdict": "WARN",
+      "actual_qualification": "FAIL_TIMING_MARGIN",
+      "setup_tt_placement_ps": -22.253643372494025,
+      "hold_tt_placement_ps": 27.255184220642548,
+      "clock": {
+        "max_root_sinks": 3178,
+        "root": "port:ck",
+        "cts": true,
+        "tt_insertion_ps": 204.9,
+        "tt_spread_ps": 23.3,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "ck",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 3180,
+                "mean": 191.2,
+                "min": 181.6,
+                "max": 204.9
+              },
+              "all": {
+                "n": 4204,
+                "mean": 192.0,
+                "min": 181.6,
+                "max": 204.9
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "3,178 sinks on the largest root <= 15,000; measured TT insertion 204.9 ps, leaf spread 23.3 ps"
+      },
+      "gate_result": "physical/ref_tile/dsfd_vm_static_return_bank8_l3_1015_r4/gate_result.json",
+      "FF_signoff": false,
+      "DRC": null,
+      "critical": "release_group[0] -> ot_prs_00001_ff/D (E10 exactgroup/control)"
     }
   ],
   "coordinator": {
     "owner": "claude",
     "since": "2026-10-15T05:02:05-07:00",
     "instruction": "NO NEW SUBMISSION/MERGE/PUSH; collectread-only+local sourceproof/evidence prep only",
-    "late_submission_disclosure": "native4script timestamps05:03:35PT afterlockswitched05:02:05PT, before parentnotice; missedprelaunchlockcheck acknowledged; allalreadyadmittedjobs preserved"
+    "late_submission_disclosure": "native4script timestamps05:03:35PT afterlockswitched05:02:05PT, before parentnotice; missedprelaunchlockcheck acknowledged; allalreadyadmittedjobs preserved; rowflagsmutantunit1626723 also admitted05:03:36PT; no further submissions after parentnotice"
   },
   "qualification": false,
   "open": [
@@ -142,5 +334,15 @@
     "actual694clock/630reset parentintegration+rsched stage9 controls",
     "global32bank data->lane/outputrouter exact geometry",
     "canonical2417/BF519/PHW10 runtime/price composition"
-  ]
+  ],
+  "native4_all_terminal": true,
+  "native4_qualified": false,
+  "no_unchanged_route": true,
+  "unexecuted_structural_fallback": [
+    "Replace sequential used[idx] duplicatecheck with28parallel i_vj&i_vk&same4bitlocalindex compares, retainoccupiedcheck and exactfaultage",
+    "BalanceE9/E10 completionAND: 4pairwise row-completionflags perlane =>8bittoken,32peerbus; E9AND2/E10AND16; sameage and boundedlocalpins, mustactualprove+routeallfour",
+    "Ifmorestagingneeded priceuniformage and actualbufferparity/lifetime; nofalsepath/relaxation or invisiblewait"
+  ],
+  "route770_report_scope": "Two retained 4_cts_final.rpt snapshots use route770ps; authoritative above833.333TTplacement diagnostic values from pre_route gate path_classes. FF hold notmeasured.",
+  "next_authority": "Claudeownscoordinator; no newsubmissions/merges/push untilfreshClaude/rootauthorization"
 }
