@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.hbm.full-native-streamed-image.v1",
+  "status": "SOURCE_PAYLOAD_EXPORTED_ACTUAL_COMMAND_INSTALL_REQUIRED",
+  "descriptor": {
+    "rank": 0,
+    "sm": 0,
+    "stack": 0,
+    "pcs": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "region_row_base": 16640,
+    "region_row_count": 2048,
+    "packed_sector_offset": 43236,
+    "sectors": 104,
+    "payload_records": 24,
+    "source_matrix_key": "layers.0.ffn.experts.*.w1.weight",
+    "source_expert": 383,
+    "source_row_first": 0,
+    "source_row_stride": 32,
+    "source_row_count": 1,
+    "source_k": 5120,
+    "source_format": "fp4",
+    "source_columns": "all source columns",
+    "current_mapped4_base0_only_producer_compatible": false
+  },
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "source_tensor_headers": {
+    "layers.0.ffn.experts.383.w1.scale": {
+      "dtype": "F8_E8M0",
+      "shape": [
+        2304,
+        160
+      ],
+      "data_offsets": [
+        357486296,
+        357854936
+      ]
+    },
+    "layers.0.ffn.experts.383.w1.weight": {
+      "dtype": "I8",
+      "shape": [
+        2304,
+        2560
+      ],
+      "data_offsets": [
+        6186259928,
+        6192158168
+      ]
+    }
+  },
+  "actual_source_payload_bytes_read": 2720,
+  "source_row_decode": "exact checkpoint codes/scales; wo_a and BF16 sources follow canonical BF16 conversion; no surrogate weights",
+  "layout": "versioned modulo32 SM rows; canonical GS wave8,t,slot record order; immutable136B record",
+  "records": 24,
+  "sectors": 104,
+  "logical_payload_sha256": "ab6753c1f6fb2e648cee6c8d8149d59e9806508fc14e15f9f01c924cd94b4d42",
+  "physical_hex_sha256": "6b84594cb456a4e066fbd12f5585fac6c623aeee20694516825a8f87a724de1a",
+  "records_file_sha256": "7c5db745e458f201311674ed50eaad9db28ee9910e953816d819d451777fdcfe",
+  "book_sha256": "980899638942747e8a87131e24f6824346c7027a3b4c20b6c962f967ccc11895",
+  "residency_sha256": "4f1475584896cac625b66e28ce603a6f2323ef596959fc2ecb82a75a2dad34d8",
+  "independent_canonical_SM_packer_rows_checked": 1,
+  "source_buffer_bound_bytes": 47872,
+  "source_sha256": {
+    "tools/hbm_checkpoint_native_stream.py": "7ad050dcb685efc7791d4c5dbd940e51fbda55d02ddacc34f5afe3c181b7d3fb",
+    "tools/hbm_checkpoint_native_plan.py": "efb890639c7410d989de05ce3fd3fceb2cd3b2d2bf605c4dc5bbcb22d84121cb",
+    "tools/dsrom_checkpoint.py": "1f0ba70f4102aa8fb60e27d4bf4ce0f587fb6c9b1e456b6b35cd7705ba256844",
+    "tools/hgi_e2e/sm_lines.py": "c33abbd965bbc535fa5e0a96e203da3ac5358bfc002c95f1a58e8177878fe096",
+    "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4"
+  },
+  "actual_command_ACK_verified": false,
+  "actual_command_readback_verified": false,
+  "native_programme_qualified": false,
+  "performance_qualified": false,
+  "physical_qualified": false
+}

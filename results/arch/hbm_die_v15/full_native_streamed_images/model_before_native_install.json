@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.hbm.native-install-model.v1",
+  "mode": "explicit versioned modulo32/packedoffset; bootstrap unchanged",
+  "source_buffer": "at most eight selected source rows/packed row images plus one residual sector; never fullmodel resident",
+  "immutable_record_bytes": 136,
+  "cache_records": 64,
+  "max_transfer_sectors": 272,
+  "PCs_per_SM": 4,
+  "SMs": 32,
+  "ranks": 96,
+  "stack_capacity_bytes": 22500000000,
+  "stack_weight_rows": [
+    16640,
+    18688
+  ],
+  "bytes_per_SM": 268435456,
+  "full_binary_payload_bytes": 429434130048,
+  "bulk_text_output": "not all retained simultaneously; bounded per-operation outputs with1GiB prewrite disk headroom",
+  "clocks_ps": {
+    "hbm": 1024,
+    "stream": 833.3333333333334
+  },
+  "native_ports": "existing mapped4 same descriptor ABI; explicit mode reinterprets low30 reserve_base as bounded packed sector offset",
+  "offset_hardware_owner": "/root/h_die/service_native",
+  "native_programme_owner": "/root/h_elements_a/static_sm_feed",
+  "representative_source_export_units": [
+    "919299",
+    "919649",
+    "919940",
+    "920676"
+  ],
+  "software_input_verification_unit": "921788",
+  "actual_command_ACK_verified": false,
+  "actual_command_readback_verified": false,
+  "performance_qualified": false,
+  "physical_qualified": false
+}

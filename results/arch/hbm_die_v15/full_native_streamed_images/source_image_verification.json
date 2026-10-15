@@ -1,0 +1,60 @@
+{
+  "scope": "software source image inverse-address/payload only; no command ACK claim",
+  "images": [
+    {
+      "image": "wkv_l1_rank0_sm0_fullsource",
+      "positive": {
+        "sectors": 1836,
+        "source_payload_and_inverse_address_pass": true,
+        "actual_HBM_ACK": false,
+        "actual_HBM_readback": false
+      },
+      "wrong_address_rejected": true,
+      "dropped_sector_rejected": true
+    },
+    {
+      "image": "wkv_l14_rank0_sm0",
+      "positive": {
+        "sectors": 1836,
+        "source_payload_and_inverse_address_pass": true,
+        "actual_HBM_ACK": false,
+        "actual_HBM_readback": false
+      },
+      "wrong_address_rejected": true,
+      "dropped_sector_rejected": true
+    },
+    {
+      "image": "fp4_l0_expert383_sm0",
+      "positive": {
+        "sectors": 104,
+        "source_payload_and_inverse_address_pass": true,
+        "actual_HBM_ACK": false,
+        "actual_HBM_readback": false
+      },
+      "wrong_address_rejected": true,
+      "dropped_sector_rejected": true
+    },
+    {
+      "image": "woa_rank0_sm8",
+      "positive": {
+        "sectors": 1088,
+        "source_payload_and_inverse_address_pass": true,
+        "actual_HBM_ACK": false,
+        "actual_HBM_readback": false
+      },
+      "wrong_address_rejected": true,
+      "dropped_sector_rejected": true
+    },
+    {
+      "image": "markov_rank95_sm31",
+      "positive": {
+        "sectors": 1396,
+        "source_payload_and_inverse_address_pass": true,
+        "actual_HBM_ACK": false,
+        "actual_HBM_readback": false
+      },
+      "wrong_address_rejected": true,
+      "dropped_sector_rejected": true
+    }
+  ]
+}

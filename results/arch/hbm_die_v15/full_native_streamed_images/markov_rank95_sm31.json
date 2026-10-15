@@ -1,0 +1,68 @@
+{
+  "schema": "opentallas.hbm.full-native-streamed-image.v1",
+  "status": "SOURCE_PAYLOAD_EXPORTED_ACTUAL_COMMAND_INSTALL_REQUIRED",
+  "descriptor": {
+    "rank": 95,
+    "sm": 31,
+    "stack": 3,
+    "pcs": [
+      28,
+      29,
+      30,
+      31
+    ],
+    "region_row_base": 16640,
+    "region_row_count": 2048,
+    "packed_sector_offset": 1105564,
+    "sectors": 1396,
+    "payload_records": 328,
+    "source_matrix_key": "mtp.2.markov_head.head.weight",
+    "source_expert": 0,
+    "source_row_first": 127996,
+    "source_row_stride": 32,
+    "source_row_count": 41,
+    "source_k": 256,
+    "source_format": "bf16",
+    "source_columns": "all source columns",
+    "current_mapped4_base0_only_producer_compatible": false
+  },
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "source_tensor_headers": {
+    "mtp.2.markov_head.head.weight": {
+      "dtype": "BF16",
+      "shape": [
+        129280,
+        256
+      ],
+      "data_offsets": [
+        71470552,
+        137661912
+      ]
+    }
+  },
+  "actual_source_payload_bytes_read": 20992,
+  "source_row_decode": "exact checkpoint codes/scales; wo_a and BF16 sources follow canonical BF16 conversion; no surrogate weights",
+  "layout": "versioned modulo32 SM rows; canonical GS wave8,t,slot record order; immutable136B record",
+  "records": 328,
+  "sectors": 1396,
+  "logical_payload_sha256": "f3257be16fd40e188796b5099369d2382e4b0be3c6e6772ecfa983ec891ae416",
+  "physical_hex_sha256": "29cd80dc24438200b46335ebfd2e6bb17be71c7856daeae7af2241071e3cd0df",
+  "records_file_sha256": "7b1cbee9668cada9fa60219f2b489e6f058412949f832fb5c6d32b9f29e0de0c",
+  "book_sha256": "980899638942747e8a87131e24f6824346c7027a3b4c20b6c962f967ccc11895",
+  "residency_sha256": "4f1475584896cac625b66e28ce603a6f2323ef596959fc2ecb82a75a2dad34d8",
+  "independent_canonical_SM_packer_rows_checked": 41,
+  "source_buffer_bound_bytes": 12800,
+  "source_sha256": {
+    "tools/hbm_checkpoint_native_stream.py": "7ad050dcb685efc7791d4c5dbd940e51fbda55d02ddacc34f5afe3c181b7d3fb",
+    "tools/hbm_checkpoint_native_plan.py": "efb890639c7410d989de05ce3fd3fceb2cd3b2d2bf605c4dc5bbcb22d84121cb",
+    "tools/dsrom_checkpoint.py": "1f0ba70f4102aa8fb60e27d4bf4ce0f587fb6c9b1e456b6b35cd7705ba256844",
+    "tools/hgi_e2e/sm_lines.py": "c33abbd965bbc535fa5e0a96e203da3ac5358bfc002c95f1a58e8177878fe096",
+    "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4"
+  },
+  "actual_command_ACK_verified": false,
+  "actual_command_readback_verified": false,
+  "native_programme_qualified": false,
+  "performance_qualified": false,
+  "physical_qualified": false
+}
