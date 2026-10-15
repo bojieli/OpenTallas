@@ -1,0 +1,22 @@
+GATE WARN util: utilisation 10% outside 45%-60% (std 4162 + macro 0 in core 42942 um2)  -> FIX: resize the outline to util 0.50-0.55 (drop 'outline', set util)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: N face 10.5 pins/um (f_c): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (o_v, o_row, o_m): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-agidock128 for 16 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsfd_vm_static_cap_leaf_1015_r2_20261015-035244.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsfd_vm_static_cap_leaf_1015_r2_20261015-035244.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_static_cap_leaf_1015_r2-20261015-035244
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 482 s (gate total 1379 s)
+GATE WARN util: synthesized std area 5331 um2 + macros 0 in core 42942: util 12%  -> FIX: set "std_area_um2": 5331 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN dsfd_vm_static_cap_leaf cells 43,539 flops 5,702 depth 903.5 ps util 0.1243 reach 150.2 um (1.8 s)
+GATE WARN textbook.high_fanout: port rn: 991 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.boundary: 4777 input->register endpoint(s) > 3 levels (worst rn->u_l.o_row[9]$_DFFE_PP_/D 15 lv, rn->u_l.o_row[8]$_DFFE_PP_/D 15 lv, rn->u_l.o_row[7]$_DFFE_PP_/D 15 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.logic_depth: reg->reg stage pin_gid[0]$_DFF_P_ -> u_l.o_d[105]$_DFFE_PP_/D: ~904 ps estimated (20 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE WARN textbook.util_channel: utilisation 12.4% outside 45%-65% (std 5337 + macro 0 um2 in 42942 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 270.8..334.1 ps (spread 63.3), boundary mean 297.3; tt insertion all 205.0..266.7 ps (spread 61.7), boundary mean 229.4; ff insertion all 165.5..225.2 ps (spread 59.7), boundary mean 188.7; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.450 vs spec PD 0.45
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/dsfd_vm_static_cap_leaf_1015_r2/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      300 paths, worst slack -693.9 ps (e.g. ot_prs_00507_ff/D)
+GATE INFO path_classes: setup WNS -6.939491203894477e-10 hold WNS 3.338565535138116e-11
+GATE INFO clock_rule: root port:ck: 5,702 sinks on the largest root <= 15,000; measured TT insertion 266.7 ps, leaf spread 61.7 ps
+PRE_ROUTE_GATE: WARN (0 fail, 6 warn)
+GATE: dsfd_vm_static_cap_leaf_1015_r2/gate_result.json written (exact staged source binding; commit it with the kit)
