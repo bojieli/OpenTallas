@@ -2,7 +2,7 @@
 // One actual PMAX8 engine. NPOS6/8 reuse every row's weights across all
 // positions. The compiler-staging mutant swaps position addresses in the real
 // residual SRAM; expected answers retain original position identity.
-module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
+module tb_hgi_hc_checkpoint_native_mtp_static #(parameter integer COMMAND_NATIVE=0)(input wire clk,sink_clk,hbm_clk);
     localparam R=80,W=32,ROWS=24;
     reg rst_n=0;
     integer npos=8,cycle=0,state=0,fill=0,row=0,age=0,seen=0,errors=0,tailseen=0,sinkslot=0,pc=0;
@@ -132,6 +132,29 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
  integer requests=0,phyresponses=0;
  function automatic [4:0] pc_of(input [29:0] s);pc_of=s[6:2]^s[11:7]^s[16:12];endfunction
  for(genvar st=0;st<4;st=st+1)begin:physical_stack
+  if(COMMAND_NATIVE)begin:command_native
+  wire native_fault;wire [31:0] row_v,col_v,col_we,dram_rvalid;
+  wire [95:0] row_op;wire [159:0] row_bank,col_bank,col_col;wire [607:0] row_row;
+  wire [8191:0] col_data,dram_rdata;wire [1023:0] col_strb;
+  wire [31:0] pc_clk={32{hbm_clk}};
+  ot_hbm_svc_native_sector_prefetch_stack #(.FAST_IDLE_DESC(1),.AQ_ROW_LEASE(1),.COLUMN_CLOSE_GUARD(1)) u_controller(
+   .clk(hbm_clk),.rst_n(rst_n),.pc_clk(pc_clk),
+   .k_v(k_v[st*32+:32]),.k_rdy(k_rdy[st*32+:32]),.k_we(k_we[st*32+:32]),.k_addr(k_addr[st*960+:960]),.k_len(k_len[st*128+:128]),
+   .k_tag(k_tag[st*544+:544]),.k_wdata(k_wdata[st*8192+:8192]),.k_wstrb(k_wstrb[st*1024+:1024]),.k_wr_done(k_wr_done[st*32+:32]),
+   .kr_v(kr_v[st*32+:32]),.kr_rdy(kr_rdy[st*32+:32]),.kr_tag(kr_tag[st*544+:544]),.kr_beat(kr_beat[st*128+:128]),.kr_data(kr_data[st*8192+:8192]),
+   .row_v(row_v),.row_op(row_op),.row_bank(row_bank),.row_row(row_row),.col_v(col_v),.col_we(col_we),.col_bank(col_bank),.col_col(col_col),.col_data(col_data),.col_strb(col_strb),
+   .dram_rvalid(dram_rvalid),.dram_rdata(dram_rdata),.fault(native_fault));
+  ot_hbm_svc_command_dram_pipeline_fixture #(.K_BASE(671088640),.K_MEM(61440)) dram(
+   .clk(hbm_clk),.rst_n(rst_n),.row_v(row_v),.row_op(row_op),.row_bank(row_bank),.row_row(row_row),.col_v(col_v),.col_we(col_we),.col_bank(col_bank),.col_col(col_col),
+   .col_data(col_data),.col_strb(col_strb),.dram_rvalid(dram_rvalid),.dram_rdata(dram_rdata));
+  reg image_copied=0;
+  always @(negedge hbm_clk)if(!image_copied)begin
+   for(integer a=0;a<61440;a=a+1)dram.mem[a]=checkpoint_image[a];
+   if($test$plusargs("WEIGHT_MUTANT"))dram.mem[5*320+319] ^= 256'h10000000;
+   image_copied=1;
+  end
+  always @(posedge hbm_clk)if(rst_n&&native_fault)$fatal(1,"actual native command controller fault stack%0d",st);
+  end else begin:request_model
   wire k_oor,w_oor;wire [63:0] refreshes;
   ot_chip_v41x_hbm3e_phy #(.K_AW(30),.KTAGW(17),.K_MEM(61440),.K_BASE(64'd671088640),.CLK_PS(1024)) u_phy(
    .clk(hbm_clk),.rst_n(rst_n),.k_v(k_v[st*32+:32]),.k_rdy(k_rdy[st*32+:32]),.k_addr(k_addr[st*960+:960]),.k_len(k_len[st*128+:128]),
@@ -146,6 +169,7 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
    image_copied=1;
   end
   always @(posedge hbm_clk)if(rst_n&&(k_oor||w_oor))$fatal(1,"actual PHY address aperture error");
+  end
  end
  always @(posedge hbm_clk)begin:check_actual_phy
   integer pc,st,bank,row,offset;reg [29:0]sector;reg [34:0]byte_address;

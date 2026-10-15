@@ -6,7 +6,8 @@
     "book": "4b9a13572",
     "join": "1c74fb939",
     "PHY_window": "942124cb2",
-    "tail_issuer": "76522e515"
+    "tail_issuer": "76522e515",
+    "native_command_controller": "340cfd747f40a3bc192356418f2e41c52b64211a"
   },
   "K": 20480,
   "rows": 24,
@@ -95,8 +96,24 @@
     "HC bank/shell/controller outlines and pin faces/clock roots/phi-R/reach/cuts",
     "actual static SYS1 measured latency (analytical +58 edges cannot inherit SYS0 calendar)",
     "separate Sinkhorn measured clock/phase and revised production tail image",
-    "immutable full-dataflow throughput price and SS/FF timing closure"
+    "immutable full-dataflow throughput price and SS/FF timing closure",
+    "Full434macro actual corrected command-controller composition; no nativecontroller inheritance from request-level PHY model."
   ],
   "historical_PHY_issue_width1_failure": "Published refresh-aware model failed fixed1080 row4half1; bounded80..92edge predecessor passed. Failure retained by child.",
-  "successor_scope": "Registered accepted-mask WIDTH4 requests independent of ready; no combinational feedback. Actual publishedPHY component24rows/stalled-ready/default/ownerfault gates passed. Fullnative24row+alltailpositions onepreinstalledimage arithmetic/readback gate next."
+  "successor_scope": "Registered accepted-mask WIDTH4 requests independent of ready; no combinational feedback. Actual publishedPHY component24rows/stalled-ready/default/ownerfault gates passed. Fullnative24row+alltailpositions onepreinstalledimage arithmetic/readback gate next.",
+  "native_command_successor": {
+    "request_level_PHY_model_inside_DUT": false,
+    "native_controller_stacks": 4,
+    "response_macros_128x256_per_stack": 32,
+    "added_response_macros": 128,
+    "full_join_actual_macros": 434,
+    "full_join_actual_memory_bytes": 5046272,
+    "offchip_fixture": "strict physical row/column command consumer only; canonical23edge return pipeline",
+    "controller_params": {
+      "FAST_IDLE_DESC": 1,
+      "AQ_ROW_LEASE": 1,
+      "COLUMN_CLOSE_GUARD": 1
+    },
+    "status": "producer320macroall24rows componentPASS1080/1400; payloadmutantpending; full434arithmeticjoinprepared"
+  }
 }
