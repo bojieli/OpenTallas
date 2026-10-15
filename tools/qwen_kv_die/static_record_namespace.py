@@ -36,10 +36,22 @@ def schema():
             legacy_source=None if attention else [LEGACY_COMPUTE,LEGACY_KV],
             status='TYPED_BOUNDARY_COMPONENT_VERIFIED' if attention else 'RESERVED_SOURCE_BACKED_FORMAT_ONLY',
             production_adoption='REQUIRES_ACTUAL_SOURCE_PRODUCER_CONSUMER_AND_COMPILED_SLOT_CONTRACT'))
+    kinds += [dict(code=12,name='HOST_NATIVE_CONTEXT',direction='kv_to_compute',data_bits=142,
+        format=dict(tag59=[58,0],generation2=[60,59],attested_fused_capability=61,
+                    image_epoch16=[77,62],image_digest64=[141,78],reserved_zero=[511,142],
+                    header_layer=63,token_context='Actual HOST token-wide TAG59 stage0/beat0; later layer comes from actual accepted CALS stage'),
+        layout_owner='q_control_transport',actual_static_producer='MISSING_INTEGRATED_COMPILED_PRODUCER',
+        production_adoption='REQUIRES_ACTUAL_HOST_CONTEXT_AND_INSTALLED_PROGRAM_CAPABILITY_WITNESS')]
+    for code,name,direction in [(13,'PROGRAM_IMAGE_AUTH_METADATA','kv_to_compute'),
+                                (14,'PROGRAM_IMAGE_COMMIT_WITNESS','compute_to_kv')]:
+        kinds.append(dict(code=code,name=name,direction=direction,data_bits=None,
+            format='RESERVED; exact actual encoder/receiver field ABI pending q_control_transport',
+            layout_owner='q_control_transport',actual_static_producer='MISSING_INTEGRATED_COMPILED_PRODUCER',
+            production_adoption='REJECT_UNTIL_EXACT_SOURCE_LAYOUT_AND_ACTUAL_COMMIT_PRODUCER_EXIST'))
     sources=[CODEC,LEGACY_KV,LEGACY_COMPUTE]
-    return dict(schema='opentallas.shared548.namespace.v1',payload_bits=548,
+    return dict(schema='opentallas.shared548.namespace.v2',payload_bits=548,
         fields=dict(reserved_zero=[547,543],kind=[542,539],layer=[538,533],epoch=[532,517],beat=[516,512],data=[511,0]),
-        kinds=kinds,invalid_kind=0,unassigned_kinds=list(range(11,16)),
+        kinds=kinds,invalid_kind=0,unassigned_kinds=[11,15],
         separate_transport=[dict(name='HOST_PROGRAM_CLASS8',width=528,
             producer='qkd_host_program_loader:pr143',route='actual per-rank HOST physical class8',
             status='NOT_A_548_PRODUCER; no implicit conversion',
@@ -59,6 +71,8 @@ def require_producer(name,contract):
     kind=next((x for x in schema()['kinds'] if x['name']==name),None)
     if kind is None:
         raise ValueError(f'undeclared shared548 kind {name}')
+    if kind['data_bits'] is None:
+        raise ValueError(f'{name}: reserved kind has no exact actual source field layout')
     required=('producer_rtl','producer_module','producer_event_port','consumer_rtl','consumer_module',
               'consumer_event_port','normal_issue','source_clock_family','destination_clock_family',
               'fixed_latency_edges','compiled_slot_contract')
