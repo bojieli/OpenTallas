@@ -7488,9 +7488,9 @@ def align_station_jogs(m, rounds=2):
     face axis by the bundle's jog, so its pins stand opposite the peer's (the station master's pins are shared by all its
     instances; the instance moves, not the pins).  Only when the moved box overlaps nothing and stays on the die; the
     hop gate / pin align gate re-judge the result."""
-    hc = str(ROOT / 'tools' / 'hier_contract')
-    if hc not in sys.path:
-        sys.path.insert(0, hc)
+    for d_ in (str(ROOT / 'tools' / 'hier_contract'), str(ROOT / 'tools' / 's81')):   # die_hop_gate lives in tools/s81
+        if d_ not in sys.path:
+            sys.path.insert(0, d_)
     import pin_align as PA
     import die_hop_gate as HG
     rp = real_ports()
