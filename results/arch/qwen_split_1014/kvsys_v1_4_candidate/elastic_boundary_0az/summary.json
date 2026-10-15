@@ -2,7 +2,7 @@
  "schema": "opentallas.qwen_kv_hbm_elastic_boundary_0az.v1",
  "date": "2026-10-15",
  "owner": "Q-KVSYS-DIE (kvsys lead r8)",
- "source_rev": "82a445f8a55df1dbbaae21b4fe17d02232ea17fb",
+ "source_rev": "fc673d2770944202209c27e4ae099ae65d95ab94",
  "rule": "HANDOFF 0az / 0an: flow control kept ONLY at the HBM stack/PHY boundary; HBM reads land in on-chip staging buffers; compiler prefetches and checks ONE ready per buffer block; everything after block-ready is compiler fixed-slot",
  "hierarchy": [
   "qkd_ctrl_pc_host_static ELASTIC=1 (raw PHY return window: nominal calendar = minimum, early -> fault, late absorbed, RAW_WD=256 watchdog; in-order tag/class queues TQD=64)",
@@ -27,7 +27,7 @@
    3
   ],
   "sectors_per_run": 512,
-  "result": "PASS: 512 sectors exact through controller+front+ring, zero stalls, every release edge equals the compile-time model (blk_go from the RD reservation calendar only), no overflow",
+  "result": "PASS: 512 sectors exact through controller+front+ring, zero stalls, every release edge equals the compile-time model (blk_go from the RD reservation calendar only), no overflow; front idle asserted after the programme (KV drained reduction)",
   "max_occupancy_measured": 11,
   "occupancy_bound": "BLK + GO_DLY + 2 = 27 <= 32 at one RD per edge"
  },

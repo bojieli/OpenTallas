@@ -48,6 +48,7 @@ module qkd_kv_hbm_elastic_front #(
     output reg hold,
     output reg [15:0] stall_edges,
     output wire [$clog2(NBLK*BLK):0] occupancy,
+    output reg idle,                        // registered: nothing landed-unreleased, no release pending/emitting (KV drain)
     output reg fault_overflow, fault_go
 );
     localparam integer DEPTH = NBLK * BLK;
@@ -94,9 +95,10 @@ module qkd_kv_hbm_elastic_front #(
     always @(posedge pll_hbm or negedge hr)
         if (!hr) begin
             wp <= 0; rp <= 0; bs <= 0; pending <= 0; emitting <= 0; cnt <= 0; sc <= 0;
-            put_q <= 0; blk_freed <= 0; hold <= 0; stall_edges <= 0; fault_overflow <= 0; fault_go <= 0;
+            put_q <= 0; blk_freed <= 0; hold <= 0; stall_edges <= 0; fault_overflow <= 0; fault_go <= 0; idle <= 1'b1;
         end else begin
             put_q <= 0; blk_freed <= 0;
+            idle <= wp == rp && !land_v && pending == 0 && !emitting;
             if (land_v) begin
                 wp <= wp + 1'b1;
                 if (wp - rp == C_DEPTH) fault_overflow <= 1'b1;
