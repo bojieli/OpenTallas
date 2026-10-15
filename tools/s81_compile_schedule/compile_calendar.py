@@ -103,6 +103,25 @@ def check_persistent_state(program, binding, root):
     return errors
 
 
+def tensor_span_end(tensor):
+    """Exclusive reserved physical bound; nrows counts actual logical rows."""
+    base = integer(tensor['base_row'], 'base_row')
+    size = integer(tensor['nrows'], 'nrows', 1)
+    stride = integer(tensor.get('row_stride', 1), 'row_stride', 1)
+    actual_span = (size - 1) * stride + 1
+    reserved = integer(tensor.get('reserved_span_rows', actual_span), 'reserved_span_rows', 1)
+    if reserved < actual_span:
+        raise ValueError('reserved span excludes sparse physical rows')
+    return base + reserved
+
+
+def tensor_physical_row(tensor, logical_offset):
+    offset = integer(logical_offset, 'row_offset')
+    if offset >= integer(tensor['nrows'], 'nrows', 1):
+        raise ValueError('access outside tensor allocation')
+    return integer(tensor['base_row'], 'base_row') + offset * integer(tensor.get('row_stride', 1), 'row_stride', 1)
+
+
 def compile_program(program, binding, contract, root=ROOT):
     """Atomic lowering; every program op, even a non-VM op, needs a binding.
 
@@ -135,7 +154,7 @@ def compile_program(program, binding, contract, root=ROOT):
         try:
             base = integer(tensor['base_row'], 'base_row')
             size = integer(tensor['nrows'], 'nrows', 1)
-            if base + size > 16384:
+            if tensor_span_end(tensor) > 16384:
                 raise ValueError('tensor exceeds VM address space')
             source = tensor['source']
             if source not in ('native_job', 'external_input', 'resident_constant'):
@@ -160,7 +179,7 @@ def compile_program(program, binding, contract, root=ROOT):
         a = valid_tensors[name]
         for other in names[i+1:]:
             b = valid_tensors[other]
-            if max(a['base_row'], b['base_row']) >= min(a['base_row']+a['nrows'], b['base_row']+b['nrows']):
+            if max(a['base_row'], b['base_row']) >= min(tensor_span_end(a), tensor_span_end(b)):
                 continue
             la, lb = lifetime(a), lifetime(b)
             if max(la[0], lb[0]) <= min(la[1], lb[1]):
@@ -194,8 +213,7 @@ def compile_program(program, binding, contract, root=ROOT):
             for i, access in enumerate(events):
                 tensor = valid_tensors[access['tensor']]
                 offset = integer(access['row_offset'], 'row_offset')
-                if offset >= tensor['nrows']:
-                    raise ValueError('access outside tensor allocation')
+                physical_row = tensor_physical_row(tensor, offset)
                 kind = access['kind']
                 if kind not in ('read', 'write'):
                     raise ValueError('unsupported native access kind')
@@ -204,7 +222,7 @@ def compile_program(program, binding, contract, root=ROOT):
                 if kind == 'read' and ident not in tensor['consumers']:
                     raise ValueError('read has undeclared tensor consumer')
                 event = dict(id=f'{ident}/access/{i}', client=job['client'], job=ident,
-                             kind=kind, tensor=access['tensor'], row=tensor['base_row']+offset,
+                             kind=kind, tensor=access['tensor'], row=physical_row,
                              slot=integer(access['slot'], 'slot'), tag=integer(job['tag'], 'tag'))
                 for field in ('issue_cycle', 'deadline_cycle', 'response_cycle' if kind == 'read' else 'commit_cycle'):
                     event[field] = start + integer(access[field], field)

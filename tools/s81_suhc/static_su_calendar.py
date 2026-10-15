@@ -16,7 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 HIER = 'rtl/dsrom_sys/s81_suhc/hier/'
 OPS = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7,
-           RA=8, RB=9, QR=10, RW=11, CN=12, IK=13, MOE=14)
+           RA=8, RB=9, QR=10, RW=11, CN=12, IK=13, MOE=15)
 SOURCES = {k: [HIER+'dsfd_sp_su_static.sv', HIER+'ot_s81_su_calendar_ctl.sv'] for k in OPS}
 for ks, files in [('QN GQ', ['ot_s81_su_qn.sv']), ('KV GK', ['ot_s81_su_kv.sv','ot_s81_su_qn.sv']),
                   ('QB', ['ot_s81_su_qb.sv']), ('SW', ['ot_s81_su_sw.sv','ot_s81_su_qb.sv']),
