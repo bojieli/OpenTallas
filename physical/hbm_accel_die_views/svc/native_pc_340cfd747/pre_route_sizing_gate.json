@@ -1,0 +1,101 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 10.5 pins/um (col_bank, col_col, col_data): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "W face 10.5 pins/um (k_addr, k_len, k_rdy): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 16 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hbm_native_pc340_p0_ref_20261015-035539.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hbm_native_pc340_p0_ref_20261015-035539.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hbm_native_pc340_p0_ref-20261015-035539",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 350 s (gate total 432 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 9601 um2 + macros 3894 in core 86985: util 16%",
+   "fix": "set \"std_area_um2\": 9601 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hbm_svc_native_pc_census cells 70,020 flops 13,617 depth 713.5 ps util 0.1562 reach 213.2 um (2.8 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "reset port rst_n: 1,706 loads (1,681 flops, e.g. active_row[0]$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "1 output bit(s) combinational from input ports (e.g. k_len[0]->k_rdy 10 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "11088 input->register endpoint(s) > 3 levels (worst k_len[0]->unposted[5]$_DFF_PN0_/D 17 lv, k_len[0]->unposted[4]$_DFF_PN0_/D 16 lv, k_len[0]->unposted[3]$_DFF_PN0_/D 16 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "301 register->output bit(s) > 3 levels (worst count[0]$_DFF_PN0_->k_rdy 8 lv, controller.on.hb_oh[31]$_DFF_PN0_->col_col[4] 8 lv, controller.on.hb_oh[31]$_DFF_PN0_->col_col[3] 8 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage controller.on.wq_rp[4]$_DFF_PN0_ -> controller.row_bank[0]$_DFF_PN0_/D: ~713 ps estimated (17 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 15.6% outside 45%-65% (std 9689 + macro 3894 um2 in 86985 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 13,618 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)",
+   "fix": ""
+  }
+ ]
+}

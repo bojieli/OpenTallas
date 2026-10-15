@@ -1,0 +1,102 @@
+{
+  "name": "hbm_native_pc340_p0_ref",
+  "top": "ot_hbm_svc_native_pc_census",
+  "kind": "tile",
+  "sources": [
+    "physical/hbm_accel_die_views/svc/native_pc_340cfd747/rtl/native_pc.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_lease.sv"
+  ],
+  "params": {
+    "PC": 0,
+    "PHASE": 0
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 259.2,
+    "h": 345.6,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "util": 0.5,
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "u_response_payload",
+      "at": [
+        82.08,
+        151.2
+      ],
+      "at_exact": true
+    }
+  ],
+  "pins": {
+    "W": [
+      "k_addr",
+      "k_len",
+      "k_rdy",
+      "k_tag",
+      "k_v",
+      "k_wdata",
+      "k_we",
+      "k_wr_done",
+      "k_wstrb",
+      "kr_beat",
+      "kr_data",
+      "kr_rdy",
+      "kr_tag",
+      "kr_v"
+    ],
+    "E": [
+      "col_bank",
+      "col_col",
+      "col_data",
+      "col_strb",
+      "col_v",
+      "col_we",
+      "dram_rdata",
+      "dram_rvalid",
+      "fault",
+      "row_bank",
+      "row_op",
+      "row_row",
+      "row_v"
+    ],
+    "N": [
+      "clk",
+      "rst_n"
+    ],
+    "S": []
+  },
+  "sdc_extra": [
+    "physical/hbm_accel_die_views/svc/native_pc_340cfd747/clock_1024.sdc"
+  ],
+  "route": {
+    "pd": 0.5,
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "period_ps": 950,
+    "macro_halo_um": 20
+  },
+  "job": {
+    "owner": "Codex:HBM-native-PC-physical",
+    "branch": "claude/hbm-die-sm-compact-1014",
+    "tag": "340cfd-p0",
+    "purpose": "Source-exact native PC owner/controller and actual response SRAM, sourceprofile340cfd747; sizing/CTS/route candidate only.",
+    "no_bench_reason": "Source-exact g_pc extraction guarded against all32 independent mapped receipts; actual complete native command functional/performance receipts remain parent-owned.",
+    "extra_paths": [
+      "physical/hbm_accel_die_views/svc/native_pc_340cfd747",
+      "results/arch/hbm_die_v15/native_pc_clock_census"
+    ],
+    "views_to": "physical/ref_tile/hbm_native_pc340_p0_ref/views",
+    "record_to": "results/physical/hbm_native_pc340_p0_ref"
+  },
+  "geometry_source": {
+    "path": "physical/hbm_accel_die_views/svc/native_pc_340cfd747/geometry_candidate.json",
+    "sha256": "b30764d76ca9a8a396885fcf8a2b4fbfbdfe30b8febdc59c18e2e60be70d72f2"
+  },
+  "physical_model_sha256": "8284726130e1f80aaa8aa97130c82295d9237c2e840db1112bfadb03f12c29d7"
+}

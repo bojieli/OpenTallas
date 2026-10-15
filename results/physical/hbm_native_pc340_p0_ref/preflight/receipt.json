@@ -1,0 +1,69 @@
+{
+  "artifacts_sha256": {
+    "results/physical/hbm_native_pc340_p0_ref/preflight/floorplan_physical.json": "a6093ff960d6f5d728dea8e974624effb36c3797ec9bdacd705e9834c9e9ad7c",
+    "results/physical/hbm_native_pc340_p0_ref/preflight/flow.log.gz": "156ac4351cc7874698d9341a3cd1250487ae1bebe97a79e1334cb7ecce3c04c5",
+    "results/physical/hbm_native_pc340_p0_ref/preflight/gate.log.gz": "87f5665774d54030bcb5f31a425b2e6202a66a019a2392616bd96d3da1d505a9",
+    "results/physical/hbm_native_pc340_p0_ref/preflight/io_placement.log.gz": "d12bbccd9437d24687aae5b55341464683327203e7cacdbfd19623b3b2fee6bc",
+    "results/physical/hbm_native_pc340_p0_ref/preflight/source_snapshot.json": "fe0a4cb39d36dc28a926047dd46b98f1824d6ccf1391244b46b28efd495902c1",
+    "results/physical/hbm_native_pc340_p0_ref/preflight/synth_stat.txt.gz": "f8965bf023a9c6ff363eeb0e4a24a1873b1673deea0a90a670ba06c71329acbb",
+    "results/physical/hbm_native_pc340_p0_ref/preflight/textbook.json": "6c45f8996a3dccc7996e5c848691741db2853b81648d14d8b1310107e8d971b3"
+  },
+  "compressed_artifacts": {
+    "results/physical/hbm_native_pc340_p0_ref/preflight/flow.log.gz": {
+      "compressed_sha256": "156ac4351cc7874698d9341a3cd1250487ae1bebe97a79e1334cb7ecce3c04c5",
+      "original_path": "results/physical/hbm_native_pc340_p0_ref/preflight/flow.log",
+      "uncompressed_sha256": "b73518b57453665450aa09ba29c34e51dd036fca1e8a7195ce281fa2e2dbe816"
+    },
+    "results/physical/hbm_native_pc340_p0_ref/preflight/gate.log.gz": {
+      "compressed_sha256": "87f5665774d54030bcb5f31a425b2e6202a66a019a2392616bd96d3da1d505a9",
+      "original_path": "results/physical/hbm_native_pc340_p0_ref/preflight/gate.log",
+      "uncompressed_sha256": "2449c7306829f65c69affc956507ffa6919364bdb1eaf5aa9eec22caa9a680d6"
+    },
+    "results/physical/hbm_native_pc340_p0_ref/preflight/io_placement.log.gz": {
+      "compressed_sha256": "d12bbccd9437d24687aae5b55341464683327203e7cacdbfd19623b3b2fee6bc",
+      "original_path": "results/physical/hbm_native_pc340_p0_ref/preflight/io_placement.log",
+      "uncompressed_sha256": "4c93427ce8ebc90d66be6803ace27023d075e542e8fff2596eacf254f37c6a70"
+    },
+    "results/physical/hbm_native_pc340_p0_ref/preflight/synth_stat.txt.gz": {
+      "compressed_sha256": "f8965bf023a9c6ff363eeb0e4a24a1873b1673deea0a90a670ba06c71329acbb",
+      "original_path": "results/physical/hbm_native_pc340_p0_ref/preflight/synth_stat.txt",
+      "uncompressed_sha256": "9ee8bebc8b47a63496fafa6742c48709981531ea6481da7bb4ab489fa6b77591"
+    }
+  },
+  "fleet": {
+    "admission_GB": 16,
+    "host": "ot-agidock128",
+    "stage": "/srv/opentallas-scratch/claude/ref_gate/hbm_native_pc340_p0_ref-20261015-035539",
+    "terminal_exit_code": 0,
+    "threads": 4,
+    "unit": "oth-ubuntu-3952057-1792061776"
+  },
+  "geometry_grant": "physical/hbm_accel_die_views/svc/native_pc_340cfd747/approved_geometry_contract.json",
+  "measured": {
+    "actual_macro_area_um2": 3893.852736,
+    "actual_macro_count": 1,
+    "candidate_outline_um": [
+      259.2,
+      345.6
+    ],
+    "gate_seconds": 432,
+    "mapped_physical_gate_FF_count": 13617,
+    "physical_gate_clock_pins_including_macro": 13618,
+    "primitive_census_FF_count": 13649,
+    "sequential_cell_area_um2": 4117.77108,
+    "standard_cell_area_um2": 9601.367364000002,
+    "total_synth_cell_area_um2": 13495.2201
+  },
+  "next_gate": "exactly_one_source_bound_CTS_route_TTsetup_FFhold_DRC0_SSreported",
+  "physical_qualified": false,
+  "profile": "340cfd747",
+  "schema": "opentallas.native_PC_preflight.v1",
+  "status": "WARN_no_refusal",
+  "warnings": [
+    "reset_input1706loads",
+    "input_to_reg11088endpoints_gt3levels_worst17",
+    "301reg_to_outputbits_gt3levels",
+    "controller_wq_rp_to_row_bank713.5ps_estimated",
+    "low_util15.6percent"
+  ]
+}

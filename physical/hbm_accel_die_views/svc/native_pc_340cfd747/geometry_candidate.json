@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.native_PC_geometry_candidate.v1",
+  "source_profile": "340cfd747",
+  "PC": 0,
+  "status": "provisional_local_characterization_only_parent_geometry_assignment_pending",
+  "parent_home": null,
+  "outline_um": [
+    259.2,
+    345.6
+  ],
+  "macro_at_um": [
+    82.08,
+    151.2
+  ],
+  "pins": {
+    "W": [
+      "k_addr",
+      "k_len",
+      "k_rdy",
+      "k_tag",
+      "k_v",
+      "k_wdata",
+      "k_we",
+      "k_wr_done",
+      "k_wstrb",
+      "kr_beat",
+      "kr_data",
+      "kr_rdy",
+      "kr_tag",
+      "kr_v"
+    ],
+    "E": [
+      "col_bank",
+      "col_col",
+      "col_data",
+      "col_strb",
+      "col_v",
+      "col_we",
+      "dram_rdata",
+      "dram_rvalid",
+      "fault",
+      "row_bank",
+      "row_op",
+      "row_row",
+      "row_v"
+    ],
+    "N": [
+      "clk",
+      "rst_n"
+    ],
+    "S": []
+  },
+  "clock_entry": {
+    "port": "clk",
+    "face": "N",
+    "period_ps": 1024
+  },
+  "macro_edge_clearances_um": {
+    "W": 82.08,
+    "E": 82.296,
+    "S": 151.2,
+    "N": 153.336
+  },
+  "route_layer_cap": "M5",
+  "parent_fit_qualified": false
+}
