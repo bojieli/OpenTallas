@@ -1,0 +1,78 @@
+{
+  "status": "STRICT_COLD_AND_INHERITED_STATE_WARM_COMPONENT_PERFORMANCE_PASS",
+  "unit": "oth-ubuntu-1573153-1792065506",
+  "exit": 0,
+  "source_controller_commit": "beac495172",
+  "resources": {
+    "host": "ot-epyc1tb",
+    "GB": 2,
+    "threads": 1
+  },
+  "cases": [
+    {
+      "phase_ps": 137,
+      "sectors_per_block": 640,
+      "cold_warm_HBM_cycles": [
+        78.938865,
+        56.152389
+      ],
+      "limit": 84.7,
+      "exact_sectors": 1280,
+      "reset_between_blocks": false,
+      "rewrite_backing_between_blocks": false
+    },
+    {
+      "phase_ps": 137,
+      "sectors_per_block": 2048,
+      "cold_warm_HBM_cycles": [
+        126.139424,
+        102.539145
+      ],
+      "limit": 134.2,
+      "exact_sectors": 4096,
+      "reset_between_blocks": false,
+      "rewrite_backing_between_blocks": false
+    },
+    {
+      "phase_ps": 773,
+      "sectors_per_block": 640,
+      "cold_warm_HBM_cycles": [
+        79.752668,
+        55.338586
+      ],
+      "limit": 84.7,
+      "exact_sectors": 1280,
+      "reset_between_blocks": false,
+      "rewrite_backing_between_blocks": false
+    },
+    {
+      "phase_ps": 773,
+      "sectors_per_block": 2048,
+      "cold_warm_HBM_cycles": [
+        126.953227,
+        102.539145
+      ],
+      "limit": 134.2,
+      "exact_sectors": 4096,
+      "reset_between_blocks": false,
+      "rewrite_backing_between_blocks": false
+    }
+  ],
+  "history": "First actual block fill plus fixed80/256edge SRAMdrain, sixstreamidleedges; second sameaddress block in alternate realbank/newepoch, physical bank/REF/controller state retained; no reset or memoryrewrite",
+  "mutant": "Duplicate response beat rejected by actual boundary fault",
+  "source_manifest": "input_sha256.json",
+  "strict_fixture": "Canonical23edge command-only fixture unchanged",
+  "limits": [
+    "Four two-block campaigns, not universal refresh phase/address/client interference admission",
+    "Actual mapped4 releasedimage cost remains separate",
+    "No physical/CTS/protection/wholeprogramme qualification"
+  ],
+  "logs_sha256": {
+    "build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "duplicate.log": "4f5944b83643e8bc2c2423ed2bbd97ab79df3fc992d415cfa028fb09b94f7187",
+    "phase_137_case_1.log": "15ba9dd81a88d710e19c3a6bcbe9ab0392bee966fff128ee0cc41473da85d171",
+    "phase_137_case_2.log": "4f4a6b07f4a16b92a49ec62029047e7a8a882cebce5448f92b4feea67f990c73",
+    "phase_773_case_1.log": "efed4984dfe1d22eccc5218fe279e7afc49c8c309833da36d601fe3c7e811b55",
+    "phase_773_case_2.log": "127299bc44167535c3d65333c5ebb6f52d0db3df68b1cb383eafc52eaa274bfe"
+  }
+}

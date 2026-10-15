@@ -1,0 +1,296 @@
+{
+  "status": "SOURCE_EXACT_ABI_MANIFEST;PHYSICAL_UNQUALIFIED",
+  "profile_commit": "beac495172",
+  "source_SHA256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_dynamic_stack.sv": "680a3da31cbd2a35f1344345f6f0b7642abac0c3c273136195022a38d75ae455",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_dynamic.sv": "a9266245094a9217ce729fd118e44f0ae019504935badbabb291bc251cd2a5d7"
+  },
+  "stack_ports": {
+    "clk": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "pc_clk": {
+      "direction": "input",
+      "bits": 32
+    },
+    "k_v": {
+      "direction": "input",
+      "bits": 32
+    },
+    "k_rdy": {
+      "direction": "output",
+      "bits": 32
+    },
+    "k_we": {
+      "direction": "input",
+      "bits": 32
+    },
+    "k_addr": {
+      "direction": "input",
+      "bits": 960
+    },
+    "k_len": {
+      "direction": "input",
+      "bits": 128
+    },
+    "k_tag": {
+      "direction": "input",
+      "bits": 544
+    },
+    "k_wdata": {
+      "direction": "input",
+      "bits": 8192
+    },
+    "k_wstrb": {
+      "direction": "input",
+      "bits": 1024
+    },
+    "kr_v": {
+      "direction": "output",
+      "bits": 32
+    },
+    "kr_rdy": {
+      "direction": "input",
+      "bits": 32
+    },
+    "kr_tag": {
+      "direction": "output",
+      "bits": 544
+    },
+    "kr_beat": {
+      "direction": "output",
+      "bits": 128
+    },
+    "kr_data": {
+      "direction": "output",
+      "bits": 8192
+    },
+    "k_wr_done": {
+      "direction": "output",
+      "bits": 32
+    },
+    "row_v": {
+      "direction": "output",
+      "bits": 32
+    },
+    "row_op": {
+      "direction": "output",
+      "bits": 96
+    },
+    "row_bank": {
+      "direction": "output",
+      "bits": 160
+    },
+    "row_row": {
+      "direction": "output",
+      "bits": 608
+    },
+    "col_v": {
+      "direction": "output",
+      "bits": 32
+    },
+    "col_we": {
+      "direction": "output",
+      "bits": 32
+    },
+    "col_bank": {
+      "direction": "output",
+      "bits": 160
+    },
+    "col_col": {
+      "direction": "output",
+      "bits": 160
+    },
+    "col_data": {
+      "direction": "output",
+      "bits": 8192
+    },
+    "col_strb": {
+      "direction": "output",
+      "bits": 1024
+    },
+    "dram_rvalid": {
+      "direction": "input",
+      "bits": 32
+    },
+    "dram_rdata": {
+      "direction": "input",
+      "bits": 8192
+    },
+    "fault": {
+      "direction": "output",
+      "bits": 1
+    }
+  },
+  "unchanged_K_and_command_ABI_from_owned537": true,
+  "parameters_required": {
+    "DYNAMIC_CA": 1,
+    "INTENT_PREVIEW": 1,
+    "REGISTERED_HEAD_BYPASS": 1,
+    "FAST_IDLE_DESC": 1,
+    "AQ_ROW_LEASE": 1,
+    "COLUMN_CLOSE_GUARD": 1
+  },
+  "clock_contract": {
+    "pc_clk": "32 distinct physical roots,1024ps, synchronous frequency/phase with clk; actual skew/setup/hold closure pending",
+    "clk": "Actual16fairroundrobin FF plusca_fault1;1024ps, grant/request seam must be source-routed under sameclock constraints",
+    "stream": "Separate833.333ps, only actual boundary CDC and stream SRAM connect domains"
+  },
+  "PC_extraction_ports": {
+    "clk": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "col_bank": {
+      "bits": 5,
+      "direction": "output"
+    },
+    "col_col": {
+      "bits": 5,
+      "direction": "output"
+    },
+    "col_data": {
+      "bits": 256,
+      "direction": "output"
+    },
+    "col_strb": {
+      "bits": 32,
+      "direction": "output"
+    },
+    "col_v": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "col_we": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "dram_rdata": {
+      "bits": 256,
+      "direction": "input"
+    },
+    "dram_rvalid": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "fault": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "k_addr": {
+      "bits": 30,
+      "direction": "input"
+    },
+    "k_len": {
+      "bits": 4,
+      "direction": "input"
+    },
+    "k_rdy": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "k_tag": {
+      "bits": 17,
+      "direction": "input"
+    },
+    "k_v": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "k_wdata": {
+      "bits": 256,
+      "direction": "input"
+    },
+    "k_we": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "k_wr_done": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "k_wstrb": {
+      "bits": 32,
+      "direction": "input"
+    },
+    "kr_beat": {
+      "bits": 4,
+      "direction": "output"
+    },
+    "kr_data": {
+      "bits": 256,
+      "direction": "output"
+    },
+    "kr_rdy": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "kr_tag": {
+      "bits": 17,
+      "direction": "output"
+    },
+    "kr_v": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "row_bank": {
+      "bits": 5,
+      "direction": "output"
+    },
+    "row_grant": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "row_op": {
+      "bits": 3,
+      "direction": "output"
+    },
+    "row_priority": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "row_request": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "row_row": {
+      "bits": 19,
+      "direction": "output"
+    },
+    "row_v": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "rst_n": {
+      "bits": 1,
+      "direction": "input"
+    }
+  },
+  "PC_input_bits": 602,
+  "PC_output_bits": 611,
+  "physical_seam": {
+    "row_grant": "Input, held row request fires only on grant; deny holds currentcommand except urgentREF replaces unissuednonurgentcommand",
+    "row_request": "Output actual registered request; paired fairarbiter external to PC",
+    "row_priority": "Output registered leafpriority indication preserved for exact source extraction; current pair arbiter prioritizes emittedREFopcodes",
+    "row_v": "Output actual request AND grant; no fake issuance while denied"
+  },
+  "state_cost": {
+    "PC_projected_FF": 14099,
+    "PC_macro_clockpins": 1,
+    "PCs0to2_mapped_FF": 14099,
+    "all32_mapping": "RUNNING1559836",
+    "common_root_FF": 17,
+    "payload_macros_per_PC": 1
+  },
+  "physical_limits": [
+    "Existing8e25 baseline physical kit remains unchanged",
+    "New extraction adds realgrant/request/priority pins and payload head FF; new pin/timing/CTS proof needed",
+    "Kready/columnwrite payload paths remain combinational deep paths; no fabricated registered facade",
+    "No duplicated refresh/bank owner per client"
+  ]
+}

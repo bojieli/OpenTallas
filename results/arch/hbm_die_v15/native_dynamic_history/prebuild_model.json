@@ -1,0 +1,21 @@
+{
+  "status": "PREBUILD",
+  "source": "beac495172 unchanged controller/producer, new repeated real-history bench",
+  "reason": "Earlier four passing cases each reset; root requires cold and actual inherited bank/refresh warm state, no warmup/reset substitution",
+  "history": "Cold block to real64SRAMlanding and fixed80/256drain, sixidle stream edges, sameaddress second block alternatebank/new epoch WITHOUT reset or externalmemory rewrite",
+  "phases_ps": [
+    137,
+    773
+  ],
+  "sizes": [
+    640,
+    2048
+  ],
+  "gate_HBM_cycles": {
+    "640": 84.7,
+    "2048": 134.2
+  },
+  "mutant": "Duplicate response beat must trigger boundary fault; prior source fourhardwaremutants preserved",
+  "memory": "Same32response+32landingSRAM and unchanged strict23edge command fixture",
+  "qualification": "Two actual block histories, not universal refresh/client interference or physical timing"
+}
