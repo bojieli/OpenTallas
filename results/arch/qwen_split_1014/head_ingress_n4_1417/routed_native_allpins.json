@@ -1,0 +1,91 @@
+{
+  "cell": "qkh_head_gather_stage",
+  "view": "physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage",
+  "lib_cell": "qkh_head_gather_stage",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 202.2,
+  "spread_ps": 42.9,
+  "outputs": 1575,
+  "inputs": 1575,
+  "launch_ps": 159.6,
+  "launch_pin": "e_b[9]",
+  "capture_ps": 157.1,
+  "capture_pin": "ti_a[952]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "corners": {
+    "tt": {
+      "launch_ps": 159.64024,
+      "launch_pin": "e_b[9]",
+      "capture_ps": 157.06633,
+      "capture_pin": "ti_a[952]",
+      "outputs": 1575,
+      "inputs": 1575,
+      "missing_output_arcs": []
+    },
+    "ff": {
+      "launch_ps": 119.68934999999999,
+      "launch_pin": "e_b[9]",
+      "capture_ps": 114.6714,
+      "capture_pin": "ti_a[952]",
+      "outputs": 1575,
+      "inputs": 1575,
+      "missing_output_arcs": []
+    }
+  },
+  "job": "qkh_head_gather_stage-n4r1-8801fc345",
+  "source_commit": "8801fc34513da35acb6a411ef0d69025d0024bd2",
+  "tt_setup_ps": 354.91,
+  "ff_hold_ps": 11.02,
+  "drc": 0,
+  "integrated_qualified": false,
+  "publication_state": "CLOSED",
+  "actual_routed_views": true,
+  "scope": "Standaloneactualrouted1575FFN4gather only; allincident/head8192/staticcalendar/clock/agequalification remainsOPEN",
+  "sha256": {
+    "physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage/qkh_head_gather_stage_ff.lib": "1857b859a67e6657b857eeccd3e2f0ba26b404b3516fe2e6d7079301766b41b9",
+    "physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage/qkh_head_gather_stage_ss.lib": "605075fbbb90836549128704e2fd09bf251e3af12a6eb3b421170df8f94af96e",
+    "physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage/abstract.json": "a60ba8e937ac6e104a815265609763f35728debce98b65a0865b72ff8bd0e69a",
+    "physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage/qkh_head_gather_stage.lef": "f3510bbdd0885c3ae826c0f7c0f6a6b624f9050104c2972164ed3ad69d69444d",
+    "physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage/insertion.json": "fba2ed6b5926ace7f12a622725778d66143151aa4a1fbc49aeec474fc4ac9f87",
+    "physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage/qkh_head_gather_stage_tt.lib": "cc42955dc55ab1c102e566be1472aaa0bcfaafbb28e44ce99a1b4491d6d928d7",
+    "physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage/child_lint.json": "eb1284b1c88946dbf99a3accb58f4241400e35ea9022664e7dfc5d42b8acd5cc"
+  },
+  "record_commit": "365aa34e91e8b9a0185133e1a12ad06826c78cd7",
+  "main_commit": "a0083c43d",
+  "record_files_verified": {
+    "qkh_head_gather_stage_ff.lib": true,
+    "qkh_head_gather_stage_ss.lib": true,
+    "abstract.json": true,
+    "qkh_head_gather_stage.lef": true,
+    "insertion.json": true,
+    "qkh_head_gather_stage_tt.lib": true,
+    "child_lint.json": true
+  },
+  "standalone_native_numeric_pass": true,
+  "flow_hold_state": "ROOTscope_review_pending",
+  "clock_scope_receipt": "routed_effective_clock_scope.json",
+  "bench_positive_checks": 1798,
+  "observed_mutants": {
+    "41": {
+      "rc": 1,
+      "log": "GATHER_FAIL mutant=41 cycle=2"
+    },
+    "42": {
+      "rc": 1,
+      "log": "GATHER_FAIL mutant=42 cycle=2"
+    },
+    "43": {
+      "rc": 1,
+      "log": "GATHER_FAIL mutant=43 cycle=2"
+    }
+  },
+  "ss_sensitivity_ps": 269.98
+}

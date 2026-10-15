@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.n4_gather_effective_clock_scope.v1",
+  "source_commit": "8801fc34513da35acb6a411ef0d69025d0024bd2",
+  "record_commit": "365aa34e91e8b9a0185133e1a12ad06826c78cd7",
+  "job": "qkh_head_gather_stage-n4r1-8801fc345",
+  "read_only": true,
+  "unchanged_constraints": true,
+  "unit": "oth-ubuntu-2817388-1792102259",
+  "corners": {
+    "tt": {
+      "set_input_delay": {
+        "count": 3150,
+        "reference_clocks": {
+          "core_clk": 3150
+        }
+      },
+      "set_output_delay": {
+        "count": 3150,
+        "reference_clocks": {
+          "core_clk": 3150
+        }
+      },
+      "clock_lines": [
+        "EFFECTIVE_CLOCK core_clk period=833.333008 sources=_626e12f3d1550000_p_Pin",
+        "EFFECTIVE_CLOCK ot_lb_v_core_clk period=770.000000 sources="
+      ],
+      "other_virtual_references": [],
+      "slack_log": [
+        "OT_WS max 3.549137372882427e-10 min 4.6709691670088205e-11"
+      ],
+      "effective_sdc_sha256": "cda055a0d882d7dacd60514ae1c970f515dfd8077c1df727b71979503e9a3339",
+      "log_sha256": "11a08adb4c4ee8a4eec57f5b0125b5aaf6310abd4cd3956818dffbbcf72cc911"
+    },
+    "ff": {
+      "set_input_delay": {
+        "count": 3150,
+        "reference_clocks": {
+          "core_clk": 3150
+        }
+      },
+      "set_output_delay": {
+        "count": 3150,
+        "reference_clocks": {
+          "core_clk": 3150
+        }
+      },
+      "clock_lines": [
+        "EFFECTIVE_CLOCK core_clk period=833.333008 sources=_c2aa0abd67550000_p_Pin",
+        "EFFECTIVE_CLOCK ot_lb_v_core_clk period=770.000000 sources="
+      ],
+      "other_virtual_references": [],
+      "slack_log": [
+        "OT_WS max 3.9477768276618974e-10 min 1.1022474599720056e-11"
+      ],
+      "effective_sdc_sha256": "2084cb86193fab99ed6fbe979fd22a6377d225ea69af3d0087fabbbd7e2d2a73",
+      "log_sha256": "0b967f7f12dbfd498e413b1c552bd1d27a1e2edc6f9c29478d28de1242e47696"
+    }
+  },
+  "global_flow_hold": "ROOTreviewpending;nointegratedadoption",
+  "finding": "Both exactexport sessions have realcore_clk833.333008 and dormantvirtualot_lb_v_core_clk770. All3150input+3150outputmax/minconstraints reference realcore_clk only; zeroactivevirtualconstraintreferences. FrozenfinalTTsetup354.913737ps/FFhold11.022475ps reproduced. Thisunusedvirtual artifact doesnot show anactiveIOclock-periodmismatch forfinalN4TT/FF; route-timeglobalhelperbugscope andreleasehold belongROOT."
+}
