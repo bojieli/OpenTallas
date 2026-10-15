@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.hbm.dma-wb-phy-composition-model.v1",
+  "stage": "PRE_WRAPPER_RTL",
+  "created": "2026-10-15T00:15:24.410627",
+  "base_engine": "09eec4bec",
+  "production": {
+    "h_words": 20480,
+    "PRE_words": 8,
+    "quadrants": 4,
+    "h_sectors_per_quadrant": 640,
+    "PRE_sectors": 1
+  },
+  "macs_per_cycle": 0,
+  "replicas": 4,
+  "real_SRAM_macros": {
+    "VM": 96,
+    "DMA_landing": 32,
+    "WB": 128,
+    "total": 256
+  },
+  "WB_buffers_per_quadrant": 2,
+  "WB_depth_per_lane_per_buffer": 256,
+  "memory_bytes_per_cycle": {
+    "VM_to_landing": 1024,
+    "landing_to_WB": 1024,
+    "WB_to_HBM": "PHY-boundary variable,32PCs/stack"
+  },
+  "boundary_bits_per_cycle": {
+    "command": 309,
+    "VM_rq": 544,
+    "VM_rr": 8224,
+    "WD": 9248,
+    "posted_count": 48
+  },
+  "mux_fanout": "ExistingWB8laneheads mapped to32PCs by actual XOR hash; arbitration confined to PHY boundary. Added wrapper only joins explicit buffer/epoch reservation receipts and true completion counts.",
+  "routing_tracks": "Nonewdataformat; joins fourlocalDMA-WB endpoints and fourrealPHY32PCports. Physical cuts/slots unqualified.",
+  "area_fit": "Wires+reservationidentity flops; reusesactual96VM+32landing+128WBmacros; notphysicallyclosed.",
+  "clocks": {
+    "stream_period_ps": 833.333,
+    "hbm_period_ps": 1024,
+    "hbm_phase_ps": 173
+  },
+  "latency": {
+    "onchip_engine_rq_to_WD": 12,
+    "HBM_boundary": "actual mutable repositoryPHYmodel with corrected CLK_PS1024 forwarding,real DRAM timing/backpressure/postedcompletion; measured after composition"
+  },
+  "throughput": {
+    "immutable_price_cycles": 248,
+    "limit_cycles": 272,
+    "prediction": "CurrentWBstageswhole640sectorblock then permitsoneoutstanding/PC;20sectorsperPC times realPHYcompletionlatency likely exceeds272cycle fullfence. Diagnosticcomposition required to quantify; no adoption/pricechange."
+  },
+  "qualification": "All2561 sectors main/mirror through actual32VMbanks+32landing+128WBmacros+realCDC/FIFOs/XORmapper/PHYmux and actual mutableHBMmodel; no preload/replacementdata/syntheticwa. Fence after alltruePHYacks and memoryreadback. Failingearlycompletion/hash/data mutant required."
+}
