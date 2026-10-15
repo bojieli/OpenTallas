@@ -904,4 +904,50 @@ module tb_s81_die_layer;
         else $display("TB_S81_DIE_LAYER FAIL");
         $finish;
     end
+
+    // Optional fixed-cycle workload evidence. This observes existing signals;
+    // it never gates an issue or changes latency. Golden/behavioural producers
+    // are explicitly labelled so this trace cannot claim a fully native token.
+    integer vm_trace_fd = 0;
+    reg [7:0] vm_trace_hc_tag = 0, vm_trace_su_tag = 0;
+    always @(posedge ck) if (htake) vm_trace_hc_tag <= {u_hc.u_hc.e_d[83],u_hc.u_hc.e_d[6:0]};
+`ifdef TB_SU_REAL
+    always @(posedge ck) if (su_take) vm_trace_su_tag <= {u_su.u_ctl.e_d[83],u_su.u_ctl.e_d[6:0]};
+`endif
+    string vm_trace_path;
+    initial if ($value$plusargs("VM_TRACE=%s", vm_trace_path)) begin
+        vm_trace_fd = $fopen(vm_trace_path, "w");
+        if (!vm_trace_fd) $fatal(1, "cannot open VM_TRACE");
+        $fwrite(vm_trace_fd, "time_ns,stream_cycle,job,client,event,slot,row,mask,tag\n");
+    end
+    always @(posedge ck) if (vm_trace_fd && rst) begin
+        if (htake) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,hc,start,0,-1,0000,%0d\n",$realtime,cyc,cj,{u_hc.u_hc.e_d[83],u_hc.u_hc.e_d[6:0]});
+        if (hdv) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,hc,done,0,-1,0000,%0d\n",$realtime,cyc,cj,hdt);
+`ifdef TB_SU_REAL
+        if (su_take) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,su,start,0,-1,0000,%0d\n",$realtime,cyc,cj,{u_su.u_ctl.e_d[83],u_su.u_ctl.e_d[6:0]});
+        if (u_su.u_ctl.d_v) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,su,done,0,-1,0000,%0d\n",$realtime,cyc,cj,u_su.u_ctl.d_t);
+`endif
+        for (integer z = 0; z < S_RD; z = z + 1) begin
+            if (vq_v[z]) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,hc,read,%0d,%0d,ffff,%0d\n", $realtime, cyc, cj, z, vq_row[14*z+:14], vm_trace_hc_tag);
+            if (rs_v[z]) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,hc,response,%0d,%0d,ffff,%0d\n", $realtime, cyc, cj, z, dl_a[LVM-1][14*z+:14], vm_trace_hc_tag);
+        end
+        for (integer z = 0; z < S_WR; z = z + 1)
+            if (wq_v[z]) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,hc,write,%0d,%0d,ffff,%0d\n", $realtime, cyc, cj, z, wq_row[14*z+:14], vm_trace_hc_tag);
+`ifdef TB_SU_REAL
+        for (integer z = 0; z < SU_RD; z = z + 1) begin
+            if (su_rq_v[z]) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,su,read,%0d,%0d,ffff,%0d\n", $realtime, cyc, cj, z, su_rq_row[14*z+:14], vm_trace_su_tag);
+            if (su_rs_v[z]) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,su,response,%0d,%0d,ffff,%0d\n", $realtime, cyc, cj, z, su_dl_a[LVM-1][14*z+:14], vm_trace_su_tag);
+        end
+        for (integer z = 0; z < SU_WR; z = z + 1)
+            if (su_wq_v[z]) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,su,write,%0d,%0d,%04h,%0d\n", $realtime, cyc, cj, z, su_wq_row[14*z+:14], su_wq_mask[16*z+:16], vm_trace_su_tag);
+`endif
+        if (vwe) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,ctrl,write,0,%0d,ffff,-1\n", $realtime, cyc, cj, vwa);
+        if (g_eng[9].g_b.jdone_r && o_wr[g_eng[9].g_b.dop_r] >= 0)
+            $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,fixture_hcx,write,0,%0d,ffff,-1\n", $realtime, cyc, cj, o_wr[g_eng[9].g_b.dop_r]);
+    end
+    always @(posedge ckv) if (vm_trace_fd && rsv)
+        for (integer z = 0; z < NR; z = z + 1) begin
+            if (tvm[104*z]) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,fixture_capture,element_write,%0d,%0d,0001,-1\n", $realtime,cyc,cj,z,tvm[104*z+1+:19]);
+            if (tvm[104*z+52]) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,fixture_capture,element_write,%0d,%0d,0001,-1\n", $realtime,cyc,cj,z,tvm[104*z+53+:19]);
+        end
 endmodule

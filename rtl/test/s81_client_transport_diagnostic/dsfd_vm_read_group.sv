@@ -1,4 +1,5 @@
 `timescale 1ns/1ps
+// DIAGNOSTIC ONLY: owner prohibits production credits/backpressure.
 // One-client VM response regrouping. SU/HC issue batches as contiguous prefixes
 // containing slot 0; returning slot-0's credit only after the whole batch keeps
 // one batch in flight. Backend responses can arrive independently or reordered.

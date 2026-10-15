@@ -63,3 +63,29 @@ production tree combine when all four pass; pending/failure never becomes
 PASS. Current seven complete-layer combines L0/L1/L2/L3/L20/L21/L28 pass;
 L28 has one sequential-association mismatch, confirming why the checker must
 require the RTL's pairwise tree rather than accepting any matching order.
+
+OWNER CORRECTION 2026-10-14 18:59: production accepts no credits,
+backpressure, ready-driven issue or demand arbitration. The read-group shim
+has therefore moved under rtl/test/s81_client_transport_diagnostic; its passes
+are diagnostic correctness evidence only. The compact-arm helper likewise
+supplies encodings/ownership validation, not a production issue schedule.
+
+On-chip numerical substitutions now have an explicit source-verified inventory
+(native_inventory.json, 15 items). The previous continuous layer/head/MTP run
+is a fixture-supported component chain, NOT a fully native hardware token:
+field roots, HC coefficients, Engram residuals, SVC/selector endpoints, head
+projections, final norms/glue and ideal VM storage/ports still have numerical
+substitutes. FP=dpi additionally replaces arithmetic RTL with C++ functions.
+Expected-result comparisons remain valid evidence; injecting computed oracle
+results cannot qualify native execution. die_layer_stim now emits one
+native_operation_audit record for every emitted job, all native unqualified
+until actual elaboration, memory and producer edges are bound and verified.
+
+Static schedule work observes existing full-shape layer issue/response/write
+signals with +VM_TRACE=FILE; it does not stall or alter RTL. The fixed-cycle
+artifact records each SU/HC row, word mask, job tag and assumed response/done
+deadline. Native service/commit reservations, physical path bounds, bank/queue
+occupancy and full producer traffic are required separately. The native VM's
+isolated actual read return was measured by the VM owner at66..67streamcycles;
+the old behavioural VM's LVM10 remains unqualified. static_vm_trace.py never
+marks the observed fixture timeline as a native schedule.
