@@ -48,7 +48,14 @@
     "useful_payload_bits": 2713600,
     "latency_edges": 1,
     "physical_fit_qualified": false,
-    "reason": "Inherited 256-row macro helper cannot represent T640/NL2; no depth truncation allowed."
+    "reason": "Inherited 256-row macro helper cannot represent T640/NL2; no depth truncation allowed.",
+    "macro_bbox_um": [
+      174.744,
+      70.47
+    ],
+    "macro_area_total_um2": 418683.12912,
+    "source_legacy_NL4_256macro_area_um2": 482236.416,
+    "source_note": "Only256/1024x256 real library masters exist; macro storage area is smaller than previous68x256 allocation but placement and route remain unqualified."
   },
   "headgroup_source_inventory": {
     "functional_full_tile_count": 32,
