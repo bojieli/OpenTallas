@@ -35,6 +35,7 @@ module tb_static_host_controller;
  reg [18:0] openrow[0:31];
  reg due[0:CYCLES+RL];reg [287:0] word[0:CYCLES+RL];
  reg wdue[0:CYCLES+8];reg [287:0] wword[0:CYCLES+8];
+ integer wsector[0:CYCLES+8];reg [287:0] external_host_storage[0:1023];
  integer errors=0,mode=0,landed,hostreads,hostwrites,commits,reads;
  task automatic bad(input string message);
   if(errors<12)$display("BAD %s",message);errors++;
@@ -54,6 +55,7 @@ module tb_static_host_controller;
    for(integer t=0;t<CYCLES+RL+1;t++)begin due[t]=0;word[t]=0;end
    for(integer t=0;t<CYCLES+9;t++)begin wdue[t]=0;wword[t]=0;end
    for(integer b=0;b<32;b++)openrow[b]=0;
+   for(integer s=0;s<1024;s++)external_host_storage[s]=0;
    landed=0;hostreads=0;hostwrites=0;commits=0;reads=0;
    repeat(16)@(negedge ck);rst[phase]=1;
    for(integer t=0;t<CYCLES;t++)begin
@@ -74,10 +76,16 @@ module tb_static_host_controller;
      automatic integer col=po[phase][39:35];
      automatic integer sec=((bank>>2)<<7)|(col<<2)|(bank&3);
      automatic integer row=openrow[bank];
-     if(po[phase][29])begin wdue[t+5]=1;wword[t+5]=encode(data(row,sec));hostwrites++;end
-     else begin due[t+RL]=1;word[t+RL]=encode(data(row,sec));reads++;end
+     if(po[phase][29])begin wdue[t+5]=1;wword[t+5]=encode(data(row,sec));wsector[t+5]=sec;hostwrites++;end
+     else begin due[t+RL]=1;word[t+RL]=row==24427?external_host_storage[sec]:encode(data(row,sec));reads++;end
     end
-    if(wdue[t]&&po[phase][327:40]!==wword[t])bad($sformatf("PHY write data phase%0d t%0d",phase,t));
+    if(wdue[t])begin
+     if(po[phase][327:40]!==wword[t])bad($sformatf("PHY write data phase%0d t%0d",phase,t));
+     // The allowed off-chip memory model stores ACTUAL PHY write data. Host
+     // readback cannot be supplied from an expected/golden data expression.
+     external_host_storage[wsector[t]]=po[phase][327:40];
+     if(phase==1&&mode==4)external_host_storage[wsector[t]]^=288'd3;
+    end
     if(co[phase][0])begin
      automatic integer expected_sector=landed<256?landed:512+landed-256;
      automatic integer sec={co[phase][11:9],co[phase][7:1]};
