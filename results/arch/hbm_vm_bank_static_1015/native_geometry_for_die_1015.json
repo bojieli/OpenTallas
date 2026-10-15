@@ -1,0 +1,132 @@
+{
+  "source": "c41cd3ad2",
+  "scope": "local child pin access only; not a die wiring cut or reach grant",
+  "outline_um": [
+    393.12,
+    339.12
+  ],
+  "macro_origins_um": [
+    [
+      109.296,
+      43.2
+    ],
+    [
+      109.296,
+      133.92
+    ],
+    [
+      109.296,
+      224.64
+    ]
+  ],
+  "macro_size_um": [
+    174.744,
+    70.488
+  ],
+  "macro_clock_pins": 3,
+  "mapped_DFF_sinks": 6409,
+  "mapped_rr_payload_DFFs": 1792,
+  "mapped_eg_payload_DFFs": 275,
+  "root_topology": "one actual clk root reaches6409DFFs+3realSRAMclocks; nativeclockspreadnotqualified untilcompletedCTS",
+  "PDN_occupied_area_um2": 40479,
+  "PDN_utilization_percent": 31,
+  "faces": {
+    "N": {
+      "signal_pins": 1145,
+      "layer": "M5",
+      "edge_um": 393.12,
+      "actual_track_origin_um_mod_pitch": 0.012,
+      "actual_track_pitch_um": 0.048,
+      "corner_keepout_um": 5.4,
+      "PG_shapes_on_layer": 144,
+      "PG_clear_legal_tracks": 7290,
+      "minimum_pitch_096_packed_sites": 3680,
+      "local_pin_fraction_of_packed_sites": 0.311141,
+      "groups": [
+        "rq0",
+        "rr0",
+        "rq4",
+        "rr4",
+        "dq",
+        "dq_done",
+        "wq2",
+        "wq_done2",
+        "clk",
+        "rst_n",
+        "bid",
+        "sid",
+        "rslot_v",
+        "rslot",
+        "wslot_v",
+        "wslot",
+        "status"
+      ]
+    },
+    "S": {
+      "signal_pins": 1383,
+      "layer": "M5",
+      "edge_um": 393.12,
+      "actual_track_origin_um_mod_pitch": 0.012,
+      "actual_track_pitch_um": 0.048,
+      "corner_keepout_um": 5.4,
+      "PG_shapes_on_layer": 144,
+      "PG_clear_legal_tracks": 7290,
+      "minimum_pitch_096_packed_sites": 3680,
+      "local_pin_fraction_of_packed_sites": 0.375815,
+      "groups": [
+        "rq1",
+        "rr1",
+        "rq5",
+        "rr5",
+        "kq",
+        "kq_done",
+        "xq",
+        "xq_done",
+        "eg"
+      ]
+    },
+    "E": {
+      "signal_pins": 1107,
+      "layer": "M4",
+      "edge_um": 339.12,
+      "actual_track_origin_um_mod_pitch": 0.012,
+      "actual_track_pitch_um": 0.048,
+      "corner_keepout_um": 5.4,
+      "PG_shapes_on_layer": 0,
+      "PG_clear_legal_tracks": 6840,
+      "minimum_pitch_096_packed_sites": 3420,
+      "local_pin_fraction_of_packed_sites": 0.323684,
+      "groups": [
+        "rq2",
+        "rr2",
+        "rq6",
+        "rr6",
+        "wq0",
+        "wq_done0",
+        "xq2",
+        "xq2_done"
+      ]
+    },
+    "W": {
+      "signal_pins": 1107,
+      "layer": "M4",
+      "edge_um": 339.12,
+      "actual_track_origin_um_mod_pitch": 0.012,
+      "actual_track_pitch_um": 0.048,
+      "corner_keepout_um": 5.4,
+      "PG_shapes_on_layer": 0,
+      "PG_clear_legal_tracks": 6840,
+      "minimum_pitch_096_packed_sites": 3420,
+      "local_pin_fraction_of_packed_sites": 0.323684,
+      "groups": [
+        "rq3",
+        "rr3",
+        "pq",
+        "pr",
+        "wq1",
+        "wq_done1"
+      ]
+    }
+  },
+  "reservation_limits": "No flatquad fit claim; H-DIE mustmatch four-face groups to actual parent placement,channels,PGandglobal routecuts."
+}
