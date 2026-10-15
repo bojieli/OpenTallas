@@ -11,6 +11,7 @@ module ot_vms_slice_coll_sw #(
     input  wire                 clk,
     input  wire                 rst_n,
     input  wire [4:0]           clk_coll_rx,
+    input  wire [12:0]          clk_vm_child,
     input wire [3:0] rgx_t_v,
     input wire [159:0] rgx_t_addr,
     input wire [2047:0] rgx_t_data,
@@ -58,8 +59,8 @@ module ot_vms_slice_coll_sw #(
         .rgx_t_v(rgx_t_v), .rgx_t_addr(rgx_t_addr), .rgx_t_data(rgx_t_data), .rgx_t_vm(rgx_t_vm), .rgx_f_cr(rgx_f_cr),
         .tkw_t_v(tkw_t_v), .tkw_t_d(tkw_t_d), .tkw_f_cr(tkw_f_cr), .fault(coll_fault),
         .cq(coll_cq), .cr(coll_cr), .wq(coll_wq), .wq_cr(coll_wcr), .wq_done(coll_wdone), .xw(coll_xw), .xwa(coll_xwa));
-    ot_vms_slice #(.NC(NC+5), .RG(RG), .WG(WG+1), .RRS(RRS), .WRS({4'(COLL_WRS),WRS}),
-        .BMUT(BMUT), .HMUT(HMUT), .CMUT(CMUT)) u_slice (.clk(clk), .rst_n(rst_n), .sid(2'd0),
+    ot_vms_slice_clocked #(.NC(NC+5), .RG(RG), .WG(WG+1), .RRS(RRS), .WRS({4'(COLL_WRS),WRS}),
+        .BMUT(BMUT), .HMUT(HMUT), .CMUT(CMUT)) u_slice (.child_clk(clk_vm_child), .rst_n(rst_n), .sid(2'd0),
         .cq({coll_cq,cq}), .cr(all_cr), .rq(rq), .rq_cr(rq_cr), .rr(rr), .wq({coll_wq,wq}), .wq_cr(all_wcr), .wq_done(all_wdone), .dq(dq), .dq_done(dq_done), .vcb(vcb), .vcb_cr(vcb_cr), .kq_done(kq_done), .cw_in(cw_in), .cw_in_cr(cw_in_cr), .cw_out(cw_out), .cw_out_cr(cw_out_cr), .ccw_in(ccw_in), .ccw_in_cr(ccw_in_cr), .ccw_out(ccw_out), .ccw_out_cr(ccw_out_cr), .bank_status(bank_status), .hub_status(hub_status), .mirror_busy(mirror_busy));
 endmodule
 `default_nettype wire

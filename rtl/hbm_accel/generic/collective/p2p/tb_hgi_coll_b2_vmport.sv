@@ -21,7 +21,7 @@ module tb_hgi_coll_b2_vmport;
     for(genvar s=0;s<4;s=s+1) begin:g_slice
         wire [1095:0] rsp;
         if(s==0)begin:g_sw
-            ot_vms_slice_coll_sw #(.MUT(MUT)) u(.clk(clk),.rst_n(rst_n),.clk_coll_rx({5{clk}}),
+            ot_vms_slice_coll_sw #(.MUT(MUT)) u(.clk(clk),.rst_n(rst_n),.clk_coll_rx({5{clk}}),.clk_vm_child({13{clk}}),
                 .rgx_t_v(fr[RLY-1][2208 +:4]),.rgx_t_addr(fr[RLY-1][2048 +:160]),.rgx_t_data(fr[RLY-1][0 +:2048]),
                 .rgx_t_vm(fr[RLY-1][2212]),.rgx_f_cr(fc),.tkw_t_v(fr[RLY-1][2781]),.tkw_t_d(fr[RLY-1][2213 +:568]),
                 .tkw_f_cr(kfc),.coll_fault(ff),.coll_xw(),.coll_xwa(2'b0),
