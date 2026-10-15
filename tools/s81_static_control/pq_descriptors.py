@@ -47,7 +47,7 @@ def compile_descriptors(request,root):
                 path=Path(root)/record['path']
                 if hashlib.sha256(path.read_bytes()).hexdigest()!=record['sha256']:
                     raise ValueError('source-bound PQ evidence changed')
-            if item['timing_boundary']!='command_sample_to_observed_pq_retire':
+            if item['timing_boundary']!='sequencer_cmd_pin_to_observed_pq_END':
                 raise ValueError('internal or fixture duration cannot be an endpoint deadline')
             if item['phase_rom_bound'] is not True or item['native_operand_bound'] is not True:
                 raise ValueError('actual phase-ROM and operand producer binding required')
