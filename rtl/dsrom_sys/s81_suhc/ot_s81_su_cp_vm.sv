@@ -8,7 +8,10 @@
 module ot_s81_su_cp_vm #(
     parameter integer LVM=10,WCOMMIT=1,MUT=0
 ) (
-    input wire clk,rst_n,start,
+    input wire clk,ck_cp_ctl,
+    input wire [1:0] ck_cp_mem,
+    input wire [3:0] ck_cp_lane,
+    input wire rst_n,start,
     input wire [511:0] descriptor,
     output wire [1:0] rq_v,
     output wire [27:0] rq_row,
@@ -42,8 +45,9 @@ module ot_s81_su_cp_vm #(
     wire cv=inputslot && (response_slot?(&rs_v):held_valid);
     wire ov,core_done,core_fault,core_active;
     wire [127:0] od;
-    ot_s81_su_cp #(.IN_CYCLE(LVM),.MUT(MUT)) u_cp (
-        .clk(clk),.rst_n(rst_n),.start(start),.slot_i(descriptor[160]),.pool_i(descriptor[161]),
+    ot_s81_su_cp_h #(.IN_CYCLE(LVM),.MUT(MUT)) u_cp (
+        .ck_ctl(ck_cp_ctl),.ck_mem(ck_cp_mem),.ck_lane(ck_cp_lane),
+        .rst_n(rst_n),.start(start),.slot_i(descriptor[160]),.pool_i(descriptor[161]),
         .group_i(descriptor[128+:32]),.i_v(cv),.i_d(packet),.o_v(ov),.o_d(od),
         .done(core_done),.fault(core_fault),.active(core_active),.scheduled_cycles(core_sched));
     // One pin register owns complete-row output and completion; final partial
