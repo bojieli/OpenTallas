@@ -103,6 +103,19 @@ class StaticCalendar(unittest.TestCase):
         result['issues'][0]['unit']=1
         with self.assertRaises(ScheduleError):rows(result,0,1,10,0,19)
 
+    def test_pw_serializer_has_separate_owner_deadlines(self):
+        from qwen_static_schedule.issue_rom import pw_image
+        result=self.compile()
+        result['issues'].append(dict(stage=0,pc=2,time_fs=200,unit=0))
+        result['events'].extend([dict(stage=0,pc=2,time_fs=200,kind='owner_end',owner=1),dict(stage=0,pc=2,time_fs=220,kind='owner_end',owner=2)])
+        image=pw_image(result,0,dict(period_fs=10,phase_fs=0,stop_cycle=20),dict(period_fs=10,phase_fs=0,stop_cycle=22),3)
+        data={r['address']:int(r['data_hex'],16) for r in image}
+        self.assertEqual(data[1016]&0xffffffff,20)
+        self.assertEqual(data[1018]&0xffffffff,22)
+        self.assertEqual(data[1017]&63,2)
+        self.assertEqual((data[1017]>>6)&63,2)
+        with self.assertRaises(ScheduleError):pw_image(result,0,dict(period_fs=10,phase_fs=0,stop_cycle=20),dict(period_fs=10,phase_fs=0,stop_cycle=22),61)
+
     def test_multi_clock_phase(self):
         self.contract['clocks']['slow']=dict(period_fs=20,phase_fs=0)
         self.contract['resources']['vm']['clock']='slow'
