@@ -33,7 +33,7 @@ module ot_hgi_sfu_vm_static_bridge #(
  input wire [31:0] drain_vm_sector,
  input wire [1:0] drain_result_v,
  input wire [511:0] drain_data,
- output reg [2247:0] local_wq,
+ output wire [2247:0] local_wq,
  input wire [7:0] local_w_done,
  output reg fault
 );
@@ -79,6 +79,8 @@ module ot_hgi_sfu_vm_static_bridge #(
  // crossings require the die clock/pin plan; this is not a reach waiver.
  for(genvar g=0;g<4;g=g+1)begin:g_lg
   reg [META-1:0] meta[0:READ_RETURN];
+  reg [561:0] write_q;
+  assign local_wq[562*g+:562]=write_q;
   assign {expect_v[2*g+:2],stage_group[4*g+:4],stage_addr[2*LWB*g+:2*LWB],
           scalar[2*g+:2],word_sel[6*g+:6]}=meta[READ_RETURN];
   reg [1:0] drain_round_q,drain_expected;
@@ -98,10 +100,10 @@ module ot_hgi_sfu_vm_static_bridge #(
   end
   always @(posedge clk_lg[g])begin
    drain_sector_q<=drain_vm_sector;drain_round_q<=drain_round_bf16;
-   local_wq[562*g+:562]<=0;
+   write_q<=0;
    for(integer s=0;s<2;s=s+1)
     if(drain_expected[s] && drain_sector_q[16*s+1+:2]==g)
-     local_wq[562*g+281*drain_sector_q[16*s]+:281]<=
+     write_q[281*drain_sector_q[16*s]+:281]<=
       {1'b1,drain_sector_q[16*s+:16],round_sector(drain_data[256*s+:256],drain_round_q[s]),8'hff};
   end
   always @(posedge clk_lg[g] or negedge rst_lg_n[g])begin
