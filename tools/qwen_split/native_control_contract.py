@@ -18,6 +18,7 @@ def apply(model):
     if owner.master!='qfd_tt_ctlm':
         raise ValueError('native controller transition requires the explicit historical master')
     owner.master=MASTER
+    owner.w,owner.h=777.6,1814.4  # fresh actual contract outline, no legacy24nm shave
     removed=[]
     buses=[]
     for b,c,n,es in model['buses']:
