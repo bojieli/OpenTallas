@@ -19,6 +19,7 @@
 //     across relays): rgx_t_* / rgx_f_* credit-flow die nets (2,213 b out, 5 b back) instead of the 8,961-b W2 client.
 // Every die output leaves a flop (ring, ret, session, status); die inputs are captured by the block's input stations.
 module ot_hfd_coll_q #(
+    parameter integer PR_SPLIT_CLOCKS = 0,
     parameter integer NPT = 3,              // links of this quadrant's rail (3 SW, 2 SE / NW / NE)
     parameter integer SWCRED = 32,
     parameter integer RGX_CRD = 16,         // ROW_GATHER write credits a delivery lane (= the slice-side FIFO depth)
@@ -43,6 +44,8 @@ module ot_hfd_coll_q #(
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
+    input  wire [7:0]           pr_clk_state,
+    input  wire [7:0]           pr_clk_add,
     input  wire [1:0]           qid,        // die strap: 0 SW, 1 SE, 2 NW, 3 NE
     // command processor (broadcast record; only HOME's ret is bound)
     input  wire [967:0]         hgi_rec,
@@ -182,8 +185,8 @@ module ot_hfd_coll_q #(
     // ---- peer ring stop ---------------------------------------------------------------------------------------------
     wire [3:0] h_pop, h_done, h_fault; wire ring_fault;
     reg e_fault;
-    ot_hgi_coll_pring #(.HOME(HOME), .MUT_CARRY(MUT_CARRY), .MUT_ORDER(MUT_ORDER), .RW(RW)) u_ring (
-        .clk(clk), .rst_n(rst_n), .qid(qid_q), .cw_i(pr_cw_i), .cw_o(pr_cw_o), .ccw_i(pr_ccw_i), .ccw_o(pr_ccw_o),
+    ot_hgi_coll_pring #(.SPLIT_CLOCKS(PR_SPLIT_CLOCKS), .HOME(HOME), .MUT_CARRY(MUT_CARRY), .MUT_ORDER(MUT_ORDER), .RW(RW)) u_ring (
+        .clk(clk), .rst_n(rst_n), .clk_state(pr_clk_state), .clk_add(pr_clk_add), .qid(qid_q), .cw_i(pr_cw_i), .cw_o(pr_cw_o), .ccw_i(pr_ccw_i), .ccw_o(pr_ccw_o),
         .ev_pop(pop), .ev_done(e_ret[1]), .ev_fault(e_fault), .h_pop(h_pop), .h_done(h_done), .h_fault(h_fault),
         .rc_v(rc_v), .rc_rdy(rc_rdy), .rc_tag(rc_tag), .rc_mode(rc_mode), .rc_d(rc_d),
         .rr_v(rr_v), .rr_tag(rr_tag), .rr_d(rr_d), .fault(ring_fault));

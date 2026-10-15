@@ -25,13 +25,16 @@
 module ot_hgi_coll_pring #(
     parameter integer NT        = 8,        // reduction tags in flight (client reuses a tag after its result)
     parameter integer HOME      = 0,        // quadrant that aggregates record credits / completions
-    parameter integer LAT       = 3,        // golden adder latency
+    parameter integer LAT       = 8,        // golden adder latency
     parameter integer MUT_CARRY = 0,
     parameter integer MUT_ORDER = 0,
+    parameter integer SPLIT_CLOCKS = 0,
     parameter integer RW        = 280
 ) (
     input  wire          clk,
     input  wire          rst_n,
+    input  wire [NT-1:0] clk_state,
+    input  wire [7:0]    clk_add,
     input  wire [1:0]    qid,               // die strap
     // ring links (registered at both ends)
     input  wire [RW-1:0] cw_i,              // from the CW predecessor
@@ -85,11 +88,29 @@ module ot_hgi_coll_pring #(
         else begin cwi <= cw_i; ccwi <= ccw_i; end
 
     // ---- fold state ----------------------------------------------------------------------------------------------
-    reg          lp_v [0:NT-1]; reg lp_m [0:NT-1]; reg [255:0] lp_d [0:NT-1];       // local partial
-    reg          c_v [0:NT-1][0:3]; reg [255:0] c_d [0:NT-1][0:3];                  // carry slots by source quadrant
-    reg          t_v [0:NT-1]; reg [255:0] t_d [0:NT-1];                             // q3 TREE: P2 + P3
+    reg          lp_v [0:NT-1]; reg lp_m [0:NT-1]; wire [255:0] lp_d [0:NT-1];       // local partial
+    reg          c_v [0:NT-1][0:3]; wire [255:0] c_d [0:NT-1][0:3];                  // carry slots by source quadrant
+    reg          t_v [0:NT-1]; wire [255:0] t_d [0:NT-1];                             // q3 TREE: P2 + P3
     reg          busy [0:NT-1];                                                      // an add of this tag in flight
     assign rc_rdy = !lp_v[rc_tag] && !busy[rc_tag];
+    // One payload leaf per tag. Common registered write streams keep the parent's payload root small.
+    // A payload crosses one extra register edge; ready bits below prevent a fold before that edge lands.
+    reg lp_wr, tree_wr; reg [2:0] lp_wtag, tree_wtag; reg [255:0] lp_wdata, tree_wdata;
+    reg [1:0] carry_wr; reg [5:0] carry_wtag; reg [3:0] carry_wsrc; reg [511:0] carry_wdata;
+    reg lp_landed [0:NT-1], tree_landed [0:NT-1]; reg carry_landed [0:NT-1][0:3];
+    always @(posedge clk) begin
+        for (integer t = 0; t < NT; t = t + 1) begin
+            lp_landed[t] <= lp_v[t]; tree_landed[t] <= t_v[t];
+            for (integer q = 0; q < 4; q = q + 1) carry_landed[t][q] <= c_v[t][q];
+        end
+    end
+    for (genvar t = 0; t < NT; t = t + 1) begin : g_state
+        wire leaf_clk = SPLIT_CLOCKS ? clk_state[t] : clk;
+        ot_hgi_coll_pring_state u_state (.clk(leaf_clk), .tid(3'(t)),
+            .lp_wr(lp_wr), .lp_tag(lp_wtag), .lp_data(lp_wdata), .tree_wr(tree_wr), .tree_tag(tree_wtag), .tree_data(tree_wdata),
+            .carry_wr(carry_wr), .carry_tag(carry_wtag), .carry_src(carry_wsrc), .carry_data(carry_wdata),
+            .lp(lp_d[t]), .tree(t_d[t]), .c0(c_d[t][0]), .c1(c_d[t][1]), .c2(c_d[t][2]), .c3(c_d[t][3]));
+    end
     // serial order: next quadrant after q (golden 0,1,2,3; MUT_ORDER ring order 0,1,3,2)
     function automatic [1:0] nxt(input [1:0] q);
         if (MUT_ORDER != 0) case (q) 2'd0: nxt = 2'd1; 2'd1: nxt = 2'd3; 2'd3: nxt = 2'd2; default: nxt = 2'd0; endcase
@@ -105,7 +126,7 @@ module ot_hgi_coll_pring #(
     reg          a_iv; reg [255:0] a_a, a_b; reg [2:0] a_it; reg [1:0] a_is;     // step: 0 send-on, 1 final, 2 q3 tree t
     wire [255:0] a_y;
     for (genvar l = 0; l < 8; l = l + 1) begin : g_add
-        ot_hdc_fp32_add_lat #(.LAT(LAT)) u_add (.clk(clk), .rst_n(rst_n), .valid_in(a_iv), .a(a_a[32*l +: 32]),
+        ot_hgi_coll_pring_add_lane #(.LAT(LAT)) u_add (.clk(SPLIT_CLOCKS ? clk_add[l] : clk), .rst_n(rst_n), .valid_in(a_iv), .a(a_a[32*l +: 32]),
             .b(a_b[32*l +: 32]), .y(a_y[32*l +: 32]), .valid_out());
     end
     reg [LAT-1:0] sp_v; reg [2:0] sp_t [0:LAT-1]; reg [1:0] sp_s [0:LAT-1];
@@ -130,6 +151,7 @@ module ot_hgi_coll_pring #(
         if (!rst_n) begin
             cw_o <= '0; ccw_o <= '0; rr_v <= 1'b0; fault <= 1'b0; a_iv <= 1'b0;
             h_pop <= '0; h_done <= '0; h_fault <= '0; n_pop <= '0; n_done <= '0; f_sent <= 1'b0;
+            lp_wr <= 0; tree_wr <= 0; carry_wr <= 0;
             for (i = 0; i < NT; i = i + 1) begin
                 lp_v[i] <= 1'b0; t_v[i] <= 1'b0; busy[i] <= 1'b0;
                 for (integer s = 0; s < 4; s = s + 1) c_v[i][s] <= 1'b0;
@@ -140,7 +162,7 @@ module ot_hgi_coll_pring #(
             reg [3:0] hp, hd; reg [$clog2(QD):0] qn [0:1]; reg [$clog2(QD)-1:0] qh [0:1], qt [0:1];
             reg lpv [0:NT-1]; reg cv [0:NT-1][0:3]; reg tv [0:NT-1]; reg bz [0:NT-1];
             reg issued; reg [1:0] dir;
-            rr_v <= 1'b0; a_iv <= 1'b0; issued = 1'b0;
+            rr_v <= 1'b0; a_iv <= 1'b0; issued = 1'b0; lp_wr <= 0; tree_wr <= 0; carry_wr <= 0;
             hp = '0; hd = '0;
             for (i = 0; i < 2; i = i + 1) begin qn[i] = iq_n[i]; qh[i] = iq_h[i]; qt[i] = iq_t[i]; fo[i] = '0; end
             for (i = 0; i < NT; i = i + 1) begin lpv[i] = lp_v[i]; tv[i] = t_v[i]; bz[i] = busy[i];
@@ -160,18 +182,19 @@ module ot_hgi_coll_pring #(
                         hp[`F_SRC(x)] = `F_AUX(x)[1]; hd[`F_SRC(x)] = `F_AUX(x)[2];
                     end else begin                                     // CARRY into slot (tag, src)
                         if (cv[`F_TAG(x)][`F_SRC(x)]) fault <= 1'b1;
-                        cv[`F_TAG(x)][`F_SRC(x)] = 1'b1; c_d[`F_TAG(x)][`F_SRC(x)] <= `F_D(x);
+                        cv[`F_TAG(x)][`F_SRC(x)] = 1'b1;
+                        carry_wr[d] <= 1; carry_wtag[d*3 +: 3] <= `F_TAG(x); carry_wsrc[d*2 +: 2] <= `F_SRC(x); carry_wdata[d*256 +: 256] <= `F_D(x);
                     end
                 end
             end
             // -- client partial
             if (rc_v) begin
                 if (lpv[rc_tag] || bz[rc_tag]) fault <= 1'b1;
-                lpv[rc_tag] = 1'b1; lp_m[rc_tag] <= rc_mode; lp_d[rc_tag] <= rc_d; bz[rc_tag] = 1'b1;
+                lpv[rc_tag] = 1'b1; lp_m[rc_tag] <= rc_mode; lp_wr <= 1; lp_wtag <= rc_tag; lp_wdata <= rc_d; bz[rc_tag] = 1'b1;
             end
             // -- adder results
             if (ao_v) begin
-                if (ao_s == 2'd2) begin tv[ao_t] = 1'b1; t_d[ao_t] <= a_y; end            // q3 TREE: P2 + P3
+                if (ao_s == 2'd2) begin tv[ao_t] = 1'b1; tree_wr <= 1; tree_wtag <= ao_t; tree_wdata <= a_y; end            // q3 TREE: P2 + P3
                 else if (ao_s == 2'd1) begin                                              // final: local + broadcast
                     rr_v <= 1'b1; rr_tag <= ao_t; rr_d <= a_y; bz[ao_t] = 1'b0;
                     dir = 2'd0;
@@ -185,7 +208,7 @@ module ot_hgi_coll_pring #(
             end
             // -- fold issue: at most one add (or one raw send) per edge, lowest ready tag first
             // a partial / carry / tree sum is folded from the edge after it landed (its data is a non-blocking write)
-            for (i = 0; i < NT; i = i + 1) if (!issued && lpv[i] && lp_v[i]) begin : fold
+            for (i = 0; i < NT; i = i + 1) if (!issued && lpv[i] && lp_v[i] && lp_landed[i]) begin : fold
                 reg [1:0] src_c; reg mode_; reg [255:0] carry_d;
                 mode_ = lp_m[i];
                 if (!mode_) begin                                                         // SERIAL
@@ -193,7 +216,7 @@ module ot_hgi_coll_pring #(
                         dir = is_ccw(me, nxt(me)) ? 2'd1 : 2'd0;
                         iq[dir][qt[dir]] <= mk(K_CARRY, me, nxt(me), 2'd0, 3'(i), 1'b0, 11'd0, lp_d[i]);
                         qt[dir] = inc(qt[dir]); qn[dir] = qn[dir] + 1'b1; lpv[i] = 1'b0; issued = 1'b1;
-                    end else if ((cv[i][prv(me)] && c_v[i][prv(me)]) || MUT_CARRY != 0) begin
+                    end else if ((cv[i][prv(me)] && c_v[i][prv(me)] && carry_landed[i][prv(me)]) || MUT_CARRY != 0) begin
                         src_c = prv(me);
                         a_iv <= 1'b1; a_a <= (MUT_CARRY != 0) ? 256'd0 : c_d[i][src_c]; a_b <= lp_d[i]; a_it <= 3'(i);
                         a_is <= (me == last) ? 2'd1 : 2'd0;
@@ -207,11 +230,11 @@ module ot_hgi_coll_pring #(
                             iq[dir][qt[dir]] <= mk(K_CARRY, me, dq, 2'd0, 3'(i), 1'b1, 11'd0, lp_d[i]);
                             qt[dir] = inc(qt[dir]); qn[dir] = qn[dir] + 1'b1; lpv[i] = 1'b0; issued = 1'b1;
                         end
-                        2'd1: if ((cv[i][0] && c_v[i][0]) || MUT_CARRY != 0) begin                       // P0 + P1 -> q3
+                        2'd1: if ((cv[i][0] && c_v[i][0] && carry_landed[i][0]) || MUT_CARRY != 0) begin                       // P0 + P1 -> q3
                             a_iv <= 1'b1; a_a <= (MUT_CARRY != 0) ? 256'd0 : c_d[i][0]; a_b <= lp_d[i]; a_it <= 3'(i); a_is <= 2'd0;
                             lpv[i] = 1'b0; cv[i][0] = 1'b0; issued = 1'b1;
                         end
-                        default: if ((cv[i][2] && c_v[i][2]) || MUT_CARRY != 0) begin                    // q3: P2 + P3 first
+                        default: if ((cv[i][2] && c_v[i][2] && carry_landed[i][2]) || MUT_CARRY != 0) begin                    // q3: P2 + P3 first
                             a_iv <= 1'b1; a_a <= (MUT_CARRY != 0) ? 256'd0 : c_d[i][2]; a_b <= lp_d[i]; a_it <= 3'(i); a_is <= 2'd2;
                             lpv[i] = 1'b0; cv[i][2] = 1'b0; issued = 1'b1;
                         end
@@ -219,7 +242,7 @@ module ot_hgi_coll_pring #(
                 end
             end
             // q3 TREE second add: (P0 + P1) + (P2 + P3)
-            for (i = 0; i < NT; i = i + 1) if (!issued && tv[i] && t_v[i] && cv[i][1] && c_v[i][1]) begin
+            for (i = 0; i < NT; i = i + 1) if (!issued && tv[i] && t_v[i] && tree_landed[i] && cv[i][1] && c_v[i][1] && carry_landed[i][1]) begin
                 a_iv <= 1'b1; a_a <= c_d[i][1]; a_b <= t_d[i]; a_it <= 3'(i); a_is <= 2'd1;
                 tv[i] = 1'b0; cv[i][1] = 1'b0; issued = 1'b1;
             end
@@ -265,4 +288,46 @@ module ot_hgi_coll_pring #(
     `undef F_AUX
     `undef F_D
 endmodule
+
+// Harden once, replicate for the eight reduction tags. Payload only: 6*256 = 1536 sinks/root.
+// All outputs are register pins; clock phases are assigned per hard child at phi - R.
+module ot_hgi_coll_pring_state (
+    input wire clk,
+    input wire [2:0] tid,
+    input wire lp_wr, tree_wr,
+    input wire [2:0] lp_tag, tree_tag,
+    input wire [255:0] lp_data, tree_data,
+    input wire [1:0] carry_wr,
+    input wire [5:0] carry_tag,
+    input wire [3:0] carry_src,
+    input wire [511:0] carry_data,
+    output reg [255:0] lp, tree, c0, c1, c2, c3
+);
+    always @(posedge clk) begin
+        if (lp_wr && lp_tag == tid) lp <= lp_data;
+        if (tree_wr && tree_tag == tid) tree <= tree_data;
+        for (integer d = 0; d < 2; d = d + 1) if (carry_wr[d] && carry_tag[d*3 +: 3] == tid) begin
+            case (carry_src[d*2 +: 2])
+                0: c0 <= carry_data[d*256 +: 256]; 1: c1 <= carry_data[d*256 +: 256];
+                2: c2 <= carry_data[d*256 +: 256]; 3: c3 <= carry_data[d*256 +: 256];
+            endcase
+        end
+    end
+endmodule
+
+
+// Pin capture + seven real FP cuts at LAT8, one independent native adder root per lane.
+module ot_hgi_coll_pring_add_lane #(parameter integer LAT = 8) (
+    input wire clk, rst_n, valid_in,
+    input wire [31:0] a, b,
+    output wire [31:0] y,
+    output wire valid_out
+);
+    reg [31:0] a_pin, b_pin; reg v_pin;
+    always @(posedge clk) begin a_pin <= a; b_pin <= b; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) v_pin <= 0; else v_pin <= valid_in;
+    ot_hdc_fp32_add_lat #(.LAT(LAT-1), .DRST(0)) u_fp (.clk(clk), .rst_n(rst_n), .valid_in(v_pin),
+        .a(a_pin), .b(b_pin), .y(y), .err(), .valid_out(valid_out));
+endmodule
+
 `default_nettype wire
