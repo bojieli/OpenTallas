@@ -1,0 +1,27 @@
+{
+  "classification": "Superseded under root coordinator instruction, not test failures or observation-timeout restarts",
+  "reason": "Bit-at-a-time blocking external vector drives caused excessive continuous-assignment events; build identical PRNG sequence in temporary vector and drive DUT once per cycle. No DUT source change.",
+  "preserved_remote_directories": [
+    "ot-epyc1tb:/srv/opentallas-scratch/codex/norm-stage-0815",
+    "ot-pve1:/srv/opentallas-scratch/codex/norm-stage-0815-v2"
+  ],
+  "terminated_owned_vvp_pids": [
+    3611558,
+    1347689
+  ],
+  "successor_dir": "/srv/opentallas-scratch/codex/norm-stage-0815-v3",
+  "dut_source_sha256": "51a1c53ef84e2a948a0479a56a3a71967de94828228c7b576e1a7b3f70879786",
+  "cancelled_owned_job_script_pids": [
+    3611507,
+    1347645
+  ],
+  "cancelled_owned_mutant_pids": [
+    3682384,
+    1349370
+  ],
+  "terminal_exit_code_both": 137,
+  "successor_actual_unit": "oth-ubuntu-17013-1792077922",
+  "successor_host": "ot-epyc4",
+  "successor_vvp_pid": 17301,
+  "successor_session": 91157
+}

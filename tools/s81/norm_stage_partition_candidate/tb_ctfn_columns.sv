@@ -3,7 +3,7 @@ module tb;
 reg clk=0,rst=0;reg [6:0] fv_in=0;reg[2919:0] fd_in=0;
 reg[3:0] ci=0,co=0;wire[3:0] resets={4{rst}};
 wire[2919:0] refd,newd;wire[6:0] refv,newv;wire refr,newr;
-integer mutant=0,cycle,j,checks=0;reg[31:0] rng=32'h7ecfa129;
+integer mutant=0,cycle,j,checks=0;reg[2919:0] stimulus;reg[31:0] rng=32'h7ecfa129;
 ot_s81_hc_ctfn old(.clk(clk),.rst_in(rst),.fv_in(fv_in),.fd_in(fd_in),.rst_c(refr),.fvm(refv),.fdm(refd));
 ot_s81_hc_ctfn_columns_candidate dut(.clk_input(ci),.clk_output(co),.rst_in(resets),.fv_in(fv_in),.fd_in(fd_in),.rst_c(newr),.fvm(newv),.fdm(newd));
 initial begin
@@ -12,7 +12,8 @@ initial begin
   clk=0;ci=0;co=0;
   // Exercise reset entry, long assertion, release, and low/high reset pulses between clock edges.
   rst= !((cycle<5)||(cycle>=517&&cycle<522)||(cycle>=1031&&cycle<1035)||(cycle>=1541&&cycle<1547));
-  for(j=0;j<2920;j=j+1)begin rng=rng^(rng<<13);rng=rng^(rng>>17);rng=rng^(rng<<5);fd_in[j]=rng[0];end
+  for(j=0;j<2920;j=j+1)begin rng=rng^(rng<<13);rng=rng^(rng>>17);rng=rng^(rng<<5);stimulus[j]=rng[0];end
+  fd_in=stimulus;
   fv_in=rng[6:0];
   #4;
   if(cycle==721||cycle==1703)begin rst=0;#1;rst=1;end else #1;
