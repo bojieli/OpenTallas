@@ -262,7 +262,10 @@ module ot_s81_engram_mixq_shctl #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
   rq_v<=0;vtag<=0;wq_v<=0;done<=0;go<=0;iv<=0;
   if(mf_q||rvq!=expected[VM_LAT])fault<=1;
   case(state)
-  IDLE:if(start)begin dsc<=desc;ns=BEGIN;end
+  // Native capture fix (S-ELEM-C 10-15, shctl audit: start capture 246.4 > 190 ps, start was the load enable of the
+  // 224 descriptor flops): in IDLE dsc samples desc every edge, so the enable comes from the local state register and
+  // the start pin only steers ns/fault. dsc holds the descriptor present at the start edge exactly as before; 0 cycles.
+  IDLE:begin dsc<=desc;if(start)ns=BEGIN;end
   BEGIN:begin go<=1;phase<=0;req<=0;received<=0;written<=0;ns=REDUCE;end
   REDUCE:begin
    if(req<160)begin
