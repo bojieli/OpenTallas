@@ -1,0 +1,261 @@
+{
+  "root_main_base": "d6a659d52",
+  "status": "REVIEW_MANIFEST_SOURCE_ONLY_SUCCESSOR_LIVE",
+  "ordered_source_groups": [
+    {
+      "ref": "d8ed3949f",
+      "scope": "fixed tail module only"
+    },
+    {
+      "ref": "3830a9353",
+      "scope": "44-root shared shell/memory, diagnostic wrapper support"
+    },
+    {
+      "ref": "473756fb3",
+      "scope": "92-root quarter/half/control and independently tested generated macros"
+    },
+    {
+      "ref": "409dea062",
+      "scope": "new SYS1 core +44 projection/engine/programmed wrappers"
+    },
+    {
+      "ref": "c629ab65d",
+      "scope": "92 projection/engine/programmed/native wrappers"
+    },
+    {
+      "ref": "92588650d",
+      "scope": "new generated-provider masked-write gate and final downgraded shared/split models"
+    },
+    {
+      "ref": "1816b8b1e",
+      "scope": "source-verified amendment applies all13 affected historical receipts"
+    }
+  ],
+  "method": "Review/import listed final files; these groups are not a claim that whole historical cherry-picks are dependency-free. Native wrapper dependencies listed separately. Do not import925 alone onto missing models.",
+  "engine_gate_compiled_and_golden_sources": [
+    {
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_engine_sys1_split_mtp_static.sv",
+      "source_ref": "92588650d",
+      "sha256": "2aac707f4fa35908186986aed976d18d229cf2caf565078b0fddc594dcec96c1",
+      "root_main": "ABSENT"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+      "source_ref": "92588650d",
+      "sha256": "2c46f5896bf69561d0b3c4d3e08dd8c7a67bdaf03297559a9de17be7e5984c69",
+      "root_main": "ABSENT"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_projection_sys1_split_static.sv",
+      "source_ref": "92588650d",
+      "sha256": "30a38ea6d4522a51254e2810d419e7f50e1eb68d42107f5b379a1143fea4718f",
+      "root_main": "ABSENT"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv",
+      "source_ref": "92588650d",
+      "sha256": "31623c863d461c38f417c8c15ecd1bbec22b2d3a947aedd1daa4e5c7f5e6676b",
+      "root_main": "ABSENT"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_weight_quarter_static.sv",
+      "source_ref": "473756fb3",
+      "sha256": "6569bacf6214971df87729b313e5a5cb277bf3878ace3f6583c0acb3c2fdfc07",
+      "root_main": "ABSENT"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_half_static.sv",
+      "source_ref": "473756fb3",
+      "sha256": "5eac3afeb1b426e222437ba0983d4d4bffa66ba4f9bfa85066e7f7a4265908b8",
+      "root_main": "ABSENT"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_control_static.sv",
+      "source_ref": "473756fb3",
+      "sha256": "beb5b944112d9771b9e0a74c5c3aa0b17f82d0988c2572cdac8e9394f8732209",
+      "root_main": "ABSENT"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_aperture_static.sv",
+      "source_ref": "473756fb3",
+      "sha256": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae",
+      "root_main": "SAME"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "source_ref": "92588650d",
+      "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "root_main": "SAME"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "source_ref": "92588650d",
+      "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "source_ref": "92588650d",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "source_ref": "92588650d",
+      "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "source_ref": "92588650d",
+      "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "source_ref": "92588650d",
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "source_ref": "92588650d",
+      "sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "source_ref": "92588650d",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "source_ref": "92588650d",
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+      "source_ref": "92588650d",
+      "sha256": "a719521c87012ec5117e6b92f2089ade75b1a6faf727193543b758cf3ee8989f",
+      "root_main": "DIFFERENT_REVIEW_REQUIRED"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "source_ref": "92588650d",
+      "sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "source_ref": "92588650d",
+      "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+      "source_ref": "92588650d",
+      "sha256": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "source_ref": "92588650d",
+      "sha256": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+      "source_ref": "92588650d",
+      "sha256": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+      "root_main": "SAME"
+    },
+    {
+      "path": "rtl/test/tb_hgi_hc_engine_sys1_mapped_mtp_static.sv",
+      "source_ref": "92588650d",
+      "sha256": "800bafd0baf1d2ca37d6abbc7a3a7c33de0e983203f7cf5de4c5f67092c0b481",
+      "root_main": "ABSENT"
+    },
+    {
+      "path": "rtl/test/hgi_hc_engine_sys1_mapped_mtp_static_harness.cpp",
+      "source_ref": "92588650d",
+      "sha256": "85de24db8fd95cff7af6ef2877ff012156a8184c81fbe76ca8a4c736f95e3e79",
+      "root_main": "ABSENT"
+    },
+    {
+      "path": "tools/hdc_golden.py",
+      "source_ref": "92588650d",
+      "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "root_main": "SAME"
+    },
+    {
+      "path": "tools/hdc_golden_v41.py",
+      "source_ref": "92588650d",
+      "sha256": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+      "root_main": "SAME"
+    },
+    {
+      "path": "tools/rtl_hgi_hc_engine_sys1_mapped_mtp_static_gate.py",
+      "source_ref": "92588650d",
+      "sha256": "9a3d3dc832d51d1be58a3c9a89e14bf9be83b98b60ed703ebc101d89f16f5400",
+      "root_main": "ABSENT"
+    },
+    {
+      "path": "tools/rtl_hdc_v41x_hcp_campaign.py",
+      "source_ref": "92588650d",
+      "sha256": "99606af2292c827d5ebe935cdd4f2ddc1e06bf5744b95d555985af6853585b41",
+      "root_main": "SAME"
+    }
+  ],
+  "original_HCP_utilities_and_LG8": {
+    "root_and_branch_body_byte_equal": true,
+    "body_start_marker": "// Valid delay line with a tap per stage",
+    "body_sha256": "79a595489c7df9480e3f11ea4ddef3dc99f2e99d04e71eebbc05bb04da5206d7",
+    "root_full_file_diff": "only original unused core differs; root may keep its original file and record helper-body equality, or review opt-in d30 patch"
+  },
+  "native_optional_dependencies": [
+    {
+      "ref": "29272fdde",
+      "files": [
+        "rtl/hbm_accel/generic/peers/hc_prefetch_static/ot_hgi_hc_prefetch_resident_static.sv",
+        "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_region_cdc.sv"
+      ]
+    },
+    {
+      "ref": "67716f587",
+      "files": [
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv"
+      ]
+    },
+    {
+      "ref": "537b00b2a",
+      "files": [
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_vm_gather_adapter_static.sv"
+      ]
+    },
+    {
+      "ref": "6de6ad318",
+      "scope": "current ROW_LOOP/TAIL_LOOP programme issuer and tail loop compiler; also import ROW_LOOP16b885432 before this historical patch if cherry-picking"
+    },
+    {
+      "ref": "bda2a23ae",
+      "scope": "actual two-page stripe SRAM issuer"
+    },
+    {
+      "ref": "1898014c5",
+      "scope": "residual VM fixed producer; currentfinal source can be read from HEAD without historicalpatchchain"
+    },
+    {
+      "ref": "f4b6f279f",
+      "scope": "native24word result writer"
+    }
+  ],
+  "warning": "VM bank/tap/controller native test dependencies must be source-reviewed with their owners, not blindly overwrite root integration. Fullnative gate receipt pending actualprovider correction.",
+  "clock_and_latency_assertions": {
+    "whole_pipeline": "row result age exact322+160p, nominal/early periods checked every result; fixedtail capture checked",
+    "leaf_independent": "473756fb3 actual generated128 SHA audited local/Git/compiled; all32quartercases test masks and exactreadTML3; residual leaf640commits exactwrite+1/readTML3; root source92 directclockindex wiring",
+    "mask_successor": "warmedmaskedpoison write must retain FP32word0, mask-enable mutant must fail; actual residual address mutant also required",
+    "physical_clock_qualification": false
+  }
+}
