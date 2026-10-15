@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 GROW = 17.28
 
-def build(base):
+def build(base, hc_s_anchor='north'):
     c = copy.deepcopy(base)
     if c.get('v20_hc_native_geometry'):
         return c
@@ -25,6 +25,34 @@ def build(base):
     for parent, rows in [('sp_hc_s', 10), ('sp_hc_t', 12)]:
         slab = slots[parent]
         delta = round(rows * GROW, 3)
+        if parent == 'sp_hc_s' and hc_s_anchor == 'south':
+            # Canonical geometry (2417-pair screens): the hc_corridor under
+            # sp_hc_s carries the cx/cr return-chain stations (62 measured in
+            # screen14 pass3 within 172.8 um of the slab's south edge), while
+            # the strip above its north edge is empty up to the c6/d6
+            # collectors. Keep the south edge and every W/E pin at its die y;
+            # the cth columns grow upward and the top children ride up.
+            slab['outline']['h'] = round(slab['outline']['h'] + delta, 3)
+            slab['grow_down_um'] = 0.0
+            slab['grow_up_um'] = delta
+            slab['version'] = 20
+            children = [s for s in c['slots'] if s.get('parent') == parent]
+            tiles = [s for s in children if s.get('cell') == 'ot_s81_hc_cth']
+            top = max(t['origin']['y'] + t['outline']['h'] for t in tiles)
+            for child in children:
+                if child.get('cell') != 'ot_s81_hc_cth':
+                    assert child['origin']['y'] >= top - 1e-6, child['name']
+                    child['origin']['y'] = round(child['origin']['y'] + delta, 3)
+            for x in sorted({s['origin']['x'] for s in tiles}):
+                column = sorted([s for s in tiles if s['origin']['x'] == x], key=lambda s: s['origin']['y'])
+                assert len(column) == rows, (parent, x, len(column))
+                for j, tile in enumerate(column):
+                    tile['origin']['y'] = round(tile['origin']['y'] + j * GROW, 3)
+                    tile['outline']['h'] = round(tile['outline']['h'] + GROW, 3)
+                    tile['version'] = 20
+            receipt['slabs'][parent] = {'growth_up_um': delta, 'anchor': 'south', 'cth_instances': len(tiles),
+                                        'outline': slab['outline'], 'origin': slab['origin']}
+            continue
         slab['outline']['h'] = round(slab['outline']['h'] + delta, 3)
         slab['origin']['y'] = round(slab['origin']['y'] - delta, 3)
         slab['grow_down_um'] = delta
@@ -80,8 +108,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--input', default='results/arch/hier_contract_1011/s81.json')
     ap.add_argument('--output', default='results/arch/hier_contract_1011/s81_v20_hc.json')
+    ap.add_argument('--hc-s-anchor', choices=('north', 'south'), default='north',
+                    help='north: grow sp_hc_s down into the hc_corridor (jog10 geometry); '
+                         'south: grow it up, corridor untouched (canonical 2417-pair geometry)')
     a = ap.parse_args()
-    c = build(json.loads((ROOT / a.input).read_text()))
+    c = build(json.loads((ROOT / a.input).read_text()), a.hc_s_anchor)
     out = ROOT / a.output
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(c, indent=1) + '\n')
