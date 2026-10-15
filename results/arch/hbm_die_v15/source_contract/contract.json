@@ -10609,13 +10609,13 @@
     "QID": 0,
     "READ_RETURN": 10,
     "WRITE_RETURN": 7,
-    "NPG": 5,
-    "BANK_GROUP": 1126306048
+    "NPG": 4,
+    "BANK_GROUP": 857870592
    },
    "ports": {
     "pg_clk": {
      "direction": "input",
-     "bits": 5
+     "bits": 4
     },
     "rst_n": {
      "direction": "input",
@@ -10655,7 +10655,7 @@
     },
     "fault": {
      "direction": "output",
-     "bits": 5
+     "bits": 4
     }
    }
   },
@@ -10966,13 +10966,13 @@
     "QID": 1,
     "READ_RETURN": 10,
     "WRITE_RETURN": 7,
-    "NPG": 5,
-    "BANK_GROUP": 1126306048
+    "NPG": 4,
+    "BANK_GROUP": 857870592
    },
    "ports": {
     "pg_clk": {
      "direction": "input",
-     "bits": 5
+     "bits": 4
     },
     "rst_n": {
      "direction": "input",
@@ -11012,7 +11012,7 @@
     },
     "fault": {
      "direction": "output",
-     "bits": 5
+     "bits": 4
     }
    }
   },
@@ -28134,17 +28134,6 @@
    "status": "NEEDS_REAL_CTS_VIEW"
   },
   {
-   "instance": "hb_su_SW",
-   "port": "pg_clk",
-   "bit": 4,
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ],
-   "physical_insertion_reference": null,
-   "status": "NEEDS_REAL_CTS_VIEW"
-  },
-  {
    "instance": "hb_sfu_SE",
    "port": "clk",
    "bit": 0,
@@ -28555,17 +28544,6 @@
    "instance": "hb_su_SE",
    "port": "pg_clk",
    "bit": 3,
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ],
-   "physical_insertion_reference": null,
-   "status": "NEEDS_REAL_CTS_VIEW"
-  },
-  {
-   "instance": "hb_su_SE",
-   "port": "pg_clk",
-   "bit": 4,
    "source": [
     "hb_ckgen",
     "pll_stream"
@@ -53800,7 +53778,7 @@
   }
  },
  "engine_lg_port_group_rule": {
-  "rule": ">=4 LG port groups per quadrant per engine (one per bank pair), 5 on SW/SE; every LG link <500 um",
+  "rule": "4 LG port groups per quadrant per engine (one per bank pair) in EVERY quadrant (adopted T_band2__npg4_s5 condition; supersedes 5 on SW/SE); every LG link <500 um",
   "source": "coordinator decision 2026-10-15 on GEO-H 7025b4f52 (el1011-hbmdie.log)",
   "bank_pair_bits": {
    "rq": "[(2k)*17,(2k+2)*17)",
@@ -53813,15 +53791,15 @@
     "tap": "lg_SW_0",
     "instance": "hb_su_SW",
     "owner": "H-ELEM-B (static SU)",
-    "required_port_groups": 5,
-    "physical_port_groups": 5,
-    "status": "SOURCE MET (5 pg_clk groups, db4f2facb), BANK_GROUP 0x43221100 provisional (bank 7 alone) pending GEO-H RG5 readback; pins open"
+    "required_port_groups": 4,
+    "physical_port_groups": 4,
+    "status": "SOURCE MET (4 pg_clk groups, db4f2facb); pins open"
    },
    "SFU_SW": {
     "tap": "lg_SW_1",
     "instance": "hb_sfu_SW",
     "owner": "SFU owner",
-    "required_port_groups": 5,
+    "required_port_groups": 4,
     "physical_port_groups": null,
     "status": "OPEN: no pin/leaf plan yet"
    },
@@ -53829,7 +53807,7 @@
     "tap": "lg_SW_2",
     "instance": null,
     "owner": "HC/hbm_hard_physical owner",
-    "required_port_groups": 5,
+    "required_port_groups": 4,
     "physical_port_groups": null,
     "status": "OPEN: engine not yet bound in contract"
    },
@@ -53837,15 +53815,15 @@
     "tap": "lg_SE_0",
     "instance": "hb_su_SE",
     "owner": "H-ELEM-B (static SU)",
-    "required_port_groups": 5,
-    "physical_port_groups": 5,
-    "status": "SOURCE MET (5 pg_clk groups, db4f2facb), BANK_GROUP 0x43221100 provisional (bank 7 alone) pending GEO-H RG5 readback; pins open"
+    "required_port_groups": 4,
+    "physical_port_groups": 4,
+    "status": "SOURCE MET (4 pg_clk groups, db4f2facb); pins open"
    },
    "SFU_SE": {
     "tap": "lg_SE_1",
     "instance": "hb_sfu_SE",
     "owner": "SFU owner",
-    "required_port_groups": 5,
+    "required_port_groups": 4,
     "physical_port_groups": null,
     "status": "OPEN: no pin/leaf plan yet"
    },
@@ -53853,7 +53831,7 @@
     "tap": "lg_SE_2",
     "instance": null,
     "owner": "HC/hbm_hard_physical owner",
-    "required_port_groups": 5,
+    "required_port_groups": 4,
     "physical_port_groups": null,
     "status": "OPEN: engine not yet bound in contract"
    },
@@ -53916,7 +53894,29 @@
    }
   }
  },
- "floorplan_direction": "attention on SM engines (H-ATTQ verdict B 2026-10-15T07:47; owner 10:45 adopt): ATT tiles/RG/WG/PV return dropped; GLOBAL-FP-H re-packs",
+ "floorplan_direction": "ADOPTED T_band2__npg4_s5 (coordinator 2026-10-15 ~09:25, GLOBAL-FP-H main 952c5933c): per quadrant PHY+PC row on the edge, 2x4 SM block, 1.8 mm VM band (VM slice, LG chains, SU/SFU/HC/QUANT port groups, hub, COLL); attention on SM engines (no ATT). Grants: results/arch/hier_contract_1015/hbm_v15.json",
+ "attention_on_sm": {
+  "verdict": "B: QK^T and PV on the SM engines at SM 1.0x; softmax/pv_normalize on SU (+SFU exp) unchanged",
+  "kv_dataflow": "KV rows stream HBM PHY -> PC -> SM on the existing SM HBM port exactly like weights (both QK and PV passes stream the row set); kv_home = stack_local: dense rows sequence-sliced to the SM whose stack holds them, DS top-k rows rank-assigned, DS compressed KV replicated in all four stacks",
+  "replication_cost": "DS compressed KV stored in all 4 stacks: +3 row writes / layer / token -- MEASURE on the compiled DS programme and record in the accepted-cost ledger (H-ATTQ/compiler); not silently priced",
+  "sm_obligations": [
+   "PV accumulate mode (per-lane FP32 accumulate of V row x scalar p, no reduction tree)",
+   "BF16/FP32 x against FP8/FP4 block-exponent W (quality contract required)",
+   "GQA multi-x (up to 4 x vectors per streamed KV line)",
+   "KV row = 4 SM lines (544 B = 4 x 136 B); FP4 top-k row 288 B vs 272 B to reconcile",
+   "KV_DESC: one 64-bit KV descriptor input port per SM, driven by the quadrant VM hub (floorplan link vmh_<q> -> sm_<q>k KV_DESC 64 b); owner H-SM-ATT / H-ELEM-A (SM master + VM hub)"
+  ],
+  "vm_hub_condition": "VM hub outline >= 1.1 mm (S face 1.04..1.19 utilisation at 900 um) OR the 8-lane delivery split (ot_hbm_svc_static_vm_delivery_split)",
+  "su_role": "scores land in VM as SM FP32 outputs; SU softmax + PV normalize per existing SU records; PV partial reduce on SU",
+  "compiler": "ATT.QK -> SM.MATVEC, ATT.PV -> SM.ACC, KV prefetch descriptors issued at IDX top-k (rows known before q)",
+  "status": "source/compiler/SM-RTL adoption OPEN; no attention performance or physical qualification inherited",
+  "owners": {
+   "sm": "H-SM-ATT / H-ELEM-A",
+   "su": "H-ELEM-B",
+   "compiler": "H-ATTQ",
+   "floorplan": "GLOBAL-FP-H (adopted)"
+  }
+ },
  "long_returns": [],
  "vm_abi_change_requests": [
   {
@@ -76634,14 +76634,14 @@
    "instance": "hb_su_SW",
    "port": "fault",
    "direction": "output",
-   "bits": 5,
+   "bits": 4,
    "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
    "bound_bits": 0,
-   "unbound_bits": 5,
+   "unbound_bits": 4,
    "unbound_ranges_half_open": [
     [
      0,
-     5
+     4
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -77642,14 +77642,14 @@
    "instance": "hb_su_SE",
    "port": "fault",
    "direction": "output",
-   "bits": 5,
+   "bits": 4,
    "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
    "bound_bits": 0,
-   "unbound_bits": 5,
+   "unbound_bits": 4,
    "unbound_ranges_half_open": [
     [
      0,
-     5
+     4
     ]
    ],
    "status": "UNBOUND_FAIL"

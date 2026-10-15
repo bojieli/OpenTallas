@@ -20,15 +20,8 @@
    "instance": "hb_vms_SW",
    "port": "cq",
    "lo": 338,
-   "hi": 1352,
-   "top_port": "x_hb_vms_SW__cq_338_1352"
-  },
-  {
-   "instance": "hb_vms_SW",
-   "port": "cq",
-   "lo": 1690,
-   "hi": 2366,
-   "top_port": "x_hb_vms_SW__cq_1690_2366"
+   "hi": 676,
+   "top_port": "x_hb_vms_SW__cq_338_676"
   },
   {
    "instance": "hb_vms_SW",
@@ -766,7 +759,7 @@
    "top_port": "x_hb_argmax__am_stream_0_523"
   }
  ],
- "boundary_input_bits": 63785,
+ "boundary_input_bits": 62433,
  "sources": {
   "hb_vms_SW": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
   "delivery_SW": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",

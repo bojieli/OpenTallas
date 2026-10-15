@@ -175,15 +175,31 @@
   "VM ABI shrink (H-ELEM-A): SW NC 7->3, drop IDX RG in SE/NW/NE; static argmax source now bound, physical parent open (H-IDX); hb_idx = ot_hbm_idx_client_static kit",
   "SM xload static successor ot_hgi_sm_xload_static 2ae9a6d93 (H-ELEM-A, merge to main; BF16 only, DS block-dot not static); compact SM tile view 11.316 mm2 (H-ELEM-A)",
   "svc_v15 bands + COLL q2/q3 static parents (service_native, H-COLL)",
-  "then: die floorplan from GEO-H D2 candidate -> GRT (overflow 0) -> TT/FF STA",
   "QUANT NW proven host top RL7/WC4 COMPACT1 target48 now bound to actual NW quant RG4/WG2; 9-leaf/LG successor changes calendar and is not silently substituted.",
-  "Delivery split v2 source47a83d466 pending hardener publication and real 8-clock physical wrapper; scalar logical parent is not 8 physical root proof."
+  "Delivery split v2 source47a83d466 pending hardener publication and real 8-clock physical wrapper; scalar logical parent is not 8 physical root proof.",
+  "die floorplan = adopted T_band2__npg4_s5 + grants -> views -> GRT (overflow 0) -> TT/FF STA"
  ],
- "floorplan_direction": "attention on SM engines (H-ATTQ verdict B 2026-10-15T07:47; owner 10:45 adopt): ATT tiles/RG/WG/PV return dropped; GLOBAL-FP-H re-packs",
+ "floorplan_direction": "ADOPTED T_band2__npg4_s5 (coordinator 2026-10-15 ~09:25, GLOBAL-FP-H 952c5933c); attention on SM engines (no ATT)",
  "source_contract_sha256": "96987d39cdb5f1d735a45acf11d751d4d850673ed50bd5fa6765bde028ce9078",
- "attention_architecture": "ADOPTED B: QK/PV on existing SM1.0x + SU softmax; dedicated ATT resources absent. SM RTL/compiler/geometry adoption remains open; no attention performance or physical qualification inherited.",
- "source_subnet_elaboration": "5000s full / 3300s IDX-body-excluded source elaborations terminal timeout. No unchanged retry; compose actual per-master synthesized netlists when available.",
+ "attention_architecture": "ADOPTED B: QK/PV on SM1.0x, KV streams PHY->PC->SM like weights (stack-local, DS compressed KV x4 stacks), softmax on SU; contract field attention_on_sm lists SM/SU/compiler obligations; no ATT instance/group/return",
+ "source_subnet_elaboration": "source elaboration timed out (5000 s / 3300 s); composed elaboration over per-master synthesized netlists (tools/hbm_die_v15/compose_netlists.py) in progress",
  "calendar_duplicate_outputs_open": [
   "hb_idx.cq_seq and hb_argmax.cq_seq are not VM drivers; client_seq remains calendar-owned. Exact compiler programme equality proof required."
- ]
+ ],
+ "grants": {
+  "file": "results/arch/hier_contract_1015/hbm_v15.json",
+  "schema": "opentallas.hier_contract.v1",
+  "granted": [
+   "coll_SW/SE/NW/NE (ot_hfd_coll_q3/q2_static)",
+   "hb_sfu_<q> (engine at sfu_<q>0; groups 1..3 request)",
+   "hb_dbk_<q> (new homes, no DMA block in T_band2)",
+   "34 svc bands on pc_<q>k with per-PC clock entries (band RTL must emit clk_pc[3:0])",
+   "IDX: 4 scorer clusters (512 CLOSED hslices each, 3840x3009) in the middle band + idx_sel/link/q/op glue"
+  ],
+  "requests": [
+   "whole static SU per quadrant (H-ELEM-B RTL pending), 4 port groups at su_<q>0..3",
+   "SFU port groups 1..3 (LG face split into 4 bank-pair groups)"
+  ],
+  "outlines_from": "ASAP7 yosys synth of each master (tools/hbm_die_v15/synth_master.sh) at std util 0.50 + macro x1.25, faces <=0.60 at 0.096 um/bit"
+ }
 }
