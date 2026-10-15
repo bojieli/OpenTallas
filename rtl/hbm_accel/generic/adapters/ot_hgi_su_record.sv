@@ -38,6 +38,9 @@ module ot_hgi_su_record #(
                                            //    takes one (op_rdy), up to 3 in flight; retire one per su_ret pulse (the
                                            //    unit's in-order completion: last drain write landed); refusals / empty
                                            //    ops retire only with nothing in flight (order kept)
+    parameter integer RDY_REG = 0,         // 1 (PIPED, LEGACY 0 only): rec_rdy is a FLOP holding the exact next value of
+                                           // hen && !raw_v && !dec_v && !halt_q (native pin audit: SV head rec_rdy launch
+                                           // 272.8 ps from the AND3 of three internal flops); same cycle behaviour
     parameter integer LEGACY = 1           // 1: the static legacy pass-through mux (die wrapper / bench); 0: the routed
                                            //    adapter alone (records only, every output from a register; hgi_en unused)
 ) (
@@ -98,7 +101,22 @@ module ot_hgi_su_record #(
     assign halted  = halt_q;
     assign drained = !raw_v && !dec_v && !exec;
     wire   hen     = LEGACY ? hgi_en : 1'b1;
-    assign rec_rdy = hen && !raw_v && !dec_v && !halt_q;
+    wire   rdy_c   = hen && !raw_v && !dec_v && !halt_q;
+    reg    rdy_q;
+    assign rec_rdy = RDY_REG ? rdy_q : rdy_c;
+    initial if (RDY_REG && (!PIPED || LEGACY)) $fatal(1, "ot_hgi_su_record: RDY_REG needs PIPED = 1 and LEGACY = 0");
+    // next state of raw_v / dec_v / halt_q (PIPED, hen = 1), the exact terms of the state block below
+    wire   acc_n   = rec_v && rec_rdy;
+    wire   take_n  = op_v && op_rdy;
+    wire   rbn_n   = dec_v && !exec && !halt_q && (bad_q || nop_q);
+    wire   dec_nx  = raw_v || (dec_v && !rbn_n && !take_n);
+    wire   halt_nx = halt_q || (rbn_n && bad_q) || (in_fault && (exec || take_n));
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) rdy_q <= 1'b1;
+        else        rdy_q <= !acc_n && !dec_nx && !halt_nx;
+`ifndef SYNTHESIS
+    always @(negedge clk) if (RDY_REG && rst_n && rdy_q !== rdy_c) $fatal(1, "ot_hgi_su_record: registered rec_rdy diverged");
+`endif
     assign op_v    = hen ? (dec_v && !nop_q && !bad_q && (PIPED ? nexec != 2'd3 : !exec) && !halt_q) : lg_v;
     assign op_w    = hen ? w_q : lg_w;
     assign lg_rdy  = !hen && op_rdy;
