@@ -1,12 +1,19 @@
 `timescale 1ns/1ps
 `default_nettype none
 module tb_hgi_coll_qslots;
-    parameter integer G=96, PF=384, MUT_SELECT=0, MUT_PIN_LATENCY=0, BAD_SLOT=0;
+    parameter integer G=96, PF=384, MUT_SELECT=0, MUT_PIN_LATENCY=0, BAD_SLOT=0, CALENDAR=0;
+    parameter string CALDIR="";
     reg clk=0,rst_n=0; always #0.41665 clk=~clk;
     integer cyc=0, checked=0;
     wire [3:0] fault;
     for(genvar q=0;q<4;q=q+1) begin:gq
         localparam integer NP=(q==0)?3:2, NS=2+NP+4+1, ND=NP+3*4+2, SW=$clog2(NS);
+        localparam integer CW=NS+ND+ND*SW;
+        reg [CW-1:0] program_words[0:G*(PF/4)+3];
+        initial if(CALENDAR!=0) begin
+            for(integer c=0;c<G*(PF/4)+4;c=c+1) program_words[c]=0;
+            $readmemh($sformatf("%s/npt%0d.mem",CALDIR,NP),program_words,0,G*(PF/4));
+        end
         reg [NS-1:0] sv=0,cs=0;
         reg [NS*545-1:0] sd=0;
         reg [ND-1:0] ds=0;
@@ -36,6 +43,11 @@ module tb_hgi_coll_qslots;
             for(integer s=0;s<NS;s=s+1) sd[s*545+:545]=value(cyc,s);
             ds=(cyc>0)?'1:'0;
             for(integer d=0;d<ND;d=d+1) sel[d*SW+:SW]=SW'((d+cyc)%NS);
+            if(CALENDAR!=0) begin
+                cs=program_words[cyc][0+:NS]; sv=cs;
+                ds=program_words[cyc][NS+:ND];
+                sel=program_words[cyc][NS+ND+:ND*SW];
+            end
             if(BAD_SLOT==1 && cyc==8) cs[0]=0;
             if(BAD_SLOT==2 && cyc==8) sel[0+:SW]=SW'(NS);
             if(BAD_SLOT==3 && cyc==8) begin cs='0; sv='0; end
@@ -60,7 +72,7 @@ module tb_hgi_coll_qslots;
         repeat(4) @(negedge clk); rst_n=1;
         repeat(G*(PF/4)+3) begin @(posedge clk); #0.02; cyc=cyc+1; end
         if(BAD_SLOT!=0 && fault!=4'hf) $fatal(1,"schedule mutant escaped fault mask=%h",fault);
-        $display("QSLOTS PASS G=%0d PF=%0d quadrants=4 checked=%0d cycles=%0d BAD_SLOT=%0d",G,PF,checked,cyc,BAD_SLOT); $finish;
+        $display("QSLOTS PASS G=%0d PF=%0d quadrants=4 checked=%0d cycles=%0d BAD_SLOT=%0d CALENDAR=%0d",G,PF,checked,cyc,BAD_SLOT,CALENDAR); $finish;
     end
 endmodule
 `default_nettype wire
