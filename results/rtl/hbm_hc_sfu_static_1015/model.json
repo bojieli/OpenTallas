@@ -68,5 +68,40 @@
     "fullbatch_limit": "does not fit1k raw-word programme; no truncated or collapsed batch claim",
     "native_physical_qualification": false,
     "dependency_commit": "3d7520a5f"
+  },
+  "paged_programme_candidate": {
+    "PAGE_AW": 1,
+    "real_1024x256_SRAMs": 16,
+    "capacity_instructions": 2048,
+    "payload_widths": [
+      222,
+      222,
+      222,
+      222,
+      222,
+      222,
+      222,
+      188
+    ],
+    "protected_PC_bits": 11,
+    "full4x7168_sigmoid_image_words": 1968,
+    "optional_PAGE_AW2": {
+      "real_SRAMs": 32,
+      "capacity_instructions": 4096,
+      "payload_widths": [
+        221,
+        221,
+        221,
+        221,
+        221,
+        221,
+        221,
+        195
+      ],
+      "full8x7168_sigmoid_image_words": 3760
+    },
+    "no_programme_truncation": true,
+    "physical_qualified": false,
+    "arithmetic_join": false
   }
 }
