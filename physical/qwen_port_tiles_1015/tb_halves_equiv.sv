@@ -6,6 +6,7 @@
 module tb_halves_equiv;
     parameter integer MUT = 0;
     parameter integer CYC = 3000;
+    parameter integer BANDP = 1, HALFP = 1;   // strap coverage: pt_id = 8*BANDP+4*HALFP+q
     reg ck=0; always #1 ck=~ck;
     reg rst_n=0;
     reg [8*514-1:0] bw; reg [340:0] tc; reg [2047:0] ty;
@@ -14,8 +15,8 @@ module tb_halves_equiv;
         .ck_pair0(ck),.ck_pair1(ck),.ck_pair2(ck),.ck_pair3(ck),.rst_n(rst_n),.bw(bw),.cw(cw_o));
     qfd_slab_word_half #(.MUTANT(MUT==1)) wn (.ck(ck),.ck_bw0(ck),.ck_bw1(ck),.ck_bw2(ck),.ck_bw3(ck),.ck_bw4(ck),.ck_bw5(ck),.ck_bw6(ck),.ck_bw7(ck),
         .ck_pair0(ck),.ck_pair1(ck),.ck_pair2(ck),.ck_pair3(ck),.rst_n(rst_n),.bw(bw),.cw(cw_n));
-    qfd_slab_result_half_old #(.BAND(1),.HALF(1)) ro (.ck(ck),.rst_n(rst_n),.ck_col({16{ck}}),.ck_mul({16{ck}}),.ck_group({4{ck}}),.tc(tc),.ty(ty),.rq(rq_o),.am(am_o));
-    qfd_slab_result_half #(.BAND(1),.HALF(MUT==2 ? 0 : 1)) rn (.ck(ck),.rst_n(rst_n),.ck_col({16{ck}}),.ck_mul({16{ck}}),.ck_group({4{ck}}),.tc(tc),.ty(ty),.rq(rq_n),.am(am_n));
+    qfd_slab_result_half_old #(.BAND(BANDP),.HALF(HALFP)) ro (.ck(ck),.rst_n(rst_n),.ck_col({16{ck}}),.ck_mul({16{ck}}),.ck_group({4{ck}}),.tc(tc),.ty(ty),.rq(rq_o),.am(am_o));
+    qfd_slab_result_half #(.BAND(BANDP),.HALF(MUT==2 ? 1-HALFP : HALFP)) rn (.ck(ck),.rst_n(rst_n),.ck_col({16{ck}}),.ck_mul({16{ck}}),.ck_group({4{ck}}),.tc(tc),.ty(ty),.rq(rq_n),.am(am_n));
     function [31:0] rf(input integer s); begin rf = {$random(s)} ; end endfunction
     integer cyc=0, err=0, seed=7, i, act=0, ract=0, rfl=0;
     reg [31:0] r;
@@ -30,7 +31,7 @@ module tb_halves_equiv;
         for(i=0;i<64;i=i+1) begin r=$random(seed); ty[32*i +: 32]={r[31],4'b1000 ^ r[30:27],r[26:0]}; end
     end endtask
     always @(negedge ck) begin
-        cyc=cyc+1; if(cyc==8) rst_n=1; if(cyc==1200) rst_n=0; if(cyc==1206) rst_n=1;
+        cyc=cyc+1; if(cyc==24) rst_n=1;   // die boot: >= 16 asserted reset edges (pt_q strap settles on edge 1) if(cyc==1200) rst_n=0; if(cyc==1206) rst_n=1;
         drive_inputs;
         if (cyc>2) begin
             if (cw_o!==cw_n) begin err=err+1; if(err<4) $display("MISMATCH cw cyc %0d",cyc); end
@@ -41,7 +42,7 @@ module tb_halves_equiv;
             if (am_o[51]) rfl=rfl+1;
         end
         if (cyc==CYC) begin
-            $display("EQUIV MUT=%0d cycles=%0d word_active=%0d result_active=%0d result_fault=%0d mismatches=%0d %s",MUT,cyc,act,ract,rfl,err,(err==0)?"PASS":"FAIL");
+            $display("EQUIV BAND=%0d HALF=%0d MUT=%0d cycles=%0d word_active=%0d result_active=%0d result_fault=%0d mismatches=%0d %s",BANDP,HALFP,MUT,cyc,act,ract,rfl,err,(err==0)?"PASS":"FAIL");
             $finish;
         end
     end
