@@ -106,6 +106,10 @@ def main():
     if xf.shape!=(5120,) or xf.dtype!=np.float32 or (xf.view(np.uint32)&65535).any() or not np.isfinite(xf).all():
         raise ValueError('native xf must be finite BF16-exact float32 [5120]')
     provenance=json.loads(a.xf_provenance.read_text())
+    actual_mem=''.join(f'{int(v):04x}\n' for v in (xf.view(np.uint32)>>16)).encode()
+    if (provenance.get('gate') != 'PASS' or not provenance.get('rtl_sources')
+            or provenance.get('actual_output_sha256') != hashlib.sha256(actual_mem).hexdigest()):
+        raise ValueError('xf does not match passing native RTL producer provenance')
     H.setup_gate(); H.SK=10  # CUT=511 => ten adder stages, ROM skew must match
     exe=build(a.work); ck=H.Ckpt(a.snapshot)
     ranks=[int(r) for r in a.ranks.split(',')]
