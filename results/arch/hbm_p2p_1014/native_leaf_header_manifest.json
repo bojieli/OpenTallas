@@ -170,12 +170,12 @@
     "rgx_rx": {
       "spec": "results/arch/hbm_p2p_1014/hgi_coll_rgx_rx_r2.json",
       "kit": "physical/ref_tile/hgi_coll_rgx_rx_r2",
-      "gate": "running per-64-bit retained pointer revision"
+      "gate": "PASS zero warnings,10018 sinks; route job hgi_coll_rgx_rx_r2-r2-51de2332d submitted"
     },
     "tkw_rx": {
       "spec": "results/arch/hbm_p2p_1014/hgi_coll_tkw_rx_r2.json",
       "kit": "physical/ref_tile/hgi_coll_tkw_rx_r2",
-      "gate": "PASS no warnings, 5743 clock sinks, exact assigned pins; physical-order native VM bench pending"
+      "gate": "PASS zero warnings,5743 sinks; route job hgi_coll_tkw_rx_r2-r2-51de2332d submitted"
     },
     "ring_state": {
       "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_state_r1.json",
@@ -185,7 +185,24 @@
     "ring_add": {
       "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_add_r1.json",
       "kit": "physical/ref_tile/hgi_coll_ring_add_r1",
-      "gate": "TT +270.0ps setup / +25.6ps hold,655 sinks; route job hgi_coll_ring_add_r1-r1-d5597fc42 running benches"
+      "gate": "TT +270.0ps setup / +25.6ps hold,655 sinks; route job hgi_coll_ring_add_r1-r1-d5597fc42 running benches",
+      "view": "physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_add_lane",
+      "native_audit": {
+        "pass": true,
+        "launch_ps": 172.0,
+        "capture_ps": 125.8,
+        "TT_R_ps": 97.6,
+        "TT_boundary_spread_ps": 4.2,
+        "clock_entry": "phi-97.6ps at TT; FF/SS references in insertion.json",
+        "assigned_scalar_pins": 100,
+        "routed_pin_mismatches": 0,
+        "TT_setup_ps": 257.13,
+        "FF_hold_ps": 25.23,
+        "DRC": 0,
+        "SS_sensitivity_ps": 8.09,
+        "reset": "valid/control only, FP DRST0 payload",
+        "parent_integration": "phi-R delivery and parent timing still required"
+      }
     }
   },
   "vm_parent": {
@@ -299,13 +316,57 @@
       "6": "hub ring replay (not part of NC)"
     },
     "functional_evidence": {
-      "source": "9ed17dd34",
+      "source": "c6c58c60d",
       "RLY": 20,
-      "positive": "PASS 768 flits / 2442 wide native readbacks, every target seeded nonzero via SW single CQ, all three peers no CQ",
-      "mutant": "FAIL premature credit drain lane4",
-      "write_cycles_excluding_seed": 35743,
-      "performance_qualified": false,
-      "ring_order": "0,1,2,3 (arithmetic SID isolation); physical SW0,SE1,NE3,NW2 test pending"
+      "ring_order": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "global_SID_map": {
+        "SW": 0,
+        "SE": 1,
+        "NW": 2,
+        "NE": 3
+      },
+      "positive": "PASS 768 COLL flits,2442 native-wide readbacks including all mirrors,1536 SW scalar CQ readbacks; nonzero seed via SW and three no-CQ peers",
+      "mutants": {
+        "credit": "FAIL premature credit drain lane4",
+        "old_arithmetic_directions": "FAIL physical hop bound CCW sid0"
+      },
+      "write_cycles_excluding_seed": 29294,
+      "previous_physical_topology_arithmetic_direction_cycles": 36635,
+      "unit_price_status": "UNQUALIFIED: synthetic transport workload is not production unit-price workload. No repricing.",
+      "hop_counts_after_seed": {
+        "CW": [
+          1546,
+          926,
+          922,
+          0
+        ],
+        "CCW": [
+          922,
+          1848,
+          0,
+          926
+        ]
+      },
+      "credit_returns_after_seed": {
+        "CW": [
+          1546,
+          926,
+          922,
+          0
+        ],
+        "CCW": [
+          922,
+          1850,
+          0,
+          926
+        ]
+      },
+      "counter_scope": "Phase>=1 counters include scalar-read phase. Two seed-tail CCW credits cross initial phase boundary; full protocol and all final readbacks pass."
     }
   },
   "ring_parent": {
@@ -330,7 +391,8 @@
         "WRS": [
           3,
           3
-        ]
+        ],
+        "PHYSICAL_RING": 1
       },
       "clocks": [
         "clk",
@@ -376,7 +438,8 @@
       },
       "hub_params": {
         "NC": 6,
-        "total_clients_including_ring": 7
+        "total_clients_including_ring": 7,
+        "PHYSICAL_RING": 1
       },
       "bank_params": {
         "RG": 2,
@@ -391,7 +454,16 @@
           3
         ]
       },
-      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views."
+      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views.",
+      "ring_stop_params": {
+        "PHYSICAL_RING": 1,
+        "HF": 2,
+        "EGC": 1,
+        "D": 3,
+        "VC_count": 2,
+        "injection_min_credit": 2,
+        "forward_min_credit": 1
+      }
     },
     "NW": {
       "top": "ot_vms_slice_clocked",
@@ -407,7 +479,8 @@
         "WRS": [
           3,
           3
-        ]
+        ],
+        "PHYSICAL_RING": 1
       },
       "clocks": [
         "child_clk[12:0]"
@@ -440,7 +513,8 @@
       },
       "hub_params": {
         "NC": 2,
-        "total_clients_including_ring": 3
+        "total_clients_including_ring": 3,
+        "PHYSICAL_RING": 1
       },
       "bank_params": {
         "RG": 2,
@@ -454,7 +528,16 @@
           3
         ]
       },
-      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views."
+      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views.",
+      "ring_stop_params": {
+        "PHYSICAL_RING": 1,
+        "HF": 2,
+        "EGC": 1,
+        "D": 3,
+        "VC_count": 2,
+        "injection_min_credit": 2,
+        "forward_min_credit": 1
+      }
     },
     "NE": {
       "top": "ot_vms_slice_clocked",
@@ -470,7 +553,8 @@
         "WRS": [
           3,
           3
-        ]
+        ],
+        "PHYSICAL_RING": 1
       },
       "clocks": [
         "child_clk[12:0]"
@@ -503,7 +587,8 @@
       },
       "hub_params": {
         "NC": 2,
-        "total_clients_including_ring": 3
+        "total_clients_including_ring": 3,
+        "PHYSICAL_RING": 1
       },
       "bank_params": {
         "RG": 2,
@@ -517,7 +602,16 @@
           3
         ]
       },
-      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views."
+      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views.",
+      "ring_stop_params": {
+        "PHYSICAL_RING": 1,
+        "HF": 2,
+        "EGC": 1,
+        "D": 3,
+        "VC_count": 2,
+        "injection_min_credit": 2,
+        "forward_min_credit": 1
+      }
     },
     "SE": {
       "top": "ot_vms_slice_no_cq",
@@ -532,7 +626,8 @@
         "WRS": [
           3,
           3
-        ]
+        ],
+        "PHYSICAL_RING": 1
       },
       "clocks": [
         "child_clk[12:0]"
@@ -563,7 +658,8 @@
       },
       "hub_params": {
         "NC": 0,
-        "total_clients_including_ring": 1
+        "total_clients_including_ring": 1,
+        "PHYSICAL_RING": 1
       },
       "bank_params": {
         "RG": 2,
@@ -577,7 +673,16 @@
           3
         ]
       },
-      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views."
+      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views.",
+      "ring_stop_params": {
+        "PHYSICAL_RING": 1,
+        "HF": 2,
+        "EGC": 1,
+        "D": 3,
+        "VC_count": 2,
+        "injection_min_credit": 2,
+        "forward_min_credit": 1
+      }
     }
   },
   "production_quadrant_note": "NW/NE NC2 are real production producers, SE NC0. Bench with three no-CQ peers is adapter/ring isolation; it does not replace the production client map. Wide RG/WG allocations remain subject to H-ELEM owner confirmation."

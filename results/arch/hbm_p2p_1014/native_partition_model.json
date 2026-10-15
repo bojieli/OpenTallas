@@ -1,5 +1,5 @@
 {
-  "source": "9ed17dd34",
+  "source": "c6c58c60d",
   "clock_roots": {
     "ring_state": {
       "count": 8,
@@ -15,12 +15,12 @@
     "rgx_rx": {
       "count": 4,
       "CRD": 16,
-      "measured_clock_sinks_each": 9954
+      "measured_clock_sinks_each": 10018
     },
     "topk_rx": {
       "count": 1,
       "CRD": 8,
-      "measured_clock_sinks": 5695
+      "measured_clock_sinks": 5743
     },
     "topk_engine": {
       "count": 39,
@@ -42,7 +42,7 @@
     "dedicated_write_credit_each": 10,
     "route": "local SW main on8 bank wide lanes; nonlocal main/mirror via real native packet hub/ring",
     "posted_completion": "COLL credit only after2 committed sector acknowledgements",
-    "measured_write_cycles": 35743,
+    "measured_write_cycles": 29294,
     "measured_flits": 768,
     "measured_readbacks": 2442,
     "performance_qualified": false,
@@ -51,7 +51,9 @@
     "seeded_nonzero_readbacks": 2442,
     "external_NC": 1,
     "measured_RLY": 20,
-    "measurement": "seed excluded; three zero-CQ peers isolation bench"
+    "measurement": "seed excluded; physical ring order0,1,3,2; true native hub/rstop rank mapping; three zero-CQ peers isolation bench",
+    "scalar_readbacks": 1536,
+    "PHYSICAL_RING": 1
   },
   "physical_qualification": false
 }
