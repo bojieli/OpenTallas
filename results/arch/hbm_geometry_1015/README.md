@@ -26,6 +26,8 @@ python3 tools/hbm_geometry_pin_search.py MANIFEST --out attention_hi_search.json
 python3 tools/hbm_attention_reach_repair.py MANIFEST attention_hi_plan.json --out attention_hi_reproof.json
 ```
 
-Actual admitted search: `ot-agidock128`, `oth-ubuntu-3706613-1792050630`, exit 0. Independent reproof: same host, `oth-ubuntu-3707902-1792050687`, exit 0. Both used 2 GB / 1 thread and preserve their frozen artifacts remotely. Four focused tests pass: external anchoring/global incident-wire objective, obstacle/clearance rejection, missing actual pin rejection, and preserving the actual SM frame rather than shrinking it to a child bounding box.
+Actual admitted search: `ot-agidock128`, `oth-ubuntu-3706613-1792050630`, exit 0. Independent reproof: same host, `oth-ubuntu-3707902-1792050687`, exit 0. Both used 2 GB / 1 thread and preserve their frozen artifacts remotely. Five focused tests pass: external anchoring/global incident-wire objective, obstacle/clearance rejection, missing actual pin rejection, preserving the actual SM frame rather than shrinking it to a child bounding box, and anchoring an explicitly bound external pin even when its net also has internal fanout.
 
 Next: the ATT owner decides whether to adopt the exact coordinate overrides in its current source-bound placement generator. The die lead supplies actual parent and SM client geometry so this stream can optimize global connectivity without reviving legacy master assumptions. No existing route was rerun or modified.
+
+Follow-up search explicitly anchors all non-clock `boundary_binding` entries, including external pins on nets with internal fanout. Admitted AGI unit `oth-ubuntu-3708653-1792050865` exits 0 and reproduces the identical candidate. `attention_hi_before_after.svg` draws both exact geometries at the same scale; displayed lines are representative pin pairs, not routed wires.

@@ -791,7 +791,7 @@
     }
   ],
   "limits": [
-    "18944 data bit pairs optimized; independent auditor also checks two internal clock signal pairs (18946 total). All external data endpoint children fixed; clock/reset pin positions move with children, clock-route proof outstanding.",
+    "Clock/reset ports are excluded from the data objective. All external data endpoint children fixed; clock/reset pin positions move with children, clock-route proof outstanding.",
     "No flips without actual LEF symmetry and PG legality evidence.",
     "Existing pair clearance retained up to 5.4um; no halo is reduced by search.",
     "No routed congestion, clock, timing, source-native or throughput claim.",

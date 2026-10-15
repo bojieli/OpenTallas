@@ -10,6 +10,10 @@ from pathlib import Path
 
 def build(m):
     cs={c['instance']:c for c in m['children']};pairs=[];anchors=set();clock_ports={'clk','ck','rst_n','rst','reset','reset_n'}
+    for binding in m.get('boundary_binding',[]):
+        port=binding['parent_port']
+        if port not in clock_ports and m.get('boundary_ports',{}).get(port,{}).get('role')!='clock':
+            anchors.add(binding['child_instance'])
     def shapes(e,k):
         p=cs[e['instance']]['pins'];key=f"{e['port']}[{e['lsb']+k}]";key=key if key in p else e['port']
         if key not in p:raise ValueError('missing pin '+str(e))

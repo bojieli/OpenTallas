@@ -10,6 +10,8 @@ class GeometrySearchTest(unittest.TestCase):
  def test_external_anchor_and_all_incident_wires(self):
   m=dict(component='test',component_sha256='x',outline_um=[200,100],children=[child('a',0,0),child('b',100,0),child('c',120,0)],connections=[net('ab','a','b'),net('bc','b','c'),dict(net='external',kind='signal',endpoints=[dict(instance='a',port='i',lsb=0,width=1,direction='input')])])
   r=search(m);self.assertNotIn('a',r['placement_deltas_um']);self.assertEqual(r['actual_bit_pairs'],2);self.assertLess(r['after']['total_bit_um'],r['before']['total_bit_um']);self.assertLessEqual(r['after']['max_pin_manhattan_um'],r['before']['max_pin_manhattan_um'])
+ def test_explicit_boundary_binding_stays_fixed_with_internal_fanout(self):
+  m=dict(component='test',component_sha256='x',outline_um=[200,100],children=[child('a',0,0),child('b',100,0),child('c',120,0)],connections=[net('ab','a','b'),net('bc','b','c')],boundary_binding=[dict(parent_port='output',child_instance='b')]);r=search(m);self.assertNotIn('b',r['placement_deltas_um']);self.assertIn('b',r['external_data_anchored_children'])
  def test_obstacle_cannot_be_crossed(self):
   m=dict(component='test',component_sha256='x',outline_um=[100,10],children=[child('a',0,0),child('b',20,0),child('wall',10,0)],connections=[net('ab','a','b')]);r=search(m);self.assertEqual(r['placement_deltas_um'],{})
  def test_full_sm_frame_not_child_bbox_and_master_mismatch(self):
