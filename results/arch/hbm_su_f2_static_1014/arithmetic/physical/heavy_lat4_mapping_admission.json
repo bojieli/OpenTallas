@@ -30,5 +30,14 @@
   "expected_clock_census": "existing source LAT4 conservative census max12317 sinks,10 live roots forSFU/12 forFULL; actual mapped netlist recount required before report",
   "memory_admission_gb_per_run": 12,
   "mapping_scope": "synth only, no PNR/CTS or timing closure claim",
-  "geometry_requirement": "G0/G1 each16 heavy+16LIGHT; G2/G3 each32LIGHT. Q0G0 includes1FULL+15SFU. Whole heavy is127SFU+1FULL. Data_store/programme/multirate bridge area remains separate."
+  "geometry_requirement": "G0/G1 each16 heavy+16LIGHT; G2/G3 each32LIGHT. Q0G0 includes1FULL+15SFU. Whole heavy is127SFU+1FULL. Data_store/programme/multirate bridge area remains separate.",
+  "RF_bank": {
+    "top": "ot_hbm_su_static_rf_bank",
+    "READERS": 6,
+    "logical_storage_bits_per_bank": 128,
+    "declared_storage_bits_per_bank": 768,
+    "declared_total_FF_bits_per_bank": 1217,
+    "banks_per_quarter": 64,
+    "purpose": "reconcile logical versus physically mapped RF storage/pipe/root area; mapper may merge coherent same-clock payload replicas so report actual netlist count"
+  }
 }

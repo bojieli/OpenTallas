@@ -4,7 +4,7 @@ import argparse,hashlib,json,math,re,subprocess,sys
 from pathlib import Path
 R=Path(__file__).resolve().parents[2]
 parser=argparse.ArgumentParser(description=__doc__)
-parser.add_argument('kind',choices=['bank','0','1','2','0_lat4_leaf1','1_lat4_leaf1','2_lat4_leaf1'])
+parser.add_argument('kind',choices=['bank','rf_bank','0','1','2','0_lat4_leaf1','1_lat4_leaf1','2_lat4_leaf1'])
 parser.add_argument('out',type=Path)
 cli=parser.parse_args();kind=cli.kind;variant=kind.endswith('_lat4_leaf1')
 lane_kind=kind.split('_',1)[0]
@@ -15,7 +15,12 @@ if kind=='bank':
  args+=['--pnr-stop-after','floorplan','--die-area','0','0','364.472','142.08','--core-area','2','2','362.472','140.08','--macro-place-halo','10','10']
  files=['rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv','rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv','rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv','physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v']
  args+=['--top','ot_hbm_su_static_pinned_bank','--clock-port','clk','--param','READERS=6','--param','RB=9','--macro-view','ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2']
+elif kind=='rf_bank':
+ files=['rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv']
+ top='ot_hbm_su_static_rf_bank';profile=dict(READERS=6,MUT_COHERENCE=0)
+ args+=['--top',top,'--clock-port','clk','--param','READERS=6','--param','MUT_COHERENCE=0']
 else:
+ top='ot_hbm_su_static_lane';profile=dict(KIND=int(lane_kind),LN=7,MLAT=4 if variant else 3,ALAT=3,LEAF=1 if variant else 0,FETCH_EXTRA_EDGES=2)
  files=re.findall(r'(?:rtl|physical)/[^\s\\]+\.(?:sv|v)',(R/'tools/hbm_static/su_arith_run.sh').read_text());files=[f for f in files if '/data_store/'not in f and '/peers/'not in f and not f.startswith('physical/') and '/tb_'not in f]
  args+=['--top','ot_hbm_su_static_lane','--clock-port','clk_stage[0]']
  for p in ['KIND='+lane_kind,'LN=7','MLAT='+('4' if variant else '3'),'ALAT=3','LEAF='+('1' if variant else '0'),'FETCH_EXTRA_EDGES=2']:args+=['--param',p]
@@ -28,7 +33,7 @@ if r.returncode==0 and kind!='bank':
  sys.path.insert(0,str(R/'tools'))
  import textbook_lint as TL
  netlist=out/'work/mapped.v'
- mapped=netlist.read_text();g,top=TL.flatten(TL.parse_verilog(mapped),'ot_hbm_su_static_lane')
+ mapped=netlist.read_text();g,top=TL.flatten(TL.parse_verilog(mapped),top)
  _,roots=TL.clock_nets(g,TL.build(g,None))
  result=json.loads((out/'result.json').read_text());syn=result['synthesis']
  population=sum(v['ff'] for v in roots.values())
@@ -36,7 +41,7 @@ if r.returncode==0 and kind!='bank':
   raise RuntimeError(f'mapped clock census {population} != actual synthesis sequential cells {syn["sequential_cell_count"]}')
  area=syn['cell_area_um2'];side=math.ceil((math.sqrt(area/0.5)+4.32)/0.216)*0.216
  census=dict(qualified=False,scope='source-current synthesis area and actual mapped clock population only; no CTS/route qualification',
-  profile=dict(KIND=int(lane_kind),LN=7,MLAT=4 if variant else 3,ALAT=3,LEAF=1 if variant else 0,FETCH_EXTRA_EDGES=2),
+  profile=profile,top=top,
   period_ps=1111.111111,setup_uncertainty_ps=60,hold_uncertainty_ps=25,
   std_area_um2=area,sequential_area_um2=syn['sequential_area_um2'],sequential_cells=syn['sequential_cell_count'],
   mapped_netlist_sha256=hashlib.sha256(netlist.read_bytes()).hexdigest(),
