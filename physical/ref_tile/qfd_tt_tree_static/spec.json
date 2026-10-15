@@ -38,8 +38,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 302.4,
-  "h": 216.0
+  "w": 280.8,
+  "h": 172.8
  },
  "recipe": 2,
  "layer_cap": "M5",
@@ -48,8 +48,8 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
    "at": [
-    64.8,
-    43.2
+    32.4,
+    32.4
    ],
    "orient": "R0",
    "inst": "*u_pretag*g_b?0?*u_m"
@@ -58,8 +58,8 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
    "at": [
-    183.6,
-    43.2
+    151.2,
+    32.4
    ],
    "orient": "R0",
    "inst": "*u_pretag*g_b?1?*u_m"
@@ -68,8 +68,8 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
    "at": [
-    64.8,
-    129.6
+    32.4,
+    97.2
    ],
    "orient": "R0",
    "inst": "*u_tag*g_b?0?*u_m"
@@ -78,8 +78,8 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
    "at": [
-    183.6,
-    129.6
+    151.2,
+    97.2
    ],
    "orient": "R0",
    "inst": "*u_tag*g_b?1?*u_m"
@@ -139,11 +139,11 @@
   "OT_CHANNEL_BLOCK_UM": "20",
   "OT_ROW_MIN_UM": "6"
  },
- "structural_change": "NEW leaf of the selected static TT controller (TT50 source 6fd2bbf9): exact RTL u_body.u_tree = qfd_tt_ctlm_tree_static, one root (9,636 flops, census EPYC4), 4 SRAM 128x256; replaces the obsolete dynamic ICG tree (tr4 NEEDS_RTL). Leaf of a qfd_tt_ctlm_static_s cluster (flat 4-root leaf model refused: pw/st/xm/control_stores_ready ports span two roots).",
+ "structural_change": "NEW leaf of the selected static TT controller (TT50 source 6fd2bbf9): exact RTL u_body.u_tree = qfd_tt_ctlm_tree_static, one root (9,636 flops, census EPYC4), 4 SRAM 128x256; replaces the obsolete dynamic ICG tree (tr4 NEEDS_RTL). Leaf of a qfd_tt_ctlm_static_s cluster (flat 4-root leaf model refused: pw/st/xm/control_stores_ready ports span two roots). t2: outline 302.4x216 -> 280.8x172.8 (t1 gate std 8,833 um2, util 35%, TT insertion 290.6..412.3 / spread 121.7): denser leaf for shorter clock tree.",
  "job": {
   "owner": "Claude:q15_compute_elem",
   "branch": "claude/q15-tt-static",
-  "tag": "t1",
+  "tag": "t2",
   "purpose": "Static TT tree leaf (exact RTL, single root) for the qfd_tt_ctlm_static_s cluster"
  },
  "children": [],
