@@ -3,7 +3,7 @@
 // No tile state, group relay, memory state, or extra pipeline stage lives here.
 module ot_qfd_su_lane_relay #(
     parameter integer AW=24, NW=18, WR=16, RD=2,
-    parameter integer RTREE=1,
+    parameter integer RTREE=0,
     parameter integer GBW=NW+(NW+1)+5*AW+6+8+9+64+WR*16,
     parameter integer PDW=4*AW+3*32+64,
     parameter integer OVW=11,

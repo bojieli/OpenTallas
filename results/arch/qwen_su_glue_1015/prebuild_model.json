@@ -14,7 +14,8 @@
     "NW": 18,
     "RD": 2,
     "VL": 14,
-    "ML": 15
+    "ML": 15,
+    "RTREE": 0
   },
   "arithmetic": {
     "macs_per_cycle": 0,
@@ -30,12 +31,14 @@
     "PDW": 256,
     "OVW": 11,
     "ODW": 291,
-    "register_bits": 1622,
+    "register_bits": 1621,
     "input_bits_per_cycle": 1062,
     "output_bits_per_cycle": 1062,
     "fanout": "one lane tile per relay; group broadcast fanout8 remains existing",
     "mux_demux": "none within relay shell; four24bit offset adders per lane remain in actual parent base,256 adders total",
-    "memory_bytes_per_cycle": 0
+    "memory_bytes_per_cycle": 0,
+    "alternative_rtree1_register_bits": 1622,
+    "reset": "Canonical c6c44 staticmaster does not pass RTREE; vstream RTREE default0, resetpassesdirectly. Historical RTREE1 gates/physicalvariant add oneexistingoptionalresetregister andcannot qualifycanonical0."
   },
   "align": {
     "replicas": 16,
@@ -56,7 +59,7 @@
   },
   "area": {
     "sequential_cell_assumption_um2": 0.2916,
-    "lane_register_area_um2": 472.97520000000003,
+    "lane_register_area_um2": 472.68360000000007,
     "align_register_area_cbuf5_um2": 1525.6512000000002,
     "align_register_area_cbuf8_um2": 1301.7024000000001,
     "slot_fit": "not established; real synthesis/pin-fit required",

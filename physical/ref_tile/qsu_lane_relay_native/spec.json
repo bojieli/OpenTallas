@@ -1,0 +1,123 @@
+{
+ "name": "qsu_lane_relay_native",
+ "top": "ot_qfd_su_lane_relay",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/physical/ot_qfd_su_lane_relay.sv"
+ ],
+ "params": {
+  "AW": 24,
+  "NW": 18,
+  "WR": 16,
+  "RD": 2,
+  "RTREE": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "b_d",
+   "b_v",
+   "live"
+  ],
+  "E": [
+   "b_q",
+   "bv_q",
+   "lv_q",
+   "rst_l"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "cura",
+   "curb",
+   "curc",
+   "curd",
+   "mem_q",
+   "o_v",
+   "o_d"
+  ],
+  "S": [
+   "p_q",
+   "o_vq",
+   "o_dq"
+  ]
+ },
+ "outline": {
+  "w": 70,
+  "h": 70
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "inter": [
+  "b_d",
+  "b_v",
+  "live",
+  "b_q",
+  "bv_q",
+  "lv_q",
+  "rst_l",
+  "cura",
+  "curb",
+  "curc",
+  "curd",
+  "mem_q",
+  "o_v",
+  "o_d",
+  "p_q",
+  "o_vq",
+  "o_dq"
+ ],
+ "route": {
+  "pd": 0.55,
+  "period_ps": 770,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "io_budget": {
+  "in": 0.2,
+  "out": 0.2
+ },
+ "job": {
+  "owner": "Codex:su-glue-physical-1015",
+  "branch": "codex/su-glue-physical-1015",
+  "tag": "r0v1",
+  "purpose": "CANONICAL c6c44 caller uses RTREE0; exact1621existingFF, combinationalresetpassthrough, noextraresetedge. Actual c6c44 source-preserving SU relay/alignment state cut; no added edges. Serial0.9GHz domain. Parent offset comb logic remains explicitly unqualified. Standard strict833.333ps leaf characterization retained; no slower-clock SDC override. Four-face pin plan sized from actual synthesis1871/1613/587um2; leaf pin-limited area explicitly priced.",
+  "cycles_added": 0,
+  "benches": [
+   {
+    "name": "source_cut_and_mutants",
+    "cmd": "bash tools/qwen_su_glue_1015/gate.sh {RUN}/bench",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS su_glue gate"
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_su_glue_1015",
+   "tools/qwen_su_glue_1015"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

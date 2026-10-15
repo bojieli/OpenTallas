@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_su_glue;
- parameter integer MC=6;
+ parameter integer MC=6,RTREE=0;
  reg clk=0; always #5 clk=~clk;
  reg rst_n=0;
  reg [499:0] b; reg [2:0] bv;reg live;
@@ -32,8 +32,8 @@ module tb_su_glue;
  wire [23:0] d=cur[47:24]+l*stride[47:24];
  wire [23:0] e=cur[23:0]+l*stride[23:0];
  wire [1062:0] got,exp;
- ot_qfd_su_lane_relay dut(clk,rst_n,b,bv,live,a,c,d,e,mem,ov,od,got[1062],got[1061:562],got[561:559],got[558],got[557:302],got[301:291],got[290:0]);
- ot_qfd_su_lane_relay_reference ref0(clk,rst_n,b,bv,live,offset_ref(cur[95:72],stride[95:72],l),offset_ref(cur[71:48],stride[71:48],l),offset_ref(cur[47:24],stride[47:24],l),offset_ref(cur[23:0],stride[23:0],l),mem,ov,od,exp[1062],exp[1061:562],exp[561:559],exp[558],exp[557:302],exp[301:291],exp[290:0]);
+ ot_qfd_su_lane_relay #(.RTREE(RTREE)) dut(clk,rst_n,b,bv,live,a,c,d,e,mem,ov,od,got[1062],got[1061:562],got[561:559],got[558],got[557:302],got[301:291],got[290:0]);
+ ot_qfd_su_lane_relay_reference #(.RTREE(RTREE)) ref0(clk,rst_n,b,bv,live,offset_ref(cur[95:72],stride[95:72],l),offset_ref(cur[71:48],stride[71:48],l),offset_ref(cur[47:24],stride[47:24],l),offset_ref(cur[23:0],stride[23:0],l),mem,ov,od,exp[1062],exp[1061:562],exp[561:559],exp[558],exp[557:302],exp[301:291],exp[290:0]);
  assign mismatch[l]=(got!==exp);
  end endgenerate
  integer cycle,k,checks=0;
@@ -59,6 +59,6 @@ module tb_su_glue;
  checks=checks+1;
  end
  end
- $display("PASS su_glue MC=%0d cycles=%0d lane_checks=%0d align_checks=%0d resets=3",MC,checks,checks*64,checks);$finish;
+ $display("PASS su_glue RTREE=%0d MC=%0d cycles=%0d lane_checks=%0d align_checks=%0d resets=3",RTREE,MC,checks,checks*64,checks);$finish;
  end
 endmodule

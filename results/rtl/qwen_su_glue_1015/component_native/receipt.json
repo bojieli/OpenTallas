@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.qwen-su-source-cut-gate.v1",
+  "source_parent": "c6c44c12c",
+  "sources": {
+    "rtl/physical/ot_qfd_su_lane_relay.sv": "9bf926d9506c83cfa5a9009f8616a1d36d24c7090aa7812189179b481bd722db",
+    "rtl/physical/ot_qfd_su_align_entries64.sv": "047bf5912323d1365adb629e8fc41705955843325497587ed5365bf1b98c51af",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/test/qwen_su_glue_1015/tb_su_glue.sv": "77042dd9bd909d28a93a62cc0ccd17f994f65f0bf9196d6bb4e3d2f9d3373ca4",
+    "rtl/test/qwen_su_glue_1015/lane_relay_reference.sv": "d22de139541567d6bbaa6603713df3ab62c5089eb3fd49b4eaa802076524cddf",
+    "tools/qwen_su_glue_1015/gate.sh": "d6909510ce78441803c13149ae22ab20131412db36e22fb5611c5acbd232923e"
+  },
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-3867897-1792057775",
+  "outer_exit": 0,
+  "configs": [
+    {
+      "MC": 6,
+      "ML": 15,
+      "VL": 14,
+      "cycles": 669,
+      "lane_checks": 42816,
+      "align_checks": 669,
+      "resets": 3
+    },
+    {
+      "MC": 9,
+      "ML": 15,
+      "VL": 14,
+      "cycles": 669,
+      "lane_checks": 42816,
+      "align_checks": 669,
+      "resets": 3
+    }
+  ],
+  "actual_source_mutants": {
+    "relay": "PDW delay RD becomes RD+1: detected cycle31 all64lanes",
+    "align": "reset mask ML becomes ML-1: detected cycle38"
+  },
+  "offset_test": "all64 constant lane multiplication compared with independent repeated-add reference, wrap at AW24; offset arithmetic stays original parent source",
+  "scope": "state cut equivalence only; no lane arithmetic/production throughput/physical qualification",
+  "logs": {
+    "align_mut.log": "97918798c41db5ad7888f3515a2a5ec6748c4e7d8057326abaf61a17ef3dc3fa",
+    "gate_mc9.log": "42ab0443990388a2ef0fbead7e384264169c6ac070b87f87557e3ed3c5e6ec8d",
+    "relay_mut.log": "eb5bbbdb20ee7113e9fe4c3c7b7667805b94710c0727e2942e348de2a90d8273",
+    "gate_mc6.log": "fbc6b6d1639f5f542173fadf96493d98d715f67583713a3f4c6bd4360f0f3c11"
+  },
+  "RTREE": 0,
+  "register_bits_per_lane": 1621,
+  "canonical_call_chain": "c6c44c12c qfd_sp_su64_sfu -> ot_qfd_sp_su64_static_entries -> ot_hdc_vstream_static_entries, no RTREE override; default0"
+}
