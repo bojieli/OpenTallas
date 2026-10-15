@@ -692,6 +692,12 @@ def main():
     ap.add_argument('--require-qualified-collective', action='store_true', help='reject an unqualified opt-in split3CR collective instead of writing an interim planning kit')
     ap.add_argument('--require-real-views', action='store_true',
                     help='refuse missing real SS/TT/FF views before writing timing libraries; no interim cells or SS-as-TT substitution')
+    ap.add_argument('--require-view-identity', action='store_true',
+                    help='separately require actual source/parameter/hierarchy identity against every bound closing job; not physical qualification')
+    ap.add_argument('--variant-recipes', type=Path,
+                    help='JSON mapping die master to Git-pinned source recipe; actual die parameters/defines always override this file')
+    ap.add_argument('--jobs-root', type=Path, default=Path.home() / '.local/state/closure_loop/jobs')
+    ap.add_argument('--identity-yosys', default='yosys')
     ap.add_argument('--planning-hold-pads', action='store_true',
                     help='planning sensitivity only: model unbuilt 120 ps FF receiver delay chains; '
                          'the default kit uses unpadded timing and never treats these chains as physical evidence')
@@ -788,6 +794,28 @@ def main():
         if gate['verdict'] != 'PASS':
             raise ValueError('REAL_VIEW_GATE FAIL: missing source-qualified three-corner views; see real_view_gate.json')
         rec['real_view_gate'] = gate
+    if a.require_view_identity:
+        from s81 import view_identity as VI
+        source_root = Path(S.ROOT).resolve()
+        manifest = source_root / 'physical/s81_die_rtl/layer1.f'
+        selected, defines, libdirs = [], [], []
+        for line in manifest.read_text().splitlines():
+            line = line.strip()
+            if line.startswith('+define+'):
+                defines.extend(d for d in line[len('+define+'):].split('+') if d)
+            elif line.startswith('+libdir+'):
+                libdirs.append(line[len('+libdir+'):])
+            elif line and not line.startswith(('#', '//', '+', '-')):
+                selected.append(source_root / line)
+        recipes = json.loads(a.variant_recipes.read_text()) if a.variant_recipes else {}
+        identity = VI.attest(first, recipes, bound, S.die_master_params(m),
+                             source_root=source_root, manifest_sources=selected,
+                             manifest_defines=defines, manifest_libdirs=libdirs, jobs_root=a.jobs_root,
+                             yosys=a.identity_yosys)
+        (a.out / 'view_identity_gate.json').write_text(json.dumps(identity, indent=1) + '\n')
+        if identity['verdict'] != 'PASS':
+            raise ValueError('VIEW_IDENTITY FAIL: see view_identity_gate.json; library presence is a separate gate')
+        rec['view_identity_gate'] = identity
     for corner in ('ss', 'tt', 'ff'):
         cl = cls_[corner]
         cells, libs = [], set()

@@ -210,6 +210,14 @@ class Gate(unittest.TestCase):
         r = self.run_(spec(reroute_reason=ok))
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("another cause", r["message"])
+        pad = stage + "source /src/physical/dsrom_window_source/leaf_iohold.tcl\n"
+        self.r.c["bbbbbbbbb"][f"{kd}/pre_gpl.tcl"] = pad                            # re-kit adds the output hold pad
+        r = self.run_(spec(reroute_reason=ok))
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "native_launch"), r["message"])
+        self.r.c["aaaaaaaaa"][f"{kd}/pre_gpl.tcl"] = pad                            # closed kit already had the pad too
+        r = self.run_(spec(reroute_reason=ok))
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("another cause", r["message"])
 
     # ---------------------------------------------------------------- param_change
     def test_param_change(self):

@@ -2203,7 +2203,7 @@ def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
     return dict(hops=n, reach_um=reach, violations=len(bad), worst=bad[:40])
 
 
-def stack_local_reach(m, M, reach=500.0):
+def assigned_pin_reach(m, M, reach=500.0, classes=('stack_local',)):
     """Measure every assigned bit, including unequal face pitches and mirroring.
 
     Pin centres describe a bus only when both ends have identical pitch/order.
@@ -2225,7 +2225,7 @@ def stack_local_reach(m, M, reach=500.0):
                  it.y + (it.h-y if it.orient in ('MX','R180') else y)) for x,y in positions]
     bad, missing, n, checked, worst = [], [], 0, 0, 0.0
     for bid, cl, bits, eps in m['buses']:
-        if cl != 'stack_local' or len(eps) < 2:
+        if (classes is not None and cl not in classes) or cl in ('clock_trunk', 'reset', 'constant') or len(eps) < 2:
             continue
         for target in eps[1:]:
             try:
@@ -2243,11 +2243,15 @@ def stack_local_reach(m, M, reach=500.0):
             worst = max(worst,distance)
             if distance > reach:
                 bit = distances.index(distance)
-                bad.append(dict(bus=bid,bits=bits,bit=bit,um=round(distance,3),
+                bad.append(dict(bus=bid,cls=cl,bits=bits,bit=bit,um=round(distance,3),
                     a=f'{eps[0][0]}.{eps[0][1]}[{bit}]', b=f'{target[0]}.{target[1]}[{bit}]'))
     bad.sort(key=lambda row:-row['um'])
     return dict(hops=n,bits_checked=checked,reach_um=reach,violations=len(bad),max_um=round(worst,3),
                 worst=bad[:40],unmeasured=len(missing),missing=missing[:20],method='exact generated face rectangles per bit after orientation')
+
+
+def stack_local_reach(m, M, reach=500.0):
+    return assigned_pin_reach(m, M, reach, classes=('stack_local',))
 
 
 _BASE_PORT_WIDTHS = F.port_widths

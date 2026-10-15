@@ -1,0 +1,11 @@
+{
+ "scope": "valid-select bank successor (H-ELEM-A r2 2026-10-15): owner/CE/prefix bench (MUT 1-3 FAIL), all-owners RG7/WG3 + RG5/WG1 (MUT 2, 3 and new MUT 4 = write enable ignores the slot FAIL: write commit timing), physical-wrapper all-groups RG7/3, RG5/1, RG6/3, RG4/1 exact (wrong return-group wiring mutant KILLED)",
+ "sources_sha256": {
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_vs.sv": "fa11aa02a599737eddb963e8dc24534d65b5eabb81ecd44cdb43459e582899aa",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg4wg1.sv": "59b27e86035ca1da1fee41d08d6c6bb5b0909739d41e32f64e386f9607433016",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg5wg1.sv": "34c562a64511b83e2bb6b6204f69de53a74d847a194b25d66f853593d8367c66",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg6wg3.sv": "3d4fe388b28b21b458c29dab8eb2f853d1f6bbc61a7d715463d250ebdcc590f0",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg7wg3.sv": "42e58231cf300f8474a48dbe73fabdda7a8f302cf4eab91ccbd77313b3a3744c"
+ },
+ "result": "PASS (all positives exact, all mutants FAIL)"
+}

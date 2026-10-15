@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.qwen.kv.host-slice-boot-candidate.v1",
+ "status": "SOURCE_CANDIDATE_NOT_ADOPTED",
+ "owner": "KV die lead",
+ "structural_reason": "Strict clock-root input capture: bgi reaches both boot and boot_test registers without one owning pin capture; lpc reaches station and boot status logic without one owning pin capture.",
+ "lpc": {
+  "capture": "5-bit lpc_status register on ck_station",
+  "strap_initialization_edges": 1,
+  "normal_data_or_control_cycle_change": 0
+ },
+ "bgi": {
+  "capture": "bgi_q register on ck_boot; drive actual u_slice.boot_go from bgi_q",
+  "bgo_chain": "existing bgo <= bgi register remains unchanged, one edge per physical slot",
+  "uniform_local_boot_start_extra_edges": 1,
+  "normal_data_or_control_cycle_change": 0
+ },
+ "chain_order": {
+  "WS": "slot0 -> slot31",
+  "ES": "slot0 -> slot31",
+  "WN": "slot31 -> slot0",
+  "EN": "slot31 -> slot0"
+ },
+ "compiler_contract": "For physical chain position p: boot-start edge = chain-head bgi arrival + p + 1; status return still uses actual registered status chain and source boot result, never guessed completion.",
+ "clocks": "Four separate related CORE833.334 roots; retain ordinary cross-root setup and hold checks.",
+ "admission": [
+  "Source-exact 32-slot boot reference comparison with +1 local start and missing-capture negative control",
+  "Fresh exact source-bound CTS gate and TT/FF/DRC route plus native pin audit",
+  "Actual parent boot/completion/quiet integration; do not release writer/return adoption holds from this change"
+ ],
+ "exception_or_goal_change": "none"
+}
