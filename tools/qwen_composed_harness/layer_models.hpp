@@ -116,7 +116,16 @@ struct Rank {
  std::vector<std::pair<size_t,size_t>> port_ranges;int memo_cur=-1;
  bool memo_recording=false;uint64_t memo_tick=0,memo_hits=0,memo_verified=0,memo_records=0,memo_dry=0;
  static size_t root_size(){static const size_t n=size_t(actual_core_root_bytes());return n;}
- static unsigned memo_slots(){static const unsigned n=[]{const char*e=std::getenv("OT_EVAL_MEMO");return e?unsigned(std::stoul(e)):4u;}();return n;}
+ // Hierarchical RTL FP units own sequential pipeline state outside rootp.
+ // Replaying only root bytes cannot advance those child objects. Even VERIFY=1
+ // checks only the parent and is insufficient, so disable this optimisation.
+ static unsigned memo_slots(){
+#ifdef OT_CORE_HIERARCHICAL
+  return 0;
+#else
+  static const unsigned n=[]{const char*e=std::getenv("OT_EVAL_MEMO");return e?unsigned(std::stoul(e)):4u;}();return n;
+#endif
+ }
  static uint64_t memo_verify_every(){static const uint64_t n=[]{const char*e=std::getenv("OT_EVAL_MEMO_VERIFY");return e?uint64_t(std::stoull(e)):0ull;}();return n;}
  uint8_t*root_bytes(){return reinterpret_cast<uint8_t*>(core.rootp);}
  template<class T>void port_range(const T&x){auto o=reinterpret_cast<const uint8_t*>(&x)-root_bytes();
