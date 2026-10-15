@@ -93,6 +93,12 @@
   },
   "vm_read_latency_edges": 12,
   "qualification": "PASS_COMPONENT_DEFAULT_VM_ONLY; not current assigned die PIPE successor, canonical workload or physical signoff",
-  "mutant": "session86496 queued; no negative verdict yet",
+  "mutant": {
+    "unit": "oth-ubuntu-929048-1792088314",
+    "rc": 1,
+    "expected": "fail",
+    "observed": "real HC payload bit corruption rejected at reduced VM pins item0 edge433",
+    "log": "payload_mutant.log"
+  },
   "calendar": "base1clock v3; seven-entry integrated candidate is separate pending proof"
 }
