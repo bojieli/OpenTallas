@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """NK banked v2 kit (PM-H-S interleaved W tree faces, Q-COMPUTE-ELEM r13 2026-10-15) derived from the v1 kit:
-face_n_a/n_b/n_y/t_out (4 x qwen_glue_v514) -> face_ya / face_tb (2 x qwen_glue_x1028, x 5.4, y 587.52 / 699.84),
+face_n_a/n_b/n_y/t_out (4 x qwen_glue_v514) -> face_ya / face_tb (2 x qwen_glue_x1028 28.08 x 105.84, x 2.16, y 587.52 / 699.84),
 W pins bit-interleaved: TB y = 705.132 + 0.096 s (t_out[k] s=2k, n_b[k] s=2k+1); YA y = 592.812 + 0.096 s
 (n_y[k] s=2k, n_a[k] s=2k+1); M4 at x 0.096.  ck_bank[37..40] pads move onto the x1028 clock pins (from its LEF).
 Run after the qwen_glue_x1028 view exists (its bytes are hash-bound in the hard-face audit)."""
@@ -9,7 +9,7 @@ import json,hashlib,re,sys,subprocess
 r=Path(__file__).resolve().parents[2]; G=r/'physical/qwen_tile_glue_banks_1015'
 v1=r/'physical/ref_tile/qfd_tile_nk_banked_v1'; name='qfd_tile_nk_banked_v2'; kit=r/'physical/ref_tile'/name
 XV='physical/ref_tile/qwen_glue_x1028/views/qwen_glue_x1028'
-TB=(5.4,699.84); YA=(5.4,587.52); LOCAL0=5.292; P=0.096
+TB=(2.16,699.84); YA=(2.16,587.52); LOCAL0=5.292; P=0.096
 sha=lambda p:hashlib.sha256((r/p).read_bytes()).hexdigest()
 lef=(r/XV/'qwen_glue_x1028.lef').read_text()
 def pin_xy(pin):
@@ -31,6 +31,9 @@ hr=s['required_hybrid_roots']['hard_child_entry']
 cmap={'ck_bank[37]':('face_ya','clk_i',YA),'ck_bank[38]':('face_tb','clk_i',TB),'ck_bank[39]':('face_ya','clk_o',YA),'ck_bank[40]':('face_tb','clk_o',TB)}
 for port,(inst,pin,o) in cmap.items(): hr[port]=f'{inst}/{pin}'
 s['io_tcl']=f'physical/ref_tile/{name}/assigned_pins.tcl'
+# x1028 sits on the core edge with a 2.16 um gap to reset_mid_w: below the 2 um row-cut halo pair there are no rows; the
+# channel hook blocks every gap < 20 um, so the abutment floor is the real 2.16 um gap, not a 20 um exception
+s['abut_plan']=dict(s.get('abut_plan',{}),channel_um=2.16,why='PM-H-S paired face masters 2.16 um from reset_mid_w; every channel < 20 um is hard-blocked (macro_channel_block.tcl)')
 s['orfs_vars']['OT_OFLOP_HARD_FACE_AUDIT']='/src/physical/qwen_tile_glue_banks_1015/hard_face_binding_v2.tcl'
 s['job'].update(tag='pm1',owner='Claude:q15_compute_elem',purpose='PM-H-S interleaved W tree faces (coordinator 2026-10-15): paired x1028 face masters, 81 hard children, same 84 roots; bp58c hooks')
 s['job']['benches']=[b for b in s['job'].get('benches',[]) if b['name']!='lint']
