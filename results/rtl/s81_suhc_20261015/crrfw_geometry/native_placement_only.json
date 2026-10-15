@@ -1,0 +1,41 @@
+{
+  "cell": "ot_s81_hc_crootr_f",
+  "view": "s81-crrfw-local-native-diag",
+  "lib_cell": "ot_s81_hc_crootr_f",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 331.5,
+  "spread_ps": 53.5,
+  "outputs": 2939,
+  "inputs": 3952,
+  "launch_ps": 186.0,
+  "launch_pin": "ch_fd[2596]",
+  "capture_ps": 165.1,
+  "capture_pin": "f_fd[171]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "qualification": "UNQUALIFIED_PLACEMENT_ONLY",
+  "routed": false,
+  "source_binding": {
+    "remote_host": "ot-epyc1tb",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81hc_crrfw_local_ref-20261015-012736",
+    "scope": "postCTS placementestimated ETM; no routed SPEF",
+    "files": {
+      "probe_tt.tcl": "5dc706de4910a89f57c705ce12a4ee67a579450faa40766540ab753cb5cef3e7",
+      "probe_ff.tcl": "c2894288db5392c43f9e810cdb8704667cc4b5bc02c0ba5613f3864149084216",
+      "ot_s81_hc_crootr_f_tt.lib": "8b58f966d10e0c6a822cb8707506bfe06076cba0d9077b44c12b494654efcce9",
+      "insertion.json": "99dd06d9da242bbd8deff7a3a68d8071d014a8e35563a8e73a67ddbd7eb89fa2",
+      "scope.json": "c993758bae915fc5a52c72850e2cdb0953b20d2ddf8129907c7e164d6da716f8",
+      "probe_tt.log": "959f83ae0c6a0112402ebc6bac6fdf12f838abb5e5da30424836fa8abc7b5052",
+      "ot_s81_hc_crootr_f_ff.lib": "8e30a184d664e342aa0ac4b53ae762d30f52865a65f0c305a8abbbbb110b0951",
+      "probe_ff.log": "17b3b91bcaff4c6fd513b5637683486ec5d09fd187bc99671c44a0aec805b932",
+      "ot_s81_hc_crootr_f.lef": "bd37134673896169f953c336b0075c86e13da61a81e3ec3a41fec7cefc951a75"
+    }
+  }
+}
