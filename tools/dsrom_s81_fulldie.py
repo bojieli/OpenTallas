@@ -5775,6 +5775,9 @@ def _corr_frac(path, rects, step=20.0):
     return ins / tot if tot else 0.0
 
 
+HOP_DETOUR_MIN_UM = 500.0
+
+
 def _hop_paths(a, b, cor):
     """candidate Manhattan paths a -> b for a die-level hop (s81-gen 2026-10-09, --path-pick): the two L orientations
     and a Z through the centre line of every corridor that spans the turn (vertical corridors: a -> (xc, ay) -> (xc, by)
@@ -5783,13 +5786,20 @@ def _hop_paths(a, b, cor):
     out = [[a, (b[0], a[1]), b], [a, (a[0], b[1]), b]]
     lo_y, hi_y = min(a[1], b[1]), max(a[1], b[1])
     lo_x, hi_x = min(a[0], b[0]), max(a[0], b[0])
+    # S-DIE r12 2026-10-15: a corridor centre line OUTSIDE the hop's bounding box makes a detour of twice its offset.
+    # Unbounded, a 140-um hop (sp_gather.t_capture -> pq_cnt_2.r_v, GEN18p/18/18r/c18) tried a vertical corridor
+    # 13.6 mm east (27.1 mm path, 73 stations x 4 hop-extra tiers x fine-lattice searches): the hop stage ran for
+    # hours, and a clean far detour would have won over the default L at +70 cycles.  Offset cap: max(500 um, L/4).
+    slack = max(HOP_DETOUR_MIN_UM, 0.25 * ((hi_x - lo_x) + (hi_y - lo_y)))
     for x0, y0, x1, y1 in cor.values():
         if x1 - x0 < y1 - y0 and y0 <= lo_y + 1e-6 and y1 >= hi_y - 1e-6:       # vertical corridor spanning both ys
             xc = (x0 + x1) / 2
-            out.append([a, (xc, a[1]), (xc, b[1]), b])
+            if lo_x - slack <= xc <= hi_x + slack:
+                out.append([a, (xc, a[1]), (xc, b[1]), b])
         if x1 - x0 >= y1 - y0 and x0 <= lo_x + 1e-6 and x1 >= hi_x - 1e-6:     # horizontal corridor spanning both xs
             yc = (y0 + y1) / 2
-            out.append([a, (a[0], yc), (b[0], yc), b])
+            if lo_y - slack <= yc <= hi_y + slack:
+                out.append([a, (a[0], yc), (b[0], yc), b])
     return out
 
 

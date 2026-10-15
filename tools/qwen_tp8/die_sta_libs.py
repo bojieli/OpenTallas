@@ -64,33 +64,24 @@ def assumed_clock_refs(master, ports, physical_ports=None):
     The die Verilog connects .ck(net), but a generated LEF may expose ck[0].
     E.write_lib deliberately preserves that spelling; clock delivery must too.
     """
-    vec = {}
     if physical_ports is not None:
-        # Generated physical clock buses retain indexed pin names, including scalar ck[0].
-        for p in ports:
-            if p in E.CLOCKS and p not in physical_ports:
-                bits = sorted(q for q in physical_ports if q.startswith(p + '[') and q.endswith(']'))
-                if bits:
-                    indices = [int(re.fullmatch(re.escape(p) + r'\[(\d+)\]', q).group(1)) for q in bits]
-                    if set(indices) != set(range(len(indices))):
-                        raise ValueError(f'{master}.{p}: incomplete physical clock bus')
-                    vec[p] = sorted(bits, key=lambda q: int(q.rsplit('[', 1)[1][:-1]))
-        missing=[p for p in ports if p in E.CLOCKS and p not in physical_ports and p not in vec]
+        missing=[p for p in ports if p in E.CLOCKS and p not in physical_ports]
         if missing:
             raise ValueError(f'{master}: clock inputs missing from generated physical LEF: {missing}')
-    out = {}
-    for p in ports:
-        if p not in E.CLOCKS:
-            continue
-        for q in vec.get(p, [f'{p}[0]' if (master, p) in E.IDX else p]):
-            out[q] = 0.0
-    return out
+    return {(f'{p}[0]' if (master, p) in E.IDX else p): 0.0
+            for p in ports if p in E.CLOCKS}
 
 
-def clock_tcl(doms, leaves, corner):
+def clock_tcl(doms, leaves, corner, periods=None):
     # Each domain has related shallow / earlier-tap clock objects. Separate
     # domains remain asynchronous; no exception is created between levels.
     # Source latency shifts the boundary while propagated ETMs retain insertion.
+    if periods is not None:
+        missing = set(doms) - set(periods)
+        if missing:
+            raise ValueError(f'missing source clock periods: {sorted(missing)}')
+        if any(not math.isfinite(periods[d]) or periods[d] <= 0 for d in doms):
+            raise ValueError('invalid source clock period')
     lines = ['# DOMS ' + ' '.join(sorted(doms)), '# INSERTION_COMPENSATED ' + corner,
              '# OWNER_CLOCK_BUDGET v1', 'set_cmd_units -time ps', 'set ot_clock_bound 0']
     domain_clocks = {}
@@ -108,7 +99,7 @@ def clock_tcl(doms, leaves, corner):
                 lines += [f'set p [get_pins -quiet {{{pin}}}]',
                           f'if {{[llength $p] != 1}} {{ error "clock boundary pin missing or ambiguous: {pin}" }}',
                           'lappend ot_pins [lindex $p 0]']
-            lines.append(f'create_clock -name {name} -period {PERIOD.get(d, 1024.0):.6f} $ot_pins')
+            lines.append(f'create_clock -name {name} -period {(periods[d] if periods is not None else PERIOD.get(d, 1024.0)):.6f} $ot_pins')
             for pin, master, libpin in group:
                 r = leaves[master][corner][libpin]
                 lines += [f'set_clock_latency -source -clock [get_clocks {name}] {-r:.6f} [get_pins {{{pin}}}]',

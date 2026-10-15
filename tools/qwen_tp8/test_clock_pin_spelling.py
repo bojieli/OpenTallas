@@ -12,13 +12,6 @@ class ClockPinSpelling(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'missing from generated physical LEF'):
             D.assumed_clock_refs('qfd_xcst_s',{'ck':'input'},{'a_d':516})
 
-    def test_generated_scalar_index_and_multibit_roots_keep_every_pin(self):
-        self.assertEqual(D.assumed_clock_refs('qfd_d2d_static', {'ck':'input'}, {'ck[0]':1}), {'ck[0]':0.0})
-        pins={f'ck[{k}]':1 for k in range(12)}
-        self.assertEqual(list(D.assumed_clock_refs('vector', {'ck':'input'}, pins)), list(pins))
-        with self.assertRaisesRegex(ValueError, 'incomplete physical clock bus'):
-            D.assumed_clock_refs('broken', {'ck':'input'}, {'ck[0]':1,'ck[2]':1})
-
     def test_scalar_and_indexed_clock_entries_keep_exact_view_names(self):
         with patch.object(D.E, 'IDX', {('qfd_xcst_s','ck')}):
             refs=D.assumed_clock_refs('qfd_xcst_s',{'ck':'input','a_d':'input'})
