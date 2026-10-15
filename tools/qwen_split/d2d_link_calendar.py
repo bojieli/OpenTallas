@@ -206,7 +206,11 @@ def main():
     ap.add_argument("--host-stages", type=int, default=None,
                     help="KV die HOST core <-> qkd_d2d_static relay stages (each way), from the KV die lead's measured "
                          "die plan; added to the KV HOST-record TX codec latency (port 1) and the token-id budget")
+    ap.add_argument("--allow-unmeasured-host", action="store_true",
+                    help="diagnostic program images only: retain PENDING HOST stages and compile with zero; never production-qualified")
     a = ap.parse_args()
+    if a.profile == "program" and a.host_stages is None and not a.allow_unmeasured_host:
+        ap.error("program calendar requires --host-stages from the measured KV die plan; use --allow-unmeasured-host only for diagnostics")
     txd = {"C": [int(x) for x in a.txd_c.split(",")], "K": [int(x) for x in a.txd_k.split(",")]}
     layout = None
     if a.spec:
