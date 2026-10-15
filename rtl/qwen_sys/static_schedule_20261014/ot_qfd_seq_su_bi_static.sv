@@ -716,4 +716,3 @@ module ot_qfd_stage_gate_static #(parameter integer SW_=6,NW=18)(
   end
  end
 endmodule
-
