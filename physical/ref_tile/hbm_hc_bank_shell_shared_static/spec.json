@@ -1,0 +1,260 @@
+{
+ "name": "hbm_hc_bank_shell_shared_static",
+ "top": "ot_hgi_hc_bank_shell_shared_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_memory_shared_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_shell_shared_static.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 500.04,
+  "h": 500.04,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "memory.slot[0].quarter[0].u_weight",
+   "at": [
+    23.76,
+    23.76
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "memory.slot[0].quarter[1].u_weight",
+   "at": [
+    23.76,
+    108.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "memory.slot[0].quarter[2].u_weight",
+   "at": [
+    23.76,
+    192.24
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "memory.slot[0].quarter[3].u_weight",
+   "at": [
+    23.76,
+    276.48
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "memory.slot[1].quarter[0].u_weight",
+   "at": [
+    144.288,
+    23.76
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "memory.slot[1].quarter[1].u_weight",
+   "at": [
+    144.288,
+    108.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "memory.slot[1].quarter[2].u_weight",
+   "at": [
+    144.288,
+    192.24
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "memory.slot[1].quarter[3].u_weight",
+   "at": [
+    144.288,
+    276.48
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "memory.slot[0].u_residual",
+   "at": [
+    261.36,
+    43.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "memory.slot[1].u_residual",
+   "at": [
+    261.36,
+    203.04000000000002
+   ],
+   "orient": "MY"
+  }
+ ],
+ "pins": {
+  "W": [
+   "weight_ap",
+   "x_write_v",
+   "x_write_word",
+   "x_write_data"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "d_v",
+   "d_ss",
+   "d_nv",
+   "d_wa",
+   "d_xa",
+   "f_in",
+   "lane_fault",
+   "expected_bank_id"
+  ],
+  "S": [
+   "o_v",
+   "o_ss",
+   "o_nv",
+   "o_wa",
+   "o_xa",
+   "f_out",
+   "lane_valid",
+   "lane_ss",
+   "lane_go"
+  ],
+  "E": [
+   "weight_data",
+   "residual_data",
+   "write_done",
+   "read_valid",
+   "memory_fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:/root/h_hc_physical",
+  "branch": "codex/hc-physical-1015",
+  "tag": "native1",
+  "purpose": "Production reusable shared HC bank shell: static expected_bank_id captured3FF, eightcommonmasterinstances; actual10SRAM memory TML3 plus exact stagecontrol; FFband-aware assigned geometry. FouracceptedLG8MACs outsideownroots; no wholebankqualification.",
+  "benches": [
+   {
+    "name": "shared_all8_memory_exact",
+    "cmd": "bash tools/hbm_hc/run_bank_shell_shared.sh {RUN}/memory",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "BANK_SHELL_SHARED PASS"
+   },
+   {
+    "name": "shared_static_bank_ID_mutant",
+    "cmd": "bash tools/hbm_hc/run_bank_shell_shared.sh {RUN}/memory_mut && vvp {RUN}/memory_mut/mID.vvp",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "BANK_SHELL_SHARED.*mismatch"
+   },
+   {
+    "name": "shared_stage_control_exact",
+    "cmd": "bash tools/hbm_hc/run_bank_shell_shared_control.sh {RUN}/control",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "BANK_SHELL_SHARED_CONTROL PASS"
+   },
+   {
+    "name": "shared_stage_control_latency_mutant",
+    "cmd": "bash tools/hbm_hc/run_bank_shell_shared_control.sh {RUN}/control_mut && vvp {RUN}/control_mut/m1.vvp",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "BANK_SHELL_SHARED_CONTROL.*mismatch"
+   }
+  ],
+  "views_to": "physical/ref_tile/hbm_hc_bank_shell_shared_static/views",
+  "record_to": "results/rtl/ref_tile/hbm_hc_bank_shell_shared_static"
+ },
+ "pin_ranges": {
+  "weight_data": [
+   20,
+   310
+  ],
+  "residual_data": [
+   310,
+   460
+  ],
+  "write_done": [
+   460,
+   470
+  ],
+  "read_valid": [
+   470,
+   480
+  ],
+  "memory_fault": [
+   480,
+   490
+  ]
+ },
+ "structural_change": "Reserve61.776um from residualmacro to Ecore instead20.736um for realoutputFFband+halo, shortenweight/residualcolumn; explicit proportional Ebuspinranges remove crowded1024bit group",
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
