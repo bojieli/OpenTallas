@@ -1,0 +1,66 @@
+{
+  "scope": "Component arithmetic/transfers with actual native front_core+columns; uses historical C++ numerical ROM stimulus shim, NOT full native mapped-ROM/token qualification. Actual generated front/die-wrapper test remains separate pending.",
+  "source_commits": [
+    "674e2445d",
+    "8598faf90"
+  ],
+  "source_note": "Nonmutated implementation unchanged between commits. Corrected BF_SEAM_MUTANT_DATA conditional only changes mutated branch; preserved initial undetected rowLSB mutant and negative aggregate verdict.",
+  "qualification": "COMPONENT_ONLY",
+  "CPIN": 1,
+  "fixed_cycles_added": 1,
+  "initial": {
+    "positive": {
+      "returncode": 0,
+      "ok": true,
+      "markers": [
+        "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+        "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+        "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+        "TXN LAG ns min=6.664 max=15.827 mean=9.923 n=456",
+        "TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0",
+        "TXN MATCH"
+      ]
+    },
+    "seam_data": {
+      "returncode": 0,
+      "ok": false,
+      "markers": [
+        "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+        "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+        "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+        "TXN LAG ns min=6.664 max=15.827 mean=9.923 n=456",
+        "TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0",
+        "TXN MATCH"
+      ]
+    },
+    "seam_slot": {
+      "returncode": 1,
+      "ok": true,
+      "markers": [
+        "[2250000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=344d487400400010"
+      ]
+    }
+  },
+  "corrected_data": {
+    "seam_data": {
+      "returncode": 1,
+      "ok": true,
+      "markers": [
+        "[4617000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=8 ref=334e503a40400010 shadow=334e503dc0400010"
+      ]
+    }
+  },
+  "accepted": true,
+  "files": {
+    "initial/terminal.json": "22fcc01705209882f1088b478a186d0036bd7567c0765efb2198575d0b9505fe",
+    "initial/positive/run.log": "9d57d1bddc7a0cbdc506a141611513b7fdd9357d387c8f3218e00106fcbe8935",
+    "initial/positive/ot_s81_bf_seam.sv": "760edfc4478440d70140d43605aec82655806a58e15e0dde6c140a6f16282d44",
+    "initial/seam_data/run.log": "44404c374eb603e1e1eac15143d06f4fac6edefd88655ce866ecc4d25e638389",
+    "initial/seam_data/ot_s81_bf_seam.sv": "760edfc4478440d70140d43605aec82655806a58e15e0dde6c140a6f16282d44",
+    "initial/seam_slot/run.log": "3ebbdb8dc54253622318c12e2e8e7fcf67c11162424b005566f78e14357da98f",
+    "initial/seam_slot/ot_s81_bf_seam.sv": "760edfc4478440d70140d43605aec82655806a58e15e0dde6c140a6f16282d44",
+    "fixed_data/terminal.json": "712be253c819064328abc7778e56267e1faa01df4bdb18b975d7d4ae7c8bcb9d",
+    "fixed_data/seam_data/run.log": "63136adf2815055a4b625aac4a632fd62f783045a38d5ab219ffd08cf4353250",
+    "fixed_data/seam_data/ot_s81_bf_seam.sv": "97cd1503059711ed23f8836b0c93963a8e1d407c64981226def2ef996329e547"
+  }
+}

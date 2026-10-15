@@ -1,0 +1,113 @@
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 9.505 MB sources in 53 modules, into 1.077 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.437 s (elab=0.120, cvt=0.192, bld=0.000); cpu 0.437 s on 1 threads; allocated 79.469 MB
+%Warning-PINMISSING: rtl/s81/ot_s81_bf_native.sv:301:139: Instance has missing pin: 'prog_issue_pin'
+  301 |             .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_front (
+      |                                                                                                                                           ^~~~~~~
+                     rtl/v41rom/ot_v41_bf_front_core.sv:264:26: ... Location of port declaration
+  264 |     input  wire          prog_issue_pin,
+      |                          ^~~~~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/s81/ot_s81_bf_native.sv:301:139: Instance has missing pin: 'prog_addr_pin'
+  301 |             .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_front (
+      |                                                                                                                                           ^~~~~~~
+                     rtl/v41rom/ot_v41_bf_front_core.sv:265:26: ... Location of port declaration
+  265 |     input  wire [13:0]   prog_addr_pin,
+      |                          ^~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/s81/ot_s81_bf_native.sv:301:139: Instance has missing pin: 'prog_operand_pin'
+  301 |             .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_front (
+      |                                                                                                                                           ^~~~~~~
+                     rtl/v41rom/ot_v41_bf_front_core.sv:266:26: ... Location of port declaration
+  266 |     input  wire [14:0]   prog_operand_pin,  
+      |                          ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/s81/ot_s81_bf_native.sv:301:139: Instance has missing pin: 'prog_segment_pin'
+  301 |             .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_front (
+      |                                                                                                                                           ^~~~~~~
+                     rtl/v41rom/ot_v41_bf_front_core.sv:267:36: ... Location of port declaration
+  267 |     input  wire [$clog2(NSEG)-1:0] prog_segment_pin,
+      |                                    ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/s81/ot_s81_bf_native.sv:301:139: Instance has missing pin: 'prog_half_pin'
+  301 |             .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_front (
+      |                                                                                                                                           ^~~~~~~
+                     rtl/v41rom/ot_v41_bf_front_core.sv:268:26: ... Location of port declaration
+  268 |     input  wire          prog_half_pin,
+      |                          ^~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/s81/ot_s81_bf_native.sv:301:139: Instance has missing pin: 'prog_chain_pin'
+  301 |             .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_front (
+      |                                                                                                                                           ^~~~~~~
+                     rtl/v41rom/ot_v41_bf_front_core.sv:269:35: ... Location of port declaration
+  269 |     input  wire [$clog2(NCH)-1:0] prog_chain_pin
+      |                                   ^~~~~~~~~~~~~~
+%Warning-WIDTHTRUNC: rtl/v41rom/ot_v41_bf_front_core.sv:348:22: Operator VAR 'HOLDM1' expects 3 bits on the Initial value, but Initial value's SUB generates 32 bits.
+                                                              : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+  348 |     localparam [2:0] HOLDM1 = BPH - 1;
+      |                      ^~~~~~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/v41rom/ot_v41_bf_front_core.sv:349:25: Operator VAR 'KLAST' expects 2 bits on the Initial value, but Initial value's SUB generates 32 bits.
+                                                              : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+  349 |     localparam [KW-1:0] KLAST = BPH - 1;
+      |                         ^~~~~
+%Warning-WIDTHEXPAND: rtl/v41rom/ot_v41_bf_front_core.sv:536:18: Bit extraction of array[15:0] requires 4 bit index, not 3 bits.
+                                                               : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+  536 |             s_row[cfg_a_e[SW-1:0]]  <= cfg_d_e[15:0];
+      |                  ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/v41rom/ot_v41_bf_front_core.sv:578:23: Bit extraction of array[15:0] requires 4 bit index, not 3 bits.
+                                                               : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+  578 |                 so_row[qa_[SW-1:0]] <= qd_[15:0]; so_idx[qa_[SW-1:0]] <= qd_[20:16]; so_n[qa_[SW-1:0]] <= qd_[25:21];
+      |                       ^
+%Warning-WIDTHEXPAND: rtl/v41rom/ot_v41_bf_front_core.sv:838:65: Operator ADD expects 9 bits on the LHS, but LHS's VARREF 'ntot' generates 7 bits.
+                                                               : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+  838 |             if (base_live[bc] && nhi[bc] > nlo[bc]) ntot = ntot + (nhi[bc] - nlo[bc]);
+      |                                                                 ^
+%Warning-WIDTHTRUNC: rtl/v41rom/ot_v41_bf_front_core.sv:838:58: Operator ASSIGN expects 7 bits on the Assign RHS, but Assign RHS's ADD generates 9 bits.
+                                                              : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+  838 |             if (base_live[bc] && nhi[bc] > nlo[bc]) ntot = ntot + (nhi[bc] - nlo[bc]);
+      |                                                          ^
+%Warning-WIDTHEXPAND: rtl/v41rom/ot_v41_bf_front_core.sv:843:42: Operator ADD expects 9 bits on the LHS, but LHS's VARREF 'gtot' generates 7 bits.
+                                                               : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+  843 |             if (base_go[bc]) gtot = gtot + (ghi - glo);
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/v41rom/ot_v41_bf_front_core.sv:843:35: Operator ASSIGN expects 7 bits on the Assign RHS, but Assign RHS's ADD generates 9 bits.
+                                                              : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+  843 |             if (base_go[bc]) gtot = gtot + (ghi - glo);
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/v41rom/ot_v41_bf_front_core.sv:844:44: Operator ADD expects 9 bits on the LHS, but LHS's VARREF 'ltot' generates 7 bits.
+                                                               : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+  844 |             if (base_live[bc]) ltot = ltot + (ghi - glo);
+      |                                            ^
+%Warning-WIDTHTRUNC: rtl/v41rom/ot_v41_bf_front_core.sv:844:37: Operator ASSIGN expects 7 bits on the Assign RHS, but Assign RHS's ADD generates 9 bits.
+                                                              : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+  844 |             if (base_live[bc]) ltot = ltot + (ghi - glo);
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/v41rom/ot_v41_bf_front_core.sv:979:46: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'w_c' generates 3 bits.
+                                                               : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+  979 |     wire w_lastu0 = (FAST != 0) ? (wA[5*NSEG + w_c] && {1'b0, w_j} + 4'd1 == w_curc) : w_uabs + 7'd1 == c_nu[w_c];
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/v41rom/ot_v41_bf_front_core.sv:1172:26: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'fc' generates 3 bits.
+                                                                : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+ 1172 |         lu_f = fa[5*NSEG + fc] && ({1'b0, fj} + 4'd1 == fa[NSEG + 4*fc +: 4]);
+      |                          ^
+%Warning-WIDTHEXPAND: rtl/v41rom/ot_v41_bf_front_core.sv:1247:47: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+ 1247 |                 f_cnt <= f_cnt + npush - (pop ? 1'b1 : 1'b0);
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/v41rom/ot_v41_bf_front_core.sv:1247:47: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+ 1247 |                 f_cnt <= f_cnt + npush - (pop ? 1'b1 : 1'b0);
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/v41rom/ot_v41_bf_front_core.sv:1263:35: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 5 bits.
+                                                                : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+ 1263 |                 if ({1'b0, f_cnt} + {2'b0, npush} > XF + (pop ? 1 : 0)) ffault_dynamic <= 1'b1;
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/v41rom/ot_v41_bf_front_core.sv:1263:35: Operator ADD expects 32 bits on the RHS, but RHS's REPLICATE generates 5 bits.
+                                                                : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+ 1263 |                 if ({1'b0, f_cnt} + {2'b0, npush} > XF + (pop ? 1 : 0)) ffault_dynamic <= 1'b1;
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/v41rom/ot_v41_bf_front_core.sv:1265:64: Operator GTE expects 32 bits on the LHS, but LHS's REPLICATE generates 31 bits.
+                                                                : ... note: In instance 'dsfd_bf_front_static.u_view.g_hc.u_front'
+ 1265 |                 if (BP != 0 && issue && w_bf && {27'd0, w_cnt} >= NCH / BPH) ffault_dynamic <= 1'b1;
+      |                                                                ^~

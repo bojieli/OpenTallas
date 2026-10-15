@@ -73,6 +73,9 @@ module ot_s81_bf_front #(
     // block ot_s81_bf_front (pin registers + ot_v41_bf_front_core) and two ot_v41_bf_col blocks with registered
     // abutted boundaries (tools/s81/gen_bf_hier.py); the columns run one cycle behind the front (partials +1 cycle).
     parameter integer HCOL = 0,
+    // Uniform fixed egress stage per column face; +1 cycle, no scheduling feedback.
+    parameter integer CPIN = 0,
+    parameter integer STATIC_PROGRAM = 0,
     // PINLAT (BF-PINCLK 2026-10-09, default 0; requires PINREG): a lockup latch, transparent while clk is LOW, between each
     // pin-capture data register and the element.  Routed full-rate dbs miss FF hold on g_pin.r_* -> u_elem b_* (pin group
     // ungated, capture on the deeper ICG-gated eclk tree: 1,407 endpoints, -37 ps).  Through the latch the element sees
@@ -134,10 +137,22 @@ module ot_s81_bf_front #(
     output wire [5*NSEG-1:0] c1_so_idx,
     output wire [5*NSEG-1:0] c1_so_n,
     input  wire [1:0]    c_qy_bkf_in,     // the two columns' registered fault ORs
+    input wire io_clk, // independent physical pin/seam clock root
+    input wire [37:0] f_prog, // fixed core-edge programme, pin->issue +1 edge
     output wire         busy,
     output wire         fault,
     output wire         hph           // HALF: 1 in the clk cycle that ends on a gated (element) edge; 1 when HALF = 0
 );
+
+    // Keep all programme fields together at the physical face. The core samples
+    // the previous registered word; no ready/busy/clock-enable participates.
+    wire pin_clk = (STATIC_PROGRAM != 0) ? io_clk : clk;
+    (* keep = 1 *) reg [37:0] programme_pin_q;
+    generate if (STATIC_PROGRAM != 0) begin : g_static_programme_pin
+        always @(posedge pin_clk or negedge rst_n)
+            if (!rst_n) programme_pin_q <= 38'd0;
+            else programme_pin_q <= f_prog;
+    end endgenerate
     // bf-arch: the partial outputs leave from the hardened columns, not from this block
     wire [NB-1:0] pv; wire [32*NB-1:0] pval; wire [16*NB-1:0] prow; wire [5*NB-1:0] pseg, pnseg; wire [NB-1:0] perr;
     wire [3*NB-1:0] ppos;
@@ -217,13 +232,13 @@ module ot_s81_bf_front #(
         reg [3:0] r_xb_sv;
         reg [31:0] r_xb_u;
         reg [1023:0] r_xb_d;
-        always @(posedge clk or negedge rst_n)
+        always @(posedge pin_clk or negedge rst_n)
             if (!rst_n) begin r_busy <= 1'b0; r_fault <= 1'b0; end
             else begin r_busy <= busy_e; r_fault <= fault_e; end
-        always @(posedge pclk or negedge rst_n)
+        always @(posedge pin_clk or negedge rst_n)
             if (!rst_n) begin r_cfg_v <= 1'b0; r_go <= 1'b0; r_xs_v <= 1'b0; r_xb_v <= 1'b0; end
             else begin r_cfg_v <= cfg_v; r_go <= go; r_xs_v <= xs_v; r_xb_v <= xb_v; end
-        always @(posedge pclk) begin
+        always @(posedge pin_clk) begin
             r_cfg_a <= cfg_a;
             r_cfg_d <= cfg_d;
             r_go_bf <= go_bf;
@@ -245,7 +260,7 @@ module ot_s81_bf_front #(
         reg [7:0] r_lxs_p; reg [2:0] r_lxs_b; reg [1:0] r_lxs_sv; reg [255:0] r_lxs_q0, r_lxs_q1; reg [9:0] r_lxs_e0, r_lxs_e1;
         reg [2:0] r_lxs_pos, r_lxb_pos, r_lxb_b; reg [3:0] r_lxb_sv; reg [31:0] r_lxb_u; reg [1023:0] r_lxb_d;
         if (PINLAT != 0) begin : g_lat
-            always_latch if (!clk) begin
+            always_latch if (!pin_clk) begin
                 r_lxs_p = r_xs_p; r_lxs_b = r_xs_b; r_lxs_sv = r_xs_sv; r_lxs_q0 = r_xs_q0; r_lxs_e0 = r_xs_e0;
                 r_lxs_q1 = r_xs_q1; r_lxs_e1 = r_xs_e1; r_lxs_pos = r_xs_pos; r_lxb_pos = r_xb_pos; r_lxb_b = r_xb_b;
                 r_lxb_sv = r_xb_sv; r_lxb_u = r_xb_u;
@@ -309,7 +324,11 @@ module ot_s81_bf_front #(
         assign xb_d_i = xb_d;
         assign busy = busy_e; assign fault = fault_e;
     end
-    if (RECUT != 0 && HCOL != 0) begin : g_rc
+    // Three independent, mutually exclusive generate blocks (not an if / else-if chain): a 3-way else-if chain makes Yosys
+    // wrap the later branches in genblkN (g_rc.u_elem became genblk3.g_rc.u_elem when HCOL was added), which broke every
+    // flat-hierarchy physical hook (place.tcl g_rc.u_elem.g_mac[0].g_pp.u_rom0, synth.tcl selectors, CTS groups).  Separate
+    // blocks keep the pre-HCOL names g_rc.u_elem / g_orig.u_elem exactly; HCOL's front/column pair is g_hc.
+    if (RECUT != 0 && HCOL != 0) begin : g_hc
         // bf-arch HCOL: front core + two hardened columns (the column interface c_* crosses an abutted boundary)
         localparam integer CTW = $clog2(NCH) + 3 + $clog2(NSEG) + (MTP != 0 ? 1 : 0) + 6;
         wire c_issue, c_i1_v, c_i1_bk, c_i1_bf, c_ze_d;
@@ -318,7 +337,10 @@ module ot_s81_bf_front #(
         ot_v41_bf_front_core #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NCHB(NCHB), .NB(NB), .MTP(MTP),
             .EARLY(EARLY), .CG(CG), .DRAIN(RDRAIN), .FAST(FAST), .CUT(CUT), .PP(PP), .FRONT_PAR(FRONT_PAR), .BP(BP),
             .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4),
-            .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_front (
+            .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE), .STATIC_PROGRAM(STATIC_PROGRAM)) u_front (
+            .prog_issue_pin(programme_pin_q[0]), .prog_addr_pin(programme_pin_q[14:1]),
+            .prog_operand_pin(programme_pin_q[29:15]), .prog_segment_pin(programme_pin_q[32:30]),
+            .prog_half_pin(programme_pin_q[33]), .prog_chain_pin(programme_pin_q[37:34]),
             .clk(eclk), .rst_n_pin(rst_n), .cfg_v_pin(cfg_v_i), .cfg_a_pin(cfg_a_i), .cfg_d_pin(cfg_d_i), .go_pin(go_i),
             .go_bf_pin(go_bf_i), .xs_v_pin(xs_v_i), .xs_p_pin(xs_p_i), .xs_b_pin(xs_b_i), .xs_sv_pin(xs_sv_i),
             .xs_q0_pin(xs_q0_i), .xs_e0_pin(xs_e0_i), .xs_q1_pin(xs_q1_i), .xs_e1_pin(xs_e1_i), .xs_pos_pin(xs_pos_i),
@@ -328,41 +350,19 @@ module ot_s81_bf_front #(
             .c_issue(c_issue), .c_a_ctr(c_a_ctr), .c_i1_v(c_i1_v), .c_i1_bk(c_i1_bk), .c_i1_bf(c_i1_bf), .c_i1_t(c_i1_t),
             .c_i2x_q0(c_i2x_q0), .c_i2x_e0(c_i2x_e0), .c_i2x_q1(c_i2x_q1), .c_i2x_e1(c_i2x_e1), .c_ze_d(c_ze_d),
             .c_so_row(c_so_row), .c_so_idx(c_so_idx), .c_so_n(c_so_n), .c_qy_bkf(c_qy_bkf));
-        // replicated column interface: one pin set per column face (west: column 0, east: column 1)
-        assign c0_issue = c_issue;
-        assign c0_a_ctr = c_a_ctr;
-        assign c0_i1_v = c_i1_v;
-        assign c0_i1_bk = c_i1_bk;
-        assign c0_i1_bf = c_i1_bf;
-        assign c0_i1_t = c_i1_t;
-        assign c0_i2x_q0 = c_i2x_q0;
-        assign c0_i2x_e0 = c_i2x_e0;
-        assign c0_i2x_q1 = c_i2x_q1;
-        assign c0_i2x_e1 = c_i2x_e1;
-        assign c0_ze_d = c_ze_d;
-        assign c0_so_idx = c_so_idx;
-        assign c0_so_n = c_so_n;
-        assign c0_so_row = c_so_row[16*NSEG*0 +: 16*NSEG];
-        assign c1_issue = c_issue;
-        assign c1_a_ctr = c_a_ctr;
-        assign c1_i1_v = c_i1_v;
-        assign c1_i1_bk = c_i1_bk;
-        assign c1_i1_bf = c_i1_bf;
-        assign c1_i1_t = c_i1_t;
-        assign c1_i2x_q0 = c_i2x_q0;
-        assign c1_i2x_e0 = c_i2x_e0;
-        assign c1_i2x_q1 = c_i2x_q1;
-        assign c1_i2x_e1 = c_i2x_e1;
-        assign c1_ze_d = c_ze_d;
-        assign c1_so_idx = c_so_idx;
-        assign c1_so_n = c_so_n;
-        assign c1_so_row = c_so_row[16*NSEG*1 +: 16*NSEG];
+        // Independent pin registers on both column faces, fixed +CPIN cycle.
+        localparam integer CW = 1+14+3+CTW+2*256+2*10+1+2*5*NSEG+16*NSEG;
+        ot_s81_bf_seam #(.W(CW), .PIPE(CPIN)) u_seam0 (.clk(pin_clk), .rst_n(rst_n),
+            .d({c_issue, c_a_ctr, c_i1_v, c_i1_bk, c_i1_bf, c_i1_t, c_i2x_q0, c_i2x_e0, c_i2x_q1, c_i2x_e1, c_ze_d, c_so_idx, c_so_n, c_so_row[16*NSEG*0 +: 16*NSEG]}), .q({c0_issue, c0_a_ctr, c0_i1_v, c0_i1_bk, c0_i1_bf, c0_i1_t, c0_i2x_q0, c0_i2x_e0, c0_i2x_q1, c0_i2x_e1, c0_ze_d, c0_so_idx, c0_so_n, c0_so_row}));
+        ot_s81_bf_seam #(.W(CW), .PIPE(CPIN)) u_seam1 (.clk(pin_clk), .rst_n(rst_n),
+            .d({c_issue, c_a_ctr, c_i1_v, c_i1_bk, c_i1_bf, c_i1_t, c_i2x_q0, c_i2x_e0, c_i2x_q1, c_i2x_e1, c_ze_d, c_so_idx, c_so_n, c_so_row[16*NSEG*1 +: 16*NSEG]}), .q({c1_issue, c1_a_ctr, c1_i1_v, c1_i1_bk, c1_i1_bf, c1_i1_t, c1_i2x_q0, c1_i2x_e0, c1_i2x_q1, c1_i2x_e1, c1_ze_d, c1_so_idx, c1_so_n, c1_so_row}));
         assign c_qy_bkf = c_qy_bkf_in;
         assign pv_e = '0; assign pval_e = '0; assign prow_e = '0; assign pseg_e = '0; assign pnseg_e = '0; assign perr_e = '0; assign ppos_e = '0;
 `ifndef SYNTHESIS
         initial if (TCG == 0 || QZE == 0 || HALF != 0) $fatal(1, "HCOL requires RECUT, TCG = 1, QZE = 1, HALF = 0");
 `endif
-    end else if (RECUT != 0) begin : g_rc
+    end
+    if (RECUT != 0 && HCOL == 0) begin : g_rc
         ot_v41_rom_elem_qx_w10 #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NCHB(NCHB), .NB(NB), .MTP(MTP),
             .EARLY(EARLY), .CG(CG), .DRAIN(RDRAIN), .FAST(FAST), .CUT(CUT), .PP(PP), .FRONT_PAR(FRONT_PAR), .BP(BP),
             .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4),
@@ -376,7 +376,8 @@ module ot_s81_bf_front #(
 `ifndef SYNTHESIS
         initial if (FAST == 0 || PP == 0 || BP != 0 || HALF != 0) $fatal(1, "RECUT requires FAST = 1, PP = 1, BP = 0, HALF = 0");
 `endif
-    end else begin : g_orig
+    end
+    if (RECUT == 0) begin : g_orig
         ot_v41_rom_elem_w10 #(
             .NSEG(NSEG),
             .NCH(NCH),
