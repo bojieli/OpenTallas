@@ -87,6 +87,17 @@
     "needs": [
      "iverilog"
     ]
+   },
+   {
+    "name": "reset_pin_exact_release_and_mutant",
+    "cmd": "bash tools/qwen_static_kv/run_writer_reset_pin_gate.sh {RUN}/bench/reset-pin",
+    "expect": "pass",
+    "pass_regex": "^RESET_PIN PASS",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
    }
   ],
   "extra_paths": [
