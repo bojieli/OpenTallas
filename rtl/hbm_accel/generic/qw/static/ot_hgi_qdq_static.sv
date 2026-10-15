@@ -164,7 +164,8 @@ endmodule
 // Wires-only native engine. All five physical roots remain explicit at the
 // enclosing programme parent. Decoder leaf arithmetic is unchanged dec3.
 module ot_hgi_qdq_static #(
-    parameter integer RL=7,DL=25,WC=4,MUT=0,IO_REGS=0
+    parameter integer RL=7,DL=25,WC=4,MUT=0,IO_REGS=0,
+    parameter integer TSPLIT=0 // 1: word-sliced transport (ot_hgi_qdq_static_transport_split), same edges; IO_REGS=1 only
 )(
     input wire clk_transport,clk_dxl,clk_dbq,clk_daq,rst_n,
     input wire cmd_v,
@@ -182,11 +183,19 @@ module ot_hgi_qdq_static #(
     wire [511:0] y;
     wire [17:0] hd={header[127:118],header[71:64]};
     wire [1023:0] xs,xb,xa;wire bvo,bfo;wire [511:0] byo;
+    generate if(TSPLIT!=0) begin: split_transport
+    ot_hgi_qdq_static_transport_split #(.IO_REGS(IO_REGS),.RL(RL),.DL(DL),.WC(WC),.MUT(MUT)) transport(
+        .clk(clk_transport),.rst_n(rst_n),.cmd_v(cmd_v),.cmd_op(cmd_op),.cmd_block(cmd_block),
+        .cmd_src(cmd_src),.cmd_dst(cmd_dst),.cmd_last(cmd_last),.rq(rq),.rr(rr),.wq(wq),
+        .beat_done(beat_done),.record_done(record_done),.fault(fault),
+        .dec_v(v),.dec_header(header),.dec_x(x),.vo(vo),.qfault(qfault),.decode_fault(decode_fault),.y(y));
+    end else begin: monolith_transport
     ot_hgi_qdq_static_transport #(.IO_REGS(IO_REGS),.RL(RL),.DL(DL),.WC(WC),.MUT(MUT)) transport(
         .clk(clk_transport),.rst_n(rst_n),.cmd_v(cmd_v),.cmd_op(cmd_op),.cmd_block(cmd_block),
         .cmd_src(cmd_src),.cmd_dst(cmd_dst),.cmd_last(cmd_last),.rq(rq),.rr(rr),.wq(wq),
         .beat_done(beat_done),.record_done(record_done),.fault(fault),
         .dec_v(v),.dec_header(header),.dec_x(x),.vo(vo),.qfault(qfault),.decode_fault(decode_fault),.y(y));
+    end endgenerate
     ot_hgi_qw_dxl u_dxl(.clk(clk_dxl),.x(x),.xs(xs),.xb(xb),.xa(xa));
     ot_hgi_qw_dbq u_dbq(.clk(clk_dbq),.rst_n(rst_n),.v(v),.hd(hd),.xs(xs),.xb(xb),
         .bvo(bvo),.bfo(bfo),.byo(byo));
