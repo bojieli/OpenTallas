@@ -6,14 +6,16 @@
 //                                   cluster of hardened leaves; its leaf set is chosen by the OT_PQ_* defines of the die
 //                                   RTL manifest (physical/s81_die_rtl/layer1.f), its clock entries pass straight to die
 //                                   pins (the die delivers phi - R at each)
-//   u_rom   dsfd_pq_romr            the register stage of the core's "two-cycle synchronous ROM" contract (rom_pq0 /
-//                                   rom_pq1 / rom_sq at edge t + 2 hold the word of the address driven at edge t: the
-//                                   die's ot_rom_4096x72_m8 macro registers the address, this leaf registers its data)
+//   the three ROM macros (die instances pqrom0..2, ot_rom_4096x72_m8) abut the core's E face and ARE the core's
+//                                   "two-cycle synchronous ROM": address launched by a core flop at edge t, sampled
+//                                   by the macro at t + 1 (rd_out <= word), captured by the core at t + 2 -- no
+//                                   register here (one would make it three cycles: DSFD_PQ_ROM_MUT_REG, the bench's
+//                                   negative control)
 //   u_lane  dsfd_pq_lx              the x lane: the q-family fields of the native 1,633-b broadcast f_bus packed into the
 //                                   die's 564-b lane word {cc 15 | x1 266 | x0 283} + valid, registered at the pins, one
 //                                   copy per lane start block (W / E); lane-FIFO overrun is a sticky fault into the core
 // Die ports (every one is a leaf pin; no logic at this level):
-//   clock entries ck_ctl ck_qb ck_fault ck_aq ck_ix ck_bc (+ the split leaves' entries) ck_rom ck_lane; rst (async, low)
+//   clock entries ck_ctl ck_qb ck_fault ck_aq ck_ix ck_bc (+ the split leaves' entries) ck_lane; rst (async, low)
 //   f_iss[91:0]  issuer  {f_fault, i_fmt 2, i_ops 19, i_obase 19, i_xps 19, i_xbase 19, i_np 3, i_ph 9, go}
 //   t_iss[38:0]  status  {ev_tag 2, ev_end, ev_go, phase_cycles 32, fault, idle, ready}
 //   t_vm[19:0]   x read request {x_addr 19, x_re}          f_vm[2048:0]  x read return {x_q 2048, x_rv}
@@ -25,7 +27,7 @@
 // outputs are open, and the BF fronts' xb pins are reported unconnected by tools/die_port_bind.py -- the BF transport
 // is a die decision (union lane 1,085 b on BF frames, or a serial BF beat), not hidden.
 // ROM use: the phase ROMs hold 2 x 512 phases (PHW 9) in rows 0..1023 of a 4,096-row macro, the stream ROM 2,048 rows:
-// the unused address MSBs are driven 0 by the ROM leaf; the macros read every cycle (ce 1: the core has no enable).
+// the unused address MSBs are tied 0 at this level; the macros read every cycle (ce tied 1: the core has no enable).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_pq_n (
     input  wire          ck_ctl, ck_qb, ck_fault,
@@ -49,7 +51,7 @@ module dsfd_sp_pq_n (
 `else
     input  wire [3:0]    ck_bc,
 `endif
-    input  wire          ck_rom, ck_lane,
+    input  wire          ck_lane,
     input  wire          rst,
     input  wire [91:0]   f_iss,
     output wire [38:0]   t_iss,
@@ -91,37 +93,21 @@ module dsfd_sp_pq_n (
         .f_fault(f_fault_c), .fault(t_iss[2]), .phase_cycles(t_iss[34:3]), .ev_go(t_iss[35]), .ev_end(t_iss[36]),
         .ev_tag(t_iss[38:37]), .f_bus(f_bus),
         .rom_pa0(pa0), .rom_pa1(pa1), .rom_pq0(pq0), .rom_pq1(pq1), .rom_sa(sa), .rom_sq(sq));
-    dsfd_pq_romr u_rom (.ck(ck_rom), .pa0(pa0), .pa1(pa1), .sa(sa), .ra0(ra0), .ra1(ra1), .ra2(ra2),
-        .rc0(rc0), .rc1(rc1), .rc2(rc2), .rq0(rq0), .rq1(rq1), .rq2(rq2), .pq0(pq0), .pq1(pq1), .sq(sq));
-    dsfd_pq_lx u_lane (.ck(ck_lane), .rst(rst), .f_bus(f_bus), .f_fault(f_iss[91]), .xws(xws), .xes(xes),
-        .xw(xw), .xe(xe), .f_fault_c(f_fault_c));
-endmodule
-
-// ---------------------------------------------------------------------------------------------------------------------
-// dsfd_pq_romr: the PQ core's ROM data register stage (one leaf for the three macros beside the core's E face).  The
-// address / enable pins are the core's NEXT-address flops (the macro registers them); data rd_out -> this leaf's flops
-// (captured at the pin) -> the core: word of address(t) at edge t + 2.
-// ---------------------------------------------------------------------------------------------------------------------
-module dsfd_pq_romr (
-    input  wire        ck,
-    input  wire [9:0]  pa0, pa1,
-    input  wire [10:0] sa,
-    output wire [11:0] ra0, ra1, ra2,
-    output wire        rc0, rc1, rc2,
-    input  wire [63:0] rq0, rq1,
-    input  wire [47:0] rq2,
-    output reg  [63:0] pq0, pq1,
-    output reg  [47:0] sq
-);
+    // ROM macros: address MSBs / enables are constant ties (rows 1024.. / 2048.. of the 4,096-row macros unused)
     assign ra0 = {2'b00, pa0};
     assign ra1 = {2'b00, pa1};
     assign ra2 = {1'b0, sa};
     assign {rc0, rc1, rc2} = 3'b111;
-`ifdef DSFD_PQ_ROMR_MUT_NOREG
-    always @* begin pq0 = rq0; pq1 = rq1; sq = rq2; end
+`ifdef DSFD_PQ_ROM_MUT_REG
+    // negative control only: a relay stage on the ROM data (three-cycle ROM) must FAIL the die-slot bench
+    reg [63:0] pq0_q, pq1_q; reg [47:0] sq_q;
+    always @(posedge ck_lane) begin pq0_q <= rq0; pq1_q <= rq1; sq_q <= rq2; end
+    assign pq0 = pq0_q; assign pq1 = pq1_q; assign sq = sq_q;
 `else
-    always @(posedge ck) begin pq0 <= rq0; pq1 <= rq1; sq <= rq2; end
+    assign pq0 = rq0; assign pq1 = rq1; assign sq = rq2;
 `endif
+    dsfd_pq_lx u_lane (.ck(ck_lane), .rst(rst), .f_bus(f_bus), .f_fault(f_iss[91]), .xws(xws), .xes(xes),
+        .xw(xw), .xe(xe), .f_fault_c(f_fault_c));
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------

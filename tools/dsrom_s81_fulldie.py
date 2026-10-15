@@ -5082,7 +5082,7 @@ def pq_rtl_clock_ports(manifest='physical/s81_die_rtl/layer1.f'):
         vec.append(('ck_aq_aux', 16))
     if 'OT_PQ_IX_PHYS_SPLIT' in defs:
         vec.append(('ck_ix_read', 32 if 'OT_PQ_IX_BANK_SPLIT' in defs else 16))
-    return ['ck_ctl', 'ck_qb', 'ck_fault', 'ck_rom', 'ck_lane'] + [f'{n}[{i}:{i}]' for n, w in vec for i in range(w)]
+    return ['ck_ctl', 'ck_qb', 'ck_fault', 'ck_lane'] + [f'{n}[{i}:{i}]' for n, w in vec for i in range(w)]
 
 
 DUAL_CLOCK_MASTERS = ('dsfd_sp_gather_c', 'dsfd_sp_capture_c', 'dsfd_stage_seq_c', 'dsfd_stage_seq_c8', 'dsfd_host_c')
