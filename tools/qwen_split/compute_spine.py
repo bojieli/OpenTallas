@@ -314,7 +314,7 @@ def _snap(v, x, g):
     return round(v.dn(x, g), 4)
 
 
-def _place_su_vm(put, cx, su_y):
+def _place_su_vm(put, cx, su_y, xe=None):
     """Keep the r21v registered SU/VM seam at its actual abutted pin faces.
 
     The VM is wider than the SU. Leave one channel of positive face offset
@@ -322,8 +322,11 @@ def _place_su_vm(put, cx, su_y):
     put() snaps both origins and subtracts SHAVE from their outlines, leaving
     the existing 24-nm contact gap and no additional RTL transport edge.
     """
-    vm_x = cx - VM_WH[0] / 2
-    su = put('sp_su64_sfu', vm_x + CH, su_y, SU_WH)
+    vm_x = cx - VM_WH[0] / 2 if STACK != 'seamw' else xe
+    # C16 'seamw' (owner 21:35: communicating blocks adjacent): the tree-top column (tap / tt_ctlm / tt_up4) moves W of
+    # the SU, beside the W slab column it talks to (band_lanes tt_ty / pword / tt_lc, port_tiles tt_c / tt_f); the VM
+    # aligns to the E sub-area's W edge and the SU shifts E by one control column (still inside the VM N face).
+    su = put('sp_su64_sfu', vm_x + (CH if STACK != 'seamw' else CTLM_WH[0] + CH), su_y, SU_WH)
     vm = put('sp_vector_memory', vm_x, su.y - VM_WH[1], VM_WH)
     return su, vm
 
@@ -377,7 +380,7 @@ def place(v, m, G):
     for b in range(3):
         y0 = max(lo, cents[b] - gh / 2)
         y0 = min(y0, top - gh) if b == 2 else y0
-        if STACK == 'seam' and y0 < head_y + HROW and y0 + gh > head_y - HROW:
+        if STACK in ('seam', 'seamw') and y0 < head_y + HROW and y0 + gh > head_y - HROW:
             y0 = head_y - HROW - gh
             if y0 < lo:
                 raise SystemExit('split compute seam: slab stack cannot clear the head-row channel')
@@ -386,7 +389,7 @@ def place(v, m, G):
         put(f'sp_res_ser_{b}', xa + dr, y0 + LANES_WH[1] + PORT_WH[1] + 8.64, RES_WH)
         yf = max(lo_f, cents[b] - PORT_WH[1] / 2)
         yf = min(yf, top - PORT_WH[1])
-        if STACK == 'seam' and yf < head_y + HROW and yf + PORT_WH[1] > head_y - HROW:
+        if STACK in ('seam', 'seamw') and yf < head_y + HROW and yf + PORT_WH[1] > head_y - HROW:
             yf = head_y - HROW - PORT_WH[1]
             if yf < lo_f:
                 raise SystemExit('split compute seam: east slab cannot clear the head-row channel')
@@ -417,8 +420,8 @@ def place(v, m, G):
     put('rs_bump', ph.x - 4.32 - by['rs_bump'].w - 4.32, ph.y - by['rs_bump'].h / 2)
     put('ckb_rom', ph.x - 4.32 - by['ckb_rom'].w - 4.32, ph.y + 30.0)
     # SU slot below the link, constant group E of it
-    su_y = head_y + HROW if STACK == 'seam' else ad.y - CH - SU_WH[1]
-    su, vm = _place_su_vm(put, cx, su_y)
+    su_y = head_y + HROW if STACK in ('seam', 'seamw') else ad.y - CH - SU_WH[1]
+    su, vm = _place_su_vm(put, cx, su_y, xe)
     rec['stack'] = dict(mode=STACK, head_y=round(head_y, 3), su_vm_gap=round(su.y - vm.y - vm.h, 4))
     gx = su.x + SU_WH[0] + CH
     cb = sorted((i for i in m['insts'] if i.master == 'qfd_su_cbuf_g'), key=lambda i: int(i.name.rsplit('_', 1)[1]))
@@ -433,13 +436,19 @@ def place(v, m, G):
     sq = by.get('seq_su')
     if sq is not None:
         put('seq_su', gx, yq - sq.h)
-    if gx + 2 * (cr[0].w + 4.32) > xf - CH + 1e-3 or (sq is not None and sq.y < su.y - 1e-3):
+    if gx + 2 * (cr[0].w + 4.32) > xf - CH + 1e-3 or (sq is not None and (sq.y < su.y - 1e-3 or gx + sq.w > xf - CH + 1e-3)):
         raise SystemExit(f'split compute spine: constant group does not fit E of the SU (gx {gx:.1f}, xf {xf:.1f})')
     # The VM was placed with the SU above: S(SU) and N(VM) are abutted,
     # matching the existing zero-relay registered seam and its latency.
     # tree top below the VM, clock receiver + reset leaf at the die centre
     xt = gx + max(2 * (cr[0].w + 4.32), sq.w if sq is not None else 0.0) + CH
-    if STACK == 'seam':
+    if STACK == 'seamw':
+        # tap at the VM N face W end; tt_up4 right above it (its band words tt_ty / pword reach bands 0 and 2 from
+        # the band-1 height), tt_ctlm above tt_up4 (tt_ib to the tap: one up4 height away)
+        xt = vm.x
+        u4 = put('tt_up4_0', vm.x, su.y + TAP_SLOT_WH[1] + CH, UP4_WH)
+        ct = put('tt_ctlm', vm.x, u4.y + UP4_WH[1] + CH, CTLM_WH)
+    elif STACK == 'seam':
         # The tap sits beside the SU, above the VM's abutted face. The controls form
         # one column above it rather than sending every ME command around the VM.
         ct = put('tt_ctlm', xf - CH - CTLM_WH[0], su.y + TAP_SLOT_WH[1] + CH, CTLM_WH)
@@ -450,7 +459,7 @@ def place(v, m, G):
     if DVM:
         _dvm(v, m, put, rec, vm, su, xt)
     ymid = (io_top + top) / 2
-    ck_y = vm.y - CH - CLKRX_WH[1] if STACK == 'seam' else min(ymid - CLKRX_WH[1] / 2, ct.y - CH - CLKRX_WH[1])
+    ck_y = vm.y - CH - CLKRX_WH[1] if STACK in ('seam', 'seamw') else min(ymid - CLKRX_WH[1] / 2, ct.y - CH - CLKRX_WH[1])
     ck = put('clk_rx', cx - CLKRX_WH[0] / 2, ck_y)
     put('rstseq_rom', ck.x + ck.w + 4.32, ck.y)
     # ---- containment: every spine slot inside [x0, x1] x [io_top, top]
@@ -469,7 +478,8 @@ def place(v, m, G):
         _tree_widths(m, rec)
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
-        json.dump(dict(die=m['die'], rec=rec, insts=ins), open(os.environ['OT_SPLIT_DUMP'], 'w'), default=str)
+        bus = [dict(b=b_, c=c_, n=n_, e=[list(x) for x in e_]) for b_, c_, n_, e_ in m.get('buses', [])]
+        json.dump(dict(die=m['die'], rec=rec, insts=ins, buses=bus), open(os.environ['OT_SPLIT_DUMP'], 'w'), default=str)
     from qwen_split.static_io_contract import build as static_io_build
     m['native_static_io_contract'] = static_io_build(next(i for i in m['insts'] if i.name == 'io_xfifo'))
     rec['native_static_io_contract'] = dict(children=12, roots=24, native_endpoint_binding='OPEN; legacy IO graph remains diagnostic')
