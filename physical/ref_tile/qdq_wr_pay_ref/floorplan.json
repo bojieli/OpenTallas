@@ -7,13 +7,13 @@
   0,
   0,
   259.2,
-  142.56
+  159.84
  ],
  "core": [
   2.16,
   2.16,
   257.03999999999996,
-  140.4
+  157.68
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -108,6 +108,7 @@
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/qdq_wr_pay_ref/pre_gpl.tcl",
   "physical/ref_tile/qdq_wr_pay_ref/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
   "physical/common_flow/clock_spine.tcl",
   "physical/ref_tile/qdq_wr_pay_ref/spine_ins.tcl",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
