@@ -1,0 +1,2228 @@
+{
+  "baseline_git_commit": "cf60e7395",
+  "binding_status": "FULL_TOP_WIP_NAMES_ONLY_DO_NOT_BIND_UNTIL_FINAL_ELABORATION",
+  "capacity_decision": "existing die slot is historical reservation only; retain origin/outline as comparison, request revision if actual measured leaves do not fit; do not enlarge silently",
+  "clock": {
+    "historical_sdc": "legacy coll_clocks.sdc contains latency770ps and setup uncertainty123ps; source facts only, do not copy into new signoff",
+    "historical_target_insertion_ps": 250.0,
+    "new_leaf_clock_inputs": "one actual entry per hardened leaf; native HC16 arithmetic leaves plus its control root await source binding, not a tied clock placeholder",
+    "new_measured_insertion_ps": null,
+    "new_measured_spread_ps": null,
+    "new_sink_counts": null,
+    "period_ps": 833,
+    "pin_budget": "registered pin -> wire<=500um -> registered pin; IO0.2T, phases and insertion charged in compiler",
+    "retained_source": "dsfd_coll_ck instantiates actual reset sequencer plus allowed PLL hard IP",
+    "signoff": "TT setup, FF hold, DRC0; SS sensitivity only"
+  },
+  "component_census": {
+    "ports": 34,
+    "source": "five_channel_source_census.json",
+    "status": "elaborated actual fivechannel top only; does not prove whole slab",
+    "total_bits": 8043
+  },
+  "fixed_port_bit_lower_bound": 12106,
+  "fixed_port_bit_lower_bound_excludes": "additional host77 source/host516 sink and native HC consumer control/data interfaces",
+  "historical_assigned_outline_um": [
+    1727.976,
+    2721.576
+  ],
+  "historical_children": {
+    "dsfd_coll_cb": {
+      "outline_um": [
+        680.4,
+        340.2
+      ],
+      "ports": {
+        "bw_cr": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "bw_d": {
+          "bits": 2099,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "bw_flt": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "bw_v": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "ck": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "eflt": {
+          "bits": 3,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "eli_d": {
+          "bits": 553,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "eli_r": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "eli_v": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "elo_d": {
+          "bits": 553,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "elo_r": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "elo_v": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "f_vm": {
+          "bits": 592,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "flt_u": {
+          "bits": 6,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "fvm_u": {
+          "bits": 592,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li0_d": {
+          "bits": 553,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li0_r": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li0_v": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li4_d": {
+          "bits": 553,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li4_r": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li4_v": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo0_d": {
+          "bits": 553,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo0_r": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo0_v": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo4_d": {
+          "bits": 553,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo4_r": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo4_v": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "rs": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "t_vm": {
+          "bits": 2100,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "ts": {
+          "bits": 3,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "wflt": {
+          "bits": 3,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wli_d": {
+          "bits": 553,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wli_r": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wli_v": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wlo_d": {
+          "bits": 553,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wlo_r": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wlo_v": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        }
+      },
+      "source": "physical/s81_ph_views/ports/contract_split3/dsfd_coll_cb/ports.json",
+      "status": "historical pin proposal; no new RTL closure claim"
+    },
+    "dsfd_coll_ce": {
+      "outline_um": [
+        680.4,
+        680.4
+      ],
+      "ports": {
+        "bw_cr": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "bw_d": {
+          "bits": 2099,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "bw_flt": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "bw_v": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "ck": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "eflt": {
+          "bits": 6,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "eli_d": {
+          "bits": 1106,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "eli_r": {
+          "bits": 2,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "eli_v": {
+          "bits": 2,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "elo_d": {
+          "bits": 1106,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "elo_r": {
+          "bits": 2,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "elo_v": {
+          "bits": 2,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "flt_d": {
+          "bits": 6,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "flt_u": {
+          "bits": 6,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "fvm_u": {
+          "bits": 592,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li0_d": {
+          "bits": 553,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li0_r": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li0_v": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li3_d": {
+          "bits": 553,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li3_r": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li3_v": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li4_d": {
+          "bits": 553,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li4_r": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li4_v": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li7_d": {
+          "bits": 553,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li7_r": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li7_v": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo0_d": {
+          "bits": 553,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo0_r": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo0_v": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo3_d": {
+          "bits": 553,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo3_r": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo3_v": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo4_d": {
+          "bits": 553,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo4_r": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo4_v": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo7_d": {
+          "bits": 553,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo7_r": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo7_v": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "rs": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wflt": {
+          "bits": 6,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wli_d": {
+          "bits": 1106,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wli_r": {
+          "bits": 2,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wli_v": {
+          "bits": 2,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wlo_d": {
+          "bits": 1106,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wlo_r": {
+          "bits": 2,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wlo_v": {
+          "bits": 2,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        }
+      },
+      "source": "physical/s81_ph_views/ports/contract_split3/dsfd_coll_ce/ports.json",
+      "status": "historical pin proposal; no new RTL closure claim"
+    },
+    "dsfd_coll_ck": {
+      "outline_um": [
+        216.0,
+        216.0
+      ],
+      "ports": {
+        "pll_hbm": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "pll_serial": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "pll_stream": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "por": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "refclk": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "rst_hbm": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "rst_serial": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "rst_stream": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        }
+      },
+      "source": "physical/s81_ph_views/ports/contract_wide_lanes_p4/dsfd_coll_ck/ports.json",
+      "status": "historical pin proposal; no new RTL closure claim"
+    },
+    "dsfd_coll_ct": {
+      "outline_um": [
+        680.4,
+        340.2
+      ],
+      "ports": {
+        "ck": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "eflt": {
+          "bits": 3,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "eli_d": {
+          "bits": 553,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "eli_r": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "eli_v": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "elo_d": {
+          "bits": 553,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "elo_r": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "elo_v": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "flt_d": {
+          "bits": 6,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li3_d": {
+          "bits": 553,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li3_r": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li3_v": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li7_d": {
+          "bits": 553,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li7_r": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "li7_v": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo3_d": {
+          "bits": 553,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo3_r": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo3_v": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo7_d": {
+          "bits": 553,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo7_r": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "lo7_v": {
+          "bits": 1,
+          "faces": [
+            "S"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "rs": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "wflt": {
+          "bits": 3,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wli_d": {
+          "bits": 553,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wli_r": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wli_v": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wlo_d": {
+          "bits": 553,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wlo_r": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "wlo_v": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        }
+      },
+      "source": "physical/s81_ph_views/ports/contract_split3/dsfd_coll_ct/ports.json",
+      "status": "historical pin proposal; no new RTL closure claim"
+    },
+    "dsfd_coll_lane_w": {
+      "outline_um": [
+        345.6,
+        340.2
+      ],
+      "ports": {
+        "chb": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "ck": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "flt": {
+          "bits": 3,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "li_d": {
+          "bits": 553,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "li_r": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "li_v": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "lo_d": {
+          "bits": 553,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "lo_r": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "lo_v": {
+          "bits": 1,
+          "faces": [
+            "E"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "rs": {
+          "bits": 1,
+          "faces": [
+            "N"
+          ],
+          "layers": [
+            "M5"
+          ]
+        },
+        "rx": {
+          "bits": 515,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "tf": {
+          "bits": 1,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        "tx": {
+          "bits": 512,
+          "faces": [
+            "W"
+          ],
+          "layers": [
+            "M4"
+          ]
+        }
+      },
+      "source": "physical/s81_ph_views/ports/contract_wide_lanes_p4/dsfd_coll_lane_w/ports.json",
+      "status": "historical pin proposal; no new RTL closure claim"
+    }
+  },
+  "historical_conflicts": [
+    {
+      "actual_legacy_adapter_bits": 81,
+      "assigned_pin_bits": 130,
+      "port": "f_host"
+    },
+    {
+      "actual_legacy_adapter_bits": 516,
+      "assigned_pin_bits": 514,
+      "port": "t_host"
+    },
+    {
+      "assigned_pin_bits": 592,
+      "port": "f_vm",
+      "static_successor": "f_crq15 + t_crs513"
+    },
+    {
+      "assigned_pin_bits": 2100,
+      "port": "t_vm",
+      "static_successor_bits": 2204
+    }
+  ],
+  "historical_die_slot": {
+    "assembly": "tiles_direct",
+    "cell": "dsfd_sp_collective_c",
+    "clock_entry": {
+      "face": "N",
+      "layer": "M4",
+      "pin": "ck"
+    },
+    "io_budget": {
+      "in_delay_frac": 0.2,
+      "out_delay_frac": 0.2,
+      "registered_in": true,
+      "registered_out": true
+    },
+    "kind": "element",
+    "layer_rule": "cluster",
+    "name": "sp_collective",
+    "notes": "v1 slab 1,727.976 x 2,721.576 (free W-column height): lanes W stacked, core column 1,360.776 wide; cb = 8 tiles direct (cbh parent route not iterated: GLUE PLACEMENT); ce tiles to fill (367.2, 444.96)-(1,727.976, 2,359.776) at 50-60% with >= 20 um channels -> owner posts the tile list; ct 1,036.776 x 340.2 at the N",
+    "origin": {
+      "orient": "R0",
+      "x": 13942.8,
+      "y": 18677.52
+    },
+    "outline": {
+      "h": 2721.6,
+      "w": 1727.976
+    },
+    "owner": "el1011-ds-coll",
+    "parent": "s81_layer1",
+    "pg_layer": "M7",
+    "pins": [
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "c_cmd[84:0]",
+        "offset": 63.756,
+        "width": 4.056
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "c_done[8:0]",
+        "offset": 96.732,
+        "width": 0.408
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "c_st[1:0]",
+        "offset": 0.468,
+        "width": 0.072
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "f_hc_yr",
+        "offset": 853.164,
+        "width": 0.024
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "f_host[129:0]",
+        "offset": 2717.46,
+        "width": 6.216
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "f_vm[591:0]",
+        "offset": 16.692,
+        "width": 28.392
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "f_wfc[513:0]",
+        "offset": 45.252,
+        "width": 24.648
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "f_wfcg",
+        "offset": 94.524,
+        "width": 0.024
+      },
+      {
+        "face": "S",
+        "layer": "M5",
+        "name": "pll_hbm",
+        "offset": 0.444,
+        "width": 0.024
+      },
+      {
+        "face": "S",
+        "layer": "M5",
+        "name": "pll_serial",
+        "offset": 1725.516,
+        "width": 0.024
+      },
+      {
+        "face": "S",
+        "layer": "M5",
+        "name": "pll_stream",
+        "offset": 1727.532,
+        "width": 0.024
+      },
+      {
+        "face": "N",
+        "layer": "M5",
+        "name": "por",
+        "offset": 0.444,
+        "width": 0.024
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "rE0[514:0]",
+        "offset": 1574.604,
+        "width": 24.696
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "rE1[514:0]",
+        "offset": 1601.34,
+        "width": 24.696
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "rE2[514:0]",
+        "offset": 1685.292,
+        "width": 24.696
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "rE3[514:0]",
+        "offset": 1740.636,
+        "width": 24.696
+      },
+      {
+        "face": "W",
+        "layer": "M4",
+        "name": "rW0[514:0]",
+        "offset": 1225.788,
+        "width": 24.696
+      },
+      {
+        "face": "W",
+        "layer": "M4",
+        "name": "rW1[514:0]",
+        "offset": 1361.868,
+        "width": 24.696
+      },
+      {
+        "face": "W",
+        "layer": "M4",
+        "name": "rW2[514:0]",
+        "offset": 1611.324,
+        "width": 24.696
+      },
+      {
+        "face": "W",
+        "layer": "M4",
+        "name": "rW3[514:0]",
+        "offset": 1523.388,
+        "width": 24.696
+      },
+      {
+        "face": "N",
+        "layer": "M5",
+        "name": "refclk",
+        "offset": 2.46,
+        "width": 0.024
+      },
+      {
+        "face": "S",
+        "layer": "M5",
+        "name": "rst_hbm",
+        "offset": 2.46,
+        "width": 0.024
+      },
+      {
+        "face": "S",
+        "layer": "M5",
+        "name": "rst_serial",
+        "offset": 916.428,
+        "width": 0.024
+      },
+      {
+        "face": "S",
+        "layer": "M5",
+        "name": "rst_stream",
+        "offset": 1723.452,
+        "width": 0.024
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "t_hc_y[8191:0]",
+        "offset": 1360.788,
+        "width": 393.192
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "t_hc_yv",
+        "offset": 2468.844,
+        "width": 0.024
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "t_host[513:0]",
+        "offset": 2699.988,
+        "width": 24.648
+      },
+      {
+        "face": "S",
+        "layer": "M5",
+        "name": "t_vm[2099:0]",
+        "offset": 863.988,
+        "width": 100.776
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "t_wfc[513:0]",
+        "offset": 80.148,
+        "width": 24.648
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "t_wfcg",
+        "offset": 110.124,
+        "width": 0.024
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "tdE0[511:0]",
+        "offset": 1628.004,
+        "width": 24.552
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "tdE1[511:0]",
+        "offset": 1656.612,
+        "width": 24.552
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "tdE2[511:0]",
+        "offset": 1711.956,
+        "width": 24.552
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "tdE3[511:0]",
+        "offset": 1767.3,
+        "width": 24.552
+      },
+      {
+        "face": "W",
+        "layer": "M4",
+        "name": "tdW0[511:0]",
+        "offset": 928.788,
+        "width": 24.552
+      },
+      {
+        "face": "W",
+        "layer": "M4",
+        "name": "tdW1[511:0]",
+        "offset": 965.508,
+        "width": 24.552
+      },
+      {
+        "face": "W",
+        "layer": "M4",
+        "name": "tdW2[511:0]",
+        "offset": 1293.828,
+        "width": 24.552
+      },
+      {
+        "face": "W",
+        "layer": "M4",
+        "name": "tdW3[511:0]",
+        "offset": 1494.708,
+        "width": 24.552
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "tfE0",
+        "offset": 1642.284,
+        "width": 0.024
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "tfE1",
+        "offset": 1670.94,
+        "width": 0.024
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "tfE2",
+        "offset": 1726.284,
+        "width": 0.024
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "tfE3",
+        "offset": 1781.628,
+        "width": 0.024
+      },
+      {
+        "face": "W",
+        "layer": "M4",
+        "name": "tfW0",
+        "offset": 943.116,
+        "width": 0.024
+      },
+      {
+        "face": "W",
+        "layer": "M4",
+        "name": "tfW1",
+        "offset": 979.836,
+        "width": 0.024
+      },
+      {
+        "face": "W",
+        "layer": "M4",
+        "name": "tfW2",
+        "offset": 1308.156,
+        "width": 0.024
+      },
+      {
+        "face": "W",
+        "layer": "M4",
+        "name": "tfW3",
+        "offset": 1509.036,
+        "width": 0.024
+      },
+      {
+        "face": "E",
+        "layer": "M4",
+        "name": "ts[2:0]",
+        "offset": 59.676,
+        "width": 0.12
+      }
+    ],
+    "signal_max_layer": "M6",
+    "strap_layer": "M8",
+    "target_insertion_ps": 250.0,
+    "tile_masters": {
+      "dsfd_coll_ces0": {
+        "h": 341.28,
+        "reason": "v13 ADOPTED (layout needs it): two 172.8-um 256x256 SRAMs with pins on their short W/E edges leave ~45 um side channels at 226.8; GRT over-macro capacity is 0 under the M5 cap -> macro-band cut 0.65-0.86 of raw M3/M5 tracks (ces0_rt GRT-0116, 94 % of overflow inside the macros); 302.4 with the macros split S/N -> 0.24. Pin faces unchanged. Kit physical/ref_tile/dscoll_ces0_rts (claude/el1011-ds-coll); ce region (367.2..1,727.976 x 444.96..2,359.776, 1,360.8 wide) takes 4 a row at 302.4 + 21.6.",
+        "w": 302.4,
+        "was": [
+          226.8,
+          340.2
+        ]
+      },
+      "dsfd_coll_cesn": {
+        "h": 341.28,
+        "reason": "v13 ADOPTED (layout needs it): two 172.8-um 256x256 SRAMs with pins on their short W/E edges leave ~45 um side channels at 226.8; GRT over-macro capacity is 0 under the M5 cap -> macro-band cut 0.65-0.86 of raw M3/M5 tracks (ces0_rt GRT-0116, 94 % of overflow inside the macros); 302.4 with the macros split S/N -> 0.24. Pin faces unchanged. Kit physical/ref_tile/dscoll_ces0_rts (claude/el1011-ds-coll); ce region (367.2..1,727.976 x 444.96..2,359.776, 1,360.8 wide) takes 4 a row at 302.4 + 21.6.",
+        "w": 302.4,
+        "was": [
+          226.8,
+          340.2
+        ]
+      }
+    },
+    "version": 13
+  },
+  "historical_split_composition": {
+    "boundary_protocol": "lo_r / li_r are credit pulses, not combinational ready; every lane and seam uses an 8-deep credit landing FIFO",
+    "core_rtl_defines": [
+      "OT_S81PH_COLL_SPLIT",
+      "OT_S81PH_COLL_QPIPE",
+      "OT_S81PH_COLL_CR"
+    ],
+    "core_um": [
+      680.4,
+      1360.8
+    ],
+    "cost": "full rate; +2..3 cycles per lane/seam crossing each way; full-shape collective bench 3013 cycles vs current 3015, not a token-rate claim",
+    "instances": [
+      {
+        "ch_b": 0,
+        "inst": "g_lane[0].g_w.u_l",
+        "lane": "W0",
+        "master": "dsfd_coll_lane_w",
+        "orient": "R0",
+        "xy": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "ch_b": 1,
+        "inst": "g_lane[1].g_w.u_l",
+        "lane": "W1",
+        "master": "dsfd_coll_lane_w",
+        "orient": "R0",
+        "xy": [
+          0.0,
+          340.2
+        ]
+      },
+      {
+        "ch_b": 1,
+        "inst": "g_lane[2].g_w.u_l",
+        "lane": "W2",
+        "master": "dsfd_coll_lane_w",
+        "orient": "R0",
+        "xy": [
+          0.0,
+          680.4
+        ]
+      },
+      {
+        "ch_b": 1,
+        "inst": "g_lane[3].g_w.u_l",
+        "lane": "W3",
+        "master": "dsfd_coll_lane_w",
+        "orient": "R0",
+        "xy": [
+          0.0,
+          1020.6
+        ]
+      },
+      {
+        "ch_b": 0,
+        "inst": "g_lane[4].g_e.u_l",
+        "lane": "E0",
+        "master": "dsfd_coll_lane_w",
+        "orient": "MY",
+        "xy": [
+          1026.192,
+          0.0
+        ]
+      },
+      {
+        "ch_b": 1,
+        "inst": "g_lane[5].g_e.u_l",
+        "lane": "E1",
+        "master": "dsfd_coll_lane_w",
+        "orient": "MY",
+        "xy": [
+          1026.192,
+          340.2
+        ]
+      },
+      {
+        "ch_b": 1,
+        "inst": "g_lane[6].g_e.u_l",
+        "lane": "E2",
+        "master": "dsfd_coll_lane_w",
+        "orient": "MY",
+        "xy": [
+          1026.192,
+          680.4
+        ]
+      },
+      {
+        "ch_b": 1,
+        "inst": "g_lane[7].g_e.u_l",
+        "lane": "E3",
+        "master": "dsfd_coll_lane_w",
+        "orient": "MY",
+        "xy": [
+          1026.192,
+          1020.6
+        ]
+      },
+      {
+        "inst": "u_cb",
+        "master": "dsfd_coll_cb",
+        "orient": "R0",
+        "xy": [
+          345.6,
+          0.0
+        ]
+      },
+      {
+        "inst": "u_ce",
+        "master": "dsfd_coll_ce",
+        "orient": "R0",
+        "xy": [
+          345.6,
+          340.2
+        ]
+      },
+      {
+        "inst": "u_ct",
+        "master": "dsfd_coll_ct",
+        "orient": "R0",
+        "xy": [
+          345.6,
+          1020.5999999999999
+        ]
+      }
+    ],
+    "lane_rtl_defines": [
+      "OT_S81PH_GBX_FMT1",
+      "OT_S81PH_EP_PIPE2",
+      "OT_S81PH_LANE_CR"
+    ],
+    "nets": {
+      "clocks": "pll_stream -> ck of every lane tile and of u_cb / u_ce / u_ct (die clock tree; core tiles take ck on the W face near mid-height)",
+      "lanes": "lane k core-face pins <-> the core tile holding lane k (0 / 4: u_cb, 1 2 5 6: u_ce, 3 / 7: u_ct) at slab y = (k % 4) * LH + Y_CORE",
+      "seams": "u_cb N <-> u_ce S and u_ce N <-> u_ct S: same-named pins at the same x (abutting, 0-um gap)"
+    },
+    "physical_adoption": "UNQUALIFIED: cb, ce, ct and lane LCR must all close with exactness and negative-control gates before binding",
+    "port_contract": "contract_split3",
+    "required_parameters": {
+      "dsfd_coll_cb": {
+        "CR": 1
+      },
+      "dsfd_coll_ce": {
+        "CR": 1,
+        "QPIPE": 1
+      },
+      "dsfd_coll_ct": {
+        "CR": 1,
+        "LR": 0
+      },
+      "dsfd_coll_lane_w": {
+        "LCR": 1
+      }
+    },
+    "reuse_east_w_my": true,
+    "schema": "opentallas.s81_ph.composition.v1",
+    "slab": "dsfd_sp_collective",
+    "slab_um": [
+      1371.792,
+      1369.416
+    ],
+    "source": "rtl/dsrom_sys/s81_ph/dsfd_sp_collective.sv with core_rtl_defines and lane_rtl_defines; rtl/common/ot_link_credit.sv WFREE credit landing",
+    "source_commits": {
+      "core": "a17b27437",
+      "lane": "851328e6c"
+    },
+    "variant": "split3cr",
+    "vm_pin_step": 4
+  },
+  "host_pending": {
+    "legacy_ingest516": "exact direction and ABI must be confirmed by host owner",
+    "legacy_return81": "status11+credits5+completion65",
+    "static_return_fields": [
+      "status11",
+      "completion65",
+      "valid1"
+    ],
+    "static_return_required_bits": 77
+  },
+  "lane_map": [
+    {
+      "die_pin": "W0",
+      "historical_orientation": "R0",
+      "historical_xy": [
+        0.0,
+        0.0
+      ],
+      "index": 0,
+      "legacy_transport": "UCIe",
+      "logical_channel": null,
+      "peer_rank_xor": 1,
+      "role": "TP4"
+    },
+    {
+      "die_pin": "W1",
+      "historical_orientation": "R0",
+      "historical_xy": [
+        0.0,
+        340.2
+      ],
+      "index": 1,
+      "legacy_transport": "board",
+      "logical_channel": null,
+      "peer_rank_xor": 2,
+      "role": "TP4"
+    },
+    {
+      "die_pin": "W2",
+      "historical_orientation": "R0",
+      "historical_xy": [
+        0.0,
+        680.4
+      ],
+      "index": 2,
+      "legacy_transport": "board",
+      "logical_channel": null,
+      "peer_rank_xor": 3,
+      "role": "TP4"
+    },
+    {
+      "die_pin": "W3",
+      "historical_orientation": "R0",
+      "historical_xy": [
+        0.0,
+        1020.6
+      ],
+      "index": 3,
+      "legacy_transport": "board",
+      "logical_channel": 0,
+      "peer_rank_xor": null,
+      "role": "pass_through"
+    },
+    {
+      "die_pin": "E0",
+      "historical_orientation": "MY",
+      "historical_xy": [
+        1026.192,
+        0.0
+      ],
+      "index": 4,
+      "legacy_transport": "UCIe",
+      "logical_channel": 1,
+      "peer_rank_xor": null,
+      "role": "pass_through"
+    },
+    {
+      "die_pin": "E1",
+      "historical_orientation": "MY",
+      "historical_xy": [
+        1026.192,
+        340.2
+      ],
+      "index": 5,
+      "legacy_transport": "board",
+      "logical_channel": 2,
+      "peer_rank_xor": null,
+      "role": "pass_through"
+    },
+    {
+      "die_pin": "E2",
+      "historical_orientation": "MY",
+      "historical_xy": [
+        1026.192,
+        680.4
+      ],
+      "index": 6,
+      "legacy_transport": "board",
+      "logical_channel": 3,
+      "peer_rank_xor": null,
+      "role": "pass_through"
+    },
+    {
+      "die_pin": "E3",
+      "historical_orientation": "MY",
+      "historical_xy": [
+        1026.192,
+        1020.6
+      ],
+      "index": 7,
+      "legacy_transport": "board",
+      "logical_channel": 4,
+      "peer_rank_xor": null,
+      "role": "pass_through"
+    }
+  ],
+  "new_area_um2": null,
+  "new_outline_um": null,
+  "port_scope": "WIP names t_crq15/f_crs513 may change before binding; includes native hc_clk_lane16/f_rank2/WFC514 eachway. Actual HC consumer control/data and final static host77 return packing await owners.",
+  "proposed_fixed_top_ports": {
+    "c_cmd": {
+      "bits": 85,
+      "direction": "input"
+    },
+    "c_done": {
+      "bits": 9,
+      "direction": "output"
+    },
+    "c_st": {
+      "bits": 2,
+      "direction": "output"
+    },
+    "f_crs": {
+      "bits": 513,
+      "direction": "input",
+      "role": "actual mutable VM response"
+    },
+    "f_rank": {
+      "bits": 2,
+      "direction": "input",
+      "role": "registered boot rank strap sampled first active edge"
+    },
+    "f_wfc": {
+      "bits": 514,
+      "direction": "input",
+      "role": "static WFC source without grant"
+    },
+    "hc_clk_lane": {
+      "bits": 16,
+      "direction": "input",
+      "role": "actual clock inputs to native scalar leaves; controller clock uses PLL stream"
+    },
+    "pll_hbm": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "pll_serial": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "pll_stream": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "por": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "rE0": {
+      "bits": 515,
+      "direction": "input"
+    },
+    "rE1": {
+      "bits": 515,
+      "direction": "input"
+    },
+    "rE2": {
+      "bits": 515,
+      "direction": "input"
+    },
+    "rE3": {
+      "bits": 515,
+      "direction": "input"
+    },
+    "rW0": {
+      "bits": 515,
+      "direction": "input"
+    },
+    "rW1": {
+      "bits": 515,
+      "direction": "input"
+    },
+    "rW2": {
+      "bits": 515,
+      "direction": "input"
+    },
+    "rW3": {
+      "bits": 515,
+      "direction": "input"
+    },
+    "refclk": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "rst_hbm": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "rst_serial": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "rst_stream": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "t_crq": {
+      "bits": 15,
+      "direction": "output",
+      "role": "actual static VM read request"
+    },
+    "t_vm": {
+      "bits": 2204,
+      "direction": "output",
+      "role": "actual static VM writes"
+    },
+    "t_wfc": {
+      "bits": 514,
+      "direction": "output",
+      "role": "static WFC result without grant"
+    },
+    "tdE0": {
+      "bits": 512,
+      "direction": "output"
+    },
+    "tdE1": {
+      "bits": 512,
+      "direction": "output"
+    },
+    "tdE2": {
+      "bits": 512,
+      "direction": "output"
+    },
+    "tdE3": {
+      "bits": 512,
+      "direction": "output"
+    },
+    "tdW0": {
+      "bits": 512,
+      "direction": "output"
+    },
+    "tdW1": {
+      "bits": 512,
+      "direction": "output"
+    },
+    "tdW2": {
+      "bits": 512,
+      "direction": "output"
+    },
+    "tdW3": {
+      "bits": 512,
+      "direction": "output"
+    },
+    "tfE0": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "tfE1": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "tfE2": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "tfE3": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "tfW0": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "tfW1": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "tfW2": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "tfW3": {
+      "bits": 1,
+      "direction": "output"
+    }
+  },
+  "removed_legacy_ports": [
+    "f_hc_yr (removed, no ready scheduling)",
+    "f_wfcg",
+    "t_wfcg",
+    "f_vm592",
+    "ts3"
+  ],
+  "requested_changes": [
+    {
+      "area_um2": null,
+      "clock_insertion_ps": null,
+      "count": 8,
+      "outline_um": null,
+      "placement": "retain lane/face order only; old child outlines are capacity references, not proven fit",
+      "role": "8 real digital link lanes",
+      "source": "s81_static_fmt1_lane for TP4 0..2; s81_static_raw_fmt1_lane for channels3..7"
+    },
+    {
+      "area_um2": null,
+      "count": null,
+      "outline_um": null,
+      "placement": "fresh registered leaves in central region; allocation pending actual full-shape model",
+      "role": "real TP4 arithmetic/reduction and static VM staging"
+    },
+    {
+      "area_um2": null,
+      "count": null,
+      "outline_um": null,
+      "placement": "actual command/calendar source and SRAM rows required, no legacy credit queue substitution",
+      "role": "calendar/controller and mutable-row routing"
+    },
+    {
+      "area_um2": null,
+      "count": 17,
+      "outline_um": null,
+      "placement": "interface unresolved with s_elements; no guessed consumer ABI",
+      "role": "native HC row consumer with16 lane clock inputs and one control root"
+    }
+  ],
+  "required_before_kits": [
+    "source elaboration width census of actual combined top matches regenerated die pin contract, including all native HC/WFC/host ports",
+    "compiler row allocations, all8 lane calendars, native HC capture and host static role are connected to actual RTL",
+    "full-shape model measures demand, occupancy, memory and boundary rates, latency, clock sinks and area",
+    "derive actual leaf outlines/placement and bits/tracks <=0.60, request daily contract revision once",
+    "measure leaf insertion/spread and route with actual registered clock phases",
+    "run exact full-shape bench and failing actual DUT mutants; production cost gate unchanged"
+  ],
+  "schema": "opentallas.s81-static-collective.physical-alignment-proposal.v1",
+  "source_sha256": {
+    "physical/s81_die_pins/v19_merged/contract_trial.json": "9fa6418341feeb14e30c90640d13f06f1725bbb0c8cffb1b8fadc0e5e9fac126",
+    "physical/s81_die_pins/v19_merged/generated/dsfd_sp_collective_c.json": "897b0dfafa346d3b79e70decc3ae26d6375ae9c8517ce34f42fd394a3367b456",
+    "physical/s81_ph_views/collective/coll_clocks.sdc": "3846dbbb8f2956cf494292f934043070156baa3e269a7d0bce1508483088325a",
+    "physical/s81_ph_views/collective/composition_split3cr.json": "f2a3f792ccc1afd8c4aabc79980dd730c7a14558e16b23196653fcf6ee1883e6",
+    "physical/s81_ph_views/collective/composition_wide_lanes_p4.json": "fa53f7e71b751b2be5af1a2daba746474a62d81f267ba28cd6fd7b0e27df84da",
+    "physical/s81_ph_views/ports/contract_split3/dsfd_coll_cb/ports.json": "8804fccfe276442b9b9165d4d9836be091494849e3e5516bd015c03818cfa6a2",
+    "physical/s81_ph_views/ports/contract_split3/dsfd_coll_ce/ports.json": "10d6f1addf08f300a5acb0108fa2f7d403e373b4e79f4fd52c38a4838d068651",
+    "physical/s81_ph_views/ports/contract_split3/dsfd_coll_ct/ports.json": "e30c86d2eaa5268156c1aeb344acb09884ec98654597cb4203284dd2fbefca31",
+    "physical/s81_ph_views/ports/contract_wide_lanes_p4/dsfd_coll_ck/ports.json": "0aff40c9cb1107a35edef9452e2b4b2a62b04404d6b68196ee0f12b3417de4b5",
+    "physical/s81_ph_views/ports/contract_wide_lanes_p4/dsfd_coll_lane_w/ports.json": "c418e4e4695e2757ca567c3fa791b6bf19999ae524c51f01cec3524406e57c64",
+    "results/rtl/s81_ph_20261006/collective/contract.json": "8eb29a38d6ca9950af498b73c1dca91068ba314d2b006271c4f9f5954ecc6de7",
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv": "29c8509ea4b4c18b8f7a5a1d2b2e0c437b5844f1faba764b026977521a1a1299",
+    "rtl/dsrom_sys/s81_ph/dsfd_sp_collective.sv": "33be1688736a49befa95ba161f2d52e487ea853f91d598bd4464afe62facd51b",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv": "6a926c32f457d233e4372b56036ef95ed2a70362688112346ace196087a11733"
+  },
+  "status": "PROPOSAL_UNQUALIFIED_NO_KITS"
+}
