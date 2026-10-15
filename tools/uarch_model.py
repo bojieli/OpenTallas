@@ -16111,6 +16111,13 @@ def hbm_qdq_ordered_one_row_front_model():
             "parent_pin_clock_pg_status": "unassigned; no native qualification"}
 
 
+def hbm_sfu_native_quarter_model():
+    """Actual c12 source boundaries; native local8 binding remains unqualified."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] / "results/arch/hbm_native_1013/sfu_native_quarter/model.json").read_text())
+
+
 def hbm_qdq_pin_capture_front_model():
     """S2 emits final payload; early metadata preserves four-edge ordered fast return."""
     return {"price_cycles": 168, "fast_edges": 4, "general_extra_edges": 2,
