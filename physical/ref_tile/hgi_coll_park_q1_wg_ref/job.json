@@ -1,5 +1,5 @@
 {
- "name": "hgi_coll_park_q1_wg_ref-pstage4-COMMIT",
+ "name": "hgi_coll_park_q1_wg_ref-pstage4-5f0dd8dc1",
  "block": "ot_hgi_coll_park_q1",
  "ref_tile": true,
  "owner": "Codex:H-ELEM-A",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/hbm-smcompact-1014",
-  "commit": "COMMIT",
+  "commit": "5f0dd8dc1",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
    "rtl/link",
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_coll_park_q1_wg_ref/hgi_coll_park_q1_wg_ref-pstage4-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_coll_park_q1_wg_ref/hgi_coll_park_q1_wg_ref-pstage4-5f0dd8dc1"
   }
  ],
  "cycles_added": 0,
