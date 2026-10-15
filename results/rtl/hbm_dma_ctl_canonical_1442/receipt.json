@@ -1,0 +1,10 @@
+{
+ "source": "937d1c1e4",
+ "normal_latency": "DESC_LAT4/commandlead/data/fence unchanged; FULL32VM/128SRAM MAIN+MIRROR2561sectors173cycles each",
+ "exact": "31case1921checks6790beatsPASS; all3semanticmutantsFAIL",
+ "formal": "YosysSAT proves all2^64 cycle/target pairs includingwrap andsameenableoffsetinvariant; validlead signed32difference identical; no claim fullDUTformal",
+ "fault": "8banks26reset/responsefaultchecksPASS",
+ "state": "129declared precomputed target/gap bits inexistingCstage; actualtotal2965sinks vsnative1 2869(+96mappedFF)",
+ "CTS": "TT-5.5019/FF43.9392,Rboundary actualreceipt,max139.7/sp17.0; actualroute/nativeETM pending",
+ "scope": "component+actual32VM/128SRAM, wholecompiler/nine-rootparentnative OPEN"
+}
