@@ -85,7 +85,7 @@ module tb_dsfd_vm_static_core;
         .f_mx_wqv(mx_wqv), .f_mx_wq(mx_wq), .f_mx_wqm(mx_wqm), .f_mx_wqd(mx_wqd),
         .l_v(l_v), .l_d(l_d), .cp_v(16'd0), .cp_row(224'd0), .cp_m(256'd0), .cp_d(8192'd0), .cl_t(clt), .cl_v(clv), .cl_row(clr), .cl_m(clm), .cl_d(cld), .wf_v(1'b0), .wf_row(14'd0), .wf_d(512'd0), .x_al(3'd0), .x_hdr(9'd0), .edge_f(3'd0), .vm_fault(vm_fault));
 
-    localparam integer RL = 12+READ_PIPE, DL = 6;      // Exact elapsed edges from command/read sampling to output.
+    localparam integer RL = 12+READ_PIPE, DL = 7;      // Exact elapsed edges from command/read sampling to output.
     integer cy = 0, bad = 0, mode = 0, seed = 1, nreads = 4000, K = -1, commits = 0, reads = 0, rows_checked = 0;
     integer dones = 0, pqreads = 0, cmds = 0, mxreads = 0, mxwrites = 0, fault_seen = 0;
     reg [7:0] ver [0:16383];                 // stimulus version of each row (value function input)
