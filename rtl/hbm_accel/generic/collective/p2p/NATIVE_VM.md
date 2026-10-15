@@ -1,0 +1,13 @@
+# Native VM component gate
+
+`run_native_vm_bench.sh` uses the actual COLL writer, extracted protocol leaf, qslots and eight source-pinned H-VM static banks. Each bank instantiates three real 1024x256 SRAM functional models: 24 macros per tested slice. Bank source is pinned to0334452c, with exact input hashes in `native_vm_sources.json`; changed native inputs fail before simulation.
+
+The two production shapes are SW RG5/WG1 with COLL read group3 and write owner1, and NW RG7/WG3 with COLL read group5 and write owner3. All other native read/write ports remain present and idle at this declared component boundary. The bench creates no additional memory port or synthetic acknowledgment. It checks actual `kq_done` from each bank every edge; writer `launch_done` is not treated as commit.
+
+Each shape checks152 exact sector commits and18 exact512-bit assembled reads. A16-cycle full four-RGX burst produces15 consecutive cycles with eight native sector commits each (2,048 data bits/cycle), verified through exact expected commit bitmaps. Cases include all five ingress lanes simultaneously, masked TKW updates after native initialization, main and local mirror storage, reversed pair selectors, and a line crossing bank7 to bank0 in the next row. Six consecutive read issue cycles verify the fixed response pipeline under changing bank masks and pair selections.
+
+A writer input at C commits its low/high sectors at C+5/C+6. A parent VM request launched at P reaches bank pins at P+1, actual bank response registers at P+7, raw face capture at P+8, assembly at P+9, qslots capture at P+10 and SU destination at P+12. Every data bit and33-bit metadata field is checked against declared external write stimuli and the compiled calendar. Golden arrays supply expected answers only; they never drive a DUT memory, internal result or acknowledgment.
+
+Four mutants fail in each shape: a write-data wire corruption before native ECC/storage, a missing compiler bank reservation, a connection to the wrong actual native return group, and crossed low/high native response halves. The data corruption occurs before encoding, so it is caught by the independent read scoreboard rather than claimed as an ECC-detectable fault.
+
+The current receipt and logs are in `results/arch/hbm_p2p_1014/native_vm_1015/`. This gate qualifies this native component composition and its measured cycle behavior. Micro-ops and source data enter at declared component boundaries. It does not qualify normative collective record lowering, the full eight-parent program, four-copy mirror distribution, the whole SRAM depth, physical closure or full production throughput. Mirror kq writes update only the instantiated local copy; a complete program must distribute them to the other required copies.

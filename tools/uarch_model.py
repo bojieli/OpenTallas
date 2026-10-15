@@ -716,6 +716,18 @@ def hgi_collective_endpoint_model():
     return endpoint_model()
 
 
+def hgi_collective_capture_endpoint_model():
+    """All command/data inputs first captured, native SRAM/CRC TX6/RX2."""
+    from uarch_model_hcoll_capture import model
+    return model()
+
+
+def hgi_collective_fec_endpoint_model():
+    """Actual endpoint/613gearbox/rootFEC/finitewindow composition calendar."""
+    from uarch_model_hcoll_fec_endpoint import model
+    return model()
+
+
 def hgi_collective_pinregistered_endpoint_model():
     """Controller and actual SRAM store faces registered, TX5/RX1."""
     from uarch_model_hcoll_pinreg import model
