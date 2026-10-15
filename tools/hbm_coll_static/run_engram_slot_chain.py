@@ -43,9 +43,10 @@ integer fc=0,cc=0;realtime link_origin;reg phase_checked=0;always @(posedge link
  end
  @(negedge core_clk);desc_v=1;tick;@(negedge core_clk);desc_v=0;
  repeat(1346)tick;
- if(MUT==1)begin if(!nodefault[0])$fatal(1,"reservedprogramme_mutant_escaped");$display("ENGRAM_SLOT_PROGRAM_MUTANT_PASS");$finish;end
+ if(MUT==1)begin if(!nodefault[0])$fatal(1,"reservedprogramme_mutant_escaped");$display("ENGRAM_SLOT_PROGRAM_MUTANT_PASS");$finish;end else begin
  if(configured!==9'h1ff || init_busy!=0)$fatal(1,"nativecatalogue_notconfigured");
  $display("SLOT_CHAIN_PREFLIGHT actual24rows216DRAMreads 9x21nativeprogrammeSRAMs ready C%0d",core_edge);$fflush;
+ end
 end
 endmodule
 '''
