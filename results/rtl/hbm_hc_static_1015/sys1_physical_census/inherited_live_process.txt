@@ -1,0 +1,3 @@
+    PID    PPID ELAPSED S COMMAND
+3397070 3397047   23561 S bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 /work/results/asap7/opentallas_ot_s81_hcx_projection_leaf_asap7_ref_gate/base/1_2_yosys.v && chmod a+w /work/results/asap7/opentallas_ot_s81_hcx_projection_leaf_asap7_ref_gate/base/1_2_yosys.v
+3397554 3397553   23558 R /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl

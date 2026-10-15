@@ -1,0 +1,139 @@
+{
+  "scope": "HBM PMAX8 SYS1 source/master census and proposed binding only; no prototype is admitted because the physical contracts do not yet compose",
+  "source_pins": [
+    {
+      "commit": "d30ae4714",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+      "sha256": "a719521c87012ec5117e6b92f2089ade75b1a6faf727193543b758cf3ee8989f"
+    },
+    {
+      "commit": "d30ae4714",
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_projection_static.sv",
+      "sha256": "fee6286cf1ae6e3485608fe66d0ffcb6046f813f9cfdc30d357621cc5defad4f"
+    },
+    {
+      "commit": "faa293303",
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_engine_mtp_static.sv",
+      "sha256": "e59d83e85cdd95bca4a313d016c3972f2d93264645f1a026a10385274ca1d895"
+    },
+    {
+      "commit": "b3b45c34d",
+      "path": "results/rtl/ref_tile/hc_tile_xl/c5_redesign_spec.md",
+      "sha256": "bfaf8976706f00d15552eb0688e07e256cbcf6986595d23dc5231a8db7807c7e"
+    },
+    {
+      "commit": "15c472f82",
+      "path": "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_hcp_partition.sv",
+      "sha256": "02802b5d806ae97cf21c91eaa2d796f0d389280c097b33d72504ff83d5dd4528"
+    },
+    {
+      "commit": "4bb5ee22d",
+      "path": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/ot_hdc_v41x_hcp_lanes.lef",
+      "sha256": "8df98b519fa2bd613474ba9c5962ad7e2f719358cbbea193fbf0d739e527f642"
+    },
+    {
+      "commit": "4bb5ee22d",
+      "path": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/child_lint.json",
+      "sha256": "95324898191517b66ef74517b036fcf01207c248215b4297c5cdadad9e6c71a3"
+    },
+    {
+      "commit": "4bb5ee22d",
+      "path": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/insertion.json",
+      "sha256": "b85c649d8bc2575032df4175229f17bf553b6614b65d3bf3d9287ddcd64b71b7"
+    },
+    {
+      "commit": "4bb5ee22d",
+      "path": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/abstract.json",
+      "sha256": "15619a52a7e295727cf6163736f35554c9359fa892d33139a10b1700eecb06c9"
+    }
+  ],
+  "parameters": {
+    "W": 32,
+    "stages": 8,
+    "LG": 8,
+    "PMAX": 8,
+    "K": 20480,
+    "LM": 8,
+    "LA": 7,
+    "TML": 3,
+    "SOR": 1,
+    "DRLY": 2
+  },
+  "proposed_actual_binding": {
+    "controller": "ot_hdc_v41x_hcp SYS=1 STATIC_CALENDAR=1; compiler launch/raw-read slots",
+    "bank_stage": "ot_hdc_v41x_hcp_stage W32 ML3 LM8 LA7 SOR1 LG8, eight real stages in term0..7 order",
+    "lane_master": "32 parameterless ot_hdc_v41x_hcp_lanes (four per bank), existing hardened defaults unchanged",
+    "weight_storage": "existing static aperture banks, split physically into eight local bank stores; no historical credit-driven weight windows",
+    "residual_storage": "existing actual16x1024x256 SRAMs, two per bank, BF16 data; local registered read capture",
+    "memory_shell": "new physical local read/write/address shell required; existing ot_hgi_hc_tile cannot be reused as static SRAM shell because its HBM window path contains ready/FIFO state",
+    "tail": "controller tree/tail/rsqrt raw storage needs its own bounded roots/slot, not covered by MAC master"
+  },
+  "analytical_model": {
+    "logical_lanes": 256,
+    "MACs_per_issue_edge": 256,
+    "rows": 24,
+    "positions": 8,
+    "weight_bytes_per_read_edge": 1024,
+    "residual_bytes_per_read_edge": 512,
+    "weight_SRAMs_128x256": 64,
+    "weight_capacity_bytes": 262144,
+    "residual_SRAMs_1024x256": 16,
+    "residual_capacity_bytes": 524288,
+    "bank_weight_read_bits": 1024,
+    "bank_residual_read_bits": 512,
+    "crossbank_sum_bits": 1024,
+    "crossbank_descriptor_bits": 40,
+    "crossbank_fault_bits": 1,
+    "crossbank_sum_plus_descriptor_fault_bits": 1065,
+    "descriptor_hop_edges": 9,
+    "legacy_SYS_LAT_formula_edges": 90,
+    "legacy_SYS_leaf_capture_edges": 91,
+    "flat_SYS0_leaf_capture_edges": 33,
+    "nominal_delta_leaf_edges": 58,
+    "caveat": "90-edge SYS_LAT is the existing legacy timing formula, not verified static prototype latency. Added pin/register/relay/clock phases can increase it. Do not reuse SYS0 raw-read calendar or performance receipt."
+  },
+  "measured_existing_lane_master": {
+    "outline_um": [
+      138.24,
+      138.24
+    ],
+    "flops": 11251,
+    "TT_setup_ps": 183.93,
+    "FF_hold_ps": 16.65,
+    "qualified_scope": "historical accepted MAC leaf; current export/physical binding must be checked before reuse; standalone leaf closure does not close bank/tile"
+  },
+  "failed_existing_native_tile": {
+    "job": "hc_tile_xl-c4-550082537-hs",
+    "TT_setup_ps": -294.75,
+    "FF_hold_ps": -21.45,
+    "DRC": 11,
+    "c5_status": "source-pinned redesign specification only, no implemented/qualified replacement",
+    "causes": [
+      "250..480um wire plus5..14logic levels in one hop",
+      "window/memory capture cross-root skew",
+      "legacy weight-window runtime ready path forbidden in static successor"
+    ]
+  },
+  "clock_root_contract_gaps": [
+    "Existing32MACleaves each11251FF fit count; new eight SRAMbank/shell roots and controller/tree/tail roots have no measured census or CTS.",
+    "SYS1 bank stages expose a common clk only; independent hardened-child clock delivery/phi-R and mixed-phase exactness not implemented in this proposal.",
+    "S81 first42/later46-root partition uses resident ROM and a different bank/rotator tree, not an interchangeable HBM SYS1 master.",
+    "No assigned bank/shell/controller outlines, physical pin faces,500um hop/reach proof, crossbank cut capacity or fixed compiler calendar exists."
+  ],
+  "required_next_steps": [
+    "Obtain H-DIE slot/pin/clock contract for eight local bank clusters plus controller/tree/tail; preserve accepted MAC views.",
+    "Model proposed SRAM bank shell and controller roots, exact crossbank pin faces and paths before writing the native composition.",
+    "Then build opt-in SYS1/static controller+realbankstage composition using real SRAM stores; prove minimum component at PMAX8 and K20480 against independent golden plus actual source mutant.",
+    "Only after assigned slot/model and source-bound gate, route new shells/parents and validate SS/FF/DRC/CTS/phi-R."
+  ],
+  "prototype_implemented": false,
+  "route_submitted": false,
+  "physical_qualified": false,
+  "full_native_qualified": false,
+  "evidence_sha256": {
+    "tile_routed_ioref.json": "6b09ceaa358af90b7f3ed7704927013f7cc46e10e2f97b4f0dc1559c64b5b972",
+    "lane_master_source_identity.json": "4876fbe3c60192cb96bd40ea9148f6a1fc486542688a19a612afedd4f2a4182a",
+    "inherited_live_process.txt": "18faebc711cabdee0d2b4221572d389bac0671b7bf52f843c2caa7fe7a5a72e3",
+    "lane_routed_ioref.json": "dad1e14e517198bbf7dadfe1b5130d177be37672f3486a0c9c28f2f8a1882f64"
+  }
+}
