@@ -4667,7 +4667,7 @@ IOREF_SDC = "physical/common_flow/io_ref_routed.sdc"
 # FLOW-FIX-0410 2026-10-09: io_ref_routed.sdc reads the ACTIVE-edge insertion (sinks behind an odd clock inversion were
 # T/2 late).  The version is part of the routed_ioref cache key, so ioref-rejudge / a verdict re-STA under the new rule
 # instead of returning a re-STA cached under the old one.
-IOREF_VERSION = "ae0410"
+IOREF_VERSION = "ae0410-cecorner-1015"
 
 
 def routed_ioref(j, m):
