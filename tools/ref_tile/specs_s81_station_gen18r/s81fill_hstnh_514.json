@@ -10,8 +10,8 @@
  "clock_port": "ck",
  "reset_ports": [],
  "outline": {
-  "w": 35.208,
-  "h": 30.216,
+  "w": 36.72,
+  "h": 30.24,
   "exact": true
  },
  "layer_cap": "M5",
@@ -36,11 +36,11 @@
   "pin_v": "M3 M5",
   "m5_pg_pitch": 2.7
  },
- "structural_change": "First hardening of the GEN18r common-clock station dsfd_hstnh_514 (7 die instances) in the --hstn-posedge form: plain posedge flops on ck (the glue INV + negedge stage is the same function but its inverted sinks failed the IO reference in every gate, OT_LINK_BUDGET no latency for core_clk), 514 b, no reset, 0 cycles; RTL = the generator --hstn-posedge emission of the case glue header (module sha256 a9c75b7e6ed82d81, glue 81730f1679e7bc00); pins at the generator centres. Slot 17.256 x 30.216 holds 335 um2 of core vs 439 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 35.208 x 30.216 (data-pin coordinates unchanged).",
+ "structural_change": "First hardening of the GEN18r common-clock station dsfd_hstnh_514 (7 die instances) in the --hstn-posedge form: plain posedge flops on ck (the glue INV + negedge stage is the same function but its inverted sinks failed the IO reference in every gate, OT_LINK_BUDGET no latency for core_clk), 514 b, no reset, 0 cycles; RTL = the generator --hstn-posedge emission of the case glue header (module sha256 a9c75b7e6ed82d81, glue 81730f1679e7bc00); pins at the generator centres. Slot 17.256 x 30.216 holds 335 um2 of core vs 439 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 36.72 x 30.24 (data-pin coordinates unchanged).",
  "job": {
   "owner": "Claude:fill-s81",
   "branch": "claude/el1015-fill-1015",
-  "tag": "f1",
+  "tag": "f5",
   "purpose": "S81 FILL: GEN18r die station dsfd_hstnh_514 (7 replicas, hardened once): exact phase/basis/random bench + wrong-edge and payload mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81fill_hstnh_514/views",
   "record_to": "results/rtl/ref_tile/s81fill_hstnh_514",
@@ -81,8 +81,8 @@
  "slot_change_request": {
   "reason": "recipe-2 content 439 um2 exceeds util 0.55 of the generator slot core 335 um2; depth-only growth keeps every data pin coordinate",
   "outline": [
-   35.208,
-   30.216
+   36.72,
+   30.24
   ],
   "generator_slot": [
    17.256,

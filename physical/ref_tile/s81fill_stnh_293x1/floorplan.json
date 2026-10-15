@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  34.776,
-  19.416
+  36.72,
+  19.44
  ],
  "core": [
   2.16,
   2.16,
-  32.616,
-  17.256
+  34.56,
+  17.28
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -44,6 +44,7 @@
  "referenced": [
   "rtl/common/ot_fwd_link_stage.sv",
   "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_stnh_293x1.sv",
+  "physical/s81_station_native/fwd_clock_out.tcl",
   "physical/ref_tile/s81fill_stnh_293x1/kit.env",
   "physical/ref_tile/s81fill_stnh_293x1/clock.sdc",
   "physical/ref_tile/s81fill_stnh_293x1/signoff.sdc",
