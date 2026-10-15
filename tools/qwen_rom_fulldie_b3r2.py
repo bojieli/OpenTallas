@@ -3580,8 +3580,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             rr = (f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE)
             if not free(rr):
                 if _os.environ.get('OT_RELAY_COLLISION_JSON'):
-                    from qwen_split.relay_collision_receipt import receipt, write
-                    write(_os.environ['OT_RELAY_COLLISION_JSON'], receipt(m, plans, idx, fk, v.SHAVE))
+                    try:
+                        from qwen_split.relay_collision_receipt import receipt, write
+                        write(_os.environ['OT_RELAY_COLLISION_JSON'], receipt(m, plans, idx, fk, v.SHAVE))
+                    except Exception as diagnostic_error:
+                        print(f'relay collision diagnostic failed: {diagnostic_error}', file=sys.stderr)
                 raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
             add_rect(rr)
     pad_done = {}
