@@ -1014,5 +1014,8 @@
     "oracle_seeded_initial_state",
     "physical_compute_die",
     "physical_kvsys_die"
-  ]
+  ],
+  "inspected_source_commit": "0e2ef487f",
+  "source_pins_match_inspected_commit": true,
+  "source_snapshot_note": "The source inventory describes the historical harness before this separate coverage gate and explicit native-false receipt metadata were added."
 }
