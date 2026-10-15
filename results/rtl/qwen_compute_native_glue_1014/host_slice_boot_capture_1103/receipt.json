@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.host-slice-boot-capture-proof.v1",
+  "source": "aa0c50c21",
+  "source_sha256": {
+    "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv": "72bc7aac287211893adfb476de71dad279c818625b855ba3a211f7ffbc356088",
+    "rtl/qwen_sys/split_20261014/qkd_host_pc_slice.sv": "5a1cc9d9cab3dead2768d934999f938de75d3e96281328c5a1e4dc36fff2e1fa",
+    "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static_completion.sv": "5fdfb6e7865f8c848a7463b7d79fe0c05de4ab035d5bb129168461797bf364c9",
+    "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static.sv": "d938729874272e5b420b956b5b158f13eb22d61bdd49e5ac31a07f91e22e0e0a",
+    "rtl/qwen_sys/split_20261014/qkd_hbm_boot_pc.sv": "445921e88b5177bc3527fc2a4659e36af08d4c5660c80e3e52d6720267d58067",
+    "rtl/qwen_sys/split_20261014/qkd_static_completion_ownerdemux.sv": "922105c31c62edb779b914b724d068af59f020c485af548a01d4c153a92fcf9c",
+    "rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv": "28931dd981edaf460f2be7d928e3bea62ca8ea2cff8fa3ee72f78c36e96b460c",
+    "rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback.sv": "c9c6208fb9219217d8900ee1e8a8de0c6390fe8e6300fd1153d3e2c4ea79866c",
+    "rtl/test/qwen_split/tb_host_pc_slice_die_pin_capture.sv": "94002ef78ae896b03df914528adee8dfd24b22d8bdc2ad3dddeee1c200574ac8",
+    "tools/qwen_kv_die/run_host_slice_leaf_bench.sh": "e73dacd3bfa8f3cf24595d4624bb76b68f58b4d3b319b193f61ce4361e6cd0e0"
+  },
+  "physical_grant": "233825580",
+  "clock_roots": "four synchronous833.334ps roots, no timing exceptions",
+  "boot_cost": "one uniform additional boot-start edge perPC; existing one-edge bgo chain unchanged; normaldata/control age unchanged",
+  "exact": {
+    "unit": "oth-ubuntu-969791-1792089345",
+    "exit": 0,
+    "slots": 32,
+    "cycles": 6000,
+    "activity": 5939
+  },
+  "status_mutant": {
+    "unit": "oth-ubuntu-969842-1792089346",
+    "exit": 1,
+    "mismatches": 5939,
+    "first_cycle": 61
+  },
+  "missing_boot_capture_mutant": {
+    "unit": "oth-ubuntu-969869-1792089347",
+    "exit": 1,
+    "mismatches": 37,
+    "first_cycle": 17,
+    "observed": "boot capture age"
+  },
+  "scope": "Functional candidate PASS only. Fresh helper-bound CTS/route/native ETM and actual parent producer/boot contract binding required."
+}

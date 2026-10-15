@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/claude/codex-hslice-boot-proof-1103/src
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-hslice-boot-proof-1103/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hslice-boot-proof-1103/src
+ot-run: ot-agidock128  admits    45 GB (avail 77, growth 22, headroom 24, waiters 0/0 GB) load 17/64 running 6 disk 102 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-969791-1792089345 after 0 s
+ACTIVITY boot_done=5939 ctrl_es=5939 head_boot_done=5939
+PASS slice die wrapper: 32 slots physical order, 6000 cycles, per-slot outputs identical, head status = REF delayed k+1
+rtl/test/qwen_split/tb_host_pc_slice_die_pin_capture.sv:84: $finish called at 6000000 (1ps)
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-969791-1792089345): exit 0
