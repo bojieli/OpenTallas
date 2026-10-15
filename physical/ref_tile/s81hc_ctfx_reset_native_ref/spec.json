@@ -33,7 +33,8 @@
     "pd": 0.5,
     "threads": 8,
     "peak_ram_gb": 24,
-    "hold_margin_ns": 0.03
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
   },
   "job": {
     "owner": "Codex:S81-CTfx-reset-native-0757",
@@ -79,6 +80,17 @@
   "assigned_pins": {
     "file": "physical/s81_die_pins/v22_ctfx_reset_native/ot_s81_hc_ctfx_reset_native.json",
     "case": "exact_current_serial_CTFX_LEF_geometry"
+  },
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
   },
   "anchor_capacity_hook": "physical/ref_tile/s81hc_ctfx_reset_native_ref/anchor_capacity.tcl"
 }
