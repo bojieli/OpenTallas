@@ -39,8 +39,17 @@
     "runtime_record_slot_edges": 4,
     "runtime_backpressure": false,
     "minimum_install_axi_words": 8196,
-    "minimum_ingress_install_edges": 40980
+    "minimum_ingress_install_edges": 40980,
+    "minimum_install_axi_words_before_launch": 8195,
+    "minimum_install_axi_words_including_launch": 8196,
+    "measured_native_install_edges_before_launch": 1017144,
+    "measured_first_command_after_public_launch_edges": 13,
+    "measured_runtime_commands_per_launch": 4096,
+    "measured_installed_replays": 2,
+    "measured_replay_cfg_writes": 0
   },
   "external_service_stalls": "Unbounded permitted only at host/offdie boundary; actual measured installation cycles required before token pricing",
-  "native_pin_status": "pin2 physical gate pending; old native FAIL views preserved"
+  "native_pin_status": "pin2 physical gate pending; old native FAIL views preserved",
+  "measured_native_install_us_at_1200MHz": 847.62,
+  "qualified_scope": "Actual host digital transport plus compact programme production at declared command port; full host target inventory, QDQ engine integration, physical source binding and whole-token cost remain OPEN"
 }
