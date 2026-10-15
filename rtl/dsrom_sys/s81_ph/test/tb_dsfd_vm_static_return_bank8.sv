@@ -72,8 +72,9 @@ module tb_dsfd_vm_static_return_bank8;
    if(t==2)it[0+:8]={3'd4,5'd0};
    if(t==3)iv[0]=0;
    pv=(t!=1);pg=2;pm=32'hffffffff;check();
-   @(negedge ck);iv=(t==1)?32'hffffffff:0;pv=(t==1);pg=2;pm=32'hffffffff;
-   if(t==1)check();
+   if(t==1)begin
+    @(negedge ck);iv=32'hffffffff;pv=1;pg=2;pm=32'hffffffff;check();
+   end
    @(negedge ck);rv=1;rg=2;rm=32'hffffffff;pv=1;pg=4;pm=32'hffffffff;iv=32'hffffffff;
    for(s=0;s<32;s=s+1)begin it[8*s+:8]={3'd4,5'(s)};id[128*s+:128]=value(4,s);end
    check();
