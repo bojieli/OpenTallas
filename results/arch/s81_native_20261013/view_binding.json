@@ -3,10 +3,10 @@
  "rule": "master bound only when native_view_qualify.py says QUALIFIED, the export replayed the verdict SDC sequence (abc334b14) and the placer can place the real outline",
  "builder": "tools/s81/view_binding.py",
  "qualification": "results/arch/s81_native_20261013/qualification.json",
- "qualification_sha256": "bdc573deb5ab40df227aa0da9e0104a209240e24b2e7add5d4edba0c8ecc1411",
+ "qualification_sha256": "8ea4b09cb4e8f3a431b0d68038799543e7dca8312156708b64532133bfab192c",
  "census": "results/physical/die_iter_1012/s81/real_view_census_20261013/c5_census.json",
  "placer_fit": {
-  "recipe": "results/physical/die_iter_1012/s81/s81_layer1_v19.opts",
+  "recipe": "results/physical/die_iter_1012/s81/s81_layer1_v19c.opts",
   "rejected": []
  },
  "bound": {
