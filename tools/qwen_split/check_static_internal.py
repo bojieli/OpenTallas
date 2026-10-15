@@ -28,7 +28,7 @@ def run():
    if mut:
     newhead=Path(tmp)/'head.sv';newhead.write_text((ROOT/D/'ot_qfd_tt_ctlm_split_static.sv').read_text().replace('if(accepted_start)begin native_tok','if(1\'b1)begin native_tok'));paths[1]=str(newhead)
    compiled=subprocess.run(['iverilog','-g2012','-s','tb_qfd_static_head_face','-o',exe]+['-Ptb_qfd_static_head_face.'+p for p in params]+paths,cwd=ROOT,capture_output=True,text=True)
-   (out/(name+'_compile.log')).write_text(compiled.stdout+compiled.stderr)
+   (out/(name+'_compile.log')).write_text((compiled.stdout+compiled.stderr).replace(tmp,'<gate_tmp>'))
    if compiled.returncode:raise RuntimeError(compiled.stderr)
    r=subprocess.run(['vvp',exe,'+PROGRAM='+str(program_local)],cwd=ROOT,capture_output=True,text=True);(out/(name+'.log')).write_text(r.stdout+r.stderr)
    if (r.returncode==0)==mut:raise RuntimeError(name+': '+r.stdout+r.stderr)
