@@ -137,7 +137,7 @@ module tb_hgi_hc_checkpoint_native_mtp_static #(parameter integer COMMAND_NATIVE
   wire [95:0] row_op;wire [159:0] row_bank,col_bank,col_col;wire [607:0] row_row;
   wire [8191:0] col_data,dram_rdata;wire [1023:0] col_strb;
   wire [31:0] pc_clk={32{hbm_clk}};
-  ot_hbm_svc_native_sector_prefetch_stack #(.FAST_IDLE_DESC(1),.AQ_ROW_LEASE(1),.COLUMN_CLOSE_GUARD(1)) u_controller(
+  ot_hbm_svc_native_sector_owned_stack #(.FAST_IDLE_DESC(1),.AQ_ROW_LEASE(1),.COLUMN_CLOSE_GUARD(1)) u_controller(
    .clk(hbm_clk),.rst_n(rst_n),.pc_clk(pc_clk),
    .k_v(k_v[st*32+:32]),.k_rdy(k_rdy[st*32+:32]),.k_we(k_we[st*32+:32]),.k_addr(k_addr[st*960+:960]),.k_len(k_len[st*128+:128]),
    .k_tag(k_tag[st*544+:544]),.k_wdata(k_wdata[st*8192+:8192]),.k_wstrb(k_wstrb[st*1024+:1024]),.k_wr_done(k_wr_done[st*32+:32]),

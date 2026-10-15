@@ -54,7 +54,7 @@ def main():
         words,meta=lower_native(npos=n,first_row_consumer_cycle=7,first_tail_consumer_cycle=tail_first)
         (run/f'full_n{n}.mem').write_text(''.join(f'{w:064x}\n' for w in words))
         (run/f'full_n{n}.json').write_text(json.dumps(meta,indent=2)+'\n')
-    files=['rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_prefetch_stack.sv',
+    files=['rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_owned_stack.sv',
         'rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_lease.sv',
         'rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv',
         'rtl/chip/ot_chip_v41x_hbm3e_phy.sv','rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv','rtl/hdc/kv/ot_hdc_hbm_model.sv',
@@ -86,7 +86,7 @@ def main():
     receipt={'scope':'actual paged programme SRAM to PMAX8 operandSRAM projection/tail; actual4SID32bankVM96SRAM and12LGtaps joined plus realresultVMwrites/readback; actual20GiB checkpoint PHY CDC staging128SRAM joined; only offchip PHY data model; no wholechip/physical qualification',
         'source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in pins},
         'fixture_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [*run.glob('*.mem'),run/'all24rows.hex']},
-        'K':20480,'positions':[6,8],'projection_rows':24,'tail_words_per_position':24,'sink_clock_divisor':7,'checkpoint_fn_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'actual_SRAMs':306+128*command_native,'command_native':command_native,'tail_configuration_words':497,'tail_programme_reconfigure_between_positions':False,'tail_body_period':497,'configuration_words_n6':1577,'configuration_words_n8':1897,'host_reconfigure_between_projection_and_tail':False,'PHY_model':('strict command-only offchipfixture canonical23edge; corrected340cfd actualcontroller' if command_native else 'published request-level refresh-aware ot_chip_v41x_hbm3e_phy') ,'nominal_row_result_ages':[289+160*p for p in range(8)],'nominal_row_periods':{'6':1100,'8':1420},'early_row_result_ages':[269+160*p for p in range(8)],'early_row_periods':{'6':1080,'8':1400}}
+        'K':20480,'positions':[6,8],'projection_rows':24,'tail_words_per_position':24,'sink_clock_divisor':7,'checkpoint_fn_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'actual_SRAMs':306+128*command_native,'command_native':command_native,'tail_configuration_words':497,'tail_programme_reconfigure_between_positions':False,'tail_body_period':497,'configuration_words_n6':1577,'configuration_words_n8':1897,'host_reconfigure_between_projection_and_tail':False,'PHY_model':('strict command-only offchipfixture canonical23edge; corrected owned-stacka7b86347d actualcontroller' if command_native else 'published request-level refresh-aware ot_chip_v41x_hbm3e_phy') ,'nominal_row_result_ages':[289+160*p for p in range(8)],'nominal_row_periods':{'6':1100,'8':1420},'early_row_result_ages':[269+160*p for p in range(8)],'early_row_periods':{'6':1080,'8':1400}}
     (run/'source.json').write_text(json.dumps(receipt,indent=2)+'\n')
     with (run/'build.log').open('w') as log:
         subprocess.run(['verilator','--cc','--exe','--build','-j','4','-O1','-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD',
