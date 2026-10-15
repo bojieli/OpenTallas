@@ -274,7 +274,7 @@ def main() -> int:
                     'purpose': f'S81 S-NET static-schedule redesign: {mst} ({n} replicas, hardened once): exact bench + '
                                'observed failing mutants; recipe 2, M5 cap, generator pins',
                     'views_to': f'physical/ref_tile/{name}/views', 'record_to': f'results/rtl/ref_tile/{name}',
-                    'extra_paths': [RTL_DIR, pin_dir] + extra, 'benches': benches}}
+                    'extra_paths': [RTL_DIR, f'{pin_dir}/{mst}.tcl'] + extra, 'benches': benches}}
         if kd == 'hend':
             spec['sdc_extra'] = [f'{HEND_DIR}/{mst}.sdc']
             spec['boundary_tcl'] = [f'{HEND_DIR}/{mst}_boundary.tcl']

@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import bisect
+import copy
 import hashlib
 import json
 import math
@@ -3530,9 +3531,27 @@ def relay_dims(bits, horiz):
     # relay can enter a horizontal search and finish as SN or a corner master.
     # Reserve the enclosing outlines for both pin orientations now, including
     # the full-width and bundled-view pin capacity in stn_dims/face_need.
+    if RLY_WIDE_ORIENTED and bits >= 1000:
+        # S-DIE r3 --relay-wide-oriented (FILL-S 14:06 answer to GEN20 GEN_FAIL hb_hc_s_wq_d_vm_d9): a >= 1,000-b relay
+        # cannot finish as a corner master, so reserve only its hop-direction outline (face across the flow, depth
+        # along it) grown to the deepest granted station footprint (36.72 um), not the 201 x 203-um enclosing square
+        # of both orientations that finds no spot in a 101-um hub hop beside the VM.
+        w_, h_ = stn_dims([bits], horiz)
+        if horiz:
+            return max(w_, up(RLY_WIDE_DEPTH, GX) - SHAVE), h_
+        return w_, max(h_, up(RLY_WIDE_DEPTH, GY) - SHAVE)
     horizontal = stn_dims([bits], True)
     vertical = stn_dims([bits], False)
     return tuple(max(a, b) for a, b in zip(horizontal, vertical))
+
+
+def stn70_across(lanes, horiz):
+    """S-DIE r3 --stn70-across-fallback: the pre-70363dae1 envelope of a split 70xK group, K leaves stacked ACROSS the
+    flow (used only where the along-flow envelope finds no spot, e.g. c21f crE2_W0_hub at the hub-W return entry)."""
+    w1, h1 = stn_dims([70], horiz)
+    if horiz:
+        return w1 + SHAVE, (len(lanes) - 1) * up(h1 + 0.864 + SHAVE, GY) + h1 + SHAVE
+    return (len(lanes) - 1) * up(w1 + 0.864 + SHAVE, GX) + w1 + SHAVE, h1 + SHAVE
 
 
 def _split_multi_lane_stations(m):
@@ -3556,8 +3575,15 @@ def _split_multi_lane_stations(m):
         horiz = hv == 'h'
         w1, h1 = stn_dims([70], horiz)
         subs = []
+        # --stn70-across-fallback: a group reserved ACROSS the flow (its box is taller/wider than one leaf) splits across
+        across = (it.h > h1 + SHAVE + 0.5) if horiz else (it.w > w1 + SHAVE + 0.5)
         for k in range(K):
-            if horiz:      # flow W->E: the lanes follow each other along x (same cross-section as one lane)
+            if across:
+                if horiz:
+                    x0, y0 = it.x, up(it.y, GY) + k * up(h1 + 0.864 + SHAVE, GY)
+                else:
+                    x0, y0 = up(it.x, GX) + k * up(w1 + 0.864 + SHAVE, GX), it.y
+            elif horiz:      # flow W->E: the lanes follow each other along x (same cross-section as one lane)
                 x0, y0 = up(it.x, GX) + k * up(w1 + 0.864 + SHAVE, GX), it.y
             else:
                 x0, y0 = it.x, up(it.y, GY) + k * up(h1 + 0.864 + SHAVE, GY)
@@ -3754,6 +3780,12 @@ class Chains:
                 horiz = force_horiz or d in 'EW'
                 w, h = stn_dims(lanes, horiz)
                 placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, span=300.0, rows=24, reach=reach)
+                if placed is None and STN70_ACROSS_FB and STN70_SPLIT and len(lanes) in (2, 3, 4) \
+                        and all(w0 == 70 for w0 in lanes):
+                    w, h = stn70_across(lanes, horiz)
+                    placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, span=300.0, rows=24, reach=reach)
+                    if placed is not None:
+                        self.m.setdefault('stn70_across', []).append(dict(chain=name, at=list(placed), lanes=len(lanes)))
             if placed is None:
                 raise RuntimeError(f'chain {name}: no station spot near s={target:.0f} of {L:.0f} ({cx:.0f}, {cy:.0f})')
             x, y = placed
@@ -8279,7 +8311,21 @@ def align_station_jogs(m, rounds=2):
             for nm in {eps[0][0], load[0]}:
                 incident.setdefault(nm, []).append(hop)
 
+    # A spread register is placed against these exact load pins. Generated
+    # hub pins otherwise follow the changed peer centroid when LEFs are
+    # emitted again, invalidating the channel just assessed. Retain the full
+    # load map, including neighboring ports and their access rectangles.
+    hard_maps = masters_r8(m) if ALIGN_EXT[0] else {}
     ppins = PA.read_pins(die_lef_texts(m))
+
+    def keep_load_map(load):
+        if load.master in REAL_FILES or load.master in m.get('bound_views', {}):
+            return
+        source = hard_maps.get(load.master)
+        if source is not None:
+            m.setdefault('spread_load_pin_maps', {}).setdefault(load.master, dict(
+                outline=[source.w, source.h], ports=copy.deepcopy(source.ports), order=list(source.order),
+                port_signature=dict(m['pdir'][load.master])))
 
     def pts(it, port, bits):
         w, h, pp = ppins.get(it.master, (0.0, 0.0, {}))
@@ -8573,12 +8619,14 @@ def align_station_jogs(m, rounds=2):
                                             hard_short=ALIGN_HARD_SHORT_UM if side_ == 'E' else 0.0)
                         if split_:
                             ch_ = BT.apply(sys.modules[__name__],m,it,split_,ins_[0],outs_[0])
+                            keep_load_map(ld)
                             moved[it.name] = ('band_split',[c_.name for c_ in ch_],r['bus'])
                             refused.pop(r['bus'],None)
                             continue
                 refused[r['bus']] = refused.get(r['bus'], []) + ['spread:no_position']
                 continue
             bx, loc, vin = done_
+            keep_load_map(ld)
             old = it.master
             it.master = '%s_sp%d' % (old, len(spread))
             m['pdir'][it.master] = dict(m['pdir'][old])
@@ -8610,6 +8658,9 @@ def _lay(M, face, ports, layer, start=None, gap=0.96, length=None, pitch=1):
 
 _LAY_K = [1]
 PIN_ALIGN = False               # --pin-align (s81-die v17): field-frame pins bit-aligned with their abutting peers
+RLY_WIDE_ORIENTED = False       # --relay-wide-oriented (S-DIE r3): >= 1,000-b relays reserve the hop-direction outline only
+RLY_WIDE_DEPTH = 36.72          # deepest granted station footprint (FILL-S 14:06)
+STN70_ACROSS_FB = False         # --stn70-across-fallback (S-DIE r3)
 STN_WIDE_SQUARE = False         # --stn-wide-square (S-BIND r6): >= 1,000-b forwarded stations square, same area
 HEND_VR_NOBP = False            # --hend-vr-nobp (s81 grpA 10-14): wide (>= 512 b) m2l VR lane ends take NOBP + WCHK
 FWD_NEGCAP = False              # --fwd-negcap (s81-die v17): forwarded-lane ENDS capture on the falling forwarded edge
@@ -8901,7 +8952,14 @@ def masters_r8(m, k=1):
         ports = pdir.get(mst, {})
         Mx = Q.Master(mst, it.w, it.h, 3 if is_glue(mst) or mst in CFG7_MASTERS else 7, f'r8 {it.kind}')
         M[mst] = Mx
-        _faces_r8(m, Mx, it, ports)
+        saved = m.get('spread_load_pin_maps', {}).get(mst) if k == 1 else None
+        if saved is None:
+            _faces_r8(m, Mx, it, ports)
+        else:
+            assert all(abs(a - b) < 1e-6 for a, b in zip(saved['outline'], (Mx.w, Mx.h))), (mst, 'spread load outline changed')
+            assert saved['port_signature'] == ports, (mst, 'spread load port signature changed')
+            Mx.ports = copy.deepcopy(saved['ports'])
+            Mx.order = list(saved['order'])
         _apply_pin_overrides(Mx, it)
         if k == 1:
             _assigned_physical_pins(Mx, ports)
@@ -10266,6 +10324,8 @@ def die_options(ap):
     ap.add_argument('--bf-static-prog', action='store_true', help='S-BIND 2026-10-15: BF pairs run their compiled '
                     'programme (dsfd_bf_front_static + ot_s81_cfg7_seq_bfp; descriptor in the cfg ROM spare columns)')
     ap.add_argument('--bf-x2-pair', action='store_true', help='S-BIND r6 (needs --bf-x2-static): the x tree carries the packed word as two equal-station forwarded lanes (566-b legacy + 538-b x2) with one static ingress each at the column')
+    ap.add_argument('--relay-wide-oriented', action='store_true', help='S-DIE r3: >= 1,000-b relays reserve only the hop-direction outline (depth >= 36.72 um), not the two-orientation square')
+    ap.add_argument('--stn70-across-fallback', action='store_true', help='S-DIE r3: with --stn70-split, a 70xK group with no along-flow spot retries stacked across the flow')
     ap.add_argument('--stn-wide-square', action='store_true', help='S-BIND r6: >= 1,000-b forwarded stations (the packed static x lane) square at the same area')
     ap.add_argument('--bf-x2-static', action='store_true', help='S-BIND 2026-10-15: packed 1,101-b static x lane '
                     '(legacy 564 + BF x2 536 + valid): static hx pipelines, static column ingress, x2 slot stations, BF xb bound')
@@ -10414,7 +10474,7 @@ def apply_options(a):
     global WFC_PRICED, PEER_PIN_POS, HOP_R_HUB
     HOP_R_HUB = float(getattr(a, 'hop_r_hub', 0.0) or 0.0)
     PEER_PIN_POS = bool(getattr(a, 'peer_pin_pos', False))
-    global PIN_ALIGN, FWD_NEGCAP, HEND_VR_NOBP, STN_WIDE_SQUARE
+    global PIN_ALIGN, FWD_NEGCAP, HEND_VR_NOBP, STN_WIDE_SQUARE, RLY_WIDE_ORIENTED, STN70_ACROSS_FB
     PIN_ALIGN = bool(getattr(a, 'pin_align', False))
     global XB_RGAP_FIRST, X_SITE_PAIR
     XB_RGAP_FIRST = bool(getattr(a, 'xb_rgap_first', False))
@@ -10439,6 +10499,8 @@ def apply_options(a):
     CFIFO_FALL = bool(getattr(a, 'cfifo_fall_launch', False))
     HEND_VR_NOBP = bool(getattr(a, 'hend_vr_nobp', False))
     STN_WIDE_SQUARE = bool(getattr(a, 'stn_wide_square', False))
+    RLY_WIDE_ORIENTED = bool(getattr(a, 'relay_wide_oriented', False))
+    STN70_ACROSS_FB = bool(getattr(a, 'stn70_across_fallback', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
     global RTL_BIND, HOST_CF_BITS, HOST_TC_BITS   # HC_T_FWD / HC_T_RET / HC_RTL_WIDTHS declared global above (r6: was a SyntaxError)
     RTL_BIND = bool(getattr(a, 'rtl_bind', False))

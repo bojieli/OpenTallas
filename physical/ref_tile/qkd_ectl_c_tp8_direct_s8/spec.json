@@ -1,0 +1,214 @@
+{
+ "name": "qkd_ectl_c_tp8_direct_s8",
+ "top": "qkd_ectl_c_tp8_direct",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv",
+  "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "STATIC_QK": 1,
+  "QK_ISSUE_AGE": 34,
+  "ROW_RETURN_LAT": 21,
+  "HXK": 8
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 138.24,
+  "h": 129.6
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "rsv_i",
+   "x_b",
+   "x_a"
+  ],
+  "E": [
+   "si",
+   "so"
+  ],
+  "S": [
+   "t0_q",
+   "e0",
+   "e1",
+   "s0",
+   "s1",
+   "rst_n",
+   "cfg"
+  ],
+  "N": [
+   "t1_q",
+   "e2",
+   "e3",
+   "s2",
+   "s3",
+   "ck"
+  ]
+ },
+ "pin_ranges": {
+  "rsv_i": [
+   108.0,
+   109.0
+  ],
+  "x_b": [
+   112.0,
+   124.0
+  ],
+  "x_a": [
+   94.0,
+   106.0
+  ],
+  "si": [
+   6.0,
+   76.0
+  ],
+  "so": [
+   80.0,
+   124.0
+  ],
+  "t0_q": [
+   4.5,
+   64.0
+  ],
+  "e0": [
+   66.0,
+   68.5
+  ],
+  "e1": [
+   69.0,
+   71.5
+  ],
+  "s0": [
+   73.0,
+   78.0
+  ],
+  "s1": [
+   79.0,
+   84.0
+  ],
+  "rst_n": [
+   90.0,
+   91.0
+  ],
+  "cfg": [
+   92.0,
+   94.0
+  ],
+  "t1_q": [
+   4.5,
+   64.0
+  ],
+  "e2": [
+   66.0,
+   68.5
+  ],
+  "e3": [
+   69.0,
+   71.5
+  ],
+  "s2": [
+   73.0,
+   78.0
+  ],
+  "s3": [
+   79.0,
+   84.0
+  ],
+  "ck": [
+   86.0,
+   87.0
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_balance": {
+   "group_max": 32,
+   "v": "M5",
+   "h": "M4"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "structural_change": "Production binding of leaf C in the static native attention stack: STATIC_QK 1, QK_ISSUE_AGE 34, ROW_RETURN_LAT 21 (K_EXT 16 + RQD 2 + 3 response pin stages; was K_EXT+6 = one edge early, age-99 fault), HXK 8 (hierarchical head ot_qkh_head_native_r4 NRS1+NRI2+NRK2+3: the K-pass tag delay SCD = KDEPTH+LANE_D+4 grows by 8 stages x 13 b). RTL unchanged vs closed qkd_ectl_c_tp8_direct except the parameters; outline/pins/slot identical.",
+ "job": {
+  "owner": "Claude:Q-VMWB (el1015-qwen-attn.log)",
+  "branch": "claude/q-vmwb-1015",
+  "tag": "s8",
+  "purpose": "ECTL leaf C with the Q-ATTN r3 static binding (RL21/HXK8) for the KV/system die native attention stack.",
+  "benches": [
+   {
+    "name": "ectl3_tp8_exact",
+    "cmd": "SPLIT_CLOCK=1 ECTL_DIRECT=1 bash tools/qwen_kv_die/ectl3_tp8_bench.sh {RUN}/bench/ectl3",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ECTL3 PASS",
+    "min_count_regex": "compares (\\d+)"
+   },
+   {
+    "name": "ectl3_tp8_exact_s0e0",
+    "cmd": "SPLIT_CLOCK=1 ECTL_DIRECT=1 S=0 E=0 NL=6 bash tools/qwen_kv_die/ectl3_tp8_bench.sh {RUN}/bench/ectl3_00",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ECTL3 PASS",
+    "min_count_regex": "compares (\\d+)"
+   },
+   {
+    "name": "ectl3_tp8_mut_c",
+    "cmd": "SPLIT_CLOCK=1 ECTL_DIRECT=1 S=0 E=0 bash tools/qwen_kv_die/ectl3_tp8_bench.sh {RUN}/bench/ectl3_mut C",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ECTL3 PASS"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_kv_die",
+   "tools/qwen_nearhbm_attn_ref.py",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/qwen_kv_die_phy"
+  ],
+  "views_to": "physical/ref_tile/qkd_ectl_c_tp8_direct_s8/views",
+  "record_to": "results/rtl/ref_tile/qkd_ectl_c_tp8_direct_s8"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "clock": "cts",
+ "slot_change_request": "qkd_ectl slot unchanged (647.976 x 129.576, three abutting leaves A 254.88 | B 254.88 | C 138.24); parent becomes rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv (wires only, ck[2:0]); C.x_a (W 94-106) -> A.x_i (E 112-124) and A.rs_o[0] -> C.rsv_i are parent nets over the B slot on M6+ (<= 255 um).",
+ "children": [],
+ "inter": [],
+ "purpose": "Q-VMWB/Q-ATTN r3 2026-10-15: native static ECTL leaf C at the production binding of ot_qwen_tp8_attention_native_stack (STATIC_QK 1, QK_ISSUE_AGE 34, ROW_RETURN_LAT 21 = K_EXT+5, HXK 8 = hierarchical head score skew). Same outline/pins as closed qkd_ectl_c_tp8_direct; K-pass tag delay +8 stages (13 b x 8 flops). Evidence of the binding: tools/qwen_attention_native/minparent_1015/fix_r3/receipt.json (T8192 EXACT, rejecting mutants)."
+}

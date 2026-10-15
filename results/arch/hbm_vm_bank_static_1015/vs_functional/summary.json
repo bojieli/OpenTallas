@@ -7,5 +7,6 @@
   "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg6wg3.sv": "3d4fe388b28b21b458c29dab8eb2f853d1f6bbc61a7d715463d250ebdcc590f0",
   "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg7wg3.sv": "42e58231cf300f8474a48dbe73fabdda7a8f302cf4eab91ccbd77313b3a3744c"
  },
- "result": "PASS (all positives exact, all mutants FAIL)"
+ "result": "PASS (all positives exact, all mutants FAIL)",
+ "revision": "vs1b: mirror egress valid without the cross-face conflict OR (gate rg4 -86.8 ps at eg_v)"
 }

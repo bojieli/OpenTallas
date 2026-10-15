@@ -12,6 +12,7 @@ inputs train_start / train_count / capture_stride / payload_write have no comput
 calendar, Q-FUNC): enumerated as open inputs, never tied.
 """
 import hashlib
+import json
 from pathlib import Path
 
 from qwen_split.source_pin_plan import rtl_ports
@@ -27,6 +28,31 @@ COMMAND = ('train_start', 'train_count', 'capture_stride', 'payload_write')
 
 def master(b):
     return f'qfd_sp_res_train_{b}'
+
+
+def mapped_inventory(core_sha256, slot):
+    """Attach current mapped census only; physical qualification stays open."""
+    base = ROOT / 'results/arch/qwen_res_train_physical_1015'
+    records = []
+    for band in range(BANDS):
+        file = base / f'inventory_band{band}.json'
+        if not file.exists():
+            return dict(status='incomplete', qualified=False, why=f'missing {file.name}')
+        data = json.loads(file.read_text())
+        if data['source_sha256'] != core_sha256:
+            return dict(status='stale_source', qualified=False, why=f'{file.name} source changed')
+        if any(abs(a-b) > .1 for a, b in zip(data['slot_um'], slot)):
+            return dict(status='different_slot', qualified=False, why=f'{file.name} frame changed')
+        records.append(dict(band=band, source=str(file.relative_to(ROOT)),
+                            ff=data['ff'], area_um2=data['mapped_cell_area_um2'],
+                            occupancy=data['mapped_occupancy'], clock_sinks=data['clock_sinks'],
+                            reset_sinks=data['reset_sinks']))
+    return dict(status='mapped_area_only', qualified=False, bands=records,
+                aggregate_ff=sum(r['ff'] for r in records),
+                aggregate_cell_area_um2=round(sum(r['area_um2'] for r in records), 6),
+                slot_growth_requested=False,
+                physical_open=['rq broadcast capture placement', 'bank merge and rb launch placement',
+                               '25-root native CTS', 'actual reset tree', 'same-slot GRT/DRC/TT/FF'])
 
 
 def apply(model):
@@ -94,8 +120,9 @@ def apply(model):
                             for n, b in sers.items()},
                open_owner='train command fields from the TT ME-issue calendar (Q-FUNC); no compute-die producer yet',
                slot_um=[round(by['sp_res_ser_0'].w, 3), round(by['sp_res_ser_0'].h, 3)],
-               slot_note='legacy res_ser slot kept; physical fit of 24 banks (~360k FF) not yet measured',
+               slot_note='legacy res_ser slot retained; source-/slot-checked mapped census attached below; routing and native qualification open',
                qualified=False)
+    rec['mapped_inventory'] = mapped_inventory(rec['core_sha256'], rec['slot_um'])
     model['res_train_bind'] = rec
     return rec
 

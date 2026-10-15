@@ -2607,7 +2607,30 @@ def case(m, work):
         F.masters, F.port_widths = saved
     _case_ties(m, work / 'die.v')
     run = (work / 'run.tcl').read_text()
-    (work / 'run_pdn.tcl').write_text((work / 'run_pa.tcl').read_text())
+    # KV uses the base generator's run_pa vehicle, independently of the
+    # compute-die run_pdn generator. Preserve its real PG/pin checks and enable
+    # the same temporary conservative OBS mechanism around pdngen only.
+    pdn_run = (work / 'run_pa.tcl').read_text()
+    guarded = """set ot_bbox 0
+if {[info exists ::env(OT_PDN_BBOX_OBS)] && $::env(OT_PDN_BBOX_OBS) eq "1"} {
+  source /work/pdn_bbox_obs.tcl
+  # Preflight the entire actual KV master set before any PDN geometry work.
+  ot_pdn_bbox::begin /work
+  ot_pdn_bbox::restore
+  puts "OT_PDN_BBOX PREFLIGHT PASS actual KV pins, outline, PG, containment and detailed OBS restoration"
+  ot_pdn_bbox::begin /work
+  set ot_bbox 1
+}
+try {source /work/pdn.tcl; pdngen} finally {
+  if {$ot_bbox} {ot_pdn_bbox::restore}
+}
+source /work/die_constant_pg_check.tcl"""
+    original = 'source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl'
+    if pdn_run.count(original) != 1:
+        raise ValueError('KV PDN vehicle changed: guarded PDN hook unresolved')
+    (work / 'run_pdn.tcl').write_text(pdn_run.replace(original, guarded))
+    for helper in ('pdn_bbox_obs.py', 'pdn_bbox_obs.tcl'):
+        (work / helper).write_text((ROOT / 'tools/qwen_kv_die/chain' / helper).read_text())
     # the HBM PHY macros' own M4 power rails (the KV die's four PHY bands): a macro grid that straps them to M8 / M9,
     # so the PG check sees them connected (die_kv2..4: 1,000 PSM-0038 unconnected M4 shapes over x 20.8 - 853.3 um).
     # qwen-1010/b 2026-10-10: M4 and M8 are both horizontal, so an M4 -> M8 connect only forms where a strap happens to
@@ -2617,7 +2640,7 @@ def case(m, work):
     # VSS still failed (die_kv12 PSM-0069); without it VSS passes (pgb test on the die_kv11 floorplan).
     (work / 'pdn.tcl').write_text((work / 'pdn.tcl').read_text() + '''
 set phy_cells {}
-foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] { if {[string match ot_hbm3e_phy* [$c getName]]} { lappend phy_cells [$c getName] } } }
+foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] { if {[string match ot_hbm3e_phy* [$c getName]] || [string match OT_PDN_BBOX_ot_hbm3e_phy* [$c getName]]} { lappend phy_cells [$c getName] } } }
 if {[llength $phy_cells]} {
   define_pdn_grid -macro -cells $phy_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {phy}
   add_pdn_stripe -grid {phy} -layer {M5} -width {0.12} -pitch {10.88} -offset {1.0}
@@ -2666,7 +2689,7 @@ if {[llength $hv7_cells]} {
 set hv5_cells {}
 foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] {
   if {![$c isBlock] || [lsearch -exact $hv6_cells [$c getName]] >= 0 || [lsearch -exact $hv7_cells [$c getName]] >= 0} { continue }
-  if {[string match ot_hbm3e_phy* [$c getName]]} { continue }
+  if {[string match ot_hbm3e_phy* [$c getName]] || [string match OT_PDN_BBOX_ot_hbm3e_phy* [$c getName]]} { continue }
   set t [$c findMTerm VDD]
   if {$t eq "NULL"} { continue }
   foreach mp [$t getMPins] { foreach b [$mp getGeometry] {

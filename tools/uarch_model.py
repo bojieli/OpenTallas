@@ -17301,3 +17301,21 @@ def dsrom_wfc_static_link_price():
                       'internal WFC tokpipe in/out grants and VM write credits stay inside the master (absorbed by the '
                       'static buffers; any would-be wait at the boundary is a sticky fault)',
                       'buffers as flops (49,248 b): map to ot_sram_1r1w_64x512 macros at hardening'])
+
+
+def hbm_host_static_ingress_model():
+    """Sizing-first successor of dynamic HGI CP: configuration only."""
+    return dict(schema='opentallas.hbm.host-static-ingress.v1', replicas=1,
+      macs_per_cycle=0, storage_macros=0,
+      storage='one224bit assembly, independent AW12 and W36 holding slots, registered256bit config output and descriptor registers',
+      target_capacity='existing F20 target8/address12 (4096 rows x256bits =128KiB/target); NOT SU bank16+row7',
+      configuration_bytes_per_cycle=1, output_burst_bytes=32,
+      output_cadence='minimum32edges per256bit frame (eight AXI writes, registeredready plus held response); external host stalls unbounded',
+      boundary_bits=dict(axi_inputs=65,axi_outputs=39,target_config=277,target_descriptor=42,launch=1,status_inputs=3),
+      routing='single registered target broadcast; die-assigned pins/corridor and replicated destination collars OPEN',
+      launch='explicit F30 write only after actual aggregate block_ready, no active/fault, complete256bit assembly; fixed4edge guard after every config/descriptor output;7edge launch guard and host-only active lock',
+      latency='host launch accepted at L -> launch flop after L; target collar samples L+1, emits start after L+2; native programme captures L+3 and starts L+4',
+      local_readiness=dict(bitmap_bits_per_target=1024,scan_edges_per_1024row_descriptor=1024,write_commit_guard_edges=2,storage_macros=0,location='local programme target, outside ingress'),
+      area_slot_um=[432,432], slot_area_um2=186624,
+      sink_bound='under700 source registers, no programme SRAM inside ingress; mapped area and CTS still required',
+      scope='component ingress only; actual host packet/landing join, heterogeneous target adapters, all-ready reduction, fullchip binding and performance remain OPEN')

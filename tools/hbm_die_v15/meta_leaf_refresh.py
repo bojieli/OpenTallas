@@ -52,6 +52,8 @@ def routed_pins(raw):
 
 def apply(contract, raw, rtl, view_ref, source_ref):
     pins = routed_pins(raw)
+    view_hashes = {n: hashlib.sha256(read_at(view_ref,str(Path(LEF).parent/n))).hexdigest()
+        for n in (f'{MASTER}.lef',f'{MASTER}_tt.lib',f'{MASTER}_ff.lib','insertion.json')}
     parents = {s['name']: s for s in contract['slots']}
     leaves = [s for s in contract['slots'] if s.get('cell') == MASTER]
     if len(leaves) != 16:
@@ -81,6 +83,7 @@ def apply(contract, raw, rtl, view_ref, source_ref):
         s.pop('measured_ff', None)  # old 3,075-flop shift count is not the RF successor's count
         s['source_dependencies_sha256'] = {p: hashlib.sha256(read_at(source_ref,p)).hexdigest()
             for p in (SOURCE,'rtl/hdc/ot_hdc_delay_rf.sv','rtl/hdc/ot_hdc_delay.sv')}
+        s['view_files_sha256'] = view_hashes
     contract['metadata_leaf_refresh_1319'] = dict(view_ref=view_ref, source_ref=source_ref, instances=16,
         old_outline_um=[51.84,51.84], new_outline_um=[68.04,68.04], added_area_mm2=round(16*(68.04**2-51.84**2)/1e6,9),
         added_cycles=0, parent_and_die_qualified=False)

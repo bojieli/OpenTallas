@@ -33,13 +33,13 @@ module ot_hbm_svc_static_vm_delivery_split_native (
  genvar b;
  generate for(b=0;b<8;b=b+1)begin:g_bank
   ot_hbm_svc_vmdel_lane u_lane (.clk(clk_lane[b]),.rst_n(rst_n),.bank_id(b[2:0]),
-   .begin_v(begin_v),.begin_bank(begin_bank),.begin_epoch(begin_epoch),
-   .start(start),.start_bank(start_bank),.start_epoch(start_epoch),.start_base_sector(start_base_sector),
-   .fill_v({fill_v[24+b],fill_v[16+b],fill_v[8+b],fill_v[b]}),
-   .fill_bank({fill_bank[24+b],fill_bank[16+b],fill_bank[8+b],fill_bank[b]}),
-   .fill_slot({fill_slot[(24+b)*6+:6],fill_slot[(16+b)*6+:6],fill_slot[(8+b)*6+:6],fill_slot[b*6+:6]}),
-   .fill_epoch({fill_epoch[(24+b)*16+:16],fill_epoch[(16+b)*16+:16],fill_epoch[(8+b)*16+:16],fill_epoch[b*16+:16]}),
-   .fill_data({fill_data[(24+b)*256+:256],fill_data[(16+b)*256+:256],fill_data[(8+b)*256+:256],fill_data[b*256+:256]}),
+   .begin_v_i(begin_v),.begin_bank_i(begin_bank),.begin_epoch_i(begin_epoch),
+   .start_i(start),.start_bank_i(start_bank),.start_epoch_i(start_epoch),.start_base_sector_i(start_base_sector),
+   .fill_v_i({fill_v[24+b],fill_v[16+b],fill_v[8+b],fill_v[b]}),
+   .fill_bank_i({fill_bank[24+b],fill_bank[16+b],fill_bank[8+b],fill_bank[b]}),
+   .fill_slot_i({fill_slot[(24+b)*6+:6],fill_slot[(16+b)*6+:6],fill_slot[(8+b)*6+:6],fill_slot[b*6+:6]}),
+   .fill_epoch_i({fill_epoch[(24+b)*16+:16],fill_epoch[(16+b)*16+:16],fill_epoch[(8+b)*16+:16],fill_epoch[b*16+:16]}),
+   .fill_data_i({fill_data[(24+b)*256+:256],fill_data[(16+b)*256+:256],fill_data[(8+b)*256+:256],fill_data[b*256+:256]}),
    .full0_all(full0),.full1_all(full1),.pcbad_all(pcbad),
    .full0(full0[b]),.full1(full1[b]),.pcbad(pcbad[b]),
    .block_ready(br[b]),.busy(bz[b]),.fault(ft[b]),.dq(dq[b*281+:281]));

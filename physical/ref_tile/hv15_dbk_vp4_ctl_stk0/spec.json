@@ -1,0 +1,95 @@
+{
+ "name": "hv15_dbk_vp4_ctl_stk0",
+ "top": "ot_hgi_dma_back_static_vp4_controller",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "mv",
+   "cycle_in",
+   "mv_v",
+   "issue_at",
+   "drain_at",
+   "mv_wb_bank",
+   "mv_wb_epoch"
+  ],
+  "E": [
+   "bank_read_en",
+   "bank_read_slot",
+   "bank_write_slot",
+   "bank_write_en",
+   "bank_output_en",
+   "bank_read_addr",
+   "rr_valid_i"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "wa",
+   "wb_ready",
+   "mv_src",
+   "mv_done",
+   "mv_fault",
+   "quiet",
+   "busy"
+  ],
+  "S": [
+   "rq",
+   "wb_reserve_v",
+   "wb_reserve_bank",
+   "wb_fill_bank",
+   "wb_reserve_epoch",
+   "wb_fill_epoch",
+   "wb_reserve_sectors",
+   "wb_reserve_base",
+   "wb_fill_start"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:HBM-HARDEN-1103",
+  "branch": "codex/hbm-hardening-1103",
+  "tag": "footprint",
+  "purpose": "DIAGNOSTIC CTS gate of the DESC_LAT4 controller leaf (ot_hgi_dma_back_static_vp4_controller, STK=0): measures whether the four-stage descriptor pipeline removes the vp controller setup -412 ps / 27-level cm path before any route. Not a slot grant.",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "rtl/hbm_accel/generic/peers/static",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "record_to": "results/rtl/ref_tile/hv15_dbk_vp4_ctl_stk0",
+  "benches": []
+ },
+ "params": {
+  "STK": 0
+ },
+ "std_area_um2": 2600,
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

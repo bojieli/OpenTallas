@@ -3,7 +3,7 @@
 // Directed-random legal traffic (begin, per-PC fills of both banks, compiler starts at legal and illegal bases) mixed
 // with protocol violations (duplicate/epoch-wrong fills, early starts, begin conflicts). Every output bit, every cycle.
 module tb_hbm_svc_vmdel_split_equiv;
- parameter integer SEED=1, CYCLES=60000;
+ parameter integer SEED=1, CYCLES=60000, LAT=0;  // LAT: split interface latency (v3 lane pin registers: 2)
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,begin_v=0,begin_bank=0,start=0,start_bank=0;
  reg [15:0] begin_epoch=0,start_epoch=0,start_base_sector=0;
@@ -18,11 +18,19 @@ module tb_hbm_svc_vmdel_split_equiv;
  integer seed=SEED,cyc,p,checks=0,starts=0,valid_dq=0,faults_seen=0,resets=0,completes=0;
  reg [15:0] ep[0:1]; reg [6:0] nxt[0:31][0:1]; reg [1:0] opened; integer viol_at=-1,fault_run=0; reg v; reg run_bank=0; reg open_pend=0; 
  function integer rnd(input integer n); rnd=$unsigned($random(seed))%n; endfunction
- always @(negedge clk) if(rst_n) begin
+ // reference outputs delayed LAT cycles; the first LAT cycles after each reset release compare nothing (the split's
+ // output registers still hold their reset value while the reference already shows its post-reset state)
+ reg [2251:0] hist [0:7]; integer since_rst=0, h;
+ wire [2251:0] ref_now={br_a,dq_a,busy_a,fault_a};
+ wire [2251:0] ref_del=(LAT==0)?ref_now:hist[LAT-1];
+ always @(negedge clk) begin
+  if(!rst_n) since_rst=0; else since_rst=since_rst+1;
+ end
+ always @(posedge clk) begin for(h=7;h>0;h=h-1) hist[h]<=hist[h-1]; hist[0]<=ref_now; end
+ always @(negedge clk) if(rst_n && since_rst>LAT) begin
   checks=checks+1;
-  if({br_a,dq_a,busy_a,fault_a}!=={br_b,dq_b,busy_b,fault_b})
-   $fatal(1,"SPLIT_EQUIV mismatch cycle=%0d br %b/%b busy %b/%b fault %b/%b dq_diff_bank=%0d",cyc,br_a,br_b,busy_a,busy_b,fault_a,fault_b,
-          (dq_a[280:0]!==dq_b[280:0])?0:(dq_a[561:281]!==dq_b[561:281])?1:9);
+  if(ref_del!=={br_b,dq_b,busy_b,fault_b})
+   $fatal(1,"SPLIT_EQUIV mismatch cycle=%0d LAT=%0d br %b/%b busy %b/%b fault %b/%b",cyc,LAT,ref_del[2251:2250],br_b,ref_del[1],busy_b,ref_del[0],fault_b);
   for(integer b=0;b<8;b=b+1) if(dq_a[b*281+280]) valid_dq=valid_dq+1;
   if(fault_a) faults_seen=faults_seen+1;
  end
@@ -64,8 +72,8 @@ module tb_hbm_svc_vmdel_split_equiv;
     end
    end
   end
-  $display("SPLIT_EQUIV PASS seed=%0d cycles=%0d checks=%0d starts=%0d dq_valid_lanes=%0d fault_cycles=%0d resets=%0d",
-           seed,CYCLES,checks,starts,valid_dq,faults_seen,resets);
+  $display("SPLIT_EQUIV PASS LAT=%0d seed=%0d cycles=%0d checks=%0d starts=%0d dq_valid_lanes=%0d fault_cycles=%0d resets=%0d",
+           LAT,seed,CYCLES,checks,starts,valid_dq,faults_seen,resets);
   $finish;
  end
 endmodule
