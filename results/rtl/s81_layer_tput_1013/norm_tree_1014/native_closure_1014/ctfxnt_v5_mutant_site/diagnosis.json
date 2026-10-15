@@ -1,0 +1,9 @@
+{
+  "source": "c3c6d50b196c1a2085147a6931e9da300106e0c2",
+  "failed_job": "s81hc_ctfxnt_ref-v5-ck-split-8ebd28fd2",
+  "failure_kind": "mutant injection site missing before build",
+  "failure": "tile mutant ot_s81_hc_ctfx_nt: site not found",
+  "fix_commit": "87783473c227c0a94635407625facacf1b15f480",
+  "fix": "Match the rr-derived rst_n local capture and mutate its valid capture to zero; one exact injection site.",
+  "qualification": "Pending repaired-source positive and observed mutant bench plus full route/native audit; existing rc=1 is not mutant qualification."
+}
