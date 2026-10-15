@@ -63,7 +63,11 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11);
 
 
  dsfd_engram_mix4_c #(.MUT(MUT),.HLAYOUT(1),.VM_LAT(MIX_VM_LAT),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT),.RS(5)) mix(
-  {149{ck}},rss,mix_cmd,mix_done,mix_st,1'b1,mx_rqv,mx_rq,mx_rsv,mx_rs,mx_wqv,mx_wq,mx_wqm,mx_wqd);
+  {149{ck}},rss,mix_cmd,mix_done,mix_st,
+`ifndef DSFD_ENGRAM_STATIC_ISSUE
+ 1'b1,
+`endif
+ mx_rqv,mx_rq,mx_rsv,mx_rs,mx_wqv,mx_wq,mx_wqm,mx_wqd);
  reg [63:0] cfg[0:0]; reg [1023:0] hm[0:639],km[0:639],wm[0:639],vm[0:159],ym[0:639];
  reg [511:0] image[0:16383], expected_y[0:639]; reg used[0:16383];
  reg [19:0] ev[0:MAXC-1]; reg [10239:0] ed[0:MAXC-1];

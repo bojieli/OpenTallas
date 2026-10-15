@@ -42,7 +42,10 @@
 module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=1, BC=2, RS=5, HLAYOUT=1)(
  input wire [148:0] ck,              // ck[0] top; ck[1+37q +: 37] cluster q roots
  input wire [0:0] rst,input wire [84:0] c_cmd,
- output wire [8:0] c_done,output wire [1:0] c_st,input wire [0:0] f_inp,
+ output wire [8:0] c_done,output wire [1:0] c_st,
+`ifndef DSFD_ENGRAM_STATIC_ISSUE
+ input wire [0:0] f_inp,
+`endif
  output reg [19:0] rq_v,output reg [279:0] rq_row,
  input wire [19:0] rs_v,input wire [10239:0] rs_d,
  output wire [3:0] wq_v,output wire [55:0] wq_row,
@@ -52,7 +55,12 @@ module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=
  always @(posedge ck[0] or negedge rst[0])if(!rst[0])reset_sync<=0;else reset_sync<={reset_sync[0],1'b1};
  wire rn=reset_sync[1];
  wire jv,jnew,epf;wire [83:0] jd,jnd;reg done,fault;reg inp_q;
+`ifdef DSFD_ENGRAM_STATIC_ISSUE
+ // Compiled issue edge proves operand availability; late/missing VM results remain faults.
+ always @(posedge ck[0] or negedge rn)if(!rn)inp_q<=0;else inp_q<=1'b1;
+`else
  always @(posedge ck[0] or negedge rn)if(!rn)inp_q<=0;else inp_q<=f_inp[0];
+`endif
  ot_s81_slab_ep ep(.c_clk(ck[0]),.c_rst_n(rn),.c_cmd(c_cmd),.c_done(c_done),.c_st(c_st),
   .e_clk(ck[0]),.e_rst_n(rn),.j_v(jv),.j_d(jd),.j_new(jnew),.j_new_d(jnd),.j_present(1'b1),.j_done(done),.slab_fault(fault),.ep_fault(epf));
 
