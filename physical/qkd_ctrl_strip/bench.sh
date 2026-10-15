@@ -37,7 +37,7 @@ build() { # tag top tb params...
 }
 if [ "$WHAT" = pc ]; then
   PCS="0 13 31"; [ "$MUT" != 0 ] && PCS="13"
-  for p in $PCS; do build "p${p}m$MUT" tb_qkd_ctrl_pc "$R/rtl/test/qwen_kv_die/tb_qkd_ctrl_pc.sv" -GPCI=$p -GMUT=$MUT; done > "$OUT/all.log"
+  for p in $PCS; do build "p${p}m$MUT" tb_qkd_ctrl_pc "$R/rtl/test/qwen_kv_die/tb_qkd_ctrl_pc.sv" -GPCI=$p -GMUT=$MUT -GHAND_PIPE=${HAND_PIPE:-0}; done > "$OUT/all.log"
   n=$(grep -c '^PASS qkd_ctrl_pc' "$OUT/all.log"); f=$(grep -c '^FAIL' "$OUT/all.log")
   want=$(echo $PCS | wc -w)
   grep -E '^(PASS|FAIL)' "$OUT/all.log"

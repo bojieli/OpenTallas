@@ -77,7 +77,9 @@ module ot_qkd_ectl_part #(
     parameter integer ND = 1,
     parameter integer HXK = 0,
     parameter integer HXN = 0,
-    parameter integer RWD = (PART == 3) ? 32 : 512     // row bits held here (C holds none: a pruned dummy slice)
+    parameter integer RWD = (PART == 3) ? 32 : 512,    // row bits held here (C holds none: a pruned dummy slice)
+    parameter integer XB2 = 0            // B (PART 2) only: x_i already carries the stage-2 word (direct seams: C's x2), so
+                                         // B's stage 3 is its own pin flop x1 (kvsys-elements r3)
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -110,6 +112,7 @@ module ot_qkd_ectl_part #(
     output reg                  ev_k_first,
     output reg                  ev_v_first,
     // W face (leaf A)
+    output wire                 req_epoch,          // alternating layer identity at the request pin
     output wire                 req_valid,
     output wire                 req_v,
     output wire                 req_g,
@@ -201,9 +204,9 @@ module ot_qkd_ectl_part #(
         if (!rp) begin x1 <= {XW{1'b0}}; x2 <= {XW{1'b0}}; x3 <= {XW{1'b0}}; end
         else begin x1 <= x_d; x2 <= x1; x3 <= x2; end
 `ifdef KVD_ECTL3_MUT_B
-    wire [XW-1:0] xv = (PART == 3) ? x3 : x1;            // mutant: leaf B's control one cycle early
+    wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2 && XB2 != 0) ? x_i : x1;   // mutant: leaf B's control one cycle early
 `else
-    wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2) ? x2 : x1;
+    wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2) ? ((XB2 != 0) ? x1 : x2) : x1;
 `endif
     assign x_o = x1;
     assign x2_o = x2;
@@ -374,6 +377,17 @@ module ot_qkd_ectl_part #(
         (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_v (.clk(clk), .rst_n(rc), .d(rqv_s[gq]), .q(rqv_s[gq + 1]));
         (* keep_hierarchy *) ot_nhb_rep_h #(.W(15)) u_d (.clk(clk), .d(rqd_s[15*gq +: 15]), .q(rqd_s[15*(gq + 1) +: 15]));
     end endgenerate
+    // First start after reset is layer zero (even); NL=36 preserves parity at the token wrap.
+    reg layer_epoch;
+    always @(posedge clk or negedge rc)
+        if (!rc) layer_epoch <= 1'b1;
+        else if (start) layer_epoch <= ~layer_epoch;
+    wire [RQD:0] epoch_s;
+    assign epoch_s[0] = layer_epoch;
+    for (genvar ep = 0; ep < RQD; ep = ep + 1) begin : g_epoch
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(1)) u_ep (.clk(clk), .d(epoch_s[ep]), .q(epoch_s[ep+1]));
+    end
+    assign req_epoch = epoch_s[RQD];
     assign req_valid = rqv_s[RQD];
     assign {req_v, req_g, req_t} = rqd_s[15*RQD +: 15];
 

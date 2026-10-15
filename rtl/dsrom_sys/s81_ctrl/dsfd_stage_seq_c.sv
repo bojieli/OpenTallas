@@ -27,7 +27,7 @@ module dsfd_stage_seq_c #(
     // head 8 / emb 9 / Engram 10 / spare 11) instantiates this core through a variant master that has no c/d/s pins for
     // e (dsfd_stage_seq_c8); here d<e> / s<e> of an absent engine are not read and c<e> stays 0.  A program op routed
     // to an absent engine is a FAULT (code 8, sticky, fail closed: the op is never issued, the job never completes).
-    parameter [11:0] ENG_PRESENT = 12'hFFF,
+    parameter [12:0] ENG_PRESENT = 13'h0FFF,
     // s81-die-rtl-bind 2026-10-14 (F4 hop): KDX = the stage hand-off engine whose op the KIT done does not wait for
     // (the kit sends the HIDDEN after its done; the hop op completes when the kit's message has left: ot_s81_stage_seq
     // job_kdone).  -1 = the kit done is the job done (unchanged).
@@ -40,9 +40,9 @@ module dsfd_stage_seq_c #(
     input  wire [35:0]           f_pw,                  // {v, a 7, d 28} program write
     input  wire [7:0]            f_plen,
     output wire [5:0]            t_st,                  // {fault, code[3:0], busy}
-    output wire [84:0] c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11,
-    input  wire [8:0]  d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11,
-    input  wire [1:0]  s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11
+    output wire [84:0] c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12,
+    input  wire [8:0]  d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12,
+    input  wire [1:0]  s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12
 );
     localparam integer CMDW = 1 + USER_W + 2 * NW + ARGW + OPW, TAGW = 1 + OPW;   // 84 / 8
     // ---------------- resets
@@ -77,9 +77,9 @@ module dsfd_stage_seq_c #(
     end
     // ---------------- engine pins
     wire [NENG*85-1:0] c_w;
-    wire [NENG*9-1:0]  d_w = {d11, d10, d9, d8, d7, d6, d5, d4, d3, d2, d1, d0};
-    wire [NENG*2-1:0]  s_w = {s11, s10, s9, s8, s7, s6, s5, s4, s3, s2, s1, s0};
-    assign {c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0} = c_w;
+    wire [NENG*9-1:0]  d_w = {d12, d11, d10, d9, d8, d7, d6, d5, d4, d3, d2, d1, d0};
+    wire [NENG*2-1:0]  s_w = {s12, s11, s10, s9, s8, s7, s6, s5, s4, s3, s2, s1, s0};
+    assign {c12, c11, c10, c9, c8, c7, c6, c5, c4, c3, c2, c1, c0} = c_w;
     reg [NENG-1:0] dnv_q; reg [NENG*TAGW-1:0] dnt_q; reg [NENG-1:0] ef_q;
     integer i;
     always @(posedge ck[0]) begin
@@ -140,9 +140,9 @@ endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
 // dsfd_stage_seq_c8 (s81-die-rtl-bind 2026-10-14, die item F4): the stage sequencer master of a die with engines 0..7
-// only (S81 layer1: fld 0, su 1, hc 2, coll 3, svc 4, sel 5, col 6, hop 7 -- results/rtl/s81_ctrl_20261008/programs
+// plus VM engine 12 (S81 layer1: fld 0, su 1, hc 2, coll 3, svc 4, sel 5, col 6, hop 7 -- results/rtl/s81_ctrl_20261008/programs
 // engine_ports; head 8 / emb 9 / Engram 10 / spare 11 live on the head, source and Engram-home dies).  Same core and
-// cycles as dsfd_stage_seq_c; the absent engines have no die pins (an op routed to one faults, code 8).
+// cycles as dsfd_stage_seq_c; engine 12 is the compact VM arming endpoint; the absent engines have no die pins (an op routed to one faults, code 8).
 // KDX 7: the kit done (t_kd) is given when every op but the hop (engine 7 = the kit's HIDDEN hand-off) has completed;
 // the hop op completes at the kit (dsfd_wfc_stg hop endpoint: its link-out message last flit) and retires the job.
 // ---------------------------------------------------------------------------------------------------------------
@@ -154,15 +154,20 @@ module dsfd_stage_seq_c8 #(parameter integer NOPS = 128, parameter integer QD = 
     input  wire [35:0]  f_pw,
     input  wire [7:0]   f_plen,
     output wire [5:0]   t_st,
-    output wire [84:0]  c0, c1, c2, c3, c4, c5, c6, c7,
-    input  wire [8:0]   d0, d1, d2, d3, d4, d5, d6, d7,
-    input  wire [1:0]   s0, s1, s2, s3, s4, s5, s6, s7
+    output wire [84:0]  c0, c1, c2, c3, c4, c5, c6, c7, c12,
+    input  wire [8:0]   d0, d1, d2, d3, d4, d5, d6, d7, d12,
+    input  wire [1:0]   s0, s1, s2, s3, s4, s5, s6, s7, s12
 );
     // engines 8..11 do not exist on this die: their completion / status inputs are the constant "no engine" (never
     // read: ENG_PRESENT masks them), their command outputs are left open inside this master
-    dsfd_stage_seq_c #(.NOPS(NOPS), .QD(QD), .FQ(FQ), .ENG_PRESENT(12'h0FF), .KDX(7)) u_s (.ckv(ckv), .rsv(rsv), .ck(ck), .rst(rst),
+`ifdef OT_SSEQC_MUT_VM_ABSENT
+    localparam [12:0] PRESENT = 13'h00FF; // negative control: VM commands must not disappear
+`else
+    localparam [12:0] PRESENT = 13'h10FF;
+`endif
+    dsfd_stage_seq_c #(.NOPS(NOPS), .QD(QD), .FQ(FQ), .NENG(13), .ENG_PRESENT(PRESENT), .KDX(7)) u_s (.ckv(ckv), .rsv(rsv), .ck(ck), .rst(rst),
         .f_ks(f_ks), .t_kd(t_kd), .f_pw(f_pw), .f_plen(f_plen), .t_st(t_st),
-        .c0(c0), .c1(c1), .c2(c2), .c3(c3), .c4(c4), .c5(c5), .c6(c6), .c7(c7), .c8(), .c9(), .c10(), .c11(),
-        .d0(d0), .d1(d1), .d2(d2), .d3(d3), .d4(d4), .d5(d5), .d6(d6), .d7(d7), .d8(9'd0), .d9(9'd0), .d10(9'd0), .d11(9'd0),
-        .s0(s0), .s1(s1), .s2(s2), .s3(s3), .s4(s4), .s5(s5), .s6(s6), .s7(s7), .s8(2'd0), .s9(2'd0), .s10(2'd0), .s11(2'd0));
+        .c0(c0), .c1(c1), .c2(c2), .c3(c3), .c4(c4), .c5(c5), .c6(c6), .c7(c7), .c8(), .c9(), .c10(), .c11(), .c12(c12),
+        .d0(d0), .d1(d1), .d2(d2), .d3(d3), .d4(d4), .d5(d5), .d6(d6), .d7(d7), .d8(9'd0), .d9(9'd0), .d10(9'd0), .d11(9'd0), .d12(d12),
+        .s0(s0), .s1(s1), .s2(s2), .s3(s3), .s4(s4), .s5(s5), .s6(s6), .s7(s7), .s8(2'd0), .s9(2'd0), .s10(2'd0), .s11(2'd0), .s12(s12));
 endmodule

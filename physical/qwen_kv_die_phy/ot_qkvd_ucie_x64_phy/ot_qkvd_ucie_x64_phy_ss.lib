@@ -1,5 +1,5 @@
 library (ot_qkvd_ucie_x64_phy_ss) {
-  comment : "ot_qkvd_ucie_x64_phy: licensed UCIe PHY + D2D adapter abstract, FDI boundary timing only (ASSUMED registered pins)";
+  comment : "ot_qkvd_ucie_x64_phy: licensed UCIe PHY abstract, FDI boundary timing only (ASSUMED registered pins)";
   technology (cmos);
   delay_model : table_lookup;
   revision : "1.0";
@@ -52,16 +52,16 @@ library (ot_qkvd_ucie_x64_phy_ss) {
   type (ot_qkvd_ucie_x64_phy_tx_flit_t) {
     base_type : array;
     data_type : bit;
-    bit_width : 548;
-    bit_from : 547;
+    bit_width : 583;
+    bit_from : 582;
     bit_to : 0;
     downto : true;
   }
   type (ot_qkvd_ucie_x64_phy_rx_flit_t) {
     base_type : array;
     data_type : bit;
-    bit_width : 548;
-    bit_from : 547;
+    bit_width : 583;
+    bit_from : 582;
     bit_to : 0;
     downto : true;
   }
@@ -85,7 +85,7 @@ library (ot_qkvd_ucie_x64_phy_ss) {
       internal_power () {
         rise_power (mc_energy) {
           index_1 ("5, 20, 80, 160, 320");
-          values ("158920.0000, 158920.0000, 158920.0000, 158920.0000, 158920.0000");
+          values ("169070.0000, 169070.0000, 169070.0000, 169070.0000, 169070.0000");
         }
         fall_power (mc_energy) {
           index_1 ("5, 20, 80, 160, 320");

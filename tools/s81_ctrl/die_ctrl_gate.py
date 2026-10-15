@@ -28,7 +28,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 BIND = ROOT / 'physical/s81_ctrl/die_ctrl_bindings.json'
 PROGS = ROOT / 'results/rtl/s81_ctrl_20261008/programs/index.json'
-ENG = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11)
+ENG = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11, vm=12)
 _PSL = re.compile(r'^(.+)\[(\d+):(\d+)\]$')
 
 
