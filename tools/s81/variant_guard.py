@@ -49,7 +49,9 @@ def job_recipe(job, repo):
     declared = (spec.get('source') or {}).get('commit')
     if not declared or not (commit.startswith(declared) or declared.startswith(commit)):
         raise EvidenceError('bound job/spec source commits disagree or are missing')
-    recipe = closed_stands.route_recipe(spec, lambda c, p: git_show(repo, c, p))
+    # rtl_boundary is an analysis override, not evidence of what synthesis ran.
+    route_spec = {k: v for k, v in spec.items() if k != 'rtl_boundary'}
+    recipe = closed_stands.route_recipe(route_spec, lambda c, p: git_show(repo, c, p))
     if not recipe or not recipe.get('top') or not recipe.get('sources'):
         raise EvidenceError('bound job route recipe cannot be recovered')
     # ref_tile records synthesis flags in the Git-pinned kit EXTRA array.
@@ -58,7 +60,11 @@ def job_recipe(job, repo):
     flags = cmd
     if km:
         kit = git_show(repo, commit, km.group(1) + '/kit.env') or ''
-        flags = closed_stands.rtl_boundary._cfg_vars(kit).get('EXTRA', '()').strip('()')
+        variables = closed_stands.rtl_boundary._cfg_vars(kit)
+        kit_top = shlex.split(variables.get('TOP', ''))
+        if kit_top != [recipe['top']]:
+            raise EvidenceError('archived kit TOP differs from the bound job block or is missing')
+        flags = variables.get('EXTRA', '()').strip('()')
     defines, incdirs = [], list(recipe.get('incdirs') or [])
     for token in shlex.split(flags):
         if token.startswith('VERILOG_DEFINES='):
@@ -100,7 +106,7 @@ def source_bundle(recipe, repo):
         if path in files:
             continue
         text = read(path)
-        if re.search(r'^\s*`include\s+(?!")', text, re.M):
+        if any(not rest.lstrip().startswith('"') for rest in re.findall(r'^\s*`include\b(.*)$', text, re.M)):
             raise EvidenceError(f'unsupported macro include in {path}')
         # Include payloads belong to the source identity too; unsupported macro
         # include paths fail during elaboration rather than borrowing host files.
