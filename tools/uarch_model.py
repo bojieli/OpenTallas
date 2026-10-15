@@ -16375,3 +16375,16 @@ def hbm_idx_static_selector_model():
         routing='four quarterhist/compact roots and separate registered macro roots; cut/slot UNASSIGNED',
         schedule='compiler opcode+address slots only; no request queues, credits, readiness or data-dependent scan length',
         qualification='OPEN exact fullshape golden/mutants, physical closure and native productionrate')
+
+
+def hbm_idx_static_scorer_model():
+    """One real HBM stack, four four-key engines; metadata owns fixed delays."""
+    return dict(schema='opentallas.hbm-idx-static-scorer.v1',keys_per_edge=16,
+        ingress_bits_per_edge=8792,score_bits_per_edge=610,replicas=4,
+        roots=dict(engine=4,meta=4,tail=4,chunk=16,hslice=512,control=1),
+        metadata_bits_per_root=123*25,
+        mapping='global ID768*(first_ord+2*beat+lane//8)+8*rank+lane%8',
+        buffers='no line/score FIFOs; compiler supplies eight whole2-key lines on reserved beat slots',
+        latency='engine123stage path, metadata123stages; measured fullshape join required',
+        slot='source successor UNASSIGNED; no old scorer physicalview alias',
+        price='immutable INDEX price; selector865cycles includes171scoreingest, overlap must be measured')
