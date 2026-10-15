@@ -40,5 +40,15 @@
     },
     "limitation": "Generic cell counts mix widths and do not measure mapped area, delay, congestion or native boundary timing."
   },
-  "open": "Same real canonical writer outline/pins need new mapped gate and physical/native launch/capture proof; prior CTS 21-level data path and 11-level slot_owner fault path are not qualified by behavioral PASS. No clock or timing gate waived."
+  "open": "Same real canonical writer outline/pins need new mapped gate and physical/native launch/capture proof; prior CTS 21-level data path and 11-level slot_owner fault path are not qualified by behavioral PASS. No clock or timing gate waived.",
+  "actual_mapped_synthesis": {
+    "baseline_gate": "ot-epyc1tb hcoll_vmwrite_static_v1-20261015-114930",
+    "new_gate": "ot-agidock128 hcoll_vmwrite_static_v1-20261015-134337",
+    "baseline_area_um2": 8982.19854,
+    "successor_area_um2": 4168.66986,
+    "delta_percent": -53.589649110561744,
+    "baseline_sequential_area_um2": 1834.98048,
+    "successor_sequential_area_um2": 1834.98048,
+    "limit": "Actual mapped area only; CTS/native timing still pending, no physical qualification inferred."
+  }
 }
