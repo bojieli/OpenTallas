@@ -16,3 +16,5 @@ Issuer halt produces `hgi_done` on its fixed program edge. The compiler must pla
 
 
 Delivery base addresses and RGX writer addresses are computed and registered in the parent protocol root. An address word executed at edge C changes the address register after C; a synchronous consumer samples it at C+1. The compiler must put RGX address words one edge before the corresponding writer ingress reservation; delivery address words similarly precede SU consumption by one edge. These registers remove arithmetic from the producer's physical face. This adds320 declared protocol-root register bits; the complete analytic root bound is7,231 bits for q3 (7,223 for q2), below15,000 but still requiring synthesis/CTS evidence.
+
+The protocol root is now the actual hardenable `ot_hgi_coll_q_static_ctl` leaf. Its registers and expressions were moved without introducing a cycle or changing a port. The q3/q2 parent and wrapper modules contain no procedural blocks; the independent protocol clock enters that leaf. Physical mapping and clock-tree evidence remain outstanding.
