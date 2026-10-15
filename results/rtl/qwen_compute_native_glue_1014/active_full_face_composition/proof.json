@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.native-local-bank-component.v1",
+  "status": "SOURCE_COMPONENT_PASS_PARENT_INTEGRATION_OPEN",
+  "source_sha256": {
+    "rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_native_reset_tree.sv": "25e5cb3cb801bc928a1f1f9d9195d36c05caac19f861182ab54c65042c0480ec",
+    "rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tile_full_face_composition.sv": "9126d77187a29adf20ed2380308a0b48f934da37e048648ba51d2a80938ed7c2",
+    "physical/qwen_tile_glue_banks_1015/tb_full.sv": "03c695fa7848ed5fc72931ddfbeedc6979fbde43aab736af9ac4fefcf57edaf7",
+    "physical/qwen_tile_glue_banks_1015/tb_face_reset.sv": "c5b34d21b73e2efd1df784b60c7f351588a60e32e23903bdc2b32af736dfe9e6"
+  },
+  "faces": [
+    "tap508",
+    "n_a514",
+    "n_b514",
+    "t_out514",
+    "n_y514"
+  ],
+  "actual_independent_face_roots": 5,
+  "reset_tree_actual_roots": 9,
+  "fullface_checks": 21035056,
+  "fullface_mutants_failed": {
+    "bypass": 4106,
+    "corruption": 8204,
+    "wrong_actual_clock_root": 9
+  },
+  "reset_face_checks": 71968,
+  "reset_mutants_failed": {
+    "bypass": 97,
+    "corruption": 537
+  },
+  "reset_capture_edges": 3,
+  "first_data_capture_edge": 7,
+  "initial_asserted_reset_edges": 16,
+  "operational_face_capture_edges": 1,
+  "operational_edges_added": 0,
+  "local_fullface_footprint_um2": 8164.8,
+  "local_reset_footprint_um2": 4199.04,
+  "acceptance": "Actual fullface and PG3 Vleaf routes in flight. Parent RTL substitution, source-exact arithmetic/body bench, control/metadata sink/clock setup audit and whole native routing remainOPEN; no productionthroughput or costacceptance claimed."
+}

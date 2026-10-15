@@ -1,0 +1,15 @@
+{
+  "tree_node_count": 9,
+  "target_count": 77,
+  "body_overlaps": [],
+  "halo_5p4_violations": [],
+  "boundary_violations": [],
+  "max_tree_leg_um": 475.284,
+  "max_target_leg_um": 448.176,
+  "target_legs_over_500": [],
+  "tree_legs_over_500": []
+}
+DATA_RECHECK {"changed_body_translation_um": [-184.032, 166.32], "groups": 60, "max_um": 497.082, "failed_groups": {}, "group_maxima_um": {"face_n_a": 13.272, "face_n_b": 40.272, "face_n_y": 13.272, "face_t_out": 40.272, "face_tap": 13.56, "n_a_bank_node_data": 497.082, "n_b_bank_node_data": 425.49, "n_y_bank_node_data": 353.946, "t_out_bank_node_data": 437.01, "rp3_to_rqr_north": 221.658, "rp4_to_rqr_north": 70.458, "rp0_to_rqr_south": 85.386, "rp1_to_rqr_south": 236.586, "rp2_to_rqr_south": 387.786, "tx0_r0_r1": 181.248, "tx0_r1_to_lsl": 101.97, "tx1_r0_r1": 181.248, "tx1_r1_to_lsl": 198.09, "tx2_r0_r1": 181.248, "tx2_r1_to_lsl": 221.298, "tx3_r0_r1": 181.248, "tx3_r1_to_lsl": 125.178, "tx4_r0_r1": 181.248, "tx4_r1_to_lsl": 147.786, "tx5_r0_r1": 181.248, "tx5_r1_to_lsl": 243.906, "tx6_r0_r1": 169.104, "tx6_r1_to_lsl": 267.114, "tx7_r0_r1": 181.248, "tx7_r1_to_lsl": 170.994, "rqr_south_to_mq_wrom": 481.728, "rqr_north_to_mq_wrom": 343.416, "mq_wrom_to_s2_w": 221.808, "s2_w_to_tx0_r0": 365.208, "s2_w_to_tx1_r0": 301.776, "s2_w_to_tx2_r0": 347.04, "s2_w_to_tx3_r0": 410.472, "s2_w_to_tx4_r0": 437.808, "s2_w_to_tx5_r0": 374.376, "s2_w_to_tx6_r0": 336.552, "s2_w_to_tx7_r0": 387.84, "tap_to_xl_q": 224.784, "xl_q_to_xdelay0": 42.384, "xdelay7_to_mq_x": 58.152, "mq_x_to_s2_x": 280.776, "s2_x_to_tx0_r0": 133.488, "s2_x_to_tx1_r0": 63.288, "s2_x_to_tx2_r0": 110.832, "s2_x_to_tx3_r0": 181.032, "s2_x_to_tx4_r0": 396.312, "s2_x_to_tx5_r0": 326.112, "s2_x_to_tx6_r0": 355.944, "s2_x_to_tx7_r0": 443.856, "xdelay_0_1": 85.128, "xdelay_1_2": 85.128, "xdelay_2_3": 123.96, "xdelay_3_4": 386.4, "xdelay_4_5": 85.128, "xdelay_5_6": 85.128, "xdelay_6_7": 85.128}}
+GROUPS {"global_input_to_root": 79.954, "root_to_mid": 474.036, "mid_to_branch": 475.284}
+FANOUTS {"reset_branch_w_low": 12, "reset_branch_w_mid": 16, "reset_branch_w_high0": 16, "reset_branch_w_high1": 6, "reset_branch_e_low": 15, "reset_branch_e_high": 12}
+NATIVE_CAPTURE_SCREEN {"max_capture_plus_extrema_ps": 177.60053, "min_margin_ps": 12.39947}

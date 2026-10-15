@@ -15,8 +15,9 @@ module ot_qwen_native_reset_tree #(parameter integer MUT=0) (
     qkh_packet_v16 u_mid1(.clk(ck_reset[2]),.rst_n(1'b1),.d({16{root_q[1]}}),.q(mid_q[31:16]));
     genvar b;
     generate for(b=0;b<6;b=b+1)begin:g_branch
-        // Three different mid output pins per physical mid master.
-        wire reset_d=(b<3) ? mid_q[b] : mid_q[16+b-3];
+        // Match the exact bounded physical tree: five distinct low-mid pins
+        // own W-low/W-mid/W-high0/W-high1/E-low; high-mid q0 owns E-high.
+        wire reset_d=(b==5) ? mid_q[16] : mid_q[(b==4)?0:b+1];
         wire [15:0] branch_q;
         qkh_packet_v16 u_branch(.clk(ck_reset[3+b]),.rst_n(1'b1),.d({16{reset_d}}),.q(branch_q));
         assign child_reset_n[16*b +:16]=branch_q ^ ((MUT==2 && b==0) ? 16'd1 : 16'd0);
