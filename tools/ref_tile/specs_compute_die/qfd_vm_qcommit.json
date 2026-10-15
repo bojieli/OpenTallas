@@ -83,6 +83,14 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "actual_macro_missing_commit_mutant",
+    "cmd": "ulimit -c 0; {RUN}/bench/raw_commit/obj/Vtb_qfd_vm_die_static +COMMIT_MUT=1",
+    "expect": "fail",
+    "fail_regex": "FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
    }
   ]
  },
