@@ -19,7 +19,7 @@ module hfd_hgi_vm_calendar_SW (
     output wire [5:0] hub_ring_client,
     output wire [7:0] rslot_v,
     output wire [7:0] wslot_v,
-    output wire [15:0] rslot,
+    output wire [23:0] rslot,
     output wire [23:0] wslot,
     output wire [1:0] ring_tx_enable,
     output wire [5:0] ring_tx_source,
@@ -28,8 +28,8 @@ module hfd_hgi_vm_calendar_SW (
     output wire [23:0] lg_local_read,
     output wire [23:0] lg_local_write
 );
-    wire [193:0] calendar;
-    ot_vms_calendar_static #(.W(194)) u_programme (
+    wire [201:0] calendar;
+    ot_vms_calendar_static #(.W(202)) u_programme (
         .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
         .calendar(calendar),.calendar_v(calendar_v),.ordinal(ordinal),.active(active),.done(done),.fault(fault));
@@ -42,14 +42,14 @@ module hfd_hgi_vm_calendar_SW (
     assign hub_ring_client=calendar[74+:6];
     assign rslot_v=calendar[80+:8];
     assign wslot_v=calendar[88+:8];
-    assign rslot=calendar[96+:16];
-    assign wslot=calendar[112+:24];
-    assign ring_tx_enable=calendar[136+:2];
-    assign ring_tx_source=calendar[138+:6];
-    assign replay_enable=calendar[144+:1];
-    assign replay_source=calendar[145+:1];
-    assign lg_local_read=calendar[146+:24];
-    assign lg_local_write=calendar[170+:24];
+    assign rslot=calendar[96+:24];
+    assign wslot=calendar[120+:24];
+    assign ring_tx_enable=calendar[144+:2];
+    assign ring_tx_source=calendar[146+:6];
+    assign replay_enable=calendar[152+:1];
+    assign replay_source=calendar[153+:1];
+    assign lg_local_read=calendar[154+:24];
+    assign lg_local_write=calendar[178+:24];
 endmodule
 module hfd_hgi_vm_calendar_SE (
     input wire clk,rst_n,cfg_we,
@@ -70,7 +70,7 @@ module hfd_hgi_vm_calendar_SE (
     output wire [1:0] hub_ring_client,
     output wire [7:0] rslot_v,
     output wire [7:0] wslot_v,
-    output wire [15:0] rslot,
+    output wire [23:0] rslot,
     output wire [23:0] wslot,
     output wire [1:0] ring_tx_enable,
     output wire [5:0] ring_tx_source,
@@ -79,8 +79,8 @@ module hfd_hgi_vm_calendar_SE (
     output wire [23:0] lg_local_read,
     output wire [23:0] lg_local_write
 );
-    wire [138:0] calendar;
-    ot_vms_calendar_static #(.W(139)) u_programme (
+    wire [146:0] calendar;
+    ot_vms_calendar_static #(.W(147)) u_programme (
         .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
         .calendar(calendar),.calendar_v(calendar_v),.ordinal(ordinal),.active(active),.done(done),.fault(fault));
@@ -93,14 +93,14 @@ module hfd_hgi_vm_calendar_SE (
     assign hub_ring_client=calendar[23+:2];
     assign rslot_v=calendar[25+:8];
     assign wslot_v=calendar[33+:8];
-    assign rslot=calendar[41+:16];
-    assign wslot=calendar[57+:24];
-    assign ring_tx_enable=calendar[81+:2];
-    assign ring_tx_source=calendar[83+:6];
-    assign replay_enable=calendar[89+:1];
-    assign replay_source=calendar[90+:1];
-    assign lg_local_read=calendar[91+:24];
-    assign lg_local_write=calendar[115+:24];
+    assign rslot=calendar[41+:24];
+    assign wslot=calendar[65+:24];
+    assign ring_tx_enable=calendar[89+:2];
+    assign ring_tx_source=calendar[91+:6];
+    assign replay_enable=calendar[97+:1];
+    assign replay_source=calendar[98+:1];
+    assign lg_local_read=calendar[99+:24];
+    assign lg_local_write=calendar[123+:24];
 endmodule
 module hfd_hgi_vm_calendar_NW (
     input wire clk,rst_n,cfg_we,

@@ -4,7 +4,7 @@
     "quadrant": "NE",
     "params": {
       "NC": 0,
-      "RG": 5,
+      "RG": 7,
       "WG": 3,
       "CW": 1,
       "RB": 3,
@@ -104,19 +104,23 @@
   "configuration_writes": [
     {
       "addr": 7,
-      "data": "c7a1000700000000000000000007ffffffffffffffffffffffffffffffffffff"
+      "data": "c7a1000700000000000000000000000000000000000000016db6da01fe000000"
     },
     {
       "addr": 8,
-      "data": "c7a1000800000000000000000000000000000000000000000000000000000000"
+      "data": "c7a100080000000000000000000000000000000000000001b6db6c01fe000000"
+    },
+    {
+      "addr": 9,
+      "data": "c7a1000900000000000000000000000000000000000000000000000000000000"
     }
   ],
   "start": {
     "base": 7,
-    "limit": 9,
+    "limit": 10,
     "loops": 3
   },
-  "output_edges": 6,
+  "output_edges": 9,
   "first_output_after_start": 4,
   "configuration": "Writes and launch are consumed by real input pin registers; no ready/credit path",
   "limits": "Caller must prove these calendars against actual producer requests, transport latency and response identities."
