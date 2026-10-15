@@ -41,5 +41,69 @@
   "single_user_latency": "candidate SYS1 raw accumulation is53edges later than flat SYS0 (86 vs33 leaf tap), calendar must move; exact scalar readiness and row period pending actual proof",
   "canonical_whole_kernel_allocator": "h_vm owner; P1 frozen MDESC, P6/P8 component-only",
   "physical_qualified": false,
-  "functional_qualified": false
+  "functional_qualified": false,
+  "engine_root_lower_bound_with_Sinkhorn": 44,
+  "physical_boundary_bits": {
+    "per_bank_weight_local_to_MACs": 1024,
+    "per_bank_residual_local_to_MACs": 512,
+    "per_bank_partial_sum_to_next_bank": 1024,
+    "per_bank_descriptor_to_next_bank": 40,
+    "native_weight_AP_allbanks": 2224,
+    "native_residual_wave": 8192
+  },
+  "functional_root_phase": "equal phase in first numerical gate only; actual independently rooted phase/reach physical proof pending",
+  "native_successor": {
+    "source": "766fb6ae2",
+    "resident_prefetch_dependency": "29272fdde",
+    "native_gather_adapter": "537b00b2a",
+    "cold_prime_rows": 4,
+    "steady_prefetch_lookahead_rows": 4,
+    "reserve_edges_relative_row": [
+      330,
+      660
+    ],
+    "drain_edges_relative_row": [
+      0,
+      330
+    ],
+    "weight_commit_latest_relative_drain0": 655,
+    "startup_cycles": "must measure in joined successor; child320 cold2486includes realqueue/PHY progress"
+  },
+  "candidate_row_calendar": {
+    "raw_ss_age": [
+      213,
+      373,
+      533,
+      693,
+      853,
+      1013,
+      1173,
+      1333
+    ],
+    "raw_row_age": [
+      317,
+      477,
+      637,
+      797,
+      957,
+      1117,
+      1277,
+      1437
+    ],
+    "result_age": [
+      322,
+      482,
+      642,
+      802,
+      962,
+      1122,
+      1282,
+      1442
+    ],
+    "period6": 1133,
+    "period8": 1453,
+    "programme_words6": 1630,
+    "programme_words8": 1950,
+    "actualprogrammeSRAMs": 2
+  }
 }
