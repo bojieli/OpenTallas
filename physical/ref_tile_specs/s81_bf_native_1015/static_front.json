@@ -92,12 +92,25 @@
   "structural_change": "Actual named BF static programme core replaces availability-qualified issue; independent core/IO physicalclockroots <=15k target with real relatedclockdata paths. CPIN1 perface776bit egress, resetrelay/face, exact3230oldlive pinrectangles plus38programme pins; no relaxed timing.",
   "reroute_reason": {
     "kind": "rtl_change",
-    "why": "Newactualstaticprogramme core withperfaceegress andseparatephysicalclockroot; oldfrontnativepin/childauditFAIL despite CLOSED"
+    "why": "Newactualstaticprogramme core withperfaceegress andseparatephysicalclockroot; oldfrontnativepin/childauditFAIL despite CLOSED",
+    "fix": "Use actual static programme core with independent ck[0]/io_clk roots and registered programme/payload/CPIN boundaries; exact inherited live pin locations plus f_prog38/io_clk. Related-root crossings remain timed. Actual per-root census, CTS/native qualification remain required."
   },
   "job": {
-    "owner": "Codex:s81-bf-native-physical-1015",
+    "owner": "Codex:s81-pq-physical-1103",
     "purpose": "Actual named BF static programme core replaces availability-qualified issue; independent core/IO physicalclockroots <=15k target with real relatedclockdata paths. CPIN1 perface776bit egress, resetrelay/face, exact3230oldlive pinrectangles plus38programme pins; no relaxed timing.",
-    "benches": [],
+    "benches": [
+      {
+        "name": "actual_static_front_boundary",
+        "cmd": "python3 tools/s81/bf_static_front_gate.py",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS actual BF static die front:64 public-pin slots"
+      }
+    ],
     "extra_paths": [
       "tools/s81",
       "rtl/s81",
@@ -107,7 +120,8 @@
       "rtl/proto",
       "results/rtl/s81_bf_compact_20261010/bench_prep_1013",
       "rtl/dsrom_sys/s81_die_bind",
-      "physical/ref_tile_specs/s81_bf_native_1015/static_pins"
+      "physical/ref_tile_specs/s81_bf_native_1015/static_pins",
+      "tests/s81"
     ],
     "views_to": "physical/ref_tile/dsfd_bf_front_static_ref/views",
     "record_to": "results/physical/s81_bf_native_1015/static_front"
