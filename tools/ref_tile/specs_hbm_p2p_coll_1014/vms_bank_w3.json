@@ -64,7 +64,8 @@
  ],
  "params": {
   "EGC": 1,
-  "WG": 3
+  "WG": 3,
+  "WRS": 51
  },
  "outline": {
   "w": 308.88,
@@ -81,11 +82,11 @@
    "rtl/link",
    "physical/asap7_memory_macros"
   ],
-  "purpose": "B2 VM bank for the SW slice: WG 3 (two die write groups + the COLL write group, WRS 3 each); RTL = closed vms_bank v08",
+  "purpose": "B2 VM bank for the SW slice: WG 3 = two die write groups (WRS 3) + the in-parent COLL write group (WRS 0: vmcore->bank registered direct, lane depth 4; keeps one clock root <= 15k sinks: WRS 3 measured 16,450 sinks, TT insertion 534 / spread 154 ps FAIL); RTL = closed vms_bank v08",
   "benches": [
    {
     "name": "b2vm_nc4_pos",
-    "cmd": "JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_nc4_pos -GRLY=20 -GSNC=4",
+    "cmd": "JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_nc4_pos -GRLY=20 -GSNC=4 -GSCW=0",
     "expect": "pass",
     "threads": 4,
     "peak_ram_gb": 48,
@@ -95,7 +96,7 @@
    },
    {
     "name": "b2vm_early_credit",
-    "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_early_credit -GRLY=20 -GSNC=4 -GMUT=1; then exit 0; elif test -s {RUN}/b2vm_early_credit/run.log && ! grep -q '^B2_COLL_VMPORT PASS' {RUN}/b2vm_early_credit/run.log; then exit 1; else exit 0; fi",
+    "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_early_credit -GRLY=20 -GSNC=4 -GSCW=0 -GMUT=1; then exit 0; elif test -s {RUN}/b2vm_early_credit/run.log && ! grep -q '^B2_COLL_VMPORT PASS' {RUN}/b2vm_early_credit/run.log; then exit 1; else exit 0; fi",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 48,
