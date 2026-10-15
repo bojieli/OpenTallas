@@ -1,0 +1,127 @@
+{
+ "schema": "opentallas.hbm.native_coll.measured_clock_entries.v1",
+ "status": "FP_CHILD_MEASURED; parent and other child entries pending",
+ "clock_rule": "Each child clock pin receives phi minus its measured TT boundary insertion, never a common pin phase",
+ "master": "ot_hgi_coll_pring_add_lane",
+ "params": {
+  "LAT": 8
+ },
+ "view": "physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_add_lane",
+ "view_commit": "2d09819f7",
+ "corners": {
+  "tt": {
+   "n": 104,
+   "mean": 97.6,
+   "min": 95.4,
+   "max": 99.6
+  },
+  "ff": {
+   "n": 104,
+   "mean": 74.1,
+   "min": 72.0,
+   "max": 75.9
+  },
+  "ss": {
+   "n": 104,
+   "mean": 138.6,
+   "min": 136.2,
+   "max": 140.8
+  }
+ },
+ "clock_level": "common (R<=300ps)",
+ "entry_phase_relative_phi_ps": -97.6,
+ "same_level_hop_skew_ps": 90,
+ "cross_level_hop_skew_ps": 150,
+ "native_launch_o_ps": 172.0,
+ "native_capture_s_ps": 125.8,
+ "native_pin_audit": "PASS",
+ "child_lint": "PASS",
+ "child_lint_warns": [
+  "(f) face-pin access: 98 of 100 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. a[0] M5 (2.400,0.144), a[10] M5 (2.400,0.144), a[11] M5 (2.400,0.144))"
+ ],
+ "assignments_exact_scalar_pins": 100,
+ "sources": {
+  "physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_add_lane/insertion.json": "46fcd58f5de500d3ad5a9fe6e76b2fc4a6e6f2e08095b40a9961e597464e2360",
+  "physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_add_lane/child_lint.json": "644ceda194fd06368210222fabb330f2a6fb71e2b272ba8ccba2a29ccf20525f",
+  "results/arch/hbm_p2p_1014/codex_collect_1834/ring_add_r1_assigned_pin_audit.json": "a112aa19cf6b5ccbfa9350214044cf1dfb94ab28b624ad4724a04190c9893ac8",
+  "results/arch/hbm_p2p_1014/codex_collect_1834/ring_add_r1_native_pin_audit.json": "10ee4fc0dafb516a6db7ee80b5a57d72c9621e8ea55530fb725d17d409e4cccf",
+  "physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_add_lane/ot_hgi_coll_pring_add_lane.lef": "0f0557a437e4f0ec20f98b706ae958fded737a17bba8118c80c8b00587cf10b3"
+ },
+ "parent_entries": {
+  "hfd_coll_q3": {
+   "pr_clk_add[0]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[1]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[2]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[3]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[4]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[5]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[6]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[7]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   }
+  },
+  "hfd_coll_q2": {
+   "pr_clk_add[0]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[1]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[2]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[3]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[4]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[5]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[6]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   },
+   "pr_clk_add[7]": {
+    "phase_relative_phi_ps": -97.6,
+    "native_view": "ot_hgi_coll_pring_add_lane LAT8"
+   }
+  }
+ },
+ "unmeasured": [
+  "ring state eight roots per quadrant",
+  "RX/TOPK five roots in SW real VM parent",
+  "parent control roots",
+  "TOPK 39 native child roots"
+ ],
+ "limits": "Measured child only. No parent/die timing closure or physical pin-hop qualification inferred."
+}
