@@ -621,9 +621,9 @@
     "QLINE": 13,
     "outline_um": [
       12.96,
-      38.88
+      30.24
     ],
-    "status": "CANDIDATE_GATE_LIVE_PINS_UNASSIGNED",
+    "status": "CTS_TIMING_PASS_NATIVE_PINS_UNASSIGNED",
     "ports": {
       "inputs": [
         "ck",
@@ -636,6 +636,10 @@
       "outputs": [
         "cm16"
       ]
-    }
+    },
+    "TT_insertion_ps": 48.3,
+    "TT_boundary_spread_ps": 0.4,
+    "TT_setup_slack_ps": 282.52,
+    "FF_hold_slack_ps": 27.35
   }
 }
