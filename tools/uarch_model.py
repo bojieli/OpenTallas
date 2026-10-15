@@ -16440,3 +16440,38 @@ def hgi_coll_tkm_static_calendar(G=96, n=512, k=2048, kmax=2048, has_r=True):
                 output_lines=(min(k,G*n)+15)//16*(2 if has_r else 1),
                 schedule='fixed all-element insertion; fixed value conveyor; fixed SRAM reinsertion; fixed id conveyor',
                 price_comparison='historical estimate retained separately; static throughput remains unqualified until measured')
+
+
+def s81_static_hc_source_model():
+    """Source preflight only: fixed TP4 gather -> exact pairwise HC row.
+
+    Native production calendar/slot binding is deliberately an open gate.  No
+    legacy DS slab or performance claim selects this opt-in successor.
+    """
+    return dict(scope='SOURCE_COMPONENT_UNQUALIFIED', ranks=4,
+        fp32_lanes_per_record=16, fp32_add_replicas=48,
+        reduction_order='RN(RN(p0+p1)+RN(p2+p3))',
+        add_pipeline='ot_s81ph_fp32_add_rne_preexp SPLIT=7 KS=1',
+        add_register_stages=8, input_register_stages=1, output_register_stages=1,
+        word_pipeline_register_stages=18,
+        word_sample_to_result_edge_delta=17,
+        input_payload_bits_per_issue=2048, output_payload_bits_per_record=512,
+        input_bytes_per_issue=256, output_bytes_per_record=64,
+        source_cadence_cycles=[4,4,8], records_per_16_cycles=3,
+        input_average_bytes_per_cycle=48, output_average_bytes_per_cycle=12,
+        peak_input_bytes_per_cycle=256, peak_output_bytes_per_cycle=64,
+        macs_per_cycle=0, fp32_adds_per_issue=48,
+        pack_words=16, hc_row_bits=8192,
+        pack_storage_bits=8192, pack_output_register_bits=8192,
+        pack_control='compiler index4, tag32, complete bitmap16, explicit emit slot; no queue or ready',
+        mux_demux='16x512b static indexed assembly write; 8192b registered emit; no arbitration',
+        min_last_word_to_emit_edge_delta=2,
+        rank_fanout='each rank scalar reaches one input adder; inner outputs reach one outer adder',
+        replica_count_per_die=1,
+        routing_tracks_and_area='UNMEASURED: 16 lane pipelines plus assembly; source component only',
+        outline='UNASSIGNED: die-owned slot request required before any synthesis/route',
+        adoption=False,
+        open_gates=['real compiler HC source reservations and six-value/rank packing',
+                    'production throughput and whole-layer price composition',
+                    'die slot outline, faces, tracks, area and registered pin placement',
+                    'SS/FF timing, DRC, insertion and phi-R bindings'])
