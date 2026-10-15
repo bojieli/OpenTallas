@@ -1,0 +1,3307 @@
+{
+ "source_commit": "c3fc1a4a2a9fe2722ba5f9e7bf938a8802c3c381",
+ "reports": [
+  {
+   "option": "body2x2_holes_gap21.6_spill540",
+   "outline_um": [
+    4514.4,
+    4903.2
+   ],
+   "counts": {
+    "clock_reset_endpoints_excluded": 1328,
+    "external_pin_home_unknown": 40254,
+    "measured_bits": 441050,
+    "over500_bits": 205589,
+    "sum_L1_um": 568920912.8520563,
+    "max_L1_um": 8328.198,
+    "CONSTANT": 162,
+    "PARENT_LOGIC_OR_UNRESOLVED": 31904
+   },
+   "family_pairs": {
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 168,
+     "sum_um": 891228.4680000001,
+     "max_um": 8328.198,
+     "over500": 168
+    },
+    "dsfd_vm_static_wcontrol -> dsfd_vm_static_wstage128": {
+     "bits": 384,
+     "sum_um": 1615345.1519999995,
+     "max_um": 8013.072,
+     "over500": 384
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 128,
+     "sum_um": 961016.0639999995,
+     "max_um": 7910.585999999998,
+     "over500": 128
+    },
+    "dsfd_vm_static_wcontrol -> dsfd_vm_static_wdispatch128": {
+     "bits": 4240,
+     "sum_um": 17663637.31200002,
+     "max_um": 7861.02,
+     "over500": 4240
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 520,
+     "sum_um": 2851084.079999998,
+     "max_um": 7577.418,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 520,
+     "sum_um": 2928542.544,
+     "max_um": 7337.802,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 128,
+     "sum_um": 872659.9679999999,
+     "max_um": 7166.538,
+     "over500": 128
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 32,
+     "sum_um": 160363.584,
+     "max_um": 7141.338,
+     "over500": 32
+    },
+    "ot_s81_vm_x34_s -> ot_s81_vm_x34_t": {
+     "bits": 33998,
+     "sum_um": 85325434.75201769,
+     "max_um": 7037.471999999999,
+     "over500": 17963
+    },
+    "dsfd_vm_static_cap_leaf -> ot_s81_vm_x34_s": {
+     "bits": 8688,
+     "sum_um": 36366324.26399984,
+     "max_um": 6999.143999999999,
+     "over500": 8688
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 520,
+     "sum_um": 2452338.191999998,
+     "max_um": 6965.322,
+     "over500": 520
+    },
+    "dsfd_vm_static_read_q1_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 2218633.5600000033,
+     "max_um": 6895.859999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 520,
+     "sum_um": 1867613.3039999998,
+     "max_um": 6760.794,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 520,
+     "sum_um": 2529796.6560000014,
+     "max_um": 6562.266,
+     "over500": 520
+    },
+    "dsfd_vm_static_w0_payload -> dsfd_vm_static_wcontrol": {
+     "bits": 12,
+     "sum_um": 52034.544,
+     "max_um": 6561.348,
+     "over500": 12
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 128,
+     "sum_um": 783278.5920000003,
+     "max_um": 6472.41,
+     "over500": 128
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 520,
+     "sum_um": 2328915.312,
+     "max_um": 6438.665999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_read_q3_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 72,
+     "sum_um": 427077.79200000013,
+     "max_um": 6421.787999999999,
+     "over500": 72
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 2326852.752,
+     "max_um": 6356.9220000000005,
+     "over500": 520
+    },
+    "dsfd_vm_static_read_q5_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 72,
+     "sum_um": 412964.35199999966,
+     "max_um": 6300.395999999999,
+     "over500": 72
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_fsr_b1": {
+     "bits": 2172,
+     "sum_um": 9222628.823999994,
+     "max_um": 6281.874,
+     "over500": 2172
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 520,
+     "sum_um": 2143680.000000001,
+     "max_um": 6188.01,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 520,
+     "sum_um": 2318848.8480000007,
+     "max_um": 6089.657999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 520,
+     "sum_um": 1900923.9119999993,
+     "max_um": 6068.49,
+     "over500": 520
+    },
+    "dsfd_vm_static_w0_header -> dsfd_vm_static_wdispatch128": {
+     "bits": 18656,
+     "sum_um": 60303982.4640002,
+     "max_um": 6026.268000000001,
+     "over500": 18628
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_fsr_b0": {
+     "bits": 2172,
+     "sum_um": 7745972.903999989,
+     "max_um": 6014.034,
+     "over500": 2172
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 2096263.6680000003,
+     "max_um": 6008.441999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 160,
+     "sum_um": 568130.9760000001,
+     "max_um": 5995.398,
+     "over500": 160
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 520,
+     "sum_um": 2180168.0159999994,
+     "max_um": 5991.737999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 2186273.9040000006,
+     "max_um": 5884.8899999999985,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 520,
+     "sum_um": 1930169.4239999999,
+     "max_um": 5799.353999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_read_q2_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 72,
+     "sum_um": 381782.59199999954,
+     "max_um": 5799.276,
+     "over500": 72
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 96,
+     "sum_um": 312143.42399999994,
+     "max_um": 5776.368,
+     "over500": 96
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 14439.839999999997,
+     "max_um": 5756.495999999999,
+     "over500": 4
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_seq_tile": {
+     "bits": 1792,
+     "sum_um": 5575792.464000003,
+     "max_um": 5749.902,
+     "over500": 1792
+    },
+    "dsfd_vm_static_read_q0_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 72,
+     "sum_um": 270157.4639999998,
+     "max_um": 5642.196,
+     "over500": 72
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_seq_tile": {
+     "bits": 451,
+     "sum_um": 2483708.0880000005,
+     "max_um": 5631.864,
+     "over500": 451
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 520,
+     "sum_um": 1892440.2959999999,
+     "max_um": 5582.058,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 520,
+     "sum_um": 1920102.9599999997,
+     "max_um": 5394.57,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_fsr_b3": {
+     "bits": 2172,
+     "sum_um": 8616249.86400003,
+     "max_um": 5361.714,
+     "over500": 2172
+    },
+    "dsfd_vm_static_wdispatch128 -> dsfd_vm_static_wcontrol": {
+     "bits": 96,
+     "sum_um": 362174.4000000001,
+     "max_um": 5311.2480000000005,
+     "over500": 96
+    },
+    "dsfd_vm_static_fsr_b2 -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 13449.708,
+     "max_um": 5310.726,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 520,
+     "sum_um": 1467732.3120000002,
+     "max_um": 5291.178000000001,
+     "over500": 520
+    },
+    "dsfd_vm_static_read_q7_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 40,
+     "sum_um": 147148.65600000002,
+     "max_um": 5284.332,
+     "over500": 40
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 16411.920000000002,
+     "max_um": 5276.976000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 520,
+     "sum_um": 1470520.4640000004,
+     "max_um": 5149.241999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 520,
+     "sum_um": 1751956.104,
+     "max_um": 5112.330000000001,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_fsr_b2": {
+     "bits": 2172,
+     "sum_um": 8246219.399999963,
+     "max_um": 5093.874,
+     "over500": 2172
+    },
+    "dsfd_vm_static_fsr_b3 -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 12380.508000000002,
+     "max_um": 5043.462,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 520,
+     "sum_um": 1580540.7839999993,
+     "max_um": 5039.946,
+     "over500": 520
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 4384,
+     "sum_um": 10246480.320000062,
+     "max_um": 4979.466,
+     "over500": 3982
+    },
+    "dsfd_vm_static_read_v7_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 4951.8780000000015,
+     "max_um": 4951.8780000000015,
+     "over500": 1
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 520,
+     "sum_um": 1482746.303999999,
+     "max_um": 4902.522,
+     "over500": 520
+    },
+    "dsfd_vm_static_read_v6_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 4878.006,
+     "max_um": 4878.006,
+     "over500": 1
+    },
+    "dsfd_vm_static_fsr_b0 -> dsfd_vm_static_relay128_b8": {
+     "bits": 576,
+     "sum_um": 2261499.4560000002,
+     "max_um": 4873.428,
+     "over500": 576
+    },
+    "ot_s81_vm_x34_t -> dsfd_vm_seq_tile": {
+     "bits": 12,
+     "sum_um": 39306.600000000006,
+     "max_um": 4834.518,
+     "over500": 12
+    },
+    "dsfd_vm_static_read_v5_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 4803.750000000001,
+     "max_um": 4803.750000000001,
+     "over500": 1
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 520,
+     "sum_um": 1618524.3839999998,
+     "max_um": 4794.378000000001,
+     "over500": 520
+    },
+    "dsfd_vm_static_read_q1_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 80,
+     "sum_um": 199682.44799999995,
+     "max_um": 4786.907999999999,
+     "over500": 60
+    },
+    "dsfd_vm_static_fsr_b0 -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 12032.892,
+     "max_um": 4779.366,
+     "over500": 4
+    },
+    "dsfd_vm_static_read_v0_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 4757.334000000001,
+     "max_um": 4757.334000000001,
+     "over500": 1
+    },
+    "dsfd_vm_static_read_v2_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 4754.106,
+     "max_um": 4754.106,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 96,
+     "sum_um": 315490.5600000002,
+     "max_um": 4750.368,
+     "over500": 96
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 4,
+     "sum_um": 11235.048,
+     "max_um": 4748.07,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 14584.560000000001,
+     "max_um": 4721.352000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_read_v3_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 4681.241999999999,
+     "max_um": 4681.241999999999,
+     "over500": 1
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 4,
+     "sum_um": 11088.744,
+     "max_um": 4674.918,
+     "over500": 4
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 4384,
+     "sum_um": 12232170.048,
+     "max_um": 4664.91,
+     "over500": 4384
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 10927.272,
+     "max_um": 4648.182000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_read_v4_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 4609.529999999999,
+     "max_um": 4609.529999999999,
+     "over500": 1
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 4,
+     "sum_um": 10942.152,
+     "max_um": 4601.622,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 10780.968,
+     "max_um": 4575.030000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_wstage128 -> dsfd_vm_static_write_capture128": {
+     "bits": 19968,
+     "sum_um": 13432051.96800005,
+     "max_um": 4569.51,
+     "over500": 5248
+    },
+    "dsfd_vm_static_read_q1_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 24873.252,
+     "max_um": 4503.624,
+     "over500": 8
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 4384,
+     "sum_um": 9759208.752000008,
+     "max_um": 4502.934,
+     "over500": 4382
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 4,
+     "sum_um": 10634.376000000002,
+     "max_um": 4501.734,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 12340.824,
+     "max_um": 4497.414000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 4384,
+     "sum_um": 11387044.608000007,
+     "max_um": 4495.9259999999995,
+     "over500": 4384
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 20052.600000000002,
+     "max_um": 4457.67,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 12048.216,
+     "max_um": 4424.262000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 48,
+     "sum_um": 110282.68800000005,
+     "max_um": 4416.912,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 48,
+     "sum_um": 110156.54400000004,
+     "max_um": 4401.216,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 4,
+     "sum_um": 11755.032000000003,
+     "max_um": 4350.966,
+     "over500": 4
+    },
+    "dsfd_vm_static_read_v1_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 4343.13,
+     "max_um": 4343.13,
+     "over500": 1
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 8,
+     "sum_um": 19779.96,
+     "max_um": 4335.51,
+     "over500": 8
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 96,
+     "sum_um": 205583.232,
+     "max_um": 4329.168,
+     "over500": 96
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 25073.112000000005,
+     "max_um": 4306.902,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 48,
+     "sum_um": 71727.55200000004,
+     "max_um": 4263.120000000001,
+     "over500": 24
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 1730765.328,
+     "max_um": 4257.833999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 48,
+     "sum_um": 71665.34400000006,
+     "max_um": 4250.016000000001,
+     "over500": 24
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 520,
+     "sum_um": 1277256.864,
+     "max_um": 4228.17,
+     "over500": 490
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 32,
+     "sum_um": 89429.184,
+     "max_um": 4209.642,
+     "over500": 32
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 14936.64,
+     "max_um": 4108.848,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 48,
+     "sum_um": 100814.97599999997,
+     "max_um": 4092.9120000000007,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 48,
+     "sum_um": 100310.39999999998,
+     "max_um": 4079.808000000001,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 520,
+     "sum_um": 964258.0800000003,
+     "max_um": 4049.3220000000006,
+     "over500": 520
+    },
+    "dsfd_vm_static_fsr_b1 -> dsfd_vm_static_relay128_b8": {
+     "bits": 576,
+     "sum_um": 1845711.3600000003,
+     "max_um": 4046.316,
+     "over500": 576
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 48,
+     "sum_um": 98224.70400000007,
+     "max_um": 3939.120000000001,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 48,
+     "sum_um": 97848.00000000009,
+     "max_um": 3928.608000000001,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 520,
+     "sum_um": 1290766.4280000005,
+     "max_um": 3921.2099999999996,
+     "over500": 520
+    },
+    "dsfd_vm_static_fsr_b2 -> dsfd_vm_static_relay128_b8": {
+     "bits": 576,
+     "sum_um": 1504549.0559999999,
+     "max_um": 3856.0679999999998,
+     "over500": 576
+    },
+    "dsfd_vm_static_cap_ctl -> dsfd_vm_static_cap_leaf": {
+     "bits": 16,
+     "sum_um": 36208.212,
+     "max_um": 3844.3620000000005,
+     "over500": 16
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 520,
+     "sum_um": 1421338.4279999998,
+     "max_um": 3821.5260000000003,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 96,
+     "sum_um": 216488.54399999997,
+     "max_um": 3789.1680000000006,
+     "over500": 72
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 11079.768,
+     "max_um": 3732.7740000000003,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 4,
+     "sum_um": 11377.176,
+     "max_um": 3726.39,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 10933.464,
+     "max_um": 3659.6220000000003,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 4,
+     "sum_um": 11230.872,
+     "max_um": 3653.238,
+     "over500": 4
+    },
+    "dsfd_vm_static_fsr_b1 -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 9315.756,
+     "max_um": 3608.154,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 4,
+     "sum_um": 10786.872000000001,
+     "max_um": 3586.3260000000005,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 4,
+     "sum_um": 11084.28,
+     "max_um": 3579.9420000000005,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 18477.744000000002,
+     "max_um": 3543.9900000000002,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 4,
+     "sum_um": 9324.504,
+     "max_um": 3526.134000000001,
+     "over500": 4
+    },
+    "ot_s81_vm_x34_t -> dsfd_vm_static_landing": {
+     "bits": 2052,
+     "sum_um": 4802835.7440000065,
+     "max_um": 3520.71,
+     "over500": 2052
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 4,
+     "sum_um": 9324.504,
+     "max_um": 3452.8380000000006,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 4,
+     "sum_um": 9324.504,
+     "max_um": 3379.6860000000006,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 8,
+     "sum_um": 18170.544,
+     "max_um": 3319.014,
+     "over500": 8
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 48,
+     "sum_um": 158186.44799999992,
+     "max_um": 3315.1259999999997,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 4,
+     "sum_um": 5904.168000000001,
+     "max_um": 3299.5740000000005,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 520,
+     "sum_um": 1461907.956000001,
+     "max_um": 3290.346,
+     "over500": 520
+    },
+    "dsfd_vm_static_read_q6_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 40,
+     "sum_um": 70771.056,
+     "max_um": 3257.9880000000003,
+     "over500": 36
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 48,
+     "sum_um": 81297.72,
+     "max_um": 3248.874,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 4,
+     "sum_um": 5757.8640000000005,
+     "max_um": 3226.4220000000005,
+     "over500": 3
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 48,
+     "sum_um": 79697.08800000003,
+     "max_um": 3174.9120000000003,
+     "over500": 36
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 48,
+     "sum_um": 79633.15199999994,
+     "max_um": 3156.6240000000003,
+     "over500": 36
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 4,
+     "sum_um": 5611.272,
+     "max_um": 3153.126,
+     "over500": 3
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 520,
+     "sum_um": 1177986.2880000004,
+     "max_um": 3151.482,
+     "over500": 520
+    },
+    "dsfd_vm_static_w0_payload -> dsfd_vm_static_wdispatch128": {
+     "bits": 111936,
+     "sum_um": 144064935.9359977,
+     "max_um": 2896.908000000001,
+     "over500": 97504
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 8,
+     "sum_um": 12933.192000000001,
+     "max_um": 2887.0140000000006,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 16633.992,
+     "max_um": 2845.7700000000004,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 520,
+     "sum_um": 1099773.0000000007,
+     "max_um": 2840.2500000000005,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 520,
+     "sum_um": 673767.5520000006,
+     "max_um": 2761.518,
+     "over500": 455
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 48,
+     "sum_um": 93953.08800000003,
+     "max_um": 2672.928,
+     "over500": 36
+    },
+    "dsfd_vm_static_read_q4_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 24,
+     "sum_um": 34337.088,
+     "max_um": 2671.3320000000003,
+     "over500": 21
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 48,
+     "sum_um": 93637.44000000002,
+     "max_um": 2665.0080000000003,
+     "over500": 36
+    },
+    "dsfd_vm_static_landing -> dsfd_vm_seq_tile": {
+     "bits": 3,
+     "sum_um": 7818.624,
+     "max_um": 2606.5440000000003,
+     "over500": 3
+    },
+    "dsfd_vm_static_fsr_b3 -> dsfd_vm_static_relay128_b8": {
+     "bits": 576,
+     "sum_um": 1172415.8159999994,
+     "max_um": 2573.0279999999993,
+     "over500": 576
+    },
+    "dsfd_vm_seq_tile -> dsfd_vm_static_landing": {
+     "bits": 19,
+     "sum_um": 48713.040000000015,
+     "max_um": 2567.0880000000006,
+     "over500": 19
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 520,
+     "sum_um": 822911.4000000006,
+     "max_um": 2512.4700000000007,
+     "over500": 455
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 6220.680000000001,
+     "max_um": 2505.462000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 5928.072000000002,
+     "max_um": 2432.310000000001,
+     "over500": 3
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 9662.664,
+     "max_um": 2415.882,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 4,
+     "sum_um": 5634.888000000001,
+     "max_um": 2359.0140000000006,
+     "over500": 3
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 8,
+     "sum_um": 14660.568000000001,
+     "max_um": 2347.878,
+     "over500": 8
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 9375.384,
+     "max_um": 2344.0260000000003,
+     "over500": 4
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 28,
+     "sum_um": 62900.232,
+     "max_um": 2266.6980000000003,
+     "over500": 28
+    },
+    "dsfd_vm_static_w0_header -> dsfd_vm_static_wcontrol": {
+     "bits": 798,
+     "sum_um": 1563590.8080000167,
+     "max_um": 1959.5400000000006,
+     "over500": 798
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 12,
+     "sum_um": 17500.056000000004,
+     "max_um": 1481.3220000000003,
+     "over500": 12
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 48,
+     "sum_um": 65671.68000000001,
+     "max_um": 1401.6900000000003,
+     "over500": 48
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 48,
+     "sum_um": 62437.15200000002,
+     "max_um": 1329.6420000000003,
+     "over500": 48
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 54,
+     "sum_um": 70491.78,
+     "max_um": 1325.91,
+     "over500": 54
+    },
+    "dsfd_vm_static_bank128 -> dsfd_vm_static_relay128_b4": {
+     "bits": 20352,
+     "sum_um": 6052386.816000941,
+     "max_um": 486.3960000000002,
+     "over500": 0
+    },
+    "dsfd_vm_static_relay128_b4 -> dsfd_vm_static_bank128": {
+     "bits": 21504,
+     "sum_um": 6297698.304000016,
+     "max_um": 463.23600000000033,
+     "over500": 0
+    },
+    "dsfd_vm_static_write_capture128 -> dsfd_vm_static_scatter_b8_out": {
+     "bits": 19968,
+     "sum_um": 6664431.359999996,
+     "max_um": 451.58400000000006,
+     "over500": 0
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_relay128_b4": {
+     "bits": 21504,
+     "sum_um": 4819206.143999644,
+     "max_um": 398.9400000000005,
+     "over500": 0
+    },
+    "dsfd_vm_static_relay128_b4 -> dsfd_vm_static_relay128_b8": {
+     "bits": 20352,
+     "sum_um": 7063312.896000746,
+     "max_um": 397.11600000000044,
+     "over500": 0
+    },
+    "dsfd_vm_static_scatter_b8_out -> dsfd_vm_static_relay128_b8": {
+     "bits": 19200,
+     "sum_um": 4634796.288000025,
+     "max_um": 342.1860000000006,
+     "over500": 0
+    },
+    "dsfd_vm_static_wdispatch128 -> dsfd_vm_static_wstage128": {
+     "bits": 60288,
+     "sum_um": 6392095.487999926,
+     "max_um": 169.82400000000052,
+     "over500": 0
+    },
+    "ot_s81_vm_x43_t -> ot_s81_vm_x43_s": {
+     "bits": 6171,
+     "sum_um": 133811.9639999854,
+     "max_um": 21.684000000000196,
+     "over500": 0
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 48,
+     "sum_um": 504.5760000000007,
+     "max_um": 10.512000000000171,
+     "over500": 0
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 48,
+     "sum_um": 376.70400000000086,
+     "max_um": 7.920000000000073,
+     "over500": 0
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 48,
+     "sum_um": 252.28799999999956,
+     "max_um": 5.328000000000429,
+     "over500": 0
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 48,
+     "sum_um": 126.72000000000122,
+     "max_um": 2.736000000000331,
+     "over500": 0
+    }
+   },
+   "worst_bits": [
+    {
+     "source": [
+      63,
+      "release_slot",
+      7,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_su1_group",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      200.844,
+      270.096
+     ],
+     "sink_xy_um": [
+      4392.780000000001,
+      4406.357999999998
+     ],
+     "L1_um": 8328.198
+    },
+    {
+     "source": [
+      63,
+      "expected_v",
+      3,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_expected",
+      3,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      192.78,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4340.939999999999
+     ],
+     "L1_um": 8206.746
+    },
+    {
+     "source": [
+      63,
+      "expected_v",
+      2,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_expected",
+      2,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      192.492,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4340.507999999998
+     ],
+     "L1_um": 8206.601999999999
+    },
+    {
+     "source": [
+      63,
+      "expected_v",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_expected",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      192.204,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4340.075999999998
+     ],
+     "L1_um": 8206.457999999999
+    },
+    {
+     "source": [
+      63,
+      "expected_v",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_expected",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      191.772,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4339.643999999998
+     ],
+     "L1_um": 8206.457999999999
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_sel",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      198.348,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4343.531999999998
+     ],
+     "L1_um": 8203.769999999999
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_sel",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      198.06,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4343.0999999999985
+     ],
+     "L1_um": 8203.625999999998
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      6,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_sel",
+      3,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      199.93200000000002,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4344.395999999999
+     ],
+     "L1_um": 8203.05
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      5,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_sel",
+      2,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      199.644,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4343.963999999998
+     ],
+     "L1_um": 8202.905999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      3,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_expected",
+      7,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      234.97199999999998,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4342.667999999999
+     ],
+     "L1_um": 8166.281999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      2,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_expected",
+      6,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      234.54000000000002,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4342.235999999998
+     ],
+     "L1_um": 8166.281999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_expected",
+      5,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      234.252,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4341.803999999998
+     ],
+     "L1_um": 8166.137999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_expected",
+      4,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      233.964,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4341.3719999999985
+     ],
+     "L1_um": 8165.993999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_sel",
+      5,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      241.11599999999999,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4345.259999999998
+     ],
+     "L1_um": 8162.73
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_sel",
+      4,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      240.828,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4344.827999999999
+     ],
+     "L1_um": 8162.585999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      6,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_sel",
+      7,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      242.7,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4346.123999999998
+     ],
+     "L1_um": 8162.009999999998
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      5,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_sel",
+      6,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      242.412,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4345.691999999998
+     ],
+     "L1_um": 8161.865999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      11,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_sel",
+      9,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      244.764,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4346.9879999999985
+     ],
+     "L1_um": 8160.8099999999995
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      10,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_sel",
+      8,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      244.476,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4346.555999999999
+     ],
+     "L1_um": 8160.665999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      16,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_sel",
+      11,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      246.348,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4347.851999999998
+     ],
+     "L1_um": 8160.089999999998
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      15,
+      "OUTPUT"
+     ],
+     "sink": [
+      572,
+      "i_sel",
+      10,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      246.06,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4347.419999999998
+     ],
+     "L1_um": 8159.945999999999
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      7,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_su1_group",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      200.844,
+      270.096
+     ],
+     "sink_xy_um": [
+      4215.660000000001,
+      4406.357999999998
+     ],
+     "L1_um": 8151.0779999999995
+    },
+    {
+     "source": [
+      63,
+      "expected_v",
+      3,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_expected",
+      3,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      192.78,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4340.939999999999
+     ],
+     "L1_um": 8029.625999999999
+    },
+    {
+     "source": [
+      63,
+      "expected_v",
+      2,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_expected",
+      2,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      192.492,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4340.507999999998
+     ],
+     "L1_um": 8029.481999999998
+    },
+    {
+     "source": [
+      63,
+      "expected_v",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_expected",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      191.772,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4339.643999999998
+     ],
+     "L1_um": 8029.338
+    },
+    {
+     "source": [
+      63,
+      "expected_v",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_expected",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      192.204,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4340.075999999998
+     ],
+     "L1_um": 8029.337999999999
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_sel",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      198.348,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4343.531999999998
+     ],
+     "L1_um": 8026.65
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_sel",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      198.06,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4343.0999999999985
+     ],
+     "L1_um": 8026.505999999999
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      6,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_sel",
+      3,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      199.93200000000002,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4344.395999999999
+     ],
+     "L1_um": 8025.93
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      5,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_sel",
+      2,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      199.644,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4343.963999999998
+     ],
+     "L1_um": 8025.785999999998
+    },
+    {
+     "source": [
+      69,
+      "dr_s",
+      47,
+      "OUTPUT"
+     ],
+     "sink": [
+      169,
+      "drain_slot",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3617.664,
+      270.042
+     ],
+     "sink_xy_um": [
+      43.392,
+      4708.842000000001
+     ],
+     "L1_um": 8013.072
+    },
+    {
+     "source": [
+      69,
+      "dr_s",
+      46,
+      "OUTPUT"
+     ],
+     "sink": [
+      169,
+      "drain_slot",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3617.568,
+      270.042
+     ],
+     "sink_xy_um": [
+      43.296,
+      4708.842000000001
+     ],
+     "L1_um": 8013.072
+    },
+    {
+     "source": [
+      69,
+      "dr_v",
+      23,
+      "OUTPUT"
+     ],
+     "sink": [
+      169,
+      "drain_v",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3612.2880000000005,
+      270.042
+     ],
+     "sink_xy_um": [
+      43.2,
+      4708.842000000001
+     ],
+     "L1_um": 8007.888000000001
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      3,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_expected",
+      7,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      234.97199999999998,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4342.667999999999
+     ],
+     "L1_um": 7989.162
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      2,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_expected",
+      6,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      234.54000000000002,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4342.235999999998
+     ],
+     "L1_um": 7989.161999999998
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_expected",
+      5,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      234.252,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4341.803999999998
+     ],
+     "L1_um": 7989.017999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_expected",
+      4,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      233.964,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4341.3719999999985
+     ],
+     "L1_um": 7988.874
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_sel",
+      5,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      241.11599999999999,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4345.259999999998
+     ],
+     "L1_um": 7985.609999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_sel",
+      4,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      240.828,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4344.827999999999
+     ],
+     "L1_um": 7985.465999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      6,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_sel",
+      7,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      242.7,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4346.123999999998
+     ],
+     "L1_um": 7984.889999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      5,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_sel",
+      6,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      242.412,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4345.691999999998
+     ],
+     "L1_um": 7984.745999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      11,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_sel",
+      9,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      244.764,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4346.9879999999985
+     ],
+     "L1_um": 7983.689999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      10,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_sel",
+      8,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      244.476,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4346.555999999999
+     ],
+     "L1_um": 7983.545999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      16,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_sel",
+      11,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      246.348,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4347.851999999998
+     ],
+     "L1_um": 7982.969999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      15,
+      "OUTPUT"
+     ],
+     "sink": [
+      567,
+      "i_sel",
+      10,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      246.06,
+      270.096
+     ],
+     "sink_xy_um": [
+      4151.562000000001,
+      4347.419999999998
+     ],
+     "L1_um": 7982.825999999999
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      7,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_su1_group",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      200.844,
+      270.096
+     ],
+     "sink_xy_um": [
+      4038.54,
+      4406.357999999998
+     ],
+     "L1_um": 7973.957999999999
+    },
+    {
+     "source": [
+      69,
+      "dr_s",
+      45,
+      "OUTPUT"
+     ],
+     "sink": [
+      168,
+      "drain_slot",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3617.472,
+      270.042
+     ],
+     "sink_xy_um": [
+      43.392,
+      4622.442
+     ],
+     "L1_um": 7926.48
+    },
+    {
+     "source": [
+      69,
+      "dr_s",
+      44,
+      "OUTPUT"
+     ],
+     "sink": [
+      168,
+      "drain_slot",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3617.376,
+      270.042
+     ],
+     "sink_xy_um": [
+      43.296,
+      4622.442
+     ],
+     "L1_um": 7926.48
+    },
+    {
+     "source": [
+      69,
+      "dr_v",
+      22,
+      "OUTPUT"
+     ],
+     "sink": [
+      168,
+      "drain_v",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3612.1920000000005,
+      270.042
+     ],
+     "sink_xy_um": [
+      43.2,
+      4622.442
+     ],
+     "L1_um": 7921.392
+    },
+    {
+     "source": [
+      63,
+      "aux_expected",
+      3,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_expected",
+      3,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      230.60399999999998,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4082.603999999998
+     ],
+     "L1_um": 7910.585999999998
+    },
+    {
+     "source": [
+      63,
+      "aux_expected",
+      2,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_expected",
+      2,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      230.316,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4082.171999999998
+     ],
+     "L1_um": 7910.441999999999
+    },
+    {
+     "source": [
+      63,
+      "aux_expected",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_expected",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      230.02800000000002,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4081.739999999998
+     ],
+     "L1_um": 7910.297999999999
+    },
+    {
+     "source": [
+      63,
+      "aux_expected",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_expected",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      229.74,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4081.307999999998
+     ],
+     "L1_um": 7910.153999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      19,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_expected",
+      7,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      240.54000000000002,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4084.331999999998
+     ],
+     "L1_um": 7902.377999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      18,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_expected",
+      6,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      240.252,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4083.8999999999983
+     ],
+     "L1_um": 7902.233999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      17,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_expected",
+      5,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      239.82,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4083.467999999998
+     ],
+     "L1_um": 7902.233999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      16,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_expected",
+      4,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      239.53199999999998,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4083.0359999999982
+     ],
+     "L1_um": 7902.089999999998
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      81,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_sel",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      269.1,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4085.195999999998
+     ],
+     "L1_um": 7874.681999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      80,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_sel",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      268.812,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4084.7639999999983
+     ],
+     "L1_um": 7874.537999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      86,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_sel",
+      3,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      271.212,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4086.059999999998
+     ],
+     "L1_um": 7873.433999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      85,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_sel",
+      2,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      270.924,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4085.627999999998
+     ],
+     "L1_um": 7873.289999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      91,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_sel",
+      5,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      272.796,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4086.923999999998
+     ],
+     "L1_um": 7872.713999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      90,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_sel",
+      4,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      272.508,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4086.491999999998
+     ],
+     "L1_um": 7872.569999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      96,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_sel",
+      7,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      274.38,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4087.787999999998
+     ],
+     "L1_um": 7871.993999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      95,
+      "OUTPUT"
+     ],
+     "sink": [
+      618,
+      "i_sel",
+      6,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      274.092,
+      270.096
+     ],
+     "sink_xy_um": [
+      4328.682000000001,
+      4087.355999999998
+     ],
+     "L1_um": 7871.8499999999985
+    },
+    {
+     "source": [
+      69,
+      "lv",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_v",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3604.992,
+      270.042
+     ],
+     "sink_xy_um": [
+      269.08799999999997,
+      4795.158
+     ],
+     "L1_um": 7861.02
+    },
+    {
+     "source": [
+      63,
+      "expected_v",
+      3,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_expected",
+      3,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      192.78,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4340.939999999999
+     ],
+     "L1_um": 7852.5059999999985
+    },
+    {
+     "source": [
+      63,
+      "expected_v",
+      2,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_expected",
+      2,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      192.492,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4340.507999999998
+     ],
+     "L1_um": 7852.361999999997
+    },
+    {
+     "source": [
+      63,
+      "expected_v",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_expected",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      191.772,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4339.643999999998
+     ],
+     "L1_um": 7852.217999999999
+    },
+    {
+     "source": [
+      63,
+      "expected_v",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_expected",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      192.204,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4340.075999999998
+     ],
+     "L1_um": 7852.217999999998
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_sel",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      198.348,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4343.531999999998
+     ],
+     "L1_um": 7849.529999999999
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_sel",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      198.06,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4343.0999999999985
+     ],
+     "L1_um": 7849.385999999999
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      6,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_sel",
+      3,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      199.93200000000002,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4344.395999999999
+     ],
+     "L1_um": 7848.8099999999995
+    },
+    {
+     "source": [
+      63,
+      "release_slot",
+      5,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_sel",
+      2,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      199.644,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4343.963999999998
+     ],
+     "L1_um": 7848.665999999997
+    },
+    {
+     "source": [
+      69,
+      "lv",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_v",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3605.088,
+      270.042
+     ],
+     "sink_xy_um": [
+      284.352,
+      4795.158
+     ],
+     "L1_um": 7845.852000000001
+    },
+    {
+     "source": [
+      69,
+      "dr_s",
+      43,
+      "OUTPUT"
+     ],
+     "sink": [
+      167,
+      "drain_slot",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3617.28,
+      270.042
+     ],
+     "sink_xy_um": [
+      43.392,
+      4536.042
+     ],
+     "L1_um": 7839.888000000001
+    },
+    {
+     "source": [
+      69,
+      "dr_s",
+      42,
+      "OUTPUT"
+     ],
+     "sink": [
+      167,
+      "drain_slot",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3617.184,
+      270.042
+     ],
+     "sink_xy_um": [
+      43.296,
+      4536.042
+     ],
+     "L1_um": 7839.888000000001
+    },
+    {
+     "source": [
+      69,
+      "lane",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_capture_lane",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3594.9120000000003,
+      270.042
+     ],
+     "sink_xy_um": [
+      284.06399999999996,
+      4795.158
+     ],
+     "L1_um": 7835.964
+    },
+    {
+     "source": [
+      69,
+      "lane",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_capture_lane",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3594.8160000000003,
+      270.042
+     ],
+     "sink_xy_um": [
+      283.96799999999996,
+      4795.158
+     ],
+     "L1_um": 7835.964
+    },
+    {
+     "source": [
+      69,
+      "lane",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_storage_slot",
+      1,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3594.9120000000003,
+      270.042
+     ],
+     "sink_xy_um": [
+      284.256,
+      4795.158
+     ],
+     "L1_um": 7835.772000000001
+    },
+    {
+     "source": [
+      69,
+      "lane",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_storage_slot",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3594.8160000000003,
+      270.042
+     ],
+     "sink_xy_um": [
+      284.15999999999997,
+      4795.158
+     ],
+     "L1_um": 7835.772000000001
+    },
+    {
+     "source": [
+      69,
+      "dr_v",
+      21,
+      "OUTPUT"
+     ],
+     "sink": [
+      167,
+      "drain_v",
+      0,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3612.0960000000005,
+      270.042
+     ],
+     "sink_xy_um": [
+      43.2,
+      4536.042
+     ],
+     "L1_um": 7834.896000000001
+    },
+    {
+     "source": [
+      69,
+      "lv",
+      2,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_v",
+      2,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3605.184,
+      270.042
+     ],
+     "sink_xy_um": [
+      299.616,
+      4795.158
+     ],
+     "L1_um": 7830.684
+    },
+    {
+     "source": [
+      69,
+      "lane",
+      3,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_capture_lane",
+      3,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3595.1040000000003,
+      270.042
+     ],
+     "sink_xy_um": [
+      299.328,
+      4795.158
+     ],
+     "L1_um": 7820.892
+    },
+    {
+     "source": [
+      69,
+      "lane",
+      2,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_capture_lane",
+      2,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3595.0080000000003,
+      270.042
+     ],
+     "sink_xy_um": [
+      299.23199999999997,
+      4795.158
+     ],
+     "L1_um": 7820.892
+    },
+    {
+     "source": [
+      69,
+      "lane",
+      3,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_storage_slot",
+      3,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3595.1040000000003,
+      270.042
+     ],
+     "sink_xy_um": [
+      299.52,
+      4795.158
+     ],
+     "L1_um": 7820.700000000001
+    },
+    {
+     "source": [
+      69,
+      "lane",
+      2,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_storage_slot",
+      2,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3595.0080000000003,
+      270.042
+     ],
+     "sink_xy_um": [
+      299.424,
+      4795.158
+     ],
+     "L1_um": 7820.700000000001
+    },
+    {
+     "source": [
+      69,
+      "lv",
+      3,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_v",
+      3,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3605.28,
+      270.042
+     ],
+     "sink_xy_um": [
+      314.88,
+      4795.158
+     ],
+     "L1_um": 7815.516
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      3,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_expected",
+      7,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      234.97199999999998,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4342.667999999999
+     ],
+     "L1_um": 7812.0419999999995
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      2,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_expected",
+      6,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      234.54000000000002,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4342.235999999998
+     ],
+     "L1_um": 7812.041999999998
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_expected",
+      5,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      234.252,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4341.803999999998
+     ],
+     "L1_um": 7811.897999999998
+    },
+    {
+     "source": [
+      63,
+      "mx_expected",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_expected",
+      4,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      233.964,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4341.3719999999985
+     ],
+     "L1_um": 7811.753999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      1,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_sel",
+      5,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      241.11599999999999,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4345.259999999998
+     ],
+     "L1_um": 7808.489999999998
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      0,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_sel",
+      4,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      240.828,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4344.827999999999
+     ],
+     "L1_um": 7808.345999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      6,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_sel",
+      7,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      242.7,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4346.123999999998
+     ],
+     "L1_um": 7807.769999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      5,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_sel",
+      6,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      242.412,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4345.691999999998
+     ],
+     "L1_um": 7807.625999999998
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      11,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_sel",
+      9,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      244.764,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4346.9879999999985
+     ],
+     "L1_um": 7806.569999999998
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      10,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_sel",
+      8,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      244.476,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4346.555999999999
+     ],
+     "L1_um": 7806.425999999999
+    },
+    {
+     "source": [
+      63,
+      "mx_rslot",
+      16,
+      "OUTPUT"
+     ],
+     "sink": [
+      566,
+      "i_sel",
+      11,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      246.348,
+      270.096
+     ],
+     "sink_xy_um": [
+      3974.442,
+      4347.851999999998
+     ],
+     "L1_um": 7805.8499999999985
+    },
+    {
+     "source": [
+      69,
+      "lane",
+      5,
+      "OUTPUT"
+     ],
+     "sink": [
+      144,
+      "i_capture_lane",
+      5,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3595.2960000000003,
+      270.042
+     ],
+     "sink_xy_um": [
+      314.592,
+      4795.158
+     ],
+     "L1_um": 7805.82
+    }
+   ],
+   "all_bits_file": "reach_body2x2_holes_gap21.6_spill540.jsonl.gz",
+   "scope": "Every pure-wire uniquely joined hardleaf functional bit, at actual LEF/assigned/candidate pin coordinates. Unknown parent-expression/top homes retained; no reach exception, router, timing, clock/PG/cut or static-age proof."
+  }
+ ],
+ "scope": "NATIVE_CANDIDATE_READ_PIPE4_CAP_PIPE2_NOT_GENERATOR_ADOPTED"
+}

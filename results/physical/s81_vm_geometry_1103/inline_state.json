@@ -1,0 +1,244 @@
+[
+ {
+  "master": "dsfd_vm_static_wfc",
+  "clock_regions": [
+   {
+    "clock": "ck_control_t",
+    "declared_state_bits": 1757,
+    "variables": [
+     {
+      "name": "dv0",
+      "declared_bits": 18
+     },
+     {
+      "name": "dv1",
+      "declared_bits": 18
+     },
+     {
+      "name": "dl0",
+      "declared_bits": 36
+     },
+     {
+      "name": "dl1",
+      "declared_bits": 36
+     },
+     {
+      "name": "w_v",
+      "declared_bits": 1
+     },
+     {
+      "name": "k",
+      "declared_bits": 32
+     },
+     {
+      "name": "w_row",
+      "declared_bits": 14
+     },
+     {
+      "name": "w_d",
+      "declared_bits": 512
+     },
+     {
+      "name": "a_v",
+      "declared_bits": 4
+     },
+     {
+      "name": "r_q",
+      "declared_bits": 1026
+     },
+     {
+      "name": "a_row",
+      "declared_bits": 56
+     },
+     {
+      "name": "r_bad",
+      "declared_bits": 1
+     },
+     {
+      "name": "tq",
+      "declared_bits": 2
+     },
+     {
+      "name": "err",
+      "declared_bits": 1
+     }
+    ]
+   },
+   {
+    "clock": "ck_control_s",
+    "declared_state_bits": 4,
+    "variables": [
+     {
+      "name": "sq",
+      "declared_bits": 2
+     },
+     {
+      "name": "g_q",
+      "declared_bits": 1
+     },
+     {
+      "name": "e_q",
+      "declared_bits": 1
+     }
+    ]
+   }
+  ],
+  "physical_outline": null,
+  "mapped_cell_area_um2": null,
+  "area_status": "UNMAPPED_SOURCE_STATE_NO_HARDENED_FOOTPRINT_OR_PIN_HOMES",
+  "scope": "Declared storage bits in source variables assigned by edge-triggered nonblocking statements. Mapped replicas/clock/reset/hold repair and combinational logic absent; not a physical FF census."
+ },
+ {
+  "master": "dsfd_vm_static_xio",
+  "clock_regions": [
+   {
+    "clock": "ck_control_t",
+    "declared_state_bits": 1522,
+    "variables": [
+     {
+      "name": "dlG",
+      "declared_bits": 36
+     },
+     {
+      "name": "act",
+      "declared_bits": 3
+     },
+     {
+      "name": "u_row",
+      "declared_bits": 42
+     },
+     {
+      "name": "gn",
+      "declared_bits": 3
+     },
+     {
+      "name": "gph",
+      "declared_bits": 40
+     },
+     {
+      "name": "u",
+      "declared_bits": 32
+     },
+     {
+      "name": "u_n",
+      "declared_bits": 15
+     },
+     {
+      "name": "k",
+      "declared_bits": 32
+     },
+     {
+      "name": "gw",
+      "declared_bits": 2
+     },
+     {
+      "name": "stream_av",
+      "declared_bits": 4
+     },
+     {
+      "name": "gr",
+      "declared_bits": 2
+     },
+     {
+      "name": "stream_ar",
+      "declared_bits": 56
+     },
+     {
+      "name": "xq",
+      "declared_bits": 11
+     },
+     {
+      "name": "f_iss",
+      "declared_bits": 3
+     },
+     {
+      "name": "f3",
+      "declared_bits": 1
+     },
+     {
+      "name": "f9",
+      "declared_bits": 1
+     },
+     {
+      "name": "f10",
+      "declared_bits": 1
+     },
+     {
+      "name": "tp",
+      "declared_bits": 2
+     },
+     {
+      "name": "f_s",
+      "declared_bits": 2
+     },
+     {
+      "name": "n_d",
+      "declared_bits": 84
+     },
+     {
+      "name": "dC",
+      "declared_bits": 17
+     },
+     {
+      "name": "dlC",
+      "declared_bits": 34
+     },
+     {
+      "name": "rq",
+      "declared_bits": 2
+     },
+     {
+      "name": "q_v",
+      "declared_bits": 1
+     },
+     {
+      "name": "q_d",
+      "declared_bits": 512
+     },
+     {
+      "name": "dQ",
+      "declared_bits": 18
+     },
+     {
+      "name": "g_v",
+      "declared_bits": 1
+     },
+     {
+      "name": "dG",
+      "declared_bits": 18
+     },
+     {
+      "name": "g_d",
+      "declared_bits": 511
+     },
+     {
+      "name": "dlQ",
+      "declared_bits": 36
+     }
+    ]
+   },
+   {
+    "clock": "ck_control_s",
+    "declared_state_bits": 6,
+    "variables": [
+     {
+      "name": "sq",
+      "declared_bits": 2
+     },
+     {
+      "name": "qs_q",
+      "declared_bits": 3
+     },
+     {
+      "name": "qs_bad",
+      "declared_bits": 1
+     }
+    ]
+   }
+  ],
+  "physical_outline": null,
+  "mapped_cell_area_um2": null,
+  "area_status": "UNMAPPED_SOURCE_STATE_NO_HARDENED_FOOTPRINT_OR_PIN_HOMES",
+  "scope": "Declared storage bits in source variables assigned by edge-triggered nonblocking statements. Mapped replicas/clock/reset/hold repair and combinational logic absent; not a physical FF census."
+ }
+]

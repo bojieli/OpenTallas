@@ -1,0 +1,8295 @@
+{
+ "raw_die_clock_bits": 693,
+ "hard_boundary_pins": 688,
+ "no_hard_boundary_pin": [
+  "ck_core_t[0]",
+  "ck_wfc_control_s[0]",
+  "ck_wfc_control_t[0]",
+  "ck_xio_control_s[0]",
+  "ck_xio_control_t[0]"
+ ],
+ "roots": [
+  {
+   "category": "ck_core_t",
+   "bit": 0,
+   "hard_leaf_pins": []
+  },
+  {
+   "category": "ck_rsched_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     63,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_seq_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     638,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_landing_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     639,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     298,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     299,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     300,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     301,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     386,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     387,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     388,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     389,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     474,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     475,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     476,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     477,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     562,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     563,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     564,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_return_t",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     565,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     214,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     215,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     216,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     217,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     302,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     303,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     304,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     305,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     390,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     391,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     392,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     393,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     478,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     479,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     480,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_fsr_t",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     481,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     566,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     567,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     568,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     569,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     570,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     571,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     572,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     573,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     575,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     576,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     577,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     578,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     579,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     580,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     581,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     582,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 16,
+   "hard_leaf_pins": [
+    [
+     584,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 17,
+   "hard_leaf_pins": [
+    [
+     585,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 18,
+   "hard_leaf_pins": [
+    [
+     586,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 19,
+   "hard_leaf_pins": [
+    [
+     587,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 20,
+   "hard_leaf_pins": [
+    [
+     588,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 21,
+   "hard_leaf_pins": [
+    [
+     589,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 22,
+   "hard_leaf_pins": [
+    [
+     590,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 23,
+   "hard_leaf_pins": [
+    [
+     591,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 24,
+   "hard_leaf_pins": [
+    [
+     593,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 25,
+   "hard_leaf_pins": [
+    [
+     594,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 26,
+   "hard_leaf_pins": [
+    [
+     595,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 27,
+   "hard_leaf_pins": [
+    [
+     596,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 28,
+   "hard_leaf_pins": [
+    [
+     597,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 29,
+   "hard_leaf_pins": [
+    [
+     598,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 30,
+   "hard_leaf_pins": [
+    [
+     599,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 31,
+   "hard_leaf_pins": [
+    [
+     600,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 32,
+   "hard_leaf_pins": [
+    [
+     602,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 33,
+   "hard_leaf_pins": [
+    [
+     603,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 34,
+   "hard_leaf_pins": [
+    [
+     604,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 35,
+   "hard_leaf_pins": [
+    [
+     605,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 36,
+   "hard_leaf_pins": [
+    [
+     606,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 37,
+   "hard_leaf_pins": [
+    [
+     607,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 38,
+   "hard_leaf_pins": [
+    [
+     608,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 39,
+   "hard_leaf_pins": [
+    [
+     609,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 40,
+   "hard_leaf_pins": [
+    [
+     611,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 41,
+   "hard_leaf_pins": [
+    [
+     612,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 42,
+   "hard_leaf_pins": [
+    [
+     613,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 43,
+   "hard_leaf_pins": [
+    [
+     614,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 44,
+   "hard_leaf_pins": [
+    [
+     615,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 45,
+   "hard_leaf_pins": [
+    [
+     616,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 46,
+   "hard_leaf_pins": [
+    [
+     617,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 47,
+   "hard_leaf_pins": [
+    [
+     618,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 48,
+   "hard_leaf_pins": [
+    [
+     620,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 49,
+   "hard_leaf_pins": [
+    [
+     621,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 50,
+   "hard_leaf_pins": [
+    [
+     622,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 51,
+   "hard_leaf_pins": [
+    [
+     623,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 52,
+   "hard_leaf_pins": [
+    [
+     624,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 53,
+   "hard_leaf_pins": [
+    [
+     625,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 54,
+   "hard_leaf_pins": [
+    [
+     626,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 55,
+   "hard_leaf_pins": [
+    [
+     627,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 56,
+   "hard_leaf_pins": [
+    [
+     629,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 57,
+   "hard_leaf_pins": [
+    [
+     630,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 58,
+   "hard_leaf_pins": [
+    [
+     631,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 59,
+   "hard_leaf_pins": [
+    [
+     632,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 60,
+   "hard_leaf_pins": [
+    [
+     633,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 61,
+   "hard_leaf_pins": [
+    [
+     634,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 62,
+   "hard_leaf_pins": [
+    [
+     635,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_data_t",
+   "bit": 63,
+   "hard_leaf_pins": [
+    [
+     636,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_valid_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     574,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_valid_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     583,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_valid_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     592,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_valid_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     601,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_valid_t",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     610,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_valid_t",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     619,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_valid_t",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     628,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_read_valid_t",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     637,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     266,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     267,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     268,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     269,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     270,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     271,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     272,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     273,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     274,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     275,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     276,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     277,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     278,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     279,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     280,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     281,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 16,
+   "hard_leaf_pins": [
+    [
+     282,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 17,
+   "hard_leaf_pins": [
+    [
+     283,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 18,
+   "hard_leaf_pins": [
+    [
+     284,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 19,
+   "hard_leaf_pins": [
+    [
+     285,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 20,
+   "hard_leaf_pins": [
+    [
+     286,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 21,
+   "hard_leaf_pins": [
+    [
+     287,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 22,
+   "hard_leaf_pins": [
+    [
+     288,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 23,
+   "hard_leaf_pins": [
+    [
+     289,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 24,
+   "hard_leaf_pins": [
+    [
+     290,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 25,
+   "hard_leaf_pins": [
+    [
+     291,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 26,
+   "hard_leaf_pins": [
+    [
+     292,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 27,
+   "hard_leaf_pins": [
+    [
+     293,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 28,
+   "hard_leaf_pins": [
+    [
+     294,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 29,
+   "hard_leaf_pins": [
+    [
+     295,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 30,
+   "hard_leaf_pins": [
+    [
+     296,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 31,
+   "hard_leaf_pins": [
+    [
+     297,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 32,
+   "hard_leaf_pins": [
+    [
+     354,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 33,
+   "hard_leaf_pins": [
+    [
+     355,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 34,
+   "hard_leaf_pins": [
+    [
+     356,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 35,
+   "hard_leaf_pins": [
+    [
+     357,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 36,
+   "hard_leaf_pins": [
+    [
+     358,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 37,
+   "hard_leaf_pins": [
+    [
+     359,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 38,
+   "hard_leaf_pins": [
+    [
+     360,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 39,
+   "hard_leaf_pins": [
+    [
+     361,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 40,
+   "hard_leaf_pins": [
+    [
+     362,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 41,
+   "hard_leaf_pins": [
+    [
+     363,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 42,
+   "hard_leaf_pins": [
+    [
+     364,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 43,
+   "hard_leaf_pins": [
+    [
+     365,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 44,
+   "hard_leaf_pins": [
+    [
+     366,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 45,
+   "hard_leaf_pins": [
+    [
+     367,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 46,
+   "hard_leaf_pins": [
+    [
+     368,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 47,
+   "hard_leaf_pins": [
+    [
+     369,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 48,
+   "hard_leaf_pins": [
+    [
+     370,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 49,
+   "hard_leaf_pins": [
+    [
+     371,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 50,
+   "hard_leaf_pins": [
+    [
+     372,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 51,
+   "hard_leaf_pins": [
+    [
+     373,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 52,
+   "hard_leaf_pins": [
+    [
+     374,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 53,
+   "hard_leaf_pins": [
+    [
+     375,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 54,
+   "hard_leaf_pins": [
+    [
+     376,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 55,
+   "hard_leaf_pins": [
+    [
+     377,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 56,
+   "hard_leaf_pins": [
+    [
+     378,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 57,
+   "hard_leaf_pins": [
+    [
+     379,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 58,
+   "hard_leaf_pins": [
+    [
+     380,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 59,
+   "hard_leaf_pins": [
+    [
+     381,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 60,
+   "hard_leaf_pins": [
+    [
+     382,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 61,
+   "hard_leaf_pins": [
+    [
+     383,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 62,
+   "hard_leaf_pins": [
+    [
+     384,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 63,
+   "hard_leaf_pins": [
+    [
+     385,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 64,
+   "hard_leaf_pins": [
+    [
+     442,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 65,
+   "hard_leaf_pins": [
+    [
+     443,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 66,
+   "hard_leaf_pins": [
+    [
+     444,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 67,
+   "hard_leaf_pins": [
+    [
+     445,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 68,
+   "hard_leaf_pins": [
+    [
+     446,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 69,
+   "hard_leaf_pins": [
+    [
+     447,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 70,
+   "hard_leaf_pins": [
+    [
+     448,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 71,
+   "hard_leaf_pins": [
+    [
+     449,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 72,
+   "hard_leaf_pins": [
+    [
+     450,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 73,
+   "hard_leaf_pins": [
+    [
+     451,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 74,
+   "hard_leaf_pins": [
+    [
+     452,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 75,
+   "hard_leaf_pins": [
+    [
+     453,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 76,
+   "hard_leaf_pins": [
+    [
+     454,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 77,
+   "hard_leaf_pins": [
+    [
+     455,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 78,
+   "hard_leaf_pins": [
+    [
+     456,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 79,
+   "hard_leaf_pins": [
+    [
+     457,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 80,
+   "hard_leaf_pins": [
+    [
+     458,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 81,
+   "hard_leaf_pins": [
+    [
+     459,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 82,
+   "hard_leaf_pins": [
+    [
+     460,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 83,
+   "hard_leaf_pins": [
+    [
+     461,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 84,
+   "hard_leaf_pins": [
+    [
+     462,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 85,
+   "hard_leaf_pins": [
+    [
+     463,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 86,
+   "hard_leaf_pins": [
+    [
+     464,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 87,
+   "hard_leaf_pins": [
+    [
+     465,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 88,
+   "hard_leaf_pins": [
+    [
+     466,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 89,
+   "hard_leaf_pins": [
+    [
+     467,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 90,
+   "hard_leaf_pins": [
+    [
+     468,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 91,
+   "hard_leaf_pins": [
+    [
+     469,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 92,
+   "hard_leaf_pins": [
+    [
+     470,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 93,
+   "hard_leaf_pins": [
+    [
+     471,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 94,
+   "hard_leaf_pins": [
+    [
+     472,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 95,
+   "hard_leaf_pins": [
+    [
+     473,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 96,
+   "hard_leaf_pins": [
+    [
+     530,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 97,
+   "hard_leaf_pins": [
+    [
+     531,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 98,
+   "hard_leaf_pins": [
+    [
+     532,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 99,
+   "hard_leaf_pins": [
+    [
+     533,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 100,
+   "hard_leaf_pins": [
+    [
+     534,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 101,
+   "hard_leaf_pins": [
+    [
+     535,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 102,
+   "hard_leaf_pins": [
+    [
+     536,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 103,
+   "hard_leaf_pins": [
+    [
+     537,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 104,
+   "hard_leaf_pins": [
+    [
+     538,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 105,
+   "hard_leaf_pins": [
+    [
+     539,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 106,
+   "hard_leaf_pins": [
+    [
+     540,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 107,
+   "hard_leaf_pins": [
+    [
+     541,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 108,
+   "hard_leaf_pins": [
+    [
+     542,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 109,
+   "hard_leaf_pins": [
+    [
+     543,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 110,
+   "hard_leaf_pins": [
+    [
+     544,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 111,
+   "hard_leaf_pins": [
+    [
+     545,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 112,
+   "hard_leaf_pins": [
+    [
+     546,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 113,
+   "hard_leaf_pins": [
+    [
+     547,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 114,
+   "hard_leaf_pins": [
+    [
+     548,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 115,
+   "hard_leaf_pins": [
+    [
+     549,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 116,
+   "hard_leaf_pins": [
+    [
+     550,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 117,
+   "hard_leaf_pins": [
+    [
+     551,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 118,
+   "hard_leaf_pins": [
+    [
+     552,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 119,
+   "hard_leaf_pins": [
+    [
+     553,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 120,
+   "hard_leaf_pins": [
+    [
+     554,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 121,
+   "hard_leaf_pins": [
+    [
+     555,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 122,
+   "hard_leaf_pins": [
+    [
+     556,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 123,
+   "hard_leaf_pins": [
+    [
+     557,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 124,
+   "hard_leaf_pins": [
+    [
+     558,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 125,
+   "hard_leaf_pins": [
+    [
+     559,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 126,
+   "hard_leaf_pins": [
+    [
+     560,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_bank_t",
+   "bit": 127,
+   "hard_leaf_pins": [
+    [
+     561,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     218,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     219,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     220,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     221,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     222,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     223,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     224,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     225,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     227,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     228,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     229,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     230,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     231,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     232,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     233,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     234,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 16,
+   "hard_leaf_pins": [
+    [
+     236,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 17,
+   "hard_leaf_pins": [
+    [
+     237,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 18,
+   "hard_leaf_pins": [
+    [
+     238,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 19,
+   "hard_leaf_pins": [
+    [
+     239,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 20,
+   "hard_leaf_pins": [
+    [
+     240,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 21,
+   "hard_leaf_pins": [
+    [
+     241,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 22,
+   "hard_leaf_pins": [
+    [
+     242,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 23,
+   "hard_leaf_pins": [
+    [
+     243,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 24,
+   "hard_leaf_pins": [
+    [
+     245,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 25,
+   "hard_leaf_pins": [
+    [
+     246,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 26,
+   "hard_leaf_pins": [
+    [
+     247,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 27,
+   "hard_leaf_pins": [
+    [
+     248,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 28,
+   "hard_leaf_pins": [
+    [
+     249,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 29,
+   "hard_leaf_pins": [
+    [
+     250,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 30,
+   "hard_leaf_pins": [
+    [
+     251,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 31,
+   "hard_leaf_pins": [
+    [
+     252,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 32,
+   "hard_leaf_pins": [
+    [
+     306,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 33,
+   "hard_leaf_pins": [
+    [
+     307,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 34,
+   "hard_leaf_pins": [
+    [
+     308,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 35,
+   "hard_leaf_pins": [
+    [
+     309,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 36,
+   "hard_leaf_pins": [
+    [
+     310,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 37,
+   "hard_leaf_pins": [
+    [
+     311,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 38,
+   "hard_leaf_pins": [
+    [
+     312,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 39,
+   "hard_leaf_pins": [
+    [
+     313,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 40,
+   "hard_leaf_pins": [
+    [
+     315,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 41,
+   "hard_leaf_pins": [
+    [
+     316,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 42,
+   "hard_leaf_pins": [
+    [
+     317,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 43,
+   "hard_leaf_pins": [
+    [
+     318,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 44,
+   "hard_leaf_pins": [
+    [
+     319,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 45,
+   "hard_leaf_pins": [
+    [
+     320,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 46,
+   "hard_leaf_pins": [
+    [
+     321,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 47,
+   "hard_leaf_pins": [
+    [
+     322,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 48,
+   "hard_leaf_pins": [
+    [
+     324,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 49,
+   "hard_leaf_pins": [
+    [
+     325,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 50,
+   "hard_leaf_pins": [
+    [
+     326,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 51,
+   "hard_leaf_pins": [
+    [
+     327,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 52,
+   "hard_leaf_pins": [
+    [
+     328,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 53,
+   "hard_leaf_pins": [
+    [
+     329,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 54,
+   "hard_leaf_pins": [
+    [
+     330,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 55,
+   "hard_leaf_pins": [
+    [
+     331,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 56,
+   "hard_leaf_pins": [
+    [
+     333,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 57,
+   "hard_leaf_pins": [
+    [
+     334,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 58,
+   "hard_leaf_pins": [
+    [
+     335,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 59,
+   "hard_leaf_pins": [
+    [
+     336,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 60,
+   "hard_leaf_pins": [
+    [
+     337,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 61,
+   "hard_leaf_pins": [
+    [
+     338,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 62,
+   "hard_leaf_pins": [
+    [
+     339,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 63,
+   "hard_leaf_pins": [
+    [
+     340,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 64,
+   "hard_leaf_pins": [
+    [
+     394,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 65,
+   "hard_leaf_pins": [
+    [
+     395,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 66,
+   "hard_leaf_pins": [
+    [
+     396,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 67,
+   "hard_leaf_pins": [
+    [
+     397,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 68,
+   "hard_leaf_pins": [
+    [
+     398,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 69,
+   "hard_leaf_pins": [
+    [
+     399,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 70,
+   "hard_leaf_pins": [
+    [
+     400,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 71,
+   "hard_leaf_pins": [
+    [
+     401,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 72,
+   "hard_leaf_pins": [
+    [
+     403,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 73,
+   "hard_leaf_pins": [
+    [
+     404,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 74,
+   "hard_leaf_pins": [
+    [
+     405,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 75,
+   "hard_leaf_pins": [
+    [
+     406,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 76,
+   "hard_leaf_pins": [
+    [
+     407,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 77,
+   "hard_leaf_pins": [
+    [
+     408,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 78,
+   "hard_leaf_pins": [
+    [
+     409,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 79,
+   "hard_leaf_pins": [
+    [
+     410,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 80,
+   "hard_leaf_pins": [
+    [
+     412,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 81,
+   "hard_leaf_pins": [
+    [
+     413,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 82,
+   "hard_leaf_pins": [
+    [
+     414,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 83,
+   "hard_leaf_pins": [
+    [
+     415,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 84,
+   "hard_leaf_pins": [
+    [
+     416,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 85,
+   "hard_leaf_pins": [
+    [
+     417,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 86,
+   "hard_leaf_pins": [
+    [
+     418,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 87,
+   "hard_leaf_pins": [
+    [
+     419,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 88,
+   "hard_leaf_pins": [
+    [
+     421,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 89,
+   "hard_leaf_pins": [
+    [
+     422,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 90,
+   "hard_leaf_pins": [
+    [
+     423,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 91,
+   "hard_leaf_pins": [
+    [
+     424,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 92,
+   "hard_leaf_pins": [
+    [
+     425,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 93,
+   "hard_leaf_pins": [
+    [
+     426,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 94,
+   "hard_leaf_pins": [
+    [
+     427,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 95,
+   "hard_leaf_pins": [
+    [
+     428,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 96,
+   "hard_leaf_pins": [
+    [
+     482,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 97,
+   "hard_leaf_pins": [
+    [
+     483,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 98,
+   "hard_leaf_pins": [
+    [
+     484,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 99,
+   "hard_leaf_pins": [
+    [
+     485,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 100,
+   "hard_leaf_pins": [
+    [
+     486,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 101,
+   "hard_leaf_pins": [
+    [
+     487,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 102,
+   "hard_leaf_pins": [
+    [
+     488,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 103,
+   "hard_leaf_pins": [
+    [
+     489,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 104,
+   "hard_leaf_pins": [
+    [
+     491,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 105,
+   "hard_leaf_pins": [
+    [
+     492,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 106,
+   "hard_leaf_pins": [
+    [
+     493,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 107,
+   "hard_leaf_pins": [
+    [
+     494,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 108,
+   "hard_leaf_pins": [
+    [
+     495,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 109,
+   "hard_leaf_pins": [
+    [
+     496,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 110,
+   "hard_leaf_pins": [
+    [
+     497,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 111,
+   "hard_leaf_pins": [
+    [
+     498,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 112,
+   "hard_leaf_pins": [
+    [
+     500,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 113,
+   "hard_leaf_pins": [
+    [
+     501,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 114,
+   "hard_leaf_pins": [
+    [
+     502,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 115,
+   "hard_leaf_pins": [
+    [
+     503,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 116,
+   "hard_leaf_pins": [
+    [
+     504,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 117,
+   "hard_leaf_pins": [
+    [
+     505,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 118,
+   "hard_leaf_pins": [
+    [
+     506,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 119,
+   "hard_leaf_pins": [
+    [
+     507,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 120,
+   "hard_leaf_pins": [
+    [
+     509,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 121,
+   "hard_leaf_pins": [
+    [
+     510,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 122,
+   "hard_leaf_pins": [
+    [
+     511,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 123,
+   "hard_leaf_pins": [
+    [
+     512,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 124,
+   "hard_leaf_pins": [
+    [
+     513,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 125,
+   "hard_leaf_pins": [
+    [
+     514,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 126,
+   "hard_leaf_pins": [
+    [
+     515,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wcapture_t",
+   "bit": 127,
+   "hard_leaf_pins": [
+    [
+     516,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     226,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     235,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     244,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     253,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     314,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     323,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     332,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     341,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     402,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     411,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     420,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     429,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     490,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     499,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     508,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_wscatter_t",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     517,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     254,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     255,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     256,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     257,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     258,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     259,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     260,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     261,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     262,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     263,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     264,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     265,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     342,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     343,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     344,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     345,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 16,
+   "hard_leaf_pins": [
+    [
+     346,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 17,
+   "hard_leaf_pins": [
+    [
+     347,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 18,
+   "hard_leaf_pins": [
+    [
+     348,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 19,
+   "hard_leaf_pins": [
+    [
+     349,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 20,
+   "hard_leaf_pins": [
+    [
+     350,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 21,
+   "hard_leaf_pins": [
+    [
+     351,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 22,
+   "hard_leaf_pins": [
+    [
+     352,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 23,
+   "hard_leaf_pins": [
+    [
+     353,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 24,
+   "hard_leaf_pins": [
+    [
+     430,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 25,
+   "hard_leaf_pins": [
+    [
+     431,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 26,
+   "hard_leaf_pins": [
+    [
+     432,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 27,
+   "hard_leaf_pins": [
+    [
+     433,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 28,
+   "hard_leaf_pins": [
+    [
+     434,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 29,
+   "hard_leaf_pins": [
+    [
+     435,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 30,
+   "hard_leaf_pins": [
+    [
+     436,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 31,
+   "hard_leaf_pins": [
+    [
+     437,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 32,
+   "hard_leaf_pins": [
+    [
+     438,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 33,
+   "hard_leaf_pins": [
+    [
+     439,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 34,
+   "hard_leaf_pins": [
+    [
+     440,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 35,
+   "hard_leaf_pins": [
+    [
+     441,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 36,
+   "hard_leaf_pins": [
+    [
+     518,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 37,
+   "hard_leaf_pins": [
+    [
+     519,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 38,
+   "hard_leaf_pins": [
+    [
+     520,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 39,
+   "hard_leaf_pins": [
+    [
+     521,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 40,
+   "hard_leaf_pins": [
+    [
+     522,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 41,
+   "hard_leaf_pins": [
+    [
+     523,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 42,
+   "hard_leaf_pins": [
+    [
+     524,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 43,
+   "hard_leaf_pins": [
+    [
+     525,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 44,
+   "hard_leaf_pins": [
+    [
+     526,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 45,
+   "hard_leaf_pins": [
+    [
+     527,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 46,
+   "hard_leaf_pins": [
+    [
+     528,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_req_t",
+   "bit": 47,
+   "hard_leaf_pins": [
+    [
+     529,
+     "ck_req",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     254,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     255,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     256,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     257,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     258,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     259,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     260,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     261,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     262,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     263,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     264,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     265,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     342,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     343,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     344,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     345,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 16,
+   "hard_leaf_pins": [
+    [
+     346,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 17,
+   "hard_leaf_pins": [
+    [
+     347,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 18,
+   "hard_leaf_pins": [
+    [
+     348,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 19,
+   "hard_leaf_pins": [
+    [
+     349,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 20,
+   "hard_leaf_pins": [
+    [
+     350,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 21,
+   "hard_leaf_pins": [
+    [
+     351,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 22,
+   "hard_leaf_pins": [
+    [
+     352,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 23,
+   "hard_leaf_pins": [
+    [
+     353,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 24,
+   "hard_leaf_pins": [
+    [
+     430,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 25,
+   "hard_leaf_pins": [
+    [
+     431,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 26,
+   "hard_leaf_pins": [
+    [
+     432,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 27,
+   "hard_leaf_pins": [
+    [
+     433,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 28,
+   "hard_leaf_pins": [
+    [
+     434,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 29,
+   "hard_leaf_pins": [
+    [
+     435,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 30,
+   "hard_leaf_pins": [
+    [
+     436,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 31,
+   "hard_leaf_pins": [
+    [
+     437,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 32,
+   "hard_leaf_pins": [
+    [
+     438,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 33,
+   "hard_leaf_pins": [
+    [
+     439,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 34,
+   "hard_leaf_pins": [
+    [
+     440,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 35,
+   "hard_leaf_pins": [
+    [
+     441,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 36,
+   "hard_leaf_pins": [
+    [
+     518,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 37,
+   "hard_leaf_pins": [
+    [
+     519,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 38,
+   "hard_leaf_pins": [
+    [
+     520,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 39,
+   "hard_leaf_pins": [
+    [
+     521,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 40,
+   "hard_leaf_pins": [
+    [
+     522,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 41,
+   "hard_leaf_pins": [
+    [
+     523,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 42,
+   "hard_leaf_pins": [
+    [
+     524,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 43,
+   "hard_leaf_pins": [
+    [
+     525,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 44,
+   "hard_leaf_pins": [
+    [
+     526,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 45,
+   "hard_leaf_pins": [
+    [
+     527,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 46,
+   "hard_leaf_pins": [
+    [
+     528,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_mem_relay_rsp_t",
+   "bit": 47,
+   "hard_leaf_pins": [
+    [
+     529,
+     "ck_rsp",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_control_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     69,
+     "ck_control",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_header_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     64,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_payload_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     65,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_payload_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     66,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_payload_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     67,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_payload_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     68,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     70,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     71,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     72,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     73,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     106,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     107,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     108,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     109,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     142,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     143,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     144,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     145,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     178,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     179,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     180,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_dispatch_t",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     181,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     74,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     75,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     76,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     77,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     78,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     79,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     80,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     81,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     82,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     83,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     84,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     85,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     86,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     87,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     88,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     89,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 16,
+   "hard_leaf_pins": [
+    [
+     90,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 17,
+   "hard_leaf_pins": [
+    [
+     91,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 18,
+   "hard_leaf_pins": [
+    [
+     92,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 19,
+   "hard_leaf_pins": [
+    [
+     93,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 20,
+   "hard_leaf_pins": [
+    [
+     94,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 21,
+   "hard_leaf_pins": [
+    [
+     95,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 22,
+   "hard_leaf_pins": [
+    [
+     96,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 23,
+   "hard_leaf_pins": [
+    [
+     97,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 24,
+   "hard_leaf_pins": [
+    [
+     98,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 25,
+   "hard_leaf_pins": [
+    [
+     99,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 26,
+   "hard_leaf_pins": [
+    [
+     100,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 27,
+   "hard_leaf_pins": [
+    [
+     101,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 28,
+   "hard_leaf_pins": [
+    [
+     102,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 29,
+   "hard_leaf_pins": [
+    [
+     103,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 30,
+   "hard_leaf_pins": [
+    [
+     104,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 31,
+   "hard_leaf_pins": [
+    [
+     105,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 32,
+   "hard_leaf_pins": [
+    [
+     110,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 33,
+   "hard_leaf_pins": [
+    [
+     111,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 34,
+   "hard_leaf_pins": [
+    [
+     112,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 35,
+   "hard_leaf_pins": [
+    [
+     113,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 36,
+   "hard_leaf_pins": [
+    [
+     114,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 37,
+   "hard_leaf_pins": [
+    [
+     115,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 38,
+   "hard_leaf_pins": [
+    [
+     116,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 39,
+   "hard_leaf_pins": [
+    [
+     117,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 40,
+   "hard_leaf_pins": [
+    [
+     118,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 41,
+   "hard_leaf_pins": [
+    [
+     119,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 42,
+   "hard_leaf_pins": [
+    [
+     120,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 43,
+   "hard_leaf_pins": [
+    [
+     121,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 44,
+   "hard_leaf_pins": [
+    [
+     122,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 45,
+   "hard_leaf_pins": [
+    [
+     123,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 46,
+   "hard_leaf_pins": [
+    [
+     124,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 47,
+   "hard_leaf_pins": [
+    [
+     125,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 48,
+   "hard_leaf_pins": [
+    [
+     126,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 49,
+   "hard_leaf_pins": [
+    [
+     127,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 50,
+   "hard_leaf_pins": [
+    [
+     128,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 51,
+   "hard_leaf_pins": [
+    [
+     129,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 52,
+   "hard_leaf_pins": [
+    [
+     130,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 53,
+   "hard_leaf_pins": [
+    [
+     131,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 54,
+   "hard_leaf_pins": [
+    [
+     132,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 55,
+   "hard_leaf_pins": [
+    [
+     133,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 56,
+   "hard_leaf_pins": [
+    [
+     134,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 57,
+   "hard_leaf_pins": [
+    [
+     135,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 58,
+   "hard_leaf_pins": [
+    [
+     136,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 59,
+   "hard_leaf_pins": [
+    [
+     137,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 60,
+   "hard_leaf_pins": [
+    [
+     138,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 61,
+   "hard_leaf_pins": [
+    [
+     139,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 62,
+   "hard_leaf_pins": [
+    [
+     140,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 63,
+   "hard_leaf_pins": [
+    [
+     141,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 64,
+   "hard_leaf_pins": [
+    [
+     146,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 65,
+   "hard_leaf_pins": [
+    [
+     147,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 66,
+   "hard_leaf_pins": [
+    [
+     148,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 67,
+   "hard_leaf_pins": [
+    [
+     149,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 68,
+   "hard_leaf_pins": [
+    [
+     150,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 69,
+   "hard_leaf_pins": [
+    [
+     151,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 70,
+   "hard_leaf_pins": [
+    [
+     152,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 71,
+   "hard_leaf_pins": [
+    [
+     153,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 72,
+   "hard_leaf_pins": [
+    [
+     154,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 73,
+   "hard_leaf_pins": [
+    [
+     155,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 74,
+   "hard_leaf_pins": [
+    [
+     156,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 75,
+   "hard_leaf_pins": [
+    [
+     157,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 76,
+   "hard_leaf_pins": [
+    [
+     158,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 77,
+   "hard_leaf_pins": [
+    [
+     159,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 78,
+   "hard_leaf_pins": [
+    [
+     160,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 79,
+   "hard_leaf_pins": [
+    [
+     161,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 80,
+   "hard_leaf_pins": [
+    [
+     162,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 81,
+   "hard_leaf_pins": [
+    [
+     163,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 82,
+   "hard_leaf_pins": [
+    [
+     164,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 83,
+   "hard_leaf_pins": [
+    [
+     165,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 84,
+   "hard_leaf_pins": [
+    [
+     166,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 85,
+   "hard_leaf_pins": [
+    [
+     167,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 86,
+   "hard_leaf_pins": [
+    [
+     168,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 87,
+   "hard_leaf_pins": [
+    [
+     169,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 88,
+   "hard_leaf_pins": [
+    [
+     170,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 89,
+   "hard_leaf_pins": [
+    [
+     171,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 90,
+   "hard_leaf_pins": [
+    [
+     172,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 91,
+   "hard_leaf_pins": [
+    [
+     173,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 92,
+   "hard_leaf_pins": [
+    [
+     174,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 93,
+   "hard_leaf_pins": [
+    [
+     175,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 94,
+   "hard_leaf_pins": [
+    [
+     176,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 95,
+   "hard_leaf_pins": [
+    [
+     177,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 96,
+   "hard_leaf_pins": [
+    [
+     182,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 97,
+   "hard_leaf_pins": [
+    [
+     183,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 98,
+   "hard_leaf_pins": [
+    [
+     184,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 99,
+   "hard_leaf_pins": [
+    [
+     185,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 100,
+   "hard_leaf_pins": [
+    [
+     186,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 101,
+   "hard_leaf_pins": [
+    [
+     187,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 102,
+   "hard_leaf_pins": [
+    [
+     188,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 103,
+   "hard_leaf_pins": [
+    [
+     189,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 104,
+   "hard_leaf_pins": [
+    [
+     190,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 105,
+   "hard_leaf_pins": [
+    [
+     191,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 106,
+   "hard_leaf_pins": [
+    [
+     192,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 107,
+   "hard_leaf_pins": [
+    [
+     193,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 108,
+   "hard_leaf_pins": [
+    [
+     194,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 109,
+   "hard_leaf_pins": [
+    [
+     195,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 110,
+   "hard_leaf_pins": [
+    [
+     196,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 111,
+   "hard_leaf_pins": [
+    [
+     197,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 112,
+   "hard_leaf_pins": [
+    [
+     198,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 113,
+   "hard_leaf_pins": [
+    [
+     199,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 114,
+   "hard_leaf_pins": [
+    [
+     200,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 115,
+   "hard_leaf_pins": [
+    [
+     201,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 116,
+   "hard_leaf_pins": [
+    [
+     202,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 117,
+   "hard_leaf_pins": [
+    [
+     203,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 118,
+   "hard_leaf_pins": [
+    [
+     204,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 119,
+   "hard_leaf_pins": [
+    [
+     205,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 120,
+   "hard_leaf_pins": [
+    [
+     206,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 121,
+   "hard_leaf_pins": [
+    [
+     207,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 122,
+   "hard_leaf_pins": [
+    [
+     208,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 123,
+   "hard_leaf_pins": [
+    [
+     209,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 124,
+   "hard_leaf_pins": [
+    [
+     210,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 125,
+   "hard_leaf_pins": [
+    [
+     211,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 126,
+   "hard_leaf_pins": [
+    [
+     212,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_write_stage_t",
+   "bit": 127,
+   "hard_leaf_pins": [
+    [
+     213,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_landing_x34_s",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     0,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_landing_x34_s",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     2,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_landing_x34_s",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     4,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_landing_x34_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     1,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_landing_x34_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     3,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_landing_x34_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     5,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_control_s",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     6,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     7,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     10,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     13,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     16,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     19,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     22,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     25,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     28,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     31,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     34,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     37,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     40,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     43,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     46,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     49,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_lane_s",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     52,
+     "ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     8,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     11,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     14,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     17,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     20,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     23,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     26,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     29,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     32,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     35,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     38,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     41,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     44,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     47,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     50,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_s",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     53,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     9,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     12,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 2,
+   "hard_leaf_pins": [
+    [
+     15,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 3,
+   "hard_leaf_pins": [
+    [
+     18,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 4,
+   "hard_leaf_pins": [
+    [
+     21,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 5,
+   "hard_leaf_pins": [
+    [
+     24,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 6,
+   "hard_leaf_pins": [
+    [
+     27,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 7,
+   "hard_leaf_pins": [
+    [
+     30,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 8,
+   "hard_leaf_pins": [
+    [
+     33,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 9,
+   "hard_leaf_pins": [
+    [
+     36,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 10,
+   "hard_leaf_pins": [
+    [
+     39,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 11,
+   "hard_leaf_pins": [
+    [
+     42,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 12,
+   "hard_leaf_pins": [
+    [
+     45,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 13,
+   "hard_leaf_pins": [
+    [
+     48,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 14,
+   "hard_leaf_pins": [
+    [
+     51,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_cap_x34_t",
+   "bit": 15,
+   "hard_leaf_pins": [
+    [
+     54,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_wfc_control_s",
+   "bit": 0,
+   "hard_leaf_pins": []
+  },
+  {
+   "category": "ck_wfc_control_t",
+   "bit": 0,
+   "hard_leaf_pins": []
+  },
+  {
+   "category": "ck_wfc_x34_s",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     55,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_wfc_x34_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     56,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_wfc_x43_s",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     58,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_wfc_x43_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     57,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_xio_control_s",
+   "bit": 0,
+   "hard_leaf_pins": []
+  },
+  {
+   "category": "ck_xio_control_t",
+   "bit": 0,
+   "hard_leaf_pins": []
+  },
+  {
+   "category": "ck_xio_x43_s",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     60,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_xio_x43_s",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     62,
+     "s_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_xio_x43_t",
+   "bit": 0,
+   "hard_leaf_pins": [
+    [
+     59,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  },
+  {
+   "category": "ck_xio_x43_t",
+   "bit": 1,
+   "hard_leaf_pins": [
+    [
+     61,
+     "t_ck",
+     0,
+     "INPUT"
+    ]
+   ]
+  }
+ ],
+ "scope": "Exact source wire-join independently matches693root ABI. Five no-hard-boundary roots are legacycore1 and inlineWFC/XIOcontrol4; no CTS/phiR proof."
+}

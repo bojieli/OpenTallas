@@ -1,0 +1,7539 @@
+{
+ "scope": "HISTORICAL_LOCAL_VECTORS_REUSED_ONLY_AFTER_CURRENT_OUTLINE_EQUALITY",
+ "source_path": "results/arch/s81_system_current_1015/report.json",
+ "source_blob": "35eff373002d2306697f5929e6262ce61ff2490c",
+ "options": [
+  {
+   "nodes": [
+    {
+     "name": "vm_s0_bank0",
+     "xy_um": [
+      13636.08,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_bank1",
+     "xy_um": [
+      13636.08,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_bank2",
+     "xy_um": [
+      14111.279999999999,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_bank3",
+     "xy_um": [
+      14111.279999999999,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_quarter0",
+     "xy_um": [
+      13938.48,
+      12890.88
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_bank4",
+     "xy_um": [
+      13636.08,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_bank5",
+     "xy_um": [
+      13636.08,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_bank6",
+     "xy_um": [
+      14111.279999999999,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_bank7",
+     "xy_um": [
+      14111.279999999999,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_quarter1",
+     "xy_um": [
+      13938.48,
+      13279.68
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_bank8",
+     "xy_um": [
+      14651.279999999999,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_bank9",
+     "xy_um": [
+      14651.279999999999,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_bank10",
+     "xy_um": [
+      15126.48,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_bank11",
+     "xy_um": [
+      15126.48,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_quarter2",
+     "xy_um": [
+      14953.679999999998,
+      12890.88
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_bank12",
+     "xy_um": [
+      14651.279999999999,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_bank13",
+     "xy_um": [
+      14651.279999999999,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_bank14",
+     "xy_um": [
+      15126.48,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_bank15",
+     "xy_um": [
+      15126.48,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_quarter3",
+     "xy_um": [
+      14953.679999999998,
+      13279.68
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_bank16",
+     "xy_um": [
+      13636.08,
+      14014.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_bank17",
+     "xy_um": [
+      13636.08,
+      14143.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_bank18",
+     "xy_um": [
+      14111.279999999999,
+      14014.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_bank19",
+     "xy_um": [
+      14111.279999999999,
+      14143.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_quarter4",
+     "xy_um": [
+      13938.48,
+      14057.279999999999
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_bank20",
+     "xy_um": [
+      13636.08,
+      14402.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_bank21",
+     "xy_um": [
+      13636.08,
+      14532.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_bank22",
+     "xy_um": [
+      14111.279999999999,
+      14402.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_bank23",
+     "xy_um": [
+      14111.279999999999,
+      14532.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_quarter5",
+     "xy_um": [
+      13938.48,
+      14446.08
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_bank24",
+     "xy_um": [
+      14651.279999999999,
+      14014.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_bank25",
+     "xy_um": [
+      14651.279999999999,
+      14143.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_bank26",
+     "xy_um": [
+      15126.48,
+      14014.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_bank27",
+     "xy_um": [
+      15126.48,
+      14143.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_quarter6",
+     "xy_um": [
+      14953.679999999998,
+      14057.279999999999
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_bank28",
+     "xy_um": [
+      14651.279999999999,
+      14402.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_bank29",
+     "xy_um": [
+      14651.279999999999,
+      14532.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_bank30",
+     "xy_um": [
+      15126.48,
+      14402.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_bank31",
+     "xy_um": [
+      15126.48,
+      14532.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_quarter7",
+     "xy_um": [
+      14953.679999999998,
+      14446.08
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_bridge0",
+     "xy_um": [
+      13895.279999999999,
+      13063.68
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_bridge1",
+     "xy_um": [
+      14910.48,
+      13063.68
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_bridge2",
+     "xy_um": [
+      13895.279999999999,
+      14230.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_bridge3",
+     "xy_um": [
+      14910.48,
+      14230.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_bank0",
+     "xy_um": [
+      15623.279999999999,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_bank1",
+     "xy_um": [
+      15623.279999999999,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_bank2",
+     "xy_um": [
+      16098.479999999998,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_bank3",
+     "xy_um": [
+      16098.479999999998,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_quarter0",
+     "xy_um": [
+      15925.679999999998,
+      12890.88
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_bank4",
+     "xy_um": [
+      15623.279999999999,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_bank5",
+     "xy_um": [
+      15623.279999999999,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_bank6",
+     "xy_um": [
+      16098.479999999998,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_bank7",
+     "xy_um": [
+      16098.479999999998,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_quarter1",
+     "xy_um": [
+      15925.679999999998,
+      13279.68
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_bank8",
+     "xy_um": [
+      16638.48,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_bank9",
+     "xy_um": [
+      16638.48,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_bank10",
+     "xy_um": [
+      17113.679999999997,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_bank11",
+     "xy_um": [
+      17113.679999999997,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_quarter2",
+     "xy_um": [
+      16940.879999999997,
+      12890.88
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_bank12",
+     "xy_um": [
+      16638.48,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_bank13",
+     "xy_um": [
+      16638.48,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_bank14",
+     "xy_um": [
+      17113.679999999997,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_bank15",
+     "xy_um": [
+      17113.679999999997,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_quarter3",
+     "xy_um": [
+      16940.879999999997,
+      13279.68
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_bank16",
+     "xy_um": [
+      15623.279999999999,
+      14014.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_bank17",
+     "xy_um": [
+      15623.279999999999,
+      14143.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_bank18",
+     "xy_um": [
+      16098.479999999998,
+      14014.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_bank19",
+     "xy_um": [
+      16098.479999999998,
+      14143.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_quarter4",
+     "xy_um": [
+      15925.679999999998,
+      14057.279999999999
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_bank20",
+     "xy_um": [
+      15623.279999999999,
+      14402.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_bank21",
+     "xy_um": [
+      15623.279999999999,
+      14532.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_bank22",
+     "xy_um": [
+      16098.479999999998,
+      14402.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_bank23",
+     "xy_um": [
+      16098.479999999998,
+      14532.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_quarter5",
+     "xy_um": [
+      15925.679999999998,
+      14446.08
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_bank24",
+     "xy_um": [
+      16638.48,
+      14014.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_bank25",
+     "xy_um": [
+      16638.48,
+      14143.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_bank26",
+     "xy_um": [
+      17113.679999999997,
+      14014.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_bank27",
+     "xy_um": [
+      17113.679999999997,
+      14143.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_quarter6",
+     "xy_um": [
+      16940.879999999997,
+      14057.279999999999
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_bank28",
+     "xy_um": [
+      16638.48,
+      14402.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_bank29",
+     "xy_um": [
+      16638.48,
+      14532.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_bank30",
+     "xy_um": [
+      17113.679999999997,
+      14402.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_bank31",
+     "xy_um": [
+      17113.679999999997,
+      14532.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_quarter7",
+     "xy_um": [
+      16940.879999999997,
+      14446.08
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_bridge0",
+     "xy_um": [
+      15882.479999999998,
+      13063.68
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_bridge1",
+     "xy_um": [
+      16897.679999999997,
+      13063.68
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_bridge2",
+     "xy_um": [
+      15882.479999999998,
+      14230.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_bridge3",
+     "xy_um": [
+      16897.679999999997,
+      14230.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_bank0",
+     "xy_um": [
+      13636.08,
+      15310.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_bank1",
+     "xy_um": [
+      13636.08,
+      15439.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_bank2",
+     "xy_um": [
+      14111.279999999999,
+      15310.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_bank3",
+     "xy_um": [
+      14111.279999999999,
+      15439.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_quarter0",
+     "xy_um": [
+      13938.48,
+      15353.279999999999
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_bank4",
+     "xy_um": [
+      13636.08,
+      15698.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_bank5",
+     "xy_um": [
+      13636.08,
+      15828.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_bank6",
+     "xy_um": [
+      14111.279999999999,
+      15698.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_bank7",
+     "xy_um": [
+      14111.279999999999,
+      15828.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_quarter1",
+     "xy_um": [
+      13938.48,
+      15742.08
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_bank8",
+     "xy_um": [
+      14651.279999999999,
+      15310.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_bank9",
+     "xy_um": [
+      14651.279999999999,
+      15439.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_bank10",
+     "xy_um": [
+      15126.48,
+      15310.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_bank11",
+     "xy_um": [
+      15126.48,
+      15439.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_quarter2",
+     "xy_um": [
+      14953.679999999998,
+      15353.279999999999
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_bank12",
+     "xy_um": [
+      14651.279999999999,
+      15698.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_bank13",
+     "xy_um": [
+      14651.279999999999,
+      15828.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_bank14",
+     "xy_um": [
+      15126.48,
+      15698.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_bank15",
+     "xy_um": [
+      15126.48,
+      15828.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_quarter3",
+     "xy_um": [
+      14953.679999999998,
+      15742.08
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_bank16",
+     "xy_um": [
+      13636.08,
+      16476.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_bank17",
+     "xy_um": [
+      13636.08,
+      16606.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_bank18",
+     "xy_um": [
+      14111.279999999999,
+      16476.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_bank19",
+     "xy_um": [
+      14111.279999999999,
+      16606.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_quarter4",
+     "xy_um": [
+      13938.48,
+      16519.68
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_bank20",
+     "xy_um": [
+      13636.08,
+      16865.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_bank21",
+     "xy_um": [
+      13636.08,
+      16994.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_bank22",
+     "xy_um": [
+      14111.279999999999,
+      16865.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_bank23",
+     "xy_um": [
+      14111.279999999999,
+      16994.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_quarter5",
+     "xy_um": [
+      13938.48,
+      16908.48
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_bank24",
+     "xy_um": [
+      14651.279999999999,
+      16476.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_bank25",
+     "xy_um": [
+      14651.279999999999,
+      16606.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_bank26",
+     "xy_um": [
+      15126.48,
+      16476.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_bank27",
+     "xy_um": [
+      15126.48,
+      16606.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_quarter6",
+     "xy_um": [
+      14953.679999999998,
+      16519.68
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_bank28",
+     "xy_um": [
+      14651.279999999999,
+      16865.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_bank29",
+     "xy_um": [
+      14651.279999999999,
+      16994.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_bank30",
+     "xy_um": [
+      15126.48,
+      16865.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_bank31",
+     "xy_um": [
+      15126.48,
+      16994.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_quarter7",
+     "xy_um": [
+      14953.679999999998,
+      16908.48
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_bridge0",
+     "xy_um": [
+      13895.279999999999,
+      15526.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_bridge1",
+     "xy_um": [
+      14910.48,
+      15526.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_bridge2",
+     "xy_um": [
+      13895.279999999999,
+      16692.48
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_bridge3",
+     "xy_um": [
+      14910.48,
+      16692.48
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_bank0",
+     "xy_um": [
+      15623.279999999999,
+      15310.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_bank1",
+     "xy_um": [
+      15623.279999999999,
+      15439.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_bank2",
+     "xy_um": [
+      16098.479999999998,
+      15310.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_bank3",
+     "xy_um": [
+      16098.479999999998,
+      15439.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_quarter0",
+     "xy_um": [
+      15925.679999999998,
+      15353.279999999999
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_bank4",
+     "xy_um": [
+      15623.279999999999,
+      15698.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_bank5",
+     "xy_um": [
+      15623.279999999999,
+      15828.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_bank6",
+     "xy_um": [
+      16098.479999999998,
+      15698.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_bank7",
+     "xy_um": [
+      16098.479999999998,
+      15828.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_quarter1",
+     "xy_um": [
+      15925.679999999998,
+      15742.08
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_bank8",
+     "xy_um": [
+      16638.48,
+      15310.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_bank9",
+     "xy_um": [
+      16638.48,
+      15439.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_bank10",
+     "xy_um": [
+      17113.679999999997,
+      15310.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_bank11",
+     "xy_um": [
+      17113.679999999997,
+      15439.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_quarter2",
+     "xy_um": [
+      16940.879999999997,
+      15353.279999999999
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_bank12",
+     "xy_um": [
+      16638.48,
+      15698.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_bank13",
+     "xy_um": [
+      16638.48,
+      15828.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_bank14",
+     "xy_um": [
+      17113.679999999997,
+      15698.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_bank15",
+     "xy_um": [
+      17113.679999999997,
+      15828.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_quarter3",
+     "xy_um": [
+      16940.879999999997,
+      15742.08
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_bank16",
+     "xy_um": [
+      15623.279999999999,
+      16476.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_bank17",
+     "xy_um": [
+      15623.279999999999,
+      16606.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_bank18",
+     "xy_um": [
+      16098.479999999998,
+      16476.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_bank19",
+     "xy_um": [
+      16098.479999999998,
+      16606.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_quarter4",
+     "xy_um": [
+      15925.679999999998,
+      16519.68
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_bank20",
+     "xy_um": [
+      15623.279999999999,
+      16865.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_bank21",
+     "xy_um": [
+      15623.279999999999,
+      16994.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_bank22",
+     "xy_um": [
+      16098.479999999998,
+      16865.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_bank23",
+     "xy_um": [
+      16098.479999999998,
+      16994.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_quarter5",
+     "xy_um": [
+      15925.679999999998,
+      16908.48
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_bank24",
+     "xy_um": [
+      16638.48,
+      16476.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_bank25",
+     "xy_um": [
+      16638.48,
+      16606.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_bank26",
+     "xy_um": [
+      17113.679999999997,
+      16476.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_bank27",
+     "xy_um": [
+      17113.679999999997,
+      16606.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_quarter6",
+     "xy_um": [
+      16940.879999999997,
+      16519.68
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_bank28",
+     "xy_um": [
+      16638.48,
+      16865.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_bank29",
+     "xy_um": [
+      16638.48,
+      16994.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_bank30",
+     "xy_um": [
+      17113.679999999997,
+      16865.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_bank31",
+     "xy_um": [
+      17113.679999999997,
+      16994.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_quarter7",
+     "xy_um": [
+      16940.879999999997,
+      16908.48
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b4",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_bridge0",
+     "xy_um": [
+      15882.479999999998,
+      15526.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_bridge1",
+     "xy_um": [
+      16897.679999999997,
+      15526.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_bridge2",
+     "xy_um": [
+      15882.479999999998,
+      16692.48
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_bridge3",
+     "xy_um": [
+      16897.679999999997,
+      16692.48
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "bank_local_memory",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q0_capture0",
+     "xy_um": [
+      14132.88,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_storage0",
+     "xy_um": [
+      14456.88,
+      13625.279999999999
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_capture1",
+     "xy_um": [
+      14197.679999999998,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_storage1",
+     "xy_um": [
+      14456.88,
+      13711.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_capture2",
+     "xy_um": [
+      14262.48,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_storage2",
+     "xy_um": [
+      14456.88,
+      13798.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_capture3",
+     "xy_um": [
+      14327.279999999999,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_storage3",
+     "xy_um": [
+      14456.88,
+      13884.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_capture4",
+     "xy_um": [
+      13830.48,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_storage4",
+     "xy_um": [
+      13592.88,
+      13625.279999999999
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_capture5",
+     "xy_um": [
+      13765.679999999998,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_storage5",
+     "xy_um": [
+      13592.88,
+      13711.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_capture6",
+     "xy_um": [
+      13700.88,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_storage6",
+     "xy_um": [
+      13592.88,
+      13798.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_capture7",
+     "xy_um": [
+      13636.08,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_storage7",
+     "xy_um": [
+      13592.88,
+      13884.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_scatterout",
+     "xy_um": [
+      13895.279999999999,
+      13452.48
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q0_dispatch",
+     "xy_um": [
+      13700.88,
+      13625.279999999999
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 0,
+     "q8": 0
+    },
+    {
+     "name": "vm_s0_q1_capture0",
+     "xy_um": [
+      15148.08,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_storage0",
+     "xy_um": [
+      15472.08,
+      13625.279999999999
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_capture1",
+     "xy_um": [
+      15212.88,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_storage1",
+     "xy_um": [
+      15472.08,
+      13711.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_capture2",
+     "xy_um": [
+      15277.68,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_storage2",
+     "xy_um": [
+      15472.08,
+      13798.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_capture3",
+     "xy_um": [
+      15342.48,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_storage3",
+     "xy_um": [
+      15472.08,
+      13884.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_capture4",
+     "xy_um": [
+      14845.68,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_storage4",
+     "xy_um": [
+      14608.08,
+      13625.279999999999
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_capture5",
+     "xy_um": [
+      14780.88,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_storage5",
+     "xy_um": [
+      14608.08,
+      13711.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_capture6",
+     "xy_um": [
+      14716.08,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_storage6",
+     "xy_um": [
+      14608.08,
+      13798.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_capture7",
+     "xy_um": [
+      14651.28,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_storage7",
+     "xy_um": [
+      14608.08,
+      13884.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_scatterout",
+     "xy_um": [
+      14910.48,
+      13452.48
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q1_dispatch",
+     "xy_um": [
+      14716.08,
+      13625.279999999999
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 0,
+     "q8": 1
+    },
+    {
+     "name": "vm_s0_q2_capture0",
+     "xy_um": [
+      14132.88,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_storage0",
+     "xy_um": [
+      14456.88,
+      14791.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_capture1",
+     "xy_um": [
+      14197.679999999998,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_storage1",
+     "xy_um": [
+      14456.88,
+      14878.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_capture2",
+     "xy_um": [
+      14262.48,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_storage2",
+     "xy_um": [
+      14456.88,
+      14964.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_capture3",
+     "xy_um": [
+      14327.279999999999,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_storage3",
+     "xy_um": [
+      14456.88,
+      15050.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_capture4",
+     "xy_um": [
+      13830.48,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_storage4",
+     "xy_um": [
+      13592.88,
+      14791.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_capture5",
+     "xy_um": [
+      13765.679999999998,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_storage5",
+     "xy_um": [
+      13592.88,
+      14878.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_capture6",
+     "xy_um": [
+      13700.88,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_storage6",
+     "xy_um": [
+      13592.88,
+      14964.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_capture7",
+     "xy_um": [
+      13636.08,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_storage7",
+     "xy_um": [
+      13592.88,
+      15050.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_scatterout",
+     "xy_um": [
+      13895.279999999999,
+      14618.88
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q2_dispatch",
+     "xy_um": [
+      13700.88,
+      14791.679999999998
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 0,
+     "q8": 2
+    },
+    {
+     "name": "vm_s0_q3_capture0",
+     "xy_um": [
+      15148.08,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_storage0",
+     "xy_um": [
+      15472.08,
+      14791.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_capture1",
+     "xy_um": [
+      15212.88,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_storage1",
+     "xy_um": [
+      15472.08,
+      14878.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_capture2",
+     "xy_um": [
+      15277.68,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_storage2",
+     "xy_um": [
+      15472.08,
+      14964.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_capture3",
+     "xy_um": [
+      15342.48,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_storage3",
+     "xy_um": [
+      15472.08,
+      15050.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_capture4",
+     "xy_um": [
+      14845.68,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_storage4",
+     "xy_um": [
+      14608.08,
+      14791.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_capture5",
+     "xy_um": [
+      14780.88,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_storage5",
+     "xy_um": [
+      14608.08,
+      14878.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_capture6",
+     "xy_um": [
+      14716.08,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_storage6",
+     "xy_um": [
+      14608.08,
+      14964.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_capture7",
+     "xy_um": [
+      14651.28,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_storage7",
+     "xy_um": [
+      14608.08,
+      15050.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_scatterout",
+     "xy_um": [
+      14910.48,
+      14618.88
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_s0_q3_dispatch",
+     "xy_um": [
+      14716.08,
+      14791.679999999998
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 0,
+     "q8": 3
+    },
+    {
+     "name": "vm_payload0",
+     "xy_um": [
+      14024.88,
+      15158.88
+     ],
+     "outline_um": [
+      1166.4,
+      86.4
+     ],
+     "kind": "write_payload",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_w0_payload",
+     "slice": 0
+    },
+    {
+     "name": "vm_s1_q0_capture0",
+     "xy_um": [
+      16120.079999999998,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_storage0",
+     "xy_um": [
+      16444.079999999998,
+      13625.279999999999
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_capture1",
+     "xy_um": [
+      16184.879999999997,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_storage1",
+     "xy_um": [
+      16444.079999999998,
+      13711.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_capture2",
+     "xy_um": [
+      16249.679999999998,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_storage2",
+     "xy_um": [
+      16444.079999999998,
+      13798.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_capture3",
+     "xy_um": [
+      16314.479999999998,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_storage3",
+     "xy_um": [
+      16444.079999999998,
+      13884.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_capture4",
+     "xy_um": [
+      15817.679999999998,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_storage4",
+     "xy_um": [
+      15580.079999999998,
+      13625.279999999999
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_capture5",
+     "xy_um": [
+      15752.879999999997,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_storage5",
+     "xy_um": [
+      15580.079999999998,
+      13711.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_capture6",
+     "xy_um": [
+      15688.079999999998,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_storage6",
+     "xy_um": [
+      15580.079999999998,
+      13798.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_capture7",
+     "xy_um": [
+      15623.279999999999,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_storage7",
+     "xy_um": [
+      15580.079999999998,
+      13884.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_scatterout",
+     "xy_um": [
+      15882.479999999998,
+      13452.48
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q0_dispatch",
+     "xy_um": [
+      15688.079999999998,
+      13625.279999999999
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 1,
+     "q8": 0
+    },
+    {
+     "name": "vm_s1_q1_capture0",
+     "xy_um": [
+      17135.28,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_storage0",
+     "xy_um": [
+      17459.28,
+      13625.279999999999
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_capture1",
+     "xy_um": [
+      17200.079999999998,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_storage1",
+     "xy_um": [
+      17459.28,
+      13711.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_capture2",
+     "xy_um": [
+      17264.879999999997,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_storage2",
+     "xy_um": [
+      17459.28,
+      13798.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_capture3",
+     "xy_um": [
+      17329.68,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_storage3",
+     "xy_um": [
+      17459.28,
+      13884.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_capture4",
+     "xy_um": [
+      16832.879999999997,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_storage4",
+     "xy_um": [
+      16595.28,
+      13625.279999999999
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_capture5",
+     "xy_um": [
+      16768.079999999998,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_storage5",
+     "xy_um": [
+      16595.28,
+      13711.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_capture6",
+     "xy_um": [
+      16703.28,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_storage6",
+     "xy_um": [
+      16595.28,
+      13798.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_capture7",
+     "xy_um": [
+      16638.48,
+      13560.48
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_storage7",
+     "xy_um": [
+      16595.28,
+      13884.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_scatterout",
+     "xy_um": [
+      16897.68,
+      13452.48
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q1_dispatch",
+     "xy_um": [
+      16703.28,
+      13625.279999999999
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 1,
+     "q8": 1
+    },
+    {
+     "name": "vm_s1_q2_capture0",
+     "xy_um": [
+      16120.079999999998,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_storage0",
+     "xy_um": [
+      16444.079999999998,
+      14791.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_capture1",
+     "xy_um": [
+      16184.879999999997,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_storage1",
+     "xy_um": [
+      16444.079999999998,
+      14878.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_capture2",
+     "xy_um": [
+      16249.679999999998,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_storage2",
+     "xy_um": [
+      16444.079999999998,
+      14964.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_capture3",
+     "xy_um": [
+      16314.479999999998,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_storage3",
+     "xy_um": [
+      16444.079999999998,
+      15050.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_capture4",
+     "xy_um": [
+      15817.679999999998,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_storage4",
+     "xy_um": [
+      15580.079999999998,
+      14791.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_capture5",
+     "xy_um": [
+      15752.879999999997,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_storage5",
+     "xy_um": [
+      15580.079999999998,
+      14878.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_capture6",
+     "xy_um": [
+      15688.079999999998,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_storage6",
+     "xy_um": [
+      15580.079999999998,
+      14964.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_capture7",
+     "xy_um": [
+      15623.279999999999,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_storage7",
+     "xy_um": [
+      15580.079999999998,
+      15050.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_scatterout",
+     "xy_um": [
+      15882.479999999998,
+      14618.88
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q2_dispatch",
+     "xy_um": [
+      15688.079999999998,
+      14791.679999999998
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 1,
+     "q8": 2
+    },
+    {
+     "name": "vm_s1_q3_capture0",
+     "xy_um": [
+      17135.28,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_storage0",
+     "xy_um": [
+      17459.28,
+      14791.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_capture1",
+     "xy_um": [
+      17200.079999999998,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_storage1",
+     "xy_um": [
+      17459.28,
+      14878.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_capture2",
+     "xy_um": [
+      17264.879999999997,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_storage2",
+     "xy_um": [
+      17459.28,
+      14964.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_capture3",
+     "xy_um": [
+      17329.68,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_storage3",
+     "xy_um": [
+      17459.28,
+      15050.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_capture4",
+     "xy_um": [
+      16832.879999999997,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_storage4",
+     "xy_um": [
+      16595.28,
+      14791.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_capture5",
+     "xy_um": [
+      16768.079999999998,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_storage5",
+     "xy_um": [
+      16595.28,
+      14878.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_capture6",
+     "xy_um": [
+      16703.28,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_storage6",
+     "xy_um": [
+      16595.28,
+      14964.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_capture7",
+     "xy_um": [
+      16638.48,
+      14726.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_storage7",
+     "xy_um": [
+      16595.28,
+      15050.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_scatterout",
+     "xy_um": [
+      16897.68,
+      14618.88
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_s1_q3_dispatch",
+     "xy_um": [
+      16703.28,
+      14791.679999999998
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 1,
+     "q8": 3
+    },
+    {
+     "name": "vm_payload1",
+     "xy_um": [
+      16012.079999999998,
+      15158.88
+     ],
+     "outline_um": [
+      1166.4,
+      86.4
+     ],
+     "kind": "write_payload",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_w0_payload",
+     "slice": 1
+    },
+    {
+     "name": "vm_s2_q0_capture0",
+     "xy_um": [
+      14132.88,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_storage0",
+     "xy_um": [
+      14456.88,
+      16087.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_capture1",
+     "xy_um": [
+      14197.679999999998,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_storage1",
+     "xy_um": [
+      14456.88,
+      16174.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_capture2",
+     "xy_um": [
+      14262.48,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_storage2",
+     "xy_um": [
+      14456.88,
+      16260.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_capture3",
+     "xy_um": [
+      14327.279999999999,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_storage3",
+     "xy_um": [
+      14456.88,
+      16346.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_capture4",
+     "xy_um": [
+      13830.48,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_storage4",
+     "xy_um": [
+      13592.88,
+      16087.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_capture5",
+     "xy_um": [
+      13765.679999999998,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_storage5",
+     "xy_um": [
+      13592.88,
+      16174.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_capture6",
+     "xy_um": [
+      13700.88,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_storage6",
+     "xy_um": [
+      13592.88,
+      16260.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_capture7",
+     "xy_um": [
+      13636.08,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_storage7",
+     "xy_um": [
+      13592.88,
+      16346.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_scatterout",
+     "xy_um": [
+      13895.279999999999,
+      15914.88
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q0_dispatch",
+     "xy_um": [
+      13700.88,
+      16087.679999999998
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 2,
+     "q8": 0
+    },
+    {
+     "name": "vm_s2_q1_capture0",
+     "xy_um": [
+      15148.08,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_storage0",
+     "xy_um": [
+      15472.08,
+      16087.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_capture1",
+     "xy_um": [
+      15212.88,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_storage1",
+     "xy_um": [
+      15472.08,
+      16174.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_capture2",
+     "xy_um": [
+      15277.68,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_storage2",
+     "xy_um": [
+      15472.08,
+      16260.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_capture3",
+     "xy_um": [
+      15342.48,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_storage3",
+     "xy_um": [
+      15472.08,
+      16346.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_capture4",
+     "xy_um": [
+      14845.68,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_storage4",
+     "xy_um": [
+      14608.08,
+      16087.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_capture5",
+     "xy_um": [
+      14780.88,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_storage5",
+     "xy_um": [
+      14608.08,
+      16174.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_capture6",
+     "xy_um": [
+      14716.08,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_storage6",
+     "xy_um": [
+      14608.08,
+      16260.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_capture7",
+     "xy_um": [
+      14651.28,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_storage7",
+     "xy_um": [
+      14608.08,
+      16346.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_scatterout",
+     "xy_um": [
+      14910.48,
+      15914.88
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q1_dispatch",
+     "xy_um": [
+      14716.08,
+      16087.679999999998
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 2,
+     "q8": 1
+    },
+    {
+     "name": "vm_s2_q2_capture0",
+     "xy_um": [
+      14132.88,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_storage0",
+     "xy_um": [
+      14456.88,
+      17254.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_capture1",
+     "xy_um": [
+      14197.679999999998,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_storage1",
+     "xy_um": [
+      14456.88,
+      17340.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_capture2",
+     "xy_um": [
+      14262.48,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_storage2",
+     "xy_um": [
+      14456.88,
+      17426.879999999997
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_capture3",
+     "xy_um": [
+      14327.279999999999,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_storage3",
+     "xy_um": [
+      14456.88,
+      17513.28
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_capture4",
+     "xy_um": [
+      13830.48,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_storage4",
+     "xy_um": [
+      13592.88,
+      17254.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_capture5",
+     "xy_um": [
+      13765.679999999998,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_storage5",
+     "xy_um": [
+      13592.88,
+      17340.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_capture6",
+     "xy_um": [
+      13700.88,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_storage6",
+     "xy_um": [
+      13592.88,
+      17426.879999999997
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_capture7",
+     "xy_um": [
+      13636.08,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_storage7",
+     "xy_um": [
+      13592.88,
+      17513.28
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_scatterout",
+     "xy_um": [
+      13895.279999999999,
+      17081.28
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q2_dispatch",
+     "xy_um": [
+      13700.88,
+      17254.079999999998
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 2,
+     "q8": 2
+    },
+    {
+     "name": "vm_s2_q3_capture0",
+     "xy_um": [
+      15148.08,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_storage0",
+     "xy_um": [
+      15472.08,
+      17254.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_capture1",
+     "xy_um": [
+      15212.88,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_storage1",
+     "xy_um": [
+      15472.08,
+      17340.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_capture2",
+     "xy_um": [
+      15277.68,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_storage2",
+     "xy_um": [
+      15472.08,
+      17426.879999999997
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_capture3",
+     "xy_um": [
+      15342.48,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_storage3",
+     "xy_um": [
+      15472.08,
+      17513.28
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_capture4",
+     "xy_um": [
+      14845.68,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_storage4",
+     "xy_um": [
+      14608.08,
+      17254.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_capture5",
+     "xy_um": [
+      14780.88,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_storage5",
+     "xy_um": [
+      14608.08,
+      17340.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_capture6",
+     "xy_um": [
+      14716.08,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_storage6",
+     "xy_um": [
+      14608.08,
+      17426.879999999997
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_capture7",
+     "xy_um": [
+      14651.28,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_storage7",
+     "xy_um": [
+      14608.08,
+      17513.28
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_scatterout",
+     "xy_um": [
+      14910.48,
+      17081.28
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_s2_q3_dispatch",
+     "xy_um": [
+      14716.08,
+      17254.079999999998
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 2,
+     "q8": 3
+    },
+    {
+     "name": "vm_payload2",
+     "xy_um": [
+      14024.88,
+      17621.28
+     ],
+     "outline_um": [
+      1166.4,
+      86.4
+     ],
+     "kind": "write_payload",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_w0_payload",
+     "slice": 2
+    },
+    {
+     "name": "vm_s3_q0_capture0",
+     "xy_um": [
+      16120.079999999998,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_storage0",
+     "xy_um": [
+      16444.079999999998,
+      16087.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_capture1",
+     "xy_um": [
+      16184.879999999997,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_storage1",
+     "xy_um": [
+      16444.079999999998,
+      16174.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_capture2",
+     "xy_um": [
+      16249.679999999998,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_storage2",
+     "xy_um": [
+      16444.079999999998,
+      16260.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_capture3",
+     "xy_um": [
+      16314.479999999998,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_storage3",
+     "xy_um": [
+      16444.079999999998,
+      16346.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_capture4",
+     "xy_um": [
+      15817.679999999998,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_storage4",
+     "xy_um": [
+      15580.079999999998,
+      16087.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_capture5",
+     "xy_um": [
+      15752.879999999997,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_storage5",
+     "xy_um": [
+      15580.079999999998,
+      16174.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_capture6",
+     "xy_um": [
+      15688.079999999998,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_storage6",
+     "xy_um": [
+      15580.079999999998,
+      16260.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_capture7",
+     "xy_um": [
+      15623.279999999999,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_storage7",
+     "xy_um": [
+      15580.079999999998,
+      16346.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_scatterout",
+     "xy_um": [
+      15882.479999999998,
+      15914.88
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q0_dispatch",
+     "xy_um": [
+      15688.079999999998,
+      16087.679999999998
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 3,
+     "q8": 0
+    },
+    {
+     "name": "vm_s3_q1_capture0",
+     "xy_um": [
+      17135.28,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_storage0",
+     "xy_um": [
+      17459.28,
+      16087.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_capture1",
+     "xy_um": [
+      17200.079999999998,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_storage1",
+     "xy_um": [
+      17459.28,
+      16174.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_capture2",
+     "xy_um": [
+      17264.879999999997,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_storage2",
+     "xy_um": [
+      17459.28,
+      16260.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_capture3",
+     "xy_um": [
+      17329.68,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_storage3",
+     "xy_um": [
+      17459.28,
+      16346.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_capture4",
+     "xy_um": [
+      16832.879999999997,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_storage4",
+     "xy_um": [
+      16595.28,
+      16087.679999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_capture5",
+     "xy_um": [
+      16768.079999999998,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_storage5",
+     "xy_um": [
+      16595.28,
+      16174.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_capture6",
+     "xy_um": [
+      16703.28,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_storage6",
+     "xy_um": [
+      16595.28,
+      16260.479999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_capture7",
+     "xy_um": [
+      16638.48,
+      16022.88
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_storage7",
+     "xy_um": [
+      16595.28,
+      16346.88
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_scatterout",
+     "xy_um": [
+      16897.68,
+      15914.88
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q1_dispatch",
+     "xy_um": [
+      16703.28,
+      16087.679999999998
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 3,
+     "q8": 1
+    },
+    {
+     "name": "vm_s3_q2_capture0",
+     "xy_um": [
+      16120.079999999998,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_storage0",
+     "xy_um": [
+      16444.079999999998,
+      17254.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_capture1",
+     "xy_um": [
+      16184.879999999997,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_storage1",
+     "xy_um": [
+      16444.079999999998,
+      17340.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_capture2",
+     "xy_um": [
+      16249.679999999998,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_storage2",
+     "xy_um": [
+      16444.079999999998,
+      17426.879999999997
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_capture3",
+     "xy_um": [
+      16314.479999999998,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_storage3",
+     "xy_um": [
+      16444.079999999998,
+      17513.28
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_capture4",
+     "xy_um": [
+      15817.679999999998,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_storage4",
+     "xy_um": [
+      15580.079999999998,
+      17254.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_capture5",
+     "xy_um": [
+      15752.879999999997,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_storage5",
+     "xy_um": [
+      15580.079999999998,
+      17340.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_capture6",
+     "xy_um": [
+      15688.079999999998,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_storage6",
+     "xy_um": [
+      15580.079999999998,
+      17426.879999999997
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_capture7",
+     "xy_um": [
+      15623.279999999999,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_storage7",
+     "xy_um": [
+      15580.079999999998,
+      17513.28
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_scatterout",
+     "xy_um": [
+      15882.479999999998,
+      17081.28
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q2_dispatch",
+     "xy_um": [
+      15688.079999999998,
+      17254.079999999998
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 3,
+     "q8": 2
+    },
+    {
+     "name": "vm_s3_q3_capture0",
+     "xy_um": [
+      17135.28,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_storage0",
+     "xy_um": [
+      17459.28,
+      17254.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_capture1",
+     "xy_um": [
+      17200.079999999998,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_storage1",
+     "xy_um": [
+      17459.28,
+      17340.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_capture2",
+     "xy_um": [
+      17264.879999999997,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_storage2",
+     "xy_um": [
+      17459.28,
+      17426.879999999997
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_capture3",
+     "xy_um": [
+      17329.68,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_storage3",
+     "xy_um": [
+      17459.28,
+      17513.28
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_capture4",
+     "xy_um": [
+      16832.879999999997,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_storage4",
+     "xy_um": [
+      16595.28,
+      17254.079999999998
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_capture5",
+     "xy_um": [
+      16768.079999999998,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_storage5",
+     "xy_um": [
+      16595.28,
+      17340.48
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_capture6",
+     "xy_um": [
+      16703.28,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_storage6",
+     "xy_um": [
+      16595.28,
+      17426.879999999997
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_capture7",
+     "xy_um": [
+      16638.48,
+      17189.28
+     ],
+     "outline_um": [
+      43.2,
+      43.2
+     ],
+     "kind": "write_capture",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_write_capture128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_storage7",
+     "xy_um": [
+      16595.28,
+      17513.28
+     ],
+     "outline_um": [
+      86.4,
+      86.4
+     ],
+     "kind": "write_storage",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wstage128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_scatterout",
+     "xy_um": [
+      16897.68,
+      17081.28
+     ],
+     "outline_um": [
+      172.8,
+      86.4
+     ],
+     "kind": "write_output",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter_b8_out",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_s3_q3_dispatch",
+     "xy_um": [
+      16703.28,
+      17254.079999999998
+     ],
+     "outline_um": [
+      734.4,
+      345.6
+     ],
+     "kind": "write_dispatch",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_wdispatch128",
+     "slice": 3,
+     "q8": 3
+    },
+    {
+     "name": "vm_payload3",
+     "xy_um": [
+      16012.079999999998,
+      17621.28
+     ],
+     "outline_um": [
+      1166.4,
+      86.4
+     ],
+     "kind": "write_payload",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_w0_payload",
+     "slice": 3
+    },
+    {
+     "name": "vm_w0_header",
+     "xy_um": [
+      13592.88,
+      17729.28
+     ],
+     "outline_um": [
+      216,
+      86.4
+     ],
+     "kind": "write_header",
+     "orientation": "R0"
+    },
+    {
+     "name": "vm_w0_control",
+     "xy_um": [
+      13830.48,
+      17729.28
+     ],
+     "outline_um": [
+      216,
+      86.4
+     ],
+     "kind": "write_control",
+     "orientation": "R0"
+    }
+   ],
+   "slice_origins_um": [
+    [
+     13592.88,
+     12804.48
+    ],
+    [
+     15580.079999999998,
+     12804.48
+    ],
+    [
+     13592.88,
+     15266.88
+    ],
+    [
+     15580.079999999998,
+     15266.88
+    ]
+   ]
+  }
+ ]
+}
