@@ -7,18 +7,18 @@
 module ot_s81_pq_boot_control(
  input wire ck,rst_n,input wire[35:0]pw,input wire job_launch,busy,
  input wire image_sealed,calendar_primed,calendar_fault,
- output wire[35:0]f_desc_pw,output reg calendar_prime,
+ output reg[35:0]f_desc_pw,output reg calendar_prime,
  output wire stage_start,output reg[11:0]calendar_base,
  output reg[12:0]calendar_length,output reg fault
 );
  wire control=pw[27:25]==3'd5 || pw[27:25]==3'd6;
  reg configured;
- assign f_desc_pw={pw[35]&&!control,pw[34:0]};
  assign stage_start=job_launch;
  always @(posedge ck or negedge rst_n)begin
-  if(!rst_n)begin configured<=0;calendar_base<=0;calendar_length<=0;calendar_prime<=0;fault<=0;end
+  if(!rst_n)begin f_desc_pw<=0;configured<=0;calendar_base<=0;calendar_length<=0;calendar_prime<=0;fault<=0;end
   else begin
    calendar_prime<=0;
+   f_desc_pw<={pw[35]&&!control,pw[34:0]};
    if(calendar_fault)fault<=1;
    if(pw[35]&&control)begin
     if(job_launch||busy||pw[34:28]!=0||pw[24])fault<=1;
