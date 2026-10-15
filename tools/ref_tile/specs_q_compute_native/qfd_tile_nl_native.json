@@ -125,7 +125,7 @@
       "orient": "MX"
     },
     {
-      "view": "physical/ref_tile/qfd_tile_lsl_fp1r/views/ot_qwen_tile_lsl_fp1",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
       "count": 1,
       "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
       "at": [
@@ -135,7 +135,7 @@
       "orient": "MY"
     },
     {
-      "view": "physical/ref_tile/qfd_tile_lsl_fp1r/views/ot_qwen_tile_lsl_fp1",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
       "count": 1,
       "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
       "at": [
@@ -145,7 +145,7 @@
       "orient": "R0"
     },
     {
-      "view": "physical/ref_tile/qfd_tile_lsl_fp1r/views/ot_qwen_tile_lsl_fp1",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
       "count": 1,
       "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
       "at": [
@@ -155,7 +155,7 @@
       "orient": "MY"
     },
     {
-      "view": "physical/ref_tile/qfd_tile_lsl_fp1r/views/ot_qwen_tile_lsl_fp1",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
       "count": 1,
       "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
       "at": [
@@ -165,7 +165,7 @@
       "orient": "R0"
     },
     {
-      "view": "physical/ref_tile/qfd_tile_lsl_fp1r/views/ot_qwen_tile_lsl_fp1",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
       "count": 1,
       "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
       "at": [
@@ -175,7 +175,7 @@
       "orient": "MY"
     },
     {
-      "view": "physical/ref_tile/qfd_tile_lsl_fp1r/views/ot_qwen_tile_lsl_fp1",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
       "count": 1,
       "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
       "at": [
@@ -185,7 +185,7 @@
       "orient": "R0"
     },
     {
-      "view": "physical/ref_tile/qfd_tile_lsl_fp1r/views/ot_qwen_tile_lsl_fp1",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
       "count": 1,
       "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
       "at": [
@@ -195,7 +195,7 @@
       "orient": "MY"
     },
     {
-      "view": "physical/ref_tile/qfd_tile_lsl_fp1r/views/ot_qwen_tile_lsl_fp1",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
       "count": 1,
       "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
       "at": [
@@ -212,14 +212,27 @@
   },
   "pins": {
     "W": [
-      "t_out"
+      "t_out",
+      "ck_rp0",
+      "ck_rp1",
+      "ck_rp2",
+      "ck_rp3",
+      "ck_rp4",
+      "ck_lsl0",
+      "ck_lsl1",
+      "ck_lsl2",
+      "ck_lsl3"
     ],
     "E": [
       "tie_lo",
       "tie_hi",
       "tile_id",
       "rst_n",
-      "tap"
+      "tap",
+      "ck_lsl4",
+      "ck_lsl5",
+      "ck_lsl6",
+      "ck_lsl7"
     ],
     "N": [
       "ck"

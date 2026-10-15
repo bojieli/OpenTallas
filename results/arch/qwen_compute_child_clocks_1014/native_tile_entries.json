@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.compute.native-tile-entries.v1",
   "source_commit": "2f1c87b24",
-  "qualification": "ExistingCLOSEDchildpositions andmeasuredper-cornerR; nativeLSLfaultpinsFAILandfp1successorviewpending. No parentnativequalification.",
+  "qualification": "Exact final published LSL fp1r nativeTT PASS plus existingCLOSED rpair/node children; new native parentCTS/route still required.",
   "masters": {
     "qfd_tile_nk": {
       "outline": [
@@ -26,7 +26,8 @@
             "ff": 256.8,
             "ss": 394.7
           },
-          "reference": "boundary mean, clock delivered at phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         },
         "ck_rp4": {
           "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
@@ -44,7 +45,8 @@
             "ff": 256.8,
             "ss": 394.7
           },
-          "reference": "boundary mean, clock delivered at phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         },
         "ck_rp0": {
           "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
@@ -55,14 +57,15 @@
           "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
           "at": [
             22.506,
-            1012.452
+            1082.796
           ],
           "R_ps": {
             "tt": 309.1,
             "ff": 256.8,
             "ss": 394.7
           },
-          "reference": "boundary mean, clock delivered at phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MX"
         },
         "ck_rp1": {
           "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
@@ -73,14 +76,15 @@
           "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
           "at": [
             22.506,
-            1163.652
+            1233.996
           ],
           "R_ps": {
             "tt": 309.1,
             "ff": 256.8,
             "ss": 394.7
           },
-          "reference": "boundary mean, clock delivered at phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MX"
         },
         "ck_rp2": {
           "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
@@ -91,14 +95,15 @@
           "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
           "at": [
             22.506,
-            1314.852
+            1385.196
           ],
           "R_ps": {
             "tt": 309.1,
             "ff": 256.8,
             "ss": 394.7
           },
-          "reference": "boundary mean, clock delivered at phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MX"
         },
         "ck_node": {
           "child_instance": "u_tile.u_tile.u_logic.g_ndh.u_node",
@@ -116,7 +121,8 @@
             "ff": 200.6,
             "ss": 325.2
           },
-          "reference": "boundary mean, clock delivered at phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         },
         "ck_lsl0": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
@@ -124,17 +130,18 @@
             103.68,
             328.32
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
-            203.43,
+            103.722,
             391.308
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MY"
         },
         "ck_lsl4": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
@@ -142,17 +149,18 @@
             233.28,
             328.32
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
             333.03,
             391.308
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         },
         "ck_lsl1": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
@@ -160,17 +168,18 @@
             103.68,
             492.48
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
-            203.43,
-            555.4680000000001
+            103.722,
+            555.468
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MY"
         },
         "ck_lsl5": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
@@ -178,17 +187,18 @@
             233.28,
             492.48
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
             333.03,
-            555.4680000000001
+            555.468
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         },
         "ck_lsl2": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
@@ -196,17 +206,18 @@
             103.68,
             656.64
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
-            203.43,
-            719.6279999999999
+            103.722,
+            719.628
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MY"
         },
         "ck_lsl6": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
@@ -214,17 +225,18 @@
             233.28,
             656.64
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
             333.03,
-            719.6279999999999
+            719.628
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         },
         "ck_lsl3": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
@@ -232,17 +244,18 @@
             103.68,
             820.8
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
-            203.43,
+            103.722,
             883.788
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MY"
         },
         "ck_lsl7": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
@@ -250,17 +263,18 @@
             233.28,
             820.8
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
             333.03,
             883.788
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         }
       }
     },
@@ -287,7 +301,8 @@
             "ff": 256.8,
             "ss": 394.7
           },
-          "reference": "boundary mean, clock delivered at phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         },
         "ck_rp4": {
           "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
@@ -305,7 +320,8 @@
             "ff": 256.8,
             "ss": 394.7
           },
-          "reference": "boundary mean, clock delivered at phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         },
         "ck_rp0": {
           "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
@@ -316,14 +332,15 @@
           "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
           "at": [
             22.506,
-            1012.452
+            1082.796
           ],
           "R_ps": {
             "tt": 309.1,
             "ff": 256.8,
             "ss": 394.7
           },
-          "reference": "boundary mean, clock delivered at phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MX"
         },
         "ck_rp1": {
           "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
@@ -334,14 +351,15 @@
           "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
           "at": [
             22.506,
-            1163.652
+            1233.996
           ],
           "R_ps": {
             "tt": 309.1,
             "ff": 256.8,
             "ss": 394.7
           },
-          "reference": "boundary mean, clock delivered at phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MX"
         },
         "ck_rp2": {
           "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
@@ -352,14 +370,15 @@
           "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
           "at": [
             22.506,
-            1314.852
+            1385.196
           ],
           "R_ps": {
             "tt": 309.1,
             "ff": 256.8,
             "ss": 394.7
           },
-          "reference": "boundary mean, clock delivered at phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MX"
         },
         "ck_lsl0": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
@@ -367,17 +386,18 @@
             103.68,
             328.32
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
-            203.43,
+            103.722,
             391.308
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MY"
         },
         "ck_lsl4": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
@@ -385,17 +405,18 @@
             233.28,
             328.32
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
             333.03,
             391.308
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         },
         "ck_lsl1": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
@@ -403,17 +424,18 @@
             103.68,
             492.48
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
-            203.43,
-            555.4680000000001
+            103.722,
+            555.468
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MY"
         },
         "ck_lsl5": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
@@ -421,17 +443,18 @@
             233.28,
             492.48
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
             333.03,
-            555.4680000000001
+            555.468
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         },
         "ck_lsl2": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
@@ -439,17 +462,18 @@
             103.68,
             656.64
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
-            203.43,
-            719.6279999999999
+            103.722,
+            719.628
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MY"
         },
         "ck_lsl6": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
@@ -457,17 +481,18 @@
             233.28,
             656.64
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
             333.03,
-            719.6279999999999
+            719.628
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         },
         "ck_lsl3": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
@@ -475,17 +500,18 @@
             103.68,
             820.8
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
-            203.43,
+            103.722,
             883.788
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "MY"
         },
         "ck_lsl7": {
           "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
@@ -493,17 +519,18 @@
             233.28,
             820.8
           ],
-          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
           "at": [
             333.03,
             883.788
           ],
           "R_ps": {
-            "tt": 169.4,
-            "ff": 137.1,
-            "ss": 225.4
+            "tt": 165.7,
+            "ff": 133.9,
+            "ss": 221.0
           },
-          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+          "reference": "actual published child clock pin rectangle transformed by child orientation; deliver phi-R boundary mean",
+          "orientation": "R0"
         }
       }
     }
