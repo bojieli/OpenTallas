@@ -189,6 +189,19 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
    calendar[r]={'root':r,'x_stations':count,'x_path_um':G._poly_len(prefix)+dist[n]+G._poly_len(path),'physical_half':side,'logical_gather':[f['logical_half'],f['logical_tier'],f['logical_col']]}
  # Return stations occupy the eastern RSC lane beside existing packed relays.
  road=Roadmap(G,m,cor,return_lanes=True)
+ # Global returns must climb in the existing broad S14 spine, rather than
+ # concentrating every gather group in the innermost47.52um field column.
+ # All street entries are physically connected by that actual spine.
+ for side in 'WE':
+  entries=sorted(road.entry[side],key=lambda n:n[1])
+  for a,b in zip(entries,entries[1:]):road.add(a,b)
+ # Optimize routing preference only; physical length, station reach and
+ # flight counts still come from each emitted real polyline and primitive.
+ rsc_x=set(road.sx.values())
+ for node,edges in road.graph.items():
+  for nxt,length in list(edges.items()):
+   if node[0]==nxt[0] and node[0] in rsc_x:edges[nxt]=2*length
+ m['canonical_return_topology']='local streets to external S14 spine; field RSC vertical cost2, actual geometry unchanged'
  for logical in 'WE':
   for t in range(G.TIERS):
    roots=sorted((r for r,f in m['frames'].items() if f['logical_half']==logical and f['logical_tier']==t),key=lambda r:m['frames'][r]['logical_col'],reverse=True)
