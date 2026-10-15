@@ -438,6 +438,12 @@ def hgi_collective_endpoint_model():
     return endpoint_model()
 
 
+def hgi_collective_static_sequence_link_model():
+    """HBM545 full logical sequence, native SRAM/CRC, fixed TX3/RX1."""
+    from uarch_model_hcoll_static_seq import model
+    return model()
+
+
 def hgi_collective_decode_model():
     """Approved HGI-1 G10/G14 dispatcher sizing, one real endpoint per die."""
     from uarch_model_hgi_collective_decode import model
