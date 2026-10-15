@@ -9,7 +9,7 @@
 // Shared host target decode/global launch and actual NW stations are external
 // integration obligations; these explicit ports must not be tied away there.
 module ot_hgi_qdq_program_static #(
-    parameter integer RL=7, WC=4, MUT=0
+    parameter integer RL=7, WC=4, MUT=0,IO_REGS=0
 )(
     input wire clk_program,clk_transport,clk_dxl,clk_dbq,clk_daq,rst_n,
     input wire cfg_we,
@@ -34,7 +34,7 @@ module ot_hgi_qdq_program_static #(
         .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
         .calendar(command),.calendar_v(command_v),.ordinal(ordinal),
         .active(program_active),.done(program_done),.fault(program_fault));
-    ot_hgi_qdq_static #(.RL(RL),.WC(WC),.MUT(MUT)) engine(
+    ot_hgi_qdq_static #(.IO_REGS(IO_REGS),.RL(RL),.WC(WC),.MUT(MUT)) engine(
         .clk_transport(clk_transport),.clk_dxl(clk_dxl),.clk_dbq(clk_dbq),.clk_daq(clk_daq),.rst_n(rst_n),.cmd_v(command_v&&command[0]),
         .cmd_op(command[6:1]),.cmd_block(command[14:7]),.cmd_src(command[30:15]),
         .cmd_dst(command[46:31]),.cmd_last(command[47]),
