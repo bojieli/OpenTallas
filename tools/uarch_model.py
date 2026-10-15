@@ -438,6 +438,12 @@ def hgi_collective_endpoint_model():
     return endpoint_model()
 
 
+def hgi_collective_pinregistered_endpoint_model():
+    """Controller and actual SRAM store faces registered, TX5/RX1."""
+    from uarch_model_hcoll_pinreg import model
+    return model()
+
+
 def hgi_collective_native_transport_model():
     """Real SRAM/CRC endpoint plus 613/487 registered transport calendar."""
     from uarch_model_hcoll_native_transport import model
