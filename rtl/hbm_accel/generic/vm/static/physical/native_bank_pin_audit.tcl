@@ -80,7 +80,18 @@ foreach item [lsort -real -index 1 $nports] {
  set along [expr {double($best)/$nu}]
  set x [expr {$face eq "W"?double($nx0)/$nu:($face eq "E"?double($nx1)/$nu:$along)}]
  set y [expr {$face eq "S"?double($ny0)/$nu:($face eq "N"?double($ny1)/$nu:$along)}]
- place_pin -pin_name $name -layer $layer -location [list $x $y] -force_to_die_boundary
+ # PPL uses the first routing track strictly above its requested edge
+ # coordinate. Request one DBU below the chosen actual center, then verify
+ # the resulting BTerm rectangle independently; never trust request positions.
+ set request_x $x;set request_y $y
+ if {$face in {N S}} {set request_x [expr {$x-1.0/$nu}]} else {set request_y [expr {$y-1.0/$nu}]}
+ place_pin -pin_name $name -layer $layer -location [list $request_x $request_y] -force_to_die_boundary
+ # Read back the placed rectangle, so a future PPL snapping change fails
+ # immediately instead of silently accepting requested coordinates.
+ set placed_bt [$nb findBTerm $name]
+ set placed_box [lindex [[lindex [$placed_bt getBPins] 0] getBoxes] 0]
+ set actual_center [expr {$face in {N S}?([$placed_box xMin]+[$placed_box xMax])/2.0:([$placed_box yMin]+[$placed_box yMax])/2.0}]
+ if {abs($actual_center-$best)>0.1} {error "NATIVE_BANK_PIN_AUDIT: requested track $best actual $actual_center on $name"}
  puts $nmanifest "$name\t$face\t$layer\t$along\t$best\t1"
 }
 close $nmanifest

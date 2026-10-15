@@ -1,0 +1,41 @@
+{
+  "scope": "actual signal BTerm PORT rectangles, requested actual ODB routingtrack indices, and both VDD/VSS PG contact projections",
+  "actual_sha256": "1cca154eb2dfe2de38731ad9ca0b2889d73ec76f055ef8d4191ff2967b48c2df",
+  "coordinates_sha256": "641ce3b19ad917b896e8ffed31e39818819541fce0d118181e6d3195f5035946",
+  "outline_um": [
+    0.0,
+    0.0,
+    393.12,
+    339.12
+  ],
+  "scalar_pins": 4742,
+  "PG_contact_shapes": 144,
+  "face_pins": {
+    "N": 1145,
+    "S": 1383,
+    "W": 1107,
+    "E": 1107
+  },
+  "clock_port": [
+    "clk",
+    "clk",
+    "SIGNAL",
+    "INPUT",
+    [
+      [
+        "M5",
+        [
+          191.28,
+          339.036,
+          191.304,
+          339.12
+        ]
+      ]
+    ]
+  ],
+  "shifted_actual_pins": [],
+  "PG_clearance_violations": [],
+  "signal_pitch_violations": [],
+  "missing_or_multiple_rectangles": [],
+  "pass": true
+}
