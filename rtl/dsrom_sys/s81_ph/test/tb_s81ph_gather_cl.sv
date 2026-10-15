@@ -85,6 +85,8 @@ module tb_s81ph_gather_cl;
     integer k, j, expect_ = 0, need = 0;
     integer row_mism = 0, ctl_mism = 0, st_mism = 0, rows_f = 0, rows_c = 0, first_bad = -1, n_xgo = 0, n_done = 0, n_ctl = 0,
             busy_seen = 0, bad_before_fault = 0, late = 0;
+    integer t_cmd = -1, t_cd = -1, lx, ld, lx_min = 1 << 30, lx_max = -1, ld_min = 1 << 30, ld_max = -1, issue_wait = 0;
+    reg f_cd_prev = 1'b0;
     reg [NR-1:0] got = 0;
     reg armed = 0;
     reg [31:0] frow [bit [26:0]];            // flat rows by {root, pos, row}
@@ -126,13 +128,23 @@ module tb_s81ph_gather_cl;
             if(tf[6784])ctl_words_f=ctl_words_f+1;
             if (xc[10]) n_xgo = n_xgo + 1;
             if (dc[8]) n_done = n_done + 1;
+            // STATIC SCHEDULE (owner 2026-10-14, no runtime credits/backpressure): the driver is open-loop (fixed gaps,
+            // never waits on a DUT ready); the cluster must answer every phase on the SAME compiled latency:
+            // c_cmd -> t_xgo and capture-drained event -> c_done, identical over all phases of all real layers.
+            if (c_cmd[84]) t_cmd = cyc;
+            if (xc[10] && t_cmd >= 0) begin lx = cyc - t_cmd; if (lx < lx_min) lx_min = lx; if (lx > lx_max) lx_max = lx; t_cmd = -1; end
+            if (f_cd[11] !== f_cd_prev) begin t_cd = cyc; f_cd_prev = f_cd[11]; end
+            if (dc[8] && t_cd >= 0) begin ld = cyc - t_cd; if (ld < ld_min) ld_min = ld; if (ld > ld_max) ld_max = ld; t_cd = -1; end
+            // the queued descriptor's issue condition (slab_ep j_present) must never hold a released head: a wait here
+            // would be a dynamic stall of the compiled phase timeline
+            if (u_c.u_ctl.jv && u_c.u_ctl.fly && !u_c.u_ctl.roots_issue_ok) issue_wait = issue_wait + 1;
             if (tc[6784]) n_ctl = n_ctl + 1;
             if (tc[6945]) busy_seen = 1;
         end
     end
     // ---------------- driver
     integer fd, rc, root, n_ph = 0, quiet, restart = 0, early_cmd = 0, reset_phase = 0;
-    integer ready_errors = 0, early_accepted = 0, ctl_words_f = 0;
+    integer ready_errors = 0, early_accepted = 0, ctl_words_f = 0; reg static_ok;
     reg [8*8-1:0] cmd; reg [63:0] a0, a1, a2, a3, a4;
     reg [NR-1:0] n_v; reg [31:0] n_t [0:NR-1]; reg [31:0] n_d [0:NR-1]; reg [NR-1:0] n_e;
     reg [9:0] ph; reg tgl = 0;
@@ -219,9 +231,12 @@ module tb_s81ph_gather_cl;
         $display("READY_SUMMARY errors=%0d early_command=%0d ctl_words_flat=%0d",ready_errors,early_accepted,ctl_words_f);
         $display("SUMMARY phases=%0d rows_flat=%0d rows_cluster=%0d row_mismatch=%0d ctl_mismatch=%0d status_mismatch=%0d first=%0d roots_with_rows=%0d xgo=%0d done=%0d ctl_words=%0d busy_seen=%0d fault_flat=%b fault_cluster=%b bad_before_fault=%0d shift=R(c)+R(k)-2",
                  n_ph, rows_f, rows_c, row_mism, ctl_mism, st_mism, first_bad, $countones(got), n_xgo, n_done, n_ctl, busy_seen, tf[6944], tc[6944], bad_before_fault);
+        $display("STATIC_SUMMARY cmd_to_xgo=%0d..%0d done_after_drain=%0d..%0d issue_wait=%0d driver=open_loop",
+                 lx_min, lx_max, ld_min, ld_max, issue_wait);
+        static_ok = (expect_ != 0) || (lx_max >= 0 && lx_min == lx_max && ld_min == ld_max && issue_wait == 0);
         if (need != 0 && !($countones(got) == NR && n_xgo == n_ph && n_done == n_ph && n_ctl >= n_ph && n_ph > 0 && busy_seen))
             $display("RESULT REFUSED coverage: roots %0d/128 xgo %0d done %0d busy %0d", $countones(got), n_xgo, n_done, busy_seen);
-        else if (expect_ == 0 && row_mism == 0 && ctl_mism == 0 && st_mism == 0 && ready_errors == 0 && ctl_words_f == n_ctl && rows_f == rows_c && rows_f > 0 && !tf[6944] && !tc[6944]) $display("RESULT PASS");
+        else if (expect_ == 0 && row_mism == 0 && ctl_mism == 0 && st_mism == 0 && ready_errors == 0 && ctl_words_f == n_ctl && rows_f == rows_c && rows_f > 0 && !tf[6944] && !tc[6944] && static_ok) $display("RESULT PASS");
         else if (expect_ == 1 && ready_errors == 0 && tc[6944] && !tf[6944] && bad_before_fault == 0 && ctl_mism == 0) $display("RESULT PASS");
         else $display("RESULT FAIL");
         $finish;
