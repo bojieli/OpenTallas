@@ -68,3 +68,19 @@ budget. No old route, price or physical CLOSED marker transfers to this candidat
 
 Remote preserved proof: `/srv/opentallas-scratch/codex/fec-chien-linear-1015` on
 `ot-epyc4`. Original live census is a separate source tree and process.
+
+## Full candidate clock census
+
+`tools/hbm_io/run_chien_linear_census.py --out NEW_OUT` is the source-pinned
+full-composition sizing runner. It uses the opt-in wrapper and actual static CDC,
+explicit EMUT=DMUT=0, WINDOW_WORDS=2048 and CDC_AW=4. It runs hierarchy, proc,
+flatten, opt, memory_map, opt, check and JSON export, then invokes the existing
+strict 12-clock FEC census. It records source/checker hashes before synthesis and
+requires identical hashes afterward. It performs no ABC or physical timing claim.
+
+One distinct-source candidate run was admitted on EPYC4 with 32 GB / one thread:
+unit `oth-ubuntu-1591169-1792057312`, initial Yosys PID `1591185`, output
+`/srv/opentallas-scratch/codex/fec-chien-linear-1015/full_census_0`. Until its
+terminal receipt exists, full candidate synthesis and actual root sizing remain
+unproven. Preserve this process if frontend elaboration is slow. The original
+source census PID 1083099 is independent and remains untouched.
