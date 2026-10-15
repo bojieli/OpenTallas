@@ -24,7 +24,7 @@ foreach bt [$nb getBTerms] {
  set choices [list [list [expr {abs($x-$nx0)}] W] [list [expr {abs($x-$nx1)}] E] [list [expr {abs($y-$ny0)}] S] [list [expr {abs($y-$ny1)}] N]]
  set face [lindex [lindex [lsort -real -index 0 $choices] 0] 1]
  set along [expr {$face in {N S}?$x:$y}]
- lappend nports [list $face $along [$bt getName]]
+ lappend nports [list $face $along [$bt getName] [expr {[$box xMax]-[$box xMin]}] [expr {[$box yMax]-[$box yMin]}]]
 }
 # Remove the old uniform signal pin plan as a complete set. Keeping pins
 # awaiting relocation lets place_pin move an otherwise legal requested track
@@ -38,7 +38,7 @@ array set nused {};array set ncount {N 0 S 0 E 0 W 0}
 set nmanifest [open [file join $::env(RESULTS_DIR) native_bank_pin_coordinates.tsv] w]
 puts $nmanifest "port\tface\tlayer\tcenter_um\tactual_track_dbu\tPG_projection_clear"
 foreach item [lsort -real -index 1 $nports] {
- lassign $item face preferred name
+ lassign $item face preferred name old_width old_height
  set layer [expr {$face in {N S}?"M5":"M4"}]
  set tl [$nt findLayer $layer]
  set grid [$nb findTrackGrid $tl]
@@ -88,12 +88,20 @@ foreach item [lsort -real -index 1 $nports] {
  set along [expr {double($best)/$nu}]
  set x [expr {$face eq "W"?double($nx0)/$nu:($face eq "E"?double($nx1)/$nu:$along)}]
  set y [expr {$face eq "S"?double($ny0)/$nu:($face eq "N"?double($ny1)/$nu:$along)}]
- # PPL uses the first routing track strictly above its requested edge
- # coordinate. Request one DBU below the chosen actual center, then verify
- # the resulting BTerm rectangle independently; never trust request positions.
- set request_x $x;set request_y $y
- if {$face in {N S}} {set request_x [expr {$x-1.0/$nu}]} else {set request_y [expr {$y-1.0/$nu}]}
- place_pin -pin_name $name -layer $layer -location [list $request_x $request_y] -force_to_die_boundary
+ # PPL retains its original internal obstacle map in the full IO process,
+ # even after old BPin deletion. Construct actual on-track rectangles in ODB
+ # directly, retaining each original pin's legal dimensions and edge depth.
+ set placed_bt [$nb findBTerm $name]
+ set new_pin [odb::dbBPin_create $placed_bt]
+ $new_pin setPlacementStatus FIRM
+ if {$face in {N S}} {
+  set bx0 [expr {int($best-$old_width/2)}];set bx1 [expr {$bx0+$old_width}]
+  set by0 [expr {$face eq "S"?$ny0:$ny1-$old_height}];set by1 [expr {$by0+$old_height}]
+ } else {
+  set by0 [expr {int($best-$old_height/2)}];set by1 [expr {$by0+$old_height}]
+  set bx0 [expr {$face eq "W"?$nx0:$nx1-$old_width}];set bx1 [expr {$bx0+$old_width}]
+ }
+ odb::dbBox_create $new_pin $tl $bx0 $by0 $bx1 $by1
  # Read back the placed rectangle, so a future PPL snapping change fails
  # immediately instead of silently accepting requested coordinates.
  set placed_bt [$nb findBTerm $name]
