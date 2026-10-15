@@ -64,7 +64,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "STRUCTURAL native re-close of the direct-write scatter (S81 VM F6, 2026-10-15): bank-hit compare gates only o_v/o_we/fault (payload registered straight from pins, valid-qualified as the capture stage); composed io_budget 0.6/0.6 reaches route, post-CTS io_ref boundary and sign-off; outhold off. Per-record fault flops (FAULT_AGE 3, exceptional only). New valid-gating mutant. Same pins/outline/root, two data stages, zero data cycles.",
+ "structural_change": "STRUCTURAL native re-close of the direct-write scatter (S81 VM F6 cb2, 2026-10-15): bank-hit compare drives only o_v; we/addr/mask/data/tag registered straight from pins (valid-qualified); fault from a raw valid pin flop vs registered o_v (FAULT_AGE 3); io_budget in 0.6 / out 0.57 at route, post-CTS boundary and sign-off; outhold off. Same pins/outline/root, zero data cycles.",
  "slot_change_request": {
   "contract": "S81 static VM direct q8 native option",
   "version": "30421c7c5/a60002977/eaca93a88",
@@ -73,7 +73,7 @@
  "job": {
   "owner": "Claude:S81 VM F6 scatter",
   "branch": "claude/s81-vm-f6-scatter-1015",
-  "tag": "cb1",
+  "tag": "cb2",
   "purpose": "Composed-budget native re-close of the direct-write scatter: native pin audit launch<=220/capture<=190 with exact/mutant benches; same RTL/pins/outline/2 stages",
   "extra_paths": [
    "physical/s81_die_pins/v20_vm_direct_write",
@@ -162,7 +162,7 @@
  "inter": [],
  "io_budget": {
   "in": 0.6,
-  "out": 0.6
+  "out": 0.57
  },
  "reroute_reason": {
   "kind": "rtl_change",
@@ -170,6 +170,6 @@
   "launch_ps": 228.6,
   "capture_ps": 316.5,
   "source": "results/physical/s81_vm_static_ownership_1015/scatter_native_audit_1015.json",
-  "fix": "native pin audit FAIL on the CLOSED view: capture 316.5 ps on 72 pins (i_row hash bits 64 + i_v 8: the bank-hit compare zero-gated ~155 output flops per record behind the pin; CTS gate with the composed 0.6T input budget alone still in->reg -142..-228 ps, so a constraint change cannot fix it) and launch 228.6 ps (unconditional FIRM outhold BUF-HB2-BUF). STRUCTURAL: the compare now gates only o_v/o_we/fault (fanout 3 per record); address/mask/data/tag are registered straight from the pins (as the upstream capture stage) and meaningful only with o_v; the relay->bank consumer writes only on valid (static512_suhc 128-SRAM gate: 3857 requests restored, bad 0, unchanged). Plus io_budget in/out 0.6T at route, post-CTS boundary and sign-off, outhold off. Fault (exceptional sticky indicator) is registered per record beside its pins and OR-ed flop-to-flop: FAULT_AGE 3 edges (one after o_v; suppression unchanged). Same pins, outline, one root, two data stages, zero data cycles."
+  "fix": "native pin audit FAIL on the CLOSED view: capture 316.5 ps on 72 pins (i_row hash bits 64 + i_v 8: the bank-hit compare zero-gated ~155 output flops per record behind the pin; CTS gate with the composed 0.6T input budget alone still in->reg -142..-228 ps, so a constraint change cannot fix it) and launch 228.6 ps (unconditional FIRM outhold BUF-HB2-BUF). STRUCTURAL: the compare drives only o_v (fanout 1 per record); we/address/mask/data/tag are registered straight from the pins (as the upstream capture stage) and meaningful only with o_v; the relay->bank consumer writes only on valid (static512_suhc 128-SRAM gate: 3857 requests restored, bad 0, unchanged). cb1 (b0 0306988ee) closed NEEDS_RTL TT -23.03 / FF -22.66: setup on i_row->XNOR->AND5->rebuffer->AND3->o_we (206 ps: the shared compare also fed o_we and bad_q), hold on output ports (sender min L+75 ps vs flop->pin 52 ps with no room under the 0.6T output budget, worst output setup +18 ps). cb2: compare fanout 1 (we is payload; fault = registered raw v & !o_v, FAULT_AGE 3 unchanged), io_budget in 0.6 / out 0.57 (launch <= ~208 ps <= 220 at sign-off, leaves room for the 25 ps sender-min hold pads), outhold off. Same pins, outline, one root, two data stages, zero data cycles."
  }
 }

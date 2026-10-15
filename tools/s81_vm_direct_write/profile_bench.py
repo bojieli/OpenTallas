@@ -50,11 +50,11 @@ integer cy,k,w,hi,bank,row,checks=0,bad=0,seed=32'h7ace1593;reg good;reg[N-1:0] 
 '''
  if capture:defs+='''  if({ov,owe,oq,om,od,ot}!=={xv,xwe,xq,xm,xd,xt})begin bad=bad+1;if(bad<4)$display("PROFILE_DATA_MISMATCH cycle%0d",cy);end
 '''
- else:defs+='''  // Scatter contract (S81 VM F6 2026-10-15): o_v/o_we exact every edge; address/mask/data/tag exact for every VALID
+ else:defs+='''  // Scatter contract (S81 VM F6 2026-10-15): o_v exact every edge; we/address/mask/data/tag exact for every VALID
   // record (payload is registered straight from the pins and meaningful only with o_v); sticky fault at FAULT_AGE 3,
   // i.e. exactly one edge after the record that raised it.
-  if({ov,owe}!=={xv,xwe})begin bad=bad+1;if(bad<4)$display("PROFILE_VALID_MISMATCH cycle%0d",cy);end
-  for(k=0;k<N;k=k+1)if(xv[k]&&{oq[9*k+:9],om[4*k+:4],od[128*k+:128],ot[8*k+:8]}!=={xq[9*k+:9],xm[4*k+:4],xd[128*k+:128],xt[8*k+:8]})begin bad=bad+1;if(bad<4)$display("PROFILE_DATA_MISMATCH cycle%0d record%0d",cy,k);end
+  if(ov!==xv)begin bad=bad+1;if(bad<4)$display("PROFILE_VALID_MISMATCH cycle%0d",cy);end
+  for(k=0;k<N;k=k+1)if(xv[k]&&{owe[k],oq[9*k+:9],om[4*k+:4],od[128*k+:128],ot[8*k+:8]}!=={xwe[k],xq[9*k+:9],xm[4*k+:4],xd[128*k+:128],xt[8*k+:8]})begin bad=bad+1;if(bad<4)$display("PROFILE_DATA_MISMATCH cycle%0d record%0d",cy,k);end
   if(fault!==fault_due)bad=bad+1;
   fault_due=expect_fault;
 '''

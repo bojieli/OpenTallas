@@ -2,8 +2,8 @@
 // Second existing scatter stage. Production wsched already reserves bank k and
 // packet slot8*(k%4)+k/4. Parent wires each record to its bank-local capture leaf.
 // No crossbar or arbitration: rowhash mismatch is a sticky compiler-defect fault.
-// Native pin timing (S81 VM F6 2026-10-15): the bank-hit compare gates ONLY o_v / o_we / fault (fanout 3 per
-// record); address/mask/data/tag are registered straight from the pins (as the upstream capture stage does) and are
+// Native pin timing (S81 VM F6 2026-10-15): the bank-hit compare drives ONLY o_v (fanout 1 per record);
+// we/address/mask/data/tag are registered straight from the pins (as the upstream capture stage does) and are
 // meaningful only with o_v.  The consumer (relay -> bank) writes only on valid, so memory state is unchanged; the
 // former zero-gating put the compare + a 155-flop gate tree behind every row/valid pin (capture 316-332 ps > 190).
 module dsfd_vm_static_scatter_b8_out #(parameter integer BANK_BASE=0)(
@@ -17,17 +17,16 @@ module dsfd_vm_static_scatter_b8_out #(parameter integer BANK_BASE=0)(
  reg [1:0] reset_release;
  always @(posedge ck or negedge rst_n)
   if(!rst_n)reset_release<=0;else reset_release<={reset_release[0],1'b1};
- wire rn=reset_release[1];wire [7:0] good,bad;
+ wire rn=reset_release[1];wire [7:0] good;
  genvar k;generate for(k=0;k<8;k=k+1)begin:bank
   assign good[k]=(i_row[14*k+:5]^{i_row[14*k+5+:3],2'b00})==BANK_BASE+k;
-  assign bad[k]=i_v[k]&&!good[k];
 `ifdef OT_VM_DIRECT_SCATTER_MUT_VALID
   always @(posedge ck or negedge rn)if(!rn)o_v[k]<=0;else o_v[k]<=i_v[k];
 `else
   always @(posedge ck or negedge rn)if(!rn)o_v[k]<=0;else o_v[k]<=i_v[k]&&good[k];
 `endif
   always @(posedge ck)begin
-   o_we[k]<=i_v[k]&&good[k]?i_we[k]:1'b0;
+   o_we[k]<=i_we[k];
 `ifdef OT_VM_DIRECT_SCATTER_MUT_ADDR
    o_addr[9*k+:9]<=i_row[14*k+5+:9]^9'h1;
 `else
@@ -42,11 +41,11 @@ module dsfd_vm_static_scatter_b8_out #(parameter integer BANK_BASE=0)(
    o_tag[8*k+:8]<=i_tag[8*k+:8];
   end
  end endgenerate
- // Sticky compiler-defect fault, FAULT_AGE 3 edges (one after o_v): each record registers its own mismatch beside its
- // pins, the 8-way OR is flop-to-flop.  The direct pin->compare->OR8 cone spanned the whole N face (gate in->reg
- // -112..-169 ps at the native budget).  Exceptional indicator only: o_v/o_we suppression stays on the same edge.
- reg [7:0] bad_q;
- always @(posedge ck or negedge rn)if(!rn)bad_q<=0;else bad_q<=bad;
- always @(posedge ck or negedge rn)if(!rn)fault<=0;else fault<=fault|(|bad_q);
+ // Sticky compiler-defect fault, FAULT_AGE 3 edges (one after o_v), flop-to-flop: a raw valid pin flop beside each
+ // record and the registered o_v give the mismatch (v_q & !o_v == registered i_v & !good) without a second load
+ // on the compare cone.  Exceptional indicator only: o_v suppression stays on the same edge.
+ reg [7:0] v_q;
+ always @(posedge ck or negedge rn)if(!rn)v_q<=0;else v_q<=i_v;
+ always @(posedge ck or negedge rn)if(!rn)fault<=0;else fault<=fault|(|(v_q&~o_v));
  initial if(BANK_BASE<0 || BANK_BASE>24 || BANK_BASE%8)$error("bank-local scatter base must be0,8,16,24");
 endmodule

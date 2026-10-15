@@ -36,12 +36,12 @@ module tb_dsfd_vm_static_direct_scatter;
   @(posedge ck);#1;
   if(cycle>4)begin
    checks=checks+1;
-   // valid / we / fault exactly; address, mask, data and tag of every VALID bank exactly (payload is meaningful
+   // valid / fault exactly; we, address, mask, data and tag of every VALID bank exactly (payload is meaningful
    // only with o_v: the consumer writes only on valid).  Mode 2 (wrong lane) keeps the same valid set as the
    // baseline on every cycle, so its valid suppression is checked throughout.
    if(mode==0 || mode==2 || cycle<10)begin
-    if({av,ae}!=={bv,be})bad=bad+1;
-    for(w=0;w<32;w=w+1)if(av[w]===1'b1 && {aa[9*w+:9],am[4*w+:4],ad[128*w+:128],at[8*w+:8]}!=={ba[9*w+:9],bm[4*w+:4],bd[128*w+:128],bt[8*w+:8]})bad=bad+1;
+    if(av!==bv)bad=bad+1;
+    for(w=0;w<32;w=w+1)if(av[w]===1'b1 && {ae[w],aa[9*w+:9],am[4*w+:4],ad[128*w+:128],at[8*w+:8]}!=={be[w],ba[9*w+:9],bm[4*w+:4],bd[128*w+:128],bt[8*w+:8]})bad=bad+1;
    end
    // b8_out fault is FAULT_AGE 3 (per-record mismatch flop, then the sticky OR): exactly one edge after the baseline
    if(af_d!==( |bf))bad=bad+1;
