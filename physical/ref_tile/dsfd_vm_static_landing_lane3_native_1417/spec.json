@@ -1,13 +1,11 @@
 {
  "name": "dsfd_vm_static_landing_lane3_native_1417",
- "top": "dsfd_vm_static_landing_lane",
+ "top": "dsfd_vm_static_landing_lane3",
  "kind": "tile",
  "sources": [
   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing_lane.sv"
  ],
- "params": {
-  "LANE": 3
- },
+ "params": {},
  "clock_port": "ck",
  "reset_ports": [
   "rst_n"
@@ -74,7 +72,7 @@
  "slot_change_request": {
   "contract": "S81 VM landing four-root candidate",
   "version": "1417",
-  "why": "4x95.04um lane leaves per slice instead181.44um monolith; +12 clock pins across4slices; +.0128397mm2 across4slices; parent14mm2 fit pending"
+  "why": "4x95.04um lane leaves per slice instead181.44um monolith; +3 clock pins perVM; +.00320993mm2 perVM; parent14mm2 fit pending"
  },
  "job": {
   "owner": "codex:S81 VM landing1417",

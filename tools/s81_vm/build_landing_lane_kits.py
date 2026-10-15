@@ -33,8 +33,8 @@ for lane in range(4):
                expect='pass' if mode=='base' else 'fail',threads=1,peak_ram_gb=1,needs=['iverilog'])
         b['pass_regex' if mode=='base' else 'fail_regex']='LANDING_LANE '+('PASS' if mode=='base' else 'FAIL')
         benches.append(b)
-    spec=dict(name=f'dsfd_vm_static_landing_lane{lane}_native_1417',top='dsfd_vm_static_landing_lane',kind='tile',
-        sources=['rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing_lane.sv'],params=dict(LANE=lane),
+    spec=dict(name=f'dsfd_vm_static_landing_lane{lane}_native_1417',top=f'dsfd_vm_static_landing_lane{lane}',kind='tile',
+        sources=['rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing_lane.sv'],params={},
         clock_port='ck',reset_ports=['rst_n'],outline=dict(w=side,h=side,exact=True),pins=faces,io_tcl=str(pin.relative_to(ROOT)),
         macros=[],route=dict(pd=.4,threads=8,peak_ram_gb=16,period_ps=770,hold_margin_ns=.03,
             cts_sink=dict(size=16,diameter_um=20,extra='-distance_between_buffers 15')),
@@ -43,7 +43,7 @@ for lane in range(4):
         io_budget=dict(**{'in':.55,'out':.55}),
         structural_change='r5 monolithic landing repeatedly failed FF with57ps input-to-local clock difference. Replace with four independently hardened512b lane leaves, one local reset/arm/counter/root per lane, opposing local payload pin faces. No shared payload/control clock tree; no added age or throughput cost. Model tools/s81_vm/landing_lane_model.json; startup and age2 exact against r4 reference; all four lane data retained.',
         slot_change_request=dict(contract='S81 VM landing four-root candidate',version='1417',
-            why='4x95.04um lane leaves per slice instead181.44um monolith; +12 clock pins across4slices; +.0128397mm2 across4slices; parent14mm2 fit pending'),
+            why='4x95.04um lane leaves per slice instead181.44um monolith; +3 clock pins perVM; +.00320993mm2 perVM; parent14mm2 fit pending'),
         job=dict(owner='codex:S81 VM landing1417',branch='codex/s81-vm-landing-1417',tag='split1',cycles_added=0,
             extra_paths=['tools/s81_vm','rtl/dsrom_sys/s81_ph/vm','physical/s81_vm_landing_lanes_1417'],
             purpose='Independent lane root structural replacement; exact full4lane age2/startup equivalence and two observed failing DUT mutants.',benches=benches))

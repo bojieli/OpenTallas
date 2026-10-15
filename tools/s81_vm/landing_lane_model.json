@@ -102,12 +102,13 @@
   "control_replication": 4,
   "arm_control_fanout": 4,
   "reset_fanout": 4,
-  "area_per_slice_mm2": 0.03613040640000001,
-  "area_four_slices_mm2": 0.14452162560000004,
-  "previous_area_per_slice_mm2": 0.0329204736,
-  "clock_roots_four_slices": 16,
-  "previous_clock_roots_four_slices": 4,
-  "roots_added": 12,
+  "area_per_vm_mm2": 0.03613040640000001,
+  "previous_area_per_vm_mm2": 0.0329204736,
+  "area_delta_per_vm_mm2": 0.0032099328000000094,
+  "clock_roots_per_vm": 4,
+  "previous_clock_roots_per_vm": 1,
+  "roots_added": 3,
+  "clock_abi_change": "ck_landing_t scalar -> [3:0] only if adopted; rst_n scalar fans out to four leaf input pins",
   "candidate_arrangement_um": [
     190.08,
     190.08
@@ -117,7 +118,7 @@
     3369.6,
     4150
   ],
-  "slot_change": "4x95.04um independent lane leaves per slice replacing181.44um monolith; +12 landing root pins total; parent placement/clock ABI pending",
+  "slot_change": "4x95.04um independent lane leaves per slice replacing181.44um monolith; +3 landing root pins perVM; parent placement/clock ABI pending",
   "single_user_latency_change_edges": 0,
   "initiation_interval_edges": 1,
   "normal_rows_per_edge": 4,

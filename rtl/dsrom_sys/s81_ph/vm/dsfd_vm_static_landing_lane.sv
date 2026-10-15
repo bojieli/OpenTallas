@@ -57,13 +57,71 @@ module dsfd_vm_static_landing_split (
     output wire [1023:0] o_d01, o_d23, output wire [2:0] fault
 );
     wire [2:0] f[0:3]; wire [2047:0] d={i_d23,i_d01}; wire [2047:0] q;
-    genvar l;
-    generate for(l=0;l<4;l=l+1) begin:g_lane
-        dsfd_vm_static_landing_lane #(.LANE(l)) u_lane(.ck(ck[l]),.rst_n(rst_n),
-            .larm_v(larm_v),.larm_g(larm_g),.larm_base(larm_base),.i_v(i_v[l]),.i_d(d[512*l+:512]),
-            .o_v(o_v[l]),.o_row(o_row[14*l+:14]),.o_d(q[512*l+:512]),.fault(f[l]));
-    end endgenerate
+    dsfd_vm_static_landing_lane0 u_lane0(.ck(ck[0]),.rst_n(rst_n),
+        .larm_v(larm_v),.larm_g(larm_g),.larm_base(larm_base),.i_v(i_v[0]),.i_d(d[0+:512]),
+        .o_v(o_v[0]),.o_row(o_row[0+:14]),.o_d(q[0+:512]),.fault(f[0]));
+    dsfd_vm_static_landing_lane1 u_lane1(.ck(ck[1]),.rst_n(rst_n),
+        .larm_v(larm_v),.larm_g(larm_g),.larm_base(larm_base),.i_v(i_v[1]),.i_d(d[512+:512]),
+        .o_v(o_v[1]),.o_row(o_row[14+:14]),.o_d(q[512+:512]),.fault(f[1]));
+    dsfd_vm_static_landing_lane2 u_lane2(.ck(ck[2]),.rst_n(rst_n),
+        .larm_v(larm_v),.larm_g(larm_g),.larm_base(larm_base),.i_v(i_v[2]),.i_d(d[1024+:512]),
+        .o_v(o_v[2]),.o_row(o_row[28+:14]),.o_d(q[1024+:512]),.fault(f[2]));
+    dsfd_vm_static_landing_lane3 u_lane3(.ck(ck[3]),.rst_n(rst_n),
+        .larm_v(larm_v),.larm_g(larm_g),.larm_base(larm_base),.i_v(i_v[3]),.i_d(d[1536+:512]),
+        .o_v(o_v[3]),.o_row(o_row[42+:14]),.o_d(q[1536+:512]),.fault(f[3]));
     assign o_d01=q[1023:0]; assign o_d23=q[2047:1024];
     assign fault=f[0]|f[1]|f[2]|f[3];
 endmodule
+// Actual hardened master for lane0; each master has its own source-pinned routed view.
+module dsfd_vm_static_landing_lane0 (
+    input wire ck, rst_n,
+    input wire larm_v, input wire [3:0] larm_g, input wire [13:0] larm_base,
+    input wire i_v, input wire [511:0] i_d,
+    output wire o_v, output wire [13:0] o_row, output wire [511:0] o_d,
+    output wire [2:0] fault
+);
+    dsfd_vm_static_landing_lane #(.LANE(0)) u_lane(.ck(ck),.rst_n(rst_n),
+        .larm_v(larm_v),.larm_g(larm_g),.larm_base(larm_base),.i_v(i_v),.i_d(i_d),
+        .o_v(o_v),.o_row(o_row),.o_d(o_d),.fault(fault));
+endmodule
+
+// Actual hardened master for lane1; each master has its own source-pinned routed view.
+module dsfd_vm_static_landing_lane1 (
+    input wire ck, rst_n,
+    input wire larm_v, input wire [3:0] larm_g, input wire [13:0] larm_base,
+    input wire i_v, input wire [511:0] i_d,
+    output wire o_v, output wire [13:0] o_row, output wire [511:0] o_d,
+    output wire [2:0] fault
+);
+    dsfd_vm_static_landing_lane #(.LANE(1)) u_lane(.ck(ck),.rst_n(rst_n),
+        .larm_v(larm_v),.larm_g(larm_g),.larm_base(larm_base),.i_v(i_v),.i_d(i_d),
+        .o_v(o_v),.o_row(o_row),.o_d(o_d),.fault(fault));
+endmodule
+
+// Actual hardened master for lane2; each master has its own source-pinned routed view.
+module dsfd_vm_static_landing_lane2 (
+    input wire ck, rst_n,
+    input wire larm_v, input wire [3:0] larm_g, input wire [13:0] larm_base,
+    input wire i_v, input wire [511:0] i_d,
+    output wire o_v, output wire [13:0] o_row, output wire [511:0] o_d,
+    output wire [2:0] fault
+);
+    dsfd_vm_static_landing_lane #(.LANE(2)) u_lane(.ck(ck),.rst_n(rst_n),
+        .larm_v(larm_v),.larm_g(larm_g),.larm_base(larm_base),.i_v(i_v),.i_d(i_d),
+        .o_v(o_v),.o_row(o_row),.o_d(o_d),.fault(fault));
+endmodule
+
+// Actual hardened master for lane3; each master has its own source-pinned routed view.
+module dsfd_vm_static_landing_lane3 (
+    input wire ck, rst_n,
+    input wire larm_v, input wire [3:0] larm_g, input wire [13:0] larm_base,
+    input wire i_v, input wire [511:0] i_d,
+    output wire o_v, output wire [13:0] o_row, output wire [511:0] o_d,
+    output wire [2:0] fault
+);
+    dsfd_vm_static_landing_lane #(.LANE(3)) u_lane(.ck(ck),.rst_n(rst_n),
+        .larm_v(larm_v),.larm_g(larm_g),.larm_base(larm_base),.i_v(i_v),.i_d(i_d),
+        .o_v(o_v),.o_row(o_row),.o_d(o_d),.fault(fault));
+endmodule
+
 `default_nettype wire

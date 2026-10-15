@@ -1,5 +1,5 @@
 {
-  "scope": "COMPONENT_EQUIVALENCE_NOT_NATIVE_PARENT_QUALIFICATION",
+  "scope": "FULL_FOUR_LANE_COMPONENT_EQUIVALENCE_NOT_NATIVE_PARENT_QUALIFICATION",
   "normal_landing_age_edges": 2,
   "normal_rows_per_edge": 4,
   "bench": "tools/s81_vm/landing_lane_bench.sv",
@@ -32,8 +32,10 @@
   },
   "source_sha256": {
     "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing.sv": "8cbaff890741914c82b0d29735155f3553e2f7f5fbf5e7c7af783cddb0ed003a",
-    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing_lane.sv": "d3b39eb5a961b0241982bb6670c132f0239f4fc16aeb6f518e639b18c41d3550",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing_lane.sv": "462abf6071bc87c6489a243d6c09c347e44cc3e4c607c0103a25d2313d86d521",
     "tools/s81_vm/landing_lane_bench.sv": "3f5cfe903a2eba9ea34dcd6f92f7ec883b2c705c71e7894a47a9ef59237c2cb4",
     "tools/s81_vm/landing_lane_gate.sh": "4b51ca2260e4ef6986615eb2c1f43d32987bb9ce2cbef88a4afcaacb9fc39dab"
-  }
+  },
+  "clock_abi": "candidate scalar -> four roots; production scalar unchanged",
+  "actual_inventory_landing_count": 1
 }
