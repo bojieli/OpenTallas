@@ -1,0 +1,15 @@
+Bounded one actual GLU context→unchangedAQ→mappedcolumn0SMfragment PASS.
+Input only canonical G/U/route, actualRTL computes all3072BF16 expanded words;
+96AQ blocks check3072FP8codes/96signedexponents/3072dequantBF16 values.
+Eight actual32x128codeSRAMs plus exponent registerfiles feed312actual2048bit
+SMxwrite beats: NC8/SUB4 fmt1,K3072/G3,address0..23,13groups each, realcol0.
+The seven other contexts are OPEN. Zero fields only scope component; no valid
+mask pin, no fullP8 or nativeSM arithmetic claim. No fixture idealGLU fedDUT.
+Actual SRAM writepayload mutant fails firstreadbackSMbeat; actual AQinput sign
+mutant fails firstAQpacket. Three-root GLU clocks preserve109latency exactly.
+All11clocks related1:1phase0; actual memory_map clockmax12320, including scalar
+exponent registerfiles and8physicalmacro pins. Physical timing unqualified.
+FullP8 needs8realGLUvectors24576words, correct sourcehomes,4route scalars/tuple,
+compilerII4+fourphase serialization for existingtwoAQs64words/edge, and actual
+nextSMoperation. Conditional outputVMwrite+reread removal196608B receives no
+systemgain/120cycle credit. Full256replication was not launched.

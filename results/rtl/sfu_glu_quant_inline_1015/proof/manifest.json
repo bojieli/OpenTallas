@@ -1,0 +1,12 @@
+{
+  "actual_GLU_inputs": "canonicalG/U/route only; actualRTL computesall3072BF16outputs",
+  "expected_only": "canonicalGLUgold\u2192V.quant_fp8/V.qdq_fp8; never fed toDUT",
+  "quant_packets": 96,
+  "code_bytes": 3072,
+  "exponents": 96,
+  "dequant_BF16_words": 3072,
+  "SM_pins": "NC8SUB4 fmt1,K3072,G3,address0..23,13groups;col0real;7contextsOPEN",
+  "fragment_mapping": "b=(4*g+j)*8+t;packet={signedexp10,codes256littleendian};col0bitsj*266",
+  "SM_beats": 312,
+  "full_P8_qualified": false
+}

@@ -1,0 +1,37 @@
+{
+  "source_commit": "7cc5e4f37",
+  "admitted_job": "oth-ubuntu-1893071-1792061782",
+  "input_source": "onlycanonicalG/U/route; no idealGLUresults loaded intoDUT",
+  "actual_GLU_BF16_checks": 3072,
+  "actual_AQ_code_words": 3072,
+  "actual_AQ_exp_checks": 96,
+  "actual_AQ_dequant_BF16_words": 3072,
+  "physical_code_SRAMs": 8,
+  "actual_SM_xwrite_beats": 312,
+  "SM_contexts_actual": 1,
+  "other_contexts": "7OPEN; zero output fields component only; no contextmask pin exists",
+  "SM_K": 3072,
+  "SM_G": 3,
+  "SM_addresses": 24,
+  "SM_groups": 13,
+  "SM_payload_bits": 2048,
+  "measured_AQ_first_last_preNBA": [
+    159,
+    3199
+  ],
+  "measured_SM_xwrite_first_last_preNBA": [
+    3213,
+    3524
+  ],
+  "actual_SRAMPayload_mutant": "failsINLINE_XWRITE beat0 fromactualSRAMreadback",
+  "actual_AQinput_mutant": "actualGLUoutput signchanged atAQregister;failsINLINE_AQ_WORD block0",
+  "clock_count_job": "oth-ubuntu-1916092-1792061891",
+  "clock_root_max": 12320,
+  "clock_roots": 11,
+  "memory_exponent_registers_included": true,
+  "physical_qualified": false,
+  "production_throughput_qualified": false,
+  "full8context_qualified": false,
+  "next_SM_operation_selected": false,
+  "token_rate_credit": 0
+}

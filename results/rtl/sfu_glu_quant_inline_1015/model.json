@@ -73,8 +73,8 @@
     "tuple_serialize_phases": 4,
     "tuple_words": 256,
     "input_tuples": 96,
-    "first_GLU_input_to_last_quant_input_edges": 492,
-    "first_GLU_input_to_last_quant_output_edges": 510,
+    "first_GLU_input_to_last_quant_input_edges": 493,
+    "first_GLU_input_to_last_quant_output_edges": 511,
     "VM_output_write_bytes_removed": 98304,
     "VM_output_reread_bytes_removed": 98304,
     "removed_VM_8sector_waves": 768,
@@ -106,7 +106,28 @@
     "physical_qualified": false
   },
   "bounded_component_build_admitted": true,
-  "numerical_qualified": false,
+  "numerical_qualified": true,
+  "numerical_scope": "3072actualGLUcodes/96exponents/dequants plus312col0SMbeats;notfull8contexts",
+  "measured_component": {
+    "AQ_first_last_preNBA": [
+      159,
+      3199
+    ],
+    "SM_xwrite_first_last_preNBA": [
+      3213,
+      3524
+    ],
+    "fixed_emit_launch_start": 3210,
+    "first_input_edge": 0,
+    "input_issue_edges": 3072,
+    "fixed_emit_to_xwrite_preNBA_edges": 3,
+    "clock_roots": 11,
+    "max_root_clock_sinks": 12320,
+    "actualrootcounts": "results/rtl/sfu_glu_quant_inline_1015/clocks/counts.json",
+    "exact_gate_source": "7cc5e4f37",
+    "actual_SRAMPayload_mutant_fails": true,
+    "actual_AQinput_mutant_fails": true
+  },
   "full_graph_ready": false,
   "adopted": false,
   "token_rate_credit": 0,
