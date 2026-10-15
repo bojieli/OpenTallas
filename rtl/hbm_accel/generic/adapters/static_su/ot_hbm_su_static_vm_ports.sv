@@ -6,6 +6,8 @@
 // bank pair {0,0,1,1,2,2,3,3}. SW/SE (NPG 5): the fifth group takes ONE bank of a pair, chosen by the die lead from
 // the actual bank placement (the bank farthest from its pair's pin cluster); the logical buses below stay one port
 // per quarter, only the pin/leaf plan and the clock root follow the group.
+// SW/SE map from the GEO-H geometry (results/arch/hbm_system_geometry_1015/LG_local_engine_reach_{current,B}.json,
+// min groups within 500 um = [0],[1,2],[3,4],[5,6],[7]): NPG 5, BANK_GROUP 32'h4332_2110.
 // Each bank leaf drives the SU (near) station of the LG tap of its bank (ot_hbm_vm_lg_static_bank, READ_RETURN 10,
 // WRITE_RETURN 7). No register stage is added: request pins go straight to the LG leaf's sampled local inputs, so
 // the compiler latencies stay 10/7. No queues, credits, ready, arbitration or runtime rescheduling.

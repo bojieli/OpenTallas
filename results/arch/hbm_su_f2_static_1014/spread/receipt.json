@@ -621,5 +621,15 @@
   },
   "decision": "coordinator: keep 32 SFU lanes/quarter; 0.543 % <= 1.5 % threshold -> ledger row proposed (r25gq SU.VOP group), no 64-lane build",
   "still_model": "reduction tail (softmax.max 88 edges) and ARITH applied to not-yet-lowered op classes (pv_normalize); producer-side layout adoption open"
- }
+ },
+ "rev_1015_swse_group5": {
+  "map": "SW/SE NPG 5 BANK_GROUP 0x43322110 = groups [0],[1,2],[3,4],[5,6],[7] from GEO-H LG_local_engine_reach_{current,B}.json (min groups within 500 um, every plan, SW and SE); replaces provisional 0x43221100",
+  "vehicle": "PASS Qwen 24,560 / DS 11,544 events, PG/LG/CAL mutants FAIL (both designs)",
+  "contract": "H-DIE to set BANK_GROUP 0x43322110 for hb_su_SW/SE (and QUANT_SW) in v15.x"
+ },
+ "rev_1015_attention_sm": {
+  "interface": "attention_sm_interface.json (tools/hbm_static/su_attention_sm_interface.py)",
+  "summary": "SU records/calendar unchanged under attention-on-SM; SC/P/PV position i lives only in slice (i mod 512)//128 (checked word by word, 0 replica); Qwen GQA heads co-located; DS T640 rule gives 256/128/128/128 rows (1.6x SM rows on q0), T128 all on q0 -> balanced-tail SU lowering proposed (reducer is scratch-addressed so the golden sum tree stays bit-exact); PV needs a 4-quadrant reduce-scatter (H-COLL/SM)"
+ },
+ "rev_1015_scores_bias": "SW-only placement (9505d6569) satisfies H-IDX: route.scores_bias.O 384 words exist only in SW, sole reader IDX; no replica needed elsewhere, so no REPL write set (a cross-quarter mirror write path does not exist in the static SU and would cost more than the 55/60-edge quarter-0 record)"
 }
