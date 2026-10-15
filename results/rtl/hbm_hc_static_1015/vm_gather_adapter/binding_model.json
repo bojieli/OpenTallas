@@ -1,0 +1,45 @@
+{
+  "scope": "adapter and register reader only, shared existing native VM port; no new SRAM/physical claim",
+  "default_parameter": {
+    "ENABLE_GATHER_READER": 0
+  },
+  "source_FF_bound": {
+    "reader": 886,
+    "adapter_return_phase_guard": 19,
+    "adapter_inflight": 1,
+    "adapter_sticky_fault": 1,
+    "enabled_total": 907,
+    "disabled": 0
+  },
+  "new_native_wrapper_ABI": {
+    "parameter": "NATIVE_GATHER_READER=0 forwarded to ENABLE_GATHER_READER",
+    "inputs": {
+      "gather_phase": 1,
+      "gather_launch": 1,
+      "gather_npos": 4,
+      "gather_base_sector": 16,
+      "gather_stride_sector": 16
+    },
+    "output": {
+      "gather_done": 1
+    }
+  },
+  "phase_contract": [
+    "Compiler selects complete exclusive gather/residual VM phases, including fixed return/capture edges; no runtime arbitration or readiness.",
+    "Residual pending guard spans19 request-to-consumer edges. Gather launch/phase cannot overlap those reservations.",
+    "Gather phase holds through the last registered gathered output. It can end when the last output+done is sampled; diagnostics do not move slots.",
+    "When enabled external_mix_v must be0; unselected external source faults.",
+    "When disabled all previous residual/return/external gathered pins pass exactly with zero new edge; gather controls ignored."
+  ],
+  "pipeline_edges_added": 0,
+  "canonical_P1": {
+    "npos": 1,
+    "base_sector": 18136,
+    "stride": 0,
+    "first_output": 20,
+    "first_engine_capture": 21,
+    "last_output_and_done": 43,
+    "last_engine_capture": 44
+  },
+  "scope_limit": "Parent owns native/programmed/SYS1 wrappers and canonical compiler integration; none edited by this component."
+}

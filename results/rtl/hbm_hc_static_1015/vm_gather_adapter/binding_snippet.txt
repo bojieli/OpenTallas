@@ -1,0 +1,28 @@
+// Native-wrapper integration owned by hc_static_engine. Add parameter
+// NATIVE_GATHER_READER=0 plus inputs gather_phase, gather_launch,
+// gather_npos[3:0], gather_base_sector[15:0], gather_stride_sector[15:0],
+// and output gather_done. Existing external gathered_mix_* input ABI stays.
+wire [135:0] residual_rq;
+wire [7:0] residual_read;
+wire [2055:0] residual_rr;
+wire effective_mix_v, gather_adapter_fault;
+wire [4:0] effective_mix_row;
+wire [2:0] effective_mix_pos;
+wire [31:0] effective_mix_data;
+// Change ONLY residual producer VM connections to these private wires:
+// .local_rq(residual_rq),.local_read(residual_read),.local_rr(residual_rr)
+ot_hgi_hc_vm_gather_adapter_static #(.ENABLE_GATHER_READER(NATIVE_GATHER_READER)) mix_reader(
+ .clk(clk),.rst_n(rst_n),.gather_phase(gather_phase),.gather_launch(gather_launch),
+ .gather_npos(gather_npos),.gather_base_sector(gather_base_sector),.gather_stride_sector(gather_stride_sector),
+ .residual_rq(residual_rq),.residual_read(residual_read),.residual_rr(residual_rr),
+ .local_rq(local_rq),.local_read(local_read),.local_rr(local_rr),
+ .external_mix_v(gathered_mix_v),.external_mix_row(gathered_mix_row),
+ .external_mix_pos(gathered_mix_pos),.external_mix_data(gathered_mix_data),
+ .gathered_mix_v(effective_mix_v),.gathered_mix_row(effective_mix_row),
+ .gathered_mix_pos(effective_mix_pos),.gathered_mix_data(effective_mix_data),
+ .gather_done(gather_done),.fault(gather_adapter_fault));
+// Connect arithmetic gathered inputs to effective_mix_*.
+// OR gather_adapter_fault into existing native fault. Preserve all other logic.
+// ENABLED canonicalG25: phase1, launch, npos1, base18136, stride0;
+// output+20..43, engine samples+21..44, fixed done at+43.
+// Do not issue residual requests in gather phase or assert external_mix_v.
