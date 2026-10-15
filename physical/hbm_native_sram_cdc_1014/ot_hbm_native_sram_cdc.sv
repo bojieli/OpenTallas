@@ -139,7 +139,24 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
  wire ack_ok_x=(ack1==~ackn1);
  wire src_ep_ok_x=(re1==~ren1)&&(re1==w_epoch_x)&&(wepoch_p==w_epoch_x);
  wire w_fault_x=wf_x||wbad;
- wire full_x=w_fault_x||!ack_ok_x||!src_ep_ok_x||(sk_wp_x!=sk_rp_x)||(occ_x>=D-1);
+ wire full_x_ref=w_fault_x||!ack_ok_x||!src_ep_ok_x||(sk_wp_x!=sk_rp_x)||(occ_x>=D-1);
+ // full_q next state, restructured (H-ELEM-A 2026-10-14 22:20; sk gates TT reg->reg -94.8 ps w256 at full / -116.9 ps
+ // w280 at its pin-register copy): the reference form above compares re1 and the occupancy AFTER the epoch-switch /
+ // commit muxes (32-bit compare -> mux -> 32-bit compare; compare -> commit -> wb_x -> subtract -> compare).  The same
+ // function with every compare done in parallel on the current state and the branch selected last:
+ //   any rail fault (wbad) is full; epoch change (ep_ne): busy -> wf, idle -> switch (w_epoch_x = wepoch_p, wb_x = 0,
+ //   skid empty, wf_x = 0); no epoch change: wf kept, wb_x = wb + commit, skid fault on a third pending write.
+ // MUT 4 (fetch-based release) keeps the reference form.  Proven equal to full_x_ref (yosys equiv, MUT 0) and by the suite.
+ wire ep_ne=(wepoch_p!=w_epoch);
+ wire ep_busy=(wb!=released)||enc_v||read_v||(sk_cnt!=2'd0)||we_p;
+ wire cn_b=source_safe&&((sk_cnt!=2'd0)||we_p)&&(occupancy<D);          // commit_now when !ep_ne
+ wire [PW-1:0] o_sw=-released_x, o_hold=wb-released_x, o_inc=wb+1'b1-released_x;
+ wire full_occ=ep_ne?(o_sw>=D-1):(cn_b?(o_inc>=D-1):(o_hold>=D-1));
+ wire full_ep=!(re1==~ren1)||!(ep_ne?(re1==wepoch_p):(re1==w_epoch));
+ wire full_sk=!ep_ne&&((sk_cnt+(we_p?2'd1:2'd0))!=(cn_b?2'd1:2'd0));
+ wire full_wf=wbad||(ep_ne&&ep_busy)||(!ep_ne&&(wf||((sk_cnt==2'd2)&&we_p&&!cn_b)));
+ wire full_fast=full_wf||!ack_ok_x||full_ep||full_sk||full_occ;
+ wire full_x=(MUT==4)?full_x_ref:full_fast;
  wire [CW-1:0] store_rd;
  always @(posedge wclk or negedge wr[0])begin
   if(!wr[0])begin

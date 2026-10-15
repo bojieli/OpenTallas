@@ -1,0 +1,9 @@
+# full_fast == full_x_ref (combinational, every state): yosys 0.68, run per W in {16, 280}, MUT 0
+# (the two wires need (* keep *) in a scratch copy so opt_clean does not drop the unused reference)
+read_verilog -sv -DSYNTHESIS cdc_eq.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v
+chparam -set W 280 -set MUT 0 ot_hbm_native_sram_cdc
+hierarchy -top ot_hbm_native_sram_cdc; proc; flatten; memory_map; opt_clean; expose -evert-dff
+delete t:ot_sram_1r1w_64x512_m1_r2c2; opt_clean
+sat -prove full_x_ref full_fast -verify
+# result 2026-10-14 22:30: "SAT proof finished - no model found: SUCCESS!" (W 280 and W 16); negative control
+# (o_inc -> o_hold in the +1 branch): "model found: FAIL!"

@@ -69,9 +69,9 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:hbm-native-physical-1014",
+  "owner": "Claude:H-ELEM-A",
   "branch": "codex/hbm-native-physical-1014",
-  "tag": "clockpath2",
+  "tag": "fullpar1",
   "purpose": "Actual source-clock SRAM+SECDED W256 backend with eight protected coded source slots and eight coded consumer landing banks; actual ASIC controller/root/port/PG diagnostic. Catalog macro descriptor calibration/claim_boundary retained verbatim; no transistor layout/SPICE/silicon qualification or native184 price inheritance.",
   "hold_merge": "Diagnostic only; actual slots and phase delivery must be qualified before native integration.",
   "benches": [
@@ -102,7 +102,8 @@
    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "physical/hbm_native_bounded_cdc_1014/related_domains.sdc",
    "physical/hbm_native_sram_cdc_1014/deep_related_domains.sdc"
-  ]
+  ],
+  "structural_change": "H-ELEM-A 10-14 22:30: full_q next state restructured (sk gates TT reg->reg w256 -94.8 ps at full, w280 -116.9 ps at its pin-register copy): every compare (epoch change, re1 vs wepoch_p AND vs w_epoch, occupancy for switch / hold / +1) is done in parallel on the current state and the branch is selected last, instead of 32-bit compare -> epoch mux -> 32-bit compare and compare -> commit -> wb_x -> subtract -> compare. Same function: yosys SAT proof full_fast == reference for W 16 and W 280 (MUT 0; negative control FAILs), MUT 4 keeps the reference form; suite PASS 29/29. Earlier: "
  },
  "inter": [],
  "io_flop_at_pins": {
