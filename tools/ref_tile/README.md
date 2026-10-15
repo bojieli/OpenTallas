@@ -231,7 +231,8 @@ are required, with one `[1,1]` clock root per domain, the primary root in
 `core`, and literal base input/output names covering every IO once (including
 reset). The supported relationship is related samefrequency clocks with zero
 nominal phase; asynchronous groups, ratio changes, or unassigned IO are refused.
-Shared asynchronous resets get one IO reference and must not drive data pins.
+Shared asynchronous resets get one IO reference; actual data-pin paths (including
+synchronous resets) must obey their declared domain like other data inputs.
 
 Each root is measured in the actual loaded corner. Its boundary register
 population determines its own R; delivery compensates each source to phi−R.

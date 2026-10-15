@@ -145,7 +145,7 @@ def generate(spec, root):
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
     return (f'# OT_CLOCK_ENTRY_DOMAIN_API_VERSION {ENTRY_DOMAIN_API_VERSION}\n'
             '# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.\n'
-            + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_resets {' + ' '.join(spec.get('reset_ports', [])) + '}\n') if spec.get('clock') == 'multiple_cts_roots' else '') +
+            + (('set ::ot_ce_leaf_roots 1\n') if spec.get('clock') == 'multiple_cts_roots' else '') +
             'set ::ot_ce_refs [dict create ' + ' '.join(rows) + ']\n'
             'set ::ot_ce_counts [dict create ' + ' '.join(f'{{{m}}} {n}' for m, n in counts.items()) + ']\n'
             'set ::ot_ce_domains [dict create ' + ' '.join(domain_rows) + ']\n'
@@ -456,6 +456,12 @@ LEAF_OWNERSHIP = r'''
 # A multi-root leaf contains independent synchronous datapaths. Domain declarations
 # are checked against the real synthesized timing graph, not trusted as metadata.
 proc ot_ce_leaf_ownership {inputs outputs} {
+  set expected {}
+  dict for {domain info} $::ot_ce_domains {lappend expected [dict get $info clock]}
+  for {set i 0} {$i < [llength $::ot_ce_ports]} {incr i} {lappend expected ot_entry_$i}
+  set actual {}
+  foreach c [all_clocks] {lappend actual [get_full_name $c]}
+  if {[lsort $actual] ne [lsort $expected]} {error "OT_MULTI_ROOT: undeclared clock alias or relationship"}
   set cells {}; set clocks {}
   foreach root $::ot_ce_cts_roots {
     set domain [dict get $::ot_ce_source_domains $root]
@@ -481,9 +487,6 @@ proc ot_ce_leaf_ownership {inputs outputs} {
         set name [get_full_name $start]
         if {![dict exists $inputs $name] || [dict get $inputs $name] ne $expected} {
           error "OT_MULTI_ROOT: input $name has wrong domain for $cell"
-        }
-        if {[regsub {\[.*$} $name {}] in $::ot_ce_resets} {
-          error "OT_MULTI_ROOT: declared async reset $name drives a data pin"
         }
       } else {
         set source [get_full_name [get_cells -quiet -of_objects $start]]

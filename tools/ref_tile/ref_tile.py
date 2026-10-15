@@ -274,6 +274,8 @@ def load_spec(path: str) -> dict:
         if len(set(cps)) != len(cps) or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*(?:\[\d+\])?", c) for c in cps):
             raise SpecError("spec: clock_ports must be distinct scalar names or literal bus bits")
         if s.get("clock") == "multiple_cts_roots":
+            if any(s.get(k) for k in ("sdc_extra", "boundary_tcl", "pre_cts_extra", "forwarded_clock")):
+                raise SpecError("multiple_cts_roots owns the clock relationship and boundary; custom timing/clock hooks are unsupported")
             if s.get("clock_cts_roots") is not None:
                 raise SpecError("multiple_cts_roots derives every CTS root from clock_ports")
             clock_entry_constraints.domains(s)
