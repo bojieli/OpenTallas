@@ -38,7 +38,7 @@ def build(work):
     exe = obj / 'Vtb_dsrom_1m_head_bundle'
     sources = [ROOT / H.TB_BUNDLE] + [ROOT / p for p in H.BUNDLE_RTL]
     hashes = {str(p.relative_to(ROOT)): sha(p) for p in sources}
-    key = dict(sources=hashes, CUT=511, SPLIT9=0, IOREG=1, SAFE=1)
+    key = dict(sources=hashes, CUT=511, SPLIT9=1, IOREG=1, SAFE=1)
     stamp = work / 'build.json'
     if exe.exists():
         if json.loads(stamp.read_text()) != key:
@@ -48,7 +48,7 @@ def build(work):
         subprocess.run([str(H.gate.VERILATOR), '--binary', '--timing', '-j', '8',
                         '-Wno-fatal', '-Wno-lint', '-Wno-style', '-O2',
                         '--top-module', 'tb_dsrom_1m_head_bundle', '-Mdir', str(obj),
-                        '-GIOREG=1', '-GSAFE=1', '-GCUT=511'] + [str(p) for p in sources],
+                        '-GIOREG=1', '-GSAFE=1', '-GCUT=511', '-GSPLIT9=1'] + [str(p) for p in sources],
                        check=True, stdout=log, stderr=subprocess.STDOUT)
     stamp.write_text(json.dumps(key, indent=2) + '\n')
     return exe
@@ -110,7 +110,7 @@ def main():
     if (provenance.get('gate') != 'PASS' or not provenance.get('rtl_sources')
             or provenance.get('actual_output_sha256') != hashlib.sha256(actual_mem).hexdigest()):
         raise ValueError('xf does not match passing native RTL producer provenance')
-    H.setup_gate(); H.SK=10  # CUT=511 => ten adder stages, ROM skew must match
+    H.setup_gate(); H.SK=11  # CUT511 + production SPLIT9 => eleven stages; skew follows
     exe=build(a.work); ck=H.Ckpt(a.snapshot)
     ranks=[int(r) for r in a.ranks.split(',')]
     if len(set(ranks))!=len(ranks) or any(r not in range(4) for r in ranks): raise ValueError('invalid ranks')
