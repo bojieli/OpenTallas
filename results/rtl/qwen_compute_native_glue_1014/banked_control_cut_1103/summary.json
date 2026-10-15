@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.banked-control-complete-cut.v1",
+  "source_commit": "9c2614c65",
+  "input_sha256": {
+    "instances": "cf4345c145197d0070658b2912a167541c6d2d7e79b956d2ab1bb8e8b42242a9",
+    "connections": "6d5717d9e86be855022c717681fe4466cf9cadb9f996efb51b03b3e16c61ca72"
+  },
+  "selection_fanout_threshold": 8,
+  "control_cells": 5942,
+  "control_ff": 886,
+  "physical_nonclock_ports": 451,
+  "input_ports": 370,
+  "output_ports": 81,
+  "cuts_touching_other_soft_components": 187,
+  "existing_direct_ff_inputs": 155,
+  "existing_direct_ff_outputs": 0,
+  "scope": "All cut nets restored after graph selection, including high-fanout and soft-to-soft cuts. No source partition, leaf fit, pin registration, cycle cost or native qualification inferred."
+}
