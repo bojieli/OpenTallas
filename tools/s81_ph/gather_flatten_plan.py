@@ -61,6 +61,10 @@ def main():
     a.add_argument("--plan", default="physical/s81_ph_views/gather/v21/strip_plan.json")
     a.add_argument("--layout", default=f"{CAND}/layout_gather.json")
     a.add_argument("--slot", default=f"{CAND}/dsfd_sp_gather_c.json")
+    a.add_argument("--die-origin", default=None,
+                   help="X,Y of the sp_gather slot's lower-left in a die build (e.g. GEN18c 13942.8,17120.16): adds die_at_um "
+                        "per child, die_xy_um per die-port child pin and a per-bus die-frame pin summary")
+    a.add_argument("--die-build", default=None, help="name of the die build the origin was read from (recorded)")
     args = a.parse_args()
     layout = json.loads((ROOT / args.layout).read_text())
     plan = json.loads((ROOT / args.plan).read_text())
@@ -183,6 +187,24 @@ def main():
         "unloaded_child_outputs": unloaded, "errors": errors,
         "verdict": "FLATTEN_PLAN OK" if not errors else "FLATTEN_PLAN FAIL",
         "children": children, "die_ports": dict(sorted(die_ports.items())), "nets": nets}
+    if args.die_origin:
+        ox, oy = map(float, args.die_origin.split(","))
+        out["die_frame"] = {"build": args.die_build, "slot_origin_um": [ox, oy],
+                            "note": "die xy = slot origin + slot-frame xy; R0 slot; children keep their own orient"}
+        for c in children.values():
+            c["die_at_um"] = [round(ox + c["at_um"][0], 3), round(oy + c["at_um"][1], 3)]
+        bus = {}
+        for pn, v in die_ports.items():
+            for cp in v["child_pins"]:
+                if cp["xy_um"][0] is None:
+                    continue
+                cp["die_xy_um"] = [round(ox + cp["xy_um"][0], 3), round(oy + cp["xy_um"][1], 3)]
+                b = bus.setdefault(pn.split("[")[0], {"bits": set(), "children": set(), "x": [], "y": [], "layers": set()})
+                b["bits"].add(pn); b["children"].add(cp["pin"].split("/")[0]); b["layers"].add(cp["layer"])
+                b["x"].append(cp["die_xy_um"][0]); b["y"].append(cp["die_xy_um"][1])
+        out["die_port_bus_summary"] = {k: {"bits": len(b["bits"]), "child_instances": len(b["children"]),
+                                           "layers": sorted(b["layers"]), "die_x_um": [min(b["x"]), max(b["x"])],
+                                           "die_y_um": [min(b["y"]), max(b["y"])]} for k, b in sorted(bus.items())}
     Path(args.out).write_text(json.dumps(out, separators=(",", ":")) + "\n")
     print(out["verdict"], json.dumps(out["counts"]), json.dumps(out["child_net_manhattan_um"]), f"errors {len(errors)}")
     for e in errors[:15]:
