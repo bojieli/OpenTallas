@@ -188,19 +188,24 @@ module ot_s81_hc_ctra_columns #(
         wire [16-1:0] local_hs_c_c1;
         wire [16-1:0] local_hs_c_c2;
         wire [16-1:0] local_hs_c_c3;
-        if(c==0) begin : g_requests
+        // Every column already owns the identical real scheduler state. Route
+        // its registered request to its own banks, avoiding A0 broadcasts.
+        if(c==0) begin : g_requests0
             assign rq_q=local_rq_q;
             assign hs_run=local_hs_run;
             assign hs_c=local_hs_c;
-            assign rq_q_c1=local_rq_q_c1;
-            assign rq_q_c2=local_rq_q_c2;
-            assign rq_q_c3=local_rq_q_c3;
-            assign hs_run_c1=local_hs_run_c1;
-            assign hs_run_c2=local_hs_run_c2;
-            assign hs_run_c3=local_hs_run_c3;
-            assign hs_c_c1=local_hs_c_c1;
-            assign hs_c_c2=local_hs_c_c2;
-            assign hs_c_c3=local_hs_c_c3;
+        end else if(c==1) begin : g_requests1
+            assign rq_q_c1=local_rq_q;
+            assign hs_run_c1=local_hs_run;
+            assign hs_c_c1=local_hs_c;
+        end else if(c==2) begin : g_requests2
+            assign rq_q_c2=local_rq_q;
+            assign hs_run_c2=local_hs_run;
+            assign hs_c_c2=local_hs_c;
+        end else begin : g_requests3
+            assign rq_q_c3=local_rq_q;
+            assign hs_run_c3=local_hs_run;
+            assign hs_c_c3=local_hs_c;
         end
         ot_s81_hc_ctra_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(c)) u (
             .clk(clk_col[c]),
