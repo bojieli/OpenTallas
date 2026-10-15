@@ -4,6 +4,9 @@
 // (die decision D1, el1011-s81die.log 17:58: "assign a VM engine port on the sequencer; ARMB/ARMR/ARMN/XMAP/XGO/LARM/
 // P2ID/P2RD issue").  Without it no row-completion slot is ever armed on the die and SU / HC inp never assert.
 //
+// Prototype D1 pulse-credit client contract is diagnostic only after owner 2026-10-14
+// static-schedule decision: no production use of credit gating or delayed completion.
+// The compiler must replace the client admission contract with fixed issue slots.
 // Stream clock (ck = the dsfd_sp_ctrl / slab command clock), one domain.  It sits between the sequencer's engine pins
 // and the engine channel of dsfd_sp_vm_m (cv / cd / dv / dt, the VM's own ot_s81_engine_adapter, QD 8):
 //   die pins   c_cmd[84:0] = {v, descriptor 84} from sequencer c12 (pin flop) -> ot_s81_engine_adapter (QD 8 credit,

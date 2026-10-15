@@ -71,13 +71,18 @@
   "threads": 16,
   "peak_ram_gb": 40,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 16,
+   "extra": "-distance_between_buffers 20"
+  }
  },
- "structural_change": "Dedicated same-cycle head capture seam flops with reset-distinct physical ownership, preserving valid data epochs and latency; original s0_d internal owner stays; ln_d single-fanout launch can be fixed at Npin through holdstages instead of shared-fanout old longwire435ps defect. RealclosedDBpath747ps and parentTTmiss -16/-39 captured2250.",
+ "structural_change": "Dedicated same-cycle head capture seam flops with reset-distinct physical ownership, preserving valid data epochs and latency; original s0_d internal owner stays; ln_d single-fanout launch can be fixed at Npin through holdstages instead of shared-fanout old longwire435ps defect. RealclosedDBpath747ps and parentTTmiss -16/-39 captured2250. | pr1: kit regenerated on current recipe 2 (pin_reg_split: one dedicated launch flop per output pin at the pin, kept pin regs) for the cr_o launch defect (native pin audit of the closed ln2 view: launch cr_o[4] 290.3 ps after R on 415 outputs > 220, boundary spread 80.5 > 80) that fails the ces0_pc parent face (tx_d / cr_o launch 619-699 ps from ck_core). Clock: 16-sink / 16-um sink clusters + 20-um clock buffer spacing (the Cn leaf topology that took its boundary spread 82.3 -> 54.5 ps) for the ln2 spread 80.5 > 80.",
  "job": {
-  "owner": "Codex:s81-rom-2250",
-  "branch": "codex/s81-rom-2250",
-  "tag": "ln2",
+  "owner": "Claude:s81-elemB-1014",
+  "branch": "claude/s81-elemB-1014",
+  "tag": "pr1",
   "purpose": "S81 collective lane-slice split: hardened leaf dsfd_coll_cesc0 (M5 cap, recipe 2, registers at the pins) of the wires-only clusters dsfd_coll_ces0 / dsfd_coll_cesn; bench = the 4-die collective composition with both split parents + this leaf's mutant",
   "benches": [
    {
@@ -251,7 +256,15 @@
   "OT_S81_CES_LNPIN"
  ],
  "reroute_reason": {
-  "kind": "rtl_change",
-  "why": "opt-in dedicated seam launch capture avoids shared internal s0_d fanout and preserves valid epochs"
+  "kind": "pin_register",
+  "source": "physical/ref_tile/dscoll_cesc0_ln/views/dsfd_coll_cesc0/dsfd_coll_cesc0_tt.lib",
+  "cell": "dsfd_coll_cesc0",
+  "launch_ps": 290.3,
+  "fix": "cr_o launch 290.3 ps after R (415 outputs over 220; boundary spread 80.5 > 80) makes the ces0_pc parent outputs tx_d / cr_o launch late: one dedicated launch flop per output pin at the pin (recipe 2 pin_reg_split), kept pin regs, HB2 pad; RTL, outline, pins unchanged (same fix as the Cn leaf pr1 dscoll_cescn_ln_c16-pr1-a867994ec, which CLOSED and passes the native audit 219.7 / 180.1 / spread 54.5)"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
  }
 }

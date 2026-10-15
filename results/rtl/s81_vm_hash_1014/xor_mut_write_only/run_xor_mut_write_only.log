@@ -1,0 +1,17 @@
+MISMATCH cyc 251 port 0: got d948b42d524881a4.. exp 7513049e398389b9..
+MISMATCH cyc 251 port 1: got 4819c6e1694fb2c7.. exp 0000000000000000..
+MISMATCH cyc 391 port 5: got 7513049e398389b9.. exp d948b42d524881a4..
+MISMATCH cyc 392 port 5: got 9be449a75f9f5638.. exp 4819c6e1694fb2c7..
+MISMATCH cyc 393 port 5: got 0000000000000000.. exp a072be8b1d7fe072..
+MISMATCH cyc 394 port 5: got 0000000000000000.. exp 935cffcad88ba9e3..
+MISMATCH ctrl read 15
+MISMATCH ctrl read 17
+MISMATCH cyc 417 port 0: got e0f542235fec1b24.. exp 0000000000000000..
+MISMATCH cyc 441 port 0: got 0000000000000000.. exp e0f542235fec1b24..
+MISMATCH cyc 441 port 1: got 64585d11c66ea2ac.. exp 0000000000000000..
+RESULT cyc=24000 checked=14223 mismatches_or_fails=59553 phases=46 arm=46 p2rd=190 done=2446 rows_ready=23 starts=151 p2_words=4390 ctrl_reads=1079 el=65280/65280 cap_ops=3932 max_occ=3 mirror_max=3 lat p0=41 p1=41 p2=-1 p4=-1 p6=-1 p7=-1
+FAIL
+- /srv/opentallas-scratch/claude/s81grpA6/src/rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm.sv:820: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 96us; walltime 10.574 s; speed 9.079 us/s
+- Verilator: cpu 10.571 s on 1 threads; allocated 28 MB

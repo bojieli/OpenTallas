@@ -304,8 +304,7 @@ place_pin -pin_name {bt_d[29]} -layer M5 -location {53.532 0.000} -pin_size {0.0
 place_pin -pin_name {bt_d[30]} -layer M3 -location {53.649 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
 place_pin -pin_name {bt_d[31]} -layer M5 -location {53.676 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
 place_pin -pin_name {consume} -layer M4 -location {0.000 38.892} -pin_size {0.192 0.024} -force_to_die_boundary
-place_pin -pin_name {par} -layer M4 -location {0.000 39.036} -pin_size {0.192 0.024} -force_to_die_boundary
-place_pin -pin_name {ba_v} -layer M4 -location {0.000 39.180} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {ba_wv} -layer M4 -location {0.000 39.180} -pin_size {0.192 0.024} -force_to_die_boundary
 place_pin -pin_name {ba_blk[0]} -layer M4 -location {0.000 39.324} -pin_size {0.192 0.024} -force_to_die_boundary
 place_pin -pin_name {ba_blk[1]} -layer M4 -location {0.000 39.468} -pin_size {0.192 0.024} -force_to_die_boundary
 place_pin -pin_name {ba_blk[2]} -layer M4 -location {0.000 39.612} -pin_size {0.192 0.024} -force_to_die_boundary

@@ -64,6 +64,7 @@ from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
 import macro_clk
 import helper_overlay as HO
+import status_report
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
@@ -7815,10 +7816,7 @@ def cmd_daemon(a):
 
 
 def cmd_status(a):
-    for r in all_jobs():
-        h = host_label(r.get("host"))
-        print(f"{r['name']:40s} {r['status']:12s} {r.get('stage_key', '-'):16s} {h:8s} "
-              f"{(r.get('reason') or r.get('wait') or '')[:90]}")
+    status_report.print_status(all_jobs(), a, TERMINAL, host_label)
     hb = STATE / "heartbeat"
     print("heartbeat:", hb.read_text().strip() if hb.exists() else "none")
 
@@ -8410,7 +8408,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     d = sub.add_parser("daemon"); d.add_argument("--interval", type=int, default=60)
-    sub.add_parser("tick"); sub.add_parser("status")
+    sub.add_parser("tick")
+    status_report.add_arguments(sub.add_parser("status", help="active jobs and recent results (--all for history)"))
     v = sub.add_parser("validate"); v.add_argument("file")
     sr = sub.add_parser("submit-recheck"); sr.add_argument("--since", required=True)
     sr.add_argument("--requeue", action="store_true"); sr.add_argument("--log")

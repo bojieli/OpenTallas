@@ -73,6 +73,44 @@ class VerdictError(Exception):
     pass
 
 
+def abstract_obs_layers(text):
+    obs = {}
+    for block in re.findall(r"(?ms)^\s*OBS\s*$\n(.*?)^\s*END\s*$", text):
+        for layer in re.findall(r"\bLAYER\s+(M\d+)\s*;", block):
+            obs[layer] = obs.get(layer, 0) + 1
+    return obs
+
+
+def audit_signal_abstract(text, signal_cap, pg_cap, routed):
+    """Tie abstract metal above the signal ceiling to final-ODB PG evidence."""
+    sig, pg = int(signal_cap[1:]), int(pg_cap[1:])
+    if (routed.get("schema") != "opentallas.ref_tile.routed-signal-cap.v1"
+            or routed.get("violations") != {} or routed.get("signal_cap") != signal_cap
+            or routed.get("pg_cap") != pg_cap):
+        raise VerdictError("final routed net-type audit is missing, inconsistent, or failed")
+    for key, maximum in (("non_pg_layers", sig), ("pg_layers", pg)):
+        if key not in routed or any(int(layer[1:]) > maximum for layer in routed[key]):
+            raise VerdictError("routed layer counts exceed their net-type ceiling")
+    obs = abstract_obs_layers(text)
+    pins = set()
+    for match in re.finditer(r"(?m)^\s*PIN\s+(\S+)\s*$", text):
+        end = re.search(r"(?m)^\s*END\s+" + re.escape(match[1]) + r"\s*$", text[match.end():])
+        if end is None:
+            raise VerdictError("unterminated abstract pin")
+        body = text[match.end():match.end() + end.start()]
+        if not re.search(r"\bUSE\s+(?:POWER|GROUND)\s*;", body):
+            pins.update(re.findall(r"\bLAYER\s+(M\d+)\s*;", body))
+    if any(int(layer[1:]) > sig for layer in pins):
+        raise VerdictError("abstract signal/clock pin exceeds signal_max_layer")
+    high = {layer for layer in obs if int(layer[1:]) > sig}
+    if any(int(layer[1:]) > pg for layer in obs):
+        raise VerdictError("abstract OBS exceeds the PG ceiling")
+    if not high <= {layer for layer, count in routed.get("pg_layers", {}).items() if count > 0}:
+        raise VerdictError("abstract OBS above signal_max_layer lacks actual PG metal evidence")
+    return dict(signal_cap=signal_cap, pg_cap=pg_cap, obs_layers=obs,
+                signal_pin_layers=sorted(pins), pg_backed_high_obs_layers=sorted(high))
+
+
 def verdict_section(tcl_text):
     """the constraint section of a verdict STA Tcl (corner_sta.py / meas_resta.py form): every line from read_db up to
     the first report (puts "OT_CORNER ..."), without meas_resta's register census"""
@@ -245,7 +283,23 @@ def main():
     ap.add_argument("--expect-ff", type=float, help="ps; sign-off FF hold slack the export session must reproduce")
     ap.add_argument("--require-check", action="store_true", help="an export with no verdict to check against fails (5)")
     ap.add_argument("--pin-only-tech", action="store_true", help="snapshot exact read-tech LEF for M6 contact-via audit")
+    ap.add_argument("--signal-max-layer", help="optional stricter signal/clock ceiling, independent of PG")
+    ap.add_argument("--pg-max-layer", help="PG ceiling for the final routed net-type audit")
+    ap.add_argument("--signal-audit-tcl", type=Path, help="source-pinned actual OpenDB net-type audit helper")
     a = ap.parse_args()
+    strict = a.signal_max_layer is not None
+    if strict:
+        if (not re.fullmatch(r"M[2-9]", a.signal_max_layer)
+                or not re.fullmatch(r"M[2-9]", a.pg_max_layer or "")
+                or int(a.signal_max_layer[1:]) > int(a.pg_max_layer[1:])
+                or a.signal_audit_tcl is None or not a.signal_audit_tcl.is_file()):
+            ap.error("signal audit requires valid signal<=PG ceilings and an existing --signal-audit-tcl")
+        for view in a.macro_view:
+            text = (view / f"{view.name}.lef").read_text()
+            if any(int(layer[1:]) > int(a.signal_max_layer[1:]) for layer in abstract_obs_layers(text)):
+                ap.error("stricter signal cap cannot qualify hard-macro OBS above it without net-type evidence")
+    elif a.pg_max_layer is not None or a.signal_audit_tcl is not None:
+        ap.error("PG/audit helper options require --signal-max-layer")
     orfs, out = a.orfs_dir.resolve(), a.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
     base = next((orfs / "results/asap7").glob("*/base"))
@@ -345,8 +399,12 @@ def main():
             seq, mode = [f"read_db /in/{rel}/6_final.odb", f"read_spef /in/{rel}/6_final.spef", f"read_sdc {sdc}",
                          "set_propagated_clock [all_clocks]"], "legacy"
         rec["sdc_sequence"][c] = dict(mode=mode, tcl=seq)
+        audit = []
+        if strict:
+            audit = [a.signal_audit_tcl.read_text(),
+                     f"ot_ref_audit_signal_layers {a.signal_max_layer} {a.pg_max_layer} /out/signal_layer_audit_{c}.json"]
         tcl = "\n".join([f"read_lef {PLAT}/lef/asap7_tech_1x_201209.lef",
-                         f"read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef", *lefs, *libs, *seq,
+                         f"read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef", *lefs, *libs, *seq, *audit,
                          "puts \"OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]\"",
                          f"write_timing_model -library_name {a.name}_{c} /out/{a.name}_{c}.lib",
                          f"write_abstract_lef /out/{a.name}.lef" if c == "ss" else "",
@@ -354,6 +412,8 @@ def main():
                          if c == "ss" and a.pin_only_tech else "",
                          "puts \"OT_EXPORT_DONE\"", "exit", ""])
         (out / f"export_{c}.tcl").write_text(tcl)
+        if strict:
+            (out / f"signal_layer_audit_{c}.json").unlink(missing_ok=True)
         cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/in:ro", "-v", f"{out}:/out", *mounts, a.image,
                "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad", "-no_init", "-exit", f"/out/export_{c}.tcl"]
         p = subprocess.run(cmd, capture_output=True, text=True)
@@ -380,6 +440,21 @@ def main():
     # CHECKED = the TT setup and FF hold of this export session were both compared with a sign-off verdict
     chk = (rec.get("verdict") or {}).get("check") or {}
     rec["checked"] = all(chk.get(c, {}).get("ok") for c in ("tt", "ff"))
+    if strict:
+        proof = dict(helper_sha256=sha(a.signal_audit_tcl), corners={})
+        try:
+            text = (out / f"{a.name}.lef").read_text()
+            for c in a.corners.split(","):
+                path = out / f"signal_layer_audit_{c}.json"
+                report = json.loads(path.read_text())
+                proof["corners"][c] = dict(path=str(path), sha256=sha(path),
+                    abstract=audit_signal_abstract(text, a.signal_max_layer, a.pg_max_layer, report))
+        except (OSError, ValueError, VerdictError) as exc:
+            proof["error"] = str(exc)
+            for c in a.corners.split(","):
+                rec["corners"][c]["done"] = False
+        rec["signal_layer_audit"] = proof
+        rec["ok"] = rec["ok"] and "error" not in proof
     unchecked = [c for c in a.corners.split(",") if c in ("tt", "ff") and c not in chk]
     if unchecked:
         print(f"VIEW_EXPORT UNCHECKED {','.join(unchecked)}: no sign-off verdict to compare this session with "

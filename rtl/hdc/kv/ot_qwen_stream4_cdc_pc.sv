@@ -53,7 +53,13 @@ module ot_qwen_stream4_cdc_pc #(
     //     registers wh_bin / +1 / +2 and h_wv / h_wsec are computed for both outcomes from registers, so h_hand is
     //     the select of one final 2:1 mux in front of each flop (was a 7-level cone through the adder and the mux).
     // No logic is added between a Gray register and its synchroniser.
-    parameter integer WPIPE = 0
+    parameter integer WPIPE = 0,
+    // WCE 1 (native pin capture, qkd_cdc_wleaf_hpin hp2 2026-10-14; WPIPE 1 only; default 0 unchanged): the column
+    // groups' completion enables come from the ONE h_wcon pin flop (hwc_q) instead of per-group kept copies of the raw
+    // pin: logically identical (every copy samples h_wcon at the same HCLK edge), cycle-identical, and the pin has a
+    // single flop load at the face (hp1 native capture S + R 234.3 ps on h_wcon = the pin wire to the far copies). The
+    // enable fan-out becomes an internal reg -> reg net with a full HCLK period.
+    parameter integer WCE = 0
 ) (
     // ---- CLK (core) domain ----
     input  wire             clk,
@@ -320,7 +326,11 @@ module ot_qwen_stream4_cdc_pc #(
             wire [WB-1:0] hot; wire ce;
             ot_hdc_v41x_kreg #(.W(WB), .R(0)) u_sel (.clk(hclk), .rst_n(1'b1),
                 .d(h_rw ? wc_hot_n : {{(WB-1){1'b0}}, 1'b1}), .q(hot));
-            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_ce (.clk(hclk), .rst_n(h_arst_n), .d(h_wcon), .q(ce));
+            if (WCE != 0) begin : g_ce_pin
+                assign ce = h_wcon_i;
+            end else begin : g_ce_copy
+                ot_hdc_v41x_kreg #(.W(1), .R(1)) u_ce (.clk(hclk), .rst_n(h_arst_n), .d(h_wcon), .q(ce));
+            end
             wire [HI-LO-1:0] acc [0:WB];
             assign acc[0] = {(HI-LO){1'b0}};
             for (genvar e = 0; e < WB; e = e + 1) begin : g_or
