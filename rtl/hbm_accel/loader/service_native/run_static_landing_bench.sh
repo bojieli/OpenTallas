@@ -15,3 +15,13 @@ if vvp "$out/mutant.vvp" > "$out/mutant.log"; then echo 'mutant unexpectedly pas
 grep -q 'payload pc=' "$out/mutant.log"
 cat "$out/positive.log"
 echo 'STATIC_LANDING_MUTANT rejected real SRAM slot corruption'
+iverilog -g2012 -s tb_hbm_svc_static_vm_delivery -o "$out/vm.vvp" "$mem" "$d/ot_hbm_svc_static_landing.sv" "$d/ot_hbm_svc_static_vm_delivery.sv" "$d/tb_hbm_svc_static_vm_delivery.sv"
+vvp "$out/vm.vvp" > "$out/vm.log"
+grep -q 'STATIC_VM_DELIVERY PASS' "$out/vm.log"
+sed 's/(out_group\*8+b)/(out_group*8+(b ^ 1))/' "$d/ot_hbm_svc_static_landing.sv" > "$out/group_mutant.sv"
+if cmp -s "$out/group_mutant.sv" "$d/ot_hbm_svc_static_landing.sv"; then exit 1;fi
+iverilog -g2012 -s tb_hbm_svc_static_vm_delivery -o "$out/group_mutant.vvp" "$mem" "$out/group_mutant.sv" "$d/ot_hbm_svc_static_vm_delivery.sv" "$d/tb_hbm_svc_static_vm_delivery.sv"
+if vvp "$out/group_mutant.vvp" > "$out/group_mutant.log"; then echo 'group mutant unexpectedly passed';exit 1;fi
+grep -q 'bank/group mismatch' "$out/group_mutant.log"
+cat "$out/vm.log"
+echo 'STATIC_VM_DELIVERY_MUTANT rejected bank permutation'
