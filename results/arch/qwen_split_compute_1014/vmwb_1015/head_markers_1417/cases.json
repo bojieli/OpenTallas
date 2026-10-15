@@ -1,0 +1,130 @@
+[
+  {
+    "pc": 3,
+    "args": [
+      "+NOUT=6144",
+      "+TILES=8",
+      "+K=8",
+      "+TS=64",
+      "+SPLIT=9",
+      "+OEN=0",
+      "+OBASE=0",
+      "+OTS=8",
+      "+OJS=1",
+      "+WSRC=0",
+      "+ROUND=1",
+      "+MMODE=0",
+      "+WBASE=0",
+      "+KS=8",
+      "+JS=1",
+      "+XBASE=8192",
+      "+XKS=1",
+      "+XJS=0",
+      "+XCS=8",
+      "+WCS=0"
+    ],
+    "markers": 64,
+    "programmed_amax": 1,
+    "unsupported_by_cached_bench": [
+      "amax",
+      "row0",
+      "amc"
+    ]
+  },
+  {
+    "pc": 4,
+    "args": [
+      "+NOUT=6144",
+      "+TILES=8",
+      "+K=8",
+      "+TS=64",
+      "+SPLIT=9",
+      "+OEN=0",
+      "+OBASE=384",
+      "+OTS=8",
+      "+OJS=1",
+      "+WSRC=0",
+      "+ROUND=1",
+      "+MMODE=0",
+      "+WBASE=512",
+      "+KS=8",
+      "+JS=1",
+      "+XBASE=8192",
+      "+XKS=1",
+      "+XJS=0",
+      "+XCS=8",
+      "+WCS=384"
+    ],
+    "markers": 64,
+    "programmed_amax": 1,
+    "unsupported_by_cached_bench": [
+      "amax",
+      "row0",
+      "amc"
+    ]
+  },
+  {
+    "pc": 5,
+    "args": [
+      "+NOUT=6144",
+      "+TILES=8",
+      "+K=8",
+      "+TS=64",
+      "+SPLIT=9",
+      "+OEN=0",
+      "+OBASE=768",
+      "+OTS=8",
+      "+OJS=1",
+      "+WSRC=0",
+      "+ROUND=1",
+      "+MMODE=0",
+      "+WBASE=1024",
+      "+KS=8",
+      "+JS=1",
+      "+XBASE=8192",
+      "+XKS=1",
+      "+XJS=0",
+      "+XCS=8",
+      "+WCS=768"
+    ],
+    "markers": 64,
+    "programmed_amax": 1,
+    "unsupported_by_cached_bench": [
+      "amax",
+      "row0",
+      "amc"
+    ]
+  },
+  {
+    "pc": 6,
+    "args": [
+      "+NOUT=560",
+      "+TILES=1",
+      "+K=8",
+      "+TS=64",
+      "+SPLIT=9",
+      "+OEN=0",
+      "+OBASE=1152",
+      "+OTS=8",
+      "+OJS=1",
+      "+WSRC=0",
+      "+ROUND=1",
+      "+MMODE=0",
+      "+WBASE=1536",
+      "+KS=8",
+      "+JS=1",
+      "+XBASE=8192",
+      "+XKS=1",
+      "+XJS=0",
+      "+XCS=8",
+      "+WCS=1152"
+    ],
+    "markers": 8,
+    "programmed_amax": 1,
+    "unsupported_by_cached_bench": [
+      "amax",
+      "row0",
+      "amc"
+    ]
+  }
+]

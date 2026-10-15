@@ -1,0 +1,321 @@
+{
+  "scope": "Head NULL-marker projection only: cached bench forces amax=0; programmed amax/row0/amc and head arithmetic not served. Actual ctl/24 ports/issuer/serializers/real mapped VM, head timing fields unchanged.",
+  "binaries": {
+    "pos": "9061cc828e66d7599b123dfc8cd8e37c9ba71743eb693ba9932877ef0a314a52",
+    "imut1": "b3788cb96e7ae17236120412377256d07fd498672306f6db66942acd1793da86"
+  },
+  "cases": [
+    {
+      "pc": 3,
+      "args": [
+        "+NOUT=6144",
+        "+TILES=8",
+        "+K=8",
+        "+TS=64",
+        "+SPLIT=9",
+        "+OEN=0",
+        "+OBASE=0",
+        "+OTS=8",
+        "+OJS=1",
+        "+WSRC=0",
+        "+ROUND=1",
+        "+MMODE=0",
+        "+WBASE=0",
+        "+KS=8",
+        "+JS=1",
+        "+XBASE=8192",
+        "+XKS=1",
+        "+XJS=0",
+        "+XCS=8",
+        "+WCS=0"
+      ],
+      "markers": 64,
+      "programmed_amax": 1,
+      "unsupported_by_cached_bench": [
+        "amax",
+        "row0",
+        "amc"
+      ]
+    },
+    {
+      "pc": 4,
+      "args": [
+        "+NOUT=6144",
+        "+TILES=8",
+        "+K=8",
+        "+TS=64",
+        "+SPLIT=9",
+        "+OEN=0",
+        "+OBASE=384",
+        "+OTS=8",
+        "+OJS=1",
+        "+WSRC=0",
+        "+ROUND=1",
+        "+MMODE=0",
+        "+WBASE=512",
+        "+KS=8",
+        "+JS=1",
+        "+XBASE=8192",
+        "+XKS=1",
+        "+XJS=0",
+        "+XCS=8",
+        "+WCS=384"
+      ],
+      "markers": 64,
+      "programmed_amax": 1,
+      "unsupported_by_cached_bench": [
+        "amax",
+        "row0",
+        "amc"
+      ]
+    },
+    {
+      "pc": 5,
+      "args": [
+        "+NOUT=6144",
+        "+TILES=8",
+        "+K=8",
+        "+TS=64",
+        "+SPLIT=9",
+        "+OEN=0",
+        "+OBASE=768",
+        "+OTS=8",
+        "+OJS=1",
+        "+WSRC=0",
+        "+ROUND=1",
+        "+MMODE=0",
+        "+WBASE=1024",
+        "+KS=8",
+        "+JS=1",
+        "+XBASE=8192",
+        "+XKS=1",
+        "+XJS=0",
+        "+XCS=8",
+        "+WCS=768"
+      ],
+      "markers": 64,
+      "programmed_amax": 1,
+      "unsupported_by_cached_bench": [
+        "amax",
+        "row0",
+        "amc"
+      ]
+    },
+    {
+      "pc": 6,
+      "args": [
+        "+NOUT=560",
+        "+TILES=1",
+        "+K=8",
+        "+TS=64",
+        "+SPLIT=9",
+        "+OEN=0",
+        "+OBASE=1152",
+        "+OTS=8",
+        "+OJS=1",
+        "+WSRC=0",
+        "+ROUND=1",
+        "+MMODE=0",
+        "+WBASE=1536",
+        "+KS=8",
+        "+JS=1",
+        "+XBASE=8192",
+        "+XKS=1",
+        "+XJS=0",
+        "+XCS=8",
+        "+WCS=1152"
+      ],
+      "markers": 8,
+      "programmed_amax": 1,
+      "unsupported_by_cached_bench": [
+        "amax",
+        "row0",
+        "amc"
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "variant": "pos",
+      "pc": 3,
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 64,
+        "rows": 0,
+        "vm_rows_checked": 0,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 758,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "passed": true
+    },
+    {
+      "variant": "pos",
+      "pc": 4,
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 64,
+        "rows": 0,
+        "vm_rows_checked": 0,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 758,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "passed": true
+    },
+    {
+      "variant": "pos",
+      "pc": 5,
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 64,
+        "rows": 0,
+        "vm_rows_checked": 0,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 758,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "passed": true
+    },
+    {
+      "variant": "pos",
+      "pc": 6,
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 0,
+        "vm_rows_checked": 0,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 310,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "passed": true
+    },
+    {
+      "variant": "imut1",
+      "pc": 3,
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 1,
+        "vpmut": 0,
+        "bursts": 64,
+        "rows": 0,
+        "vm_rows_checked": 0,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 759,
+        "errors": 1,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "passed": false
+    },
+    {
+      "variant": "imut1",
+      "pc": 4,
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 1,
+        "vpmut": 0,
+        "bursts": 64,
+        "rows": 0,
+        "vm_rows_checked": 0,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 759,
+        "errors": 1,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "passed": false
+    },
+    {
+      "variant": "imut1",
+      "pc": 5,
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 1,
+        "vpmut": 0,
+        "bursts": 64,
+        "rows": 0,
+        "vm_rows_checked": 0,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 759,
+        "errors": 1,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "passed": false
+    },
+    {
+      "variant": "imut1",
+      "pc": 6,
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 1,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 0,
+        "vm_rows_checked": 0,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 311,
+        "errors": 1,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "passed": false
+    }
+  ],
+  "ok": true,
+  "source_program_sha256": "08c4c30c2c41cc3473280e33bf84dba3c0bca9180a21f233aad4682b5558a6a9",
+  "status": "HEAD_NULL_MARKER_PROJECTION_ONLY",
+  "qualified_head": false,
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-2608429-1792099689"
+}
