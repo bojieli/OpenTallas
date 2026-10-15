@@ -5,7 +5,7 @@
 // PHY frame boundary is external. Normal operation is fixed-cycle; abort is
 // exceptional and requires explicit reset/drain before reuse.
 module qfd_collective_static_io #(
- parameter integer PU=14,PS=339,LU=37,LS=376,RU=0,RS0=0,RS1=0,RS2=0
+ parameter integer PU=14,PS=339,LU=47,LS=376,RU=5,RS0=0,RS1=0,RS2=5
 )(
  input wire  clk,
  input wire  clk_pfold0,

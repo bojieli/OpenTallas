@@ -608,11 +608,11 @@
     "owner": "Codex:q_collective",
     "branch": "codex/qcoll-kv-native-1014",
     "tag": "s3",
-    "purpose": "Qwen TP8 compute-die STATIC collective cluster qfd_io_collective_static (OWNER 0ah: compiler command per message, fixed-offset rings, no credits/ready/queues; LU 37 / LS 376 = composed on the real static link RTL + R_max 7). structural s2: three independently kept face-register hierarchies preserve existing cycle, command pin capture adds one compiler lead cycle, width864 central9macrocolumn. 8 CLOSED ot_coll_fold_slice children (coll_fold_slice_rt) on own clock entries, 9 SRAM macros, glue on clk. s3 nine SRAM clocks are independent die entries; no shared macro clock on glue CTS.",
+    "purpose": "Qwen TP8 compute-die STATIC collective cluster qfd_io_collective_static (OWNER 0ah: compiler command per message, fixed-offset rings, no credits/ready/queues; LU 47 / LS 376 = composed on the real static link RTL + R_max 7). structural s2: three independently kept face-register hierarchies preserve existing cycle, command pin capture adds one compiler lead cycle, width864 central9macrocolumn. 8 CLOSED ot_coll_fold_slice children (coll_fold_slice_rt) on own clock entries, 9 SRAM macros, glue on clk. s3 nine SRAM clocks are independent die entries; no shared macro clock on glue CTS. Freeze integration owner physical candidate LU47/LS376 with R_U5,R_S0=0,R_S1=0,R_S2=5. Old LU37 diagnostic only.",
     "benches": [
       {
         "name": "static_exact_qfd",
-        "cmd": "python3 tools/qwen_coll_tp8_static_links_bench.py --qfd --production --latu 37 --lats 376 --out {RUN}/bench/static_exact_qfd",
+        "cmd": "python3 tools/qwen_coll_tp8_static_links_bench.py --parent --relays 5 0 0 5 --production --latu 47 --lats 376 --out {RUN}/bench/static_exact_qfd",
         "expect": "pass",
         "pass_regex": "^COLL_TP8SL PASS cases=4",
         "threads": 16,
@@ -623,7 +623,7 @@
       },
       {
         "name": "static_mut_rank",
-        "cmd": "python3 tools/qwen_coll_tp8_static_links_bench.py --qfd --production --latu 37 --lats 376 --mutant-define OT_TP8S_MUT_RANK --out {RUN}/bench/static_mut_rank",
+        "cmd": "python3 tools/qwen_coll_tp8_static_links_bench.py --parent --relays 5 0 0 5 --production --latu 47 --lats 376 --mutant-define OT_TP8S_MUT_RANK --out {RUN}/bench/static_mut_rank",
         "expect": "fail",
         "fail_regex": "^COLL_TP8SL FAIL failed=",
         "threads": 16,
@@ -643,7 +643,10 @@
       "tools/qwen_coll_tp8_static_links_bench.py",
       "rtl/qwen_sys/static_schedule_20261014",
       "rtl/qwen_sys/split_20261014",
-      "rtl/physical"
+      "rtl/physical",
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+      "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
     ],
     "views_to": "physical/ref_tile/qfd_io_collective_s3/views",
     "record_to": "results/rtl/ref_tile/qfd_io_collective_s3"
