@@ -65,9 +65,18 @@ module tb_hbm_su_native_multirate_top;
   .control(control),.vmr_cmd(vmr),.vmw_cmd(vmw),.rf_rd_cmd(rf),.red_cmd(red),
   .lg_rq(lg_rq),.lg_wq(lg_wq),.lg_rr(lg_rr),.lg_w_done(lg_w_done),.fault(fault));
  wire[127:0]lw[0:3];
+ wire[511:0]store_commit;wire[255:0]rf_commit;
  for(genvar q=0;q<4;q=q+1)begin:g_lwq
   for(genvar g=0;g<4;g=g+1)begin:g_lws
    assign lw[q][g*32+:32]=dut.g_q[q].u_quarter.g_slice[g].u_slice.vm_we|dut.g_q[q].u_quarter.g_slice[g].u_slice.kv_we;
+   for(genvar b=0;b<32;b=b+1)begin:g_commit
+    // The pinned bank samples write_v one edge before w_pin drives actual
+    // SRAM write enables. Observe pre-edge w_pin at that real commit edge.
+    assign store_commit[q*128+g*32+b]=dut.g_q[q].u_quarter.g_slice[g].u_slice.g_bank[b].u_bank.w_pin;
+   end
+  end
+  for(genvar b=0;b<64;b=b+1)begin:g_rfcommit
+   assign rf_commit[q*64+b]=dut.g_q[q].u_quarter.u_core.u_rf.g_bank[b].u_bank.wv_pin;
   end
  end
  wire[31:0]bridge_read_present,bridge_ack_present;
@@ -81,7 +90,7 @@ module tb_hbm_su_native_multirate_top;
  end
  integer last_read_issue=-1,last_read_return=-1,last_write_issue=-1,last_lg_ack=-1;
  integer last_bridge_read=-1,last_bridge_ack=-1,last_lane=-1,last_scalar=-1;
- integer bridge_reads=0,bridge_acks=0;
+ integer bridge_reads=0,bridge_acks=0,last_store_commit=-1,last_rf_commit=-1;
  reg[31:0]seed[0:262143];reg[319:0]expw[0:NW-1];reg[127:0]exps[0:NS-1];reg[31:0]explw[0:NE-1];
  reg pend_v[0:31][0:31],pend_w[0:31][0:31];
  integer errors=0,ew=0,es=0,reads=0,writes=0,scalars=0;
@@ -90,6 +99,7 @@ module tb_hbm_su_native_multirate_top;
   integer n;
   n=(half_tick-epoch_half)/8;
   if((half_tick-epoch_half)%8!=0)fail("serial clock phase");
+  if(|store_commit)last_store_commit=n;if(|rf_commit)last_rf_commit=n;
   if(n<NE)begin
    if(!serial_valid||serial_edge!==n||serial_fault)fail($sformatf("serial programme edge %0d got %0d valid %b",n,serial_edge,serial_valid));
    for(integer q=0;q<4;q=q+1)if(|lw[q])last_lane=n;
@@ -193,8 +203,8 @@ module tb_hbm_su_native_multirate_top;
   wait(half_tick>=epoch_half+8*(NE+40));#2;
   if(ew!=NW||es!=NS||reads!=32768||writes!=NW||bridge_reads!=32768||bridge_acks!=NW)fail($sformatf("counts reads%0d writes%0d/%0d scalars%0d/%0d",reads,writes,NW,es,NS));
   if(serial_fault||stream_fault||(|fault)||(|lg_fault)||bank_status!==0)fail("final faults");
-  $display("SU_NATIVE_MULTIRATE_ENDPOINTS {\"last_read_issue_stream\":%0d,\"last_read_return_stream\":%0d,\"last_write_issue_stream\":%0d,\"last_lg_ack_stream\":%0d,\"last_bridge_read_serial\":%0d,\"last_bridge_ack_serial\":%0d,\"last_lane_write_serial\":%0d,\"last_scalar_serial\":%0d,\"config_serial_transactions\":%0d,\"config_stream_transactions\":%0d,\"serial_prime_edges\":4,\"stream_prime_edges\":4,\"serial_programme_edges\":%0d,\"stream_calendar_edges\":%0d,\"checker_tail_serial_edges\":40}",
-   last_read_issue,last_read_return,last_write_issue,last_lg_ack,last_bridge_read,last_bridge_ack,last_lane,last_scalar,SERIAL_WRITES,STREAM_WRITES,NE,PE);
+  $display("SU_NATIVE_MULTIRATE_ENDPOINTS {\"last_read_issue_stream\":%0d,\"last_read_return_stream\":%0d,\"last_write_issue_stream\":%0d,\"last_lg_ack_stream\":%0d,\"last_bridge_read_serial\":%0d,\"last_bridge_ack_serial\":%0d,\"last_lane_write_serial\":%0d,\"last_scalar_serial\":%0d,\"last_store_sram_commit_serial\":%0d,\"last_rf_register_commit_serial\":%0d,\"config_serial_transactions\":%0d,\"config_stream_transactions\":%0d,\"serial_prime_edges\":4,\"stream_prime_edges\":4,\"serial_programme_edges\":%0d,\"stream_calendar_edges\":%0d,\"checker_tail_serial_edges\":40}",
+   last_read_issue,last_read_return,last_write_issue,last_lg_ack,last_bridge_read,last_bridge_ack,last_lane,last_scalar,last_store_commit,last_rf_commit,SERIAL_WRITES,STREAM_WRITES,NE,PE);
   if(errors)$fatal(1,"SU_NATIVE_MULTIRATE_TOP FAIL errors=%0d",errors);
   $display("SU_NATIVE_MULTIRATE_TOP PASS lanes512 storeSRAM3072 nativeVMbanks32 VM_SRAM96 programmeSRAM%0d serial_edges%0d stream_edges%0d reads%0d writes%0d scalars%0d",SERIAL_MACROS+STREAM_MACROS,NE,PE,reads,writes,scalars);
   $finish;

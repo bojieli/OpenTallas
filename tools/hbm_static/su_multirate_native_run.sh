@@ -62,7 +62,7 @@ python3 - "$out/positive.log" "$out/endpoints.json" <<'PY'
 import json,sys
 from pathlib import Path
 line=next(x for x in Path(sys.argv[1]).read_text().splitlines() if x.startswith('SU_NATIVE_MULTIRATE_ENDPOINTS '))
-d=json.loads(line.split(' ',1)[1]);d['max_observed_completion_tick']=max(3*d['last_lg_ack_stream'],3*d['last_read_return_stream'],4*d['last_bridge_read_serial'],4*d['last_bridge_ack_serial'],4*d['last_lane_write_serial'],4*d['last_scalar_serial'])
+d=json.loads(line.split(' ',1)[1]);d['max_observed_completion_tick']=max(3*d['last_lg_ack_stream'],3*d['last_read_return_stream'],4*d['last_bridge_read_serial'],4*d['last_bridge_ack_serial'],4*d['last_lane_write_serial'],4*d['last_scalar_serial'],4*d['last_store_sram_commit_serial'],4*d['last_rf_register_commit_serial'])
 d['quantum_ps']='2500/9';d['physical_clock_epoch_qualified']=False;d['throughput_qualified']=False
 Path(sys.argv[2]).write_text(json.dumps(d,indent=2)+'\n')
 PY

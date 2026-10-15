@@ -148,3 +148,8 @@ It checks every command and calendar bit at the common E0-relative consumer
 edges using the actual mapped SRAM models. Mutants corrupt either plane's
 configuration or shift the stream programmer's start by one stream edge. This
 component cannot establish native VM/top arithmetic or physical qualification.
+
+The native endpoint receipt also observes all 512 pinned store-bank `w_pin`
+signals at the actual SRAM write edge, and all 256 RF-bank `wv_pin` signals at
+their actual register commit edge. These are separate from the lane-write input
+strobes. Both commit endpoints enter the maximum completion tick calculation.
