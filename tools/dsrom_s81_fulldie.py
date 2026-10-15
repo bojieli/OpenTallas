@@ -6873,7 +6873,7 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         y0 = yS if sv.orient == 'R0' else yN
         return y0 + (i - 2.5) * 55.0
 
-    def single(name, payload, fmt, src, src_xy, path, sink_end):
+    def single(name, payload, fmt, src, src_xy, path, sink_end, canonical_access=None):
         """src: (inst, fclk port, data port); sink_end: (end inst) -> lane 0 ports fi0/di0"""
         lw = payload + (2 if fmt == 'vr' else 0)
         if HUB_SOUTH_SHIFT:
@@ -6890,14 +6890,15 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                     m.setdefault('south_su_bypass_chains', []).append(name)
                 detour.append(b_)
             path = detour
-        narrow_service = CANONICAL_LAYOUT and re.fullmatch(r'(q|a|ix|co)[NS][WE]',name)
+        narrow_service = CANONICAL_LAYOUT and (canonical_access is not None or re.fullmatch(r'(q|a|ix|co)[NS][WE]',name))
         if narrow_service:
             from s81.canonical_layout import service_path
             endpoint=(sink_end.x+sink_end.w/2,sink_end.y+sink_end.h/2)
-            if name[0]=='q':
-                path=service_path(sys.modules[__name__],m,cor,src_xy,endpoint,name[-1])
+            side,service_source=canonical_access or (name[-1],name[0]!='q')
+            if not service_source:
+                path=service_path(sys.modules[__name__],m,cor,src_xy,endpoint,side)
             else:
-                path=list(reversed(service_path(sys.modules[__name__],m,cor,endpoint,src_xy,name[-1])))
+                path=list(reversed(service_path(sys.modules[__name__],m,cor,endpoint,src_xy,side)))
         # A wide service record uses its real W/E-face station in an RSC
         # vertical access lane; its17.256um body fits, its54.84um N/S-face
         # alternative does not. Actual pin turns/reach remain to be audited.
@@ -7089,7 +7090,8 @@ def _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, 
             path = [a, (sx, a[1]), (sx, sy), (b[0], sy), b]
         else:
             path = [a, (sx, a[1]), (sx, b[1]), b]
-        single(tag, payload, 'vr', srcp, a, path, he)
+        access=(side,band(src)) if band(src)!=band(dst) else None
+        single(tag, payload, 'vr', srcp, a, path, he, canonical_access=access)
         CH8.bus(f'he_{tag}_o', 'local', payload + 3, [(he.name, 'o'), (dst.name, dport)])
 
     if HOST_SLAB and CTRL_RQ and not _svc_c_host():
@@ -7209,7 +7211,8 @@ def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, stri
             path = [a, (sx, a[1]), (sx, sy), (b[0], sy), b]
         else:
             path = [a, (sx, a[1]), (sx, b[1]), b]
-        single(tag, w_i - 1, 'vr', (st_.name, 'fo', 'od'), a, path, he)
+        access=(side,band(sa)) if band(sa)!=band(da) else None
+        single(tag, w_i - 1, 'vr', (st_.name, 'fo', 'od'), a, path, he, canonical_access=access)
         CH8.bus(f'he_{tag}_o', 'local', w_i, [(he.name, f'o[0:{w_i - 1}]'), (dst.name, dport)])
 
     def bind_slab(e, slab, side, at=None):
