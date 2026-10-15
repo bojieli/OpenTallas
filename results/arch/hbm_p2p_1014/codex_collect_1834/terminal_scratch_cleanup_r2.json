@@ -1,0 +1,31 @@
+[
+  {
+    "name": "reset2dd",
+    "states": {
+      "oth-ubuntu-2523996-1792033086.scope": "inactive",
+      "oth-ubuntu-2523997-1792033086.scope": "inactive"
+    },
+    "logs": {
+      "pos": "make -f Vtb_hgi_coll_b2_vmport.mk\nmake[1]: Entering directory '/srv/opentallas-scratch/codex/hcoll-native-reset-2dd73b243-pos/obj'\nmake[1]: Nothing to be done for 'default'.\nmake[1]: Leaving directory '/srv/opentallas-scratch/codex/hcoll-native-reset-2dd73b243-pos/obj'\nmake: Leaving directory '/srv/opentallas-scratch/codex/hcoll-native-reset-2dd73b243-pos/obj'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 1.355 MB sources in 26 modules, into 0.000 MB in 0 C++ files needing 0.000 MB\n- Verilator: Walltime 68.104 s (elab=0.000, cvt=0.000, bld=0.000); cpu 0.169 s on 4 threads; allocated 80.184 MB\n",
+      "mut": "make -f Vtb_hgi_coll_b2_vmport.mk\nmake[1]: Entering directory '/srv/opentallas-scratch/codex/hcoll-native-reset-2dd73b243-mut/obj'\nmake[1]: Nothing to be done for 'default'.\nmake[1]: Leaving directory '/srv/opentallas-scratch/codex/hcoll-native-reset-2dd73b243-mut/obj'\nmake: Leaving directory '/srv/opentallas-scratch/codex/hcoll-native-reset-2dd73b243-mut/obj'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 1.355 MB sources in 26 modules, into 0.000 MB in 0 C++ files needing 0.000 MB\n- Verilator: Walltime 64.546 s (elab=0.000, cvt=0.000, bld=0.000); cpu 0.196 s on 4 threads; allocated 81.184 MB\n"
+    },
+    "deleted": [
+      "/srv/opentallas-scratch/codex/hcoll-native-reset-2dd73b243-pos",
+      "/srv/opentallas-scratch/codex/hcoll-native-reset-2dd73b243-mut"
+    ]
+  },
+  {
+    "name": "clientmap9ed",
+    "states": {
+      "oth-ubuntu-3947655-1792033646.scope": "inactive"
+    },
+    "logs": {
+      "pos": "make -f Vtb_hgi_coll_b2_vmport.mk\nmake[1]: Entering directory '/srv/opentallas-scratch/codex/hcoll-clientmap-9ed17dd34-pos/obj'\nmake[1]: Nothing to be done for 'default'.\nmake[1]: Leaving directory '/srv/opentallas-scratch/codex/hcoll-clientmap-9ed17dd34-pos/obj'\nmake: Leaving directory '/srv/opentallas-scratch/codex/hcoll-clientmap-9ed17dd34-pos/obj'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 1.438 MB sources in 28 modules, into 0.000 MB in 0 C++ files needing 0.000 MB\n- Verilator: Walltime 162.019 s (elab=0.000, cvt=0.000, bld=0.000); cpu 0.125 s on 4 threads; allocated 74.191 MB\n",
+      "mut": "make -f Vtb_hgi_coll_b2_vmport.mk\nmake[1]: Entering directory '/srv/opentallas-scratch/codex/hcoll-clientmap-9ed17dd34-mut/obj'\nmake[1]: Nothing to be done for 'default'.\nmake[1]: Leaving directory '/srv/opentallas-scratch/codex/hcoll-clientmap-9ed17dd34-mut/obj'\nmake: Leaving directory '/srv/opentallas-scratch/codex/hcoll-clientmap-9ed17dd34-mut/obj'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 1.438 MB sources in 28 modules, into 0.000 MB in 0 C++ files needing 0.000 MB\n- Verilator: Walltime 153.384 s (elab=0.000, cvt=0.000, bld=0.000); cpu 0.174 s on 4 threads; allocated 75.188 MB\n"
+    },
+    "deleted": [
+      "/srv/opentallas-scratch/codex/hcoll-clientmap-9ed17dd34-pos",
+      "/srv/opentallas-scratch/codex/hcoll-clientmap-9ed17dd34-mut"
+    ]
+  }
+]

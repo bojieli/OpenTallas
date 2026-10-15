@@ -180,7 +180,24 @@
     "ring_state": {
       "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_state_r1.json",
       "kit": "physical/ref_tile/hgi_coll_ring_state_r1",
-      "gate": "TT +227.2ps setup / +37.1ps hold, 2600 sinks; route job hgi_coll_ring_state_r1-r1-d5597fc42 running benches"
+      "gate": "CLOSED native pin audit PASS, official-pin coordinates exact",
+      "view": "physical/ref_tile/hgi_coll_ring_state_r1/views/ot_hgi_coll_pring_state",
+      "native_audit": {
+        "pass": true,
+        "launch_ps": 195.9,
+        "capture_ps": 183.9,
+        "TT_R_ps": 151.0,
+        "TT_boundary_spread_ps": 18.8,
+        "clock_entry": "phi-151.0ps at TT; FF/SS references in insertion.json",
+        "assigned_scalar_pins": 2571,
+        "routed_pin_mismatches": 0,
+        "TT_setup_ps": 313.86,
+        "FF_hold_ps": 21.36,
+        "DRC": 0,
+        "SS_sensitivity_ps": 176.42,
+        "reset": "Datapath leaf has no reset; parent owns resettable validity/landed flags and must not consume uninitialized state.",
+        "parent_integration": "phi-R delivery and parent timing still required"
+      }
     },
     "ring_add": {
       "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_add_r1.json",
