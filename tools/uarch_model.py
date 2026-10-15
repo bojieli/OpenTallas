@@ -16291,6 +16291,76 @@ def hbm_qdq_dedicated_face_ff_model():
             "default_off":True,"actual_pin_requirement":"P190/Q220 and per-pairL-H100"}
 
 
+def s81_hcx_resident_native_model():
+    """F12 coefficient home: shared HBM arithmetic, real resident native memory.
+
+    This sizes the actual implemented W32 source, not an adopted die/rate claim.
+    Shared projection arithmetic is ot_hdc_v41x_hcp from ot_hgi_hc_unit; tail
+    instantiates the actual unit with constant HC_MIX_POST records. Production
+    requires real VM/collective slots and measured physical relay calendars.
+    """
+    rom_area = 121.824 * 62.910
+    x_area = 94.824 * 41.040
+    mac = 256 * UNIT['fp32_mac_um2']
+    return dict(schema='opentallas.s81-hcx-resident-native.v1',
+        scope='candidate real RTL and native component evidence; not die qualification',
+        arithmetic='unchanged shared ot_hdc_v41x_hcp W32 and ot_hgi_hc_unit HC_MIX_POST',
+        per_rank_outputs=6, ranks=4, outputs=24, K=20480,
+        clock=dict(serial_GHz=0.9, fast_GHz=1.2, ratio=[4,3]),
+        each_projection=dict(macs_per_cycle=256,
+            weight_port_bytes_per_cycle=8*32*4,
+            x_port_bytes_per_cycle=8*32*2,
+            rom_macros=64, rom_macro='ot_rom_4096x266_m8', payload_bits=256,
+            rom_area_um2=64*rom_area,
+            fn_payload_bits=43*2*20480*32, fn_sets=['attn','ffn'],
+            resident_layer_sets=43, resident_layer_map='main0..39,MTP40..42',
+            rom_payload_capacity_bits=64*4096*256, physical_rom_bits=64*4096*266,
+            rom_addresses=dict(formula='80*(2*layer_idx+ffn)+run',range=[0,6879],pages=2),
+            macro_SS_clk_to_q_ps=739.210334475635,
+            rejected_8192_option=dict(macros=32,area_um2=32*122.256*119.34,SS_clk_to_q_ps=999.324702151268,reason='Only5percent area saving, materially less serial SS timing margin'),
+            x_sram_macros=16, x_sram_macro='ot_sram_1r1w_128x256_m1_r2c2',
+            x_sram_area_um2=16*x_area, x_payload_bits=20480*16,
+            mac_cell_area_estimate_um2=mac,
+            footprint_lower_bound_um2=mac/.55+64*rom_area+16*x_area,
+            estimate_excludes='tree/scalar/tag/clock/hold/pin logic; actual synthesis required',
+            assigned_outline_um=[1728,864],
+            slot_resize='S-DIE f7cc8be24 measuredclear six slots; old128ROM fits only25layers',
+            native_cmd_to_pin_result_cycles=264,
+            pin_register_cost_cycles=2,
+            native_result_source='results/rtl/s81_hcx_home_1014/projection_pin_L00.log',
+            clock_sinks='actual synthesis/CTS census required; >15k needs measured R<=300ps/spread<=80ps or partition'),
+        prefetch=dict(rows=640, bytes_per_row=64, reserved_read_ports=8,
+            native_rows_per_cycle=8, beats=80, payload_bits_per_beat=4096,
+            payload_multicast_sinks=6, replicated_link_bit_demand=6*4096,
+            reservation='real bankmod32 calendar plus capture/SU/field clients; not assigned by this model',
+            producer='actual HC H_STORE export after attention POST required for FFN h; fixture H_BASE is insufficient'),
+        projection_raw_link=dict(words_per_rank=6, bits_per_rank=192,
+            collective='real TP4 all-gather of four padded16-word records, then actual static24-word gatherpack',
+            gatherpack=dict(module='ot_s81_hcx_gatherpack',clock_GHz=1.2,actual_FF_bits=3384,
+                input_record_bits=512,parallel_input_bits=2048,records=4,meaningful_words_per_record=6,
+                native_output_rows=2,native_output_mask=65535,
+                fixed_issue_formula='max(R_CYC)+2,+3',fixed_public_done_formula='max(R_CYC)+WL+5',
+                production_calendar='unbound actual collectives, physical pins and VM writevisibility'),
+            raw_vm_rows=dict(attn=2624,ffn=2640)),
+        native_tail=dict(parameter_rom_macros=4, parameter_rom_area_um2=4*38.016*62.910,
+            arithmetic='actual ot_hgi_hc_unit op2, RMAX2 PMAX2',
+            shared_gain=dict(module='ot_s81_hcx_post_gain_native',
+                clock_roots_added=0,storage_macros_added=0,
+                parameter_addresses=[0,343],gain_addresses=[512,1151],
+                words_per_vector=320,rom_read_bits_per_cycle=256,
+                vm_write_bits_per_cycle=512,vm_write_mask_bits=16,
+                measured_gain_serial_cycles=326,public_start_to_done_serial_cycles=327,vm_commit_latency=4,
+                ownership='fixed compiler mode; post/gain conflicts fault, never arbitrate/wait',
+                qualification='native six-job post/gain/post component PASS; same-binary ROM sign-bit mutant FAIL; physical/liveVM open'),
+            memory='native FP32 rawmix reads, comb/pre/post/eps/reserved output layout',
+            output_rows=dict(attn=2560,ffn=2576), words_per_output_region=32,
+            completion='fixed compiled deadline; actual arithmetic/VM commit checks never reschedule',
+            status='actualcore531..537 observed free-running Sinkhorn phase; fixed540serial budget, public541 exactL00attn+FFNPASS'),
+        immutable_prices_fast_cycles=dict(fn=229,sumsq=253.6,rsqrt=197.3,pre_post=212.3,sinkhorn=637.2),
+        rate_qualification='open: native H export, VM8 reservation, real all-gather, CDC phase/hops, TT/FF/DRC and clock roots',
+        adoption=False)
+
+
 def s81_native_functional_homes_1014_model():
     """Real missing functional homes, unchanged prices, explicit physical debt.
 
@@ -16440,3 +16510,67 @@ def hgi_coll_tkm_static_calendar(G=96, n=512, k=2048, kmax=2048, has_r=True):
                 output_lines=(min(k,G*n)+15)//16*(2 if has_r else 1),
                 schedule='fixed all-element insertion; fixed value conveyor; fixed SRAM reinsertion; fixed id conveyor',
                 price_comparison='historical estimate retained separately; static throughput remains unqualified until measured')
+
+
+def s81_static_hc_source_model():
+    """Source preflight only: fixed TP4 gather -> exact pairwise HC row.
+
+    Native production calendar/slot binding is deliberately an open gate.  No
+    legacy DS slab or performance claim selects this opt-in successor.
+    """
+    return dict(scope='SOURCE_COMPONENT_UNQUALIFIED', ranks=4,
+        fp32_lanes_per_record=16, fp32_add_replicas=48,
+        reduction_order='RN(RN(p0+p1)+RN(p2+p3))',
+        add_pipeline='ot_s81ph_fp32_add_rne_preexp SPLIT=7 KS=1',
+        add_register_stages=8, input_register_stages=1, output_register_stages=1,
+        word_pipeline_register_stages=18,
+        word_sample_to_result_edge_delta=17,
+        input_payload_bits_per_issue=2048, output_payload_bits_per_record=512,
+        input_bytes_per_issue=256, output_bytes_per_record=64,
+        source_cadence_cycles=[4,4,8], records_per_16_cycles=3,
+        input_average_bytes_per_cycle=48, output_average_bytes_per_cycle=12,
+        peak_input_bytes_per_cycle=256, peak_output_bytes_per_cycle=64,
+        macs_per_cycle=0, fp32_adds_per_issue=48,
+        pack_words=16, hc_row_bits=8192,
+        pack_storage_bits=8192, pack_output_register_bits=8192,
+        pack_control='compiler index4, tag32, complete bitmap16, explicit emit slot; no queue or ready',
+        mux_demux='16x512b static indexed assembly write; 8192b registered emit; no arbitration',
+        min_last_word_to_emit_edge_delta=2,
+        rank_fanout='each rank scalar reaches one input adder; inner outputs reach one outer adder',
+        replica_count_per_die=1,
+        isolated_adder_clocked_bits_measured_yosys=641,
+        adders_alone_clock_sinks=48*641,
+        physical_clock_partition=dict(lane_roots=16, metadata_control_roots=1,
+            arithmetic_leaf='s81_static_hc_scalar_reduce',
+            assembly_leaf='s81_static_hc_scalar_assemble',
+            native_interfaces=['s81_static_hc_reduce_clocked','s81_static_hc_assemble_clocked'],
+            actual_independent_clock_pins='clk_lane[15:0],clk_control',
+            measured_scalar_reduce_clocked_bits=2086,
+            measured_scalar_assemble_clocked_bits=1024,
+            measured_clocked_bits_per_lane_root=3110,
+            payload_register_bits_per_lane=dict(rank_input=128,result=32,assembly=512,hc_row_output=512),
+            clock_delivery='PENDING: real slots, control-to-leaf pin registration, insertion, boundary spread and phi-R; common epoch required',
+            compatibility_wrapper='single clk tied across native pins for functional tests only'),
+        routing_tracks_and_area='UNMEASURED: 16 lane pipelines plus assembly; source component only',
+        outline='UNASSIGNED: die-owned slot request required before any synthesis/route',
+        adoption=False,
+        open_gates=['real compiler HC source reservations and six-value/rank packing',
+                    'production throughput and whole-layer price composition',
+                    'die slot outline, faces, tracks, area and registered pin placement',
+                    'TT setup/FF hold, SS sensitivity, DRC, insertion and phi-R bindings'])
+
+
+def s81_static_raw_vm_rows_model():
+    from uarch_model_s81_static_channels import s81_static_raw_vm_rows_model as model
+    return model()
+
+
+def s81_static_collective_slab_model():
+    from uarch_model_s81_static_slab import s81_static_collective_slab_model as model
+    return model()
+
+
+def s81_static_collective_control_rom_model(cycles=2400):
+    """Actual three-macro immutable control page; contextual price remains open."""
+    from s81_static_collective.control_rom_model import price
+    return price(cycles, ROOT)

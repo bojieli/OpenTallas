@@ -1,0 +1,30 @@
+{
+  "additional_metadata_control_roots": 1,
+  "clocked_bits_per_lane_root": 3110,
+  "clocked_payload_bits_all_16_lanes": 49760,
+  "common_epoch_required": true,
+  "lane_roots": 16,
+  "leaves": {
+    "s81_static_hc_scalar_assemble": {
+      "clocked_bits_by_cell_type": {
+        "$dff": 1024
+      },
+      "clocked_bits_total": 1024
+    },
+    "s81_static_hc_scalar_reduce": {
+      "clocked_bits_by_cell_type": {
+        "$adff": 1170,
+        "$dff": 916
+      },
+      "clocked_bits_total": 2086
+    }
+  },
+  "qualification": "SOURCE_ONLY: single-clock compatibility wrapper does not qualify a whole-tile clock root",
+  "scope": "actual source flop partition; physical roots, slots, pin timing and CTS remain unqualified",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv": "bcd4b251ecdddf7740cf652a1198950d2790e06d3618bc9c537a8a7257bb36af",
+    "rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv": "3fb6e07ade3c05b115b7654ea92df9fd9bb28c553cc140e280d2dde20120d783",
+    "rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv": "3e9adac89ab0176846e9602230e0531728698518f24b74f5e409718d4e395710",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+  }
+}
