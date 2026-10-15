@@ -86,14 +86,15 @@ def run(a):
     if exe.exists() and (not mf.exists() or json.loads(mf.read_text()) != manifest):
         raise ValueError('source changed: use a fresh work/build directory')
     if not exe.exists():
-        cmd=[HG.VERILATOR,'--binary','--timing','--hierarchical','--hierarchical-threads',str(a.hier_workers),'-O2','-Wno-fatal','-Wno-WIDTH',
+        cmd=[HG.VERILATOR,'--debugi','1','--binary','--timing','--hierarchical','--hierarchical-threads',str(a.hier_workers),'-O2','-Wno-fatal','-Wno-WIDTH',
              '--top-module','tb_s81_head_prep','-Mdir',str(obj),'-j','16',
              '--unroll-count','4','-fno-dfg','-GNG=256',f'-GMUT={a.mut}',
              '-GHIER=1','-GHALF=1','-GCSPLIT=1','-GTAIL_SPLIT=2',
              '-GCNL_PIN=1','-GCHAIN_STEP=6','-GLANE_SPECIALIZE=1',
              *map(str,sources),'-CFLAGS','-O1']
-        p=subprocess.run(cmd,capture_output=True,text=True)
-        (obj/'build.log').write_text(' '.join(cmd)+'\n'+p.stdout+p.stderr)
+        with (obj/'build.log').open('w') as log:
+            log.write(' '.join(cmd)+'\n'); log.flush()
+            p=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT)
         if p.returncode: raise RuntimeError(f'build failed: {obj}/build.log')
         mf.write_text(json.dumps(manifest,indent=2)+'\n')
     p=subprocess.run([str(exe)],cwd=w,capture_output=True,text=True)
