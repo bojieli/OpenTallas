@@ -24,7 +24,7 @@ module ot_qfd_xpf_schedule_bank #(
  reg sealed;reg [IW:0] count;reg local_fault;
  wire arm_ready,guard_allow,guard_fault,released;
  reg found,me_required,su_required;reg [IW-1:0] pick;
- integer i;
+ integer i,j;
  always @* begin
   found=0;pick=0;me_required=0;su_required=0;
   for(i=N-1;i>=0;i=i-1)begin
@@ -54,6 +54,10 @@ module ot_qfd_xpf_schedule_bank #(
  always @* begin
   seal_good=cfg_count!=0&&cfg_count<=N;
   for(i=0;i<N;i=i+1)if(i<cfg_count&&!loaded[i])seal_good=0;
+  // One producer issue cannot release two distinct operand epochs. Such a
+  // reuse needs an explicitly retained epoch or replay, not a second arm.
+  for(i=0;i<N;i=i+1)for(j=0;j<i;j=j+1)
+   if(i<cfg_count&&records[i][91:72]==records[j][91:72])seal_good=0;
  end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin loaded<=0;used<=0;sealed<=0;count<=0;local_fault<=0;busy<=0;selected<=0;selected_unit<=0;end
