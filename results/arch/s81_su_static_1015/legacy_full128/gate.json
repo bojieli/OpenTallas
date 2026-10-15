@@ -1,0 +1,127 @@
+{
+ "schema": "opentallas.s81.su-calendar-full128.v1",
+ "sources": {
+  "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_calendar_store_full.sv": "28f1e6aaf246b906c0169097d002d24d21427a7cb8876c3e78a85ac6d4570432",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_store.sv": "5a461f769106ca90365395a1fa2ac7a2dc21854cd8cd62914a7601d8516a103b",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl.sv": "ee79596b363a1d757689ba2806dfe7085c331d83591905a8c124bc388c4b96c0",
+  "rtl/hdc/ot_sram_bank.sv": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+ },
+ "shape": {
+  "depth": 4096,
+  "width": 1024,
+  "macros": 128,
+  "macro_shape": "64x512",
+  "words_per_edge": 1
+ },
+ "scope": "Mapped programme store and actual fixed controller component only; SU arithmetic parent, clock delivery and physical placement remain open.",
+ "variants": {
+  "base": {
+   "expected_pass": true,
+   "returncode": 0,
+   "ok": true,
+   "mutation": null,
+   "compiled_sha256": {
+    "tb_s81_su_calendar_store_full.sv": "28f1e6aaf246b906c0169097d002d24d21427a7cb8876c3e78a85ac6d4570432",
+    "ot_s81_su_calendar_store.sv": "5a461f769106ca90365395a1fa2ac7a2dc21854cd8cd62914a7601d8516a103b",
+    "ot_s81_su_calendar_ctl.sv": "ee79596b363a1d757689ba2806dfe7085c331d83591905a8c124bc388c4b96c0",
+    "ot_sram_bank.sv": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+    "ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+   },
+   "log_sha256": "758e46a82dbfc9ce8b2ac692651bb57abbef69847aa5a7fb8c691263d24a869d",
+   "tail": "PASS CALENDAR_FULL128 depth4096 width1024 raw4096 instructions4096 macros128 bubbles0 reset1 done1 bad_ready=0 fault=0 code=0\n/srv/opentallas-scratch/codex/s81-su-programme-1103/full128/base/tb_s81_su_calendar_store_full.sv:81: $finish called at 116158686 (1ps)\n"
+  },
+  "bad_ready": {
+   "expected_pass": true,
+   "returncode": 0,
+   "ok": true,
+   "mutation": null,
+   "compiled_sha256": {
+    "tb_s81_su_calendar_store_full.sv": "28f1e6aaf246b906c0169097d002d24d21427a7cb8876c3e78a85ac6d4570432",
+    "ot_s81_su_calendar_store.sv": "5a461f769106ca90365395a1fa2ac7a2dc21854cd8cd62914a7601d8516a103b",
+    "ot_s81_su_calendar_ctl.sv": "ee79596b363a1d757689ba2806dfe7085c331d83591905a8c124bc388c4b96c0",
+    "ot_sram_bank.sv": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+    "ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+   },
+   "log_sha256": "faaea34a91bd922b1844fb97c6041dfc8878af80b8efd5022bf922ff9d4fc292",
+   "tail": "PASS CALENDAR_FULL128 depth4096 width1024 raw4096 instructions4096 macros128 bubbles0 reset1 done1 bad_ready=1 fault=1 code=8\n/srv/opentallas-scratch/codex/s81-su-programme-1103/full128/bad_ready/tb_s81_su_calendar_store_full.sv:81: $finish called at 116158686 (1ps)\n"
+  },
+  "half_swap": {
+   "expected_pass": false,
+   "returncode": 1,
+   "ok": true,
+   "mutation": [
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_store.sv",
+    ".q(calendar_word[512*b+:512])",
+    ".q(calendar_word[512*(1-b)+:512])"
+   ],
+   "compiled_sha256": {
+    "tb_s81_su_calendar_store_full.sv": "28f1e6aaf246b906c0169097d002d24d21427a7cb8876c3e78a85ac6d4570432",
+    "ot_s81_su_calendar_store.sv": "937877d6912169b54949bdbf6e85ee9cce3bc39887c66aaed6c8177d1bbde142",
+    "ot_s81_su_calendar_ctl.sv": "ee79596b363a1d757689ba2806dfe7085c331d83591905a8c124bc388c4b96c0",
+    "ot_sram_bank.sv": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+    "ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+   },
+   "log_sha256": "8855c39e606bb989bc66811d9e9f5b8fb2f82b720ccacf4ed2aea921871b43a3",
+   "tail": "FATAL: /srv/opentallas-scratch/codex/s81-su-programme-1103/full128/half_swap/tb_s81_su_calendar_store_full.sv:68: full-width raw mismatch row=0\n       Time: 54662028  Scope: tb_s81_su_calendar_store_full\n"
+  },
+  "bank_select": {
+   "expected_pass": false,
+   "returncode": 1,
+   "ok": true,
+   "mutation": [
+    "rtl/hdc/ot_sram_bank.sv",
+    "bs <= ra >> 6;",
+    "bs <= (ra >> 6) ^ 1;"
+   ],
+   "compiled_sha256": {
+    "tb_s81_su_calendar_store_full.sv": "28f1e6aaf246b906c0169097d002d24d21427a7cb8876c3e78a85ac6d4570432",
+    "ot_s81_su_calendar_store.sv": "5a461f769106ca90365395a1fa2ac7a2dc21854cd8cd62914a7601d8516a103b",
+    "ot_s81_su_calendar_ctl.sv": "ee79596b363a1d757689ba2806dfe7085c331d83591905a8c124bc388c4b96c0",
+    "ot_sram_bank.sv": "6f012dc72a823d7e57ded7e53ff93758927a04ffafd5bd38e609b266c0bc544a",
+    "ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+   },
+   "log_sha256": "505e2e608a6a6a2479792915a901a249bb0719c71677c4bcec99db440f5551ec",
+   "tail": "FATAL: /srv/opentallas-scratch/codex/s81-su-programme-1103/full128/bank_select/tb_s81_su_calendar_store_full.sv:68: full-width raw mismatch row=0\n       Time: 54662028  Scope: tb_s81_su_calendar_store_full\n"
+  },
+  "control_row": {
+   "expected_pass": false,
+   "returncode": 1,
+   "ok": true,
+   "mutation": [
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl.sv",
+    "rq_row<=calendar_word[239:16];",
+    "rq_row<=calendar_word[239:16]^224'd1;"
+   ],
+   "compiled_sha256": {
+    "tb_s81_su_calendar_store_full.sv": "28f1e6aaf246b906c0169097d002d24d21427a7cb8876c3e78a85ac6d4570432",
+    "ot_s81_su_calendar_store.sv": "5a461f769106ca90365395a1fa2ac7a2dc21854cd8cd62914a7601d8516a103b",
+    "ot_s81_su_calendar_ctl.sv": "5fc852074b5bffdca3783e7bcfe1af1c3ffc22115e4fd973cd82dd4c28368517",
+    "ot_sram_bank.sv": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+    "ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+   },
+   "log_sha256": "f6743963fba065850b502aa886695e1bcb2df94f95ee606ab5c7c4eb8f2c33c1",
+   "tail": "FATAL: /srv/opentallas-scratch/codex/s81-su-programme-1103/full128/control_row/tb_s81_su_calendar_store_full.sv:48: controller request mismatch word=0\n       Time: 112740120  Scope: tb_s81_su_calendar_store_full\n"
+  },
+  "ready_bypass": {
+   "expected_pass": false,
+   "returncode": 1,
+   "ok": true,
+   "mutation": [
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl.sv",
+    "!up_rdy ||",
+    "1'b0 ||"
+   ],
+   "compiled_sha256": {
+    "tb_s81_su_calendar_store_full.sv": "28f1e6aaf246b906c0169097d002d24d21427a7cb8876c3e78a85ac6d4570432",
+    "ot_s81_su_calendar_store.sv": "5a461f769106ca90365395a1fa2ac7a2dc21854cd8cd62914a7601d8516a103b",
+    "ot_s81_su_calendar_ctl.sv": "4c06c7470b42f74ad6b6a75a777c2c3e31649a16413492d3b49fbb681c428e57",
+    "ot_sram_bank.sv": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+    "ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+   },
+   "log_sha256": "7a7ef4ea1023a692e7a4d21b853f8b8c25b4ddd7cb8b7fa7c94ded0fafad3ced",
+   "tail": "FATAL: /srv/opentallas-scratch/codex/s81-su-programme-1103/full128/ready_bypass/tb_s81_su_calendar_store_full.sv:80: full calendar failure seen=4096 flt=0 code=0 sfault=0 cycle=4096\n       Time: 116158686  Scope: tb_s81_su_calendar_store_full\n"
+  }
+ },
+ "pass_gate": true
+}

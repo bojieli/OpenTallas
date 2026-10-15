@@ -6,7 +6,7 @@ EPYC queue and staging the coherent sources plus CPU fixture onto that machine.
 No scheduler, daemon, flow or cache state is modified by this runner.
 """
 from __future__ import annotations
-import argparse, ast, hashlib, json, os, re, subprocess
+import argparse, ast, hashlib, json, os, re, shutil, subprocess
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 TOP='tb_s81_engram_mix4_native_vm'
@@ -37,6 +37,7 @@ def main():
     p.add_argument('--fixture-dir',type=Path,required=True);p.add_argument('--macro',type=Path)
     p.add_argument('--execute',action='store_true');p.add_argument('--lint-only',action='store_true')
     p.add_argument('--variants',nargs='+',choices=VARIANTS,default=list(VARIANTS))
+    p.add_argument('--reuse-base-objects',action='store_true',help='Deep-copy completed base build as an incremental build seed; every variant still rebuilds and runs')
     p.add_argument('--jobs',type=int,default=1);p.add_argument('--coordinator-lock',type=Path,default=LOCK)
     p.add_argument('--verilator',default=str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'))
     a=p.parse_args();LOCK=a.coordinator_lock;coordinator()
@@ -63,6 +64,12 @@ def main():
         if any(sha(fixture/x)!=h for x,h in manifest['fixture_sha256'].items()):raise SystemExit('STOP: fixture changed during gate')
     for name,v in manifest['variants'].items():
         coordinator();unchanged()
+        obj=out/f'obj_{name}'
+        if a.reuse_base_objects and name!='base' and not obj.exists():
+            seed=out/'obj_base'
+            if not (seed/f'V{TOP}').is_file():raise SystemExit('Missing completed base build seed')
+            shutil.copytree(seed,obj) # Independent files: never hardlink mutable generated C++/objects.
+            v['incremental_seed']=str(seed)
         with (out/f'build_{name}.log').open('w') as f:r=subprocess.run(v['build'],stdout=f,stderr=subprocess.STDOUT)
         unchanged()
         if r.returncode:raise SystemExit(f'BUILD FAIL {name}; see {out}/build_{name}.log')
