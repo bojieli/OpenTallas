@@ -198,8 +198,22 @@ module ot_s81_su_rxc #(
     always @(posedge clk) begin
         xa_x <= e_x;
         xq_x <= {e_b, e_x};                  // QR: {pair row, row}; RB: {bias, score}; RW: {-, operand row}
-        xq_c <= {coef(e_j + 2'd1, cos_t), coef(e_j, cos_t)};
-        xq_s <= {coef(e_j + 2'd1, sin_t), coef(e_j, sin_t)};
+    end
+    // QR coefficient select: the row index j drives 2 x 1024 output bits through 4:1 muxes (g3 gate: b_oi[1] = 3,076
+    // loads).  Eight kept copies of j (one per 128-bit coefficient group of each table half) bound the fanout.
+    (* keep *) reg [15:0] cj;                 // copy gq at [2 gq +: 2]
+    always @(posedge clk) cj <= {8{oi_a[1:0]}};
+    genvar gq;
+    generate for (gq = 0; gq < 8; gq = gq + 1) begin : g_cf
+        // group gq: table half gq / 4 (0 = row j, 1 = row j + 1), 64-bit slice gq % 4 of the 256-bit coefficient word
+        localparam integer H = gq / 4, Q = gq % 4;
+        wire [1:0] jj = cj[2 * gq +: 2] + ((H != 0) ? 2'd1 : 2'd0);
+        always @(posedge clk) begin
+            xq_c[256 * H + 64 * Q +: 64] <= coef(jj, cos_t) >> (64 * Q);
+            xq_s[256 * H + 64 * Q +: 64] <= coef(jj, sin_t) >> (64 * Q);
+        end
+    end endgenerate
+    always @(posedge clk) begin
         xw_cfg <= {prow[0][160 +: 4], prow[0][128 +: 4], prow[0][96 +: 32]};
     end
 

@@ -16,7 +16,7 @@
   365.03999999999996
  ],
  "why": "spec outline",
- "std_area_um2": 9000,
+ "std_area_um2": 6400,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -86,7 +86,7 @@
   [
    "WARN",
    "util",
-   "utilisation 9% outside 45%-60% (std 9000 + macro 0 in core 100329 um2)",
+   "utilisation 6% outside 45%-60% (std 6400 + macro 0 in core 100329 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],

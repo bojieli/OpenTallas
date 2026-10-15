@@ -89,12 +89,12 @@
   "benched_by": "s81su_rxh_eq",
   "owner": "Claude:S-ELEM-C",
   "branch": "claude/s81-surx-engram-1015",
-  "tag": "g3",
+  "tag": "g4",
   "purpose": "S81 SU rx cluster control leaf (tap, slot classes, stage B, issue, result rows)",
   "views_to": "physical/ref_tile/s81su_rxc_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_rxc_ref"
  },
- "std_area_um2": 9000,
+ "std_area_um2": 6400,
  "outline": {
   "w": 280.8,
   "h": 367.2
@@ -114,5 +114,5 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "S-ELEM-C 10-15 g3: g2 gate (11,378 sinks, CTS 469.7/72.4) failed setup -386 ps on dq_d -> serial 16-bit row numbering over 5 slots -> 5:1 x512 select -> xq_x across a 388.8 sq pin-limited tile at util 4.6%. g3: slot classes from a registered pending-parameter count (shallow), one-hot AND-OR selects, +1 register stage (stage B) between tap and issue flops (+1 cycle all RX kinds); RW control added; RB/RW leaf pins moved to S; outline 280.8 x 367.2 (pin-limited: E 3,080 pins, N 2,575)"
+ "structural_change": "S-ELEM-C 10-15 g3: g2 gate (11,378 sinks, CTS 469.7/72.4) failed setup -386 ps on dq_d -> serial 16-bit row numbering over 5 slots -> 5:1 x512 select -> xq_x across a 388.8 sq pin-limited tile at util 4.6%. g3: slot classes from a registered pending-parameter count (shallow), one-hot AND-OR selects, +1 register stage (stage B) between tap and issue flops (+1 cycle all RX kinds); RW control added; RB/RW leaf pins moved to S; outline 280.8 x 367.2 (pin-limited: E 3,080 pins, N 2,575) | g4: g3 gate CTS 11,550 sinks 435.9/92.2, r2r +41.2 (was -386.4); b_oi[1] 3,076 loads -> 8 kept copies of the QR row index, one per 64-bit coefficient group"
 }
