@@ -15,6 +15,10 @@ module tb_dsfd_vm_static_return_bank8;
  .release_v(rv),.release_group(rg),.release_mask(rm),.prepare_v(pv),.prepare_group(pg),.prepare_mask(pm),
  .o_v(newv),.o_data(newd),.o_group(newg),.fault(newf));
  integer errors=0,checks=0,releases=0,words=0,atomic_missing=0,seed=1,mode=0;
+ // The lanes register the schedule-fault check once before their sticky flag: compare against the
+ // reference fault one stream edge late (diagnostic level; data/valid are compared at the same edge).
+ reg oldf_d=0;always @(posedge ck)oldf_d<=oldf;
+ reg [31:0] nv_rel;
  reg [31:0] issuedmask;integer g,t,s,b,drop;
  function automatic [127:0] value(input integer group_id,input integer slot_id);
   value={32'(group_id),32'(slot_id),32'hfedcba98,32'(group_id*127+slot_id*773)};
@@ -22,7 +26,7 @@ module tb_dsfd_vm_static_return_bank8;
  task automatic check;
   begin
    @(posedge ck);#0.1;checks=checks+1;
-   if(oldv!==newv || oldf!==( |newf))begin
+   if(oldv!==newv || oldf_d!==( |newf))begin
     $display("MISMATCH mode%0d check%0d ov%h nv%h of%b nf%h",mode,checks,oldv,newv,oldf,newf);errors=errors+1;
    end
    if(rv)begin
@@ -66,8 +70,9 @@ module tb_dsfd_vm_static_return_bank8;
   for(drop=0;drop<4;drop=drop+1)begin
    reset();@(negedge ck);pv=1;pg=3;pm=32'hffffffff;iv=32'hffffffff & ~(32'b1<<drop);
    for(s=0;s<32;s=s+1)begin it[8*s+:8]={3'd3,5'(s)};id[128*s+:128]=value(3,s);end
-   check();@(negedge ck);iv=0;pv=0;rv=1;rg=3;rm=32'hffffffff;check();
-   if(newv!==0 || !oldf || !(|newf))errors=errors+1;else atomic_missing=atomic_missing+1;
+   check();@(negedge ck);iv=0;pv=0;rv=1;rg=3;rm=32'hffffffff;check();nv_rel=newv;
+   @(negedge ck);rv=0;check();
+   if(nv_rel!==0 || !oldf || !(|newf))errors=errors+1;else atomic_missing=atomic_missing+1;
   end
   // Duplicate, occupied overwrite, wrong group, late-at-release and same-parity
   // clear+arrival semantics compared to the actual monolithic old leaf.

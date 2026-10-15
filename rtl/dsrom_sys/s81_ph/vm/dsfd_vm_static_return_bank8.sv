@@ -9,6 +9,9 @@
 // leaf's own registered copy of the stage9 prepare descriptor (the same compiled
 // descriptor one edge early). The release_* pins only feed a shallow equality check
 // (descriptor mismatch = sticky fault + suppressed release), never the slot state.
+// Native5 also registers the schedule-fault check once before the sticky flag (measured native5 CTS: the 8-source
+// slot-collision cone i_tag -> bad -> fault was the worst input path, -20/-38 ps): fault rises one stream edge after
+// the offending edge. It is a diagnostic level only; it never gates data or stretches the schedule.
 module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer LANE=0)(
  input wire ck,rst_n,
  input wire [7:0] i_v,input wire [63:0] i_tag,input wire [8*DW-1:0] i_data,
@@ -31,7 +34,7 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
  reg prepared_v;reg [2:0] prepared_group;
  wire rel_mismatch=(release_v!=prepared_v) || (release_v && (release_group!=prepared_group || release_mask!=prepared_mask));
  reg [7:0] prepared_parity;
- reg bad,complete;reg [7:0] prepare_complete;
+ reg bad,complete,bad_q;reg [7:0] prepare_complete;
  integer j,idx,s,p;
  always @*begin
   complete=1;
@@ -59,9 +62,9 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
   end
  end
  always @(posedge ck or negedge rn)begin
-  if(!rn)begin valid<=0;o_v<=0;fault<=0;o_group<=0;completion_token<=0;prepared_mask<=0;prepared_v<=0;prepared_group<=0;end
+  if(!rn)begin valid<=0;o_v<=0;fault<=0;bad_q<=0;o_group<=0;completion_token<=0;prepared_mask<=0;prepared_v<=0;prepared_group<=0;end
   else begin
-   valid<=valid_n;fault<=fault|bad;
+   valid<=valid_n;bad_q<=bad;fault<=fault|bad_q;
    o_v<=release_v && complete ? release_mask : 8'b0;
    o_group<=prepared_group;
    completion_token<={prepare_v,prepare_group,prepare_complete};

@@ -24,7 +24,8 @@
 // Every service fault is ORed onto the engine's legacy-fault input (seq flt[10] -> c_st[0]).
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
-    // cks owns this core's bounded local control registers. Every child root is an explicit
+    // cks owns ONLY the legacy READ_PIPE=0 die output registers (native read production: no sink; the VM control
+    // glue lives in the hardened engine-12 tile dsfd_vm_seq_tile on ck_seq). Every child root is an explicit
     // independently deliverable clock pin; tying these pins is a TESTBENCH decision only.
     input  wire          cks, rss,
     input  wire          ck_rsched, ck_seq, ck_landing,
@@ -78,14 +79,11 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
     input  wire [15:0]   cp_v, input wire [223:0] cp_row, input wire [255:0] cp_m, input wire [8191:0] cp_d,
     input  wire [3:0]    cl_v, input wire [55:0] cl_row, input wire [63:0] cl_m, input wire [2047:0] cl_d, input wire [31:0] cl_t,
     input  wire          wf_v, input wire [13:0] wf_row, input wire [511:0] wf_d,
-    // external service faults ORed in (e.g. the 3:4 transfers)
-    input  wire          x_flt,
+    // external service fault sources, checked/registered in the engine-12 tile: 3:4 landing transfer alarms and
+    // headers {xw_v, xw_d[1025:1024], xc_v, xc_d[513:512], xs_v, xs_d[513:512]}, edge leaf faults {xio, wfc, cap}
+    input  wire [2:0]    x_al, input wire [8:0] x_hdr, input wire [2:0] edge_f,
     output wire          vm_fault
 );
-    wire ck = cks;
-    reg [1:0] rr;
-    always @(posedge ck or negedge rss) if (!rss) rr <= 2'b00; else rr <= {rr[0], 1'b1};
-    wire rn = rr[1];
 
     // ---------------------------------------------------------------- read schedule
     // aux 0..3: PQ x rows (4 an edge); aux 4..7: outbound row streams (xio); aux 8..11: WFC kit reads
@@ -108,8 +106,6 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
         .release_v(rel_v), .release_group(rel_g), .release_mask(rel_m), .prepare_v(pre_v), .prepare_group(pre_g), .prepare_mask(pre_m),
         .expected_v(exp_v), .release_slot(rel_s),
         .aux_expected(aux_exp), .obs_row(obs_row));
-    reg pq_bad;
-    always @(posedge ck) if (!rn) pq_bad <= 1'b0; else if (f_pqx[0] && (f_pqx[19] || f_pqx[6:1] != 6'd0)) pq_bad <= 1'b1;
 
     // ---------------------------------------------------------------- write sources
     localparam integer NSRC = 53;
@@ -168,8 +164,12 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
         .commit_v(cm_v), .commit_addr(cm_a), .commit_mask(cm_m), .commit_tag(cm_t), .fault(m_flt));
 
     // ---------------------------------------------------------------- die output registers (P+12)
-    wire o_bad;
+    wire [7:0] out_fault;
     generate if (READ_PIPE == 0) begin : legacy_read
+        wire ck = cks;     // legacy READ_PIPE=0 output stage only (native read production: cks has no sink)
+        reg [1:0] rr;
+        always @(posedge ck or negedge rss) if (!rss) rr <= 2'b00; else rr <= {rr[0], 1'b1};
+        wire rn = rr[1];
         reg [15:0] q_t_su_rsv; assign t_su_rsv=q_t_su_rsv;
         reg [8191:0] q_t_su_rs; assign t_su_rs=q_t_su_rs;
         reg [1:0] q_t_hc_rsv; assign t_hc_rsv=q_t_hc_rsv;
@@ -179,7 +179,7 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
         reg [4095:0] q_x_rd; assign x_rd=q_x_rd;
         reg [19:0] q_t_mx_rsv; assign t_mx_rsv=q_t_mx_rsv;
         reg [10239:0] q_t_mx_rs; assign t_mx_rs=q_t_mx_rs;
-        reg [0:0] q_o_bad; assign o_bad=q_o_bad;
+        reg [0:0] q_o_bad; assign out_fault={7'd0,q_o_bad};
     always @(posedge ck) begin : p_out integer p, s; reg bad;
         bad = 1'b0;
         for (p = 0; p < 18; p = p + 1)
@@ -212,34 +212,20 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
             .n_data({t_hc_rs,t_su_rs}), .n_valid({t_hc_rsv,t_su_rsv}),
             .pq_data(t_pqx[2048:1]), .pq_valid(t_pqx[0]), .x_data(x_rd), .x_valid(x_rv),
             .mx_data(t_mx_rs), .mx_valid(t_mx_rsv), .fault(read_fault));
-        // This diagnostic reduction belongs to the existing explicit core-control root.
-        // One additional observation edge; it never gates data or extends a schedule.
-        reg fault_q;
-        always @(posedge ck) if (!rn) fault_q <= 1'b0; else if (|read_fault) fault_q <= 1'b1;
-        assign o_bad=fault_q;
+        // read-router faults are registered (sticky) in the engine-12 tile; never gate data or extend a schedule.
+        assign out_fault=read_fault;
     end endgenerate
 
-    // ---------------------------------------------------------------- engine 12 + static native ops
-    wire v_cv; wire [83:0] v_cd; reg v_dv; reg [7:0] v_dt; reg op_bad;
-    wire svc_flt = w_flt | |m_flt | |l_flt | pq_bad | o_bad | op_bad | r_flt | x_flt;
-    dsfd_vm_seq_static u_seq (.ck(ck_seq), .rst(rst_seq_n), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
+    // ---------------------------------------------------------------- engine 12 + static native ops + control glue
+    wire larm_v; wire [3:0] larm_g; wire [13:0] larm_base;
+    dsfd_vm_seq_tile u_seq (.ck(ck_seq), .rst(rst_seq_n), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
         .o_cv(cm_v), .o_ca(cm_a), .o_cm(cm_m), .o_rv({2'b00, a_v, n_v}), .o_rr({28'd0, obs_row}),
-        .v_cv(v_cv), .v_cd(v_cd), .v_dv(v_dv), .v_dt(v_dt), .v_flt(svc_flt),
-        .t_inp_su(t_inp_su), .t_inp_hc(t_inp_hc));
-    wire [2:0] v_code = v_cd[30:28];
-    wire larm_v = v_cv && v_code == 3'd6 && v_cd[27:24] != 4'd7;      // group 7 = collective landing (xio)
-    assign nf_v = v_cv; assign nf_d = v_cd;
-    always @(posedge ck) begin
-        if (!rn) begin v_dv <= 1'b0; op_bad <= 1'b0; end
-        else begin
-            v_dv <= v_cv;                                  // fixed: every native op retires one edge after its forward
-            if (v_cv && (v_code == 3'd5 || v_code == 3'd7 ||
-                (v_code == 3'd6 && v_cd[27:24] == 4'd7))) op_bad <= 1'b1; // legacy collective ops removed
-        end
-        v_dt <= {v_cd[83], v_cd[6:0]};
-    end
-    dsfd_vm_static_landing u_land (.ck(ck_landing), .rst_n(rst_landing_n), .larm_v(larm_v), .larm_g(v_cd[27:24]), .larm_base(v_cd[20:7]),
-        .i_v(l_v), .i_d(l_d), .o_v(lo_v), .o_row(lo_row), .o_d(lo_d), .fault(l_flt));
-    assign vm_fault = svc_flt;
+        .t_inp_su(t_inp_su), .t_inp_hc(t_inp_hc), .nf_v(nf_v), .nf_d(nf_d),
+        .larm_v(larm_v), .larm_g(larm_g), .larm_base(larm_base),
+        .pqx_chk({f_pqx[19], f_pqx[6:1], f_pqx[0]}), .read_fault(out_fault), .edge_f(edge_f), .x_hdr(x_hdr), .x_al(x_al),
+        .w_flt(w_flt), .m_flt(m_flt), .l_flt(l_flt), .r_flt(r_flt), .vm_fault(vm_fault));
+    dsfd_vm_static_landing u_land (.ck(ck_landing), .rst_n(rst_landing_n), .larm_v(larm_v), .larm_g(larm_g), .larm_base(larm_base),
+        .i_v(l_v), .i_d01(l_d[1023:0]), .i_d23(l_d[2047:1024]), .o_v(lo_v), .o_row(lo_row),
+        .o_d01(lo_d[1023:0]), .o_d23(lo_d[2047:1024]), .fault(l_flt));
 endmodule
 `default_nettype wire
