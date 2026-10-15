@@ -12,12 +12,12 @@ module tb_qwen_static_slot_link;
  reg [LAT-1:0] avpipe=0,bvpipe=0;
  reg [LAT*PW-1:0] afpipe=0,bfpipe=0;
  integer cyc,checks=0,errors=0,aborts=0;
- function automatic [FW-1:0] word(input integer endpoint,input integer slot);
+ function automatic [FW-1:0] word(input integer endpoint,input integer slot,input integer gen);
    integer k;begin
-    for(k=0;k<FW;k=k+1)word[k]=((k*13+slot*17+endpoint*29)^(slot>>(k%6)))&1;
+    for(k=0;k<FW;k=k+1)word[k]=((k*13+slot*17+endpoint*29+gen*33)^(slot>>(k%6)))&1;
    end
  endfunction
- assign aw=word(0,ws);assign bw=word(1,ws);
+ assign aw=word(0,ws,cyc>=200);assign bw=word(1,ws,cyc>=200);
  wire corrupt= MUT==1 && atv && atf[FW+5:FW]==6'd7;
  always @(posedge clk)begin
    avpipe<={avpipe,atv};bvpipe<={bvpipe,btv};
@@ -37,21 +37,25 @@ module tb_qwen_static_slot_link;
   .p_tx_v(btv),.p_tx_flit(btf),.p_rx_v(avpipe[LAT-1]),.p_rx_flit(afpipe[LAT*PW-1-:PW]),
   .rx_v(brv),.rx_flit(brd),.epoch_abort(ba),.fault_cause(bc));
  initial begin
-  for(cyc=0;cyc<190;cyc=cyc+1)begin
+  for(cyc=0;cyc<380;cyc=cyc+1)begin
    rst_n=cyc>=4;epoch_begin=cyc==6;
-   wr_v=cyc>=8&&cyc<72;ws=6'(cyc-8);
-   rd_v=cyc>=100&&cyc<164;rs=6'(cyc-100);
-   ev=cyc>=108&&cyc<172;es=6'(cyc-108);
+   wr_v=(cyc>=8&&cyc<72)||(cyc>=200&&cyc<264);
+   if(MUT==5 && cyc==207)wr_v=0;
+   ws=6'(cyc>=200?cyc-200:cyc-8);
+   rd_v=(cyc>=100&&cyc<164)||(cyc>=292&&cyc<356);
+   rs=6'(cyc>=292?cyc-292:cyc-100);
+   ev=(cyc>=108&&cyc<172)||(cyc>=300&&cyc<364);
+   es=6'(cyc>=300?cyc-300:cyc-108);
    #5;clk=1;#1;
    if(rst_n)begin
     if(aa||ba)aborts=aborts+1;
     if(MUT==0 && (aa||ba))begin errors=errors+1;$display("ABORT cycle%0d a%h b%h",cyc,ac,bc);end
     // These are compiler constants, not observed-output driven expectations.
-    if(MUT==0 && (atv!==(cyc>=102&&cyc<166)||btv!==(cyc>=102&&cyc<166)))errors=errors+1;
-    if(cyc>=109&&cyc<173)begin
+    if(MUT==0 && (atv!==((cyc>=102&&cyc<166)||(cyc>=294&&cyc<358))||btv!==((cyc>=102&&cyc<166)||(cyc>=294&&cyc<358))))errors=errors+1;
+    if((cyc>=109&&cyc<173)||(cyc>=301&&cyc<365))begin
       checks=checks+2;
-      if(!arv || ard!==word(1,cyc-109))errors=errors+1;
-      if(!brv || brd!==word(0,cyc-109))errors=errors+1;
+      if(!arv || ard!==word(1,cyc>=301?cyc-301:cyc-109,cyc>=301))errors=errors+1;
+      if(!brv || brd!==word(0,cyc>=301?cyc-301:cyc-109,cyc>=301))errors=errors+1;
     end else if(MUT==0 && (arv||brv))errors=errors+1;
    end
    #4;clk=0;

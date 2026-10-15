@@ -1,0 +1,202 @@
+{
+ "name": "qkd_slot_ctl548",
+ "top": "ot_qwen_static_slot_ctl",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216,
+  "h": 172.8
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "p_tx_up",
+   "p_tx_v",
+   "p_rx_v",
+   "p_rx_flit",
+   "p_tx_flit"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "epoch_begin",
+   "epoch",
+   "wr_v",
+   "wr_slot",
+   "rd_v",
+   "rd_slot",
+   "rx_expect_v",
+   "rx_expect_slot",
+   "rx_v",
+   "rx_flit",
+   "epoch_abort",
+   "fault_cause"
+  ],
+  "W": [
+   "q_data"
+  ],
+  "E": []
+ },
+ "pin_ranges": {
+  "p_tx_up": [
+   5,
+   6
+  ],
+  "p_tx_v": [
+   8,
+   9
+  ],
+  "p_rx_v": [
+   10,
+   11
+  ],
+  "p_rx_flit": [
+   30,
+   100
+  ],
+  "p_tx_flit": [
+   110,
+   180
+  ],
+  "clk": [
+   2,
+   3
+  ],
+  "rst_n": [
+   4,
+   5
+  ],
+  "epoch_begin": [
+   6,
+   7
+  ],
+  "epoch": [
+   8,
+   12
+  ],
+  "wr_v": [
+   13,
+   14
+  ],
+  "wr_slot": [
+   15,
+   18
+  ],
+  "rd_v": [
+   19,
+   20
+  ],
+  "rd_slot": [
+   21,
+   24
+  ],
+  "rx_expect_v": [
+   25,
+   26
+  ],
+  "rx_expect_slot": [
+   27,
+   30
+  ],
+  "rx_v": [
+   31,
+   32
+  ],
+  "epoch_abort": [
+   33,
+   34
+  ],
+  "fault_cause": [
+   35,
+   39
+  ],
+  "rx_flit": [
+   50,
+   180
+  ],
+  "q_data": [
+   8,
+   164
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M5"
+ },
+ "recipe": 2,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "structural_change": "True static normal link controller: compiler-issuedwr/rdslots with fixedTX2/RX1, CRC16 epoch+slot check, no credits/ACK/upselectnormalissue. Any slot/writeownership/timeline/CRC/PHYup error abortsepoch; explicitcompilerdrain/restart. Separate control root and four SRAM store roots; no parent-local payload flops.",
+ "job": {
+  "owner": "Codex:q-link-replay",
+  "branch": "codex/q-link-replay-1014",
+  "tag": "s1",
+  "purpose": "Real native Qwen CRC/retry replay leaf with independent clock and registered read pin face",
+  "benches": [
+   {
+    "name": "compiled_static_slot_exact",
+    "cmd": "bash rtl/test/qwen_split/run_static_slot_link.sh {RUN}/bench/positive",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 3,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "STATIC_SLOT_PASS",
+    "min_count_regex": "checks(\\d+)"
+   },
+   {
+    "name": "compiled_static_slot_bank_mut",
+    "cmd": "bash rtl/test/qwen_split/run_static_slot_link.sh {RUN}/bench/mutant -Ptb_qwen_static_slot_link.MUT=3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 3,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "STATIC_SLOT_PASS"
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_split",
+   "rtl/test/qwen_split",
+   "rtl/qwen_sys",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/qwen_kv_die_phy",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qkd_slot_ctl548/views",
+  "record_to": "results/rtl/ref_tile/qkd_slot_ctl548"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "physical/ref_tile/qkd_slot_ctl548/assigned_pins.tcl"
+}
