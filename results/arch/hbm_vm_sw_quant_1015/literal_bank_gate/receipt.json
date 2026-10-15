@@ -1,0 +1,75 @@
+{
+  "scope": "literal new SW Quant RG6/WG2/SID0 wrapper, actual8banks/24SRAM, unchanged frozenbank core",
+  "status": "PASS",
+  "source_commit": "e219c9689",
+  "sources_sha256": {
+    "hfd_vms_bank_static_rg6wg2.sv": "d1a235c0f27fa4f5212c24123bcdfc93793ef8a3e5f6d0b5c1058be9cba2baaa",
+    "ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+    "run_vms_rg6_quant_static.sh": "7e0f06f937f98e5563c25588849e9cd5c169e0ef4e3c8d40fe47e6c8c7c90378",
+    "tb_hbm_vm_physical_banks_static.sv": "3d844d4dd1c35232558a3f975d3df183ee53503bf7f7b4761f49d4e18aa46456",
+    "tb_vms_rg6_quant_static.sv": "b42aa74889502809f04179c9e10296df82e7baa5df15b1c00ef7b0a81e9e529a"
+  },
+  "shape": {
+    "RG": 6,
+    "WG": 2,
+    "SID": 0,
+    "banks": 8,
+    "actualSRAMmacros": 24
+  },
+  "positive": {
+    "DMA_initial_writes": 1024,
+    "baseline_wide_reads": 6144,
+    "each_of_six_groups": 1024,
+    "read_issue_edges": 768,
+    "sectors_per_edge": 8,
+    "read_return_edges": 6,
+    "packet_read_owner": 6,
+    "packet_reads": 8,
+    "packet_tag_exact": true,
+    "two_active_reads_selected0_only_fault_no_arbitration": true
+  },
+  "extra_write_owner_proof": {
+    "WG1_writes": 1024,
+    "WG1_readbacks_through_RG5": 1024,
+    "commit_edges": 3,
+    "fixed_owner_slots": {
+      "WG0": 0,
+      "WG1": 1,
+      "COLL": 2,
+      "CW": 3,
+      "packet": 4,
+      "CCW": 5,
+      "DMA": 6
+    },
+    "each_owner_extra_writes": 8,
+    "each_owner_extra_readbacks": 8,
+    "exact_completion_routes": true,
+    "packet_write_reply_edges": 6,
+    "packet_write_tag_echo": true
+  },
+  "mutants": {
+    "actual_SRAM_response_group_wire_permutation": "KILLED atcycle145 actual bank response group mismatch",
+    "actual_WG1_input_slot1_changedto0": "KILLED actual WG1 write owner mismatch"
+  },
+  "ot_run": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3861680-1792057556",
+    "memGB": 1,
+    "threads": 1,
+    "exit": 0,
+    "terminal": true,
+    "path": "/tmp/hbm-vm-rg6-quant-run1"
+  },
+  "bank_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "limitations": [
+    "functionalshape/wiring/throughput gate only, no physical/STA/route qualification",
+    "one literal8bank SW representative, notfourquadrants",
+    "Quant arithmetic4096wordprogramme belongs independent0a2b7d317, notclaimed bythisgate",
+    "no oldRG5/7 orDMA reruns"
+  ],
+  "measured": {
+    "positive_vvp_elapsed_s": 44.15,
+    "positive_vvp_max_RSS_KB": 14596
+  }
+}

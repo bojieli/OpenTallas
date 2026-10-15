@@ -1,0 +1,29 @@
+{
+  "stage": "BEFORE_SHAPE_BENCH_EXTENSION",
+  "source_commit": "e219c9689",
+  "bank_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "shape": {
+    "RG": 6,
+    "WG": 2,
+    "SID": 0,
+    "banks": 8,
+    "actualSRAMmacros": 24
+  },
+  "fixedslots": {
+    "wide0": 0,
+    "wide1": 1,
+    "COLL": 2,
+    "CW": 3,
+    "packet": 4,
+    "CCW": 5,
+    "DMA": 6
+  },
+  "pipeline": {
+    "read_edges": 6,
+    "write_commit_edges": 3,
+    "packet_write_reply_edges": 6
+  },
+  "proof": "eachsixgroup1024actualreads; WG1actual1024writes+readbacks; shiftedall7writeowners andexactacks; responsewirepermutation andwrongWG1slot mutants",
+  "resources": "sameactual24macrobankshape noRTLchange; benchonly; nooldRG5/7rerun",
+  "qualification": "shape functional/throughput only; Quant4096word arithmetic andphysicalkit separateowners"
+}
