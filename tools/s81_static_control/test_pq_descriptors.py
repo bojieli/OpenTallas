@@ -23,6 +23,10 @@ class NativePQImageTest(unittest.TestCase):
   rows=compile_events(events,cmd);self.assertEqual(rows[0],(4<<72)|2)
   events[0]['timestamp']=3
   with self.assertRaisesRegex(ValueError,'align'):compile_events(events,cmd)
+ def test_canonical_calendar_action75_bank_and_end(self):
+  rows=compile_events([dict(timestamp=1,action=dict(stream_addr=16383,launch=1)),dict(timestamp=9,action=dict(phase_end=1))],[dict(engine=0,issue=0,done=20,native_tag=0)],action_bits=75)
+  self.assertEqual((rows[0]>>40)&16383,16383);self.assertEqual((rows[0]>>65)&1,1)
+  self.assertEqual(rows[1],(9<<75)|(1<<72))
  def test_real_macro_via_bit_order(self):
   rows=viamap([1,1<<71]);first=int(rows.splitlines()[0],16)
   self.assertEqual(first,1|(1<<(71*8+1)));self.assertEqual(len(rows.splitlines()),512)
