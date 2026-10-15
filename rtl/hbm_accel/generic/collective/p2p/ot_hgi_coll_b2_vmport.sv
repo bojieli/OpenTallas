@@ -31,15 +31,28 @@ module ot_hgi_coll_b2_vmport #(
     wire [4:0] blocked = ~(epoch ^ issued_epoch);
     for (genvar l = 0; l < 4; l = l + 1) begin : g_rx
         wire [551:0] h;
-        ot_hgi_coll_rx_native #(.W(552), .CRD(CRD)) u_rx (.clk(clk_rx[l]), .rst_n(rst_n),
-            .t_v(rgx_t_v[l]), .t_d({rgx_t_addr[l*40 +: 40],rgx_t_data[l*512 +: 512]}),
-            .out_v(hv[l]), .out_d(h), .out_rdy(pop_cmd[l]), .epoch(epoch[l]), .fault(qfault[l]));
+        // CRD 16 = the closed hard master _w552; any other depth is a bench-only generic instance.
+        if (CRD == 16) begin : g_hard
+            ot_hgi_coll_rx_native_w552 u_rx (.clk(clk_rx[l]), .rst_n(rst_n),
+                .t_v(rgx_t_v[l]), .t_d({rgx_t_addr[l*40 +: 40],rgx_t_data[l*512 +: 512]}),
+                .out_v(hv[l]), .out_d(h), .out_rdy(pop_cmd[l]), .epoch(epoch[l]), .fault(qfault[l]));
+        end else begin : g_gen
+            ot_hgi_coll_rx_native #(.W(552), .CRD(CRD)) u_rx (.clk(clk_rx[l]), .rst_n(rst_n),
+                .t_v(rgx_t_v[l]), .t_d({rgx_t_addr[l*40 +: 40],rgx_t_data[l*512 +: 512]}),
+                .out_v(hv[l]), .out_d(h), .out_rdy(pop_cmd[l]), .epoch(epoch[l]), .fault(qfault[l]));
+        end
         assign ha[l*40 +: 40] = h[551:512]; assign hd[l*512 +: 512] = h[511:0];
         assign hm[l*16 +: 16] = 16'hffff;
     end
     wire [567:0] th;
-    ot_hgi_coll_rx_native #(.W(568), .CRD(TCRD)) u_trx (.clk(clk_rx[4]), .rst_n(rst_n), .t_v(tkw_t_v), .t_d(tkw_t_d),
-        .out_v(hv[4]), .out_d(th), .out_rdy(pop_cmd[4]), .epoch(epoch[4]), .fault(qfault[4]));
+    // TCRD 8 = the closed hard master _w568.
+    if (TCRD == 8) begin : g_thard
+        ot_hgi_coll_rx_native_w568 u_trx (.clk(clk_rx[4]), .rst_n(rst_n), .t_v(tkw_t_v), .t_d(tkw_t_d),
+            .out_v(hv[4]), .out_d(th), .out_rdy(pop_cmd[4]), .epoch(epoch[4]), .fault(qfault[4]));
+    end else begin : g_tgen
+        ot_hgi_coll_rx_native #(.W(568), .CRD(TCRD)) u_trx (.clk(clk_rx[4]), .rst_n(rst_n), .t_v(tkw_t_v), .t_d(tkw_t_d),
+            .out_v(hv[4]), .out_d(th), .out_rdy(pop_cmd[4]), .epoch(epoch[4]), .fault(qfault[4]));
+    end
     assign ha[160 +: 40] = th[567:528]; assign hm[64 +: 16] = th[527:512]; assign hd[2048 +: 512] = th[511:0];
     reg vm_q, vm_run; reg [3:0] rv_q;
     always @(posedge clk or negedge rst_n)
