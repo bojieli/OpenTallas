@@ -1,5 +1,5 @@
 {
- "name": "s81_markov_mul_native-pc1-COMMIT",
+ "name": "s81_markov_mul_native-pc2-COMMIT",
  "block": "ot_s81_markov_mul_native",
  "ref_tile": true,
  "owner": "Claude:s81-elemB6-1014",
@@ -102,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81_markov_mul_native/s81_markov_mul_native-pc1-COMMIT"
+   "to": "results/rtl/ref_tile/s81_markov_mul_native/s81_markov_mul_native-pc2-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -114,6 +114,6 @@
  "structural_change": "Original K256PINREG1CUT511SPLIT9 row partitioned to39real clocks, ring skew preserves every original interface epoch; parent wires only. No thresholds relaxed.",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "native capture (tools/hier_contract/native_pin_audit.py: CLOSED view capture 278-438 ps vs 190, die hop o + 0.76 L + s fails every v19_markov hop): every input registered at the leaf pin, body one cycle later with one arithmetic cut fewer (fadd CUT 9'b1_1101_1111 = steps 5+6 shared; mul ot_v41_bmul2), leaf latency unchanged: markov_native_bench every-cycle equality vs the unchanged ot_dsrom_markov_row PINREG1 reference PASS + all leaf mutants FAIL"
+  "why": "pc2: leaf reset conditioner (2 flops at the rst_n pin; pc1 views of chunk1..7 captured rst_n at 208-268 ps > 190 through the ring pointer / valid resets); data-path pin capture of pc1 unchanged (pc1 native audit: launch 177-194, data capture <= 190). markov_native_bench every-cycle equality vs PINREG1 PASS, all 15 mutants FAIL"
  }
 }

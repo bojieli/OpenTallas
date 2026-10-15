@@ -43,7 +43,7 @@
 //   P1 decode; slot state (base / end / client / open) written for ARM / CHECK of pin t at the end of cycle t+1;
 //      per port x slot range compare + masked popcount; read early-check
 //   P2 per slot x slice partial sums (32 ports)        P3 per slot total -> count (count of pin-t commits from t+4)
-//   P4 CHECK compare (count includes every commit pinned <= CHECK pin)   P5 done register (c_done at pin + DLAT)
+//   P4 CHECK compare (count includes every commit pinned <= CHECK pin)   P5 output retime, P6 done register (c_done at pin + DLAT)
 //
 // Mutants (negative controls, tb_dsfd_vm_seq_static):
 //   OT_VMSS_MUT_SLICE   slice 3 commits are not counted (a late / dropped physical slice hidden): must FAIL
@@ -162,13 +162,13 @@ module dsfd_vm_seq_static #(
             end
     end
 
-    // command pipeline P1 -> P5 (fixed: every command takes the same stages)
-    reg        c1_v, c2_v, c3_v, c4_v;
+    // command pipeline P1 -> P6 (fixed: every command takes the same stages)
+    reg        c1_v, c2_v, c3_v, c4_v, c5_v;
     reg        c1_chk, c2_chk, c3_chk;
     reg        c1_arm, c2_arm;
     reg [1:0]  c1_s, c2_s, c3_s;
     reg        c1_cl, c2_cl, c3_cl;
-    reg [7:0]  c1_t, c2_t, c3_t, c4_t;
+    reg [7:0]  c1_t, c2_t, c3_t, c4_t, c5_t;
     reg [18:0] c1_n, c2_n, c3_n;           // the CHECKed arm's nelems, taken at decode (a re-ARM may follow at once)
 
     // ------------------------------------------------------------------ P3 count, P4 check
@@ -183,7 +183,7 @@ module dsfd_vm_seq_static #(
         vf_s <= {vf_s[0], v_flt};
         if (!rn) begin
             s_open <= 0; s_cl <= 0; s_ok <= 0; flt <= 11'd0; armq <= 0;
-            c1_v <= 1'b0; c2_v <= 1'b0; c3_v <= 1'b0; c4_v <= 1'b0; c1_chk <= 1'b0; c2_chk <= 1'b0; c3_chk <= 1'b0;
+            c1_v <= 1'b0; c2_v <= 1'b0; c3_v <= 1'b0; c4_v <= 1'b0; c5_v <= 1'b0; c1_chk <= 1'b0; c2_chk <= 1'b0; c3_chk <= 1'b0;
             c1_arm <= 1'b0; c2_arm <= 1'b0; v_cv <= 1'b0; vout <= 0; t_inp_su <= 1'b0; t_inp_hc <= 1'b0;
             for (z = 0; z < NSLOT; z = z + 1) begin cnt[z] <= 20'd0; s_lo[z] <= 14'd0; s_hi[z] <= 15'd0; s_need[z] <= 19'd0; end
         end else begin
@@ -225,6 +225,7 @@ module dsfd_vm_seq_static #(
                 else if (!s_open[c3_s] && !(d_arm && d_s == c3_s)) s_ok[c3_s] <= 1'b1;
             end
             c4_v <= c3_v; c4_t <= c3_t;
+            c5_v <= c4_v; c5_t <= c4_t;
             begin : p_inp reg su, hc;
                 su = 1'b0; hc = 1'b0;
                 for (z = 0; z < NSLOT; z = z + 1) begin
@@ -235,11 +236,11 @@ module dsfd_vm_seq_static #(
             end
         end
     end
-    // ------------------------------------------------------------------ P5 done / status (die-face flops)
+    // ------------------------------------------------------------------ P6 done / status (die-face flops)
 `ifdef OT_VMSS_MUT_DLAT
-    wire       dn_v = c3_v;  wire [7:0] dn_t = c3_t;                     // MUTANT: one stage early
+    wire       dn_v = c4_v;  wire [7:0] dn_t = c4_t;                     // MUTANT: one stage early
 `else
-    wire       dn_v = c4_v;  wire [7:0] dn_t = c4_t;
+    wire       dn_v = c5_v;  wire [7:0] dn_t = c5_t;
 `endif
     always @(posedge clk or negedge rst[0])
         if (!rst[0]) begin c_done <= 9'd0; c_st <= 2'b00; end

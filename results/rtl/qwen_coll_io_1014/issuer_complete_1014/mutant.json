@@ -1,0 +1,15 @@
+{
+  "mutant": true,
+  "cases": [
+    {
+      "omit": 2,
+      "rc": -6,
+      "output": "[260000] %Fatal: tb_coll_cmd_issue.sv:30: Assertion failed in tb_coll_cmd_issue: completeness omit=2 fault=0\n%Error: /srv/opentallas-scratch/codex/qcoll-issuer-1014/rtl/test/tb_coll_cmd_issue.sv:30: Verilog $stop\nAborting...\n"
+    }
+  ],
+  "sources": {
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+    "rtl/rom/ot_coll_cmd_issue.sv": "c5e6e93b466c5901b06e9f84a618ee7bbdc19945a623ffe6d3bb8dae4dddd6fa",
+    "rtl/test/tb_coll_cmd_issue.sv": "207142f8d9515f58704bac8379ac8945b2d5a919c5c0718977a7a9d35a01cf6a"
+  }
+}

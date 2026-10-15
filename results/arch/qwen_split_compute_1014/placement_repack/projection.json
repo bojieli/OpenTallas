@@ -1,0 +1,175 @@
+{
+  "schema": "opentallas.qwen.placement-repack-projection.v1",
+  "evidence_scope": "legal source rectangle proposal; geometric lower bounds only",
+  "die": {
+    "w": 32413.392,
+    "h": 25937.28,
+    "mm2": 840.715,
+    "budget_mm2": 858,
+    "margin_mm2": 17.285
+  },
+  "baseline": {
+    "input_relays": [
+      20,
+      10,
+      11
+    ],
+    "return_relays": 20,
+    "critical_roundtrip_relays": 40
+  },
+  "band0_flip_only": {
+    "input_relays": [
+      14,
+      10,
+      11
+    ],
+    "return_relays": 14,
+    "critical_roundtrip_relays": 28
+  },
+  "candidate": {
+    "input_relays": [
+      13,
+      9,
+      13
+    ],
+    "return_relays": 13,
+    "critical_roundtrip_relays": 26
+  },
+  "candidate_leaves": [
+    {
+      "n": "tt_up4_leaf0",
+      "m": "ot_qfd_band_upper",
+      "x": 14753.016,
+      "y": 13422.24,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf1",
+      "m": "ot_qfd_band_upper",
+      "x": 14753.016,
+      "y": 13646.88,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf2",
+      "m": "ot_qfd_band_upper",
+      "x": 14753.016,
+      "y": 13871.52,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf3",
+      "m": "ot_qfd_band_upper",
+      "x": 14753.016,
+      "y": 14096.16,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    }
+  ],
+  "placements": [
+    {
+      "n": "sp_res_ser_0",
+      "m": "qfd_sp_res_ser",
+      "x": 12794.112,
+      "y": 4423.68,
+      "w": 777.576,
+      "h": 518.376,
+      "o": "MX"
+    },
+    {
+      "n": "sp_band_lanes_0",
+      "m": "qfd_sp_band_lanes",
+      "x": 12742.272,
+      "y": 7413.12,
+      "w": 881.28,
+      "h": 1131.84,
+      "o": "MX"
+    },
+    {
+      "n": "sp_port_tiles_0",
+      "m": "qfd_port_tiles_0",
+      "x": 12664.512,
+      "y": 4946.4,
+      "w": 1036.776,
+      "h": 2462.376,
+      "o": "MX"
+    },
+    {
+      "n": "sp_port_tiles_0_f1",
+      "m": "qfd_port_tiles_0_f1",
+      "x": 13705.632,
+      "y": 4946.4,
+      "w": 1036.776,
+      "h": 2462.376,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf0",
+      "m": "ot_qfd_band_upper",
+      "x": 14753.016,
+      "y": 13422.24,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf1",
+      "m": "ot_qfd_band_upper",
+      "x": 14753.016,
+      "y": 13646.88,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf2",
+      "m": "ot_qfd_band_upper",
+      "x": 14753.016,
+      "y": 13871.52,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf3",
+      "m": "ot_qfd_band_upper",
+      "x": 14753.016,
+      "y": 14096.16,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    }
+  ],
+  "retired": [
+    "tt_up4_0"
+  ],
+  "baseline_geometry_errors": [],
+  "candidate_geometry_errors": [],
+  "saved_critical_stages": 14,
+  "cuts": {
+    "qualified": false,
+    "reason": "exact per-bit paths and relay sites absent; cannot infer <=0.60 from rectangles"
+  },
+  "production_relay_cost": {
+    "qualified": false,
+    "reason": "full relay planner and actual layer measurement required"
+  },
+  "warnings": [
+    "MX band-0 pins/clocks must be regenerated from actual child orientations.",
+    "Vertical direct-leaf stack requires exact per-leaf pin/clock joins and equal fixed ages.",
+    "Global rectangle validity does not prove pin access or relay-frame fit."
+  ],
+  "application_state": "existing rectangles applied; direct_up4 must consume candidate_leaves",
+  "source_pin_clock_qualification": "OPEN: regenerate actual oriented pins/clocks and route",
+  "input_dump_sha256": "91a04e4307a5f5162ccc91581f2b36ee353e83e687e23de4d160c446d28f9e7d",
+  "input_dump_path": "/tmp/claude-1000/qsc/v13_dump.json",
+  "input_dump_time_scope": "historical local v13 no-relay geometry, 2026-10-14 23:16",
+  "full_model_repeat_application": "PASS: existing model rectangles stable; same four candidate leaves"
+}

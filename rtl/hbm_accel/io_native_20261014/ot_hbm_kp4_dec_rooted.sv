@@ -1,0 +1,259 @@
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------------------------------------------
+// ot_s81_kp4_dec (s81-die-rtl-bind 2026-10-14, die item F10): the receive FEC of one S81 die link -- RS(544,514) KP4
+// decoder (t = 15) behind codeword alignment.  Frame / code as ot_s81_kp4_enc and tools/s81_link/rs544.py.
+//   in : one 544-b PMA word a cycle (p_v) in the RECOVERED clock domain of the link (clk = the PMA's recovered clock)
+//   out: the frame's 10 lane beats, one a cycle (q_v, q_d), corrected; per frame: q_unc (the codeword was not
+//        correctable: beats passed uncorrected, the link CRC / replay above takes them), q_nerr (symbols corrected)
+// Alignment: hunt for the 12-b AM at word bits [543:532] (<= 2 bit errors), lock on two AMs exactly 10 words apart,
+// stay locked through up to 3 consecutive bad AMs (the AM is checked before correction), re-hunt on the 4th.
+// Stages, one codeword every 10 cycles (strobe = locked word 9):
+//   capture (10 words) -> syndromes S_0..S_29 over the stored codeword, 55 symbols a cycle (10 cycles)
+//   -> Berlekamp-Massey, one iteration a cycle (30) + Omega, in one of NBM = 4 units taken round robin
+//   -> Chien search + Forney over 55 degrees a cycle (10 cycles): e = X Omega(X^-1) / Lambda'(X^-1) (b = 0)
+//   -> emit 10 beats.  Uncorrectable: deg Lambda > 15, or roots found != deg Lambda.
+// Latency ~ 10 + 10 + 40 + 10 + 10 cycles.  Every output leaves a flop.
+// MUT 2: Forney error value not multiplied by X (wrong correction) -- bench mutant.
+// ---------------------------------------------------------------------------------------------------------------
+module ot_hbm_kp4_dec_rooted #(parameter integer MUT = 0, parameter integer NBM = 4) (
+    input wire clk_capture,clk_syndrome,clk_bm0,clk_bm1,clk_bm2,clk_bm3,clk_chien,clk_emit,
+    input  wire          rst_n,
+    input  wire          p_v,
+    input  wire [543:0]  p_d,
+    output reg           q_v,
+    output reg  [511:0]  q_d,
+    output reg           q_first,       // first beat of a frame
+    output reg           q_unc,         // with q_first: this frame was uncorrectable
+    output reg  [4:0]    q_nerr,        // with q_first: symbols corrected
+    output reg  [7:0]    q_seq,         // with q_first: the frame's sequence number (header, after correction)
+    output reg           lock,
+    output reg  [31:0]   n_corr, n_unc, n_relock
+);
+`include "ot_s81_gf1024.svh"
+    localparam integer NT = 30, SPC = 55;
+    // ---------------- alignment
+    wire [11:0] amx = p_d[543:532] ^ 12'hA5C;
+    function automatic [3:0] pop12(input [11:0] x); integer b; begin pop12 = 0; for (b = 0; b < 12; b = b + 1) pop12 = pop12 + x[b]; end endfunction
+    wire am_ok = p_v && (pop12(amx) <= 2);
+    reg  [3:0] wc;          // word index in frame (locked) / words since candidate (hunt)
+    reg        cand;
+    reg  [1:0] miss;
+    reg  [5439:0] cap;
+    reg        strobe;      // the cycle after word 9 was captured: cap holds a whole codeword
+    integer i, j, k;
+    always @(posedge clk_capture or negedge rst_n)
+        if (!rst_n) begin lock <= 1'b0; cand <= 1'b0; wc <= 0; miss <= 0; strobe <= 1'b0; n_relock <= 0; end
+        else begin
+            strobe <= 1'b0;
+            if (p_v) begin
+                if (!lock) begin
+                    if (cand && wc == 4'd9) begin
+                        if (am_ok) begin lock <= 1'b1; wc <= 4'd1; cap[5439 -: 544] <= p_d; n_relock <= n_relock + 1; end
+                        else begin cand <= 1'b0; wc <= 0; end
+                    end else if (cand) wc <= wc + 1'b1;
+                    else if (am_ok) begin cand <= 1'b1; wc <= 4'd0; end
+                end else begin
+                    cap[5439 - 544 * wc -: 544] <= p_d;
+                    if (wc == 4'd0) begin
+                        if (am_ok) miss <= 0;
+                        else if (miss == 2'd3) begin lock <= 1'b0; cand <= 1'b0; miss <= 0; end
+                        else miss <= miss + 1'b1;
+                    end
+                    if (wc == 4'd9) strobe <= 1'b1;
+                    wc <= (wc == 4'd9) ? 4'd0 : wc + 1'b1;
+                end
+            end
+        end
+    // ---------------- syndromes: stage register sb (codeword) + running S over 10 cycles (sc = 0..9 after a strobe)
+    reg  [5439:0] sb;
+    reg  [9:0]    S [0:NT-1];
+    reg  [3:0]    sc;
+    reg           s_busy;
+    reg  [9:0]    nS [0:NT-1];
+    reg  [9:0]    sym;
+    wire[849:0]linear_input;
+    wire[299:0]linear_output;
+    reg[549:0]linear_symbols;
+    always @* case(sc)
+    4'd0:linear_symbols={60'd0,sb[5439-:490]};
+    4'd1:linear_symbols=sb[4949-:550];
+    4'd2:linear_symbols=sb[4399-:550];
+    4'd3:linear_symbols=sb[3849-:550];
+    4'd4:linear_symbols=sb[3299-:550];
+    4'd5:linear_symbols=sb[2749-:550];
+    4'd6:linear_symbols=sb[2199-:550];
+    4'd7:linear_symbols=sb[1649-:550];
+    4'd8:linear_symbols=sb[1099-:550];
+    4'd9:linear_symbols=sb[549-:550];
+    default:linear_symbols=550'd0;
+    endcase
+    genvar lm;generate for(lm=0;lm<30;lm=lm+1)begin:g_linear
+    assign linear_input[550+(29-lm)*10+:10]=S[lm];
+    always @* nS[lm]=linear_output[(29-lm)*10+:10];
+    end endgenerate
+    assign linear_input[549:0]=linear_symbols;
+    ot_hbm_kp4_syndrome55_map u_map(.x(linear_input),.y(linear_output));
+    wire s_fin = s_busy && sc == 4'd9;   // nS = the codeword's syndromes (this cycle); the next strobe may coincide
+    always @(posedge clk_syndrome or negedge rst_n)
+        if (!rst_n) begin sc <= 0; s_busy <= 1'b0; end
+        else begin
+            if (s_busy) begin
+                for (j = 0; j < NT; j = j + 1) S[j] <= nS[j];
+                sc <= sc + 1'b1;
+                if (sc == 4'd9) s_busy <= 1'b0;
+            end
+            if (strobe) begin
+                sb <= cap; s_busy <= 1'b1; sc <= 0;
+                for (j = 0; j < NT; j = j + 1) S[j] <= 10'd0;
+            end
+        end
+    // ---------------- Berlekamp-Massey units (round robin; unit bsel takes the codeword at s_fin, and its previous
+    // codeword -- loaded NBM frames = 40 cycles ago, finished after 31 -- goes to the Chien stage in the same cycle)
+    reg  [1:0]    bsel;
+    reg  [5439:0] bcw  [0:NBM-1];
+    reg  [9:0]    bS   [0:NBM-1][0:NT-1];
+    reg  [9:0]    bC   [0:NBM-1][0:NT];
+    reg  [9:0]    bB   [0:NBM-1][0:NT];  // x^m B
+    reg  [9:0]    bW   [0:NBM-1][0:NT];  // syndrome window W[i] = S[n - i]
+    reg  [9:0]    bb   [0:NBM-1];
+    reg  [5:0]    bL   [0:NBM-1];
+    reg  [5:0]    bn   [0:NBM-1];        // iteration 0..29, 30 = Omega, 31 = done
+    reg           bact [0:NBM-1];
+    reg           bany [0:NBM-1];        // a nonzero syndrome
+    reg  [9:0]    bO   [0:NBM-1][0:NT-1];
+    wire[3:0]bm_clock={clk_bm3,clk_bm2,clk_bm1,clk_bm0};
+    genvar u;
+    generate for (u = 0; u < NBM; u = u + 1) begin : g_bm
+        reg [9:0] d, coef;
+        reg [9:0] nC [0:NT];
+        reg [9:0] oc_ [0:NT-1];
+        reg       sany;
+        integer a, c;
+        always @* begin
+            d = 10'd0;
+            for (a = 0; a <= NT; a = a + 1) d = d ^ gf_mul(bC[u][a], bW[u][a]);
+            coef = gf_mul(d, gf_inv(bb[u]));
+            for (a = 0; a <= NT; a = a + 1) nC[a] = bC[u][a] ^ gf_mul(coef, bB[u][a]);
+            for (a = 0; a < NT; a = a + 1) begin
+                oc_[a] = 10'd0;
+                for (c = 0; c <= a; c = c + 1) oc_[a] = oc_[a] ^ gf_mul(bC[u][c], bS[u][a - c]);
+            end
+            sany = 1'b0;
+            for (a = 0; a < NT; a = a + 1) sany = sany | (nS[a] != 10'd0);
+        end
+        always @(posedge bm_clock[u] or negedge rst_n)
+            if (!rst_n) begin bact[u] <= 1'b0; bn[u] <= 6'd31; end
+            else if (s_fin && bsel == u) begin
+                bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+                for (a = 0; a < NT; a = a + 1) bS[u][a] <= nS[a];
+                for (a = 0; a <= NT; a = a + 1) begin
+                    bC[u][a] <= (a == 0) ? 10'd1 : 10'd0;
+                    bB[u][a] <= (a == 1) ? 10'd1 : 10'd0;       // x^1 * 1
+                    bW[u][a] <= (a == 0) ? nS[0] : 10'd0;
+                end
+            end else if (bact[u] && bn[u] < 6'd30) begin
+                // one BM iteration n = bn
+                if (d == 10'd0) begin
+                    for (a = NT; a >= 1; a = a - 1) bB[u][a] <= bB[u][a - 1];
+                    bB[u][0] <= 10'd0;
+                end else if (2 * bL[u] <= bn[u]) begin
+                    for (a = 0; a <= NT; a = a + 1) bC[u][a] <= nC[a];
+                    for (a = NT; a >= 1; a = a - 1) bB[u][a] <= bC[u][a - 1];   // x * C_old
+                    bB[u][0] <= 10'd0;
+                    bL[u] <= bn[u] + 6'd1 - bL[u];
+                    bb[u] <= d;
+                end else begin
+                    for (a = 0; a <= NT; a = a + 1) bC[u][a] <= nC[a];
+                    for (a = NT; a >= 1; a = a - 1) bB[u][a] <= bB[u][a - 1];
+                    bB[u][0] <= 10'd0;
+                end
+                for (a = NT; a >= 1; a = a - 1) bW[u][a] <= bW[u][a - 1];
+                bW[u][0] <= (bn[u] < 6'd29) ? bS[u][bn[u] + 1] : 10'd0;
+                bn[u] <= bn[u] + 6'd1;
+            end else if (bact[u] && bn[u] == 6'd30) begin
+                for (a = 0; a < NT; a = a + 1) bO[u][a] <= oc_[a];   // Omega = S Lambda mod x^30
+                bn[u] <= 6'd31;
+            end
+    end endgenerate
+    always @(posedge clk_syndrome or negedge rst_n)
+        if (!rst_n) bsel <= 2'd0;
+        else if (s_fin) bsel <= (bsel == NBM - 1) ? 2'd0 : bsel + 1'b1;
+    wire c_take = s_fin && bact[bsel] && bn[bsel] == 6'd31;
+    // ---------------- Chien + Forney (cc = 0..9 after c_take; c_fin = the last slice, the next take may coincide)
+    reg  [5439:0] cw, orig;
+    reg  [5:0]    cL;
+    reg           c_bad, c_any;
+    reg  [3:0]    cc;
+    reg           c_busy;
+    reg  [9:0]    Rl [0:15];             // lambda_i alpha^{-i 55 cc}
+    reg  [9:0]    Ro [0:NT-1];           // omega_i alpha^{-i 55 cc}
+    reg  [9:0]    Rx;                    // alpha^{55 cc}
+    reg  [5:0]    nroot;
+    reg  [9:0]    lv, ov, dv, ev, xe;
+    reg  [5439:0] ncw;
+    reg  [5:0]    nr_add;
+    integer e, pp;
+    always @* begin
+        ncw = cw; nr_add = 0;
+        for (k = 0; k < SPC; k = k + 1) begin
+            e = SPC * cc + k;                       // degree: X = alpha^e, symbol position 543 - e
+            lv = 10'd0; ov = 10'd0; dv = 10'd0;
+            for (i = 0; i < 16; i = i + 1) lv = lv ^ gf_mul(Rl[i], gf_alpha(-i * k));
+            for (i = 0; i < NT; i = i + 1) ov = ov ^ gf_mul(Ro[i], gf_alpha(-i * k));
+            for (i = 1; i < 16; i = i + 2) dv = dv ^ gf_mul(Rl[i], gf_alpha(-i * k));
+            xe = gf_mul(Rx, gf_alpha(k));
+            dv = gf_mul(dv, xe);                    // Lambda'(X^-1) = X * sum_{i odd} lambda_i X^-i
+            ev = (MUT == 2) ? gf_mul(ov, gf_inv(dv)) : gf_mul(xe, gf_mul(ov, gf_inv(dv)));
+            if (e < 544 && lv == 10'd0) begin
+                pp = 543 - e;
+                ncw[5439 - 10 * pp -: 10] = ncw[5439 - 10 * pp -: 10] ^ ev;
+                nr_add = nr_add + 1;
+            end
+        end
+    end
+    wire       c_fin  = c_busy && cc == 4'd9;
+    wire [5:0] nr_fin = nroot + nr_add;
+    wire       unc    = c_any && (c_bad || nr_fin != cL);
+    always @(posedge clk_chien or negedge rst_n)
+        if (!rst_n) begin c_busy <= 1'b0; cc <= 0; nroot <= 0; end
+        else begin
+            if (c_busy) begin
+                cw <= ncw;
+                nroot <= nr_fin;
+                for (i = 0; i < 16; i = i + 1) Rl[i] <= gf_mul(Rl[i], gf_alpha(-i * SPC));
+                for (i = 0; i < NT; i = i + 1) Ro[i] <= gf_mul(Ro[i], gf_alpha(-i * SPC));
+                Rx <= gf_mul(Rx, gf_alpha(SPC));
+                cc <= cc + 1'b1;
+                if (cc == 4'd9) c_busy <= 1'b0;
+            end
+            if (c_take) begin
+                cw <= bcw[bsel]; orig <= bcw[bsel]; cL <= bL[bsel]; c_bad <= (bL[bsel] > 6'd15); c_any <= bany[bsel];
+                c_busy <= 1'b1; cc <= 0; nroot <= 0; Rx <= 10'd1;
+                for (i = 0; i < 16; i = i + 1) Rl[i] <= bC[bsel][i];
+                for (i = 0; i < NT; i = i + 1) Ro[i] <= bO[bsel][i];
+            end
+        end
+    // ---------------- emit (oc = 0..9 after c_fin; the last beat coincides with the next c_fin)
+    reg  [5439:0] ob;
+    reg  [3:0]    oc;
+    reg           o_busy, o_unc;
+    reg  [4:0]    o_ne;
+    always @(posedge clk_emit or negedge rst_n)
+        if (!rst_n) begin o_busy <= 1'b0; oc <= 0; q_v <= 1'b0; q_first <= 1'b0; q_unc <= 1'b0; q_nerr <= 0; n_corr <= 0; n_unc <= 0; end
+        else begin
+            q_v <= 1'b0; q_first <= 1'b0;
+            if (o_busy) begin
+                q_v <= 1'b1; q_first <= (oc == 0); q_unc <= o_unc; q_nerr <= o_ne; q_seq <= ob[5427:5420];
+                q_d <= ob[5419 - 512 * oc -: 512];        // beats follow the 20-b header
+                oc <= oc + 1'b1;
+                if (oc == 4'd9) o_busy <= 1'b0;
+            end
+            if (c_fin) begin
+                o_unc <= unc;
+                o_ne  <= (c_any && !unc) ? cL[4:0] : 5'd0;
+                ob    <= unc ? orig : (c_bad ? cw : ncw);
+                if (unc) n_unc <= n_unc + 1; else if (c_any) n_corr <= n_corr + cL;
+                o_busy <= 1'b1; oc <= 0;
+            end
+        end
+endmodule

@@ -72,7 +72,7 @@ module ot_chip_v41x_hbm3e_phy #(
     output wire [63:0]          refreshes,     // K port refresh events
     output wire [31:0]          w_reads        // W port sector reads
 );
-    ot_hdc_v41x_idx_hbm #(.NPC(NPC), .AW(K_AW), .DW(256), .MEM_WORDS(K_MEM), .TAGW(KTAGW), .LENW(4), .BEATW(4),
+    ot_hdc_v41x_idx_hbm #(.NPC(NPC), .AW(K_AW), .DW(256), .MEM_WORDS(K_MEM), .TAGW(KTAGW), .LENW(4), .BEATW(4), .CLK_PS(CLK_PS),
                           .QD(64), .REFPB(3), .MEM_MODE(0)) u_k (
         .clk(clk), .rst_n(rst_n), .req_v(k_v), .req_rdy(k_rdy), .req_addr(k_addr), .req_len(k_len),
         .req_tag(k_tag), .req_we(k_we), .req_wdata(k_wdata), .req_wstrb(k_wstrb), .wr_done(k_wr_done),
