@@ -27,7 +27,7 @@ for pair in 0 1; do
  g++ -O1 -std=c++20 -pthread -DPV_TREE -DPV_STATIC -I"$out/obj-$pair" -I"$vroot" -I"$vroot/vltstd" \
   "$tb" -Wl,--start-group "${libs[@]}" -Wl,--end-group \
   "$vroot/verilated.cpp" "$vroot/verilated_threads.cpp" -o "check-$pair" > "link-$pair.log" 2>&1
- for mode in steady epoch order first last data restart gap early output_late; do
+ for mode in steady reframe epoch order first last data restart gap early output_late; do
   "./check-$pair" "$vectors" "$pair" "$mode" > "p$pair-$mode.json"
  done
  for ctx in 1 127 128 129 255 256 257 513 8191; do
