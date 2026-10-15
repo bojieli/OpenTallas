@@ -1,0 +1,83 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "oflop",
+   "message": "N face 8.1 pins/um (q): recipe-2 hold stages take 2.72 um behind the face, the pin flops need gap 3.5 um and 16 columns = 7.82 um, more than 45% of the 10.8 um core behind the face (GRT-0116 class)",
+   "fix": "a longer edge or pins on two layers (lower face density), or drop the pin hold stages of this face (\"outhold\": false + route.hold_delay in RTL)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 5 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qkh_packet_h519_20261015-001849.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qkh_packet_h519_20261015-001849.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qkh_packet_h519-20261015-001849",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 21 s (gate total 75 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 260 um2 + macros 0 in core 653: util 40%",
+   "fix": "set \"std_area_um2\": 260 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_qkh_packet_pipe cells 1,572 flops 526 depth 11.7 ps util 0.4337 reach 7.5 um (0.0 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 43.4% outside 45%-65% (std 283 + macro 0 um2 in 653 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=1",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 526 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)",
+   "fix": ""
+  }
+ ]
+}

@@ -43,7 +43,7 @@ puts "REF_TILE place: [$i getName] ot_qwen_tile_rpair at 22.464 1134.024 MX"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_rpair {u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp}]
 $i setOrient MX; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(1285.224 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_rpair at 22.464 1285.224 MX"
-set i [ot_ref_pick $ot_ref_by ot_qwen_tile_node {u_tile.u_tile.u_logic.g_ndh.u_node}]
+set i [ot_ref_pick $ot_ref_by ot_qwen_tile_node {u_tile.u_tile.u_logic.genblk4.g_ndh.u_node}]
 $i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(345.6 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_node at 22.464 345.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh}]

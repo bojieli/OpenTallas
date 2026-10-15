@@ -1,0 +1,29 @@
+{
+  "cell": "qfd_static_ch546",
+  "view": "physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546",
+  "lib_cell": "qfd_static_ch546",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 447.6,
+  "spread_ps": 71.5,
+  "outputs": 549,
+  "inputs": 564,
+  "launch_ps": 220.3,
+  "launch_pin": "o_data[155]",
+  "capture_ps": 156.2,
+  "capture_pin": "w_slot",
+  "launch_over": 1,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 220.3 > 220 (1 pins)",
+  "closure_job": "qfd_static_ch546-s2-885fe056c",
+  "main_record": "a51009fd9",
+  "TT_setup_ps": 46.88,
+  "FF_hold_ps": 9.11,
+  "DRC": 0,
+  "SS_sensitivity_ps": -225.67
+}
