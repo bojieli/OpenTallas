@@ -32,8 +32,8 @@ module tb_bf_static_core;
     if(issue !== {7{pi}}) $fatal(1,"calendar slipped");
     for(integer z=1;z<7;z=z+1) begin
       if(issue[z] && addr[z] !== addr[0]) $fatal(1,"fault rescheduled address");
-      if(iv[z] !== iv[0]) $fatal(1,"fault rescheduled retire control");
-      if(iv[z] && tag[z] !== tag[0]) $fatal(1,"fault changed retire identity");
+      if(iv[z] !== iv[0]) $fatal(1,"fault shifted column ingress valid");
+      if(iv[z] && tag[z] !== tag[0]) $fatal(1,"fault changed column ingress identity");
     end
     if(pi) begin
       if(addr[0] !== pa) $fatal(1,"wrong compiled address %d %d",addr[0],pa);
@@ -67,7 +67,7 @@ module tb_bf_static_core;
     repeat(150)tick();
     if(n!=64) $fatal(1,"missing issues %d",n);
     if(fault !== 7'b1111110) $fatal(1,"fault qualification %b",fault);
-    $display("PASS BF static core: 64 compiled issues; dropped ingress, wrong address, wrong operand, captured identity, forced recurrence and PP bank faults preserve issue/address/retire timelines");
+    $display("PASS BF static core: 64 compiled issues; dropped ingress, wrong address, wrong operand, captured identity, forced recurrence and PP bank faults preserve issue/address/column-ingress timelines");
     $finish;
   end
 endmodule
