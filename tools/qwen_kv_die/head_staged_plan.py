@@ -189,12 +189,21 @@ def internal_edges():
     return edges
 
 
-def repack_fronts(plan,leafs,inside_stage=False):
+def repack_fronts(plan,leafs,inside_stage=False,widen=False):
     proposed=json.loads(json.dumps(plan));children=proposed['children']
     for q in range(4):children[f'front{q}']=[388.8+(167.4 if inside_stage else 135)*(q%2),5.4+48.6*(q//2),129.6,43.2]
     children['ktree']=[351.0 if inside_stage else 388.8,102.6,151.2,97.2]
     children['score']=[604.8 if inside_stage else 550.8,151.2,43.2,43.2]
     if inside_stage:children['u_t2']=[529.2,0.,21.6,259.2]
+    keepouts={}
+    if widen:
+        proposed['slot_outline_um'][0]+=54.
+        for n,r in children.items():
+            if r[0]>=550.8:r[0]+=54.
+        children['front1'][1],children['front3'][1]=children['front3'][1],children['front1'][1]
+        children['score'][1]=102.6
+        children['ktree'][0]=372.6
+        keepouts=dict(two_T1_channel=[556.2,0.,48.6,492.456])
     def kind(n):
         if n.startswith('front'):return 'front'
         if n.startswith('lane'):return 'lane'
@@ -210,20 +219,30 @@ def repack_fronts(plan,leafs,inside_stage=False):
     protected={f'front{q}'for q in range(4)}|{'ktree','score'}|({'u_t2'}if inside_stage else set())
     hits=[(a,b)for(a,aa),(b,bb)in itertools.combinations(children.items(),2)if overlap(aa,bb)]
     moving_set={b if a in protected else a for a,b in hits}
+    for n,r in children.items():
+        if any(overlap(r,k)for k in keepouts.values()):
+            assert n not in protected,(n,'protected leaf blocks proposed channel')
+            moving_set.add(n)
     for (a,b),k in coefs.items():
         if np.max((np.array(children[a][:2])-children[b][:2])@SIGNS.T+k)>480:
             if a in protected and b not in protected:moving_set.add(b)
             elif b in protected and a not in protected:moving_set.add(a)
     moving=sorted(moving_set,key=lambda n:(-children[n][2]*children[n][3],n))
+    if widen:
+        moving.sort(key=lambda n:(0 if n.startswith('stk')else 1 if n.startswith('stin')else 2,
+                                  int(re.search(r'(\d+)$',n)[1])*(1 if n.startswith('nb')else -1)))
     pending=set(moving);moves=[]
     for n in moving:
-        pending.remove(n);w,h=children[n][2:];W,H=plan['slot_outline_um']
+        pending.remove(n);w,h=children[n][2:];W,H=proposed['slot_outline_um']
         sites=np.array([(round(x*PITCH,6),round(y*PITCH,6))
                         for x in range(math.ceil(CLEAR/PITCH),math.floor((W-w-CLEAR)/PITCH)+1)
                         for y in range(math.ceil(CLEAR/PITCH),math.floor((H-h-CLEAR)/PITCH)+1)])
         valid=np.ones(len(sites),dtype=bool);worst=np.zeros(len(sites))
         for m,r in children.items():
             if m==n or m in pending:continue
+            valid &= ((sites[:,0]+w+CLEAR<=r[0]+1e-6)|(r[0]+r[2]+CLEAR<=sites[:,0]+1e-6)|
+                      (sites[:,1]+h+CLEAR<=r[1]+1e-6)|(r[1]+r[3]+CLEAR<=sites[:,1]+1e-6))
+        for r in keepouts.values():
             valid &= ((sites[:,0]+w+CLEAR<=r[0]+1e-6)|(r[0]+r[2]+CLEAR<=sites[:,0]+1e-6)|
                       (sites[:,1]+h+CLEAR<=r[1]+1e-6)|(r[1]+r[3]+CLEAR<=sites[:,1]+1e-6))
         for (a,b),k in coefs.items():
@@ -247,6 +266,8 @@ def repack_fronts(plan,leafs,inside_stage=False):
                 moves=moves,initial_conflicts=hits,children=children,internal_edges=final,
                 worst_internal_edge=max(final,key=lambda e:e['um']),conflicts=conflicts,
                 unresolved='Die input/output pin grants, stage1/score placement, clock track legality and native signoff remain separate obligations.')
+    result['slot_outline_um']=proposed['slot_outline_um']
+    result['placement_keepouts']=keepouts
     if inside_stage:
         pairs=front_connections(leafs['front'][1],leafs['tstage'][1],proposed,'MX')
         result['stage2']=dict(cell='u_t2',master='qkh_head_tstage',xy=children['u_t2'][:2],orient='MX',
@@ -262,7 +283,7 @@ def repack_fronts(plan,leafs,inside_stage=False):
     return result
 
 
-def global_stages(insts,repacked,leafs,ectl_leafs):
+def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False):
     """Actual A/B/C->per-head T1->T2 and score->S1->C; conservative other frames."""
     index={i['name']:i for i in insts};obstacles=[];byname={}
     def child_world(parent,box,orient='R0'):
@@ -284,7 +305,7 @@ def global_stages(insts,repacked,leafs,ectl_leafs):
         else:obstacles.append((n,[instance[k]for k in ('x','y','w','h')]))
     def points(n,leaf,pin):
         box,o=byname[n];return xf(leaf[1][pin],box[:2],box[2:],o)
-    def solve_site(pairs_for_orient,size,margin=0.):
+    def solve_site(pairs_for_orient,size,margin=0.,fixed_xs=None,y_phase=0.):
         best=None;blocked_best=None;counts=dict(reach_origins=0,free_origins=0);lower=[]
         for orient in FLIPS:
             pairs=pairs_for_orient(orient);k=coefficients(pairs);cap=LIMIT-margin
@@ -296,9 +317,9 @@ def global_stages(insts,repacked,leafs,ectl_leafs):
             if ps[0]>ps[1]or ms[0]>ms[1]:continue
             xmin,xmax=(ps[0]+ms[0])/2,(ps[1]+ms[1])/2
             ymin,ymax=(ps[0]-ms[1])/2,(ps[1]-ms[0])/2
-            xy=np.array([(round(ix*PITCH,6),round(iy*PITCH,6))
-                         for ix in range(math.ceil(xmin/PITCH),math.floor(xmax/PITCH)+1)
-                         for iy in range(math.ceil(ymin/PITCH),math.floor(ymax/PITCH)+1)]).reshape((-1,2))
+            xs=[round(ix*PITCH,6)for ix in range(math.ceil(xmin/PITCH),math.floor(xmax/PITCH)+1)]if fixed_xs is None else[x for x in fixed_xs if xmin-1e-6<=x<=xmax+1e-6]
+            xy=np.array([(x,round(iy*PITCH+y_phase,6))for x in xs
+                         for iy in range(math.ceil((ymin-y_phase)/PITCH),math.floor((ymax-y_phase)/PITCH)+1)]).reshape((-1,2))
             if not len(xy):continue
             distance=np.max(xy@SIGNS.T+k,axis=1);keep=distance<=cap+1e-6
             xy=xy[keep];distance=distance[keep];counts['reach_origins']+=len(xy)
@@ -344,7 +365,15 @@ def global_stages(insts,repacked,leafs,ectl_leafs):
         def t_pairs(o):
             return [(f'ECTL->{pin}',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts)for pin,pts in origins]+[
                 (f'{pin}->T2',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts)for pin,pts in targets]
-        t=solve_site(t_pairs,leafs['tstage'][0]);
+        kwargs={}
+        if channel_lanes:
+            inner=index['head_'+'_'.join(parts[1:-1])+('_1'if h<2 else'_2')]
+            local_x=556.2 if h in (0,3)else 583.2
+            fx,fy=FLIPS[inner['orient']]
+            xx=inner['x']+(inner['w']-local_x-21.6 if fx else local_x)
+            phase=(inner['y']+(inner['h']-259.2 if fy else 0))%PITCH
+            kwargs=dict(fixed_xs=[xx],y_phase=phase)
+        t=solve_site(t_pairs,leafs['tstage'][0],**kwargs)
         if t['site']:obstacles.append((hname+'/u_t1',[*t['site']['xy'],*t['site']['size_um']]))
         score_inputs=[('s_a[0]','gf_o'),('s_a[1]','sf_o')]+[(f's_a[{i+2}]',f'sc_o[{i}]')for i in range(32)]
         score_outputs=[('s_b[0]',33),('s_b[1]',32)]+[(f's_b[{i+2}]',i)for i in range(32)]
@@ -360,11 +389,41 @@ def global_stages(insts,repacked,leafs,ectl_leafs):
                 next='If a leaf has zero reach origins, change source/target geometry. If reach origins exist but none free, grant/rehome the connected cluster. Do not admit missing leaf placements.')
 
 
+def widen_world_proposal(insts):
+    """Open four54um die columns. A geometry proposal, never an actual grant."""
+    heads=[i for i in insts if i['master']=='qkd_rhead']
+    columns={}
+    for h in heads:
+        columns[h['x']]=dict(x=h['x'],mirror=FLIPS[h['orient']][0],
+                             cut=h['x']+(h['w']-550.8 if FLIPS[h['orient']][0]else 550.8))
+    columns=sorted(columns.values(),key=lambda c:c['x']);assert len(columns)==4
+    cuts=[c['cut']for c in columns];proposal=[];crossing=[]
+    for i in insts:
+        q=dict(i)
+        if i['master']=='qkd_rhead':
+            q['x']+=54*sum(c<i['x']for c in cuts);q['w']+=54
+        elif i['master']=='qkd_ectl':
+            group='head_'+'_'.join(i['name'].split('_')[1:])+'_0'
+            head=next(h for h in heads if h['name']==group)
+            q['x']+=54*sum(c<head['x']for c in cuts)+(54 if FLIPS[i['orient']][0]else 0)
+        else:
+            touched=[c for c in cuts if i['x']<c<i['x']+i['w']]
+            if touched:crossing.append(dict(name=i['name'],master=i['master'],cut_x=touched))
+            q['x']+=54*sum(c<i['x']+i['w']/2 for c in cuts)
+        proposal.append(q)
+    return proposal,dict(qualified=False,kind='Connectedcolumnwidthproposal; actual generator admission required',
+                         columns=columns,die_width_added_um=216,head_width_added_um=54,
+                         ectl_rule='Preserve canonical216um offset; R0 no own-column shift, MY+54. Do not recenter+27.',
+                         unrelated_frames_crossing_cut=crossing,
+                         physical_limits='Other cut-crossing instances require real generator relocation and all changed paths/cuts/clocks remeasurement. This proposal is not a floorplan grant.')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--insts', type=Path, help='Actual unexpanded current die insts.json for128-copy projection')
     ap.add_argument('--global-stages',action='store_true',help='Solve actual T1/S1 in the current whole-die grant; requires --insts')
+    ap.add_argument('--widen54',action='store_true',help='Propose54um/head growth with real incident-pin audit; never an actual die grant')
     args = ap.parse_args()
     prefix = ROOT/'physical/ref_tile'
     paths = dict(plan=ROOT/'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json',
@@ -404,6 +463,7 @@ def main():
     repack_lb=continuous_bound(repack,tstage,front,dict(below=(-129.6,w+108,-280.8,-264.6)))
     repacked=repack_fronts(plan,{k:lef(paths[k])for k in ('front','score','stin','stk','nb','lane','ktree')})
     repacked_inside=repack_fronts(plan,{k:lef(paths[k])for k in ('front','score','stin','stk','nb','lane','ktree','tstage')},True)
+    widened=repack_fronts(plan,{k:lef(paths[k])for k in ('front','score','stin','stk','nb','lane','ktree','tstage')},True,True)if args.widen54 else None
     if 'children'in repacked:
         repacked['stage2_continuous_lower_bound']=continuous_bound(
             dict(plan,children=repacked['children']),tstage,front,dict(below=(-129.6,w+108,-280.8,-264.6)))
@@ -422,6 +482,7 @@ def main():
                   alternatives=alternatives,
                   repacked_actual_leaf_plan=repacked,
                   repacked_inside_stage2_actual_leaf_plan=repacked_inside,
+                  widened54_actual_leaf_plan=widened,
                   structural_fallback=dict(front_quarters_2x2={f'front{q}':repack['children'][f'front{q}'] for q in range(4)},
                                            actual_pin_lower_bound=repack_lb,
                                            existing_child_conflicts=repack_conflicts,
@@ -483,9 +544,18 @@ def main():
         ectl_paths={c:prefix/f'qkd_ectl_{c}_tp8_direct/views/qkd_ectl_{c}_tp8_direct/qkd_ectl_{c}_tp8_direct.lef'for c in 'abc'}
         ectl_paths['a']=prefix/'qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct/qkd_ectl_a_tp8_epoch_direct.lef'
         ectl_leafs={c:lef(p)for c,p in ectl_paths.items()}
-        global_result=global_stages(insts,repacked_inside,{k:lef(paths[k])for k in ('tstage','sstage','score')},ectl_leafs)
+        if args.widen54:
+            assert widened['admitted'],widened
+            insts,proposal=widen_world_proposal(insts)
+            (args.out/'proposed_insts_widen54.json').write_text(json.dumps(insts,indent=2)+'\n')
+            chosen=widened
+        else:chosen=repacked_inside;proposal=None
+        global_result=global_stages(insts,chosen,{k:lef(paths[k])for k in ('tstage','sstage','score')},ectl_leafs,args.widen54)
+        global_result['world_proposal']=proposal
+        global_result['die_grant_source']=str(args.insts)
+        global_result['die_grant_sha256']=hashlib.sha256(args.insts.read_bytes()).hexdigest()
         global_result['source_sha256']={c:hashlib.sha256(p.read_bytes()).hexdigest()for c,p in ectl_paths.items()}
-        (args.out/'global_stages.json').write_text(json.dumps(global_result,indent=2)+'\n')
+        (args.out/('global_stages_widen54.json'if args.widen54 else'global_stages.json')).write_text(json.dumps(global_result,indent=2)+'\n')
         print(json.dumps({k:global_result[k]for k in ('placed_tstage1','placed_sstage1')}))
     print(json.dumps({k:{x:v[x] for x in ('origins','free_origins','reach_pass_origins','admitted','best_free','best_reach_only')} for k,v in alternatives.items()},indent=2))
 
