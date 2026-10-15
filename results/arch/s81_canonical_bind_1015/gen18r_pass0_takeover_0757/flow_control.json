@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.s81.flow_control_seams.v1",
+ "die": "../gen18r/construction_pass0_die.v",
+ "rule": "static-slot on die; elastic only at the HBM stack/PHY boundary (DFI ready into dsfd_svc/ctrl ingress buffer, one ready per buffer block); everything after it fixed-slot",
+ "summary": {
+  "HBM_PHY_BOUNDARY": 5
+ },
+ "glue": {
+  "r_rdy_tied_1": 169,
+  "w_rdy_ports_unverified_use": 169
+ },
+ "by_master_port": [
+  {
+   "cls": "HBM_PHY_BOUNDARY",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "port": "k_rdy",
+   "instances": 1
+  },
+  {
+   "cls": "HBM_PHY_BOUNDARY",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "port": "kr_rdy",
+   "instances": 1
+  },
+  {
+   "cls": "HBM_PHY_BOUNDARY",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "port": "w_rdy",
+   "instances": 1
+  },
+  {
+   "cls": "HBM_PHY_BOUNDARY",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "port": "w_room",
+   "instances": 1
+  },
+  {
+   "cls": "HBM_PHY_BOUNDARY",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "port": "wr_rdy",
+   "instances": 1
+  }
+ ],
+ "verdict": "PASS"
+}

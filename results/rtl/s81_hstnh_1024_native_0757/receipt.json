@@ -1,0 +1,23 @@
+{
+ "time": "2026-10-15T08:39:17.477033-07:00",
+ "source_commit": "7110ec4a7",
+ "source_sha256": {
+  "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+  "rtl/dsrom_sys/s81_station_native/dsfd_hstnh_1024.sv": "01979329286c0219e3e48a36c1a497e1bb6956db8e16c0d35f9390b3722bbff5",
+  "tools/s81_station_native/run_gate.sh": "c9ce556c0e2306148f7f5f0e71d353fa065bf44f583ead207ca9c9a47e4552ea",
+  "tools/s81_station_native/tb_hstnh_1024.sv": "fc76fe45148c16c6f0a46efab15fc24793461b61ed5f7c7d51b02e89e54a714b"
+ },
+ "unit": "oth-ubuntu-402446-1792078696",
+ "host": "ot-agidock128",
+ "terminal_exit": 0,
+ "words": 20000,
+ "compared_bits": 20480000,
+ "walking_one_basis": 1024,
+ "phase": "real kept INV then negedge capture equals top ck posedge; output stable after negedge input changes",
+ "actual_rtl_mutants": {
+  "wrong_clock_edge": "FAIL payload n=0",
+  "payload_bit0": "FAIL payload n=0"
+ },
+ "qualification": "COMPONENT FUNCTIONAL ONLY; exact physical gate/native TT FF DRC and die clock delivery OPEN",
+ "native_gate": "s81die-hstnh1024-native2-0837.service active; prior local launcher failed missing PATH ot-run before any fleet admission"
+}
