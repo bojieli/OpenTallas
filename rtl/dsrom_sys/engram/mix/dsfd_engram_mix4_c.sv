@@ -345,12 +345,15 @@ module ot_s81_engram_mixq_shcol #(parameter integer MUT=0)(
  reg [1:0] reset_sync;
  always @(posedge ck or negedge rst)if(!rst)reset_sync<=0;else reset_sync<={reset_sync[0],1'b1};
  wire rn=reset_sync[1];
- reg [4:0] rvq;reg ov_q;
+ reg [4:0] rvq;reg ov_q;reg fr_q,fa_q;
+ // Capture phase controls at the leaf boundary. Static requests cannot return on the entry edge,
+ // so their one-edge local capture precedes the first payload and does not extend the calendar.
+ always @(posedge ck or negedge rn)if(!rn)begin fr_q<=0;fa_q<=0;end else begin fr_q<=fr;fa_q<=fa;end
  always @(posedge ck or negedge rn)if(!rn)begin rvq<=0;ov_q<=0;end else begin rvq<=rs_v;ov_q<=ov;end
  reg [639:0] rdq;reg [127:0] result_q;integer lane;
  always @(posedge ck)rdq<=rs_d;
  always @(posedge ck)for(lane=0;lane<8;lane=lane+1)result_q[16*lane+:16]<=result[32*lane+16+:16];
- wire ld_r=fr&&rvq==5'b11111,ld_a=fa&&rvq==5'b00111;
+ wire ld_r=fr_q&&rvq==5'b11111,ld_a=fa_q&&rvq==5'b00111;
  wire ov_use=(MUT==21)?(ov&&rn):ov_q;
  always @(posedge ck)begin
   if(ld_r||ld_a)begin
