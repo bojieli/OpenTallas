@@ -619,6 +619,25 @@
         "clk_control": 1,
         "clk_mem": 19,
         "clk_capture": 19
+      },
+      "profiles": {
+        "legacy19": {
+          "native_banks": 19,
+          "capacity_cycles": 2432,
+          "descriptor_guard": 1218,
+          "clock_entries": 39,
+          "native_receipt": "6fda7a2f1"
+        },
+        "slot160_21": {
+          "native_banks": 21,
+          "capacity_cycles": 2688,
+          "descriptor_guard": 1346,
+          "clock_entries": 43,
+          "native_receipt": "2abb2b6e5",
+          "compiler_inputs": "7073ef139",
+          "semantic_profile": "actual local-slot160kernel, limit2569 odd; preserve19profile separately",
+          "requires_explicit_host_hardware_profile": true
+        }
       }
     },
     "121": {
@@ -652,6 +671,25 @@
         "clk_control": 1,
         "clk_mem": 19,
         "clk_capture": 19
+      },
+      "profiles": {
+        "legacy19": {
+          "native_banks": 19,
+          "capacity_cycles": 2432,
+          "descriptor_guard": 1218,
+          "clock_entries": 39,
+          "native_receipt": "6fda7a2f1"
+        },
+        "slot160_21": {
+          "native_banks": 21,
+          "capacity_cycles": 2688,
+          "descriptor_guard": 1346,
+          "clock_entries": 43,
+          "native_receipt": "2abb2b6e5",
+          "compiler_inputs": "7073ef139",
+          "semantic_profile": "actual local-slot160kernel, limit2569 odd; preserve19profile separately",
+          "requires_explicit_host_hardware_profile": true
+        }
       }
     },
     "122": {
@@ -685,6 +723,25 @@
         "clk_control": 1,
         "clk_mem": 19,
         "clk_capture": 19
+      },
+      "profiles": {
+        "legacy19": {
+          "native_banks": 19,
+          "capacity_cycles": 2432,
+          "descriptor_guard": 1218,
+          "clock_entries": 39,
+          "native_receipt": "6fda7a2f1"
+        },
+        "slot160_21": {
+          "native_banks": 21,
+          "capacity_cycles": 2688,
+          "descriptor_guard": 1346,
+          "clock_entries": 43,
+          "native_receipt": "2abb2b6e5",
+          "compiler_inputs": "7073ef139",
+          "semantic_profile": "actual local-slot160kernel, limit2569 odd; preserve19profile separately",
+          "requires_explicit_host_hardware_profile": true
+        }
       }
     },
     "123": {
@@ -718,6 +775,25 @@
         "clk_control": 1,
         "clk_mem": 19,
         "clk_capture": 19
+      },
+      "profiles": {
+        "legacy19": {
+          "native_banks": 19,
+          "capacity_cycles": 2432,
+          "descriptor_guard": 1218,
+          "clock_entries": 39,
+          "native_receipt": "6fda7a2f1"
+        },
+        "slot160_21": {
+          "native_banks": 21,
+          "capacity_cycles": 2688,
+          "descriptor_guard": 1346,
+          "clock_entries": 43,
+          "native_receipt": "2abb2b6e5",
+          "compiler_inputs": "7073ef139",
+          "semantic_profile": "actual local-slot160kernel, limit2569 odd; preserve19profile separately",
+          "requires_explicit_host_hardware_profile": true
+        }
       }
     },
     "124": {

@@ -96,6 +96,19 @@ class RegistryTest(unittest.TestCase):
         spec['images'][-1]['payload_bits'] = 48
         with self.assertRaises(ValueError): build(spec)
 
+    def test_control256_new_profile_cannot_overwrite_legacy_capacity(self):
+        spec = fixture(); image = spec['images'][-1]
+        image['programme'] = dict(start=dict(base=0, limit=2569, loops=1),
+            configuration_writes=[dict(addr=n, data='0'*64) for n in range(2570)])
+        with self.assertRaises(ValueError): raw_fragment(image)
+        image['native_profile'] = 'slot160_21'
+        fragment = raw_fragment(image)
+        self.assertEqual(fragment['launch_guard_core_edges'], 1346)
+        self.assertEqual(fragment['target_manifest']['native_banks'], 21)
+        with self.assertRaisesRegex(ValueError, 'matching hardware'): build(spec)
+        spec['native_target_profiles'] = {'120': 'slot160_21'}
+        self.assertEqual(build(spec)['axi_writes'][-2]['idle_core_edges'], 1346)
+
     def test_old_registered_profile_unchanged(self):
         spec = fixture(); spec['required_targets'].pop(); spec['images'].pop()
         image = build(spec)

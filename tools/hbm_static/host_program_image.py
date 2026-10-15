@@ -52,7 +52,8 @@ def raw_fragment(image):
                 launch_guard_core_edges=contract['descriptor_to_launch_min_edges'],
                 target_manifest=dict(target=target, encoding=encoding, payload_bits=contract['payload_bits'],
                                      transport_bits=256, words=len(words), start=start,
-                                     source=contract['source'], native_op_pc_bits=contract['native_op_pc_bits']))
+                                     source=contract['source'], native_op_pc_bits=contract['native_op_pc_bits'],
+                                     native_profile=contract.get('native_profile'), native_banks=contract.get('native_banks')))
 
 
 def build(spec):
@@ -71,6 +72,8 @@ def build(spec):
         if not (target in range(4) or 16 <= target <= 255):
             raise ValueError('Target is outside the actual direct-VM/extended-engine map')
         if image.get('encoding') in ('raw_control256', 'raw_engram_fetch7x32'):
+            if image.get('native_profile') == 'slot160_21' and spec.get('native_target_profiles', {}).get(str(target)) != 'slot160_21':
+                raise ValueError('21-bank Engram image requires explicit matching hardware-target profile')
             fragment = raw_fragment(image)
             writes.extend(fragment['axi_writes'])
             launch_idle = max(launch_idle, fragment['launch_guard_core_edges'])
@@ -86,10 +89,10 @@ def build(spec):
             raise ValueError('Protected programme payload/PC does not fit its actual word')
         if target < 4 and pcw != 10:
             raise ValueError('Direct VM programme SRAM has exactly ten address bits')
-        if target == 125:
+        if target in (125, 126):
             contract = target_contract(target)
-            if spec.get('vm_profile') != contract['vm_profile'] or pcw != 10 or payload != 94:
-                raise ValueError('SW Quant target125 requires actual sw_quant_v2 VM profile and protected94b/PC10 image')
+            if spec.get('vm_profile') != contract['vm_profile'] or pcw != contract['PCW'] or payload != contract['payload_bits']:
+                raise ValueError('Native engine requires actual sw_quant_v2 VM profile and its exact protected payload/PC width')
         programme = image['programme']
         start = {k: integer(programme['start'][k]) for k in ('base', 'limit', 'loops')}
         if not (0 <= start['base'] < start['limit'] <= 1 << pcw and 1 <= start['loops'] <= 65535):

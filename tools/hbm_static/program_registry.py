@@ -19,10 +19,18 @@ def raw_control256(image):
     contract = target_contract(target)
     if contract.get('encoding') != 'raw_control256':
         raise ValueError('Target does not own native raw control256 encoding')
+    profile = image.get('native_profile', 'legacy19')
+    if profile not in ('legacy19', 'slot160_21'):
+        raise ValueError('Unknown actual control256 hardware profile')
+    if profile == 'slot160_21':
+        contract = dict(contract, native_banks=21, capacity_cycles=2688,
+                        descriptor_to_launch_min_edges=1346, native_profile=profile)
+    else:
+        contract = dict(contract, native_profile=profile)
     programme = image['programme']
     start = {key: int(programme['start'][key]) for key in ('base', 'limit', 'loops')}
     if not (0 <= start['base'] < start['limit'] <= contract['capacity_cycles']):
-        raise ValueError('Raw control range exceeds actual19-bank capacity')
+        raise ValueError('Raw control range exceeds selected actual native-bank capacity')
     if start['base'] % 2 or start['loops'] != 1:
         raise ValueError('Raw control256 requires even cycle base and loops1')
     words = {}
