@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 `default_nettype none
 module tb_hgi_coll_b2_vmport;
-    parameter integer RLY=8, MUT=0, N=128, KLINES=256, PHYSICAL_RING=1;
+    parameter integer RLY=8, MUT=0, N=128, KLINES=256, PHYSICAL_RING=1, ROUTE_MUT=0;
     function automatic integer next_sid(input integer s);
         if(!PHYSICAL_RING)next_sid=(s+1)%4;else case(s)0:next_sid=1;1:next_sid=3;3:next_sid=2;default:next_sid=0;endcase
     endfunction
@@ -28,7 +28,7 @@ module tb_hgi_coll_b2_vmport;
     for(genvar s=0;s<4;s=s+1) begin:g_slice
         wire [273:0] rsp;
         if(s==0)begin:g_sw
-            ot_vms_slice_coll_sw #(.MUT(MUT)) u(.clk(clk),.rst_n(rst_n),.clk_coll_rx({5{clk}}),.clk_vm_child({13{clk}}),
+            ot_vms_slice_coll_sw #(.PHYSICAL_RING(PHYSICAL_RING&&!ROUTE_MUT),.MUT(MUT)) u(.clk(clk),.rst_n(rst_n),.clk_coll_rx({5{clk}}),.clk_vm_child({13{clk}}),
                 .rgx_t_v(fr[RLY-1][2208 +:4]),.rgx_t_addr(fr[RLY-1][2048 +:160]),.rgx_t_data(fr[RLY-1][0 +:2048]),
                 .rgx_t_vm(fr[RLY-1][2212]),.rgx_f_cr(fc),.tkw_t_v(fr[RLY-1][2781]),.tkw_t_d(fr[RLY-1][2213 +:568]),
                 .tkw_f_cr(kfc),.coll_fault(ff),.coll_xw(),.coll_xwa(2'b0),
@@ -37,7 +37,7 @@ module tb_hgi_coll_b2_vmport;
                 .ccw_in(ni[s]),.ccw_in_cr(nic[s]),.ccw_out(no[s]),.ccw_out_cr(noc[s]),.bank_status(bs[s]),.hub_status(hs[s]),.mirror_busy(mb[s]));
         end else begin:g_peer
             assign rsp='0;
-            ot_vms_slice_no_cq u(.child_clk({13{clk}}),.rst_n(rst_n),.sid(2'(s)),
+            ot_vms_slice_no_cq #(.PHYSICAL_RING(PHYSICAL_RING&&!ROUTE_MUT)) u(.child_clk({13{clk}}),.rst_n(rst_n),.sid(2'(s)),
                 .rq(verify_rq[s]),.rq_cr(),.rr(verify_rr[s]),.wq('0),.wq_cr(),.wq_done(),.dq('0),.dq_done(),.vcb('0),.vcb_cr(),.kq_done(),
                 .cw_in(ci[s]),.cw_in_cr(cic[s]),.cw_out(co[s]),.cw_out_cr(coc[s]),
                 .ccw_in(ni[s]),.ccw_in_cr(nic[s]),.ccw_out(no[s]),.ccw_out_cr(noc[s]),.bank_status(bs[s]),.hub_status(hs[s]),.mirror_busy(mb[s]));
@@ -90,6 +90,12 @@ module tb_hgi_coll_b2_vmport;
             if(kv&&kr)begin record_write(kd[567:528],kd[511:0],kd[527:512]);ks=ks+1;end
         end
         if(phase>=1)for(integer s=0;s<4;s=s+1)begin
+            if(PHYSICAL_RING)begin
+                if(co[s][2223]&&!co[s][2222]&&co[s][2216:2215]==2'(s)&&
+                   (co[s][2220:2217]&~((4'b1<<next_sid(s))|(4'b1<<next_sid(next_sid(s)))))!=0)$fatal(1,"physical hop bound CW sid%0d",s);
+                if(no[s][2223]&&!no[s][2222]&&no[s][2216:2215]==2'(s)&&
+                   (no[s][2220:2217]&~(4'b1<<prev_sid(s)))!=0)$fatal(1,"physical hop bound CCW sid%0d",s);
+            end
             if(co[s][2223])cw_hops[s]=cw_hops[s]+1;
             if(no[s][2223])ccw_hops[s]=ccw_hops[s]+1;
             cw_credits[s]=cw_credits[s]+int'(coc[s][0])+int'(coc[s][1]);
