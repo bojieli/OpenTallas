@@ -21,6 +21,8 @@ CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
               "tools/ref_tile/path_classes.tcl")
+# Non-Python source read by an imported generator and embedded in its kit.
+PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",)}
 PY_DIRS = ("tools", "tools/ref_tile", "tools/closure_loop", "tools/w18")
 SCAN = (".tcl", ".sdc", ".sh", ".env", ".mk", ".cfg", ".f")    # flow scripts: every repo path they name is consumed
 HDL = (".v", ".sv", ".svh", ".vh")
@@ -155,6 +157,7 @@ def consumed_closure(files, seeds, prefixes, path_re):
                      and (not p.endswith(".py") or m.group(1).endswith((".tcl", ".sdc", ".sh", ".env")))]
         if p.endswith(".py"):
             todo += [(q, False) for q in sorted(_py_imports(p, text, files))]
+            todo += [(q, True) for q in PY_DATA.get(p, ())]
         if p.endswith(".f"):
             todo += [(ln.strip(), True) for ln in text.splitlines()
                      if ln.strip() and not ln.lstrip().startswith(("-", "/", "#"))]
