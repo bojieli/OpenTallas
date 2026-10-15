@@ -1,0 +1,64 @@
+{
+  "schema": "opentallas.qwen.native-glue-diagnosis.v1",
+  "original_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nl_native-20261014-234039",
+  "original_cts_unchanged": true,
+  "measurement": "new diagnostic using read-only original src and /work mounts; no archive verification or gate admission claim",
+  "actual_nl_tt_boundary": {
+    "mean_ps": 991.2,
+    "min_ps": 985.5,
+    "max_ps": 998.0
+  },
+  "worst_actual_setup_ps": -299.0476755,
+  "actual_hold_ps": 21.8999263,
+  "failed_actual_edges": [
+    {
+      "start": "g_rb[2].g_hd.u_rp/r_q[412]",
+      "end": "g_rqr.gs_q[412]",
+      "setup_ps": -299.04767,
+      "cause": "real registered rpair return through OR3 and long placement buffers into south collector"
+    },
+    {
+      "start": "reset_q",
+      "end": "g_rb[2].g_hd.u_rp/rst_n",
+      "setup_ps": -292.31241,
+      "cause": "one parent reset flop drives long buffered real child reset path"
+    }
+  ],
+  "nk_synth_sha256": "e76bf421f8d4ca540f5dab2ddb11ae4ca5204e483c067c7ec2e21c1201bc3638",
+  "nk_synth_module": "qfd_tile_nk",
+  "nk_top_module_named_ff_inventory": {
+    "u_tile.u_tile.u_logic.u_me": 2984,
+    "": 2583,
+    "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr": 2048,
+    "u_tile.u_tile.u_logic.u_xm.genblk1.g_line": 1024,
+    "u_tile.u_tile.u_logic": 443,
+    "u_tile.u_tile.u_logic.u_me.g_issue_fast": 244,
+    "u_tile.u_tile.u_logic.u_me.g_gm_fast": 152,
+    "u_tile.u_tile.u_logic.u_me.genblk2.g_kv_addr_prep.g_off[3]": 149,
+    "u_tile.u_tile.u_logic.u_me.genblk2.g_kv_addr_prep": 124,
+    "u_tile.u_tile.u_logic.u_me.genblk2.g_kv_addr_prep.g_off[1]": 88,
+    "u_tile.u_tile.u_logic.u_me.u_mt.genblk1.g_line": 88,
+    "u_tile.u_tile.u_logic.u_me.genblk2.g_kv_addr_prep.g_off[0]": 86,
+    "u_tile.u_tile.u_logic.u_me.genblk2.g_kv_addr_prep.g_off[2]": 86,
+    "u_tile.u_tile.u_logic.u_me.genblk2.g_kv_addr_prep.g_off[1].g_cs_reg": 45,
+    "u_tile.u_tile.u_logic.u_me.genblk2.g_kv_addr_prep.g_off[3].g_cs_reg": 45,
+    "u_tile.u_tile.u_logic.u_me.genblk2.g_kv_addr_prep.g_off[2].g_cs_reg": 44,
+    "u_tile.u_tile.u_logic.u_me.genblk2.g_kv_addr_prep.g_off[0].g_cs_reg": 43,
+    "u_tile.u_tile.u_logic.g_rom_pipe": 39,
+    "u_tile.u_tile.u_logic.u_me.u_v": 33,
+    "u_tile.u_tile.u_logic.g_tidr": 16,
+    "u_tile.u_tile.u_logic.u_me.u_mv": 8,
+    "u_tile": 1,
+    "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_lrr": 1,
+    "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_lrr": 1,
+    "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.g_lrr": 1,
+    "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.g_lrr": 1,
+    "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.g_lrr": 1,
+    "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.g_lrr": 1,
+    "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.g_lrr": 1,
+    "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.g_lrr": 1
+  },
+  "inventory_warning": "Top-module FF inventory excludes preserved child module instances and is not an actual clock sink count; TX has16 instances of390-bit FF module. Actual CTS root counters remain authoritative.",
+  "next": "Harden existing-edge native faces, RQR collectors, mq_wrom/s2_w operands, xdelay and TX banks into local roots; retain all real arithmetic and closed children, use additional fixed edges only after actual bounded-hop proof and compiler/model update.",
+  "acceptance": "OPEN; no native NK/NL timing/area/performance qualification"
+}

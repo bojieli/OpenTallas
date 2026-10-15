@@ -1,0 +1,2975 @@
+{
+  "schema": "ot.qwen.boundary.liberty.firstload.v1",
+  "cell": "qkh_packet_v16",
+  "selected_routed_clock_ref": "corner boundary mean from insertion.json; deliver phi-R, not rawclocktreeglobalmean",
+  "definition": {
+    "O_minus_R": "max rising_edge cell_rise/cell_fall atfirst outputloadpoint minuscornerR",
+    "S_plus_R": "max setup_rising rise_constraint/fall_constraint pluscornerR",
+    "clock_extrema_addends": "separate packet maxima: launch(max-R), capture(R-min). NOT folded intoeach intrinsiccost.",
+    "reset": "includedactualexported setup/hold arcs, noasync exemption invented.",
+    "Sdc_metrics": "tt_out andtt_i2r are positiveWNSslacks, not interfacecosts."
+  },
+  "launch_budget_ps": 220,
+  "capture_budget_ps": 190,
+  "corners": {
+    "tt": {
+      "R_ps": 52.4,
+      "boundary": {
+        "n": 19,
+        "mean": 52.4,
+        "min": 51.8,
+        "max": 52.9
+      },
+      "clock_extrema_packet_ps": {
+        "launch": 0.5,
+        "capture": 0.6
+      },
+      "first_loadpoint_fF": 1.44,
+      "pins": {
+        "clk": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "min_clock_tree_path",
+              "related_pin": null,
+              "cell_rise": {
+                "template": "scalar",
+                "first": 49.44238,
+                "loadpoint": null
+              },
+              "cell_fall": {
+                "template": "scalar",
+                "first": 54.11391,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "max_clock_tree_path",
+              "related_pin": null,
+              "cell_rise": {
+                "template": "scalar",
+                "first": 52.94931,
+                "loadpoint": null
+              },
+              "cell_fall": {
+                "template": "scalar",
+                "first": 57.40844,
+                "loadpoint": null
+              }
+            }
+          ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -26.86398,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 41.71857,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 94.11857,
+          "capture_margin_ps": 95.88143
+        },
+        "d[15]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -31.70336,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -25.83541,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 48.95921,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 48.50693,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 101.35921,
+          "capture_margin_ps": 88.64079
+        },
+        "d[14]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -31.40471,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -25.61326,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 48.68826,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 48.22641,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 101.08826,
+          "capture_margin_ps": 88.91174
+        },
+        "d[13]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -31.65336,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -25.8803,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 48.94174,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 48.45819,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 101.34174,
+          "capture_margin_ps": 88.65826
+        },
+        "d[12]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -30.91204,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -25.20313,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 48.20446,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 47.74017,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 100.60446,
+          "capture_margin_ps": 89.39554
+        },
+        "d[11]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -32.68047,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -26.7548,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 49.87788,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 49.4021,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 102.27788,
+          "capture_margin_ps": 87.72212
+        },
+        "d[10]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -31.54831,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -25.76824,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 48.73208,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 48.28808,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 101.13208,
+          "capture_margin_ps": 88.86792
+        },
+        "d[9]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -31.87955,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -26.13709,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 49.10273,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 48.63028,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 101.50273,
+          "capture_margin_ps": 88.49727
+        },
+        "d[8]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -31.20712,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -25.52017,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 48.44946,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 47.98964,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 100.84946,
+          "capture_margin_ps": 89.15054
+        },
+        "d[7]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -31.82524,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -25.4469,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 48.65215,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 48.10553,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 101.05215,
+          "capture_margin_ps": 88.94785
+        },
+        "d[6]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -31.16664,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -24.87447,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 48.0215,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 47.48516,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 100.4215,
+          "capture_margin_ps": 89.5785
+        },
+        "d[5]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -31.51406,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -25.27209,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 48.37294,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 47.81489,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 100.77294,
+          "capture_margin_ps": 89.22706
+        },
+        "d[4]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -46.15092,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -41.35757,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 63.34076,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 64.30834,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 116.70834,
+          "capture_margin_ps": 73.29166
+        },
+        "d[3]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -31.27372,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -24.81937,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 48.13584,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 47.59808,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 100.53584,
+          "capture_margin_ps": 89.46416
+        },
+        "d[2]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -46.34954,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -41.35774,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 63.54353,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 64.48416,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 116.88416,
+          "capture_margin_ps": 73.11584
+        },
+        "d[1]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -45.32861,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -40.47285,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 62.61575,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 63.58052,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 115.98052,
+          "capture_margin_ps": 74.01948
+        },
+        "d[0]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -45.57369,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -40.72388,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 62.87505,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 63.83549,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 116.23549,
+          "capture_margin_ps": 73.76451
+        },
+        "q[15]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 216.63649,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 219.86127,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 167.46127,
+          "launch_margin_ps": 52.53873
+        },
+        "q[14]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 219.81075,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 222.97733,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 170.57733,
+          "launch_margin_ps": 49.42267
+        },
+        "q[13]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 218.62854,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 221.83374,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 169.43374,
+          "launch_margin_ps": 50.56626
+        },
+        "q[12]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 219.30421,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 222.51218,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 170.11218,
+          "launch_margin_ps": 49.88782
+        },
+        "q[11]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 214.95657,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 218.30975,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 165.90975,
+          "launch_margin_ps": 54.09025
+        },
+        "q[10]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 216.00981,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 219.35435,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 166.95435,
+          "launch_margin_ps": 53.04565
+        },
+        "q[9]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 219.19072,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 222.38092,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 169.98092,
+          "launch_margin_ps": 50.01908
+        },
+        "q[8]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 218.96129,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 222.13608,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 169.73608,
+          "launch_margin_ps": 50.26392
+        },
+        "q[7]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 216.40735,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 219.72757,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 167.32757,
+          "launch_margin_ps": 52.67243
+        },
+        "q[6]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 218.15942,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 221.39354,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 168.99354,
+          "launch_margin_ps": 51.00646
+        },
+        "q[5]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 218.39154,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 221.64696,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 169.24696,
+          "launch_margin_ps": 50.75304
+        },
+        "q[4]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 219.64621,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 222.83498,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 170.43498,
+          "launch_margin_ps": 49.56502
+        },
+        "q[3]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 216.07475,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 219.4119,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 167.0119,
+          "launch_margin_ps": 52.9881
+        },
+        "q[2]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 219.00703,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 222.23318,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 169.83318,
+          "launch_margin_ps": 50.16682
+        },
+        "q[1]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 222.45903,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 225.55428,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 173.15428,
+          "launch_margin_ps": 46.84572
+        },
+        "q[0]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 223.68977,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 226.73792,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 174.33792,
+          "launch_margin_ps": 45.66208
+        }
+      },
+      "over_budget_pins": [],
+      "worst_launch": [
+        "q[0]",
+        174.33792
+      ],
+      "worst_capture": [
+        "d[2]",
+        116.88416
+      ]
+    },
+    "ff": {
+      "R_ps": 39.1,
+      "boundary": {
+        "n": 19,
+        "mean": 39.1,
+        "min": 38.5,
+        "max": 39.6
+      },
+      "clock_extrema_packet_ps": {
+        "launch": 0.5,
+        "capture": 0.6
+      },
+      "first_loadpoint_fF": 1.44,
+      "pins": {
+        "clk": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "min_clock_tree_path",
+              "related_pin": null,
+              "cell_rise": {
+                "template": "scalar",
+                "first": 37.01936,
+                "loadpoint": null
+              },
+              "cell_fall": {
+                "template": "scalar",
+                "first": 38.91795,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "max_clock_tree_path",
+              "related_pin": null,
+              "cell_rise": {
+                "template": "scalar",
+                "first": 39.58822,
+                "loadpoint": null
+              },
+              "cell_fall": {
+                "template": "scalar",
+                "first": 41.36849,
+                "loadpoint": null
+              }
+            }
+          ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -17.98436,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 30.5059,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 69.6059,
+          "capture_margin_ps": 120.3941
+        },
+        "d[15]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -21.79218,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -18.82627,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 35.8228,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 37.00563,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 76.10563,
+          "capture_margin_ps": 113.89437
+        },
+        "d[14]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -21.52176,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -18.66609,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 35.64337,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 36.79835,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 75.89835,
+          "capture_margin_ps": 114.10165
+        },
+        "d[13]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -21.66693,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -18.86916,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 35.82351,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 36.96862,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 76.06862,
+          "capture_margin_ps": 113.93138
+        },
+        "d[12]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -21.12989,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -18.37453,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 35.32122,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 36.44349,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 75.54349,
+          "capture_margin_ps": 114.45651
+        },
+        "d[11]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -22.5642,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -19.55601,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 36.50371,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 37.70499,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 76.80499,
+          "capture_margin_ps": 113.19501
+        },
+        "d[10]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -21.80365,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -18.9325,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 35.81457,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 36.96837,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 76.06837,
+          "capture_margin_ps": 113.93163
+        },
+        "d[9]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -21.96984,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -19.18844,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 36.06532,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 37.21028,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 76.31028,
+          "capture_margin_ps": 113.68972
+        },
+        "d[8]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -21.45026,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -18.7156,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 35.59802,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 36.72131,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 75.82131,
+          "capture_margin_ps": 114.17869
+        },
+        "d[7]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -21.93156,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -18.78708,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 35.67928,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 36.85666,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 75.95666,
+          "capture_margin_ps": 114.04334
+        },
+        "d[6]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -21.45618,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -18.38522,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 35.26208,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 36.41106,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 75.51106,
+          "capture_margin_ps": 114.48894
+        },
+        "d[5]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -21.73543,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -18.74466,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 35.57228,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 36.70722,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 75.80722,
+          "capture_margin_ps": 114.19278
+        },
+        "d[4]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -32.56191,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -30.05007,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 46.56113,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 48.29817,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 87.39817,
+          "capture_margin_ps": 102.60183
+        },
+        "d[3]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -21.39445,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -18.16593,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 35.15765,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 36.34473,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 75.44473,
+          "capture_margin_ps": 114.55527
+        },
+        "d[2]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -32.56626,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -29.88106,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 46.51288,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 48.28741,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 87.38741,
+          "capture_margin_ps": 102.61259
+        },
+        "d[1]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -31.75739,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -29.19136,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 45.84106,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 47.57482,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 86.67482,
+          "capture_margin_ps": 103.32518
+        },
+        "d[0]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -31.91637,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -29.36124,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 46.01617,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 47.75793,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 86.85793,
+          "capture_margin_ps": 103.14207
+        },
+        "q[15]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 155.5849,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 157.37238,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 118.27238,
+          "launch_margin_ps": 101.72762
+        },
+        "q[14]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 157.69574,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 159.25777,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 120.15777,
+          "launch_margin_ps": 99.84223
+        },
+        "q[13]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 156.86018,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 158.49881,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 119.39881,
+          "launch_margin_ps": 100.60119
+        },
+        "q[12]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 157.29648,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 158.87061,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 119.77061,
+          "launch_margin_ps": 100.22939
+        },
+        "q[11]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 154.32166,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 156.14742,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 117.04742,
+          "launch_margin_ps": 102.95258
+        },
+        "q[10]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 154.91675,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 156.6176,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 117.5176,
+          "launch_margin_ps": 102.4824
+        },
+        "q[9]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 157.05154,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 158.60013,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 119.50013,
+          "launch_margin_ps": 100.49987
+        },
+        "q[8]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 156.93024,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 158.52867,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 119.42867,
+          "launch_margin_ps": 100.57133
+        },
+        "q[7]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 155.26424,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 157.04845,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 117.94845,
+          "launch_margin_ps": 102.05155
+        },
+        "q[6]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 156.39767,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 158.06569,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 118.96569,
+          "launch_margin_ps": 101.03431
+        },
+        "q[5]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 156.49437,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 158.11606,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 119.01606,
+          "launch_margin_ps": 100.98394
+        },
+        "q[4]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 157.34326,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 158.93298,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 119.83298,
+          "launch_margin_ps": 100.16702
+        },
+        "q[3]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 155.22575,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 157.03481,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 117.93481,
+          "launch_margin_ps": 102.06519
+        },
+        "q[2]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 157.1636,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 158.81017,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 119.71017,
+          "launch_margin_ps": 100.28983
+        },
+        "q[1]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 159.52658,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 161.03505,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 121.93505,
+          "launch_margin_ps": 98.06495
+        },
+        "q[0]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 160.40791,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 161.87131,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 122.77131,
+          "launch_margin_ps": 97.22869
+        }
+      },
+      "over_budget_pins": [],
+      "worst_launch": [
+        "q[0]",
+        122.77131
+      ],
+      "worst_capture": [
+        "d[4]",
+        87.39817
+      ]
+    },
+    "ss": {
+      "R_ps": 75.0,
+      "boundary": {
+        "n": 19,
+        "mean": 75.0,
+        "min": 74.1,
+        "max": 75.6
+      },
+      "clock_extrema_packet_ps": {
+        "launch": 0.6,
+        "capture": 0.9
+      },
+      "first_loadpoint_fF": 1.44,
+      "pins": {
+        "clk": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "min_clock_tree_path",
+              "related_pin": null,
+              "cell_rise": {
+                "template": "scalar",
+                "first": 70.45948,
+                "loadpoint": null
+              },
+              "cell_fall": {
+                "template": "scalar",
+                "first": 83.03083,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "max_clock_tree_path",
+              "related_pin": null,
+              "cell_rise": {
+                "template": "scalar",
+                "first": 75.64213,
+                "loadpoint": null
+              },
+              "cell_fall": {
+                "template": "scalar",
+                "first": 87.79768,
+                "loadpoint": null
+              }
+            }
+          ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -40.132,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 57.78022,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 132.78022,
+          "capture_margin_ps": 57.21978
+        },
+        "d[15]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -43.82129,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -24.41498,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 71.10316,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 59.05196,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 146.10316,
+          "capture_margin_ps": 43.89684
+        },
+        "d[14]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -43.34064,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -24.00853,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 70.92164,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 58.68146,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 145.92164,
+          "capture_margin_ps": 44.07836
+        },
+        "d[13]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -43.73326,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -24.38511,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 71.29282,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 59.03616,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 146.29282,
+          "capture_margin_ps": 43.70718
+        },
+        "d[12]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -42.38954,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -23.21746,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 69.90974,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 57.86041,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 144.90974,
+          "capture_margin_ps": 45.09026
+        },
+        "d[11]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -45.26989,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -25.79509,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 72.45827,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 60.36824,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 147.45827,
+          "capture_margin_ps": 42.54173
+        },
+        "d[10]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -43.23251,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -23.93151,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 70.63808,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 58.53118,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 145.63808,
+          "capture_margin_ps": 44.36192
+        },
+        "d[9]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -43.83439,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -24.52868,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 71.32427,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 59.09855,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 146.32427,
+          "capture_margin_ps": 43.67573
+        },
+        "d[8]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -42.66157,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -23.50113,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 70.12715,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 58.08289,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 145.12715,
+          "capture_margin_ps": 44.87285
+        },
+        "d[7]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -43.78137,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -23.70847,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 70.52506,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 58.33557,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 145.52506,
+          "capture_margin_ps": 44.47494
+        },
+        "d[6]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -42.74675,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -22.7171,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 69.65267,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 57.3894,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 144.65267,
+          "capture_margin_ps": 45.34733
+        },
+        "d[5]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -43.15131,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -23.16896,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 70.16829,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 57.81461,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 145.16829,
+          "capture_margin_ps": 44.83171
+        },
+        "d[4]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -64.48449,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -48.23803,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 91.8959,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 83.36105,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 166.8959,
+          "capture_margin_ps": 23.1041
+        },
+        "d[3]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -42.97013,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -22.98271,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 69.76749,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 57.74148,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 144.76749,
+          "capture_margin_ps": 45.23251
+        },
+        "d[2]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -64.61291,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -48.46013,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 92.04836,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 83.75934,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 167.04836,
+          "capture_margin_ps": 22.95164
+        },
+        "d[1]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -63.41964,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -47.19481,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 90.99573,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 82.52747,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 165.99573,
+          "capture_margin_ps": 24.00427
+        },
+        "d[0]": {
+          "direction": "input",
+          "arcs": [
+            {
+              "timing_type": "hold_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": -63.95594,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": -47.67797,
+                "loadpoint": null
+              }
+            },
+            {
+              "timing_type": "setup_rising",
+              "related_pin": "clk",
+              "rise_constraint": {
+                "template": "scalar",
+                "first": 91.48622,
+                "loadpoint": null
+              },
+              "fall_constraint": {
+                "template": "scalar",
+                "first": 82.9563,
+                "loadpoint": null
+              }
+            }
+          ],
+          "S_plus_R_ps": 166.48622,
+          "capture_margin_ps": 23.51378
+        },
+        "q[15]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 323.31393,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 329.83917,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 254.83917,
+          "launch_margin_ps": -34.83917
+        },
+        "q[14]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 327.91016,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 334.79749,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 259.79749,
+          "launch_margin_ps": -39.79749
+        },
+        "q[13]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 326.21112,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 333.04599,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 258.04599,
+          "launch_margin_ps": -38.04599
+        },
+        "q[12]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 327.26483,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 334.18951,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 259.18951,
+          "launch_margin_ps": -39.18951
+        },
+        "q[11]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 321.01932,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 327.707,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 252.707,
+          "launch_margin_ps": -32.707
+        },
+        "q[10]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 322.52423,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 329.57721,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 254.57721,
+          "launch_margin_ps": -34.57721
+        },
+        "q[9]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 327.22659,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 334.25134,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 259.25134,
+          "launch_margin_ps": -39.25134
+        },
+        "q[8]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 326.95255,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 333.75909,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 258.75909,
+          "launch_margin_ps": -38.75909
+        },
+        "q[7]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 323.46313,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 330.12946,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 255.12946,
+          "launch_margin_ps": -35.12946
+        },
+        "q[6]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 325.94888,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 332.78317,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 257.78317,
+          "launch_margin_ps": -37.78317
+        },
+        "q[5]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 326.38434,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 333.32535,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 258.32535,
+          "launch_margin_ps": -38.32535
+        },
+        "q[4]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 328.28561,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 335.11539,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 260.11539,
+          "launch_margin_ps": -40.11539
+        },
+        "q[3]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 322.57684,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 329.35165,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 254.35165,
+          "launch_margin_ps": -34.35165
+        },
+        "q[2]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 327.04535,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 333.80505,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 258.80505,
+          "launch_margin_ps": -38.80505
+        },
+        "q[1]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 332.10733,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 338.88947,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 263.88947,
+          "launch_margin_ps": -43.88947
+        },
+        "q[0]": {
+          "direction": "output",
+          "arcs": [
+            {
+              "timing_type": "rising_edge",
+              "related_pin": "clk",
+              "cell_rise": {
+                "template": "template_1",
+                "first": 333.87814,
+                "loadpoint": 1.44
+              },
+              "cell_fall": {
+                "template": "template_1",
+                "first": 340.63425,
+                "loadpoint": 1.44
+              }
+            }
+          ],
+          "O_minus_R_ps": 265.63425,
+          "launch_margin_ps": -45.63425
+        }
+      },
+      "over_budget_pins": [
+        "q[15]",
+        "q[14]",
+        "q[13]",
+        "q[12]",
+        "q[11]",
+        "q[10]",
+        "q[9]",
+        "q[8]",
+        "q[7]",
+        "q[6]",
+        "q[5]",
+        "q[4]",
+        "q[3]",
+        "q[2]",
+        "q[1]",
+        "q[0]"
+      ],
+      "worst_launch": [
+        "q[0]",
+        265.63425
+      ],
+      "worst_capture": [
+        "d[2]",
+        167.04836
+      ]
+    }
+  },
+  "source_sha256": {
+    "/tmp/qce-closed-head-views/physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16/qkh_packet_v16_tt.lib": "34c445a21832ecef9d154a528724f2fb7a15a896902a027081327209cb3728be",
+    "/tmp/qce-closed-head-views/physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16/qkh_packet_v16_ff.lib": "2736e754df92932cba121430db7bc7ff0fdeed51c2bf1f682b22371520c5b8a9",
+    "/tmp/qce-closed-head-views/physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16/qkh_packet_v16_ss.lib": "02d75330cb63a76b2432e318db218a29f477f070d2ec9dcba7e1e5b86c958e26"
+  }
+}
