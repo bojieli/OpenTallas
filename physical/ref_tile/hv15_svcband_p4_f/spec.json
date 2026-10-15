@@ -1,0 +1,149 @@
+{
+ "name": "hv15_svcband_p4_f",
+ "top": "hfd_svc_v15_SW_s0",
+ "kind": "tile",
+ "sources": [
+  "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s0.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_pc.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "fill_v",
+   "fill_bank",
+   "fill_epoch",
+   "fill_slot",
+   "fill_data",
+   "read_v",
+   "read_bank",
+   "read_epoch",
+   "read_slot",
+   "out_v",
+   "out_data",
+   "open_v",
+   "open_bank",
+   "open_epoch",
+   "open_count",
+   "retire_v",
+   "retire_bank",
+   "retire_epoch",
+   "cmd_v",
+   "cmd_write",
+   "cmd_bank",
+   "cmd_epoch",
+   "cmd_addr",
+   "cmd_step",
+   "block_ready",
+   "bank_owned",
+   "busy",
+   "done",
+   "fault"
+  ],
+  "S": [
+   "k_v",
+   "k_rdy",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_we",
+   "k_wdata",
+   "k_wstrb",
+   "k_wr_done",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 4
+  }
+ ],
+ "outline": {
+  "w": 561.6,
+  "h": 112.32
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:HBM-V15-HARDEN",
+  "branch": "claude/hbm-v15-harden-1015b",
+  "tag": "hv15b",
+  "purpose": "v15.1 service band, 4 PCs, candidate B (flat: 4 PCs + 4 real 128x256 SRAMs, one CTS root, outline 4 x PC tile): one view for hfd_svc_v15_SW_s0, hfd_svc_v15_SE_s0, hfd_svc_v15_SW_s2, hfd_svc_v15_SE_s2, hfd_svc_v15_SW_s3, hfd_svc_v15_SE_s4, hfd_svc_v15_SW_s5, hfd_svc_v15_SE_s5, hfd_svc_v15_SW_s6, hfd_svc_v15_SW_s7. Bench: lockstep vs 4 stand-alone PCs, 2 wiring mutants.",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "physical/hbm_accel_die_views/svc/v15/rtl",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/hv15_svc_pc/views"
+  ],
+  "record_to": "results/rtl/ref_tile/hv15_svcband_p4_f",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_svc_band.sh {RUN}/bench/exact 0 hfd_svc_v15_SW_s0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "BAND_EQUIV PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_v15_harden/bench_svc_band.sh {RUN}/bench/mut1 1 hfd_svc_v15_SW_s0",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant2",
+    "cmd": "bash tools/hbm_v15_harden/bench_svc_band.sh {RUN}/bench/mut2 2 hfd_svc_v15_SW_s0",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
