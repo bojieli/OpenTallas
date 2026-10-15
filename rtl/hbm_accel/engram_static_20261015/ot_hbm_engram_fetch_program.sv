@@ -6,7 +6,7 @@
 module ot_hbm_engram_fetch_program #(
     parameter[7:0]TARGET=8'd124,
     parameter integer FETCH_EDGES=18944,
-    parameter integer MUT_OPCODE=0
+    parameter integer MUT_OPCODE=0, MUT_DESC_TARGET=0
 )(
     input wire clk_control,clk_mem,rst_n,
     input wire cfg_v,input wire[7:0]cfg_target,input wire[11:0]cfg_addr,input wire[255:0]cfg_data,
@@ -52,8 +52,8 @@ module ot_hbm_engram_fetch_program #(
             seen_epoch<=0;seen_hash<=0;program_done<=0;have_token<=0;first_q<=0;cid_q<=0;kernel_started<=0;kernel_age<=0;
             instruction_v<=0;instruction<=0;instruction_pc<=0;
         end else begin
-            cv<=cfg_v;dv<=desc_v;lv<=launch_v;
-            if(desc_v)descriptor_age<=0;else if(descriptor_age!=255)descriptor_age<=descriptor_age+1'b1;
+            cv<=cfg_v;dv<=desc_v && (MUT_DESC_TARGET || cfg_target==TARGET);lv<=launch_v;
+            if(desc_v && (MUT_DESC_TARGET || cfg_target==TARGET))descriptor_age<=0;else if(descriptor_age!=255)descriptor_age<=descriptor_age+1'b1;
             mem_we<=0;mem_re<=0;done<=0;program_done<=0;instruction_v<=0;instruction<=0;
             rp0<=mem_re;rp1<=rp0;first0<=read_first;first1<=first0;
             if(rp1)begin

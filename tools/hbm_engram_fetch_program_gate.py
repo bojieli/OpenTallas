@@ -13,7 +13,7 @@ reg[9:0]desc_base=0,desc_limit=42;reg[15:0]desc_loops=1;reg[16:0]token_cid=0;
 reg[7:0]home_done=0,home_fault=0;
 wire configured,init_busy,busy,done,fault,epoch_begin,hash_v,hash_first,fetch_start,instruction_v;
 wire[16:0]hash_cid;wire[31:0]instruction;wire[9:0]instruction_pc;
-ot_hbm_engram_fetch_program #(.MUT_OPCODE(`MUT_OPCODE)) dut(.*);
+ot_hbm_engram_fetch_program #(.MUT_OPCODE(`MUT_OPCODE),.MUT_DESC_TARGET(`MUT_DESC_TARGET)) dut(.*);
 integer edge_no=0,launch_edge=-1,fetch_edge=-1,opchecks=0,epochs=0,hashes=0,fetches=0,mode=0;
 reg[31:0]ops[0:41];
 always @(posedge clk_control)begin:check
@@ -57,6 +57,13 @@ initial begin
  end
  @(negedge clk_control);desc_v=1;tick;@(negedge clk_control);desc_v=0;
  repeat(mode==1?128:129)tick;
+ if(mode==0)begin
+  // Another configured target must not alter our descriptor, age or activation.
+  @(negedge clk_control);cfg_target=120;desc_base=3;desc_limit=2;desc_loops=0;desc_v=1;tick;
+  @(negedge clk_control);desc_v=0;repeat(3)tick;
+  if(!configured || init_busy || fault)$fatal(1,"unrelateddescriptorchangedtarget124");
+  cfg_target=124;desc_base=0;desc_limit=42;desc_loops=1;
+ end
  @(negedge clk_control);launch_v=1;token_v=1;token_cid=77;token_first=1;tick;launch_edge=edge_no;
  @(negedge clk_control);launch_v=0;token_v=0;token_cid=999;token_first=0;
  if(mode==1)begin
@@ -84,16 +91,16 @@ def run(out):
     out=Path(out);out.mkdir(parents=True,exist_ok=True);tb=out/'tb.sv';tb.write_text(TB)
     paths=['physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v','rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_fetch_program.sv']
     runs=[]
-    for name,mutant,mode in [('baseline',0,0),('early_launch',0,1),('opcode_mutant',1,0)]:
-        cp=subprocess.run(['iverilog','-g2012',f'-DMUT_OPCODE={mutant}','-s','tb','-o',str(out/name),*[str(ROOT/p) for p in paths],str(tb)],capture_output=True,text=True)
+    for name,mutant,desc_mutant,mode in [('baseline',0,0,0),('early_launch',0,0,1),('opcode_mutant',1,0,0),('descriptor_target_mutant',0,1,0)]:
+        cp=subprocess.run(['iverilog','-g2012',f'-DMUT_OPCODE={mutant}',f'-DMUT_DESC_TARGET={desc_mutant}','-s','tb','-o',str(out/name),*[str(ROOT/p) for p in paths],str(tb)],capture_output=True,text=True)
         (out/f'{name}.build.log').write_text(cp.stdout+cp.stderr);assert cp.returncode==0,cp.stderr
         rp=subprocess.run(['vvp',str(out/name),f'+MODE={mode}'],capture_output=True,text=True)
         (out/f'{name}.run.log').write_text(rp.stdout+rp.stderr)
-        assert (rp.returncode==0)==(mutant==0),rp.stdout+rp.stderr
+        assert (rp.returncode==0)==(mutant==0 and desc_mutant==0),rp.stdout+rp.stderr
         runs.append(dict(name=name,returncode=rp.returncode,output=rp.stdout.strip()))
     result=dict(schema='opentallas.hbm.engram.fetch_program.v1',status='pass',target=124,cfg_meaningful_bits=224,ops_per_word=7,op_width=32,
         native_words=128,pc_width=10,max_cycles=896,descriptor_launch_guard=130,first_instruction_age=5,first_consumer_age=6,
-        fixed_kernel_done_after_fetch_consumer=18945,inactive_global_C10=True,explicit_disable_descriptor=dict(base=0,limit=0,loops=0),retained_catalogue_reselect=True,runs=runs,
+        fixed_kernel_done_after_fetch_consumer=18945,inactive_global_C10=True,unrelated_descriptor_isolation=True,explicit_disable_descriptor=dict(base=0,limit=0,loops=0),retained_catalogue_reselect=True,runs=runs,
         home_status_modeled=True,scope='Programme SRAM/issuer component only; actual homekernel and wholeoperation must compose, no fullnative/physical/performance claim',
         source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in paths})
     (out/'receipt.json').write_text(json.dumps(result,indent=2)+'\n');return result
