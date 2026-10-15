@@ -3641,6 +3641,7 @@ def build_r8(variant=None):
     global HOP_PLAN
     if HOP_FIX and HOP_PLAN is None:
         HOP_PLAN = {}
+        ALIGN_EXT[0] = False     # r8: planning passes align single stations only (the r7 rule)
         m0 = build_r8(variant)
         finalize_r8(m0)
         HOP_PLAN = hop_plan(m0)
@@ -3659,6 +3660,7 @@ def build_r8(variant=None):
             if not add_:
                 break
             HOP_PLAN.update(add_)
+        ALIGN_EXT[0] = True      # the built die: rigid runs / partial moves / spread entry (all re-judged, <= 450 um)
     variant = dict(variant or {})
     W, H = DIE
     insts, regions, notes = [], [], []
@@ -7479,6 +7481,9 @@ def finalize_r8(m):
 
 
 STATION_KINDS = ('stn', 'hstn', 'sstn', 'xstg')
+ALIGN_EXT = [True]             # r8: align-jogs extensions (aligned runs, partial moves, spread entry) on the final build only:
+                               # r8b screen applied them in the hop-plan passes too, so the plan saw a spread / shifted chain
+                               # the final build did not reproduce (tf2 d8: 3,056 b at 799 um, 11,377 bits over 500)
 ALIGN_STN_REACH_UM = 450.0     # r7: a station->station hop moved by --align-jogs stays <= 450 um a bit (hop gate 500)
 
 
@@ -7635,20 +7640,45 @@ def align_station_jogs(m, rounds=2):
                     why_.append('%s:not_movable' % nm)
                     continue
                 cands.append(({nm: it}, sg))
-            for nm, sg in ((r['load'], -1.0), (r['drv'], 1.0)):       # r8: then the aligned run behind each end
+            for nm, sg in (((r['load'], -1.0), (r['drv'], 1.0)) if ALIGN_EXT[0] else ()):   # r8: aligned runs
                 it = by.get(nm)
                 if it is None or it.kind not in STATION_KINDS or nm in moved:
                     continue
                 run = aligned_run(nm, ax)
                 if len(run) > 1:
                     cands.append((run, sg))
-            for members, sg in cands:
-                dx, dy = (sg * d, 0.0) if ax == 0 else (0.0, sg * d)
-                w_ = try_move(members, dx, dy)
-                if not w_:
+            tgt = [h_ for h_ in incident.get(r['drv'], []) if h_[0][0] == r['drv'] and h_[1][0] == r['load']]
+
+            def tgt_ok():
+                """the flagged bundle itself, re-judged at the current positions: not a FAIL"""
+                if len(tgt) != 1:
+                    return False
+                (an, ap), (bn, bp), bits = tgt[0]
+                A_, B_ = pts(by[an], ap, bits), pts(by[bn], bp, bits)
+                return not any(q is None for q in A_ + B_) and PA.bundle(A_, B_)['verdict'] != 'FAIL'
+            ok_ = False
+            # r8: the full jog first, then partial moves: a FAIL needs only jog_cut <= 0.6, i.e. the jog shortened
+            # until its crossing wires fit the channel (jog10 d10: 2,100 b, 108 um in 86.7 um; <= ~78 um suffices)
+            for frac in ((1.0, 0.75, 0.6, 0.45, 0.3) if ALIGN_EXT[0] else (1.0,)):
+                for members, sg in cands:
+                    dd = up(frac * d, GX if ax == 0 else GY) if d > 0 else -up(-frac * d, GX if ax == 0 else GY)
+                    dx, dy = (sg * dd, 0.0) if ax == 0 else (0.0, sg * dd)
+                    snap = {n_: (i_.x, i_.y) for n_, i_ in members.items()}
+                    mv0 = dict(moved)
+                    w_ = try_move(members, dx, dy)
+                    if not w_ and (frac == 1.0 or tgt_ok()):
+                        ok_ = True
+                        break
+                    if not w_:          # moved but the bundle is still a FAIL: undo
+                        for n_, (x_, y_) in snap.items():
+                            by[n_].x, by[n_].y = x_, y_
+                        moved.clear()
+                        moved.update(mv0)
+                        w_ = 'partial_still_fail'
+                    why_.append('%s[%d]@%.2f:%s' % (next(iter(members)), len(members), frac, w_))
+                if ok_:
                     why_ = []
                     break
-                why_.append('%s[%d]:%s' % (next(iter(members)), len(members), w_))
             if why_:
                 refused[r['bus']] = why_
         if len(moved) == n0:
@@ -7660,7 +7690,7 @@ def align_station_jogs(m, rounds=2):
     # every dq bit exactly opposite its load pin and di at the same coordinate on the input face, so the fan-out is
     # made on the input side in the wide channel toward the previous station (re-judged: not a FAIL, <= 450 um a bit).
     # Same register stage, no cycle added; RTL is the generated hstn glue (one ot_fwd_link_stage per 512 bits).
-    if refused:
+    if refused and ALIGN_EXT[0]:
         rec = PA.analyze(m['insts'], m['buses'], die_lef_texts(m), names)
         spread = m.setdefault('spread_stations', {})
         for r in [r for r in rec['flagged'] if r['verdict'] == 'FAIL' and r.get('kind') == 'straight']:
@@ -7684,8 +7714,8 @@ def align_station_jogs(m, rounds=2):
             al = 1 if horiz else 0                      # coordinate along the face
             lo, hi = min(q[al] for q in B), max(q[al] for q in B)
             g0 = GY if horiz else GX
-            start = math.floor((lo - 2.0) / g0) * g0
-            span = math.ceil((hi + 2.0 - start) / g0) * g0
+            start = math.floor((lo - 0.5) / g0) * g0
+            span = math.ceil((hi + 0.5 - start) / g0) * g0
             thick = it.w if horiz else it.h
             toward = 1.0 if fa in 'EN' else -1.0       # the load lies in +axis direction from the driver face
             lc = (ld.x if toward > 0 else ld.x + ld.w) if horiz else (ld.y if toward > 0 else ld.y + ld.h)
