@@ -8,8 +8,8 @@
     "pcs_per_stack": 32
   },
   "source_sha256": {
-    "tools/hgi_sim/ds_native.py": "5ad0bdab07f3b99fad6ad119896a830d9bb2fa33efb678df35c0874854d56e0f",
-    "tools/hgi_sim/ds_mtp_kernels.py": "1b8088aef724182e96b5559c02bab84846c542681b998caabe35f13a77e78e32",
+    "tools/hgi_sim/ds_native.py": "6af1c4439743aaf5575f41cdb3fa4c85b35aba82e8af95b7d9504cbe4b8de799",
+    "tools/hgi_sim/ds_mtp_kernels.py": "34ff1ab3a56bae164641f6857de15b9f170835ad29d4d286d6858f14fdcea004",
     "rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
     "rtl/hbm_accel/service/ot_hbm_kport_map.sv": "93e6f1e03c7c9ce4780da18b3c453381878107d5db68cda8312d2fb9a61ab84f",
     "tools/hdc_v41_engram_shipped.py": "09827bf166bc9fb1d82adb2ca7808c64af4a07fecf2347d2206320b952d2902f"
@@ -37,7 +37,7 @@
         21474836480,
         21743271936
       ],
-      "policy": "entire first256MiB protected; legacy HC_STRIPE_LOC remains invalid and is not silently relocated"
+      "policy": "entire first256MiB protected; historical predecessor HC failure retained separately"
     },
     {
       "owner": "MTP column DMA slots",
@@ -4438,7 +4438,8 @@
     "all_within_stack_capacity": true,
     "weight_manifest_guards_exercised": true
   },
-  "occupied_source_errors": [
+  "occupied_source_errors": [],
+  "historical_HC_source_errors": [
     {
       "owner": "legacy HC stripe",
       "local_base": 32212254720,
@@ -4449,7 +4450,7 @@
   ],
   "remaining": [
     "Actual external fixed extent ends for CKV/IKS/Engram staging/table/DMA namespaces must be inventoried against each reservation",
-    "Legacy HC_STRIPE_LOC30GiB is still beyond stack capacity; explicit source relocation and actual delivery proof required",
+    "Relocated HC source must join actual image installation, native delivery and immutable performance proof",
     "Source MAN_END94GiB is only a manifest envelope, not proof each actual stack2 weight extent fits22.5GB",
     "released520-record payload counts/sourceSHA must be bound to perSM reservations",
     "native mapped descriptor and actual hardware installation/ACK",
