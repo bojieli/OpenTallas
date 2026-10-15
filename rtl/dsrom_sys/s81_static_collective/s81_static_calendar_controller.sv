@@ -66,7 +66,7 @@ module s81_static_calendar_controller #(
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)c_cmd_q<=0;else c_cmd_q<=c_cmd;
  end
- reg active,fault;reg [AW-1:0] cursor;
+ reg active,fault,online;reg [AW-1:0] cursor;
  wire [RW-1:0] entry=rom[active ? cursor:{AW{1'b0}}];
  wire running=active || c_cmd_q[84];
  wire [84:0] expected=entry[CB+:85];
@@ -77,9 +77,9 @@ module s81_static_calendar_controller #(
  wire row_bad=!entry[RW-1] || descriptor_bad || command_bad;
  wire enabled=rst_n && running && !fault && !datapath_fault && !row_bad;
  assign busy=active;
- assign c_st={rst_n && (ROM_FILE!="") && rom[0][RW-1],fault};
+ assign c_st={online,fault};
  always @(posedge clk or negedge rst_n) begin
-  if(!rst_n)begin read_slot<=0;read_row<=0;issue_slot<=0;tag<=0;seq<=0;last<=0;rankmask<=0;commit_slot<=0;commit_tag<=0;commit_seq<=0;commit_last<=0;commit_rankmask<=0;commit_rows<=0;tx_beat_slot<=0;tx_phase<=0;tx_frame_slot<=0;rx_beat_slot<=0;rx_phase<=0;rx_frame_slot<=0;channel_tx_slot<=0;channel_tx_kind<=0;channel_tx_seq<=0;channel_tx_last<=0;channel_rx_slot<=0;channel_rx_kind<=0;channel_rx_seq<=0;channel_rx_last<=0;channel_tx_beat_slot<=0;channel_tx_frame_slot<=0;channel_tx_phase<=0;channel_rx_beat_slot<=0;channel_rx_frame_slot<=0;channel_rx_phase<=0;hc_reduce_slot<=0;hc_write_slot<=0;hc_word_index<=0;hc_expect_seq<=0;hc_expect_last<=0;hc_emit_slot<=0;hc_emit_tag<=0;active<=0;fault<=0;cursor<=0;c_done<=0;end
+  if(!rst_n)begin read_slot<=0;read_row<=0;issue_slot<=0;tag<=0;seq<=0;last<=0;rankmask<=0;commit_slot<=0;commit_tag<=0;commit_seq<=0;commit_last<=0;commit_rankmask<=0;commit_rows<=0;tx_beat_slot<=0;tx_phase<=0;tx_frame_slot<=0;rx_beat_slot<=0;rx_phase<=0;rx_frame_slot<=0;channel_tx_slot<=0;channel_tx_kind<=0;channel_tx_seq<=0;channel_tx_last<=0;channel_rx_slot<=0;channel_rx_kind<=0;channel_rx_seq<=0;channel_rx_last<=0;channel_tx_beat_slot<=0;channel_tx_frame_slot<=0;channel_tx_phase<=0;channel_rx_beat_slot<=0;channel_rx_frame_slot<=0;channel_rx_phase<=0;hc_reduce_slot<=0;hc_write_slot<=0;hc_word_index<=0;hc_expect_seq<=0;hc_expect_last<=0;hc_emit_slot<=0;hc_emit_tag<=0;active<=0;fault<=0;online<=0;cursor<=0;c_done<=0;end
   else begin
    read_slot<=enabled ? entry[0 +: 1] : 1'd0;
    read_row<=enabled ? entry[1 +: 14] : 14'd0;
@@ -121,6 +121,7 @@ module s81_static_calendar_controller #(
    hc_expect_last<=enabled ? entry[393 +: 1] : 1'd0;
    hc_emit_slot<=enabled ? entry[394 +: 1] : 1'd0;
    hc_emit_tag<=enabled ? entry[395 +: 32] : 32'd0;
+   online<=(ROM_FILE!="") && rom[0][RW-1];
    c_done<=0;
    if(datapath_fault)fault<=1;
    if(running && !fault) begin
