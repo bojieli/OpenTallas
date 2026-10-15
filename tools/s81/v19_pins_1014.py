@@ -444,7 +444,7 @@ def gather(out):
         ent.append(dict(port=r['clock'], child=f"{r['inst']} ({r['master']}).ck", parent_face=face, entry_wire_manhattan_um=round(d[face] + abs(k * P - c), 1)))
     slot = {p: [list(b) for b in v['per_bit']] for p, v in v18['ports'].items()}
     slot['ck_q'] = ckq
-    rec_extra = dict(clock_entries={'stream': v18['clock_entries']['stream'] + [f'ck_q[{i}]' for i in range(48)]},
+    rec_extra = dict(clock_entries={'stream': v18['clock_entries']['stream'] + [f'ck_q[{i}]' for i in range(48)], 'serial': ['ckv', 'ck_r[132]']},
                      ck_q_entries=ent, relay_plan='claude/s81-gather-1014 04320da21 gather_parent_spec.relay_children()',
                      unchanged_from_v18=sorted(v18['ports']), removed=['f_pq', 't_pq (PQ RWB interface, not gather ports)'])
     fn = write(out, 'dsfd_sp_gather_c', [W, H], slot, 'ck', 'die lead r6: v18 slot pins unchanged + ck_q[47:0] (one compensated '

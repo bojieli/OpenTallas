@@ -1,0 +1,87 @@
+# S81 fixed cycle calendar compiler
+
+`compile_calendar.py` lowers already scheduled stage jobs to exact physical VM
+edges. It has no runtime inputs and never adjusts execution in response to
+credits, readiness, queue occupancy, observed completion, or fixture values.
+Compilation rejects memory/transfer conflicts and requires a revised offline program.
+The optional `--schedule-native-jobs` pass assigns fixed job issue cycles
+offline using owner-provided native durations, predecessor completions, one
+in-flight job per physical engine port, and exact recurring clock phases. It
+reports the changed makespan and leaves performance acceptance false. It never
+uses priced graph durations in place of missing measured native durations.
+Operator fusion and endpoint remapping must precede this scheduling pass.
+
+Every native job needs its real endpoint, native engine, fixed duration, tag,
+client, start phase, and explicit accesses. Durations must match the scheduled
+program, including physical transport. Evidence pins the implementing RTL and
+its separately measured timing/port contract by path and SHA256. Accesses use
+stream-relative issue/response/commit/deadline cycles and VM-relative ingress,
+bank enqueue and service cycles. The VM origin is the last VM edge at or before
+the scheduled job start. Templates only apply at the declared recurring clock
+phase; their phase period must repeat both clocks exactly.
+
+Every tensor requires explicit physical base row, row count, native producer
+(or declared external input/resident constant), consumers, and pinned allocation
+contract evidence. Reads of native-produced rows require complete word-mask
+coverage from actual native writes. Overlapping live allocations are rejected.
+A C++ snapshot allocator is not a production allocation contract. Internal
+reference/fixture tensors are rejected, even if their numerical results match.
+
+The generated schedule is checked using
+`tools/s81_suhc/static_vm_reservations.py`. Any missing binding, stale evidence,
+unsupported native operation, latency mismatch, timing conflict, or unproduced
+read prevents **all** dispatch and emits no partial execution calendar.
+`qualified` remains false: source-backed native RTL replay, physically mapped
+memories, digital links, die binding/timing and throughput gates are separate.
+Compiler tests qualify only this lowering mechanism.
+
+```sh
+python3 tools/s81_compile_schedule/compile_calendar.py \
+  --programs results/rtl/s81_ctrl_20261008/programs \
+  --bindings actual-owner-bindings.json --contract actual-native-vm-contract.json \
+  --out compiled-calendar.json
+python3 -m unittest discover -s tools/s81_compile_schedule -v
+```
+
+The current 59 committed stage programs contain 2,367 jobs: 920 SU, 560 HC,
+332 field, 210 collective, 168 service, 97 selector, 59 hop, eight collector,
+eight Engram, four head, and one embedding. These programs are arithmetic
+operator graphs with ASAP duration estimates. They do not supply the complete
+native tensor producer allocation or fixed physical memory calendar. The
+fullshape compiler test therefore proves all 59 programs reject absent owner
+bindings, not that 2,367 native jobs have been implemented. SU/HC snapshot
+addresses and ideal LVM10 response timing cannot be promoted to production
+bindings. The native VM service, field/collective mapping and owner-provided
+operand contracts must be connected before full-native dispatch is possible.
+
+`lower_native_graph.py` now rewrites the actual 2,367 operators using named
+native fusion rules: 704 graph operators fold into existing SU/HC/HCP chains.
+It retains every original operation in exact coverage and inserts 80 required
+HC raw all-gathers and 40 post-attention HSTORE producers before FFN projection.
+The resulting 1,783 jobs are a structural lowering with unbound endpoints and
+unmeasured native durations explicitly visible. They are not a qualified native
+calendar. The normalized HCP implements HC fn/sumsq/rsqrt; the existing HBM op2
+coefficient tail implements pre/post and Sinkhorn. They remain separate jobs
+with the real TP4 gather between them.
+
+`operand_layout.py` assigns the first actual field/SU buffers independently of
+historical fixture/ISA addresses. It joins all 160 released wq_a/wkv/wq_b source
+matrices and 640 rank fragments across 40 layers to QN/KV/QR buffers, preserving
+literal source rank slices and scalar identity. QN/KV input data must arrive
+from actual field roots and the TP4 collective. The allocation is an integration
+contract; the producer packet tags, formats, writes and their fixed calendars
+still need actual native implementation evidence. No tensor values are read or
+generated. These production-layout candidates and full graph witnesses live in
+`results/arch/s81_native_compile_1014/` with explicit incomplete status.
+
+`write_itinerary.py` compiles fixed write staging capture/drain tables, preserving
+source port, slot, job, tag, row, mask and event identity. Its independent table
+checker rejects missing writes, changed metadata, storage overwrite, early
+release and bank service conflicts. It specifies no dynamic queue arbitration.
+The current four source-pinned observed demand patterns need at most three
+register rows per bank (68 rows with individual bank sizing; 18 simultaneously
+live), at most three captures per bank per edge, and at most two extra drain
+cycles. The original write visibility deadlines are missing, so these remain
+**diagnostic demand itineraries**. Production rebasing can change conflicts.
+Actual staging RTL, physical paths, and compiled consumer/commit fences must be
+verified before any of these tables become executable native programs.
