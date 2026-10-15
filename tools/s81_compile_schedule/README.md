@@ -110,3 +110,23 @@ Actual native instances are identified by `(die_id, instance)`. Repeated real
 hierarchy names on distinct rank dies are legal; inventing globally prefixed
 hierarchy names is unnecessary. Independent operation-home assignments still
 select the exact physical die and implementing engine.
+
+`source_locality_assignment.py` is a new compiler design pass. It builds literal
+symbolic producer/consumer edges from the pinned canonical demand, joins actual
+FIELD fragment-stage alternatives, and proposes non-FIELD operation homes with
+integer alpha-expansion graph cuts. It preserves independent write bursts such
+as W1/W3 and in-place versions; runtime expert alternatives use worst-case
+boundary counts. Unanchored operations and missing input producers stay visible.
+It does not use provider2L, catalogue position, fixture addresses or prices.
+
+The first full-source candidate preserves all4778 instructions/7925 dependency
+edges and1149 FIELD anchors;2654 SU instructions have10616 TP4 candidate homes
+across42 stages. The equal-weight symbolic stage-boundary objective goes from
+2818 to2282. This is a source graph metric, **not** a measured reduction in wiring,
+bandwidth, latency or token time. Ten admitted mechanism tests cover real
+producer grouping, source mutations and graph-cut correctness against a small
+exhaustive binary optimum. The candidate provides no native physical instance,
+programme, epoch or cycle. Native fusion/replication/capacity constraints and
+explicit no-op programmes on unused stages still need implementation; the raw
+candidate may split existing fused kernels and must not be adopted as-is.
+MTP auxiliary programme coverage remains separate and unbound.
