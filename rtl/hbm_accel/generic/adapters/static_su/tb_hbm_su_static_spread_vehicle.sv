@@ -12,9 +12,10 @@
 // calendar events), never from the SU ports. MUT_CAL=1: the calendar omits one SU read slot (quarter 1) -> FAIL.
 module tb_hbm_su_static_spread_vehicle;
  parameter integer MUT_PG=0,MUT_LG=0,MUT_CAL=0,MAXPRE=32768,MAXEV=32768,MAXREC=64;
- // SW/SE (QID 0/1) carry the fifth port group: GEO-H geometry map (LG_local_engine_reach_current/_B, all plans, SW+SE:
- // groups [0],[1,2],[3,4],[5,6],[7], each <= 500 um from its pin cluster) = BANK_GROUP 0x43322110 (was provisional 0x43221100)
- parameter [31:0] SWSE_BANK_GROUP=32'h4332_2110;
+ // Adopted floorplan T_band2__npg4_s5 (main 952c5933c): all four quarters 4 bank-pair groups (BANK_GROUP 0x33221100);
+ // the superseded v15/D 5-group SW/SE map (SWSE_NPG 5, 0x43322110) stays reachable via -P parameter overrides.
+ parameter integer SWSE_NPG=4;
+ parameter [31:0] SWSE_BANK_GROUP=32'h3322_1100;
  localparam integer RR=10,WR=7;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0;
@@ -26,7 +27,7 @@ module tb_hbm_su_static_spread_vehicle;
  for(genvar q=0;q<4;q=q+1)begin:g_q
   wire [8*17-1:0] lrq,nrq;wire [8*281-1:0] lwq,nwq;wire [7:0] ndone,ldone;
   wire [8*257-1:0] nrr,lrr;
-  localparam integer NPG=(q<2)?5:4;
+  localparam integer NPG=(q<2)?SWSE_NPG:4;
   wire [NPG-1:0] pf;
   assign pg_fault[q]=5'(pf);
   ot_hbm_su_static_vm_ports #(.QID(q),.READ_RETURN(RR),.WRITE_RETURN(WR),.MUT(MUT_PG),.NPG(NPG),
@@ -161,8 +162,8 @@ module tb_hbm_su_static_spread_vehicle;
    if(first_seen[k]!==win[k][63:32]||last_seen[k]!==win[k][31:0])begin $display("ERR record %0d window",k);errors=errors+1;end
   end
   if(errors)$fatal(1,"SU_SPREAD_VEHICLE FAIL errors=%0d reads=%0d writes=%0d",errors,reads,writes);
-  $display("SU_SPREAD_VEHICLE PASS preload=%0d events=%0d records=%0d reads=%0d writes=%0d calendar_edges=%0d quarters=4 port_groups=18(SW/SE 5) lg_leaves=32 banks=32 srams=96",
-           npre,nev,nrec,reads,writes,ev[nev-1][327:296]+1);
+  $display("SU_SPREAD_VEHICLE PASS preload=%0d events=%0d records=%0d reads=%0d writes=%0d calendar_edges=%0d quarters=4 port_groups=%0d(SW/SE %0d) lg_leaves=32 banks=32 srams=96",
+           npre,nev,nrec,reads,writes,ev[nev-1][327:296]+1,8+2*SWSE_NPG,SWSE_NPG);
   $finish;
  end
 endmodule

@@ -1,13 +1,12 @@
 `timescale 1ns/1ps
 `default_nettype none
-// Static SU VM interface of one quarter: NPG independently placeable port groups (GEO-H rule 10-15, main f5d89a0a8,
-// v15 engine_lg_port_group_rule: >= 4 groups per quadrant, 5 on SW/SE so every SU <-> LG link stays < 500 um).
-// BANK_GROUP[4b+:4] = the port group (and pg_clk root) of VM bank b of the quarter. Default (NW/NE): one group per
-// bank pair {0,0,1,1,2,2,3,3}. SW/SE (NPG 5): the fifth group takes ONE bank of a pair, chosen by the die lead from
-// the actual bank placement (the bank farthest from its pair's pin cluster); the logical buses below stay one port
-// per quarter, only the pin/leaf plan and the clock root follow the group.
-// SW/SE map from the GEO-H geometry (results/arch/hbm_system_geometry_1015/LG_local_engine_reach_{current,B}.json,
-// min groups within 500 um = [0],[1,2],[3,4],[5,6],[7]): NPG 5, BANK_GROUP 32'h4332_2110.
+// Static SU VM interface of one quarter: NPG independently placeable port groups, one per VM bank pair.
+// ADOPTED floorplan T_band2__npg4_s5 (GLOBAL-FP-H, main 952c5933c; coordinator 09:35 PT 10-15): the 8-bank slice sits in
+// the 1.8 mm VM band between SM rows 2/3, so EVERY quadrant incl. SW/SE uses 4 bank-pair groups (NPG 4,
+// BANK_GROUP 32'h3322_1100 = {0,0,1,1,2,2,3,3}); the earlier 5-group SW/SE map (0x43322110, v15/D geometry) is
+// superseded (with it the adopted plan's worst cut is 0.636 instead of 0.556). NPG/BANK_GROUP stay parameters so the
+// die contract states the map; the logical buses below stay one port per quarter, only the pin/leaf plan and the
+// clock root follow the group.
 // Each bank leaf drives the SU (near) station of the LG tap of its bank (ot_hbm_vm_lg_static_bank, READ_RETURN 10,
 // WRITE_RETURN 7). No register stage is added: request pins go straight to the LG leaf's sampled local inputs, so
 // the compiler latencies stay 10/7. No queues, credits, ready, arbitration or runtime rescheduling.

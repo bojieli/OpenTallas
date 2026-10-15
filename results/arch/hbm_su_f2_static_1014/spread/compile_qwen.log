@@ -12,4 +12,4 @@ swiglu                       priced    120 edges    97 issues   24 rd     4 wr  
 row_scale_down+residual      priced     67 edges    75 issues    8 rd  1024 wr   512 reuse   4096 elide      0  OVER
 qwen {'priced': 1668.0, 'edges': 1795, 'ratio': 1.076} slices [43681, 43681, 43425, 43425] replicated 138 conflicts 0 affine_fail 0
 address map /home/ubuntu/wt/hbm-elemb-sfu-1015/results/arch/hbm_su_f2_static_1014/spread/address_map_qwen.json runs 1401 obligations {'ATT': (1032, 1032), 'COLL': (8192, 0), 'DMA': (58472, 512), 'FUSED': (1280, 13568), 'SM': (7680, 4096), 'SU(not in fixture set)': (0, 37984)}
-vehicle images /tmp/claude-elemb-veh-1015/veh_qwen preload sectors 21780 events 24560
+vehicle images /tmp/elemb-su-veh/veh_qwen preload sectors 21780 events 24560
