@@ -41,7 +41,14 @@
       "A0_A1_A2": "472 + 256*k",
       "A3": "474 + 256*k"
     },
-    "phase_clarification": "head owner confirmed 2026-10-15; direct fullbundle RTL gate is authoritative"
+    "phase_clarification": "head owner confirmed 2026-10-15; direct fullbundle RTL gate is authoritative",
+    "direct_actual_head_Markov_gate": "results/rtl/s81_mtp_static_bundle_1015/bundle3/record.json",
+    "direct_actual_head_Markov_gate_status": "PASS128actualpublicheadrows; actualphysicalWviasignDUTmutantFAIL; no goldenheadlogits feedDUT",
+    "joined_pin_launch_original_bench_G": {
+      "A0_A1_A2": "656 + 256*k",
+      "A3": "658 + 256*k",
+      "last": 8594
+    }
   },
   "row": {
     "request": "compiler request captured with actual head_valid/logit/row/token/identity; availability checks fault only",
@@ -93,7 +100,6 @@
     "scope": "all32rows exact fullK actualmappedE/W+actualheadlogits; ROMviaflip and metadata mutants fail"
   },
   "remaining": [
-    "direct actual public head-port wiring on all four A phases",
     "all vocabulary groups and recursive actual draft token chain",
     "static carried argmax and acceptance/rollback program plus full program calendar",
     "physical W/cache/pair master mapping and boundary/root budget with actual clocks",

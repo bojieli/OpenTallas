@@ -1,0 +1,36 @@
+{
+  "gate": "PASS",
+  "results": [
+    {
+      "mode": "exact",
+      "exit": 0,
+      "ok": true
+    },
+    {
+      "mode": "via_mutant",
+      "exit": -6,
+      "ok": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/v41rom/ot_dsrom_head_bundle.sv": "0ad72924f820452c41afda1f528f21f3790d3c98157579e2cbd17431fddeeda4",
+    "rtl/v41rom/ot_dsrom_head_elem.sv": "0460f69944698f206cdda26ac3a326a24522dfd6d5c18b9804d76f04e0ef21aa",
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_native.sv": "b6e93a3e4792bee734434984c00e7bb6c2655a5a650b6fc9c59663019c3762d0",
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_static.sv": "7e5d1e0fd2fecf97fcb568e0ed39c70c1eb336793f2113a0171360100601c3b5",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_static.sv": "05d89e9c7889f5b6a0c4bfdeeb6db410686cfff217069fadc9ec1447536d8e9e",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_weight32_static.sv": "d1f21c983b08e07847b6d67aaa1bcf60b3a78fd862cc02c2be4656d72e10fe07",
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_embed_cache_static.sv": "2f6cfd05b5373287b4bdc73b18c5166ce1909cc3382b61169dfdfa872bc443b8",
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_static_row.sv": "15fabf984af75cf5830b46fbc78c57a1f8755d0abc8d34d46fb02cfeba71611b",
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_static_bundle.sv": "29dde877d1a135cf9a53613a55cfb8f926572054484d63ff98ed0da6644e200c"
+  },
+  "actual_head_receipt_sha256": "c6591eafee9f06f58cd465f3a20887db05d31da48563e6f731164c58b8b39f0e",
+  "actual_terminal_receipt_sha256": "20e08f07c7993accbee25eaf448693976a7113fdd84d1ae63929e22f0b98bce4",
+  "scope": "actual 128-row head pin stream -> static cached real E/W+K256; fixed production calendar; upstream HC stream replayed actual ROM inputs; whole MTP/VM/physical die remains unqualified",
+  "full_native_token_qualified": false,
+  "physical_qualified": false
+}
