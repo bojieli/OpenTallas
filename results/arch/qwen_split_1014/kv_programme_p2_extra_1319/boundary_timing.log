@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/qwen-p2-extra-1319
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/qwen-p2-extra-1319
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qwen-p2-extra-1319
+ot-run: ot-agidock128  admits   -50 GB (avail 71, growth 50, headroom 24, waiters 4/72 GB) load 28/64 running 12 disk 161 GB 
+ot-run: -> ot-agidock128 (will queue: admits -50 GB < 4 GB)
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1359387-1792096109 after 0 s
+PASS boundary timing min_t0_dense PASS programme+native_writer all36 two_tokens boundary_positions single_boot_noreset_no_reconfigure cases1152 slots4608 sectors9216 noreset_roots TAG59 generation2 inverse_address raw_data
+tb_qkd_kv_native_programme.sv:125: $finish called at 37240000 (1ps)
+PASS boundary timing alternating_rows PASS programme+native_writer all36 two_tokens boundary_positions single_boot_noreset_no_reconfigure cases1152 slots4608 sectors9216 noreset_roots TAG59 generation2 inverse_address raw_data
+tb_qkd_kv_native_programme.sv:125: $finish called at 1184632000 (1ps)
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1359387-1792096109): exit 0
