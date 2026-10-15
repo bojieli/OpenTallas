@@ -103,5 +103,17 @@
     "no_programme_truncation": true,
     "physical_qualified": false,
     "arithmetic_join": false
+  },
+  "programmed_engine_candidate": {
+    "module": "ot_hgi_sfu_programmed_engine",
+    "default_programme_capacity": 2048,
+    "default_real_SRAMs": 96,
+    "default_local_storage_bytes": 655360,
+    "default_programme_storage_bytes": 524288,
+    "actual_C12_lanes": 16,
+    "full4x7168_passthrough_image_words": 1846,
+    "full4x7168_sigmoid_image_words": 1968,
+    "VM_prefetch_join": false,
+    "native_physical_qualification": false
   }
 }
