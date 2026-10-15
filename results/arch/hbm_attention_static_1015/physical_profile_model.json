@@ -16,7 +16,8 @@
     "ILV": 0,
     "REPL": 0,
     "SRAM_MACRO": 1,
-    "PHYS": 0
+    "PHYS": 0,
+    "HG": 1
   },
   "physical_tile_pairs": 32,
   "logical_full_tiles": 32,
@@ -48,5 +49,14 @@
     "latency_edges": 1,
     "physical_fit_qualified": false,
     "reason": "Inherited 256-row macro helper cannot represent T640/NL2; no depth truncation allowed."
+  },
+  "headgroup_source_inventory": {
+    "functional_full_tile_count": 32,
+    "headgroups_per_functional_tile": 16,
+    "closed_headgroup_wrapper": "ot_attn_hgrp_m6h1",
+    "heads_per_hard_group": 1,
+    "full_H16_headgroups": 512,
+    "mapping_to_quadrant_half_parents": "pending exact H-DIE instance inventory; no additional physical replication authorized",
+    "inflight_6656d5af7": "HG4 functional organization; proves arithmetic/control only"
   }
 }
