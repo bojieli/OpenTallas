@@ -60,7 +60,8 @@ TAP_SW, TAP_AW, TAP_PF, TAP_GI = 1 + 24 + 64 + 2048, 1 + 24 + 16 + 512, 72, 380
 CHILD_CK = {'qfd_tt_up4': ['ck_pin', 'ck_l0', 'ck_l1', 'ck_l2', 'ck_l3'],     # rtl/physical/ot_qwen_tt_up4_cluster.sv (+define OT_QFD_UP4_CK_ENTRIES)
             'qfd_xcol_e': [f'ck{k}' for k in range(9)], 'qfd_xcol_w': [f'ck{k}' for k in range(9)],
             'qfd_sp_vector_memory': ['ck'] + [f'ck_r{r}_{k}' for r in range(8) for k in range(56)]
-                                     + [f'ck_r{r}_{k}' for r in (3, 4, 5, 6) for k in range(56, 64)],
+                                     + [f'ck_r{r}_{k}' for r in (3, 4, 5, 6) for k in range(56, 64)]
+                                     + [f'ck_r7_{k}' for k in range(56, 63)],
             'qfd_io_collective': ['clk'] + [f'clk_colr{k}' for k in range(4)] + [f'clk_ecol{k}' for k in range(5)]
                                 + [f'clk_pfold{k}' for k in range(4)] + [f'clk_efold{k}' for k in range(4)],
             'qfd_d2d_rom': ['ck', 'mux_ck'] + [f'llr_ck{k}' for k in range(5)],

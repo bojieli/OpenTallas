@@ -238,7 +238,7 @@
  ],
  "orientation": "R0",
  "signal_cap": "M5",
- "source_protocol": "Raw actual bank consume valid/line8/mask16; q_vm_commit source successor pending",
+ "source_protocol": "Actual raw SRAM consume ABI24e9aeaf7 (localcherrybbca72dd2); cv,line8,mask16 fromactualbankedge",
  "qualification": "Fresh raw-ABI native gate required; previous Q-filtered observer42sinks/R48ps does not qualify added raw cv/cl outputs",
  "R_ps": null,
  "phi_ps": null
