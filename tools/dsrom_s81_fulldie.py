@@ -8544,19 +8544,30 @@ def _lay_fixed(Mx, face, ports, layer, pitch, fixed, gap=0.96, pitch_of=None):
     rest = [(n_, b) for n_, b in ports if n_ not in fixed]
     pof = pitch_of or {}
     tot = sum(sp(b, pof.get(n_, pitch)) for n_, b in rest) + gap * max(0, len(rest) - 1)
-    pos = max(2 * p + 0.2, (L - tot - sum(r1 - r0 + gap for r0, r1 in resv)) / 2)
-    placed = {}
-    for name, b in rest:
-        w_ = sp(b, pof.get(name, pitch))
-        for r0, r1 in sorted(resv):
-            if pos < r1 + gap and pos + w_ > r0 - gap:
-                pos = r1 + gap
-        assert pos + w_ <= L - 2 * p, (Mx.name, face, name, 'no room beside the pinned groups',
-                                       dict(face_um=round(L, 3), demand_um=round(tot + sum(r1 - r0 + gap for r0, r1 in resv), 3),
-                                            pinned=[(n_, fixed[n_]) for n_, _ in ports if n_ in fixed],
-                                            ports=[(n_, b_, pof.get(n_, pitch)) for n_, b_ in ports]))
-        placed[name] = (pos + w_ / 2, pof.get(name, pitch))
-        pos += w_ + gap
+    centred = max(2 * p + 0.2, (L - tot - sum(r1 - r0 + gap for r0, r1 in resv)) / 2)
+
+    def pack(pos):
+        placed = {}
+        for name, b in rest:
+            w_ = sp(b, pof.get(name, pitch))
+            for r0, r1 in sorted(resv):
+                if pos < r1 + gap and pos + w_ > r0 - gap:
+                    pos = r1 + gap
+            if pos + w_ > L - 2 * p:
+                return None, name
+            placed[name] = (pos + w_ / 2, pof.get(name, pitch))
+            pos += w_ + gap
+        return placed, None
+    placed, bad_ = pack(centred)
+    if placed is None:
+        # S-BIND r6 (bind15 dsfd_sstn_e0c0sinf_x2 N face: 113.6 of 172.8 um needed, but the centred start pushed xa past
+        # the pinned x2 relay group and left xb no room): when the centred packing fails, first-fit from the face's
+        # left margin; a layout that already fits keeps its centred pins
+        placed, bad_ = pack(2 * p + 0.2)
+    assert placed is not None, (Mx.name, face, bad_, 'no room beside the pinned groups',
+                                dict(face_um=round(L, 3), demand_um=round(tot + sum(r1 - r0 + gap for r0, r1 in resv), 3),
+                                     pinned=[(n_, fixed[n_]) for n_, _ in ports if n_ in fixed],
+                                     ports=[(n_, b_, pof.get(n_, pitch)) for n_, b_ in ports]))
     for name, b in ports:           # port order kept (pin_rects / LEF order)
         c_, pt_ = fixed[name] if name in fixed else placed[name]
         Mx.face(name, b, face, layer, c_, pt_)
