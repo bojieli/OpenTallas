@@ -1,0 +1,51 @@
+{
+  "status": "SEARCHES_TERMINAL_MODELS_PARTIAL_NOT_NATIVE_PASS",
+  "collected_PIDs": {
+    "274222": {
+      "terminal": true,
+      "result": "split18_east_canonical.json",
+      "area_um2": 395200
+    },
+    "280026": {
+      "terminal": true,
+      "iterations": 3000000,
+      "result_file_missing": true,
+      "interpretation": "No result met extra center-distancefilter. Notglobal infeasibility: exactpinorientation395.2kpassedTCLpinreachdespitecenterfilter."
+    }
+  },
+  "canonical_partial": "split18_full_pin_progress.json",
+  "passed_necessary_checks": [
+    "18hardoutlines20umseparation",
+    "actualTCLsum\u2192TCTpinsunderlegalMXMYR180",
+    "both2069landingQ\u2192actualXSbk1",
+    "3152existingXRELlegalfreeparentpointlegs<=429.788",
+    "ActualrowWfirst\u2192XS androwWlast\u2192rowE<=461.806",
+    "2edgeWBtransitlast\u2192Etransitd<=282.208",
+    "all3705trueWdistinctM6M8PINREGslotsforall3forkswithnewlandingDorder",
+    "all3705distinctEoutputboundaryslots"
+  ],
+  "remaining_physical_gates": [
+    "Newoneedge2069landingD/Qportmappinginternalspan192.384um nativecapture/launch190ps",
+    "ActualPINREG3705FF+hold/clockPGfootprintattrueface (notpointcloud)",
+    "ActualXREL3152FF+control+holdclockPGparentpartition",
+    "G1gather/control/resetactualallpins",
+    "FullM6M8cutsafterOBS/PGandviaescapes",
+    "TTsetupFFholdDRC0samecontext"
+  ],
+  "explicit_optional_extra_edge": {
+    "adopted": false,
+    "when": "IftruefacebankD/Qnativegatefailsandactualrepackcannotrepair",
+    "mechanism": "Onefull2069bitforkpipelinebeforethreewestchildren",
+    "additional_FF": 2069,
+    "additional_reset_clock_root_cost": "17logical128bit/tailslicephysicalmasters, realclockresetpins; exactsourcegate required",
+    "closed_s1_outline_analogue_um2": 15097.881599999999,
+    "analogue_qualification": "Componentoutlineonly, notextra17macroplacement proof",
+    "parent_added_cycles": 1,
+    "west_transit_contribution_cycles_after": 3,
+    "whole_tile_transit_cycles_after": 5,
+    "landing_contribution_cycles_after": 2,
+    "compiler_calendar": "Allrow/beat/gatherusersmustexplicitlyrealign+1, immutablepricesnotchangeduntilnativeclosed."
+  },
+  "no_heavy_jobs": true,
+  "no_R90": true
+}
