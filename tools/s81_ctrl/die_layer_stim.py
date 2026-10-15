@@ -290,7 +290,7 @@ def main():
                     'block\'s hc.fn/sumsq/rsqrt/pre_post/sinkhorn leave the dynamic program (one compiled engine-9 command '
                     'per block in fixed_program.mem); NO golden coefficient rows are written (the HC COEF job reads the '
                     'rows the real post writes)')
-    ap.add_argument('--hcx-issue', default='', help='compiled issuer ages of the attn,ffn chain commands (phase-2 edges)')
+    ap.add_argument('--hcx-issue', default='', help='compiled issuer ages of the attn,ffn chain commands (phase-2 edges): A,F or per layer L1=A,F/L14=A,F')
     ap.add_argument('--hcx-p2p', type=int, default=0, help='measured chain command-pin -> done-pin latency (tb_s81_hcx_chain)')
     ap.add_argument('--hcx-set', type=int, default=-1, help='resident HC ROM set index (default: the layer number)')
     ap.add_argument('--program-layer', default=None, help='take the stage program of this backbone layer (e.g. L0) '
@@ -525,7 +525,10 @@ def main():
         for n in nodes.values():                        # consumers read the coefficient rows (VM presence), not a port-9 done
             n['preds'] = [p for p in n['preds'] if p not in gone]
         assert set(hcx_members) == {'attn', 'ffn'}, hcx_members
-        iss = [int(x) for x in a.hcx_issue.split(',')] if a.hcx_issue else []
+        hi = a.hcx_issue
+        if '=' in hi:                                   # per-layer calendar: 'L1=A,F/L14=A,F' (one bench build, many layers)
+            hi = dict(e.split('=', 1) for e in hi.split('/')).get(L, '')
+        iss = [int(x) for x in hi.split(',')] if hi else []
         assert len(iss) == 2 and a.hcx_p2p > 0, '--hcx-issue A,F and --hcx-p2p required'
         hset = a.hcx_set if a.hcx_set >= 0 else int(L[1:]) if L[0] == 'L' else -1
         assert 0 <= hset < 43, hset
