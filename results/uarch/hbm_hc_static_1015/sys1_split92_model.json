@@ -94,8 +94,9 @@
     "early6": 1133,
     "early8": 1453
   },
-  "mapped_memory_qualified": true,
-  "mapped_memory_scope": "component functional only; physical/native wholekernel false",
+  "mapped_memory_qualified": false,
+  "mapped_memory_scope": "Generated implementation component simulation passes; actual physical mapping/CTS/SS/FF closure belongs to h_hc_physical and remains unqualified.",
   "generated_provider_source": "473756fb3, physical128dba76986 and physical1024 6530a2ef",
-  "prior_diagnostic_amendment": "results/rtl/hbm_hc_static_1015/memory_provider_scope_amendment.json"
+  "prior_diagnostic_amendment": "results/rtl/hbm_hc_static_1015/memory_provider_scope_amendment.json",
+  "generated_memory_component_functional_pass": true
 }
