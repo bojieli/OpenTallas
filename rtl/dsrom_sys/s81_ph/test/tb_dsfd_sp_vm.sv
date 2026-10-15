@@ -338,7 +338,13 @@ module tb_dsfd_sp_vm;
             for (r_ = 0; r_ < NR; r_ = r_ + 1) begin
                 r_gap[r_] = skew ? rnd(50) % (skew + 1) : 0;
                 for (j_ = 0; j_ < R; j_ = j_ + 1) for (p_ = 0; p_ < npos; p_ = p_ + 1) begin
+`ifdef OT_SPVM_SLOC
+                    // VM FE (a) capture-slice locality (claude s81-grpA r5): root r = 8g + i of lane g (quadrant q = g / 4)
+                    // writes only column slice q: row-in-block 4 (g % 4) + (i >> 1), word 4 q + 2 (i & 1) + b
+                    row = 256 * (j_ >> 1) + 16 * (4 * ((r_ >> 3) % 4) + ((r_ % 8) >> 1)) + 4 * ((r_ >> 3) / 4) + 2 * ((r_ % 8) & 1) + (j_ & 1);
+`else
                     row = 256 * (j_ >> 1) + 2 * r_ + (j_ & 1);
+`endif
                     addr = obase + row + p_ * ops;
                     dd = mix(addr, salt);
                     rq_a[r_].push_back(addr); rq_d[r_].push_back(dd);

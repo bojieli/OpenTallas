@@ -53,6 +53,12 @@ CASES = {
     'tp_trace': dict(params=dict(MODE=1, TP_ROWS=56), defines=['OT_SPVM_BGTRACE'], expect='pass'),
     'gold_s1_trace': dict(params=dict(SEED=1), defines=['OT_SPVM_BGTRACE'], expect='pass'),
 }
+# VM FE (a) capture-slice locality (claude s81-grpA r5, S-DIE v19 decision vm_fe (a)): the root -> address contract is
+# transposed inside each 256-word block so the 4 lanes of quadrant q write only column slice q (no 4 x 4 fxs -> fsr
+# crossbar); same production shapes, same expectations; throughput compared against the default cases
+for _c in ('gold_s1', 'gold_s2', 'tp', 'burst_r128', 'burst_r128_np2', 'burst_r256_skew6', 'align_neg', 'mut_dropw_burst',
+           'mut_noalign', 'mut_np16', 'mut_stale', 'land_attn'):
+    CASES['sl_' + _c] = dict(CASES[_c], defines=CASES[_c].get('defines', []) + ['OT_SPVM_SLOC'])
 # ---- hierarchy dsfd_vm_fe_h (el1013-s81-vmfe): flat reference at the hierarchy's stage counts (ref_*), lockstep with the
 # hierarchy as a shadow (lk_*: every FE output bit-exact every cycle), hierarchy-only mutants (must break lockstep) and
 # every case above with the hierarchy SUBSTITUTED for the flat FE (h_*: same expectation; pass cases also need LOCKSTEP_OK)
