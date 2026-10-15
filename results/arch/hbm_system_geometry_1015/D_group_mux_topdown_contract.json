@@ -118422,5 +118422,7 @@
     "block_q remains existing globalclk register; moving/replicating requires explicit source successor and actual clock/timing proof.",
     "Same 128 headmajor commits, same eight physical NEbanks, no added SRAM ports.",
     "Global write_v/base_sector/fault remain explicit outside paths."
-  ]
+  ],
+  "physical_admission": "Pure combinational standalone intertile leaf is NOT admitted: requires real registered source/capture faces or proved embedded local mux within timing budget. Existing source selection is only factoring reference.",
+  "registered_successor": "ATT owner building actual added-cycle gather/mux, fixed128commit calendar; root/area/face tracks/halo/cuts must be measured."
 }

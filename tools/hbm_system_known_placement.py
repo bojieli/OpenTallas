@@ -24,12 +24,13 @@ def build(kind,graph):
   put(f'SM{i}',x,y,sw,sh,'SM_frame',native_qualified=False)
  # Compare full central32pair field with four8pair fields. All actual quads,
  # code memories, PVmemories and narrow metadata remain explicit.
- qw,qh=514.89,562.95;mw,mh=51.408,20.79;localD=kind=='D_local_scattered_NE';cw,ch=174.744,70.488
+ qw,qh=514.89,562.95;mw,mh=51.408,20.79;localD=kind.startswith('D_local_');central=kind=='D_local_central_NE';cw,ch=174.744,70.488
  tw=2*qw+21.6+43.2+(2*(mw+5.4) if localD else 0);th=2*qh+21.6+43.2+ch+21.6+mh+43.2
  for t in range(32):
   if kind=='central_ATT':ox=14000+(t%8)*tw;oy=10000+(t//8)*th
   else:
-   q=qs[t%4] if kind in ('bank_affinity_scattered_NE','D_local_scattered_NE') else qs[t//8];j=([u for u in range(32) if u%4==t%4].index(t) if kind in ('bank_affinity_scattered_NE','D_local_scattered_NE') else t%8);ox=(8500 if q.endswith('W') else 19500)+(j%4)*tw;oy=(9700 if q.startswith('S') else 13500)+(j//4)*th
+   q=qs[t%4] if kind in ('bank_affinity_scattered_NE','D_local_scattered_NE','D_local_central_NE') else qs[t//8];j=([u for u in range(32) if u%4==t%4].index(t) if kind in ('bank_affinity_scattered_NE','D_local_scattered_NE','D_local_central_NE') else t%8);ox=(8500 if q.endswith('W') else 19500)+(j%4)*tw;oy=(9700 if q.startswith('S') else 13500)+(j//4)*th
+  if central and j%4>=2:ox+=1100
   for a in range(4):put(f'ATT_q{t}_{a}',ox+(a%2)*(qw+21.6),oy+(a//2)*(qh+21.6),qw,qh,'ATT_quad',logical_tile=t,source_mapping_proposed=True)
   put(f'ATT_code{t}',ox+100,oy+2*qh+21.6+43.2,cw,ch,'KV_code',source='actual_same34_grouped_staging_successor')
   if localD:
@@ -44,11 +45,11 @@ def build(kind,graph):
  put('ATT_programme',24500,16500,cw,ch,'programme')
  # Northactualbody / southseparatelyprovisionalbody; no false alias.
  for q in qs:
-  bw,bh=graph['nodes'][f'vm_{q}_bank0']['provisional_body_um'];x=(15000 if q.endswith('W') else (26100 if localD else 25900)) if kind in ('bank_affinity_scattered_NE','D_local_scattered_NE') else (13500 if q.endswith('W') else 24900);y=9200 if q.startswith('S') else 13300
+  bw,bh=graph['nodes'][f'vm_{q}_bank0']['provisional_body_um'];x=(15000 if q.endswith('W') else (26100 if localD else 25900)) if kind in ('bank_affinity_scattered_NE','D_local_scattered_NE','D_local_central_NE') else (13500 if q.endswith('W') else 24900);y=9200 if q.startswith('S') else 13300
   for b in range(8):
    by=y+b*(bh+43.2);put(f'VM_{q}_{b}',x,by,bw,bh,'VM_bank',source_body_qualified=False)
    for s in range(3):put(f'LG_{q}_{b}_{s}',x-43.2-(s+1)*150.336-s*43.2,by,150.336,151.2,'LG_prototype',outline_measured=False,roots=1,read_return=10+4*s,write_return=7+4*s)
- if kind in ('bank_affinity_scattered_NE','D_local_scattered_NE'):
+ if kind in ('bank_affinity_scattered_NE','D_local_scattered_NE','D_local_central_NE'):
   # Same logicalNE8banks/oneWG1; physical pairs follow bankaffinitygroups.
   # NoextraVMport or payloadmemory is added. AllotherNEclients now require
   # physicallydistributed read/control/ring joins and explicitcycle proof.
@@ -57,7 +58,7 @@ def build(kind,graph):
    bs=[b for b in range(128) if (b//4)%4==g]
    for j,b in enumerate([] if localD else bs):put(f'ATT_PVbank{b}',edge_x+396+(j%4)*(mw+5.4),oy+1350+(j//4)*(mh+5.4),mw,mh,'PV_memory',bank=b,source='canonical128bankXOR_mapping')
    for half in range(2):
-    b=2*g+half;bx=edge_x+666;by=oy+1000+half*(339.12+43.2)
+    b=2*g+half;bx=(ox+2*tw+666 if central else edge_x+666);by=oy+1000+half*(339.12+43.2)
     put(f'VM_NE_{b}',bx,by,393.12,339.12,'VM_bank',source_body_qualified=False,logical_NE_bank_unchanged=True)
     for stage in range(3):put(f'LG_NE_{b}_{stage}',bx-43.2-(stage+1)*150.336-stage*43.2,by-151.2-43.2,150.336,151.2,'LG_prototype',outline_measured=False,roots=1,read_return=10+4*stage,write_return=7+4*stage)
  # Same9SerDes, sameS5/N4/order/Y. E-adjacent endpoint envelope cannot fit
@@ -104,7 +105,7 @@ def pv_write_affinity(c,vm_path,sram_path):
  # it is a geometric source-to-destination affinity, not one legal timing hop.
  for h in range(16):
   for dim in range(512):
-   tile,cc=divmod(dim,16);bank=(tile*16+cc)*4+h//4 if c['name']=='D_local_scattered_NE' else (tile*4+h//4)^((cc&3)|((cc&12)<<2));vb=(dim//8)%8
+   tile,cc=divmod(dim,16);bank=(tile*16+cc)*4+h//4 if c['name'].startswith('D_local_') else (tile*4+h//4)^((cc&3)|((cc&12)<<2));vb=(dim//8)%8
    src=c['boxes'][f'ATT_PVbank{bank}'];dst=c['boxes'][f'VM_NE_{vb}']
    for k in range(32):
     sx,sy=mem['pins'][f'rd_out[{(h%4)*32+k}]'];dx,dy=pins[f'wq1[{8+(dim%8)*32+k}]']
@@ -119,13 +120,13 @@ def pv_capture_affinity(c,quad_path,sram_path):
   for h in range(16):
    a,l=lookup[h];src=c['boxes'][f'ATT_q{t}_{a}']
    for cc in range(16):
-    bank=(t*16+cc)*4+h//4 if c['name']=='D_local_scattered_NE' else (t*4+h//4)^((cc&3)|((cc&12)<<2));dst=c['boxes'][f'ATT_PVbank{bank}']
+    bank=(t*16+cc)*4+h//4 if c['name'].startswith('D_local_') else (t*4+h//4)^((cc&3)|((cc&12)<<2));dst=c['boxes'][f'ATT_PVbank{bank}']
     for k in range(32):
      sx,sy=q['pins'][f'oy[{l*32+k}]'];dx,dy=m['pins'][f'wd_in[{(h%4)*32+k}]'];d=abs(src['x']+sx-dst['x']-dx)+abs(src['y']+sy-dst['y']-dy);total+=d;worst=max(worst,d)
- return dict(bit_pairs_per_record=262144,bit_um_per_record=total,max_actual_pin_affinity_um=worst,scope='Quad oy -> canonicalXOR PVstorage wd input realpins at proposed positions; unplaced selection/capture/status/relay hardware, not direct timing hop.')
+ return dict(bit_pairs_per_record=262144,bit_um_per_record=total,max_actual_pin_affinity_um=worst,scope='Quad oy -> selected-profile PVstorage wd input realpins at proposed positions; unplaced selection/capture/status/relay hardware, not direct timing hop.')
 
 def draw(cases,path):
- labels={'central_ATT':'A: central attention reference','four_ATT_groups':'B: four attention groups','bank_affinity_scattered_NE':'C: bank affinity / lower-area fallback','D_local_scattered_NE':'D: local PV / primary development'}
+ labels={'central_ATT':'A: central attention reference','four_ATT_groups':'B: four attention groups','bank_affinity_scattered_NE':'C: bank affinity / lower-area fallback','D_local_scattered_NE':'D1: local PV / bank pairs at field edge','D_local_central_NE':'D2: local PV / central bank-pair corridor'}
  scale=.0175;svg=['<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="1280">','<rect width="100%" height="100%" fill="white"/>','<text x="15" y="26" font-size="20">HBM whole-die structural precursors: all known macro footprints, missing state explicit</text>','<text x="15" y="48" font-size="13">32.984 × 25.981 mm, same scale / real dimensions; incomplete layouts. No physical, pad or routing adoption. Gray gaps are not proven free capacity.</text>']
  colors={'SM_frame':'#aaa5c8','ATT_quad':'#d99035','KV_code':'#55a46d','PV_memory':'#cf4a91','P_Q_memory':'#4e8fbd','KV_metadata':'#178c45','programme':'#795f9f','VM_bank':'#e4c85c','LG_prototype':'#a6c66b','HBM_PHY_abstract':'#888','SerDes':'#444','endpoint_group':'#75aaa9'}
  for i,c in enumerate(cases):
@@ -135,7 +136,7 @@ def draw(cases,path):
    svg.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{colors[b["role"]]}" stroke="white" stroke-width=".35"><title>{n} {b["role"]}, {b["w"]}×{b["h"]} µm; all proposed, unqualified</title></rect>')
    if b['role']=='SM_frame':svg.append(f'<text x="{x+4}" y="{y+h/2}" font-size="10">{n}</text>')
   svg.append(f'<text x="{x0}" y="{y0+H*scale+20}" font-size="12">PV affinity capture {c["PV_capture_pin_affinity"]["bit_um_per_record"]/1e6:.1f} / drain {c["PV_external_pin_affinity"]["bit_um_per_record"]/1e6:.1f} Mbit·µm; no mux/clock closure.</text>')
-  svg.append(f'<text x="{x0}" y="{y0+H*scale+38}" font-size="12">{c["known_rectangle_count"]} boxes; {c["placed_rectangle_area_mm2"]:.3f} mm²; overlaps {len(c["rectangle_conflicts"])}; NE banks '+('four local pairs' if 'scattered' in c['name'] else 'one east column')+'</text>')
+  svg.append(f'<text x="{x0}" y="{y0+H*scale+38}" font-size="12">{c["known_rectangle_count"]} boxes; {c["placed_rectangle_area_mm2"]:.3f} mm²; overlaps {len(c["rectangle_conflicts"])}; NE banks '+('four local pairs' if ('scattered' in c['name'] or c['name']=='D_local_central_NE') else 'one east column')+'</text>')
  svg += ['<text x="20" y="1230" font-size="13">Purple:32 complete SM frames (unqualified); orange:128 quads; green:34 KV; pink:128/2048 PV; blue:192 P/Q; yellow:32 VM.</text>','<text x="20" y="1250" font-size="13">96 LG prototypes, nine SerDes/endpoint groups and four historical PHY reservations retained. All other source state stays unplaced.</text>','</svg>'];Path(path).write_text('\n'.join(svg))
 
 def main():
