@@ -1,0 +1,344 @@
+{
+  "job": "qvm_bank_entries_my_native-ne3-4ad880d2b",
+  "source_commit": "4ad880d2b",
+  "record_commit": "310aff7e859f0771e64ac79e3e598699336ab850",
+  "main_merge": "d25e2a2b1",
+  "physical": {
+    "tt_setup_ps": 138.43,
+    "ff_hold_ps": 23.35,
+    "drc": 0
+  },
+  "files": {
+    "export_tt.tcl": "ad26d20bdffa3a697bc03a52dd9c3a581e1c9bb564b2ed95d3d8fed0503f95d2",
+    "qvm_bank_banked_native.lef": "a6e8da9d842e9106a1f4926798629a239eba8bbb824036f73999e1320afdcb08",
+    "abstract.json": "bee793f2af6e71b9ae983507b56017bc396dd771932dbddb21d9cc8ebc38002f",
+    "export_ff.tcl": "1f7462e235e136498dd64e0a3d297864e259f91dea501ef030e66e2a34a96f0f",
+    "insertion.json": "f6243e259c240ef083b62aeb4498588d1e16a6388d88e23eac9a20a8066232da",
+    "export_tt.log": "2c9f007432c36c9ec596e74b138555970b6cbc3119be752628a12b320fd126b3",
+    "export_ss.log": "757e3b254329762862ac0bdb84524fc01380861d56d81c96c1fc60b86da9a603",
+    "export_ff.log": "310ad9abccc58d8b24231743f9a7bd76cc941896fa56c1268bc56625741c52ea",
+    "qvm_bank_banked_native_ff.lib": "faae50887bd529fb22085e3f8074cca4345eec5093aa6f0f9b111daff3ca81e9",
+    "export_ss.tcl": "d48701c9614bd62666e3822922ec71a07e48b67f0d15c0b0edf3669862462ed4",
+    "child_lint.json": "a283f0209688e6893137d9679d05a1b7847acf37f07dff52d9506257b645c8be",
+    "qvm_bank_banked_native_tt.lib": "6cf05d8b1c993b208f4836b5a45bee1ab9639d086e3188300ea0812a0b4a3e13",
+    "qvm_bank_banked_native_ss.lib": "cff5eb2275fad31fd3becabb940c9787dba1cb1a6260b7a4b38f10ebb33b87d7"
+  },
+  "corners": {
+    "tt": {
+      "launch_worst": [
+        "q[475]",
+        298.09891
+      ],
+      "capture_worst": [
+        "re",
+        143.81141000000002
+      ],
+      "launch_over220": 512,
+      "capture_over190": 0,
+      "comb_pins": [],
+      "clock_refs": {
+        "ck_cap_hi": {
+          "rise": 16.75405,
+          "fall": 16.75404,
+          "min": 16.75405,
+          "max": 16.75405,
+          "src": "lib midrange",
+          "bmin": 16.75405,
+          "bmax": 16.75405,
+          "n": null
+        },
+        "ck_cap_lo": {
+          "rise": 4.86627,
+          "fall": 4.86627,
+          "min": 4.86627,
+          "max": 4.86627,
+          "src": "lib midrange",
+          "bmin": 4.86627,
+          "bmax": 4.86627,
+          "n": null
+        },
+        "ck_ctrl": {
+          "rise": 1.8,
+          "fall": 1.8,
+          "min": 1.78105,
+          "max": 1.78105,
+          "src": "insertion.json boundary mean",
+          "bmin": 1.8,
+          "bmax": 1.8,
+          "n": 1
+        },
+        "ck_in_hi": {
+          "rise": 1.2,
+          "fall": 1.19999,
+          "min": 1.23441,
+          "max": 1.23441,
+          "src": "insertion.json boundary mean",
+          "bmin": 1.2,
+          "bmax": 1.2,
+          "n": 1
+        },
+        "ck_in_lo": {
+          "rise": 1.7,
+          "fall": 1.70001,
+          "min": 1.7003,
+          "max": 1.7003,
+          "src": "insertion.json boundary mean",
+          "bmin": 1.7,
+          "bmax": 1.7,
+          "n": 1
+        },
+        "ck_mem_hi": {
+          "rise": 20.85987,
+          "fall": 20.85987,
+          "min": 20.85987,
+          "max": 20.85987,
+          "src": "lib midrange",
+          "bmin": 20.85987,
+          "bmax": 20.85987,
+          "n": null
+        },
+        "ck_mem_lo": {
+          "rise": 6.21586,
+          "fall": 6.21586,
+          "min": 6.21586,
+          "max": 6.21586,
+          "src": "lib midrange",
+          "bmin": 6.21586,
+          "bmax": 6.21586,
+          "n": null
+        },
+        "ck_out_hi": {
+          "rise": 21.5,
+          "fall": 21.5,
+          "min": 21.54787,
+          "max": 21.54787,
+          "src": "insertion.json boundary mean",
+          "bmin": 21.5,
+          "bmax": 21.5,
+          "n": 1
+        },
+        "ck_out_lo": {
+          "rise": 8.2,
+          "fall": 8.19999,
+          "min": 8.16226,
+          "max": 8.16226,
+          "src": "insertion.json boundary mean",
+          "bmin": 8.2,
+          "bmax": 8.2,
+          "n": 1
+        }
+      }
+    },
+    "ff": {
+      "launch_worst": [
+        "q[475]",
+        216.42184
+      ],
+      "capture_worst": [
+        "re",
+        113.68177
+      ],
+      "launch_over220": 0,
+      "capture_over190": 0,
+      "comb_pins": [],
+      "clock_refs": {
+        "ck_cap_hi": {
+          "rise": 17.03596,
+          "fall": 17.03596,
+          "min": 17.03596,
+          "max": 17.03596,
+          "src": "lib midrange",
+          "bmin": 17.03596,
+          "bmax": 17.03596,
+          "n": null
+        },
+        "ck_cap_lo": {
+          "rise": 4.98609,
+          "fall": 4.98609,
+          "min": 4.98609,
+          "max": 4.98609,
+          "src": "lib midrange",
+          "bmin": 4.98609,
+          "bmax": 4.98609,
+          "n": null
+        },
+        "ck_ctrl": {
+          "rise": 1.8,
+          "fall": 1.8,
+          "min": 1.80186,
+          "max": 1.80186,
+          "src": "insertion.json boundary mean",
+          "bmin": 1.8,
+          "bmax": 1.8,
+          "n": 1
+        },
+        "ck_in_hi": {
+          "rise": 1.3,
+          "fall": 1.2999900000000002,
+          "min": 1.29825,
+          "max": 1.29825,
+          "src": "insertion.json boundary mean",
+          "bmin": 1.3,
+          "bmax": 1.3,
+          "n": 1
+        },
+        "ck_in_lo": {
+          "rise": 1.8,
+          "fall": 1.79999,
+          "min": 1.76393,
+          "max": 1.76393,
+          "src": "insertion.json boundary mean",
+          "bmin": 1.8,
+          "bmax": 1.8,
+          "n": 1
+        },
+        "ck_mem_hi": {
+          "rise": 21.99556,
+          "fall": 21.99557,
+          "min": 21.99556,
+          "max": 21.99556,
+          "src": "lib midrange",
+          "bmin": 21.99556,
+          "bmax": 21.99556,
+          "n": null
+        },
+        "ck_mem_lo": {
+          "rise": 6.69925,
+          "fall": 6.69925,
+          "min": 6.69925,
+          "max": 6.69925,
+          "src": "lib midrange",
+          "bmin": 6.69925,
+          "bmax": 6.69925,
+          "n": null
+        },
+        "ck_out_hi": {
+          "rise": 21.9,
+          "fall": 21.9,
+          "min": 21.92824,
+          "max": 21.92824,
+          "src": "insertion.json boundary mean",
+          "bmin": 21.9,
+          "bmax": 21.9,
+          "n": 1
+        },
+        "ck_out_lo": {
+          "rise": 8.4,
+          "fall": 8.40001,
+          "min": 8.37973,
+          "max": 8.37973,
+          "src": "insertion.json boundary mean",
+          "bmin": 8.4,
+          "bmax": 8.4,
+          "n": 1
+        }
+      }
+    },
+    "ss": {
+      "launch_worst": [
+        "q[475]",
+        442.9373
+      ],
+      "capture_worst": [
+        "re",
+        194.31772
+      ],
+      "launch_over220": 512,
+      "capture_over190": 1,
+      "comb_pins": [],
+      "clock_refs": {
+        "ck_cap_hi": {
+          "rise": 16.5713,
+          "fall": 16.5713,
+          "min": 16.5713,
+          "max": 16.5713,
+          "src": "lib midrange",
+          "bmin": 16.5713,
+          "bmax": 16.5713,
+          "n": null
+        },
+        "ck_cap_lo": {
+          "rise": 4.78858,
+          "fall": 4.78859,
+          "min": 4.78858,
+          "max": 4.78858,
+          "src": "lib midrange",
+          "bmin": 4.78858,
+          "bmax": 4.78858,
+          "n": null
+        },
+        "ck_ctrl": {
+          "rise": 1.8,
+          "fall": 1.8,
+          "min": 1.76786,
+          "max": 1.76786,
+          "src": "insertion.json boundary mean",
+          "bmin": 1.8,
+          "bmax": 1.8,
+          "n": 1
+        },
+        "ck_in_hi": {
+          "rise": 1.2,
+          "fall": 1.19999,
+          "min": 1.19303,
+          "max": 1.19303,
+          "src": "insertion.json boundary mean",
+          "bmin": 1.2,
+          "bmax": 1.2,
+          "n": 1
+        },
+        "ck_in_lo": {
+          "rise": 1.7,
+          "fall": 1.7,
+          "min": 1.65906,
+          "max": 1.65906,
+          "src": "insertion.json boundary mean",
+          "bmin": 1.7,
+          "bmax": 1.7,
+          "n": 1
+        },
+        "ck_mem_hi": {
+          "rise": 20.12809,
+          "fall": 20.12809,
+          "min": 20.12809,
+          "max": 20.12809,
+          "src": "lib midrange",
+          "bmin": 20.12809,
+          "bmax": 20.12809,
+          "n": null
+        },
+        "ck_mem_lo": {
+          "rise": 5.90439,
+          "fall": 5.90439,
+          "min": 5.90439,
+          "max": 5.90439,
+          "src": "lib midrange",
+          "bmin": 5.90439,
+          "bmax": 5.90439,
+          "n": null
+        },
+        "ck_out_hi": {
+          "rise": 21.3,
+          "fall": 21.3,
+          "min": 21.30129,
+          "max": 21.30129,
+          "src": "insertion.json boundary mean",
+          "bmin": 21.3,
+          "bmax": 21.3,
+          "n": 1
+        },
+        "ck_out_lo": {
+          "rise": 8.0,
+          "fall": 8.000010000000001,
+          "min": 8.02127,
+          "max": 8.02127,
+          "src": "insertion.json boundary mean",
+          "bmin": 8.0,
+          "bmax": 8.0,
+          "n": 1
+        }
+      }
+    }
+  },
+  "status": "NATIVE_HOLD: published per-entry reference launch exceeds220; child-reference semantics require flow review; no reroute"
+}
