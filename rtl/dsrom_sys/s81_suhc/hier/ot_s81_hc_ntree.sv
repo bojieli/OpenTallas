@@ -81,9 +81,9 @@ module ot_s81_hc_ctfx_nt #(
     generate if (LOCAL_EPOCH) begin : g_local_capture
         reg [S_RD+4:0] v;
         reg [FXW-1:0] d;
-        // synchronous on the pin (same sampled epoch; no rst_in->RESETN removal arc, see ot_s81_hc_ctfx_cap)
-        always @(posedge clk)
-            if (!rst_in) v <= 0; else v <= fv;
+        // reset by the pin capture rr (rst_in's only load; cycle-identical epoch, see ot_s81_hc_ctfx_cap)
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) v <= 0; else v <= fv;
         always @(posedge clk) d <= fdx;
         assign fv_local = v;
         assign fdx_local = d;
