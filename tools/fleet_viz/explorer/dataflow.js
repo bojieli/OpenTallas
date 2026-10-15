@@ -7,7 +7,7 @@ export function normalizeDataflow(payload = {}) {
     ...e, id: String(e.id ?? `connection-${i}`), label: e.label || e.name || e.id || `Connection ${i + 1}`,
     src: e.src ?? null, dst: e.dst ?? null,
     direction: e.direction || (e.directed === true ? 'forward' : 'unknown'),
-    width_bits: number(e.width_bits), required_bps: number(e.required_bps), capacity_bps: number(e.capacity_bps),
+    width_bits: Number.isInteger(e.width_bits) && e.width_bits > 0 ? e.width_bits : null, required_bps: number(e.required_bps), capacity_bps: number(e.capacity_bps),
     bytes: number(e.bytes), start: number(e.start), end: number(e.end),
     from: point(e.from), to: point(e.to), source: typeof e.source === 'string' && payload.provenance ? { kind: e.source, provenance: payload.provenance } : e.source || payload.provenance || null,
     endpoints: (e.endpoints || []).map(p => ({ ...p, point: point(p.point) })),

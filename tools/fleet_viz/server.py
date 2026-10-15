@@ -429,7 +429,7 @@ def ticker():
             log('snapshot: %s' % e)
 
 # ---------------------------------------------------------------- http
-STATIC = {'/explorer/dataflow.js': ('explorer/dataflow.js', 'text/javascript; charset=utf-8'), '/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
+STATIC = {'/explorer_chip_dataflow.js': ('explorer_chip_dataflow.js', 'text/javascript; charset=utf-8'), '/explorer/dataflow.js': ('explorer/dataflow.js', 'text/javascript; charset=utf-8'), '/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
           '/replay': ('index.html', 'text/html; charset=utf-8'), '/explorer': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.html': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.js': ('explorer.js', 'text/javascript; charset=utf-8'),
