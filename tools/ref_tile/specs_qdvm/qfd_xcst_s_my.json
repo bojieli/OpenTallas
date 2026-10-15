@@ -52,7 +52,7 @@
  "job": {
   "owner": "Codex:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xsmy1",
+  "tag": "xsmy2",
   "purpose": "MY-legal corridor station (M3-only N/S pins, W 52.686). Qwen TP8 corridor station with the tile's x hold (distributed x slice, owner 08:20 PT 10-14): onward + tap flops as qfd_cst_s, + TDM capture of its own tagged line and the tuple hold register (IL 8, XOFF 3) driving the tile's xl pins. r3: no tap ready (the tile never back-pressures; DIE_BUS_AUDIT row 10).",
   "benches": [
    {
@@ -126,15 +126,15 @@
  "inter": [],
  "recipe": 2,
  "io_flop_at_pins": {
-  "cols": 8,
+  "cols": 4,
   "allow_none": true
  },
  "inhold": true,
- "outhold": true,
+ "outhold": false,
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "m5a/m5b GRT-0116 (output-face band; M5-only pins cut 0.49 + M3->M5 stack per pin, 8-col stage did not help: M3 overflow 261/258). _my: N/S pins M3-only (cut 0.368, 701 slots@2trk for 516; closed xs7 escape was M3 0.18 + M5 0.25), width 52.686 (=18 mod 36 nm) -> MY origin 0 mod 36 = R0 residue."
+ "structural_change": "m5a/m5b GRT-0116: congestion spans the WHOLE output face (x 0-52 evenly, y<6 um), nets = ot_outhold_n/p (2,344 of 4,442 refs) + b_d: the recipe-2 OUTPUT hold pads (2 per pin x 516) fill the face band. Fix (S-ELEM-B shared finding ee058260f): no output hold pads; receiver keeps its input hold pad; output stage back to 4 columns."
 }
