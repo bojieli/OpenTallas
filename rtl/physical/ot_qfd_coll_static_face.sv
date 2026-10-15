@@ -5,7 +5,7 @@
 // the measured mesochronous phase used by the compiler. This wrapper adds no
 // stage beyond the source-bound calendar/CDC/codec composition.
 module qfd_coll_static_face #(
- parameter integer FW=546, PHY=339, L=376, R=0, KC=4, KW=2,
+ parameter integer FW=546, PHY=339, L=376, R=0, PEER_R=R, KC=4, KW=2,
  parameter integer PW=FW+51
 )(
  input wire cal_ck,cal_lck,tx_wck,tx_rck,rx_wck,rx_rck,
@@ -29,7 +29,7 @@ module qfd_coll_static_face #(
  .clk(cal_ck),.lck(cal_lck),.rs_c(rs_c),.rs_l(rs_l),.slot(tx_slot),
  .w_slot(tws),.w_addr(twa),.w_version(twsver),.r_slot(trs),.r_addr(tra),.r_version(trsver),
  .wr_v(wr_v),.wr_slot(wr_slot),.rd_v(rd_v),.rd_slot(rd_slot));
- ot_coll_lcal_rx #(.KC(KC),.KW(KW),.PHY(PHY),.L(L),.R(R))u_rxcal(
+ ot_coll_lcal_rx #(.KC(KC),.KW(KW),.PHY(PHY),.L(L),.R(R),.PEER_R(PEER_R))u_rxcal(
  .clk(cal_ck),.lck(cal_lck),.rs_c(rs_c),.rs_l(rs_l),.exp(peer_slot),
  .rx_expect_v(rxe),.rx_expect_slot(rx_slot),.w_slot(rws),.w_addr(rwa),.w_version(rwv),
  .r_slot(rrs),.r_addr(rra),.r_version(rrv));

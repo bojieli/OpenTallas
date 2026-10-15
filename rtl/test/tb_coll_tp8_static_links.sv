@@ -114,6 +114,10 @@ module tb_coll_tp8_static_links #(
               .fault(flt[g]),.fault_code(fc[g*5+:5]),.cmd_free(cfree[g]),
               .face_ck(fck),.relay_ck({((2*(2*RU+RS0+RS1+RS2)>0)?2*(2*RU+RS0+RS1+RS2):1){clk}}),.phy_up(5'b11111),.phy_rx_valid(prv),.phy_rx(prpack),.phy_tx_valid(ptv),.phy_tx(ptpack),
               .transport_cdc_fault(xflt[g*20+:20]),.transport_abort(cabort[g*5+:5]),.transport_fault_cause(ccause[g*40+:40]));
+            // Read-only source observations used by the existing latency meter.
+            assign upv[g]=u_parent.up_valid;assign dpv[g]=u_parent.dp_valid;
+            assign sxv[g*3+:3]={u_parent.sx2_valid,u_parent.sx1_valid,u_parent.sx0_valid};
+            assign srv[g*3+:3]={u_parent.sr2_valid,u_parent.sr1_valid,u_parent.sr0_valid};
 `else
             // ---------------- collective ----------------
 `ifdef OT_TP8S_QFD
