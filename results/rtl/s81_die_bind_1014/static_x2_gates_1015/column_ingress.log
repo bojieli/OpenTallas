@@ -1,0 +1,10 @@
+STATIC_COLUMN_INGRESS PASS phase=1 trunk=3 first=6 last=299 words=294
+STATIC_COLUMN_INGRESS PASS phase=1 trunk=17 first=20 last=313 words=294
+STATIC_COLUMN_INGRESS PASS phase=4 trunk=3 first=6 last=299 words=294
+STATIC_COLUMN_INGRESS PASS phase=4 trunk=17 first=20 last=313 words=294
+STATIC_COLUMN_INGRESS PASS phase=6 trunk=3 first=6 last=298 words=293
+STATIC_COLUMN_INGRESS PASS phase=6 trunk=17 first=20 last=312 words=293
+STATIC_COLUMN_INGRESS PASS phase=9 trunk=3 first=6 last=298 words=293
+STATIC_COLUMN_INGRESS PASS phase=9 trunk=17 first=20 last=312 words=293
+FATAL: rtl/dsrom_sys/s81_die_bind/test/tb_static_column_ingress.sv:24: wrong first source epoch 19 expected20
+STATIC_COLUMN_INGRESS_GATE PASS exact first epoch and every pin edge, variable trunk reset delay; mutant rejected

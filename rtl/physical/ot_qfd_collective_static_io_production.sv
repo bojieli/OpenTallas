@@ -1,11 +1,13 @@
 `timescale 1ns/1ps
 // Physical production boundary: one1043-bit UCIe plus three597-bit SerDes
-// frames, actual1GHzFDI and1.2GHzcore roots. No duplicate external P/R pins.
+// frames, actual1GHzFDI and1.2GHzcore roots plus two 200MHz gearbox block
+// roots (r10: no direct core<->FDI path; every crossing integer 6:1 or 5:1).
+// No duplicate external P/R pins.
 // The shared parent internally retains its diagnosticP/R rawports; their RX
 // inputs are compile-time dead in SIX_FIVE mode, not functionalchannels.
 // All acceptancefaults aggregate without changing the fixed schedule.
 module qfd_collective_static_io_production #(
- parameter integer PU=25,PS=339,LU=58,LS=376,RU=5,RS0=0,RS1=0,RS2=5
+ parameter integer PU=20,PS=339,LU=53,LS=376,RU=5,RS0=0,RS1=0,RS2=5
 )(
  input wire  clk,
  input wire  clk_pfold0,
@@ -53,7 +55,7 @@ module qfd_collective_static_io_production #(
  input wire[3*597-1:0]serdes_rx,
  output wire[2:0]serdes_tx_valid,output wire[3*597-1:0]serdes_tx,
  output wire[19:0]transport_cdc_fault,output wire[4:0]transport_abort,
- input wire gearbox_core_ck,fdi_ck,input wire[2:0]fdi_rx_ck,input wire shared_rx_valid,input wire[1042:0]shared_rx,
+ input wire gearbox_core_ck,fdi_ck,fdi_rx_ck,input wire[1:0]blk_ck,input wire shared_rx_valid,input wire[1042:0]shared_rx,
  output wire shared_tx_valid,output wire[1042:0]shared_tx,output wire shared_fault,
  output wire[39:0]transport_fault_cause
 );
@@ -102,7 +104,7 @@ module qfd_collective_static_io_production #(
  .relay_ck(relay_ck),
  .transport_cdc_fault(transport_cdc_fault),
  .transport_abort(transport_abort),
- .gearbox_core_ck(gearbox_core_ck),.fdi_rx_ck(fdi_rx_ck),.fdi_ck(fdi_ck),
+ .gearbox_core_ck(gearbox_core_ck),.fdi_rx_ck(fdi_rx_ck),.blk_ck(blk_ck),.fdi_ck(fdi_ck),
  .shared_rx_valid(shared_rx_valid),
  .shared_rx(shared_rx),
  .shared_tx_valid(shared_tx_valid),

@@ -1,0 +1,270 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="980" viewBox="0 0 1320 980">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="25" y="26" font-size="18">Qwen actual TX198 child placement: data direction, critical native pin hops and reset</text>
+<text x="25" y="49" font-size="12">Source bitmap 6644fec71; 58 data banks + 14 children + 11 reset bodies = 83 explicit physical roots. Residual root 84 remains unplaced.</text>
+<text x="25" y="69" font-size="12">481.68 × 1400.22 µm; common physical scale. Native-arc + wire screens exclude parent RNE / gating comb; no parent CTS / route / full-system qualification.</text>
+<rect x="48" y="110" width="264.92400000000004" height="770.1210000000001" fill="#f4f6f7" stroke="#222"/>
+<rect x="60.355" y="795.773" width="171.072" height="71.280" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp | ot_qwen_tile_rpair | R0 | (22.464,23.76) µm</title></rect>
+<text x="62.4" y="805.8" font-size="8">RP</text>
+<rect x="60.355" y="712.613" width="171.072" height="71.280" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp | ot_qwen_tile_rpair | R0 | (22.464,174.96) µm</title></rect>
+<text x="62.4" y="722.6" font-size="8">RP</text>
+<rect x="60.355" y="284.784" width="171.072" height="71.280" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp | ot_qwen_tile_rpair | MX | (22.464,952.83) µm</title></rect>
+<text x="62.4" y="294.8" font-size="8">RP</text>
+<rect x="60.355" y="199.249" width="171.072" height="71.280" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp | ot_qwen_tile_rpair | MX | (22.464,1108.35) µm</title></rect>
+<text x="62.4" y="209.2" font-size="8">RP</text>
+<rect x="60.355" y="116.089" width="171.072" height="71.280" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp | ot_qwen_tile_rpair | MX | (22.464,1259.55) µm</title></rect>
+<text x="62.4" y="126.1" font-size="8">RP</text>
+<rect x="252.930" y="416.801" width="26.136" height="237.600" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.genblk4.g_ndh.u_node | ot_qwen_tile_node | R0 | (372.59999999999997,410.4) µm</title></rect>
+<text x="254.9" y="426.8" font-size="8">NODE</text>
+<rect x="105.024" y="621.137" width="54.886" height="77.220" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh | ot_qwen_tile_lsl_fp1 | MY | (103.68,330.48) µm</title></rect>
+<text x="107.0" y="631.1" font-size="8">LSL</text>
+<rect x="194.124" y="621.137" width="54.886" height="77.220" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh | ot_qwen_tile_lsl_fp1 | R0 | (265.68,330.48) µm</title></rect>
+<text x="196.1" y="631.1" font-size="8">LSL</text>
+<rect x="105.024" y="537.532" width="54.886" height="77.220" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh | ot_qwen_tile_lsl_fp1 | MY | (103.68,482.49) µm</title></rect>
+<text x="107.0" y="547.5" font-size="8">LSL</text>
+<rect x="194.124" y="537.532" width="54.886" height="77.220" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh | ot_qwen_tile_lsl_fp1 | R0 | (265.68,482.49) µm</title></rect>
+<text x="196.1" y="547.5" font-size="8">LSL</text>
+<rect x="105.024" y="453.926" width="54.886" height="77.220" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh | ot_qwen_tile_lsl_fp1 | MY | (103.68,634.5) µm</title></rect>
+<text x="107.0" y="463.9" font-size="8">LSL</text>
+<rect x="194.124" y="453.926" width="54.886" height="77.220" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh | ot_qwen_tile_lsl_fp1 | R0 | (265.68,634.5) µm</title></rect>
+<text x="196.1" y="463.9" font-size="8">LSL</text>
+<rect x="105.024" y="370.321" width="54.886" height="77.220" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh | ot_qwen_tile_lsl_fp1 | MY | (103.68,786.51) µm</title></rect>
+<text x="107.0" y="380.3" font-size="8">LSL</text>
+<rect x="194.124" y="370.321" width="54.886" height="77.220" fill="#aebed0" stroke="#526170" stroke-width="0.4"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh | ot_qwen_tile_lsl_fp1 | R0 | (265.68,786.51) µm</title></rect>
+<text x="196.1" y="380.3" font-size="8">LSL</text>
+<rect x="282.036" y="308.545" width="11.880" height="11.880" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>strap | qkh_packet_v16 | R0 | (425.52,1017.63) µm</title></rect>
+<rect x="62.256" y="273.499" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>rqr_south_0 | qkh_packet_h256 | R0 | (25.92,1087.83) µm</title></rect>
+<rect x="100.866" y="273.499" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>rqr_south_1 | qkh_packet_h256 | R0 | (96.12,1087.83) µm</title></rect>
+<rect x="139.476" y="273.499" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>rqr_south_2 | qkh_packet_h256 | R0 | (166.32,1087.83) µm</title></rect>
+<rect x="178.086" y="273.499" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>rqr_south_3 | qkh_packet_h256 | R0 | (236.52000000000004,1087.83) µm</title></rect>
+<rect x="62.256" y="701.327" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>rqr_north_0 | qkh_packet_h256 | R0 | (25.92,309.96) µm</title></rect>
+<rect x="100.866" y="701.327" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>rqr_north_1 | qkh_packet_h256 | R0 | (96.12,309.96) µm</title></rect>
+<rect x="139.476" y="701.327" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>rqr_north_2 | qkh_packet_h256 | R0 | (166.32,309.96) µm</title></rect>
+<rect x="178.086" y="701.327" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>rqr_north_3 | qkh_packet_h256 | R0 | (236.52000000000004,309.96) µm</title></rect>
+<rect x="66.414" y="579.112" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>mq_wrom_0 | qkh_packet_h256 | R0 | (33.48,532.17) µm</title></rect>
+<rect x="69.384" y="389.626" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>mq_wrom_1 | qkh_packet_v256 | R0 | (38.88,827.01) µm</title></rect>
+<rect x="174.284" y="450.956" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>mq_wrom_2 | qkh_packet_v256 | R0 | (229.608,715.5) µm</title></rect>
+<rect x="162.880" y="450.956" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>mq_wrom_3 | qkh_packet_v256 | R0 | (208.872,715.5) µm</title></rect>
+<rect x="301.638" y="701.327" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>xdelay_0 | qkh_packet_v256 | R0 | (461.16,260.28) µm</title></rect>
+<rect x="259.464" y="701.327" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>xdelay_1 | qkh_packet_h256 | R0 | (384.48,309.96) µm</title></rect>
+<rect x="234.397" y="712.613" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>xdelay_2 | qkh_packet_h256 | R0 | (338.904,289.44) µm</title></rect>
+<rect x="282.036" y="712.613" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>xdelay_3 | qkh_packet_v256 | R0 | (425.52,239.76) µm</title></rect>
+<rect x="62.256" y="609.851" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>xdelay_4 | qkh_packet_h256 | R0 | (25.92,476.28) µm</title></rect>
+<rect x="216.696" y="701.327" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>xdelay_5 | qkh_packet_h256 | R0 | (306.72,309.96) µm</title></rect>
+<rect x="66.414" y="598.565" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>xdelay_6 | qkh_packet_h256 | R0 | (33.48,496.8) µm</title></rect>
+<rect x="54.534" y="662.717" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>xdelay_7 | qkh_packet_v256 | R0 | (11.88,330.48) µm</title></rect>
+<rect x="50.970" y="599.902" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx0_r0_lo | qkh_packet_v256 | R0 | (5.4,444.69) µm</title></rect>
+<rect x="80.670" y="662.717" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx0_r1_lo | qkh_packet_v256 | R0 | (59.4,330.48) µm</title></rect>
+<rect x="80.670" y="540.502" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx1_r0_lo | qkh_packet_v256 | R0 | (59.4,552.69) µm</title></rect>
+<rect x="80.670" y="624.107" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx1_r1_lo | qkh_packet_v256 | R0 | (59.4,400.68) µm</title></rect>
+<rect x="80.670" y="495.506" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx2_r0_lo | qkh_packet_v256 | R0 | (59.4,634.5) µm</title></rect>
+<rect x="80.670" y="411.901" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx2_r1_lo | qkh_packet_v256 | R0 | (59.4,786.51) µm</title></rect>
+<rect x="80.670" y="456.896" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx3_r0_lo | qkh_packet_v256 | R0 | (59.4,704.7) µm</title></rect>
+<rect x="80.670" y="373.291" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx3_r1_lo | qkh_packet_v256 | R0 | (59.4,856.71) µm</title></rect>
+<rect x="282.036" y="579.112" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx4_r0_lo | qkh_packet_v256 | R0 | (425.52,482.49) µm</title></rect>
+<rect x="282.036" y="662.717" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx4_r1_lo | qkh_packet_v256 | R0 | (425.52,330.48) µm</title></rect>
+<rect x="282.036" y="540.502" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx5_r0_lo | qkh_packet_v256 | R0 | (425.52,552.69) µm</title></rect>
+<rect x="282.036" y="624.107" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx5_r1_lo | qkh_packet_v256 | R0 | (425.52,400.68) µm</title></rect>
+<rect x="162.998" y="411.901" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx6_r0_lo | qkh_packet_v256 | R0 | (209.088,786.51) µm</title></rect>
+<rect x="282.036" y="411.901" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx6_r1_lo | qkh_packet_v256 | R0 | (425.52,786.51) µm</title></rect>
+<rect x="282.036" y="456.896" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx7_r0_lo | qkh_packet_v256 | R0 | (425.52,704.7) µm</title></rect>
+<rect x="282.036" y="373.291" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>tx7_r1_lo | qkh_packet_v256 | R0 | (425.52,856.71) µm</title></rect>
+<rect x="50.970" y="516.623" width="11.880" height="41.580" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>face_n_a | qwen_glue_v514 | R0 | (5.4,585.306) µm</title></rect>
+<rect x="65.820" y="485.814" width="11.880" height="41.580" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>face_n_b | qwen_glue_v514 | R0 | (32.4,641.322) µm</title></rect>
+<rect x="50.970" y="469.370" width="11.880" height="41.580" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>face_n_y | qwen_glue_v514 | MY | (5.4,671.22) µm</title></rect>
+<rect x="50.970" y="424.807" width="11.880" height="41.580" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>face_t_out | qwen_glue_v514 | MY | (5.4,752.244) µm</title></rect>
+<rect x="298.074" y="478.293" width="11.880" height="41.580" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>face_tap | qwen_glue_v508 | MY | (454.67999999999995,654.996) µm</title></rect>
+<rect x="162.998" y="571.389" width="11.880" height="41.580" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>s2_word_0 | qwen_glue_v514 | R0 | (209.088,485.73) µm</title></rect>
+<rect x="177.848" y="571.389" width="11.880" height="41.580" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>s2_word_1 | qwen_glue_v514 | R0 | (236.088,485.73) µm</title></rect>
+<rect x="162.998" y="621.731" width="11.880" height="41.580" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>node_stage_n_a | qwen_glue_v514 | R0 | (209.088,394.2) µm</title></rect>
+<rect x="177.848" y="489.566" width="11.880" height="41.580" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>node_stage_n_b | qwen_glue_v514 | R0 | (236.088,634.5) µm</title></rect>
+<rect x="162.998" y="489.566" width="11.880" height="41.580" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>node_stage_n_y | qwen_glue_v514 | R0 | (209.088,634.5) µm</title></rect>
+<rect x="177.848" y="405.961" width="11.880" height="41.580" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>node_stage_t_out | qwen_glue_v514 | R0 | (236.088,786.51) µm</title></rect>
+<rect x="62.256" y="359.035" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>return_south_0 | qkh_packet_h256 | R0 | (25.92,932.31) µm</title></rect>
+<rect x="100.866" y="359.035" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>return_south_1 | qkh_packet_h256 | R0 | (96.12,932.31) µm</title></rect>
+<rect x="139.476" y="359.035" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>return_south_2 | qkh_packet_h256 | R0 | (166.32,932.31) µm</title></rect>
+<rect x="178.086" y="359.035" width="35.640" height="8.316" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>return_south_3 | qkh_packet_h256 | R0 | (236.52000000000004,932.31) µm</title></rect>
+<rect x="50.970" y="561.292" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>return_north_0 | qkh_packet_v256 | R0 | (5.4,514.89) µm</title></rect>
+<rect x="65.820" y="624.107" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>return_north_1 | qkh_packet_v256 | R0 | (32.4,400.68) µm</title></rect>
+<rect x="178.086" y="662.717" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>return_north_2 | qkh_packet_v256 | R0 | (236.52,330.48) µm</title></rect>
+<rect x="178.086" y="624.107" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>return_north_3 | qkh_packet_v256 | R0 | (236.52,400.68) µm</title></rect>
+<rect x="65.820" y="662.717" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>xdelay_extra | qkh_packet_v256 | R0 | (32.4,330.48) µm</title></rect>
+<rect x="91.956" y="540.502" width="8.316" height="35.640" fill="#efc37e" stroke="#526170" stroke-width="0.4"><title>s2_x_full | qkh_packet_v256 | R0 | (79.92,552.69) µm</title></rect>
+<rect x="282.036" y="515.108" width="11.880" height="11.880" fill="#91c6a2" stroke="#526170" stroke-width="0.4"><title>reset_root | qkh_packet_v16 | R0 | (425.52,642.06) µm</title></rect>
+<rect x="65.820" y="535.111" width="11.880" height="11.880" fill="#91c6a2" stroke="#526170" stroke-width="0.4"><title>reset_mid_w | qkh_packet_v16 | R0 | (32.4,605.69) µm</title></rect>
+<rect x="296.886" y="525.652" width="11.880" height="11.880" fill="#91c6a2" stroke="#526170" stroke-width="0.4"><title>reset_mid_e | qkh_packet_v16 | R0 | (452.52,622.89) µm</title></rect>
+<rect x="235.110" y="341.809" width="11.880" height="11.880" fill="#91c6a2" stroke="#526170" stroke-width="0.4"><title>reset_mid_high | qkh_packet_v16 | R0 | (340.2,957.15) µm</title></rect>
+<rect x="50.970" y="647.867" width="11.880" height="11.880" fill="#91c6a2" stroke="#526170" stroke-width="0.4"><title>reset_branch_w_low | qkh_packet_v16 | R0 | (5.4,400.68) µm</title></rect>
+<rect x="62.256" y="564.262" width="11.880" height="11.880" fill="#91c6a2" stroke="#526170" stroke-width="0.4"><title>reset_branch_w_mid | qkh_packet_v16 | R0 | (25.92,552.69) µm</title></rect>
+<rect x="50.970" y="407.743" width="11.880" height="11.880" fill="#91c6a2" stroke="#526170" stroke-width="0.4"><title>reset_branch_w_high0 | qkh_packet_v16 | R0 | (5.4,837.27) µm</title></rect>
+<rect x="50.970" y="374.776" width="11.880" height="11.880" fill="#91c6a2" stroke="#526170" stroke-width="0.4"><title>reset_branch_w_high1 | qkh_packet_v16 | R0 | (5.4,897.21) µm</title></rect>
+<rect x="252.930" y="657.371" width="11.880" height="11.880" fill="#91c6a2" stroke="#526170" stroke-width="0.4"><title>reset_branch_e_low | qkh_packet_v16 | R0 | (372.6,383.4) µm</title></rect>
+<rect x="235.110" y="154.699" width="11.880" height="11.880" fill="#91c6a2" stroke="#526170" stroke-width="0.4"><title>reset_branch_e_high | qkh_packet_v16 | R0 | (340.2,1297.35) µm</title></rect>
+<rect x="252.930" y="383.784" width="11.880" height="11.880" fill="#91c6a2" stroke="#526170" stroke-width="0.4"><title>reset_branch_e_mid | qkh_packet_v16 | R0 | (372.6,880.83) µm</title></rect>
+<path d="M293.893,526.612 L65.843,546.615" stroke="#248548" stroke-width="0.8" opacity="0.45" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M293.893,525.873 L296.909,537.155" stroke="#248548" stroke-width="0.8" opacity="0.45" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M293.893,525.133 L235.133,353.312" stroke="#248548" stroke-width="0.8" opacity="0.45" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M77.677,546.615 L50.993,659.371" stroke="#248548" stroke-width="0.8" opacity="0.45" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M77.677,545.876 L62.279,575.765" stroke="#248548" stroke-width="0.8" opacity="0.45" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M77.677,545.137 L50.993,419.246" stroke="#248548" stroke-width="0.8" opacity="0.45" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M77.677,544.398 L50.993,386.279" stroke="#248548" stroke-width="0.8" opacity="0.45" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M308.743,537.155 L252.953,668.875" stroke="#248548" stroke-width="0.8" opacity="0.45" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M246.967,353.312 L235.133,166.202" stroke="#248548" stroke-width="0.8" opacity="0.45" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M246.967,352.573 L252.953,395.288" stroke="#248548" stroke-width="0.8" opacity="0.45" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M246.967,155.062 L60.378,132.437" stroke="#248548" stroke-width="0.9" opacity="0.55" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M62.827,657.892 L60.378,850.705" stroke="#248548" stroke-width="0.9" opacity="0.55" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M62.827,380.339 L60.378,215.597" stroke="#248548" stroke-width="0.9" opacity="0.55" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M264.787,394.549 L179.624,486.543" stroke="#248548" stroke-width="0.9" opacity="0.55" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<path d="M246.967,166.202 L178.139,276.475" stroke="#248548" stroke-width="0.9" opacity="0.55" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+<circle cx="60.378" cy="850.758" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp clock [22.506, 53.388]; R_TT=309.1 ps; parent phase unassigned</title></circle>
+<circle cx="60.378" cy="767.598" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp clock [22.506, 204.588]; R_TT=309.1 ps; parent phase unassigned</title></circle>
+<circle cx="60.378" cy="301.080" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp clock [22.506, 1052.802]; R_TT=309.1 ps; parent phase unassigned</title></circle>
+<circle cx="60.378" cy="215.544" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp clock [22.506, 1208.322]; R_TT=309.1 ps; parent phase unassigned</title></circle>
+<circle cx="60.378" cy="132.384" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp clock [22.506, 1359.522]; R_TT=309.1 ps; parent phase unassigned</title></circle>
+<circle cx="279.043" cy="542.194" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.genblk4.g_ndh.u_node clock [420.078, 614.412]; R_TT=246.6 ps; parent phase unassigned</title></circle>
+<circle cx="105.047" cy="663.714" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh clock [103.722, 393.468]; R_TT=165.7 ps; parent phase unassigned</title></circle>
+<circle cx="248.987" cy="663.714" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh clock [365.43, 393.468]; R_TT=165.7 ps; parent phase unassigned</title></circle>
+<circle cx="105.047" cy="580.108" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh clock [103.722, 545.478]; R_TT=165.7 ps; parent phase unassigned</title></circle>
+<circle cx="248.987" cy="580.108" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh clock [365.43, 545.478]; R_TT=165.7 ps; parent phase unassigned</title></circle>
+<circle cx="105.047" cy="496.503" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh clock [103.722, 697.488]; R_TT=165.7 ps; parent phase unassigned</title></circle>
+<circle cx="248.987" cy="496.503" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh clock [365.43, 697.488]; R_TT=165.7 ps; parent phase unassigned</title></circle>
+<circle cx="105.047" cy="412.897" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh clock [103.722, 849.498]; R_TT=165.7 ps; parent phase unassigned</title></circle>
+<circle cx="248.987" cy="412.897" r="1.1" fill="#235caa"><title>u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh clock [365.43, 849.498]; R_TT=165.7 ps; parent phase unassigned</title></circle>
+<circle cx="284.999" cy="320.401" r="1.1" fill="#235caa"><title>strap clock [430.908, 1017.672]; R_TT=52.4 ps; parent phase unassigned</title></circle>
+<circle cx="62.309" cy="278.851" r="1.1" fill="#235caa"><title>rqr_south_0 clock [26.016, 1093.218]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="100.919" cy="278.851" r="1.1" fill="#235caa"><title>rqr_south_1 clock [96.216, 1093.218]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="139.529" cy="278.851" r="1.1" fill="#235caa"><title>rqr_south_2 clock [166.416, 1093.218]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="178.139" cy="278.851" r="1.1" fill="#235caa"><title>rqr_south_3 clock [236.616, 1093.218]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="62.309" cy="706.680" r="1.1" fill="#235caa"><title>rqr_north_0 clock [26.016, 315.348]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="100.919" cy="706.680" r="1.1" fill="#235caa"><title>rqr_north_1 clock [96.216, 315.348]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="139.529" cy="706.680" r="1.1" fill="#235caa"><title>rqr_north_2 clock [166.416, 315.348]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="178.139" cy="706.680" r="1.1" fill="#235caa"><title>rqr_north_3 clock [236.616, 315.348]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="66.467" cy="584.464" r="1.1" fill="#235caa"><title>mq_wrom_0 clock [33.576, 537.558]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="69.437" cy="424.546" r="1.1" fill="#235caa"><title>mq_wrom_1 clock [38.976, 828.318]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="174.337" cy="485.877" r="1.1" fill="#235caa"><title>mq_wrom_2 clock [229.704, 716.808]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="162.932" cy="485.877" r="1.1" fill="#235caa"><title>mq_wrom_3 clock [208.968, 716.808]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="301.691" cy="736.248" r="1.1" fill="#235caa"><title>xdelay_0 clock [461.256, 261.588]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="259.517" cy="706.680" r="1.1" fill="#235caa"><title>xdelay_1 clock [384.576, 315.348]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="234.450" cy="717.966" r="1.1" fill="#235caa"><title>xdelay_2 clock [339.0, 294.828]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="282.089" cy="747.534" r="1.1" fill="#235caa"><title>xdelay_3 clock [425.616, 241.068]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="62.309" cy="615.204" r="1.1" fill="#235caa"><title>xdelay_4 clock [26.016, 481.668]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="216.749" cy="706.680" r="1.1" fill="#235caa"><title>xdelay_5 clock [306.816, 315.348]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="66.467" cy="603.918" r="1.1" fill="#235caa"><title>xdelay_6 clock [33.576, 502.188]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="54.587" cy="697.638" r="1.1" fill="#235caa"><title>xdelay_7 clock [11.976, 331.788]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="51.023" cy="634.822" r="1.1" fill="#235caa"><title>tx0_r0_lo clock [5.496, 445.998]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="80.723" cy="697.638" r="1.1" fill="#235caa"><title>tx0_r1_lo clock [59.496, 331.788]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="80.723" cy="575.422" r="1.1" fill="#235caa"><title>tx1_r0_lo clock [59.496, 553.998]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="80.723" cy="659.028" r="1.1" fill="#235caa"><title>tx1_r1_lo clock [59.496, 401.988]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="80.723" cy="530.427" r="1.1" fill="#235caa"><title>tx2_r0_lo clock [59.496, 635.808]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="80.723" cy="446.821" r="1.1" fill="#235caa"><title>tx2_r1_lo clock [59.496, 787.818]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="80.723" cy="491.817" r="1.1" fill="#235caa"><title>tx3_r0_lo clock [59.496, 706.008]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="80.723" cy="408.211" r="1.1" fill="#235caa"><title>tx3_r1_lo clock [59.496, 858.018]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="282.089" cy="614.032" r="1.1" fill="#235caa"><title>tx4_r0_lo clock [425.616, 483.798]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="282.089" cy="697.638" r="1.1" fill="#235caa"><title>tx4_r1_lo clock [425.616, 331.788]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="282.089" cy="575.422" r="1.1" fill="#235caa"><title>tx5_r0_lo clock [425.616, 553.998]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="282.089" cy="659.028" r="1.1" fill="#235caa"><title>tx5_r1_lo clock [425.616, 401.988]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="163.051" cy="446.821" r="1.1" fill="#235caa"><title>tx6_r0_lo clock [209.184, 787.818]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="282.089" cy="446.821" r="1.1" fill="#235caa"><title>tx6_r1_lo clock [425.616, 787.818]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="282.089" cy="491.817" r="1.1" fill="#235caa"><title>tx7_r0_lo clock [425.616, 706.008]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="282.089" cy="408.211" r="1.1" fill="#235caa"><title>tx7_r1_lo clock [425.616, 858.018]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="51.023" cy="557.483" r="1.1" fill="#235caa"><title>face_n_a clock [5.496, 586.614]; R_TT=83.7 ps; parent phase unassigned</title></circle>
+<circle cx="65.873" cy="526.675" r="1.1" fill="#235caa"><title>face_n_b clock [32.496, 642.63]; R_TT=83.7 ps; parent phase unassigned</title></circle>
+<circle cx="62.797" cy="510.231" r="1.1" fill="#235caa"><title>face_n_y clock [26.904, 672.528]; R_TT=83.7 ps; parent phase unassigned</title></circle>
+<circle cx="62.797" cy="465.667" r="1.1" fill="#235caa"><title>face_t_out clock [26.904, 753.552]; R_TT=83.7 ps; parent phase unassigned</title></circle>
+<circle cx="309.901" cy="519.154" r="1.1" fill="#235caa"><title>face_tap clock [476.184, 656.304]; R_TT=83.2 ps; parent phase unassigned</title></circle>
+<circle cx="163.051" cy="612.250" r="1.1" fill="#235caa"><title>s2_word_0 clock [209.184, 487.038]; R_TT=83.7 ps; parent phase unassigned</title></circle>
+<circle cx="177.901" cy="612.250" r="1.1" fill="#235caa"><title>s2_word_1 clock [236.184, 487.038]; R_TT=83.7 ps; parent phase unassigned</title></circle>
+<circle cx="163.051" cy="662.592" r="1.1" fill="#235caa"><title>node_stage_n_a clock [209.184, 395.508]; R_TT=83.7 ps; parent phase unassigned</title></circle>
+<circle cx="177.901" cy="530.427" r="1.1" fill="#235caa"><title>node_stage_n_b clock [236.184, 635.808]; R_TT=83.7 ps; parent phase unassigned</title></circle>
+<circle cx="163.051" cy="530.427" r="1.1" fill="#235caa"><title>node_stage_n_y clock [209.184, 635.808]; R_TT=83.7 ps; parent phase unassigned</title></circle>
+<circle cx="177.901" cy="446.821" r="1.1" fill="#235caa"><title>node_stage_t_out clock [236.184, 787.818]; R_TT=83.7 ps; parent phase unassigned</title></circle>
+<circle cx="62.309" cy="364.387" r="1.1" fill="#235caa"><title>return_south_0 clock [26.016, 937.698]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="100.919" cy="364.387" r="1.1" fill="#235caa"><title>return_south_1 clock [96.216, 937.698]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="139.529" cy="364.387" r="1.1" fill="#235caa"><title>return_south_2 clock [166.416, 937.698]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="178.139" cy="364.387" r="1.1" fill="#235caa"><title>return_south_3 clock [236.616, 937.698]; R_TT=76.0 ps; parent phase unassigned</title></circle>
+<circle cx="51.023" cy="596.212" r="1.1" fill="#235caa"><title>return_north_0 clock [5.496, 516.198]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="65.873" cy="659.028" r="1.1" fill="#235caa"><title>return_north_1 clock [32.496, 401.988]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="178.139" cy="697.638" r="1.1" fill="#235caa"><title>return_north_2 clock [236.616, 331.788]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="178.139" cy="659.028" r="1.1" fill="#235caa"><title>return_north_3 clock [236.616, 401.988]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="65.873" cy="697.638" r="1.1" fill="#235caa"><title>xdelay_extra clock [32.496, 331.788]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="92.009" cy="575.422" r="1.1" fill="#235caa"><title>s2_x_full clock [80.016, 553.998]; R_TT=73.5 ps; parent phase unassigned</title></circle>
+<circle cx="284.999" cy="526.965" r="1.1" fill="#235caa"><title>reset_root clock [430.908, 642.102]; R_TT=52.4 ps; parent phase unassigned</title></circle>
+<circle cx="68.783" cy="546.968" r="1.1" fill="#235caa"><title>reset_mid_w clock [37.788, 605.732]; R_TT=52.4 ps; parent phase unassigned</title></circle>
+<circle cx="299.849" cy="537.508" r="1.1" fill="#235caa"><title>reset_mid_e clock [457.908, 622.932]; R_TT=52.4 ps; parent phase unassigned</title></circle>
+<circle cx="238.073" cy="353.665" r="1.1" fill="#235caa"><title>reset_mid_high clock [345.588, 957.192]; R_TT=52.4 ps; parent phase unassigned</title></circle>
+<circle cx="53.933" cy="659.724" r="1.1" fill="#235caa"><title>reset_branch_w_low clock [10.788, 400.722]; R_TT=52.4 ps; parent phase unassigned</title></circle>
+<circle cx="65.219" cy="576.118" r="1.1" fill="#235caa"><title>reset_branch_w_mid clock [31.308, 552.732]; R_TT=52.4 ps; parent phase unassigned</title></circle>
+<circle cx="53.933" cy="419.599" r="1.1" fill="#235caa"><title>reset_branch_w_high0 clock [10.788, 837.312]; R_TT=52.4 ps; parent phase unassigned</title></circle>
+<circle cx="53.933" cy="386.632" r="1.1" fill="#235caa"><title>reset_branch_w_high1 clock [10.788, 897.252]; R_TT=52.4 ps; parent phase unassigned</title></circle>
+<circle cx="255.893" cy="669.228" r="1.1" fill="#235caa"><title>reset_branch_e_low clock [377.988, 383.442]; R_TT=52.4 ps; parent phase unassigned</title></circle>
+<circle cx="238.073" cy="166.555" r="1.1" fill="#235caa"><title>reset_branch_e_high clock [345.588, 1297.392]; R_TT=52.4 ps; parent phase unassigned</title></circle>
+<circle cx="255.893" cy="395.641" r="1.1" fill="#235caa"><title>reset_branch_e_mid clock [377.988, 880.872]; R_TT=52.4 ps; parent phase unassigned</title></circle>
+<circle cx="252.95" cy="648.40" r="2.2" fill="#9d3d92"/><text x="255.95" y="646.40" font-size="6">a[0]</text>
+<circle cx="252.95" cy="593.07" r="2.2" fill="#9d3d92"/><text x="255.95" y="591.07" font-size="6">b[0]</text>
+<circle cx="252.95" cy="482.53" r="2.2" fill="#9d3d92"/><text x="255.95" y="480.53" font-size="6">y[0]</text>
+<circle cx="252.95" cy="537.81" r="2.2" fill="#9d3d92"/><text x="255.95" y="535.81" font-size="6">t_out[0]</text>
+<path d="M77.647,396.087 L163.051,576.584" stroke="#ce7626" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="120.35" cy="486.34" r="7" fill="white" stroke="#ce7626"/><text x="120.35" y="489.34" text-anchor="middle" font-size="8">1</text>
+<path d="M100.219,573.046 L282.089,488.173" stroke="#287ea9" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="191.15" cy="530.61" r="7" fill="white" stroke="#287ea9"/><text x="191.15" y="533.61" text-anchor="middle" font-size="8">2</text>
+<path d="M74.539,609.904 L228.979,709.590" stroke="#287ea9" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="151.76" cy="659.75" r="7" fill="white" stroke="#287ea9"/><text x="151.76" y="662.75" text-anchor="middle" font-size="8">3</text>
+<path d="M228.979,701.380 L78.697,606.828" stroke="#287ea9" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="153.84" cy="654.10" r="7" fill="white" stroke="#287ea9"/><text x="153.84" y="657.10" text-anchor="middle" font-size="8">4</text>
+<path d="M189.676,603.063 L80.723,474.181" stroke="#ce7626" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="135.20" cy="538.62" r="7" fill="white" stroke="#ce7626"/><text x="135.20" y="541.62" text-anchor="middle" font-size="8">5</text>
+<path d="M252.953,538.129 L177.901,408.990" stroke="#9d3d92" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="215.43" cy="473.56" r="7" fill="white" stroke="#9d3d92"/><text x="215.43" y="476.56" text-anchor="middle" font-size="8">6</text>
+<path d="M298.127,489.903 L301.691,718.612" stroke="#287ea9" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="299.91" cy="604.26" r="7" fill="white" stroke="#287ea9"/><text x="299.91" y="607.26" text-anchor="middle" font-size="8">7</text>
+<path d="M74.083,641.049 L69.437,406.568" stroke="#ce7626" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="71.76" cy="523.81" r="7" fill="white" stroke="#ce7626"/><text x="71.76" y="526.81" text-anchor="middle" font-size="8">8</text>
+<path d="M74.539,359.087 L78.697,587.375" stroke="#ce7626" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="76.62" cy="473.23" r="7" fill="white" stroke="#ce7626"/><text x="76.62" y="476.23" text-anchor="middle" font-size="8">9</text>
+<path d="M100.219,559.318 L282.089,604.898" stroke="#287ea9" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="191.15" cy="582.11" r="7" fill="white" stroke="#287ea9"/><text x="191.15" y="585.11" text-anchor="middle" font-size="8">10</text>
+<path d="M174.826,592.556 L282.089,478.960" stroke="#ce7626" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="228.46" cy="535.76" r="7" fill="white" stroke="#ce7626"/><text x="228.46" y="538.76" text-anchor="middle" font-size="8">11</text>
+<path d="M62.797,524.378 L163.051,629.486" stroke="#287ea9" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="112.92" cy="576.93" r="7" fill="white" stroke="#287ea9"/><text x="112.92" y="579.93" text-anchor="middle" font-size="8">12</text>
+<path d="M189.676,526.704 L252.953,590.823" stroke="#9d3d92" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="221.31" cy="558.76" r="7" fill="white" stroke="#9d3d92"/><text x="221.31" y="561.76" text-anchor="middle" font-size="8">13</text>
+<path d="M189.676,413.716 L62.797,432.562" stroke="#9d3d92" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="126.24" cy="423.14" r="7" fill="white" stroke="#9d3d92"/><text x="126.24" y="426.14" text-anchor="middle" font-size="8">14</text>
+<path d="M174.826,629.486 L252.953,600.961" stroke="#9d3d92" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="213.89" cy="615.22" r="7" fill="white" stroke="#9d3d92"/><text x="213.89" y="618.22" text-anchor="middle" font-size="8">15</text>
+<path d="M174.826,497.321 L62.797,477.125" stroke="#9d3d92" stroke-width="1.5" opacity="0.82" fill="none" marker-end="url(#arrow)"/>
+<circle cx="118.81" cy="487.22" r="7" fill="white" stroke="#9d3d92"/><text x="118.81" y="490.22" text-anchor="middle" font-size="8">16</text>
+<text x="370" y="122" font-size="14">Actual directed worst native hops (representative bit of each group)</text>
+<text x="370" y="143" font-size="11">Purple: node/tree staging. Orange: ROM/weight pipeline. Blue: X/TX data. Green dashed: reset.</text>
+<text x="370" y="170" font-size="11">1. mq_wrom_to_s2_w  |  483.456 µm  |  margin +15.449 ps</text><text x="388" y="183" font-size="9" fill="#536273">mq_wrom_1.q[225] → s2_word_0.d[481]</text>
+<text x="370" y="197" font-size="11">2. s2_x_to_tx7_r0  |  484.986 µm  |  margin +21.208 ps</text><text x="388" y="210" font-size="9" fill="#536273">s2_x_full.q[1] → tx7_r0_lo.d[12]</text>
+<text x="370" y="224" font-size="11">3. xdelay_5_6  |  462.048 µm  |  margin +24.775 ps</text><text x="388" y="237" font-size="9" fill="#536273">xdelay_4.q[80] → xdelay_5.d[80]</text>
+<text x="370" y="251" font-size="11">4. xdelay_6_7  |  445.152 µm  |  margin +37.616 ps</text><text x="388" y="264" font-size="9" fill="#536273">xdelay_5.q[80] → xdelay_6.d[80]</text>
+<text x="370" y="278" font-size="11">5. s2_w_to_tx3_r0  |  432.426 µm  |  margin +42.422 ps</text><text x="388" y="291" font-size="9" fill="#536273">s2_word_1.q[100] → tx3_r0_lo.d[132]</text>
+<text x="370" y="305" font-size="11">6. native_node_tv_metadata  |  371.256 µm  |  margin +42.476 ps</text><text x="388" y="318" font-size="9" fill="#536273">u_tile.u_tile.u_logic.genblk4.g_ndh.u_node.t_vout → node_stage_t_out.d[512]</text>
+<text x="370" y="332" font-size="11">7. tap_to_xl_q  |  422.316 µm  |  margin +53.658 ps</text><text x="388" y="345" font-size="9" fill="#536273">face_tap.q[384] → xdelay_0.d[132]</text>
+<text x="370" y="359" font-size="11">8. rqr_north_to_mq_wrom  |  434.778 µm  |  margin +53.805 ps</text><text x="388" y="372" font-size="9" fill="#536273">return_north_1.q[135] → mq_wrom_1.d[135]</text>
+<text x="370" y="386" font-size="11">9. rqr_south_to_mq_wrom  |  422.628 µm  |  margin +54.734 ps</text><text x="388" y="399" font-size="9" fill="#536273">return_south_0.q[80] → mq_wrom_0.d[80]</text>
+<text x="370" y="413" font-size="11">10. s2_x_to_tx4_r0  |  413.544 µm  |  margin +71.948 ps</text><text x="388" y="426" font-size="9" fill="#536273">s2_x_full.q[119] → tx4_r0_lo.d[59]</text>
+<text x="370" y="440" font-size="11">11. s2_w_to_tx7_r0  |  401.562 µm  |  margin +74.453 ps</text><text x="388" y="453" font-size="9" fill="#536273">s2_word_0.q[251] → tx7_r0_lo.d[91]</text>
+<text x="370" y="467" font-size="11">12. face_n_a_to_stage  |  373.386 µm  |  margin +81.806 ps</text><text x="388" y="480" font-size="9" fill="#536273">face_n_a.q[444] → node_stage_n_a.d[444]</text>
+<text x="370" y="494" font-size="11">13. n_b_bank_node_data  |  231.630 µm  |  margin +153.241 ps</text><text x="388" y="507" font-size="9" fill="#536273">node_stage_n_b.q[21] → u_tile.u_tile.u_logic.genblk4.g_ndh.u_node.b[21]</text>
+<text x="370" y="521" font-size="11">14. stage_t_out_to_face  |  264.954 µm  |  margin +164.215 ps</text><text x="388" y="534" font-size="9" fill="#536273">node_stage_t_out.q[444] → face_t_out.d[444]</text>
+<text x="370" y="548" font-size="11">15. n_a_bank_node_data  |  193.914 µm  |  margin +178.253 ps</text><text x="388" y="561" font-size="9" fill="#536273">node_stage_n_a.q[444] → u_tile.u_tile.u_logic.genblk4.g_ndh.u_node.a[444]</text>
+<text x="370" y="575" font-size="11">16. stage_n_y_to_face  |  240.408 µm  |  margin +182.870 ps</text><text x="388" y="588" font-size="9" fill="#536273">node_stage_n_y.q[444] → face_n_y.d[444]</text>
+<text x="370" y="635" font-size="13">Why the right-side NODE can be sensible</text>
+<text x="370" y="655" font-size="11">Actual a/b/y/t_out pins are all on its W face, toward the data-stage banks.</text>
+<text x="370" y="673" font-size="11">Its clock/reset pins are on E. A MY flip would reverse both data and clock faces;</text>
+<text x="370" y="691" font-size="11">it needs legal-orientation, real pin, obstacle and compensated-phase admission.</text>
+<rect x="368" y="713" width="900" height="94" fill="#dedede" stroke="#777"/>
+<text x="385" y="738" font-size="13">Unknown hardware and routes are explicit — no invented XY or zero-area credit</text>
+<text x="385" y="758" font-size="11">Residual root 84: actual 2278 bit-mapped DFFs; control/metadata/RNE/gating comb and physical home unqualified.</text>
+<text x="385" y="777" font-size="11">Native outer pin ABI, all parent clock phases, unrepresented endpoints, RC/TT/FF/DRC and full programme remain open.</text>
+<text x="385" y="796" font-size="11">This tile drawing does not represent the complete 956-root compute or KV/IO system.</text>
+<text x="370" y="843" font-size="12">Known payload: 31,507 semantic LEF pairs; minimum +15.44948 ps, 0 failing groups.</text>
+<text x="370" y="864" font-size="12">Reset: 72 targets, minimum +48.91437 ps; no residual placeholder credited.</text>
+<text x="25" y="930" font-size="10">Candidate SHA256 6089e1bf7dc044cf8868627e138dddf8e0e28057378ca941bc058fe2a81db175</text>
+<text x="25" y="948" font-size="10">Actual LEF/TT bundle SHA256 4c35b9fd87b80b24586cbc8159c97d3406a6d008b308221ca5b68d001a08378d</text>
+<text x="25" y="967" font-size="11">Arrows show actual pin-center direction, not routed tracks. Activity/cuts outside this local source scope remain unknown.</text></svg>

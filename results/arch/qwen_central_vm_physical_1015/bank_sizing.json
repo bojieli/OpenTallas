@@ -43,5 +43,19 @@
   "capture_output_views": "reuse actual512-bit delay1 leaf only after source/native audit",
   "parent_own_flops": 0,
   "memory_contents": "same actual two256x256 SRAMs; no behavioral replacement",
-  "qualification": "sizing/proposal; fullbank exact+mutant, leaf/native clocks/routes and parent composition open"
+  "qualification": "sizing/proposal; fullbank exact+mutant, leaf/native clocks/routes and parent composition open",
+  "parent_candidate": {
+    "outline_um": [
+      406.08,
+      146.88
+    ],
+    "area_um2": 59645.030399999996,
+    "old_closed_bank_area_um2": 40054.176,
+    "area_increase_um2": 19590.854399999997,
+    "rows": "two same rawSRAM arrays vertically stacked",
+    "ordering": "input\u2192SRAM\u2192capture\u2192output",
+    "clock_roots": 5,
+    "own_flops": 0,
+    "qualification": "candidate only; exact placements/per-pin hops/native views and routing pending"
+  }
 }

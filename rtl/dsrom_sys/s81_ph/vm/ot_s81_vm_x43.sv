@@ -20,16 +20,37 @@
 // must be sampled high by serial edge 1 only.  Any slip -> sticky fault (never a re-timed transfer).
 // Mutant OT_VM_X43_MUT_PHASE: the n = 3 bank is read one serial edge early (serial edge 0, with the n = 2 bank's slot).
 // ---------------------------------------------------------------------------------------------------------------
+// SPLIT PER CLOCK ROOT (claude S81 VM F4 cdc-leaves, 2026-10-15; same pattern as ot_s81_vm_x34): ot_s81_vm_x43_t (stream
+// side: sample index, parity, marker, index-1 schedule check and the three banks, every output a flop) and
+// ot_s81_vm_x43_s (serial side: fixed-edge bank reads, parity / marker assertions) are separate hard leaves, one per
+// clock root (ABI categories ck_*_x43_t / ck_*_x43_s).  The 3:4 related arcs (bank / parity / marker / ph1_bad flops ->
+// serial capture) are parent-level related-clock paths.  ot_s81_vm_x43 is the wrapper of the two: the same flops, the
+// same logic, bit-identical behaviour (tb_ot_s81_vm_x43 unchanged).
 module ot_s81_vm_x43 #(parameter integer W = 512) (
     input  wire         t_ck, t_rst_n,
     input  wire         s_v, input wire [W-1:0] s_d,
     input  wire         s_ck, s_rst_n,
-    output reg          o_v, output reg [W-1:0] o_d,
-    output reg          fault
+    output wire         o_v, output wire [W-1:0] o_d,
+    output wire         fault
 );
-    // ---- stream side: tp = index of the last stream edge (3 at reset: the next edge is epoch edge 0)
+    wire [W:0] b0, b2, b3; wire [2:0] bp; wire mark, p1;
+    ot_s81_vm_x43_t #(.W(W)) u_t (.t_ck(t_ck), .t_rst_n(t_rst_n), .s_v(s_v), .s_d(s_d), .b0(b0), .b2(b2), .b3(b3),
+        .bpar(bp), .t_mark(mark), .ph1_bad(p1));
+    ot_s81_vm_x43_s #(.W(W)) u_s (.s_ck(s_ck), .s_rst_n(s_rst_n), .b0(b0), .b2(b2), .b3(b3), .bpar(bp), .t_mark(mark),
+        .ph1_bad(p1), .o_v(o_v), .o_d(o_d), .fault(fault));
+endmodule
+
+// stream side: sample index, epoch parity, phase marker, index-1 schedule check and the three banks (every output a flop)
+module ot_s81_vm_x43_t #(parameter integer W = 512) (
+    input  wire         t_ck, t_rst_n,
+    input  wire         s_v, input wire [W-1:0] s_d,
+    output reg  [W:0]   b0, b2, b3,
+    output reg  [2:0]   bpar,
+    output reg          t_mark,
+    output reg          ph1_bad
+);
+    // tp = index of the last stream edge (3 at reset: the next edge is epoch edge 0)
     reg [1:0] tp; reg te;                       // te = parity of the epoch whose edge 0 was the latest
-    reg [W:0] b0, b2, b3; reg [2:0] bpar; reg t_mark; reg ph1_bad;
     wire [1:0] tn = tp + 2'd1;                  // sample index of THIS edge
     always @(posedge t_ck or negedge t_rst_n)
         if (!t_rst_n) begin tp <= 2'd3; te <= 1'b0; bpar <= 3'b000; t_mark <= 1'b0; ph1_bad <= 1'b0; end
@@ -50,7 +71,19 @@ module ot_s81_vm_x43 #(parameter integer W = 512) (
             2'd3: b3 <= {s_v, s_d};
             default: ;
         endcase
-    // ---- serial side: sp = phase index of the last serial edge (2 at reset: the next edge is epoch edge 0)
+endmodule
+
+// serial side: fixed-edge bank reads, epoch-parity and phase-marker assertions, index-1 schedule fault
+module ot_s81_vm_x43_s #(parameter integer W = 512) (
+    input  wire         s_ck, s_rst_n,
+    input  wire [W:0]   b0, b2, b3,
+    input  wire [2:0]   bpar,
+    input  wire         t_mark,
+    input  wire         ph1_bad,
+    output reg          o_v, output reg [W-1:0] o_d,
+    output reg          fault
+);
+    // sp = phase index of the last serial edge (2 at reset: the next edge is epoch edge 0)
     reg [1:0] sp; reg se; reg warm; reg mk;
     wire [1:0] sn = (sp == 2'd2) ? 2'd0 : sp + 2'd1;   // serial edge index of THIS edge
     always @(posedge s_ck or negedge s_rst_n)

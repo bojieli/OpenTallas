@@ -1,0 +1,231 @@
+{
+ "params": {
+  "MUT": 0
+ },
+ "job": {
+  "owner": "Codex:q_vm_physical",
+  "branch": "codex/q-vm-physical-1015",
+  "tag": "ne1",
+  "purpose": "Actual9-entry wire parent over real native-audited data256/control35+2 rawSRAMs; same4edges; actual macro/clock/native route verification, no fullVM adoption.",
+  "views_to": "physical/ref_tile/qvm_bank_entries_my_native/views",
+  "record_to": "results/rtl/ref_tile/qvm_bank_entries_my_native",
+  "cycles_added": 0,
+  "extra_paths": [
+   "rtl/qwen_sys/vm_native_physical_20261015",
+   "rtl/qwen_sys/vm_plane_20261013",
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/qwen_sys/rtl_finish_20261007",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/ref_tile/qvm_data256_native/views",
+   "physical/ref_tile/qvm_bank_ctrl_native/views"
+  ],
+  "benches": [
+   {
+    "name": "bank_m0",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=0 -j 2 --Mdir {RUN}/bench/m0 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m0.build.log 2>&1 && {RUN}/bench/m0/Vtb_qvm_bank_banked_native",
+    "expect": "pass",
+    "pass_regex": "PASS qvm_bank_banked_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_m1",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=1 -j 2 --Mdir {RUN}/bench/m1 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m1.build.log 2>&1 && {RUN}/bench/m1/Vtb_qvm_bank_banked_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_bank_banked_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_m2",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=2 -j 2 --Mdir {RUN}/bench/m2 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m2.build.log 2>&1 && {RUN}/bench/m2/Vtb_qvm_bank_banked_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_bank_banked_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "structural_change": "Actual2084bit leg screen found SRAM WD pinsE/RD pinsW cause254negative R0read margins. Mirror both SRAMsMY so WD faces input and RD faces capture; same rawmacro clock entries, source/dataedges/capacity preserved; no unchanged placement retry."
+ },
+ "name": "qvm_bank_entries_my_native",
+ "top": "qvm_bank_banked_native",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_hard_native.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "clock": "entries",
+ "clock_port": "ck_ctrl",
+ "clock_ports": [
+  "ck_ctrl",
+  "ck_in_lo",
+  "ck_in_hi",
+  "ck_mem_lo",
+  "ck_mem_hi",
+  "ck_cap_lo",
+  "ck_cap_hi",
+  "ck_out_lo",
+  "ck_out_hi"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "std_area_um2": 0,
+ "outline": {
+  "w": 367.2,
+  "h": 220.32
+ },
+ "pins": {
+  "W": [
+   "re",
+   "we",
+   "ra",
+   "wl",
+   "wm",
+   "wd"
+  ],
+  "E": [
+   "q"
+  ],
+  "S": [
+   "ck_ctrl",
+   "ck_in_lo",
+   "ck_in_hi",
+   "ck_mem_lo",
+   "ck_mem_hi",
+   "ck_cap_lo",
+   "ck_cap_hi",
+   "ck_out_lo",
+   "ck_out_hi",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03
+ },
+ "slot_change_request": "Actual mirrored SRAM bank parent variant, same9clock/body andcandidateoutline as R0; true pin/Liberty screen before physical gate. No globaladoption/reticlearea inherited.",
+ "children": [
+  {
+   "view": "physical/ref_tile/qvm_bank_ctrl_native/views/qvm_bank_ctrl_native",
+   "count": 1,
+   "inst": "u_ctrl",
+   "at": [
+    25.92,
+    172.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_in_lo",
+   "at": [
+    25.92,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_in_hi",
+   "at": [
+    25.92,
+    99.36
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_cap_lo",
+   "at": [
+    267.84,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_cap_hi",
+   "at": [
+    267.84,
+    99.36
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_out_lo",
+   "at": [
+    315.36,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_out_hi",
+   "at": [
+    315.36,
+    99.36
+   ]
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "u_lo",
+   "at": [
+    73.44,
+    25.92
+   ],
+   "clock_entry": {
+    "port": "ck_mem_lo",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "u_hi",
+   "at": [
+    73.44,
+    99.36
+   ],
+   "clock_entry": {
+    "port": "ck_mem_hi",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "orient": "MY"
+  }
+ ],
+ "child_lattice_um": 4.32,
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

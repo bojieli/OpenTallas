@@ -1,0 +1,24 @@
+GATE_SOURCE_ARCHIVE_SHA256=ae05b530ca081147128e909a212e067ef48306d8970ba13bf50bace8d0dbc85e
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=29
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN qvm_bank_input_native cells 1,095 flops 547 depth 11.7 ps util 0.073 reach 57.6 um (0.0 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=547 root=port:clk rule=PASS: 547 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 7.3% outside 45%-65% (std 184 + macro 0 um2 in 2519 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "re": [1, false], "we": [1, false], "ra": [null, true], "wl": [null, true], "wm": [null, true], "wd": [null, true], "p_re": [1, false], "p_we": [1, false], "p_ra": [null, true], "p_wl": [null, true], "p_wm": [null, true], "p_wd": [null, true]}
+GATE_AREA    Chip area for module '\qvm_bank_input_native': 183.737160
+GATE_CTS_RC=2
+GATE_CTSERR [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=1
+GATE_DONE
+
+--- stderr
+ot-run: ot-agidock128  admits     8 GB (avail 67, growth 38, headroom 24, waiters 0/0 GB) load 7/64 running 7 disk 30 GB 
+ot-run: -> ot-agidock128
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 8 GB, admissible 8 GB: available 67 GB, growth charged 38 GB, young 34 GB, headroom 24 GB, real floor 25 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3945346-1792061616 after 41 s
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3945346-1792061616): exit 0

@@ -12,7 +12,7 @@ a=block(cth,'ot_s81_hc_ctfx_cap');b=block(nt,'ot_s81_hc_ctfx_nt')
 if mut==1:
  old='else fv_local <= fv;';assert a.count(old)==1;a=a.replace(old,'else fv_local <= 0;')
 elif mut==2:
- old='if (!rst_in) v <= 0; else v <= fv;';assert b.count(old)==1;b=b.replace(old,'if (!rst_in) v <= 0; else v <= 0;')
+ old='\n            if (!rst_n) v <= 0; else v <= fv;';assert b.count(old)==1;b=b.replace(old,'\n            if (!rst_n) v <= 0; else v <= 0;')
 else:assert mut==0
 (out/'leaf_subset.sv').write_text(a+'\n'+b+'\n'+block(cth,'ot_s81_hc_ctq')+'\n'+block('rtl/hdc/ot_hdc_sfu.sv','ot_hdc_vline')+'\n'+block('rtl/hdc/ot_hdc_delay.sv','ot_hdc_delay')+'\n')
 PY

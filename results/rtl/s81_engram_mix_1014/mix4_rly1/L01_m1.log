@@ -1,0 +1,10 @@
+ot-heavy: admitted on regular-crane as oth-ubuntu-2808094-1792069154 after 0 s
+BAD row=0 word=0
+BAD row=0 word=1
+BAD row=0 word=2
+BAD row=0 word=3
+[1568000] %Fatal: tb_s81_engram_mix4_c.sv:46: Assertion failed in tb_s81_engram_mix4_c: FAIL 20471 words
+%Error: /srv/opentallas-scratch/claude/s81-mix4-phys/src_rly1/rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_c.sv:46: Verilog $stop
+Aborting...
+
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2808094-1792069154): exit 1

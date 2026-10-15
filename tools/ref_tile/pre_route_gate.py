@@ -700,6 +700,22 @@ def gate_route_clock_hooks(script: str, spec: dict) -> str:
     return script.replace(marker, marker + "export OT_CTS_FIX_HOOKS=" + shlex.quote(RT.clock_fix_hooks(spec)) + "\n", 1)
 
 
+def gate_route_hold_context(script: str, spec: dict, kd: str) -> str:
+    """Use production hold settings, never the ref_route.sh 10ps fallback.
+
+    This is not OT_CAL_CTS_ONLY insertion measurement. The formal gate builds
+    placement/CTS with the route's actual MM scenes, margin and physical hooks.
+    """
+    marker = "export OT_ORFS_CORNER_OVERRIDE=TC\n"
+    if script.count(marker) != 1:
+        raise ValueError("remote gate runtime-context insertion marker changed")
+    values = RT.route_hold_context(spec, kd)
+    if spec.get("clock") != "multiple_cts_roots":
+        values["OT_CTS_FIX_HOOKS"] = RT.clock_fix_hooks(spec)
+    text = "".join("export " + k + "=" + shlex.quote(v) + "\n" for k, v in values.items())
+    return script.replace(marker, marker + text, 1)
+
+
 def gate_disk_budget(spec: dict, data: bytes, override=None) -> dict:
     """GiB required before shipping and before unpacking; ot-run accepts integer GiB.
 
@@ -769,6 +785,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     sh = gate_route_clock_hooks(sh, spec)
+    sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
+    binding["route_hold_context"] = RT.route_hold_context(spec, str(kd.relative_to(ROOT)))
     import hashlib
     binding["remote_script_sha256"] = hashlib.sha256(sh.encode()).hexdigest()
     binding["tool_image_requested"] = "openroad/orfs:latest"
@@ -1034,6 +1052,10 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
     ev = rec["clock"] if rec else None
     if rec and note and "reported, not refused" in note[0]:
         g.add("INFO", "source_binding", note[0][:1500])
+    if rec and not closed_stands and not rec["source_binding"].get("route_hold_context"):
+        g.add("WARN", "route_hold_context",
+              "historical CTS gate does not attest production hold margin/MM context; diagnostic clock evidence only",
+              "re-gate with the route hold context before claiming production placement/CTS readiness; routed signoff remains required")
     if rec and not closed_stands:
         frozen = rec["source_binding"].get("route_overlay_plan")
         if frozen is None:

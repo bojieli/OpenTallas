@@ -24,7 +24,7 @@ PY
 for mut in 0 1;do
  iverilog -g2012 -DENDPOINT_MUT="$mut" -DENDPOINT_PHW="$phw" -DENDPOINT_PINREG="$pinreg" -s tb_s81_pq_command_endpoint -o gate.sim \
  "$root/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv" \
- "$root/rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv" \
+ "$root/rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv" "$root/physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv" \
  "$root/rtl/dsrom_sys/s81_static_control/test/tb_s81_pq_command_endpoint.sv" > "compile_$mut.log" 2>&1
  if [[ "$mut" == 0 ]];then modes='0 1 2 3 4';else modes=0;fi
  for mode in $modes;do

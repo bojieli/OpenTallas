@@ -1,0 +1,6 @@
+ROW MISMATCH tk 203 lane 1 row 321 mask 000c exp ffff seen 0
+TIME MISMATCH row 321 tk 203 exp 187
+ROW MISMATCH tk 204 lane 1 row 337 mask 000c exp ffff seen 0
+TIME MISMATCH row 337 tk 204 exp 189
+TB_VMCAP PASS mode 1 (fault 1 lanes 00000000000000000080)
+rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_cap.sv:136: $finish called at 860142 (1ps)

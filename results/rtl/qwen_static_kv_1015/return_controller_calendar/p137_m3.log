@@ -5,6 +5,6 @@ BAD predicted co at t405 want1 got0
 BAD controller sticky fault phase1 t405
 BAD KV row phase1 index71 sec71
 BAD controller sticky fault phase1 t406
-[2907000000] %Fatal: tb_static_return_controller_calendar.sv:47: Assertion failed in tb_static_return_controller_calendar: actual controller dual-clock slot fault at core3489
-%Error: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:47: Verilog $stop
+[2907000000] %Fatal: tb_static_return_controller_calendar.sv:49: Assertion failed in tb_static_return_controller_calendar: actual controller dual-clock slot fault at core3489
+%Error: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:49: Verilog $stop
 Aborting...

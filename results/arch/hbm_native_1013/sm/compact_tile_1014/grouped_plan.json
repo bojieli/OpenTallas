@@ -1,0 +1,103 @@
+{
+  "schema": "opentallas.smh.grouped_transport_plan.v1",
+  "status": "ANALYTICAL_ONLY_UNBUILT",
+  "purpose": "Avoid 96 tiny macro outlines plus per-macro channels; retain exactly96 logical128/tail slices in six hardened production groups. Each real group below15000 sinks; separate tile-glue root.",
+  "logical_slices": 96,
+  "buses": {
+    "rin": 1636,
+    "bin": 2069,
+    "transit_cycles": 4,
+    "landing_cycles": 1
+  },
+  "retained_compute_views": 10,
+  "groups": [
+    {
+      "instance": "ptw_row0",
+      "master": "row_w",
+      "logical_slices": 7,
+      "logical_data_flops": 1636,
+      "reset_relay_flops": 21,
+      "x": 43.2,
+      "y": 518.4,
+      "w": 86.4,
+      "h": 90.72
+    },
+    {
+      "instance": "ptw_row1",
+      "master": "row_w",
+      "logical_slices": 7,
+      "logical_data_flops": 1636,
+      "reset_relay_flops": 21,
+      "x": 43.2,
+      "y": 407.52000000000004,
+      "w": 86.4,
+      "h": 90.72
+    },
+    {
+      "instance": "ptw_beat",
+      "master": "beat_w",
+      "logical_slices": 51,
+      "logical_data_flops": 8276,
+      "reset_relay_flops": 153,
+      "x": 149.76,
+      "y": 401.76000000000005,
+      "w": 216,
+      "h": 216
+    },
+    {
+      "instance": "pte_row0",
+      "master": "row_e",
+      "logical_slices": 7,
+      "logical_data_flops": 1636,
+      "reset_relay_flops": 21,
+      "x": 385.92,
+      "y": 518.4,
+      "w": 43.2,
+      "h": 90.72
+    },
+    {
+      "instance": "pte_row1",
+      "master": "row_e",
+      "logical_slices": 7,
+      "logical_data_flops": 1636,
+      "reset_relay_flops": 21,
+      "x": 385.92,
+      "y": 407.52000000000004,
+      "w": 43.2,
+      "h": 90.72
+    },
+    {
+      "instance": "pte_beat",
+      "master": "beat_e",
+      "logical_slices": 17,
+      "logical_data_flops": 4138,
+      "reset_relay_flops": 51,
+      "x": 449.28,
+      "y": 401.76000000000005,
+      "w": 43.2,
+      "h": 216
+    }
+  ],
+  "analytical_pin_faces": {
+    "row_w": "818d W/818last E M4 two-track:78.53um;818first N M5 two-track:78.53um",
+    "row_e": "818d W/818last E M4 two-track:78.53um; no unused first output",
+    "beat_w": "2069d W/2069last E M4 two-track:198.62um;2069north N/2069south S M5 two-track:198.62um",
+    "beat_e": "2069d W/2069last E M4 two-track:198.62um; no unused first output"
+  },
+  "channel_bounds": [
+    0,
+    373.68,
+    630.72,
+    648.0
+  ],
+  "child_min_gap_um": 20.0,
+  "external_vertical_cut_ratio": 0.3498995915665982,
+  "qualification": "Actual synth/CTS, pin boundary audits, production original-reference plus mutant and route remain required. Guessed outlines include datapath+recipe2holdcells estimate. No fit claim.",
+  "group_outline_sum_um2": 79501.82400000001,
+  "max_group_logical_clock_sinks": 8429,
+  "channel_change_um": 43.2,
+  "pilot_outline_um": [
+    630.72,
+    1036.8
+  ]
+}

@@ -425,9 +425,9 @@
     {
       "element": "actual A operand gateway",
       "owner": "/root/q_compute_integration",
-      "state": "ACTIVE_PHYSICAL_PREFLIGHT_PREPARATION",
-      "evidence": "466FF exact extraction d8f/evidence1680;clock variants fee778245",
-      "next": "Real reference-kit synth/CTS/pin timing; possible removal of proven dead VMpass branch before physical source freeze"
+      "state": "TERMINAL_PHYSICAL_DIAGNOSTIC_FAILED_STRUCTURAL_REDESIGN_ACTIVE",
+      "evidence": "b26 exact source/kit; terminal CTS gate FAIL 2026-10-15T04:17:53-0700, TT in/out WNS -1527.5ps; native_cts terminal receipt",
+      "next": "q_control source proof of unused VM passthrough/compiler aligned index and existing embedding-stage retiming; q_compute owns revised physical cut/clock/pin integration"
     },
     {
       "element": "actual SU347 parents/base/copy/relay/alignment",
@@ -505,5 +505,44 @@
     "wideallocator1201509",
     "C16437563",
     "C11873628"
-  ]
+  ],
+  "vm_native_audit_update": {
+    "owner": "/root/q_vm_physical",
+    "receipt_ref": "502e7e191",
+    "receipt": "results/arch/qwen_central_vm_physical_1015/all_existing_native_audit.json",
+    "per_module_source_equivalence_ref": "571510c93",
+    "source_identical_existing_modules": [
+      "ot_qfd_vm_bctl_nx",
+      "qfd_vm_qcommit",
+      "ot_qfd_vm_bank_t"
+    ],
+    "native_pin_screen_pass_families": [
+      "ot_qfd_vm_bctl_nx",
+      "qfd_vm_qcommit",
+      "ot_qfd_vm_sctl_t",
+      "ot_qfd_vm_su1024_t",
+      "ot_qfd_vm_rr4_t",
+      "ot_qfd_vm_rr2_nx"
+    ],
+    "screen_pass_instances": 199,
+    "native_storage_repair_families": {
+      "ot_qfd_vm_bank_t": 64,
+      "ot_qfd_vm_su_t": 48
+    },
+    "missing_exact_delay_view_instances": 176,
+    "main_residual_instances": 1,
+    "qualification_limit": "All eight existing source-view family module/parameter bindings are verified; six source-bound families/199 entries pass stated native pin screen. Actual per-hop timing, placement and global clock integration remain required. Two storage families112, exact delay views176 and main residual1 still require structural/native work. Closed views retained; no blind reroutes.",
+    "concrete_active_work": "New9root actual bank with exact+2mutants passed; control35FF route READY qvm_bank_ctrl_native-np1-c9bb6b00d and data256 pin-plan repair gate65384 live.",
+    "remaining_module_source_equivalence_ref": "2f9adbb2d",
+    "all_eight_existing_module_families_source_bound": true
+  },
+  "tile_hierarchy_update": {
+    "owner": "/root/q_elements",
+    "state": "NK_HARDPARENT_HELD_DIAGNOSTIC_ONLY",
+    "preferred_successor": "Actual83 closed hardchildren plus source-bound residual hardleaf under logical tile grouping; exact residual cut/native gate required",
+    "mapped_residual_ff": 954,
+    "mapped_residual_std_um2": 3684,
+    "raw_source_residual_ff": 2278,
+    "external_dvm_placement_rule": "No external GW in holes within retained NK hardabstract bbox. Flatten legal real descendants or new source-owned co-pack ABI."
+  }
 }

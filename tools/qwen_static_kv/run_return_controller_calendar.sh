@@ -17,11 +17,12 @@ done
 mapfile -d '' sources < <(find "$src" -name '*.sv' -print0)
 verilator --binary --timing -Wno-fatal -j "${JOBS:-4}" --top-module tb_static_return_controller_calendar --Mdir "$out/obj" "${sources[@]}" > "$out/build.log" 2>&1
 for phase in 137 637;do
- for mode in 0 1 2 3 4 5 6 7;do
+ for mode in 0 1 2 3 4 5 6 7 8;do
   if "$out/obj/Vtb_static_return_controller_calendar" +phase="$phase" +faultmode="$mode" > "$out/p${phase}_m${mode}.log" 2>&1;then rc=0;else rc=$?;fi
   echo "$rc" > "$out/p${phase}_m${mode}.exit"
   if ((mode==0));then test "$rc" = 0;grep -q '^PASS sourcebound' "$out/p${phase}_m${mode}.log";else test "$rc" != 0;fi
  done
 done
+"$out/obj/Vtb_static_return_controller_calendar" +phase=137 +report_calendar > "$out/compiled_return_calendar.log" 2>&1
 find "$src" -name '*.sv' -print0 | sort -z | xargs -0 sha256sum > "$out/source.sha256"
-echo 'PASS two phases actual controller K256/V256, independent RD-to-co32 predictor, 512 dual-clock sectors each; seven faults rejected per phase'
+echo 'PASS two phases actual controller K256/V256, independent RD-to-co32 predictor, 512 dual-clock sectors each; eight faults rejected per phase'

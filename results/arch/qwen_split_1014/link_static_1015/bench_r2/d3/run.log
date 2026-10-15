@@ -1,0 +1,25 @@
+token run: embedding words 64, terminal results 1
+layer 0 start cyc 191 epoch 1/1
+ERR fault in normal epoch lay 0 rel 3 ca1 ka0 cs0 ks0 cab0/00 kab0/00 endf 00
+ERR fault in normal epoch lay 0 rel 4 ca1 ka0 cs0 ks0 cab0/00 kab0/00 endf 00
+ERR fault in normal epoch lay 0 rel 5 ca1 ka0 cs0 ks0 cab1/00 kab0/00 endf 00
+ERR host services lay 0 vm1 co0 cb1 ar0 ad1011 lu10
+layer 1 start cyc 291 epoch 1/1
+ERR host services lay 1 vm1 co0 cb1 ar0 ad1011 lu10
+layer 2 start cyc 391 epoch 1/1
+ERR host services lay 2 vm1 co0 cb1 ar0 ad1011 lu10
+layer 3 start cyc 491 epoch 1/1
+ERR host services lay 3 vm1 co0 cb1 ar0 ad1011 lu10
+layer 4 start cyc 591 epoch 1/1
+ERR expected KV crc abort + compute missing abort: k1/04 c1/80
+abort at cyc 690
+drained 690
+reset seen 692
+retrained 725
+RECOVERY abort->epoch_begin KV 524 cycles, compute 0 cycles; HOST-visible 50 cycles
+layer 4 start cyc 741 epoch 2/2
+ERR host services lay 4 vm0 co0 cb1 ar0 ad1001 lu10
+layer 5 start cyc 841 epoch 2/2
+ERR host services lay 5 vm0 co0 cb1 ar0 ad1001 lu10
+frames C->S 0 S->C 0 kvn 0 results 0 host-checks 0 normal-epoch faults 592 errors 7
+D2D_DIES_FAIL

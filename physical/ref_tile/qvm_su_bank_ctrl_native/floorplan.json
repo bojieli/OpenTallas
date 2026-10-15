@@ -1,0 +1,85 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qvm_su_bank_ctrl_native",
+ "top": "qvm_su_bank_ctrl_native",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  17.28,
+  21.6
+ ],
+ "core": [
+  2.16,
+  2.16,
+  15.120000000000001,
+  19.44
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "re",
+   "we",
+   "ra",
+   "wl",
+   "wm"
+  ],
+  "E": [
+   "p_re",
+   "p_we",
+   "p_ra",
+   "p_wl",
+   "p_wm"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/kit.env",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/clock.sdc",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/signoff.sdc",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/pdn.tcl",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/pre_cts.tcl",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/post_cts.tcl",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/post_grt.tcl",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/pre_drt.tcl",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/pre_fill.tcl",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/post_fill.tcl",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/pre_grt.tcl",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/pre_gpl.tcl",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}
