@@ -35,6 +35,12 @@
     "VM_read_return_edges": 14,
     "store_word_read_edges": 1,
     "prefetch_policy": "compiler reserves sector arrivals before vector launch; no runtime wait",
-    "production_qualified": false
+    "production_qualified": false,
+    "SRAM_macro_dimensions_um": [
+      172.8,
+      41.04
+    ],
+    "SRAM_macro_area_um2_total": 567336.96,
+    "area_excludes": "control/crossbar cells, halos, routing, clock roots; not slot fit"
   }
 }
