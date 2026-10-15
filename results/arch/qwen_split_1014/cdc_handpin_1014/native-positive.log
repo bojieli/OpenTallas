@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     admits   453 GB (avail 680, growth 95, headroom 64, waiters 0/0 GB) load 126/128 running 23 disk 878 GB 
+ot-run: ot-epyc4       admits   375 GB (avail 608, growth 184, headroom 48, waiters 0/0 GB) load 158/128 running 25 disk 712 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/kvsys-handpin-1014
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/kvsys-handpin-1014
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-529680-1792028776 after 0 s
+SEED=11
+PASS qkd_cdc_wleaf clk_checks=20000 hclk_checks=17094 landings=5083 wdone=2098 completions=2115 max_outstanding=32
+rtl/test/qwen_blocks/tb_qkd_cdc_wleaf_equiv.sv:75: $finish called at 40033000 (1ps)
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-529680-1792028776): exit 0

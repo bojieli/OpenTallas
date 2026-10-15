@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.smh.compact_transport_proof_receipt.v1",
+ "date": "2026-10-14T21:40-07:00",
+ "recorded_by": "Claude H-DIE (SM ABI/compact owner after H-ELEM-A handover)",
+ "bench": "tools/bench_smh_compact_transport.py (production rin 1636 = 2 x 818 / bin 2069, 4096 cycles, mid-stream resets, original pt_w/pt_e bodies byte-extracted from rtl/hbm_accel/sm/ot_hbm_accel_smh.sv)",
+ "input_sha256": {
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv": "82b456d994da7bc4386d5c15e949fad48633b6c2824060620b59bf2304634d91",
+  "rtl/test/tb_hbm_smh_compact_transport.sv": "d320ac043c5a0c2a0de4019836bf5dea143ab98ce0023bf58c97b6c91a38684f",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "d2b431714d6e7d1eccd7a76af6b9c51dafc41ff97c74404877269e7c4fc1fbd0",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/lib/ot_hdly.sv": "8839e0bad5c7289180b736e93ca98d98aab25021d3ddf3a811963e0f52c6e574",
+  "tools/bench_smh_compact_transport.py": "f6d803229a7e60ee15bcf746b0b12cd892c7d56f989c359a7bf088359a5f997e"
+ },
+ "runs": [
+  {
+   "case": "positive (OT_SMH_RSTRELAY)",
+   "args": "",
+   "unit": "oth-ubuntu-3235123-1792028410",
+   "result": "COMPACT EXACT PASS cycles=4096 checks=4087 width_r=818 width_b=2069 stages=4",
+   "exit": 0
+  },
+  {
+   "case": "alternate original no-reset-relay mode",
+   "args": "--no-reset-relay",
+   "unit": "oth-ubuntu-3223693-1792028422",
+   "result": "COMPACT EXACT PASS cycles=4096 checks=4087 width_r=818 width_b=2069 stages=4",
+   "exit": 0
+  },
+  {
+   "case": "mutant OT_SMH_COMPACT_MUT_LAT (transport register bypassed)",
+   "args": "--mutant",
+   "unit": "oth-ubuntu-3223690-1792028422",
+   "result": "FATAL: tb_hbm_smh_compact_transport.sv:37: COMPACT EXACT FAIL cycle=9",
+   "exit": 1
+  }
+ ],
+ "verdict": "EXACT PASS (both reset modes) + observed failing mutant (cycle 9, exit 1); component proof only: slice pins, outlines, phi-R clocks, native audit, cut windows, parent bench/cost still open",
+ "runs_on_published_source": [
+  {
+   "case": "positive",
+   "unit": "oth-ubuntu-139282-1792038348",
+   "result": "COMPACT EXACT PASS cycles=4096 checks=4087 width_r=818 width_b=2069 stages=4",
+   "exit": 0
+  },
+  {
+   "case": "no-reset-relay",
+   "unit": "oth-ubuntu-139288-1792038348",
+   "result": "COMPACT EXACT PASS cycles=4096 checks=4087 width_r=818 width_b=2069 stages=4",
+   "exit": 0
+  },
+  {
+   "case": "mutant",
+   "unit": "oth-ubuntu-139283-1792038348",
+   "result": "FATAL: tb_hbm_smh_compact_transport.sv:37: COMPACT EXACT FAIL cycle=9",
+   "exit": 1
+  }
+ ],
+ "note": "runs = groupA branch source (Codex, 18:40-19:03); runs_on_published_source = this commit (main + 3a1283ed5 cherry-pick, input_sha256 above), same verdicts"
+}
