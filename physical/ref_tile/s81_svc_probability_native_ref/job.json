@@ -1,14 +1,14 @@
 {
- "name": "s81_svc_probability_native_ref-native1-4808b5add",
+ "name": "s81_svc_probability_native_ref-native2-COMMIT",
  "block": "ot_s81_svc_probability_frame",
  "ref_tile": true,
  "owner": "Codex:s_native_svc",
- "purpose": "Native SVC probability converter with actual assigned v20 pins; T640/T133 exact shapes and failing RNE/swap mutants. Needs TT setup, FF hold, DRC0 and native pin/register/clock audit before adoption.",
+ "purpose": "Native SVC probability converter with actual assigned v20 pins; T640/T133 exact shapes and failing RNE/swap mutants. Needs TT setup, FF hold, DRC0 and native pin/register/clock audit before adoption. Fixed probability ingress is3 launch-to-launch cycles; raw FP32 transport also adds rows/headers and is not accepted token-rate credit; see unified component model.",
  "threads": 4,
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/s81-native-svc-1014",
-  "commit": "4808b5add",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph/svc/test",
    "physical/s81_die_pins/v20_svc_native",
@@ -35,8 +35,29 @@
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
-     "iverilog",
-     "vvp"
+     "iverilog"
+    ]
+   },
+   {
+    "name": "actual_frame_RNE_mutant",
+    "cmd": "mkdir -p {RUN}\niverilog -g2012 -s tb_svc_probability_frame -Ptb_svc_probability_frame.MUT=1 -o {RUN}/mut rtl/dsrom_sys/s81_ph/svc/ot_s81_svc_probability_pack.sv rtl/dsrom_sys/s81_ph/svc/ot_s81_svc_probability_frame.sv rtl/dsrom_sys/s81_ph/svc/test/tb_svc_probability_frame.sv && vvp {RUN}/mut",
+    "expect": "fail",
+    "fail_regex": "PROBFRAME checked=391 latency_edges=3 errors=386 verdict=FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "actual_frame_pair_mutant",
+    "cmd": "mkdir -p {RUN}\niverilog -g2012 -s tb_svc_probability_frame -Ptb_svc_probability_frame.MUT=2 -o {RUN}/mut rtl/dsrom_sys/s81_ph/svc/ot_s81_svc_probability_pack.sv rtl/dsrom_sys/s81_ph/svc/ot_s81_svc_probability_frame.sv rtl/dsrom_sys/s81_ph/svc/test/tb_svc_probability_frame.sv && vvp {RUN}/mut",
+    "expect": "fail",
+    "fail_regex": "PROBFRAME checked=391 latency_edges=3 errors=386 verdict=FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
     ]
    }
   ],
@@ -88,10 +109,10 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81_svc_probability_native_ref/s81_svc_probability_native_ref-native1-4808b5add"
+   "to": "results/rtl/ref_tile/s81_svc_probability_native_ref/s81_svc_probability_native_ref-native2-COMMIT"
   }
  ],
- "cycles_added": 0,
+ "cycles_added": 3,
  "route_hold_corners": "mm",
  "route_hold_margin_ns": 0.03,
  "route_corner": "TC",

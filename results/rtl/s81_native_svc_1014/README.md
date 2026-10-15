@@ -58,3 +58,12 @@ was removed; remaining warnings concern the assigned slot's 13% utilization
 (1,291 um2 logic). Full native top composition/reset/clock remains open.
 Exact gate source binding is `physical/ref_tile/s81_svc_probability_native_ref/gate_result.json`;
 TT/FF routed pin qualification and DRC remain required.
+
+The unified sizing entry point is `tools/uarch_model.s81_probability_ingress_model`.
+`component_model.json` prices the raw FP32 candidate explicitly: T640 sends
+643 input words versus 322 legacy BF16 words, adding 321 transport cycles
+plus the three-stage flight if exposed. T133 adds 66 transport cycles plus
+the pipeline. No overlap, token-rate loss, or free transpose is assumed.
+Real source-side BF16 packing is an alternative to evaluate before adoption.
+Input accepted on edge C yields q_o after C+2; an upstream registered launch
+just after edge L yields q_o just after L+3, then downstream capture L+4.

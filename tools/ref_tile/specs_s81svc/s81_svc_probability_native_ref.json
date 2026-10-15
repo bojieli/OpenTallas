@@ -47,8 +47,8 @@
   "job": {
     "owner": "Codex:s_native_svc",
     "branch": "codex/s81-native-svc-1014",
-    "tag": "native1",
-    "purpose": "Native SVC probability converter with actual assigned v20 pins; T640/T133 exact shapes and failing RNE/swap mutants. Needs TT setup, FF hold, DRC0 and native pin/register/clock audit before adoption.",
+    "tag": "native2",
+    "purpose": "Native SVC probability converter with actual assigned v20 pins; T640/T133 exact shapes and failing RNE/swap mutants. Needs TT setup, FF hold, DRC0 and native pin/register/clock audit before adoption. Fixed probability ingress is3 launch-to-launch cycles; raw FP32 transport also adds rows/headers and is not accepted token-rate credit; see unified component model.",
     "extra_paths": [
       "rtl/dsrom_sys/s81_ph/svc/test",
       "physical/s81_die_pins/v20_svc_native",
@@ -63,12 +63,34 @@
         "threads": 1,
         "peak_ram_gb": 2,
         "needs": [
-          "iverilog",
-          "vvp"
+          "iverilog"
+        ]
+      },
+      {
+        "name": "actual_frame_RNE_mutant",
+        "cmd": "mkdir -p {RUN}\niverilog -g2012 -s tb_svc_probability_frame -Ptb_svc_probability_frame.MUT=1 -o {RUN}/mut rtl/dsrom_sys/s81_ph/svc/ot_s81_svc_probability_pack.sv rtl/dsrom_sys/s81_ph/svc/ot_s81_svc_probability_frame.sv rtl/dsrom_sys/s81_ph/svc/test/tb_svc_probability_frame.sv && vvp {RUN}/mut",
+        "expect": "fail",
+        "fail_regex": "PROBFRAME checked=391 latency_edges=3 errors=386 verdict=FAIL",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "actual_frame_pair_mutant",
+        "cmd": "mkdir -p {RUN}\niverilog -g2012 -s tb_svc_probability_frame -Ptb_svc_probability_frame.MUT=2 -o {RUN}/mut rtl/dsrom_sys/s81_ph/svc/ot_s81_svc_probability_pack.sv rtl/dsrom_sys/s81_ph/svc/ot_s81_svc_probability_frame.sv rtl/dsrom_sys/s81_ph/svc/test/tb_svc_probability_frame.sv && vvp {RUN}/mut",
+        "expect": "fail",
+        "fail_regex": "PROBFRAME checked=391 latency_edges=3 errors=386 verdict=FAIL",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
         ]
       }
     ],
     "views_to": "physical/ref_tile/s81_svc_probability_native_ref/views",
-    "record_to": "results/rtl/ref_tile/s81_svc_probability_native_ref"
+    "record_to": "results/rtl/ref_tile/s81_svc_probability_native_ref",
+    "cycles_added": 3
   }
 }
