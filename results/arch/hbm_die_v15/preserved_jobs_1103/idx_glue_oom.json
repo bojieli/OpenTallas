@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.preserved-job-receipt",
+ "sample_pt": "2026-10-15T11:58:45-07:00",
+ "job": "original die IDXglue96GB",
+ "host": "ot-epyc1tb",
+ "local_observer_pid": 455645,
+ "remote_yosys_pid": 3877388,
+ "status": "TERMINAL_CGROUP_OOM",
+ "terminal_pt": "2026-10-15T11:49:35-07:00",
+ "kernel_anon_rss_kib": 100464956,
+ "source_snapshot": "/srv/opentallas-scratch/claude/hdie-v15c",
+ "outputs": "out/idx_glue:log,files,script,hier.stat only; noflatmappednetlist",
+ "restart": false,
+ "engineering_result": "NO_SYNTHESIS_RESULT",
+ "scope": "preserve original cache/source and terminal log; no observer timeout or new job submitted",
+ "log_sha256": "15e444bf8fc21ea506bad2f3522b94304c5299d05a3c771cfa71d662c1608563"
+}

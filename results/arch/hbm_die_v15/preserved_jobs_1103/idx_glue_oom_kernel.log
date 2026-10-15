@@ -1,0 +1,165 @@
+Oct 15 11:49:06 ot-epyc1tb kernel: docker0: port 1(veth94cc822) entered disabled state
+Oct 15 11:49:06 ot-epyc1tb kernel: veth16bd817: renamed from eth0
+Oct 15 11:49:06 ot-epyc1tb kernel: docker0: port 1(veth94cc822) entered disabled state
+Oct 15 11:49:06 ot-epyc1tb kernel: veth94cc822 (unregistering): left allmulticast mode
+Oct 15 11:49:06 ot-epyc1tb kernel: veth94cc822 (unregistering): left promiscuous mode
+Oct 15 11:49:06 ot-epyc1tb kernel: docker0: port 1(veth94cc822) entered disabled state
+Oct 15 11:49:06 ot-epyc1tb kernel: docker0: port 1(vethff16997) entered blocking state
+Oct 15 11:49:06 ot-epyc1tb kernel: docker0: port 1(vethff16997) entered disabled state
+Oct 15 11:49:06 ot-epyc1tb kernel: vethff16997: entered allmulticast mode
+Oct 15 11:49:06 ot-epyc1tb kernel: vethff16997: entered promiscuous mode
+Oct 15 11:49:06 ot-epyc1tb kernel: eth0: renamed from vethdc1d54e
+Oct 15 11:49:06 ot-epyc1tb kernel: docker0: port 1(vethff16997) entered blocking state
+Oct 15 11:49:06 ot-epyc1tb kernel: docker0: port 1(vethff16997) entered forwarding state
+Oct 15 11:49:28 ot-epyc1tb kernel: docker0: port 1(vethff16997) entered disabled state
+Oct 15 11:49:28 ot-epyc1tb kernel: vethdc1d54e: renamed from eth0
+Oct 15 11:49:28 ot-epyc1tb kernel: docker0: port 1(vethff16997) entered disabled state
+Oct 15 11:49:28 ot-epyc1tb kernel: vethff16997 (unregistering): left allmulticast mode
+Oct 15 11:49:28 ot-epyc1tb kernel: vethff16997 (unregistering): left promiscuous mode
+Oct 15 11:49:28 ot-epyc1tb kernel: docker0: port 1(vethff16997) entered disabled state
+Oct 15 11:49:28 ot-epyc1tb kernel: docker0: port 1(veth6d30eda) entered blocking state
+Oct 15 11:49:28 ot-epyc1tb kernel: docker0: port 1(veth6d30eda) entered disabled state
+Oct 15 11:49:28 ot-epyc1tb kernel: veth6d30eda: entered allmulticast mode
+Oct 15 11:49:28 ot-epyc1tb kernel: veth6d30eda: entered promiscuous mode
+Oct 15 11:49:28 ot-epyc1tb kernel: eth0: renamed from vetha7e8526
+Oct 15 11:49:28 ot-epyc1tb kernel: docker0: port 1(veth6d30eda) entered blocking state
+Oct 15 11:49:28 ot-epyc1tb kernel: docker0: port 1(veth6d30eda) entered forwarding state
+Oct 15 11:49:35 ot-epyc1tb kernel: yosys invoked oom-killer: gfp_mask=0x100cca(GFP_HIGHUSER_MOVABLE), order=0, oom_score_adj=0
+Oct 15 11:49:35 ot-epyc1tb kernel: CPU: 12 UID: 0 PID: 3877388 Comm: yosys Not tainted 7.0.0-34-generic #34-Ubuntu PREEMPT(lazy) 
+Oct 15 11:49:35 ot-epyc1tb kernel: Hardware name: Supermicro AS -1116CS-TN/H14SHM, BIOS 1.7 10/09/2025
+Oct 15 11:49:35 ot-epyc1tb kernel: Call Trace:
+Oct 15 11:49:35 ot-epyc1tb kernel:  <TASK>
+Oct 15 11:49:35 ot-epyc1tb kernel:  show_stack+0x49/0x60
+Oct 15 11:49:35 ot-epyc1tb kernel:  dump_stack_lvl+0x5f/0x90
+Oct 15 11:49:35 ot-epyc1tb kernel:  dump_stack+0x10/0x18
+Oct 15 11:49:35 ot-epyc1tb kernel:  dump_header+0x48/0x1c7
+Oct 15 11:49:35 ot-epyc1tb kernel:  oom_kill_process.cold+0x8/0xac
+Oct 15 11:49:35 ot-epyc1tb kernel:  out_of_memory+0xff/0x2b0
+Oct 15 11:49:35 ot-epyc1tb kernel:  mem_cgroup_out_of_memory+0xc8/0xe0
+Oct 15 11:49:35 ot-epyc1tb kernel:  try_charge_memcg+0x3c3/0x620
+Oct 15 11:49:35 ot-epyc1tb kernel:  charge_memcg+0x34/0x80
+Oct 15 11:49:35 ot-epyc1tb kernel:  __mem_cgroup_charge+0x2f/0xa0
+Oct 15 11:49:35 ot-epyc1tb kernel:  filemap_add_folio+0x5e/0x220
+Oct 15 11:49:35 ot-epyc1tb kernel:  __filemap_get_folio_mpol+0x1cf/0x340
+Oct 15 11:49:35 ot-epyc1tb kernel:  filemap_fault+0x112/0xce0
+Oct 15 11:49:35 ot-epyc1tb kernel:  ? filemap_map_pages+0x2f8/0x440
+Oct 15 11:49:35 ot-epyc1tb kernel:  __do_fault+0x3c/0x1e0
+Oct 15 11:49:35 ot-epyc1tb kernel:  do_read_fault+0x12f/0x280
+Oct 15 11:49:35 ot-epyc1tb kernel:  do_fault+0x16c/0x2a0
+Oct 15 11:49:35 ot-epyc1tb kernel:  ? pte_offset_map_rw_nolock+0x20/0xa0
+Oct 15 11:49:35 ot-epyc1tb kernel:  handle_pte_fault+0x141/0x1f0
+Oct 15 11:49:35 ot-epyc1tb kernel:  ? set_next_entity+0xeb/0x290
+Oct 15 11:49:35 ot-epyc1tb kernel:  __handle_mm_fault+0x493/0x720
+Oct 15 11:49:35 ot-epyc1tb kernel:  handle_mm_fault+0xee/0x2e0
+Oct 15 11:49:35 ot-epyc1tb kernel:  do_user_addr_fault+0x2ee/0x830
+Oct 15 11:49:35 ot-epyc1tb kernel:  exc_page_fault+0x83/0x1e0
+Oct 15 11:49:35 ot-epyc1tb kernel:  asm_exc_page_fault+0x27/0x30
+Oct 15 11:49:35 ot-epyc1tb kernel: RIP: 0033:0x5587fe70ab43
+Oct 15 11:49:35 ot-epyc1tb kernel: Code: Unable to access opcode bytes at 0x5587fe70ab19.
+Oct 15 11:49:35 ot-epyc1tb kernel: RSP: 002b:00007ffe5327f6e0 EFLAGS: 00010202
+Oct 15 11:49:35 ot-epyc1tb kernel: RAX: 0000559198ad5bd0 RBX: 0000559ad3e61358 RCX: 0000000000000036
+Oct 15 11:49:35 ot-epyc1tb kernel: RDX: 00007d64fae12bc0 RSI: 00007d64a932b008 RDI: 00005599c16dc460
+Oct 15 11:49:35 ot-epyc1tb kernel: RBP: 00007ffe53282700 R08: 00007ffe53281d20 R09: 00007ffe53281d90
+Oct 15 11:49:35 ot-epyc1tb kernel: R10: 00007ffe53281d60 R11: edb39cf3518969da R12: 0000000000000036
+Oct 15 11:49:35 ot-epyc1tb kernel: R13: 00007ffe53281d20 R14: 00007d631c6291f0 R15: 0000000001981776
+Oct 15 11:49:35 ot-epyc1tb kernel:  </TASK>
+Oct 15 11:49:35 ot-epyc1tb kernel: memory: usage 100663296kB, limit 100663296kB, failcnt 72
+Oct 15 11:49:35 ot-epyc1tb kernel: swap: usage 0kB, limit 100663296kB, failcnt 0
+Oct 15 11:49:35 ot-epyc1tb kernel: Memory cgroup stats for /system.slice/docker-cc70b301b184192ce9cc5119aeee344f11e4f083a2e1727332fef7ea03f67928.scope:
+Oct 15 11:49:35 ot-epyc1tb kernel: anon 102876114944
+Oct 15 11:49:35 ot-epyc1tb kernel: file 0
+Oct 15 11:49:35 ot-epyc1tb kernel: kernel 203100160
+Oct 15 11:49:35 ot-epyc1tb kernel: kernel_stack 16384
+Oct 15 11:49:35 ot-epyc1tb kernel: pagetables 202305536
+Oct 15 11:49:35 ot-epyc1tb kernel: sec_pagetables 0
+Oct 15 11:49:35 ot-epyc1tb kernel: percpu 46280
+Oct 15 11:49:35 ot-epyc1tb kernel: sock 0
+Oct 15 11:49:35 ot-epyc1tb kernel: vmalloc 16384
+Oct 15 11:49:35 ot-epyc1tb kernel: shmem 0
+Oct 15 11:49:35 ot-epyc1tb kernel: zswap 0
+Oct 15 11:49:35 ot-epyc1tb kernel: zswapped 0
+Oct 15 11:49:35 ot-epyc1tb kernel: file_mapped 0
+Oct 15 11:49:35 ot-epyc1tb kernel: file_dirty 0
+Oct 15 11:49:35 ot-epyc1tb kernel: file_writeback 0
+Oct 15 11:49:35 ot-epyc1tb kernel: swapcached 0
+Oct 15 11:49:35 ot-epyc1tb kernel: anon_thp 0
+Oct 15 11:49:35 ot-epyc1tb kernel: file_thp 0
+Oct 15 11:49:35 ot-epyc1tb kernel: shmem_thp 0
+Oct 15 11:49:35 ot-epyc1tb kernel: inactive_anon 102210486272
+Oct 15 11:49:35 ot-epyc1tb kernel: active_anon 665628672
+Oct 15 11:49:35 ot-epyc1tb kernel: inactive_file 0
+Oct 15 11:49:35 ot-epyc1tb kernel: active_file 0
+Oct 15 11:49:35 ot-epyc1tb kernel: unevictable 0
+Oct 15 11:49:35 ot-epyc1tb kernel: slab_reclaimable 341440
+Oct 15 11:49:35 ot-epyc1tb kernel: slab_unreclaimable 362096
+Oct 15 11:49:35 ot-epyc1tb kernel: slab 703536
+Oct 15 11:49:35 ot-epyc1tb kernel: hugetlb 0
+Oct 15 11:49:35 ot-epyc1tb kernel: workingset_refault_anon 0
+Oct 15 11:49:35 ot-epyc1tb kernel: workingset_refault_file 16
+Oct 15 11:49:35 ot-epyc1tb kernel: workingset_activate_anon 0
+Oct 15 11:49:35 ot-epyc1tb kernel: workingset_activate_file 3
+Oct 15 11:49:35 ot-epyc1tb kernel: workingset_restore_anon 0
+Oct 15 11:49:35 ot-epyc1tb kernel: workingset_restore_file 3
+Oct 15 11:49:35 ot-epyc1tb kernel: workingset_nodereclaim 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pgdemote_kswapd 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pgdemote_direct 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pgdemote_khugepaged 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pgdemote_proactive 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pgpromote_success 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pgscan 40837
+Oct 15 11:49:35 ot-epyc1tb kernel: pgsteal 40462
+Oct 15 11:49:35 ot-epyc1tb kernel: pswpin 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pswpout 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pgscan_kswapd 34878
+Oct 15 11:49:35 ot-epyc1tb kernel: pgscan_direct 5959
+Oct 15 11:49:35 ot-epyc1tb kernel: pgscan_khugepaged 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pgscan_proactive 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pgsteal_kswapd 34878
+Oct 15 11:49:35 ot-epyc1tb kernel: pgsteal_direct 5584
+Oct 15 11:49:35 ot-epyc1tb kernel: pgsteal_khugepaged 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pgsteal_proactive 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pgfault 276314880
+Oct 15 11:49:35 ot-epyc1tb kernel: pgmajfault 58
+Oct 15 11:49:35 ot-epyc1tb kernel: pgrefill 772
+Oct 15 11:49:35 ot-epyc1tb kernel: pgactivate 590
+Oct 15 11:49:35 ot-epyc1tb kernel: pgdeactivate 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pglazyfree 0
+Oct 15 11:49:35 ot-epyc1tb kernel: pglazyfreed 0
+Oct 15 11:49:35 ot-epyc1tb kernel: swpin_zero 0
+Oct 15 11:49:35 ot-epyc1tb kernel: swpout_zero 0
+Oct 15 11:49:35 ot-epyc1tb kernel: zswpin 0
+Oct 15 11:49:35 ot-epyc1tb kernel: zswpout 0
+Oct 15 11:49:35 ot-epyc1tb kernel: zswpwb 0
+Oct 15 11:49:35 ot-epyc1tb kernel: thp_fault_alloc 0
+Oct 15 11:49:35 ot-epyc1tb kernel: thp_collapse_alloc 0
+Oct 15 11:49:35 ot-epyc1tb kernel: thp_swpout 0
+Oct 15 11:49:35 ot-epyc1tb kernel: thp_swpout_fallback 0
+Oct 15 11:49:35 ot-epyc1tb kernel: numa_pages_migrated 0
+Oct 15 11:49:35 ot-epyc1tb kernel: numa_pte_updates 0
+Oct 15 11:49:35 ot-epyc1tb kernel: numa_hint_faults 0
+Oct 15 11:49:35 ot-epyc1tb kernel: Memory cgroup min protection 0kB -- low protection 0kB
+Oct 15 11:49:35 ot-epyc1tb kernel: Tasks state (memory values in pages):
+Oct 15 11:49:35 ot-epyc1tb kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+Oct 15 11:49:35 ot-epyc1tb kernel: [3877388]     0 3877388 27178234 25118304 25116239     2065         0 202297344        0             0 yosys
+Oct 15 11:49:35 ot-epyc1tb kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=docker-cc70b301b184192ce9cc5119aeee344f11e4f083a2e1727332fef7ea03f67928.scope,mems_allowed=0,oom_memcg=/system.slice/docker-cc70b301b184192ce9cc5119aeee344f11e4f083a2e1727332fef7ea03f67928.scope,task_memcg=/system.slice/docker-cc70b301b184192ce9cc5119aeee344f11e4f083a2e1727332fef7ea03f67928.scope,task=yosys,pid=3877388,uid=0
+Oct 15 11:49:35 ot-epyc1tb kernel: Memory cgroup out of memory: Killed process 3877388 (yosys) total-vm:108712936kB, anon-rss:100464956kB, file-rss:8260kB, shmem-rss:0kB, UID:0 pgtables:197556kB oom_score_adj:0
+Oct 15 11:49:39 ot-epyc1tb kernel: oom_reaper: reaped process 3877388 (yosys), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+Oct 15 11:49:39 ot-epyc1tb kernel: docker0: port 6(veth265e872) entered disabled state
+Oct 15 11:49:39 ot-epyc1tb kernel: vethfa09854: renamed from eth0
+Oct 15 11:49:39 ot-epyc1tb kernel: docker0: port 6(veth265e872) entered disabled state
+Oct 15 11:49:39 ot-epyc1tb kernel: veth265e872 (unregistering): left allmulticast mode
+Oct 15 11:49:39 ot-epyc1tb kernel: veth265e872 (unregistering): left promiscuous mode
+Oct 15 11:49:39 ot-epyc1tb kernel: docker0: port 6(veth265e872) entered disabled state
+Oct 15 11:49:50 ot-epyc1tb kernel: docker0: port 1(veth6d30eda) entered disabled state
+Oct 15 11:49:50 ot-epyc1tb kernel: vetha7e8526: renamed from eth0
+Oct 15 11:49:50 ot-epyc1tb kernel: docker0: port 1(veth6d30eda) entered disabled state
+Oct 15 11:49:50 ot-epyc1tb kernel: veth6d30eda (unregistering): left allmulticast mode
+Oct 15 11:49:50 ot-epyc1tb kernel: veth6d30eda (unregistering): left promiscuous mode
+Oct 15 11:49:50 ot-epyc1tb kernel: docker0: port 1(veth6d30eda) entered disabled state
+Oct 15 11:49:50 ot-epyc1tb kernel: docker0: port 1(vethd4e0b0a) entered blocking state
+Oct 15 11:49:50 ot-epyc1tb kernel: docker0: port 1(vethd4e0b0a) entered disabled state
+Oct 15 11:49:50 ot-epyc1tb kernel: vethd4e0b0a: entered allmulticast mode
+Oct 15 11:49:50 ot-epyc1tb kernel: vethd4e0b0a: entered promiscuous mode
+Oct 15 11:49:50 ot-epyc1tb kernel: eth0: renamed from veth0caf7cd
+Oct 15 11:49:50 ot-epyc1tb kernel: docker0: port 1(vethd4e0b0a) entered blocking state
+Oct 15 11:49:50 ot-epyc1tb kernel: docker0: port 1(vethd4e0b0a) entered forwarding state
