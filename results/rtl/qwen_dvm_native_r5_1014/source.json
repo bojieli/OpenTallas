@@ -7,5 +7,18 @@
   "49d3aa973",
   "22478e136"
  ],
- "native_status": "FAIL raw corridor tag to cap capture; structural repair proofs in flight"
+ "native_status": "FAIL raw corridor tag to cap capture; structural repair proofs in flight",
+ "repair": "Existing b_q captures corridor before tag decode; forward selected b_q line at unchanged hold edge, else retained cap. No new schedule edge.",
+ "repair_source_sha256": "8094428beb501dde53ebcf0a61d41b14d081f775f45414a7f400b15fd1109cc9",
+ "observed_no_forward_source_sha256": "97e8c1c4155cb91c6c9ca14a5543e092e1b5e1cf1c6b17b84f68200af1f98009",
+ "proof": {
+  "positive": "proofs/core_forward.log",
+  "positive_checks": 159744,
+  "cycles": 1710,
+  "first_result_minus_ref_edges": 1,
+  "negative": "proofs/core_no_forward_mutant.log",
+  "negative_errors": 39928,
+  "native_wrapper": "in flight",
+  "native_tt_producer": "open"
+ }
 }
