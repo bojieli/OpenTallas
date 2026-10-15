@@ -1,0 +1,196 @@
+{
+ "name": "s81_bf_front_cpin1",
+ "top": "ot_s81_bf_front",
+ "kind": "tile",
+ "sources": [
+  "rtl/s81/ot_s81_bf_seam.sv",
+  "rtl/s81/ot_s81_bf_native.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_bmul2.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2_w10.sv",
+  "rtl/v41rom/ot_v41_chain.sv",
+  "rtl/v41rom/ot_v41_chain2.sv",
+  "rtl/v41rom/ot_v41_fadd.sv",
+  "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+  "rtl/v41rom/ot_v41_segtree.sv",
+  "rtl/v41rom/ot_v41_segtree2.sv",
+  "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+  "rtl/v41rom/ot_v41_chain2u2.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/v41rom/ot_v41_chain3.sv",
+  "rtl/v41rom/ot_v41_chain4.sv",
+  "rtl/v41rom/ot_v41_fadd2.sv",
+  "rtl/v41rom/ot_v41_bterm3_w10.sv",
+  "rtl/v41rom/ot_v41_bterm4_w10.sv",
+  "rtl/v41rom/ot_v41_bterm5_w10.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes3.sv",
+  "rtl/v41rom/ot_v41_tile_clk.sv",
+  "rtl/v41rom/ot_bf_hdly.sv",
+  "rtl/v41rom/ot_v41_bf_col.sv",
+  "rtl/v41rom/ot_v41_bf_front_core.sv",
+  "rtl/v41rom/ot_v41_segtree3.sv",
+  "rtl/v41rom/ot_v41_segtree4.sv",
+  "rtl/v41rom/ot_v41_segtree5.sv",
+  "rtl/v41rom/ot_v41_segtree6.sv",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+  "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+  "rtl/s81/ot_s81_bf_front.sv"
+ ],
+ "params": {
+  "PINREG": 1,
+  "HITFIX": 1,
+  "RECUT": 2,
+  "QZE": 1,
+  "TCG": 1,
+  "HCOL": 1,
+  "BXST": 2,
+  "FXST": 2,
+  "PINLAT": 1,
+  "CPIN": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 100.224,
+  "h": 198.72,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "xb_d"
+  ],
+  "S": [
+   "busy",
+   "c_qy_bkf_in",
+   "cfg_a",
+   "cfg_d",
+   "cfg_v",
+   "clk",
+   "fault",
+   "go",
+   "go_bf",
+   "hph",
+   "rst_n",
+   "xb_b",
+   "xb_pos",
+   "xb_sv",
+   "xb_u",
+   "xb_v",
+   "xs_b",
+   "xs_e0",
+   "xs_e1",
+   "xs_p",
+   "xs_pos",
+   "xs_q0",
+   "xs_q1",
+   "xs_sv",
+   "xs_v"
+  ],
+  "E": [
+   "c1_a_ctr",
+   "c1_i1_bf",
+   "c1_i1_bk",
+   "c1_i1_t",
+   "c1_i1_v",
+   "c1_i2x_e0",
+   "c1_i2x_e1",
+   "c1_i2x_q0",
+   "c1_i2x_q1",
+   "c1_issue",
+   "c1_so_idx",
+   "c1_so_n",
+   "c1_so_row",
+   "c1_ze_d"
+  ],
+  "W": [
+   "c0_a_ctr",
+   "c0_i1_bf",
+   "c0_i1_bk",
+   "c0_i1_t",
+   "c0_i1_v",
+   "c0_i2x_e0",
+   "c0_i2x_e1",
+   "c0_i2x_q0",
+   "c0_i2x_q1",
+   "c0_issue",
+   "c0_so_idx",
+   "c0_so_n",
+   "c0_so_row",
+   "c0_ze_d"
+  ]
+ },
+ "io_tcl": "physical/s81_bf_hier/front_pins_aligned.tcl",
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.6,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "Independent 776-bit egress register on each column face (+1 fixed cycle), recipe2 pin-flop placement and above-layer access keepout repair actual c1_issue q_lb293.4 and367 blocked-above pins; no timing threshold changes.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Measured native output launch defects despite old CLOSED status; CPIN adds per-face pin register"
+ },
+ "job": {
+  "owner": "Codex:s81-bf-native-physical-1015",
+  "purpose": "BF front egress pin closure; canonical BF519 unchanged, fixed seam +1 cycle pending compiler composition",
+  "benches": [
+   {
+    "name": "actual_pair_exact",
+    "cmd": "python3 tools/s81/bf_txn_bench.py --variant recut --prep {SRC}/results/rtl/s81_bf_compact_20261010/bench_prep_1013 --jobs 16 --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1,CPIN=1 --no-default-mutants --only positive --work {RUN}/pair_exact",
+    "expect": "pass",
+    "pass_regex": "^positive ok",
+    "threads": 16,
+    "peak_ram_gb": 17
+   },
+   {
+    "name": "actual_pair_seam_mutant",
+    "cmd": "python3 tools/s81/bf_txn_bench.py --variant recut --prep {SRC}/results/rtl/s81_bf_compact_20261010/bench_prep_1013 --jobs 16 --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1,CPIN=1 --no-default-mutants --mutant seam_slot=BF_SEAM_MUTANT_SLOT --only seam_slot --work {RUN}/pair_mutant",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 17,
+    "pass_regex": "^seam_slot ok .*DIFF TXN"
+   }
+  ],
+  "extra_paths": [
+   "tools/s81",
+   "rtl/s81",
+   "rtl/v41rom",
+   "rtl/common",
+   "rtl/hdc",
+   "rtl/proto",
+   "results/rtl/s81_bf_compact_20261010/bench_prep_1013"
+  ],
+  "views_to": "physical/ref_tile/s81_bf_front_cpin1/views",
+  "record_to": "results/physical/s81_bf_native_1015/front_cpin1"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

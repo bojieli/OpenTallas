@@ -8,7 +8,7 @@ module ot_s81_bf_seam #(parameter integer W=776, PIPE=0) (
         always @(posedge clk or negedge rst_n)
             if (!rst_n) r <= '0;
 `ifdef BF_SEAM_MUTANT_DATA
-            else r <= {d[W-1:1],1'b0};
+            else r <= d ^ ({{(W-1){1'b0}},1'b1} << (W/2));
 `elsif BF_SEAM_MUTANT_SLOT
             else r <= d ^ ({{(W-1){1'b0}},1'b1} << (W-1));
 `else
