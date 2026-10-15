@@ -121,8 +121,14 @@ module ot_vms_calendar_host_static (
                     end
                     8'h28:begin engine_base<=s_wdata[11:0];engine_limit<=s_wdata[24:12];engine_range_valid<=1;end
                     8'h2c:begin
-                        if(!engine_range_valid || engine_target<16 || s_wdata[15:0]==0 ||
-                           engine_limit<={1'b0,engine_base} || engine_limit>13'd4096)fault<=1;
+                        // Target124 has a source-owned explicit disable descriptor.
+                        // Preserve the ordinary nonempty/nonzero range checks for
+                        // every other target and every partial-zero descriptor.
+                        if(!engine_range_valid || engine_target<16 ||
+                           ((s_wdata[15:0]==0 || engine_limit<={1'b0,engine_base}) &&
+                            !(engine_target==8'd124 && engine_base==12'd0 &&
+                              engine_limit==13'd0 && s_wdata==32'd0)) ||
+                           engine_limit>13'd4096)fault<=1;
                         else begin
                             ext_desc_v<=1;ext_target<=engine_target;ext_base<=engine_base;
                             ext_limit<=engine_limit;ext_loops<=s_wdata[15:0];
