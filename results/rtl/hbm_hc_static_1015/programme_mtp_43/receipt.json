@@ -1,0 +1,576 @@
+{
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_programme_mtp_static.sv": "8f5b3a7b19d596c37f2050f3b944f950c157fcce9fab3bcc83b5da7e1e8223b9",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv": "cfc58626830f0e8fe6c66488b7768e48a6e38cc124983d0483ec1221aca6c6ee",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/test/tb_hgi_hc_programme_mtp_static.sv": "0187a7055065de1a8cfb460a718013547b2f2682a280401e114675d4824b8c83",
+    "rtl/test/hgi_hc_programme_mtp_static_harness.cpp": "541114e983f35f3961eadd77954e02d79967a39699f2749e88d0b0ac489982ee",
+    "tools/lower_hbm_hc_mtp_static_calendar.py": "b72e686a90cc2fa34f246957c6eff870d0fe742a4ca94bb6e2b86e649e5fc156",
+    "tools/rtl_hgi_hc_programme_mtp_static_gate.py": "886e03c9c543a040698dc421bc410710b09bd81a2f2e49c417157e1d8cb5d379"
+  },
+  "images": {
+    "n6_e0": {
+      "words": 1100,
+      "metadata": {
+        "kind": "row",
+        "instruction_payload_bits": 51,
+        "field_lsb_width": {
+          "clear": [
+            0,
+            1
+          ],
+          "row_launch": [
+            1,
+            1
+          ],
+          "row_raw_read": [
+            2,
+            1
+          ],
+          "row_weight_slot": [
+            3,
+            1
+          ],
+          "row_id": [
+            4,
+            5
+          ],
+          "tail_launch": [
+            9,
+            1
+          ],
+          "sink_launch": [
+            10,
+            1
+          ],
+          "sink_capture": [
+            11,
+            1
+          ],
+          "norm_eps": [
+            12,
+            32
+          ],
+          "row_npos": [
+            44,
+            4
+          ],
+          "tail_position": [
+            48,
+            3
+          ]
+        },
+        "first_consumer_cycle": 2053,
+        "programme_start_edge": 2048,
+        "start_base": 0,
+        "start_limit": 1100,
+        "start_loops": 1,
+        "programme_pages": 2,
+        "global_PC_lsb": 223,
+        "npos": 6,
+        "tail_position": 0,
+        "calendar_profile": "nominal",
+        "sink_divisor": 7,
+        "sink_phase": 0,
+        "events_relative_consumer0": {
+          "launch": 0,
+          "raw_ss": [
+            180,
+            340,
+            500,
+            660,
+            820,
+            980
+          ],
+          "raw_row": [
+            284,
+            444,
+            604,
+            764,
+            924,
+            1084
+          ],
+          "results": [
+            289,
+            449,
+            609,
+            769,
+            929,
+            1089
+          ],
+          "next_row_earliest": 1100
+        },
+        "scope": "fixed HC component image; full layer and physical phase integration pending"
+      }
+    },
+    "n6_e1": {
+      "words": 1080,
+      "metadata": {
+        "kind": "row",
+        "instruction_payload_bits": 51,
+        "field_lsb_width": {
+          "clear": [
+            0,
+            1
+          ],
+          "row_launch": [
+            1,
+            1
+          ],
+          "row_raw_read": [
+            2,
+            1
+          ],
+          "row_weight_slot": [
+            3,
+            1
+          ],
+          "row_id": [
+            4,
+            5
+          ],
+          "tail_launch": [
+            9,
+            1
+          ],
+          "sink_launch": [
+            10,
+            1
+          ],
+          "sink_capture": [
+            11,
+            1
+          ],
+          "norm_eps": [
+            12,
+            32
+          ],
+          "row_npos": [
+            44,
+            4
+          ],
+          "tail_position": [
+            48,
+            3
+          ]
+        },
+        "first_consumer_cycle": 2053,
+        "programme_start_edge": 2048,
+        "start_base": 0,
+        "start_limit": 1080,
+        "start_loops": 1,
+        "programme_pages": 2,
+        "global_PC_lsb": 223,
+        "npos": 6,
+        "tail_position": 0,
+        "calendar_profile": "early_candidate",
+        "sink_divisor": 7,
+        "sink_phase": 0,
+        "events_relative_consumer0": {
+          "launch": 0,
+          "raw_ss": [
+            160,
+            320,
+            480,
+            640,
+            800,
+            960
+          ],
+          "raw_row": [
+            264,
+            424,
+            584,
+            744,
+            904,
+            1064
+          ],
+          "results": [
+            269,
+            429,
+            589,
+            749,
+            909,
+            1069
+          ],
+          "next_row_earliest": 1080
+        },
+        "scope": "fixed HC component image; full layer and physical phase integration pending"
+      }
+    },
+    "n8_e0": {
+      "words": 1420,
+      "metadata": {
+        "kind": "row",
+        "instruction_payload_bits": 51,
+        "field_lsb_width": {
+          "clear": [
+            0,
+            1
+          ],
+          "row_launch": [
+            1,
+            1
+          ],
+          "row_raw_read": [
+            2,
+            1
+          ],
+          "row_weight_slot": [
+            3,
+            1
+          ],
+          "row_id": [
+            4,
+            5
+          ],
+          "tail_launch": [
+            9,
+            1
+          ],
+          "sink_launch": [
+            10,
+            1
+          ],
+          "sink_capture": [
+            11,
+            1
+          ],
+          "norm_eps": [
+            12,
+            32
+          ],
+          "row_npos": [
+            44,
+            4
+          ],
+          "tail_position": [
+            48,
+            3
+          ]
+        },
+        "first_consumer_cycle": 2053,
+        "programme_start_edge": 2048,
+        "start_base": 0,
+        "start_limit": 1420,
+        "start_loops": 1,
+        "programme_pages": 2,
+        "global_PC_lsb": 223,
+        "npos": 8,
+        "tail_position": 0,
+        "calendar_profile": "nominal",
+        "sink_divisor": 7,
+        "sink_phase": 0,
+        "events_relative_consumer0": {
+          "launch": 0,
+          "raw_ss": [
+            180,
+            340,
+            500,
+            660,
+            820,
+            980,
+            1140,
+            1300
+          ],
+          "raw_row": [
+            284,
+            444,
+            604,
+            764,
+            924,
+            1084,
+            1244,
+            1404
+          ],
+          "results": [
+            289,
+            449,
+            609,
+            769,
+            929,
+            1089,
+            1249,
+            1409
+          ],
+          "next_row_earliest": 1420
+        },
+        "scope": "fixed HC component image; full layer and physical phase integration pending"
+      }
+    },
+    "n8_e1": {
+      "words": 1400,
+      "metadata": {
+        "kind": "row",
+        "instruction_payload_bits": 51,
+        "field_lsb_width": {
+          "clear": [
+            0,
+            1
+          ],
+          "row_launch": [
+            1,
+            1
+          ],
+          "row_raw_read": [
+            2,
+            1
+          ],
+          "row_weight_slot": [
+            3,
+            1
+          ],
+          "row_id": [
+            4,
+            5
+          ],
+          "tail_launch": [
+            9,
+            1
+          ],
+          "sink_launch": [
+            10,
+            1
+          ],
+          "sink_capture": [
+            11,
+            1
+          ],
+          "norm_eps": [
+            12,
+            32
+          ],
+          "row_npos": [
+            44,
+            4
+          ],
+          "tail_position": [
+            48,
+            3
+          ]
+        },
+        "first_consumer_cycle": 2053,
+        "programme_start_edge": 2048,
+        "start_base": 0,
+        "start_limit": 1400,
+        "start_loops": 1,
+        "programme_pages": 2,
+        "global_PC_lsb": 223,
+        "npos": 8,
+        "tail_position": 0,
+        "calendar_profile": "early_candidate",
+        "sink_divisor": 7,
+        "sink_phase": 0,
+        "events_relative_consumer0": {
+          "launch": 0,
+          "raw_ss": [
+            160,
+            320,
+            480,
+            640,
+            800,
+            960,
+            1120,
+            1280
+          ],
+          "raw_row": [
+            264,
+            424,
+            584,
+            744,
+            904,
+            1064,
+            1224,
+            1384
+          ],
+          "results": [
+            269,
+            429,
+            589,
+            749,
+            909,
+            1069,
+            1229,
+            1389
+          ],
+          "next_row_earliest": 1400
+        },
+        "scope": "fixed HC component image; full layer and physical phase integration pending"
+      }
+    },
+    "tail_position0": {
+      "words": 493,
+      "metadata": {
+        "kind": "tail",
+        "instruction_payload_bits": 51,
+        "field_lsb_width": {
+          "clear": [
+            0,
+            1
+          ],
+          "row_launch": [
+            1,
+            1
+          ],
+          "row_raw_read": [
+            2,
+            1
+          ],
+          "row_weight_slot": [
+            3,
+            1
+          ],
+          "row_id": [
+            4,
+            5
+          ],
+          "tail_launch": [
+            9,
+            1
+          ],
+          "sink_launch": [
+            10,
+            1
+          ],
+          "sink_capture": [
+            11,
+            1
+          ],
+          "norm_eps": [
+            12,
+            32
+          ],
+          "row_npos": [
+            44,
+            4
+          ],
+          "tail_position": [
+            48,
+            3
+          ]
+        },
+        "first_consumer_cycle": 2053,
+        "programme_start_edge": 2048,
+        "start_base": 0,
+        "start_limit": 493,
+        "start_loops": 1,
+        "programme_pages": 2,
+        "global_PC_lsb": 223,
+        "npos": 8,
+        "tail_position": 0,
+        "calendar_profile": "nominal",
+        "sink_divisor": 7,
+        "sink_phase": 0,
+        "events_relative_consumer0": {
+          "launch": 0,
+          "exponentials_ready": 197,
+          "sink_launch": 201,
+          "sink_capture": 490,
+          "result": 491
+        },
+        "scope": "fixed HC component image; full layer and physical phase integration pending"
+      }
+    },
+    "tail_position7": {
+      "words": 493,
+      "metadata": {
+        "kind": "tail",
+        "instruction_payload_bits": 51,
+        "field_lsb_width": {
+          "clear": [
+            0,
+            1
+          ],
+          "row_launch": [
+            1,
+            1
+          ],
+          "row_raw_read": [
+            2,
+            1
+          ],
+          "row_weight_slot": [
+            3,
+            1
+          ],
+          "row_id": [
+            4,
+            5
+          ],
+          "tail_launch": [
+            9,
+            1
+          ],
+          "sink_launch": [
+            10,
+            1
+          ],
+          "sink_capture": [
+            11,
+            1
+          ],
+          "norm_eps": [
+            12,
+            32
+          ],
+          "row_npos": [
+            44,
+            4
+          ],
+          "tail_position": [
+            48,
+            3
+          ]
+        },
+        "first_consumer_cycle": 2053,
+        "programme_start_edge": 2048,
+        "start_base": 0,
+        "start_limit": 493,
+        "start_loops": 1,
+        "programme_pages": 2,
+        "global_PC_lsb": 223,
+        "npos": 8,
+        "tail_position": 7,
+        "calendar_profile": "nominal",
+        "sink_divisor": 7,
+        "sink_phase": 0,
+        "events_relative_consumer0": {
+          "launch": 0,
+          "exponentials_ready": 197,
+          "sink_launch": 201,
+          "sink_capture": 490,
+          "result": 491
+        },
+        "scope": "fixed HC component image; full layer and physical phase integration pending"
+      }
+    }
+  },
+  "scope": "real two-page programme1024x256 macros and51HCcontrol pins, not arithmetic/wholelayer qualification",
+  "n6_e0": {
+    "exit_code": 0,
+    "log_sha256": "cc1121777f617cada6bc282e02c26aeb8a9c1ddf80e69b7c6aa6723ac2f87b6c"
+  },
+  "n6_e1": {
+    "exit_code": 0,
+    "log_sha256": "108de0ed535ff1ee7d007a27c7dfb7ac77ceaa266c4af9f2ad1a896688581914"
+  },
+  "n8_e0": {
+    "exit_code": 0,
+    "log_sha256": "af487b723a13c1c2f566676eb8036af749bf9f757929f3152493af09da876da8"
+  },
+  "n8_e1": {
+    "exit_code": 0,
+    "log_sha256": "ea3031b6868db44e62ed3f9544e1d14295e29b7ec4be15c58b1459e9c63b4bc5"
+  },
+  "tail_position0": {
+    "exit_code": 0,
+    "log_sha256": "8f1ae45cf4ca02aa3bb57dff15e81918949f868176cecd43ddbf8a395a9ed3ee"
+  },
+  "tail_position7": {
+    "exit_code": 0,
+    "log_sha256": "8f1ae45cf4ca02aa3bb57dff15e81918949f868176cecd43ddbf8a395a9ed3ee"
+  },
+  "mutant": {
+    "exit_code": -6,
+    "log_sha256": "809f3cad3917aa7e9eaa3442eddff66c44a3cbfe80d662a56abdd943177ce9d8"
+  }
+}
