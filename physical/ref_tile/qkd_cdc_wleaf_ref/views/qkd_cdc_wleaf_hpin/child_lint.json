@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_cdc_wleaf_hpin_ref-hp1-128073d6c/record/views/qkd_cdc_wleaf_hpin/qkd_cdc_wleaf_hpin.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_cdc_wleaf_hpin_ref-hp2-1fe387b6f/record/views/qkd_cdc_wleaf_hpin/qkd_cdc_wleaf_hpin.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 1202 of 1202 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_arst_n M4 (0.060,87.696), h_arst_n M4 (0.060,87.696), hclk M4 (0.060,87.696))"
+  "(f) face-pin access: 1202 of 1202 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_arst_n M4 (0.060,26.256), h_arst_n M4 (0.060,26.256), hclk M4 (0.060,26.256))"
  ],
- "summary": "qkd_cdc_wleaf_hpin 183.6 x 183.6: PG M5 VDD 34 stripes (97% spread, 100% cov) / VSS 34 stripes (97% spread, 100% cov); strap M6; face pins 1202 blocked-above 0 blocked-same 0; clock clk insertion 277 ps; clock hclk insertion 261 ps; pockets M5 0 (closed)",
+ "summary": "qkd_cdc_wleaf_hpin 183.6 x 183.6: PG M5 VDD 34 stripes (97% spread, 100% cov) / VSS 34 stripes (97% spread, 100% cov); strap M6; face pins 1202 blocked-above 0 blocked-same 0; clock clk insertion 237 ps; clock hclk insertion 283 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "qkd_cdc_wleaf_hpin",
   "W": 183.6,
@@ -40,28 +40,28 @@
   "face": {
    "face_pins": 1202,
    "blocked_above": 0,
-   "covered_below": 85,
+   "covered_below": 124,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
    "band_same": 1202,
    "band_examples": [
-    "c_arst_n M4 (0.060,87.696)",
-    "h_arst_n M4 (0.060,87.696)",
-    "hclk M4 (0.060,87.696)",
-    "l_data[0] M4 (0.060,87.696)",
-    "l_data[10] M4 (0.060,87.696)",
-    "l_data[11] M4 (0.060,87.696)"
+    "c_arst_n M4 (0.060,26.256)",
+    "h_arst_n M4 (0.060,26.256)",
+    "hclk M4 (0.060,26.256)",
+    "l_data[0] M4 (0.060,26.256)",
+    "l_data[10] M4 (0.060,26.256)",
+    "l_data[11] M4 (0.060,26.256)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 276.83,
-    "min_ps": 200.0
+    "max_ps": 236.74,
+    "min_ps": 177.88
    },
    "hclk": {
-    "max_ps": 261.47,
-    "min_ps": 191.75
+    "max_ps": 283.16,
+    "min_ps": 219.86
    }
   },
   "pockets": {
@@ -70,7 +70,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 3644
+    "added": 3721
    },
    "count": 0,
    "area_um2": 0,
