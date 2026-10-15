@@ -20,7 +20,17 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-CLOCKS = ('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk')
+
+
+class _Clocks(tuple):
+    """the clock pin names; qwen-split kvsys v1.1 adds the per-child clock entries of a wires-only parent frame
+    (ck_<letter>[<index>]: ck_a / ck_b / ck_c of the control tile, ck_f / ck_k / ck_s / ck_t0..15 / ck_l0..15 of the
+    native head), each its own clock input"""
+    def __contains__(self, p):
+        return tuple.__contains__(self, p) or bool(re.fullmatch(r'(ck|hk)_[a-z]\d{0,2}', str(p)))   # hk_*: v1.2 HBM-clock entries
+
+
+CLOCKS = _Clocks(('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk'))
 CORNERS = dict(  # setup, hold, clk->q base, ps/fF output slope, output transition base, ps/fF, input cap fF (ASSUMED)
     ss=dict(setup=30.0, hold=5.0, cq=75.0, k=0.9, tr=25.0, tk=1.6, cin=0.7, volt=0.63, temp=100),
     ff=dict(setup=12.0, hold=12.0, cq=32.0, k=0.35, tr=10.0, tk=0.7, cin=0.6, volt=0.77, temp=0))
@@ -73,7 +83,7 @@ def stub_dirs(path):
         if m and cur is not None:
             cur[m.group(3)] = [m.group(1), int(m.group(2)) + 1, set()]
             continue
-        m = re.search(r'assign (\w+)\[(\d+):(\d+)\] = r_', ln)
+        m = re.search(r'assign (\w+) ?\[(\d+):(\d+)\] = r_', ln)   # main 10-14: die_top_lint writes 'p [h:l]'
         if m and cur is not None and m.group(1) in cur:
             cur[m.group(1)][2].update(range(int(m.group(3)), int(m.group(2)) + 1))
     return mods
@@ -135,6 +145,10 @@ def write_lib(corner, lef, stubs, path):
                     L.append(f'    pin ({p}) {{ direction : input; clock : true; capacitance : 2.0; }}')
                 continue
             rel = rel or ('ck' if 'ck' in clocks else (clocks[0] if clocks else None))
+            if master in ('qkd_ctrl', 'qkd_ctrl_n') and 'hk_k' in clocks:
+                # qwen-split kvsys v1.2: the HBM controller strip has two domains: its CDC / PHY words run on the HBM
+                # clock (hk_*), the landing / stream-command words on the core clock (ck_*)
+                rel = 'hk_k' if re.fullmatch(r'(c\d+[io]|po\d+|pi\d+|hrst)', p) else 'ck_k'
             if rel is not None and (master, rel) in IDX:
                 rel = rel + '[0]'
             arcs = rel is not None and not p.startswith(('fck_', 'pll_'))

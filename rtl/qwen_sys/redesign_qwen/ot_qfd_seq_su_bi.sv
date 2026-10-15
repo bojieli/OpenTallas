@@ -1052,7 +1052,13 @@ module ot_qfd_seq_su_bi #(
     // HQ2 = 1 (hardcore-1010 fe-h): the controller's FIFO head as two words with a register-only fill enable (FQ_HEAD 2):
     // fba-0ef4d7781 TT -131 / fbb post-CTS -537 on u_ctrl.st -> skip/issue -> load -> hq_fill -> hq[1023:0] enable (26 lv)
     // HQ2 = 2: bench negative control (FQ_HEAD 3: a third fill overwrites an unread head word)
-    parameter integer HQ2 = 0
+    parameter integer HQ2 = 0,
+    // qwen-tp8/seq (2026-10-12): tensor-parallel degree D (= TP, the dies of one tensor group; the argmax gather covers D
+    // ranks) and lane groups G (TP4 6,144; TP8 3,072) are parameters; RBW = the collective's rank width (TP4 2, TP8 3).
+    // The TP4 defaults (D 4, G 6144) elaborate to the unchanged block.  TPMUT: bench negative controls only (0 = off):
+    // 1 = the rank compare sees only rank bits [1:0] (the old 2-bit literal), 2 = the gather ends after 4 ranks.
+    parameter integer RBW = (D > 1) ? $clog2(D) : 1,
+    parameter integer TPMUT = 0
 ) (
     input  wire clk,
     input  wire rst_n,
@@ -1071,7 +1077,7 @@ module ot_qfd_seq_su_bi #(
     input  wire [1-1:0] r_valid,
     input  wire [512-1:0] r_data,
     input  wire [1-1:0] r_last,
-    input  wire [2-1:0] r_rank,
+    input  wire [RBW-1:0] r_rank,
     input  wire [1-1:0] r_err,
     input  wire [1-1:0] pw_v,
     input  wire [10-1:0] pw_addr,
@@ -1083,8 +1089,12 @@ module ot_qfd_seq_su_bi #(
     input  wire [8-1:0] pi_su_rt_inflight,
     input  wire [1-1:0] pi_su_ready,
     input  wire [1-1:0] pi_su_idle,
+`ifndef OT_QFD_SEQ_SU_NOWROM
+    // q14 r9: the split compute die's SU issues no weight-ROM reads (OT_QFD_SEQ_SU_NOWROM removes these two ports; the
+    // controller's SU weight-read request is then absent, not tied at a pin)
     input  wire [1-1:0] pi_su_wrom_re,
     input  wire [AW-1:0] pi_su_wrom_addr,
+`endif
     input  wire [SW-1:0] pi_su_kv_we,
     input  wire [16-1:0] pi_su_progress,
     input  wire [16-1:0] pi_su_progress_rows,
@@ -1202,8 +1212,9 @@ module ot_qfd_seq_su_bi #(
     ot_hdc_delay #(.W(512), .D(IS)) u_i_r_data (.clk(clk), .rst_n(rsv[5]), .d(r_data), .q(q_r_data));
     wire [1-1:0] q_r_last;
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_last (.clk(clk), .rst_n(rsv[5]), .d(r_last), .q(q_r_last));
-    wire [2-1:0] q_r_rank;
-    ot_hdc_delay #(.W(2), .D(IS)) u_i_r_rank (.clk(clk), .rst_n(rsv[5]), .d(r_rank), .q(q_r_rank));
+    wire [RBW-1:0] q_r_rank;
+    ot_hdc_delay #(.W(RBW), .D(IS)) u_i_r_rank (.clk(clk), .rst_n(rsv[5]), .d(r_rank), .q(q_r_rank));
+    wire [RBW-1:0] q_r_rank_s = (TPMUT == 1) ? (q_r_rank & RBW'(3)) : q_r_rank;   // TPMUT 1: negative control
     wire [1-1:0] q_r_err;
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_err (.clk(clk), .rst_n(rsv[5]), .d(r_err), .q(q_r_err));
     wire [1-1:0] q_pw_v;
@@ -1227,9 +1238,14 @@ module ot_qfd_seq_su_bi #(
     wire [1-1:0] q_pi_su_idle;
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_idle (.clk(clk), .rst_n(rsv[3]), .d(pi_su_idle), .q(q_pi_su_idle));
     wire [1-1:0] q_pi_su_wrom_re;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_wrom_re (.clk(clk), .rst_n(rsv[3]), .d(pi_su_wrom_re), .q(q_pi_su_wrom_re));
     wire [AW-1:0] q_pi_su_wrom_addr;
+`ifdef OT_QFD_SEQ_SU_NOWROM
+    assign q_pi_su_wrom_re = 1'b0;          // no SU weight-ROM request exists on the split die (no pin, no flop)
+    assign q_pi_su_wrom_addr = {AW{1'b0}};
+`else
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_wrom_re (.clk(clk), .rst_n(rsv[3]), .d(pi_su_wrom_re), .q(q_pi_su_wrom_re));
     ot_hdc_delay #(.W(AW), .D(IS)) u_i_pi_su_wrom_addr (.clk(clk), .rst_n(rsv[3]), .d(pi_su_wrom_addr), .q(q_pi_su_wrom_addr));
+`endif
     wire [SW-1:0] q_pi_su_kv_we;
     ot_hdc_delay #(.W(SW), .D(IS)) u_i_pi_su_kv_we (.clk(clk), .rst_n(rsv[3]), .d(pi_su_kv_we), .q(q_pi_su_kv_we));
     wire [16-1:0] q_pi_su_progress;
@@ -1651,7 +1667,7 @@ module ot_qfd_seq_su_bi #(
         .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
         .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok));
     ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rsv[6]), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
-    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
+    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N((TPMUT == 2) ? 4 : D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
         .QWEN_FULLSHAPE(1), .ENABLE_AR256(1), .RMUT(RRG >= 2 ? 1 : 0)) u_seq (
         .clk(clk), .rst_n(rsv[0]), .rst_nw(rsv[1]), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
@@ -1660,7 +1676,7 @@ module ot_qfd_seq_su_bi #(
         .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q), .vm_re(b_vm_re), .vm_raddr(b_vm_raddr),
         .vm_rq(q_vm_rq), .vm_we(b_vm_we), .vm_waddr(b_vm_waddr), .vm_wdata(b_vm_wdata), .c_valid(b_c_valid),
         .c_ready(q_c_ready), .c_data(b_c_data), .c_last(b_c_last), .c_mode(b_c_mode), .c_tag(b_c_tag),
-        .r_valid(q_r_valid), .r_data(q_r_data), .r_last(q_r_last), .r_rank(q_r_rank), .r_err(q_r_err));
+        .r_valid(q_r_valid), .r_data(q_r_data), .r_last(q_r_last), .r_rank(q_r_rank_s), .r_err(q_r_err));
     assign b_me_start_o = core_start;
     assign b_me_token_o = core_tokw;
     assign b_me_pos_o = core_pos;

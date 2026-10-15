@@ -167,9 +167,15 @@ def write_vectors(path: Path, ev, wins):
     path.write_text("".join(lines))
 
 
+_ROW8 = {}
+
+
 def expected(t, w, li):
+    """F13 (2026-10-14): the S81 lookup carries the released row (8 block exponents): content row_bytes8, decode
+    decode_rows8 (= the golden decode_engram_rows)."""
     rows = ES.hashes(t, [w[3], w[2], w[1], w[0]])[li]
-    return GC.expected_words(li, rows)
+    cs = [_ROW8.setdefault((li, int(r)), ES.row_bytes8(li, int(r))) for r in rows]
+    return ES.words_of_rows(ES.decode_rows8([c for c, _ in cs], [s for _, s in cs]))
 
 
 def compare(out_path: Path, t, wins, injected):

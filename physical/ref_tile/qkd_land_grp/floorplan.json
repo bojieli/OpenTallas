@@ -71,6 +71,11 @@
   "physical/ref_tile/qkd_land_grp/signoff.sdc",
   "physical/ref_tile/qkd_land_grp/pdn.tcl",
   "physical/ref_tile/qkd_land_grp/pre_cts.tcl",
+  "physical/ref_tile/qkd_land_grp/post_cts.tcl",
+  "physical/ref_tile/qkd_land_grp/post_grt.tcl",
+  "physical/ref_tile/qkd_land_grp/pre_drt.tcl",
+  "physical/ref_tile/qkd_land_grp/pre_fill.tcl",
+  "physical/ref_tile/qkd_land_grp/post_fill.tcl",
   "physical/ref_tile/qkd_land_grp/pre_grt.tcl",
   "physical/ref_tile/qkd_land_grp/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -89,6 +94,7 @@
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/qkd_land_grp/pre_gpl.tcl",
-  "physical/ref_tile/qkd_land_grp/pre_dpl.tcl"
+  "physical/ref_tile/qkd_land_grp/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

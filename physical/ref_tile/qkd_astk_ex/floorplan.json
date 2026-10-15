@@ -78,6 +78,11 @@
   "physical/ref_tile/qkd_astk_ex/signoff.sdc",
   "physical/ref_tile/qkd_astk_ex/pdn.tcl",
   "physical/ref_tile/qkd_astk_ex/pre_cts.tcl",
+  "physical/ref_tile/qkd_astk_ex/post_cts.tcl",
+  "physical/ref_tile/qkd_astk_ex/post_grt.tcl",
+  "physical/ref_tile/qkd_astk_ex/pre_drt.tcl",
+  "physical/ref_tile/qkd_astk_ex/pre_fill.tcl",
+  "physical/ref_tile/qkd_astk_ex/post_fill.tcl",
   "physical/ref_tile/qkd_astk_ex/pre_grt.tcl",
   "physical/ref_tile/qkd_astk_ex/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -96,6 +101,7 @@
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/qkd_astk_ex/pre_gpl.tcl",
-  "physical/ref_tile/qkd_astk_ex/pre_dpl.tcl"
+  "physical/ref_tile/qkd_astk_ex/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

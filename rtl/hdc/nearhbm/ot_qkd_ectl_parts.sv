@@ -77,7 +77,9 @@ module ot_qkd_ectl_part #(
     parameter integer ND = 1,
     parameter integer HXK = 0,
     parameter integer HXN = 0,
-    parameter integer RWD = (PART == 3) ? 32 : 512     // row bits held here (C holds none: a pruned dummy slice)
+    parameter integer RWD = (PART == 3) ? 32 : 512,    // row bits held here (C holds none: a pruned dummy slice)
+    parameter integer XB2 = 0            // B (PART 2) only: x_i already carries the stage-2 word (direct seams: C's x2), so
+                                         // B's stage 3 is its own pin flop x1 (kvsys-elements r3)
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -110,6 +112,7 @@ module ot_qkd_ectl_part #(
     output reg                  ev_k_first,
     output reg                  ev_v_first,
     // W face (leaf A)
+    output wire                 req_epoch,          // alternating layer identity at the request pin
     output wire                 req_valid,
     output wire                 req_v,
     output wire                 req_g,
@@ -119,6 +122,7 @@ module ot_qkd_ectl_part #(
     // seams: the E-face control word west (C pin flops -> B pin flops -> A pin flops), the row response east
     input  wire [51:0]          x_i,
     output wire [51:0]          x_o,
+    output wire [51:0]          x2_o,        // optional stage-2 launch: direct C -> A seam, existing x2 state
     input  wire                 rsv_i,        // rsp_valid: A stage 2 -> B pin (B) | B feed-through -> C pin (C)
     output wire                 rsv_o,        // A: stage 2 (E-face flop); B: the feed-through flop (to C)
     input  wire                 rvm_i,        // B: A's second capture flop of rsp_valid (stage 1) -> the feed-through
@@ -164,24 +168,30 @@ module ot_qkd_ectl_part #(
     localparam integer GPH = HD / 16;                      // 16-lane groups per head
     localparam integer NG = 4 * GPH;
     // ---- reset tree: root, central control leaf, halves, heads, groups -----------------------------------------------
+    // kvsys-elements r2 2026-10-14 (native pin audit, qkd_ectl_b_tp8: rst_n capture 307.0 ps > 190): ONE synchroniser at
+    // the rst_n pin (ot_rst_relay 2 + 1); every reset leaf and pin-register block below takes rp, not the raw pin.
+    // Release is 3 cycles later in all three leaves alike (the copies still agree from the first start).
+    wire [0:0] rp_v;
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rpin (.clk(clk), .rst_n_in(rst_n), .rst_n(rp_v));
+    wire rp = rp_v[0];
     wire r0, rc;
     wire [1:0] rhalf;
     wire [3:0] rhead;
     wire [NG-1:0] rgrp;
-    (* keep_hierarchy *) ot_nhb_rleaf_h u_r0 (.clk(clk), .arst_n(rst_n), .d(1'b1), .q(r0));
-    (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rc));
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_r0 (.clk(clk), .arst_n(rp), .d(1'b1), .q(r0));
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rp), .d(r0), .q(rc));
     wire rsc;                                                         // the score / running-max block's own leaf
-    (* keep_hierarchy *) ot_nhb_rleaf_h u_rsc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rsc));
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_rsc (.clk(clk), .arst_n(rp), .d(r0), .q(rsc));
     genvar gr;
     generate
         for (gr = 0; gr < 2; gr = gr + 1) begin : g_rhalf
-            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rst_n), .d(r0), .q(rhalf[gr]));
+            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rp), .d(r0), .q(rhalf[gr]));
         end
         for (gr = 0; gr < 4; gr = gr + 1) begin : g_rhead
-            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rst_n), .d(rhalf[gr / 2]), .q(rhead[gr]));
+            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rp), .d(rhalf[gr / 2]), .q(rhead[gr]));
         end
         for (gr = 0; gr < NG; gr = gr + 1) begin : g_rgrp
-            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rst_n), .d(rhead[gr / GPH]), .q(rgrp[gr]));
+            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rp), .d(rhead[gr / GPH]), .q(rgrp[gr]));
         end
     endgenerate
     // ---- registered boundary: every control copy sees each die input THREE flops after its pin ----------------------------
@@ -190,15 +200,16 @@ module ot_qkd_ectl_part #(
     localparam integer XW = 52;
     reg  [XW-1:0] x1, x2, x3;
     wire [XW-1:0] x_d = (PART == 3) ? {q_valid_in, nb_cr, exp_done, cyc8_in, T_in, start_in} : x_i;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin x1 <= {XW{1'b0}}; x2 <= {XW{1'b0}}; x3 <= {XW{1'b0}}; end
+    always @(posedge clk or negedge rp)
+        if (!rp) begin x1 <= {XW{1'b0}}; x2 <= {XW{1'b0}}; x3 <= {XW{1'b0}}; end
         else begin x1 <= x_d; x2 <= x1; x3 <= x2; end
 `ifdef KVD_ECTL3_MUT_B
-    wire [XW-1:0] xv = (PART == 3) ? x3 : x1;            // mutant: leaf B's control one cycle early
+    wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2 && XB2 != 0) ? x_i : x1;   // mutant: leaf B's control one cycle early
 `else
-    wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2) ? x2 : x1;
+    wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2) ? ((XB2 != 0) ? x1 : x2) : x1;
 `endif
     assign x_o = x1;
+    assign x2_o = x2;
     wire        start      = xv[0];
     wire [13:0] T          = xv[14:1];
     wire [2:0]  cyc8_r     = xv[17:15];
@@ -214,8 +225,8 @@ module ot_qkd_ectl_part #(
     reg  [511:0]    rse;                                  // A: E-face flops of B's half (stage 2)
     reg  [RWD-1:0]  rd2, rd3;
     wire            rv_d = (PART == 1) ? rsp_valid_in : rsv_i;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rv1 <= 1'b0; rv2 <= 1'b0; rv3 <= 1'b0; rvm <= 1'b0; bf <= 1'b0; end
+    always @(posedge clk or negedge rp)
+        if (!rp) begin rv1 <= 1'b0; rv2 <= 1'b0; rv3 <= 1'b0; rvm <= 1'b0; bf <= 1'b0; end
         else begin rv1 <= rv_d; rv2 <= rv1; rv3 <= rv2; rvm <= rsp_valid_in; bf <= rvm_i; end
     wire            rsp_valid = (PART == 1) ? rv3 : rv1;
     assign rsv_o = (PART == 1) ? rv2 : bf;
@@ -238,8 +249,8 @@ module ot_qkd_ectl_part #(
     reg  [1:0]      er_pd;                      // the push follows the word through both pin stages
     assign er_valid = er_valid_o;
     assign er_addr = er_addr_o;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin er_valid_o <= 1'b0; er_pd <= 2'b00; end
+    always @(posedge clk or negedge rp)
+        if (!rp) begin er_valid_o <= 1'b0; er_pd <= 2'b00; end
         else begin er_valid_o <= er_valid_g; er_pd <= {er_pd[0], er_valid_g}; end
     always @(posedge clk) begin er_addr_o <= er_addr_g; er_data_p <= er_data; end
     // the q beat (leaf C): pin flops, mid stage, third stage (with qv_r of the control word), then the S1b copies
@@ -255,8 +266,8 @@ module ot_qkd_ectl_part #(
         qd_r <= qd_m;
 `endif
     end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) qcnt <= 7'd0;
+    always @(posedge clk or negedge rp)
+        if (!rp) qcnt <= 7'd0;
         else if (start) qcnt <= 7'd0;
         else if (qv_r) qcnt <= qcnt + 7'd1;
     wire q_ready = (qcnt == NQB);
@@ -366,6 +377,17 @@ module ot_qkd_ectl_part #(
         (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_v (.clk(clk), .rst_n(rc), .d(rqv_s[gq]), .q(rqv_s[gq + 1]));
         (* keep_hierarchy *) ot_nhb_rep_h #(.W(15)) u_d (.clk(clk), .d(rqd_s[15*gq +: 15]), .q(rqd_s[15*(gq + 1) +: 15]));
     end endgenerate
+    // First start after reset is layer zero (even); NL=36 preserves parity at the token wrap.
+    reg layer_epoch;
+    always @(posedge clk or negedge rc)
+        if (!rc) layer_epoch <= 1'b1;
+        else if (start) layer_epoch <= ~layer_epoch;
+    wire [RQD:0] epoch_s;
+    assign epoch_s[0] = layer_epoch;
+    for (genvar ep = 0; ep < RQD; ep = ep + 1) begin : g_epoch
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(1)) u_ep (.clk(clk), .d(epoch_s[ep]), .q(epoch_s[ep+1]));
+    end
+    assign req_epoch = epoch_s[RQD];
     assign req_valid = rqv_s[RQD];
     assign {req_v, req_g, req_t} = rqd_s[15*RQD +: 15];
 

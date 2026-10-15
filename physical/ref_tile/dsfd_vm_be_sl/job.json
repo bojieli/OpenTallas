@@ -1,14 +1,14 @@
 {
- "name": "dsfd_vm_be_sl-r5-COMMIT",
+ "name": "dsfd_vm_be_sl-r6-429584943",
  "block": "dsfd_vm_be_sl",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-vm/be",
- "purpose": "claude s81-grpA r3 / dsfd_vm_be_sl r5: (a) native pin audit 1014 (results/arch/native_pin_audit_1014/s81.json): the bound CLOSED view s81vm-besl-b235ed401 launches 186.9 / captures 246.0 ps (budget 220 / 190 at phi-R) -> kit recipe 2 (one dedicated launch flop per output pin via pin_reg_split, single capture flop at each input pin, HB2 pad, flops at pins); (b) r3 TT +7.85 / FF -6.57 and r4 TT +8.88 / FF -9.13: the only FF failures are the 9 str_clk->core_clk ratio-FIFO crossings (u_rc*.rp->rp_w, r_st->r_st_w; setup +23.9 in the 208 ps window, cks leaf ~39 ps early at FF) -> besl_xhold.tcl: one dont_touch HB1xp67 (~15 FF / ~20 TT ps) on the D of all 12 str->core crossing flops. No RTL / SDC / outline / pin-order change; slot cap M6 (contract grant).",
+ "purpose": "claude s81-grpA r5 / dsfd_vm_be_sl r6: r5 dsfd_vm_be_sl-r5-21672a82e-g5 TT -69.37 / FF +3.40 (2,060 D pins; i2r +245, out +175 = recipe 2 worked) was a KIT HOOK-ORDER DEFECT, not RTL: kits generated after 6a3b8e235 source be_sl_str_boundary.tcl from their own post-CTS wrapper, so the ck/cks inter-clock insertion balance (r3/r4 mechanism) never ran: routed ck 271 / cks 153 ps, every core->str ratio-FIFO hop (u_rc*.mem->sh) lost 118 ps of its 208 ps 4:3 window. Fix: be_sl_str_boundary.tcl balances when sourced post-CTS (same fix in fe_h_str_boundary.tcl). Kit otherwise identical to r5 (recipe 2 pin flops, HB1 str->core hold stage, CTS sink clustering 16/40 um).",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "main",
-  "commit": "COMMIT"
+  "branch": "claude/s81-grpA-r5-1014",
+  "commit": "429584943"
  },
  "stages": {
   "bench": [
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_be_sl/dsfd_vm_be_sl-r5-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_be_sl/dsfd_vm_be_sl-r6-429584943"
   }
  ],
  "cycles_added": 0,

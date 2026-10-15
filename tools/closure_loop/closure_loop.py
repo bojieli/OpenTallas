@@ -64,10 +64,12 @@ from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
 import macro_clk
 import helper_overlay as HO
+import status_report
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
 STATE = Path(os.environ.get("CL_STATE", str(Path.home() / ".local/state/closure_loop")))
+HELPER_STORE = STATE / "frozen_helpers"   # content-addressed frozen helper bytes (sha256); no cleanup touches STATE
 REVIEW = Path(os.environ.get("CL_REVIEW", "/tmp/claude-review-20261003"))
 DROP = REVIEW / "closure_jobs"
 LEDGER = REVIEW / "CLOSURE_LOOP_LEDGER.md"
@@ -2507,7 +2509,7 @@ def ship_helpers(host, run, job=None):
             try:
                 receipt = installed_helper_receipt(host, run, frozen)
                 if receipt["status"] == "verified_original":
-                    HO.committed_frozen_payloads(REPO, frozen)
+                    HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
                     job["helper_overlay_verification"] = dict(receipt, verified_at=now_iso(),
                                                                host=host, run=run, mutation=False)
                     return
@@ -2522,7 +2524,20 @@ def ship_helpers(host, run, job=None):
                     modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
                     job["bench_helper_origin_verification"] = dict(original, **origin, verified_at=now_iso())
                 elif job.get("source_synced") or job.get("helper_overlay_installed") or job.get("helper_overlay_verification"):
-                    raise ValueError("previously installed frozen helper directory is missing")
+                    # FROZEN-HELPER-REINSTALL (el1014-root-frozen-helper, 2026-10-14): an installed job whose run
+                    # directory has NO helpers is a fresh location -- move_to_other_host (AGIdock run root < 200 GB
+                    # -> EPYC1/EPYC4) or a cleaned run root.  Six jobs stopped NEEDS_HUMAN here.  Re-install the
+                    # exact frozen bytes (committed origin tree, else the content-addressed store), each verified
+                    # against the plan; a partially present or changed directory still refuses (verify above).
+                    try:
+                        payloads, source = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+                    except ValueError as ex:
+                        raise ValueError(f"previously installed frozen helper directory is missing and its exact "
+                                         f"bytes are not recoverable ({ex})") from ex
+                    modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
+                    job.setdefault("helper_overlay_reinstalls", []).append(dict(
+                        host=host, run=run, source=source, content_sha256=frozen.get("content_sha256"),
+                        origin_main=frozen.get("origin_main"), verified_at=now_iso()))
             except (ValueError, OSError, subprocess.SubprocessError) as ex:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {ex}; preserve original execution") from ex
         if payloads is None:
@@ -2532,6 +2547,7 @@ def ship_helpers(host, run, job=None):
             ok, why = HO.compare_plans(frozen, current)
             if not ok:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+            HO.store_payloads(HELPER_STORE, frozen, payloads)
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
         for helper in HELPERS:
@@ -7800,10 +7816,7 @@ def cmd_daemon(a):
 
 
 def cmd_status(a):
-    for r in all_jobs():
-        h = host_label(r.get("host"))
-        print(f"{r['name']:40s} {r['status']:12s} {r.get('stage_key', '-'):16s} {h:8s} "
-              f"{(r.get('reason') or r.get('wait') or '')[:90]}")
+    status_report.print_status(all_jobs(), a, TERMINAL, host_label)
     hb = STATE / "heartbeat"
     print("heartbeat:", hb.read_text().strip() if hb.exists() else "none")
 
@@ -8395,7 +8408,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     d = sub.add_parser("daemon"); d.add_argument("--interval", type=int, default=60)
-    sub.add_parser("tick"); sub.add_parser("status")
+    sub.add_parser("tick")
+    status_report.add_arguments(sub.add_parser("status", help="active jobs and recent results (--all for history)"))
     v = sub.add_parser("validate"); v.add_argument("file")
     sr = sub.add_parser("submit-recheck"); sr.add_argument("--since", required=True)
     sr.add_argument("--requeue", action="store_true"); sr.add_argument("--log")

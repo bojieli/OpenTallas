@@ -53,6 +53,7 @@ GATHER_REC = {'router_allgather': 4, 'a_allgather': 12, 'rows_allgather': 64, 'i
 SU_IN_NORM = {'attn': ['quant'], 'ffn': ['norm.scale', 'quant']}
 PINNED = ('L0', 'L2')                                   # the layers of the pinned su_cases pickle (hc_gate.chains_golden)
 ENG_PORT = 10
+SUX_PORT = 11                                           # --su-snap: SU ops with no SU job kind (behavioural)
 
 
 def hc_arg(kind, base, gsel=0, quant=0, yout=0):
@@ -166,14 +167,58 @@ def partition(y):
 
 
 def layer_ops(progdir, L):
+    """The committed stage-program ops of layer L.  Raises if the program directory is missing or holds no op of L:
+    a source snapshot without results/rtl/s81_ctrl_20261008/programs used to yield an empty layer, whose H_STORE then
+    waited on a node that never existed and the topological sort died with a bare 'AssertionError: cycle'."""
+    files = sorted(Path(progdir).glob('S*.json'))
+    if not files:
+        raise SystemExit(f'die_layer_stim: no stage programs (S*.json) under {progdir}: the source snapshot must carry '
+                         f'results/rtl/s81_ctrl_20261008/programs (or pass --programs)')
     ops = []
-    for f in sorted(progdir.glob('S*.json')):
+    for f in files:
         p = json.loads(f.read_text())
         loc = {o['op']: o['id'] for o in p['ops']}
         for o in p['ops']:
             if o['id'].startswith((f'{L}.attn.', f'{L}.ffn.', f'{L}.eng.')):
                 ops.append(dict(o, preds_id=[loc[q] for q in o['preds']]))
+    if not ops:
+        raise SystemExit(f'die_layer_stim: layer {L} has no ops in the stage programs under {progdir}')
     return ops
+
+
+def apply_dur(src, L, items):
+    """--dur OP=CYCLES: set the duration of behavioural ops of layer L in src (in place); returns {op id: cycles}."""
+    dur_ov = {}
+    for kv in items:
+        k, v = kv.split('=')
+        dur_ov[f'{L}.{k}'] = int(v)
+    miss = sorted(set(dur_ov) - {o['id'] for o in src})
+    if miss:
+        raise SystemExit(f'die_layer_stim: --dur names ops not in layer {L}: {miss}')
+    for o in src:
+        if o['id'] in dur_ov:
+            if o['eng'] in ('hc', 'coll', 'fld'):
+                raise SystemExit(f"die_layer_stim: --dur {o['id']}: a real master's op, its cycles are measured, not set")
+            o['dur'] = dur_ov[o['id']]
+    return dur_ov
+
+
+def topo_order(nodes):
+    """Kahn's order of the rewritten layer program, ties broken by the source program order.  A predecessor that is
+    not a node, and a true dependency cycle, are reported by name (both used to surface as 'AssertionError: cycle')."""
+    dangling = sorted({(n['id'], p) for n in nodes.values() for p in n['preds'] if p not in nodes})
+    if dangling:
+        raise ValueError('die_layer_stim: predecessors that are not program nodes: '
+                         + ', '.join(f'{n} <- {p}' for n, p in dangling))
+    prog, done = [], set()
+    while len(prog) < len(nodes):
+        ready = [n for n in nodes.values() if n['id'] not in done and all(p in done for p in n['preds'])]
+        if not ready:
+            raise ValueError('die_layer_stim: dependency cycle among ' + ', '.join(
+                sorted(k for k in nodes if k not in done)))
+        n = min(ready, key=lambda x: x['order'])
+        prog.append(n); done.add(n['id'])
+    return prog
 
 
 def main():
@@ -198,6 +243,19 @@ def main():
                     'their start on an engine of unlimited concurrency, so a critical SU job queues behind long '
                     'off-critical ones (kv_rope_qdq before q_rope, the shared-expert jobs before swiglu).  The search '
                     'simulates every in-order port with duration estimates and moves SU jobs while the layer end improves')
+    ap.add_argument('--dur', action='append', default=[], metavar='OP=CYCLES',
+                    help='override the program duration of a BEHAVIOURAL op of the layer (OP = the id after "<L>.", e.g. '
+                    'attn.q_rope=123): a measured unit latency in place of the priced one, to see what the layer '
+                    'makes of it.  Real-master ops (hc / coll / fld) are refused; recorded in meta.json dur_override')
+    ap.add_argument('--su-snap', type=Path, default=None, help='the REAL SU slab (tb +define+TB_SU_REAL, s81-ftok r3): '
+                    'the layer\'s SU operand snapshot (tools/dsrom_1m_su.py golden --engram snap_LXX.pkl); SU ops with an SU '
+                    'job kind become jobs of the production slab on the golden operands (tools/s81_ftok/su_layer.py), '
+                    'their chain members are aliased to the job, the SU ops with no job kind move to the behavioural port '
+                    f'{SUX_PORT} (su.x) at program duration')
+    ap.add_argument('--program-layer', default=None, help='take the stage program of this backbone layer (e.g. L0) '
+                    'for --layer (its op ids renamed): a DSpark stage row (M<st>R<i>, tools/s81_ftok/mtp_golden.py) runs '
+                    'on the sliding layer\'s program (window attention + MoE, the same op graph), its own chain and SU '
+                    'snapshot')
     ap.add_argument('--seed', type=int, default=11)
     ap.add_argument('--programs', type=Path, default=ROOT / 'results/rtl/s81_ctrl_20261008/programs')
     a = ap.parse_args()
@@ -206,6 +264,13 @@ def main():
     a.out.mkdir(parents=True, exist_ok=True)
 
     # ------------------------------------------------------------------ golden chain (hc_gate.chains_golden)
+    if a.program_layer:                                # a DSpark stage row on a backbone layer's program (s81-ftok r3)
+        P_ = a.program_layer
+        src = [dict(o, id=a.layer + o['id'][len(P_):], preds_id=[a.layer + q[len(P_):] for q in o['preds_id']])
+               for o in layer_ops(a.programs, P_)]
+    else:
+        src = layer_ops(a.programs, a.layer)          # fail fast on a snapshot without the stage programs
+    dur_ov = apply_dur(src, a.layer, a.dur)
     cases = pickle.loads(Path(a.cases).read_bytes())
     fx = None
     if a.layer in PINNED:
@@ -262,7 +327,6 @@ def main():
             else:
                 coef[E_BASE + 2 * b + 1] = e1
     # ------------------------------------------------------------------ program rewrite (by name, then topological)
-    src = layer_ops(a.programs, a.layer)
     eng_ops = [o['id'] for o in src if o['id'].startswith(f'{a.layer}.eng.')]
     assert bool(eng_ops) == (eng_rows is not None), (a.layer, eng_ops, 'Engram ops need an Engram chain fixture')
     if eng_ops:
@@ -275,6 +339,17 @@ def main():
                            wrow=wrow, eng=eng, order=order)
 
     L = a.layer
+    sub, su_alias = None, {}
+    if a.su_snap:
+        sys.path.insert(0, str(ROOT / 'tools/s81_ftok'))
+        import su_layer
+        sub = su_layer.build(a.su_snap, L, check_layer=not a.program_layer)
+        su_alias = sub['alias']
+        add(f'{L}.su.gain_q', 1, 0, [], sub['arg'][f'{L}.su.gain_q'], eng='su', order=-2.8)
+        add(f'{L}.su.gain_k', 1, 0, [], sub['arg'][f'{L}.su.gain_k'], eng='su', order=-2.7)
+        su_members = {}
+        for k_, v_ in su_alias.items():
+            su_members.setdefault(v_, []).append(k_)
     add(f'{L}.hc.gain_attn', HC_PORT, 0, [], hc_arg(5, G_BASE, gsel=0), eng='hc', order=-3)
     add(f'{L}.hc.gain_ffn', HC_PORT, 0, [], hc_arg(5, G_BASE + HG.GROWS, gsel=1), eng='hc', order=-2)
     hl_base = EH_BASE if (a.h_stream and eng_ops) else H_BASE
@@ -293,9 +368,16 @@ def main():
             continue
         b = 0 if blk == 'attn' else 1
         tail = nm.split('.', 2)[2]
-        if nm in alias:
+        if nm in alias or nm in su_alias:
             continue
-        preds = [alias.get(p, p) for p in o['preds_id'] if alias.get(p, p) in names]
+
+        def res(p):
+            return su_alias.get(alias.get(p, p), alias.get(p, p))
+        pids = list(o['preds_id'])
+        if sub is not None:                             # an SU job waits on every member's predecessors
+            for m_ in su_members.get(nm, []):
+                pids += next(x['preds_id'] for x in src if x['id'] == m_)
+        preds = [res(p) for p in pids if res(p) in names and res(p) != nm]
         if blk == 'ffn' and tail in ('hc.fn', 'hc.sumsq', 'hc_pre'):
             preds.append(f'{L}.attn.hc_post')            # the ffn block reads the h the attn hc_post wrote
         if eng_ops and blk == 'attn' and tail == 'hc_pre':
@@ -330,17 +412,17 @@ def main():
             nrec = D // 16 if mode == 0 else GATHER_REC[tail]
             msgs.append(dict(op=nm, mode=mode, nrec=nrec, blk=blk))
             add(nm, COLL_PORT, o['dur'], preds, (mode << 16) | nrec, eng='coll', order=i)
+        elif sub is not None and o['port'] == 1:
+            if nm in sub['arg']:
+                add(nm, 1, o['dur'], preds, sub['arg'][nm], eng='su', order=i)
+            else:
+                add(nm, SUX_PORT, o['dur'], preds, eng='sux', order=i)
         else:
             add(nm, o['port'], o['dur'], preds, eng=o['eng'], order=i)
     add(f'{L}.hc.h_store', HC_PORT, 0, [f'{L}.ffn.hc_post'], hc_arg(1, S_BASE), eng='hc', order=1e9)
+    topo_order(nodes)                                  # dangling predecessor / cycle: named, before the SU search
     sched = su_schedule(nodes, a, f'{L}.hc.h_store') if a.su_sched else None
-    # Kahn, ties broken by the source program order
-    prog, done = [], set()
-    while len(prog) < len(nodes):
-        ready = [n for n in nodes.values() if n['id'] not in done and all(p in done for p in n['preds'])]
-        assert ready, 'cycle'
-        n = min(ready, key=lambda x: x['order'])
-        prog.append(n); done.add(n['id'])
+    prog = topo_order(nodes)
     idx = {n['id']: k for k, n in enumerate(prog)}
     stim = open(a.out / 'stim.txt', 'w')
     nph, cm = 0, {m['op']: k for k, m in enumerate(msgs)}
@@ -390,6 +472,26 @@ def main():
     with open(a.out / 'coef.mem', 'w') as f:
         for r in sorted(coef):
             f.write(f'@{r:x}\n{coef[r]:0128x}\n')
+    su_meta = None
+    if sub is not None:
+        assert min(sub['vm']) >= su_layer.SU_BASE and sub['top'] <= 16384, (min(sub['vm']), sub['top'])
+        assert not set(sub['vm']) & set(vm_boot)
+        with open(a.out / 'vm_boot.mem', 'a') as f:
+            for r in sorted(sub['vm']):
+                f.write(f'@{r:x}\n{sub["vm"][r]:0128x}\n')
+        with open(a.out / 'su_expa.mem', 'w') as fa, open(a.out / 'su_expd.mem', 'w') as fd:
+            for r in sorted(sub['exp']):
+                fa.write(f'{r:04x}\n')
+                fd.write(f'{sub["exp"][r]:0128x}\n')
+        (a.out / 'su_n.mem').write_text(f'{len(sub["exp"]):08x}\n')
+        real = [n['id'] for n in prog if n['eng'] == 'su']
+        sux = [n['id'] for n in prog if n['eng'] == 'sux']
+        su_meta = dict(snapshot=str(a.su_snap), snapshot_sha256=HG.sha(a.su_snap), real_jobs=real,
+                       aliased=su_alias, behavioural_sux=sux, exp_rows=len(sub['exp']), vm_rows=len(sub['vm']),
+                       T=sub['T'], softmax_fits=sub['softmax_fits'], qb_fits=sub['qb_fits'],
+                       router_fits=sub['router_fits'], checks=sub['checks'],
+                       sw_fit=sub['sw_fit'], jexp={k: list(v) for k, v in sub['jexp'].items()})
+        print(f"{L}: REAL SU {len(real)} jobs ({len(sub['exp'])} expected rows), behavioural su.x {sux}")
     (a.out / 'boot_ok.txt').write_text(''.join(f'{r}\n' for r in boot_ok))
     (a.out / 'payload.mem').write_text(''.join(f'{v:0128x}\n' for v in payload))
     with open(a.out / 'expa.mem', 'w') as fa, open(a.out / 'expd.mem', 'w') as fd:
@@ -401,7 +503,8 @@ def main():
     meta = dict(layer=a.layer, ng=a.ng, ops=len(prog), field_phases=nph, coll_messages=msgs, coll_records=len(own),
                 y_words=len(ygold), exp_rows=len(run.exp), hstore_rows=nst, golden_checks_vs_pickle=4,
                 program=[dict(k=k, id=o['id'], port=o['port'], eng=o['eng'], preds=o['preds']) for k, o in enumerate(prog)],
-                cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split), h_stream=bool(a.h_stream), su_sched=sched)
+                cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split), h_stream=bool(a.h_stream), su_sched=sched,
+                dur_override=dur_ov or None, su_real=su_meta)
     if fx is not None:
         meta.update(chain_fixture_sha256=HG.sha(a.chain), chain_schema=fx['schema'], chain_checks=fx['checks'],
                     shard=fx['shard'], shard_sha256=fx['shard_sha256'], golden_checks_vs_pickle=0,
