@@ -13937,6 +13937,62 @@ def hbm_native_index_sram_join_model():
         token_rate_credit=0, offpackage_FEC='FULL; no light130ns budget; no offpackage link in this local wiring')
 
 
+def hbm_sfu_glu_inline_quant_model():
+    """Bounded exact GLU→AQ→fragment candidate; no next-op/token credit."""
+    return dict(schema='opentallas.glu-inline-quant.v1', default_OFF=True,
+        graph='actual G/U/route→exactSiLU*U*route→BF16_RNE→expandedFP32→unchangedAQ18→realcodeSRAM/e10→NC8SUB4SMxwrite',
+        canonical_producer_words=3072, immutable_GLU_price=120,
+        BF16_round_before_quant=True, numerical_reassociation=False,
+        bounded_component=dict(actual_GLU_lanes=1, actual_aq=1, aq_words=32,
+            producer_latency=109, producer_II=1, collector_words=32,
+            collector_fixed_aq_issue_period=32, aq_latency=18,
+            active_contexts=1, remaining_contexts='7OPEN; zero output fields are component padding only',
+            K=3072, G=3, NC=8, SUB=4, context_valid_mask_pin=False,
+            quant_blocks=96, fragment_addresses=24, xwrite_beats=312,
+            xwrite_bits_per_edge=2048, xwrite_bytes=312*256,
+            useful_code_bytes=3072, useful_exponent_bits=960,
+            code_SRAM_macros=8, code_SRAM_shape='32x128 actualmacro;4j×2halves',
+            code_SRAM_capacity_bytes=8*32*16,
+            exponent_register_bits=4*32*10, validity_bits=4*32,
+            collector_register_bits=1024, replica_clock_roots=3,
+            aq_clock_sinks_nominal=[2597,11264,6019],
+            producer_to_aq_boundary_bits=1025,
+            aq_to_fragment_boundary_bits=267,
+            fragment_read_boundary_bits=1064,
+            SM_boundary_bits=2063,
+            new_control_FF_reservation=2048,
+            code_macro_area_um2=None, FF_area_floor_um2=(1024+1280+128+2048)*.2916,
+            cell_area_reservation_um2=50000, outline_area_reservation_um2=50000/.55,
+            full_NC8_qualification=False),
+        full_NC8_conditional=dict(contexts=8, K=3072, actual_GLU_words_required=24576,
+            output_FP32_bytes=98304, quant_blocks=768, packet_bits=768*266,
+            xwrite_addresses=24, xwrite_beats=312, xwrite_bytes=79872,
+            actual_SM_pin_width=2048, consumer_width_increase=False,
+            existing_AQ_replicas=2, AQ_capacity_words_per_edge=64,
+            proposed_GLU_lanes=256, compiler_GLU_tuple_II=4,
+            tuple_serialize_phases=4, tuple_words=256, input_tuples=96,
+            first_GLU_input_to_last_quant_input_edges=109+95*4+3,
+            first_GLU_input_to_last_quant_output_edges=109+95*4+3+18,
+            VM_output_write_bytes_removed=98304, VM_output_reread_bytes_removed=98304,
+            removed_VM_8sector_waves=768,
+            raw_GU_input_bytes=196608, raw_GU_8sector_waves=768,
+            cache_layout='row=pair*8+j*2+column//4;lane=(column%4)*64+word0..63;96rows×256',
+            existing_GU_32bank128x256_capacity_fits=True,
+            route_scalars_required=8, route_scalars_per_tuple=4,
+            current_common_route32_array_sufficient=False,
+            static_serialization_capacity_bits=8192,
+            traffic='same2AQ64word/edge and312SMbeats; saveonlyrealGLUoutputVMwrite/read; sourceGUtraffic unchanged',
+            input_homes_selected=False, next_actual_SM_operation_selected=False,
+            fixed_source_calendar_implemented=False, producer_residency_epochs_proved=False,
+            full_8context_codes_exponents_checked=False, gain_cycles_measured=None),
+        physical=dict(clock_period_ps=833.333, related_clock_phase='1:1phase0',
+            SS_uncertainty_ps=60, FF_uncertainty_ps=25, routing_tracks_required=1025+267+1064+2063,
+            channel_capacity=None, mapped_area_um2=None, slot_fit=False, physical_qualified=False),
+        bounded_component_build_admitted=True, numerical_qualified=False,
+        full_graph_ready=False, adopted=False, token_rate_credit=0,
+        gain_scope='VMtraffic avoided analytically; nextconsumerop/context/sourcehomes notbound; no120cycle or token gain credit')
+
+
 def hbm_su_static_side_model():
     """Original MLAT3/ALAT3 SIDE with six real 1:1 phase0 clock roots.
 
