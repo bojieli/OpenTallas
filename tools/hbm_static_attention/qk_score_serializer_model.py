@@ -58,7 +58,7 @@ if __name__=='__main__':
         write_ports=16,write_bits_per_selected_bank=64,read_ports=16,
         read_bits_per_selected_bank=128,flag_FF_capacity=32768,
         data_macro_area_um2=256*51.408*20.790,
-        flag_clock_roots_at_8192_sinks=4),
+        flag_read_pipeline_FF=1024,flag_clock_roots_at_8192_sinks=5),
       VM=dict(proposed_layout='head-major FP32[16][T]',
         sector='base+head*(T//8)+block*8+bank',payload_bits_per_request=2048,
         write_group=None,residency=None,consumer_SFU_binding=None,

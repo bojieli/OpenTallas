@@ -22,7 +22,8 @@
     "read_bits_per_selected_bank": 128,
     "flag_FF_capacity": 32768,
     "data_macro_area_um2": 273605.71392,
-    "flag_clock_roots_at_8192_sinks": 4
+    "flag_read_pipeline_FF": 1024,
+    "flag_clock_roots_at_8192_sinks": 5
   },
   "VM": {
     "proposed_layout": "head-major FP32[16][T]",
