@@ -86,6 +86,7 @@ rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv
 +define+DSFD_SP_VM_MIX4
 rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv
