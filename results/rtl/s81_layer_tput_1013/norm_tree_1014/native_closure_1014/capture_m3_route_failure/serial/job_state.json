@@ -1,0 +1,41 @@
+{
+  "name": "s81hc_ctfxcap_ref-v1-owned-epoch-631a20a94",
+  "status": "EARLY_FAIL_CONGESTION",
+  "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxcap_ref-v1-owned-epoch-631a20a94",
+  "host": "ot-epyc4",
+  "reason": "global route finished with congestion (GRT-0116): s81hc_ctfxcap_ref_v1_owned_epoch_631a20a94/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+  "events": [
+    "2026-10-14T19:32:14-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81hc_ctfxcap_ref-v1-owned-epoch-631a20a94.json",
+    "2026-10-14T19:32:14-07:00 MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/s81hc_ctfxcap_ref/pre_gpl.tcl'] but no macro LEF resolved from the commands",
+    "2026-10-14T19:32:18-07:00 CLOCK-RULE at submit: 2,271 sinks on the largest root <= 15,000; measured TT insertion 257.0 ps, leaf spread 14.9 ps",
+    "2026-10-14T19:32:18-07:00 ref gate PASS: pre-route gate PASS",
+    "2026-10-14T19:32:34-07:00 benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)",
+    "2026-10-14T19:32:56-07:00 git-mirror sync 631a20a940b8 via upstream in 2s + extract 13s; 3469 views / 6.0 GB hard-linked from the host view store",
+    "2026-10-14T19:33:00-07:00 source 631a20a940b8 synced to ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxcap_ref-v1-owned-epoch-631a20a94/src",
+    "2026-10-14T19:33:02-07:00 bench track: launched bench_lint (bench_lint.a1b1) beside None",
+    "2026-10-14T19:33:14-07:00 launched route (attempt 1) on ot-epyc4",
+    "2026-10-14T19:33:25-07:00 bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-14T19:33:28-07:00 bench track: launched bench_owned_serial_exact (bench_owned_serial_exact.a1b1) beside route",
+    "2026-10-14T19:42:22-07:00 bench track: bench_owned_serial_exact PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-14T19:42:25-07:00 bench track: launched bench_owned_serial_local_mut (bench_owned_serial_local_mut.a1b1) beside route",
+    "2026-10-14T19:42:27-07:00 TEXTBOOK-LINT route.a1: WARN ot_s81_hc_ctfx_cap cells 4,543 flops 2,271 depth 11.7 ps util 0.0926 reach 54.8 um (0.1 s) || INFO clock_roots max_root_sinks=2271 root=port:clk rule=PASS: 2,271 sinks on the largest root <= 15,000; measured TT insertion 257.0 ps, leaf spread 14.9 ps || WARN util_channel: utilisation 9.3% outside 45%-65% (std 1145 + macro 0 um2 in 12364 um2): shrink the outline (long wires / sparse placement)",
+    "2026-10-14T19:42:29-07:00 EARLY_FAIL_CONGESTION: global route finished with congestion (GRT-0116): s81hc_ctfxcap_ref_v1_owned_epoch_631a20a94/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+    "2026-10-14T19:44:22-07:00 auto-react: no recipe; structural fix needed (noted in ds-1010.log)"
+  ],
+  "benches": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 6.309 MB sources in 118 modules, into 0.008 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.067 s (elab=0.018, cvt=0.001, bld=0.000); cpu 0.067 s on 1 threads; allocated 54.391 MB\nlint-ok\n",
+      "track": "parallel"
+    },
+    "bench_owned_serial_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "t 0 cyc 5548\nstress_0 PASS 0 / 1940 fault 0 cyc 5548\nstress_1 PASS 0 / 1940 fault 0 cyc 5548\n/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxcap_ref-v1-owned-epoch-631a20a94/bench_src_a1/tools/s81_suhc/hc_gate.py:551: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  rec = dict(schema=\"opentallas.s81_suhc.hc_gate.run.v1\", generated_utc=datetime.datetime.utcnow().isoformat() + \"Z\",\nRUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40 pass\n",
+      "track": "parallel"
+    }
+  }
+}

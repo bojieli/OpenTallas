@@ -54,6 +54,14 @@ def main():
  for master in ('ot_s81_hc_ctfx_nt','ot_s81_hc_ctfx_cap'):
   ports={p:list(v) for p,v in old.items() if master.endswith('_nt') or p in ('clk','rst_in','fv_in','fd_in','fv','fdx')}
   ports.update(extra)
+  # Put the reset capture flop within its measured CTS cluster. Preserve UL
+  # pins: moving ul_out[15] would exceed its actual 500um north seam.
+  reset_x = 45.036 if master.endswith('_nt') else 225.036
+  ports['rst_in'] = [['N','M3',reset_x,.084]]
+  if master.endswith('_nt'):
+   # Production TID is localparam BC+p or BC+START+p in dsfd_sp_hc.
+   # Its capture must stay in the measured reset/control clock neighborhood.
+   ports['tid'] = [['N','M3',round(45.132+.096*i,3),.084] for i in range(8)]
   # Custom writer preserves original rectangles; all new S pins have checked
   # spacing from preserved ports rather than nudging accepted rectangles.
   rec=dict(base,master=master,case='v20_hc_owned_capture',ports={p:{'bits':len(v),'uniform':False,'per_bit':v} for p,v in ports.items()},source='tools/s81/hc_capture_pins.py')
@@ -65,7 +73,7 @@ def main():
     nm=p if len(ps)==1 else f'{p}[{i}]'
     lines.append(f'place_pin -pin_name {{{nm}}} -layer {ly} -location {{{x:.3f} {y:.3f}}} -force_to_die_boundary')
   (out/(master+'.tcl')).write_text('\n'.join(lines)+'\n')
- report={'scope':'actual CLOSED CPL faces only; CTRA/CTRB have no published LEF and remain unverified','max_um':max(r['length_um'] for r in proof),'over500':[r for r in proof if r['length_um']>500],'hops':proof,'new_sink_timing':'unverified pending routed owned capture leaf','M3_reach_clamps':clamps}
+ report={'scope':'actual CLOSED CPL faces only; CTRA/CTRB have no published LEF and remain unverified','max_um':max(r['length_um'] for r in proof),'over500':[r for r in proof if r['length_um']>500],'hops':proof,'new_sink_timing':'unverified pending routed owned capture leaf','M3_reach_clamps':clamps,'reset_reassignment':{'source':'CLOSED ot_s81_hc_ctfn.rst_c W M4 centre(0.042,10.044), ctfn Noffset390.96','source_xy_um':[.042,344.844],'capture_N_y_um':386.598,'serial_reset_x_um':225.036,'nt_reset_x_um':45.036,'serial_hop_um':266.748,'nt_hop_um':86.748,'qualification':'geometry only; native reset epoch, launch/capture and CTS remain required'},'tid_delivery':{'port':'ot_s81_hc_ctfx_nt.tid[7:0]','pins':'N/M3 x45.132..45.804','source':'rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv localparam TID=BC+p or BC+START+p, passed through cth_nt to ctfx_nt','delivery':'static per-instance value; local tie realization remains required in native parent, no dynamic launch source','native_capture':'must be measured after retap/pin move'},'ul_policy':'preserve original UL rectangles; ul_out15 needs a measured local clock branch, not a pin move'}
  (out/'cpl_geometry.json').write_text(json.dumps(report,indent=1)+'\n')
  # Strip expansion requires 751.68 height: old spare2.16 is consumed. N-face
  # offsets preserve upper rows; all rows below capture move12.96 down.
