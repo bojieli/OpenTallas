@@ -10,8 +10,10 @@
 Faces / outlines are Codex's write-edge candidates (physical/s81_vm_write_edge_1015/*.json, reach screen plan.json:
 dispatch->stage max 83.5 um, 0 bits > 500 um).  Pins are re-snapped here onto the layers and tracks of the closed native
 VM leaves (capture/scatter): N/S on M5, E/W on M4, centres .012 mod .048, pitch a multiple of .048 (>= .096, two tracks;
-face use <= 0.5 of the tracks), centred with >= 4.32 um corner keep-out.  Same RTL, no stage added; outhold off (the
-composed hold is carried by every receiver's input pad, as the composed-budget relay kits).
+face use <= 0.5 of the tracks), centred with >= 4.32 um corner keep-out.  Registered write edge (every leaf boundary a pin register / output flop,
+native pin rule): W0 two stages, control lane P->P+1 reg-to-reg + registered drain calendar, dispatch pin registers
+P+2, storage drain pin register + output register; scatter sample P+6+lane (r8: P+4+lane, +2 cycles).  outhold off
+(the composed hold is carried by every receiver's input pad, as the composed-budget relay kits).
 """
 import hashlib, json, math, subprocess, sys
 from pathlib import Path
@@ -37,6 +39,8 @@ DISP_OUT = {'o_v': 1, 'o_slot': 2, 'o_row': 14, 'o_mask': 4, 'o_data': 128, 'o_t
 
 
 def rename(top, name):
+    if top == 'dsfd_vm_static_wcontrol' and name.startswith('cap_v['):
+        return None                    # registered write edge: drain calendar from the leaf's own lanes, cap_v retired
     if top == 'dsfd_vm_static_wcontrol' and name.startswith(('pv[', 'pr[')):
         # control now samples the source pins (src_v, row[7:0] bank bits) at P; pr bits 8..13 are no longer pins
         idx = int(name[3:-1])
@@ -136,10 +140,12 @@ def main():
                                                          hold_margin_ns=.030),
                     recipe=2, io_flop_at_pins=dict(cols=4, allow_none=True), inhold=True, outhold=False, keep_pin_regs=True, pin_reg_split=True,
                     hold_pad=dict(cell='HB2xp67_ASAP7_75t_R'),
-                    structural_change=('Native write-edge leaf: the scalar 29,203-sink W0/wsched register is split into 150 independently '
-                                       'clocked actual leaves (control1/header1/payload4/dispatch16/stage128); same RTL, fixed edges W0 P, '
-                                       'dispatch P+1/P+2, storage P+3, scatter P+4+lane; no ready/credit/stage added. Pins on closed-leaf '
-                                       'M5/M4 tracks; outhold off (receivers carry the composed hold pad).'),
+                    structural_change=('Registered native write edge: the scalar 29,203-sink W0/wsched register becomes 150 independently '
+                                       'clocked actual leaves (control1/header1/payload4/dispatch16/stage128) with every leaf boundary a pin '
+                                       'register or output flop (native pin rule; measured: lane 34-level in->out TT -1119 ps, then 16-level '
+                                       'in->reg -204 ps; stage drain combinational pin-to-pin). Fixed edges: W0 P/P+1, control lane P+1, '
+                                       'dispatch P+2/P+3, storage P+4, drain pin P+4+c, output P+5+c, scatter P+6+c (+2 cycles vs r8); no '
+                                       'ready/credit. Pins on closed-leaf M5/M4 tracks; outhold off.'),
                     slot_change_request=dict(contract='S81 static VM write-edge native option', version='101a4e629/a60002977',
                                              why='New native write leaves: per-category clock roots need closed views with measured R; '
                                                  'parent geometry adoption by S-DIE'),

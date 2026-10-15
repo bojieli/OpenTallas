@@ -12,7 +12,7 @@
 //   SU / HC row read  f_*_rqv/rq  -> t_*_rsv/rs        L = 12  (P pin, P+1 FSR, P+11 release, P+12 output register)
 //   PQ x read         f_pqx       -> t_pqx (4 rows)    L = 12  (aux ports 0..3 = rows x_addr[17:6]*4 + 0..3)
 //   edge aux reads    x_av / x_ar -> x_rv / x_rd       L = 12  (aux 4..7 xio row streams, 8..11 WFC; port = row[1:0])
-//   row write         f_*_wq*     -> SRAM commit       lane c: scatter sample P+4+c (+ relay and macro stages of the
+//   row write         f_*_wq*     -> SRAM commit       lane c: scatter sample P+6+c (+ relay and macro stages of the
 //                                                      static512 timeline); the engine CHECK observes the commits
 //   engine 12         c_cmd       -> c_done            6 (dsfd_vm_seq_static DLAT)
 //   Engram MIX4 read  f_mx_rq*    -> t_mx_rs* (20)     L = 12  (lane i: slot {G(i), row[1:0]} on logical port = slot)

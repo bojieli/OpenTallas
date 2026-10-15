@@ -78,7 +78,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Native write-edge leaf: the scalar 29,203-sink W0/wsched register is split into 150 independently clocked actual leaves (control1/header1/payload4/dispatch16/stage128); same RTL, fixed edges W0 P, dispatch P+1/P+2, storage P+3, scatter P+4+lane; no ready/credit/stage added. Pins on closed-leaf M5/M4 tracks; outhold off (receivers carry the composed hold pad).",
+ "structural_change": "Registered native write edge: the scalar 29,203-sink W0/wsched register becomes 150 independently clocked actual leaves (control1/header1/payload4/dispatch16/stage128) with every leaf boundary a pin register or output flop (native pin rule; measured: lane 34-level in->out TT -1119 ps, then 16-level in->reg -204 ps; stage drain combinational pin-to-pin). Fixed edges: W0 P/P+1, control lane P+1, dispatch P+2/P+3, storage P+4, drain pin P+4+c, output P+5+c, scatter P+6+c (+2 cycles vs r8); no ready/credit. Pins on closed-leaf M5/M4 tracks; outhold off.",
  "slot_change_request": {
   "contract": "S81 static VM write-edge native option",
   "version": "101a4e629/a60002977",

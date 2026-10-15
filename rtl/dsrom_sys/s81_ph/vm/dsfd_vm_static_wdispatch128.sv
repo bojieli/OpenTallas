@@ -19,12 +19,10 @@ module dsfd_vm_static_wdispatch128 #(
  always @(posedge ck or negedge rst_n)
   if(!rst_n)reset_release<=0;else reset_release<={reset_release[0],1'b1};
  wire rn=reset_release[1];
- // i_v / i_capture_lane / i_storage_slot arrive from the control leaf's P+1 flops (claude S81 VM F1 2026-10-15):
- // used directly in the P+1 -> P+2 record select, aligned with the P+1 data registers below (no extra cycle).
- reg [14*NSRC-1:0] qr;reg [4*NSRC-1:0] qm;
- reg [128*NSRC-1:0] qd;reg [8*NSRC-1:0] qt;
- wire [NSRC-1:0] qv=rn?i_v:{NSRC{1'b0}};wire [2*NSRC-1:0] ql=i_capture_lane,qs=i_storage_slot;
- always @(posedge ck)begin qr<=i_row;qm<=i_mask;qd<=i_data;qt<=i_tag;end
+ reg [NSRC-1:0] qv;reg [14*NSRC-1:0] qr;reg [4*NSRC-1:0] qm;
+ reg [128*NSRC-1:0] qd;reg [8*NSRC-1:0] qt;reg [2*NSRC-1:0] ql,qs;
+ always @(posedge ck or negedge rn)if(!rn)qv<=0;else qv<=i_v;
+ always @(posedge ck)begin qr<=i_row;qm<=i_mask;qd<=i_data;qt<=i_tag;ql<=i_capture_lane;qs<=i_storage_slot;end
  wire [3*NBANK-1:0] hit,dup;
  genvar g;generate for(g=0;g<3*NBANK;g=g+1)begin:record
   reg h,d;reg [13:0] r;reg [3:0] m;reg [127:0] w;reg [7:0] t;reg [1:0] s;

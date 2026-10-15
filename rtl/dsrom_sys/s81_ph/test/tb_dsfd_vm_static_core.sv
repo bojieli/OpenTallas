@@ -308,7 +308,7 @@ module tb_dsfd_vm_static_core;
             $display("TB_VMCORE %s mode %0d", bad == 0 ? "PASS" : "FAIL", mode);
             $finish;
         end
-        // Verilator schedules $finish for the end of this time step. A fault
+        // Note: the simulator schedules $finish for the end of this time step. A fault
         // witness must not fall through into the base-calendar count checks.
         if (mode == 0) begin
         if (mode == 0 && (vm_fault || c_st[0])) begin bad = bad + 1;

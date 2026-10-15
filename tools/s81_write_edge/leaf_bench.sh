@@ -19,8 +19,8 @@ if [ "$CASE" = mutant ]; then
   header) python3 - "$W0" "$O/w0_header_mut.sv" <<'PY'
 import sys
 from pathlib import Path
-s=Path(sys.argv[1]).read_text();n='o_row<=i_row;o_tag<=i_tag;';assert s.count(n)==1
-Path(sys.argv[2]).write_text(s.replace(n,"o_row<=i_row^{{(14*NSRC-1){1'b0}},1'b1};o_tag<=i_tag;"))
+s=Path(sys.argv[1]).read_text();n='o_row<=s_row;';assert s.count(n)==1
+Path(sys.argv[2]).write_text(s.replace(n,"o_row<=s_row^{{(14*NSRC-1){1'b0}},1'b1};"))
 PY
    W0="$O/w0_header_mut.sv";;
   *) echo "unknown leaf $LEAF"; exit 2;;

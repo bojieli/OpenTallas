@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Actual53sources,16dispatch,128depth3storage. Scoreboard is derived directly
-// from the documented source P -> scatter sample P+4+same-bank prefix lane.
+// from the documented source P -> scatter sample P+6+same-bank prefix lane (registered write edge, 2026-10-15).
 module tb_dsfd_vm_static_wsched_roots;
  localparam integer N=53, END=1700;
  reg ck=0,rst_n=0,skip=0;always #5 ck=~ck;
@@ -23,7 +23,7 @@ module tb_dsfd_vm_static_wsched_roots;
   if(cy>=20 && cy<END-20 && (cy-20)%8==0)begin
    for(c=0;c<N;c=c+1)begin
     b=(c/3+batch*7)%32;l=c%3;hi=(c*13+batch*17)%512;
-    row=32*hi+(b^((hi%8)*4));j=8*(b%4)+b/4;due=cy+1+4+l;
+    row=32*hi+(b^((hi%8)*4));j=8*(b%4)+b/4;due=cy+1+6+l;
     iv[c]=1;ir[14*c+:14]=14'(row);im[16*c+:16]=16'((c*701+batch*13)^16'ha56c);it[8*c+:8]=8'(batch+c);
     for(w=0;w<16;w=w+1)id[512*c+32*w+:32]=32'((batch<<20)^(c<<10)^w^32'h7be125a0);
     if(xv[due][j])$fatal(1,"scoreboard collision");

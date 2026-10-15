@@ -5,15 +5,19 @@
 // NSRC 512-b row sources (SU, HC, landing, collective ...) -> the 32 logical write ports of dsfd_vm_static512_suhc.
 // Owner rule 2026-10-14T18:59: no ready, credit, queue head/tail, arbitration or schedule extension.  Every decision is
 // a fixed function of the compiled request pattern, so the compiler predicts every edge exactly:
-//   P    source pin register (row 14, mask 16 words, data 512, tag 8, valid) sampled at edge P.
-//        capture LANE of source c = number of valid sources c' < c whose row hashes to the same bank this edge
+// REGISTERED WRITE EDGE (claude S81 VM F1, 2026-10-15, structural, +2 cycles vs the r8 timeline; native pin rule: every
+// leaf boundary is a pin register / output flop, no combinational lane or drain path between leaves):
+//   P    W0 source pin register (row 14, mask 16 words, data 512, tag 8, valid) sampled at edge P; control samples
+//        valid + row[7:0] (bank hash inputs) at P
+//   P+1  W0 second stage (outputs); control lane / lv flops (lane function register-to-register)
+//   P+2  dispatch pin registers; P+3 dispatch records; P+4 storage capture
+//   DRAIN: control drain flop P+3+c -> storage drain pin register P+4+c -> storage output register P+5+c -> scatter
+//        sample P+6+c (lane c).  Earliest scatter sample = source pin + 6.
+//   capture LANE of source c = number of valid sources c' < c whose row hashes to the same bank this edge
 //        (bank = row[4:0] ^ {row[7:5], 2'b00}); lane >= 3 is a schedule fault (the record is dropped, fail closed).
-//   P+1  dsfd_vm_static_wdispatch128 data pin register + control lane/lv flops (4 quarters x 4 slices; storage slot =
-//        lane); P+2 records registered
-//   P+3  dsfd_vm_static_wstage128 (DEPTH 3) captures
-//   DRAIN RULE (fixed): lane c of a bank is drained into the scatter sample at edge P+4+c.  Two lanes of one bank due on
-//        one edge (a lane-c capture at edge E and a lane-c' capture at E + c - c') is a schedule fault: the lower lane
-//        drains, the other is reported (never delayed).  Earliest scatter sample = source pin + 4 (lane 0).
+//   Two lanes of one bank due on one drain edge is a schedule fault: the lower lane drains, the other is reported
+//        (never delayed).
+//   (r8 timeline, superseded: dispatch P+1/P+2, storage P+3, scatter sample P+4+c.)
 //   Packet: bank k -> logical write port J = 8 (k mod 4) + k / 4 (row[1:0] = k mod 4 = the scatter lane rule).
 // All four 128-b slices run identical control (row / valid / tag from slice 0, mask / data per slice).
 // Faults: own[0] lane>=3, own[1] drain collision, own[2] W0 root epoch mismatch; downstream dflt/sflt.
@@ -61,8 +65,8 @@ module dsfd_vm_static_wsched #(parameter integer NSRC = 48) (
             .ck(ck_payload[ps]), .rst_n(rst_payload_n[ps]), .i_mask(mi), .i_data(di),
             .o_mask(mo), .o_data(dout), .o_epoch(payload_epoch[3*ps +: 3]));
     end endgenerate
-    // control registers the source pins' bank bits at P beside the header; lane/lv leave its flops at P+1 and the
-    // dispatch uses them directly in its P+1 -> P+2 record select (no dispatch input register for lane/valid)
+    // control registers the source pins' bank bits at P beside the header; lane/lv leave its flops at P+1 with the W0
+    // outputs and every dispatch pin registers them at P+2
     wire [8*NSRC-1:0] src_bank;
     genvar sb;
     generate for (sb = 0; sb < NSRC; sb = sb + 1) begin : srcbank
@@ -70,12 +74,11 @@ module dsfd_vm_static_wsched #(parameter integer NSRC = 48) (
     end endgenerate
     wire [2*NSRC-1:0] lane; wire [NSRC-1:0] lv; wire [2:0] own;
     dsfd_vm_static_wcontrol #(.NSRC(NSRC)) u_control (
-        .ck_control(ck_control), .rst_n(rst_control_n), .src_v(i_v), .src_bank(src_bank), .cap_v(cap_v[95:0]),
+        .ck_control(ck_control), .rst_n(rst_control_n), .src_v(i_v), .src_bank(src_bank),
         .header_epoch(header_epoch), .payload_epoch(payload_epoch),
         .lane(lane), .lv(lv), .dr_v(dr_v), .dr_s(dr_s), .own(own));
 
     // ---------------------------------------------------------------- P+1..P+3 dispatch + storage, per slice
-    wire [4*96-1:0] cap_v;                 // slice-major, 96 = 32 banks x 3 lanes
     wire [15:0] dflt; wire [127:0] sflt;
     wire [32*4-1:0] sv;                    // per slice drain output valid (bank-major)
     wire [32*14-1:0] srow; wire [32*8-1:0] stag;
@@ -96,7 +99,6 @@ module dsfd_vm_static_wsched #(parameter integer NSRC = 48) (
                 .o_v(cv[24*z +: 24]), .o_slot(cs[48*z +: 48]), .o_row(cr[336*z +: 336]), .o_mask(cm[96*z +: 96]),
                 .o_data(cd[3072*z +: 3072]), .o_tag(ct[192*z +: 192]), .fault(dflt[4*s + z]));
         end
-        assign cap_v[96*s +: 96] = cv;
         for (b = 0; b < 32; b = b + 1) begin : bank
             wire [13:0] orow; wire [7:0] otag;
             dsfd_vm_static_wstage128 #(.DEPTH(3)) u_w (

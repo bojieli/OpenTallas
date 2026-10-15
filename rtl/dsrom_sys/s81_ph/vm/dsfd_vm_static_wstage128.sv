@@ -1,9 +1,10 @@
 `timescale 1ns/1ps
 // Compiler-indexed bank-local write storage. No queue head/tail, arbiter,
 // credits, ready, or retry. Up to3 captures target distinct explicit slots.
-// The compiler selects the exact drain edge/slot, visible combinationally to
-// the receiving scatter input pins BEFORE that edge. CaptureE -> earliest
-// scatter sampleE+1. Storage can be reused on the same edge it is drained.
+// The compiler selects the exact drain edge/slot. REGISTERED BOUNDARY (claude S81 VM F1, 2026-10-15, structural,
+// +1 cycle; native pin rule: no combinational pin-to-pin arc): drain_v/drain_slot are pin registers at edge X, the
+// output register loads the drained slot at X+1 (the receiving scatter samples at X+2). CaptureE -> earliest drain pin
+// register E -> output register E+1. Storage can be reused on the edge it is read out.
 module dsfd_vm_static_wstage128 #(parameter integer DEPTH=3)(
  input wire ck,rst_n,
  input wire [2:0] capture_v,input wire [5:0] capture_slot,
@@ -20,18 +21,24 @@ module dsfd_vm_static_wstage128 #(parameter integer DEPTH=3)(
  reg [DEPTH-1:0] valid,valid_n;reg bad;
  reg [13:0] rows[0:DEPTH-1];reg [3:0] masks[0:DEPTH-1];
  reg [127:0] words[0:DEPTH-1];reg [7:0] tags[0:DEPTH-1];
- assign o_v=drain_v && drain_slot<DEPTH && valid[drain_slot];
+ reg d_v;reg [1:0] d_slot;                       // drain pin registers (edge X)
+ always @(posedge ck or negedge rn)if(!rn)d_v<=0;else d_v<=drain_v;
+ always @(posedge ck)d_slot<=drain_slot;
+ reg ov;assign o_v=ov;
+ reg [13:0] row_q;reg [3:0] mask_q;reg [127:0] word_q;reg [7:0] tag_q;
  always @*begin
-  o_row=0;o_mask=0;o_data=0;o_tag=0;
-  for(integer s=0;s<DEPTH;s=s+1)if(drain_slot==s)begin
-   o_row=rows[s];o_mask=masks[s];o_data=words[s];o_tag=tags[s];
+  row_q=0;mask_q=0;word_q=0;tag_q=0;
+  for(integer s=0;s<DEPTH;s=s+1)if(d_slot==s)begin
+   row_q=rows[s];mask_q=masks[s];word_q=words[s];tag_q=tags[s];
   end
  end
+ always @(posedge ck)begin o_row<=row_q;o_mask<=mask_q;o_data<=word_q;o_tag<=tag_q;end   // output register X+1
+ always @(posedge ck or negedge rn)if(!rn)ov<=0;else ov<=d_v && d_slot<DEPTH && valid[d_slot];
  always @*begin
   valid_n=valid;bad=0;
-  if(drain_v)begin
-   if(drain_slot>=DEPTH)bad=1;
-   else begin if(!valid[drain_slot])bad=1;valid_n[drain_slot]=0;end
+  if(d_v)begin
+   if(d_slot>=DEPTH)bad=1;
+   else begin if(!valid[d_slot])bad=1;valid_n[d_slot]=0;end
   end
   for(integer c=0;c<3;c=c+1)if(capture_v[c])begin
    if(capture_slot[2*c+:2]>=DEPTH)bad=1;
