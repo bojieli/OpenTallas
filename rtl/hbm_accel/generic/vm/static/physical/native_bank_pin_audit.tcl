@@ -26,6 +26,14 @@ foreach bt [$nb getBTerms] {
  set along [expr {$face in {N S}?$x:$y}]
  lappend nports [list $face $along [$bt getName]]
 }
+# Remove the old uniform signal pin plan as a complete set. Keeping pins
+# awaiting relocation lets place_pin move an otherwise legal requested track
+# around an old neighbour; a second pass can appear correct by accident.
+# Power/ground port geometry remains intact and is the exclusion source.
+foreach bt [$nb getBTerms] {
+ if {[$bt getSigType] in {POWER GROUND}} continue
+ foreach bp [$bt getBPins] {odb::dbBPin_destroy $bp}
+}
 array set nused {};array set ncount {N 0 S 0 E 0 W 0}
 set nmanifest [open [file join $::env(RESULTS_DIR) native_bank_pin_coordinates.tsv] w]
 puts $nmanifest "port\tface\tlayer\tcenter_um\tactual_track_dbu\tPG_projection_clear"
