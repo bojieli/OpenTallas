@@ -90,6 +90,10 @@ CASES['lk_mut_avbyp'] = dict(params=dict(MODE=4), defines=LK + ['OT_VMFE_MUT_AVB
 CASES['lk_mut_wnqdrop'] = dict(params=dict(SEED=1, NCYC=20000), defines=LK + ['OT_VMFE_MUT_WNQDROP'], expect='fail', regex='LOCKSTEP_BAD')
 for _n, _c in _base.items():
     CASES['h_' + _n] = dict(_c, defines=_c.get('defines', []) + SUB, **({'regex2': 'LOCKSTEP_OK'} if _c['expect'] == 'pass' else {}))
+# FE (a) hierarchy: the flat SLOC FE as reference, the SLOC hierarchy as shadow (sl_lk_*) and substituted (h_sl_*, above)
+for _n in LOCK_SET:
+    CASES['sl_lk_' + _n] = dict(_base[_n], defines=LK + ['OT_SPVM_SLOC'], regex2='LOCKSTEP_OK')
+CASES['sl_lk_mut_fxr1'] = dict(params=dict(SEED=1, NCYC=20000), defines=LK + ['OT_SPVM_SLOC', 'OT_VMFE_MUT_FXR1'], expect='fail', regex='LOCKSTEP_BAD')
 FEH_SRC = 'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv'
 COVER = ['rd', 'wr', 'drain', 'cap', 'cts_low', 'cw_stall', 'rdy', 'dv', 'ks']   # every bin must be hit over the lockstep set
 
