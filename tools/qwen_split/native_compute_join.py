@@ -137,7 +137,7 @@ def main():
     a.rtl.parent.mkdir(parents=True,exist_ok=True);a.rtl.write_text(rtl)
     manifest=dict(schema='opentallas.qwen.actual-native-compute-join.v1',qualified=False,
       scope='real source-output to source-input wires; no physical roots/homes/route ages or whole-die workload qualification',
-      nodes=m['nodes'],joins=m['joins'],actual_clock_roots=dict(tt=4,seq=2,su=346,vm=488,native=6,io=103,embed=1),external_ports=[dict(node=n,port=p,**s)for n,p,s in ext],
+      nodes=m['nodes'],joins=m['joins'],actual_clock_roots={n:sum(s['bits']for p,s in node['ports'].items()if s['direction']=='input'and(p in('ck','clk','face_ck','relay_ck')or p.startswith(('ck_','clk_'))))for n,node in m['nodes'].items()},external_ports=[dict(node=n,port=p,**s)for n,p,s in ext],
       source_register_edges=dict(copy_active=1,su_image_ready=1,su_issue_observer=1,native_return=1),
       clock_binding='all real roots exposed independently; no common phase or physical insertion invented',
       default_profile='production1, unknown routes refuse; diagnostic0 requires explicit nonnegative component ages and remains unqualified',
