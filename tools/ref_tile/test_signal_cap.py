@@ -11,6 +11,7 @@ import unittest
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import ref_tile as RT
+import pre_route_gate as G
 spec = importlib.util.spec_from_file_location("strict_view_export", HERE.parent / "tt_views/view_export.py")
 VE = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(VE)
@@ -25,6 +26,21 @@ def tile(**kw):
 
 
 class SignalCap(unittest.TestCase):
+    def test_generated_m4_kit_gate_and_tamper_rejection(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            source = root / "spec.json"
+            source.write_text(json.dumps(tile(signal_max_layer="M4")))
+            kit = root / RT.gen(str(source), out_root=root)["kit"]
+            gate = G.Gate()
+            G.check_kit(gate, kit, None)
+            self.assertFalse(any(x["check"] == "layer" and x["severity"] == "FAIL" for x in gate.items))
+            path = kit / "kit.env"
+            path.write_text(path.read_text().replace("RLAYERS='M2 M4'", "RLAYERS='M2 M5'"))
+            gate = G.Gate()
+            G.check_kit(gate, kit, None)
+            self.assertTrue(any(x["check"] == "layer" and x["severity"] == "FAIL" for x in gate.items))
+
     def test_default_unchanged_and_stricter_cap_keeps_power(self):
         base = RT.layer_contract(tile(), None)
         self.assertEqual((base["pg_layer"], base["rlayers"], base["strap_layer"]),
