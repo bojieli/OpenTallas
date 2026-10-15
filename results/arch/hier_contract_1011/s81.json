@@ -156,6 +156,7 @@
   "v19 (2026-10-14 PM): PQ return topology G (frame pq_root row off the layer die; 12 count-only RWB slots in a 43.2-um gather|capture seam); Engram hl / Markov K256 / gather v4 / NORM-variant pin files + subslots; cfifo falling-edge station launch; crootr_f target insertion = measured R; IR gate recipe --pdn-field-cov 0.09; recipe s81_layer1_v19c (c9p).",
   "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks.",
   "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks.",
+  "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks.",
   "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks."
  ],
  "slots": [
@@ -13561,7 +13562,7 @@
   },
   {
    "name": "sp_hcx_south0",
-   "master": "HC projection native leaf (owner defines module)",
+   "master": "ot_s81_hcx_projection_leaf",
    "at_um": [
     17334.0,
     1857.6
@@ -13594,7 +13595,7 @@
   },
   {
    "name": "sp_hcx_south1",
-   "master": "HC projection native leaf (owner defines module)",
+   "master": "ot_s81_hcx_projection_leaf",
    "at_um": [
     18241.2,
     1857.6
@@ -13627,7 +13628,7 @@
   },
   {
    "name": "sp_hcx_middle0",
-   "master": "HC projection native leaf (owner defines module)",
+   "master": "ot_s81_hcx_projection_leaf",
    "at_um": [
     17334.0,
     12238.56
@@ -13660,7 +13661,7 @@
   },
   {
    "name": "sp_hcx_middle1",
-   "master": "HC projection native leaf (owner defines module)",
+   "master": "ot_s81_hcx_projection_leaf",
    "at_um": [
     18241.2,
     12238.56
@@ -13693,7 +13694,7 @@
   },
   {
    "name": "sp_hcx_north0",
-   "master": "HC projection native leaf (owner defines module)",
+   "master": "ot_s81_hcx_projection_leaf",
    "at_um": [
     17334.0,
     22350.24
@@ -13726,7 +13727,7 @@
   },
   {
    "name": "sp_hcx_north1",
-   "master": "HC projection native leaf (owner defines module)",
+   "master": "ot_s81_hcx_projection_leaf",
    "at_um": [
     18241.2,
     22350.24
