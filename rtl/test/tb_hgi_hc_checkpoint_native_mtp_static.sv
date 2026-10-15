@@ -149,14 +149,14 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
  reg [16:0] tag_q[0:127][0:7];reg [255:0] data_q[0:127][0:7];
  reg injected=0;reg [16:0] oldest_tag[0:127];reg have_oldest[0:127];
  integer fault_mode=0;
- integer requests=0,responses=0;
+ integer requests=0,phyresponses=0;
  localparam PHY_LATENCY=80;
  function automatic [4:0] pc_of(input [29:0] s);pc_of=s[6:2]^s[11:7]^s[16:12];endfunction
  always @(posedge hbm_clk)begin:phy
   integer s,pc,i,bank,offset,row,free_slot,reply_slot;reg [29:0] sector;reg [34:0] byte_address;
   if(rst_n)begin
    for(i=0;i<128;i=i+1)begin
-    if(kr_v[i]&&kr_rdy[i])begin kr_v[i]<=0;responses=responses+1;end
+    if(kr_v[i]&&kr_rdy[i])begin kr_v[i]<=0;phyresponses=phyresponses+1;end
     reply_slot=-1;
     for(integer os=0;os<8;os=os+1)if(pending[i][os])begin
      if(delay_q[i][os]==0&&reply_slot<0)reply_slot=os;
@@ -168,7 +168,7 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
      if(fault_mode==2&&!injected&&requests>=2800)begin kr_tag[i*17+:17]<=oldest_tag[i];injected<=1;end
      kr_data[i*256+:256]<=data_q[i][reply_slot];pending[i][reply_slot]=0;
     end
-    if(i==0&&fault_mode==3&&!injected&&responses>=2560&&!kr_v[0])begin
+    if(i==0&&fault_mode==3&&!injected&&phyresponses>=2560&&!kr_v[0])begin
      kr_v[0]<=1;kr_tag[0+:17]<=oldest_tag[0];injected<=1;
     end
     if(k_v[i]&&k_rdy[i])begin
@@ -286,7 +286,7 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
                 end
             end
             if(age==50)begin
-                if(requests!=61440||responses!=61440)$fatal(1,"checkpoint PHY count requests%0d responses%0d",requests,responses);
+                if(requests!=61440||phyresponses!=61440)$fatal(1,"checkpoint PHY count requests%0d responses%0d",requests,phyresponses);
                 if(result_sectors!=npos*3)$fatal(1,"nativeHCwritebackcount%0d",result_sectors);
                 $display("HC_CHECKPOINT_NATIVE_MTP_DONE npos=%0d rows=%0d tails=%0d nativeVMresultwords=%0d cycles=%0d",npos,seen,tailseen,result_sectors*8,cycle);$finish;
             end
