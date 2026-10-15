@@ -28,11 +28,11 @@ rtl/hdc/nearhbm/ot_qwen_tp8_attention_native_service.sv
 rtl/test/nearhbm/tb_qwen_tp8_attention_native_service.sv"
 mkdir -p "$out"
 python3 "$here/gen_astk_cal.py" --check > "$out/generated_check.log"
-sha256sum $SRC "$here/native_service.vlt" "$0" > "$out/source.sha256"
+sha256sum $SRC "$here/${VLT:-native_service.vlt}" "$0" > "$out/source.sha256"
 start=$(date +%s)
-"$vl" --binary --timing --hierarchical -j 1 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH \
+"$vl" --binary --timing --hierarchical -j ${VJOBS:-1} -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH \
  +define+KVD_HEADS=1 +define+KVD_Q_FP32=1 +define+KVD_QK_ONLY=1 --top-module tb_qwen_tp8_attention_native_service \
- --Mdir "$out/obj" "$@" "$here/native_service.vlt" $SRC > "$out/verilate.log" 2>&1
+ --Mdir "$out/obj" "$@" "$here/${VLT:-native_service.vlt}" $SRC > "$out/verilate.log" 2>&1
 echo "verilate_seconds $(( $(date +%s) - start ))" >> "$out/verilate.log"
 make -C "$out/obj" -f Vtb_qwen_tp8_attention_native_service_hier.mk -j${OUTER_JOBS:-1} "MAKE=make -j${JOBS:-32}" OBJCACHE=ccache hier_build >> "$out/verilate.log" 2>&1 || \
  make -C "$out/obj" -f Vtb_qwen_tp8_attention_native_service.mk -j"${JOBS:-32}" OBJCACHE=ccache >> "$out/verilate.log" 2>&1
