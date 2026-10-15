@@ -462,6 +462,12 @@ def hgi_collective_native_transport_model():
     return model()
 
 
+def hgi_collective_engram_rowgather_model():
+    """Actual eight-home SRAM row gather, fixed transport and native decode."""
+    from uarch_model_hcoll_rowgather import model
+    return model()
+
+
 def hgi_collective_static_quarter_bridge_model():
     """Full545 compiler-reserved quarter ring; geometry remains explicit."""
     from uarch_model_hcoll_quarter_bridge import model

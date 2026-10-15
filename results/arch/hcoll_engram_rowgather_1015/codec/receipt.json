@@ -1,0 +1,35 @@
+{
+  "status": "PASS codec component only",
+  "rows": 48,
+  "epochs": 2,
+  "native_SRAMs": 4,
+  "packets": 240,
+  "raw_sectors": 432,
+  "decoded_blocks": 384,
+  "BF16_values": 12288,
+  "runs": [
+    {
+      "mutant": 0,
+      "returncode": 0,
+      "output": "ENGRAM_CODEC PASS mut0 actual4SRAM epochs2 rows48 packets240 sectors432 blocks384 BF1612288\n/tmp/hcoll-row-codec-1015/tb.sv:59: $finish called at 18000000 (1ps)"
+    },
+    {
+      "mutant": 1,
+      "returncode": 0,
+      "output": "ENGRAM_CODEC PASS mut1 actual4SRAM epochs2 rows48 packets240 sectors432 blocks384 BF1612288\n/tmp/hcoll-row-codec-1015/tb.sv:59: $finish called at 18000000 (1ps)"
+    },
+    {
+      "mutant": 2,
+      "returncode": 0,
+      "output": "ENGRAM_CODEC PASS mut2 actual4SRAM epochs2 rows48 packets240 sectors432 blocks384 BF1612288\n/tmp/hcoll-row-codec-1015/tb.sv:59: $finish called at 18000000 (1ps)"
+    }
+  ],
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/hdc/v41/ot_hdc_engram_gather.sv": "2edd7582a38629ebd662f68eff7eb88c5f90d88c689157cbbe2acf5d5a2099ed",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_row_store_decode.sv": "e450c13fee2e85d1c5099f225875af1914075ba7154894c5b50659e46505df2d",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hcoll_engram_row_transport.sv": "592154c7f94cacdcdea8b4fd04363daa8b4801982141cbe8d0b0d948e4a3c77f"
+  },
+  "qualification": "Local native SRAM/codec/decode only; no nine-rank endpoint/FEC/clock/physical/wholeROW_GATHER claim"
+}
