@@ -2,10 +2,10 @@
 """Source-bound separate-library STA of retained Quant programme CTS ODB; placement RC only."""
 import argparse, hashlib, importlib.util, json, re, subprocess
 from pathlib import Path
-ap=argparse.ArgumentParser(); ap.add_argument('run',type=Path); a=ap.parse_args()
+ap=argparse.ArgumentParser(); ap.add_argument('run',type=Path);ap.add_argument('--kit',default='hgi_qdq_program_sw125'); a=ap.parse_args()
 r=a.run.resolve(); src=r/'src'; work=r/'routes/gate/work/orfs'
 spec=importlib.util.spec_from_file_location('corner_sta',src/'tools/w18/corner_sta.py'); sta=importlib.util.module_from_spec(spec); spec.loader.exec_module(sta)
-base=next((work/'results/asap7').glob('*/base')); rel='/work/'+str(base.relative_to(work)); macro='physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2'; sdc='physical/ref_tile/hgi_qdq_program_sw125/signoff.sdc'
+base=next((work/'results/asap7').glob('*/base')); rel='/work/'+str(base.relative_to(work)); macro='physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2'; sdc=f'physical/ref_tile/{a.kit}/signoff.sdc'
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 rec={'schema':'opentallas.quant.programme_cts_corners.v1','scope':'retained CTS ODB, placement RC; not routed signoff','run':str(r),'odb_sha256':sha(base/'4_cts.odb'),'saved_sdc_sha256':sha(base/'4_cts.sdc'),'native_sdc_sha256':sha(src/sdc),'corner_helper_sha256':sha(src/'tools/w18/corner_sta.py'),'corners':{}}
 for c in ('tt','ff','ss'):
