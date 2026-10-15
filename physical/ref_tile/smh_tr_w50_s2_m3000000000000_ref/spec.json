@@ -1,0 +1,87 @@
+{
+ "name": "smh_tr_w50_s2_m3000000000000_ref",
+ "top": "ot_smh_tr_w50_s2_m3000000000000",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_masters.sv"
+ ],
+ "defines": [
+  "OT_SMH_RSTRELAY"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_a"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 21.6
+ },
+ "pg_layer": "M6",
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "d"
+  ],
+  "E": [
+   "last"
+  ],
+  "N": [
+   "clk",
+   "rst_a",
+   "first"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/smh/smh_tr_w50_s2_m3000000000000_ref_pins.tcl",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-ELEM-A",
+  "branch": "claude/hbm-smcompact-1014",
+  "tag": "split1",
+  "purpose": "Actual fixed specialization of one of 96 retained SM compact transport slices. Four transit edges and first-edge branch preserved. Independent hardened slice CTS removes 22862-sink tile clock defect; full SM shape unchanged. Slot and parent placement unqualified.",
+  "structural_change": "Harden actual production transport slices as independent clock roots; retain all 96 slices and ten closed compute children. No divided sink-count claim for a flat parent.",
+  "benches": [
+   {
+    "name": "original_transport",
+    "expect": "pass",
+    "pass_regex": "COMPACT EXACT PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "cmd": "python3 tools/bench_smh_compact_transport.py --hard-transport --local"
+   },
+   {
+    "name": "latency_mutant",
+    "expect": "fail",
+    "fail_regex": "FATAL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "cmd": "python3 tools/bench_smh_compact_transport.py --hard-transport --mutant --local"
+   }
+  ],
+  "views_to": "physical/ref_tile/smh_tr_w50_s2_m3000000000000_ref/views",
+  "record_to": "results/rtl/ref_tile/smh_tr_w50_s2_m3000000000000_ref"
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

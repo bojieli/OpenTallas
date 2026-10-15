@@ -1,3 +1,8 @@
+`ifdef OT_SMH_COMPACT_HARD
+`define OT_SMH_SLICE ot_hbm_smh_transport_hard
+`else
+`define OT_SMH_SLICE ot_hbm_smh_transport_slice
+`endif
 // Compact replacement for the physical pt_w/pt_e band. Each 128-bit slice
 // has its own clock/reset pins; the die places the register slices among the
 // retained compute children and carries transit wires on assigned M6/M7 tracks.
@@ -53,18 +58,18 @@ module ot_hbm_smh_compact_pt_w #(parameter integer TAGW=16, NBEAT=13, CHUNK=128)
  generate for(row=0;row<2;row=row+1) begin: g_row
   for(k=0;k<(R+CHUNK-1)/CHUNK;k=k+1) begin: g_slice
    localparam integer OFF=k*CHUNK, W=(R-OFF<CHUNK)?R-OFF:CHUNK;
-   ot_hbm_smh_transport_slice #(.W(W),.RESET_MASK(RM[OFF+:W])) u_slice
+   `OT_SMH_SLICE #(.W(W),.RESET_MASK(RM[OFF+:W])) u_slice
     (.clk(clk),.rst_a(rst_a),.d(rin[row*R+OFF+:W]),.first(first_r[row*R+OFF+:W]),.last(rpm[row*R+OFF+:W]));
   end
  end
  for(k=0;k<(B+CHUNK-1)/CHUNK;k=k+1) begin: g_beat
   localparam integer OFF=k*CHUNK, W=(B-OFF<CHUNK)?B-OFF:CHUNK;
   wire [W-1:0] unused_n,unused_s;
-  ot_hbm_smh_transport_slice #(.W(W),.RESET_MASK(BM[OFF+:W])) u_transit
+  `OT_SMH_SLICE #(.W(W),.RESET_MASK(BM[OFF+:W])) u_transit
    (.clk(clk),.rst_a(rst_a),.d(bin[OFF+:W]),.first(first_b[OFF+:W]),.last(bm[OFF+:W]));
-  ot_hbm_smh_transport_slice #(.W(W),.STAGES(1),.RESET_MASK(BM[OFF+:W])) u_north
+  `OT_SMH_SLICE #(.W(W),.STAGES(1),.RESET_MASK(BM[OFF+:W])) u_north
    (.clk(clk),.rst_a(rst_a),.d(bin[OFF+:W]),.first(bk1_n[OFF+:W]),.last(unused_n));
-  ot_hbm_smh_transport_slice #(.W(W),.STAGES(1),.RESET_MASK(BM[OFF+:W])) u_south
+  `OT_SMH_SLICE #(.W(W),.STAGES(1),.RESET_MASK(BM[OFF+:W])) u_south
    (.clk(clk),.rst_a(rst_a),.d(bin[OFF+:W]),.first(bk1_s[OFF+:W]),.last(unused_s));
  end endgenerate
  assign rl1_n=first_r[0+:R]; assign rl1_s=first_r[R+:R];
@@ -85,14 +90,16 @@ module ot_hbm_smh_compact_pt_e #(parameter integer TAGW=16,NBEAT=13,CHUNK=128) (
   for(k=0;k<(R+CHUNK-1)/CHUNK;k=k+1) begin: g_slice
    localparam integer OFF=k*CHUNK,W=(R-OFF<CHUNK)?R-OFF:CHUNK;
    wire [W-1:0] unused_first;
-   ot_hbm_smh_transport_slice #(.W(W),.RESET_MASK(RM[OFF+:W])) u_slice
+   `OT_SMH_SLICE #(.W(W),.RESET_MASK(RM[OFF+:W])) u_slice
     (.clk(clk),.rst_a(rst_a),.d(rpm[row*R+OFF+:W]),.first(unused_first),.last(rout[row*R+OFF+:W]));
   end
  end
  for(k=0;k<(B+CHUNK-1)/CHUNK;k=k+1) begin: g_beat
   localparam integer OFF=k*CHUNK,W=(B-OFF<CHUNK)?B-OFF:CHUNK;
   wire [W-1:0] unused_first;
-  ot_hbm_smh_transport_slice #(.W(W),.RESET_MASK(BM[OFF+:W])) u_slice
+  `OT_SMH_SLICE #(.W(W),.RESET_MASK(BM[OFF+:W])) u_slice
    (.clk(clk),.rst_a(rst_a),.d(bm[OFF+:W]),.first(unused_first),.last(bout[OFF+:W]));
  end endgenerate
 endmodule
+
+`undef OT_SMH_SLICE

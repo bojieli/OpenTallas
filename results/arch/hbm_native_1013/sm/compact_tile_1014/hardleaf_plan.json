@@ -1,0 +1,64 @@
+{
+  "schema": "opentallas.smh.transport_hardleaf_plan.v1",
+  "status": "UNQUALIFIED",
+  "retained_slices": 96,
+  "retained_input_bits": 3705,
+  "retained_transit_edges": 4,
+  "retained_landing_edges": 1,
+  "retained_closed_compute_leaves": 10,
+  "retained_sm_count": 32,
+  "flat_gate_clock_rule": "REFUSE 22862 sinks TT insertion1347.6ps spread1344.2ps",
+  "masters": [
+    {
+      "kit": "smh_tr_w128_s2_m80_ref",
+      "outline": {
+        "w": 30.24,
+        "h": 30.24
+      },
+      "instances": 4
+    },
+    {
+      "kit": "smh_tr_w128_s2_m0_ref",
+      "outline": {
+        "w": 30.24,
+        "h": 30.24
+      },
+      "instances": 52
+    },
+    {
+      "kit": "smh_tr_w50_s2_m3000000000000_ref",
+      "outline": {
+        "w": 21.6,
+        "h": 21.6
+      },
+      "instances": 4
+    },
+    {
+      "kit": "smh_tr_w128_s1_m0_ref",
+      "outline": {
+        "w": 30.24,
+        "h": 30.24
+      },
+      "instances": 32
+    },
+    {
+      "kit": "smh_tr_w21_s2_m100000_ref",
+      "outline": {
+        "w": 21.6,
+        "h": 21.6
+      },
+      "instances": 2
+    },
+    {
+      "kit": "smh_tr_w21_s1_m100000_ref",
+      "outline": {
+        "w": 21.6,
+        "h": 21.6
+      },
+      "instances": 2
+    }
+  ],
+  "next": "Close actual slice masters before replacing parent primitive with hard views. No slot or parent area fit claimed; final packing must include clock/reset/seams/pin routing and original ten views.",
+  "hardleaf_outline_sum_um2_per_tile": 84204.74879999999,
+  "hardleaf_outline_sum_mm2_per_sm": 1.3472759807999999
+}
