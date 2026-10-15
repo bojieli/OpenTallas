@@ -1,0 +1,196 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/codex/lg-sfu14-slew-repair-1015/work/results/asap7/opentallas_hfd_vm_lg_sfu14_asap7_ref_lg_sfu14_native_route_1015/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 1697,
+   "mean": 245.5,
+   "min": 225.0,
+   "max": 286.1
+  },
+  "all": {
+   "n": 1697,
+   "mean": 245.5,
+   "min": 225.0,
+   "max": 286.1
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "tt": {
+  "boundary": {
+   "n": 1697,
+   "mean": 191.7,
+   "min": 172.0,
+   "max": 229.7
+  },
+  "all": {
+   "n": 1697,
+   "mean": 191.7,
+   "min": 172.0,
+   "max": 229.7
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "ff": {
+  "boundary": {
+   "n": 1697,
+   "mean": 159.0,
+   "min": 139.9,
+   "max": 195.4
+  },
+  "all": {
+   "n": 1697,
+   "mean": 159.0,
+   "min": 139.9,
+   "max": 195.4
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "route_corner": "TC",
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 192,
+  "CK_SS_ALL_MEAN": 192,
+  "CK_SS_MIN": 172,
+  "CK_SS_ALL_MIN": 172,
+  "CK_SS_MAX": 230,
+  "CK_SS_ALL_MAX": 230,
+  "CK_TT_MEAN": 192,
+  "CK_TT_ALL_MEAN": 192,
+  "CK_TT_MIN": 172,
+  "CK_TT_ALL_MIN": 172,
+  "CK_TT_MAX": 230,
+  "CK_TT_ALL_MAX": 230,
+  "CK_FF_MEAN": 159,
+  "CK_FF_ALL_MEAN": 159,
+  "CK_FF_MIN": 140,
+  "CK_FF_ALL_MIN": 140,
+  "CK_FF_MAX": 195,
+  "CK_FF_ALL_MAX": 195,
+  "CK_SSLIB_MEAN": 246,
+  "CK_SSLIB_MIN": 225,
+  "CK_SSLIB_MAX": 286,
+  "CK_SSLIB_ALL_MEAN": 246,
+  "CK_SSLIB_ALL_MIN": 225,
+  "CK_SSLIB_ALL_MAX": 286,
+  "CK_ROUTE_REF": "TT"
+ },
+ "lib_clock_pin": "clk",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
+ "clock_measurements": {
+  "clk": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/codex/lg-sfu14-slew-repair-1015/work/results/asap7/opentallas_hfd_vm_lg_sfu14_asap7_ref_lg_sfu14_native_route_1015/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 1697,
+     "mean": 245.5,
+     "min": 225.0,
+     "max": 286.1
+    },
+    "all": {
+     "n": 1697,
+     "mean": 245.5,
+     "min": 225.0,
+     "max": 286.1
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "boundary": {
+     "n": 1697,
+     "mean": 191.7,
+     "min": 172.0,
+     "max": 229.7
+    },
+    "all": {
+     "n": 1697,
+     "mean": 191.7,
+     "min": 172.0,
+     "max": 229.7
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "boundary": {
+     "n": 1697,
+     "mean": 159.0,
+     "min": 139.9,
+     "max": 195.4
+    },
+    "all": {
+     "n": 1697,
+     "mean": 159.0,
+     "min": 139.9,
+     "max": 195.4
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": "TC",
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 192,
+    "CK_SS_ALL_MEAN": 192,
+    "CK_SS_MIN": 172,
+    "CK_SS_ALL_MIN": 172,
+    "CK_SS_MAX": 230,
+    "CK_SS_ALL_MAX": 230,
+    "CK_TT_MEAN": 192,
+    "CK_TT_ALL_MEAN": 192,
+    "CK_TT_MIN": 172,
+    "CK_TT_ALL_MIN": 172,
+    "CK_TT_MAX": 230,
+    "CK_TT_ALL_MAX": 230,
+    "CK_FF_MEAN": 159,
+    "CK_FF_ALL_MEAN": 159,
+    "CK_FF_MIN": 140,
+    "CK_FF_ALL_MIN": 140,
+    "CK_FF_MAX": 195,
+    "CK_FF_ALL_MAX": 195,
+    "CK_SSLIB_MEAN": 246,
+    "CK_SSLIB_MIN": 225,
+    "CK_SSLIB_MAX": 286,
+    "CK_SSLIB_ALL_MEAN": 246,
+    "CK_SSLIB_ALL_MIN": 225,
+    "CK_SSLIB_ALL_MAX": 286,
+    "CK_ROUTE_REF": "TT"
+   },
+   "lib_clock_pin": "clk",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+  }
+ }
+}

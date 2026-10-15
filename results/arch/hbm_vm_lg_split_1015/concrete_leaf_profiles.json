@@ -37,5 +37,88 @@
   ],
   "HC_existing": "ot_hbm_vm_lg_static_bank READ18/WRITE15 native_route_1015 receipt93dd47d9e; preserved",
   "model_basis": "HC actual finalroot1705 and1509um2 routedstdarea. Near/middle have16/8 fewer RTL calendar FF respectively; reference is not an actual measurement of new concrete masters. Pin-limited outline/clock/PG/DRC independently checked.",
-  "aggregate_96_leaf_planning_area_mm2": 2.1821571072
+  "aggregate_96_leaf_planning_area_mm2": 2.1821571072,
+  "native_routed_prototypes": {
+    "su10": {
+      "master": "hfd_vm_lg_su10",
+      "receipt": "results/arch/hbm_vm_lg_split_1015/slew_repair_1015/su10/native/receipt.json",
+      "receipt_sha256": "877bcbac7e072a20cf427e2c04dfc166fd8e142e48960cb53737bb93a6db948e",
+      "views": "physical/ref_tile/vm_lg_bank_su10_static_1015/views/hfd_vm_lg_su10",
+      "result": "PASS_SINGLE_LITERAL_LEAF_PROTOTYPE",
+      "TT_setup_ps": 269.9,
+      "SS_setup_ps": 114.72,
+      "actual_FF_hold_ps": 29.9,
+      "raw_routed_clock_ps": {
+        "tt": {
+          "n": 1689,
+          "mean": 173.5,
+          "min": 164.1,
+          "max": 196.8,
+          "spread_ps": 32.7
+        },
+        "ff": {
+          "n": 1689,
+          "mean": 142.5,
+          "min": 133.7,
+          "max": 164.9,
+          "spread_ps": 31.2
+        },
+        "ss": {
+          "n": 1689,
+          "mean": 225.1,
+          "min": 214.5,
+          "max": 249.5,
+          "spread_ps": 35.0
+        }
+      },
+      "pin_gate": {
+        "signals": 1673,
+        "PG_contacts": 54,
+        "violations": 0
+      },
+      "replicas": 32,
+      "hierarchical_adoption": false
+    },
+    "sfu14": {
+      "master": "hfd_vm_lg_sfu14",
+      "receipt": "results/arch/hbm_vm_lg_split_1015/slew_repair_1015/sfu14/native/receipt.json",
+      "receipt_sha256": "be7f4545691dc9500654a4cf9e4ff9f7b7afae073461c74c251992cfda9d765f",
+      "views": "physical/ref_tile/vm_lg_bank_sfu14_static_1015/views/hfd_vm_lg_sfu14",
+      "result": "PASS_SINGLE_LITERAL_LEAF_PROTOTYPE",
+      "TT_setup_ps": 251.5,
+      "SS_setup_ps": 127.66,
+      "actual_FF_hold_ps": 23.17,
+      "raw_routed_clock_ps": {
+        "tt": {
+          "n": 1697,
+          "mean": 191.7,
+          "min": 172.0,
+          "max": 229.7,
+          "spread_ps": 57.7
+        },
+        "ff": {
+          "n": 1697,
+          "mean": 159.0,
+          "min": 139.9,
+          "max": 195.4,
+          "spread_ps": 55.5
+        },
+        "ss": {
+          "n": 1697,
+          "mean": 245.5,
+          "min": 225.0,
+          "max": 286.1,
+          "spread_ps": 61.1
+        }
+      },
+      "pin_gate": {
+        "signals": 1673,
+        "PG_contacts": 54,
+        "violations": 0
+      },
+      "replicas": 32,
+      "hierarchical_adoption": false
+    }
+  },
+  "physical_adoption_scope": "Only three independently source-bound near/middle/far leaf prototypes. Actual96 station placement, compensated clocks, PG and hierarchical access remain open."
 }

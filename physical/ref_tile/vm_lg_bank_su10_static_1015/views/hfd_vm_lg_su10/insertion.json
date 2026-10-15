@@ -1,0 +1,196 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/codex/lg-su10-slew-repair-1015/work/results/asap7/opentallas_hfd_vm_lg_su10_asap7_ref_lg_su10_native_route_1015/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 1689,
+   "mean": 225.1,
+   "min": 214.5,
+   "max": 249.5
+  },
+  "all": {
+   "n": 1689,
+   "mean": 225.1,
+   "min": 214.5,
+   "max": 249.5
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "tt": {
+  "boundary": {
+   "n": 1689,
+   "mean": 173.5,
+   "min": 164.1,
+   "max": 196.8
+  },
+  "all": {
+   "n": 1689,
+   "mean": 173.5,
+   "min": 164.1,
+   "max": 196.8
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "ff": {
+  "boundary": {
+   "n": 1689,
+   "mean": 142.5,
+   "min": 133.7,
+   "max": 164.9
+  },
+  "all": {
+   "n": 1689,
+   "mean": 142.5,
+   "min": 133.7,
+   "max": 164.9
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "route_corner": "TC",
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 174,
+  "CK_SS_ALL_MEAN": 174,
+  "CK_SS_MIN": 164,
+  "CK_SS_ALL_MIN": 164,
+  "CK_SS_MAX": 197,
+  "CK_SS_ALL_MAX": 197,
+  "CK_TT_MEAN": 174,
+  "CK_TT_ALL_MEAN": 174,
+  "CK_TT_MIN": 164,
+  "CK_TT_ALL_MIN": 164,
+  "CK_TT_MAX": 197,
+  "CK_TT_ALL_MAX": 197,
+  "CK_FF_MEAN": 142,
+  "CK_FF_ALL_MEAN": 142,
+  "CK_FF_MIN": 134,
+  "CK_FF_ALL_MIN": 134,
+  "CK_FF_MAX": 165,
+  "CK_FF_ALL_MAX": 165,
+  "CK_SSLIB_MEAN": 225,
+  "CK_SSLIB_MIN": 214,
+  "CK_SSLIB_MAX": 250,
+  "CK_SSLIB_ALL_MEAN": 225,
+  "CK_SSLIB_ALL_MIN": 214,
+  "CK_SSLIB_ALL_MAX": 250,
+  "CK_ROUTE_REF": "TT"
+ },
+ "lib_clock_pin": "clk",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
+ "clock_measurements": {
+  "clk": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/codex/lg-su10-slew-repair-1015/work/results/asap7/opentallas_hfd_vm_lg_su10_asap7_ref_lg_su10_native_route_1015/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 1689,
+     "mean": 225.1,
+     "min": 214.5,
+     "max": 249.5
+    },
+    "all": {
+     "n": 1689,
+     "mean": 225.1,
+     "min": 214.5,
+     "max": 249.5
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "boundary": {
+     "n": 1689,
+     "mean": 173.5,
+     "min": 164.1,
+     "max": 196.8
+    },
+    "all": {
+     "n": 1689,
+     "mean": 173.5,
+     "min": 164.1,
+     "max": 196.8
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "boundary": {
+     "n": 1689,
+     "mean": 142.5,
+     "min": 133.7,
+     "max": 164.9
+    },
+    "all": {
+     "n": 1689,
+     "mean": 142.5,
+     "min": 133.7,
+     "max": 164.9
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": "TC",
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 174,
+    "CK_SS_ALL_MEAN": 174,
+    "CK_SS_MIN": 164,
+    "CK_SS_ALL_MIN": 164,
+    "CK_SS_MAX": 197,
+    "CK_SS_ALL_MAX": 197,
+    "CK_TT_MEAN": 174,
+    "CK_TT_ALL_MEAN": 174,
+    "CK_TT_MIN": 164,
+    "CK_TT_ALL_MIN": 164,
+    "CK_TT_MAX": 197,
+    "CK_TT_ALL_MAX": 197,
+    "CK_FF_MEAN": 142,
+    "CK_FF_ALL_MEAN": 142,
+    "CK_FF_MIN": 134,
+    "CK_FF_ALL_MIN": 134,
+    "CK_FF_MAX": 165,
+    "CK_FF_ALL_MAX": 165,
+    "CK_SSLIB_MEAN": 225,
+    "CK_SSLIB_MIN": 214,
+    "CK_SSLIB_MAX": 250,
+    "CK_SSLIB_ALL_MEAN": 225,
+    "CK_SSLIB_ALL_MIN": 214,
+    "CK_SSLIB_ALL_MAX": 250,
+    "CK_ROUTE_REF": "TT"
+   },
+   "lib_clock_pin": "clk",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+  }
+ }
+}

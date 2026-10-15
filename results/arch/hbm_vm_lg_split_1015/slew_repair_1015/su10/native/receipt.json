@@ -1,0 +1,166 @@
+{
+  "schema": "opentallas.hbm.lg-native-routed-leaf.v2",
+  "result": "PASS_SINGLE_LITERAL_LEAF_PROTOTYPE",
+  "master": "hfd_vm_lg_su10",
+  "source_commit": "f3fa747d8",
+  "functional_receipt_commit": "506e762c6",
+  "functional_scope": "812 realprogramme words\u219224 literal near/middle/far leaves\u219224 current7b2 VM SRAMs,3072 exact writes/readbacks and real payload mutant rejected",
+  "native_parameters": {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+  },
+  "baseline_failure": "one native actual return-D max-slew violation; original complete ODB/SPEF kept separately",
+  "repair": {
+    "hook_commit": "63f59cc86",
+    "capture_bit": 244,
+    "old": "INVx2_ASAP7_75t_R",
+    "new": "INVx4_ASAP7_75t_R",
+    "additional_area_um2": 0.02916,
+    "additional_FF": 0,
+    "additional_cycles": 0,
+    "clock_roots_changed": false,
+    "constraints_changed": false,
+    "native_CTS_objects_unchanged": 24
+  },
+  "route": {
+    "host": "ot-epyc4",
+    "unit_prefix": "oth-ubuntu-2277038",
+    "directory": "/srv/opentallas-scratch/codex/lg-su10-slew-repair-1015",
+    "status": "TERMINAL exit0",
+    "collection_unit_prefix": "2303816",
+    "checked_export_unit_prefix": "2328401",
+    "DRC": 0,
+    "antenna_nets": 0,
+    "violation_counts": {
+      "max slew": 0,
+      "max fanout": 0,
+      "max cap": 0,
+      "setup": 0,
+      "hold": 0
+    },
+    "TT_setup_ps": 269.9,
+    "SS_setup_ps": 114.72,
+    "actual_FF_hold_ps": 29.9,
+    "odb_sha256": "0683d80b6e3bcda1252e5cf3f9875b9106280806ce7670e9e06b09706befdc2b",
+    "spef_sha256": "4bd82a96faa757727d9619ba9b6d0a735c7b733230dc18762faadbd6b50c7586",
+    "FF_scope": "independent realFF library + actual routedSPEF + unchanged propagated signoffSDC; not TT-min"
+  },
+  "raw_routed_clock_ps": {
+    "tt": {
+      "n": 1689,
+      "mean": 173.5,
+      "min": 164.1,
+      "max": 196.8,
+      "spread_ps": 32.7
+    },
+    "ff": {
+      "n": 1689,
+      "mean": 142.5,
+      "min": 133.7,
+      "max": 164.9,
+      "spread_ps": 31.2
+    },
+    "ss": {
+      "n": 1689,
+      "mean": 225.1,
+      "min": 214.5,
+      "max": 249.5,
+      "spread_ps": 35.0
+    }
+  },
+  "outline_um": [
+    150.336,
+    151.2
+  ],
+  "orientation": "R0 only",
+  "pin_gate": {
+    "scope": "actual signal BTerm PORT rectangles, requested actual ODB routingtrack indices, and both VDD/VSS PG contact projections",
+    "actual_sha256": "ecd8aee28371e74c281b478ffa8744db8d4e39064b7c244bd90dc429ff2f7576",
+    "coordinates_sha256": "eab727c5caf0e16d514e5e325efe835ec01faf193882f56fbf22e42d8d9aff20",
+    "outline_um": [
+      0.0,
+      0.0,
+      150.336,
+      151.2
+    ],
+    "scalar_pins": 1673,
+    "PG_contact_shapes": 54,
+    "face_pins": {
+      "N": 5,
+      "W": 556,
+      "S": 556,
+      "E": 556
+    },
+    "clock_port": [
+      "clk",
+      "clk",
+      "SIGNAL",
+      "INPUT",
+      [
+        [
+          "M5",
+          [
+            33.264,
+            151.116,
+            33.288,
+            151.2
+          ]
+        ]
+      ]
+    ],
+    "shifted_actual_pins": [],
+    "PG_clearance_violations": [],
+    "signal_pitch_violations": [],
+    "missing_or_multiple_rectangles": [],
+    "pass": true
+  },
+  "views": {
+    "checked_against_routed_TT_FF": true,
+    "strict_child_lint": "PASS capM5 strict-pockets",
+    "LEF_postprocess": "standard own-net PORT stub and own M5 pocket closure, no routed ODB change",
+    "warnings": [
+      "(f) face-pin access: 1665 of 1673 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. far_rq[0] M4 (0.060,8.112), far_rq[10] M4 (0.060,8.112), far_rq[11] M4 (0.060,8.112))"
+    ],
+    "hashes": {
+      "abstract.json": "336eb4f7df275e414e53ff271b8abe16d170bd8178a91b3e5398bb7211928cb9",
+      "export_tt.log": "7c736ea8e26ba863c0a8a32649549ad934bf292db0d2aea6be18d00148aec790",
+      "export_ss.log": "b9e91b8f923d5c8006845df776f9d2cebda472702b9e2f4b0c7f65e9a2fc10c3",
+      "export_ss.tcl": "acfbecd879aa5ca5a6bfa3eabca305a4796b15259b6988e2415588924b2dfcb3",
+      "export_ff.log": "8a2776299e9392ee0bc1bb4aee22c65eac17853831bf83c02101c0e526a30fb4",
+      "export_tt.tcl": "5b7758138ff6a16eeb9647c78607809d14e2bc10cdc318643174d256bb4c048a",
+      "hfd_vm_lg_su10.lef": "a573acd435c16a1a4a72bc4374dfaa91154b3f2196a16daf691dbc6f0e23a829",
+      "insertion.json": "6ea79d16c893318fdda8403bc7111b7dc5a42905e3bba3b6d5b0450733bc5273",
+      "hfd_vm_lg_su10_ss.lib": "0dac1b0438fe093552480cd7eacc0e99189933680d7394c8648247fba37d7986",
+      "signal_layer_audit_ff.json": "5a9f40285718a892a7378a507dfffc15813cf4bca19f9c8ccdf2ae2ba8ea20ba",
+      "hfd_vm_lg_su10_ff.lib": "914ac75f72ca18195b46314af58ccca0c7decfa718640c317dead8dc61337215",
+      "export_ff.tcl": "09d9564f8ea209f7da87026639712c52fe7e4fe7973a404710f5629f1e151d92",
+      "signal_layer_audit_ss.json": "5a9f40285718a892a7378a507dfffc15813cf4bca19f9c8ccdf2ae2ba8ea20ba",
+      "signal_layer_audit_tt.json": "5a9f40285718a892a7378a507dfffc15813cf4bca19f9c8ccdf2ae2ba8ea20ba",
+      "hfd_vm_lg_su10.raw.lef": "378b407e58b0f5823c77447d880d25c7dc360ebdd8b03b484ea822fd1dae322b",
+      "hfd_vm_lg_su10_tt.lib": "a5343d9167a9945cb913a04c8142105e70150b32af6529be72eec6da7be21839"
+    }
+  },
+  "open": [
+    "Actual96leaf absolute station/root delivery and compensated relativephase",
+    "Actual parent cut/PG/IR/EM and hierarchical access; HC48um harness does not qualify these new actual homes",
+    "Whole-token compiler/globalprogramme binding and production throughput"
+  ],
+  "publication": "New literal near/middle singleleaf prototype only; historical HC and failed baseline preserved",
+  "evidence_sha256": {
+    "final_actual_pin_pg.json": "ecd8aee28371e74c281b478ffa8744db8d4e39064b7c244bd90dc429ff2f7576",
+    "native_bank_pin_coordinates.tsv": "eab727c5caf0e16d514e5e325efe835ec01faf193882f56fbf22e42d8d9aff20",
+    "route.log": "1edfe12f9b118a195a6092c36b9f04256b708a95f56e1c4125d9e8b09df7b59c",
+    "final_pin_audit.json": "80318fef4c85edbbfd0e1575a333e6b37c8c97c86d28b16f23847099906a3428",
+    "check_export.sh": "524e6037768759a1804f06af3abd3658708aab4ca01757f4c42410409ea212d2",
+    "strict_child_lint.json": "4c07e8ca09c4ab247857ef518a59a146281842618151979600795a696a98c4b5",
+    "collect.sh": "2734aa1efabf4a4149ad456cb4b23cb883293e19224dcd119ef53113e2d6d95a",
+    "export_checked.log": "96750d7f3faa5a4aef626783bbbb025756bfec09a3d99bbd3eff068a7295f0e7",
+    "lef_postprocess.log": "7a78b9050e61ef093a0e4a6ec310144a6a88de68d5e297e761218941447b1861",
+    "prepared.json": "0bf4022cef756fb556291921cc92b9d1f66ee4df08ab77c1b4f8355afe264155",
+    "upstream_check.json": "d1b9be413e5052730103c32dc70c081a054f28c3180cfb43c05c2fb93490f887",
+    "6_final.v": "aa64ec3f04c67943b8eb242d787ccb536d9f18dc57ded7e12242abfbb16cfa23",
+    "ck_routed.json": "6ea79d16c893318fdda8403bc7111b7dc5a42905e3bba3b6d5b0450733bc5273",
+    "6_finish.rpt": "7e3462c982bd960f1616f7ae4c98899d662642a3ee72e57e991615741c3997a9",
+    "corner_sta.json": "650793c4f6b88027c508516a0202886c7f17904bac623282dcc27748a9efb673"
+  }
+}
