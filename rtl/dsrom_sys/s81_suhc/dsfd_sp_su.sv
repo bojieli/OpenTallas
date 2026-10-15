@@ -8,7 +8,7 @@
 // the command / done pulses are flopped inside the adapter's CDC FIFOs.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_su #(
-    parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40,
+    parameter integer INPUT_CREDITS = 0, QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40,
     parameter integer S_RD = 16, S_WR = 16, LM = 5, LA = 4, OQ = 1024, MUT = 0, AMUT = 0, XMUT = 0, RAL = 16
 ) (
     input  wire                cck, crs,                 // controller clock / reset (dsfd_sp_ctrl domain)
@@ -35,7 +35,7 @@ module dsfd_sp_su #(
     wire [7:0]  d_t;
     reg inp_q;
     always @(posedge sk or negedge srs) if (!srs) inp_q <= 1'b0; else inp_q <= inp;
-    ot_s81_engine_adapter #(.QD(8), .MUT(AMUT)) u_ad (
+    ot_s81_engine_adapter #(.QD(8), .MUT(AMUT), .INPUT_CREDITS(INPUT_CREDITS)) u_ad (
         .c_clk(cck), .c_rst_n(crs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v), .c_done_tag(c_done_tag),
         .fault(a_flt), .online(online),
         .e_clk(sk), .e_rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_inputs_present(inp_q),

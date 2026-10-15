@@ -68,7 +68,7 @@ module ot_s81_su_pin #(
 endmodule
 
 module ot_s81_su_ctl #(
-    parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16,
+    parameter integer INPUT_CREDITS = 0, QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16,
     parameter integer S_RD = 16, S_WR = 16, NSW = 8, NQB = 4, NQN = 2, NKV = 2, MUT = 0, AMUT = 0, QRW = 2
 ) (
     input  wire                cck, crs,
@@ -112,7 +112,7 @@ module ot_s81_su_ctl #(
     reg [83:0] cmd_d_q;
     always @(posedge cck or negedge crs) if (!crs) cmd_v_q <= 1'b0; else cmd_v_q <= c_cmd_v;
     always @(posedge cck) cmd_d_q <= c_cmd_d;
-    ot_s81_engine_adapter #(.QD(8), .MUT(AMUT)) u_ad (
+    ot_s81_engine_adapter #(.QD(8), .MUT(AMUT), .INPUT_CREDITS(INPUT_CREDITS)) u_ad (
         .c_clk(cck), .c_rst_n(crs), .c_cmd_v(cmd_v_q), .c_cmd_d(cmd_d_q), .c_done_v(c_done_v), .c_done_tag(c_done_tag),
         .fault(a_flt), .online(online),
         .e_clk(sk), .e_rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_inputs_present(inp_q),

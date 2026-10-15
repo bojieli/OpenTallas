@@ -9,7 +9,7 @@
 // the command / done pulses are flopped inside the adapter's CDC FIFOs.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_hc #(
-    parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, LVM = 10, WIN = 2, WOUT = 2, ML = 5, AL = 4,
+    parameter integer INPUT_CREDITS = 0, NG = 256, D = 5120, S_RD = 2, S_WR = 8, LVM = 10, WIN = 2, WOUT = 2, ML = 5, AL = 4,
     parameter integer OQ = 512, MUT = 0, AMUT = 0,
     parameter integer HIER = 0,                          // 0: flat engine ot_s81_hc_core; 1: hierarchical slab = pin tile
     parameter integer NCOL = 3, GS = 8, S_RT = 4,        //    ot_s81_hc_cpin + combine ot_s81_hc_comb + column roots
@@ -139,7 +139,7 @@ module dsfd_sp_hc #(
     localparam integer NE0 = (necnt(0) > 0) ? necnt(0) : 1, NE2 = (necnt(2) > 0) ? necnt(2) : 1;
     wire [NE0*32-1:0] w_ex;
     wire [NE2*32-1:0] e_ex;
-    ot_s81_hc_comb #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
+    ot_s81_hc_comb #(.INPUT_CREDITS(INPUT_CREDITS), .NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
                      .MUT(MUT), .AMUT(AMUT), .HALF(HALF), .RLY(RLY), .RF(CSPLIT ? 5 : 1),
                      .DW(CSPLIT ? 6 : 5), .RET_EXTRA(CNL_PIN), .PIPE(PIPE), .PIPE_PD(PIPE_PD)) u_cb (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v),
@@ -342,7 +342,7 @@ module dsfd_sp_hc #(
     wire [7:0]  d_t;
     reg inp_q;
     always @(posedge sk or negedge srs) if (!srs) inp_q <= 1'b0; else inp_q <= inp;
-    ot_s81_engine_adapter #(.QD(8), .MUT(AMUT)) u_ad (
+    ot_s81_engine_adapter #(.QD(8), .MUT(AMUT), .INPUT_CREDITS(INPUT_CREDITS)) u_ad (
         .c_clk(cck), .c_rst_n(crs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v), .c_done_tag(c_done_tag),
         .fault(a_flt), .online(online),
         .e_clk(sk), .e_rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_inputs_present(inp_q),

@@ -19,7 +19,7 @@
 // defaults are the hardened NG 256 HIER=1 configuration = this module's defaults; elaboration check below).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_comb #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
+    parameter integer INPUT_CREDITS = 0, NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
     parameter integer WIN = 2, WOUT = 2, MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16,
     parameter integer HALF = 0, RLY = 1,            // the chains' sub-tiles: half octets (2 a slot), RLY relays a hop
     parameter integer DW = 3 + RW, RET_EXTRA = 0,   // the write path to the pins (send + capture + relays + pin flop)
@@ -151,9 +151,9 @@ module ot_s81_hc_comb #(
     wire [S_RT*24-1:0]  a_iq;
 
 `ifdef OT_S81_HC_COMB_HARD
-    ot_s81_hc_cseq #(.PIPE(PIPE), .PD(PIPE_PD)) u_seq (
+    ot_s81_hc_cseq #(.INPUT_CREDITS(INPUT_CREDITS), .PIPE(PIPE), .PD(PIPE_PD)) u_seq (
 `else
-    ot_s81_hc_cseq #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
+    ot_s81_hc_cseq #(.INPUT_CREDITS(INPUT_CREDITS), .NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
         .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW),
         .PIPE(PIPE), .PD(PIPE_PD)) u_seq (
 `endif

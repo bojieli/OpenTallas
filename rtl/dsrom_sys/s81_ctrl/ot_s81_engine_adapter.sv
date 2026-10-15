@@ -71,7 +71,7 @@ endmodule
 // copies, one more cycle of staged release): copy 0 -> this module's state, copy 1 / 2 -> the two CDC FIFOs, which build
 // no conditioner of their own (EXT_RST).  No flop of one domain reaches a reset pin of the other (XRT 0: the FIFOs'
 // conditioners were cleared by c_run && e_run: a serial-domain flop -> stream-domain RESETN recovery arc, -334 ps).
-module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0)(
+module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0, INPUT_CREDITS=0)(
  input wire c_clk,c_rst_n,input wire c_cmd_v,input wire[83:0] c_cmd_d,
  output reg c_done_v,output reg[7:0] c_done_tag,output wire fault,output wire online,
  input wire e_clk,e_rst_n,output wire e_cmd_v,output wire[83:0] e_cmd_d,
@@ -145,7 +145,27 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0)(
  reg rv; reg[83:0] rq;
  wire[7:0] etag={rq[83],rq[6:0]};
  assign e_cmd_d=rq;
- assign e_cmd_v=rv&&e_inputs_present&&!epending[etag]&&(eused<QD);
+ // In credit mode each input pulse authorises exactly one descriptor in
+ // client order. Keep tokens while the command CDC/engine is stalled; consume
+ // only at the real e_cmd_v && e_cmd_ready handshake, never at command arrival.
+ reg [CW-1:0] input_tokens;
+ wire inputs_ok = INPUT_CREDITS ? (input_tokens != 0) : e_inputs_present;
+ assign e_cmd_v=rv&&inputs_ok&&!epending[etag]&&(eused<QD);
+ wire input_overflow = INPUT_CREDITS && e_inputs_present && (input_tokens == QD) && !take;
+ always @(posedge e_clk or negedge e_run)
+  if(!e_run) input_tokens<=0;
+  else if(INPUT_CREDITS) begin
+   case({e_inputs_present,take})
+    2'b10: if(input_tokens<QD) input_tokens<=input_tokens+1'b1;
+    2'b01:
+`ifdef OT_S81_MUT_INPUT_CREDITS
+     input_tokens<=input_tokens;
+`else
+     input_tokens<=input_tokens-1'b1;
+`endif
+    default: input_tokens<=input_tokens;
+   endcase
+  end
  wire take=e_cmd_v&&e_cmd_ready;
  assign cr=!rv||take;
  always @(posedge e_clk or negedge e_run) if(!e_run) rv<=1'b0; else if(cr) rv<=cv;
@@ -177,7 +197,7 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0)(
    if(complete) epending[e_done_tag]<=0;
    if(take) epending[etag]<=1;
    case({take,complete}) 2'b10:eused<=eused+1'b1;2'b01:eused<=eused-1'b1;default:eused<=eused;endcase
-   if((e_done_v&&!complete)||(rv&&epending[etag])||done_fault) ef<=1;
+   if((e_done_v&&!complete)||(rv&&epending[etag])||done_fault||input_overflow) ef<=1;
   end
  end
 `ifdef OT_SPVM_RESET_ACK

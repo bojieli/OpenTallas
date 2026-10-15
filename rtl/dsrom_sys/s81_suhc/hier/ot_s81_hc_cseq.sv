@@ -18,7 +18,7 @@
 // code 6 on an event nobody issued); late hnz / pflt flags stay sticky faults as before.  PIPE 0: unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cseq #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
+    parameter integer INPUT_CREDITS = 0, NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
     parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW,
     parameter integer PIPE = 1, PD = 40
 ) (
@@ -104,7 +104,7 @@ module ot_s81_hc_cseq #(
     ot_hdc_delay #(.W(9), .D(DW), .RESET(1)) u_dd (.clk(sk), .rst_n(rs_n), .d({d_v, d_t}), .q(dd));
     wire       cdv;
     wire [7:0] cdt;
-    ot_s81_engine_adapter #(.QD(8), .MUT(AMUT)) u_ad (
+    ot_s81_engine_adapter #(.QD(8), .MUT(AMUT), .INPUT_CREDITS(INPUT_CREDITS)) u_ad (
         .c_clk(cck), .c_rst_n(crs_n), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(cdv), .c_done_tag(cdt),
         .fault(a_flt), .online(online),
         .e_clk(sk), .e_rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_inputs_present(inp_q),

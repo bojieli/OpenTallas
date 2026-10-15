@@ -7,9 +7,10 @@
 // controller side and the slab (the adapter's pulse CDC runs synchronous).  f_inp = the SU dependency net (head
 // descriptor's VM operands present: the VM row-completion event), a die pin, never tied here.  +1 cycle each way.
 // The hierarchical dsfd_sp_su_h replaces dsfd_sp_su with the same pins.
+// Native f_inp is one pulse per job from engine12. INPUT_CREDITS=0 selects the legacy level contract.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_su_c #(
-    parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40,
+    parameter integer INPUT_CREDITS = 1, QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40,
     parameter integer S_RD = 16, S_WR = 16, MUT = 0, AMUT = 0
 ) (
     input  wire [0:0]          ck,
@@ -39,7 +40,7 @@ module dsfd_sp_su_c #(
     always @(posedge ck[0]) cd_q <= c_cmd[83:0];
     wire dv, flt, onl;
     wire [7:0] dt;
-    dsfd_sp_su #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
+    dsfd_sp_su #(.INPUT_CREDITS(INPUT_CREDITS), .QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
                  .SM_NVMAX(SM_NVMAX), .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT)) u_su (
         .cck(ck[0]), .crs(rn), .sk(ck[0]), .srs(rn), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(dv), .c_done_tag(dt),
         .inp(f_inp[0]), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row),
