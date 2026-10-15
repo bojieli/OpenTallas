@@ -1,0 +1,3 @@
+Oct 15 03:04:05 regular-crane systemd[3813]: Started oth-ubuntu-1668505-1792058645.scope - [systemd-run] /usr/bin/bash -lc "cp lint_profile47.log lint_profile47_cap24_terminal143.log && /usr/bin/time -v verilator --lint-only --timing -DOT_QFD_SEQ_SU_NOWROM -DOT_QFD_VM_NOX -DOT_QFDS_LU=47 -DOT_QFDS_LS=376 -Wno-fatal -Wno-TIMESCALEMOD -Irtl/hdc --top-module qfd_native_compute_join -f native_join.f > lint_profile47_cap96.log 2>&1".
+Oct 15 03:10:38 regular-crane systemd[3813]: oth-ubuntu-1668505-1792058645.scope: Consumed 6min 33.109s CPU time over 6min 33.127s wall clock time, 35.8G memory peak.
+Oct 15 03:11:28 regular-crane sudo[1693605]: ubuntu :  PWD=/home/ubuntu ; USER=root ; COMMAND=/usr/bin/journalctl --user -u oth-ubuntu-1668505-1792058645.scope --no-pager -n 6

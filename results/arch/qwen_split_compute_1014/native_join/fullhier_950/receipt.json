@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.qwen.actual-native-fullhierarchy.v1",
+  "status": "ELABORATION_PASS_WITH_WARNINGS",
+  "qualified": false,
+  "unit": "oth-ubuntu-1668505-1792058645.scope",
+  "command_exit": 0,
+  "clock_roots": 950,
+  "master_nodes": 7,
+  "actual_producer_joins": 64,
+  "source_entries": 116,
+  "hdl_input_files": 108,
+  "source_manifest_sha256": "af83d08b3bd5a78d5d02ee5dca1c4a948aefb332a6cf3439919f1058ae165f8a",
+  "log_sha256": "066aea756e4b04f8e69feed4b381690126765f9f1ed488f6245f293406c33a25",
+  "warnings": {
+    "PINMISSING": 53,
+    "WIDTHEXPAND": 193,
+    "WIDTHTRUNC": 112,
+    "WIDTHCONCAT": 14,
+    "CMPCONST": 1,
+    "UNOPTFLAT": 3
+  },
+  "hard_errors": [],
+  "scope": "Full actual seven-master source hierarchy Verilator lint-only elaboration; no simulation, place/route, physical clock/pin/source-view or compiler calendar qualification.",
+  "known_warning_review": [
+    "PINMISSING includes historical parsed module definitions and omitted observation outputs. Omitted ck_mul callers use default HARD_MUL=0; omitted ck_lsl caller uses default CHILD_CLOCKS=0. No unassigned real topjoin input tied off. Active hierarchical warning classification remains explicit followup.",
+    "UNOPTFLAT g/p arrays advance only prefix levels; sel bus advances only disjoint slice i to i+1. Bit-level source appears feedforward; warnings preserved rather than suppressed.",
+    "Width warnings are retained source concerns, not a claim of arithmetic equivalence."
+  ],
+  "open": [
+    "actual source-equivalent physical child masters and per-root clock phase/pins",
+    "physical route ages and fixed programme schedule",
+    "external HOST/KV/PHY producer binding and licensedFDI clock conversion",
+    "951-root copy successor separate source version",
+    "A operand gateway extraction/equivalence/activities separate design candidate"
+  ],
+  "elapsed_seconds": 393.1,
+  "maximum_rss_kbytes": 37533796,
+  "verilator_modules": 249,
+  "source_bytes_mb": 70.249
+}
