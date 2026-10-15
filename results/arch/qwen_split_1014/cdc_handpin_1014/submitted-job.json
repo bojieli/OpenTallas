@@ -1,0 +1,129 @@
+{
+  "name": "qkd_cdc_wleaf_hpin_ref-hp1-128073d6c",
+  "block": "qkd_cdc_wleaf_hpin",
+  "ref_tile": true,
+  "owner": "Codex:Q-KVSYS-ELEM",
+  "purpose": "Native input-pin capture successor for authorized CDC h_hand hand-off +1 edge; same die port widths/slot.",
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "codex/kvsys-cdc-hpin-sourcebound-1014",
+    "commit": "128073d6c8383da7af6b017856640f453d20d61c",
+    "extra_paths": [
+      "rtl/test/qwen_blocks",
+      "rtl/test/qwen_kv_die",
+      "physical/qkd_ctrl_strip",
+      "rtl/qwen_sys",
+      "rtl/lib",
+      "tools/qwen_kv_die"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "lint",
+        "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_cdc_wleaf_hpin u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/kv/qkd_cdc_wleaf_hpin.sv rtl/hdc/kv/qkd_cdc_wleaf.sv rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv rtl/hdc/v41x/ot_hdc_v41x_kreg.sv && echo lint-ok",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "cdc_hpin_exact",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/hpin_0 -P tb_qkd_cdc_wleaf_equiv.HANDPIPE=1 -P tb_qkd_cdc_wleaf_equiv.NEG=0 rtl/test/qwen_blocks/tb_qkd_cdc_wleaf_equiv.sv rtl/hdc/kv/qkd_cdc_wleaf.sv rtl/hdc/kv/qkd_cdc_wleaf_hpin.sv rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv rtl/hdc/v41x/ot_hdc_v41x_kreg.sv && vvp -n {RUN}/bench/hpin_0",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "^PASS qkd_cdc_wleaf"
+      },
+      {
+        "name": "cdc_hpin_mutant_missing_delay",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/hpin_4 -P tb_qkd_cdc_wleaf_equiv.HANDPIPE=1 -P tb_qkd_cdc_wleaf_equiv.NEG=4 rtl/test/qwen_blocks/tb_qkd_cdc_wleaf_equiv.sv rtl/hdc/kv/qkd_cdc_wleaf.sv rtl/hdc/kv/qkd_cdc_wleaf_hpin.sv rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv rtl/hdc/v41x/ot_hdc_v41x_kreg.sv && vvp -n {RUN}/bench/hpin_4",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^FAIL qkd_cdc_wleaf NEG=4"
+      },
+      {
+        "name": "controller_handpin_production",
+        "cmd": "HAND_PIPE=1 bash physical/qkd_ctrl_strip/bench.sh pc {RUN}/bench/ctrl",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^PASS qkd_ctrl_pc all 3 strap values exact"
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_cdc_wleaf_hpin_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_cdc_wleaf_hpin_ref/kit.env {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 16,
+      "peak_ram_gb": 32
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_cdc_wleaf_hpin_ref --out {RUN}/record/views/qkd_cdc_wleaf_hpin  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/ref_tile/qkd_cdc_wleaf_hpin_ref/signoff.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": true,
+    "session": "mm",
+    "reason": "ref_tile: corrected FF hold flow"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/ref_tile/qkd_cdc_wleaf_ref/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/ref_tile/qkd_cdc_wleaf_ref/qkd_cdc_wleaf_hpin_ref-hp1-COMMIT"
+    }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.03,
+  "route_corner": "TC",
+  "notes": "generated by tools/ref_tile/ref_tile.py",
+  "merge_target": null,
+  "structural_change": "landing depth 64 -> 32, h_wcon registered at its pin with per-group kept one-hot selects, M5 slot cell wrapper. r2 (the r1 kit was refused by the clock rule: hclk root 19,280 sinks, measured TT insertion 442.7 ps): (1) landing storage 64 x 281 -> 32 x 281 flops (LD = the controller's credit count CRED 32; every RD holds a credit and credits return from the synchronised read pointer that the full flag uses, so occupancy <= 32; contract: controller CRED <= 32): hclk root ~10.4k sinks; (2) WPIPE 1: h_wcon registered at its pin (completion path h_cv / h_csec / h_cdata / h_ctag one HCLK edge later: h_cv two edges after h_wcon), one kept pin-flop copy and one kept one-hot entry select per storage column group (wc_bin[0] drove 4,629 loads, port h_wcon 584); (3) h_hand (same-edge hand-off, cycle kept) is the select of one final 2:1 mux: hand-off pointer kept as +0/+1/+2 registers (was a 7-level input cone). No logic between a Gray register and its synchroniser. np1: recipe-2 pin defaults (native audit launch 382.8 on 515 outputs). hp1: h_hand is a dedicated HCLK input pin flop; internal hand-off head advances one edge later. Native exact equivalence20000/17094 edges PASS, omitted-delay mutant FAIL16168 edges; controller PC13 HOFF3 exact at production 3072 landings/28 writes, same4685hclk vs legacy. Die lead authorized +1 hand-off cycle 17:17, same pins and 183.6-square slot.",
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "why": "dedicated h_hand pin capture; lead-authorized +1 hand-off edge, controller production exact/cost measured"
+  }
+}

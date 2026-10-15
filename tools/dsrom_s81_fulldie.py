@@ -4262,7 +4262,10 @@ def build_r8(variant=None):
                 hub[k_].master = ms_
         if 'sseq' in hub:   # s81die-1011/ctrl: per-engine c/d/s pins on the stream clock (kit / program faces cross)
             # F4 (--rtl-bind): a layer1 die has engines 0..7 only (stage programs); its master has no pins for 8..11
-            hub['sseq'].master = 'dsfd_stage_seq_c8' if (RTL_BIND and DIE_KIND == 'layer1') else 'dsfd_stage_seq_c'
+            # S-BIND (owner 2026-10-14 18:59, static cycle schedule): --rtl-bind binds the STATIC issuer (calendar-fixed
+            # issue/KIT/END, completions fault-check only; same c/d/s die faces); the completion-driven c/c8 leave the die
+            hub['sseq'].master = ('dsfd_stage_seq_static_c8' if DIE_KIND == 'layer1' else 'dsfd_stage_seq_static_c') if RTL_BIND \
+                else 'dsfd_stage_seq_c'
         if RTL_BIND and 'collector' in hub and len(m.get('svcs', {}) or STACKS.get(DIE_KIND, ())) == 1:
             # F5 (--rtl-bind): a 1-stack die's collector has the one stack lane (dsfd_bk_collector_c1: DONE join over the
             # present stack; the 4-lane master would never emit a DONE there)
@@ -5054,7 +5057,6 @@ SER_STAGE_UM = 640.0            # mtp-wfc 2026-10-10: 0.9 GHz (1,111.1 ps) stati
                                 #   (833.3 - 261) on the SS wire model 261 ps + 1.135 ps/um (504 um at 833 ps; 749 um at 1,111 ps)
 STAGE_SEQ = False               # --stage-seq (main decision A 2026-10-11): kit start / done through dsfd_stage_seq
 SSEQ_MM2 = 0.06                 #   ot_s81_stage_seq NOPS 128 program (3.6 kbit) + 12 x (FQ 4 + credits) queues; preliminary
-VM_CREDIT_DIAG = False          # --vm-credit-diagnostic (r7): wire the historical VM credit-return nets (never in production)
 WFC_CRP = False                 # --wfc-crp (main 10-11): WFC slab master dsfd_wfc_cr2 (credit-boundary tile dsfd_wfc_crp + kit)
 WFC_KIT = False                 # --wfc-kit (mtp-wfc 2026-10-10, default off): the WFC slab as the kit's closed elements
 WFC_ROLE = 'stage'              #   'source' on the S0 die (--ctrl-role source), else 'stage'
@@ -5122,7 +5124,8 @@ def pq_rtl_clock_ports(manifest='physical/s81_die_rtl/layer1.f'):
     return ['ck_ctl', 'ck_qb', 'ck_fault', 'ck_lane'] + [f'{n}[{i}:{i}]' for n, w in vec for i in range(w)]
 
 
-DUAL_CLOCK_MASTERS = ('dsfd_sp_gather_c', 'dsfd_sp_capture_c', 'dsfd_stage_seq_c', 'dsfd_stage_seq_c8', 'dsfd_host_c')
+DUAL_CLOCK_MASTERS = ('dsfd_sp_gather_c', 'dsfd_sp_capture_c', 'dsfd_stage_seq_c', 'dsfd_stage_seq_c8',
+                      'dsfd_stage_seq_static_c', 'dsfd_stage_seq_static_c8', 'dsfd_host_c')
 CTRL_SVC_MASTER = 'dsfd_svc_c'        # svc_<st> under --ctrl-adapters: j / jd job pins from dsfd_svc_join (engine 4)
 CTRL_SVC_JOIN = 'dsfd_svc_join'
 
@@ -5151,18 +5154,6 @@ def ctrl_adapter_buses(hb):
         out += [('vm', 'hc_s', 1, 't_inp_hc', 'f_inp')]
     if 'su_s' in hb and hb['su_s'].master == 'dsfd_sp_su_c':     # SU dependency net (dsfd_sp_su inp), same rule
         out += [('vm', 'su_s', 1, 't_inp_su', 'f_inp')]
-    if RTL_BIND and SUHC_V2 and VM_CREDIT_DIAG:
-        # HISTORICAL / DIAGNOSTIC ONLY (s81-die r7 2026-10-14): BINDING OWNER 18:59 -- production ROM execution is static
-        # cycle scheduled, no credits / backpressure.  The die does not wire these nets unless --vm-credit-diagnostic;
-        # without it the VM / SU / HC credit ports stay unconnected and the port-bind check FAILS closed until the
-        # static-slot RTL replaces them.
-        # Per-slot credit-return pulses, not a delayed combinational ready level. The VM adapter emits
-        # an initial token when online, and returns one token when the ordered request retires.
-        # Request/credit paths are registered; client FIFOs hold requests until a token is available.
-        for client, ports in (('su_s', (('t_su_rqr', 'f_su_rqr', 16), ('t_su_wqr', 'f_su_wqr', 16))),
-                              ('hc_s', (('t_hc_rqr', 'f_hc_rqr', 2), ('t_hc_wqr', 'f_hc_wqr', 8)))):
-            if client in hb:
-                out += [('vm', client, width, vp, cp) for vp, cp, width in ports]
     return tuple(out)
 
 
@@ -7497,9 +7488,9 @@ def align_station_jogs(m, rounds=2):
     face axis by the bundle's jog, so its pins stand opposite the peer's (the station master's pins are shared by all its
     instances; the instance moves, not the pins).  Only when the moved box overlaps nothing and stays on the die; the
     hop gate / pin align gate re-judge the result."""
-    hc = str(ROOT / 'tools' / 'hier_contract')
-    if hc not in sys.path:
-        sys.path.insert(0, hc)
+    for d_ in (str(ROOT / 'tools' / 'hier_contract'), str(ROOT / 'tools' / 's81')):   # die_hop_gate lives in tools/s81
+        if d_ not in sys.path:
+            sys.path.insert(0, d_)
     import pin_align as PA
     import die_hop_gate as HG
     rp = real_ports()
@@ -8940,8 +8931,6 @@ def die_options(ap):
     ap.add_argument('--pq-cnt', default=None, help='s81-die r6b: topology G count-only return leaves from this slot file '
                     '(physical/s81_die_pins/v19/pq_count_slots.json): 12 rwbc leaves in a 43.2 gather | capture seam, '
                     't_capture root-word taps, live / ga / q2f lanes to the PQ core (needs --pq-g --rtl-bind --rtl-hub-widths)')
-    ap.add_argument('--vm-credit-diagnostic', action='store_true', help='s81-die r7: DIAGNOSTIC only, wire the historical '
-                    'per-slot VM credit-return nets (owner 10-14 18:59: production is static cycle scheduled, no credits)')
     ap.add_argument('--cfifo-fall-launch', action='store_true', help='s81-die r6: the x-lane station that taps a cfifo '
                     'forwards a non-inverted clock copy (fn0) as its xf: xd launches on the falling xf edge, the closed colck '
                     'cfifo captures on the rising one (half-cycle source-synchronous hop)')
@@ -9070,8 +9059,6 @@ def apply_options(a):
     assert not X_SITE_PAIR or XB_RGAP_FIRST, '--x-site-pair needs --xb-rgap-first (and --xb-rgap)'
     FWD_NEGCAP = bool(getattr(a, 'fwd_negcap', False))
     global CFIFO_FALL
-    global VM_CREDIT_DIAG
-    VM_CREDIT_DIAG = bool(getattr(a, 'vm_credit_diagnostic', False))
     CFIFO_FALL = bool(getattr(a, 'cfifo_fall_launch', False))
     HEND_VR_NOBP = bool(getattr(a, 'hend_vr_nobp', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
