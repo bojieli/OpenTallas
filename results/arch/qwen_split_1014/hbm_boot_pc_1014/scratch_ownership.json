@@ -1,0 +1,21 @@
+{
+  "status": "REAL_CONTROLLER_FUNCTIONAL_PROOF_NOT_PHYSICAL_QUALIFICATION",
+  "address": {
+    "row": 0,
+    "bank": 3,
+    "col": 2,
+    "pc": "each of128 PCs"
+  },
+  "reservation": "Every host payload decode must reject BOOT_SCRATCH_ROW (default0). KV reachable rows64..99; embedding24427..24575. Scratch row0 is absent from both ranges.",
+  "release": "Start on boot_go with HBM reset already released. Hold normal static traffic reset until boot_done&&boot_ok&&!fault. Cold boot or soft reset reasserts HBM/test reset first.",
+  "writes": "two complement patterns; actual ordered static WR->RD per pattern; returned read compare required",
+  "latency": "New pin-registered static arbiter adds one registered edge each way to normal static traffic; cold path exact through controller and PHY model. Price/physical qualification remain open.",
+  "gate": "real qkd_ctrl_pc+static arbiter+boot checker+PHY memory/ECC model:good2WR2RD, normal postboot1WR1RD, corrupt cold restart rejected; MUT compare-ignore accepted corruption and observed failure",
+  "sources": {
+    "rtl/qwen_sys/split_20261014/qkd_hbm_boot_pc.sv": "445921e88b5177bc3527fc2a4659e36af08d4c5660c80e3e52d6720267d58067",
+    "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static.sv": "d938729874272e5b420b956b5b158f13eb22d61bdd49e5ac31a07f91e22e0e0a",
+    "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv": "f9cb8a9c496ee44c25d7f2600246fc79b39c409a8cc2835b9765dbb5aeb6ce91",
+    "rtl/test/qwen_kv_die/tb_qkd_hbm_boot_pc_controller.sv": "ffbc02f19df1069aa3d290044eff7cebc54c2d808a6c06a57b1adffee5fc6d97",
+    "tools/qwen_kv_die/bench_hbm_boot_pc.sh": "90fc1c6d042bc29a750adfdbcbd42a54360838c27a6f6b09f9f2536d9c4a4466"
+  }
+}
