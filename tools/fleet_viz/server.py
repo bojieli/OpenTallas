@@ -456,6 +456,17 @@ _ELEM_CACHE = {}
 
 def elem_redact(o):
     """share-safe element data: no module / instance / pin / port / job / host / record names"""
+    if str(o.get('schema', '')).startswith('opentallas.elem_trace'):   # data/<element>.trace.json (Replay tab)
+        for k in ('job', 'bench', 'bench_why', 'netlist', 'dut_scope', 'source_commit', 'cell_models'): o[k] = ''
+        o['instances'] = []; o['provenance'] = dict(source=(o.get('provenance') or {}).get('source'))
+        for i, ln in enumerate(o.get('lanes') or []): ln['name'] = 'register %d' % (i + 1); ln['file'] = ln['line'] = None
+        for h in o.get('handshakes') or []: h['name'] = h.get('kind', '')
+        for t in o.get('transactions') or []: t[1] = ''
+        for g in o.get('icgs') or []: g['name'] = ''
+        o['ports'] = {}; o['flops'] = [[f[0], ''] for f in o.get('flops') or []]
+        m = o.get('mapping') or {}; m['netlist_not_in_db'] = []; m['db_not_in_netlist'] = []
+        x = o.get('exactness') or {}; x['bench_markers_gate'] = []
+        return o
     if str(o.get('schema', '')).startswith('opentallas.explorer_elem.index'):   # data/index.json (export index)
         for e in (o.get('elements') or {}).values():
             for k in ('job', 'block', 'reference'): e[k] = ''
