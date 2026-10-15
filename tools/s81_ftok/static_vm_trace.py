@@ -15,7 +15,8 @@ from pathlib import Path
 
 
 def convert(path, metadata=None):
-    raw = list(csv.DictReader(path.open()))
+    with path.open() as stream:
+        raw = list(csv.DictReader(stream))
     events, jobs, pending = [], [], defaultdict(deque)
     last_write = {}
     unresolved = []

@@ -534,7 +534,10 @@ def main():
                 vm_coefficient_stride=COEF_STRIDE,
                 vm_coefficient_bases=[C_BASE, C_BASE + COEF_STRIDE], ng=a.ng, ops=len(prog), field_phases=nph, coll_messages=msgs, coll_records=len(own),
                 y_words=len(ygold), exp_rows=len(run.exp), hstore_rows=nst, golden_checks_vs_pickle=4,
-                program=[dict(k=k, id=o['id'], port=o['port'], eng=o['eng'], preds=o['preds']) for k, o in enumerate(prog)],
+                program=[dict(k=k, id=o['id'], port=o['port'], eng=o['eng'],
+                              arg=o['arg'] if o['arg'] is not None else k,
+                              argument_provenance='native endpoint descriptor' if o['eng'] in ('su', 'hc') else 'fixture program argument; native binding unproven',
+                              preds=o['preds']) for k, o in enumerate(prog)],
                 cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split), h_stream=bool(a.h_stream), su_sched=sched,
                 dur_override=dur_ov or None, su_real=su_meta)
     if fx is not None:
