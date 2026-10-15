@@ -1,8 +1,9 @@
 {
- "keep": "hb_vms_SW|calendar_SW|lg_SW_[012]|hb_su_SW|hb_sfu_SW|hb_dbk_SW|hb_idx|hb_coll_SW|delivery_SW|vm_status4",
+ "keep": "hb_vms_SW|calendar_SW|lg_SW_[0-2]|vm_status4|hb_coll_SW|delivery_SW|hb_dbk_SW|hb_sfu_SW|hb_su_SW|hb_idx|hb_argmax",
  "instances": [
   "calendar_SW",
   "delivery_SW",
+  "hb_argmax",
   "hb_coll_SW",
   "hb_dbk_SW",
   "hb_idx",
@@ -18,9 +19,9 @@
   {
    "instance": "hb_vms_SW",
    "port": "cq",
-   "lo": 0,
+   "lo": 338,
    "hi": 1352,
-   "top_port": "x_hb_vms_SW__cq_0_1352"
+   "top_port": "x_hb_vms_SW__cq_338_1352"
   },
   {
    "instance": "hb_vms_SW",
@@ -693,9 +694,79 @@
    "lo": 0,
    "hi": 18,
    "top_port": "x_hb_idx__topk_r_str_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "die_id",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_hb_argmax__die_id_0_8"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "go",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_argmax__go_0_1"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "mode",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_argmax__mode_0_1"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "imm_a",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_argmax__imm_a_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "a_mirror",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_argmax__a_mirror_0_1"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "a_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_argmax__a_base_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "n",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_argmax__n_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "o_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_argmax__o_base_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "o_is",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_argmax__o_is_0_16"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "am_stream",
+   "lo": 0,
+   "hi": 523,
+   "top_port": "x_hb_argmax__am_stream_0_523"
   }
  ],
- "boundary_input_bits": 63501,
+ "boundary_input_bits": 63785,
  "sources": {
   "hb_vms_SW": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
   "delivery_SW": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
@@ -708,6 +779,7 @@
   "hb_sfu_SW": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
   "hb_dbk_SW": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
   "hb_su_SW": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
-  "hb_idx": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv"
+  "hb_idx": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv",
+  "hb_argmax": "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv"
  }
 }
