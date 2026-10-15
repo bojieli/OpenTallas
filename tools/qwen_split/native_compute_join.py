@@ -7,6 +7,7 @@ input. Physical roots remain individual pins; unknown route ages fail closed.
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -142,6 +143,37 @@ def render(model,profile=None):
     return '\n'.join(lines),ext
 
 
+def port_role(name,direction):
+    if direction=='input' and re.fullmatch(r'ck(?:_.+)?|clk(?:_.+)?|.+_ck',name):return 'clock'
+    if direction=='input' and name in ('rst','rst_n','reset','reset_n','rsi'):return 'reset'
+    return 'functional'
+
+
+def graph_metadata(model,external):
+    typed=[dict(node=n,port=p,role=port_role(p,s['direction']),**s)for n,p,s in external]
+    counts={role:dict(ports=sum(p['direction']=='input' and p['role']==role for p in typed),
+        bits=sum(p['bits']for p in typed if p['direction']=='input'and p['role']==role))for role in ('clock','reset','functional')}
+    roots={n:sum(s['bits']for p,s in node['ports'].items()if port_role(p,s['direction'])=='clock')for n,node in model['nodes'].items()}
+    parts=[];remaining=model['nodes']['seq']['ports']['cc']['bits']
+    for port,bits in model['return_parts']:
+        hi=remaining-1;remaining-=bits
+        parts.append(dict(source=['io',port],bits=bits,sink_select=[hi,remaining]))
+    if remaining:raise ValueError('collective assembly does not cover actual cc width')
+    assembly=dict(name='coll_return',kind='concatenation',sink=['seq','cc'],bits=518,
+        order='most significant first',parts=parts,
+        rtl_expression='{'+','.join('w_io_'+p for p,b in model['return_parts'])+'}')
+    edges=[dict(name=j['name'],source=j['source'],source_select=j['select'],sink=sink,bits=j['bits'])
+        for j in model['joins']for sink in j['sinks']]
+    edges += [dict(name='coll_return_'+p['source'][1],source=p['source'],source_select=None,
+        sink=assembly['sink'],sink_select=p['sink_select'],bits=p['bits'],assembly='coll_return')for p in parts]
+    bound={tuple(j['sink'])for j in edges}
+    if bound!=set(model['assigned']):raise ValueError('manifest does not cover every actual bound input')
+    if sum(roots.values())!=counts['clock']['bits']:raise ValueError('external/source clock coverage mismatch')
+    return dict(actual_clock_roots=roots,external_ports=typed,external_input_counts=counts,
+        assemblies=[assembly],directed_edges=edges,directed_edge_count=len(edges),
+        rate_and_geometry_status='Workload activity/rates, physical homes, actual pin lengths and route ages remain unassigned.')
+
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--profile',type=Path);p.add_argument('--rtl',type=Path,default=ROOT/'rtl/qwen_split/qfd_native_compute_join.sv');a=p.parse_args()
     profile,specs=profile_config(a.profile)
@@ -149,7 +181,7 @@ def main():
     a.rtl.parent.mkdir(parents=True,exist_ok=True);a.rtl.write_text(rtl)
     manifest=dict(schema='opentallas.qwen.actual-native-compute-join.v1',qualified=False,
       scope='real source-output to source-input wires; no physical roots/homes/route ages or whole-die workload qualification',
-      profile=profile, nodes=m['nodes'],joins=m['joins'],actual_clock_roots={n:sum(s['bits']for p,s in node['ports'].items()if s['direction']=='input'and(p in('ck','clk','face_ck','relay_ck')or p.startswith(('ck_','clk_'))or p.endswith('_ck')))for n,node in m['nodes'].items()},external_ports=[dict(node=n,port=p,**s)for n,p,s in ext],
+      profile=profile, nodes=m['nodes'],joins=m['joins'],**graph_metadata(m,ext),
       source_register_edges=dict(copy_active=1,su_image_ready=1,su_issue_observer=1,native_return=1),
       clock_binding='all real roots exposed independently; no common phase or physical insertion invented',
       default_profile='production1, unknown routes refuse; diagnostic0 requires explicit nonnegative component ages and remains unqualified',
