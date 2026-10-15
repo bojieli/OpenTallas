@@ -104,5 +104,12 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "io_tcl": "physical/ref_tile/qkd_land_emb_ifw/io_pins.tcl"
+ "io_tcl": "physical/ref_tile/qkd_land_emb_ifw/io_pins.tcl",
+ "reroute_reason": {
+  "kind": "native_launch",
+  "source": "results/arch/qwen_split_1014/kvsys_native_audit_1015/qkd_land_emb_ifw_if1.json",
+  "cell": "qkd_land_emb_ifw",
+  "launch_ps": 276.8,
+  "fix": "even face pin spread (spread_face_pins, S-ELEM-B ee058260f), ck at N-face centre, no output hold pads; same RTL/outline/faces"
+ }
 }
