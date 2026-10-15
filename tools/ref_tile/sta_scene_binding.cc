@@ -22,7 +22,21 @@ int census(ClientData, Tcl_Interp* ip, int argc, Tcl_Obj* const argv[]) {
     auto* scene = sta->cmdScene();
     if (!scene) throw std::runtime_error("missing actual active scene");
     auto* network = sta->network();
-    auto* inst = network->findInstance(Tcl_GetString(argv[1]));
+    const std::string want = Tcl_GetString(argv[1]);
+    auto* inst = network->findInstance(want.c_str());
+    if (!inst) {
+      // The caller passes get_full_name of the cell it found; a flattened escaped name
+      // (e.g. u_coll.g_sring\[0\].u_m) does not round-trip through findInstance's path parser.
+      // Match the same pathName exactly over the leaf instances; never a pattern, never ambiguous.
+      int hits = 0;
+      auto* it = network->leafInstanceIterator();
+      while (it->hasNext()) {
+        auto* leaf = it->next();
+        if (network->pathName(leaf) == want) { inst = leaf; ++hits; }
+      }
+      delete it;
+      if (hits > 1) throw std::runtime_error("ambiguous actual instance path name");
+    }
     if (!inst) throw std::runtime_error("missing actual instance");
     auto* base = network->libertyCell(inst);
     if (!base) throw std::runtime_error("missing actual instance Liberty cell");
