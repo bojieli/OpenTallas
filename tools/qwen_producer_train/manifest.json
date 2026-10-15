@@ -19,7 +19,7 @@
   "instruction_word": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000112000001000008000000000000200002000601001000000001000008000040000000000400008180000001",
   "scope": "Actual fullshape controller p_v/p_f -> real soft-multiply spport -> static serializer; declared synthetic tree/scale boundary inputs. No slab macro, physical, arithmetic, native layer or throughput qualification.",
   "mutant": "Actual ot_qwen_me_spport_w12 o_ov1 producer marker replaced by zero; must fail eight-capture expectation",
-  "status": "POSITIVE_ACTUAL_DUT_PASS_MUTANT_PENDING",
+  "status": "ACTUAL_DUT_POSITIVE_AND_MISSING_MARKER_MUTANT_PASS",
   "actual_producer_positive": {
     "host": "ot-agidock128",
     "unit": "oth-ubuntu-923480-1792088233",
@@ -48,6 +48,6 @@
     "min_gap": 1,
     "static_serializer_fault": 1,
     "terminal_marker": "PASS actual_ctl_port_train count=8 min_gap=1 serializer_fault=1",
-    "mutant": "Still running; no rejection claim"
+    "mutant": "Actual producer marker forcedzero; explicit eight-capture expectation rejects count0/gap999/fault0"
   }
 }
