@@ -33,12 +33,16 @@
         "dsfd_vm_bgq28"
       ],
       "required_successors": [
-        "dsfd_vm_static_scatter",
         "dsfd_vm_static_return",
-        "dsfd_vm_static_relay128_b16",
         "dsfd_vm_static_relay128_b8",
         "dsfd_vm_static_wdispatch128",
-        "dsfd_vm_static_wstage128"
+        "dsfd_vm_static_wstage128",
+        "dsfd_vm_static_relay128_b4",
+        "dsfd_vm_static_write_capture128",
+        "dsfd_vm_static_scatter_b8_out",
+        "dsfd_vm_static_w0_header",
+        "dsfd_vm_static_w0_payload",
+        "dsfd_vm_static_wcontrol"
       ],
       "reason": "Fixed indexed request/return/write transport replaces dynamic bank-group queues; published views never transfer by name",
       "state": "OPEN physical closure; historical parent must not be rerouted as surrogate"
@@ -65,9 +69,9 @@
         "dsfd_vm_frg"
       ],
       "required_successors": [
-        "dsfd_vm_static_relay128_b16",
         "dsfd_vm_static_relay128_b8",
-        "dsfd_vm_seq_static"
+        "dsfd_vm_seq_static",
+        "dsfd_vm_static_relay128_b4"
       ],
       "reason": "Legacy grant/address relays not production endpoints; fixed transport/control with actual pin-to-pin budget replaces them",
       "state": "OPEN physical closure; historical parent must not be rerouted as surrogate"
@@ -248,15 +252,43 @@
       "fullVMphysical placement and producer calendar"
     ]
   },
-  "structural_next": "actual188smallgroup source/gatesPASS, exact83,712bank/relaybit reachPASS max486.3; nativeCTS/TTFFDRC and globalendpointdistribution/fullproducer calendar next",
-  "current_actual_source": "cd1242953",
+  "structural_next": "Collect corrected native b4/b8 routes nativepin1-e12206107, export per-root insertion/IO domains. Finalize geometry of328memory +150edge leaves. Implement actual outer clock delivery by structural categories; source census598 endpoints remains scalar-tied. Replace25,600outputFF/read mux parent with physically bounded actual router; 64data+distributedvalid is analytical only and added ages need proof/compiler accounting. Actual capture/CDC/WFC/fullcanonical programme/TTFFDRC/throughput remain open.",
+  "current_actual_source": "f85c56604",
   "current_required_core_masters": {
     "dsfd_vm_static_bank128": 128,
     "dsfd_vm_static_relay128_b4": 32,
     "dsfd_vm_static_relay128_b8": 16,
     "dsfd_vm_static_suhc_fsr": 4,
-    "dsfd_vm_static_scatter": 4,
-    "dsfd_vm_static_return_NROW32": 4
+    "dsfd_vm_static_return_NROW32": 4,
+    "dsfd_vm_static_write_capture128": 128,
+    "dsfd_vm_static_scatter_b8_out_BANK_BASE_0_8_16_24": 16
   },
-  "current_native_geometry": "physical/s81_die_pins/v20_vm_static_small_groups/layout_option.json"
+  "current_native_geometry": "Selected system B compact2x2, C fallback; final actual328memory +150writeedge leaf geometry and new capture/output exactpins pending; old188geometry only proves unchanged bank/relay local paths",
+  "current_actual_source_receipt": "results/rtl/s81_vm_banked_write_1015/receipt.json",
+  "current_required_write_edge_masters": {
+    "dsfd_vm_static_w0_payload": 4,
+    "dsfd_vm_static_w0_header": 1,
+    "dsfd_vm_static_wcontrol": 1,
+    "dsfd_vm_static_wdispatch128_NSRC53_NBANK8": 16,
+    "dsfd_vm_static_wstage128_DEPTH3": 128
+  },
+  "current_source_qualification": {
+    "functional": "PASS actual128SRAM core2seeds1000calendars6fault5mutants; master2seeds8fault3mutants; direct3modes2mutants",
+    "required_leaf_instances": 478,
+    "required_leaf_roots": 526,
+    "physical": false,
+    "canonical_production": false,
+    "read_age": 12,
+    "returned_commit_observation_age": 11,
+    "done_elapsed_age": 6
+  },
+  "native_route_jobs": [
+    "dsfd_vm_static_relay128_b4_native_option-nativepin1-e12206107",
+    "dsfd_vm_static_relay128_b8_native_option-nativepin1-e12206107"
+  ],
+  "superseded_candidates": {
+    "164": "actual pin capacity/reach rejected",
+    "188": "bank/relay local83712bits max486.3um PASS only; original global scatter box too small",
+    "200lane": "all functional gates pass but interleaved widewrite distribution superseded by actualbank-local328candidate"
+  }
 }
