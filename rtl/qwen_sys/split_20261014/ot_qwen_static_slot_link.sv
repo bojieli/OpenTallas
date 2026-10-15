@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Compiler scheduled normal transport. Writes and reads name immutable slots;
 // neither PHY-up, acknowledgements, credits nor receiver arrival select issue.
-// TX: slot read at edge n -> registered frame at n+2. RX: physical pin capture
+// TX: slot read at edge n -> registered frame at n+3. RX: physical pin capture
 // at n -> checked payload at n+1. The PHY/package latency is a separate fixed
 // compiler offset. A violation aborts the epoch; restart requires an explicit
 // epoch_begin after the compiler's link-drain interval. No transparent retries.
@@ -31,42 +31,45 @@ module ot_qwen_static_slot_ctl #(
     output reg [6:0] fault_cause
 );
     reg [63:0] written;
-    reg v1,v2;
-    reg [5:0] s1,s2;
-    reg [7:0] e1,e2;
+    reg v1,v2,v3;
+    reg [5:0] s1,s2,s3;
+    reg [7:0] e1,e2,e3;
     wire issue_write=wr_v && !epoch_abort && !epoch_begin;
-    function automatic [CW-1:0] crc(input [FW+18:0] d);
-        integer k;reg [CW-1:0] c;reg f;
-        begin
-            c={CW{1'b1}};
-            for(k=FW+18;k>=0;k=k-1)begin
-                f=c[CW-1]^d[k];
-                c={c[CW-2:0],1'b0}^(f ? (CW==32 ? CW'(32'h04c11db7):CW'(16'h1021)):{CW{1'b0}});
-            end
-            crc=c;
-        end
-    endfunction
-    wire [FW+18:0] body={1'b0,e2,1'b0,1'b1,2'b00,s2,q_data};
+    reg [FW-1:0] q_pin;
+    wire [FW+18:0] body={1'b0,e3,1'b0,1'b1,2'b00,s3,q_pin};
     reg rv,ev;
     reg [5:0] es;
     reg [7:0] re;
     reg [PW-1:0] rf;
-    wire crc_bad=rv && crc(rf[FW+18:0])!=rf[PW-1-:CW];
-    wire slot_bad=rv && (rf[FW+7:FW]!={2'b00,es} || rf[FW+17-:8]!=re ||
-                         !rf[FW+8] || rf[FW+9] || rf[FW+18]);
-    wire write_collision=wr_v && ((v1 && wr_slot==s1)||(v2 && wr_slot==s2)||
+    wire [CW-1:0] tx_crc, rx_crc;
+    ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_tx_crc(.d(body),.q(tx_crc));
+    ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_rx_crc(.d(rf[FW+18:0]),.q(rx_crc));
+    // Inspect payload only for an expected present frame. An unexpected frame
+    // is already its own fault; idle/aborted payload bits are not diagnostics.
+    wire crc_bad=rv && ev && (rx_crc!==rf[PW-1-:CW]);
+    wire slot_bad=rv && ev && (rf[FW+7:FW]!=={2'b00,es} || rf[FW+17-:8]!==re ||
+                         rf[FW+8]!==1'b1 || rf[FW+9]!==1'b0 || rf[FW+18]!==1'b0);
+    wire write_collision=wr_v && ((v1 && wr_slot==s1)||(v2 && wr_slot==s2)||(v3 && wr_slot==s3)||
         (written[wr_slot] && !(rd_v && rd_slot==wr_slot)));
     wire unread_slot=rd_v && !written[rd_slot] && !(wr_v && wr_slot==rd_slot);
-    wire [6:0] new_fault={write_collision,unread_slot,v2 && !p_tx_up,
+    wire [6:0] new_fault={write_collision,unread_slot,v3 && !p_tx_up,
                           rv && !ev,ev && !rv,slot_bad,crc_bad};
+    // Payload registers have no reset/epoch enable. Validity controls their
+    // observation; clocked pin registers stay real while reset fanout is small.
+    always @(posedge clk)begin
+        q_pin<=q_data;
+        rf<=p_rx_flit;
+        p_tx_flit<={tx_crc,body};
+        rx_flit<=rf[FW-1:0];
+    end
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin
-            written<=0;v1<=0;v2<=0;s1<=0;s2<=0;e1<=0;e2<=0;
-            rv<=0;ev<=0;es<=0;re<=0;rf<=0;
-            p_tx_v<=0;p_tx_flit<=0;rx_v<=0;rx_flit<=0;
+            written<=0;v1<=0;v2<=0;v3<=0;s1<=0;s2<=0;s3<=0;e1<=0;e2<=0;e3<=0;
+            rv<=0;ev<=0;es<=0;re<=0;
+            p_tx_v<=0;rx_v<=0;
             epoch_abort<=0;fault_cause<=0;
         end else if(epoch_begin)begin
-            written<=0;v1<=0;v2<=0;rv<=0;ev<=0;
+            written<=0;v1<=0;v2<=0;v3<=0;rv<=0;ev<=0;
             p_tx_v<=0;rx_v<=0;epoch_abort<=0;fault_cause<=0;
         end else begin
             if(issue_write)written[wr_slot]<=1'b1;
@@ -74,17 +77,19 @@ module ot_qwen_static_slot_ctl #(
             // a concurrent write/read of an empty slot. A later lap requires
             // another write; stale contents with a good CRC cannot qualify.
             if(rd_v && !epoch_abort)written[rd_slot]<=1'b0;
-            v1<=rd_v && !epoch_abort;v2<=v1;
-            s1<=rd_slot;s2<=s1;e1<=epoch;e2<=e1;
+            v1<=rd_v && !epoch_abort;v2<=v1;v3<=v2;
+            s1<=rd_slot;s2<=s1;s3<=s2;e1<=epoch;e2<=e1;e3<=e2;
             // Always issue at the compiled edge. PHY-up is a fault observation.
-            p_tx_v<=v2 && !epoch_abort;
-            if(v2)p_tx_flit<={crc(body),body};
-            rv<=p_rx_v;rf<=p_rx_flit;ev<=rx_expect_v;
+            p_tx_v<=v3 && !epoch_abort;
+            rv<=p_rx_v;ev<=rx_expect_v;
             es<=rx_expect_slot;re<=epoch;
             rx_v<=ev && rv && !slot_bad && !crc_bad && !epoch_abort;
-            if(ev && rv)rx_flit<=rf[FW-1:0];
-            fault_cause<=fault_cause|new_fault;
-            if(|new_fault)epoch_abort<=1'b1;
+            // Latch the first failing boundary. Later traffic belongs to an
+            // aborted epoch and cannot poison its already established cause.
+            if(!epoch_abort)begin
+                fault_cause<=fault_cause|new_fault;
+                if(|new_fault)epoch_abort<=1'b1;
+            end
         end
     end
 endmodule
@@ -93,7 +98,7 @@ endmodule
 `timescale 1ns/1ps
 // Compiler scheduled normal transport. Writes and reads name immutable slots;
 // neither PHY-up, acknowledgements, credits nor receiver arrival select issue.
-// TX: slot read at edge n -> registered frame at n+2. RX: physical pin capture
+// TX: slot read at edge n -> registered frame at n+3. RX: physical pin capture
 // at n -> checked payload at n+1. The PHY/package latency is a separate fixed
 // compiler offset. A violation aborts the epoch; restart requires an explicit
 // epoch_begin after the compiler's link-drain interval. No transparent retries.
@@ -122,7 +127,9 @@ module ot_qwen_static_slot_link #(
     output wire epoch_abort,
     output wire [6:0] fault_cause
 );
-    localparam integer BW=(FW+3)/4;
+    // Canonical physical store width is137 for548/546/514-bit payloads.
+    // The smaller board words pad unused high bits, sharing the same leaf view.
+    localparam integer BW=137;
     wire [4*BW-1:0] wd={{(4*BW-FW){1'b0}},wr_flit};
     wire [4*BW-1:0] rd;
     wire issue_write=wr_v && !epoch_abort && !epoch_begin;

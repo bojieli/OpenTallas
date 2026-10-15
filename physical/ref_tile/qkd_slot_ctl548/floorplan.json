@@ -32,13 +32,11 @@
   "N": [
    "p_tx_up",
    "p_tx_v",
+   "p_tx_flit",
    "p_rx_v",
-   "p_rx_flit",
-   "p_tx_flit"
+   "p_rx_flit"
   ],
   "S": [
-   "clk",
-   "rst_n",
    "epoch_begin",
    "epoch",
    "wr_v",
@@ -50,7 +48,9 @@
    "rx_v",
    "rx_flit",
    "epoch_abort",
-   "fault_cause"
+   "fault_cause",
+   "clk",
+   "rst_n"
   ],
   "W": [
    "q_data"
@@ -62,6 +62,7 @@
  "findings": [],
  "referenced": [
   "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
   "physical/ref_tile/qkd_slot_ctl548/kit.env",
   "physical/ref_tile/qkd_slot_ctl548/clock.sdc",
   "physical/ref_tile/qkd_slot_ctl548/signoff.sdc",

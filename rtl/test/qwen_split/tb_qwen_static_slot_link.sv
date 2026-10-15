@@ -19,7 +19,9 @@ module tb_qwen_static_slot_link;
  endfunction
  assign aw=word(0,ws,cyc>=200);assign bw=word(1,ws,cyc>=200);
  wire corrupt= MUT==1 && atv && atf[FW+5:FW]==6'd7;
- always @(posedge clk)begin
+ always @(posedge clk)if(!rst_n)begin
+   avpipe<=0;bvpipe<=0;afpipe<=0;bfpipe<=0;
+ end else begin
    avpipe<={avpipe,atv};bvpipe<={bvpipe,btv};
    afpipe<={afpipe,atf ^ (corrupt ? PW'(1):PW'(0))};
    bfpipe<={bfpipe,btf};
@@ -44,23 +46,23 @@ module tb_qwen_static_slot_link;
    ws=6'(cyc>=200?cyc-200:cyc-8);
    rd_v=(cyc>=100&&cyc<164)||(cyc>=292&&cyc<356);
    rs=6'(cyc>=292?cyc-292:cyc-100);
-   ev=(cyc>=108&&cyc<172)||(cyc>=300&&cyc<364);
-   es=6'(cyc>=300?cyc-300:cyc-108);
+   ev=(cyc>=109&&cyc<173)||(cyc>=301&&cyc<365);
+   es=6'(cyc>=301?cyc-301:cyc-109);
    #5;clk=1;#1;
    if(rst_n)begin
     if(aa||ba)aborts=aborts+1;
-    if(MUT==0 && (aa||ba))begin errors=errors+1;$display("ABORT cycle%0d a%h b%h",cyc,ac,bc);end
+    if(MUT==0 && (aa!==1'b0 || ba!==1'b0 || ac!==7'd0 || bc!==7'd0))begin errors=errors+1;$display("ABORT cycle%0d a%h b%h",cyc,ac,bc);end
     // These are compiler constants, not observed-output driven expectations.
-    if(MUT==0 && (atv!==((cyc>=102&&cyc<166)||(cyc>=294&&cyc<358))||btv!==((cyc>=102&&cyc<166)||(cyc>=294&&cyc<358))))errors=errors+1;
-    if((cyc>=109&&cyc<173)||(cyc>=301&&cyc<365))begin
+    if(MUT==0 && (atv!==((cyc>=103&&cyc<167)||(cyc>=295&&cyc<359))||btv!==((cyc>=103&&cyc<167)||(cyc>=295&&cyc<359))))errors=errors+1;
+    if((cyc>=110&&cyc<174)||(cyc>=302&&cyc<366))begin
       checks=checks+2;
-      if(!arv || ard!==word(1,cyc>=301?cyc-301:cyc-109,cyc>=301))errors=errors+1;
-      if(!brv || brd!==word(0,cyc>=301?cyc-301:cyc-109,cyc>=301))errors=errors+1;
+      if(!arv || ard!==word(1,cyc>=302?cyc-302:cyc-110,cyc>=302))errors=errors+1;
+      if(!brv || brd!==word(0,cyc>=302?cyc-302:cyc-110,cyc>=302))errors=errors+1;
     end else if(MUT==0 && (arv||brv))errors=errors+1;
    end
    #4;clk=0;
   end
-  if(errors==0 && aborts==0)$display("STATIC_SLOT_PASS FW%0d CW%0d checks%0d TX2 RX1 PHY5",FW,CW,checks);
+  if(errors==0 && aborts==0)$display("STATIC_SLOT_PASS FW%0d CW%0d checks%0d TX3 RX1 PHY5",FW,CW,checks);
   else $display("STATIC_SLOT_FAIL FW%0d CW%0d checks%0d errors%0d abort_cycles%0d causes%h/%h MUT%0d",FW,CW,checks,errors,aborts,ac,bc,MUT);
   $finish;
  end

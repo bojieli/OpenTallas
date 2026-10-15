@@ -3,7 +3,8 @@
  "top": "ot_qwen_static_slot_ctl",
  "kind": "tile",
  "sources": [
-  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv"
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
  ],
  "params": {},
  "clock_port": "clk",
@@ -19,13 +20,11 @@
   "N": [
    "p_tx_up",
    "p_tx_v",
+   "p_tx_flit",
    "p_rx_v",
-   "p_rx_flit",
-   "p_tx_flit"
+   "p_rx_flit"
   ],
   "S": [
-   "clk",
-   "rst_n",
    "epoch_begin",
    "epoch",
    "wr_v",
@@ -37,7 +36,9 @@
    "rx_v",
    "rx_flit",
    "epoch_abort",
-   "fault_cause"
+   "fault_cause",
+   "clk",
+   "rst_n"
   ],
   "W": [
    "q_data"
@@ -46,16 +47,16 @@
  },
  "pin_ranges": {
   "p_tx_up": [
-   5,
-   6
-  ],
-  "p_tx_v": [
    8,
    9
   ],
   "p_rx_v": [
-   10,
-   11
+   20,
+   21
+  ],
+  "p_tx_v": [
+   25,
+   26
   ],
   "p_rx_flit": [
    30,
@@ -65,61 +66,61 @@
    110,
    180
   ],
+  "fault_cause": [
+   194,
+   198
+  ],
   "clk": [
-   2,
-   3
+   205,
+   207
   ],
   "rst_n": [
-   4,
-   5
+   202,
+   203
   ],
   "epoch_begin": [
-   6,
-   7
+   3,
+   4
   ],
   "epoch": [
-   8,
-   12
+   5,
+   9
   ],
   "wr_v": [
-   13,
-   14
+   11,
+   12
   ],
   "wr_slot": [
-   15,
+   14,
    18
   ],
   "rd_v": [
-   19,
-   20
+   20,
+   21
   ],
   "rd_slot": [
-   21,
-   24
+   23,
+   27
   ],
   "rx_expect_v": [
-   25,
-   26
-  ],
-  "rx_expect_slot": [
-   27,
+   29,
    30
   ],
+  "rx_expect_slot": [
+   32,
+   36
+  ],
   "rx_v": [
-   31,
-   32
-  ],
-  "epoch_abort": [
-   33,
-   34
-  ],
-  "fault_cause": [
-   35,
-   39
+   45,
+   46
   ],
   "rx_flit": [
    50,
    180
+  ],
+  "epoch_abort": [
+   190,
+   191
   ],
   "q_data": [
    8,
@@ -143,11 +144,11 @@
  "recipe": 2,
  "keep_pin_regs": true,
  "pin_reg_split": true,
- "structural_change": "True static normal link controller: compiler-issuedwr/rdslots with fixedTX2/RX1, CRC16 epoch+slot check, no credits/ACK/upselectnormalissue. Any slot/writeownership/timeline/CRC/PHYup error abortsepoch; explicitcompilerdrain/restart. Separate control root and four SRAM store roots; no parent-local payload flops.",
+ "structural_change": "True static normal link controller: compiler-issuedwr/rdslots with fixedTX2/RX1, CRC16 epoch+slot check, no credits/ACK/upselectnormalissue. Any slot/writeownership/timeline/CRC/PHYup error abortsepoch; explicitcompilerdrain/restart. Separate control root and four SRAM store roots; no parent-local payload flops. s2 consumes exact official assignmentbb56cc450 (clkS205..207) and freezes first epoch fault, ignoring only already-invalid idle/aborted payload. Parallel GF2 CRC matrix replaces87-level serial recurrence; dataFF have no reset/epochfanout. FixedTX2/RX1 unchanged.",
  "job": {
   "owner": "Codex:q-link-replay",
   "branch": "codex/q-link-replay-1014",
-  "tag": "s1",
+  "tag": "s2",
   "purpose": "Real native Qwen CRC/retry replay leaf with independent clock and registered read pin face",
   "benches": [
    {
@@ -181,7 +182,8 @@
    "rtl/hdc/ot_hdc_delay.sv",
    "rtl/lib/ot_rst_relay.sv",
    "physical/qwen_kv_die_phy",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "results/arch/qwen_llr_split_1014/assigned_pins"
   ],
   "views_to": "physical/ref_tile/qkd_slot_ctl548/views",
   "record_to": "results/rtl/ref_tile/qkd_slot_ctl548"
