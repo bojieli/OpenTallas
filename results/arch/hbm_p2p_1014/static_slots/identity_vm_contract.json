@@ -1,0 +1,90 @@
+{
+  "schema": "hcoll.quadrant-identity-and-vm-abi.v1",
+  "source_version": "V1 596 native parent; V2 612 headers forthcoming",
+  "qids": {
+    "SW": 0,
+    "SE": 1,
+    "NW": 2,
+    "NE": 3
+  },
+  "vm_sids": {
+    "SW": 0,
+    "SE": 1,
+    "NW": 2,
+    "NE": 3
+  },
+  "peer_ring_CW": [
+    "SW",
+    "SE",
+    "NE",
+    "NW"
+  ],
+  "peer_ring_CW_qids": [
+    0,
+    1,
+    3,
+    2
+  ],
+  "identity_intent": "qid is physical quadrant identity, not ring position. Die RTL must bind constants via named tie-cell intent; no random zero straps.",
+  "sid_source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv explicit .sid constants verified actual H-VM worktree source",
+  "vm_read_groups": {
+    "SW": {
+      "COLL": 3,
+      "IDX": 4,
+      "total": 5
+    },
+    "SE": {
+      "COLL": 3,
+      "IDX": 4,
+      "total": 5
+    },
+    "NW": {
+      "COLL": 5,
+      "IDX": 6,
+      "total": 7
+    },
+    "NE": {
+      "COLL": 5,
+      "IDX": 6,
+      "total": 7
+    }
+  },
+  "vm_ports": {
+    "request": {
+      "bits": 136,
+      "order": "eight bank-minor tuples {v,sector16}"
+    },
+    "response": {
+      "bits": 2056,
+      "order": "eight bank-minor tuples {v,data256}"
+    },
+    "fill": {
+      "bits": 2248,
+      "order": "eight bank-minor {v,sector16,data256,mask8}"
+    }
+  },
+  "latency_edges": {
+    "VM_bank_sample_n_to_registered_response": 6,
+    "VM_boundary_consumer_sample": 7,
+    "COLL_registered_request_P_to_raw_response_capture": 8,
+    "COLL_pair_assembly_output": 9,
+    "COLL_qslots_source_capture": 10,
+    "qslots_source_capture_to_output_pin": 2,
+    "SU_inj_request_to_source_capture": 12
+  },
+  "SU_latency_scope": "12 is declared interface stimulus contract only; actual static SU512 producer remains unproven/unbound.",
+  "roots_V1": {
+    "SW": 74,
+    "SE": 35,
+    "NW": 35,
+    "NE": 35
+  },
+  "roots_V2_proposed": {
+    "SW": 108,
+    "SE": 68,
+    "NW": 68,
+    "NE": 68
+  },
+  "root_delivery": "Each real child clk pin phi-R from its own measured insertion.json, no single common phase at all pins.",
+  "qualification": "source identity/ABI contract; clock insertion/leaf pins/reach/routes and real PHY/complete layer join remain unqualified"
+}

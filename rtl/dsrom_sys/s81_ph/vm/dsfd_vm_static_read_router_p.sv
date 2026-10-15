@@ -112,7 +112,7 @@ module dsfd_vm_static_read_router_p(
  assign mx_data[960+:64]=dout7[320+:64];
  assign mx_data[1472+:64]=dout7[384+:64];
  assign mx_data[1984+:64]=dout7[448+:64];
- dsfd_vm_static_read_v0_p v0(.ck(ck_valid[0]),.rst_n(rst_valid_n[0]),.i_expected(exp0),.i_slot(sel0),.i_partial_valid(pv0),.i_peer_valid(su1_peer_valid),.i_fault(bad0),.o_valid(valid0),.fault(fault[0]));
+ dsfd_vm_static_read_v0_p v0(.ck(ck_valid[0]),.rst_n(rst_valid_n[0]),.i_slot_valid({slot_valid[96+:8],slot_valid[64+:8],slot_valid[32+:8],slot_valid[0+:8]}),.i_expected(exp0),.i_slot(sel0),.i_partial_valid(pv0),.i_peer_valid(su1_peer_valid),.i_fault(bad0),.o_valid(valid0),.fault(fault[0]));
  assign n_valid[0]=valid0[0];
  assign n_valid[1]=valid0[1];
  assign n_valid[2]=valid0[2];
@@ -220,7 +220,7 @@ module dsfd_vm_static_read_router_p(
  assign mx_data[3008+:64]=dout15[320+:64];
  assign mx_data[3520+:64]=dout15[384+:64];
  assign mx_data[4032+:64]=dout15[448+:64];
- dsfd_vm_static_read_v1_p v1(.ck(ck_valid[1]),.rst_n(rst_valid_n[1]),.i_expected(exp1),.i_slot(sel1),.i_partial_valid(pv1),.i_fault(bad1),.o_valid(valid1),.fault(fault[1]));
+ dsfd_vm_static_read_v1_p v1(.ck(ck_valid[1]),.rst_n(rst_valid_n[1]),.i_slot_valid({slot_valid[96+:8],slot_valid[64+:8],slot_valid[32+:8],slot_valid[0+:8]}),.i_expected(exp1),.i_slot(sel1),.i_partial_valid(pv1),.i_fault(bad1),.o_valid(valid1),.fault(fault[1]));
  assign n_valid[4]=valid1[0];
  assign n_valid[5]=valid1[1];
  assign n_valid[6]=valid1[2];
@@ -327,7 +327,7 @@ module dsfd_vm_static_read_router_p(
  assign mx_data[5056+:64]=dout23[320+:64];
  assign mx_data[5568+:64]=dout23[384+:64];
  assign mx_data[6080+:64]=dout23[448+:64];
- dsfd_vm_static_read_v2_p v2(.ck(ck_valid[2]),.rst_n(rst_valid_n[2]),.i_expected(exp2),.i_slot(sel2),.i_partial_valid(pv2),.i_fault(bad2),.o_valid(valid2),.fault(fault[2]));
+ dsfd_vm_static_read_v2_p v2(.ck(ck_valid[2]),.rst_n(rst_valid_n[2]),.i_slot_valid({slot_valid[104+:4],slot_valid[72+:4],slot_valid[40+:4],slot_valid[8+:4]}),.i_expected(exp2),.i_slot(sel2),.i_partial_valid(pv2),.i_fault(bad2),.o_valid(valid2),.fault(fault[2]));
  assign n_valid[8]=valid2[0];
  assign n_valid[9]=valid2[1];
  assign n_valid[10]=valid2[2];
@@ -434,7 +434,7 @@ module dsfd_vm_static_read_router_p(
  assign mx_data[7104+:64]=dout31[320+:64];
  assign mx_data[7616+:64]=dout31[384+:64];
  assign mx_data[8128+:64]=dout31[448+:64];
- dsfd_vm_static_read_v3_p v3(.ck(ck_valid[3]),.rst_n(rst_valid_n[3]),.i_expected(exp3),.i_slot(sel3),.i_partial_valid(pv3),.i_fault(bad3),.o_valid(valid3),.fault(fault[3]));
+ dsfd_vm_static_read_v3_p v3(.ck(ck_valid[3]),.rst_n(rst_valid_n[3]),.i_slot_valid({slot_valid[108+:4],slot_valid[76+:4],slot_valid[44+:4],slot_valid[12+:4]}),.i_expected(exp3),.i_slot(sel3),.i_partial_valid(pv3),.i_fault(bad3),.o_valid(valid3),.fault(fault[3]));
  assign n_valid[12]=valid3[0];
  assign n_valid[13]=valid3[1];
  assign n_valid[14]=valid3[2];
@@ -487,7 +487,7 @@ module dsfd_vm_static_read_router_p(
  .o_partial_valid(pv4[14+:2]),.o_data(dout39),.fault(bad4[7]));
  assign n_data[8640+:64]=dout39[0+:64];
  assign n_data[9152+:64]=dout39[64+:64];
- dsfd_vm_static_read_v4_p v4(.ck(ck_valid[4]),.rst_n(rst_valid_n[4]),.i_expected(exp4),.i_slot(sel4),.i_partial_valid(pv4),.i_fault(bad4),.o_valid(valid4),.fault(fault[4]));
+ dsfd_vm_static_read_v4_p v4(.ck(ck_valid[4]),.rst_n(rst_valid_n[4]),.i_slot_valid({slot_valid[112+:4],slot_valid[80+:4],slot_valid[48+:4],slot_valid[16+:4]}),.i_expected(exp4),.i_slot(sel4),.i_partial_valid(pv4),.i_fault(bad4),.o_valid(valid4),.fault(fault[4]));
  assign n_valid[16]=valid4[0];
  assign n_valid[17]=valid4[1];
  wire[7:0] exp5;wire[39:0] sel5;wire[15:0] low5;
@@ -588,7 +588,7 @@ module dsfd_vm_static_read_router_p(
  assign mx_data[9152+:64]=dout47[320+:64];
  assign mx_data[9664+:64]=dout47[384+:64];
  assign mx_data[10176+:64]=dout47[448+:64];
- dsfd_vm_static_read_v5_p v5(.ck(ck_valid[5]),.rst_n(rst_valid_n[5]),.i_expected(exp5),.i_slot(sel5),.i_partial_valid(pv5),.i_fault(bad5),.o_valid(valid5),.fault(fault[5]));
+ dsfd_vm_static_read_v5_p v5(.ck(ck_valid[5]),.rst_n(rst_valid_n[5]),.i_slot_valid({slot_valid[116+:4],slot_valid[84+:4],slot_valid[52+:4],slot_valid[20+:4]}),.i_expected(exp5),.i_slot(sel5),.i_partial_valid(pv5),.i_fault(bad5),.o_valid(valid5),.fault(fault[5]));
  assign pq_valid=valid5[0];assign mx_valid[19:16]=valid5[4:1];
  wire[3:0] exp6;wire[19:0] sel6;wire[7:0] low6;
  wire[31:0] pv6;wire[7:0] bad6;wire[3:0] valid6;
@@ -652,7 +652,7 @@ module dsfd_vm_static_read_router_p(
  assign x_data[960+:64]=dout55[64+:64];
  assign x_data[1472+:64]=dout55[128+:64];
  assign x_data[1984+:64]=dout55[192+:64];
- dsfd_vm_static_read_v6_p v6(.ck(ck_valid[6]),.rst_n(rst_valid_n[6]),.i_expected(exp6),.i_slot(sel6),.i_partial_valid(pv6),.i_fault(bad6),.o_valid(valid6),.fault(fault[6]));
+ dsfd_vm_static_read_v6_p v6(.ck(ck_valid[6]),.rst_n(rst_valid_n[6]),.i_slot_valid({slot_valid[120+:4],slot_valid[88+:4],slot_valid[56+:4],slot_valid[24+:4]}),.i_expected(exp6),.i_slot(sel6),.i_partial_valid(pv6),.i_fault(bad6),.o_valid(valid6),.fault(fault[6]));
  assign x_valid[0]=valid6[0];
  assign x_valid[1]=valid6[1];
  assign x_valid[2]=valid6[2];
@@ -719,7 +719,7 @@ module dsfd_vm_static_read_router_p(
  assign x_data[3008+:64]=dout63[64+:64];
  assign x_data[3520+:64]=dout63[128+:64];
  assign x_data[4032+:64]=dout63[192+:64];
- dsfd_vm_static_read_v7_p v7(.ck(ck_valid[7]),.rst_n(rst_valid_n[7]),.i_expected(exp7),.i_slot(sel7),.i_partial_valid(pv7),.i_fault(bad7),.o_valid(valid7),.fault(fault[7]));
+ dsfd_vm_static_read_v7_p v7(.ck(ck_valid[7]),.rst_n(rst_valid_n[7]),.i_slot_valid({slot_valid[124+:4],slot_valid[92+:4],slot_valid[60+:4],slot_valid[28+:4]}),.i_expected(exp7),.i_slot(sel7),.i_partial_valid(pv7),.i_fault(bad7),.o_valid(valid7),.fault(fault[7]));
  assign x_valid[4]=valid7[0];
  assign x_valid[5]=valid7[1];
  assign x_valid[6]=valid7[2];

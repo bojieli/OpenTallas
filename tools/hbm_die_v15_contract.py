@@ -21,6 +21,7 @@ LG_SOURCE = 'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv'
 SFU_SOURCE = 'rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv'      # LG mid tap 14/11
 DBK_SOURCE = 'rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv'    # direct RG, bank n+1/n+7
 IDX_SOURCE = 'rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv'              # direct RG, bank n+1/n+7
+ATT_PV_SOURCE = 'rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_quad_local.sv'  # D local PV (owner-approved 10-15)
 SU_SOURCE = 'rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv'  # LG near tap 10/7, 4 bank-pair groups
 SID = ('SW','SE','NW','NE')
 
@@ -69,8 +70,13 @@ def generate(out):
     for q in abi['quadrants']:
         module('hb_sfu_'+q,SFU_SOURCE,'ot_hgi_sfu_scheduled_engine',dict(PAGE_AW=1,AW=11,LWB=15))
         module('hb_dbk_'+q,DBK_SOURCE,'ot_hgi_dma_back_static',dict(STK=SID.index(q)))
-        module('hb_su_'+q,SU_SOURCE,'ot_hbm_su_static_vm_ports',dict(QID=SID.index(q),READ_RETURN=10,WRITE_RETURN=7))
+        # SW/SE NPG 5: die-lead BANK_GROUP map, PROVISIONAL bank7 alone (0x43221100, = H-ELEM-B vehicle map)
+        # until GEO-H confirms against the RG5 bank pin readback.
+        swse=q in ('SW','SE')
+        module('hb_su_'+q,SU_SOURCE,'ot_hbm_su_static_vm_ports',dict(QID=SID.index(q),READ_RETURN=10,WRITE_RETURN=7,
+               NPG=5 if swse else 4,BANK_GROUP=0x43221100 if swse else 0x33221100))
     module('hb_idx',IDX_SOURCE,'ot_hbm_idx_scheduled_static')
+    module('hb_attn_pv',ATT_PV_SOURCE,'ot_hbm_attn_pv_native_output_quad_local',dict(ACTIVE_HEADS=16))
     edges=[]; connected=set(); parts={}; logical_constants=[]
     def edge(name,src,dst):
         sm,sp=src; dm,dp=dst
@@ -137,9 +143,8 @@ def generate(out):
         edge(sfu+'_wq',(sfu,'local_wq'),(tap,'local_wq'))
         edge(sfu+'_rr',(tap,'local_rr'),(sfu,'local_rr'))
         edge(sfu+'_w_done',(tap,'local_w_done'),(sfu,'local_w_done'))
-        # SU (H-ELEM-B d66ceb2dd): near tap, 4 bank-pair port groups, returns 10/7 asserted.
-        # Tap selects stay owned by the VM calendar (h_vm programme proof 7da6141d7); the SU's
-        # own lg_read/lg_write are equal-by-schedule duplicates and stay OPEN (fault-check only).
+        # SU (H-ELEM-B db4f2facb): near tap, bank-pair port groups, returns 10/7 asserted.
+        # Tap selects are owned only by the VM calendar (SU no longer drives them).
         su='hb_su_'+q;tap0=f'lg_{q}_0'
         assert modules[tap0]['params']==dict(READ_RETURN=10,WRITE_RETURN=7)
         assert modules[su]['params']['READ_RETURN']==10 and modules[su]['params']['WRITE_RETURN']==7
@@ -163,6 +168,18 @@ def generate(out):
     logical_constants.append(dict(sink=['hb_idx','sid'],bits=2,value=0,
         reason='INDEX operand face reads the SW slice (sid order SW,SE,NW,NE)',physical_tie_cells_qualified=False))
     connected.add(('hb_idx','sid'))
+    # D local PV (owner-approved floorplan direction 2026-10-15): PV staging is quadrant-local
+    # (128 stores / 2048 32x128 macros, head order per quadrant), but the source has ONE
+    # serializer output wq that commits to the NE slice's canonical 'attention' write group.
+    g=abi['clients']['NE']['write'].index('attention')
+    slice_edge('attn_pv_wq',('hb_attn_pv','wq',0),('hb_vms_NE','wq',2248*g),2248)
+    slice_bind['NE']['write_groups'][str(g)]='hb_attn_pv'
+    long_returns=[dict(name='attn_pv_wq (PV drain -> NE VM WG%d)'%g,bits_per_edge=2248,
+        source='hb_attn_pv serializer (gathers SW/SE/NW/NE quad-local PV stores)',sink='hb_vms_NE wq group %d'%g,
+        reason='VM ABI gives attention a write group on NE only (canonical WG1); D source has one serializer output',
+        cost='OPEN: bit-um / relay stages / compiler edges for the non-NE quadrants pending GEO-H D2 corridor measurement',
+        alternative='per-quadrant attention write group (WG+1 on SW/SE/NW, 4 serializer outputs): bank port/area cost vs removed long drain -> GEO-H + H-ATTQ to price',
+        status='OPEN_LONG_RETURN')]
     for q in abi['quadrants']:
         reads=abi['clients'][q]['read'];rec=slice_bind[q]
         for i,name in enumerate(reads):
@@ -189,9 +206,9 @@ def generate(out):
                 required_port_groups=need,physical_port_groups=None,
                 status='OPEN: no pin/leaf plan yet' if inst else 'OPEN: engine not yet bound in contract')
             if eng=='SU':
-                rec=engine_rule['engines'][f'SU_{q}'];rec['physical_port_groups']=4
-                rec['status']=('SOURCE MET (4 pg_clk groups, d66ceb2dd); pins open' if need==4 else
-                               'OPEN 4 of 5: die lead adds the fifth SW/SE group with H-ELEM-B')
+                rec=engine_rule['engines'][f'SU_{q}'];rec['physical_port_groups']=need
+                rec['status']=('SOURCE MET (%d pg_clk groups, db4f2facb)%s; pins open'%(need,
+                               '' if need==4 else ', BANK_GROUP 0x43221100 provisional (bank 7 alone) pending GEO-H RG5 readback'))
     qs=('SW','SE','NE','NW')
     for i,q in enumerate(qs):
         edge('ring_cw_'+q,('hb_vms_'+q,'cw_out'),('hb_vms_'+qs[(i+1)%4],'cw_in'))
@@ -238,7 +255,9 @@ def generate(out):
             if name=='hb_ckgen':
                 if port in ('refclk','por_n'):continue # actual declared external bump boundary
                 if port.startswith(('pll_','por_')):continue # other actual die domains; outside this subnet
-            if name.startswith('hb_su_'):
+            if name=='hb_attn_pv':
+                owner='actual HG1 PV producer / attention drain calendar (H-ATTQ)'
+            elif name.startswith('hb_su_'):
                 owner='actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)'
             elif name.startswith('hb_sfu_'):
                 owner=('actual SFU operand SRAM / SU join' if port.startswith(('vi_','ro_','side_','kv_'))
@@ -296,7 +315,8 @@ def generate(out):
                 service_qualification_rejections=service['qualification_rejections'] if service else [],
                 abi_sha256=hashlib.sha256(abi_path.read_bytes()).hexdigest(),
                 instances=modules,known_actual_edges=edges,clock_roots=roots,vm_slice_bind=slice_bind,
-                engine_lg_port_group_rule=engine_rule,
+                engine_lg_port_group_rule=engine_rule,floorplan_direction='HBM D local PV (owner-approved 2026-10-15)',
+                long_returns=long_returns,
                 registered_station_masters=generated,logical_constant_requests=logical_constants,unbound_ports=unresolved,
                 boundary_gaps=['actual 1.024ns PHY to 0.833333ns stream block CDC absent',
                                'actual mapped PHY address/endian/PC striping proof required',

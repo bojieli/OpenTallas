@@ -1,0 +1,20 @@
+{
+  "status": "FAILED: capacity-limited elaboration, no simulation or functional verdict",
+  "source_commit": "cf9c38c30",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1122149-1792048206.scope",
+  "tool_session": 13729,
+  "exit_receipt": "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1122149-1792048206): exit 143",
+  "authoritative_result": "oom-kill",
+  "OOMPolicy": "stop",
+  "MemoryPeak_bytes": 171798691840,
+  "MemoryMax_bytes": 171798691840,
+  "MemorySwapMax_bytes": 0,
+  "journal_OOM_time": "2026-10-15T00:21:55-07:00",
+  "journal_terminal_time": "2026-10-15T00:22:03-07:00",
+  "cgroup_memory_events": "unavailable: cgroup removed after scope termination; retained systemd user scope status and journal prove OOM",
+  "terminal_verified": "parent scope failed, original ot-run returned143, topPID1124546 missing, no remaining job children",
+  "completed_objects": "PT64 hierarchical native TKM leaf compiled; retained /tmp/hcoll-native-allgather-1015/obj on ot-epyc4; do not remove or rebuild unchanged leaf",
+  "restart": "none at collection; coordinator selecting capacity-backed next action",
+  "scope_unchanged": "all8actualparents,2actualK2048TKM,64PTtile,96flits/quarter; no narrowing accepted"
+}

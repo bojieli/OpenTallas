@@ -1,0 +1,6 @@
+{"scope":"generator screen only; no die emitted","flags":"--static-coll --suhc-static-issue --bf-x2-static","verdict":"GEN_FAIL geometry",
+ "failure":"canonical_layout.trunks: chain cxW_edge27: no station spot near s=600 of 1014 (8635, 18594)",
+ "cause":"x trunk broadcast tree widened 566 -> 1102 b (packed static lane, BF fronts in all 128 frames): forwarded station 32.376 x 17.256 -> 58.296 x 17.256 um (stn_dims), canonical street spots sized for 566 b",
+ "rejected_alternatives":"serial BF beat over the 564 lane: 2,261/2,304 BF beats back-to-back at full rate (tb_s81_pq_die_n) -> ~+50% PQ lane time, far over the 5%/unit ledger; x2 only on BF frames: all 128 frames hold 4-5 BF fronts",
+ "owner_next":"S-DIE / GEO-S: street capacity (or a second street) for the 1,102-b x tree; column side (cfifo ingress, x2 slot stations, BF xb) not yet reached",
+ "native_qualified":false}

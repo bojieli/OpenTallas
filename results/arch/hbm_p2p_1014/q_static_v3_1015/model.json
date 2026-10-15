@@ -1,0 +1,82 @@
+{
+  "q3": {
+    "status": "UNQUALIFIED_PREBUILD_ANALYTIC",
+    "physical_frame_bits": 612,
+    "sources": 11,
+    "sinks": 16,
+    "logical_clock_roots": 108,
+    "new_operator_clock_roots": {
+      "reduce": 33,
+      "argmax": 1
+    },
+    "qslots_capture_root_registers": 6007,
+    "qslots_output_root_registers": 14824,
+    "protocol_leaf_declared_bound": 7385,
+    "measured_qslots_output_root_registers": 14824,
+    "sequence_word_to_reservation_edges": 1,
+    "source_faces": "separate registered reduction and ARGMAX outputs; no producer mux",
+    "link_sequence": "16 protected bits, extended overflow fault at65536, actual64slot SRAM reuse",
+    "area_estimate": "sum measured native leaf/macro areas; currently unknown",
+    "unverified": [
+      "actual synthesis clock-root count",
+      "physical slot area/pins",
+      "die timing",
+      "normative program compiler join",
+      "full native V2 operation programs"
+    ],
+    "source_version": "hcoll.quadrant.v3",
+    "link_module": "ot_hgi_coll_static_link_pinreg",
+    "link_read_to_pin_edges": 5,
+    "link_receive_edges": 1,
+    "sequence_metadata_lead_edges": 1,
+    "link_controller_measured_FFs": 3201,
+    "link_store_measured_FFs": [
+      597,
+      597,
+      597,
+      567
+    ],
+    "issuer_feedback_bits": 9,
+    "production_status": "candidate logical composition; physical qualification remains unproven"
+  },
+  "q2": {
+    "status": "UNQUALIFIED_PREBUILD_ANALYTIC",
+    "physical_frame_bits": 612,
+    "sources": 10,
+    "sinks": 15,
+    "logical_clock_roots": 68,
+    "new_operator_clock_roots": {
+      "reduce": 33,
+      "argmax": 0
+    },
+    "qslots_capture_root_registers": 5461,
+    "qslots_output_root_registers": 13727,
+    "protocol_leaf_declared_bound": 7326,
+    "measured_qslots_output_root_registers": 13727,
+    "sequence_word_to_reservation_edges": 1,
+    "source_faces": "separate registered reduction and ARGMAX outputs; no producer mux",
+    "link_sequence": "16 protected bits, extended overflow fault at65536, actual64slot SRAM reuse",
+    "area_estimate": "sum measured native leaf/macro areas; currently unknown",
+    "unverified": [
+      "actual synthesis clock-root count",
+      "physical slot area/pins",
+      "die timing",
+      "normative program compiler join",
+      "full native V2 operation programs"
+    ],
+    "source_version": "hcoll.quadrant.v3",
+    "link_module": "ot_hgi_coll_static_link_pinreg",
+    "link_read_to_pin_edges": 5,
+    "link_receive_edges": 1,
+    "sequence_metadata_lead_edges": 1,
+    "link_controller_measured_FFs": 3201,
+    "link_store_measured_FFs": [
+      597,
+      597,
+      597,
+      567
+    ],
+    "issuer_feedback_bits": 9,
+    "production_status": "candidate logical composition; physical qualification remains unproven"
+  }
+}

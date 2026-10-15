@@ -1,0 +1,78 @@
+{
+ "name": "hbm_att_bank_gather_binary_1015",
+ "top": "ot_hbm_attn_pv_bank_gather_binary",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/v41x/static/ot_hbm_attn_pv_bank_gather_binary.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "capture_v",
+   "block_select"
+  ],
+  "W": [
+   "tile_data",
+   "tile_flags"
+  ],
+  "E": [
+   "bank_data",
+   "bank_flags",
+   "output_v"
+  ]
+ },
+ "outline": {
+  "w": 140.4,
+  "h": 225.18,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-ATT registered gather",
+  "branch": "codex/hbm-static-attn-quant-1014",
+  "tag": "attbankbinary1015",
+  "purpose": "Exact measured nativepin repair: registered binary selector moves decode behind input face; optionaloutput padtrio removed using actualFFoutputhold+60.88ps and measured46ps padcost; unchanged2edge operation. ActualCTS/pinFF/route gates mandatory.",
+  "extra_paths": [
+   "rtl/hdc/v41x/static/physical"
+  ],
+  "benched_by": "rtl/test/hbm_accel/generic/tb_hbm_attn_bank_gather_binary.sv",
+  "record_to": "results/rtl/ref_tile/hbm_att_bank_gather_binary_1015"
+ },
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "rtl/hdc/v41x/static/physical/bank_gather_pin_audit.tcl",
+  "OT_OFLOP_GAP": "4.5",
+  "PDN_TCL": "rtl/hdc/v41x/static/physical/gather_pdn_setback.tcl"
+ },
+ "structural_change": "Source successor same2edges: 3binaryselectorFF replace8decodedselectorFF, source2381FF; decode inside output stage has measuredpredecessorTTinternalsetup248ps. Actual predecessor outputchain BUF4f/HB2/BUF4f costs~75TT/~46FF; omit optionaltrio, retain realpinlaunchFF and finalresizeddrivers. ActualalloutputFFholdmin60.88ps suggests~15ps margin; this is model notqualification. Same140.4x225.18/pins/PG; nativeperpin220/190, allcornerclock/access/DRC requalification required.",
+ "slot_change_request": {
+  "reason": "Independent source-successor leaf same compact140.4x225.18 slot. Preserve predecessor nativepin-failing baseline; no fullparent adoption."
+ },
+ "io_flop_at_pins": {
+  "cols": 6
+ },
+ "outhold": false,
+ "inhold": true,
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
