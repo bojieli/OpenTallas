@@ -984,9 +984,9 @@ module dsfd_vm_fe #(
             // quadrant gsl feed only slice gsl (no 4 x 4 crossbar); every other port as before
             if (gp >= CP && gp < CP + 16) begin : g_c
                 localparam integer LL = (gp - CP) / 4, SG = (gp - CP) % 4, LG = CP + 4 * gsl + LL;
-                localparam [1:0] L2 = LL, S2 = SG;
+                localparam [1:0] S2 = SG;
                 assign cv_s[gp] = c_vv[LG]; assign cw_s[gp] = c_we[LG];
-                assign cr_s[gp*RA +: RA] = {c_row[LG*RA + 4 +: RA - 4], L2, S2};
+                assign cr_s[gp*RA +: RA] = {c_row[LG*RA + 4 +: RA - 4], c_row[LG*RA +: 2], S2};   // c_row[1:0] = gid[1:0] = L2 when valid
                 assign cm_s[4*gp +: 4] = c_m[LG*16 + 4*SG +: 4];
                 assign cd_s[128*gp +: 128] = c_dd[LG*512 + 128*SG +: 128];
             end else begin : g_n
