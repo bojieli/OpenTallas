@@ -50,6 +50,11 @@ def main():
  ap=argparse.ArgumentParser(description=__doc__)
  for key in ['capacity','vm','contract','field','out']:ap.add_argument('--'+key,type=Path,required=True)
  a=ap.parse_args();cap,vm,contract,field=[load(p) for p in [a.capacity,a.vm,a.contract,a.field]]
+ counts={kind:sum(r[7]==kind for r in field['insts']) for kind in ['seq','cfg','bf','bfcol','q','cfifo']}
+ assert counts==dict(seq=2417,cfg=16919,bf=519,bfcol=1038,q=1898,cfifo=128),counts
+ assert cap['pair_count']==2417 and cap['bf_pairs']==519 and cap['root_count']==128
+ assert len({n['name'] for n in vm['nodes']})==len(vm['nodes'])
+ assert sum(n['master']=='dsfd_vm_static_bank128' for n in vm['nodes'])==128
  fields=[box(r[0],[r[2],r[3]],[r[4],r[5]],r[7]) for r in field['insts'] if r[8].startswith('frame_')]
  opts=options(cap,vm,contract)
  for q in opts:
@@ -72,7 +77,7 @@ def main():
   q['hardware_counts']=dict(field_pairs=2417,BF_fronts=519,CFG_ROM=16919,root_regions=128,VM_core_nodes=len(q['vm_nodes']),VM_banks=sum(n['master']=='dsfd_vm_static_bank128' for n in q['vm_nodes']))
   q['unproven']=['Global53writer/cap16/CDC16 packing in edge reservation','Actual global readissue/return/write pin faces and clock/phase delivery','All boundary wire length, actual relay allocation/cuts<=0.60 and priced extra static cycles','All native HC children and expandedHCP source pin contracts','Full revised canonical FIELD return/broadcast topology regenerates; old transport not kept']
  report=dict(schema='opentallas.s81.system_geometry_options.v1',scope='CANONICAL_FULL_FIELD_AND_ACTUAL_VM_CORE_RECTANGLES_ONLY',
-   input_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in [a.capacity,a.vm,a.contract,a.field,Path(__file__)]},die_um=cap['die_outline_um'],unchanged_field_children=len(fields),baseline_snapshot_instances=len(field['insts']),source_VM_template_nodes=len(vm['nodes']),source_VM_template_status=('SUPERSEDED_EXACT_PIN_AUDIT_FAIL_MAX1097.9UM:164node template is rectangle diagnostic only; successor188nodes pending' if len(vm['nodes'])==164 else 'Actualsource option; native pin/route qualification must still be checked'),options=opts,
+   input_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in [a.capacity,a.vm,a.contract,a.field,Path(__file__)]},die_um=cap['die_outline_um'],canonical_actual_counts=counts,unchanged_field_children=len(fields),baseline_snapshot_instances=len(field['insts']),source_VM_template_nodes=len(vm['nodes']),source_VM_template_status=('SUPERSEDED_EXACT_PIN_AUDIT_FAIL_MAX1097.9UM:164node template is rectangle diagnostic only; successor188nodes pending' if len(vm['nodes'])==164 else 'Actualsource option; native pin/route qualification must still be checked'),options=opts,
    recommendation='B is the first candidate to evaluate if it clears rectangle checks. It compacts the actual4slice VM while keeping SU and service vertical locations. C compares physical client grouping but may worsen shared all-slice service latency. No routed/performance ranking is proven.')
  a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(report,indent=1)+'\n')
  print(json.dumps([dict(name=q['name'],collisions=len(q['rectangle_collisions']),outside=len(q['outside']),first_collisions=q['rectangle_collisions'][:5]) for q in opts]))
