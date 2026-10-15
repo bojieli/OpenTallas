@@ -1,0 +1,25 @@
+{
+ "status": "LIVE_ACTUAL_GENERATOR",
+ "source_commit": "e7e772c36",
+ "host": "ot-epyc4",
+ "pid": 1259604,
+ "unit": "oth-ubuntu-1259588-1792051134",
+ "local_systemd_unit": "canonical-gen-1015-screen2.service",
+ "local_log": "/home/ubuntu/canonical-gen-1015-screen2.log",
+ "remote_source": "/srv/opentallas-scratch/codex-canonical-gen-1015/src",
+ "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen2",
+ "scope": "Actual full2417 typed generator. No native timing or placement success claim while active. All sourcepairIDs2417/BF519 andPHW10 metadata preserved.",
+ "first_failure": "Historical slot_geometry required uniform BF_PER_REGION; canonical exactperframe slot inventory now replaces only canonical restriction. Failed screen1 remains immutable.",
+ "artifacts_expected": {
+  "field_before_trunks.json.gz": "Actual fully populated canonical child boxes before transport; incomplete nets",
+  "canonical_partial.json.gz": "Exact current instances+buses on failure; explicitly partial",
+  "canonical_plan.json.gz": "Complete actual generator instances,buses,frames and calendar on success",
+  "exact_pins.lef.gz": "Generated and actual native abstract LEFs, only after success"
+ },
+ "open": [
+  "actual RSC occupancy and <=500um per-bit flights/cuts",
+  "all realnative abstracts/TTsetup/FFhold/DRC0",
+  "actual PHW10 source bindings from compute stream",
+  "static schedule through actual physical clock phases"
+ ]
+}
