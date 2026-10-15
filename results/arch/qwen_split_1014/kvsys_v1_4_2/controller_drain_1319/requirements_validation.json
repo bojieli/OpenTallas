@@ -1,0 +1,14 @@
+{
+  "actual_source_pass": true,
+  "actual_JEDEC_constants": 17,
+  "mutants": [
+    {
+      "mutant": "altered_source_bytes",
+      "refused": "actual layer programme/plan SHA mismatch"
+    },
+    {
+      "mutant": "removed_native_PC11",
+      "refused": "requires actual sole native PC11 and25 encoded instructions"
+    }
+  ]
+}
