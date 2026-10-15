@@ -1,0 +1,11 @@
+SCOREBAD ord2048 expectedc01d gotc023
+SCOREBAD ord2050 expectedc01d gotc025
+SCOREBAD ord2052 expected40e6 got40e4
+SCOREBAD ord2056 expectedc0c6 gotc0ca
+SCOREBAD ord2058 expectedc058 gotc055
+SCOREBAD ord2060 expected3f85 got3f94
+SCOREBAD ord4784 expectedc047 gotc04c
+IDX_PARENT_STATIC scores10928 records512 flits64 errors727 fault1 scoreedges123..293 TXedges951..1071
+[14650000000] %Fatal: tb_idx_parent_static.sv:99: Assertion failed in tb_idx_parent_static: fullshape real static INDEX parent mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_parent_static.sv:99: Verilog $stop
+Aborting...

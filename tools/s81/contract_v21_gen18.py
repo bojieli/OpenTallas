@@ -39,6 +39,16 @@ def build(base):
                                           source='origin/codex/s81-static-collective-1014 574f05810 (NOT on main yet)'),
                           dropped=['vm.t_collective[592]', 'vm.tcs[3] (room back-pressure)', 'hc_s.y_rdy -> collective.f_hc_yr'],
                           hc_consumer_slot='hc_s.y_tag[32] <- collective.t_hc_tag (static HC POST consumer, owner s_func)'))
+    c['v21_gen18']['hc_norm_local_split'] = dict(
+        status='GRANTED_SUBSLOT (NT variant, default-off; enters the die at the NORM swap)',
+        decision='el1011-s81die.log 2026-10-15 S-DIE r11 (coordinator-approved S-NORM requests 1-3)',
+        pin_dir='physical/s81_die_pins/v22_hc_local_split', tool='tools/s81/hc_local_split_pins.py',
+        ctfxs_nt='adopts the ctfx_nt slot 576.72 x 25.92: v20_hc_capture ctfx_nt rectangles minus fdx_local/fv_local',
+        ctfl_nt=dict(row='cth_nt row y 390.96 from N (below ctfxs_nt), 576.72 x 25.92', cth_nt_h=[751.68, 777.6],
+                     reach='fdx_local/fv_local <= 499.8 um to all 8 CLOSED CTPL (layout.json); CTRA/CTRB unverified',
+                     cycles=0, area_um2=14948.6),
+        fdm='ctfn S / ctfs_nt N one straight bus x 1.02-575.48 (NORM lanes 40-86 free); re-pins CLOSED ctfs_nt',
+        die_cost='at the swap: +19.44 um per cth row vs serial v20 (sp_hc_s +194.4, sp_hc_t +233.28); not in GEN18 geometry')
     c.setdefault('changelog', []).append(
         'v21 GEN18 candidate (S-DIE r11 2026-10-15): sp_gather +241.92 N (v21 transverse RE), static VM/collective seam, HC y_tag slot; screen only.')
     return c

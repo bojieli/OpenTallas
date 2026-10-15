@@ -1,0 +1,27 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       admits   479 GB (avail 706, growth 160, headroom 48, waiters 0/0 GB) load 29/128 running 21 disk 522 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1307615-1792052529 after 0 s
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_SOURCE_ARCHIVE_SHA256=5915a779d7911c05c4caa24b70eeee92ca38e622ff7eb4dc35965ff6e8f88468
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=0
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: PASS ot_s81_hc_ctnl_l3 cells 65,668 flops 8,483 depth 575.1 ps util 0.549 reach 0.0 um (1.2 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=8483 root=port:clk rule=PASS: 8,483 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_PORTS {"clk": [1, false], "rst_in": [1, false], "tid": [null, true], "bank": [null, true], "lane": [null, true], "last": [1, false], "fv": [null, true], "fdx": [null, true], "wb_v": [1, false], "wb_en": [1, false], "wb_hs": [1, false], "wb_ob": [null, true], "wb_d": [null, true], "rq_q": [null, true], "hs_run": [1, false], "hs_c": [null, true], "hpr": [null, true], "hrq": [null, true], "cy_in": [null, true], "acc_in": [null, true], "sqn_in": [null, true], "sq_out": [null, true], "acc_out": [null, true], "cy_out": [null, true], "yb": [null, true], "flt": [1, false]}
+GATE_AREA    Chip area for module '\ot_s81_hc_ctnl_l3': 7812.066060
+GATE_CTS_RC=0
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.6200
+GATE_CK_RC=0
+GATE_CK ss insertion all 238.3..260.8 ps (spread 22.5), boundary mean 250.2; tt insertion all 181.7..200.3 ps (spread 18.6), boundary mean 192.4; ff insertion all 147.5..164.1 ps (spread 16.6), boundary mean 157.5; macro_clk flag False
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 1284, "mean": 192.4, "min": 186.2, "max": 200.2}, "all": {"n": 8610, "mean": 190.8, "min": 181.7, "max": 200.3}, "errors": [], "macros": null, "macro_libs": 0}}
+GATE_PC constraints signoff /src/physical/ref_tile/s81hc_ctnl_l3_native_ref/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->reg      600 paths, worst slack 73.2 ps (e.g. u_core.u_mix.u_m2.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r[75]$_DFF_P_/D)
+GATE_PC setup WNS 7.315897887494316e-11 hold WNS 2.3931703840851526e-11
+GATE_DONE
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1307615-1792052529): exit 0

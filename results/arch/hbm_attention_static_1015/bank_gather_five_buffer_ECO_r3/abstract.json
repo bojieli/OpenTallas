@@ -1,0 +1,219 @@
+{
+  "name": "ot_hbm_attn_pv_bank_gather_registered",
+  "orfs_dir": "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 6.445055600323712e-11 min 6.177749978242275e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/views/ot_hbm_attn_pv_bank_gather_registered:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/ref_gate/hbm_att_bank_gather_compact_1015-20261015-041541/src/physical/ref_tile/hbm_att_bank_gather_compact_1015/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/ref_gate/hbm_att_bank_gather_compact_1015-20261015-041541/src/physical/ref_tile/hbm_att_bank_gather_compact_1015/signoff.sdc:/post0.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/io_ref_routed.sdc:/post1.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 3.085986466366819e-10 min 8.896841596772731e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/views/ot_hbm_attn_pv_bank_gather_registered:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/ref_gate/hbm_att_bank_gather_compact_1015-20261015-041541/src/physical/ref_tile/hbm_att_bank_gather_compact_1015/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/ref_gate/hbm_att_bank_gather_compact_1015-20261015-041541/src/physical/ref_tile/hbm_att_bank_gather_compact_1015/signoff.sdc:/post0.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/io_ref_routed.sdc:/post1.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.48033427130423e-10 min 2.9053093264508334e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/views/ot_hbm_attn_pv_bank_gather_registered:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/ref_gate/hbm_att_bank_gather_compact_1015-20261015-041541/src/physical/ref_tile/hbm_att_bank_gather_compact_1015/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/ref_gate/hbm_att_bank_gather_compact_1015-20261015-041541/src/physical/ref_tile/hbm_att_bank_gather_compact_1015/signoff.sdc:/post0.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/io_ref_routed.sdc:/post1.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch/claude/ref_gate/hbm_att_bank_gather_compact_1015-20261015-041541/src/physical/ref_tile/hbm_att_bank_gather_compact_1015/signoff.sdc",
+    "sha256": "59737720ef30bc211149726ac73f784e16fe42209a8e3af79f268b60eb67be44",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [],
+  "files": {
+    "ot_hbm_attn_pv_bank_gather_registered.lef": "152dfa54f374e418b7ac7584c5d98beb74874ea4358f11747b6ea4c1f51f1662",
+    "ot_hbm_attn_pv_bank_gather_registered_ff.lib": "8b8fb93170e9e34c6d1af0fa27f567fe6459c6e427d8c392deb67d2be665e569",
+    "ot_hbm_attn_pv_bank_gather_registered_ss.lib": "a63f07982cc1f8c7cabdbbcb30f44e5057982591db3d4462b9809834268a5f70",
+    "ot_hbm_attn_pv_bank_gather_registered_tt.lib": "6b103f8650c19c707d6eb3e6207ed2f0c3444607ad33aba66bce8ed8bdc66ef5"
+  },
+  "ok": true,
+  "signal_layer_audit": {
+    "helper_sha256": "4303011a36908eeec918f96b399a9fe9145563e3b1e71c79673a6099f6e09a7b",
+    "corners": {
+      "ss": {
+        "path": "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/views/ot_hbm_attn_pv_bank_gather_registered/signal_layer_audit_ss.json",
+        "sha256": "6582b6f7da3612bcc84fcd3302a4e42c9c4e7b385e2d8f332799312df4225fbb",
+        "abstract": {
+          "signal_cap": "M5",
+          "pg_cap": "M5",
+          "obs_layers": {
+            "M1": 1,
+            "M2": 1,
+            "M3": 1,
+            "M4": 1,
+            "M5": 1
+          },
+          "signal_pin_layers": [
+            "M4",
+            "M5"
+          ],
+          "pg_backed_high_obs_layers": []
+        }
+      },
+      "ff": {
+        "path": "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/views/ot_hbm_attn_pv_bank_gather_registered/signal_layer_audit_ff.json",
+        "sha256": "6582b6f7da3612bcc84fcd3302a4e42c9c4e7b385e2d8f332799312df4225fbb",
+        "abstract": {
+          "signal_cap": "M5",
+          "pg_cap": "M5",
+          "obs_layers": {
+            "M1": 1,
+            "M2": 1,
+            "M3": 1,
+            "M4": 1,
+            "M5": 1
+          },
+          "signal_pin_layers": [
+            "M4",
+            "M5"
+          ],
+          "pg_backed_high_obs_layers": []
+        }
+      },
+      "tt": {
+        "path": "/srv/opentallas-scratch/codex/ATT-gather-five-buffer-ECO-r3/views/ot_hbm_attn_pv_bank_gather_registered/signal_layer_audit_tt.json",
+        "sha256": "6582b6f7da3612bcc84fcd3302a4e42c9c4e7b385e2d8f332799312df4225fbb",
+        "abstract": {
+          "signal_cap": "M5",
+          "pg_cap": "M5",
+          "obs_layers": {
+            "M1": 1,
+            "M2": 1,
+            "M3": 1,
+            "M4": 1,
+            "M5": 1
+          },
+          "signal_pin_layers": [
+            "M4",
+            "M5"
+          ],
+          "pg_backed_high_obs_layers": []
+        }
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "post_sdc",
+      "tcl": [
+        "read_db /in/results/asap7/opentallas_ot_hbm_attn_pv_bank_gather_registered_asap7_ref_native/base/6_final.odb",
+        "read_sdc /in/results/asap7/opentallas_ot_hbm_attn_pv_bank_gather_registered_asap7_ref_native/base/6_final.sdc",
+        "read_spef /in/results/asap7/opentallas_ot_hbm_attn_pv_bank_gather_registered_asap7_ref_native/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /post0.sdc",
+        "read_sdc /post1.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "post_sdc",
+      "tcl": [
+        "read_db /in/results/asap7/opentallas_ot_hbm_attn_pv_bank_gather_registered_asap7_ref_native/base/6_final.odb",
+        "read_sdc /in/results/asap7/opentallas_ot_hbm_attn_pv_bank_gather_registered_asap7_ref_native/base/6_final.sdc",
+        "read_spef /in/results/asap7/opentallas_ot_hbm_attn_pv_bank_gather_registered_asap7_ref_native/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /post0.sdc",
+        "read_sdc /post1.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "post_sdc",
+      "tcl": [
+        "read_db /in/results/asap7/opentallas_ot_hbm_attn_pv_bank_gather_registered_asap7_ref_native/base/6_final.odb",
+        "read_sdc /in/results/asap7/opentallas_ot_hbm_attn_pv_bank_gather_registered_asap7_ref_native/base/6_final.sdc",
+        "read_spef /in/results/asap7/opentallas_ot_hbm_attn_pv_bank_gather_registered_asap7_ref_native/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /post0.sdc",
+        "read_sdc /post1.sdc"
+      ]
+    }
+  },
+  "verdict": {
+    "json": null,
+    "expect_ps": {
+      "tt": 248.03,
+      "ff": 8.9
+    },
+    "tol_ps": 0.05,
+    "basis": "--expect-tt / --expect-ff",
+    "check": {
+      "ff": {
+        "export_ps": 8.896841596772731,
+        "verdict_ps": 8.9,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 248.03342713042298,
+        "verdict_ps": 248.03,
+        "ok": true
+      }
+    }
+  },
+  "checked": true
+}

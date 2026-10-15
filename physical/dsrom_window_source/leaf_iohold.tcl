@@ -67,7 +67,9 @@ foreach bt [$ot_oh_blk getBTerms] {
       set cur $n2
     }
     if {$hold} { lappend ot_oh_dt [[$i findITerm A] getNet] }
-    $i setOrient R0; $i setLocation $x $y; $i setPlacementStatus FIRM
+    $i setOrient R0
+    if {[[$i getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
+    $i setLocation $x $y; $i setPlacementStatus FIRM
     lappend ot_oh_firm $nm
     incr k
   }

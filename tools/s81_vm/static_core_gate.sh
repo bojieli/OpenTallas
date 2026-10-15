@@ -5,12 +5,12 @@
 set -u
 S=$1; O=$2; READS=${3:-4000}; mkdir -p "$O"
 V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
-FILES="dsfd_vm_static_fsr_bank8.sv dsfd_vm_static_fsr_quartets.sv dsfd_vm_static_read_leaf.sv dsfd_vm_static_read_quartets.sv dsfd_vm_static_read_valid.sv dsfd_vm_static_read_valid_quartets.sv dsfd_vm_static_read_router.sv dsfd_vm_static_suhc_fsr.sv dsfd_vm_static_suhc_return_map.sv dsfd_vm_static_write_capture128.sv dsfd_vm_static_scatter_b8_out.sv dsfd_vm_static_scatter_lane.sv dsfd_vm_static_scatter.sv dsfd_vm_static_bank128.sv
- dsfd_vm_static_relay128.sv dsfd_vm_static_relay128_b8.sv dsfd_vm_static_relay128_b4.sv dsfd_vm_static_slice128_suhc.sv dsfd_vm_static_return.sv dsfd_vm_static512_suhc.sv
+FILES="dsfd_vm_static_fsr_bank8.sv dsfd_vm_static_fsr_quartets.sv dsfd_vm_static_read_leaf.sv dsfd_vm_static_read_quartets.sv dsfd_vm_static_read_valid.sv dsfd_vm_static_read_valid_quartets.sv dsfd_vm_static_read_router.sv dsfd_vm_static_read_quartets_p.sv dsfd_vm_static_read_valid_quartets_p.sv dsfd_vm_static_read_router_p.sv dsfd_vm_static_suhc_fsr.sv dsfd_vm_static_suhc_return_map.sv dsfd_vm_static_write_capture128.sv dsfd_vm_static_scatter_b8_out.sv dsfd_vm_static_scatter_lane.sv dsfd_vm_static_scatter.sv dsfd_vm_static_bank128.sv
+ dsfd_vm_static_relay128.sv dsfd_vm_static_relay128_b8.sv dsfd_vm_static_relay128_b4.sv dsfd_vm_static_slice128_suhc.sv dsfd_vm_static_return.sv dsfd_vm_static_return32_native_lanes.sv dsfd_vm_static_return_bank8_profiles.sv dsfd_vm_static_return_bank8.sv dsfd_vm_static512_suhc.sv
  ot_sram_1r1w_512x128_m4_r2c2.v dsfd_vm_static_wdispatch128.sv dsfd_vm_static_wstage128.sv dsfd_vm_static_w0.sv dsfd_vm_static_wcontrol.sv dsfd_vm_static_wsched.sv
- dsfd_vm_static_rsched.sv dsfd_vm_static_landing.sv dsfd_vm_seq_static.sv dsfd_vm_static_core.sv tb_dsfd_vm_static_core.sv"
+ dsfd_vm_static_rsched.sv dsfd_vm_static_landing.sv dsfd_vm_seq_static.sv dsfd_vm_seq_tile.sv dsfd_vm_static_core.sv tb_dsfd_vm_static_core.sv"
 F=""; for f in $FILES; do F="$F $S/$f"; done
-EXTRA=""; [ "${VM_READ_PIPE:-0}" = 0 ] || EXTRA="+define+OT_VM_NATIVE_READ"
+EXTRA=""; [ "${VM_READ_PIPE:-0}" = 0 ] || EXTRA="+define+OT_VM_NATIVE_READ"; [ "${VM_READ_PIPE:-0}" = 2 ] && EXTRA="$EXTRA +define+OT_VM_NATIVE_READ_PINREG"
 build(){ "$V" --binary --timing -O1 -Wno-fatal -j "${VM_BUILD_JOBS:-1}" -MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0" --top-module tb_dsfd_vm_static_core --Mdir "$O/obj_$1" -o tb $EXTRA ${2:-} $F > "$O/build_$1.log" 2>&1 || { echo "BUILD FAIL $1"; tail -20 "$O/build_$1.log"; }; }
 build base & p0=$!
 build mlane +define+OT_VM_WSCHED_MUT_LANE & p1=$!

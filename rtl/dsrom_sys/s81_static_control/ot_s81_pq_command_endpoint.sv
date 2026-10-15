@@ -13,11 +13,23 @@ module ot_s81_pq_command_endpoint #(
  input wire[35:0]f_desc_pw,input wire[38:0]t_iss,
  output wire[NATIVE_BITS+1:0]f_iss,output reg[8:0]c_done,output wire[1:0]c_st,
  output wire image_sealed);
+ // Native reset (S-ELEM-B 10-15): with PINREG the port reset drives only a registered relay (async assert,
+ // release +3 edges, an initialization-only delay); the closed reader view failed native capture on rst_n
+ // (recovery 288 + R 112 = 400 > 190 ps) because the port fanned out to flops directly.
+ wire rst_i;
+ generate if(PINREG!=0)begin:g_rst_relay
+  wire[0:0] rst_r;
+  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_r));
+  assign rst_i=rst_r[0];
+ end else begin:g_rst_port
+  assign rst_i=rst_n;
+ end endgenerate
+
  wire[84:0]c_cmd_pin;wire[35:0]f_desc_pw_pin;wire[38:0]t_iss_pin;
  generate if(PINREG!=0)begin:g_input_capture
   reg[84:0]cmd_q;reg[35:0]pw_q;reg[38:0]status_q;
-  always @(posedge ck or negedge rst_n)
-   if(!rst_n)begin cmd_q[84]<=0;pw_q[35]<=0;end
+  always @(posedge ck or negedge rst_i)
+   if(!rst_i)begin cmd_q[84]<=0;pw_q[35]<=0;end
    else begin cmd_q[84]<=c_cmd[84];pw_q[35]<=f_desc_pw[35];end
   always @(posedge ck)begin
    cmd_q[83:0]<=c_cmd[83:0];pw_q[34:0]<=f_desc_pw[34:0];status_q<=t_iss;
@@ -37,8 +49,8 @@ module ot_s81_pq_command_endpoint #(
  assign f_iss={fault,native_fields,go_q};
  assign c_st={sealed&&!fault,fault};assign image_sealed=sealed;
  integer i,s;reg bad;reg seen_done;reg[1:0]selected_tag;
- always @(posedge ck or negedge rst_n)begin
-  if(!rst_n)begin
+ always @(posedge ck or negedge rst_i)begin
+  if(!rst_i)begin
    length_q<=0;scan<=0;begun<=0;sealed<=0;scanning<=0;scan_bad<=0;
    fault<=0;active<=0;go_q<=0;
    for(i=0;i<4;i=i+1)begin command_tag[i]<=0;age[i]<=0;duration[i]<=0;end

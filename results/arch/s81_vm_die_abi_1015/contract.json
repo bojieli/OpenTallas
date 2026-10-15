@@ -363,10 +363,19 @@
    "dir": "input",
    "bits": 1,
    "domain": "serial",
-   "master": null,
-   "child_pin": null,
-   "routed_R": null,
-   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending"
+   "master": "dsfd_vm_static_cap_ctl",
+   "child_pin": "ck",
+   "routed_R": [
+    {
+     "kit": "dsfd_vm_static_cap_ctl_1015_r1",
+     "R_tt_ps": 47.0,
+     "min": 46.4,
+     "max": 47.6,
+     "n": 9,
+     "native_pin_audit": "PASS"
+    }
+   ],
+   "delivery": "phi - wire - R per root (R from the bound routed view)"
   },
   "ck_cap_lane_s": {
    "dir": "input",
@@ -443,7 +452,8 @@
      "R_tt_ps": 222.0,
      "min": 200.0,
      "max": 226.7,
-     "n": 329
+     "n": 329,
+     "native_pin_audit": "PASS"
     }
    ],
    "delivery": "phi - wire - R per root (R from the bound routed view)"
@@ -452,7 +462,7 @@
    "dir": "input",
    "bits": 16,
    "domain": "stream",
-   "master": "dsfd_vm_static_fsr_b0",
+   "master": "dsfd_vm_static_fsr_b0..b3",
    "child_pin": "ck",
    "routed_R": [
     {
@@ -460,7 +470,32 @@
      "R_tt_ps": 185.2,
      "min": 167.9,
      "max": 199.3,
-     "n": 690
+     "n": 690,
+     "native_pin_audit": "PASS"
+    },
+    {
+     "kit": "dsfd_vm_static_fsr_b1_native_1015_r1",
+     "R_tt_ps": 187.7,
+     "min": 168.2,
+     "max": 203.3,
+     "n": 690,
+     "native_pin_audit": "PASS"
+    },
+    {
+     "kit": "dsfd_vm_static_fsr_b2_native_1015_r1",
+     "R_tt_ps": 185.2,
+     "min": 167.6,
+     "max": 202.0,
+     "n": 690,
+     "native_pin_audit": "PASS"
+    },
+    {
+     "kit": "dsfd_vm_static_fsr_b3_native_1015_r1",
+     "R_tt_ps": 183.9,
+     "min": 164.6,
+     "max": 198.0,
+     "n": 690,
+     "native_pin_audit": "PASS"
     }
    ],
    "delivery": "phi - wire - R per root (R from the bound routed view)"
@@ -473,18 +508,20 @@
    "child_pin": "ck_req",
    "routed_R": [
     {
-     "kit": "dsfd_vm_static_relay128_b4_native_option",
-     "R_tt_ps": 143.3,
-     "min": 132.8,
-     "max": 156.1,
-     "n": 674
+     "kit": "dsfd_vm_static_relay128_b4_native_cb",
+     "R_tt_ps": 162.1,
+     "min": 147.7,
+     "max": 179.6,
+     "n": 674,
+     "native_pin_audit": "PASS"
     },
     {
-     "kit": "dsfd_vm_static_relay128_b8_native_option",
-     "R_tt_ps": 204.4,
-     "min": 195.1,
-     "max": 237.3,
-     "n": 1346
+     "kit": "dsfd_vm_static_relay128_b8_native_cb",
+     "R_tt_ps": 222.0,
+     "min": 213.6,
+     "max": 261.8,
+     "n": 1346,
+     "native_pin_audit": "PASS"
     }
    ],
    "delivery": "phi - wire - R per root (R from the bound routed view)"
@@ -497,18 +534,20 @@
    "child_pin": "ck_rsp",
    "routed_R": [
     {
-     "kit": "dsfd_vm_static_relay128_b4_native_option",
-     "R_tt_ps": 91.1,
-     "min": 87.5,
-     "max": 95.1,
-     "n": 638
+     "kit": "dsfd_vm_static_relay128_b4_native_cb",
+     "R_tt_ps": 91.3,
+     "min": 86.8,
+     "max": 97.3,
+     "n": 638,
+     "native_pin_audit": "PASS"
     },
     {
-     "kit": "dsfd_vm_static_relay128_b8_native_option",
-     "R_tt_ps": 128.9,
-     "min": 120.9,
-     "max": 137.2,
-     "n": 1274
+     "kit": "dsfd_vm_static_relay128_b8_native_cb",
+     "R_tt_ps": 134.1,
+     "min": 127.8,
+     "max": 140.6,
+     "n": 1274,
+     "native_pin_audit": "PASS"
     }
    ],
    "delivery": "phi - wire - R per root (R from the bound routed view)"
@@ -534,14 +573,16 @@
      "R_tt_ps": 81.9,
      "min": 77.9,
      "max": 84.4,
-     "n": 158
+     "n": 158,
+     "native_pin_audit": "PASS"
     },
     {
      "kit": "dsfd_vm_direct_capture_w_native",
      "R_tt_ps": 83.1,
      "min": 78.1,
      "max": 86.3,
-     "n": 158
+     "n": 158,
+     "native_pin_audit": "PASS"
     }
    ],
    "delivery": "phi - wire - R per root (R from the bound routed view)"
@@ -558,28 +599,32 @@
      "R_tt_ps": 146.6,
      "min": 131.5,
      "max": 172.6,
-     "n": 1212
+     "n": 1212,
+     "native_pin_audit": "FAIL: launch 228.6 > 220 (37 pins); capture 316.5 > 190 (72 pins)"
     },
     {
      "kit": "dsfd_vm_direct_scatter_b8_native",
      "R_tt_ps": 147.7,
      "min": 133.1,
      "max": 169.9,
-     "n": 1212
+     "n": 1212,
+     "native_pin_audit": "FAIL: launch 232.1 > 220 (85 pins); capture 324.9 > 190 (72 pins)"
     },
     {
      "kit": "dsfd_vm_direct_scatter_b16_native",
      "R_tt_ps": 146.2,
      "min": 131.4,
      "max": 170.0,
-     "n": 1212
+     "n": 1212,
+     "native_pin_audit": "FAIL: launch 233.7 > 220 (170 pins); capture 332.0 > 190 (72 pins)"
     },
     {
      "kit": "dsfd_vm_direct_scatter_b24_native",
      "R_tt_ps": 149.3,
      "min": 131.0,
      "max": 176.8,
-     "n": 1212
+     "n": 1212,
+     "native_pin_audit": "FAIL: launch 234.4 > 220 (166 pins); capture 316.9 > 190 (72 pins)"
     }
    ],
    "delivery": "phi - wire - R per root (R from the bound routed view)"
@@ -588,7 +633,7 @@
    "dir": "input",
    "bits": 64,
    "domain": "stream",
-   "master": "dsfd_vm_static_read_q0|q1",
+   "master": "dsfd_vm_static_read_q0..q7",
    "child_pin": "ck",
    "routed_R": [
     {
@@ -596,14 +641,64 @@
      "R_tt_ps": 197.0,
      "min": 187.1,
      "max": 212.3,
-     "n": 1036
+     "n": 1036,
+     "native_pin_audit": "FAIL: capture 316.1 > 190 (284 pins)"
     },
     {
      "kit": "dsfd_vm_static_read_q1_native_1015_r1",
      "R_tt_ps": 199.6,
      "min": 189.6,
      "max": 214.4,
-     "n": 1102
+     "n": 1102,
+     "native_pin_audit": "FAIL: capture 320.7 > 190 (280 pins)"
+    },
+    {
+     "kit": "dsfd_vm_static_read_q2_native_1015_r1",
+     "R_tt_ps": 186.8,
+     "min": 170.6,
+     "max": 220.8,
+     "n": 1036,
+     "native_pin_audit": "FAIL: capture 306.5 > 190 (245 pins)"
+    },
+    {
+     "kit": "dsfd_vm_static_read_q3_native_1015_r1",
+     "R_tt_ps": 186.8,
+     "min": 170.6,
+     "max": 220.8,
+     "n": 1036,
+     "native_pin_audit": "FAIL: capture 306.5 > 190 (245 pins)"
+    },
+    {
+     "kit": "dsfd_vm_static_read_q4_native_1015_r1",
+     "R_tt_ps": 104.5,
+     "min": 100.0,
+     "max": 109.5,
+     "n": 262,
+     "native_pin_audit": "FAIL: capture 260.3 > 190 (8 pins)"
+    },
+    {
+     "kit": "dsfd_vm_static_read_q5_native_1015_r1",
+     "R_tt_ps": 186.8,
+     "min": 170.6,
+     "max": 220.8,
+     "n": 1036,
+     "native_pin_audit": "FAIL: capture 306.5 > 190 (245 pins)"
+    },
+    {
+     "kit": "dsfd_vm_static_read_q6_native_1015_r1",
+     "R_tt_ps": 123.1,
+     "min": 114.5,
+     "max": 130.5,
+     "n": 520,
+     "native_pin_audit": "PASS"
+    },
+    {
+     "kit": "dsfd_vm_static_read_q7_native_1015_r1",
+     "R_tt_ps": 123.1,
+     "min": 114.5,
+     "max": 130.5,
+     "n": 520,
+     "native_pin_audit": "PASS"
     }
    ],
    "delivery": "phi - wire - R per root (R from the bound routed view)"
@@ -612,7 +707,7 @@
    "dir": "input",
    "bits": 8,
    "domain": "stream",
-   "master": "dsfd_vm_static_read_v0",
+   "master": "dsfd_vm_static_read_v0..v7",
    "child_pin": "ck",
    "routed_R": [
     {
@@ -620,7 +715,64 @@
      "R_tt_ps": 42.1,
      "min": 41.0,
      "max": 42.9,
-     "n": 21
+     "n": 21,
+     "native_pin_audit": "FAIL: capture 276.4 > 190 (80 pins)"
+    },
+    {
+     "kit": "dsfd_vm_static_read_v1_native_1015_r1",
+     "R_tt_ps": 41.7,
+     "min": 40.5,
+     "max": 42.4,
+     "n": 22,
+     "native_pin_audit": "FAIL: capture 284.3 > 190 (79 pins)"
+    },
+    {
+     "kit": "dsfd_vm_static_read_v2_native_1015_r1",
+     "R_tt_ps": 41.3,
+     "min": 40.1,
+     "max": 42.0,
+     "n": 21,
+     "native_pin_audit": "FAIL: capture 279.3 > 190 (67 pins)"
+    },
+    {
+     "kit": "dsfd_vm_static_read_v3_native_1015_r1",
+     "R_tt_ps": 41.5,
+     "min": 40.1,
+     "max": 42.5,
+     "n": 21,
+     "native_pin_audit": "FAIL: capture 287.8 > 190 (73 pins)"
+    },
+    {
+     "kit": "dsfd_vm_static_read_v4_native_1015_r1",
+     "R_tt_ps": 38.8,
+     "min": 38.2,
+     "max": 39.1,
+     "n": 9,
+     "native_pin_audit": "FAIL: capture 220.3 > 190 (9 pins)"
+    },
+    {
+     "kit": "dsfd_vm_static_read_v5_native_1015_r1",
+     "R_tt_ps": 40.9,
+     "min": 40.3,
+     "max": 41.3,
+     "n": 18,
+     "native_pin_audit": "FAIL: capture 270.2 > 190 (76 pins)"
+    },
+    {
+     "kit": "dsfd_vm_static_read_v6_native_1015_r1",
+     "R_tt_ps": 39.6,
+     "min": 38.3,
+     "max": 40.6,
+     "n": 13,
+     "native_pin_audit": "FAIL: capture 225.8 > 190 (40 pins)"
+    },
+    {
+     "kit": "dsfd_vm_static_read_v7_native_1015_r1",
+     "R_tt_ps": 39.9,
+     "min": 39.1,
+     "max": 40.4,
+     "n": 13,
+     "native_pin_audit": "FAIL: capture 221.7 > 190 (39 pins)"
     }
    ],
    "delivery": "phi - wire - R per root (R from the bound routed view)"
@@ -969,5 +1121,6 @@
   "replace the RTL_BIND dsfd_sp_vm clock branch (ck/rst serial, cks/rss stream) by these per-bit clock/reset entries; each clock bit is its own die/parent root delivered at phi - wire - R",
   "MIX4 slot: f_mx_* / t_mx_* nets to dsfd_engram_mix4_c (DSFD_SP_VM_MIX4 in layer1.f)"
  ],
- "not_claimed": "no die netlist bound, no physical / native qualification; generator side owned by S-BIND/S-DIE"
+ "not_claimed": "no die netlist bound, no physical / native qualification; generator side owned by S-BIND/S-DIE",
+ "native_pin_audit": "results/physical/s81_vm_static_ownership_1015/vm_native_pin_audit_1015.json (launch O-R<=220, capture S+R<=190 TT); a FAIL view gives a measured R but is NOT native-qualified"
 }
