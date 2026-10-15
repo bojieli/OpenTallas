@@ -1,6 +1,8 @@
 `timescale 1ps/1ps
 module tb_s81_static_collective_slab;
  parameter integer MUT=0;
+ parameter integer VMB_PINCAP=1;   // VM boundary write path pin capture: t_vm +1 edge (reads unchanged)
+ localparam integer WL=VMB_PINCAP;
  import ot_fp32_rne_pkg::*;
  reg clk=0;always #417 clk=~clk;reg s_ck=0;always #556 s_ck=~s_ck;
  reg rst_n=0;reg[84:0]c_cmd=0;wire[8:0]done;wire[1:0]status;
@@ -8,7 +10,7 @@ module tb_s81_static_collective_slab;
  wire[7:0]tv,rv;wire[4095:0]td,rd;
  reg[513:0]f_wfc=0;wire[513:0]t_wfc;reg[76:0]f_host=0;wire[514:0]t_host;
  wire[8191:0]hc_y;wire hc_v;
- s81_static_collective_slab #(.ROM_FILE("calendar.mem"),.CYCLES(2141),.MUT(MUT)) dut(
+ s81_static_collective_slab #(.ROM_FILE("calendar.mem"),.CYCLES(2141),.MUT(MUT),.VMB_PINCAP(VMB_PINCAP)) dut(
  .ck_control({5{clk}}),.ck_lane({8{clk}}),.ck_hc_lane({16{clk}}),.rst_n(rst_n),.f_rank(2'd0),
  .c_cmd(c_cmd),.c_done(done),.c_st(status),.t_crq(crq),.f_crs(crs),.t_vm(writes),
  .phy_rx_valid(rv),.phy_rx_data(rd),.phy_rx_fault(8'd0),.phy_rx_live(8'hff),
@@ -20,7 +22,7 @@ module tb_s81_static_collective_slab;
  reg[15:0]su_rqv=0;reg[223:0]su_rq=0;wire[15:0]su_rsv;wire[8191:0]su_rs;wire[1:0]vm_status;
  // VM clock/reset categories (558adb0f7 / a2a504bd4): t = the collective clock, s = the VM service clock,
  // connected as rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm_static.sv does.
- dsfd_sp_vm vm(.cks(clk),.rss(rst_n),
+ dsfd_sp_vm vm(
   .ck_read_data_t({64{clk}}),.ck_read_valid_t({8{clk}}),.rss_read_data_t({64{rst_n}}),.rss_read_valid_t({8{rst_n}}),
   .ck_core_t(clk),.ck_rsched_t(clk),.ck_seq_t(clk),.ck_landing_t(clk),
   .ck_mem_fsr_t({16{clk}}),.ck_mem_return_t({4{clk}}),.ck_mem_bank_t({128{clk}}),
@@ -118,19 +120,19 @@ module tb_s81_static_collective_slab;
     if(crq[0]&&crq[14:1]!==image[e-2][1+:14])$fatal(1,"VM request row");
    end
    expected_mask=0;
-   for(j=0;j<44;j=j+1)if(e==64+16*(j/3)+4*(j%3)+14)begin
+   for(j=0;j<44;j=j+1)if(e==64+16*(j/3)+4*(j%3)+14+WL)begin
     expected_mask=15;
     for(k=0;k<4;k=k+1)begin
      if(writes[k*551+:551]!=={8'h23,value(k,j,0),16'hffff,14'(grow(k,j)),1'b1})$fatal(1,"gather VM pins item%0d rank%0d edge%0d",j,k,e);
     end
    end
    for(j=0;j<320;j=j+1)begin
-    if(e==400+16*(j/3)+4*(j%3)+32)begin
+    if(e==400+16*(j/3)+4*(j%3)+32+WL)begin
      expected_mask=1;
      if(writes[0+:551]!=={8'h56,sumvalue(j),16'hffff,14'(6000+j),1'b1})$fatal(1,"reduce VM pins item%0d edge%0d got%h want%h",j,e,writes[31+:32],sumvalue(j));
     end
    end
-   if(e==360)begin
+   if(e==360+WL)begin
     expected_mask=3;
     if(writes[0+:551]!=={8'h27,raw_payload,16'hffff,14'd7000,1'b1})$fatal(1,"raw payload VM pins");
     if(writes[551+:551]!=={8'h27,471'd0,raw_metadata,16'h0003,14'd7001,1'b1})$fatal(1,"raw metadata VM pins");

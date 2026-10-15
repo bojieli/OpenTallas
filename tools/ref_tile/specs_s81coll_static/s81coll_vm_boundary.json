@@ -6,7 +6,8 @@
   "rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv"
  ],
  "params": {
-  "MUT": 0
+  "MUT": 0,
+  "PINCAP": 1
  },
  "clock_port": "clk",
  "reset_ports": [
@@ -80,7 +81,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "10-15 S-ELEM-B: first hardening of the static collective -> VM boundary (die grant die_grants_1015: kit_allowed, provisional origin [1479.6, 0] in sp_collective). Same faces as the owner's slot request; width 248.4 -> 151.2 so the E-face gather_data (2,048 b) -> W-face t_vm (2,204 b) register path crosses 151 um instead of 248 um (pin -> mux -> t_vm flop inside the 190 ps native capture budget); height 216 -> 237.6: the W face (2,234 b) on M4 at 2 tracks needs > 216 um (pin_fit PPL-0093 at 99 % slots), S 1,651 b at 10.9 b/um. 0 cycles (source unchanged: sha ce6385c2).",
+ "structural_change": "10-15 S-ELEM-B: first hardening of the static collective -> VM boundary (die grant die_grants_1015: kit_allowed, provisional origin [1479.6, 0] in sp_collective). Same faces as the owner's slot request; width 248.4 -> 151.2 so the E-face gather_data (2,048 b) -> W-face t_vm (2,204 b) register path crosses 151 um instead of 248 um (pin -> mux -> t_vm flop inside the 190 ps native capture budget); height 216 -> 237.6: the W face (2,234 b) on M4 at 2 tracks needs > 216 um (pin_fit PPL-0093 at 99 % slots), S 1,651 b at 10.9 b/um. 0 cycles (source unchanged: sha ce6385c2). | gate b1 (PINCAP 0): in->reg -62 ps through the pack/valid logic, pack_bad_out in->out -219, raw_sources[0]/hc_write_slot 539-1,087 loads, rst_n 2,220 loads. b2 = PINCAP 1: every write-path input pin-captured (+1 fixed edge collective->VM write; the read request t_crq is unchanged), pack_bad_out registered (fault only), reset only on the 4 valid bits + t_crq + fault. Slab gate PINCAP 1 PASS, MUT FAIL; PINCAP 0 PASS.",
  "slot_change_request": {
   "name": "s81coll_vm_boundary-1015",
   "outline": [
@@ -135,12 +136,12 @@
  "job": {
   "owner": "Claude:s81-elemB-1015",
   "branch": "claude/s81-elemB-coll-1015",
-  "tag": "b1",
+  "tag": "b2",
   "purpose": "S81 static collective -> VM boundary leaf (registered t_vm 2204 / t_crq 15)",
   "benches": [
    {
     "name": "slab_exact",
-    "cmd": "bash tools/s81_static_collective/run_slab_gate.sh {RUN}/slab_exact 0",
+    "cmd": "bash tools/s81_static_collective/run_slab_gate.sh {RUN}/slab_exact 0 1",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 24,
@@ -152,7 +153,7 @@
    },
    {
     "name": "slab_hc_bit_mutant",
-    "cmd": "bash tools/s81_static_collective/run_slab_gate.sh {RUN}/slab_mutant 1",
+    "cmd": "bash tools/s81_static_collective/run_slab_gate.sh {RUN}/slab_mutant 1 1",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 24,
@@ -171,7 +172,9 @@
    "tools/s81_static_collective",
    "physical/asap7_memory_macros/ot_rom_4096x266_m8",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
-   "physical/s81_static_collective_proposal_1014"
+   "physical/s81_static_collective_proposal_1014",
+   "tools/s81_vm",
+   "tools/s81_static_control"
   ]
  }
 }
