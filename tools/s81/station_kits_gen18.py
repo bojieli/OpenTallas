@@ -195,10 +195,10 @@ def main() -> int:
                 'benches': [
                     {'name': 'phase_words', 'cmd': f'bash {bench} pass {mst} {wb} {{RUN}}/bench_p', 'expect': 'pass',
                      'pass_regex': f'STATION PASS 20000 words {wb} bits {edge}', 'threads': 2, 'peak_ram_gb': 4},
-                    {'name': 'wrong_clock_edge_mutant', 'cmd': f'bash {bench} clock_mutant {mst} {wb} {{RUN}}/bench_c',
-                     'expect': 'pass', 'pass_regex': 'STATION MUTANT REJECTED clock_mutant', 'threads': 2, 'peak_ram_gb': 4},
-                    {'name': 'payload_bit_mutant', 'cmd': f'bash {bench} data_mutant {mst} {wb} {{RUN}}/bench_d',
-                     'expect': 'pass', 'pass_regex': 'STATION MUTANT REJECTED data_mutant', 'threads': 2, 'peak_ram_gb': 4},
+                    {'name': 'wrong_clock_edge_mutant', 'cmd': f'bash {bench} clock_mutant_raw {mst} {wb} {{RUN}}/bench_c',
+                     'expect': 'fail', 'fail_regex': 'STATION FAIL', 'threads': 2, 'peak_ram_gb': 4},
+                    {'name': 'payload_bit_mutant', 'cmd': f'bash {bench} data_mutant_raw {mst} {wb} {{RUN}}/bench_d',
+                     'expect': 'fail', 'fail_regex': 'STATION FAIL', 'threads': 2, 'peak_ram_gb': 4},
                 ],
             },
         }

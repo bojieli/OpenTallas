@@ -3,10 +3,12 @@
 # run_gate.sh / tb_hstnh_1024.sv of 7110ec4a7 to every width).  The DUT is the hardened RTL file itself
 # (rtl/dsrom_sys/s81_station_native/gen18r/<master>.sv); mutants edit a copy:
 #   clock_mutant  the kept INV input becomes ~ck  (captures on the wrong edge)  -> must FAIL
+#   (append _raw to a mutant mode: the script exits with the mutant run status, for expect=fail)
 #   data_mutant   bit 0 of the first stage slice inverted                       -> must FAIL
 # usage: run_station_gate.sh pass|clock_mutant|data_mutant <master> <W> <outdir>
 set -euo pipefail
 mode=${1:?mode}; m=${2:?master}; w=${3:?width}; out=${4:?outdir}
+raw=0; case $mode in *_raw) raw=1; mode=${mode%_raw};; esac   # *_raw: exit with the mutant sim status (loop expect=fail)
 root=$(cd "$(dirname "$0")/../.." && pwd)
 mkdir -p "$out"; out=$(cd "$out" && pwd)
 python3 - "$root" "$out" "$mode" "$m" <<'PYCODE'
@@ -60,6 +62,7 @@ set +e
 rc=$?
 set -e
 cat "$out/sim.log"
+[ "$raw" = 1 ] && exit "$rc"
 if [ "$mode" = pass ]; then
   [ "$rc" = 0 ] && grep -q "STATION PASS 20000 words $w bits top_posedge" "$out/sim.log"
 else

@@ -64,17 +64,17 @@
    },
    {
     "name": "wrong_clock_edge_mutant",
-    "cmd": "bash tools/s81_station_native/run_station_gate.sh clock_mutant dsfd_hstnv_9 9 {RUN}/bench_c",
-    "expect": "pass",
-    "pass_regex": "STATION MUTANT REJECTED clock_mutant",
+    "cmd": "bash tools/s81_station_native/run_station_gate.sh clock_mutant_raw dsfd_hstnv_9 9 {RUN}/bench_c",
+    "expect": "fail",
+    "fail_regex": "STATION FAIL",
     "threads": 2,
     "peak_ram_gb": 4
    },
    {
     "name": "payload_bit_mutant",
-    "cmd": "bash tools/s81_station_native/run_station_gate.sh data_mutant dsfd_hstnv_9 9 {RUN}/bench_d",
-    "expect": "pass",
-    "pass_regex": "STATION MUTANT REJECTED data_mutant",
+    "cmd": "bash tools/s81_station_native/run_station_gate.sh data_mutant_raw dsfd_hstnv_9 9 {RUN}/bench_d",
+    "expect": "fail",
+    "fail_regex": "STATION FAIL",
     "threads": 2,
     "peak_ram_gb": 4
    }
