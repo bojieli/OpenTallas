@@ -5,6 +5,11 @@
 `define C_SB(m) cmdv[m][63:32]
 `define C_W(m) cmdv[m][31:16]
 `define C_MODE(m) cmdv[m][0]
+`ifdef OT_TP8S_QFD
+`define C_ISS(m) (`C_CMD(m)-1)
+`else
+`define C_ISS(m) `C_CMD(m)
+`endif
 // ---------------------------------------------------------------------------
 // qwen-coll-io 2026-10-14: 8-die bench of the STATIC-SCHEDULED TP8 collective rtl/rom/ot_coll_tp8_static.sv.
 // 4 packages x 2 dies (die r = 2 * package + die), every die the SAME master ranked by straps.  Links are fixed-latency
@@ -60,7 +65,7 @@ module tb_coll_tp8_static #(
     integer cm = 0;
     always @(*) begin
         cmd_v = 1'b0; cmd_mode = 1'b0; cmd_words = 16'd0; cmd_tag = 0;
-        if (cm < NMSG && cyc == `C_CMD(cm)) begin cmd_v = 1'b1; cmd_mode = `C_MODE(cm); cmd_words = `C_W(cm); cmd_tag = cm; end
+        if (cm < NMSG && cyc == `C_ISS(cm)) begin cmd_v = 1'b1; cmd_mode = `C_MODE(cm); cmd_words = `C_W(cm); cmd_tag = cm; end
     end
     always @(posedge clk) if (cmd_v) cm <= cm + 1;
 
