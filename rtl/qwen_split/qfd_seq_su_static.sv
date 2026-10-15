@@ -36,6 +36,19 @@
 // OT_QFD_SEQ_SU_MUT (bench only): group 7's st_rdy is ignored in the ready AND.
 // =====================================================================================================================
 module qfd_seq_su_static (
+    // Actual external SU operand request -> existing core INT8 decoder -> SU.
+    input wire [63:0] su_va_re,
+    input wire [1535:0] su_va_addr,
+    output wire [2047:0] su_va_q,
+    output wire [63:0] su_vm_va_re,
+    output wire [1535:0] su_vm_va_addr,
+    input wire [2047:0] su_vm_va_q,
+    output wire embed_code_re,
+    output wire [23:0] embed_code_addr,
+    input wire [511:0] embed_code_q,
+    output wire embed_scale_re,
+    output wire [17:0] embed_scale_addr,
+    input wire [15:0] embed_scale_q,
     input wire ck,
     input wire ck_sched,
     output wire [75:0] program_obs,
@@ -120,6 +133,18 @@ module qfd_seq_su_static (
     wire [2:0]  i_ad, i_sfu;
     wire [31:0] i_imm1, i_imm2;
     ot_qfd_seq_su_bi_static #(.RRG(1), .PCUT(1), .G(3072), .D(D), .PSRAM(1), .HQ2(1), .CRED(0), .RLY(2)) u_seq (
+        .su_va_re(su_va_re),
+        .su_va_addr(su_va_addr),
+        .su_va_q(su_va_q),
+        .su_vm_va_re(su_vm_va_re),
+        .su_vm_va_addr(su_vm_va_addr),
+        .su_vm_va_q(su_vm_va_q),
+        .embed_code_re(embed_code_re),
+        .embed_code_addr(embed_code_addr),
+        .embed_code_q(embed_code_q),
+        .embed_scale_re(embed_scale_re),
+        .embed_scale_addr(embed_scale_addr),
+        .embed_scale_q(embed_scale_q),
         .clk(ck),.ck_sched(ck_sched), .rst_n(rsi),.program_obs(program_obs),.descriptor_obs(descriptor_obs),.cfg_image_ready(body_cfg_ready),
         .h_start(dh[42]), .stage_in(dh[41:36]), .tp_token(dh[35:18]), .tp_pos(dh[17:0]), .kv_write_drained(dh[43]),
         .pw_v(dh[118]), .pw_addr(dh[117:108]), .pw_data(dh[107:44]),

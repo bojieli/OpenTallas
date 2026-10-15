@@ -4,6 +4,18 @@
 // remain independent inputs; this module assigns no ideal common phase.
 // svr_rdy is observational only: scheduled row requests never wait on it.
 module qfd_seq_su_vm_static (
+    input wire [63:0] su_va_re,
+    input wire [1535:0] su_va_addr,
+    output wire [2047:0] su_va_q,
+    output wire [63:0] su_vm_va_re,
+    output wire [1535:0] su_vm_va_addr,
+    input wire [2047:0] su_vm_va_q,
+    output wire embed_code_re,
+    output wire [23:0] embed_code_addr,
+    input wire [511:0] embed_code_q,
+    output wire embed_scale_re,
+    output wire [17:0] embed_scale_addr,
+    input wire [15:0] embed_scale_q,
     input wire ck,
     input wire ck_sched,
     output wire [75:0] program_obs,
@@ -68,6 +80,18 @@ module qfd_seq_su_vm_static (
     wire [20:0] vrd; wire [532:0] vwr;
     wire [511:0] vrq; wire svq_v;
     qfd_seq_su_static u_seq (
+        .su_va_re(su_va_re),
+        .su_va_addr(su_va_addr),
+        .su_va_q(su_va_q),
+        .su_vm_va_re(su_vm_va_re),
+        .su_vm_va_addr(su_vm_va_addr),
+        .su_vm_va_q(su_vm_va_q),
+        .embed_code_re(embed_code_re),
+        .embed_code_addr(embed_code_addr),
+        .embed_code_q(embed_code_q),
+        .embed_scale_re(embed_scale_re),
+        .embed_scale_addr(embed_scale_addr),
+        .embed_scale_q(embed_scale_q),
         .ck(ck),
         .ck_sched(ck_sched),
         .program_obs(program_obs),
