@@ -3,7 +3,6 @@
  "top": "dsfd_node_LLfu",
  "kind": "tile",
  "sources": [
-  "rtl/v41rom/ot_v41_ret.sv",
   "rtl/proto/ot_fp32_add_rne_pipe.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv",
@@ -37,7 +36,7 @@
    "b"
   ]
  },
- "io_tcl": "physical/s81_die_pins/snet_gen18r/dsfd_node_LLfu.tcl",
+ "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_node_LLfu.tcl",
  "recipe": 2,
  "route": {
   "pd": 0.5,
@@ -47,20 +46,20 @@
   "pin_v": "M3 M5",
   "m5_pg_pitch": 2.7
  },
- "structural_change": "S-NET static return node dsfd_node_LLfu (1024 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 df6b8c14503fa060, glue 49e64b6832936598); pins at the generator centres (gen18r).",
+ "structural_change": "S-NET static return node dsfd_node_LLfu (1024 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 df6b8c14503fa060, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b).",
  "reroute_reason": {
   "kind": "rtl_change"
  },
  "job": {
   "owner": "Claude:s81-net",
   "branch": "claude/el1015-s81-net-static",
-  "tag": "n1",
+  "tag": "n2",
   "purpose": "S81 S-NET static-schedule redesign: dsfd_node_LLfu (1024 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81net_node_llfu/views",
   "record_to": "results/rtl/ref_tile/s81net_node_llfu",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_net/gen",
-   "physical/s81_die_pins/snet_gen18r",
+   "physical/s81_die_pins/snet_gen19b",
    "rtl/v41rom",
    "rtl/proto",
    "rtl/hdc",

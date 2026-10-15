@@ -9392,7 +9392,7 @@ def _hend_static_glue(m, mst, kind, lanes, fmt, ports):
     ot_s81_static_ratio_cross (fixed source-edge map, compiled bubble phases); l2r written in the stream domain (ctrl
     lanes): a same-clock pin pipeline.  No meso / ratio FIFO, credit, ready, DOWN/WAIT/RUN or trained placement; every
     check is an assertion folded into the lane's {fault, live} pins.  Output formats are unchanged."""
-    insts = [it for it in m['insts'] if it.master == mst]
+    insts = [it for it in m['insts'] if it.master == mst or ('__' in mst and it.name == mst.split('__', 1)[1])]
     st_fmt = fmt in CTRL_ST_FMTS
     F = int(fmt[2]) if st_fmt else None
     nx = ports['xf'][1] // 2 if 'xf' in ports else 0

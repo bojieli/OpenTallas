@@ -36,7 +36,7 @@
    "rs"
   ]
  },
- "io_tcl": "physical/s81_die_pins/snet_gen18r/dsfd_sstn_e0c0si.tcl",
+ "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0c0si.tcl",
  "recipe": 2,
  "route": {
   "pd": 0.5,
@@ -48,20 +48,20 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S-NET dsfd_sstn_e0c0si (476 die instances): the reset-qualified valid is now a column-reset flop at the pin (--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); 0 cycles, same ports; RTL = the case glue module rendered by the generator (module sha256 dcc0dd45563f87c6, glue 49e64b6832936598); pins at the generator centres (gen18r).",
+ "structural_change": "S-NET dsfd_sstn_e0c0si (476 die instances): the reset-qualified valid is now a column-reset flop at the pin (--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); 0 cycles, same ports; RTL = the case glue module rendered by the generator (module sha256 dcc0dd45563f87c6, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b).",
  "reroute_reason": {
   "kind": "rtl_change"
  },
  "job": {
   "owner": "Claude:s81-net",
   "branch": "claude/el1015-s81-net-static",
-  "tag": "n1",
+  "tag": "n2",
   "purpose": "S81 S-NET static-schedule redesign: dsfd_sstn_e0c0si (476 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81net_sstn_e0c0si/views",
   "record_to": "results/rtl/ref_tile/s81net_sstn_e0c0si",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_net/gen",
-   "physical/s81_die_pins/snet_gen18r",
+   "physical/s81_die_pins/snet_gen19b",
    "rtl/dsrom_sys/s81_static_net",
    "tools/s81_static_net"
   ],

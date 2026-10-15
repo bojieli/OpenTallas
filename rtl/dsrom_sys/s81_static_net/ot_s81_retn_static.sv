@@ -45,7 +45,36 @@ module ot_s81_retn_static #(
     output wire        o_e,
     output reg         fault
 );
-    import ot_v41_ret_pkg::*;
+    // ot_v41_ret_pkg norm / complete / sibling / parent, copied verbatim (the ORFS yosys front end has no package import)
+    localparam integer TW = 3 + 16 + 5 + 3 + 5;   // {position, row, lo, k, nseg}
+    function automatic [TW-1:0] norm(input [TW-1:0] t);
+        reg [18:0] row;
+        reg [4:0] lo, n;
+        reg [2:0] k;
+        integer i;
+        begin
+            {row, lo, k, n} = t;
+            for (i = 0; i < 5; i = i + 1)
+                if (!(lo == 5'd0 && (6'd1 << k) >= {1'b0, n}) && lo[k] == 1'b0 &&
+                    ({1'b0, lo} + (6'd1 << k)) >= {1'b0, n})
+                    k = k + 3'd1;
+            norm = {row, lo, k, n};
+        end
+    endfunction
+    function automatic complete(input [TW-1:0] t);
+        complete = t[12:8] == 5'd0 && (6'd1 << t[7:5]) >= {1'b0, t[4:0]};
+    endfunction
+    function automatic sibling(input [TW-1:0] a, input [TW-1:0] b);
+        sibling = a[31:13] == b[31:13] && a[7:5] == b[7:5] && a[4:0] == b[4:0] &&
+                  (a[12:8] ^ b[12:8]) == (5'd1 << a[7:5]);
+    endfunction
+    function automatic [TW-1:0] parent(input [TW-1:0] a, input [TW-1:0] b);
+        reg [4:0] lo;
+        begin
+            lo = (a[12:8] < b[12:8]) ? a[12:8] : b[12:8];
+            parent = norm({a[31:13], lo, a[7:5] + 3'd1, a[4:0]});
+        end
+    endfunction
     localparam integer WE = (MUT == 1) ? WIN + 1 : WIN;      // mutant 1: window one edge too long
     localparam integer SL = (WIN + 2 <= 4) ? 4 : (WIN + 2 <= 8) ? 8 : 16;   // exit calendar slots (power of two)
     localparam integer SW = $clog2(SL);
@@ -99,10 +128,11 @@ module ot_s81_retn_static #(
     end
     // consumption of window entries this edge
     wire [WE-1:0] ca, cb;
-    for (genvar g = 0; g < WE; g = g + 1) begin : g_c
+    genvar g;
+    generate for (g = 0; g < WE; g = g + 1) begin : g_c
         assign cb[g] = !m_ab && a_win && ka == g;
         assign ca[g] = !m_ab && b_win && !a_win && kb == g;
-    end
+    end endgenerate
     // arrivals that stay in the window (not merged on arrival)
     wire a_in = a_v && !m_ab && !a_win;
     wire b_in = b_v && !m_ab && !(b_win && !a_win);
@@ -195,11 +225,12 @@ module ot_s81_retn_static #(
     ot_hdc_delay #(.W(66), .D(RST)) u_rd (.clk(clk), .rst_n(rst_n), .d({r_t, r_d, r_e, 1'b0}), .q(rq));
     wire [RST:0] rv;
     assign rv[0] = r_v;
-    for (genvar r = 0; r < RST; r = r + 1) begin : g_rv
+    genvar r;
+    generate for (r = 0; r < RST; r = r + 1) begin : g_rv
         reg q;
         always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= rv[r];
         assign rv[r+1] = q;
-    end
+    end endgenerate
     assign o_v = rv[RST];
     assign o_t = rq[65:34];
     assign o_d = rq[33:2];

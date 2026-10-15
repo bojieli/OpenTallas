@@ -31,7 +31,7 @@ RTL_DIR = 'rtl/dsrom_sys/s81_static_net/gen'
 SPEC_DIR = 'tools/ref_tile/specs_s81_snet'
 SNET = 'rtl/dsrom_sys/s81_static_net'
 LANE_CROSS = 'rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv'
-NODE_SRC = ['rtl/v41rom/ot_v41_ret.sv', 'rtl/proto/ot_fp32_add_rne_pipe.sv', 'rtl/hdc/ot_hdc_delay.sv',
+NODE_SRC = ['rtl/proto/ot_fp32_add_rne_pipe.sv', 'rtl/hdc/ot_hdc_delay.sv',
             f'{SNET}/ot_s81_retn_static.sv']
 
 
@@ -42,7 +42,72 @@ def kind_of(mst: str) -> str:
         return 'sstn'
     if mst.startswith('dsfd_xstg'):
         return 'xstg'
+    if re.match(r'dsfd_(m2l|r2l|l2r)_', mst):
+        return 'hend'
     raise SystemExit(f'{mst}: not an S-NET single-domain master')
+
+
+HEND_DIR = 'physical/s81_static_net/hend'
+RATIO_SRC = f'{SNET}/ot_s81_static_ratio_cross.sv'
+
+
+def hend_sdc(mst: str, txt: str) -> tuple[str, str]:
+    """(route SDC, POST_CTS boundary) of a --hend-static end / start block.  Clock names follow make_sdc_hend.sh
+    (core_clk, w_*, vclk, vw) so the boundary re-sets the virtual clocks to the measured insertion.  Crossing arcs: the
+    static lane end / ratio cross read a slot written >= 4.5 VCO ticks (1,250 ps) earlier -> 1,190 ps max delay, as the
+    d8g1 meso it replaces; a same-clock start (ck and cks are one die net) has no exception at all."""
+    kind = mst[5:8]
+    ratio = 'ot_s81_static_ratio_cross' in txt
+    L = []
+    io = []
+    if kind == 'm2l':
+        L += ['create_clock -name core_clk -period 833.333 [get_ports {ck[0]}]', 'set ot_w {}',
+              'foreach p [get_ports {fi*}] { set n [get_property $p name]; regsub {\\[0\\]} $n {} b; create_clock -name w_$b -period 833.333 $p; lappend ot_w w_$b }',
+              'create_clock -name vclk -period 833.333', 'create_clock -name vw -period 833.333']
+        cross = ['foreach w $ot_w {', '  set_max_delay -ignore_clock_latency 1190.0 -from [get_clocks $w] -to [get_clocks core_clk]',
+                 '  set_max_delay -ignore_clock_latency 1190.0 -from [get_clocks core_clk] -to [get_clocks $w]',
+                 '  set_min_delay -ignore_clock_latency 0 -from [get_clocks $w] -to [get_clocks core_clk]',
+                 '  set_min_delay -ignore_clock_latency 0 -from [get_clocks core_clk] -to [get_clocks $w]',
+                 '  set_false_path -from [get_clocks vw] -to [get_clocks core_clk]', '  set_false_path -from [get_clocks core_clk] -to [get_clocks vw]',
+                 '  set_false_path -from [get_clocks $w] -to [get_clocks vclk]', '  set_false_path -from [get_clocks vclk] -to [get_clocks $w]',
+                 '  foreach w2 $ot_w { if {$w2 ne $w} { set_false_path -from [get_clocks $w] -to [get_clocks $w2] } }', '}',
+                 'set_false_path -from [get_clocks vw] -to [get_clocks vclk]']
+        io = ['set_input_delay 166.667 -clock vw [get_ports {di*}]', 'set_input_delay -min 0 -clock vw [get_ports {di*}]',
+              'set_output_delay 316.667 -clock vclk [get_ports {o*}]', 'set_output_delay -min 0 -clock vclk [get_ports {o*}]']
+    elif kind == 'r2l':
+        L += ['create_clock -name w_fi0 -period 833.331 [get_ports {fi0[0]}]', 'create_clock -name core_clk -period 1111.108 [get_ports {ck[0]}]',
+              'create_clock -name vw -period 833.331', 'create_clock -name vclk -period 1111.108']
+        cross = ['set_max_delay -ignore_clock_latency 1190.0 -from [get_clocks w_fi0] -to [get_clocks core_clk]',
+                 'set_min_delay -ignore_clock_latency 0 -from [get_clocks w_fi0] -to [get_clocks core_clk]',
+                 'set_false_path -from [get_clocks vw] -to [get_clocks {core_clk vclk}]', 'set_false_path -from [get_clocks w_fi0] -to [get_clocks vclk]']
+        io = ['set_input_delay 166.666 -clock vw [get_ports {di*}]', 'set_input_delay -min 0 -clock vw [get_ports {di*}]',
+              'set_output_delay 372.222 -clock vclk [get_ports {o*}]', 'set_output_delay -min 0 -clock vclk [get_ports {o*}]']
+    else:
+        per = '1111.108' if ratio else '833.333'
+        L += [f'create_clock -name core_clk -period {per} [get_ports {{ck[0]}}]', 'create_clock -name w_cks -period 833.333 [get_ports {cks[0]}]',
+              f'create_clock -name vclk -period {per}', 'create_clock -name vw -period 833.333']
+        cross = (['set_max_delay -ignore_clock_latency 1190.0 -from [get_clocks core_clk] -to [get_clocks w_cks]',
+                  'set_min_delay -ignore_clock_latency 0 -from [get_clocks core_clk] -to [get_clocks w_cks]',
+                  'set_max_delay -ignore_clock_latency 1190.0 -from [get_clocks w_cks] -to [get_clocks core_clk]',
+                  'set_min_delay -ignore_clock_latency 0 -from [get_clocks w_cks] -to [get_clocks core_clk]'] if ratio else []) + \
+                ['set_false_path -from [get_clocks vclk] -to [get_clocks w_cks]', 'set_false_path -from [get_clocks core_clk] -to [get_clocks vw]']
+        io = [f'set_input_delay {0.2 * float(per):.3f} -clock vclk [get_ports {{i*}}]', 'set_input_delay -min 0 -clock vclk [get_ports {i*}]',
+              'set_output_delay 316.667 -clock vw [get_ports {od*}]', 'set_output_delay -min 0 -clock vw [get_ports {od*}]',
+              'set_false_path -to [get_ports {fo*}]']
+        if 'output wire [2:0] st' in txt:
+            io += [f'set_output_delay {0.2 * float(per):.3f} -clock vclk [get_ports {{st*}}]', 'set_output_delay -min 0 -clock vclk [get_ports {st*}]']
+        if 'input wire' in txt and ' xf' in txt:
+            io += [f'set_input_delay {0.2 * float(per):.3f} -clock vclk [get_ports {{xf*}}]', 'set_input_delay -min 0 -clock vclk [get_ports {xf*}]']
+    if kind != 'l2r' and ' xf' in txt:
+        io += ['set_input_delay 166.667 -clock vclk [get_ports {xf*}]', 'set_input_delay -min 0 -clock vclk [get_ports {xf*}]']
+    io += ['set_false_path -from [get_ports {rs*}]']
+    head = [f'# S-NET {mst} (--hend-static): fixed-calendar crossing, no FIFO / credit / ready']
+    sdc = '\n'.join(head + L + ['set_clock_latency 0 [get_clocks {vclk vw}]', 'set_clock_uncertainty -setup 123 [all_clocks]',
+                               'set_clock_uncertainty -hold 25 [all_clocks]'] + cross + io + ['set_max_fanout 32 [current_design]']) + '\n'
+    post = (ROOT / 'physical/s81_die_views/glue/post_cts_hend.tcl').read_text()
+    bnd = '\n'.join(['set ::ot_ref_pre_cts 0', 'set_propagated_clock [get_clocks {core_clk w_*}]', 'unset_input_delay [all_inputs]',
+                     'unset_output_delay [all_outputs]', post] + io) + '\n'
+    return sdc, bnd
 
 
 def main() -> int:
@@ -75,6 +140,8 @@ def main() -> int:
             assert '& rs[0]' not in txt, f'{mst}: render the glue with --sstn-reg'
         if kd == 'xstg':
             assert 'ot_s81_static_lane_end' in txt, f'{mst}: render the glue with --hend-static'
+        if kd == 'hend':
+            assert 'ot_meso_fifo' not in txt and 'ot_ratio_cdc_fifo' not in txt, f'{mst}: render the glue with --hend-static'
         mac = macs[mst]
         dw, dh = K.snap(mac['w']), K.snap(mac['h'])
         sha = hashlib.sha256(txt.encode()).hexdigest()
@@ -130,6 +197,26 @@ def main() -> int:
                       '(--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); '
                       + ('the undeclared cc driver removed; ' if mst == 'dsfd_sstn_e0c0' else '') + '0 cycles, same ports')
             extra = [SNET, 'tools/s81_static_net']
+        elif kd == 'hend':
+            sources = [LANE_CROSS, f'{SNET}/ot_s81_static_lane_end.sv', RATIO_SRC, rtl]
+            clock, resets = 'ck', ['rs'] + (['rss'] if 'input wire [0:0] rss' in txt else [])
+            bench = 'tools/s81_static_net/bench_hend_master.sh'
+            benches = [
+                {'name': 'hend_exact', 'cmd': f'bash {bench} pass {mst} {rtl} {{RUN}}/hend_pass', 'expect': 'pass',
+                 'pass_regex': 'HEND_STATIC_GATE PASS', 'threads': 1, 'peak_ram_gb': 4},
+                {'name': 'hend_offset_mutant', 'cmd': f'bash {bench} mut_offset {mst} {rtl} {{RUN}}/hend_mut',
+                 'expect': 'fail', 'fail_regex': 'HEND_STATIC', 'threads': 1, 'peak_ram_gb': 4}]
+            how = ('ot_s81_static_ratio_cross (fixed source-edge map, compiled bubble phase)' if 'ratio_cross' in txt else
+                   'ot_s81_static_lane_end (pin register, marker epoch, fixed offset)' if 'lane_end' in txt else
+                   'a same-clock pin pipeline (ck and cks are one die net)')
+            change = (f'S-NET {mst} ({n} die instance(s)): the ot_meso_fifo (trained placement + CREDITS) / ot_ratio_cdc_fifo '
+                      f'(ready + DOWN/WAIT/RUN handshake) crossing is replaced by {how}, owner static-schedule rule 10-14 18:59; '
+                      'same ports and lane formats, {fault, live} folded as before')
+            extra = ['rtl/dsrom_sys/s81_die_bind', SNET, 'tools/s81_static_net', HEND_DIR]
+            sdc, bnd = hend_sdc(mst, txt)
+            (ROOT / HEND_DIR).mkdir(parents=True, exist_ok=True)
+            (ROOT / HEND_DIR / f'{mst}.sdc').write_text(sdc)
+            (ROOT / HEND_DIR / f'{mst}_boundary.tcl').write_text(bnd)
         else:
             sources = [LANE_CROSS, f'{SNET}/ot_s81_static_lane_end.sv', rtl]
             clock, resets = 'ck', []
@@ -158,6 +245,11 @@ def main() -> int:
                                'observed failing mutants; recipe 2, M5 cap, generator pins',
                     'views_to': f'physical/ref_tile/{name}/views', 'record_to': f'results/rtl/ref_tile/{name}',
                     'extra_paths': [RTL_DIR, pin_dir] + extra, 'benches': benches}}
+        if kd == 'hend':
+            spec['sdc_extra'] = [f'{HEND_DIR}/{mst}.sdc']
+            spec['boundary_tcl'] = [f'{HEND_DIR}/{mst}_boundary.tcl']
+            spec['inhold'] = True
+            spec['outhold'] = True
         if kd == 'xstg':
             spec['sdc_extra'] = ['physical/s81_static_net/xstg/dsfd_xstg_515.sdc']
             spec['boundary_tcl'] = ['physical/s81_static_net/xstg/dsfd_xstg_515_boundary.tcl']
