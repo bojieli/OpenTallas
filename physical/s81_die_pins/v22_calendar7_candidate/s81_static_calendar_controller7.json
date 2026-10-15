@@ -3815,7 +3815,8 @@
  "clock_delivery": "Each clock phase0 related PLL1:1 delivered at phi-wire-R_i; no inherited insertion defaults",
  "cost": {
   "data_edges": 0,
-  "initialization_release_extra_edges": 3
+  "initialization_release_extra_edges": 3,
+  "fault_input_capture_extra_edges": 1
  },
  "added_clocks": [
   {
@@ -3857,8 +3858,8 @@
  ],
  "input_sha256": {
   "old_pins": "0dede762ccb39d47ef020178e2bf0e2b8d9c57e2945adc8edcd53f2d0cbc5fd5",
-  "census": "5ab10d4f325d5ff5c1fde85ab70777bd26b1f9a8a95b7247b379a88109f4880a",
-  "rtl": "6dd4bd25f052e0115ee1d26cfadb5716b0ef1899a35402524ae3ef383311211d",
+  "census": "c0afcb55412fea9b3c3adde96f0e5bffd142947edbb78bf925d715bb007905b6",
+  "rtl": "082ed2d5c528b6e4fb48936e279c434a20c41e297ad028f847bf0b62657f2d62",
   "rom_lef": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611"
  }
 }
