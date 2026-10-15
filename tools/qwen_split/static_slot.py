@@ -43,4 +43,8 @@ s=s.replace(".cp_issue(1'b0),.cp_pc(12'd0),.me_issue(xpf_me_event)",".cp_issue(m
 for name in ['x_rdy','x_dv','x_dc','x_dcs','x_dsp']:s=re.sub(r'^\s*\.'+name+r'\([^\n]*\),\n','',s,flags=re.M)
 s=s.replace('    input  wire uf,','    input  wire [3:0] uf,').replace('    assign w_up_fault = uf;','    assign w_up_fault = |uf; // Four real upper leaves; existing downstream fault capture is retained.')
 s=s.replace('    wire w_rst_n;', '    generate if(XPF_TRANSPORT_EDGES<0)begin:g_unassigned_arm_route\n      initial $error("native XPF transport edges require assigned physical route");\n    end endgenerate\n    wire w_rst_n;',1)
+# TP8 selected hardware has exactly three NB3 serializers; remove inherited six-band-only ports.
+for k in (3,4,5):
+    s=re.sub(r'^    output wire mer'+str(k)+r',\n','',s,flags=re.M)
+    s=s.replace(',rf'+str(k),'').replace('assign mer'+str(k)+'=w_me_clk_en;','').replace('|rf'+str(k),'')
 (root/'rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv').write_text('// New native static slot master; fresh physical qualification required.\n// Existing c341/f104/lc26 packing retained; obsolete VM xd/xr removed.\n'+s)

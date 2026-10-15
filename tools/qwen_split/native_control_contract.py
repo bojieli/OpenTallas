@@ -73,6 +73,7 @@ def install_master(M,model,Master):
             positions=[snap(cur+.096*k)for k in range(n)]
             q.ports[p]=('pins',n,f,'M5'if f in'NS'else'M4',positions,1)
             q.order.append(p);cur=positions[-1]+2.184
+    model['native_control_contract']['assigned_ports']={p:dict(bits=sp[1],face=sp[2],layer=sp[3],positions_um=list(sp[4]),direction=ports[p][1])for p,sp in q.ports.items()}
     # A scalar fault from each actual upper leaf lands on a distinct uf bit.
     from qwen_split.direct_up4 import partition_master
     rects=[]
