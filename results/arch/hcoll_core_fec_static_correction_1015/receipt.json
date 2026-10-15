@@ -1,0 +1,112 @@
+{
+  "updated_utc": "2026-10-15T10:46:20.922884+00:00",
+  "status": "PASS_OPT_IN_NUMERICAL_PROFILE",
+  "source_commit": "96c91fc64",
+  "decoder_source_commit": "59d0a3335",
+  "preserved_baseline_commit": "ea849baca",
+  "source_sha256": {
+    "rtl/hbm_accel/io_static_20261015/hfd_serdes487_static_correction_window.sv": "7ff2d5bb988bf75c91ca318eb04eaaecd46f098da5d49c86f8b974e486883a0c",
+    "rtl/hbm_accel/io_static_20261015/hfd_serdes487_phy512_static_correction_window.sv": "dee9b19eaa683d99f526e6e5bf047c313255bf2575cec76e07a69aaf08622316",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_core_fec_frame_static_correction_link.sv": "028487d00387ab178c9c294172fbc9bd61d2c00c1556e6bfc88e801921f1f920",
+    "rtl/hbm_accel/io_static_20261015/tb_core_fec_frame_static_correction_link.sv": "6cf321bda5d2b2fad719bab56a7151b217cf1b98a008c54e02b245b786d76187",
+    "rtl/hbm_accel/io_static_20261015/static_correction_join_provenance.json": "913ced770301c5bbe5806e9cdaf73d7d105375d856ee70ad0ba2cb5623359dca",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_static_correction.sv": "2a5adfcefb97385e1d1fdfda75b6d1ddc75ce8cdefe8dd44f755f1efd7339125",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_correction55_static.sv": "0dcb8cb5511abbd9d945b986f74ae7b74c287acb1a523356862391dc252f5b67",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_chien55_map.sv": "c044186d314182704e3dcfdd0d7c3018cdf0df5c695103495b22c962e5c170ee",
+    "tools/hbm_io/run_core_fec_static_correction_gate.sh": "3324884a1a41137d33e562f162f984a4ebc5287fc80b771c17b15170bc0215a1"
+  },
+  "model": {
+    "core_GHz": 1.2,
+    "FEC_GHz": 1.1294117647058823,
+    "core_period_ticks": 16,
+    "FEC_period_ticks": 17,
+    "core_period_ps": 833.333333333,
+    "FEC_period_ps": 885.416666667,
+    "tick_ps": 52.083333333,
+    "words": 2048,
+    "CDC_entries": 16,
+    "Gray_sync_stages": 2,
+    "complete_frame_capacity": 1627,
+    "tail_padding_bits": 25,
+    "tail_frame_must_be_idle": true,
+    "actual_CDC_payload_register_bits": 15584,
+    "actual_CDC_read_face_register_bits": 974,
+    "control_root_register_bits_upper_bound_per_domain": 9000,
+    "clock_groups": [
+      "core1.2:TXstorage+RXread",
+      "FEC16/17:RXstorage+TXread"
+    ],
+    "TX_word_steps": [
+      511,
+      2685
+    ],
+    "TX_CDC_writes": [
+      512,
+      2686
+    ],
+    "TX_CDC_FEC_reads": [
+      488,
+      2535
+    ],
+    "FEC_input_edges": [
+      489,
+      2536
+    ],
+    "FEC_age_edges": 151,
+    "FEC_capture_edges": [
+      640,
+      2687
+    ],
+    "internal_FEC_CDC_reads": [
+      648,
+      2695
+    ],
+    "RX_CDC_FEC_writes": [
+      649,
+      2696
+    ],
+    "RX_CDC_core_reads": [
+      697,
+      2871
+    ],
+    "RX_gearbox_core_steps": [
+      698,
+      2872
+    ],
+    "frame_acceptance": "511+floor(17*floor(613*j/487)/16)",
+    "endpoint_read": "A-7",
+    "endpoint_write": "A-11",
+    "endpoint_RX_capture": "700+floor(17*(ceil(613*(j+1)/487)-1)/16)",
+    "endpoint_RX_publish": "702+floor(17*(ceil(613*(j+1)/487)-1)/16)",
+    "stop_contract": "word_step=0 outside finite2048word reservations; core may continue local decode/store afterwindow; no missingword fault on unreserved edges",
+    "bandwidth_application_bytes_per_core_cycle": 47.85414067747817,
+    "scope": "Exact baseline calendar preserved and actual opt-in joined positive/faults passed; physical clock qualification remains separate."
+  },
+  "positive": {
+    "payloads": 234,
+    "idle": 66,
+    "decoded_words": 2048,
+    "internal_CDC_words": 2048,
+    "external_CDCs": 2,
+    "PHY_pins": 512
+  },
+  "faults": {
+    "valid_flip": "004",
+    "missing_word_valid": "gearboxfault,dataunchanged",
+    "frame_bit_before_FEC": "001",
+    "PHY_down": "010",
+    "Forney_DMUT2": "decodederrorF640"
+  },
+  "runs": {
+    "host": "ot-epyc4",
+    "positive_unit": "oth-ubuntu-1813007-1792061102",
+    "forney_unit": "oth-ubuntu-1813006-1792061102",
+    "positive_exit": 0,
+    "forney_expected_rejection_runner_exit": 0,
+    "memory_GB": 8,
+    "threads": 4,
+    "observed_positive_simulation_wall_s": 0.221,
+    "simulation_allocated_MB": 11
+  },
+  "scope": "Actual opt-in decoder substitution in current512PMA + native core487 CDC + endpoint613/487/TX6/RX2 composition. Same151-FEC-edge calendar proven. No physical rootphase, CDCMTBF, mapped sink inventory, routed timing, wholeG96 or native token-rate claim."
+}

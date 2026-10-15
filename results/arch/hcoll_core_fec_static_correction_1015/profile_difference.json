@@ -1,0 +1,14 @@
+{
+  "source_commit": "96c91fc64",
+  "checks": {
+    "hfd_serdes487_static_window": true,
+    "hfd_serdes487_phy512_static_window": true,
+    "ot_hbm_core_fec_frame_link": true,
+    "tb_core_fec_frame_link": true
+  },
+  "allowed_differences": "Module identifiers and static decoder class only; each source also has opt-in comment. Bench clock/reservation/scoreboard constants unchanged.",
+  "frozen_baseline_commit": "ea849baca",
+  "age_FEC_edges": 151,
+  "core_period_ps": 833.333333333,
+  "FEC_period_ps": 885.416666667
+}
