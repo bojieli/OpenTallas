@@ -30,7 +30,7 @@ for discover in 1 0;do
    for mode in 0 1 2 3 4 5 6 7 8;do
     if "$out/obj0/Vtb_static_paced_v_return_full128" +fixtures="$out/fixtures/p$fixture_phase" +phase="$phase" +faultmode="$mode" > "$out/p${phase}_m${mode}.log" 2>&1;then rc=0;else rc=$?;fi
     echo "$rc" > "$out/p${phase}_m${mode}.exit"
-    if ((mode==0));then test "$rc" = 0;grep -q '^PASS full128 persistent' "$out/p${phase}_m${mode}.log";else test "$rc" != 0;fi
+    if ((mode==0));then test "$rc" = 0;grep -q '^PASS pacedV persistent' "$out/p${phase}_m${mode}.log";else test "$rc" != 0;fi
    done
   done
  fi
