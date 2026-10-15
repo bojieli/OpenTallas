@@ -1,0 +1,54 @@
+{
+  "scope": "canonical source inventory before native FIELD build",
+  "pair_count": 2417,
+  "BF_pair_count": 519,
+  "root_count": 128,
+  "stages": 81,
+  "ranks": 4,
+  "total_rank_dies": 324,
+  "pair_macros": 4,
+  "macro_rows": 4096,
+  "macro_bits": 274,
+  "macros_per_rank_die": 9668,
+  "payload_compute_required": "source golden rounding and exact ordered K subtree",
+  "VM_ports": {
+    "native_capture_claimed": [
+      32,
+      43
+    ],
+    "collective": [
+      44,
+      47
+    ],
+    "capture_extension": [
+      48,
+      51
+    ],
+    "bound": false
+  },
+  "return_boundary": {
+    "roots": 128,
+    "bits_per_root": 53,
+    "aggregate_bits_per_cycle": 6784,
+    "FP32_payload_bits_per_cycle": 4096
+  },
+  "physical_fit_qualified": false,
+  "physical_flight_edges": null,
+  "scope_reduction_allowed": false,
+  "missing": [
+    "actual full2417/BF519 geometry capacity/cuts",
+    "actual phase/stream/CFG image inventory and native latency",
+    "static FIELD capture/VM producer schedule"
+  ],
+  "CFG_storage": {
+    "existing_macros_per_pair": 7,
+    "macro": "ot_rom_4096x72_m8",
+    "payload_bits": 48,
+    "words_per_pair": 28672,
+    "PHW10_required_words_per_pair": 25600,
+    "max_actual_phase_count": 642,
+    "max_actual_required_words_per_pair": 16050,
+    "macro_count_per_rank_die": 16919,
+    "compressed_replacement_adopted": false
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "scope": "three boundary pairs of actual canonical stage0; remaining source image generation open",
+  "complete_stage_image": false,
+  "remote_image_root": "ot-agidock128:/srv/opentallas-scratch/codex/s81-global-field-1015/native_pair{0,1,2416}",
+  "receipts": [
+    {
+      "abi": "opentallas.s81.cfg7-native.v1",
+      "source": {
+        "stage": 0,
+        "pair": 0,
+        "cfg_sha256": "e7849f5a0fde948fb86b2597471501a9deb1322e27d95337f03ca3423cb23a0e",
+        "canonical_sources": {
+          "matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+          "stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+          "inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480"
+        },
+        "original_phase_cfg_source_sha256": "cd6aa9d94575df565d5c0bd807229db65a0cf5971d6a0f2fe724e0266103f68b",
+        "original_CFG_allocation_audit": "311ab45d155c4434b1c587cf9eda423cd62b531ab4ba4e8bea85e8747ad7dfb9"
+      },
+      "phase_count": 626,
+      "PHW": 10,
+      "words_per_phase": 25,
+      "allocated_words": 15650,
+      "resident_words": 28672,
+      "physical_macros": 7,
+      "macro": "ot_rom_4096x72_m8",
+      "payload_bits": 48,
+      "spare_bits": 24,
+      "ROM_ECC": false,
+      "linear_address": "phase*25+word",
+      "bank": "linear_address>>12",
+      "row": "linear_address&4095",
+      "bank_select_registered": true,
+      "images": [
+        {
+          "bank": 0,
+          "path": "cfg0.viamap.hex",
+          "sha256": "255cf51a93c272bb107cecaeed0ef4bb786f41c88954d3843d09ac435a2f6f29"
+        },
+        {
+          "bank": 1,
+          "path": "cfg1.viamap.hex",
+          "sha256": "b78c4b113840dbe90c8e5c979e3b240b6d219c9f15b8d2350f503e773c2b6e68"
+        },
+        {
+          "bank": 2,
+          "path": "cfg2.viamap.hex",
+          "sha256": "67eeae45c9189c4772c71eb44d6efb8ea2e278041b36cb24935f55498b7d6919"
+        },
+        {
+          "bank": 3,
+          "path": "cfg3.viamap.hex",
+          "sha256": "183262576c63e9ac7ca118e893ad870ecca4d5f1b5e3d8149d9711c7d5fcacb3"
+        },
+        {
+          "bank": 4,
+          "path": "cfg4.viamap.hex",
+          "sha256": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+        },
+        {
+          "bank": 5,
+          "path": "cfg5.viamap.hex",
+          "sha256": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+        },
+        {
+          "bank": 6,
+          "path": "cfg6.viamap.hex",
+          "sha256": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+        }
+      ],
+      "complete_source_readback": true,
+      "native_execution_qualified": false
+    },
+    {
+      "abi": "opentallas.s81.cfg7-native.v1",
+      "source": {
+        "stage": 0,
+        "pair": 1,
+        "cfg_sha256": "c5e4cfbdef0c3a434b116efbf8f282588277bf8466ac41759e4965f5f12d97cf",
+        "canonical_sources": {
+          "matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+          "stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+          "inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480"
+        },
+        "original_phase_cfg_source_sha256": "cd6aa9d94575df565d5c0bd807229db65a0cf5971d6a0f2fe724e0266103f68b",
+        "original_CFG_allocation_audit": "311ab45d155c4434b1c587cf9eda423cd62b531ab4ba4e8bea85e8747ad7dfb9"
+      },
+      "phase_count": 626,
+      "PHW": 10,
+      "words_per_phase": 25,
+      "allocated_words": 15650,
+      "resident_words": 28672,
+      "physical_macros": 7,
+      "macro": "ot_rom_4096x72_m8",
+      "payload_bits": 48,
+      "spare_bits": 24,
+      "ROM_ECC": false,
+      "linear_address": "phase*25+word",
+      "bank": "linear_address>>12",
+      "row": "linear_address&4095",
+      "bank_select_registered": true,
+      "images": [
+        {
+          "bank": 0,
+          "path": "cfg0.viamap.hex",
+          "sha256": "f5710c3c408fa273ac58e1e19ec1530287e3ac3362eddc454d26088b652df42d"
+        },
+        {
+          "bank": 1,
+          "path": "cfg1.viamap.hex",
+          "sha256": "39e833f05717c6dd8052df504d478e23b2afceb2af3d217b301b45d1cca658ed"
+        },
+        {
+          "bank": 2,
+          "path": "cfg2.viamap.hex",
+          "sha256": "dc7d3926e1b19ba3daef2b3e0e79e87cd58c7ba101358dc80ab8114441b53b38"
+        },
+        {
+          "bank": 3,
+          "path": "cfg3.viamap.hex",
+          "sha256": "90b8409b483aa7ecf3f0c767a7294b721c6b86a36c698549af98d516312dfe81"
+        },
+        {
+          "bank": 4,
+          "path": "cfg4.viamap.hex",
+          "sha256": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+        },
+        {
+          "bank": 5,
+          "path": "cfg5.viamap.hex",
+          "sha256": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+        },
+        {
+          "bank": 6,
+          "path": "cfg6.viamap.hex",
+          "sha256": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+        }
+      ],
+      "complete_source_readback": true,
+      "native_execution_qualified": false
+    },
+    {
+      "abi": "opentallas.s81.cfg7-native.v1",
+      "source": {
+        "stage": 0,
+        "pair": 2416,
+        "cfg_sha256": "adbcb958ab113edd7fcda1a656dcb8a20661f218bf947bab5cccd7b3bda1dae7",
+        "canonical_sources": {
+          "matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+          "stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+          "inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480"
+        },
+        "original_phase_cfg_source_sha256": "cd6aa9d94575df565d5c0bd807229db65a0cf5971d6a0f2fe724e0266103f68b",
+        "original_CFG_allocation_audit": "311ab45d155c4434b1c587cf9eda423cd62b531ab4ba4e8bea85e8747ad7dfb9"
+      },
+      "phase_count": 626,
+      "PHW": 10,
+      "words_per_phase": 25,
+      "allocated_words": 15650,
+      "resident_words": 28672,
+      "physical_macros": 7,
+      "macro": "ot_rom_4096x72_m8",
+      "payload_bits": 48,
+      "spare_bits": 24,
+      "ROM_ECC": false,
+      "linear_address": "phase*25+word",
+      "bank": "linear_address>>12",
+      "row": "linear_address&4095",
+      "bank_select_registered": true,
+      "images": [
+        {
+          "bank": 0,
+          "path": "cfg0.viamap.hex",
+          "sha256": "df43c4c898360231fd949d9a3c5f0edef39e5a46d62e3da527595f1956557503"
+        },
+        {
+          "bank": 1,
+          "path": "cfg1.viamap.hex",
+          "sha256": "5b69ba022ee090e11c90742f814815176da60a52c084d12c5ee223a1ef8b1d71"
+        },
+        {
+          "bank": 2,
+          "path": "cfg2.viamap.hex",
+          "sha256": "6ad6374e3caa74d161363e246b1fa6c2facebad9222b5cedfb837b48f74f0f17"
+        },
+        {
+          "bank": 3,
+          "path": "cfg3.viamap.hex",
+          "sha256": "62dcb9d4130075e3dccce7505f403a01b053d545a68fe59afc2cc437493f60d8"
+        },
+        {
+          "bank": 4,
+          "path": "cfg4.viamap.hex",
+          "sha256": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+        },
+        {
+          "bank": 5,
+          "path": "cfg5.viamap.hex",
+          "sha256": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+        },
+        {
+          "bank": 6,
+          "path": "cfg6.viamap.hex",
+          "sha256": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+        }
+      ],
+      "complete_source_readback": true,
+      "native_execution_qualified": false
+    }
+  ]
+}
