@@ -1,6 +1,6 @@
 # HBM Engram: eight-home structural partition candidate
 
-The actual released tables contain 384,006,168 and 384,016,682 rows. Each HBM row is 288 bytes, preserving 256 code bytes, eight scale bytes and 24 padding bytes. Four contiguous homes per layer require up to 27,649,201,536 bytes per stack, exceeding the hardware's 22,500,000,000-byte stack capacity and overlapping the reserved data window beginning at 20 GiB. This is a capacity defect; routing another instance of the four-home organization cannot fix it.
+The actual released tables contain 384,006,168 and 384,016,682 rows. Each HBM row is 288 bytes, preserving 256 code bytes, eight scale bytes and 24 padding bytes. Four contiguous homes per layer require up to 27,649,201,248 bytes per stack, exceeding the hardware's 22,500,000,000-byte stack capacity and overlapping the reserved data window beginning at 20 GiB. This is a capacity defect; routing another instance of the four-home organization cannot fix it.
 
 The new source contract partitions each table across eight contiguous homes: layer 1 on ranks 0–7 and layer 14 on ranks 8–15. No rows or table bits are dropped or recompressed. The exact sixteen half-open intervals in `allocation_manifest.json` cover the released rows once each. Maximum home extent is 13,824,600,768 bytes on stack 3, below the reserved 20 GiB data window. This proves these intervals fit; all other live allocations still require H-DIE's allocator-book collision audit.
 
