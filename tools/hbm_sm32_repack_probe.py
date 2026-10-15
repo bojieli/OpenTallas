@@ -91,6 +91,8 @@ def repack(model, probe):
             moves[name] = (v[2], round(v[3]+43.2,4))
         if name.startswith(('at_NW_1','at_NE_1')):
             moves[name] = (v[2], round(v[3]-43.2,4))
+    moves = {n: (round(round(x/.864)*.864,4),round(round(y/2.16)*2.16,4))
+             for n,(x,y) in moves.items()}
     for name, xy in moves.items():
         blocks[name][2:4] = xy
     overlaps, outside = [], []
@@ -111,6 +113,9 @@ def repack(model, probe):
                 moved_non_sm_count=len(moves), moved_non_sm={n: dict(old_xy_um=list(insts[n][2:4]),
                 new_xy_um=list(xy)) for n,xy in moves.items()},
                 overlaps=overlaps,outside=outside,instances=blocks,
+                moved_origins_lattice_um=[.864,2.16],
+                moved_origins_off_lattice=[n for n,(x,y) in moves.items() if
+                    abs(x/.864-round(x/.864))>1e-4 or abs(y/2.16-round(y/2.16))>1e-4],
                 limitations=['compact tile outline is a plan pending real route',
                              'all displaced endpoint/collective and attention paths need new static cycle prices',
                              'pin faces, PG, detailed cut capacity, clocks and timing are unverified',
