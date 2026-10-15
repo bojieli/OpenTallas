@@ -1,0 +1,31 @@
+{
+ "cell": "qfd_xcst_n",
+ "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+ "lib_cell": "qfd_xcst_n",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 132.9,
+ "spread_ps": 52.8,
+ "outputs": 960,
+ "inputs": 520,
+ "launch_ps": 208.5,
+ "launch_pin": "a_d[33]",
+ "capture_ps": 190.7,
+ "capture_pin": "b_d[256]",
+ "launch_over": 0,
+ "capture_over": 1,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 190.7 > 190 (1 pins)",
+ "record_commit": "0f1716a20",
+ "view_sha256": {
+  "qfd_xcst_n.lef": "78fe2682909662d1fdc9705f7ff9c61a203254dcce1ae73d09bad5d0918c60d3",
+  "qfd_xcst_n_ff.lib": "c5e5779051fe8c17afbe6292c062aa64db8d68aca04686b9bb5df2d17e6e39e9",
+  "insertion.json": "a2b3f429f468fbbf0a559c2d37d9ea5bcb028941979e9334d1788680120a8af9",
+  "qfd_xcst_n_ss.lib": "84fe18969db15670433f3249e06d8e308d3df896948d4ea9c5dca58d97da4c92",
+  "qfd_xcst_n_tt.lib": "3bb2259e175209dac2837ed97962ec97b9dd4b495756cfd35ece2edb696b242f"
+ }
+}
