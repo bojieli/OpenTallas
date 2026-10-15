@@ -1,13 +1,13 @@
 {
- "status": "LIVE_ACTUAL_GENERATOR",
- "source_commit": "e7e772c36",
+ "status": "SCREEN2_TERMINAL_FAIL_SCREEN3_LIVE",
+ "source_commit": "c1005b4e1",
  "host": "ot-epyc4",
- "pid": 1259604,
- "unit": "oth-ubuntu-1259588-1792051134",
- "local_systemd_unit": "canonical-gen-1015-screen2.service",
- "local_log": "/home/ubuntu/canonical-gen-1015-screen2.log",
+ "pid": null,
+ "unit": "oth-ubuntu-1265934-1792051399",
+ "local_systemd_unit": "canonical-gen-1015-screen3.service",
+ "local_log": "/home/ubuntu/canonical-gen-1015-screen3.log",
  "remote_source": "/srv/opentallas-scratch/codex-canonical-gen-1015/src",
- "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen2",
+ "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen3",
  "scope": "Actual full2417 typed generator. No native timing or placement success claim while active. All sourcepairIDs2417/BF519 andPHW10 metadata preserved.",
  "first_failure": "Historical slot_geometry required uniform BF_PER_REGION; canonical exactperframe slot inventory now replaces only canonical restriction. Failed screen1 remains immutable.",
  "artifacts_expected": {
@@ -21,5 +21,18 @@
   "all realnative abstracts/TTsetup/FFhold/DRC0",
   "actual PHW10 source bindings from compute stream",
   "static schedule through actual physical clock phases"
- ]
+ ],
+ "screen2": {
+  "status": "GEN_FAIL",
+  "error": "cx2 no station at2075um: direct eastsource exit crossed realHC slab",
+  "field_legality": {
+   "instances": 32969,
+   "overlaps": 0,
+   "outside": 0
+  },
+  "original_pid": 1259604,
+  "original_unit": "oth-ubuntu-1259588-1792051134",
+  "partial_output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen2"
+ },
+ "fix": "East start reaches physical S14 through actual HC crossing corridor; samehopgates/occupancy. Failed partial now also exports actual pins when finalize succeeds."
 }
