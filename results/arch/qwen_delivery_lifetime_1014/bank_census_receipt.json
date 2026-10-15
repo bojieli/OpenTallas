@@ -1,0 +1,142 @@
+{
+  "status": "GENERIC_POST_PROC_OPT_MEMORY_MAP_CENSUS_NOT_MAPPED_AREA_OR_CTS",
+  "source_sha256": "04200e6ce445014a3e1ea64ac44740a674b28bdbd1173dc4f62e0e125fae096b",
+  "top": "ot_qwen_xdelivery_ack_bank",
+  "params": {
+    "ENABLE": 1,
+    "N": 48,
+    "SEQ_W": 40,
+    "COUNT_W": 7
+  },
+  "command": [
+    "yosys",
+    "-p",
+    "read_verilog -sv /srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv; hierarchy -top ot_qwen_xdelivery_ack_bank -chparam ENABLE 1 -chparam N 48 -chparam SEQ_W 40 -chparam COUNT_W 7; proc; opt; memory_map; opt; stat; write_json bank.json"
+  ],
+  "yosys": "Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)",
+  "sequential_Q_bits": 4322,
+  "cell_types": {
+    "$add": 3,
+    "$and": 352,
+    "$sdffe": 6,
+    "$dffe": 144,
+    "$not": 20,
+    "$ne": 8,
+    "$reduce_bool": 194,
+    "$reduce_and": 2,
+    "$eq": 9,
+    "$ge": 1,
+    "$logic_and": 76,
+    "$logic_not": 57,
+    "$logic_or": 59,
+    "$lt": 2,
+    "$mux": 591,
+    "$neg": 1,
+    "$or": 1,
+    "$shift": 1,
+    "$shiftx": 5,
+    "$sub": 1
+  },
+  "ports": {
+    "clk": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "begin_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "begin_context": {
+      "direction": "input",
+      "bits": 16
+    },
+    "begin_version": {
+      "direction": "input",
+      "bits": 32
+    },
+    "participant_mask": {
+      "direction": "input",
+      "bits": 48
+    },
+    "issue_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "issue_ready": {
+      "direction": "output",
+      "bits": 1
+    },
+    "issue_id": {
+      "direction": "input",
+      "bits": 6
+    },
+    "issue_seq": {
+      "direction": "input",
+      "bits": 40
+    },
+    "issue_context": {
+      "direction": "input",
+      "bits": 16
+    },
+    "issue_version": {
+      "direction": "input",
+      "bits": 32
+    },
+    "retire_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "retire_ready": {
+      "direction": "output",
+      "bits": 1
+    },
+    "retire_id": {
+      "direction": "input",
+      "bits": 6
+    },
+    "retire_seq": {
+      "direction": "input",
+      "bits": 40
+    },
+    "retire_context": {
+      "direction": "input",
+      "bits": 16
+    },
+    "retire_version": {
+      "direction": "input",
+      "bits": 32
+    },
+    "seal_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "seal_id": {
+      "direction": "input",
+      "bits": 6
+    },
+    "seal_context": {
+      "direction": "input",
+      "bits": 16
+    },
+    "seal_version": {
+      "direction": "input",
+      "bits": 32
+    },
+    "fenced_clear": {
+      "direction": "input",
+      "bits": 1
+    },
+    "drained": {
+      "direction": "output",
+      "bits": 1
+    },
+    "fault": {
+      "direction": "output",
+      "bits": 1
+    }
+  }
+}

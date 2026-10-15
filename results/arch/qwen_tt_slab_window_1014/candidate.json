@@ -1,0 +1,380 @@
+{
+  "schema": "opentallas.qwen-tt-slab-source-bound-window.v1",
+  "status": "BOUNDED_GEOMETRY_CANDIDATE_NOT_CURRENT_CONTRACT",
+  "assigned": false,
+  "route_ready": false,
+  "head": {
+    "selected_commit": "5f46813ea",
+    "variant": "ARG2",
+    "view_path": "physical/ref_tile/qfd_tt_ctlm_head/views/qfd_tt_ctlm_head/qfd_tt_ctlm_head.lef",
+    "LEF_sha256": "f2b9463453bd5aaf7e6df59f8ddcc29ffbf816c12041d4d7bbd55643b810f893",
+    "outline_um": [
+      237.6,
+      237.6
+    ],
+    "clock_pin_shapes": {
+      "direction": "INPUT",
+      "rects": [
+        {
+          "layer": "M5",
+          "rect": [
+            6.72,
+            0.0,
+            6.744,
+            0.084
+          ]
+        },
+        {
+          "layer": "M5",
+          "rect": [
+            6.72,
+            0.016,
+            6.744,
+            5.077
+          ]
+        }
+      ]
+    },
+    "clock_boundary_mean_ps": {
+      "TT": 536.4,
+      "FF": 428.4,
+      "SS": 716.1
+    },
+    "qualification": "CLOSED selected immutable family; shared main ARG1 must not replace these bytes",
+    "sample_real_pin_shapes": {
+      "cmd[0]": {
+        "direction": "OUTPUT",
+        "rects": [
+          {
+            "layer": "M4",
+            "rect": [
+              237.516,
+              40.032,
+              237.6,
+              40.056
+            ]
+          }
+        ]
+      },
+      "cmd[379]": {
+        "direction": "OUTPUT",
+        "rects": [
+          {
+            "layer": "M4",
+            "rect": [
+              237.516,
+              83.952,
+              237.6,
+              83.976
+            ]
+          }
+        ]
+      },
+      "ret[0]": {
+        "direction": "INPUT",
+        "rects": [
+          {
+            "layer": "M4",
+            "rect": [
+              237.516,
+              92.064,
+              237.6,
+              92.088
+            ]
+          }
+        ]
+      },
+      "ret[94]": {
+        "direction": "INPUT",
+        "rects": [
+          {
+            "layer": "M4",
+            "rect": [
+              237.516,
+              103.92,
+              237.6,
+              103.944
+            ]
+          },
+          {
+            "layer": "M4",
+            "rect": [
+              237.481,
+              103.92,
+              237.564,
+              103.944
+            ]
+          }
+        ]
+      },
+      "clk": {
+        "direction": "INPUT",
+        "rects": [
+          {
+            "layer": "M5",
+            "rect": [
+              6.72,
+              0.0,
+              6.744,
+              0.084
+            ]
+          },
+          {
+            "layer": "M5",
+            "rect": [
+              6.72,
+              0.016,
+              6.744,
+              5.077
+            ]
+          }
+        ]
+      },
+      "rst_n": {
+        "direction": "INPUT",
+        "rects": [
+          {
+            "layer": "M5",
+            "rect": [
+              6.72,
+              237.516,
+              6.744,
+              237.6
+            ]
+          },
+          {
+            "layer": "M5",
+            "rect": [
+              6.72,
+              235.957,
+              6.744,
+              237.584
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "tree": {
+    "receipt_commit": "16c5406b8",
+    "receipt_path": "physical/ref_tile/qfd_tt_ctlm_tree/source_binding_history/dynamic-2765d4996/route-final/final_receipt.json",
+    "receipt_sha256": "84add3ff84cb78c2493e113868fed1542f22ec978361afa8682e134c36594c05",
+    "source_commit": "2984e0c5168a9c4a708b0ab3433a997a3a6f77b9",
+    "spec_sha256": "8879c509ab0bbba6d748d198d8af4333dcbe5502187a21afc8153703d7f2d72e",
+    "outline_um": [
+      388.8,
+      280.8
+    ],
+    "public_clock_pin": "clk",
+    "clock_mapping": "clk -> core_clk; primary native shadow plus one u_cg.u_icg/GCLK engine tree; no cloned ICG",
+    "clock_domains": {
+      "TT": {
+        "primary_boundary_count": 234,
+        "primary_boundary_mean_ps": 685.901871,
+        "gated_boundary_count": 2107,
+        "gated_boundary_mean_ps": 705.071716,
+        "combined_boundary_mean_ps": 703.155550374199
+      },
+      "FF": {
+        "primary_boundary_count": 234,
+        "primary_boundary_mean_ps": 528.848365,
+        "gated_boundary_count": 2107,
+        "gated_boundary_mean_ps": 546.438207,
+        "combined_boundary_mean_ps": 544.6799741815464
+      },
+      "SS": {
+        "primary_boundary_count": 234,
+        "primary_boundary_mean_ps": 962.380625,
+        "gated_boundary_count": 2107,
+        "gated_boundary_mean_ps": 980.374129,
+        "combined_boundary_mean_ps": 978.5755472246905
+      }
+    },
+    "public_pin_reference": "combined_boundary_mean; primary/gated means are internal clock classes, not two public pins",
+    "verdict": {
+      "TT_setup_ps": 12.58,
+      "FF_hold_ps": -8.12,
+      "DRC": 5,
+      "SS_sensitivity_ps": -266.62
+    },
+    "clock_entry_candidate": {
+      "face": "S",
+      "range_um": [
+        213.12,
+        214.56
+      ]
+    },
+    "seam_pin_ranges_candidate": {
+      "cmd": [
+        40,
+        84
+      ],
+      "ret": [
+        92,
+        104
+      ]
+    },
+    "qualification": "FAILED route; spec pin ranges are requests, no published qualified tree LEF pin assignment",
+    "routed_pin_geometry": {
+      "status": "UNAVAILABLE",
+      "check": "EPYC4 remote ls of receipt original6_final.odb returned No such file; finalSDC and source directory remain",
+      "collector_submitted": false,
+      "consequence": "Spec ranges are not actual routed BTerms; no tree published view or physical pin assignment."
+    }
+  },
+  "parent_candidate": {
+    "outline_um": [
+      648,
+      280.8
+    ],
+    "head_at_um": [
+      0,
+      0
+    ],
+    "tree_at_um": [
+      259.2,
+      0
+    ],
+    "seam_um": 21.6,
+    "clock_entries": [
+      "ck_head",
+      "ck_tree"
+    ],
+    "clock_rule": "Each real child gets phi minus its own per-corner R and actual entry wire. Both deep references require total setup reserve210ps and hold100ps; no common phase at pins.",
+    "reset": "Separate child rst_n entries pending real placement/registered reset delivery",
+    "qualification": "Wires-only constructive two-box layout; external endpoints/clock/reset/dataRC/pins unbound"
+  },
+  "legacy_g9_reservation": {
+    "n": "tt_ctlm",
+    "m": "qfd_tt_ctlm",
+    "x": 14847.84,
+    "y": 13018.32,
+    "w": 777.576,
+    "h": 1814.376
+  },
+  "legacy_slab_reservations": [
+    {
+      "n": "sp_port_tiles_1",
+      "m": "qfd_port_tiles_1",
+      "x": 13670.208,
+      "y": 13538.88,
+      "w": 777.576,
+      "h": 1840.296
+    },
+    {
+      "n": "sp_port_tiles_1_f1",
+      "m": "qfd_port_tiles_1_f1",
+      "x": 15625.44,
+      "y": 13048.56,
+      "w": 777.576,
+      "h": 1840.296
+    },
+    {
+      "n": "sp_port_tiles_2",
+      "m": "qfd_port_tiles_2",
+      "x": 13670.208,
+      "y": 20208.96,
+      "w": 777.576,
+      "h": 1840.296
+    },
+    {
+      "n": "sp_port_tiles_2_f1",
+      "m": "qfd_port_tiles_2_f1",
+      "x": 15625.44,
+      "y": 20515.68,
+      "w": 777.576,
+      "h": 1840.296
+    },
+    {
+      "n": "sp_port_tiles_0",
+      "m": "qfd_port_tiles_0",
+      "x": 13670.208,
+      "y": 5276.88,
+      "w": 777.576,
+      "h": 1840.296
+    },
+    {
+      "n": "sp_port_tiles_0_f1",
+      "m": "qfd_port_tiles_0_f1",
+      "x": 15625.44,
+      "y": 5583.6,
+      "w": 777.576,
+      "h": 1840.296
+    }
+  ],
+  "slab_status": "Immutable retained four324x216 ROM columns +four71.28square lanes +one129.6square core. Core is additional, not replacement. Source-matched closed leaf bytes must remain pinned; current parent footprint/transport still unqualified.",
+  "attention_native_profile": {
+    "source_commit": "f460730903b452982cd68d9208f07219f108fdee",
+    "HEADS": 1,
+    "Q_FP32": 1,
+    "QK_ONLY": 1,
+    "ECTL": 3,
+    "heads": "4xR8",
+    "HD": 128,
+    "DQ": 128,
+    "S": 128,
+    "PV": 256,
+    "scope": "Flat head_h component proof, FP_DPI/common clock/synthetic HBM; no hierarchical head_hs footprints or views qualified"
+  },
+  "open_checks": [
+    "Actual tree closure/normalized per-pin clock/data budgets",
+    "Real head E/tree W pin alignment, not only spec ranges",
+    "External parent boundary placement and captured reset delivery",
+    "Current slab constituent group counts, clock roots and source hierarchy",
+    "Pin and channel capacity including native delivery context/control/return traffic"
+  ],
+  "attention_inventory_receipt": {
+    "commit": "558f53b2b",
+    "path": "results/arch/qwen_attention_inventory_1014/inventory.json",
+    "sha256": "c44482b94014b6d7f4427884c43aa8d40055d21d479e4ed076bc4d74b901b0bc",
+    "owner": "/root/qwen_small"
+  },
+  "slab_leaf_inventory": {
+    "source_commit": "42e2bcb1b",
+    "column_records": {
+      "MGA": "9991f8339",
+      "MGB": "622b30874",
+      "MGC": "4d9341d03"
+    },
+    "column_count_per_group": 4,
+    "column_outline_um": [
+      324,
+      216
+    ],
+    "lane_count_per_group": 4,
+    "lane_outline_um": [
+      71.28,
+      71.28
+    ],
+    "core_record": "6b6747847",
+    "core_view": "physical/ref_tile/qfd_slab_pg_core/views/ot_qwen_slab_pg_core",
+    "core_outline_um": [
+      129.6,
+      129.6
+    ],
+    "core_TT_R_ps": 203.8,
+    "core_TT_sinks": 9147,
+    "clock_entries_per_group": 9,
+    "historical_source_matches": {
+      "column": "81025983b",
+      "lane": "ec5f7bb16",
+      "multiplier": "old exact0a96f521 family; no later changed multiplier alias"
+    }
+  },
+  "slab_raw_area_bound": {
+    "group_raw_leaf_um2": 317055.5136,
+    "groups_per_historical_port_frame": 8,
+    "groups_total": 48,
+    "required_raw_area_per_port_frame_um2": 2536444.1088,
+    "historical_port_frame_um2": 1430970.0024960001,
+    "raw_area_ratio": 1.7725347871553931,
+    "minimum_extra_raw_area_six_frames_mm2": 6.632844637823999,
+    "excludes": [
+      "all interleaf channels",
+      "relay/clock/reset stations",
+      "parent glue and capture transport",
+      "actual source-profile physical variant growth"
+    ],
+    "conclusion": "Eight retained groups cannot fit old port frame even before channels; global spare area alone does not supply local corridor fit."
+  }
+}

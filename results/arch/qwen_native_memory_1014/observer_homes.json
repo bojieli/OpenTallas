@@ -1,0 +1,1135 @@
+{
+  "status": "PROPOSED_NONOVERLAPPING_DIE_ASSEMBLED_HOMES_PINS_UNASSIGNED",
+  "parent_plan": "results/arch/qwen_tp8_1012/vm_region_nx_spec_claude.json",
+  "parent_plan_sha256": "f23e4971168717dd0ff5bbe9c818686eee81a9dff6b9799f49aab580cd17287f",
+  "parent_rectangle_um": [
+    4708.8,
+    2203.2
+  ],
+  "module": "qfd_vm_qcommit",
+  "count": 32,
+  "placement_checks": "No overlap; >=20um clear axis channel to all56existingregionleaves. Region6-localbank6 observer shifted12.96um inY toclear rr2.",
+  "clock": "Independent phi-Robs for each observer; bank leaf clock unchanged.",
+  "entries": [
+    {
+      "region": 3,
+      "bank_local": 0,
+      "bank_global": 24,
+      "bank_relative_rect_um": [
+        25.92,
+        10.8,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        23.76,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        23.76,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        3872.88,
+        23.76,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r3_2",
+      "observer_clock_pin": "ck_r3_56",
+      "bank_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_b[0].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_qcommit[0].g_qbank.u_obs"
+    },
+    {
+      "region": 3,
+      "bank_local": 1,
+      "bank_global": 25,
+      "bank_relative_rect_um": [
+        25.92,
+        216.0,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        228.96,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        228.96,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        3872.88,
+        228.96,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r3_6",
+      "observer_clock_pin": "ck_r3_57",
+      "bank_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_b[1].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_qcommit[1].g_qbank.u_obs"
+    },
+    {
+      "region": 3,
+      "bank_local": 2,
+      "bank_global": 26,
+      "bank_relative_rect_um": [
+        25.92,
+        421.2,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        434.16,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        434.16,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        3872.88,
+        434.16,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r3_10",
+      "observer_clock_pin": "ck_r3_58",
+      "bank_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_b[2].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_qcommit[2].g_qbank.u_obs"
+    },
+    {
+      "region": 3,
+      "bank_local": 3,
+      "bank_global": 27,
+      "bank_relative_rect_um": [
+        25.92,
+        626.4,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        639.36,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        639.36,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        3872.88,
+        639.36,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r3_14",
+      "observer_clock_pin": "ck_r3_59",
+      "bank_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_b[3].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_qcommit[3].g_qbank.u_obs"
+    },
+    {
+      "region": 3,
+      "bank_local": 4,
+      "bank_global": 28,
+      "bank_relative_rect_um": [
+        453.6,
+        10.8,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        23.76,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        23.76,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        4300.56,
+        23.76,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r3_18",
+      "observer_clock_pin": "ck_r3_60",
+      "bank_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_b[4].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_qcommit[4].g_qbank.u_obs"
+    },
+    {
+      "region": 3,
+      "bank_local": 5,
+      "bank_global": 29,
+      "bank_relative_rect_um": [
+        453.6,
+        216.0,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        228.96,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        228.96,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        4300.56,
+        228.96,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r3_22",
+      "observer_clock_pin": "ck_r3_61",
+      "bank_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_b[5].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_qcommit[5].g_qbank.u_obs"
+    },
+    {
+      "region": 3,
+      "bank_local": 6,
+      "bank_global": 30,
+      "bank_relative_rect_um": [
+        453.6,
+        421.2,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        434.16,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        447.12,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        4300.56,
+        447.12,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r3_26",
+      "observer_clock_pin": "ck_r3_62",
+      "bank_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_b[6].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_qcommit[6].g_qbank.u_obs"
+    },
+    {
+      "region": 3,
+      "bank_local": 7,
+      "bank_global": 31,
+      "bank_relative_rect_um": [
+        453.6,
+        626.4,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        639.36,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        639.36,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        4300.56,
+        639.36,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r3_30",
+      "observer_clock_pin": "ck_r3_63",
+      "bank_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_b[7].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[3].u_t.g_qcommit[7].g_qbank.u_obs"
+    },
+    {
+      "region": 4,
+      "bank_local": 0,
+      "bank_global": 32,
+      "bank_relative_rect_um": [
+        25.92,
+        10.8,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        23.76,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        23.76,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        287.28,
+        1146.96,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r4_2",
+      "observer_clock_pin": "ck_r4_56",
+      "bank_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_b[0].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_qcommit[0].g_qbank.u_obs"
+    },
+    {
+      "region": 4,
+      "bank_local": 1,
+      "bank_global": 33,
+      "bank_relative_rect_um": [
+        25.92,
+        216.0,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        228.96,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        228.96,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        287.28,
+        1352.16,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r4_6",
+      "observer_clock_pin": "ck_r4_57",
+      "bank_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_b[1].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_qcommit[1].g_qbank.u_obs"
+    },
+    {
+      "region": 4,
+      "bank_local": 2,
+      "bank_global": 34,
+      "bank_relative_rect_um": [
+        25.92,
+        421.2,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        434.16,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        434.16,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        287.28,
+        1557.36,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r4_10",
+      "observer_clock_pin": "ck_r4_58",
+      "bank_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_b[2].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_qcommit[2].g_qbank.u_obs"
+    },
+    {
+      "region": 4,
+      "bank_local": 3,
+      "bank_global": 35,
+      "bank_relative_rect_um": [
+        25.92,
+        626.4,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        639.36,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        639.36,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        287.28,
+        1762.56,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r4_14",
+      "observer_clock_pin": "ck_r4_59",
+      "bank_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_b[3].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_qcommit[3].g_qbank.u_obs"
+    },
+    {
+      "region": 4,
+      "bank_local": 4,
+      "bank_global": 36,
+      "bank_relative_rect_um": [
+        453.6,
+        10.8,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        23.76,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        23.76,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        714.96,
+        1146.96,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r4_18",
+      "observer_clock_pin": "ck_r4_60",
+      "bank_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_b[4].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_qcommit[4].g_qbank.u_obs"
+    },
+    {
+      "region": 4,
+      "bank_local": 5,
+      "bank_global": 37,
+      "bank_relative_rect_um": [
+        453.6,
+        216.0,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        228.96,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        228.96,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        714.96,
+        1352.16,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r4_22",
+      "observer_clock_pin": "ck_r4_61",
+      "bank_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_b[5].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_qcommit[5].g_qbank.u_obs"
+    },
+    {
+      "region": 4,
+      "bank_local": 6,
+      "bank_global": 38,
+      "bank_relative_rect_um": [
+        453.6,
+        421.2,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        434.16,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        447.12,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        714.96,
+        1570.32,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r4_26",
+      "observer_clock_pin": "ck_r4_62",
+      "bank_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_b[6].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_qcommit[6].g_qbank.u_obs"
+    },
+    {
+      "region": 4,
+      "bank_local": 7,
+      "bank_global": 39,
+      "bank_relative_rect_um": [
+        453.6,
+        626.4,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        639.36,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        639.36,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        714.96,
+        1762.56,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r4_30",
+      "observer_clock_pin": "ck_r4_63",
+      "bank_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_b[7].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[4].u_t.g_qcommit[7].g_qbank.u_obs"
+    },
+    {
+      "region": 5,
+      "bank_local": 0,
+      "bank_global": 40,
+      "bank_relative_rect_um": [
+        25.92,
+        10.8,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        23.76,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        23.76,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        1410.48,
+        1146.96,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r5_2",
+      "observer_clock_pin": "ck_r5_56",
+      "bank_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_b[0].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_qcommit[0].g_qbank.u_obs"
+    },
+    {
+      "region": 5,
+      "bank_local": 1,
+      "bank_global": 41,
+      "bank_relative_rect_um": [
+        25.92,
+        216.0,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        228.96,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        228.96,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        1410.48,
+        1352.16,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r5_6",
+      "observer_clock_pin": "ck_r5_57",
+      "bank_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_b[1].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_qcommit[1].g_qbank.u_obs"
+    },
+    {
+      "region": 5,
+      "bank_local": 2,
+      "bank_global": 42,
+      "bank_relative_rect_um": [
+        25.92,
+        421.2,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        434.16,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        434.16,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        1410.48,
+        1557.36,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r5_10",
+      "observer_clock_pin": "ck_r5_58",
+      "bank_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_b[2].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_qcommit[2].g_qbank.u_obs"
+    },
+    {
+      "region": 5,
+      "bank_local": 3,
+      "bank_global": 43,
+      "bank_relative_rect_um": [
+        25.92,
+        626.4,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        639.36,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        639.36,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        1410.48,
+        1762.56,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r5_14",
+      "observer_clock_pin": "ck_r5_59",
+      "bank_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_b[3].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_qcommit[3].g_qbank.u_obs"
+    },
+    {
+      "region": 5,
+      "bank_local": 4,
+      "bank_global": 44,
+      "bank_relative_rect_um": [
+        453.6,
+        10.8,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        23.76,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        23.76,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        1838.16,
+        1146.96,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r5_18",
+      "observer_clock_pin": "ck_r5_60",
+      "bank_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_b[4].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_qcommit[4].g_qbank.u_obs"
+    },
+    {
+      "region": 5,
+      "bank_local": 5,
+      "bank_global": 45,
+      "bank_relative_rect_um": [
+        453.6,
+        216.0,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        228.96,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        228.96,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        1838.16,
+        1352.16,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r5_22",
+      "observer_clock_pin": "ck_r5_61",
+      "bank_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_b[5].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_qcommit[5].g_qbank.u_obs"
+    },
+    {
+      "region": 5,
+      "bank_local": 6,
+      "bank_global": 46,
+      "bank_relative_rect_um": [
+        453.6,
+        421.2,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        434.16,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        447.12,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        1838.16,
+        1570.32,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r5_26",
+      "observer_clock_pin": "ck_r5_62",
+      "bank_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_b[6].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_qcommit[6].g_qbank.u_obs"
+    },
+    {
+      "region": 5,
+      "bank_local": 7,
+      "bank_global": 47,
+      "bank_relative_rect_um": [
+        453.6,
+        626.4,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        639.36,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        639.36,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        1838.16,
+        1762.56,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r5_30",
+      "observer_clock_pin": "ck_r5_63",
+      "bank_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_b[7].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[5].u_t.g_qcommit[7].g_qbank.u_obs"
+    },
+    {
+      "region": 6,
+      "bank_local": 0,
+      "bank_global": 48,
+      "bank_relative_rect_um": [
+        25.92,
+        10.8,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        23.76,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        23.76,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        2749.68,
+        1146.96,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r6_2",
+      "observer_clock_pin": "ck_r6_56",
+      "bank_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_b[0].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_qcommit[0].g_qbank.u_obs"
+    },
+    {
+      "region": 6,
+      "bank_local": 1,
+      "bank_global": 49,
+      "bank_relative_rect_um": [
+        25.92,
+        216.0,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        228.96,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        228.96,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        2749.68,
+        1352.16,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r6_6",
+      "observer_clock_pin": "ck_r6_57",
+      "bank_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_b[1].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_qcommit[1].g_qbank.u_obs"
+    },
+    {
+      "region": 6,
+      "bank_local": 2,
+      "bank_global": 50,
+      "bank_relative_rect_um": [
+        25.92,
+        421.2,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        434.16,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        434.16,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        2749.68,
+        1557.36,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r6_10",
+      "observer_clock_pin": "ck_r6_58",
+      "bank_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_b[2].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_qcommit[2].g_qbank.u_obs"
+    },
+    {
+      "region": 6,
+      "bank_local": 3,
+      "bank_global": 51,
+      "bank_relative_rect_um": [
+        25.92,
+        626.4,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        248.4,
+        639.36,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        287.28,
+        639.36,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        2749.68,
+        1762.56,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r6_14",
+      "observer_clock_pin": "ck_r6_59",
+      "bank_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_b[3].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_qcommit[3].g_qbank.u_obs"
+    },
+    {
+      "region": 6,
+      "bank_local": 4,
+      "bank_global": 52,
+      "bank_relative_rect_um": [
+        453.6,
+        10.8,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        23.76,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        23.76,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        3177.36,
+        1146.96,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r6_18",
+      "observer_clock_pin": "ck_r6_60",
+      "bank_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_b[4].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_qcommit[4].g_qbank.u_obs"
+    },
+    {
+      "region": 6,
+      "bank_local": 5,
+      "bank_global": 53,
+      "bank_relative_rect_um": [
+        453.6,
+        216.0,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        228.96,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        228.96,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        3177.36,
+        1352.16,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r6_22",
+      "observer_clock_pin": "ck_r6_61",
+      "bank_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_b[5].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_qcommit[5].g_qbank.u_obs"
+    },
+    {
+      "region": 6,
+      "bank_local": 6,
+      "bank_global": 54,
+      "bank_relative_rect_um": [
+        453.6,
+        421.2,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        434.16,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        447.12,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        3177.36,
+        1570.32,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r6_26",
+      "observer_clock_pin": "ck_r6_62",
+      "bank_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_b[6].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_qcommit[6].g_qbank.u_obs"
+    },
+    {
+      "region": 6,
+      "bank_local": 7,
+      "bank_global": 55,
+      "bank_relative_rect_um": [
+        453.6,
+        626.4,
+        218.16,
+        183.6
+      ],
+      "control_relative_rect_um": [
+        676.08,
+        639.36,
+        12.96,
+        38.88
+      ],
+      "observer_relative_rect_um": [
+        714.96,
+        639.36,
+        12.96,
+        30.24
+      ],
+      "observer_vm_rect_um": [
+        3177.36,
+        1762.56,
+        12.96,
+        30.24
+      ],
+      "orientation": "R0",
+      "minimum_axis_channel_to_existing_um": 21.6,
+      "bank_clock_pin": "ck_r6_30",
+      "observer_clock_pin": "ck_r6_63",
+      "bank_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_b[7].u_bt",
+      "observer_rtl_path": "u_vm.g_tile.g_t[6].u_t.g_qcommit[7].g_qbank.u_obs"
+    }
+  ]
+}
