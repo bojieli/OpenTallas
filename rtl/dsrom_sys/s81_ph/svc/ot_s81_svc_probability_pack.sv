@@ -30,11 +30,18 @@ module ot_s81_svc_probability_pack #(parameter integer MUT = 0) (
         // Same finite probability rule as ot_dsrom_su_softmax.bf16.
         assign converted[h*16 +: 16] = x[31:16] + ((MUT == 1) ? 16'd0 : {15'd0,round_up});
     end endgenerate
+    // Payload flops are unreset; valid/control reset owns their visibility.
+    always @(posedge clk) if(in_v) begin
+        if(in_row[0] || in_row+10'd1==total) begin
+            out_word<=in_row[9:1];
+            out_d<=in_row[0] ? ((MUT==2) ? {low,converted} : {converted,low}) : {256'd0,converted};
+        end else low<=converted;
+    end
     integer j;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            active<=0; total<=0; next_row<=0; low<=0;
-            out_v<=0; out_word<=0; out_d<=0; done<=0; fault<=0;
+            active<=0; total<=0; next_row<=0;
+            out_v<=0; done<=0; fault<=0;
         end else begin
             out_v<=0; done<=0;
             if (go) begin
@@ -46,9 +53,8 @@ module ot_s81_svc_probability_pack #(parameter integer MUT = 0) (
                 for (j=0;j<16;j=j+1)
                     if (in_d[j*32 + 23 +: 8]==8'hff || (in_d[j*32+31] && (|in_d[j*32 +:31]))) fault<=1;
                 if (in_row[0] || in_row+10'd1==total) begin
-                    out_v<=1; out_word<=in_row[9:1];
-                    out_d<=in_row[0] ? ((MUT==2) ? {low,converted} : {converted,low}) : {256'd0,converted};
-                end else low<=converted;
+                    out_v<=1;
+                end
                 next_row<=next_row+10'd1;
                 if (in_row+10'd1==total) begin active<=0; done<=1; end
             end

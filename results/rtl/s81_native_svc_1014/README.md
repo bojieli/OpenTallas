@@ -6,8 +6,11 @@ before the actual job/IO path. Type 14 carries one natural attention row of
 16 FP32 head values per payload. It becomes type 5, with BF16 RNE and two
 natural rows packed per service word. Each header is rewritten to ceil(T/2)
 payload words. An odd final row pads the high half with zero. No readiness,
-credit, or runtime scheduling port exists. Output is registered on the edge
-accepting the second/final row; conversion replaces host rounding in this path.
+credit, or runtime scheduling port exists. Dedicated input and output face registers enclose the conversion stage.
+The fixed accepting-edge latency is three (capture, convert, output); the
+compiler must budget all three. Pair outputs correspond to second/final rows;
+conversion replaces host rounding in this path. Payload flops have no reset;
+reset valid/control owns visibility.
 
 Production shapes T=640 and T=133 passed 387 pack output words and 391 frame
 output/header checks. RNE-removal and swapped-half mutants fail observably.
@@ -19,7 +22,7 @@ Reproduce on an admitted fleet host from repository root:
 bash rtl/dsrom_sys/s81_ph/svc/test/run_probability_pack.sh OUT
 ```
 
-Recorded final admission: ot-epyc4 `oth-ubuntu-3551811-1792031364`, exit 0.
+Recorded final admission: ot-epyc4 `oth-ubuntu-638387-1792031882`, exit 0.
 Only the current `probability_*` logs establish this final source's result.
 Earlier p0/p1/p2 logs are historical development receipts.
 
@@ -45,6 +48,8 @@ SVC/SU iteration, the real controller and peer network, mapped-memory numerical
 proof, compiler service timeline, and physical area/CTS/pin qualification remain
 required. The historical full-slab builds inject reference probabilities and
 peer rows and use the PC controller model. Their arithmetic/component results
-must not be presented as native token qualification. The new converter is a
-real child but has no CLOSED physical view yet; reserve/place it next to the
-service ingress/PV writer as assigned by the die lead.
+must not be presented as native token qualification. The new converter is a real child but has no CLOSED physical view yet.
+The die lead assigned its 129.6 x 86.4 slot and exact v20 pins in
+`physical/s81_die_pins/v20_svc_native/ingress_layout.json` (d69e94ef3),
+with job/IO orientation MX and two short native joins. Assigned-pin CTS
+pre-route gate is live; full native top composition/reset/clock remains open.
