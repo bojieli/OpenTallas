@@ -22,7 +22,7 @@
     "native_external_VM": 96,
     "native_command_response": 128
   },
-  "FF_delta_per_bank": "approximately870; leafactualcensus pending",
+  "FF_delta_per_bank": 1417,
   "weight_quarter_straps": "expectedbank3+expectedquarter2 staticcaptured, one reusablemaster",
   "memory_bandwidth_B_per_cycle": {
     "bank_weight_reads": 128,
@@ -64,7 +64,24 @@
   "qualification": {
     "functional": false,
     "physical": false,
-    "native_whole_kernel": false
+    "native_whole_kernel": false,
+    "leaf_functional": true
   },
-  "clock_phases": "all roots synchronous, independent physical insertion/reach SS/FF proofrequired; functionalbench equalphase only"
+  "clock_phases": "all roots synchronous, independent physical insertion/reach SS/FF proofrequired; functionalbench equalphase only",
+  "leaf_source": "473756fb3",
+  "actual_leaf_census": {
+    "weight_quarter_FF": 1059,
+    "weight_quarter_macro_clocks": 2,
+    "residual_half_FF": 783,
+    "residual_half_macro_clocks": 1,
+    "control_FF": 461,
+    "bank_FF": 6263,
+    "bank_FF_delta_vs44root": 1417,
+    "engine_FF_delta_vs44root": 11336,
+    "cause_FF_delta_per_bank": {
+      "firstpin_residualwrite": 523,
+      "partition": 894
+    }
+  },
+  "leaf_functional_proof": "all32 bank/quarter combinations 512reads each+masks/wrongslot/wrongIDmutants; residual1280reads/640 measured+1writecommits+bypassmutant; controller1027cycle/tapmutant PASS"
 }
