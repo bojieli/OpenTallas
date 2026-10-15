@@ -1,0 +1,5 @@
+PASS native return slots depth8 rows512 core833.334ps HBM1024ps phase137.000ps fixedSlots noRuntimeReady
+- /srv/opentallas-scratch/codex/kvreturn-slots-1014/rtl/test/qwen_static_kv/tb_static_return_slots.sv:66: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 0.005 s; speed 230.335 us/s
+- Verilator: cpu 0.007 s on 1 threads; alloced 1017 MB

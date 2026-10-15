@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "scope": "input and flush registers relocated inside 16 independently hardenable serial capture leaves, exact same output cycles/words/masks as before",
+  "seed_counts": [
+    "1735full+8partial",
+    "1194full+7partial"
+  ],
+  "fault_witnesses": 5,
+  "mutant_word": "FAIL as required",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv": "1de4a5a9cd15e56572c368f60399c7ba0596a843a3625315ab9f0813a71f20ec",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv": "b6c23720c6dd34c3ec7296dfb44d41848abea4fe18f260ab75a7839660dba538",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv": "192752ca88c4a93c661bfeeb7bb2a2aa152b5b6490330e096f7c05eeb0e50ecf",
+    "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv": "c95f6eb78b68bed81746829e0194ad86accc45f9a70f764ff81bcc1f575e22f3"
+  },
+  "physical_status": "not measured; proposed 80.64x230.04um candidate needs gate, x34 bridges need separate roots or dual-clock combined leaves"
+}

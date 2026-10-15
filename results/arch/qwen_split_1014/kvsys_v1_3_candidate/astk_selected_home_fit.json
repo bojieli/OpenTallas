@@ -1,0 +1,2196 @@
+{
+  "schema": "opentallas.astk_selected_home_fit.v1",
+  "scope": "SELECTED_NON_PV_GEOMETRY_ONLY",
+  "native_qualified": false,
+  "selected_children": 180,
+  "parent_outside": [],
+  "overlaps": [],
+  "parents": [
+    {
+      "name": "astk_WS",
+      "master": "qkd_astk",
+      "x": 3165.264,
+      "y": 2002.32,
+      "w": 328.296,
+      "h": 8676.696,
+      "orient": "R0",
+      "kind": "attn_stack",
+      "region": "attn",
+      "domain": "stream_1p2"
+    },
+    {
+      "name": "astk_WN",
+      "master": "qkd_astk_n",
+      "x": 3165.264,
+      "y": 14145.84,
+      "w": 328.296,
+      "h": 8676.696,
+      "orient": "R0",
+      "kind": "attn_stack",
+      "region": "attn",
+      "domain": "stream_1p2"
+    },
+    {
+      "name": "astk_ES",
+      "master": "qkd_astk",
+      "x": 7347.888,
+      "y": 2002.32,
+      "w": 328.296,
+      "h": 8676.696,
+      "orient": "MY",
+      "kind": "attn_stack",
+      "region": "attn",
+      "domain": "stream_1p2"
+    },
+    {
+      "name": "astk_EN",
+      "master": "qkd_astk_n",
+      "x": 7347.888,
+      "y": 14145.84,
+      "w": 328.296,
+      "h": 8676.696,
+      "orient": "MY",
+      "kind": "attn_stack",
+      "region": "attn",
+      "domain": "stream_1p2"
+    }
+  ],
+  "children": [
+    {
+      "name": "astk_WS__ex_0_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 2544.21,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_0_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 2721.51,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ep_0",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 2898.81,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 0
+      }
+    },
+    {
+      "name": "astk_WS__ex_0_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 3272.67,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_0_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 3449.97,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_1_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 2544.21,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_1_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 2721.51,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ep_1",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 2898.81,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 1
+      }
+    },
+    {
+      "name": "astk_WS__ex_1_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 3272.67,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_1_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 3449.97,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_2_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 4654.53,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_2_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 4831.83,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ep_2",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 5009.13,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 2
+      }
+    },
+    {
+      "name": "astk_WS__ex_2_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 5382.99,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_2_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 5560.29,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_3_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 4654.53,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_3_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 4831.83,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ep_3",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 5009.13,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 3
+      }
+    },
+    {
+      "name": "astk_WS__ex_3_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 5382.99,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_3_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 5560.29,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_4_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 6764.85,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_4_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 6942.15,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ep_4",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 7119.45,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 4
+      }
+    },
+    {
+      "name": "astk_WS__ex_4_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 7493.31,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_4_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 7670.61,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_5_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 6764.85,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_5_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 6942.15,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ep_5",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 7119.45,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 5
+      }
+    },
+    {
+      "name": "astk_WS__ex_5_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 7493.31,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_5_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 7670.61,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_6_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 8875.17,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_6_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 9052.47,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ep_6",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 9229.77,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 6
+      }
+    },
+    {
+      "name": "astk_WS__ex_6_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 9603.63,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_6_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 9780.93,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_7_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 8875.17,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_7_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 9052.47,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ep_7",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 9229.77,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 7
+      }
+    },
+    {
+      "name": "astk_WS__ex_7_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 9603.63,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__ex_7_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 9780.93,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WS__zn_0",
+      "master": "qkd_astk_zn",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 10443.6,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "R0",
+      "straps": {
+        "zc": 0
+      }
+    },
+    {
+      "name": "astk_WS__zn_1",
+      "master": "qkd_astk_zn",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 10443.6,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "R0",
+      "straps": {
+        "zc": 4
+      }
+    },
+    {
+      "name": "astk_WS__zn_2",
+      "master": "qkd_astk_zn",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 10530.0,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "R0",
+      "straps": {
+        "zc": 8
+      }
+    },
+    {
+      "name": "astk_WS__zn_3",
+      "master": "qkd_astk_zn",
+      "parent": "astk_WS",
+      "x": 3327.264,
+      "y": 10530.0,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "R0",
+      "straps": {
+        "zc": 12
+      }
+    },
+    {
+      "name": "astk_WS__ctl",
+      "master": "qkd_astk_ctl_tp8",
+      "parent": "astk_WS",
+      "x": 3165.264,
+      "y": 10616.4,
+      "w": 324.0,
+      "h": 43.2,
+      "orient": "R0",
+      "straps": {
+        "st": 0
+      }
+    },
+    {
+      "name": "astk_WN__ex_0_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 14687.73,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_0_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 14865.03,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ep_0",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 15042.33,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 8
+      }
+    },
+    {
+      "name": "astk_WN__ex_0_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 15416.19,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_0_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 15593.49,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_1_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 14687.73,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_1_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 14865.03,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ep_1",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 15042.33,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 9
+      }
+    },
+    {
+      "name": "astk_WN__ex_1_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 15416.19,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_1_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 15593.49,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_2_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 16798.05,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_2_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 16975.35,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ep_2",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 17152.65,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 10
+      }
+    },
+    {
+      "name": "astk_WN__ex_2_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 17526.51,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_2_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 17703.81,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_3_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 16798.05,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_3_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 16975.35,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ep_3",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 17152.65,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 11
+      }
+    },
+    {
+      "name": "astk_WN__ex_3_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 17526.51,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_3_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 17703.81,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_4_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 18908.37,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_4_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 19085.67,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ep_4",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 19262.97,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 12
+      }
+    },
+    {
+      "name": "astk_WN__ex_4_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 19636.83,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_4_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 19814.13,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_5_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 18908.37,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_5_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 19085.67,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ep_5",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 19262.97,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 13
+      }
+    },
+    {
+      "name": "astk_WN__ex_5_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 19636.83,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_5_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 19814.13,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_6_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 21018.69,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_6_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 21195.99,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ep_6",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 21373.29,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 14
+      }
+    },
+    {
+      "name": "astk_WN__ex_6_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 21747.15,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_6_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 21924.45,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_7_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 21018.69,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_7_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 21195.99,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ep_7",
+      "master": "qkd_astk_ep",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 21373.29,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "R0",
+      "straps": {
+        "sq": 15
+      }
+    },
+    {
+      "name": "astk_WN__ex_7_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 21747.15,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__ex_7_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 21924.45,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "R0",
+      "straps": {}
+    },
+    {
+      "name": "astk_WN__zn_0",
+      "master": "qkd_astk_zn",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 22587.12,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "R0",
+      "straps": {
+        "zc": 1
+      }
+    },
+    {
+      "name": "astk_WN__zn_1",
+      "master": "qkd_astk_zn",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 22587.12,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "R0",
+      "straps": {
+        "zc": 5
+      }
+    },
+    {
+      "name": "astk_WN__zn_2",
+      "master": "qkd_astk_zn",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 22673.52,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "R0",
+      "straps": {
+        "zc": 9
+      }
+    },
+    {
+      "name": "astk_WN__zn_3",
+      "master": "qkd_astk_zn",
+      "parent": "astk_WN",
+      "x": 3327.264,
+      "y": 22673.52,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "R0",
+      "straps": {
+        "zc": 13
+      }
+    },
+    {
+      "name": "astk_WN__ctl",
+      "master": "qkd_astk_ctl_tp8",
+      "parent": "astk_WN",
+      "x": 3165.264,
+      "y": 22759.92,
+      "w": 324.0,
+      "h": 43.2,
+      "orient": "R0",
+      "straps": {
+        "st": 1
+      }
+    },
+    {
+      "name": "astk_ES__ex_0_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 2544.21,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_0_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 2721.51,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ep_0",
+      "master": "qkd_astk_ep",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 2898.81,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 16
+      }
+    },
+    {
+      "name": "astk_ES__ex_0_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 3272.67,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_0_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 3449.97,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_1_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 2544.21,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_1_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 2721.51,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ep_1",
+      "master": "qkd_astk_ep",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 2898.81,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 17
+      }
+    },
+    {
+      "name": "astk_ES__ex_1_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 3272.67,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_1_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 3449.97,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_2_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 4654.53,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_2_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 4831.83,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ep_2",
+      "master": "qkd_astk_ep",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 5009.13,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 18
+      }
+    },
+    {
+      "name": "astk_ES__ex_2_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 5382.99,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_2_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 5560.29,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_3_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 4654.53,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_3_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 4831.83,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ep_3",
+      "master": "qkd_astk_ep",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 5009.13,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 19
+      }
+    },
+    {
+      "name": "astk_ES__ex_3_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 5382.99,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_3_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 5560.29,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_4_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 6764.85,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_4_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 6942.15,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ep_4",
+      "master": "qkd_astk_ep",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 7119.45,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 20
+      }
+    },
+    {
+      "name": "astk_ES__ex_4_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 7493.31,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_4_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 7670.61,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_5_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 6764.85,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_5_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 6942.15,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ep_5",
+      "master": "qkd_astk_ep",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 7119.45,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 21
+      }
+    },
+    {
+      "name": "astk_ES__ex_5_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 7493.31,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_5_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 7670.61,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_6_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 8875.17,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_6_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 9052.47,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ep_6",
+      "master": "qkd_astk_ep",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 9229.77,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 22
+      }
+    },
+    {
+      "name": "astk_ES__ex_6_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 9603.63,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_6_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7514.184,
+      "y": 9780.93,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_7_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 8875.17,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_7_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 9052.47,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ep_7",
+      "master": "qkd_astk_ep",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 9229.77,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 23
+      }
+    },
+    {
+      "name": "astk_ES__ex_7_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 9603.63,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__ex_7_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 9780.93,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_ES__zn_0",
+      "master": "qkd_astk_zn",
+      "parent": "astk_ES",
+      "x": 7589.784,
+      "y": 10443.6,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "MY",
+      "straps": {
+        "zc": 2
+      }
+    },
+    {
+      "name": "astk_ES__zn_1",
+      "master": "qkd_astk_zn",
+      "parent": "astk_ES",
+      "x": 7427.784,
+      "y": 10443.6,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "MY",
+      "straps": {
+        "zc": 6
+      }
+    },
+    {
+      "name": "astk_ES__zn_2",
+      "master": "qkd_astk_zn",
+      "parent": "astk_ES",
+      "x": 7589.784,
+      "y": 10530.0,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "MY",
+      "straps": {
+        "zc": 10
+      }
+    },
+    {
+      "name": "astk_ES__zn_3",
+      "master": "qkd_astk_zn",
+      "parent": "astk_ES",
+      "x": 7427.784,
+      "y": 10530.0,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "MY",
+      "straps": {
+        "zc": 14
+      }
+    },
+    {
+      "name": "astk_ES__ctl",
+      "master": "qkd_astk_ctl_tp8",
+      "parent": "astk_ES",
+      "x": 7352.184,
+      "y": 10616.4,
+      "w": 324.0,
+      "h": 43.2,
+      "orient": "MY",
+      "straps": {
+        "st": 2
+      }
+    },
+    {
+      "name": "astk_EN__ex_0_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 14687.73,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_0_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 14865.03,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ep_0",
+      "master": "qkd_astk_ep",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 15042.33,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 24
+      }
+    },
+    {
+      "name": "astk_EN__ex_0_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 15416.19,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_0_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 15593.49,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_1_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 14687.73,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_1_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 14865.03,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ep_1",
+      "master": "qkd_astk_ep",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 15042.33,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 25
+      }
+    },
+    {
+      "name": "astk_EN__ex_1_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 15416.19,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_1_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 15593.49,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_2_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 16798.05,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_2_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 16975.35,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ep_2",
+      "master": "qkd_astk_ep",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 17152.65,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 26
+      }
+    },
+    {
+      "name": "astk_EN__ex_2_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 17526.51,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_2_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 17703.81,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_3_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 16798.05,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_3_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 16975.35,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ep_3",
+      "master": "qkd_astk_ep",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 17152.65,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 27
+      }
+    },
+    {
+      "name": "astk_EN__ex_3_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 17526.51,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_3_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 17703.81,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_4_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 18908.37,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_4_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 19085.67,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ep_4",
+      "master": "qkd_astk_ep",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 19262.97,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 28
+      }
+    },
+    {
+      "name": "astk_EN__ex_4_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 19636.83,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_4_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 19814.13,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_5_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 18908.37,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_5_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 19085.67,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ep_5",
+      "master": "qkd_astk_ep",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 19262.97,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 29
+      }
+    },
+    {
+      "name": "astk_EN__ex_5_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 19636.83,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_5_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 19814.13,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_6_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 21018.69,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_6_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 21195.99,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ep_6",
+      "master": "qkd_astk_ep",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 21373.29,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 30
+      }
+    },
+    {
+      "name": "astk_EN__ex_6_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 21747.15,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_6_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7514.184,
+      "y": 21924.45,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_7_0",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 21018.69,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_7_1",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 21195.99,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ep_7",
+      "master": "qkd_astk_ep",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 21373.29,
+      "w": 162.0,
+      "h": 345.6,
+      "orient": "MY",
+      "straps": {
+        "sq": 31
+      }
+    },
+    {
+      "name": "astk_EN__ex_7_2",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 21747.15,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__ex_7_3",
+      "master": "qkd_astk_ex",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 21924.45,
+      "w": 162.0,
+      "h": 149.04,
+      "orient": "MY",
+      "straps": {}
+    },
+    {
+      "name": "astk_EN__zn_0",
+      "master": "qkd_astk_zn",
+      "parent": "astk_EN",
+      "x": 7589.784,
+      "y": 22587.12,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "MY",
+      "straps": {
+        "zc": 3
+      }
+    },
+    {
+      "name": "astk_EN__zn_1",
+      "master": "qkd_astk_zn",
+      "parent": "astk_EN",
+      "x": 7427.784,
+      "y": 22587.12,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "MY",
+      "straps": {
+        "zc": 7
+      }
+    },
+    {
+      "name": "astk_EN__zn_2",
+      "master": "qkd_astk_zn",
+      "parent": "astk_EN",
+      "x": 7589.784,
+      "y": 22673.52,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "MY",
+      "straps": {
+        "zc": 11
+      }
+    },
+    {
+      "name": "astk_EN__zn_3",
+      "master": "qkd_astk_zn",
+      "parent": "astk_EN",
+      "x": 7427.784,
+      "y": 22673.52,
+      "w": 86.4,
+      "h": 86.4,
+      "orient": "MY",
+      "straps": {
+        "zc": 15
+      }
+    },
+    {
+      "name": "astk_EN__ctl",
+      "master": "qkd_astk_ctl_tp8",
+      "parent": "astk_EN",
+      "x": 7352.184,
+      "y": 22759.92,
+      "w": 324.0,
+      "h": 43.2,
+      "orient": "MY",
+      "straps": {
+        "st": 3
+      }
+    }
+  ],
+  "open": [
+    "Selected source/profile/view join and measured pin/phi-R timing",
+    "New PV and result-collector homes",
+    "Actual ck_r relay physical home"
+  ],
+  "inputs": {
+    "generator": {
+      "path": "tools/qwen_kv_die/kv_die.py",
+      "sha256": "1ec91bf84a7e7057d5fe64c59d08699f315a1ec5b10425f027a45ec951ca77b6"
+    },
+    "homes": {
+      "path": "results/arch/qwen_split_1014/kvsys_v1_3_candidate/astk_selected_nonpv_homes.json",
+      "sha256": "f97157ad0e16287afbd0d93d973897bd0534e1ee3715d875f55a1165096dfc1f"
+    }
+  },
+  "plan_arguments": [
+    "--split",
+    "--kv-wq-mirror",
+    "--reserve-static-memory",
+    "--reserve-native-astk"
+  ],
+  "die_um": [
+    10841.472,
+    24587.28
+  ],
+  "die_mm2": 266.562,
+  "whole_parent_legality": {
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": []
+  },
+  "parent_pin_reach": {
+    "hops": 2302,
+    "reach_um": 500.0,
+    "violations": 0,
+    "worst": []
+  },
+  "parent_stack_local_reach": {
+    "hops": 834,
+    "reach_um": 500.0,
+    "violations": 0,
+    "max_um": 498.5,
+    "worst": []
+  },
+  "old_envelope_negative_control": {
+    "outside_children": 20,
+    "overlaps": 29,
+    "max_child_extent_y_um": 8657.28,
+    "parent_height_um": 8439.096
+  },
+  "reservation_extension_um": 237.6
+}

@@ -16307,3 +16307,36 @@ def s81_native_functional_homes_1014_model():
             embedding='physical/s81_die_pins/v20_embedding/home.json: actual2SRAM expander, upstream full table and S000 source role OPEN',
             probability='physical/s81_die_pins/v20_svc_native/ingress_layout.json: actual 1030 closed-pin joins max25.464um; native full parent OPEN',
             capture='physical/s81_die_pins/v20_hc_capture/cpl_geometry.json: 9080 actual CPL joins <=499.782um, first-stage M5 preserved, local capture M3; actual leaf routes pending'))
+
+
+def hbm_vm_static_ring_model():
+    """Compiler slot VM ring successor; pre-RTL structural budget, not a rate claim."""
+    return dict(schema='opentallas.hbm-vm-static-ring.v1', replicas=8,
+                macs_per_cycle=0, link_bits_per_cycle=2224,
+                request_bits_per_cycle=290, response_bits_per_cycle=266,
+                mirror_bits_per_cycle=8*276, memory_bytes_per_cycle=8*32,
+                mux='five explicit compiler sources, one 2224-bit registered output; no scan/arbitration',
+                storage='one pin rung and one output rung; four fixed commit-observation rungs',
+                area='ASSUMED register area; no closed view inherited',
+                route='2224 data tracks each direction, zero credit-return tracks; die reach/cut proof pending',
+                slot_fit='new source successor needs native physical closure; historical closed stop remains untouched',
+                latency_edges=dict(pin_to_output=1,bank_commit_after_xq_sample=3),
+                compiler_requirement='reserve every transit/injection output, packet replay, bank write and ack output cycle',
+                throughput='one flit per direction per edge; mirror local injection carries up to eight sectors',
+                qualification='UNQUALIFIED until real ring4/macro integration, mutants, physical closure and production price')
+
+
+def hbm_vm_static_bank_model():
+    """Return the pre-RTL inventory for the actual static B2 bank successor."""
+    return json.loads((ROOT / 'rtl/hbm_accel/generic/vm/static/bank_static_model.json').read_text())
+
+
+def s81_static_vm_face_model(entries=8):
+    """Static capture/WFC/outbound sizing; physical slots remain unqualified."""
+    from s81_vm.static_face_model import model
+    return model(entries)
+
+
+def s81_static_channels_1014_model():
+    from uarch_model_s81_static_channels import s81_static_channels_1014_model as model
+    return model()

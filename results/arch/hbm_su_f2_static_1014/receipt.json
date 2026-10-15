@@ -1,0 +1,66 @@
+{
+  "status": "component simulation and actual32bank native data path proof; SU arithmetic/static record dispatch/reduction and physical closure remain unmeasured",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_f2_static_link.sv": "5c0de9c829d84f8f03ff3b1038c225ca4977b197d38d8add097ac89c9730ce0e",
+    "rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_f2_static_link.sv": "dac24002bc7240cd179793fa18aa1c5422f86f52ec760572cc682343ed0dc1c7"
+  },
+  "runs": [
+    {
+      "name": "exact",
+      "rc": 0,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_su_f2_static_link",
+        "-o",
+        "/tmp/hbm_su_static_exact",
+        "/home/ubuntu/wt/hbm-group-b6-1014/rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_f2_static_link.sv",
+        "/home/ubuntu/wt/hbm-group-b6-1014/rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_f2_static_link.sv"
+      ],
+      "log": "exact.log"
+    },
+    {
+      "name": "route_mutant",
+      "rc": 1,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_su_f2_static_link",
+        "-Ptb_hbm_su_f2_static_link.MUT_ROUTE=1",
+        "-o",
+        "/tmp/hbm_su_static_route_mutant",
+        "/home/ubuntu/wt/hbm-group-b6-1014/rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_f2_static_link.sv",
+        "/home/ubuntu/wt/hbm-group-b6-1014/rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_f2_static_link.sv"
+      ],
+      "log": "route_mutant.log"
+    },
+    {
+      "name": "reuse_mutant",
+      "rc": 1,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_su_f2_static_link",
+        "-Ptb_hbm_su_f2_static_link.MUT_REUSE=1",
+        "-o",
+        "/tmp/hbm_su_static_reuse_mutant",
+        "/home/ubuntu/wt/hbm-group-b6-1014/rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_f2_static_link.sv",
+        "/home/ubuntu/wt/hbm-group-b6-1014/rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_f2_static_link.sv"
+      ],
+      "log": "reuse_mutant.log"
+    }
+  ],
+  "lint": {
+    "command": [
+      "verilator",
+      "--lint-only",
+      "--top-module",
+      "ot_hbm_su_f2_static_link",
+      "/home/ubuntu/wt/hbm-group-b6-1014/rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_f2_static_link.sv"
+    ],
+    "rc": 0
+  }
+}
