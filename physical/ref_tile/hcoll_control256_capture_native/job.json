@@ -1,5 +1,5 @@
 {
- "name": "hcoll_control256_capture_native-native1-COMMIT",
+ "name": "hcoll_control256_capture_native-native1-459078da2",
  "block": "ot_hgi_coll_control256_capture",
  "ref_tile": true,
  "owner": "Codex:h_collective_physical",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/hcoll-physical-1015",
-  "commit": "COMMIT",
+  "commit": "459078da2a21f56db769ffdf4617d6e29f1910b4",
   "extra_paths": [
    "tools/hbm_coll_static",
    "rtl/hbm_accel/generic/collective/p2p"
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/hcoll_physical_1015/capture/hcoll_control256_capture_native-native1-COMMIT"
+   "to": "results/arch/hcoll_physical_1015/capture/hcoll_control256_capture_native-native1-459078da2"
   }
  ],
  "cycles_added": 0,
