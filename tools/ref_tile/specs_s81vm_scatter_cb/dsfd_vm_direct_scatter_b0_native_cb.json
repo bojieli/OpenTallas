@@ -64,7 +64,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "STRUCTURAL native re-close of the direct-write scatter (S81 VM F6, 2026-10-15): bank-hit compare gates only o_v/o_we/fault (payload registered straight from pins, valid-qualified as the capture stage); composed io_budget 0.6/0.6 reaches route, post-CTS io_ref boundary and sign-off; outhold off. New valid-gating mutant. Same pins/outline/root, two stages, zero cycles.",
+ "structural_change": "STRUCTURAL native re-close of the direct-write scatter (S81 VM F6, 2026-10-15): bank-hit compare gates only o_v/o_we/fault (payload registered straight from pins, valid-qualified as the capture stage); composed io_budget 0.6/0.6 reaches route, post-CTS io_ref boundary and sign-off; outhold off. Per-record fault flops (FAULT_AGE 3, exceptional only). New valid-gating mutant. Same pins/outline/root, two data stages, zero data cycles.",
  "slot_change_request": {
   "contract": "S81 static VM direct q8 native option",
   "version": "30421c7c5/a60002977/eaca93a88",
@@ -170,6 +170,6 @@
   "launch_ps": 228.6,
   "capture_ps": 316.5,
   "source": "results/physical/s81_vm_static_ownership_1015/vm_native_pin_audit_1015.json (tools/hier_contract/native_pin_audit.audit_one)",
-  "fix": "native pin audit FAIL on the CLOSED view: capture 316.5 ps on 72 pins (i_row hash bits 64 + i_v 8: the bank-hit compare zero-gated ~155 output flops per record behind the pin; CTS gate with the composed 0.6T input budget alone still in->reg -142..-228 ps, so a constraint change cannot fix it) and launch 228.6 ps (unconditional FIRM outhold BUF-HB2-BUF). STRUCTURAL: the compare now gates only o_v/o_we/fault (fanout 3 per record); address/mask/data/tag are registered straight from the pins (as the upstream capture stage) and meaningful only with o_v; the relay->bank consumer writes only on valid (static512_suhc 128-SRAM gate: 3857 requests restored, bad 0, unchanged). Plus io_budget in/out 0.6T at route, post-CTS boundary and sign-off, outhold off. Same pins, outline, one root, two stages, zero cycles."
+  "fix": "native pin audit FAIL on the CLOSED view: capture 316.5 ps on 72 pins (i_row hash bits 64 + i_v 8: the bank-hit compare zero-gated ~155 output flops per record behind the pin; CTS gate with the composed 0.6T input budget alone still in->reg -142..-228 ps, so a constraint change cannot fix it) and launch 228.6 ps (unconditional FIRM outhold BUF-HB2-BUF). STRUCTURAL: the compare now gates only o_v/o_we/fault (fanout 3 per record); address/mask/data/tag are registered straight from the pins (as the upstream capture stage) and meaningful only with o_v; the relay->bank consumer writes only on valid (static512_suhc 128-SRAM gate: 3857 requests restored, bad 0, unchanged). Plus io_budget in/out 0.6T at route, post-CTS boundary and sign-off, outhold off. Fault (exceptional sticky indicator) is registered per record beside its pins and OR-ed flop-to-flop: FAULT_AGE 3 edges (one after o_v; suppression unchanged). Same pins, outline, one root, two data stages, zero data cycles."
  }
 }

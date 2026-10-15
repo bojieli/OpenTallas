@@ -42,6 +42,11 @@ module dsfd_vm_static_scatter_b8_out #(parameter integer BANK_BASE=0)(
    o_tag[8*k+:8]<=i_tag[8*k+:8];
   end
  end endgenerate
- always @(posedge ck or negedge rn)if(!rn)fault<=0;else fault<=fault|(|bad);
+ // Sticky compiler-defect fault, FAULT_AGE 3 edges (one after o_v): each record registers its own mismatch beside its
+ // pins, the 8-way OR is flop-to-flop.  The direct pin->compare->OR8 cone spanned the whole N face (gate in->reg
+ // -112..-169 ps at the native budget).  Exceptional indicator only: o_v/o_we suppression stays on the same edge.
+ reg [7:0] bad_q;
+ always @(posedge ck or negedge rn)if(!rn)bad_q<=0;else bad_q<=bad;
+ always @(posedge ck or negedge rn)if(!rn)fault<=0;else fault<=fault|(|bad_q);
  initial if(BANK_BASE<0 || BANK_BASE>24 || BANK_BASE%8)$error("bank-local scatter base must be0,8,16,24");
 endmodule
