@@ -1,0 +1,162 @@
+{
+ "name": "dsfd_vm_direct_scatter_b0_native_cb",
+ "top": "dsfd_vm_static_scatter_b8_out",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv"
+ ],
+ "clock": "cts",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 86.4,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "i_v",
+   "i_we",
+   "i_row",
+   "i_mask",
+   "i_data",
+   "i_tag"
+  ],
+  "S": [
+   "o_v",
+   "o_we",
+   "o_addr",
+   "o_mask",
+   "o_data",
+   "o_tag"
+  ],
+  "E": [],
+  "W": [
+   "ck",
+   "rst_n",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl",
+ "params": {
+  "BANK_BASE": 0
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "COMPOSED-BUDGET re-close of the direct-write scatter (S81 VM F6, 2026-10-15), as the relay native_cb: the closed view fails the native pin audit (capture 316.5 ps: i_row hash/i_v bank-hit compare + 155-flop gating behind the pin; launch 228.6 ps: FIRM outhold pad). io_budget {in 0.6, out 0.6} now reaches route SDC, post-CTS io_ref boundary and sign-off (OT_IO_IN/OUT_BUDGET_PS), outhold off. Same RTL, pins, outline, two existing stages, zero cycles.",
+ "slot_change_request": {
+  "contract": "S81 static VM direct q8 native option",
+  "version": "30421c7c5/a60002977/eaca93a88",
+  "why": "Actual assigned pins/registered endpoint geometry; representativeE/B0 only, production parent nativephase/cut/calendar stillopen"
+ },
+ "job": {
+  "owner": "Claude:S81 VM F6 scatter",
+  "branch": "claude/s81-vm-f6-scatter-1015",
+  "tag": "cb1",
+  "purpose": "Composed-budget native re-close of the direct-write scatter: native pin audit launch<=220/capture<=190 with exact/mutant benches; same RTL/pins/outline/2 stages",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "tools/s81_vm_direct_write",
+   "physical/s81_die_pins/v20_vm_direct_write",
+   "physical/s81_vm_direct_write_native_1015"
+  ],
+  "benches": [
+   {
+    "name": "exact_scatter_mode0",
+    "cmd": "bash tools/s81_vm_direct_write/bench.sh {RUN}/bench/scatter_m0 scatter base 0",
+    "expect": "pass",
+    "pass_regex": "TB_VM_DIRECT_SCATTER PASS mode 0 checks 1003",
+    "min_count_regex": "checks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "exact_scatter_mode1",
+    "cmd": "bash tools/s81_vm_direct_write/bench.sh {RUN}/bench/scatter_m1 scatter base 1",
+    "expect": "pass",
+    "pass_regex": "TB_VM_DIRECT_SCATTER PASS mode 1 checks 1003",
+    "min_count_regex": "checks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "exact_scatter_mode2",
+    "cmd": "bash tools/s81_vm_direct_write/bench.sh {RUN}/bench/scatter_m2 scatter base 2",
+    "expect": "pass",
+    "pass_regex": "TB_VM_DIRECT_SCATTER PASS mode 2 checks 1003",
+    "min_count_regex": "checks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant_actual_scatter",
+    "cmd": "bash tools/s81_vm_direct_write/bench.sh {RUN}/bench/scatter_mut scatter mutant 0",
+    "expect": "fail",
+    "fail_regex": "TB_VM_DIRECT_SCATTER FAIL mode 0 checks 1003 bad",
+    "min_count_regex": "checks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant_actual_scatter_addr",
+    "cmd": "bash tools/s81_vm_direct_write/bench.sh {RUN}/bench/scatter_addr scatter address 0",
+    "expect": "fail",
+    "fail_regex": "TB_VM_DIRECT_SCATTER FAIL mode 0 checks 1003 bad",
+    "min_count_regex": "checks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_budget": {
+  "in": 0.6,
+  "out": 0.6
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "cell": "dsfd_vm_static_scatter_b8_out",
+  "launch_ps": 228.6,
+  "capture_ps": 316.5,
+  "source": "results/physical/s81_vm_static_ownership_1015/vm_native_pin_audit_1015.json (tools/hier_contract/native_pin_audit.audit_one)",
+  "fix": "native pin audit FAIL on the CLOSED dsfd_vm_direct_scatter_b0_native view (R 146.6): capture 316.5 ps on 72 pins (i_row hash bits 64 + i_v 8: the bank-hit compare drives ~155 gated output flops per record behind the pin) and launch 228.6 ps on 37 outputs (unconditional FIRM outhold BUF-HB2-BUF pad). Route was constrained with the nominal 0.2T outside budget, which allows ~300 ps of internal input logic. Re-close with the composed native budget: io_budget in/out 0.6T at route, post-CTS boundary and sign-off (capture <= ~183, launch <= ~196 ps at sign-off), outhold removed (receiver input pads carry composed hold, route keeps the 50+25 ps sender min). Same RTL, pins, outline, one root, zero cycles."
+ }
+}
