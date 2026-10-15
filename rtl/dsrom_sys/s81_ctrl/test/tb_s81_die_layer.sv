@@ -28,7 +28,7 @@
 //                predecessors ended (dataflow, dropped on the take); every SU result row (su_expa / su_expd.mem) is
 //                checked bit-exact against the CPU golden at the end.  SU ops with no SU job kind run behavioural on
 //                port 11.  SUMUT / SUXMUT: the slab's MUT / XMUT negative controls (4 gain set ignored; 3 QR inverse).
-//   port 10 eng (Engram layers, e.g. L14: eng.hh / dot / gate / add): BEHAVIOURAL at program duration like the others
+//   port 10 eng: default behavioural; TB_MIX4_REAL binds dsfd_engram_mix4_c and consumes actual row writes.
 //                (no Engram RTL in this vehicle).  The HIDDEN payload is then the layer-ENTRY h; the op with wrow >= 0
 //                (eng.add) writes the XW golden post-Engram h rows (coef.mem) over the H rows at its end, and the HC
 //                H_LOAD's f_inp waits on that write (eng_h / eng_done) as well as on its eng.add predecessor.
@@ -47,7 +47,7 @@
 // +HOUT=<file> dumps this layer's hop_tx flits (needs HTX != 0).
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_s81_die_layer;
-    parameter integer MUT = 0, HMUT = 0, INP1 = 0, NG = 16, TMAX = 45000, EPER = 97, CHB = 60, CHU = 12, TSR = 7;
+    parameter integer MXMUT = 0, MUT = 0, HMUT = 0, INP1 = 0, NG = 16, TMAX = 45000, EPER = 97, CHB = 60, CHU = 12, TSR = 7;
     // HC slab structure (defaults = the flat engine).  The production slab is the hierarchical tuple of the HC gate
     // (tools/s81_suhc/hc_gate.py --hier 3): HIER 1, HALF 1, CSPLIT 1, TAIL_SPLIT 2, HEAD_ROWS 10, CNL_PIN 1, CHAIN_STEP 6
     // at NG 256; build it with +define+TB_HC_HIER (the probes below then read the slab's sequencer tile).
@@ -381,6 +381,34 @@ module tb_s81_die_layer;
     reg [511:0] vm [0:16383];
     reg vm_ok [0:16383];
     integer hcnt = 0, gcnt [0:1];
+`ifdef TB_MIX4_REAL
+    localparam MXR = 1;
+    wire [19:0] mx_rq_v; wire [279:0] mx_rq_row;
+    reg [19:0] mx_rs_v = 0; reg [10239:0] mx_rs_d = 0;
+    wire [3:0] mx_wq_v; wire [55:0] mx_wq_row;
+    wire [63:0] mx_wq_mask; wire [2047:0] mx_wq_d;
+    dsfd_engram_mix4_c #(.MUT(MXMUT)) u_mix4 (
+        .ck({133{ck}}), .rst(rst), .c_cmd(c[10]), .c_done(d[10]), .c_st(est[10]),
+        .f_inp(hcnt == XW), .rq_v(mx_rq_v), .rq_row(mx_rq_row),
+        .rs_v(mx_rs_v), .rs_d(mx_rs_d), .wq_v(mx_wq_v), .wq_row(mx_wq_row),
+        .wq_mask(mx_wq_mask), .wq_d(mx_wq_d));
+    integer mx_reads = 0, mx_writes = 0;
+    always @(posedge ck) begin
+        mx_rs_v <= mx_rq_v;
+        for (int ml=0; ml<20; ml++) if(mx_rq_v[ml]) begin
+            mx_rs_d[512*ml+:512] <= vm[mx_rq_row[14*ml+:14]]; mx_reads++;
+        end
+        for (int ml=0; ml<4; ml++) if(mx_wq_v[ml]) begin
+            for(int mw=0; mw<16; mw++) if(mx_wq_mask[16*ml+mw])
+                vm[mx_wq_row[14*ml+:14]][32*mw+:32] = mx_wq_d[512*ml+32*mw+:32];
+            mark(mx_wq_row[14*ml+:14]); mx_writes++;
+        end
+        if(u_mix4.jnew) stt[cj][u_mix4.jnd[6:0]] = cyc;
+        if(u_mix4.done) begin endt[cj][u_mix4.jd[6:0]] = cyc; eng_done = 1; end
+    end
+`else
+    localparam MXR = 0;
+`endif
     reg eng_h = 0, eng_done = 0;         // eng_h: the program has an Engram h write (a port-10 op with wrow >= 0)
     reg clr_req = 0;
     task automatic mark(input integer r);
@@ -409,11 +437,13 @@ module tb_s81_die_layer;
         if (vwe) begin vm[vwa] = vwd; mark(vwa); nwr = nwr + 1; end
         if (g_eng[9].g_b.jdone_r && o_wr[g_eng[9].g_b.dop_r] >= 0) begin
             vm[o_wr[g_eng[9].g_b.dop_r]] = coefm[o_wr[g_eng[9].g_b.dop_r]]; mark(o_wr[g_eng[9].g_b.dop_r]); end
+`ifndef TB_MIX4_REAL
         if (g_eng[10].g_b.jdone_r && o_wr[g_eng[10].g_b.dop_r] >= 0) begin
             for (i2 = 0; i2 < XW; i2 = i2 + 1) begin
                 vm[o_wr[g_eng[10].g_b.dop_r] + i2] = coefm[o_wr[g_eng[10].g_b.dop_r] + i2]; mark(o_wr[g_eng[10].g_b.dop_r] + i2); end
             eng_done = 1;
         end
+`endif
         for (s = 0; s < S_WR; s = s + 1) if (wq_v[s]) begin vm[wq_row[14 * s +: 14]] = wq_d[512 * s +: 512]; mark(wq_row[14 * s +: 14]); end
 `ifdef TB_SU_REAL
         // the SU's write slots, under each slot's 32-bit word mask (the QN / QB exponent rows are merged word by word),
@@ -526,7 +556,7 @@ module tb_s81_die_layer;
     // ---------------- behavioural engines behind real slab endpoints (ports 1, 4..11; 9 = hcx)
     genvar ge;
     generate for (ge = 1; ge < 12; ge = ge + 1) begin : g_eng
-        if (ge != 2 && ge != 3 && !(ge == 1 && SUR)) begin : g_b
+        if (ge != 2 && ge != 3 && !(ge == 1 && SUR) && !(ge == 10 && MXR)) begin : g_b
             wire jv, jnew, epf; wire [83:0] jd, jnd;
             reg jdone_r = 1'b0, busy = 1'b0; integer rem = 0; reg [6:0] dop_r = 0;
             ot_s81_slab_ep #(.QD(8), .JQ(2)) u_ep (.c_clk(ck), .c_rst_n(rst), .c_cmd(c[ge]), .c_done(d[ge]), .c_st(est[ge]),
@@ -886,6 +916,10 @@ module tb_s81_die_layer;
         if (hout_fd != 0) $fclose(hout_fd);
         $display("HIO hin=%0d hin_bad=%0d hout=%0d", hin_n, hin_bad, hout_fd != 0);
         if (hin_bad != 0) errors = errors + 1;
+`ifdef TB_MIX4_REAL
+        $display("MIX4_REAL reads=%0d writes=%0d golden_output_injection=0 native_layer=0", mx_reads, mx_writes);
+        if(mx_reads != JOBS*4161 || mx_writes != JOBS*640) begin errors++; $display("ERR MIX4 transaction count"); end
+`endif
         $display("SUMMARY jobs=%0d layer_cycles=%0d (header %0d -> H_STORE done %0d) stage_done_cycle=%0d jobs_done=%0d/%0d dones=%0d/%0d phases_released=%0d field_phases=%0d capture_writes=%0d mismatching_roots=%0d coll_words_die0=%0d coll_errors=%0d coll_incomplete=%0d y_exact=%0d/%0d y_bad=%0d y_consumed=%0d norm_rows_exact=%0d/%0d hstore_rows_exact=%0d/%0d ref_fault=%0d dut_fault=%0d ctrl_flt=%0d fvec=%h stuck=%0d ep_faults=%0d gather_stage_fault=%0d hc_fcode=%0d max_done_latency=%0d errors=%0d first_coll_send=%0d",
                  JOBS, t_hstore - t_layer0, t_layer0, t_hstore, cyc, jdn, JOBS, ndone, JOBS * nop, released, nfp, tot, bad, dn[0], coll_err, xm,
                  y_ok, NY * JOBS, y_bad, yrd, n_ok, NE - NST, st_ok, NST, ref_fault, dst[3], flt, fvec, stk, gst_f, u_g.sf, hfcode, maxlat, errors, first_send_cyc);
