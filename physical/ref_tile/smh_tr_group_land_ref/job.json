@@ -1,5 +1,5 @@
 {
- "name": "smh_tr_group_land_ref-land2-COMMIT",
+ "name": "smh_tr_group_land_ref-land2-eb26e8f6f",
  "block": "ot_smh_tr_group_land",
  "ref_tile": true,
  "owner": "Claude:H-ELEM-A",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/hbm-smcompact-1014",
-  "commit": "COMMIT"
+  "commit": "eb26e8f6ffbc3df4edb3872543ecd92769f5448c"
  },
  "stages": {
   "bench": [
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smh_tr_group_land_ref/smh_tr_group_land_ref-land2-COMMIT"
+   "to": "results/rtl/ref_tile/smh_tr_group_land_ref/smh_tr_group_land_ref-land2-eb26e8f6f"
   }
  ],
  "cycles_added": 0,
