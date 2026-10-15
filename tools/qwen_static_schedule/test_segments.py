@@ -21,6 +21,10 @@ class Segments(unittest.TestCase):
   with self.assertRaises(MissingPhysicalProfile)as err:pw_image(p,d,1,{})
   self.assertIn('VM_response_edges',err.exception.missing_fields)
   self.assertIn('receipt_sha256',err.exception.missing_fields)
+ def test_null_ages_are_structured_missing(self):
+  p,d=self.layer()
+  with self.assertRaises(MissingPhysicalProfile)as err:pw_image(p,d,1,dict(period_fs=None,physical_profile_status='MEASURED'))
+  self.assertIn('period_fs',err.exception.missing_fields)
  def test_label_is_not_a_measurement(self):
   p,_=self.layer()
   with self.assertRaises(MissingPhysicalProfile):physical_profile(dict(physical_profile_status='MEASURED'),p)

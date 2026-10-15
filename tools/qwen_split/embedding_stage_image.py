@@ -11,6 +11,7 @@ sys.path.insert(0,str(ROOT/'tools'))
 from qwen_static_schedule.issue_rom import pw_image
 from qwen_static_schedule.collective import pw_image as coll
 from qwen_static_schedule.segments import program_segments,requires_constant_rom
+import hdc_qwen_fullshape_isa_w12 as ISA
 
 def write(out):
  out=Path(out);out.mkdir(parents=True,exist_ok=False)
@@ -34,5 +35,19 @@ def write(out):
   source_program=str(source.relative_to(ROOT)),source_program_sha256=hashlib.sha256(raw).hexdigest(),
   actual_instruction_count=2,actual_descriptors=segments,requires_constant_rom=False,
   fixed_test_slots=dict(core_start=core_start,ME_END=me_stop,SU_END=su_stop,core_end=outer_end,stage_stop=stop),
+  operation_binding=[dict(pc=0,encoded_sha256=hashlib.sha256(words[0].to_bytes(128,'little')).hexdigest(),
+    rtl_instance='u_control_vm.u_seq.u_seq.u_ctrl',rtl_source='rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv',
+    command_port='po_su_go',receiver='u_math.si[481:0]',
+    raw_operand_provider='u_embedding.embed_code_q[511:0]/embed_scale_q[15:0]',decoded_operand='u_math.external_a_q[2047:0]',
+    result='u_math.va[2366:0] -> u_control_vm.u_vm.sa',
+    actual_elements=ISA.decode_instruction(words[0])['su_nin'],vector_bits_per_edge=2048,vector_write_slots=64,
+    scalar_reduction_port='u_math.va[2366:2310]',scalar_reduction_address=ISA.decode_instruction(words[0])['r_base'],
+    scalar_reduction_count=1,source_vector_address=ISA.decode_instruction(words[0])['d_base'],
+    scalar_address_end=ISA.decode_instruction(words[0])['d_base']+4095,
+    VM_address_overflow=False,raw_token_address_wrap='intentional AW24 element offset; controller recovers full token18 in token*64 code address'),
+    dict(pc=1,command_port='fixed_end',result='u_me_control.m_fin_o -> xm[50] and actual SU core_done -> fixed outer integrity check')],
+  source_sha256={name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest()for name in[
+    'rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv','rtl/qwen_split/qfd_sp_su64_sfu.sv',
+    'rtl/qwen_split/qfd_su_vm_pack.sv','rtl/qwen_split/qfd_embedding_stage_static.sv']},
   scope='Actual source program into real control/SU/embedding/VM; no measured physical route or full token claim'),indent=2)+'\n')
 if __name__=='__main__':write(sys.argv[1])

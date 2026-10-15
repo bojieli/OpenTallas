@@ -15,7 +15,7 @@ class MissingPhysicalProfile(ScheduleError):
 def physical_profile(profile, program_bytes):
     required=('period_fs','phase_fs','VM_response_edges','stop_cycle','segments',
               'source_sha256','receipt_path','receipt_sha256')
-    missing=[field for field in required if field not in profile]
+    missing=[field for field in required if profile.get(field)is None]
     if profile.get('physical_profile_status')!='MEASURED':missing.append('physical_profile_status=MEASURED')
     if missing:raise MissingPhysicalProfile(missing)
     pins(ROOT,profile['source_sha256'])
@@ -28,6 +28,15 @@ def physical_profile(profile, program_bytes):
     missing=[key for key in ('clock_tree','reset_release','seq_relay','VM_path','collective_command_route','collective_payload_route','core_completion_path')
              if receipt.get('qualified_paths',{}).get(key,{}).get('status')!='QUALIFIED']
     if missing:raise MissingPhysicalProfile(['receipt.qualified_paths.'+key for key in missing])
+    for name,path in receipt['qualified_paths'].items():
+        if name not in ('clock_tree','reset_release','seq_relay','VM_path','collective_command_route','collective_payload_route','core_completion_path'):continue
+        absent=[key for key in ('age_fs','evidence_path','evidence_sha256')if path.get(key)is None]
+        if absent:raise MissingPhysicalProfile(['receipt.qualified_paths.'+name+'.'+key for key in absent])
+        if not isinstance(path['age_fs'],int)or isinstance(path['age_fs'],bool)or path['age_fs']<0:
+            raise ScheduleError('invalid measured physical path age: '+name)
+        evidence=(ROOT/path['evidence_path']).resolve()
+        if not evidence.is_file()or sha(evidence)!=path['evidence_sha256']:
+            raise ScheduleError('measured physical evidence missing or changed: '+name)
     if receipt.get('status')!='QUALIFIED'or receipt.get('program_sha256')!=hashlib.sha256(program_bytes).hexdigest():
         raise ScheduleError('physical receipt not qualified for actual program bytes')
     for key in ('period_fs','phase_fs','VM_response_edges','stop_cycle','segments','source_sha256'):
