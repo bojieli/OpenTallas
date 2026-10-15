@@ -1,0 +1,158 @@
+{
+ "name": "qfd_slab_port_leaf",
+ "top": "qfd_slab_port_leaf",
+ "kind": "cluster",
+ "clock": "hybrid_entries",
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_mul[0]",
+  "ck_mul[1]",
+  "ck_mul[2]",
+  "ck_mul[3]"
+ ],
+ "clock_cts_roots": [
+  "ck"
+ ],
+ "required_hybrid_roots": {
+  "standard_cell_cts": [
+   "ck"
+  ],
+  "hard_child_entry": {
+   "ck_mul[0]": "u_port.g_hard_mul.g_mul[0].u_ln/clk",
+   "ck_mul[1]": "u_port.g_hard_mul.g_mul[1].u_ln/clk",
+   "ck_mul[2]": "u_port.g_hard_mul.g_mul[2].u_ln/clk",
+   "ck_mul[3]": "u_port.g_hard_mul.g_mul[3].u_ln/clk"
+  }
+ },
+ "outline": {
+  "w": 241.92,
+  "h": 276.48
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
+   "count": 1,
+   "inst": "u_port.g_hard_mul.g_mul[0].u_ln",
+   "at": [
+    32.4,
+    81.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
+   "count": 1,
+   "inst": "u_port.g_hard_mul.g_mul[1].u_ln",
+   "at": [
+    138.24,
+    81.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
+   "count": 1,
+   "inst": "u_port.g_hard_mul.g_mul[2].u_ln",
+   "at": [
+    32.4,
+    182.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
+   "count": 1,
+   "inst": "u_port.g_hard_mul.g_mul[3].u_ln",
+   "at": [
+    138.24,
+    182.52
+   ],
+   "orient": "R0"
+  }
+ ],
+ "sources": [
+  "rtl/qwen_split/qfd_slab_port_leaf.sv",
+  "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "rtl/physical/ot_qwen_slab_port_group.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v"
+ ],
+ "params": {},
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M7",
+ "recipe": 2,
+ "pins": {
+  "W": [
+   "colq",
+   "lv_in"
+  ],
+  "E": [
+   "o_we",
+   "o_addr",
+   "o_mask",
+   "o_data",
+   "o_ov",
+   "am",
+   "fault",
+   "a_v_e2",
+   "a_f_e2",
+   "pt_id"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "ck_mul"
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.005,
+  "macro_halo_um": 5.4
+ },
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/common_flow/macro_channel_block.tcl",
+  "POST_RESIZE_TCL": "physical/common_flow/post_resize_relocate.tcl",
+  "OT_CHANNEL_BLOCK_UM": "20",
+  "OT_ROW_MIN_UM": "6"
+ },
+ "structural_change": "q15 port-tiles: new leaf. Each TP8 slab result port (group scale merge + ot_qwen_me_spport_w12 HARD_MUL, 10,455 sinks on ck_group<g>) was inline in qfd_slab_result_half inside the 2.46 mm port_tiles parent; now its own hardened cluster on its die clock entry with the four CLOSED slab_pg_lanes children on ck_mul entries (structure-only, hierarchy-equivalence bench fc0e16f69).",
+ "job": {
+  "owner": "Claude:q15_compute_elem",
+  "branch": "claude/q15-port-tiles",
+  "tag": "pl1",
+  "purpose": "port_tiles result-port leaf (x4 per result half)",
+  "extra_paths": [
+   "physical/qwen_port_tiles_1015",
+   "physical/ref_tile/qfd_slab_pg_lanes"
+  ]
+ },
+ "macros": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "child_lattice_um": 0.216
+}

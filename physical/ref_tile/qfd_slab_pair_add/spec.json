@@ -1,0 +1,70 @@
+{
+ "name": "qfd_slab_pair_add",
+ "top": "qfd_slab_pair_add",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_slab_pair_add.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 151.2
+ },
+ "pins": {
+  "W": [
+   "wa",
+   "wb"
+  ],
+  "E": [
+   "y",
+   "pv",
+   "pf"
+  ],
+  "S": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.005,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "q15 port-tiles: new leaf. The four level-6->7 FP32 pair adders of each slab word half (ck_pair0-3, 9,778 sinks each) were inline in qfd_slab_word_half and shared the 2.46 mm port_tiles parent; each is now its own hardened tile on its own die clock entry (structure-only, hierarchy-equivalence bench fc0e16f69).",
+ "job": {
+  "owner": "Claude:q15_compute_elem",
+  "branch": "claude/q15-port-tiles",
+  "tag": "pa1",
+  "purpose": "port_tiles pair-adder leaf (x4 per word half, 24 per die band set)",
+  "extra_paths": [
+   "physical/qwen_port_tiles_1015"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
