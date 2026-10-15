@@ -62,7 +62,7 @@ module tb_qkd_kv_native_programme;
     if(BAD==1&&i==2)cfg_addr=3;
     step();
    end
-   cfg_we=0;
+   cfg_we=0;step(); // flush the exceptional boot pin-capture edge
   end
  endtask
  task transaction(input integer layer_i,position_i,gen_i,epoch_i,token_i);
@@ -70,6 +70,12 @@ module tb_qkd_kv_native_programme;
    epoch=epoch_i;token=token_i;position=position_i;generation=gen_i;stage=layer_i+1;
    root_id={16'(epoch_i),6'(layer_i+1),18'(token_i),13'(position_i),6'd0};root_gen=gen_i;
    start=1;step();start=0;
+   // First edge captures the external request and its original roots.
+   // Change input roots before internal accept to prove pin ownership.
+   epoch=epoch+1;token=token+3;position=position+7;generation=generation+1;stage=(stage==36)?6'd1:stage+6'd1;
+   if(active)$fatal(1,"external start bypassed pin capture");
+   step();
+   if(!active||cycle!=0)$fatal(1,"internal start capture latency mismatch");
    // Check interval 0 and every subsequent compiler cycle. Actual source word
    // valid/data arise from the independently loaded timeline, even if MUT
    // shifts a programme slot or flips its index/identity.

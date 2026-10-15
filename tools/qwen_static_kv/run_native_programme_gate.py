@@ -24,10 +24,10 @@ def main():
     paths=[PRODUCER,WRITER,'rtl/qwen_split/qfd_kvn_static_transport.sv',
            'rtl/qwen_split/qfd_native59_compute_service.sv','rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv',
            'rtl/physical/ot_qkd_kv_static_writer_native.sv','rtl/lib/ot_rst_relay.sv']
-    profile=dict(period_fs=833334,phase_fs=137000,start_origin="SEGMENT0_CORE_START",
+    profile=dict(period_fs=833334,phase_fs=137000,start_origin="SEGMENT0_CORE_START",start_pin_capture_edges=1,
                  word_producer_age_fs=8*833334,word_stride_fs=833334,stop_cycle=16,
                  source_sha256={p:sha(ROOT/p) for p in paths},
-                 component_path_ages_fs=dict(formatter_to_writer=0,expectation_to_writer=100000,reset_release=4*833334))
+                 component_path_ages_fs=dict(formatter_to_writer=0,expectation_to_writer=100000,reset_release=4*833334,start_capture_to_root=100000))
     profiles=[]
     for stage in range(1,37):
         p=copy.deepcopy(profile);p['stage']=stage;p['word_producer_age_fs']+=(stage%3)*833334;p['stop_cycle']+=stage%3
@@ -57,10 +57,14 @@ def main():
     try:compile_programme(program,descriptors,plan,dict(stages=profiles[:-1]),component_test=True)
     except MissingPhysicalProfile as e:negative.append(dict(name='missing_stage36',refused=True,error=str(e)))
     else:raise AssertionError('partial stage table escaped')
+    p=copy.deepcopy(profile);p['start_pin_capture_edges']=0;refuse('missing_start_pin_capture',contract=p)
+    p=copy.deepcopy(profile);p['component_path_ages_fs']['start_capture_to_root']=833334;refuse('unimplemented_start_root_pipeline',contract=p)
     # An absolute outer core-start timestamp must never be added to relative
     # module cycles. Parent asserts start on that edge; emitted roots stay put.
     p=copy.deepcopy(profile);p['absolute_core_start_cycle']=1000000
-    assert compile_stage(program,descriptors,plan,p,1,component_test=True)['word_cycles']==[8,9,10,11]
+    absolute=compile_stage(program,descriptors,plan,p,1,component_test=True)
+    assert absolute['word_cycles']==[8,9,10,11]
+    assert absolute['absolute_external_start_cycle']==999999
     sources=[ROOT/'rtl/lib/ot_rst_relay.sv',ROOT/PRODUCER,ROOT/WRITER,
              ROOT/'rtl/physical/ot_qkd_kv_static_writer_native.sv',
              ROOT/'rtl/test/qwen_static_kv/tb_qkd_kv_native_programme.sv']
@@ -78,9 +82,18 @@ def main():
         if result.returncode or not result.stdout.startswith('PASS '):raise RuntimeError('component gate failed: '+name)
         runs.append(dict(name=name,exit=result.returncode,log=name+'.log'))
         binary.unlink()
-    report=dict(model_function='tools/uarch_model.py:qwen_native_kv_programme_candidate_model',schema='opentallas.qwen-native-kv-programme-component-gate.v1',status='PASS_COMPONENT_ONLY',
+    netlist=a.out/'pin_netlist.json'
+    yosys=['yosys','-Q','-T','-p',f'read_verilog -sv {ROOT/PRODUCER}; hierarchy -top qkd_kv_native_programme; proc; memory_map; opt_clean; write_json {netlist.resolve()}']
+    result=subprocess.run(yosys,capture_output=True,text=True)
+    (a.out/'pin_capture.yosys.log').write_text(result.stdout+result.stderr)
+    if result.returncode:raise RuntimeError('pin FF elaboration failed')
+    from qwen_static_kv.check_native_programme_pins import check
+    pin_report=check(netlist)
+    (a.out/'pin_faces.json').write_text(json.dumps(pin_report,indent=2)+'\n')
+    netlist.unlink()
+    report=dict(pin_audit='pin_faces.json',model_function='tools/uarch_model.py:qwen_native_kv_programme_candidate_model',schema='opentallas.qwen-native-kv-programme-component-gate.v1',status='PASS_COMPONENT_ONLY',
                 source_program_sha256=image['source_program_sha256'],
-                source_sha256={str(p.relative_to(ROOT)):sha(p) for p in sources+[Path(__file__),ROOT/'tools/qwen_static_kv/native_programme.py',ROOT/'tools/uarch_model.py']},
+                source_sha256={str(p.relative_to(ROOT)):sha(p) for p in sources+[Path(__file__),ROOT/'tools/qwen_static_kv/native_programme.py',ROOT/'tools/uarch_model.py',ROOT/'tools/qwen_static_kv/check_native_programme_pins.py']},
                 compiler_negative_controls=negative,rtl_runs=runs,
                 production_qualified=False,physical_qualified=False,full_token_qualified=False,
                 limitation='Writer candidate only. Component timeline ages are explicit test inputs; missing production physical receipts are refused. No controller/front/ring schedule, native formatter execution, routed timing or token-rate credit.')

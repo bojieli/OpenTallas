@@ -39,7 +39,7 @@ def qwen_native_kv_programme_candidate_model(replicas=1):
     """Writer-only fixed roots; no measured route or token-rate credit."""
     if type(replicas) is not int or replicas < 1:
         raise ValueError('actual positive writer replica count required')
-    state = dict(stage_table=5760, selected_cycle_roots=160, stage_and_loader=23, transaction_roots=61,
+    state = dict(pin_input_capture=129, registered_slot_outputs=4, stage_table=5760, selected_cycle_roots=160, stage_and_loader=23, transaction_roots=61,
                  run_flags=4, elapsed_cycle=32, expectation_pipeline=2,
                  expected_descriptor=116)
     return dict(schema='opentallas.qwen-native-kv-programme-candidate.v1',
@@ -55,10 +55,16 @@ def qwen_native_kv_programme_candidate_model(replicas=1):
         root_input_bits_per_start=55,
         maximum_word_slots_per_cycle=1, word_slots_per_cohort=4,
         high_half_sectors_per_slot=4, sectors_per_cohort=8,
+        start_pin_capture_edges=1, boot_pin_capture_edges=1,
+        slot_output_predecode_edges=1, slot_interval_shift_edges=0,
+        external_start_to_internal_origin_edges=1,
         added_writer_capture_edges=0, independent_descriptor_edges=2,
         mux_demux_cost='five 36to1 cycle32 selectors captured at start; four cycle32 equality terms; index4to1; group3to3 lookup; address wiring and layer6 increment',
-        routing_tracks_required=181, routing_channel_capacity=None,
+        functional_input_bits=129, functional_output_bits=217,
+        total_functional_boundary_bits=346, clock_reset_pins=2,
+        routing_tracks_required=346, routing_channel_capacity=None,
         area_um2=None, floorplan_slot_um=None,
+        proposed_slot_um=[86.4,194.4], proposed_period_ps=833.334,
         token_latency_credit_cycles=0, rate_credit=0,
         qualification='component candidate only; actual replica inventory, area/slot/channel, routed SS/FF clock and source-profiled whole-stage timing remain open')
 

@@ -19,7 +19,7 @@ from qwen_static_schedule.dense_image import native_capability
 ROOT = Path(__file__).resolve().parents[2]
 PRODUCER = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv'
 WRITER = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv'
-PATHS = ('formatter_to_writer', 'expectation_to_writer', 'reset_release')
+PATHS = ('formatter_to_writer', 'expectation_to_writer', 'reset_release', 'start_capture_to_root')
 FOOTER = 0x514b565052473336  # QKVPRG36
 
 
@@ -43,7 +43,7 @@ def source_contract(program, descriptors, plan, stage):
 
 def ages(profile, program, component_test):
     required = ('period_fs', 'phase_fs', 'start_origin', 'word_producer_age_fs',
-                'word_stride_fs', 'stop_cycle', 'source_sha256')
+                'word_stride_fs', 'stop_cycle', 'start_pin_capture_edges', 'source_sha256')
     missing = [k for k in required if profile.get(k) is None]
     if not component_test:
         missing += [k for k in ('receipt_path', 'receipt_sha256') if profile.get(k) is None]
@@ -102,6 +102,10 @@ def compile_stage(program, descriptors, plan, profile, stage, *, component_test=
     period = profile['period_fs']; phase = profile['phase_fs']
     if period <= 0 or not 0 <= phase < period or profile['word_producer_age_fs'] < 0 or profile['word_stride_fs'] <= 0:
         raise ScheduleError('invalid source writer clock/timeline')
+    if profile['start_pin_capture_edges'] != 1 or type(profile['start_pin_capture_edges']) is not int:
+        raise ScheduleError('implemented start pin capture is exactly one edge')
+    if path_ages['start_capture_to_root'] >= period:
+        raise MissingPhysicalProfile(['implemented_start_root_pipeline_for_age_ge_period'])
     if profile['start_origin'] != 'SEGMENT0_CORE_START':
         raise ScheduleError('module start must bind actual segment0 core start')
     # Source producer emits K low/high then V low/high. No payload/ready/credit
@@ -120,10 +124,18 @@ def compile_stage(program, descriptors, plan, profile, stage, *, component_test=
     stop = profile['stop_cycle']
     if not reset_edges <= cycles[0] or not cycles[-1]+2 < stop < 1<<32:
         raise ScheduleError('writer slots violate reset release, drain, or stop32')
+    absolute_core_start = profile.get('absolute_core_start_cycle') if component_test else profile['segment_profile']['segments'][0]['core_start_cycle']
+    if absolute_core_start is not None and (type(absolute_core_start) is not int or absolute_core_start < 1):
+        raise ScheduleError('absolute internal core start cannot precede the pin-capture edge')
     writes = [dict(address=n, data_hex=f'{cycle:016x}') for n,cycle in enumerate(cycles)]
     writes += [dict(address=4, data_hex=f'{stop:016x}')]
     return dict(schema='opentallas.qwen-native-kv-programme.v1',
                 status='COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE' if component_test else 'SOURCE_AND_PHYSICAL_PROFILE_BOUND_RECEIVER_WITNESS_REQUIRED',
+                start_pin_capture_edges=1,boot_pin_capture_edges=1,
+                external_start_before_internal_origin_edges=1,
+                absolute_internal_core_start_cycle=absolute_core_start,
+                absolute_external_start_cycle=None if absolute_core_start is None else absolute_core_start-1,
+                slot_output_predecode_edges=1,slot_interval_shift_edges=0,
                 qualified_stage_count=1, stage=stage, segment=0, native_pc=11, word_order=['K_low','K_high','V_low','V_high'],
                 source_kv_pcs=[3,8,10],
                 source_program_sha256=hashlib.sha256(program).hexdigest(), profile_sha256=hashlib.sha256(json.dumps(profile,sort_keys=True).encode()).hexdigest(),
@@ -149,8 +161,8 @@ def compile_programme(program, descriptors, plan, profile, *, component_test=Fal
     return dict(schema='opentallas.qwen-native-kv-programme-all36.v2',
         status='COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE' if component_test else 'SOURCE_AND_PHYSICAL_PROFILE_BOUND_RECEIVER_WITNESS_REQUIRED',
         qualified_stage_count=36,source_program_sha256=images[0]['source_program_sha256'],
-        start_origin='SEGMENT0_CORE_START',
-        cycle_origin='cycle0 interval immediately after accepted module start; start binds segment0 core-start, not stage-start. Absolute segment core_start_cycle is not added to relative word ages.',
+        start_origin='SEGMENT0_CORE_START',external_start_before_internal_origin_edges=1,boot_pin_capture_edges=1,slot_interval_shift_edges=0,
+        cycle_origin='cycle0 interval immediately after INTERNAL accepted start, one edge after external start capture; start binds segment0 core-start, not stage-start. Absolute segment core_start_cycle is not added to relative word ages.',
         stages=images,writes=writes,boot_writes=181,boot_bytes=1448,
         production_qualified=False,full_token_qualified=False,
         unsupported=['controller command/refresh/reservations','HBM front blk_go','ring return slots','full-token execution and performance'])
