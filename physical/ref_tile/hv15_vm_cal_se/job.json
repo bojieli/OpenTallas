@@ -1,5 +1,5 @@
 {
- "name": "hv15_vm_cal_se-hv15-COMMIT",
+ "name": "hv15_vm_cal_se-hv15-f9ffad88f",
  "block": "hfd_hgi_vm_calendar_SE",
  "ref_tile": true,
  "owner": "Claude:HBM-V15-HARDEN",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/hbm-v15-harden-1015",
-  "commit": "COMMIT",
+  "commit": "f9ffad88f",
   "extra_paths": [
    "tools/hbm_v15_harden",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
@@ -112,7 +112,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hv15_vm_cal_se/hv15_vm_cal_se-hv15-COMMIT"
+   "to": "results/rtl/ref_tile/hv15_vm_cal_se/hv15_vm_cal_se-hv15-f9ffad88f"
   }
  ],
  "cycles_added": 0,
