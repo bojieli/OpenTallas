@@ -1,0 +1,48 @@
+[
+  {
+    "cell": "ot_s81_hc_ctfn",
+    "view": "physical/ref_tile/s81hc_ctfn_native_ref/views/ot_s81_hc_ctfn",
+    "lib_cell": "ot_s81_hc_ctfn",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 473.7,
+    "spread_ps": 91.6,
+    "outputs": 2928,
+    "inputs": 2928,
+    "launch_ps": 247.3,
+    "launch_pin": "fdm[2109]",
+    "capture_ps": 285.4,
+    "capture_pin": "fv_in[2]",
+    "launch_over": 490,
+    "capture_over": 2372,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "launch 247.3 > 220 (490 pins); capture 285.4 > 190 (2372 pins)"
+  },
+  {
+    "cell": "ot_s81_hc_ctfl_nt",
+    "view": "physical/ref_tile/s81hc_ctflnt_ref/views/ot_s81_hc_ctfl_nt",
+    "lib_cell": "ot_s81_hc_ctfl_nt",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 264.5,
+    "spread_ps": 60.2,
+    "outputs": 1135,
+    "inputs": 1136,
+    "launch_ps": 288.0,
+    "launch_pin": "fdx_local[693]",
+    "capture_ps": 234.3,
+    "capture_pin": "rst_in",
+    "launch_over": 202,
+    "capture_over": 1,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "launch 288.0 > 220 (202 pins); capture 234.3 > 190 (1 pins)"
+  }
+]
