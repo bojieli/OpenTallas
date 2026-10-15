@@ -15,130 +15,10 @@
  ],
  "params": {},
  "clock_port": "ck",
- "clock_ports": [
-  "ck",
-  "ck_bank"
- ],
- "clock": "multiple_cts_roots",
  "reset_ports": [
   "por_n",
   "rst_n"
  ],
- "clock_data_paths": "related_same_frequency",
- "clock_relationship": {
-  "kind": "same_pll_fixed_phase",
-  "ratio": [
-   1,
-   1
-  ],
-  "phase_ps": 0
- },
- "clock_entry_domains": {
-  "core": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck"
-   ],
-   "inputs": [
-    "por_n",
-    "rst_n",
-    "cfg_tx_we",
-    "cfg_rx_we",
-    "cfg_addr",
-    "cfg_data",
-    "cal_start",
-    "cal_seg",
-    "host_link_reset_req",
-    "host_recovery_clear",
-    "host_boot_begin",
-    "att_tx_v",
-    "att_tx_payload",
-    "emb_tx_v",
-    "emb_tx_payload",
-    "record_tx_observed_v",
-    "record_tx",
-    "kvn_compiled_identity",
-    "kvn_compiled_generation",
-    "status_epoch16",
-    "serdes_up",
-    "kv_drained_local",
-    "kv_flush_local",
-    "host_drained_local",
-    "kv_active_local",
-    "fdi_tx_up",
-    "fdi_rx_v",
-    "fdi_rx_flit"
-   ],
-   "outputs": [
-    "fwd_epoch",
-    "fwd_link_rst_n",
-    "att_tx_slot",
-    "att_tx_kind",
-    "att_tx_beat",
-    "att_rx_v",
-    "att_rx_slot",
-    "att_rx_kind",
-    "att_rx_beat",
-    "rx_payload",
-    "emb_tx_slot",
-    "record_send_kind",
-    "record_witness_slot",
-    "record_rx_v",
-    "record_rx",
-    "kvn_word_valid",
-    "kvn_word_tag",
-    "kvn_word_data",
-    "kvn_word_identity",
-    "kvn_word_generation",
-    "kvn_word_slot",
-    "kvn_word_index",
-    "link_up",
-    "transport_fault",
-    "native_links_drained",
-    "native_link_reset_seen",
-    "native_retrained",
-    "abort_drained",
-    "native_kv_drained",
-    "native_vm_drained",
-    "native_collective_drained",
-    "native_host_drained",
-    "native_collective_busy",
-    "native_kv_flush",
-    "native_admit_ready",
-    "crom_fault",
-    "execution_active",
-    "engine_result_v",
-    "engine_result_done",
-    "engine_result_fault",
-    "engine_result_cause",
-    "engine_result_tag",
-    "engine_result_gen",
-    "engine_result_token",
-    "engine_result_value",
-    "engine_result_cycles",
-    "fdi_tx_v",
-    "fdi_tx_flit",
-    "phy_rst_n",
-    "epoch_abort",
-    "recovery_cycles",
-    "fault"
-   ]
-  },
-  "bank": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_bank"
-   ],
-   "inputs": [],
-   "outputs": []
-  }
- },
  "outline": {
   "w": 475.2,
   "h": 280.8
@@ -194,7 +74,6 @@
   ],
   "E": [
    "ck",
-   "ck_bank",
    "por_n",
    "rst_n",
    "cfg_tx_we",

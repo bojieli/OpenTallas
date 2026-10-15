@@ -80,8 +80,7 @@ endmodule
 // COMPUTE die end (die name qfd_d2d_static; replaces qfd_d2d_rom = credit romlink + LLR, historical)
 // ---------------------------------------------------------------------------------------------------------------------
 module qfd_d2d_static #(parameter integer MUT = 0) (
-    input  wire         ck,                              // core D2D clock (PLL D2D trunk, 1.2 GHz)
-    input  wire         ck_bank,                         // slot-store SRAM bank clock entry (same PLL trunk, own root)
+    input  wire         ck,                              // core D2D clock (PLL core trunk, 1.2 GHz; one CTS root incl. the slot-store SRAMs)
     input  wire         por_n, rst_n,
     input  wire         cfg_tx_we, cfg_rx_we, input wire [5:0] cfg_addr, input wire [31:0] cfg_data,
     input  wire         cal_start,                       // compiled run start (compute ROM sequencer)
@@ -127,7 +126,7 @@ module qfd_d2d_static #(parameter integer MUT = 0) (
         .link_reset_seen(), .retrained(), .transport_fault(transport_fault), .recovering(rec), .recovery_cycles());
     assign phy_rst_n = own_rst_n & fwd_link_rst_n;
     ot_qwen_d2d_static_end #(.NT(4), .NR(4), .TXD({8'd2, 8'd1, 8'd2, 8'd1}), .MUT(MUT)) u_end (
-        .ck({{4{ck_bank}}, ck}), .rst_n(rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .ck({5{ck}}), .rst_n(rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .epoch_begin(eb), .epoch(ep), .cal_start(cal_start), .cal_seg(cal_seg),
         .tx_slot(txs), .tx_kind(tk), .tx_beat(tb), .tx_valid(tv), .tx_payload(tp),
         .rx_event(rxe), .rx_slot(rxs), .rx_kind(rk), .rx_beat(rb), .rx_payload(rxp),
@@ -167,8 +166,7 @@ endmodule
 // KV/system die end (die name qkd_d2d_static; replaces qkd_d2d = ot_qkvd_kv_end + LLR, historical) + HOST services
 // ---------------------------------------------------------------------------------------------------------------------
 module qkd_d2d_static #(parameter integer MUT = 0, parameter integer NL = 2) (
-    input  wire         ck,                              // core D2D clock (PLL D2D trunk, 1.2 GHz)
-    input  wire         ck_bank,                         // slot-store SRAM bank clock entry (same PLL trunk, own root)
+    input  wire         ck,                              // core D2D clock (PLL core trunk, 1.2 GHz; one CTS root incl. the slot-store SRAMs)
     input  wire         por_n, rst_n,
     input  wire         cfg_tx_we, cfg_rx_we, input wire [5:0] cfg_addr, input wire [31:0] cfg_data,
     input  wire         cal_start,                       // compiled run start (KV sequencer)
@@ -221,7 +219,7 @@ module qkd_d2d_static #(parameter integer MUT = 0, parameter integer NL = 2) (
         .epoch_begin(eb), .epoch(ep), .link_up(lu), .links_drained(dr), .link_reset_seen(seen), .retrained(rt),
         .transport_fault(tf), .recovering(rec), .recovery_cycles(recovery_cycles));
     ot_qwen_d2d_static_end #(.NT(4), .NR(4), .TXD({8'd1, 8'd1, 8'd2, 8'd1}), .MUT(MUT)) u_end (
-        .ck({{4{ck_bank}}, ck}), .rst_n(rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .ck({5{ck}}), .rst_n(rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .epoch_begin(eb), .epoch(ep), .cal_start(cal_start), .cal_seg(cal_seg),
         .tx_slot(txs), .tx_kind(tk), .tx_beat(tb), .tx_valid(tv), .tx_payload(tp),
         .rx_event(rxe), .rx_slot(rxs), .rx_kind(rk), .rx_beat(rb), .rx_payload(rxp),

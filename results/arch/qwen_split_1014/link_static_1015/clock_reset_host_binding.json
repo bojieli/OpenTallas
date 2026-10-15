@@ -5,8 +5,7 @@
  "rule": "no stubs / ties: every net below lands on a real RTL port; PLL and PHY analog are the only behavioural models (qkd_pll_analog_model, ot_qkvd_ucie_x64_phy_model, SerDes analog)",
  "clocks": {
   "kv_die": {
-   "qkd_d2d_static.ck": "qkd_pll_analog_model core trunk (pll_c, 833.333 ps) through the die clock tree, delivered phi - R at the entry",
-   "qkd_d2d_static.ck_bank": "same core trunk, own entry (slot-store SRAM bank root)",
+   "qkd_d2d_static.ck": "qkd_pll_analog_model core trunk (pll_c, 833.333 ps) through the die clock tree, delivered phi - R at the single entry (one CTS root incl. the 4 slot-store SRAMs)",
    "ot_qkvd_ucie_x64_phy.clk": "same core trunk (mesochronous 1.2 GHz domain, no CDC in our logic)",
    "qkd_host_root_integrated.ck_records": "same core trunk (record_* faces are timed by the D2D end)",
    "qkd_ckbump (forwarded clock to the compute die)": "qkd_pll_analog_model.pll_fwd",
@@ -14,7 +13,7 @@
    "ot_qfd_serdes_112g_x12_phy (native ports)": "pll_phy; digital peer = HOST phy_tx_v/phy_tx_flit[1042:0]/phy_rx_v/phy_rx_flit[1042:0]/phy_up"
   },
   "compute_die": {
-   "qfd_d2d_static.ck / ck_bank": "compute core clock = forwarded pll_fwd received by qfd_clkrx (bump pair beside the UCIe macro)",
+   "qfd_d2d_static.ck": "compute core clock = forwarded pll_fwd received by qfd_clkrx (bump pair beside the UCIe macro)",
    "ot_qkvd_ucie_x64_phy.clk (compute)": "same received core clock"
   }
  },

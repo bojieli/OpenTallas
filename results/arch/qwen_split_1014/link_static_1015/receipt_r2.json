@@ -3,7 +3,7 @@
  "date": "2026-10-15",
  "stream": "Q-LINK r2",
  "rtl_changes": [
-  "die masters: scalar ck + ck_bank (kit clock entries; core root vs slot-store SRAM bank root)",
+  "die masters: one scalar ck (single CTS root incl. the 4 slot-store SRAM leaves; a separate bank root fails the multiple_cts_roots domain rule because the payload ports are captured in the bank leaves)",
   "calendar entries are bursts {dt14,last1,port3,kind4,beat5,rep5}: NE 128 -> 32 (2,048 instead of 8,192 calendar flops per end)",
   "two compiled segments per calendar image: cal_seg 0 = layer run (L1..L35), 1 = token run (terminal RESULT, embedding row, L0); segment-1 base at cfg_addr[5]=1",
   "embedding row transport: KV TX port 2 (emb_tx_slot/emb_tx_v/emb_tx_payload) -> compute RX port 2 (emb_rx_v/emb_rx_slot), kinds 6/7, 64 words per token",
@@ -34,7 +34,7 @@
    280.8
   ],
   "macros": "4 x ot_sram_1r1w_64x512_m1_r2c2 (slot store 4 x 137 b)",
-  "clock": "multiple_cts_roots ck (core) + ck_bank",
+  "clock": "single root ck (TritonCTS)",
   "cut_check_bits_x_0.096um_over_face_um (<= 0.55)": {
    "qfd_d2d_static": {
     "S": {

@@ -71,7 +71,6 @@
   ],
   "E": [
    "ck",
-   "ck_bank",
    "por_n",
    "rst_n",
    "cfg_tx_we",
@@ -121,10 +120,6 @@
   ]
  },
  "clock_port": "ck",
- "clock_ports": [
-  "ck",
-  "ck_bank"
- ],
  "blocks": [
   {
    "kind": "macro",
@@ -217,8 +212,6 @@
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/common_flow/clock_entries.tcl",
-  "physical/ref_tile/qkd_d2d_static_r1/clock_entry.sdc",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ss.lib",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",

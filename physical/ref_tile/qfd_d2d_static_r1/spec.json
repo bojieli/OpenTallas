@@ -15,107 +15,10 @@
  ],
  "params": {},
  "clock_port": "ck",
- "clock_ports": [
-  "ck",
-  "ck_bank"
- ],
- "clock": "multiple_cts_roots",
  "reset_ports": [
   "por_n",
   "rst_n"
  ],
- "clock_data_paths": "related_same_frequency",
- "clock_relationship": {
-  "kind": "same_pll_fixed_phase",
-  "ratio": [
-   1,
-   1
-  ],
-  "phase_ps": 0
- },
- "clock_entry_domains": {
-  "core": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck"
-   ],
-   "inputs": [
-    "por_n",
-    "rst_n",
-    "cfg_tx_we",
-    "cfg_rx_we",
-    "cfg_addr",
-    "cfg_data",
-    "cal_start",
-    "cal_seg",
-    "fwd_epoch",
-    "fwd_link_rst_n",
-    "native_tx_v",
-    "native_tx_payload",
-    "prog_tx_observed_v",
-    "prog_tx_record",
-    "x3",
-    "x3_identity",
-    "x3_generation",
-    "status_epoch16",
-    "vm_drained",
-    "collective_drained",
-    "collective_busy",
-    "crom_fault",
-    "execution_active",
-    "admit_ready",
-    "result_v",
-    "result_done",
-    "result_fault",
-    "result_cause",
-    "result_tag",
-    "result_gen",
-    "result_token",
-    "result_value",
-    "result_cycles",
-    "fdi_tx_up",
-    "fdi_rx_v",
-    "fdi_rx_flit"
-   ],
-   "outputs": [
-    "native_tx_slot",
-    "native_tx_slot_kind",
-    "native_tx_slot_beat",
-    "rx_payload",
-    "native_rx_v",
-    "native_rx_slot",
-    "native_rx_slot_kind",
-    "native_rx_slot_beat",
-    "prog_witness_slot",
-    "prog_auth_slot",
-    "prog_context_slot",
-    "prog_rx_v",
-    "emb_rx_v",
-    "emb_rx_slot",
-    "kv_x3_slot",
-    "fdi_tx_v",
-    "fdi_tx_flit",
-    "phy_rst_n",
-    "epoch_abort",
-    "transport_fault",
-    "fault"
-   ]
-  },
-  "bank": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_bank"
-   ],
-   "inputs": [],
-   "outputs": []
-  }
- },
  "outline": {
   "w": 475.2,
   "h": 280.8
@@ -181,7 +84,6 @@
   ],
   "E": [
    "ck",
-   "ck_bank",
    "por_n",
    "rst_n",
    "cfg_tx_we",

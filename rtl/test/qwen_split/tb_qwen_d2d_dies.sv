@@ -66,7 +66,7 @@ module tb_qwen_d2d_dies;
     endfunction
     always @(posedge ck) begin k_emb_v <= k_emb_slot; k_emb_p <= k_emb_slot ? eword(k_tk == 4'd7 ? 32 + k_tb : k_tb) : 548'd0; end
     wire c_eb = u_c.eb, k_eb = u_k.eb; wire [7:0] c_ep = u_c.ep, k_ep = u_k.ep;
-    qfd_d2d_static #(.MUT(MUT == 1 ? 1 : 0)) u_c (.ck(ck), .ck_bank(ck), .por_n(por_n), .rst_n(rst_n),
+    qfd_d2d_static #(.MUT(MUT == 1 ? 1 : 0)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_c_tx), .cfg_rx_we(cfg_c_rx), .cfg_addr({cfg_hi, cfg_a}), .cfg_data(cfg_dc), .cal_start(cstart), .cal_seg(cseg),
         .fwd_epoch(bump_ep[2]), .fwd_link_rst_n(bump_lr[2]),
         .native_tx_slot(c_txs0), .native_tx_slot_kind(c_tk), .native_tx_slot_beat(c_tb), .native_tx_v(c_tv0),
@@ -81,7 +81,7 @@ module tb_qwen_d2d_dies;
         .result_gen(2'(lay)), .result_token(18'(lay * 1001)), .result_value(32'(lay * 77)), .result_cycles(32'(lay * 1052)),
         .fdi_tx_up(c_up), .fdi_tx_v(c_ptx_v), .fdi_tx_flit(c_ptx), .fdi_rx_v(c_prx_v), .fdi_rx_flit(c_prx),
         .phy_rst_n(c_phy_rst_n), .epoch_abort(c_abort), .transport_fault(c_tf), .fault(c_f));
-    qkd_d2d_static #(.MUT(MUT == 2 ? 2 : 0)) u_k (.ck(ck), .ck_bank(ck), .por_n(por_n), .rst_n(rst_n),
+    qkd_d2d_static #(.MUT(MUT == 2 ? 2 : 0)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({cfg_hi, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(cseg),
         .host_link_reset_req(host_reset_req), .host_recovery_clear(host_clear), .host_boot_begin(host_boot),
         .fwd_epoch(fwd_ep), .fwd_link_rst_n(fwd_lrst_n),
