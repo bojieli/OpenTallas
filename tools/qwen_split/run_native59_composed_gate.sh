@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 root=$(cd "$(dirname "$0")/../.." && pwd);out=${1:?fresh outputdirectory};mkdir "$out"
-for mode in positive stale_result missing_commit missing_visibility native_route_unqualified stale_metadata_guard_mutant;do
- p=();case "$mode" in native_route_unqualified)p=(-Ptb_qfd_native59_compute_service.NATIVE_PROFILE=1);;missing_visibility)p=(-Ptb_qfd_native59_compute_service.NO_VISIBILITY=1);;missing_commit)p=(-Ptb_qfd_native59_compute_service.BAD_COMMIT=1);;stale_result)p=(-Ptb_qfd_native59_compute_service.BAD_RESULT=1);;stale_metadata_guard_mutant)p=(-Ptb_qfd_native59_compute_service.BAD_RESULT=1 -Ptb_qfd_native59_compute_service.CODEC_MUT=2);;esac
+for mode in positive stale_result missing_commit missing_visibility remote_writer_fault invalid_vm_address native_route_unqualified stale_metadata_guard_mutant;do
+ p=();case "$mode" in invalid_vm_address)p=(-Ptb_qfd_native59_compute_service.BAD_ADDRESS=1);;remote_writer_fault)p=(-Ptb_qfd_native59_compute_service.BAD_STATUS=1);;native_route_unqualified)p=(-Ptb_qfd_native59_compute_service.NATIVE_PROFILE=1);;missing_visibility)p=(-Ptb_qfd_native59_compute_service.NO_VISIBILITY=1);;missing_commit)p=(-Ptb_qfd_native59_compute_service.BAD_COMMIT=1);;stale_result)p=(-Ptb_qfd_native59_compute_service.BAD_RESULT=1);;stale_metadata_guard_mutant)p=(-Ptb_qfd_native59_compute_service.BAD_RESULT=1 -Ptb_qfd_native59_compute_service.CODEC_MUT=2);;esac
  iverilog -g2012 -s tb_qfd_native59_compute_service "${p[@]}" -o "$out/$mode.sim" \
  "$root/rtl/qwen_split/qfd_native59_q_export_control.sv" "$root/rtl/qwen_split/qfd_native59_compute_service.sv" "$root/rtl/qwen_split/qfd_native59_command_context.sv" \
  "$root/rtl/qwen_split/qfd_native59_static_service.sv" "$root/rtl/qwen_split/qfd_native59_record_endpoint.sv" \

@@ -2,7 +2,7 @@
 // Declared SU/VM/HOST/remote-native548 boundary stimuli. This verifies the
 // selected local composition only, not arithmetic or physical/full-token closure.
 module tb_qfd_native59_compute_service;
- parameter integer BAD_RESULT=0,CODEC_MUT=0,BAD_COMMIT=0,NO_VISIBILITY=0,NATIVE_PROFILE=0;localparam HEADS=1;
+ parameter integer BAD_RESULT=0,CODEC_MUT=0,BAD_COMMIT=0,NO_VISIBILITY=0,NATIVE_PROFILE=0,BAD_STATUS=0,BAD_ADDRESS=0;localparam HEADS=1;
  reg ck=0,rst_n=0;always #1 ck=~ck;
  reg context_v=0,q_committed=0,kvslot=0,xslot=0,qslot=0,txslot=0,rxslot=0,rxv=0,visibility_slot=0,complete_slot=0;
  reg[5:0]stage=1;reg[17:0]token=50994,position=255;reg[379:0]cmd=0;reg[481:0]si=0;
@@ -24,6 +24,7 @@ module tb_qfd_native59_compute_service;
    raw_mask[16*(7+pending_beat[7])+:16]=16'hffff;
   end
  end
+ wire[519:0]vm_ar;
  wire q_epoch,q_start;wire[58:0]xid;wire[1:0]xgen;wire[523:0]x3;wire tv,wv,completed,fault;wire[547:0]td;wire[19:0]ww;wire[4:0]wb;wire[58:0]wt;wire[511:0]wdata;wire[94:0]ret;
  localparam[58:0]TAG={16'd9,6'd1,18'd50994,13'd255,6'd0};
  qfd_native59_compute_service #(.CODEC_MUT(CODEC_MUT),.NATIVE_PROFILE(NATIVE_PROFILE))dut(
@@ -32,8 +33,11 @@ module tb_qfd_native59_compute_service;
  .native_issue({si[293:270],si[269:268],si[36:1],si[0]}),.kv_we(we),.kv_waddr(wa),.kv_wdata(wd),.kv_word_slot(kvslot),.kv_word_index(kvindex),.kv_x3_slot(xslot),.x3(x3),.x3_identity(xid),.x3_generation(xgen),
  .vm_q_epoch(q_epoch),.vm_q_start(q_start),.q_committed(q_committed),.q_fault(1'b0),.q(q),.q_slot(qslot),.q_slot_beat(qb),
  .tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_tx_v(tv),.native_tx_payload(td),.native_rx_v(rxv),.native_rx_payload(rxdata),.rx_slot(rxslot),.rx_slot_kind(rk),.rx_slot_beat(rb),
- .vm_write_v(wv),.vm_write_word(ww),.vm_write_beat(wb),.vm_write_tag(wt),.vm_write_data(wdata),
+ .vm_ar(vm_ar),
  .write_commit_v(raw_v),.write_commit_line(raw_line),.write_commit_mask(raw_mask),.visibility_slot(visibility_slot),.complete_slot(complete_slot),.completed(completed),.native_ret(ret),.fault(fault));
+ // Observe the actual physical face; TAG/address are internal fence state only.
+ assign wv=vm_ar[519];assign wb=vm_ar[516:512];assign wdata=vm_ar[511:0];
+ assign ww=dut.vm_write_word;assign wt=dut.vm_write_tag;
  integer ep=0,i,j,l,p,k,h,di,errors=0,kvcount=0,qcount=0,cmdcount=0,writecount=0,epochcount=0,startcount=0;reg[511:0]expected;
  function automatic [7:0] code(input integer k,input integer h,input integer d);
   integer x;begin x=(k*91+h*37+d+ep*17)%254;if(x>=127)x=x+1;code=x;end
@@ -81,9 +85,15 @@ module tb_qfd_native59_compute_service;
    if(td[547:543]!=0||td[538:533]!=0||td[532:517]!=9)errors=errors+1;
   end
   if(wv)begin
-   if(ww!=3167+writecount||wb!=writecount||wt!=TAG||wdata!=={16{32'(writecount+200)}})errors=errors+1;
+   if(vm_ar[518:517]!=0||ww!=3167+writecount||wb!=writecount||wt!=TAG||wdata!=={16{32'(writecount+200)}})errors=errors+1;
    writecount=writecount+1;
   end
+ end
+ // Corrupt a real internal registered address while leaving physical beat/data
+ // unchanged. The local fence must reject the aliased write before completion.
+ initial if(BAD_ADDRESS)begin
+  wait(wv&&wb==7);force dut.vm_write_word=20'd0;
+  @(negedge ck);@(negedge ck);release dut.vm_write_word;
  end
  initial begin
  repeat(4)step();rst_n=1;context_v=1;step();context_v=0;repeat(2)step();
@@ -107,9 +117,9 @@ module tb_qfd_native59_compute_service;
   rxdata={5'd0,4'd3,6'd0,16'(BAD_RESULT&&i==7?10:9),5'(i),{16{32'(i+200)}}};step();
  end
  rxv=0;rxslot=0;step();
- repeat(12)step();visibility_slot=!NO_VISIBILITY;step();visibility_slot=0;rxv=1;rxslot=1;rk=4;rb=0;rxdata={5'd0,4'd4,6'd0,16'd9,5'd0,507'd0,5'b01001};step();
+ repeat(12)step();visibility_slot=!NO_VISIBILITY;step();visibility_slot=0;rxv=1;rxslot=1;rk=4;rb=0;rxdata={5'd0,4'd4,6'd0,16'd9,5'd0,507'd0,(BAD_STATUS?5'b01101:5'b01001)};step();
  rxv=0;rxslot=0;step();complete_slot=1;step();complete_slot=0;
- if(BAD_RESULT||BAD_COMMIT||NO_VISIBILITY)begin
+ if(BAD_RESULT||BAD_COMMIT||NO_VISIBILITY||BAD_STATUS||BAD_ADDRESS)begin
   if(!fault||completed)$fatal(1,"FAIL stale remote metadata or missing SRAM commit qualified local completion");
   $display("PASS selected local native service invalid result or missing SRAM commit faults before completion");$finish;
  end

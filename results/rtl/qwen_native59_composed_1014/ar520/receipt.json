@@ -1,0 +1,35 @@
+{
+  "scope": "common-clock component physical ABI source join only",
+  "unit": "oth-ubuntu-2363595-1792045630",
+  "outer_exit": 0,
+  "vm_source": "24e9aeaf7",
+  "vm_ar": "v[519],group0[518],beat6[517:512],data512[511:0]",
+  "word_rows": [
+    3167,
+    3198
+  ],
+  "registered_event_extra_edges": 0,
+  "positive_counts": {
+    "KV": 4,
+    "Q": 32,
+    "result": 32,
+    "actual_event_commit": 32
+  },
+  "negative_modes": [
+    "stale_result",
+    "missing_commit",
+    "missing_visibility",
+    "remote_writer_fault",
+    "invalid_vm_address"
+  ],
+  "expected_failure_modes": [
+    "native_route_unqualified",
+    "stale_metadata_guard_mutant"
+  ],
+  "completion_time_ps": 230000,
+  "limitations": [
+    "declared VM boundary events; actual mapped SRAM timing is a separate gate",
+    "remote STATUS aggregate producer not yet joined",
+    "physical area/phase/throughput and full native token unqualified"
+  ]
+}

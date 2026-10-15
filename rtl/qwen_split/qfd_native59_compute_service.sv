@@ -25,13 +25,20 @@ module qfd_native59_compute_service #(
  output wire native_tx_v,output wire[547:0]native_tx_payload,
  input wire native_rx_v,input wire[547:0]native_rx_payload,
  input wire rx_slot,input wire[3:0]rx_slot_kind,input wire[4:0]rx_slot_beat,
- output wire vm_write_v,output wire[19:0]vm_write_word,output wire[4:0]vm_write_beat,
- output wire[58:0]vm_write_tag,output wire[511:0]vm_write_data,
+ // Physical VM24e9aeaf7 attention face: valid, group1, beat6, data512.
+ // The VM owns fixed rows3167..3198; word/TAG stay local to the commit fence.
+ output wire[519:0]vm_ar,
  input wire[38:0]write_commit_v,input wire[311:0]write_commit_line,input wire[623:0]write_commit_mask,
  input wire visibility_slot,
  input wire complete_slot,output wire completed,output wire[94:0]native_ret,
  output wire fault
 );
+ wire vm_write_v;wire[19:0]vm_write_word;wire[4:0]vm_write_beat;
+ wire[58:0]vm_write_tag;wire[511:0]vm_write_data;
+ // No additional edge or generated handshake: this is the actual registered
+ // service write event. g0 and beat<32 select the VM's fixed attention rows.
+ assign vm_ar={vm_write_v,1'b0,1'b0,vm_write_beat,vm_write_data};
+ wire vm_address_fault=vm_write_v&&(vm_write_word!=(20'd3167+{15'd0,vm_write_beat}));
  wire native_context=layer_context_v&&command_stage>=1&&command_stage<=36;
  wire begin_slot,request_slot,context_fault,active;
  wire[58:0]begin_tag,request_tag;wire[19:0]base;
@@ -108,7 +115,7 @@ module qfd_native59_compute_service #(
  .visibility_slot(visibility_slot),.write_commit_v(write_commit_v),.write_commit_line(write_commit_line),.write_commit_mask(write_commit_mask),
  .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag59(vm_commit_tag),.complete(commit_complete),.fault(commit_fault));
  qfd_native59_static_service u_service(
- .ck(ck_service),.rst_n(rst_n),.source_fault(context_fault|qtag_fault|export_control_fault|q_fault|formatter_fault|x3_fault|record_fault|commit_fault|visibility_fault),
+ .ck(ck_service),.rst_n(rst_n),.source_fault(context_fault|qtag_fault|export_control_fault|q_fault|formatter_fault|x3_fault|record_fault|commit_fault|visibility_fault|vm_address_fault),
  .begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),
  .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(req_v),.kernel_request_tag(req_tag),
  .q_slot(q_slot),.q_slot_beat(q_slot_beat),.q_v(q[523]),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(q[511:0]),
@@ -128,5 +135,5 @@ module qfd_native59_compute_service #(
   if(NATIVE_PROFILE!=0&&VM_ROUTE_QUALIFIED!=1)$fatal(1,"native service requires measured VM forward/return/phase contract");
   if(VM_FORWARD_EDGES<0||VM_RETURN_EDGES<0||VM_PHASE_EDGES<0)$fatal(1,"negative physical VM route edges");
  end
- assign fault=svc_fault|context_fault|qtag_fault|export_control_fault|q_fault|formatter_fault|x3_fault|record_fault|commit_fault|visibility_fault;
+ assign fault=svc_fault|context_fault|qtag_fault|export_control_fault|q_fault|formatter_fault|x3_fault|record_fault|commit_fault|visibility_fault|vm_address_fault;
 endmodule
