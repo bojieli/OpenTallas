@@ -1,0 +1,29 @@
+GATE_SOURCE_ARCHIVE_SHA256=64f438784e34f515430e0f783b8964272235213987c075bbc960a66d5d4395a4
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=29
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN ot_smh_static_stage256 cells 512 flops 256 depth 0.0 ps util 0.1111 reach 12.9 um (0.0 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=256 root=port:clk rule=PASS: 256 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 11.1% outside 45%-65% (std 93 + macro 0 um2 in 840 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "d": [null, true], "q": [null, true]}
+GATE_AREA    Chip area for module '\ot_smh_static_stage256': 93.312000
+GATE_CTS_RC=0
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 112.2..114.3 ps (spread 2.1), boundary mean 113.5; tt insertion all 79.3..80.8 ps (spread 1.5), boundary mean 80.1; ff insertion all 60.5..62.0 ps (spread 1.5), boundary mean 61.3; macro_clk flag False
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 256, "mean": 80.1, "min": 79.3, "max": 80.8}, "all": {"n": 256, "mean": 80.1, "min": 79.3, "max": 80.8}, "errors": [], "macros": null, "macro_libs": 0}}
+GATE_PC constraints signoff /src/physical/ref_tile/smh_static_stage256_ref/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->out      256 paths, worst slack 263.5 ps (e.g. q[179])
+GATE_PC in->reg        44 paths, worst slack 405.7 ps (e.g. q[15]$_DFF_P_/D)
+GATE_PC setup WNS 2.635484053215009e-10 hold WNS 4.834378730667055e-11
+GATE_DONE
+
+--- stderr
+ot-run: ot-agidock128  admits    54 GB (avail 79, growth 12, headroom 24, waiters 0/0 GB) load 17/64 running 6 disk 65 GB 
+ot-run: -> ot-agidock128
+ot-heavy: request 12G is charged 10G (family 'ref_gate_*' seed 10G (class 'ref_gate_smh_static_stage#_ref_#-#.sh' not measured yet)); the cap stays 12G
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3581160-1792049386 after 1 s
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3581160-1792049386): exit 0

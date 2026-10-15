@@ -1,5 +1,5 @@
 {
- "name": "smh_static_stage256_ref-narrow1-COMMIT",
+ "name": "smh_static_stage256_ref-narrow1-065366f2b",
  "block": "ot_smh_static_stage256",
  "ref_tile": true,
  "owner": "Codex:H-ELEM-A:static-sm-feed",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 12,
  "source": {
   "branch": "codex/hbm-sm-static-feed-1014",
-  "commit": "COMMIT"
+  "commit": "065366f2b"
  },
  "stages": {
   "bench": [
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smh_static_stage256_ref/smh_static_stage256_ref-narrow1-COMMIT"
+   "to": "results/rtl/ref_tile/smh_static_stage256_ref/smh_static_stage256_ref-narrow1-065366f2b"
   }
  ],
  "cycles_added": 0,
