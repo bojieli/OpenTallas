@@ -427,7 +427,9 @@ function drawGrid(c, t) {
 function hostSum(el, h) {   // one line: loop routes N · other jobs M · waiters W · load L/cores · mem used/total
   const j = h.jobs, up = h.cores && h.cores.length, x = el.querySelector('.hsum');
   if (!x) return;
-  const p = [`loop routes <b>${fmt(h.routes)}</b>`];
+  const lr = j && j.loop != null ? j.loop : h.routes;   // RUNNING + SYNC + ECO on this host (the Fleet jobs table's loop rows)
+  setText(el.querySelector('.rt'), lr);
+  const p = [`loop routes <b>${fmt(lr)}</b>`];
   if (j && j.inv) {
     p.push(`other jobs <b>${fmt(j.other)}</b>`);
     p.push(`<span class="${j.waiters ? 'wq' : ''}">waiters <b>${fmt(j.waiters)}</b></span>` + (j.held ? ` (+${fmt(j.held)} held)` : ''));
