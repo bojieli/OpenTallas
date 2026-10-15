@@ -91,9 +91,9 @@ module ot_s81_su_core #(
     end
 `endif
     localparam [3:0] K_QN = 0, K_KV = 1, K_QB = 2, K_SW = 3, K_SE = 4, K_SO = 5, K_GQ = 6, K_GK = 7;
-    localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10;
+    localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10, K_RW = 11;    // RW: s81-ftok r3 die item F11 (ffn.weights)
     function automatic is_rx(input [3:0] k);
-        is_rx = (k == K_RA || k == K_RB || k == K_QR);
+        is_rx = (k == K_RA || k == K_RB || k == K_QR || k == K_RW);
     endfunction
 
     // ------------------------------------------------------------------ job state
@@ -185,6 +185,17 @@ module ot_s81_su_core #(
     ot_s81_su_rx #(.BR(BMAX), .RAL(RAL), .LM(LM), .LA(LA), .MUT(XMUT)) u_rx (
         .clk(clk), .rst_n(rst_n), .start(rx_st), .knd(kind[1:0]), .nr(nrow), .bt(be), .cos_t({prow[2], prow[1]}),
         .sin_t({prow[4], prow[3]}), .o_v(rx_ov), .o_i(rx_oi), .o_d(rx_od), .fault(rx_f));
+    // RW (s81-ftok r3, die item F11): the ids row + the score rows, contiguous from in_base, walked a row a cycle into
+    // ot_s81_su_rw; its one result is a word-masked write of the weights into the SW descriptor row (out_base)
+    reg rw_go, rw_run; reg [15:0] rw_i;
+    wire rw_ov, rw_f; wire [511:0] rw_od; wire [15:0] rw_om;
+    ot_s81_su_rw #(.LM(LM), .LA(LA), .MUT((XMUT == 4) ? 4 : 0)) u_rw (
+        .clk(clk), .rst_n(rst_n), .start(rw_go), .k_i(prow[0][160 +: 4]), .scale_i(prow[0][96 +: 32]), .off_i(prow[0][128 +: 4]),
+        .i_v(rw_run), .i_x(be[512 * rw_i +: 512]), .i_last(rw_i == nrow - 16'd1), .o_v(rw_ov), .o_d(rw_od), .o_m(rw_om), .fault(rw_f));
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin rw_run <= 0; rw_i <= 0; end
+        else if (rw_go) begin rw_run <= 1; rw_i <= 0; end
+        else if (rw_run) begin if (rw_i == nrow - 16'd1) rw_run <= 0; else rw_i <= rw_i + 1; end
     // operand row address of operand row i (QR: the head's 4 rope rows; RB: scores then bias, contiguous)
     function automatic [13:0] oaddr(input [3:0] k, input [15:0] i, input [13:0] ib);
         case (k)
@@ -209,6 +220,7 @@ module ot_s81_su_core #(
             K_SO: rows_out = NPV * (SMW / 32);
             K_RA, K_RB: rows_out = c;
             K_QR: rows_out = 4 * c;
+            K_RW: rows_out = 1;
             default: rows_out = 0;
         endcase
     endfunction
@@ -217,6 +229,7 @@ module ot_s81_su_core #(
             K_QN: rows_in = NVQ * RQN;  K_KV: rows_in = RKV;  K_QB: rows_in = c * RQB;  K_SW: rows_in = c * 2 * RSW;
             K_SE: rows_in = c * RSM;    K_SO: rows_in = NPV * RSM; K_GQ: rows_in = DQ / 16; K_GK: rows_in = DK / 16;
             K_RA: rows_in = c;          K_RB: rows_in = 2 * c;     K_QR: rows_in = 4 * c;
+            K_RW: rows_in = c;
             default: rows_in = 0;
         endcase
     endfunction
@@ -236,18 +249,18 @@ module ot_s81_su_core #(
             e_done_v <= 0; e_done_tag <= 0; fault <= 0; fault_code <= 0; st_jobs <= 0;
             rq_v <= 0; wq_v <= 0; beat_v <= 0; beat_i <= 0; go_pend <= 0;
             qn_go <= 0; qn_in <= 0; qn_wl <= 0; qn_wi <= 0; kv_go <= 0; kv_in <= 0; kv_wl <= 0; qb_v <= 0; sw_v <= 0;
-            rx_st <= 0; sm_sv <= 0; sm_pv <= 0; sm_rst_n <= 1'b1; sm_owner_v <= 0; sm_owner <= 0; sm_dn <= 0;
+            rx_st <= 0; rw_go <= 0; sm_sv <= 0; sm_pv <= 0; sm_rst_n <= 1'b1; sm_owner_v <= 0; sm_owner <= 0; sm_dn <= 0;
             oq_n <= 0; oq_w <= 0; oq_r <= 0; ocur <= 0;
         end else begin
             e_done_v <= 0; rq_v <= 0; wq_v <= 0; beat_v <= 0;
             qn_go <= 0; qn_in <= 0; qn_wl <= 0; kv_go <= 0; kv_in <= 0; kv_wl <= 0; qb_v <= 0; sw_v <= 0; sm_sv <= 0;
-            sm_pv <= 0; sm_rst_n <= 1'b1; rx_st <= 0;
-            if (qn_f || kv_f || qb_f || sw_f || sm_f || rx_f) begin fault <= 1; if (!fault) fault_code <= 1; end
+            sm_pv <= 0; sm_rst_n <= 1'b1; rx_st <= 0; rw_go <= 0;
+            if (qn_f || kv_f || qb_f || sw_f || sm_f || rx_f || rw_f) begin fault <= 1; if (!fault) fault_code <= 1; end
             if (take) begin
                 run <= 1; kind <= c_arg[23:20]; jslot <= e_cmd_d[83]; jtag <= {e_cmd_d[83], e_cmd_d[6:0]};
                 gsel <= c_arg[19:18]; fp4 <= c_arg[14]; dbase <= c_arg[13:0];
                 ph <= 0; ri <= 0; rr <= 0; np <= nparams(c_arg[23:20]); cw <= 0; beats <= 0; ocur <= 0; beat_i <= 0;
-                if (c_arg[23:20] > K_QR) begin fault <= 1; fault_code <= 3; end
+                if (c_arg[23:20] > K_RW) begin fault <= 1; fault_code <= 3; end
                 if (c_arg[23:20] == K_SO && !(sm_owner_v && sm_owner == e_cmd_d[83])) begin fault <= 1; fault_code <= 6; end
             end
             if (run && !fault) begin
@@ -322,6 +335,7 @@ module ot_s81_su_core #(
                         K_GQ: gq[gsel * NVQ + beat_i] <= bq[0 +: QN_N * 32];
                         K_GK: gk[gsel] <= bq[0 +: KV_N * 32];
                         K_RA, K_RB, K_QR: rx_st <= 1;            // the beat is in be from the next cycle
+                        K_RW: rw_go <= 1;                        // RW walks the beat a row a cycle (ot_s81_su_rw)
                         default: ;
                     endcase
                     beats <= beats + 1;
@@ -398,7 +412,12 @@ module ot_s81_su_core #(
                         wq_v[s] <= 1; wq_row[14 * s +: 14] <= oq[rp][OW-1:512]; wq_mask[16 * s +: 16] <= 16'hFFFF;
                         wq_d[512 * s +: 512] <= oq[rp][511:0]; rp = rp + 1; n_out = n_out + 1;
                     end
-                oq_w <= wp; oq_r <= rp; oq_n <= oq_n + n_in - n_out;
+                // RW's one result: a word-masked write straight to slot 0 (the job runs alone, the FIFO is empty)
+                if (rw_ov) begin
+                    wq_v[0] <= 1; wq_row[13:0] <= obase; wq_mask[15:0] <= rw_om; wq_d[511:0] <= rw_od; n_out = n_out + 1;
+                    if (oq_n != 0) begin fault <= 1; fault_code <= 5; end
+                end
+                oq_w <= wp; oq_r <= rp; oq_n <= oq_n + n_in - (n_out - (rw_ov ? 1 : 0));
                 if (oq_n + n_in > OQ) begin fault <= 1; fault_code <= 5; end
                 if (run && ph == 2 && nw != 0) begin
                     cw <= cw + n_out;

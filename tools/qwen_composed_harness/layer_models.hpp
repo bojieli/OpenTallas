@@ -1,5 +1,6 @@
 #pragma once
 #include <cstring>
+#include <algorithm>
 #include <cstdlib>
 // Candidate executed-layer harness. No fixture QR/current-KV writes exist here.
 // Expected vectors are observers; all collective inputs come from actual VM.
@@ -93,7 +94,78 @@ struct Rank {
   push_port(v,c.vb_q);
   push_port(v,c.vc_q);
   if(core_in_valid&&v==core_in_last){++core_evals_skipped;return;}
+  if(memo_eval(v)){core_in_last=v;core_in_valid=true;return;}
   core.eval();++core_evals;core_in_last.swap(core_in_now);core_in_valid=true;
+  memo_after_eval();
+ }
+ // Exact state memo (OT_EVAL_MEMO=0 disables). A Verilated eval is a pure
+ // function of the generated root object (every signal, port, trigger and
+ // previous-clock byte; 37.6 MB of plain data, no heap members; the only DPI
+ // imports are the stateless ot_v41x_fadd/fmul and the model never reads
+ // time). If the root bytes equal those before an earlier eval, that eval's
+ // result bytes are reproduced instead of re-evaluating. The harness writes
+ // only the 28 input ports, so the root = (non-port bytes) + (input vector):
+ // non-port states are interned once (full masked compare at record time) and
+ // tracked by id; a hit needs the same state id and the same input vector, and
+ // applies the recorded byte delta pre->post. An idle core (startup before
+ // HOST dispatch, waits on HBM/collective/attention) cycles through two
+ // (state,input) pairs. OT_EVAL_MEMO_VERIFY=k re-evaluates every k-th hit and
+ // throws if the result differs from the recorded post state.
+ struct EvalMemo{std::vector<uint32_t> in;int pre=-1,post=-1;std::vector<std::pair<uint32_t,uint32_t>> runs;std::vector<uint8_t> delta;uint64_t used=0;};
+ std::vector<EvalMemo> memo;std::vector<std::vector<uint8_t>> memo_snaps;std::vector<std::vector<uint32_t>> memo_recent;std::vector<uint8_t> memo_pre;
+ std::vector<std::pair<size_t,size_t>> port_ranges;int memo_cur=-1;
+ bool memo_recording=false;uint64_t memo_tick=0,memo_hits=0,memo_verified=0,memo_records=0,memo_dry=0;
+ static size_t root_size(){static const size_t n=size_t(actual_core_root_bytes());return n;}
+ static unsigned memo_slots(){static const unsigned n=[]{const char*e=std::getenv("OT_EVAL_MEMO");return e?unsigned(std::stoul(e)):4u;}();return n;}
+ static uint64_t memo_verify_every(){static const uint64_t n=[]{const char*e=std::getenv("OT_EVAL_MEMO_VERIFY");return e?uint64_t(std::stoull(e)):0ull;}();return n;}
+ uint8_t*root_bytes(){return reinterpret_cast<uint8_t*>(core.rootp);}
+ template<class T>void port_range(const T&x){auto o=reinterpret_cast<const uint8_t*>(&x)-root_bytes();
+  if(o<0||size_t(o)+sizeof(T)>root_size())throw std::runtime_error("input port outside generated root");port_ranges.push_back({size_t(o),sizeof(T)});}
+ void memo_ports(){if(!port_ranges.empty())return;auto&c=core;
+  port_range(c.clk);port_range(c.rst_n);port_range(c.start);port_range(c.native_contract_ready);port_range(c.native_ready);port_range(c.native_idle);
+  port_range(c.native_fault);port_range(c.su_descriptor_reserved);port_range(c.kv_write_drained);port_range(c.kv_ok);port_range(c.w_ok);port_range(c.emb_ok);
+  port_range(c.me_mem_ok);port_range(c.token);port_range(c.pos);port_range(c.native_progress);port_range(c.embed_scale_q);port_range(c.prog_q);port_range(c.wrom_q);
+  port_range(c.int8_wrom_q);port_range(c.scale_q);port_range(c.embed_code_q);port_range(c.crom_q);port_range(c.kv_q);port_range(c.vx_q);port_range(c.va_q);
+  port_range(c.vb_q);port_range(c.vc_q);std::sort(port_ranges.begin(),port_ranges.end());}
+ void mask(uint8_t*p){for(auto&r:port_ranges)std::memset(p+r.first,0,r.second);}
+ // root (live ports) equals a masked snapshot outside the port bytes
+ bool same_state(const uint8_t*root,const uint8_t*snap){size_t at=0;
+  for(auto&r:port_ranges){if(r.first>at&&std::memcmp(root+at,snap+at,r.first-at))return false;at=std::max(at,r.first+r.second);}
+  return std::memcmp(root+at,snap+at,root_size()-at)==0;}
+ int intern(std::vector<uint8_t>&&snap){for(size_t i=0;i<memo_snaps.size();i++)if(memo_snaps[i]==snap)return int(i);memo_snaps.push_back(std::move(snap));return int(memo_snaps.size()-1);}
+ bool memo_eval(const std::vector<uint32_t>&v){
+  memo_recording=false;if(!memo_slots()||core_evals<4)return false;memo_ports();
+  uint8_t*root=root_bytes();
+  for(auto&m:memo){
+   if(m.in!=v)continue;
+   if(memo_cur<0&&same_state(root,memo_snaps[m.pre].data()))memo_cur=m.pre;
+   if(memo_cur!=m.pre)continue;
+   m.used=++memo_tick;++memo_hits;memo_dry=0;
+   if(memo_verify_every()&&memo_hits%memo_verify_every()==0){
+    core.eval();++core_evals;++memo_verified;
+    if(!same_state(root,memo_snaps[m.post].data()))throw std::runtime_error("EXACT EVAL MEMO DIVERGENCE rank "+std::to_string(rank));
+   }else{size_t k=0;for(auto&r:m.runs){std::memcpy(root+r.first,m.delta.data()+k,r.second);k+=r.second;}}
+   memo_cur=m.post;return true;
+  }
+  // Record only a (state,input) pair whose input vector recurs (idle period);
+  // back off while recordings produce no hits (streaming compute).
+  bool recur=false;for(auto&x:memo_recent)recur|=x==v;
+  if(recur&&(memo_dry<8||memo_dry%32==0)){memo_pre.assign(root,root+root_size());memo_recording=true;}
+  if(recur)++memo_dry;
+  return false;
+ }
+ void memo_after_eval(){
+  memo_cur=-1;
+  if(memo_slots()){memo_recent.push_back(core_in_last);if(memo_recent.size()>4)memo_recent.erase(memo_recent.begin());}
+  if(!memo_recording)return;memo_recording=false;
+  const size_t n=root_size();std::vector<uint8_t> post(root_bytes(),root_bytes()+n);mask(post.data());mask(memo_pre.data());
+  if(memo_snaps.size()>=16){memo.clear();memo_snaps.clear();}
+  EvalMemo e;e.in=core_in_last;
+  for(size_t i=0;i<n;){if(memo_pre[i]==post[i]){++i;continue;}size_t j=i;while(j<n&&memo_pre[j]!=post[j])++j;
+   e.runs.push_back({uint32_t(i),uint32_t(j-i)});e.delta.insert(e.delta.end(),post.begin()+i,post.begin()+j);i=j;}
+  e.pre=intern(std::move(memo_pre));e.post=intern(std::move(post));memo_pre.clear();
+  if(memo.size()>=memo_slots()){auto it=memo.begin();for(auto jt=memo.begin();jt!=memo.end();++jt)if(jt->used<it->used)it=jt;memo.erase(it);}
+  e.used=++memo_tick;memo.push_back(std::move(e));++memo_records;memo_cur=memo.back().post;
  }
  void enqueue_history(){
   prior_target=backend.write_acks+8*active.position;
@@ -123,6 +195,13 @@ struct Rank {
   if(vm.vm!=actual_vm)throw std::runtime_error("head ROM switch changed actual final layer VM");
   effects.clear();su_descriptors.clear();kv_commits.clear();raw_witnesses.clear();su_owner=rom_owner=-1;rom_written=rom_expected=0;
   head_stage=true;start_edge=backend.core_edges+2;layer_begin_edge=backend.core_edges;
+ }
+ // Head-only seeded run: a freshly constructed rank (no edge yet, nothing in
+ // flight) takes the head banks exactly as switch_head() does after layer 35.
+ void prepare_head_first(const std::string&image,const std::string&program){
+  if(backend.core_edges!=0||!vm.writes.empty())throw std::runtime_error("head-first preparation after the first edge");
+  vm.switch_banks(image+"/die"+std::to_string(rank),program+"/die"+std::to_string(rank)+"/program.hex",1600,0,1200);
+  head_stage=true;start_edge=2;layer_begin_edge=0;
  }
  void connect_core(){
   auto&c=core;auto&f=front;

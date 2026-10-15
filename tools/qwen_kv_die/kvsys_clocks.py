@@ -47,7 +47,8 @@ def main(argv=None):
         if not r.get('bound'):
             continue
         vd = ROOT / r['view']
-        b = K.BINDINGS[mst]
+        # v1.3: a die-placed leaf (kv_expand.py) is instantiated under its own module name with its RTL pins: identity
+        b = K.BINDINGS[mst] if not r.get('expanded_from') else None
         per = {}
         for c in CORNERS:
             lib = next(vd.glob(f'*_{c}.lib'), None)
@@ -60,6 +61,10 @@ def main(argv=None):
                     continue          # SS: sensitivity only; a view without an SS boundary measurement skips it
                 raise
             for rpin, rr in refs.items():
+                if b is None:
+                    per.setdefault(c, {})[rpin] = rr
+                    per[c][f'{rpin}[0]'] = rr
+                    continue
                 dps = [dp for dp, ps in b['ports'].items() if rpin in ps]
                 if len(dps) != 1:
                     raise ValueError(f'{mst}: clock pin {rpin} binds to {dps}')
@@ -104,7 +109,8 @@ def main(argv=None):
             (a.out / f'clocks_{c}.tcl').write_text(clock_tcl(doms, leaves, c))
     rec = dict(schema='opentallas.qwen_kvsys_clocks.v1', sinks=sinks, domains={d: len(v) for d, v in doms.items()},
                measured=src, assumed_ideal=sorted(m_ for m_ in leaves if m_ not in src),
-               per_child_entries=dict(qkd_ectl=K.ECTL_CLK, qkd_rhead=K.HEAD_CLK),
+               per_child_entries=dict(qkd_ectl=K.ECTL_CLK, qkd_rhead=K.HEAD_CLK, qkd_ahub=K.AHUB_CLK, qkd_land=K.KS.LAND_CLK,
+                                      qkd_astk=K.KS.ASTK_CLK),
                rule='phi - R per sink, R = insertion.json boundary mean of the bound view (per corner); frames ideal (R 0)')
     (a.out / 'clocks.json').write_text(json.dumps(rec, indent=1) + '\n')
     print(json.dumps({k: rec[k] for k in ('sinks', 'domains')} | dict(measured=list(src))))

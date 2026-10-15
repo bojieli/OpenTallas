@@ -43,10 +43,21 @@ module tb_ot_s81_cfg7_seq;
     wire [53:0] cfg;
     wire ge;
     wire [1:0] st, gtag;
+`ifdef TB_CFG7_BF
+    // s81-die-rtl-bind 2026-10-14: the BF pair's die master ot_s81_cfg7_seq_bf (PQ 0 loader, no ef / go_tag pins);
+    // run at PQ 0 only
+    initial if (PQ != 0) $fatal(1, "TB_CFG7_BF is the PQ 0 master");
+    assign gtag = 2'd0;
+    ot_s81_cfg7_seq_bf dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
+        .ce0(ce[0]), .ce1(ce[1]), .ce2(ce[2]), .ce3(ce[3]), .ce4(ce[4]), .ce5(ce[5]), .ce6(ce[6]),
+        .q0(q[0][47:0]), .q1(q[1][47:0]), .q2(q[2][47:0]), .q3(q[3][47:0]), .q4(q[4][47:0]), .q5(q[5][47:0]),
+        .q6(q[6][47:0]), .cfg(cfg), .go_e(ge), .st(st));
+`else
     ot_s81_cfg7_seq #(.PQ(PQ)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
         .ce0(ce[0]), .ce1(ce[1]), .ce2(ce[2]), .ce3(ce[3]), .ce4(ce[4]), .ce5(ce[5]), .ce6(ce[6]),
         .q0(q[0][47:0]), .q1(q[1][47:0]), .q2(q[2][47:0]), .q3(q[3][47:0]), .q4(q[4][47:0]), .q5(q[5][47:0]),
         .q6(q[6][47:0]), .cfg(cfg), .go_e(ge), .st(st), .ef(ef), .go_tag(gtag));
+`endif
     // the PQ spine's op tag (bt_tag = ist): +1 per go broadcast, 0 at reset
     reg [1:0] stag = 0;
     integer tags = 0;
