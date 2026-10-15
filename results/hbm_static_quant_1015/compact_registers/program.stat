@@ -1,0 +1,509 @@
+
+-- Running command `read_verilog -sv rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv; hierarchy -top ot_hgi_qdq_native_program_leaf -chparam COMPACT 1; proc; opt; flatten; opt; write_json compact_program.json; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_native_program_leaf'.
+Generating RTLIL representation for module `\ot_hgi_qdq_host_static'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_record_calendar'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv' to AST representation.
+Generating RTLIL representation for module `\ot_static_program_target'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv' to AST representation.
+Generating RTLIL representation for module `\ot_vms_calendar_static'.
+Successfully finished Verilog frontend.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \COMPACT = 1
+
+6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_qdq_native_program_leaf'.
+Parameter \COMPACT = 1
+Generating RTLIL representation for module `$paramod\ot_hgi_qdq_native_program_leaf\COMPACT=32'00000000000000000000000000000001'.
+
+6.1. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_native_program_leaf
+Used module:     \ot_static_program_target
+Used module:     \ot_hgi_qdq_record_calendar
+Parameter \TARGET = 8'00110000
+Parameter \PCW = 10
+
+6.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_static_program_target'.
+Parameter \TARGET = 8'00110000
+Parameter \PCW = 10
+Generating RTLIL representation for module `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010'.
+
+6.3. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_native_program_leaf
+Used module:     $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010
+Used module:     \ot_hgi_qdq_record_calendar
+
+6.4. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_native_program_leaf
+Used module:     $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010
+Used module:     \ot_hgi_qdq_record_calendar
+Removing unused module `\ot_vms_calendar_static'.
+Removing unused module `\ot_static_program_target'.
+Removing unused module `\ot_hgi_qdq_host_static'.
+Removing unused module `$paramod\ot_hgi_qdq_native_program_leaf\COMPACT=32'00000000000000000000000000000001'.
+Removed 4 unused modules.
+
+7. Executing PROC pass (convert processes to netlists).
+
+7.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:0$171'.
+Removing empty process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:0$171'.
+Cleaned up 1 empty switch.
+
+7.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 6 switch rules as full_case in process $proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51 in module ot_hgi_qdq_record_calendar.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:28$5 in module ot_hgi_qdq_record_calendar.
+Marked 4 switch rules as full_case in process $proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153 in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv:42$144 in module ot_hgi_qdq_native_program_leaf.
+Marked 2 switch rules as full_case in process $proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv:51$149 in module ot_hgi_qdq_native_program_leaf.
+Removed a total of 0 dead cases.
+
+7.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 12 redundant assignments.
+Promoted 13 assignments to connections.
+
+7.4. Executing PROC_INIT pass (extract init attributes).
+
+7.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+Found async reset \rst_n in `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:28$5'.
+Found async reset \rst_n in `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+Found async reset \rst_n in `\ot_hgi_qdq_native_program_leaf.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv:42$144'.
+Found async reset \rst_n in `\ot_hgi_qdq_native_program_leaf.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv:51$149'.
+
+7.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~24 debug messages>
+
+7.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+     1/17: $0\active[0:0]
+     2/17: $0\done[0:0]
+     3/17: $0\command_v[0:0]
+     4/17: $0\rv1[0:0]
+     5/17: $0\rv0[0:0]
+     6/17: $0\beat[15:0]
+     7/17: $0\pending_v[0:0]
+     8/17: $0\pending[93:0]
+     9/17: $0\current[93:0]
+    10/17: $0\next_pc[9:0]
+    11/17: $0\waiting[0:0]
+    12/17: $0\have[0:0]
+    13/17: $0\running[0:0]
+    14/17: $0\cycle[31:0]
+    15/17: $0\limit[10:0]
+    16/17: $0\fault[0:0]
+    17/17: $0\command[47:0]
+Creating decoders for process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:54$33'.
+Creating decoders for process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:28$5'.
+     1/2: $0\start_q[0:0]
+     2/2: $0\cfg_q[0:0]
+Creating decoders for process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:27$4'.
+Creating decoders for process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+     1/15: $0\program_start_v[0:0]
+     2/15: $0\program_cfg_we[0:0]
+     3/15: $0\lv[0:0]
+     4/15: $0\dv[0:0]
+     5/15: $0\cv[0:0]
+     6/15: $0\stored_loops[15:0]
+     7/15: $0\stored_limit[10:0]
+     8/15: $0\stored_base[9:0]
+     9/15: $0\program_start_loops[15:0]
+    10/15: $0\program_start_limit[10:0]
+    11/15: $0\program_start_base[9:0]
+    12/15: $0\program_cfg_data[255:0]
+    13/15: $0\program_cfg_addr[9:0]
+    14/15: $0\fault[0:0]
+    15/15: $0\configured[0:0]
+Creating decoders for process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$152'.
+Creating decoders for process `\ot_hgi_qdq_native_program_leaf.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv:42$144'.
+     1/1: $0\record_programme.unsupported_loop[0:0]
+Creating decoders for process `\ot_hgi_qdq_native_program_leaf.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv:51$149'.
+     1/1: $0\record_programme.issued[31:0]
+
+7.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+7.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hgi_qdq_record_calendar.\command' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $dff cell `$procdff$419' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\command_v' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$424' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\active' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$429' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\done' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$434' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\fault' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$439' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\limit' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$444' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\cycle' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$449' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\running' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$454' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\have' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$459' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\waiting' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$464' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\next_pc' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$469' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\current' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $dff cell `$procdff$476' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\pending' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $dff cell `$procdff$483' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\pending_v' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$488' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\beat' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$493' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\rv0' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$498' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\rv1' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+  created $adff cell `$procdff$503' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\pc0' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:54$33'.
+  created $dff cell `$procdff$504' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\pc1' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:54$33'.
+  created $dff cell `$procdff$505' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\captured' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:54$33'.
+  created $dff cell `$procdff$506' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\cfg_q' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:28$5'.
+  created $adff cell `$procdff$511' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\start_q' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:28$5'.
+  created $adff cell `$procdff$516' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\ca' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:27$4'.
+  created $dff cell `$procdff$517' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\base_q' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:27$4'.
+  created $dff cell `$procdff$518' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\limit_q' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:27$4'.
+  created $dff cell `$procdff$519' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_record_calendar.\cd' using process `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:27$4'.
+  created $dff cell `$procdff$520' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\configured' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $adff cell `$procdff$525' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\fault' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $adff cell `$procdff$530' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_cfg_we' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $adff cell `$procdff$535' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_cfg_addr' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $dff cell `$procdff$542' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_cfg_data' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $dff cell `$procdff$549' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_start_v' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $adff cell `$procdff$554' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_start_base' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $dff cell `$procdff$561' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_start_limit' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $dff cell `$procdff$568' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_start_loops' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $dff cell `$procdff$575' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\cv' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $adff cell `$procdff$580' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\dv' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $adff cell `$procdff$585' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\lv' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $adff cell `$procdff$590' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\stored_base' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $dff cell `$procdff$597' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\stored_limit' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $dff cell `$procdff$604' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\stored_loops' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+  created $dff cell `$procdff$611' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\address' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$152'.
+  created $dff cell `$procdff$612' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\base' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$152'.
+  created $dff cell `$procdff$613' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\limit' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$152'.
+  created $dff cell `$procdff$614' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\loops' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$152'.
+  created $dff cell `$procdff$615' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\target' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$152'.
+  created $dff cell `$procdff$616' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\data_q' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$152'.
+  created $dff cell `$procdff$617' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_native_program_leaf.\record_programme.unsupported_loop' using process `\ot_hgi_qdq_native_program_leaf.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv:42$144'.
+  created $adff cell `$procdff$622' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_native_program_leaf.\record_programme.issued' using process `\ot_hgi_qdq_native_program_leaf.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv:51$149'.
+  created $adff cell `$procdff$627' with positive edge clock and positive level reset.
+
+7.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 15 empty switches in `\ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+Removing empty process `ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:58$51'.
+Removing empty process `ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:54$33'.
+Removing empty process `ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:28$5'.
+Removing empty process `ot_hgi_qdq_record_calendar.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:27$4'.
+Found and cleaned up 6 empty switches in `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+Removing empty process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$153'.
+Removing empty process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$152'.
+Found and cleaned up 1 empty switch in `\ot_hgi_qdq_native_program_leaf.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv:42$144'.
+Removing empty process `ot_hgi_qdq_native_program_leaf.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv:42$144'.
+Found and cleaned up 2 empty switches in `\ot_hgi_qdq_native_program_leaf.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv:51$149'.
+Removing empty process `ot_hgi_qdq_native_program_leaf.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv:51$149'.
+Cleaned up 24 empty switches.
+
+7.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_qdq_record_calendar.
+<suppressed ~54 debug messages>
+Optimizing module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+<suppressed ~31 debug messages>
+Optimizing module ot_hgi_qdq_native_program_leaf.
+<suppressed ~4 debug messages>
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_qdq_record_calendar.
+<suppressed ~6 debug messages>
+Optimizing module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+Optimizing module ot_hgi_qdq_native_program_leaf.
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_qdq_record_calendar'.
+<suppressed ~72 debug messages>
+Finding identical cells in module `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010'.
+<suppressed ~48 debug messages>
+Finding identical cells in module `\ot_hgi_qdq_native_program_leaf'.
+<suppressed ~6 debug messages>
+Removed a total of 42 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_qdq_record_calendar..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_hgi_qdq_native_program_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~44 debug messages>
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_qdq_record_calendar.
+  Optimizing cells in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+  Optimizing cells in module \ot_hgi_qdq_native_program_leaf.
+Performed a total of 0 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_qdq_record_calendar'.
+Finding identical cells in module `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010'.
+Finding identical cells in module `\ot_hgi_qdq_native_program_leaf'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$476 ($dff) from module ot_hgi_qdq_record_calendar (D = $procmux$235_Y, Q = \current).
+Adding EN signal on $procdff$419 ($dff) from module ot_hgi_qdq_record_calendar (D = { $add$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:78$63_Y [0] $add$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:79$61_Y \current [93:80] 1'1 }, Q = \command).
+Adding EN signal on $procdff$483 ($dff) from module ot_hgi_qdq_record_calendar (D = \captured [93:0], Q = \pending).
+Adding EN signal on $procdff$469 ($adff) from module ot_hgi_qdq_record_calendar (D = $procmux$243_Y, Q = \next_pc).
+Adding EN signal on $procdff$444 ($adff) from module ot_hgi_qdq_record_calendar (D = \limit_q, Q = \limit).
+Adding EN signal on $procdff$449 ($adff) from module ot_hgi_qdq_record_calendar (D = $procmux$298_Y, Q = \cycle).
+Setting constant 1-bit at position 0 on $auto$ff.cc:266:slice$629 ($dffe) from module ot_hgi_qdq_record_calendar.
+Adding EN signal on $procdff$597 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \base [9:0], Q = \stored_base).
+Adding EN signal on $procdff$525 ($adff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = 1'1, Q = \configured).
+Adding EN signal on $procdff$575 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \stored_loops, Q = \program_start_loops).
+Adding EN signal on $procdff$542 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \address [9:0], Q = \program_cfg_addr).
+Adding EN signal on $procdff$549 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \data_q, Q = \program_cfg_data).
+Adding EN signal on $procdff$604 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \limit [10:0], Q = \stored_limit).
+Adding EN signal on $procdff$611 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \loops, Q = \stored_loops).
+Adding EN signal on $procdff$561 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \stored_base, Q = \program_start_base).
+Adding EN signal on $procdff$568 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \stored_limit, Q = \program_start_limit).
+Adding EN signal on $procdff$622 ($adff) from module ot_hgi_qdq_native_program_leaf (D = 1'1, Q = \record_programme.unsupported_loop).
+Adding EN signal on $procdff$627 ($adff) from module ot_hgi_qdq_native_program_leaf (D = $procmux$411_Y, Q = \record_programme.issued).
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_qdq_record_calendar..
+Finding unused cells or wires in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010..
+Finding unused cells or wires in module \ot_hgi_qdq_native_program_leaf..
+Removed 44 unused cells and 282 unused wires.
+<suppressed ~49 debug messages>
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+Optimizing module ot_hgi_qdq_native_program_leaf.
+<suppressed ~1 debug messages>
+Optimizing module ot_hgi_qdq_record_calendar.
+<suppressed ~2 debug messages>
+
+8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_hgi_qdq_native_program_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_hgi_qdq_record_calendar..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~32 debug messages>
+
+8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+  Optimizing cells in module \ot_hgi_qdq_native_program_leaf.
+  Optimizing cells in module \ot_hgi_qdq_record_calendar.
+Performed a total of 0 changes.
+
+8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010'.
+<suppressed ~33 debug messages>
+Finding identical cells in module `\ot_hgi_qdq_native_program_leaf'.
+Finding identical cells in module `\ot_hgi_qdq_record_calendar'.
+Removed a total of 11 cells.
+
+8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010..
+Finding unused cells or wires in module \ot_hgi_qdq_native_program_leaf..
+Finding unused cells or wires in module \ot_hgi_qdq_record_calendar..
+Removed 0 unused cells and 11 unused wires.
+<suppressed ~1 debug messages>
+
+8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+Optimizing module ot_hgi_qdq_native_program_leaf.
+Optimizing module ot_hgi_qdq_record_calendar.
+
+8.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_hgi_qdq_native_program_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_hgi_qdq_record_calendar..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~32 debug messages>
+
+8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+  Optimizing cells in module \ot_hgi_qdq_native_program_leaf.
+  Optimizing cells in module \ot_hgi_qdq_record_calendar.
+Performed a total of 0 changes.
+
+8.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010'.
+Finding identical cells in module `\ot_hgi_qdq_native_program_leaf'.
+Finding identical cells in module `\ot_hgi_qdq_record_calendar'.
+Removed a total of 0 cells.
+
+8.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010..
+Finding unused cells or wires in module \ot_hgi_qdq_native_program_leaf..
+Finding unused cells or wires in module \ot_hgi_qdq_record_calendar..
+
+8.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+Optimizing module ot_hgi_qdq_native_program_leaf.
+Optimizing module ot_hgi_qdq_record_calendar.
+
+8.23. Finished OPT passes. (There is nothing left to do.)
+
+9. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+Deleting now unused module ot_hgi_qdq_record_calendar.
+<suppressed ~2 debug messages>
+
+10. Executing OPT pass (performing simple optimizations).
+
+10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_qdq_native_program_leaf.
+
+10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_qdq_native_program_leaf'.
+Removed a total of 0 cells.
+
+10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_qdq_native_program_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~31 debug messages>
+
+10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_qdq_native_program_leaf.
+Performed a total of 0 changes.
+
+10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_qdq_native_program_leaf'.
+Removed a total of 0 cells.
+
+10.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_qdq_native_program_leaf..
+
+10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_qdq_native_program_leaf.
+
+10.9. Finished OPT passes. (There is nothing left to do.)
+
+11. Executing JSON backend.
+
+12. Printing statistics.
+
+=== ot_hgi_qdq_native_program_leaf ===
+
+   Number of wires:                259
+   Number of wire bits:           4318
+   Number of public wires:         109
+   Number of public wire bits:    3213
+   Number of ports:                 18
+   Number of port bits:            407
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                214
+     $add                            9
+     $adff                          19
+     $adffe                          6
+     $dff                           13
+     $dffe                          11
+     $eq                             8
+     $ge                             3
+     $gt                             3
+     $le                             3
+     $logic_and                     24
+     $logic_not                      7
+     $logic_or                       8
+     $lt                             2
+     $mux                           72
+     $ne                             4
+     $not                            4
+     $or                             3
+     $reduce_and                     9
+     $reduce_bool                    3
+     $scopeinfo                      2
+     ot_sram_1r1w_1024x256_m2_r2c2      1
+

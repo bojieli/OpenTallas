@@ -58,3 +58,39 @@ schedule; padding inter-unit gaps is not viable and compressor-die expansion can
 exceed1024 words (native_record_census contains representative source evidence and
 explicitly marked1040-beat capacity inference). No new physical closure or full
 native token/layer claim follows from this component proof.
+
+NEXT STRUCTURAL CONTROLLER MODEL: one timestamped native record word per QDQ
+operation, not per elapsed beat or idle cycle. Proposed payload start32/beatcount16/
+src16/dst16/op6/block8 =94 bits; PC10+magic unchanged. One next-record capture
+register plus active beat walker; prefetch next record during active record and
+assert next timestamp has at least the real fetch/capture margin. Absolute issue
+cycles are compiled, no result-ready or dependency wait. SRAM remains one1024x256
+programme macro (<=1024 records rather than <=1024 beats). Actual full native
+programme source/cycle allocation, supported min record length4beats, prefetch
+at short adjacent record boundary, and no buffer conflict need a new exact gate.
+This is a model/proposal only; current proved host component remains gapless48b.
+
+COMPACT RECORD / CURRENT BANK UPDATE: opt-in COMPACT1 native host target48 now
+executes8 real timestamped record words, expanding104 beats with the unchanged
+actual decoder. Actual NW reservations are emitted from the same decoded HGI
+records/timestamps and drive actual bank selectors. Current canonical bank SHA
+7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53
+was re-proved after preserving old7828 evidence as historical. Joint positive157
+LCP-to-actual-macro-commit cycles vs immutable168 / historical184;3328 exact
+words and416 actual SRAM readbacks. Six mutants killed for expected causes:
+sector map,write map,late response,wrong NW owner,missing target48,unsupported
+loop count. No active own job after terminal oth-ubuntu-3827706-1792055950.
+Programme root measured1576 FF+1 macro, unchanged transport4285 FF. Separate
+record-calendar mechanism proof covers adjacent shortest4-beat records and3000
+idle cycles without storing idle words, with exact timing and two killed mutants.
+
+Compiler CLI accepts actual serialized HGI records plus explicit issue_cycle and
+resident_sid. It emits real compact Quant and NW SRAM images, validates real
+read-after-write commit and other static memory hazards, rejects unsupported
+predicates/dynamic addresses/partial overlap/residency/PC/timestamp overflow. The
+historical component fixture relocation and timestamps remain clearly declared.
+Full native token global timestamp/residency authority requested from h_vm and
+h_elements_b/su_local_native. Full NW per-cycle programme capacity remains1024;
+whole-token paging/resident VM profiles must be built by the native VM calendar
+owner before claiming production integration. Actual stations/PG/TT/FF/DRC and
+source-matched hardened decoder views remain physical prerequisites.

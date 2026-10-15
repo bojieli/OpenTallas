@@ -21,7 +21,7 @@ def lower_record(record, start_cycle, resident_sid=0):
     silently changed memory source. All addresses here are VM FP32 word addresses.
     """
     from hgi_sim.records import Rec
-    if not isinstance(start_cycle,int) or start_cycle<0 or resident_sid not in range(4):
+    if not isinstance(start_cycle,int) or not 0<=start_cycle<2**32 or resident_sid not in range(4):
         raise ValueError('Quant start cycle/resident SID invalid')
     if not isinstance(record,Rec) or record.unit!='FUSED':
         raise ValueError('native Quant lowering requires decoded FUSED HGI record')
@@ -127,19 +127,56 @@ def compact_record_words(records, issue_cycles, resident_sid):
     """
     if len(records)!=len(issue_cycles) or not records or len(records)>1024:
         raise ValueError('native Quant record count exceeds actual1024-word macro')
-    words=[];previous_end=-1
+    words=[];previous_end=-1;writes={};reads={}
     for pc,(record,cycle) in enumerate(zip(records,issue_cycles)):
         commands=lower_record(record,cycle,resident_sid)
-        if len(commands)<4 or len(commands)>65535 or cycle<8 or cycle<=previous_end:
+        if len(commands)<4 or len(commands)>65535 or cycle<8 or cycle<=previous_end or cycle+len(commands)>=2**32:
             raise ValueError('native Quant timestamp/beat count overlaps or lacks initial SRAM margin')
         # Row gaps must be represented as separate statically allocated records.
         if any(c['src']!=commands[0]['src']+4*i or c['dst']!=commands[0]['dst']+4*i for i,c in enumerate(commands)):
             raise ValueError('compact Quant requires contiguous row placement or explicit split records')
+        for command in commands:
+            read_edge=command['cycle']+1
+            write_edge=command['cycle']+35
+            commit_edge=command['cycle']+38
+            for lane in range(4):
+                source=command['src']+lane;destination=command['dst']+lane
+                if writes.get(source,-1)>=read_edge:
+                    raise ValueError('Quant native RAW operand not committed on compiled read cycle')
+                if reads.get(destination,-1)>=write_edge or writes.get(destination,-1)>=commit_edge:
+                    raise ValueError('Quant native WAR/WAW conflict in compiled memory timeline')
+                reads[source]=read_edge;writes[destination]=commit_edge
         c=commands[0]
         payload=(c['block']<<86)|(c['op']<<80)|(c['dst']<<64)|(c['src']<<48)|(len(commands)<<32)|cycle
         words.append((0xc7a1<<240)|(pc<<224)|payload)
         previous_end=cycle+len(commands)-1
     return words
+
+
+def compact_native_nw_programme(records, issue_cycles, resident_sid, layout):
+    """Compile real NW bank slots for timestamped record issue, current zero-station pins.
+
+    Relative to LCP, record tick t is consumed by engine at t+7. NW ordinal k
+    reaches bank at k+7; hence read ordinal=t+1, write ordinal=t+35. Actual
+    physical stations must extend this source-derived calendar, never be hidden.
+    """
+    compact_record_words(records,issue_cycles,resident_sid)
+    if layout['params']['RG']!=7 or layout['params']['WG']!=3 or layout['bits']!=187:
+        raise ValueError('Quant compact NW requires source-matched native RG7/WG3 layout')
+    fields={f['name']:f for f in layout['fields']}
+    commands=[c for record,tick in zip(records,issue_cycles) for c in lower_record(record,tick,resident_sid)]
+    length=max(c['cycle']+35 for c in commands)+5
+    if length>1024:
+        raise ValueError('Actual NW calendar storage exceeds1024 words; native global VM paging/resident profiles required')
+    values=[0]*length
+    for c in commands:
+        for offset,key,owner,enabled,selected in [(1,'src',4,'rslot_v','rslot'),(35,'dst',2,'wslot_v','wslot')]:
+            e,s=fields[enabled],fields[selected]
+            for j in range(4):
+                bank=(c[key]+j)&7;i=c['cycle']+offset
+                if values[i]>>(e['lo']+bank)&1:raise ValueError('compact NW duplicate bank reservation')
+                values[i]|=1<<(e['lo']+bank);values[i]|=owner<<(s['lo']+3*bank)
+    return [(0xc7a1<<240)|(pc<<224)|word for pc,word in enumerate(values)]
 
 
 def native_nw_programme(result, layout):
@@ -190,7 +227,12 @@ def main():
             if end!=len(raw):raise ValueError('native Quant source contains trailing/unbound record bytes')
             records.append(record);cycles.append(item['issue_cycle'])
         words=compact_record_words(records,cycles,native['resident_sid'])
+        a.compact_out.parent.mkdir(parents=True,exist_ok=True)
         a.compact_out.write_text(''.join(f'{w:064x}\n' for w in words))
+        if a.nw_out:
+            nw_words=compact_native_nw_programme(records,cycles,native['resident_sid'],json.loads(a.nw_layout.read_text()))
+            a.nw_out.parent.mkdir(parents=True,exist_ok=True)
+            a.nw_out.write_text(''.join(f'{w:064x}\n' for w in nw_words))
         a.out.write_text(json.dumps(dict(schema='opentallas.hbm-quant-compact-source-binding.v1',
             source=str(a.compact_records),source_sha256=hashlib.sha256(a.compact_records.read_bytes()).hexdigest(),
             record_count=len(records),issue_cycles=cycles,resident_sid=native['resident_sid'],
