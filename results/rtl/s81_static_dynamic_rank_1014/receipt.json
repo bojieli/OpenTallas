@@ -129,12 +129,13 @@
     "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv": "0a876ede4169e7d8a08d24a2abc84dc6b01f419cf6fe310aca5477225a653348",
     "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane_dynamic.sv": "d12dc2b28e4401461c1d52eec59742f99f33b9ca9d937ebe78d58d17e989b0c1",
     "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv": "e0a1f6bbb2ead12198c873fb924a16e7c8e6bdcaeb2d957fb19c48889f7e0527",
-    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv": "4f8503debd6282eeff6a6c8480c40a4c54069d15c6f6d3539bacd20bfbd75a5c",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv": "9e8edec2bac1c4adf14c51b7cf9d5131a2222654cf5697cdfd6464eb22b51e33",
     "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic.sv": "fff67a9b33fb9bf5120067a80686d80645e7a144be1109b1987b3d64dd7ebbbe",
-    "rtl/dsrom_sys/s81_static_collective/tb_s81_static_fmt1_dynamic.sv": "a2ceb33a3779602dd87d599405a10e956e05693ce29000fa6786e64fcbbede4f",
+    "rtl/dsrom_sys/s81_static_collective/tb_s81_static_fmt1_dynamic.sv": "550084559b2914350d620080fd8497bc9770d61b77aae2b84e62025a229e1788",
     "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank_dynamic.sv": "91bda30525fd301a0f796e9aef449b60136320819b693e18fc53748f4020fee0",
-    "tools/s81_static_collective/check_dynamic.py": "902bb93b2585c339bdb853e311a2df0b48098db693a330b732511e3cf760454a"
+    "tools/s81_static_collective/check_dynamic.py": "4a5cbf79ee1d0a6e23ab8b402246d935ff2f6040b56c4b0182b496823864baff"
   },
+  "boot_configuration_guard": "Actual attempted source issue on first boot-capture edge asserts fault before sampling edge; no source operation admitted before rank capture",
   "mutation": "Actual lane codec peer prefix uses rank XOR g, observed gather fault; boot strap change separately detected",
   "blockers": [
     "actual native VM source image",

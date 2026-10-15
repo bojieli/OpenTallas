@@ -146,8 +146,8 @@ module s81_static_calendar_controller #(
     else begin
      c_done<=entry[CB+85+:9];
      if(entry[RW-2])begin active<=0;cursor<=0;end
-     else if((active ? cursor:0)==CYCLES-1)begin fault<=1;active<=0;end
-     else begin active<=1;cursor<=(active ? cursor:0)+1'b1;end
+     else if((active ? int'(cursor):0)==CYCLES-1)begin fault<=1;active<=0;end
+     else begin active<=1;cursor<=AW'((active ? int'(cursor):0)+1);end
     end
    end
   end

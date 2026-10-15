@@ -31,8 +31,8 @@ module s81_static_fmt1_rank_dynamic_clocked(
  always @*begin
   remote_v_map=0;remote_frame_map=0;
   for(integer j=0;j<3;j=j+1)begin
-   remote_v_map[rank_q ^ (j+1)]=lane_rx_v[j];
-   remote_frame_map[(rank_q ^ (j+1))*569+:569]=lane_rx_record[j*569+:569];
+   remote_v_map[int'(rank_q) ^ (j+1)]=lane_rx_v[j];
+   remote_frame_map[(int'(rank_q) ^ (j+1))*569+:569]=lane_rx_record[j*569+:569];
   end
  end
  assign rv=remote_v_map;assign rf=remote_frame_map;
@@ -46,5 +46,5 @@ module s81_static_fmt1_rank_dynamic_clocked(
    .phy_tx_valid(phy_tx_valid[g]),.phy_tx_data(phy_tx_data[g*512+:512]),
    .phy_rx_valid(phy_rx_valid[g]),.phy_rx_data(phy_rx_data[g*512+:512]),.fault(lf[g]));
  end endgenerate
- assign fault=ef || |lf || rank_fault;
+ assign fault=ef || |lf || configuration_fault;
 endmodule
