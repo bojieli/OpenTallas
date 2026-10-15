@@ -1,5 +1,5 @@
 {
- "name": "qkd_kv_native_programme-p2-COMMIT",
+ "name": "qkd_kv_native_programme-p2-03c7c9158",
  "block": "qkd_kv_native_programme",
  "ref_tile": true,
  "owner": "Claude:q15_compute_elem",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/q15-kvprog-1015",
-  "commit": "COMMIT",
+  "commit": "03c7c9158",
   "extra_paths": [
    "tools/qwen_static_kv/bench_native_programme_leaf_v2.sh",
    "results/rtl/qwen_native_kv_programme_1103/leaf_package_v2",
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_kv_native_programme/qkd_kv_native_programme-p2-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_kv_native_programme/qkd_kv_native_programme-p2-03c7c9158"
   }
  ],
  "cycles_added": 0,
