@@ -1,5 +1,5 @@
 {
- "name": "ot_s81_vm_x34_t_w542_1015_r7-pinmargin7-7c061d55a",
+ "name": "ot_s81_vm_x34_t_w542_1015_r7-pinmargin7-c6c540e32",
  "block": "ot_s81_vm_x34_t",
  "ref_tile": true,
  "owner": "Codex:S81 VM native takeover1103",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/s81-vm-takeover-1103",
-  "commit": "7c061d55a"
+  "commit": "c6c540e32"
  },
  "stages": {
   "bench": [
@@ -107,7 +107,9 @@
  "structural_change": "Native boundary cell correction from actual r6 exported TT arc: b2[79] capture190.01212ps exceeds immutable190ps (one pin; rounding previouslyhid failure). Routed FF input-to-register headroom47.25ps, output4.55ps, register-register26.94ps. Replace receiver HB2 by smaller HB1 physical hold stage, preserving HB1 sender stage and four balancedICG clocksubtrees; target additional capture margin, no RTL/port/outline/pin/calendar change. Actual TT/FF/DRC and native audit required; no threshold waiver.",
  "reroute_reason": {
   "kind": "pin_register",
-  "source": "physical/ref_tile/ot_s81_vm_x34_t_w542_1015_r6/views/ot_s81_vm_x34_t/ot_s81_vm_x34_t_tt.lib",
-  "why": "Native boundary cell correction from actual r6 exported TT arc: b2[79] capture190.01212ps exceeds immutable190ps (one pin; rounding previouslyhid failure). Routed FF input-to-register headroom47.25ps, output4.55ps, register-register26.94ps. Replace receiver HB2 by smaller HB1 physical hold stage, preserving HB1 sender stage and four balancedICG clocksubtrees; target additional capture margin, no RTL/port/outline/pin/calendar change. Actual TT/FF/DRC and native audit required; no threshold waiver."
+  "source": "results/physical/s81_vm_takeover_1103/native_route_audits.json",
+  "cell": "ot_s81_vm_x34_t",
+  "capture_ps": 190.01212,
+  "fix": "Replace receiver HB2 physicalholdstage by HB1 using measured FF input-to-register47.25ps reserve; unchanged HB1 output stage, four balanced ICGsubtrees, sourceRTL/pins/outline/edges. Exactr6b2[79] TTcapture190.01212>190 washiddenbydisplayrounding; fresh nativeTT/FF/DRC gate remainsmandatory."
  }
 }
