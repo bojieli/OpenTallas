@@ -58,6 +58,13 @@ def encode_program(rows: dict[int, tuple[int, int]], qid: int, base: int, limit:
         raise ValueError('qid/descriptor range invalid')
     if any(r not in rows for r in range(base, limit)):
         raise ValueError('descriptor includes incomplete row')
+    for row in range(base, limit):
+        meta = rows[row][1]
+        halt = (meta >> 44) & 1
+        next_pc, target_pc, count = meta & 63, (meta >> 6) & 63, (meta >> 12) & 0xffffffff
+        if (row == limit-1 and not halt) or (not halt and
+                (not base <= next_pc < limit or (count and not base <= target_pc < limit))):
+            raise ValueError(f'row{row} metadata escapes descriptor or lastrow lacks halt')
     frames = []
     for row, (uop, meta) in sorted(rows.items()):
         if row not in range(64) or not 0 <= uop < 1 << 1536 or not 0 <= meta < 1 << 51:
@@ -69,7 +76,8 @@ def encode_program(rows: dict[int, tuple[int, int]], qid: int, base: int, limit:
                            'next_frame_gap_edges':55 if segment == 6 else 1})
     return {'abi':'hcoll-f20-1536-v1', 'descriptor_units':'instructions',
             'frames':frames, 'descriptor':{'target':52+qid,'base':base,'limit':limit,'loops':1},
-            'launch':'global launch after descriptor transport has settled (at least2edges)',
+            'descriptor_to_launch_gap_edges':66,
+            'launch':'global launch at least66edges after descriptor capture, after fixed64row validation',
             'runtime_loop_count_source':'native64b metadata, not descriptorloops'}
 
 
