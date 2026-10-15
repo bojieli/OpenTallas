@@ -1,0 +1,288 @@
+{
+ "schema": "opentallas.hier_contract.v1",
+ "die": "hbm_v15",
+ "version": 5,
+ "clock_period_ps": 833.333,
+ "rules": {
+  "step_um_per_bit": 0.096,
+  "face_cap": 0.6,
+  "grid": 2.16,
+  "std_util": 0.5,
+  "macro_halo": 1.25,
+  "face_layer": {
+   "N": "M5",
+   "S": "M5",
+   "E": "M4",
+   "W": "M4"
+  },
+  "homes": "adopted block origin if the measured outline fits, else nearest free"
+ },
+ "slots": [
+  {
+   "name": "qdq_target48_ready_diagnostic",
+   "cell": "ot_hbm_program_block_ready",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_program_block_ready.sv",
+   "source_sha256": "251e0911da6d4ccd6f4932100e0e7bd1e630dcd6c65f9a6e66153db67dd0b8a2",
+   "source_prerequisite": "76c625248",
+   "params": {
+    "PCW": 10,
+    "TARGET": 48,
+    "MUT": 0
+   },
+   "kind": "tile",
+   "parent": "unplaced_qdq_programme_group",
+   "origin": {
+    "x": 0,
+    "y": 0,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 86.4,
+    "h": 86.4
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 42.72,
+     "span_um": [
+      42.24,
+      43.2
+     ],
+     "bit_pitch_um": 0.96,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 43.68,
+     "span_um": [
+      43.2,
+      44.16
+     ],
+     "bit_pitch_um": 0.96,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    },
+    {
+     "name": "cfg_we",
+     "face": "W",
+     "layer": "M4",
+     "offset": 37.44,
+     "span_um": [
+      36.96,
+      37.92
+     ],
+     "bit_pitch_um": 0.96,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    },
+    {
+     "name": "cfg_addr[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 42.72,
+     "span_um": [
+      37.92,
+      47.52
+     ],
+     "bit_pitch_um": 0.96,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    },
+    {
+     "name": "program_active",
+     "face": "W",
+     "layer": "M4",
+     "offset": 48.0,
+     "span_um": [
+      47.52,
+      48.48
+     ],
+     "bit_pitch_um": 0.96,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    },
+    {
+     "name": "launch_v",
+     "face": "W",
+     "layer": "M4",
+     "offset": 48.959999999999994,
+     "span_um": [
+      48.48,
+      49.44
+     ],
+     "bit_pitch_um": 0.96,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    },
+    {
+     "name": "desc_v",
+     "face": "S",
+     "layer": "M5",
+     "offset": 29.088,
+     "span_um": [
+      28.8,
+      29.376
+     ],
+     "bit_pitch_um": 0.576,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    },
+    {
+     "name": "desc_target[7:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 31.68,
+     "span_um": [
+      29.376,
+      33.984
+     ],
+     "bit_pitch_um": 0.576,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    },
+    {
+     "name": "desc_base[11:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 37.44,
+     "span_um": [
+      33.984,
+      40.896
+     ],
+     "bit_pitch_um": 0.576,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    },
+    {
+     "name": "desc_limit[12:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 44.64,
+     "span_um": [
+      40.896,
+      48.384
+     ],
+     "bit_pitch_um": 0.576,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    },
+    {
+     "name": "desc_loops[15:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 52.992000000000004,
+     "span_um": [
+      48.384,
+      57.6
+     ],
+     "bit_pitch_um": 0.576,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    },
+    {
+     "name": "block_ready",
+     "face": "E",
+     "layer": "M4",
+     "offset": 42.72,
+     "span_um": [
+      42.24,
+      43.2
+     ],
+     "bit_pitch_um": 0.96,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "E",
+     "layer": "M4",
+     "offset": 43.68,
+     "span_um": [
+      43.2,
+      44.16
+     ],
+     "bit_pitch_um": 0.96,
+     "bit_centres_rule": "lo + (bit_index+0.5)*bit_pitch_um",
+     "offset_pending_view": false
+    }
+   ],
+   "pin_ranges": {
+    "clk": [
+     42.24,
+     43.2
+    ],
+    "rst_n": [
+     43.2,
+     44.16
+    ],
+    "cfg_we": [
+     36.96,
+     37.92
+    ],
+    "cfg_addr": [
+     37.92,
+     47.52
+    ],
+    "program_active": [
+     47.52,
+     48.48
+    ],
+    "launch_v": [
+     48.48,
+     49.44
+    ],
+    "desc_v": [
+     28.8,
+     29.376
+    ],
+    "desc_target": [
+     29.376,
+     33.984
+    ],
+    "desc_base": [
+     33.984,
+     40.896
+    ],
+    "desc_limit": [
+     40.896,
+     48.384
+    ],
+    "desc_loops": [
+     48.384,
+     57.6
+    ],
+    "block_ready": [
+     42.24,
+     43.2
+    ],
+    "fault": [
+     43.2,
+     44.16
+    ]
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 42.72
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "version": 5,
+   "grant": "independent_target48_ready_diagnostic_1417",
+   "measured_std_um2": 653.9859,
+   "measured_ff": 1101,
+   "scope": "Independent diagnostic physical tile; exact downstream target write port producer required. Parent home near actual QDQprogramme/11newports remains UNPLACED, allincidenttiming open; no wholehost/die placement claim. Bitmapreset1024fanout andnativeCTS must pass.",
+   "parent_and_die_qualified": false
+  }
+ ],
+ "physical_parent_home_qualified": false
+}
