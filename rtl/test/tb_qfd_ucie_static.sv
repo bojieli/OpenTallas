@@ -131,32 +131,32 @@ module tb_qfd_ucie_static;
 .r_epoch_abort(b_r_abort),
 .r_fault_cause(b_r_cause));
 initial begin
- for(cyc=0;cyc<PHASE+32+2+14+2+N+20;cyc=cyc+1) begin
+ for(cyc=0;cyc<PHASE+32+3+14+2+N+20;cyc=cyc+1) begin
  rst_n=cyc>=4;epoch_begin=cyc==6;
  p_wr=cyc>=8 && cyc<8+N;p_ws=6'(cyc-8);
  p_rd=cyc>=32 && cyc<32+N;p_rs=6'(cyc-32);
- p_ev=cyc>=49 && cyc<49+N;p_es=6'(cyc-49);
+ p_ev=cyc>=50 && cyc<50+N;p_es=6'(cyc-50);
  r_wr=cyc>=8+PHASE && cyc<8+PHASE+N;r_ws=6'(cyc-8-PHASE);
  r_rd=cyc>=32+PHASE && cyc<32+PHASE+N;r_rs=6'(cyc-32-PHASE);
- r_ev=cyc>=49+PHASE && cyc<49+PHASE+N;r_es=6'(cyc-49-PHASE);
+ r_ev=cyc>=50+PHASE && cyc<50+PHASE+N;r_es=6'(cyc-50-PHASE);
  #5;clk=1;#1;
  if(rst_n)begin
  if(a_p_abort || a_r_abort || b_p_abort || b_r_abort)aborts=aborts+1;
  if(MUT==0 && ({a_p_abort,a_r_abort,b_p_abort,b_r_abort}!==4'b0 ||
  {a_p_cause,a_r_cause,b_p_cause,b_r_cause}!==28'b0))bad=bad+1;
  if(MUT==0 && (a_p_tv && a_r_tv || b_p_tv && b_r_tv))bad=bad+1;
- if(cyc>=50 && cyc<50+N)begin checks=checks+2;
- if(a_p_rv!==1'b1 || a_p_word!==pw(1,cyc-50))bad=bad+1;
- if(b_p_rv!==1'b1 || b_p_word!==pw(0,cyc-50))bad=bad+1;end
+ if(cyc>=51 && cyc<51+N)begin checks=checks+2;
+ if(a_p_rv!==1'b1 || a_p_word!==pw(1,cyc-51))bad=bad+1;
+ if(b_p_rv!==1'b1 || b_p_word!==pw(0,cyc-51))bad=bad+1;end
  else if(MUT==0 && (a_p_rv!==1'b0 || b_p_rv!==1'b0))bad=bad+1;
- if(cyc>=50+PHASE && cyc<50+PHASE+N)begin checks=checks+2;
- if(a_r_rv!==1'b1 || a_r_word!==rw(1,cyc-50-PHASE))bad=bad+1;
- if(b_r_rv!==1'b1 || b_r_word!==rw(0,cyc-50-PHASE))bad=bad+1;end
+ if(cyc>=51+PHASE && cyc<51+PHASE+N)begin checks=checks+2;
+ if(a_r_rv!==1'b1 || a_r_word!==rw(1,cyc-51-PHASE))bad=bad+1;
+ if(b_r_rv!==1'b1 || b_r_word!==rw(0,cyc-51-PHASE))bad=bad+1;end
  else if(MUT==0 && (a_r_rv!==1'b0 || b_r_rv!==1'b0))bad=bad+1;
  end
  #4;clk=0;
  end
- if(bad==0 && aborts==0)$display("STATIC_UCIE_PASS checks%0d words_per_channel512 TX2 RX1 PHY14 zero_simultaneous_subchannel_slots",checks);
+ if(bad==0 && aborts==0)$display("STATIC_UCIE_PASS checks%0d words_per_channel512 TX3 RX1 PHY14 zero_simultaneous_subchannel_slots",checks);
  else $display("STATIC_UCIE_FAIL checks%0d errors%0d abort_cycles%0d MUT%0d",checks,bad,aborts,MUT);
  $finish;
  end

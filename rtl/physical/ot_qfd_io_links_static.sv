@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Native static normal board endpoint. Five independently delivered clock
 // entries (control + four real SRAM banks), no credit/ready ports. The PHY
-// data clock carries the codec's fixed TX2/RX1 protocol. Compiler commands
+// data clock carries the codec's fixed TX3/RX1 protocol. Compiler commands
 // reserve every wr/rd/rx_expect edge; exceptions abort the epoch explicitly.
 module qfd_io_serdes_static #(parameter integer MUT=0) (
  input wire ck,ckb0,ckb1,ckb2,ckb3,rst_n,epoch_begin,

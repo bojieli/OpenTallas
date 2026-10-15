@@ -2,7 +2,7 @@
 module tb_qfd_serdes_static;
  parameter integer FW=546,CW=32,MUT=0,N=512;
  localparam integer PW=FW+19+CW, LAT=MUT==4?340:339;
- localparam integer RS=32, EV=RS+2+339+1, OUT=EV+1;
+ localparam integer RS=32, EV=RS+3+339+1, OUT=EV+1;
  reg clk=0,rst_n=0,epoch_begin=0,wr_v=0,rd_v=0,ev=0;
  reg [5:0] ws=0,rs=0,es=0;
  wire atv,btv,arv,brv,aa,ba;
@@ -54,7 +54,7 @@ module tb_qfd_serdes_static;
     if(aa||ba)aborts=aborts+1;
     if(MUT==0 && (aa!==1'b0 || ba!==1'b0 || ac!==7'b0 || bc!==7'b0))begin errors=errors+1;if(errors<10)$display("BAD_FAULT cycle%0d abort%h/%h causes%h/%h",cyc,aa,ba,ac,bc);end
     // These are compiler constants, not observed-output driven expectations.
-    if(MUT==0 && (atv!==(cyc>=RS+2&&cyc<RS+2+N)||btv!==(cyc>=RS+2&&cyc<RS+2+N)))errors=errors+1;
+    if(MUT==0 && (atv!==(cyc>=RS+3&&cyc<RS+3+N)||btv!==(cyc>=RS+3&&cyc<RS+3+N)))errors=errors+1;
     if(cyc>=OUT&&cyc<OUT+N)begin
       checks=checks+2;
       if(!arv || ard!==word(1,cyc-OUT))errors=errors+1;
@@ -63,7 +63,7 @@ module tb_qfd_serdes_static;
    end
    #4;clk=0;
   end
-  if(errors==0 && aborts==0)$display("STATIC_BOARD_PASS FW%0d CW%0d checks%0d TX2 RX1 PHY339",FW,CW,checks);
+  if(errors==0 && aborts==0)$display("STATIC_BOARD_PASS FW%0d CW%0d checks%0d TX3 RX1 PHY339",FW,CW,checks);
   else $display("STATIC_BOARD_FAIL FW%0d CW%0d checks%0d errors%0d abort_cycles%0d causes%h/%h MUT%0d",FW,CW,checks,errors,aborts,ac,bc,MUT);
   $finish;
  end
