@@ -42,5 +42,31 @@
     ],
     "SRAM_macro_area_um2_total": 567336.96,
     "area_excludes": "control/crossbar cells, halos, routing, clock roots; not slot fit"
+  },
+  "programme_candidate": {
+    "issuers": 8,
+    "protected_payload_bits": [
+      223,
+      223,
+      223,
+      223,
+      223,
+      223,
+      223,
+      181
+    ],
+    "real_macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "storage_bytes": 262144,
+    "macro_dimensions_um": [
+      174.744,
+      70.47
+    ],
+    "macro_area_um2_total": 98513.67744,
+    "instructions_max": 1024,
+    "full7168_sigmoid_cycles": 624,
+    "full4x7168_sigmoid_cycles": 1968,
+    "fullbatch_limit": "does not fit1k raw-word programme; no truncated or collapsed batch claim",
+    "native_physical_qualification": false,
+    "dependency_commit": "3d7520a5f"
   }
 }
