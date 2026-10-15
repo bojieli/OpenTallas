@@ -20,5 +20,5 @@ def main():
  for m in range(5):run(m,w/'images',f'mode{m}','PASS')
  shutil.copytree(w/'images',w/'mutant_images');f=w/'mutant_images/tmap7.viamap.hex';rows=f.read_text().splitlines();rows[455]=f'{int(rows[455],16)^(1<<415):0144x}';f.write_text('\n'.join(rows)+'\n');run(0,w/'mutant_images','actual_rom_mask_mutant','FAIL')
  rec=dict(gate='PASS',scope='Component arithmetic/history/control correctness; not physical or whole native token',old_entry='ot_dsrom_engram_lead_producer ready/busy/output hold historical',successor='ot_dsrom_engram_lead_static fixed compiler slots, actual eight released ROMs and history flops',model=model,cases=cases,sources={str(f.relative_to(R)):sha(f)for f in src},tool_sha256=sha(Path(__file__)))
- (w/'report.json').write_text(json.dumps(rec,indent=2)+'\n');print('ENGRAM_STATIC_GATE PASS 1344 exact windows, four faults, actual ROM mutant rejected')
+ (w/'report.json').write_text(json.dumps(rec,indent=2)+'\n');print('ENGRAM_STATIC_GATE PASS 130624 exact windows (all129280released token IDs), four faults, actual ROM mutant rejected')
 if __name__=='__main__':main()

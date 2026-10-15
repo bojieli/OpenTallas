@@ -56,7 +56,11 @@ module tb_dsrom_engram_lead_static(input wire clk);
    for(n=11;n<16;n++)begin tv=1;user=q;first=0;pos=n;tok=21946+n;dead=0;slot=n&1;step();end
    tv=0;repeat(5)step();
   end
-  repeat(6)step();if(seen!=issued||seen!=1344)$fatal(1,"missingoutputs");
+  // Exhaustive released tokenizer-map address coverage through the actual
+  // static producer, cold-first each token to keep history geometry bounded.
+  for(n=0;n<129280;n++)begin tv=1;user=0;first=1;pos=0;tok=n;dead=0;slot=n&1;step();end
+  tv=0;
+  repeat(6)step();if(seen!=issued||seen!=130624)$fatal(1,"missingoutputs");
   $display("ENGRAM_STATIC_PASS issued%0d exactwindows%0d fixedcapture3 noflowcontrol",issued,seen);$finish;
  end
 endmodule
