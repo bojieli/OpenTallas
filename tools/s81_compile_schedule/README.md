@@ -101,7 +101,12 @@ The source replay in `results/arch/s81_canonical_execution_1015` verifies an
 expected rejection of the actual screen14/2654-operation catalogue: all324
 rank programmes are missing and its literal SU scopes contain no MTP operations.
 The 10616 rank-operation obligations are 2654 source operations times TP4,
-not 10616 distinct physical elements. The thirteen mechanism tests exercise a
+not 10616 distinct physical elements. The fourteen mechanism tests exercise a
 synthetic positive and missing/stale/wrong-home/calendar/fusion mutants. They
 qualify this compiler join mechanism only. The replay does not qualify a single
 native canonical programme or the required MTP continuation.
+
+Actual native instances are identified by `(die_id, instance)`. Repeated real
+hierarchy names on distinct rank dies are legal; inventing globally prefixed
+hierarchy names is unnecessary. Independent operation-home assignments still
+select the exact physical die and implementing engine.

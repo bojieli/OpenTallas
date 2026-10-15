@@ -1,3 +1,4 @@
+test_actual_same_hierarchy_name_on_distinct_dies_is_legal (test_canonical_execution_join.CanonicalJoinTests.test_actual_same_hierarchy_name_on_distinct_dies_is_legal) ... ok
 test_duplicate_source_execution_rejected (test_canonical_execution_join.CanonicalJoinTests.test_duplicate_source_execution_rejected) ... ok
 test_exact_local_source_home_calendar_join_still_not_fullchip_dispatch (test_canonical_execution_join.CanonicalJoinTests.test_exact_local_source_home_calendar_join_still_not_fullchip_dispatch) ... ok
 test_fabricated_operation_stage_is_rejected (test_canonical_execution_join.CanonicalJoinTests.test_fabricated_operation_stage_is_rejected) ... ok
@@ -13,6 +14,6 @@ test_unchanged_template_with_changed_native_age_rejected (test_canonical_executi
 test_wrong_die_engine_home_rejected (test_canonical_execution_join.CanonicalJoinTests.test_wrong_die_engine_home_rejected) ... ok
 
 ----------------------------------------------------------------------
-Ran 13 tests in 0.986s
+Ran 14 tests in 1.108s
 
 OK

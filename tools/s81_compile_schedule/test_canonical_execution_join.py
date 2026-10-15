@@ -58,6 +58,18 @@ class CanonicalJoinTests(unittest.TestCase):
         self.assertEqual(r['covered_rank_operations'],324)
         self.assertEqual(r['rank_programmes_compiled'],324)
         self.assertFalse(r['dispatch_eligible']);self.assertFalse(r['qualified'])
+    def test_actual_same_hierarchy_name_on_distinct_dies_is_legal(self):
+        for instance in self.inventory['instances']:
+            instance['instance']=instance['role']
+        for home in self.inventory['source_operation_homes']:
+            home['physical_instance']='su'
+        self.manifest['native_instance_inventory']=self.pin('inventory.json',self.inventory)
+        for record in self.manifest['rank_programmes']:
+            record.update(su_instance='su',vm_instance='vm')
+            binding=copy.deepcopy(self.binding)
+            binding['jobs']['native_job']['physical_instance']='su'
+            record['binding']=self.pin('repeated_hierarchy_binding.json',binding)
+        self.assertTrue(self.run_join()['local_programmes_ready'])
     def test_missing_mtp_not_hidden_by_2654_backbone_nodes(self):
         self.catalogue['source_SU_nodes'][0]['scope']=0
         r=self.run_join();self.assertIn('missing_literal_MTP_continuation_operations',self.reasons(r))

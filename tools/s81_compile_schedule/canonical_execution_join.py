@@ -68,7 +68,7 @@ def join(canonical, catalogue, manifest, root):
         homes = {(h['node'], h['rank']): h for h in inventory['source_operation_homes']}
         if len(homes) != len(inventory['source_operation_homes']):
             raise ValueError('duplicate independently emitted source operation home')
-        instances = {i['instance']: i for i in inventory['instances']}
+        instances = {(i['die_id'], i['instance']): i for i in inventory['instances']}
         if len(instances) != len(inventory['instances']):
             raise ValueError('duplicate elaborated native instance')
     except (ValueError, KeyError, TypeError, OSError) as exc:
@@ -88,7 +88,7 @@ def join(canonical, catalogue, manifest, root):
                 raise ValueError('nonnegative integer actual core epoch required')
             for role in ('su', 'vm'):
                 name = record[role+'_instance']
-                instance = instances.get(name)
+                instance = instances.get((ranks[key], name))
                 if not instance or instance.get('role') != role or instance.get('die_id') != ranks[key]:
                     raise ValueError('native '+role+' home absent from actual elaboration')
             program = pinned(record['program'], root)
@@ -121,7 +121,7 @@ def join(canonical, catalogue, manifest, root):
                         raise ValueError('source operation native instance disagrees with actual compiler assignment')
                     local_covered.append((member['node'], key[1]))
                 native = binding['jobs'][op['id']]
-                home = instances.get(native.get('physical_instance'))
+                home = instances.get((ranks[key], native.get('physical_instance')))
                 if not home or home.get('die_id') != ranks[key] or home.get('role') != native.get('engine'):
                     raise ValueError('programme native job has no matching actual engine home')
             if len(set(local_covered)) != len(local_covered):
