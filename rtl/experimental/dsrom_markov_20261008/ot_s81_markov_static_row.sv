@@ -6,7 +6,7 @@
 // The dynamic LM head logit is captured at R with its actual candidate row.
 // Availability/identity checks only fault; they cannot stretch any slot.
 module ot_s81_markov_static_row #(
- parameter INSTANCE="mk",parameter integer ID_W=60,GLOBAL_ROW0=0,VALID_ROWS=32,
+ parameter string INSTANCE="mk",parameter integer ID_W=60,GLOBAL_ROW0=0,VALID_ROWS=32,
  parameter integer MUTANT_FOLD=0
 )(input wire clk,rst_n,input wire[37:0]clk_leaf,input wire request_slot,
  input wire head_valid,input wire[31:0]head_logit,input wire[16:0]head_row,head_token,

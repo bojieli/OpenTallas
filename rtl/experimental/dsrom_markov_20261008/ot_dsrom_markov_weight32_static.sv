@@ -5,7 +5,7 @@
 // The compiler provides a request only after that window is empty. Violations
 // fault without moving an issued response. No readiness, queue or credits.
 module ot_dsrom_markov_weight32_static #(
- parameter INSTANCE="mk", parameter integer ID_W=60,
+ parameter string INSTANCE="mk", parameter integer ID_W=60,
  parameter integer GLOBAL_ROW0=0, VALID_ROWS=32
 )(input wire clk,rst_n,request_slot,input wire[4:0]row,
  input wire[16:0]token,input wire[ID_W-1:0]identity,

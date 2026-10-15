@@ -32,7 +32,7 @@ module ot_dsrom_head_elem #(
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer SPLIT9 = 0,          // ot_v41_fadd SPLIT9 (+1 adder latency, the skew follows)
     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
-    parameter INSTANCE = "",
+    parameter string INSTANCE = "",
     // IOREG (default 0; redesign pass 2026-10-06): every input captured in a flop at its pin (+1 cycle, uniform);
     // outputs already leave flops (adder output stages, argmax/fault registers): register-to-register boundary
     parameter integer IOREG = 0,

@@ -17,7 +17,7 @@ module ot_dsrom_head_bundle #(
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer SPLIT9 = 0,          // ot_v41_fadd SPLIT9 (+1 adder latency, the skew follows)
     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
-    parameter INSTANCE = "h",
+    parameter string INSTANCE = "h",
     parameter integer IOREG = 0,           // ot_dsrom_head_elem IOREG (pin-registered elements)
     parameter integer SAFE = 0,            // ot_dsrom_head_elem SAFE (registered argmax compare)
     parameter integer A_INPUT_STAGES = 0   // opt-in aligned A transport; model prices every added cycle
