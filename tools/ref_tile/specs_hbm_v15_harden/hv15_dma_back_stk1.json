@@ -1,0 +1,118 @@
+{
+ "name": "hv15_dma_back_stk1",
+ "top": "ot_hgi_dma_back_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "rq",
+   "rr"
+  ],
+  "S": [
+   "wd",
+   "wa",
+   "wb_reserve_v",
+   "wb_reserve_bank",
+   "wb_fill_bank",
+   "wb_reserve_epoch",
+   "wb_fill_epoch",
+   "wb_reserve_sectors",
+   "wb_reserve_base",
+   "wb_fill_start",
+   "wb_ready"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "cycle",
+   "mv_v",
+   "mv",
+   "issue_at",
+   "drain_at",
+   "mv_wb_bank",
+   "mv_wb_epoch",
+   "mv_src",
+   "mv_done",
+   "mv_fault",
+   "quiet",
+   "busy"
+  ]
+ },
+ "outline": {
+  "w": 432.0,
+  "h": 302.4
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 8
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:HBM-V15-HARDEN",
+  "branch": "claude/hbm-v15-harden-1015",
+  "tag": "hv15",
+  "purpose": "v15.1 hb_dbk_SE: static scheduled DMA STORE back engine, STK=1, eight real landing SRAMs, VM RG1 direct (bank n+1/n+7), fixed cycles.",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "rtl/hbm_accel/generic/vm/static"
+  ],
+  "record_to": "results/rtl/ref_tile/hv15_dma_back_stk1",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_back.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS DMA static actual production"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_back.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant2",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_back.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "params": {
+  "STK": 1
+ }
+}

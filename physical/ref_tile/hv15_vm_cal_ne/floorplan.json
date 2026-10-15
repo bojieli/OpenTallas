@@ -1,0 +1,129 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hv15_vm_cal_ne",
+ "top": "hfd_hgi_vm_calendar_NE",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  259.2,
+  151.2
+ ],
+ "core": [
+  2.16,
+  2.16,
+  257.03999999999996,
+  149.04
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "cfg_we",
+   "cfg_addr",
+   "cfg_data",
+   "start_v",
+   "start_base",
+   "start_limit",
+   "start_loops"
+  ],
+  "E": [
+   "client_seq",
+   "response_enable",
+   "response_seq",
+   "bank_enable",
+   "bank_client",
+   "hub_ring_enable",
+   "hub_ring_client",
+   "rslot_v",
+   "wslot_v",
+   "rslot",
+   "wslot",
+   "ring_tx_enable",
+   "ring_tx_source",
+   "replay_enable",
+   "replay_source",
+   "lg_local_read",
+   "lg_local_write"
+  ],
+  "S": [
+   "calendar_v",
+   "active",
+   "done",
+   "fault",
+   "ordinal"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": null,
+   "idx": 0,
+   "x": 42.336,
+   "y": 41.04,
+   "w": 174.744,
+   "h": 70.488,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [],
+ "referenced": [
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/ref_tile/hv15_vm_cal_ne/kit.env",
+  "physical/ref_tile/hv15_vm_cal_ne/clock.sdc",
+  "physical/ref_tile/hv15_vm_cal_ne/signoff.sdc",
+  "physical/ref_tile/hv15_vm_cal_ne/pdn.tcl",
+  "physical/ref_tile/hv15_vm_cal_ne/pre_cts.tcl",
+  "physical/ref_tile/hv15_vm_cal_ne/post_cts.tcl",
+  "physical/ref_tile/hv15_vm_cal_ne/post_grt.tcl",
+  "physical/ref_tile/hv15_vm_cal_ne/pre_drt.tcl",
+  "physical/ref_tile/hv15_vm_cal_ne/pre_fill.tcl",
+  "physical/ref_tile/hv15_vm_cal_ne/post_fill.tcl",
+  "physical/ref_tile/hv15_vm_cal_ne/pre_grt.tcl",
+  "physical/ref_tile/hv15_vm_cal_ne/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hv15_vm_cal_ne/pre_gpl.tcl",
+  "physical/ref_tile/hv15_vm_cal_ne/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib",
+  "physical/ref_tile/hv15_vm_cal_ne/place.tcl"
+ ]
+}
