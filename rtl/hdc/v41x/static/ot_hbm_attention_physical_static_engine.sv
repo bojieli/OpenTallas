@@ -11,7 +11,7 @@ module ot_hbm_attention_physical_static_engine(
  input wire p_present,input wire[1023:0]p_word,
  output wire sc_v,output wire[15:0]sc_row,output wire[1:0]sc_mask,
  output wire[1023:0]sc_data,output wire[31:0]sc_fault,
- output wire pv_v,output wire[7:0]pv_dim,output wire[8191:0]pv_data,output wire[255:0]pv_fault,
+ output wire pv_v,output wire[7:0]pv_dim,output wire[16383:0]pv_data,output wire[511:0]pv_fault,
  output wire fault
 );
  wire[6:0]events;wire[9:0]phase;wire event_valid,pv_only,pf,cf,qv;
