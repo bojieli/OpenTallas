@@ -9,8 +9,18 @@ from pathlib import Path
 R=Path(__file__).resolve().parents[2];sys.path.insert(0,str(R/'tools'));import dsrom_s81_fulldie as G
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--work',type=Path,required=True);ap.add_argument('args',nargs=argparse.REMAINDER);a=ap.parse_args();w=a.work.resolve();w.mkdir(parents=True,exist_ok=True)
+ ap=argparse.ArgumentParser();ap.add_argument('--work',type=Path,required=True);ap.add_argument('--expect-manifest',type=Path,help='sha256 map of the declared source (tools/s81/source_manifest.py git); every generator input file must match or the run is refused');ap.add_argument('args',nargs=argparse.REMAINDER);a=ap.parse_args();w=a.work.resolve();w.mkdir(parents=True,exist_ok=True)
  p=argparse.ArgumentParser();p.add_argument('mode');p.add_argument('--k',type=int,default=16);G.die_options(p);opts=p.parse_args(a.args);G.apply_options(opts);assert G.CANONICAL_LAYOUT is not None
+ # Source-bind every input file the generator reads (contract, layout, pins, LEFs), not only tools/rtl/physical.
+ from s81 import source_manifest as SM
+ inputs=SM.generator_inputs(R,vars(opts))
+ man=SM.tree(R,inputs);(w/'source_manifest.json').write_text(json.dumps(man,indent=1,sort_keys=True))
+ bound=dict(inputs={f:man.get(f) for f in inputs},contract=SM.contract_record(R,getattr(opts,'contract',None)),source_manifest_sha256=hashlib.sha256((w/'source_manifest.json').read_bytes()).hexdigest())
+ if a.expect_manifest:
+  bound['source_check']=SM.check(man,json.loads(a.expect_manifest.read_text()),inputs)
+  if bound['source_check']['verdict']!='PASS':
+   (w/'status.json').write_text(json.dumps(dict(status='GEN_REFUSED_SOURCE_DRIFT',native_qualified=False,**bound),indent=1));print('GEN_REFUSED_SOURCE_DRIFT',bound['source_check']['required_mismatch'],file=sys.stderr);return 2
+ (w/'source_binding.json').write_text(json.dumps(bound,indent=1))
  live={};checkpoint=[0];old=G.buses_r8
  def capture(m):
   live['m']=m
@@ -80,5 +90,5 @@ def main():
    except Exception as secondary:
     (w/'partial_pin_export_failure.txt').write_text(repr(secondary))
   status={'status':'GEN_FAIL','error':repr(ex),'traceback':traceback.format_exc(),'native_qualified':False};traceback.print_exc()
- sources=['tools/dsrom_s81_fulldie.py','tools/s81/canonical_layout.py','tools/s81/canonical_screen.py'];status['source_sha256']={x:hashlib.sha256((R/x).read_bytes()).hexdigest()for x in sources};status['capacity_sha256']=G.CANONICAL_LAYOUT['sha256'];(w/'status.json').write_text(json.dumps(status,indent=1,default=list));return 0 if status['status']=='GEN_COMPLETE' else 1
+ sources=['tools/dsrom_s81_fulldie.py','tools/s81/canonical_layout.py','tools/s81/canonical_screen.py'];status['source_sha256']={x:hashlib.sha256((R/x).read_bytes()).hexdigest()for x in sources};status['capacity_sha256']=G.CANONICAL_LAYOUT['sha256'];status['source_binding']=bound;(w/'status.json').write_text(json.dumps(status,indent=1,default=list));return 0 if status['status']=='GEN_COMPLETE' else 1
 if __name__=='__main__':sys.exit(main())

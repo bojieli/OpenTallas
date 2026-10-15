@@ -121,6 +121,7 @@ class Physical(unittest.TestCase):
             if mutant=='wrong_output':
                 s['clock_entry_domains']['core']['outputs']=['zo'];s['clock_entry_domains']['response']['outputs']=['qo']
             if mutant=='unknown_port':s['clock_entry_domains']['core']['inputs']=['req','missing']
+            if mutant=='tie':s['clock_entry_domains']['core']['outputs'].append('th')
             if generated:
                 for name,text in RT.gen_hooks(s,kd).items():(w/name).write_text(text)
                 (w/'signoff.sdc').write_text(RT.gen_signoff(s,'*','none_*'))
@@ -132,7 +133,8 @@ class Physical(unittest.TestCase):
                 cells=cells.replace('DFFHQNx1_ASAP7_75t_R s0 (.CLK(ck_rsp),.D(rsp),.QN(z0));',
                     'DFFASRHQNx1_ASAP7_75t_R s0 (.CLK(ck_rsp),.D('+('rst_n' if mutant=='async_reset_data' else 'rsp')+'),.RESETN(rst_n),.SETN(1\'b1),.QN(z0));')
             extra=',rst_n' if mutant in ('async_reset','async_reset_data') else ''
-            (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp'+extra+',output qo,zo);\n'+cells+'\nassign qo=q0;assign zo=z0;endmodule\n')
+            tie=(',th','\nTIEHIx1_ASAP7_75t_R t0 (.H(th));') if mutant=='tie' else ('','')
+            (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp'+extra+',output qo,zo'+tie[0]+');\n'+cells+tie[1]+'\nassign qo=q0;assign zo=z0;endmodule\n')
             (w/'clocks.tcl').write_text(CE.clocks(s,s['route'].get('period_ps',833.333)))
             (w/'entry.tcl').write_text('set ::ot_ce_require_wire 1\n'+CE.generate(s,ROOT))
             flow=r'''
@@ -226,6 +228,10 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
         for a,b in zip(refs[:2],refs[2:]):
             self.assertEqual(a[0],b[0])
             for x,y in zip(a[1:],b[1:]):self.assertAlmostEqual(float(x),float(y),places=8)
+    def test_die_strap_tie_output_is_constant_not_a_domain(self):
+        rc,out=self.run_flow('tie');self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('OT_MULTI_ROOT constant output th <- TIEHIx1_ASAP7_75t_R',out)
+
     def test_generated_hooks_with_actual_lef_only_tap(self):
         rc,out=self.run_flow('physical_tap',generated=True);self.assertEqual(rc,0,out[-8000:])
         self.assertIn('MULTI_ROOT_RESULT PASS',out)

@@ -1,0 +1,359 @@
+{
+  "parent": "ba12d099a",
+  "common": "64fced1f9",
+  "SV": "33fe61ec9",
+  "readbridge": "321a2a12b",
+  "new_interfaces": "59a88e5ae",
+  "clocks_ps": {
+    "engine": 833.33325,
+    "VM": 1111.111
+  },
+  "files": [
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "source_commit": "33fe61ec9",
+      "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "source_commit": "33fe61ec9",
+      "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+      "source_commit": "33fe61ec9",
+      "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v",
+      "source_commit": "33fe61ec9",
+      "sha256": "ede8a6df34ed12b5ae0ae79592bb415c601562b07f38e6c11551506ff7f04e61"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+      "source_commit": "33fe61ec9",
+      "sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+    },
+    {
+      "path": "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+      "source_commit": "88b62f789",
+      "sha256": "c809d974d76ccc2cbe608a23d2f65ff40410726a80d8168298ac3b6c5401d160"
+    },
+    {
+      "path": "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+      "source_commit": "88b62f789",
+      "sha256": "e9ea4bc0e305370cbe2e2d4f7bd7e7c1596fd133f8651bcbde4ad1d1a3f0fdbf"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant/ot_hbm_b2_lane_cdc.sv",
+      "source_commit": "64fced1f9",
+      "sha256": "c19e6287c0c5bf5682a551a3b840464d8dac53bcd6aae467919e7633c719510a"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant/ot_hbm_b2_lane_cdc_owned.sv",
+      "source_commit": "ba12d099a",
+      "sha256": "8dd224e7fb5c8ad0965a550701f672cadf7d8edfd9629674427058dc29bf4286"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant/ot_hbm_b2_mirror_commit.sv",
+      "source_commit": "ba12d099a",
+      "sha256": "33666454f55b4459b9bdd8785ceabd56a047b2c643621f28a13b92a5d29edd5e"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant/ot_hbm_b2_native_owned4.sv",
+      "source_commit": "ba12d099a",
+      "sha256": "3db08ad88ffd9de2184c2d34efbc7a229f405c4394c3118f81d50d3775ab5273"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant/ot_hbm_b2_peer_lease_owned.sv",
+      "source_commit": "ba12d099a",
+      "sha256": "16546f1f6a2dc041fb991b44091aaf77f79f1b2866760f3cbed642efa4dd787b"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant/ot_hbm_b2_peer_mux_lane.sv",
+      "source_commit": "ba12d099a",
+      "sha256": "5e8a70427c7cdfefa8b0933fc1b47f585b5817655fdbf668d022614a35507df5"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant/ot_hbm_b2_peer_mux_q.sv",
+      "source_commit": "ba12d099a",
+      "sha256": "37dcd903060634a83dece3c7d65028fd094c9d805d2d667e4136960db196647e"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant/ot_hbm_b2_su_vm4_mirror.sv",
+      "source_commit": "ba12d099a",
+      "sha256": "93b6fcd074869dd6da94189d09689ba433cda758cba5e03f17cf282367e414e3"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "e944833f899f7196ecd988aa7c48e48fc6406ffacc2fd060c1866f977290df8b"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/tb/ot_hgi_sv_native_vm_fixture.sv",
+      "source_commit": "59a88e5ae",
+      "sha256": "1482c5f1e88476903ac86fe935853a43f8a4e6caa067450d9eb4061e784ef496"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_native_prod.sv",
+      "source_commit": "59a88e5ae",
+      "sha256": "9bcc6a358d2ef6a005a9f4986e2084f272c39c1e0f7ac24072f62faa43e778b9"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/tb/tb_hgi_sv_native_packet_smoke.sv",
+      "source_commit": "59a88e5ae",
+      "sha256": "008a89be485ca0b6f5e47239b38c3a77169bdbd6bf9452418c560da2147091b2"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+      "source_commit": "88b62f789",
+      "sha256": "86157cfdac1960b7c4eba0e2af357f1bf005084d4f23163766f75b4064de5a73"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+      "source_commit": "88b62f789",
+      "sha256": "0e140d8c51d615dc08867c13229f9b14a63451a4ed44437f1dd91c039a46f17c"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
+      "source_commit": "88b62f789",
+      "sha256": "2e42d8c75334158af4d518cfa0efa9179b660372dbd9f1ce6ecee9ac87192cc6"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/ot_hgi_dma_native_read_owned.sv",
+      "source_commit": "59a88e5ae",
+      "sha256": "f91044472de7df822c6c150f5b8a1701b114f1fb1a3a679b1e6f20e1ce40349f"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/ot_hgi_su_ctlw_lane2.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "86484ebd58945c46a7ec0957eba3dccf4de64b53485aad06a25818f74e2dbb38"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/ot_hgi_su_ctlw_slice_h.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "c244f7c6064d38ad76fa3fcc701ac4e4a530cf346a802a7945013eaa6ca241c5"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/ot_hgi_su_ctlw_slice_hp.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "5ebab6aeb6ad06acdd542901789e5377784d0fea64a4182faf2412a2e4fe15b5"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "3cfaf90b9e730bb33b92f350ac6d3bcd604191cc8f37e7a31698fb394767e69c"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/ot_hgi_sv_native_packet_owned.sv",
+      "source_commit": "59a88e5ae",
+      "sha256": "2a4a4e0c6cb2924960032a6ee90a18914c86f35172020600acda3739901168f4"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/ot_hgi_sv_native_write_owned.sv",
+      "source_commit": "59a88e5ae",
+      "sha256": "79f1b56568026e664d0b1f58288d0b36211085b422d20f6258af55a61e1d9ac2"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv",
+      "source_commit": "59a88e5ae",
+      "sha256": "4064826fd4c8d1d2f92b2572ec9ad568f5cc8e7c5001ccc3dc69fe84dc32e27f"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_asm.sv",
+      "source_commit": "88b62f789",
+      "sha256": "000a03f38107d1ba256d5f06379f7a5d5c0634e31b82019c1d241bc45bbaaa3d"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_core.sv",
+      "source_commit": "88b62f789",
+      "sha256": "2d314229953b7c90fb0a95396e275837ebfb9bc8dd5793d13d22622014d0e198"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr.sv",
+      "source_commit": "88b62f789",
+      "sha256": "1d2f97942cff7aaff682a9b9854da8d8e151002c84c7ce5d2220c70d7d7b377d"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr_mix.sv",
+      "source_commit": "88b62f789",
+      "sha256": "fbb0008a48a5244c6d52e9022886cdb2bd5ecb50465642ad9b020335e966a422"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr_one_s2.sv",
+      "source_commit": "88b62f789",
+      "sha256": "17264cca77b3db15545f2917341a9d126a6e11d130c22e41d3f3b9c2411ebdec"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr_retire.sv",
+      "source_commit": "88b62f789",
+      "sha256": "212f55bdc1859b921c6ea1c437b87805bc42e1deb50aa0ed253862b07f930cdd"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_lq.sv",
+      "source_commit": "88b62f789",
+      "sha256": "a8ffed16978e0032425376a5d41f9b34f2d6cdcc6484d48d741087d9f09e4ac2"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_native_peer4_owned.sv",
+      "source_commit": "ba12d099a",
+      "sha256": "6ae3ce01f8f94e6a50cf92aac8ff688676f537d2b8682409cfcb777cb28c4339"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_q.sv",
+      "source_commit": "88b62f789",
+      "sha256": "9299b472d0feebe59dceb276636ee0c227bab5b5af7b10ae24e8b3ce142d0ff1"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_q_pin4.sv",
+      "source_commit": "88b62f789",
+      "sha256": "6414787d2633e710b4cd29cb1f97467f476b281421d710252065c6d04b9f6ab1"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr.sv",
+      "source_commit": "88b62f789",
+      "sha256": "8ec0eac7980c57d3bd6d1c3a3d98224d9cc36ca97ae05a9a6bf1b70479423c2b"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv",
+      "source_commit": "88b62f789",
+      "sha256": "504deb536eaf8dbe8fcca50be747a5c5f4159cd186be08f9ccfc71d9365808e4"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv",
+      "source_commit": "88b62f789",
+      "sha256": "c51211c5286916fd084246c3ffee73126bf83f5f83e793dae3e0a58a0c7f91b6"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv",
+      "source_commit": "64fced1f9",
+      "sha256": "dff065484261b7768a8594bbd1b508a7fdb6b89aa0c09db9b5a965364621b904"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv",
+      "source_commit": "64fced1f9",
+      "sha256": "1a9164c196f91e5573e5ab34c683cdc963feb14beea172f737a09cf6b0fe91b7"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/b2/ot_vms_rcl.sv",
+      "source_commit": "64fced1f9",
+      "sha256": "4711a2ba8cba44cc0d6325980f29c1f6203a9958d40deb68d7f0cafb38742141"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/b2/ot_vms_relay.sv",
+      "source_commit": "64fced1f9",
+      "sha256": "2bc84ba2852cc494f997c790390fb4a6fb728d4e756279ad04c97f1ac52d14fe"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv",
+      "source_commit": "64fced1f9",
+      "sha256": "cf8a6e5da4ee3b995ed1a47cc84ca72aede9bdf88d74a3919896fb6fc3d97340"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/b2/ot_vms_star.sv",
+      "source_commit": "64fced1f9",
+      "sha256": "9e0fc71a382ff82a094a0a9f44213a95a7d07ab76b6620cb5236599a19577f14"
+    },
+    {
+      "path": "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo_p2.sv",
+      "source_commit": "64fced1f9",
+      "sha256": "214baf61951dbfb62d9bb7766b01ddd418cad0f461a534f574d67e58e3a4643a"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "source_commit": "88b62f789",
+      "sha256": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "928bca5da13c0aa9679e337cd60fd556b84e9bcb5ab55d1ddbaa3efbbf4e1e69"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "71b52f3016e76f1ef9ed3ca81333a73a0866b071dd4fa1c9f5727c49701c550b"
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "source_commit": "88b62f789",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    {
+      "path": "rtl/link/ot_fifo_sram_fwft.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "b50f9c177198b74b9749e1f9780e63820586d06c035d2a5bcd43c93a31392685"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "source_commit": "33fe61ec9",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    }
+  ],
+  "qualification": "unproven functional fixture; physical clocks/slots/ROW_NORM/wholelayer/cost open"
+}
