@@ -22,8 +22,8 @@ module tb_hgi_coll_pring_static;
     function automatic integer prevq(input integer q);case(q)0:prevq=2;1:prevq=0;3:prevq=1;default:prevq=3;endcase endfunction
     function automatic integer pos(input integer q);case(q)0:pos=0;1:pos=1;3:pos=2;default:pos=3;endcase endfunction
     for(genvar q=0;q<4;q=q+1)begin:g_q
-        ot_hgi_coll_pring_static #(.MUT_CARRY(MUT_CARRY),.MUT_TAG(MUT_TAG)) dut(
-            .clk(clk),.rst_n(rst_n),.qid(2'(q)),.cw_i(co[prevq(q)]),.ccw_i(no[nextq(q)]),.cw_o(co[q]),.ccw_o(no[q]),
+        ot_hgi_coll_pring_static #(.SPLIT_CLOCKS(1),.MUT_CARRY(MUT_CARRY),.MUT_TAG(MUT_TAG)) dut(
+            .clk(clk),.rst_n(rst_n),.clk_state({8{clk}}),.clk_add({8{clk}}),.qid(2'(q)),.cw_i(co[prevq(q)]),.ccw_i(no[nextq(q)]),.cw_o(co[q]),.ccw_o(no[q]),
             .lp_we(cmd[q].lp_we),.lp_tag(cmd[q].lp_tag),.lp_data(cmd[q].lp_data),
             .add_v(cmd[q].add_v),.add_tag(cmd[q].add_tag),.add_src(cmd[q].add_src),.add_rhs_acc(cmd[q].rhs_acc),
             .tx_inject(cmd[q].inject),.tx_forward(cmd[q].fwd),.tx_tag(cmd[q].tx_tag),.tx_dst(cmd[q].dst),
@@ -125,6 +125,7 @@ module tb_hgi_coll_pring_static;
             6:prog[2][52].tag[2:0]=1; // wrong reserved RESULT tag (q3 CW -> q2)
             7:prog[1][10].rx[1]=1; // missing scheduled input
             8:begin prog[0][20].lp_we=1;prog[0][20].lp_tag=0;end // live tag reuse after local send
+            9:send(0,1,8,0,0,0,0); // compiler must reject duplicate TX reservation before execution
             default:begin end
         endcase
         repeat(5)@(negedge clk);rst_n=1;

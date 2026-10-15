@@ -4,6 +4,12 @@ set -euo pipefail
 OUT=$(realpath -m "$1"); mkdir -p "$OUT"
 HERE=$(cd "$(dirname "$0")" && pwd)
 bash "$HERE/run_pring_static_bench.sh" "$OUT/positive"
+rc=0
+"$OUT/positive/obj/Vtb_hgi_coll_pring_static" +fault=9 > "$OUT/compiler-collision.log" 2>&1 || rc=$?
+if [[ "$rc" == 0 ]] || ! grep -q 'compiler injection collision' "$OUT/compiler-collision.log"; then
+ echo "STATIC_RING SUITE FAIL compiler collision rc=$rc";exit 1
+fi
+echo 'STATIC_RING COMPILER COLLISION PASS'
 for mutant in dropcarry tag ringorder; do
  case "$mutant" in
   dropcarry) arg=-GMUT_CARRY=1; pattern='golden mismatch';;

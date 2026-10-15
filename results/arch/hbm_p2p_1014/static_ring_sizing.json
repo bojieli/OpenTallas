@@ -1,7 +1,12 @@
 {
   "status": "component design budget; NOT production-qualified",
   "owner_rule": "HANDOFF 0an, 2026-10-14: compiler assigned fixed slots, no on-chip ready/credits",
-  "topology": [0, 1, 3, 2],
+  "topology": [
+    0,
+    1,
+    3,
+    2
+  ],
   "quadrants": 4,
   "reduction_lanes": 8,
   "fp32_adds_per_quadrant_cycle": 8,
@@ -18,5 +23,19 @@
   "routing_policy": "Compiler reserves every receive, transit and injection edge; no runtime arbitration. Physical relays add explicit compiler slots.",
   "memory_ports": "one local write, two carry arrival writes, one add writeback; distributed per-tag flop storage",
   "floorplan": "successor uses existing H-COLL ring stop slots; physical leaves/area/TT setup/FF hold remain unqualified",
-  "composition": "SERIAL ((P0+P1)+P2)+P3; TREE (P0+P1)+(P2+P3); fixed schedule bench derives explicit cycle trace; no token rate claim"
+  "composition": "SERIAL ((P0+P1)+P2)+P3; TREE (P0+P1)+(P2+P3); fixed schedule bench derives explicit cycle trace; no token rate claim",
+  "clock_decomposition": {
+    "control_root_bits_before_mapping": 1477,
+    "payload_roots": 8,
+    "payload_bits_per_root": 1536,
+    "arithmetic_roots": 8,
+    "independent_leaf_modules": [
+      "ot_hgi_coll_pring_static_state_lane",
+      "ot_hgi_coll_pring_static_add_lane"
+    ],
+    "phase_contract": "all roots are synchronous and phase compensated at common compiler edge; no new latency",
+    "arithmetic_bits_per_root": 676,
+    "total_register_bits": 19173,
+    "measurement": "static_ring_split_1014/root_register_bits.json; Yosys proc/memory_map/opt; not CTS or timing qualification"
+  }
 }

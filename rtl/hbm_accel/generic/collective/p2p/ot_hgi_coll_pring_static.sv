@@ -8,10 +8,11 @@
 // Relay edges must be added to the compiler trace. An invalid trace faults; it
 // never waits or repairs the timeline. This component is not a die qualification.
 module ot_hgi_coll_pring_static #(
-    parameter integer NT=8, LAT=8,
+    parameter integer NT=8, LAT=8, SPLIT_CLOCKS=0,
     parameter integer MUT_CARRY=0, MUT_TAG=0
 )(
     input wire clk, rst_n,
+    input wire [7:0] clk_state, clk_add,
     input wire [1:0] qid,
     input wire [279:0] cw_i, ccw_i,
     output reg [279:0] cw_o, ccw_o,
@@ -39,11 +40,15 @@ module ot_hgi_coll_pring_static #(
     // 280b historical pin encoding retained: v,kind,src,dst,ttl,tag,
     // mode(reserved),aux(reserved),data. Only CARRY=1 and RESULT=2 allowed.
     reg [279:0] pin [0:1];
-    reg [255:0] local_d[0:NT-1], acc_d[0:NT-1], carry_d[0:NT-1][0:3];
+    wire [255:0] local_add, acc_add, carry_add, local_tx, acc_tx, acc_rr;
+    wire [1:0] carry_write;
+    for(genvar d=0;d<2;d=d+1)begin:g_carry_write
+        assign carry_write[d]=rx_slot[d] && pin[d][278:277]==1 && pin[d][274:273]==qid;
+    end
     reg [NT-1:0] local_v, acc_v, pending, active;
     reg [3:0] carry_v[0:NT-1];
-    wire [255:0] aa = MUT_CARRY ? 256'b0 : carry_d[add_tag][add_src];
-    wire [255:0] ab = add_rhs_acc ? acc_d[add_tag] : local_d[add_tag];
+    wire [255:0] aa = MUT_CARRY ? 256'b0 : carry_add;
+    wire [255:0] ab = add_rhs_acc ? acc_add : local_add;
     wire [255:0] ay;
     wire [7:0] av;
     reg [LAT-1:0] pv;
@@ -51,19 +56,24 @@ module ot_hgi_coll_pring_static #(
     generate if (NT!=8 || LAT<4 || LAT>8) begin:g_bad
         ot_hgi_static_ring_requires_NT8_LAT4_to_8 invalid_configuration();
     end endgenerate
-    // One input pin stage + LAT-1 real arithmetic stages, as historical lane.
-    for(genvar l=0;l<8;l=l+1)begin:g_add
-        reg [31:0] ap,bp;
-        reg vp;
-        always @(posedge clk)begin
-            ap <= aa[l*32+:32];
-            bp <= ab[l*32+:32];
-        end
-        always @(posedge clk or negedge rst_n)
-            if(!rst_n)vp<=0;else vp<=add_v;
-        ot_hdc_fp32_add_lat #(.LAT(LAT-1),.DRST(0)) u_add(
-            .clk(clk),.rst_n(rst_n),.valid_in(vp),.a(ap),.b(bp),
-            .y(ay[l*32+:32]),.err(),.valid_out(av[l]));
+    // Payload and arithmetic are actual leaf modules, with one clock entry per
+    // 32b lane. All roots have synchronous edge/phase semantics; SPLIT_CLOCKS
+    // changes physical clock delivery only, never the compiler cycle price.
+    // State leaf: 8 tags * (local+acc+4carry) * 32 = 1,536 payload flops.
+    for(genvar l=0;l<8;l=l+1)begin:g_lane
+        ot_hgi_coll_pring_static_state_lane u_state(
+            .clk(SPLIT_CLOCKS?clk_state[l]:clk),
+            .lp_we(lp_we),.lp_tag(lp_tag),.lp_data(lp_data[l*32+:32]),
+            .acc_we(pv[LAT-1]),.acc_tag(pt[LAT-1]),.acc_data(ay[l*32+:32]),
+            .carry_we(carry_write),.carry0_tag(pin[0][270:268]),.carry0_src(pin[0][276:275]),
+            .carry1_tag(pin[1][270:268]),.carry1_src(pin[1][276:275]),
+            .carry0_data(pin[0][l*32+:32]),.carry1_data(pin[1][l*32+:32]),
+            .add_tag(add_tag),.add_src(add_src),.tx_tag(tx_tag),.rr_tag(rr_local_tag),
+            .local_add(local_add[l*32+:32]),.acc_add(acc_add[l*32+:32]),.carry_add(carry_add[l*32+:32]),
+            .local_tx(local_tx[l*32+:32]),.acc_tx(acc_tx[l*32+:32]),.acc_rr(acc_rr[l*32+:32]));
+        ot_hgi_coll_pring_static_add_lane #(.LAT(LAT)) u_add(
+            .clk(SPLIT_CLOCKS?clk_add[l]:clk),.rst_n(rst_n),.valid_in(add_v),
+            .a(aa[l*32+:32]),.b(ab[l*32+:32]),.y(ay[l*32+:32]),.valid_out(av[l]));
     end
     function automatic [279:0] flit(input [2:0] tag,input [255:0] data);
         flit={1'b1,tx_result?2'd2:2'd1,qid,tx_dst,
@@ -86,14 +96,14 @@ module ot_hgi_coll_pring_static #(
             rr_v<=rr_local;
             result_slots=0;
             if(rr_local)begin
-                rr_tag<=rr_local_tag;rr_d<=acc_d[rr_local_tag];
+                rr_tag<=rr_local_tag;rr_d<=acc_rr;
                 if(!acc_v[rr_local_tag] || pending[rr_local_tag])fault<=1;
                 acc_v[rr_local_tag]<=0;active[rr_local_tag]<=0;
             end
             if(lp_we)begin
                 if(local_v[lp_tag] || active[lp_tag])fault<=1;
                 active[lp_tag]<=1;
-                local_d[lp_tag]<=lp_data;local_v[lp_tag]<=1;
+                local_v[lp_tag]<=1;
             end
             if(add_v)begin
                 if(!carry_v[add_tag][add_src] || pending[add_tag] ||
@@ -106,7 +116,7 @@ module ot_hgi_coll_pring_static #(
             if(pv[LAT-1])begin
                 if(acc_v[pt[LAT-1]])fault<=1;
                 if(add_v && add_tag==pt[LAT-1])fault<=1;
-                acc_d[pt[LAT-1]]<=ay;acc_v[pt[LAT-1]]<=1;pending[pt[LAT-1]]<=0;
+                acc_v[pt[LAT-1]]<=1;pending[pt[LAT-1]]<=0;
             end
             // Every physical arrival, including transit, must match a reservation.
             // A reservation with missing input also faults at this exact edge.
@@ -127,7 +137,7 @@ module ot_hgi_coll_pring_static #(
                     if(kind==1 && dst==qid)begin
                         if(carry_v[tag][src] || tx_forward[d])fault<=1;
                         if(add_v && add_tag==tag && add_src==src)fault<=1;
-                        carry_d[tag][src]<=x[255:0];carry_v[tag][src]<=1;
+                        carry_v[tag][src]<=1;
                     end
                     if(kind==2)begin
                         if(ttl==0)fault<=1;
@@ -148,7 +158,7 @@ module ot_hgi_coll_pring_static #(
                     if(tx_forward[d])fault<=1;
                     if(tx_acc ? (!acc_v[tx_tag] || pending[tx_tag]) : !local_v[tx_tag])fault<=1;
                     if(tx_result && (!tx_acc || tx_dst!=qid))fault<=1;
-                    outx=flit(tx_tag,tx_acc?acc_d[tx_tag]:local_d[tx_tag]);
+                    outx=flit(tx_tag,tx_acc?acc_tx:local_tx);
                 end
                 if(d==0)cw_o<=outx;else ccw_o<=outx;
             end
@@ -160,5 +170,50 @@ module ot_hgi_coll_pring_static #(
             end
         end
     end
+endmodule
+
+// Distributed payload storage. Data is never reset; the parent's reset valid
+// bits protect each read. Writes occur on the same reserved edge as control.
+// Carry ports are independent; duplicate same-(tag,source) writes fault in the
+// parent rather than being arbitrated. This is an actual hardenable leaf root.
+module ot_hgi_coll_pring_static_state_lane(
+    input wire clk,
+    input wire lp_we,
+    input wire [2:0] lp_tag,
+    input wire [31:0] lp_data,
+    input wire acc_we,
+    input wire [2:0] acc_tag,
+    input wire [31:0] acc_data,
+    input wire [1:0] carry_we,
+    input wire [2:0] carry0_tag,carry1_tag,
+    input wire [1:0] carry0_src,carry1_src,
+    input wire [31:0] carry0_data,carry1_data,
+    input wire [2:0] add_tag,tx_tag,rr_tag,
+    input wire [1:0] add_src,
+    output wire [31:0] local_add,acc_add,carry_add,local_tx,acc_tx,acc_rr
+);
+    reg [31:0] lp[0:7],acc[0:7],carry[0:7][0:3];
+    always @(posedge clk)begin
+        if(lp_we)lp[lp_tag]<=lp_data;
+        if(acc_we)acc[acc_tag]<=acc_data;
+        if(carry_we[0])carry[carry0_tag][carry0_src]<=carry0_data;
+        if(carry_we[1])carry[carry1_tag][carry1_src]<=carry1_data;
+    end
+    assign local_add=lp[add_tag];assign acc_add=acc[add_tag];assign carry_add=carry[add_tag][add_src];
+    assign local_tx=lp[tx_tag];assign acc_tx=acc[tx_tag];assign acc_rr=acc[rr_tag];
+endmodule
+
+// Independent native arithmetic root: pin capture + LAT-1 arithmetic cuts.
+module ot_hgi_coll_pring_static_add_lane #(parameter integer LAT=8)(
+    input wire clk,rst_n,valid_in,
+    input wire [31:0] a,b,
+    output wire [31:0] y,
+    output wire valid_out
+);
+    reg [31:0] ap,bp;reg vp;
+    always @(posedge clk)begin ap<=a;bp<=b;end
+    always @(posedge clk or negedge rst_n)if(!rst_n)vp<=0;else vp<=valid_in;
+    ot_hdc_fp32_add_lat #(.LAT(LAT-1),.DRST(0)) u_add(
+        .clk(clk),.rst_n(rst_n),.valid_in(vp),.a(ap),.b(bp),.y(y),.err(),.valid_out(valid_out));
 endmodule
 `default_nettype wire
