@@ -14,7 +14,7 @@ w=encode_program([dict(engine=0,arg=0x102938,issue=0,done=3),dict(engine=11,arg=
 Path('wrapper.hex').write_text(''.join(f"{x['word']:09x}\n"for x in w['writes']))
 PY
 iverilog -g2012 -s tb_s81_fixed_issue -o sim rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv rtl/dsrom_sys/s81_static_control/test/tb_s81_fixed_issue.sv
-for mode in 0 1 2 3 4 5 6 7 8;do vvp sim +mode="$mode";done
+for mode in 0 1 2 3 4 5 6 7 8 9;do vvp sim +mode="$mode";done
 for mutant in 1 2;do
  iverilog -g2012 -DISSUER_MUT="$mutant" -s tb_s81_fixed_issue -o mutant rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv rtl/dsrom_sys/s81_static_control/test/tb_s81_fixed_issue.sv
  if vvp mutant +mode=0;then echo "ERROR: mutant $mutant escaped";exit 1;fi

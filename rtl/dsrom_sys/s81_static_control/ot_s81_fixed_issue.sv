@@ -30,7 +30,9 @@ module ot_s81_fixed_issue #(
  reg[75:0]mem[0:NOPS-1];
  reg[2:0]loaded[0:NOPS-1];
  reg[7:0]length_q;reg[1:0]phase_q,start_phase_q;
- reg begun,sealed,cfg_fault,run_fault,has_kit;
+ reg begun,sealed,cfg_fault,run_fault,has_kit,validating;
+ reg[7:0]scan_index,scan_native;reg scan_bad;reg[1:0]scan_ends,scan_kits;
+ reg[23:0]scan_max_done,scan_end_cycle,scan_kit_cycle;
  reg[1:0]active;reg next_slot;
  reg[9:0]users[0:1];reg[20:0]positions[0:1],tokens[0:1];
  reg[23:0]age[0:1];reg[NOPS-1:0]pending[0:1];
@@ -48,6 +50,7 @@ module ot_s81_fixed_issue #(
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    length_q<=0;phase_q<=0;start_phase_q<=0;begun<=0;sealed<=0;cfg_fault<=0;run_fault<=0;
+   validating<=0;scan_index<=0;scan_native<=0;scan_bad<=0;scan_ends<=0;scan_kits<=0;scan_max_done<=0;scan_end_cycle<=0;scan_kit_cycle<=0;
    active<=0;next_slot<=0;has_kit<=0;cmd_v<=0;cmd_d<=0;job_done<=0;job_kdone<=0;done_slot<=0;kit_tok<=0;
    fault_code<=0;st_jobs<=0;st_cmds<=0;dv_q<=0;dt_q<=0;
    for(i=0;i<NOPS;i=i+1)loaded[i]<=0;
@@ -56,7 +59,7 @@ module ot_s81_fixed_issue #(
    phase_q<=phase_q+1'b1;dv_q<=dn_v;dt_q<=dn_tag;
    cmd_v<=0;job_done<=0;job_kdone<=0;seen_cmd=0;issued=0;
    if(pw_v)begin
-    if(busy)begin cfg_fault<=1;if(fault_code==0)fault_code<=1;end
+    if(busy||validating)begin cfg_fault<=1;if(fault_code==0)fault_code<=1;end
     else if(pw_d[27:26]==3)begin
      if(pw_a!=0||pw_d[24:17]!=0||pw_d[6:0]!=7'(STAGE)||pw_d[16:9]==0||pw_d[16:9]>NOPS)begin
       cfg_fault<=1;sealed<=0;if(fault_code==0)fault_code<=2;
@@ -64,25 +67,11 @@ module ot_s81_fixed_issue #(
       begun<=1;sealed<=0;length_q<=pw_d[16:9];start_phase_q<=pw_d[8:7];
       for(i=0;i<NOPS;i=i+1)loaded[i]<=0;
      end else begin
-      bad=!begun||length_q!=pw_d[16:9]||start_phase_q!=pw_d[8:7]||prog_len!=length_q;
-      end_count=0;kit_count=0;max_done=0;end_cycle=0;kit_cycle=0;n=0;
-      for(i=0;i<NOPS;i=i+1)if(i<length_q)begin
-       if(loaded[i]!=3'b111)bad=1;
-       eng=mem[i][27:24];
-       if(eng==15)begin end_count=end_count+1;end_cycle=mem[i][51:28];if(mem[i][75:52]!=0||mem[i][23:0]!=0)bad=1;end
-       else if(eng==14)begin kit_count=kit_count+1;kit_cycle=mem[i][51:28];if(mem[i][75:52]!=0||mem[i][23:0]!=0)bad=1;end
-       else if(eng>=NENG||!ENG_PRESENT[eng])bad=1;
-       else begin
-        n=n+1;if(mem[i][75:52]<=mem[i][51:28])bad=1;
-        if(mem[i][75:52]>max_done)max_done=mem[i][75:52];
-       end
-      end
-      if(end_count!=1||kit_count>1||n==0||end_cycle<=max_done||(kit_count==1&&kit_cycle>=end_cycle))bad=1;
-      for(i=0;i<NOPS;i=i+1)if(i<length_q&&mem[i][27:24]<14)begin
-       if(mem[i][51:28]>=end_cycle)bad=1;
-      end
-      sealed<=!bad;has_kit<=kit_count==1;
-      if(bad)begin cfg_fault<=1;if(fault_code==0)fault_code<=3;end
+      // Fixed boot scan: one row per stream edge, independent of data.
+      // This removes a 128-row max/reduction from the runtime clock path.
+      validating<=1;sealed<=0;scan_index<=0;scan_native<=0;scan_ends<=0;scan_kits<=0;
+      scan_max_done<=0;scan_end_cycle<=0;scan_kit_cycle<=0;
+      scan_bad<=!begun||length_q!=pw_d[16:9]||start_phase_q!=pw_d[8:7]||prog_len!=length_q;
      end
     end else if(!begun||pw_a>=NOPS)begin cfg_fault<=1;if(fault_code==0)fault_code<=4;end
     else begin
@@ -94,6 +83,29 @@ module ot_s81_fixed_issue #(
      endcase
      loaded[pw_a][pw_d[27:26]]<=1'b1;
     end
+   end
+   if(validating)begin
+    bad=scan_bad;end_count=scan_ends;kit_count=scan_kits;n=scan_native;
+    max_done=scan_max_done;end_cycle=scan_end_cycle;kit_cycle=scan_kit_cycle;
+    if(scan_index<length_q)begin
+     if(loaded[scan_index]!=3'b111)bad=1;
+     eng=mem[scan_index][27:24];
+     if(eng==15)begin end_count=end_count+1;end_cycle=mem[scan_index][51:28];if(mem[scan_index][75:52]!=0||mem[scan_index][23:0]!=0)bad=1;end
+     else if(eng==14)begin kit_count=kit_count+1;kit_cycle=mem[scan_index][51:28];if(mem[scan_index][75:52]!=0||mem[scan_index][23:0]!=0)bad=1;end
+     else if(eng>=NENG||!ENG_PRESENT[eng])bad=1;
+     else begin
+      n=n+1;if(mem[scan_index][75:52]<=mem[scan_index][51:28])bad=1;
+      if(mem[scan_index][75:52]>max_done)max_done=mem[scan_index][75:52];
+     end
+    end
+    scan_bad<=bad;scan_native<=8'(n);scan_ends<=end_count>2?2'd3:2'(end_count);scan_kits<=kit_count>2?2'd3:2'(kit_count);
+    scan_max_done<=24'(max_done);scan_end_cycle<=end_cycle;scan_kit_cycle<=kit_cycle;
+    if(scan_index==NOPS-1)begin
+     validating<=0;
+     if(end_count!=1||kit_count>1||n==0||end_cycle<=max_done||(kit_count==1&&kit_cycle>=end_cycle))bad=1;
+     sealed<=!bad&&!cfg_fault;has_kit<=kit_count==1;
+     if(bad)begin cfg_fault<=1;if(fault_code==0)fault_code<=3;end
+    end else scan_index<=scan_index+1'b1;
    end
    if(job_v)begin
     if(!sealed||cfg_fault||active[next_slot]||prog_len!=length_q||((phase_q+2'd1)!=start_phase_q))begin
