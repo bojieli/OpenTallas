@@ -35,6 +35,10 @@ def geometry(G,d,legacy_order):
 def corridors(G,m,cor):
  """Real search regions; occupied nodes/ROMs/relays remain in Placer.occ."""
  d=m['canonical_layout'];fs=m['frames']
+ # Symmetric empty IO exclusions are absent from the canonical die. Keep
+ # actual placed PHY/service boxes and supplemental homes as blockers.
+ for key in ('s14W','s14E','vch','edgeW','edgeE'):
+  xx0,_yy0,xx1,_yy1=cor[key];cor[key]=(xx0,20.432,xx1,G.DIE[1]-20.432)
  # Never advertise obsolete fullwidth tier streets as free space.
  for k in list(cor):
   if k.startswith('ch') and k[2:].isdigit():del cor[k]
@@ -170,7 +174,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
      # hard slabs. Derive it from all placed boxes; never cross the VM,
      # capture or gather outline at the return endpoint's y.
      wx=G.s14_x(m,'W',f'r{t}');vx=G.vch_x(m,f'r{t}');xx0,xx1=sorted((wx,vx))
-     free=[(20.,G.DIE[1]-20.)];margin=.432
+     free=[(max(cor['s14W'][1],cor['vch'][1]),min(cor['s14W'][3],cor['vch'][3]))];margin=.432
      for obj in m['insts']:
       if obj.x>=xx1 or obj.x+obj.w<=xx0:continue
       cut=(obj.y-margin,obj.y+obj.h+margin);nfree=[]
