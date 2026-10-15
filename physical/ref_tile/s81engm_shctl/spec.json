@@ -1,0 +1,172 @@
+{
+ "name": "s81engm_shctl",
+ "kind": "tile",
+ "top": "ot_s81_engram_mixq_shctl",
+ "sources": [
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 54.0,
+  "exact": true
+ },
+ "util": 0.5,
+ "layer_cap": "M5",
+ "recipe": 2,
+ "pins": {
+  "N": [
+   "start",
+   "desc",
+   "rq_v",
+   "rq_row",
+   "vtag",
+   "rs_v",
+   "wq_v",
+   "wq_row",
+   "wq_mask",
+   "done",
+   "fault"
+  ],
+  "S": [
+   "fr",
+   "fa",
+   "go",
+   "iv",
+   "phase",
+   "copy",
+   "eps",
+   "scale",
+   "gv",
+   "gc",
+   "ov",
+   "oc",
+   "mf"
+  ],
+  "W": [
+   "ck",
+   "rst"
+  ],
+  "E": []
+ },
+ "io_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shctl.tcl",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "why_floorplan": "shell control leaf (419 ports, ~0.4k FF), mid-row between payload columns 1 and 2; one clock root per leaf (<=11,519 sinks); 1 per cluster x 4 clusters",
+ "structural_change": "Native capture fix (S-ELEM-C 10-15): start no longer enables the 224-bit descriptor register (IDLE samples desc each edge). 0 cycles, 0 FF. | Shell split (S-ELEM-C 2026-10-15): the flat shell (6,472 FF, one root over 742 um, native insertion 534.1 / spread 93.3 ps FAIL) becomes control leaf + 4 payload column leaves with the same registers and cycles (808-cycle MIX4 calendar, 0 added edges); each leaf has a local root.",
+ "job": {
+  "owner": "Claude:s81-surx-engram-1015",
+  "branch": "claude/s81-engram-c810-1015",
+  "tag": "c810nat",
+  "purpose": "S81 Engram MIX4 split-shell leaf ot_s81_engram_mixq_shctl (control + 4 payload columns)",
+  "benches": [
+   {
+    "name": "mix4_exact_L01",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --out {RUN}/mix4_m0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PASS native Engram MIX4.*cycles=810\\b"
+   },
+   {
+    "name": "mix4_mut1_key",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 1 --out {RUN}/mix4_m1",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL [0-9]+ words"
+   },
+   {
+    "name": "mix4_mut21_ovalign",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 21 --out {RUN}/mix4_m21",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL [0-9]+ words"
+   },
+   {
+    "name": "mix4_mut22_boundary_valid",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 22 --out {RUN}/mix4_m22",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "endpoint fault cyc=78"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81engm_shctl/views",
+  "record_to": "results/rtl/ref_tile/s81engm_shctl",
+  "extra_paths": [
+   "physical/s81_die_pins/v21_engram_arithmetic",
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/s81_engram_mix",
+   "tools/s81_suhc",
+   "results/rtl/s81_engram_mix_1014/fixtures"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "CLOSED shsplit-0955 view (TT +194.2/FF +22.8) FAILS the native pin audit: start capture 246.4 > 190 ps (start was the load enable of 224 descriptor flops). RTL: dsc samples desc every IDLE edge, start only steers ns/fault; 0 cycles."
+ }
+}

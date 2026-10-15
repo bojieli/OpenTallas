@@ -71,12 +71,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "why_floorplan": "v21 die-tool outline right-sized from the ORFS-synthesised area 11242 um2 (util 0.512); one clock root per leaf (<=11,519 sinks); 8 copies per cluster x 4 clusters",
- "structural_change": "Engram MIX4 physical hierarchy (S-ELEM-C 2026-10-15): every arithmetic root of ot_s81_engram_mix is a hardened leaf master, hardened once and replicated; inputs registered at the S pins, outputs launched from registers at the N pins (no added cycle: the leaves are the unchanged exact arithmetic RTL).",
+ "why_floorplan": "v21 die-tool outline right-sized from the ORFS-synthesised area 11242 um2 (util 0.512); one clock root per leaf (<=11,519 sinks); 8 per cluster x 4 clusters",
+ "structural_change": "Real mul4 ingress+result stages, source estimate+771FF/master and+2edges; actualfreshCTS10158sinks TT257.2/spread28.8 r2r+160.2. Corrected fullMIX4 exact810 numericalPASS, M22actualvalid-stagebypassfaults78. 810 controlreferencevariant adds2FF and needsseparatephysicalqualification; no808controlviewinheritance.",
  "job": {
-  "owner": "Claude:s81-surx-engram-1015",
-  "branch": "claude/s81-mix4-phys-1015",
-  "tag": "v21",
+  "owner": "Codex:s81-engram-0810",
+  "branch": "codex/s81-engram-mul-0830",
+  "tag": "boundary810-0852",
   "purpose": "S81 Engram MIX4 arithmetic leaf ot_s81_engram_mul4 on v21 die-tool pins",
   "benches": [
    {
@@ -88,7 +88,7 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "PASS native Engram MIX4"
+    "pass_regex": "PASS native Engram MIX4.*cycles=810\\b"
    },
    {
     "name": "mix4_mut1_key",
@@ -100,6 +100,17 @@
      "verilator"
     ],
     "fail_regex": "FAIL [0-9]+ words"
+   },
+   {
+    "name": "mix4_mut22_boundary_valid",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 22 --out {RUN}/mix4_m22",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "endpoint fault cyc=78"
    }
   ],
   "views_to": "physical/ref_tile/s81engm_mul4/views",
@@ -112,7 +123,8 @@
    "tools/s81_engram_mix",
    "tools/s81_suhc",
    "results/rtl/s81_engram_mix_1014/fixtures"
-  ]
+  ],
+  "cycles_added": 2
  },
  "macros": [],
  "children": [],
@@ -127,5 +139,9 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "Actual ingress/control alignment and registered result face repair measured native capture256.8ps and launch298.9ps failure. +2 edges priced; fullMIX4 exact810 PASS and timing-bypass M22 faults78."
  }
 }

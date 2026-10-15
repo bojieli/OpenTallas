@@ -66,7 +66,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "why_floorplan": "v21 die-tool outline right-sized from the ORFS-synthesised area 4265 um2 (util 0.518); one clock root per leaf (<=11,519 sinks); 12 copies per cluster x 4 clusters",
+ "why_floorplan": "v21 die-tool outline right-sized from the ORFS-synthesised area 4265 um2 (util 0.518); one clock root per leaf (<=11,519 sinks); 12 per cluster x 4 clusters",
  "structural_change": "Engram MIX4 physical hierarchy (S-ELEM-C 2026-10-15): every arithmetic root of ot_s81_engram_mix is a hardened leaf master, hardened once and replicated; inputs registered at the S pins, outputs launched from registers at the N pins (no added cycle: the leaves are the unchanged exact arithmetic RTL).",
  "job": {
   "owner": "Claude:s81-surx-engram-1015",
