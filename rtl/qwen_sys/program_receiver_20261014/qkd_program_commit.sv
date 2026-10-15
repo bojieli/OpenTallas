@@ -92,7 +92,7 @@ module qkd_program_commit_join #(parameter integer SINKS=2)(
  input wire[16*SINKS-1:0]sink_epoch,input wire[64*SINKS-1:0]sink_digest,
  output reg commit_v,ready,fault,installed_fusedcap,
  output reg[15:0]commit_epoch,output reg[63:0]commit_digest);
- reg armed,complete;reg[15:0]epoch;reg[63:0]digest;
+ reg armed,complete,begin_pending;reg[15:0]epoch;reg[63:0]digest;
  reg[SINKS-1:0]seen_empty;reg mismatch;integer i;
  always @*begin
   mismatch=0;
@@ -101,18 +101,18 @@ module qkd_program_commit_join #(parameter integer SINKS=2)(
  end
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin commit_v<=0;ready<=0;fault<=0;installed_fusedcap<=0;
-   commit_epoch<=0;commit_digest<=0;armed<=0;complete<=0;seen_empty<=0;epoch<=0;digest<=0;end
+   commit_epoch<=0;commit_digest<=0;armed<=0;complete<=0;begin_pending<=0;seen_empty<=0;epoch<=0;digest<=0;end
   else begin
    commit_v<=0;
    if(!fault)begin
     if(begin_v)begin
-     ready<=0;installed_fusedcap<=0;armed<=0;complete<=0;seen_empty<=0;
-     if(execution_active||auth_v)fault<=1;
+     ready<=0;installed_fusedcap<=0;armed<=0;complete<=0;begin_pending<=1;seen_empty<=0;
+     if(execution_active||auth_v||armed||begin_pending)fault<=1;
     end else begin
      seen_empty<=seen_empty|~sink_ready;
      if(auth_v)begin
-      if(execution_active||armed||complete)begin fault<=1;ready<=0;installed_fusedcap<=0;end
-      else begin armed<=1;epoch<=auth_epoch;digest<=auth_digest;end
+      if(execution_active||armed||complete||!begin_pending)begin fault<=1;ready<=0;installed_fusedcap<=0;end
+      else begin armed<=1;begin_pending<=0;epoch<=auth_epoch;digest<=auth_digest;end
      end
      if((|sink_fault)||(armed&&mismatch))begin fault<=1;ready<=0;installed_fusedcap<=0;armed<=0;end
      else if(armed&&(&seen_empty)&&(&sink_ready)&&control_stores_ready&&!auth_v)begin

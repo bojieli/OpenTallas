@@ -82,5 +82,8 @@ module tb_qkd_program_commit;
   else if(!jready||!jcap||jepoch!=16'h4281||jdigest!=64'h0123456789abcdef)$fatal(1,"join noactualcopies");
   $display("PASS physical_copy_join mismatch%0d",mismatch);
  end endtask
- initial begin for(integer mode=0;mode<11;mode=mode+1)run(mode);join_test(0);join_test(1);$finish;end
+ initial begin for(integer mode=0;mode<11;mode=mode+1)run(mode);join_test(0);join_test(1);
+  clear();jb=0;jr=0;ja=1;@(negedge ck);ja=0;@(negedge ck);
+  if(!jfault||jready)$fatal(1,"join AUTH withoutBEGIN accepted");
+  $display("PASS physical_copy_join rejectsAUTHwithoutBEGIN");$finish;end
 endmodule
