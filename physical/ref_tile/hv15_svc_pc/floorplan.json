@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  172.8,
-  151.2
+  140.4,
+  112.32
  ],
  "core": [
   2.16,
   2.16,
-  170.64000000000001,
-  149.04
+  138.24,
+  110.16
  ],
- "why": "spec outline",
- "std_area_um2": null,
+ "why": "util 0.52 of std 502 + macros 5478 um2",
+ "std_area_um2": 502,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -91,15 +91,22 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 38.88,
-   "y": 54.0,
+   "x": 22.896,
+   "y": 34.56,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 30% outside 45%-60% (std 502 + macro 3894 in core 14697 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_pc.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
