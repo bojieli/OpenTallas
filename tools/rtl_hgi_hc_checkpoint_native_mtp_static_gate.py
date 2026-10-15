@@ -13,6 +13,8 @@ from lower_hbm_hc_native_component_calendar import lower_native
 def main():
     import os
     command_native=int(os.environ.get('HC_COMMAND_NATIVE','1'))
+    build_threads=int(os.environ.get('HC_BUILD_THREADS','4'))
+    if build_threads<1:raise ValueError('positive build threads')
     if command_native not in (0,1):raise ValueError('HC_COMMAND_NATIVE0/1')
     run=ROOT/('run_hc_command_native_mtp' if command_native else 'run_hc_checkpoint_native_mtp');run.mkdir(exist_ok=True)
     rng=np.random.default_rng(20261015)
@@ -86,10 +88,10 @@ def main():
     receipt={'scope':'actual paged programme SRAM to PMAX8 operandSRAM projection/tail; actual4SID32bankVM96SRAM and12LGtaps joined plus realresultVMwrites/readback; actual20GiB checkpoint PHY CDC staging128SRAM joined; only offchip PHY data model; no wholechip/physical qualification',
         'source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in pins},
         'fixture_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [*run.glob('*.mem'),run/'all24rows.hex']},
-        'K':20480,'positions':[6,8],'projection_rows':24,'tail_words_per_position':24,'sink_clock_divisor':7,'checkpoint_fn_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'actual_SRAMs':306+128*command_native,'command_native':command_native,'tail_configuration_words':497,'tail_programme_reconfigure_between_positions':False,'tail_body_period':497,'configuration_words_n6':1577,'configuration_words_n8':1897,'host_reconfigure_between_projection_and_tail':False,'PHY_model':('strict command-only offchipfixture canonical23edge; corrected owned-stacka7b86347d actualcontroller' if command_native else 'published request-level refresh-aware ot_chip_v41x_hbm3e_phy') ,'nominal_row_result_ages':[289+160*p for p in range(8)],'nominal_row_periods':{'6':1100,'8':1420},'early_row_result_ages':[269+160*p for p in range(8)],'early_row_periods':{'6':1080,'8':1400}}
+        'K':20480,'positions':[6,8],'projection_rows':24,'tail_words_per_position':24,'sink_clock_divisor':7,'checkpoint_fn_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'actual_SRAMs':306+128*command_native,'command_native':command_native,'build_threads':build_threads,'tail_configuration_words':497,'tail_programme_reconfigure_between_positions':False,'tail_body_period':497,'configuration_words_n6':1577,'configuration_words_n8':1897,'host_reconfigure_between_projection_and_tail':False,'PHY_model':('strict command-only offchipfixture canonical23edge; corrected owned-stacka7b86347d actualcontroller' if command_native else 'published request-level refresh-aware ot_chip_v41x_hbm3e_phy') ,'nominal_row_result_ages':[289+160*p for p in range(8)],'nominal_row_periods':{'6':1100,'8':1420},'early_row_result_ages':[269+160*p for p in range(8)],'early_row_periods':{'6':1080,'8':1400}}
     (run/'source.json').write_text(json.dumps(receipt,indent=2)+'\n')
     with (run/'build.log').open('w') as log:
-        subprocess.run(['verilator','--cc','--exe','--build','-j','4','-O1','-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD',
+        subprocess.run(['verilator','--cc','--exe','--build','-j',str(build_threads),'-O1','-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD',
             f'-GCOMMAND_NATIVE={command_native}','--output-split','10000','--top-module','tb_hgi_hc_checkpoint_native_mtp_static','-Mdir',str(run/'obj'),*[str(ROOT/f) for f in files]],
             cwd=run,stdout=log,stderr=subprocess.STDOUT,check=True)
     exe=run/'obj/Vtb_hgi_hc_checkpoint_native_mtp_static'
