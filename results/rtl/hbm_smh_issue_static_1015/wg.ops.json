@@ -1,0 +1,57 @@
+{
+  "ops": [
+    {
+      "rows": 1,
+      "K": 5120,
+      "fmt": 0,
+      "launch_cycle": 8,
+      "tag": "warm-up (router gate shape)",
+      "load": 1,
+      "groups": 10,
+      "c": 8,
+      "gs": true,
+      "x_base": 0,
+      "base_tag": 0
+    },
+    {
+      "rows": 12,
+      "K": 5120,
+      "fmt": 2,
+      "launch_cycle": 207,
+      "tag": "routed gate/up workgroup (12 matrices)",
+      "load": 1,
+      "groups": 3,
+      "c": 8,
+      "gs": true,
+      "x_base": 0,
+      "base_tag": 0
+    },
+    {
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "launch_cycle": 599,
+      "tag": "expert slot 6 w1",
+      "load": 1,
+      "groups": 5,
+      "c": 8,
+      "gs": true,
+      "x_base": 0,
+      "base_tag": 0
+    },
+    {
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "launch_cycle": 735,
+      "tag": "expert slot 6 w3",
+      "load": 0,
+      "groups": 5,
+      "c": 8,
+      "gs": true,
+      "x_base": 0,
+      "base_tag": 0
+    }
+  ],
+  "scope": "immutable priced shapes; no released checkpoint payload"
+}

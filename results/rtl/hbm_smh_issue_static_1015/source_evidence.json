@@ -1,0 +1,24 @@
+{
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1305102-1792052429",
+  "ot_run_exit": 0,
+  "sources": {
+    "tools/compile_hbm_smh_issue_static.py": "ede49fce381831d8f086778a5d15654c0a7ffa9c183ea34460f01422ec003ffe",
+    "tools/hbm_smh_issue_static_gate.py": "68939298ade39b441896656a199e4e9db5e0a1137f3f31239fcc866e57269153",
+    "tools/dshbm_matched_sm_seq.py": "403529a5b3b412ea60beb13a5faf4c4803ccff1009c3c0eddaf9eb7792948ed6",
+    "tools/uarch_model.py": "fc20dae24728c356a0bf2bf5b5ed686ad824ac8fc7dbf8d093bd8a063a3a6eef",
+    "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv": "f9a025c3609612505c937b61ace0b5836c3fb65871df16a4978021f635743845",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "c3d574486f1c55032a11f1e3415e1c81d72526db012347bae87243be3137c233"
+  },
+  "artifacts": {
+    "other.ops.json": "f3d9ce971fdd35522d1d53f9c4db820856f756d1936d83dc2a526b59064605ab",
+    "verdict.json": "cb07d3ac83595419b5a2f669115509d5d0f6cb445e7f2c3175625f3d725fa4a5",
+    "wg.ops.json": "ad507a80c853a432c9a45d234bb52af552b48aa9b0ed5b9f0c5b14d37b29fc33",
+    "other.programme83.hex": "60336e924638f4a7f1978619dff0540cd9359a8b58e00404fd9333be93dab19f",
+    "mutant.log": "ffb75144ef8cbebd6bf043485f26b7a5cf6ec5afc0c92dde2ef1f817201433d5",
+    "wg.programme83.hex": "388c527e2efc0a43f025b449c2c3c2e85b97bfe659d2c9e1dabfd192fc8551c4",
+    "ar_l20.programme83.hex": "e893668a83a7536c721dfe465425cb8552c6e5399b9454201d4cf50b0c46af8d",
+    "ar_l20.ops.json": "84e8c82ebb9c3ecbcd60eca44794644d95973311b08a5ed9110e21e41558cc31"
+  },
+  "production_payload_scope": "Original immutable SEQS control shapes only. No seeded or released checkpoint payload included. p6 controls alias the matching ar/wg/other sequence; x load and service/retirement capacity require enclosing compiler reservations."
+}
