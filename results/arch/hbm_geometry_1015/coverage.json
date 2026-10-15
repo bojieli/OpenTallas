@@ -226,6 +226,188 @@
     ],
     "actual_pin_verified_edges": 0
   },
+  "top20_source_connected_pairs": [
+    {
+      "instances": [
+        "hb_vms_SW",
+        "lg_SW_0"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 4,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "lg_SW_0",
+        "lg_SW_1"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 4,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "lg_SW_1",
+        "lg_SW_2"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 4,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "hb_vms_SE",
+        "lg_SE_0"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 4,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "lg_SE_0",
+        "lg_SE_1"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 4,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "lg_SE_1",
+        "lg_SE_2"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 4,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "hb_vms_NW",
+        "lg_NW_0"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 4,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "lg_NW_0",
+        "lg_NW_1"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 4,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "lg_NW_1",
+        "lg_NW_2"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 4,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "hb_vms_NE",
+        "lg_NE_0"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 4,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "lg_NE_0",
+        "lg_NE_1"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 4,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "lg_NE_1",
+        "lg_NE_2"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 4,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "hb_vms_SE",
+        "hb_vms_SW"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 2,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "hb_vms_NW",
+        "hb_vms_SW"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 2,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "hb_vms_NE",
+        "hb_vms_SE"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 2,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "hb_vms_NE",
+        "hb_vms_NW"
+      ],
+      "known_signal_bits": 4448,
+      "known_edges": 2,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "hb_coll_SW",
+        "hb_vms_SW"
+      ],
+      "known_signal_bits": 4440,
+      "known_edges": 3,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "hb_coll_SE",
+        "hb_vms_SE"
+      ],
+      "known_signal_bits": 4440,
+      "known_edges": 3,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "hb_coll_NW",
+        "hb_vms_NW"
+      ],
+      "known_signal_bits": 4440,
+      "known_edges": 3,
+      "physical_pin_verified": false
+    },
+    {
+      "instances": [
+        "hb_coll_NE",
+        "hb_vms_NE"
+      ],
+      "known_signal_bits": 4440,
+      "known_edges": 3,
+      "physical_pin_verified": false
+    }
+  ],
   "top20_historical_lower_bounds": [
     {
       "name": "coll_vm_kq_SW",
