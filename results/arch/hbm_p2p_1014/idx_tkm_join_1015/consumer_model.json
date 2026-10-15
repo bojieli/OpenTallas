@@ -1,0 +1,43 @@
+{
+  "scope": "typed candidate producer/qslots/TKM seam; actual producer must supply first-output contract",
+  "actual_clock_entries": 64,
+  "clock_roots": {
+    "selector": 17,
+    "staging": 9,
+    "ingest_check": 1,
+    "shared_ingress": 1,
+    "qslots": 2,
+    "TKM": 34
+  },
+  "cfg_n": 512,
+  "cfg_pf": 64,
+  "cfg_g": 1,
+  "cfg_k": 512,
+  "cfg_nout": 512,
+  "native_KMAX": 2048,
+  "producer_first_launch": 833,
+  "producer_flits_per_rank": 64,
+  "beats_per_rank": 16,
+  "beat_spacing": 8,
+  "producer_selected_pair_inventory_per_rank": 512,
+  "qslots_source_sample": 836,
+  "qslots_first_output_launch": 838,
+  "TKM_first_sample": 839,
+  "TKM_start": 830,
+  "TKM_last_sample": 959,
+  "TKM_done": 1583,
+  "TKM_done_edges_from_start": 753,
+  "native_operand_format": "545 bits: valid bit544,rank bits535:528,index bits527:512;8FP32 values bits255:0,8U32 IDs bits511:256",
+  "native_index_rule": "group-relative ordinal (rank-gbase)*64+flit; no synthetic selected values",
+  "new_transport_budget": {
+    "sources": 4,
+    "sinks": 4,
+    "payload_bits": 545,
+    "capture_root_declared_bits": 2185,
+    "output_root_declared_bits": 4382,
+    "arbitration": false,
+    "storage": "two explicit fixed capture/egress stages, no elastic queue"
+  },
+  "production_parent_note": "typed VM/IDX station adds two fixed source-capture edges; existing NS11 SW output root14824 unchanged; new local4x4 transport is separate component composition",
+  "qualification": "unverified until source-pinned native producer and actual TKM composition execute"
+}
