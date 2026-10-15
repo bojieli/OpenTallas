@@ -140,6 +140,17 @@ puts "MULTI_ROOT_RESULT PASS"
                 flow=flow.replace('source /w/entry.tcl\n# A repeated stage replays measured references, not the previous compensation.\nsource /w/entry.tcl',
                     'set ::env(MAX_ROUTING_LAYER) M5\n'+'\n'.join(f'source /src/{kd}/{n}' for n in
                     ['post_cts.tcl','pre_grt.tcl','post_grt.tcl','pre_drt.tcl','post_drt.tcl','pre_fill.tcl','post_fill.tcl','signoff.sdc']))
+            if mutant=='physical_tap':
+                flow=flow.replace('set ::ot_ce_cts_roots',r'''set tap [odb::dbInst_create [ord::get_db_block] [[ord::get_db] findMaster TAPCELL_ASAP7_75t_R] physical_tap]
+$tap setLocation 10000 90000
+$tap setPlacementStatus FIRM
+set cells [get_cells physical_tap]
+if {"NULL" ni [get_lib_cells -of_objects $cells]} {error "fixture missing actual LEF-only cell"}
+set ::ot_ce_cts_roots''',1) if not generated else flow.replace(f'source /src/{kd}/pre_cts.tcl',r'''set tap [odb::dbInst_create [ord::get_db_block] [[ord::get_db] findMaster TAPCELL_ASAP7_75t_R] physical_tap]
+$tap setLocation 10000 90000
+$tap setPlacementStatus FIRM
+if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixture missing actual LEF-only cell"}
+'''+f'source /src/{kd}/pre_cts.tcl',1)
             if mutant=='related_cut':
                 flow=flow.replace('source /w/entry.tcl','set_false_path -from [get_clocks ot_entry_0] -to [get_clocks ot_entry_1]\nsource /w/entry.tcl',1)
             (w/'run.tcl').write_text(flow)
@@ -156,6 +167,10 @@ puts "MULTI_ROOT_RESULT PASS"
         for a,b in zip(refs[:2],refs[2:]):
             self.assertEqual(a[0],b[0])
             for x,y in zip(a[1:],b[1:]):self.assertAlmostEqual(float(x),float(y),places=8)
+    def test_generated_hooks_with_actual_lef_only_tap(self):
+        rc,out=self.run_flow('physical_tap',generated=True);self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('MULTI_ROOT_RESULT PASS',out)
+
     def test_actual_liberty_shared_async_reset_and_data_mutant(self):
         rc,out=self.run_flow('async_reset',generated=True);self.assertEqual(rc,0,out[-8000:])
         self.assertIn('async_control_pins=4',out)
