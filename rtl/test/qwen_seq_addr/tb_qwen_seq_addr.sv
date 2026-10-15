@@ -31,8 +31,9 @@ module tb_qwen_seq_addr;
     ot_hdc_delay #(.W(21), .D(OS + RLY)) u_dn (.clk(clk), .rst_n(rst_n), .d({vm_re, vm_raddr}), .q({m_re, m_a}));
     always @(posedge clk) if (m_re) m_q <= expected(m_a);
     ot_hdc_delay #(.W(FW), .D(RLY + IS)) u_up (.clk(clk), .rst_n(rst_n), .d(m_q), .q(vm_rq));
-    integer read_count = 0, write_count = 0;
+    integer read_count = 0, write_count = 0, launch_count = 0;
     always @(posedge clk) if (rst_n) begin
+        if (core_start) launch_count = launch_count + 1;
         if (vm_re) begin
             if (vm_raddr !== 20'(VW0 + read_count)) $fatal(1, "read row truncation expected=%0d got=%0d", VW0+read_count,vm_raddr);
             read_count = read_count + 1;
@@ -80,7 +81,7 @@ module tb_qwen_seq_addr;
     initial begin
         repeat (3) @(negedge clk); rst_n = 1; @(negedge clk); start = 1; @(negedge clk); start = 0; t0 = $time;
         repeat (4000) begin @(posedge clk); if (done) begin
-            if (FENCE ? (fault && read_count == 0 && write_count == 0) : (bad == 0 && sent == NWORDS && !fault && ovf == 0 && write_count == NWORDS)) $display("PASS tp_seq_vrl VRL=%0d OS=%0d IS=%0d RLY=%0d words=%0d coll_cycles=%0d", VRL, OS, IS, RLY, sent, $time - t0);
+            if (FENCE ? (fault && read_count == 0 && write_count == 0 && launch_count == 0) : (bad == 0 && sent == NWORDS && !fault && ovf == 0 && write_count == NWORDS)) $display("PASS tp_seq_vrl VRL=%0d OS=%0d IS=%0d RLY=%0d words=%0d coll_cycles=%0d", VRL, OS, IS, RLY, sent, $time - t0);
             else $fatal(1, "FAIL tp_seq_vrl VRL=%0d OS=%0d IS=%0d RLY=%0d bad=%0d sent=%0d fault=%0d ovf=%0d", VRL, OS, IS, RLY, bad, sent, fault, ovf);
             $finish; end end
         $fatal(1, "FAIL tp_seq_vrl timeout sent=%0d bad=%0d", sent, bad); $finish;
