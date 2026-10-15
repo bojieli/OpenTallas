@@ -8,6 +8,11 @@
 set -euo pipefail
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 CASES=${CASES:-"full1m short300 skew1m tail46"}; SEEDS=${SEEDS:-"1 2"}; JOBS=${JOBS:-16}
+SRAM_MACRO=${SRAM_MACRO:-0}
+NATIVE_FP32_PV=${NATIVE_FP32_PV:-0}
+case "$SRAM_MACRO" in 0|1) ;; *) echo "SRAM_MACRO must be 0 or 1" >&2; exit 2;; esac
+case "$NATIVE_FP32_PV" in 0|1) ;; *) echo "NATIVE_FP32_PV must be 0 or 1" >&2; exit 2;; esac
+if [ "$NATIVE_FP32_PV" = 1 ]; then : "${EREAL:?actual SU FP32 e-file directory required}"; fi
 S=rtl/dsrom_sys/s81_ph/svc; Q=$S/q; HH=$S/h
 SRC=(rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv rtl/hdc/v41x/ot_hdc_v41x_kreg.sv
      rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv rtl/hdc/v41x/ot_hdc_v41x_attn.sv
@@ -31,7 +36,8 @@ SRC=(rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv 
      $HH/ot_s81_svch_lane.sv $HH/ot_s81_svch_pcsvc.sv $HH/dsfd_svch_pcs.sv $HH/ot_s81_svch_comb.sv $HH/ot_s81_svch_attq.sv $HH/ot_s81_svch_home.sv
      $S/dsfd_svc_quad.sv $S/dsfd_svc_idx.sv
      rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv $S/ot_s81ph_svc_io.sv rtl/common/ot_fwd_link_stage.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv
-     $S/ot_s81ph_svc_io_tiles.sv $S/dsfd_svcio_job.sv $S/dsfd_svc_pc.sv $S/dsfd_svc_c.sv)
+     $S/ot_s81ph_svc_io_tiles.sv $S/dsfd_svcio_job.sv $S/dsfd_svc_pc.sv
+     $S/ot_s81_svc_probability_pack.sv $S/ot_s81_svc_probability_frame.sv $S/dsfd_svc_c.sv)
 HIER=${HIER:-$HH/svch_hierarchy.vlt}
 if [ "${1:-}" = lint ]; then
   for top in "dsfd_svch_pcs" "dsfd_svch_rly" "dsfd_svc_quad -GQID=0" "dsfd_svc_quad -GQID=1" "dsfd_svc_quad -GQID=2" "dsfd_svc_quad -GQID=3" "dsfd_svc_idx" "dsfd_svc_c"; do
@@ -47,16 +53,19 @@ B=$1; VEC=$2; shift 2
 mkdir -p "$B"
 for cfg in "$@"; do
   read -r DIE ST DEF <<<"$cfg"; DEF=${DEF:-}
-  tag=d${DIE}s${ST}${DEF:+_$DEF}; o=$B/$tag
+  tag=d${DIE}s${ST}${DEF:+_$DEF}; [ "$SRAM_MACRO" = 0 ] || tag=${tag}_sram1; o=$B/$tag
+  [ "$NATIVE_FP32_PV" = 0 ] || { tag=${tag}_nativepv; o=$B/$tag; }
   if [ ! -x "$o/obj/Vtb" ]; then
     mkdir -p "$o"
     "$VL" --cc --exe --build --top-module tb_dsfd_svc_c --prefix Vtb -Mdir "$o/obj" -j "$JOBS" -Wno-fatal -Wno-WIDTH \
       -Wno-TIMESCALEMOD --output-split 20000 --output-split-cfuncs 2000 -fno-inline --unroll-count 1 --unroll-limit 131072 \
-      -MAKEFLAGS OPT_SLOW=-O0 --hierarchical "$HIER" -GDIE=$DIE -GST=$ST ${ENGDEF:+-D$ENGDEF} ${DEF:+-D$DEF} \
+      -MAKEFLAGS OPT_SLOW=-O0 --hierarchical "$HIER" -GDIE=$DIE -GST=$ST -GSRAM_MACRO=$SRAM_MACRO -GNATIVE_FP32_PV=$NATIVE_FP32_PV ${ENGDEF:+-D$ENGDEF} ${DEF:+-D$DEF} \
       "${SRC[@]}" $HH/tb_dsfd_svc_c.sv rtl/test/hdc_v41_harness.cpp -CFLAGS -O1 >"$o/build.log" 2>&1 || { echo "$tag BUILD FAIL"; tail -20 "$o/build.log"; continue; }
   fi
   for c in $CASES; do for s in $SEEDS; do
-    "$o/obj/Vtb" +dir="$VEC/$c" +seed=$s >"$o/run_${c}_s$s.log" 2>&1 || true
+    trace=$o/trace_${c}_s$s; mkdir -p "$trace"
+    extra=(); [ "$NATIVE_FP32_PV" = 0 ] || extra+=("+e_file=$EREAL/$c/native_e.hex")
+    "$o/obj/Vtb" +dir="$VEC/$c" +seed=$s +trace="$trace" "${extra[@]}" >"$o/run_${c}_s$s.log" 2>&1 || true
     echo "$tag $c s$s: $(grep -h SVCC "$o/run_${c}_s$s.log" | tail -1)"
   done; done
 done

@@ -139,7 +139,7 @@
   "job": {
     "owner": "Codex:Q-KVSYS-ELEM",
     "branch": "claude/qwen-kvsys-el-r3-1014",
-    "tag": "ep1",
+    "tag": "ep2",
     "purpose": "Native rq17 layer-parity successor for die landing fence race; fresh pin/clock qualification.",
     "extra_paths": [
       "rtl/test/qwen_split",
@@ -175,7 +175,7 @@
       }
     ]
   },
-  "structural_change": "Landing future-layer request race: parity bit16 added to request wire; ingress128-entry queue holds requests until matching layer context, DQ128 matches actual native ECTL credits. Production named-native KL12 PASS2471 exact responses/16384words and parity-bypass GM4 FAIL; producer36layers9170requests PASS and inverted-parity FAIL1005. Same-input local cost9596->9597cycles; fresh native successor, no alias of old16-bit views. Assigned die pins403f9a8f6 results/arch/qwen_split_1014/kvsys_v1_3_candidate/pins/qkd_land_grp_epoch.json",
+  "structural_change": "Landing future-layer request race: parity bit16 added to request wire; ingress128-entry queue holds requests until matching layer context, DQ128 matches actual native ECTL credits. Production named-native KL12 PASS2471 exact responses/16384words and parity-bypass GM4 FAIL; producer36layers9170requests PASS and inverted-parity FAIL1005. Same-input local cost9596->9597cycles; fresh native successor, no alias of old16-bit views. Assigned die pins403f9a8f6 results/arch/qwen_split_1014/kvsys_v1_3_candidate/pins/qkd_land_grp_epoch.json ep2: release uses registered ls_q/context only; raw lt[0] guard was redundant under parity and introduced a seven-level input->FIFO rp cone (ep1 CTS gate), violating pin capture. Every functional lt/rq bit now lands at a pin flop; no added data stage.",
   "children": [],
   "inter": [],
   "io_flop_at_pins": {

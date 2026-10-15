@@ -1,4 +1,9 @@
 `timescale 1ns/1ps
+`ifdef OT_TP8_QFD
+`define TP8_CORE u_die.u_coll
+`else
+`define TP8_CORE u_die
+`endif
 // ---------------------------------------------------------------------------
 // qwen-tp8 bench of rtl/rom/ot_coll_tp8_die.sv: 8 dies (die r = 2 * package + die-in-package), each package's dies
 // joined by two UCIe channel models (partials P, results R; LATU cycles), die d of every package joined to die d of
@@ -74,8 +79,13 @@ module tb_coll_tp8 #(
 `else
             localparam integer PS = P;
 `endif
+`ifdef OT_TP8_QFD
+            qfd_io_collective u_die (
+                .clk_colr0(clk), .clk_colr1(clk), .clk_colr2(clk), .clk_colr3(clk), .clk_ecol0(clk), .clk_ecol1(clk), .clk_ecol2(clk), .clk_ecol3(clk), .clk_ecol4(clk), .clk_pfold0(clk), .clk_pfold1(clk), .clk_pfold2(clk), .clk_pfold3(clk), .clk_efold0(clk), .clk_efold1(clk), .clk_efold2(clk), .clk_efold3(clk),
+`else
             ot_coll_tp8_die #(.PKG(STRAP ? 0 : P), .DIE(STRAP ? 0 : D), .STRAP(STRAP), .LANES(LANES), .WT(WT), .ICR(ICR), .DEPTH(EDEPTH), .PR(EPR), .MEMM(EMEMM),
                 .CT(ECT), .LQD(QLQD), .TQD(QTQD)) u_die (
+`endif
                 .clk(clk), .rst_n(rst_n),
                 .in_valid(iv[g]), .in_cr(icr[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]),
                 .in_tag(it[g*TAGW +: TAGW]),
@@ -192,13 +202,13 @@ module tb_coll_tp8 #(
     end
 
 `ifdef TP8_DEBUG
-    always @(posedge clk) if (g_die[2].u_die.prot_n || g_die[2].u_die.arith_n)
+    always @(posedge clk) if (g_die[2].`TP8_CORE.prot_n || g_die[2].`TP8_CORE.arith_n)
         $display("DBG cyc=%0d pp=%b pbad=%b oddw=%b slv=%b tail=%b eov=%b mfhv=%b mgo=%b tl=%b mm=%b lqm=%b upbad=%b ovf=%b%b%b%b%b%b%b arith=%b sle=%b",
-            cyc, g_die[2].u_die.pair_pop, g_die[2].u_die.p_bad, g_die[2].u_die.pr_red && g_die[2].u_die.p_last && !g_die[2].u_die.wpar,
-            g_die[2].u_die.sl_v, g_die[2].u_die.sl_tail, g_die[2].u_die.e_ov, g_die[2].u_die.mf_hv, g_die[2].u_die.m_go,
-            g_die[2].u_die.take_l, g_die[2].u_die.m_mode, g_die[2].u_die.lq_hd[FW+4], g_die[2].u_die.up_bad,
-            g_die[2].u_die.lb_ovf, g_die[2].u_die.pq_ovf, g_die[2].u_die.eq_ovf, g_die[2].u_die.mf_ovf, g_die[2].u_die.lq_ovf,
-            g_die[2].u_die.tq_ovf, g_die[2].u_die.rq_ovf, g_die[2].u_die.arith_n, g_die[2].u_die.sl_e);
+            cyc, g_die[2].`TP8_CORE.pair_pop, g_die[2].`TP8_CORE.p_bad, g_die[2].`TP8_CORE.pr_red && g_die[2].`TP8_CORE.p_last && !g_die[2].`TP8_CORE.wpar,
+            g_die[2].`TP8_CORE.sl_v, g_die[2].`TP8_CORE.sl_tail, g_die[2].`TP8_CORE.e_ov, g_die[2].`TP8_CORE.mf_hv, g_die[2].`TP8_CORE.m_go,
+            g_die[2].`TP8_CORE.take_l, g_die[2].`TP8_CORE.m_mode, g_die[2].`TP8_CORE.lq_hd[FW+4], g_die[2].`TP8_CORE.up_bad,
+            g_die[2].`TP8_CORE.lb_ovf, g_die[2].`TP8_CORE.pq_ovf, g_die[2].`TP8_CORE.eq_ovf, g_die[2].`TP8_CORE.mf_ovf, g_die[2].`TP8_CORE.lq_ovf,
+            g_die[2].`TP8_CORE.tq_ovf, g_die[2].`TP8_CORE.rq_ovf, g_die[2].`TP8_CORE.arith_n, g_die[2].`TP8_CORE.sl_e);
 `endif
     integer t;
     reg tagok;
@@ -221,7 +231,7 @@ module tb_coll_tp8 #(
         end
         if (cyc > MAXCYC) begin
             $display("TIMEOUT cyc=%0d done_n=%0d words_out=%0d mismatches=%0d fault=%b code=%b", cyc, done_n, words_out, bad, flt, fc);
-            `define TP8_DUMP(i) $display("die %0d sent_msgs=%0d lb_hv=%b pq_hv=%b eq_res=%0d infl=%0d eq_hv=%b ecred=%0d lq_res=%0d tq_res=%0d mf_n=%0d lq_hv=%b rq_hv=%b mc=%0d cr_a=%0d cr_b=%0d wpar=%b", i, g_die[i].m, g_die[i].u_die.lb_hv, g_die[i].u_die.pq_hv, g_die[i].u_die.eq_res, g_die[i].u_die.infl, g_die[i].u_die.eq_hv, g_die[i].u_die.ecred, g_die[i].u_die.lq_res, g_die[i].u_die.tq_res, g_die[i].u_die.mf_n, g_die[i].u_die.lq_hv, g_die[i].u_die.rq_hv, g_die[i].u_die.mc, g_die[i].u_die.cr_a, g_die[i].u_die.cr_b, g_die[i].u_die.wpar);
+            `define TP8_DUMP(i) $display("die %0d sent_msgs=%0d lb_hv=%b pq_hv=%b eq_res=%0d infl=%0d eq_hv=%b ecred=%0d lq_res=%0d tq_res=%0d mf_n=%0d lq_hv=%b rq_hv=%b mc=%0d cr_a=%0d cr_b=%0d wpar=%b", i, g_die[i].m, g_die[i].`TP8_CORE.lb_hv, g_die[i].`TP8_CORE.pq_hv, g_die[i].`TP8_CORE.eq_res, g_die[i].`TP8_CORE.infl, g_die[i].`TP8_CORE.eq_hv, g_die[i].`TP8_CORE.ecred, g_die[i].`TP8_CORE.lq_res, g_die[i].`TP8_CORE.tq_res, g_die[i].`TP8_CORE.mf_n, g_die[i].`TP8_CORE.lq_hv, g_die[i].`TP8_CORE.rq_hv, g_die[i].`TP8_CORE.mc, g_die[i].`TP8_CORE.cr_a, g_die[i].`TP8_CORE.cr_b, g_die[i].`TP8_CORE.wpar);
             `TP8_DUMP(0) `TP8_DUMP(1) `TP8_DUMP(2) `TP8_DUMP(3) `TP8_DUMP(4) `TP8_DUMP(5) `TP8_DUMP(6) `TP8_DUMP(7)
             $display("TIMEOUT"); $finish;
         end

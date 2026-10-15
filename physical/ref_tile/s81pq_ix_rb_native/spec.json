@@ -47,8 +47,7 @@
    "clk",
    "rst_n",
    "consume",
-   "par",
-   "ba_v",
+   "ba_wv",
    "ba_blk",
    "h_hi",
    "hw_low",
@@ -91,8 +90,7 @@
     "clk",
     "rst_n",
     "consume",
-    "par",
-    "ba_v",
+    "ba_wv",
     "ba_blk",
     "h_hi",
     "hw_low",
@@ -106,9 +104,9 @@
   "tag": "esc2"
  },
  "job": {
-  "owner": "Codex:s81-rom-2250",
-  "branch": "codex/s81-rom-2250",
-  "tag": "esc2",
+  "owner": "Claude:s81-elemB6-1014",
+  "branch": "claude/s81-elemB6-pq",
+  "tag": "wv1",
   "purpose": "Actual native one-SRAM IX bank with unchanged selector and final capture epochs",
   "benches": [
    {
@@ -126,6 +124,17 @@
    {
     "name": "native_actual_mutant",
     "cmd": "python3 tools/s81/pq_native_core_bench.py --bc-sliced --aq-pin --aq-parity --ix-bank-split --mut IX --work {RUN}/native_mut --jobs 8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "PQ_NATIVE_CORE FAIL"
+   },
+   {
+    "name": "native_wv_mutant",
+    "cmd": "python3 tools/s81/pq_native_core_bench.py --bc-sliced --aq-pin --aq-parity --ix-bank-split --mut WV --work {RUN}/native_wv --jobs 8",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 8,
@@ -163,8 +172,8 @@
   }
  ],
  "reroute_reason": {
-  "kind": "slot_change",
-  "why": "Actual bank g1 TT116.88/FF23.36 but DRC3 at real SRAM M4eastOBS; add M3/M5 local via escape keepout, realLEF and macro/data pins/epochs unchanged; esc1 crashed actual ORFS optional vt_swap/reroute WNS optimization invalidating route state before ANT0008. Disable optional OPT_POST_GRT_WNS only; retain ordinary design/timing repair, recover_power incremental global_route, antenna checks and all final timing/DRC."
+  "kind": "rtl_change",
+  "why": "NO-STUBS (owner 10-14 08:05): the 'par' input was a per-instance constant tie (g >= 2); the controller now registers per-parity stage A write enables (ba_wv_o, same edge as ba_v) and this tile takes its own ba_wv in place of par + ba_v (we = write_valid). Bit-exact: pq_native_core_bench PASS 5,536 (4 configs), mutants IX / WV FAIL. Pin plan: par removed, ba_wv at ba_v's position."
  },
  "io_tcl": "physical/ref_tile_specs/s81pq_native/ix_rb_split_pins.tcl",
  "orfs_vars": {

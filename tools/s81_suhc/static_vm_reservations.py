@@ -12,6 +12,7 @@ import argparse
 from collections import defaultdict
 from fractions import Fraction
 import json
+import hashlib
 from pathlib import Path
 
 
@@ -24,7 +25,7 @@ def bank_of(row: int, contract: dict) -> int:
     raise ValueError('Unsupported bank mapping or incompatible bank count')
 
 
-def check(schedule: dict, contract: dict) -> dict:
+def check(schedule: dict, contract: dict, source_root: Path | None = None) -> dict:
     errors = []
     def error(kind, **witness):
         errors.append(dict(kind=kind, **witness))
@@ -57,6 +58,26 @@ def check(schedule: dict, contract: dict) -> dict:
     if ingress_caps is not None and (not isinstance(ingress_caps, dict) or
             any(type(k) is not str or type(v) is not int or v <= 0 for k, v in ingress_caps.items())):
         invalid.append('ingress_capacities')
+    ports = contract.get('bank_port_capacities')
+    if ports is not None:
+        # This profile describes the actual new 1R1W macro, not two generic
+        # interchangeable operations. Legacy shared-port accounting stays exact.
+        if ports != {'read': 1, 'write': 1} or any(type(v) is not int for v in ports.values()):
+            invalid.append('bank_port_capacities_requires_actual_1r1w')
+        if contract.get('same_address_policy') not in ('forbid', 'read_before_write'):
+            invalid.append('missing_same_address_policy')
+        evidence = contract.get('bank_port_evidence')
+        if not evidence:
+            invalid.append('missing_1r1w_source_evidence')
+        else:
+            root = (source_root or Path(__file__).resolve().parents[2]).resolve()
+            try:
+                for item in evidence:
+                    path = (root / item['path']).resolve()
+                    if not path.is_relative_to(root) or hashlib.sha256(path.read_bytes()).hexdigest() != item['sha256']:
+                        invalid.append('stale_1r1w_source_evidence')
+            except (KeyError, TypeError, OSError):
+                invalid.append('invalid_1r1w_source_evidence')
     if invalid:
         return dict(status='fail', violations=[dict(kind='invalid_contract', fields=invalid)], qualified=False, events=0)
     def when(cycle, domain):
@@ -131,8 +152,25 @@ def check(schedule: dict, contract: dict) -> dict:
         rows[event['row']].append((kind, issue, retire, eid))
         if kind == 'write': job_writes[jobkey(event)].append((retire, eid))
     for (cycle, bank), ids in bank_use.items():
-        if len(ids) > contract['bank_ops_per_cycle']:
-            error('bank_collision', vm_cycle=cycle, bank=bank, events=ids)
+        if ports is None:
+            if len(ids) > contract['bank_ops_per_cycle']:
+                error('bank_collision', vm_cycle=cycle, bank=bank, events=ids)
+            continue
+        for direction in ('read', 'write'):
+            directional = [eid for eid in ids if event_by_id[eid]['kind'] == direction]
+            if len(directional) > ports[direction]:
+                error('bank_port_collision', vm_cycle=cycle, bank=bank,
+                      operation=direction, events=directional)
+        reads = [event_by_id[eid] for eid in ids if event_by_id[eid]['kind'] == 'read']
+        writes = [event_by_id[eid] for eid in ids if event_by_id[eid]['kind'] == 'write']
+        for read in reads:
+            for write in writes:
+                if read['row'] != write['row']:
+                    continue
+                if contract['same_address_policy'] == 'forbid':
+                    error('same_edge_read_write_address_collision', read=read['id'], write=write['id'])
+                elif read.get('read_visibility') != 'before_same_edge_write':
+                    error('same_edge_read_visibility_unbound', read=read['id'], write=write['id'])
     for (cycle, resource), ids in ingress_use.items():
         capacity = ingress_caps[resource] if ingress_caps is not None else contract[f'{resource}_ingress_per_cycle']
         if len(ids) > capacity:
@@ -213,6 +251,10 @@ def check(schedule: dict, contract: dict) -> dict:
             error('dependency_row_mismatch', producer=producer, consumer=consumer)
         if when(c['service_cycle'], 'vm') < when(p['commit_cycle'], 'stream'):
             error('consume_before_commit', producer=producer, consumer=consumer)
+        elif (ports is not None and contract.get('same_address_policy') == 'read_before_write'
+              and when(c['service_cycle'], 'vm') == when(p['commit_cycle'], 'stream')
+              and c['service_cycle'] == p.get('service_cycle') and c['row'] == p['row']):
+            error('consume_before_same_edge_write_visibility', producer=producer, consumer=consumer)
     # Pair/batch consumers require the original mask at one fixed response edge.
     groups = list(schedule.get('groups', []))
     traced_groups = defaultdict(list)

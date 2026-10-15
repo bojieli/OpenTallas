@@ -1,0 +1,21 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_coll_xfifo_native_20261014-190621.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_coll_xfifo_native_20261014-190621.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_xfifo_native-20261014-190621
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 44 s (gate total 834 s)
+GATE WARN util: synthesized std area 3991 um2 + macros 42129 in core 109007: util 42%  -> FIX: set "std_area_um2": 3991 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN qfd_coll_xfifo_native cells 27,478 flops 8,231 depth 323.4 ps util 0.4237 reach 7.7 um (0.5 s)
+GATE WARN textbook.util_channel: utilisation 42.4% outside 45%-65% (std 4055 + macro 42129 um2 in 109007 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 1044.5..1145.0 ps (spread 100.5), boundary mean 1102.6; tt insertion all 811.3..842.4 ps (spread 31.1), boundary mean 821.9; ff insertion all 637.0..685.1 ps (spread 48.1), boundary mean 652.3; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.550 vs spec PD 0.55
+GATE INFO clock_spine: OT_SPINE iter 4 (fine) leaves 432 sinks 3364 cells 2325 leaf arrival 614.9..644.6 ps (spread 29.7) pad 73.3 / 16.2 ps
+GATE INFO clock_spine: OT_SPINE iter 5 (fine) leaves 432 sinks 3364 cells 2327 leaf arrival 616.1..644.6 ps (spread 28.4) pad 73.3 / 16.5 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qfd_coll_xfifo_native/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->out      300 paths, worst slack -758.4 ps (e.g. o_coll_seq[462])
+GATE INFO path_classes: reg->reg      428 paths, worst slack 124.1 ps (e.g. u_port.u_cq.g_afw.u_af.wq_data[312]$_DFFE_PP_/D)
+GATE INFO path_classes: in->reg       149 paths, worst slack 202.8 ps (e.g. u_port.u_cq.g_ipr.pd[305]$_DFF_P_/D)
+GATE INFO path_classes: setup WNS -7.584414207784107e-10 hold WNS 1.0348055745623697e-11
+GATE INFO clock_rule: root port:ck: 4,846 sinks on the largest root <= 15,000; measured TT insertion 842.4 ps, leaf spread 31.1 ps
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/qwen-coll-io-1014/physical/ref_tile/qfd_coll_xfifo_native/source_binding_history/eba0f477fba892a5f38fa9c8216555ba81909cc56de34e32909d1693b7662509.json
+GATE: qfd_coll_xfifo_native/gate_result.json written (exact staged source binding; commit it with the kit)

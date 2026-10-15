@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hgi_coll_tkw_rx_n4",
+ "top": "ot_hgi_coll_rx_native",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  88.56,
+  88.56
+ ],
+ "core": [
+  2.16,
+  2.16,
+  86.4,
+  86.4
+ ],
+ "why": "util 0.52 of std 3537 + macros 0 um2",
+ "std_area_um2": 3537,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "S": [
+   "t_v",
+   "t_d"
+  ],
+  "N": [
+   "out_v",
+   "out_d",
+   "out_rdy",
+   "epoch",
+   "fault"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_crl.sv",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/kit.env",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/clock.sdc",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/signoff.sdc",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/pdn.tcl",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/pre_cts.tcl",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/post_cts.tcl",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/post_grt.tcl",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/pre_drt.tcl",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/pre_fill.tcl",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/post_fill.tcl",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/pre_grt.tcl",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/pre_gpl.tcl",
+  "physical/ref_tile/hgi_coll_tkw_rx_n4/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

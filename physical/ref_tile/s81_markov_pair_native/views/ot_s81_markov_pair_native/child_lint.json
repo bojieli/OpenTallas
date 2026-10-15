@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_pair_native-g1-443f55354/record/views/ot_s81_markov_pair_native/ot_s81_markov_pair_native.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/s81_markov_pair_native-pc2-fd21a1202/record/views/ot_s81_markov_pair_native/ot_s81_markov_pair_native.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
@@ -40,7 +40,7 @@
   "face": {
    "face_pins": 101,
    "blocked_above": 0,
-   "covered_below": 4,
+   "covered_below": 0,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -56,8 +56,8 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 113.84,
-    "min_ps": 91.34
+    "max_ps": 113.56,
+    "min_ps": 90.48
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 160
+    "added": 62
    },
    "count": 0,
    "area_um2": 0,

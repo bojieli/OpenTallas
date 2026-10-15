@@ -60,7 +60,7 @@ LIST="rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_skid_buffer.s
  rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv
  rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv
  rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv
- rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_collective_c.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_job.sv rtl/dsrom_sys/s81_ctrl/ot_s81_coll_job.sv
+ rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_collective_c.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_job.sv rtl/dsrom_sys/s81_ctrl/ot_s81_coll_job.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_xc.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv
  rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv rtl/link/ot_fifo_sram_fwft.sv rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv
  rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/ot_dsrom_link_chan.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
@@ -93,7 +93,7 @@ for m in $MODES; do
   ( $ADMIT $VL --binary --timing -j $J -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING \
       -DOT_S81PH_PLL_MODEL +define+OT_S81PH_COLL_JOB $SPL $SUD -I$S/s81_ctrl --unroll-count 4 -fno-dfg -CFLAGS -O1 \
       --top-module tb_s81_die_layer -GNG=$NG $HX $XGM $X --Mdir $OUT/obj_$m -o sim $FILES > $OUT/build_$m.log 2>&1 \
-    && for L in $RUNL; do /usr/bin/time -v $OUT/obj_$m/sim +DIR=$OUT/stim_$L > $OUT/run_${m}_$L.log 2>&1; done ) &
+    && for L in $RUNL; do TX=""; [ -n "${VM_TRACE:-}" ] && TX="+VM_TRACE=${VM_TRACE}_${m}_${L}.csv"; /usr/bin/time -v $OUT/obj_$m/sim +DIR=$OUT/stim_$L $TX > $OUT/run_${m}_$L.log 2>&1; done ) &
 done
 wait
 for m in $MODES; do

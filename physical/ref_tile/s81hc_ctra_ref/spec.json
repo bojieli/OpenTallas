@@ -42,34 +42,45 @@
  "why_floorplan": "centre-band return slots 0-1: rv/rd pin flops, origination, merge (psb, ybuf, hrq of 16 lanes), sequencer; ~2.5k pins per N/S face (hrq lanes 0-7 on N, 8-15 on S)",
  "macros": [],
  "pins": {
-  "N": [
-   "rvm",
-   "rdm",
-   "rq_q",
-   "hs_run",
-   "hs_c",
-   "hrq_n",
-   "yb_n",
-   "cs",
-   "nflt_n",
-   "hov_d",
-   "hnz_n",
-   "pflt_n"
-  ],
   "S": [
+   "fv",
+   "fdx",
    "rv_in",
    "rd_in",
    "hrq_s",
    "yb_s",
    "nflt_s",
    "hnz_s",
-   "pflt_s",
-   "fv",
-   "fdx"
+   "pflt_s"
+  ],
+  "N": [
+   "rvm",
+   "rdm",
+   "hrq_n",
+   "yb_n",
+   "nflt_n",
+   "hnz_n",
+   "pflt_n",
+   "rq_q",
+   "hs_run",
+   "hs_c",
+   "rq_q_c1",
+   "hs_run_c1",
+   "hs_c_c1",
+   "rq_q_c2",
+   "hs_run_c2",
+   "hs_c_c2",
+   "rq_q_c3",
+   "hs_run_c3",
+   "hs_c_c3",
+   "hov_d",
+   "rst_in"
+  ],
+  "E": [
+   "cs"
   ],
   "W": [
    "clk",
-   "rst_in",
    "tid",
    "last"
   ]
@@ -79,19 +90,64 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 24,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.01,
+  "macro_halo_um": 5.4
  },
  "job": {
-  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
-  "owner": "Claude:el1011-s81hc-ctile",
-  "branch": "claude/el1011-s81hc-ctile",
-  "tag": "v1",
-  "purpose": "s81-suhc HC half-octet column slot (576.72 x 768.96: the measured ~215k um2 std does not fit 572.4 under the 70% cap) as 30 hard tiles of 8 masters (N->S: ctrn | ctnl rows 0-1 | ctpl half 0 | centre band ctra, ctrb, ctfx, ctfn | ctpl half 1 | ctnl rows 2-3 | ctfs; ot_s81_hc_cth; every flop-to-flop stage <= ~400 um): ctra",
-  "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
+  "owner": "Codex:S-NORM",
+  "branch": "claude/s81-norm-tree-1014",
+  "tag": "v3-column-controls",
+  "purpose": "Close production CNL_PIN1 CTRA at actual READ_STAGE1/CHAIN_STEP6; per-leaf exact probes and failing return payload mutant.",
   "views_to": "physical/ref_tile/s81hc_ctra_ref/views",
-  "record_to": "results/rtl/ref_tile/s81hc_ctra_ref"
+  "record_to": "results/rtl/ref_tile/s81hc_ctra_ref",
+  "structural_change": "Active READ_STAGE1/CHAIN_STEP6, exact die-owned native-neighbor pin plan, kept boundary registers and configured input pads. CTRA rq_q/hs control output aliases give every horizontal CTNL column its own physical registered source, same epoch/no new latency. Same accepted outline and IO/clock budgets. External rd_in/tid/last delivery still needs parent proof.",
+  "benches": [
+   {
+    "name": "return_exact_pipe1",
+    "cmd": "bash tools/s81_suhc/hc_return_bench.sh {RUN}/bench/return_exact",
+    "expect": "pass",
+    "pass_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_probe pass$",
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ctra_column1_mut",
+    "cmd": "bash tools/s81_suhc/hc_return_bench.sh {RUN}/bench/return_mut ot_s81_hc_ctra",
+    "expect": "fail",
+    "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_probe_tm-ot_s81_hc_ctra fail$",
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
  },
- "params": {},
+ "params": {
+  "CHAIN_STEP": 6,
+  "READ_STAGE": 1
+ },
  "children": [],
- "inter": []
+ "inter": [],
+ "recipe": 2,
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "io_tcl": "physical/s81_die_pins/v20_hc_return/ot_s81_hc_ctra.tcl",
+ "assigned_pins": {
+  "file": "physical/s81_die_pins/v20_hc_return/ot_s81_hc_ctra.json",
+  "source": "S81 die lead a7fd2440e actual8453internalneighbor joins max397.008um; external rd_in/tid/last delivery remains OPEN",
+  "layout": "physical/s81_die_pins/v20_hc_capture/serial_capture_layout.json"
+ }
 }

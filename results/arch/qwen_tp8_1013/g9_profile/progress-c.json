@@ -1,0 +1,13 @@
+{
+  "time": "2026-10-13T23:05:21.267284-07:00",
+  "pid": 4119778,
+  "method": "py-spy0.4.2 --nonblocking dump; read-only",
+  "active_function": "bfs",
+  "line": 3064,
+  "repair_idx": "6566",
+  "plan": "{\"bid\": \"ts_WS_1_0\", \"cl\": \"stack_local\", \"bits\": 34, \"eps\": [(\"head_WS_1_0\", \"s\"), (\"ectl_WS_1_c\", \"s0\")], \"P0\": (...), ...}",
+  "previous_idx": "6556 at22:01:04",
+  "progress": "idx advanced to6566; slow bounded BFS remains active, not nontermination",
+  "source_unchanged": true,
+  "first_read": "nonblocking race Bad address; retry succeeded"
+}

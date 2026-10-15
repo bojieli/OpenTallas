@@ -42,6 +42,8 @@ module ot_s81_su_kvt #(
     output reg                    e_gk,           // the job is a gain load (K_GK)
     output reg  [1:0]             e_gr, e_gw,     // gain set read (KV) / written (GK)
     output reg                    e_go,           // a KV job's parameter rows are in (a pulse)
+    output reg [1:0]              e_mode,         // 0 KV, 1 CN, 2 IK (statically exclusive norm epochs)
+    output reg  [13:0]            e_nb,           // CN pre-RoPE norm output base (descriptor word2)
     output reg  [13:0]            e_ob,           // the KV job's obase (quarter 0)
     output reg  [31:0]            e_eps,          // the KV job's eps (quarter 0)
     output reg  [511:0]           e_cs,           // {sin hi, sin lo, cos hi, cos lo}: this quarter of param rows 4..1
@@ -49,7 +51,7 @@ module ot_s81_su_kvt #(
     output reg  [7:0]             o_rjid
 );
     localparam integer L = N / 16, LL = $clog2(L);
-    localparam [3:0] K_KV = 1, K_GK = 7;
+    localparam [3:0] K_KV = 1, K_GK = 7, K_CN = 12, K_IK = 13;
     localparam integer NPK = 5;                    // parameter rows of a KV job (descriptor, cos lo / hi, sin lo / hi)
 `ifndef SYNTHESIS
     initial if ((1 << LL) != L || L < 2 || S_RD > L || NB < 1 || NB > 128) $fatal(1, "ot_s81_su_kvt: N / 16 a power of two >= max(2, S_RD)");
@@ -92,11 +94,14 @@ module ot_s81_su_kvt #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin mine <= 1'b0; gk <= 1'b0; gsel <= 2'd0; jid <= 8'd0; rl <= 0; sr <= 4'd0; np <= 3'd1; end
         else begin
-            if (dq_st) begin mine <= (dq_kind == K_KV || dq_kind == K_GK); gk <= (dq_kind == K_GK); gsel <= dq_gsel;
+            if (dq_st) begin mine <= (dq_kind == K_KV || dq_kind == K_GK || dq_kind == K_CN || dq_kind == K_IK); gk <= (dq_kind == K_GK); gsel <= dq_gsel;
                              jid <= dq_jid; end
             rl <= rl_n; sr <= sr_n; np <= np_n;
         end
     end
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)e_mode<=0;
+        else if(dq_st)e_mode<=(dq_kind==K_CN)?2'd1:(dq_kind==K_IK)?2'd2:2'd0;
     // per slot: operand-row valid; parameter row j (KV jobs) captured by a decoded compare
     reg [S_RD-1:0] opv;
     reg [S_RD-1:0] pj [0:NPK-1];
@@ -128,7 +133,7 @@ module ot_s81_su_kvt #(
         integer j, s;
         for (j = 0; j < L; j = j + 1) e_d[128 * j +: 128] <= rv[LL][RB * j +: 128];
         for (s = 0; s < S_RD; s = s + 1) begin
-            if (pj[0][s]) begin e_ob <= dq_d[128 * s +: 14]; e_eps <= dq_d[128 * s + 96 +: 32]; end
+            if (pj[0][s]) begin e_nb<=dq_d[128*s+64+:14]; e_ob <= dq_d[128 * s +: 14]; e_eps <= dq_d[128 * s + 96 +: 32]; end
             for (j = 1; j < NPK; j = j + 1) if (pj[j][s]) e_cs[128 * (j - 1) +: 128] <= dq_d[128 * s +: 128];
         end
         e_gk <= gk; e_gr <= (MUT == 4) ? 2'd0 : gsel; e_gw <= gsel;
@@ -165,6 +170,8 @@ module ot_s81_su_kve #(
     input  wire [31:0]   r_d,
     output reg           p_v,
     output reg  [31:0]   p_d,
+    output reg           norm_v,
+    output wire [127:0]  norm_y,          // packed BF16, before RoPE; CN wk field consumes it
     output reg           y_v,
     output reg  [255:0]  y,
     output reg           o_f
@@ -270,6 +277,13 @@ module ot_s81_su_kve #(
         always @(posedge clk or negedge rst_n) if (!rst_n) y_v <= 1'b0; else y_v <= kr[DR];
         assign ff = |af;
     end endgenerate
+    always @(posedge clk or negedge rst_n) if(!rst_n)norm_v<=0;else norm_v<=kwp[LM];
+    wire [255:0] norm_source=(RP==0)?y:yr;
+    genvar ny;
+    generate for(ny=0;ny<8;ny=ny+1)begin:g_norm_export
+        assign norm_y[16*ny+:16]=norm_source[32*ny+16+:16];
+    end endgenerate
+
     // the chunk: 8 squares summed sequentially (the golden chain: acc = ((s0 + s1) + s2) + ... + s7) on one adder,
     // add k issued LA (k - 1) cycles after the squares (the latency of the former 7-adder chain)
     localparam integer DS = LM + 7 * LA;

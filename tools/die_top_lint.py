@@ -162,6 +162,18 @@ if os.environ.get('OT_TP8_TILE'):
     _tb, _th, _rg, _cp = (float(q) for q in os.environ['OT_TP8_TILE'].split(','))
     QWEN_TP8B['tp8'] = dict(QWEN_TP8B['tp8'], tile_body=_tb, tile_h=_th, row_gap=_rg,
                             f2=dict(QWEN_TP8B['tp8']['f2'], col_pitch=_cp))
+# qwen-split compute die (owner 2026-10-14 06:45: Qwen -> two-die split; compute-die lead, el1014-qwen-split-compute.log):
+# OT_TP8_SPLIT=compute builds the tp8b F2 ROM field WITHOUT the KV halves / KV centre (they are the KV/system die): the r22k
+# link end (ucie_kv PHY + qfd_d2d_rom + ckb_rom forwarded-clock bump + rs_bump reset sync) stays, the KV die's PLL forwards
+# the clock.  Slot (contract v1-a = Codex split candidate codex/qwen-split-feasibility-1013): tile 399.6 x 1,442.88, column
+# pitch 472.608, row gap 43.2 (row pitch 1,486.08 as tp8b), spine sub-column OT_TP8_SPLIT_SPINE um (default 5,200 total).
+# C4 / contract v1 (compute lead r2, 2026-10-14): tile slot 449.28 x 1,442.88 (q-tile r6 option (a): ctl + TX + node +
+# 2 lsl columns with 20-um channels need 444.9 um), column pitch 522.288 (73-um corridor kept), die 32.41 x 25.94 mm.
+if os.environ.get('OT_TP8_SPLIT') == 'compute':
+    _tb, _th, _rg, _cp = (float(q) for q in os.environ.get('OT_TP8_SPLIT_TILE', '449.28,1442.88,43.2,522.288').split(','))
+    QWEN_TP8B['tp8'] = dict(QWEN_TP8B['tp8'], tile_body=_tb, tile_h=_th, row_gap=_rg, split='compute',
+                            f2=dict(QWEN_TP8B['tp8']['f2'], col_pitch=_cp, kv=False, kv_w=0.0, kv_ch=0.0, host_serdes=False, io_chan=400.0,
+                                    spine_w=float(os.environ.get('OT_TP8_SPLIT_SPINE', '6700'))))
 R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a', 'tp8b')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
@@ -530,6 +542,25 @@ def real_blocks(die, m=None):
         out['hfd_sm'] = dict(module='ot_hbm_accel_sm_v', file='rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv',
                              kind='RTL (sm_r2 parameters; hardened sub-views tc16 / bd_col / ring SRAM only)',
                              params=prm, ports=pm['ports'], binding=lay)
+        if V.get('sm_native_abi'):
+            # H-DIE 10-14: the die SM is the native hierarchical SM ot_hbm_accel_smh (production parameters); the control
+            # leaf is the record's per-SM ABI from source (ot_hgi_sm_record sm_cmd 106 b, bit 0 = start, the record's
+            # sm_cg_en (OT_SMH_CG wake, production define), then sm_ret 4 b {start_ready, d_ready, arrive, fault}); the
+            # result leaf has no fault bit (it rides the control leaf);
+            # busy / released are SM outputs with no RTL consumer (left open, never tied)
+            f = 'rtl/hbm_accel/sm/ot_hbm_accel_smh.sv'
+            dfn = {d_: '' for d_ in json.loads((ROOT / 'results/arch/hbm_native_1013/sm/component.json').read_text())['defines']}
+            pm = parse_module(f, 'ot_hbm_accel_smh', {}, dfn)
+            lay = dict(d=['rsp_v'] + _bus('rsp_tag', 10) + _bus('rsp_data', 1088),
+                       q=['req_v'] + _bus('req_addr', 32) + _bus('req_tag', 10) + ['req_ready'],
+                       x=SM_LAYOUT['x'], r=['rv'] + _bus('rrow', 12) + _bus('rdata', 256),
+                       c=['start'] + _bus('op_rows', 13) + _bus('op_c', 16) + _bus('op_g', 8) + ['op_gs'] + _bus('op_fmt', 2)
+                         + _bus('op_xb', 7) + ['d_valid'] + _bus('d_base', 32) + _bus('d_lines', 24) + ['release_in']
+                         + ['cg_en'] + ['start_ready', 'd_ready', 'arrive', 'fault'],
+                       ck=['clk'], rst=['rst_n'])
+            assert len(lay['c']) == 111 and len(lay['r']) == 269 and len(lay['d']) == 1099 and len(lay['q']) == 44
+            out['hfd_sm'] = dict(module='ot_hbm_accel_smh', file=f, kind='RTL (native hierarchical SM; record ABI control '
+                                 'leaf)', params={}, ports=pm['ports'], binding=lay)
     if die == 'hbm' and V.get('native_indexer'):
         directory = 'physical/hbm_accel_die_views/index/rtl/'
         for mn,filename,prm in (
@@ -997,7 +1028,15 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls in ('weight_req', 'control_leaf', 'phy_dfi'):
         if any(CUR_M['_by'][i].master in CUR_M['_real'] for i, _ in eps):
             return 'complement'
+        if cls == 'control_leaf' and V.get('sm_native_abi') and bits == 111:
+            return flow(j, 111, 107)     # H-DIE 10-14: record ABI leaf, 106 + cg_en down from the cdist side, 4 returns up
         return [(0, bits, 'out' if j == 0 else 'in')]       # r15 rq_chain: station -> station, SM side upstream
+    if cls == 'control' and V.get('sm_native_abi'):
+        # H-DIE 10-14: per SM 111 b = the record ABI (ot_hgi_sm_record sm_cmd 106 + sm_cg_en down, sm_ret 4 up)
+        seg = []
+        for s_ in range(bits // 111):
+            seg += [(a + s_ * 111, b + s_ * 111, d) for a, b, d in flow(j, 111, 107)]
+        return seg
     if cls == 'control':
         w = H.W_CTL + (H.W_DESC if V.get('sm_desc') else 0)
         seg = []
