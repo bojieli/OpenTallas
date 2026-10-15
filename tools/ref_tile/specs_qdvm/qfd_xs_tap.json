@@ -13,8 +13,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 345.6,
-  "h": 345.6,
+  "w": 259.2,
+  "h": 259.2,
   "exact": true
  },
  "pins": {
@@ -52,7 +52,7 @@
    "v": "M3 M5"
   }
  },
- "slot_change_request": "el1014-qwen-split-compute.log 11:51 slot qfd_xs_tap 345.6 x 345.6 at the VM N face (r3: gi in, two registered head words hw_d / he_d, root fault chains hw_f / he_f); sw from the SU on N, aw / xpf / gi on S, roots W / E.",
+ "slot_change_request": "el1014-qwen-split-compute.log 11:51 slot qfd_xs_tap 345.6 x 345.6 at the VM N face; r3 tile 259.2 x 259.2 inside it (345.6: TT insertion 445 ps, 216: boundary spread 86 ps > 80) (r3: gi in, two registered head words hw_d / he_d, root fault chains hw_f / he_f); sw from the SU on N, aw / xpf / gi on S, roots W / E.",
  "job": {
   "owner": "Claude:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
@@ -92,56 +92,56 @@
  },
  "pin_ranges": {
   "sw": [
-   10.0,
-   335.0
-  ],
-  "aw": [
-   10.0,
-   120.0
-  ],
-  "xpf": [
-   122.0,
-   140.0
-  ],
-  "gi": [
-   142.0,
-   240.0
-  ],
-  "fault": [
-   242.0,
-   243.0
-  ],
-  "ck": [
-   250.0,
+   8.0,
    251.0
   ],
+  "aw": [
+   8.0,
+   100.0
+  ],
+  "xpf": [
+   102.0,
+   116.0
+  ],
+  "gi": [
+   118.0,
+   200.0
+  ],
+  "fault": [
+   202.0,
+   203.0
+  ],
+  "ck": [
+   205.0,
+   206.0
+  ],
   "rst_n": [
-   252.0,
-   253.0
+   207.0,
+   208.0
   ],
   "hw_d": [
-   10.0,
-   330.0
+   8.0,
+   245.0
   ],
   "hw_r": [
-   331.0,
-   331.5
+   246.0,
+   246.5
   ],
   "hw_f": [
-   332.0,
-   332.5
+   247.0,
+   247.5
   ],
   "he_d": [
-   10.0,
-   330.0
+   8.0,
+   245.0
   ],
   "he_r": [
-   331.0,
-   331.5
+   246.0,
+   246.5
   ],
   "he_f": [
-   332.0,
-   332.5
+   247.0,
+   247.5
   ]
  }
 }

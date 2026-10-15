@@ -132,32 +132,32 @@
    63.2
   ],
   "r_v": [
-   10.0,
-   11.0
+   2.0,
+   2.5
   ],
   "r_t": [
-   11.2,
-   12.0
+   2.6,
+   3.1
   ],
   "r_ep": [
-   12.2,
-   13.0
+   3.2,
+   3.7
   ],
   "r_p": [
-   13.2,
-   40.0
+   3.8,
+   20.0
   ],
   "q_v": [
-   42.0,
-   43.0
+   20.2,
+   20.7
   ],
   "q": [
-   43.2,
-   105.0
+   20.8,
+   55.0
   ],
   "q_bad": [
-   105.2,
-   106.0
+   55.2,
+   55.7
   ],
   "clk": [
    60.0,
@@ -168,7 +168,7 @@
    63.0
   ]
  },
- "pin_source": "chain faces N / S on identical ranges (abutted leaf-to-leaf, the same bit at the same x); read bus E",
+ "pin_source": "chain faces N / S on identical ranges (abutted leaf-to-leaf, the same bit at the same x); read bus on E at the low-y end (R0 in the N chain, MX in the S chain: the end nearest the column head, read hop <= ~440 um to the far leaf)",
  "slot_change_request": "el1014-qwen-dvm-build.log 16:15 r3 / el1014-qwen-split-compute.log (DVM builder -> compute die lead): the column slot 64.8 x 1,313.28 holds a die-placed N-S STACK, not a hardened cluster (20-um child channels / edges cannot fit 64.8 um): 4 x qfd_xs_leaf 64.8 x 120.96 (N chain, R0) / qfd_xhead_e|w 64.8 x 345.6 / 4 x qfd_xs_leaf (S chain, MX), chain faces abutted pin to pin; pins re-gated against the die lead's assigned file when it exists.",
  "job": {
   "owner": "Claude:el1014-qwen-dvm-build",
