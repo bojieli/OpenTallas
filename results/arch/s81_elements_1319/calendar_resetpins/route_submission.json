@@ -1,0 +1,11 @@
+{
+  "submitted": "2026-10-15T13:57:38.595283-07:00",
+  "name": "s81coll_calendar7_resetpins_1319-localreset1-9f5af3545",
+  "source_commit": "9f5af3545",
+  "source_branch": "codex/s81-elements-1319",
+  "validation": "OK; capability vvp removed because iverilog already supplies its runtime",
+  "hold_merge": "Per-root reset candidate requires strict native clock/ETM and actual die reset binding; no standalone view adoption.",
+  "phase_proof": "scalar_phase_gate/receipt.json",
+  "actual_negative": "Held output-root0 reset triggers actual controller control-slot mismatch; separate expect-fail stage",
+  "next": "Collect TT setup, FF hold, DRC and raw per-clock native ETM; no adoption from generic CLOSED alone."
+}

@@ -182,8 +182,7 @@
         "threads": 1,
         "peak_ram_gb": 4,
         "needs": [
-          "iverilog",
-          "vvp"
+          "iverilog"
         ],
         "pass_regex": "CAL7_RESET_PINS PASS controls=468 release_phases=3 clock_mutants=18 reset_mutants=3 normal_cycle_delta=0"
       }
