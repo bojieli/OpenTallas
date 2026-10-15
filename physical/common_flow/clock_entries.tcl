@@ -69,8 +69,10 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
     if {[lsort $cts_seen] ne [lsort $roots]} { error "OT_HYBRID: declared CTS root coverage mismatch" }
     if {[llength $cts_nets]} {
       if {[lsearch -exact $args -clk_nets] >= 0} { error "OT_HYBRID: caller cannot override declared CTS nets" }
-      ot_ce_cts_orig {*}$args -clk_nets $cts_nets
-      puts "OT_HYBRID CTS roots $roots; hard-child entries excluded"
+      # TritonCTS splits -clk_nets on whitespace (TritonCTS::setClockNets); a Tcl list braces bus-bit names
+      # ({clk_outputs[0]}), which findNet never matches -> CTS-0056 (s81coll_calendar7 gate 10-15). Pass plain words.
+      ot_ce_cts_orig {*}$args -clk_nets [join $cts_nets " "]
+      puts "OT_HYBRID CTS roots [join $roots " "]; hard-child entries excluded"
     }
     if {[llength $cts_nets]} {
       puts "OT_ENTRIES done: $n independent hard entries, [llength $cts_nets] glue CTS roots, $far entry wires over $lim um"

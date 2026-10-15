@@ -1,0 +1,23 @@
+RXH_EQ seed 1
+RXH_EQ row 0 differs: a 8539/8539 m fffe/fffe d0 3f54c48a/00000000
+RXH_EQ row 1 differs: a 8541/8541 m fffe/fffe d0 3f5543d0/3f5543d0
+RXH_EQ row 18 differs: a 3059/3059 m fffe/fffe d0 3f944a5a/3f944a5a
+RXH_EQ row 19 differs: a 3061/3061 m fffe/fffe d0 3f55237b/3f55237b
+RXH_EQ row 20 differs: a 3063/3063 m fffe/fffe d0 3f4d61fa/00000000
+RXH_EQ row 68 differs: a 2495/2495 m fffe/fffe d0 3f552296/3f552296
+RXH_EQ row 73 differs: a 3607/3607 m fffe/fffe d0 3ebdb63a/00000000
+RXH_EQ row 88 differs: a 6461/6461 m fffe/fffe d0 40aea3cc/40aea3cc
+RXH_EQ row 89 differs: a 6463/6463 m fffe/fffe d0 4018fddc/4018fddc
+RXH_EQ row 90 differs: a 6465/6465 m fffe/fffe d0 3f560980/3f560980
+RXH_EQ row 91 differs: a 6467/6467 m fffe/fffe d0 3f5527ed/3f5527ed
+RXH_EQ row 92 differs: a 6469/6469 m fffe/fffe d0 3f5548b8/3f5548b8
+RXH_EQ kind 8 jobs 12 first-result latency flat 133 cluster 138 (+5)
+RXH_EQ kind 9 jobs 14 first-result latency flat 13 cluster 16 (+3)
+RXH_EQ kind 10 jobs 13 first-result latency flat 21 cluster 25 (+4)
+RXH_EQ kind 11 jobs 9 first-result latency flat 74 cluster 79 (+5)
+RXH_EQ rows 213 + 62 (slot 2) faults fu 1 fo 0 errors 60 XMUT 5
+RXH_EQ FAIL
+- rtl/dsrom_sys/s81_suhc/test/tb_s81_su_rxh_eq.sv:180: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 130us; walltime 42.278 s; speed 3.087 us/s
+- Verilator: cpu 42.265 s on 1 threads; alloced 1095 MB

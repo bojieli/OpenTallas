@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hbm.v15-die-chain-readiness.v1",
- "ref": "da2c941ec",
+ "ref": "1d480dd9d9cb2b650655fe317c926141d5535fe2",
  "rule": "die GRT/STA counts only on a REAL-view die (owner 10-13); no pin-only/stub masters (owner 10-14 08:05)",
- "masters": 36,
- "instances": 81,
+ "masters": 38,
+ "instances": 83,
  "masters_with_view": [
   "ot_hbm3e_phy_v41x_aw30_e8p5"
  ],
@@ -154,23 +154,52 @@
   ],
   "ot_hbm_idx_client_static": [
    "hb_idx"
+  ],
+  "ot_hbm_argmax_static": [
+   "hb_argmax"
+  ],
+  "ot_hgi_qdq_host_static": [
+   "hb_quant_NW"
   ]
  },
  "leaf_views_only": {
   "ot_hbm_vm_lg_static_split": "leaf ot_hbm_vm_lg_static_bank CLOSED (vm_lg_bank_hc_static_1015); parent composition view absent"
  },
- "verdict": "NOT LAUNCHED: 35/36 v15 masters (77/81 instances) lack any physical view; a die chain now would be a placeholder run. grt27_p2 (old model) remains the diagnostic (M6 33,013 of 51,123 overflow).",
+ "verdict": "NOT LAUNCHED: 37/38 current source-contract masters (79/83 instances) lack composed physical views. Source contract is incomplete, not a full die: native SM/HC/host joins and real view composition remain open.",
  "unblock_order": [
   "VM bank RG7/WG3 kit: NW pin B re-pin -> route at 833.333 (H-ELEM-A, VM banks)",
   "VM bank RG5/WG1 kit: structural CTS fix for 143.2 ps spread -> route (H-ELEM-A)",
   "LG split parent + VM calendar + hub/ring/replay + status4 + delivery leaves (h_vm / service_native)",
   "static SU VM port groups ot_hbm_su_static_vm_ports: NPG 4 NW/NE, 5 SW/SE (BANK_GROUP 0x43221100 provisional) leaves (H-ELEM-B)",
   "SFU scheduled engine / DMA back static: kits with >=4 LG port groups (engine owners)",
-  "VM ABI shrink (H-ELEM-A): SW NC 7->3, drop IDX RG in SE/NW/NE; static argmax (H-IDX); hb_idx = ot_hbm_idx_client_static kit",
+  "VM ABI shrink (H-ELEM-A): SW NC 7->3, drop IDX RG in SE/NW/NE; static argmax source now bound, physical parent open (H-IDX); hb_idx = ot_hbm_idx_client_static kit",
   "SM xload static successor ot_hgi_sm_xload_static 2ae9a6d93 (H-ELEM-A, merge to main; BF16 only, DS block-dot not static); compact SM tile view 11.316 mm2 (H-ELEM-A)",
   "svc_v15 bands + COLL q2/q3 static parents (service_native, H-COLL)",
-  "then: die floorplan from GEO-H D2 candidate -> GRT (overflow 0) -> TT/FF STA"
+  "QUANT NW proven host top RL7/WC4 COMPACT1 target48 now bound to actual NW quant RG4/WG2; 9-leaf/LG successor changes calendar and is not silently substituted.",
+  "Delivery split v2 source47a83d466 pending hardener publication and real 8-clock physical wrapper; scalar logical parent is not 8 physical root proof.",
+  "die floorplan = adopted T_band2__npg4_s5 + grants -> views -> GRT (overflow 0) -> TT/FF STA"
  ],
- "floorplan_direction": "HBM D local PV (owner-approved 2026-10-15); attention resources ON HOLD",
- "attention_placeholder": "ON HOLD (owner 10:30 2026-10-15): H-ATTQ compares dedicated attention tiles vs attention on SM engines + SU/SFU softmax. No ATT-specific die resources in v15 until the verdict (no attention instance, per-quadrant attention write groups, PV drain/return). Existing VM ABI NE WG1/RG3 attention slots untouched. Previously noted PV drain long return (2,248 b/edge to NE WG1) withdrawn with the binding."
+ "floorplan_direction": "ADOPTED T_band2__npg4_s5 (coordinator 2026-10-15 ~09:25, GLOBAL-FP-H 952c5933c); attention on SM engines (no ATT)",
+ "source_contract_sha256": "96987d39cdb5f1d735a45acf11d751d4d850673ed50bd5fa6765bde028ce9078",
+ "attention_architecture": "ADOPTED B: QK/PV on SM1.0x, KV streams PHY->PC->SM like weights (stack-local, DS compressed KV x4 stacks), softmax on SU; contract field attention_on_sm lists SM/SU/compiler obligations; no ATT instance/group/return",
+ "source_subnet_elaboration": "source elaboration timed out (5000 s / 3300 s); composed elaboration over per-master synthesized netlists (tools/hbm_die_v15/compose_netlists.py) in progress",
+ "calendar_duplicate_outputs_open": [
+  "hb_idx.cq_seq and hb_argmax.cq_seq are not VM drivers; client_seq remains calendar-owned. Exact compiler programme equality proof required."
+ ],
+ "grants": {
+  "file": "results/arch/hier_contract_1015/hbm_v15.json",
+  "schema": "opentallas.hier_contract.v1",
+  "granted": [
+   "coll_SW/SE/NW/NE (ot_hfd_coll_q3/q2_static)",
+   "hb_sfu_<q> (engine at sfu_<q>0; groups 1..3 request)",
+   "hb_dbk_<q> (new homes, no DMA block in T_band2)",
+   "34 svc bands on pc_<q>k with per-PC clock entries (band RTL must emit clk_pc[3:0])",
+   "IDX: 4 scorer clusters (512 CLOSED hslices each, 3840x3009) in the middle band + idx_sel/link/q/op glue"
+  ],
+  "requests": [
+   "whole static SU per quadrant (H-ELEM-B RTL pending), 4 port groups at su_<q>0..3",
+   "SFU port groups 1..3 (LG face split into 4 bank-pair groups)"
+  ],
+  "outlines_from": "ASAP7 yosys synth of each master (tools/hbm_die_v15/synth_master.sh) at std util 0.50 + macro x1.25, faces <=0.60 at 0.096 um/bit"
+ }
 }

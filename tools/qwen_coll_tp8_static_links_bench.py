@@ -42,6 +42,7 @@ SRC = [ROOT / p for p in (
     "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
     "rtl/rom/ot_coll_tp8_static.sv", "rtl/physical/ot_qfd_io_collective_static.sv",
     "rtl/rom/ot_coll_static_linkcal.sv", "rtl/rom/ot_coll_cmd_issue.sv",
+    "rtl/qwen_split/qfd_seq_su_collective_calendar.sv",
     "rtl/test/tb_coll_tp8_static_links.sv")]
 RES = re.compile(r"TP8SL dies=8 .* mismatches=(\d+) extra=(\d+) out_err=(\d+) cmd_bad=(\d+) coll_fault=([01]+) "
                  r"issuer_fault=([01]+) die_fault=([01]+) words_out=(\d+) meas_lu=(-?\d+) meas_ls=(-?\d+) "
@@ -83,8 +84,8 @@ def program_words(prog, nwords, cmd_pin_stages=0):
     return pw
 
 
-def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, relays=(0,0,0,0), shared=False, six_five=False):
-    obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}_phi{phi}{'_qfd' if qfd else ''}{('_' + define) if define else ''}"
+def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, relays=(0,0,0,0), shared=False, six_five=False, seqsu=False):
+    obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}_phi{phi}{'_qfd' if qfd else ''}{'_seqsu' if seqsu else ''}{('_' + define) if define else ''}"
     h = out / f"harness_phi{phi}.cpp"
     step = ("t->clk = 1; t->lck = 1; t->eval(); t->clk = 0; t->lck = 0; t->eval();" if phi == 0 else
             "t->clk = 1; t->eval(); t->lck = 1; t->eval(); t->clk = 0; t->eval(); t->lck = 0; t->eval();")
@@ -103,6 +104,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
            f"-GXS={xs}", "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
           [str(h), "-CFLAGS", "-O1", "-j", "16"]
     if six_five:cmd += ["+define+OT_TP8S_PRODUCTION_WRAPPER"]
+    if seqsu:cmd += ["+define+OT_TP8S_SEQSU"]
     if parent:
         cmd += [f"-GSHARED={int(shared)}",f"-GSIXFIVE={int(six_five)}", "+define+OT_TP8S_PARENT"] + [f"-G{p}={v}" for p,v in zip(("RU","RS0","RS1","RS2"),relays)]
     if qfd:
@@ -118,7 +120,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
             prior.get("executable_sha256")==hashlib.sha256(exe.read_bytes()).hexdigest() and
             all(prior.get(k)==v for k,v in dict(latu=lu,lats=ls,xu=xu,xs=xs,phi=phi,
               phy_ucie=PU,phy_serdes=PS,die_name_master=qfd,production_parent=parent,
-              relays=list(relays),shared_ucie=shared,six_five=six_five,mutant=define).items())):
+              relays=list(relays),shared_ucie=shared,six_five=six_five,mutant=define,sequencer_face=seqsu).items())):
             return exe
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode:
@@ -146,6 +148,8 @@ def main():
     ap.add_argument("--six-five",action="store_true")
     ap.add_argument("--fdi-phase",type=int,choices=range(6),default=0)
     ap.add_argument("--unsafe-shared-calendar",action="store_true")
+    ap.add_argument("--seqsu",action="store_true",help="commands from the actual qfd_seq_su_collective_calendar face (PW944, {token,pos,tag6} tags)")
+    ap.add_argument("--plusarg",action="append",default=[],help="extra +K=V for every case (negative controls TAGBAD=1 / TOKMUT=1)")
     a = ap.parse_args()
     if a.six_five:
         a.parent=True;a.shared_ucie=True
@@ -160,7 +164,9 @@ def main():
         cases = [("phy_longer_than_compiled", 4, 8, "m", "link", {})]
     if a.expect_fail:
         cases = [c for c in cases if c[4] == "pos"]
-    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.phi, a.mutant_define, a.qfd, a.parent, a.relays, a.shared_ucie, a.six_five)
+    if a.seqsu:
+        assert a.production, "the sequencer face admits tags 0..2: production programs (<= 3 messages) only"
+    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.phi, a.mutant_define, a.qfd, a.parent, a.relays, a.shared_ucie, a.six_five, a.seqsu)
     bad, records = [], []
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):
         rng = np.random.default_rng(100 + i)
@@ -175,7 +181,7 @@ def main():
         pw = program_words(prog, nw, cmd_pin_stages=int(a.qfd))
         (vec / "pw.hex").write_text("".join(f"{ad:03x}{d:016x}\n" for ad, d in pw))
         args = [str(exe), f"+VEC={vec}", f"+NMSG={nmsg}", f"+NPW={len(pw)}", f"+START={START}", f"+FDIPHI={a.fdi_phase}"] + \
-               [f"+{k}={v}" for k, v in extra.items()]
+               [f"+{k}={v}" for k, v in extra.items()] + [f"+{x}" for x in a.plusarg]
         run = subprocess.run(args, capture_output=True, text=True)
         txt = run.stdout
         (a.out / f"{name}.log").write_text(txt + run.stderr)
@@ -200,7 +206,7 @@ def main():
             bad.append(name)
     (a.out / "record.json").write_text(json.dumps(dict(
         schema="opentallas.qwen.tp8.collective.static_links.v1", ranks=ND, latu=a.latu, lats=a.lats, kc=KC, kw=KW,
-        phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, production_parent=a.parent, relays=a.relays, shared_ucie=a.shared_ucie, six_five=a.six_five, FDI_phase_ticks=a.fdi_phase, unsafe_shared_calendar=a.unsafe_shared_calendar, mutant=a.mutant_define,
+        phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, production_parent=a.parent, relays=a.relays, shared_ucie=a.shared_ucie, six_five=a.six_five, FDI_phase_ticks=a.fdi_phase, unsafe_shared_calendar=a.unsafe_shared_calendar, mutant=a.mutant_define, sequencer_face=a.seqsu, plusargs=a.plusarg,
         expect_fail=a.expect_fail, production=a.production, issuer_depth=DEPTH, stage_start=START, cmd_pin_stages=int(a.qfd),
         modelled="PHY frame pipes only (fixed latency); all on-chip blocks are the real RTL masters",
         mechanism="compiler program -> fixed-issue core -> collective tokens -> IO calendar slots; no credits/ready/"

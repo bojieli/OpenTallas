@@ -1,0 +1,33 @@
+# yosys (openroad/orfs:asap7lock) ctl_fifo_equiv.ys on EPYC1; gold = rtl/common/ot_ratio_cdc_fifo.sv @6cb5bd842 (ctl-g4 route source, module renamed _old), gate = same file @17d2171c8; both W=159 DEPTH=4 as instantiated in dsfd_gth_ctl.u_ctl. Full log trimmed to its result lines.
+Found and cleaned up 1 empty switch in `$paramod$e4790e4f43dcadcd7a03f95958743b3a83d70ae6\ot_ratio_cdc_fifo_old.$proc$fifo_old.sv:70$273'.
+Found and cleaned up 1 empty switch in `$paramod$e4790e4f43dcadcd7a03f95958743b3a83d70ae6\ot_ratio_cdc_fifo.$proc$fifo_new.sv:79$218'.
+Found and cleaned up 5 empty switches in `$paramod$e4790e4f43dcadcd7a03f95958743b3a83d70ae6\ot_ratio_cdc_fifo.$proc$fifo_new.sv:209$191'.
+Found and cleaned up 1 empty switch in `\ot_ratio_cdc_fifo.$proc$fifo_new.sv:79$131'.
+Found and cleaned up 5 empty switches in `\ot_ratio_cdc_fifo.$proc$fifo_new.sv:209$104'.
+Found and cleaned up 1 empty switch in `\ot_ratio_cdc_fifo_old.$proc$fifo_old.sv:70$57'.
+Found and cleaned up 1 empty switch in `$paramod$e4790e4f43dcadcd7a03f95958743b3a83d70ae6\ot_ratio_cdc_fifo_old.$proc$fifo_old.sv:138$270'.
+Found and cleaned up 8 empty switches in `$paramod$e4790e4f43dcadcd7a03f95958743b3a83d70ae6\ot_ratio_cdc_fifo_old.$proc$fifo_old.sv:140$260'.
+Found and cleaned up 1 empty switch in `$paramod$e4790e4f43dcadcd7a03f95958743b3a83d70ae6\ot_ratio_cdc_fifo_old.$proc$fifo_old.sv:115$240'.
+Found and cleaned up 8 empty switches in `$paramod$e4790e4f43dcadcd7a03f95958743b3a83d70ae6\ot_ratio_cdc_fifo_old.$proc$fifo_old.sv:92$230'.
+Found and cleaned up 1 empty switch in `$paramod$e4790e4f43dcadcd7a03f95958743b3a83d70ae6\ot_ratio_cdc_fifo.$proc$fifo_new.sv:207$215'.
+Found and cleaned up 1 empty switch in `$paramod$e4790e4f43dcadcd7a03f95958743b3a83d70ae6\ot_ratio_cdc_fifo.$proc$fifo_new.sv:138$200'.
+Found and cleaned up 8 empty switches in `$paramod$e4790e4f43dcadcd7a03f95958743b3a83d70ae6\ot_ratio_cdc_fifo.$proc$fifo_new.sv:209$191'.
+Found and cleaned up 4 empty switches in `$paramod$e4790e4f43dcadcd7a03f95958743b3a83d70ae6\ot_ratio_cdc_fifo.$proc$fifo_new.sv:184$187'.
+Found and cleaned up 8 empty switches in `$paramod$e4790e4f43dcadcd7a03f95958743b3a83d70ae6\ot_ratio_cdc_fifo.$proc$fifo_new.sv:111$170'.
+Found and cleaned up 1 empty switch in `\ot_ratio_cdc_fifo.$proc$fifo_new.sv:207$128'.
+Found and cleaned up 1 empty switch in `\ot_ratio_cdc_fifo.$proc$fifo_new.sv:138$113'.
+Found and cleaned up 8 empty switches in `\ot_ratio_cdc_fifo.$proc$fifo_new.sv:209$104'.
+Found and cleaned up 4 empty switches in `\ot_ratio_cdc_fifo.$proc$fifo_new.sv:184$100'.
+Found and cleaned up 8 empty switches in `\ot_ratio_cdc_fifo.$proc$fifo_new.sv:111$83'.
+Found and cleaned up 1 empty switch in `\ot_ratio_cdc_fifo_old.$proc$fifo_old.sv:138$54'.
+Found and cleaned up 8 empty switches in `\ot_ratio_cdc_fifo_old.$proc$fifo_old.sv:140$44'.
+Found and cleaned up 1 empty switch in `\ot_ratio_cdc_fifo_old.$proc$fifo_old.sv:115$24'.
+Found and cleaned up 8 empty switches in `\ot_ratio_cdc_fifo_old.$proc$fifo_old.sv:92$14'.
+Found 1794 unproven $equiv cells (40 groups) in eq:
+Proved 1139 previously unproven $equiv cells.
+Found 655 unproven $equiv cells in module eq:
+  Proof for induction step holds. Entire workset of 655 cells proven!
+Proved 655 previously unproven $equiv cells.
+Found 1794 $equiv cells in eq:
+  Of those cells 1794 are proven and 0 are unproven.
+  Equivalence successfully proven!
