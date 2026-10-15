@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hcoll.writer_clock_partition_candidate.v1",
-  "status": "PREPARATORY_MODEL_ONLY; no v3 RTL/adoption/route; evaluate only if actual routed v2 native capture S+R fails190ps",
+  "status": "V3 preparatory RTL and same-edge exact/mutant proofs PASS; no typed14clockgrant or physical/native qualification yet. Original v2 route preserved.",
   "basis": {
     "source_commit": "7cb9bc5ea",
     "mapped_source_sha256": "79902a842064d5c824376236b4cb868bd513c35e2c92c3b73cfcfe7f29427ced",
@@ -31,35 +31,35 @@
   "proposed_clock_groups": [
     {
       "name": "rgx0_capture",
-      "ff": 827,
+      "ff": 826,
       "ports": [
         "rgx_v[0]",
         "rgx_addr[39:0]",
         "rgx_data[511:0]"
       ],
-      "registers": "a0/a1/d0/d1/v0/v1/launch_done lane slice",
+      "registers": "a0/a1/d0/d1/v0/v1 lane slice",
       "clock_entry_face": "W"
     },
     {
       "name": "rgx1_capture",
-      "ff": 827,
+      "ff": 826,
       "ports": [
         "rgx_v[1]",
         "rgx_addr[79:40]",
         "rgx_data[1023:512]"
       ],
-      "registers": "a0/a1/d0/d1/v0/v1/launch_done lane slice",
+      "registers": "a0/a1/d0/d1/v0/v1 lane slice",
       "clock_entry_face": "W"
     },
     {
       "name": "rgx2_capture",
-      "ff": 827,
+      "ff": 826,
       "ports": [
         "rgx_v[2]",
         "rgx_addr[119:80]",
         "rgx_data[1535:1024]"
       ],
-      "registers": "a0/a1/d0/d1/v0/v1/launch_done lane slice",
+      "registers": "a0/a1/d0/d1/v0/v1 lane slice",
       "clock_entry_face": "W"
     },
     {
@@ -70,17 +70,17 @@
         "rgx_addr[159:120]",
         "rgx_data[2047:1536]"
       ],
-      "registers": "a0/a1/d0/d1/v0/v1/launch_done lane slice",
+      "registers": "a0/a1/d0/d1/v0/v1 lane slice; vm_q adjacent W-face pin",
       "clock_entry_face": "W"
     },
     {
       "name": "tkw_capture",
-      "ff": 851,
+      "ff": 850,
       "ports": [
         "tkw_v",
         "tkw_d[567:0]"
       ],
-      "registers": "lane4 a0/a1/d0/d1/v0/v1/launch_done plus m0/m1",
+      "registers": "lane4 a0/a1/d0/d1/v0/v1 plus m0/m1",
       "clock_entry_face": "S"
     },
     {
@@ -148,32 +148,30 @@
     },
     {
       "name": "bank7_launch",
-      "ff": 287,
+      "ff": 293,
       "ports": [
         "kq[2247:1967]"
       ],
-      "registers": "kq281 + used1 + multi1 + bown4",
+      "registers": "kq281 + used1 + multi1 + bown4 + launch_done5 + fault1 (E-face outputs)",
       "clock_entry_face": "E"
     },
     {
-      "name": "metadata_fault",
-      "ff": 49,
+      "name": "metadata",
+      "ff": 47,
       "ports": [
         "sid[1:0]",
         "ingress_slot[4:0]",
         "slot_valid[7:0]",
-        "slot_owner[31:0]",
-        "rgx_vm",
-        "fault"
+        "slot_owner[31:0]"
       ],
-      "registers": "sid2/islot5/sv8/so32/vm1/fault1",
+      "registers": "sid2/islot5/sv8/so32 (N-face pin captures)",
       "clock_entry_face": "N"
     }
   ],
   "cost": {
     "roots_before": 1,
     "roots_proposed": 14,
-    "root_max_ff": 851,
+    "root_max_ff": 850,
     "registers_added_planned": 0,
     "production_cycles_added_planned": 0,
     "fault_timing": "retain precise C+1",
@@ -189,5 +187,6 @@
     "native_launch_requirement_ps": 220
   },
   "clock_delivery_requirement": "14 independently delivered local roots, each phi minus its own extracted R; all logical edges remain aligned. Actual local placement/clock/pins/cuts/native/internal timing must pass; no forwarded or inherited clock qualification. New typed pin grants required before route.",
-  "alternative_hard_leaf_partition": "Five ingress plus eight bank plus metadata leaves require wide exposed interleaf interfaces and full face/channel cut accounting. Flat multiple-root master keeps existing internal wires and footprint while localizing clock roots; neither candidate is physically qualified."
+  "alternative_hard_leaf_partition": "Five ingress plus eight bank plus metadata leaves require wide exposed interleaf interfaces and full face/channel cut accounting. Flat multiple-root master keeps existing internal wires and footprint while localizing clock roots; neither candidate is physically qualified.",
+  "master": "ot_hgi_coll_static_vmwrite_roots_v3"
 }
