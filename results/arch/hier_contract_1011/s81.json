@@ -153,7 +153,8 @@
    "change": "s81-die: (1) sp_capture slot = its cluster kit: 1728 x 561.6, + ckv / rsv (S, M5), cluster layers (PG M7, strap M8, signals <= M6), clock entry N / M5, clock level early_tap owed with spread <= 80 ps. (2) field plan v17: q-bank pins on the q element pins, node pins in fixed slots, x relay site beside the slot station, station xai / xbi at the E end, falling-edge capture at the forwarded-lane ends. (3) relay masters dsfd_rly_283_EW / 266_EW (kits submitted). (4) SU does not fit (fill 1.117): the column gives at most +2.45 mm2 below the slab (v18 trial), wings beyond; bgq28 height not taken (column full); capture per-child clock pins, hub cluster rule, crooty_y 11 slices, ce_s clusters taken. (5) c6p pathfinding STA read by path class: real to real TT +169.3 / FF +131.1; every violator is a placeholder lib. NEIGHBOUR COST: none (no slab moved; the capture slot is 0.024 um wider inside the 1,728-um hub column). No price changed; cfifo: -1 cycle on the field round trip."
   },
   "v18 (2026-10-14): base = v18 geometry trial (SU S growth 686.88 um, VM +609.12, HC comb 840.24); Q element per-mac re-partition; dsfd_rly_283_EW v3 kit; SU region decision; master list + assigned pin files; sign-off TT setup / FF hold / DRC 0 with SS as a sensitivity column (owner 10-07, restated 10-14 06:35).",
-  "v19 (2026-10-14 PM): PQ return topology G (frame pq_root row off the layer die; 12 count-only RWB slots in a 43.2-um gather|capture seam); Engram hl / Markov K256 / gather v4 / NORM-variant pin files + subslots; cfifo falling-edge station launch; crootr_f target insertion = measured R; IR gate recipe --pdn-field-cov 0.09; recipe s81_layer1_v19c (c9p)."
+  "v19 (2026-10-14 PM): PQ return topology G (frame pq_root row off the layer die; 12 count-only RWB slots in a 43.2-um gather|capture seam); Engram hl / Markov K256 / gather v4 / NORM-variant pin files + subslots; cfifo falling-edge station launch; crootr_f target insertion = measured R; IR gate recipe --pdn-field-cov 0.09; recipe s81_layer1_v19c (c9p).",
+  "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks."
  ],
  "slots": [
   {
@@ -13531,6 +13532,228 @@
     }
    },
    "route_admission": false
+  },
+  {
+   "name": "sp_engram_mix",
+   "master": "dsfd_engram_mix_c",
+   "at_um": [
+    13942.8,
+    22770.0
+   ],
+   "outline": {
+    "w": 1152.0,
+    "h": 864.0
+   },
+   "clock": "stream_1p2",
+   "geometry": "xsp7_screen plan.json.gz actual entire instance set:0overlaps",
+   "memory_calendar": {
+    "read_rows_per_cycle": 5,
+    "read_port_shape_reserved": 6,
+    "write_rows_per_cycle": 1,
+    "format": "H/out packedBF16;K/W/V FP32",
+    "runtime_backpressure": false,
+    "qualification": "OPEN: fixed source/flight/bank cycles must be compiled"
+   },
+   "pin_file": "physical/s81_die_pins/v20_functional/dsfd_engram_mix_c.tcl",
+   "qualification": "RESERVED_REAL_RTL_NOT_ROUTED"
+  },
+  {
+   "name": "sp_hcx_south0",
+   "master": "HC projection native leaf (owner defines module)",
+   "at_um": [
+    17334.0,
+    1857.6
+   ],
+   "outline": {
+    "w": 864.0,
+    "h": 1152.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen actual instance set:0overlaps",
+   "ROM": {
+    "macro": "ot_rom_4096x72_m8",
+    "count": 128,
+    "used_rows_per_macro": 160,
+    "used_payload_bits_per_word": 64,
+    "phase_rows": "80attn+80ffn",
+    "physical_area_mm2": 0.30612307967999997,
+    "weight_payload_bits": 1310720
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+  },
+  {
+   "name": "sp_hcx_south1",
+   "master": "HC projection native leaf (owner defines module)",
+   "at_um": [
+    18241.2,
+    1857.6
+   ],
+   "outline": {
+    "w": 864.0,
+    "h": 1152.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen actual instance set:0overlaps",
+   "ROM": {
+    "macro": "ot_rom_4096x72_m8",
+    "count": 128,
+    "used_rows_per_macro": 160,
+    "used_payload_bits_per_word": 64,
+    "phase_rows": "80attn+80ffn",
+    "physical_area_mm2": 0.30612307967999997,
+    "weight_payload_bits": 1310720
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+  },
+  {
+   "name": "sp_hcx_middle0",
+   "master": "HC projection native leaf (owner defines module)",
+   "at_um": [
+    17334.0,
+    12238.56
+   ],
+   "outline": {
+    "w": 864.0,
+    "h": 1152.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "169 existing station/relay collisions in full middle band: relocation+reach check REQUIRED before submission",
+   "ROM": {
+    "macro": "ot_rom_4096x72_m8",
+    "count": 128,
+    "used_rows_per_macro": 160,
+    "used_payload_bits_per_word": 64,
+    "phase_rows": "80attn+80ffn",
+    "physical_area_mm2": 0.30612307967999997,
+    "weight_payload_bits": 1310720
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+  },
+  {
+   "name": "sp_hcx_middle1",
+   "master": "HC projection native leaf (owner defines module)",
+   "at_um": [
+    18241.2,
+    12238.56
+   ],
+   "outline": {
+    "w": 864.0,
+    "h": 1152.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "169 existing station/relay collisions in full middle band: relocation+reach check REQUIRED before submission",
+   "ROM": {
+    "macro": "ot_rom_4096x72_m8",
+    "count": 128,
+    "used_rows_per_macro": 160,
+    "used_payload_bits_per_word": 64,
+    "phase_rows": "80attn+80ffn",
+    "physical_area_mm2": 0.30612307967999997,
+    "weight_payload_bits": 1310720
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+  },
+  {
+   "name": "sp_hcx_north0",
+   "master": "HC projection native leaf (owner defines module)",
+   "at_um": [
+    17334.0,
+    22220.64
+   ],
+   "outline": {
+    "w": 864.0,
+    "h": 1152.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen actual instance set:0overlaps",
+   "ROM": {
+    "macro": "ot_rom_4096x72_m8",
+    "count": 128,
+    "used_rows_per_macro": 160,
+    "used_payload_bits_per_word": 64,
+    "phase_rows": "80attn+80ffn",
+    "physical_area_mm2": 0.30612307967999997,
+    "weight_payload_bits": 1310720
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+  },
+  {
+   "name": "sp_hcx_north1",
+   "master": "HC projection native leaf (owner defines module)",
+   "at_um": [
+    18241.2,
+    22220.64
+   ],
+   "outline": {
+    "w": 864.0,
+    "h": 1152.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen actual instance set:0overlaps",
+   "ROM": {
+    "macro": "ot_rom_4096x72_m8",
+    "count": 128,
+    "used_rows_per_macro": 160,
+    "used_payload_bits_per_word": 64,
+    "phase_rows": "80attn+80ffn",
+    "physical_area_mm2": 0.30612307967999997,
+    "weight_payload_bits": 1310720
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
   }
  ],
  "pdn": {
@@ -17962,5 +18185,6 @@
   "hc_widths": "hc_s <-> hc_t at the RTL widths 3,056 / 2,164 per column (15,660 b): cut 0.24 of M5+M7 over the 1,816.5-um slab width; reach needs --hop-spread",
   "recipe": "results/physical/die_iter_1012/s81/s81_layer1_v19c.opts (c9p)",
   "source": "el1011-s81die.log 2026-10-14 (s81-die lead r6)"
- }
+ },
+ "v20_functional_home_reservation": "physical/s81_die_pins/v20_functional/homes.json"
 }

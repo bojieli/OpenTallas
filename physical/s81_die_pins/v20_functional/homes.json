@@ -1,0 +1,239 @@
+{
+ "schema": "opentallas.s81.functional_homes.v1",
+ "scope": "one TP4 layer die owns6of24coefficients, both attn/ffn resident. All6 projection leaves required. Geometry source v19c xsp7 full instance plan. No synthetic ETM/stub permitted.",
+ "engine_ports": {
+  "engram_lookup_mix": 10,
+  "hc_projection": 11
+ },
+ "engram_mix": {
+  "name": "sp_engram_mix",
+  "master": "dsfd_engram_mix_c",
+  "at_um": [
+   13942.8,
+   22770.0
+  ],
+  "outline": {
+   "w": 1152.0,
+   "h": 864.0
+  },
+  "clock": "stream_1p2",
+  "geometry": "xsp7_screen plan.json.gz actual entire instance set:0overlaps",
+  "memory_calendar": {
+   "read_rows_per_cycle": 5,
+   "read_port_shape_reserved": 6,
+   "write_rows_per_cycle": 1,
+   "format": "H/out packedBF16;K/W/V FP32",
+   "runtime_backpressure": false,
+   "qualification": "OPEN: fixed source/flight/bank cycles must be compiled"
+  },
+  "pin_file": "physical/s81_die_pins/v20_functional/dsfd_engram_mix_c.tcl",
+  "qualification": "RESERVED_REAL_RTL_NOT_ROUTED"
+ },
+ "hc_projection": [
+  {
+   "name": "sp_hcx_south0",
+   "master": "HC projection native leaf (owner defines module)",
+   "at_um": [
+    17334.0,
+    1857.6
+   ],
+   "outline": {
+    "w": 864.0,
+    "h": 1152.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen actual instance set:0overlaps",
+   "ROM": {
+    "macro": "ot_rom_4096x72_m8",
+    "count": 128,
+    "used_rows_per_macro": 160,
+    "used_payload_bits_per_word": 64,
+    "phase_rows": "80attn+80ffn",
+    "physical_area_mm2": 0.30612307967999997,
+    "weight_payload_bits": 1310720
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+  },
+  {
+   "name": "sp_hcx_south1",
+   "master": "HC projection native leaf (owner defines module)",
+   "at_um": [
+    18241.2,
+    1857.6
+   ],
+   "outline": {
+    "w": 864.0,
+    "h": 1152.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen actual instance set:0overlaps",
+   "ROM": {
+    "macro": "ot_rom_4096x72_m8",
+    "count": 128,
+    "used_rows_per_macro": 160,
+    "used_payload_bits_per_word": 64,
+    "phase_rows": "80attn+80ffn",
+    "physical_area_mm2": 0.30612307967999997,
+    "weight_payload_bits": 1310720
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+  },
+  {
+   "name": "sp_hcx_middle0",
+   "master": "HC projection native leaf (owner defines module)",
+   "at_um": [
+    17334.0,
+    12238.56
+   ],
+   "outline": {
+    "w": 864.0,
+    "h": 1152.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "169 existing station/relay collisions in full middle band: relocation+reach check REQUIRED before submission",
+   "ROM": {
+    "macro": "ot_rom_4096x72_m8",
+    "count": 128,
+    "used_rows_per_macro": 160,
+    "used_payload_bits_per_word": 64,
+    "phase_rows": "80attn+80ffn",
+    "physical_area_mm2": 0.30612307967999997,
+    "weight_payload_bits": 1310720
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+  },
+  {
+   "name": "sp_hcx_middle1",
+   "master": "HC projection native leaf (owner defines module)",
+   "at_um": [
+    18241.2,
+    12238.56
+   ],
+   "outline": {
+    "w": 864.0,
+    "h": 1152.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "169 existing station/relay collisions in full middle band: relocation+reach check REQUIRED before submission",
+   "ROM": {
+    "macro": "ot_rom_4096x72_m8",
+    "count": 128,
+    "used_rows_per_macro": 160,
+    "used_payload_bits_per_word": 64,
+    "phase_rows": "80attn+80ffn",
+    "physical_area_mm2": 0.30612307967999997,
+    "weight_payload_bits": 1310720
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+  },
+  {
+   "name": "sp_hcx_north0",
+   "master": "HC projection native leaf (owner defines module)",
+   "at_um": [
+    17334.0,
+    22220.64
+   ],
+   "outline": {
+    "w": 864.0,
+    "h": 1152.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen actual instance set:0overlaps",
+   "ROM": {
+    "macro": "ot_rom_4096x72_m8",
+    "count": 128,
+    "used_rows_per_macro": 160,
+    "used_payload_bits_per_word": 64,
+    "phase_rows": "80attn+80ffn",
+    "physical_area_mm2": 0.30612307967999997,
+    "weight_payload_bits": 1310720
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+  },
+  {
+   "name": "sp_hcx_north1",
+   "master": "HC projection native leaf (owner defines module)",
+   "at_um": [
+    18241.2,
+    22220.64
+   ],
+   "outline": {
+    "w": 864.0,
+    "h": 1152.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen actual instance set:0overlaps",
+   "ROM": {
+    "macro": "ot_rom_4096x72_m8",
+    "count": 128,
+    "used_rows_per_macro": 160,
+    "used_payload_bits_per_word": 64,
+    "phase_rows": "80attn+80ffn",
+    "physical_area_mm2": 0.30612307967999997,
+    "weight_payload_bits": 1310720
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+  }
+ ],
+ "HC_memory_calendar": {
+  "native_prefetch": "8VMrows/cycle80cycles perleaf,4096bit/cycle packedBF16 stagedbroadcast6ways",
+  "steady_compute": "80dot tasks perbank, canonical8bank csum, 6outputsparallel",
+  "runtime_credit_backpressure": false,
+  "qualification": "OPEN fullactualcompiledphase/link/SRAMpipeline latency and bandwidth proof"
+ },
+ "native_clock_rule": "independent hardened roots phi-R_i; <=15k or measured<=300ps/80ps; no parent hidden state"
+}
