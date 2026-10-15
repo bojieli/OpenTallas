@@ -58,17 +58,19 @@ def report(out,plan,manifest,scale):
     stdareas={}
     for path in sorted((out/"lib").glob("*_RVT_TT_*.lib")):
         for name,block in cell_blocks(path.read_text())[1]:
-            area=re.search(r"\barea\s*:\s*([0-9.eE+-]+)\s*;",block)
+            area=re.search(r"\barea\s*:\s*([0-9.eE+-]+)(?:[ \t]*;|[ \t]*\n)",block)
             if area:stdareas[name]=float(area.group(1))
     macroareas={};macrocounts={}
     for macro in manifest["physical_macros"]:
         name=macro["module"]
         block=dict(cell_blocks((plan/"src"/macro["tt_liberty"]).read_text())[1])[name]
-        macroareas[name]=float(re.search(r"\barea\s*:\s*([0-9.eE+-]+)\s*;",block).group(1))
+        macroareas[name]=float(re.search(r"\barea\s*:\s*([0-9.eE+-]+)(?:[ \t]*;|[ \t]*\n)",block).group(1))
         macrocounts[name]=sum(c["type"]==name for c in mapped["cells"].values())
-    std=Counter();unknown=Counter()
+    std=Counter();unknown=Counter();metadata=Counter()
     for cell in mapped["cells"].values():
         typ=cell["type"]
+        if typ=="$scopeinfo":
+            metadata[typ]+=1;continue
         if typ in macroareas:continue
         if typ not in stdareas:unknown[typ]+=1
         else:std[typ]+=1
@@ -81,7 +83,7 @@ def report(out,plan,manifest,scale):
         macro_counts=macrocounts,macro_cell_area_um2=macroareas,standard_area_raw_library_units=stdraw,
         standard_library_area_scale_to_um2=scale,standard_area_um2=stdraw*scale,macro_area_um2=macroarea,total_cell_area_um2=total,
         frame_um=[777.6,518.4],frame_area_um2=frame,cell_area_over_frame=total/frame,
-        ff_count=sum(flops.values()),ff_by_clock=dict(clocks),generic_ff_types=dict(flops),generic_latch_types=dict(latches),
+        yosys_metadata_cell_counts=dict(metadata),ff_count=sum(flops.values()),ff_by_clock=dict(clocks),generic_ff_types=dict(flops),generic_latch_types=dict(latches),
         standard_library_sha256={p.name:sha(p.read_bytes()) for p in (out/"lib").glob("*.lib")},
         area_units="Canonical physical macro Liberty area uses um2 (scale1). RVT_TT standard-library area multiplied by explicit scale argument (default1 for ASAP7 1x area). No implicit dbu/LEF scale conversion.",
         limitations=["Cell area only; no placement/utilization/routing/clock-tree area","No timing, clock-phase, native bench or whole-HOST qualification","Original frontend diagnostics remain explicit in input manifest"])
@@ -92,6 +94,7 @@ def main():
     ap.add_argument("--plan",type=Path,required=True);ap.add_argument("--out",type=Path,required=True)
     ap.add_argument("--coordinator-lock",type=Path)
     ap.add_argument("--stdlib-area-scale-to-um2",type=float,default=1.0)
+    ap.add_argument("--report-only",action="store_true",help="account existing mapped.json without rerunning synthesis or mapping")
     ap.add_argument("--execute",action="store_true");ap.add_argument("--inside-container",action="store_true")
     ap.add_argument("--resume-from-run",type=Path,help="reuse source-manifest-matched generic.json and successful frontend/guard receipts")
     a=ap.parse_args();plan=a.plan.resolve();out=a.out.resolve()
@@ -109,6 +112,12 @@ def main():
         if sha((plan/"src"/path).read_bytes())!=digest:raise ValueError("source bytes changed: "+path)
     if len(manifest["physical_macros"])!=4:raise ValueError("all four real physical macro views required")
     if a.stdlib_area_scale_to_um2<=0:raise ValueError("positive explicit standard area scale required")
+    if a.report_only:
+        receipt=json.loads((out/"run_plan.json").read_text())
+        if receipt["source_manifest_sha256"]!=sha((plan/"manifest.json").read_bytes()):raise ValueError("mapped source manifest mismatch")
+        if not (out/"mapped.stat").exists() or not (out/"mapped.json").exists():raise ValueError("actual completed mapping outputs required")
+        guard();report(out,plan,manifest,a.stdlib_area_scale_to_um2)
+        return
     if not a.inside_container:
         image=IMAGE
         if a.execute:
