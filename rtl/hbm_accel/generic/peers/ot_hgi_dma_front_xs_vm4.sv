@@ -27,11 +27,23 @@ module ot_hgi_dma_front_xs_vm4 #(
 );
     wire [NIN*277-1:0] ls={ls_b,ls_a};
     function automatic [31:0] i8_f(input [7:0] c);
-        reg [7:0] a; reg [2:0] p; integer k;
+        reg [7:0] a; reg [2:0] p; reg [22:0] mi; integer k;
         begin
             a = c[7] ? (~c + 8'd1) : c; p = 3'd0;
             for (k = 0; k < 8; k = k + 1) if (a[k]) p = k[2:0];
-            i8_f = (a == 8'd0) ? 32'd0 : {c[7], 8'd127 + {5'd0, p}, ({15'd0, a} << (5'd23 - {2'd0, p})) & 23'h7FFFFF};
+            // mantissa = the bits below the leading one, left aligned: constant shifts per p (src16d: a variable
+            // $shl per word let yosys SHARE run a SAT over the 64-way select cone; it never finished)
+            case (p)
+                3'd0: mi = 23'd0;
+                3'd1: mi = {a[0], 22'd0};
+                3'd2: mi = {a[1:0], 21'd0};
+                3'd3: mi = {a[2:0], 20'd0};
+                3'd4: mi = {a[3:0], 19'd0};
+                3'd5: mi = {a[4:0], 18'd0};
+                3'd6: mi = {a[5:0], 17'd0};
+                default: mi = {a[6:0], 16'd0};
+            endcase
+            i8_f = (a == 8'd0) ? 32'd0 : {c[7], 8'd127 + {5'd0, p}, mi};
         end
     endfunction
     function automatic [31:0] e4m3_f(input [7:0] c);
@@ -43,7 +55,7 @@ module ot_hgi_dma_front_xs_vm4 #(
                 if (m == 3'd0) e4m3_f = {c[7], 31'd0};
                 else begin
                     p = m[2] ? 2'd2 : m[1] ? 2'd1 : 2'd0;
-                    e4m3_f = {c[7], 8'd127 - 8'd9 + {6'd0, p}, ({20'd0, m} << (5'd23 - {3'd0, p})) & 23'h7FFFFF};
+                    e4m3_f = {c[7], 8'd127 - 8'd9 + {6'd0, p}, (p == 2'd2) ? {m[1:0], 21'd0} : (p == 2'd1) ? {m[0], 22'd0} : 23'd0};
                 end
             end else e4m3_f = {c[7], 8'd120 + {4'd0, e}, m, 20'd0};
         end
