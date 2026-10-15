@@ -15,6 +15,7 @@ if [[ "$mut" != 0 ]];then
  echo "HOST_SM_PAIR MUTANT REJECTED $mut";cat "$out/run$mut.log";exit 0
 fi
 "$exe" +IMAGES="$out/images" > "$out/run0.log" 2>&1 || { cat "$out/run0.log";exit 1; }
+grep -q '^HOST_SM_PAIR_PASS targets=32 actualSRAMs=64 epochs=2 frames=131072 outputs=131072 launch_phase=5 II=1' "$out/run0.log"
 cat "$out/run0.log"
 for scenario in {1..6};do
  "$exe" +IMAGES="$out/images" +case="$scenario" > "$out/case-$scenario.log" 2>&1 || { cat "$out/case-$scenario.log";exit 1; }
