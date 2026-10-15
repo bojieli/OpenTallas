@@ -1,0 +1,119 @@
+{
+ "name": "hbm_hc_residual_half_static",
+ "top": "ot_hgi_hc_residual_half_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_half_static.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 273.456,
+  "h": 194.4,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "u_residual",
+   "at": [
+    55.296,
+    43.2
+   ],
+   "orient": "MY"
+  }
+ ],
+ "pins": {
+  "W": [
+   "write_v",
+   "write_word",
+   "write_data"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "read_v",
+   "read_word"
+  ],
+  "E": [
+   "residual_data",
+   "read_valid",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/hbm_hc/HC_residual_half_exact_source_place.tcl",
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:/root/h_hc_physical",
+  "branch": "codex/hc-physical-1015",
+  "tag": "native1",
+  "purpose": "Actual PRIMARY92root HC ot_hgi_hc_residual_half_static source; explicitgeometryassignedpins andpublishedrowpacking; measurelocalclockspan andboundarySTA, no wholeHCclaim",
+  "structural_change": "Replace500um10SRAMsharedclockmonolith withboundedlocalroot; keepactualmemory/phase/TML3; residualwrite+1 priced",
+  "extra_paths": [
+   "physical/hbm_hc",
+   "rtl/test/tb_hgi_hc_weight_quarter_static.sv",
+   "rtl/test/tb_hgi_hc_residual_half_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_half_static.sv",
+   "tools/hbm_hc/run_memory_partition.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_weight_quarter_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "all32_staticIDs_exact",
+    "cmd": "bash tools/hbm_hc/run_memory_partition.sh {RUN}/mem",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "WEIGHT_QUARTER PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "write_capture_bypass_mutant",
+    "cmd": "bash tools/hbm_hc/run_memory_partition.sh {RUN}/mut && vvp {RUN}/mut/residual_mut.vvp",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "RESIDUAL_HALF write_phase mismatch"
+   }
+  ],
+  "views_to": "physical/ref_tile/hbm_hc_residual_half_static/views",
+  "record_to": "results/rtl/ref_tile/hbm_hc_residual_half_static"
+ },
+ "pin_hook_before_flops": [
+  "physical/hbm_hc/HC_residual_half_exact_source_audit.tcl"
+ ],
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
