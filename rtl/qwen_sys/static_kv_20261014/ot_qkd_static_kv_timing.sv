@@ -69,6 +69,7 @@ module ot_qkd_static_kv_timing #(
                   (s==3'(IDLE4))?4:(s==3'(IDLE5))?5:(s==3'(IDLE6))?6:7;
     endfunction
     reg [10:0] j, n; reg [18:0] row;
+    reg v_consumer_order;
     reg [31:0] open, done, stale, refreshed;
     reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
     reg running; reg [31:0] blk;   // blk: one-hot of rb while a REFpb is pending
@@ -79,7 +80,12 @@ module ot_qkd_static_kv_timing #(
     // r8: the RD bank as a registered one-hot (rd_oh, rd_bgoh) and credit != 0 as a registered
     // flag, updated exactly with j / credit, so rd_ok is an AND-OR of flops (no j-decoded mux).
     reg [31:0] rd_oh; reg [3:0] rd_bgoh;
-    wire [10:0] j_p1 = j + 11'd1;
+    // Native full-context V alternates eight-sector chunks across the two
+    // V bank sets. Match actual n-major V consumption so a 128-row ring can
+    // be admitted with compiled pacing; physical-linear V acquisition cannot.
+    wire [7:0] v_ordinal={j[6:3],j[7],j[2:0]};
+    wire [7:0] v_next=v_ordinal+8'd1;
+    wire [10:0] j_p1 = v_consumer_order ? {3'b010,v_next[3],v_next[7:4],v_next[2:0]} : j+11'd1;
     // ---- write queue (WR_EN) ------------------------------------------------------------
     reg [4:0] wq_bank [0:WQ-1]; reg [4:0] wq_col [0:WQ-1]; reg wq_rd [0:WQ-1];
     localparam AQ = (WR_EN != 0) && (AQ_RD != 0);
@@ -345,9 +351,10 @@ module ot_qkd_static_kv_timing #(
     // next-cycle k and last (the same updates as j and last below)
     wire desc_acc = desc_v && !streaming && !fault_r;
     wire k_step = rd_ok && (j[6:0] == 7'h7f);
-    wire [2:0] k_n = desc_acc ? desc_first[9:7] : k_step ? k + 3'd1 : k;
+    wire v_set_flip=v_consumer_order && rd_ok && j[2:0]==3'd7;
+    wire [2:0] k_n = desc_acc ? desc_first[9:7] : v_set_flip ? (k^3'd1) : k_step ? k+3'd1 : k;
     wire [2:0] last_n = desc_acc ? 3'((desc_n - 11'd1) >> 7) : last;
-    wire [7:0] koh_n = desc_acc ? (8'b1 << desc_first[9:7]) : k_step ? {koh[6:0], koh[7]} : koh;
+    wire [7:0] koh_n = desc_acc ? (8'b1 << desc_first[9:7]) : v_set_flip ? {koh[6],koh[7],koh[4],koh[5],koh[2],koh[3],koh[0],koh[1]} : k_step ? {koh[6:0],koh[7]} : koh;
     // write ACT: closed target bank, not chosen (or about to be chosen) for refresh
     // any queued write's bank may open (oldest first), so a burst of writes opens its banks together
     wire [WQ-1:0] wq_act;
@@ -428,7 +435,7 @@ module ot_qkd_static_kv_timing #(
     assign busy = streaming; assign ref_fault = fault_r;
     always @(posedge clk or negedge rst_n) begin
       if (!rst_n) begin
-        streaming <= 0; last <= 0; nm1 <= 0;
+        streaming <= 0;v_consumer_order<=0; last <= 0; nm1 <= 0;
         j <= 0; n <= 0; row <= 0; open <= 0; done <= 0; stale <= 0; refreshed <= 0;
         rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb <= 0; fault_r <= 0;
         ref_c <= RW'(RPH + PERIOD); running <= 0; phase <= 0;
@@ -536,7 +543,8 @@ module ot_qkd_static_kv_timing #(
         endcase
         // descriptor
         if (desc_v && !streaming && !fault_r) begin
-          j <= {1'b0,desc_first}; n <= desc_n; row <= desc_row; done <= 0; running <= 0;
+          j <= {1'b0,desc_first}; n <= desc_n; row <= desc_row;
+          v_consumer_order <= desc_first==10'd512 && desc_n==11'd768; done <= 0; running <= 0;
           streaming <= (desc_n != 0); nm1 <= desc_n - 11'd1; last <= 3'((desc_n - 11'd1) >> 7);
           stale <= open_nx;                     // rows still open from the old descriptor close first
         end

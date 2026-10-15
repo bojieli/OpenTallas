@@ -92,7 +92,8 @@ module tb_static_host_controller;
      if(phase==1&&mode==4)external_host_storage[wsector[t]]^=288'd3;
     end
     if(co[phase][0])begin
-     automatic integer expected_sector=landed<256?landed:512+landed-256;
+     automatic integer o=landed-256;
+     automatic integer expected_sector=landed<256?landed:512+((o&8)<<4)+((o>>4)<<3)+(o&7);
      automatic integer sec={co[phase][11:9],co[phase][7:1]};
      if(out_epoch[phase]!=7||sec!=expected_sector||co[phase][281:26]!==data(67,expected_sector))bad($sformatf("KV row phase%0d index%0d sec%0d",phase,landed,sec));
      landed++;

@@ -49,7 +49,8 @@ module tb_static_kv_timing;
     caddr[t][p]={pcb[p],pcc[p]};rcmd[t][p]={pro[p],prb[p],prr[p]};
     if(pcv[p])begin
      automatic integer j={pcb[p][4:2],pcc[p],pcb[p][1:0]};
-     automatic integer expected=count[p]<256?count[p]:512+count[p]-256;
+     automatic integer o=count[p]-256;
+     automatic integer expected=count[p]<256?count[p]:512+((o&8)<<4)+((o>>4)<<3)+(o&7);
      if(j!=expected)bad($sformatf("profile p%0d j%0d expected%0d",p,j,expected));
      count[p]++;total++;
     end
@@ -77,6 +78,6 @@ module tb_static_kv_timing;
    @(negedge ck);
   end
   if(errors)begin $display("FAIL staticKV128 timing errors%0d mode%0d",errors,mode);$fatal(1);end
-  $display("PASS staticKV128 timing PCs128 K256 V256 sectors%0d period1024ps profilecycles2200 exactProductionReplay noCreditPort",total);$finish;
+  $display("PASS staticKV128 timing PCs128 K256 V256consumerOrder sectors%0d period1024ps profilecycles2200 exactProductionReplay noCreditPort",total);$finish;
  end
 endmodule
