@@ -1,0 +1,75 @@
+{
+ "date": "2026-10-15",
+ "guard_before": "main 79fff1ff6 (=Codex 00b62803e)",
+ "guard_after": "main f54e729f8",
+ "scan": "14-day Verilator obj dirs on localhost, AGIdock, EPYC1, EPYC4, PVE1 (Claude ROOT 07:36 scan + Codex scans)",
+ "flagged_by_old_scan": {
+  "localhost": 139,
+  "ot-agidock128": 80,
+  "ot-epyc1tb": 127,
+  "ot-epyc4": 141,
+  "ot-pve1": 8
+ },
+ "real_miscompiles": {
+  "ot_hdc_v41x_attn_merge_s.r (delay line r[i] <= r[i-1], trip > unroll)": {
+   "status": "REAL miscompile, known to H-ATTQ (0d397 branch fix)",
+   "models": [
+    "/tmp/claude-1000/attq/o1",
+    "/tmp/claude-1000/attq/o30",
+    "/tmp/claude-1000/attq/o4",
+    "/tmp/claude-1000/attq/o16",
+    "/tmp/claude-1000/attq/o8",
+    "/tmp/claude-1000/attq/objh/Vot_hdc_v41x_attn_merge_s_4",
+    "/tmp/claude-1000/attq/objh",
+    "/tmp/claude-1000/attq/objh16/Vot_hdc_v41x_attn_merge_s_6",
+    "/tmp/claude-1000/attq/objh16",
+    "/srv/opentallas-scratch/codex/hbm-att-hg1-167a/full_gate/obj/Vot_hdc_v41x_attn_merge_s_6",
+    "/srv/opentallas-scratch/codex/hbm-att-physical-profile-6656/full_gate/obj/Vot_hdc_v41x_attn_merge_s_6",
+    "/srv/opentallas-scratch/codex/ATT-local-full-ac809/full_gate/obj/Vot_hdc_v41x_attn_merge_s_6",
+    "/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf/full_gate/obj",
+    "/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf/full_gate/obj/Vot_hdc_v41x_attn_merge_s_6",
+    "/srv/opentallas-scratch/codex/hbm-att-physical-profile-6656/full_gate/obj"
+   ],
+   "receipts_on_main": [
+    "results/arch/hbm_attention_static_1015/failures/physical_profile_hier160gb_oom.log (failure log only)",
+    "results/arch/hbm_attention_static_1015/failures/exact32pair_staging_depth320.log (failure log only)"
+   ],
+   "note": "dedicated HBM attention superseded by ATT-on-SM (HANDOFF 0bc); no PASS receipt cites these models"
+  },
+  "ot_s81_stage_seq.st_credit_stall (st_credit_stall <= st_credit_stall + 1 inside for e<NENG)": {
+   "status": "REAL miscompile: Verilator counts +1 per stalled engine, RTL semantics +1 per cycle",
+   "models": [
+    "/srv/opentallas-scratch/codex/s81-statictrace/out/obj_nom",
+    "/srv/opentallas-scratch/codex/s81-mix-layer-fixed-1015/out/obj_mut_mix",
+    "/srv/opentallas-scratch/codex/s81-mix-layer/out/obj_mut_mix",
+    "/srv/opentallas-scratch/codex/s81-mix-layer-fixed-1015/out/obj_nom",
+    "/srv/opentallas-scratch/codex/s81-mix-layer/out/obj_nom"
+   ],
+   "receipts_on_main": [
+    "results/rtl/s81_functional_token_1014/r5_codex/static_trace/summary.json",
+    "results/rtl/s81_functional_token_1014/mix4_layer/running_sources.sha256",
+    "results/rtl/s81_functional_token_1014/mix4_layer_fixed/*FAIL.log"
+   ],
+   "note": "statistic counter only; no committed receipt cites st_credit_stall values, functional outputs unaffected; owner fix: hoist to one per-cycle increment of |stall"
+  }
+ },
+ "false_positive_classes_fixed": {
+  "nested loop counter / for-header <= ": "qadd u_rnd.i, coll-park q, hbm-att-hier qadd/merge/tile",
+  "macro params / macro module / generate union": "hbm-xp bulk_copy full, s81 coll_core lane_flt",
+  "per-module class members": "q-static-ahub zv, hc checkpoint mem, s81 su_qnt rv",
+  "masked part-select / cast scalar bit set": "s81 SU ua_q/um_q/h0/h1"
+ },
+ "unresolved_with_sources": [
+  "ot-epyc4 s81-su-missing-v2/shared/build_full_dpi_m0_a0_h: dsfd_su_t_ikh module not in recorded sources (same RTL proven independent in native128/512, ik, shared_v3)"
+ ],
+ "source_unavailable": {
+  "models": 249,
+  "meaning": "RTL sources deleted (pruned worktrees, old /tmp); guard fails closed; mostly testbench stat counters of old hbmbw/suvop/tk2 diagnostics; any receipt built from them must be re-run under the shim if cited",
+  "file": "source_unavailable_models.jsonl"
+ },
+ "shim": {
+  "installed": "2026-10-15 ~09:55 PT all 5 hosts",
+  "guard_sha16": "b1aae1e39d0100ed",
+  "smoke": "chain D=6 unroll1 exit 86, unroll8 exit 0; nested-loop reproducer exit 0"
+ }
+}

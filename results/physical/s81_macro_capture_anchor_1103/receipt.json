@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.macro_capture_anchor_receipt.v1",
+  "source_commit": "5def3d4801ec0349fa00d7ea3cf9ccc56e3118b4",
+  "source_gate_receipt_sha256": "70167532fd978350da19dfc4778c55cda48a8a99557021ddc3e41eb97eddcf8a",
+  "source_gate_generated": "2026-10-15T11:05:55-0700",
+  "source_gate_verdict": "WARN",
+  "remote": "ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/s81coll_calendar7-20261015-105031",
+  "actual_capture_count": 565,
+  "macro_outputs_without_single_capture": 233,
+  "raw_capture_line": "OT_MPCAP fixed 565 macro-output capture flops beside their pins (233 connected pins without a single capture flop)",
+  "path_counts": {
+    "macro_to_reg": 565
+  },
+  "placement_slack_ps": {
+    "macro_to_reg": 8.4,
+    "reg_to_reg": 50.6,
+    "reg_to_macro": 106.1
+  },
+  "route_hold_context": {
+    "HM": "0.03",
+    "OT_ROUTE_HOLD_CORNERS": "mm",
+    "OT_MM_FF_SDC": "physical/ref_tile/s81coll_calendar7/signoff.sdc"
+  },
+  "source_snapshot_sha256": "4af6b214d7332effc3e5212bdec52a7e849dd96325ad1608ad8b681865e996e9",
+  "source_binding_manifest_sha256": "7d2d59ca4225fdcc7c3d5c11d33304e07d81e82c1bb904cd0ccd397e530f2668",
+  "shared_sources": [
+    {
+      "path": "physical/qwen_die_masters/io_flop_at_pins.tcl",
+      "kind": "file",
+      "sha256": "4e53d7e20fc599c39424da330566befadabb42780e349f9bb1568b9f0fa1b75b",
+      "git_blob": "5ab65fa73181c4a61262e22236037e0737f30795",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "tools/ref_tile/ref_tile.py",
+      "kind": "file",
+      "sha256": "e398c869dbf28e24b8b4df5b7364629b477f8d22aa514c44874dd2640cff9084",
+      "git_blob": "14038ef2ea904bf298c1236acd53c9fb15a59f11",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    }
+  ],
+  "qualification": "Retained actual source-bound pre-route CTS evidence; not a new current-main gate or routed/native qualification"
+}

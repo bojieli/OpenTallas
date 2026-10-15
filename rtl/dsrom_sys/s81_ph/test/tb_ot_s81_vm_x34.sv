@@ -7,11 +7,12 @@
 module tb_ot_s81_vm_x34;
     localparam integer W = 64;
     parameter integer NAT = 0;   // NAT=1: captured stream side, every word one stream edge later (claude F2 1015)
+    parameter integer BAL = 0;   // BAL=1: core/output flops behind a 4th register-enabled ICG (S-ELEM-A 1015)
     reg s_ck = 0, t_ck = 0, s_rn = 0, t_rn = 0;
     always #556 s_ck = ~s_ck;
     always #417 t_ck = ~t_ck;
     reg s_v = 0; reg [W-1:0] s_d = 0; wire o_v; wire [W-1:0] o_d; wire fault;
-    ot_s81_vm_x34 #(.W(W), .NAT(NAT)) u (.s_ck(s_ck), .s_rst_n(s_rn), .s_v(s_v), .s_d(s_d), .t_ck(t_ck), .t_rst_n(t_rn),
+    ot_s81_vm_x34 #(.W(W), .NAT(NAT), .BAL(BAL)) u (.s_ck(s_ck), .s_rst_n(s_rn), .s_v(s_v), .s_d(s_d), .t_ck(t_ck), .t_rst_n(t_rn),
         .o_v(o_v), .o_d(o_d), .fault(fault));
     integer mode = 0, seed = 1, bad = 0, words = 0, got = 0, sk = 0, tk = 0, i;
     reg ev [0:4095]; reg [W-1:0] ed [0:4095];        // expected word for stream edge index

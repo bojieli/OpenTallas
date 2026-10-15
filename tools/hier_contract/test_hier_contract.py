@@ -149,6 +149,50 @@ class ChildLint(unittest.TestCase):
         self.assertTrue({"c", "e"} <= self.checks(r), r["fails"])
 
 
+class ThinTileRowSpan(unittest.TestCase):
+    """(b) on a tile whose outline is off the 2.16-um row/PG lattice (S81 fill dsfd_hstnh_112, 18.576 x 17.256, collect
+    crashed 10-15): rows and M5 stripes 2.151..14.859/14.873 stop 0.237 um short of the 2.16-um top inset.  A stripe
+    crossing every cell row is a full PG connection; a stripe missing a row, or a shrunken core, still FAILs."""
+    W, H = 18.576, 17.256
+
+    def text(self, y0=2.151, y1=14.873, rows=(2.16, 2.151, 16.416, 14.859)):
+        out = [f"VERSION 5.8 ;\nMACRO tile\n  CLASS BLOCK ;\n  SIZE {self.W} BY {self.H} ;"]
+        for i, n in enumerate(("VDD", "VSS")):
+            rects = "\n".join(f"        RECT {2.592 + 2.7 * k + 1.35 * i:.3f} {y0} {2.712 + 2.7 * k + 1.35 * i:.3f} {y1} ;"
+                              for k in range(5))
+            out.append(f"  PIN {n}\n    USE {'POWER' if n == 'VDD' else 'GROUND'} ;\n    PORT\n      LAYER M5 ;\n{rects}\n"
+                       f"    END\n  END {n}")
+        out.append("  PIN a\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M4 ;\n        RECT 0 5.952 0.084 5.976 ;"
+                   "\n    END\n  END a")
+        out.append("  OBS\n    LAYER M1 ;\n      RECT %g %g %g %g ;\n  END" % rows)
+        out.append("END tile\nEND LIBRARY\n")
+        return "\n".join(out)
+
+    def lint(self, text):
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "tile.lef"
+            p.write_text(text)
+            return child_lint.lint(str(p), skip={"g"})
+
+    def test_off_lattice_rows_fully_crossed_pass(self):
+        r = self.lint(self.text())
+        self.assertNotIn("b", {f[1] for f in r["fails"]}, r["fails"])
+        self.assertEqual(r["info"]["pg"]["nets"]["VDD"]["stripes"], 5)
+
+    def test_stripe_missing_top_row_fails(self):
+        r = self.lint(self.text(y1=14.5))
+        self.assertIn("b", {f[1] for f in r["fails"]})
+
+    def test_shrunken_core_fails(self):
+        # rows end 3 um below the top inset: stripes cover them, but the core is not the tile -> not full-length
+        r = self.lint(self.text(y1=12.1, rows=(2.16, 2.151, 16.416, 12.0)))
+        self.assertIn("b", {f[1] for f in r["fails"]})
+
+    def test_no_m1_rows_keeps_old_rule(self):
+        r = self.lint(self.text().replace("    LAYER M1 ;\n      RECT 2.16 2.151 16.416 14.859 ;\n", ""))
+        self.assertIn("b", {f[1] for f in r["fails"]})
+
+
 class Pockets(unittest.TestCase):
     """abstract_pin_stub pocket closing + child_lint (h)"""
     # two M5 blocks 0.5 um apart (pocket), M5 pin 'p' on the west face inside a 0.3-um slot, PG on M7 (not an obstacle)

@@ -1425,7 +1425,11 @@ module ot_qwen_me_spport_w12 #(
     // base and (g * ots) take g instead of p.  Default 0 = base.
     parameter integer BANDF = 0,
     parameter integer TCUT = 7,
-    parameter integer HARD_MUL = 0
+    parameter integer HARD_MUL = 0,
+    // q15 port-tiles: QOTS_SMALL 1 = pt_id < 32 is guaranteed by the instantiating leaf (die strap 8*BAND+4*HALF+q);
+    // (q0+g)*ots is then formed as ((bb*ots) << (TB-split)) + kk*ots (bb = qp[4:3], kk = qp[2:0]), the exact same
+    // value mod 2^AW as the 16-row qrows sum, with 5 partial products instead of 16.  Default 0 = original.
+    parameter integer QOTS_SMALL = 0
 ) (
     input wire [15:0] ck_mul,
     input  wire              clk,
@@ -1508,8 +1512,15 @@ module ot_qwen_me_spport_w12 #(
         for (b = 0; b < QB; b = b + 1) begin : g_qr
             assign qrows[b*AW +: AW] = qg[b] ? (e_ots << b) : {AW{1'b0}};
         end
-        ot_qwen_w12_csa_tree #(.W(AW), .N(QB)) u_qcs (.rows(qrows), .s(qs), .c(qc));
-        ot_qwen_w12_kadd #(.W(AW)) u_qka (.a(qs), .b(qc), .s(e_qots[g*AW +: AW]));
+        if (QOTS_SMALL != 0 && BANDF != 0) begin : g_qsmall
+            wire [AW-1:0] p_b = e_ots * qp[4:3];
+            wire [AW-1:0] p_k = e_ots * qp[2:0];
+            wire [AW-1:0] p_bs = (e_split <= TB) ? (p_b << (TB - e_split)) : {AW{1'b0}};
+            assign e_qots[g*AW +: AW] = p_bs + p_k;
+        end else begin : g_qfull
+            ot_qwen_w12_csa_tree #(.W(AW), .N(QB)) u_qcs (.rows(qrows), .s(qs), .c(qc));
+            ot_qwen_w12_kadd #(.W(AW)) u_qka (.a(qs), .b(qc), .s(e_qots[g*AW +: AW]));
+        end
     end endgenerate
     // -- stage A (the monolithic a_tag cycle) --------------------------------------------------------------------
     reg              raw_v, raw_last, raw_oen, raw_wsrc;

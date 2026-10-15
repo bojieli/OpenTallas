@@ -93,14 +93,14 @@ def token_run():
 EMB_SEND = 20   # bench token run: provider row staged (one ready per buffer block at the HBM boundary) by cycle 19
 
 
-def layer_msgs(seg, base, w, txl, phy):
+def layer_msgs(seg, base, w, txl, phy, st_ofs=38):
     """one decode layer's link messages at layer offset base; w = op windows (rmsnorm1, qkv, qknorm_rope, attn_kv)"""
     q0 = base + int(sum(w[:3]))
     a_end = q0 + int(w[3])
     m = [dict(seg=seg, src="C", cyc=q0, tx_port=0, rx_port=0, kind=1, beat=0)]
     m += [dict(seg=seg, src="C", cyc=q0 + 1 + b, tx_port=0, rx_port=0, kind=2, beat=b) for b in range(32)]
     m += [dict(seg=seg, src="C", cyc=q0 + 33 + i, tx_port=3, rx_port=3, kind=5, beat=i) for i in range(4)]
-    m.append(dict(seg=seg, src="C", cyc=q0 + 38, tx_port=2, rx_port=2, kind=15, beat=0))
+    m.append(dict(seg=seg, src="C", cyc=q0 + st_ofs, tx_port=2, rx_port=2, kind=15, beat=0))
     # RESULT: the last beat (STATUS) out of the compute end (arrive + 2 + codec 1) at a_end
     r_last = a_end - (txl + phy + 3)
     r0 = r_last - 33
@@ -109,7 +109,7 @@ def layer_msgs(seg, base, w, txl, phy):
     return m, dict(q_send=q0, attn_end=a_end, result_send=[r0, r_last])
 
 
-def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None):
+def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38):
     """Full 36-layer decode-token program from the priced token path (layer-relative op windows).
     Segment 0 = L1..L35 (identical windows: the KV fill of layer n+1 is hidden behind layer n); segment 1 = the token
     run = terminal RESULT + embedding row + L0 (its KV fill is exposed: attn_kv 2,038 vs 1,816 cycles)."""
@@ -124,13 +124,13 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None):
     win = {L: [nodes[f"{L}.{o}"]["cycles"] for o in ops] for L in lay}
     if not all(win[L] == win[lay[1]] for L in lay[2:]):
         raise SystemExit("L1..L35 op windows differ: one replayed segment-0 image cannot serve them")
-    m0, l1 = layer_msgs(0, 0, win[lay[1]], txl, phy)
+    m0, l1 = layer_msgs(0, 0, win[lay[1]], txl, phy, st_ofs)
     emb = int(nodes["embed"]["cycles"]) if emb_window is None else emb_window
     l0_start = int(groups[0]["start"])
     e_last = emb - (txl + phy + 2)
     m1 = [dict(seg=1, src="C", cyc=2, tx_port=2, rx_port=2, kind=15, beat=0)]
     m1 += [dict(seg=1, src="K", cyc=e_last - 63 + w, tx_port=2, rx_port=2, kind=6 + w // 32, beat=w % 32) for w in range(64)]
-    ml0, l0 = layer_msgs(1, l0_start, win[lay[0]], txl, phy)
+    ml0, l0 = layer_msgs(1, l0_start, win[lay[0]], txl, phy, st_ofs)
     layout = dict(source=tp_path, layers=[dict(id=g["id"], start=int(g["start"]), cycles=int(g["cycles"])) for g in groups],
                   embed=dict(start=0, cycles=emb), windows=dict(L0=dict(zip(ops, map(int, win[lay[0]]))),
                   L1_35=dict(zip(ops, map(int, win[lay[1]])))), layer=l1, token_run_L0=l0,
@@ -206,24 +206,36 @@ def main():
     ap.add_argument("--host-stages", type=int, default=None,
                     help="KV die HOST core <-> qkd_d2d_static relay stages (each way), from the KV die lead's measured "
                          "die plan; added to the KV HOST-record TX codec latency (port 1) and the token-id budget")
+    ap.add_argument("--pinreg", action="store_true",
+                    help="pin-registered die masters (PR=1, d2d_pinreg_gen.py): PHY hop +2 (TX + far RX pin flops), producer "
+                         "capture +2 (slot out + payload in), consumer outputs +1; production default for the r4 masters")
     ap.add_argument("--allow-unmeasured-host", action="store_true",
                     help="diagnostic program images only: retain PENDING HOST stages and compile with zero; never production-qualified")
     a = ap.parse_args()
     if a.profile == "program" and a.host_stages is None and not a.allow_unmeasured_host:
         ap.error("program calendar requires --host-stages from the measured KV die plan; use --allow-unmeasured-host only for diagnostics")
     txd = {"C": [int(x) for x in a.txd_c.split(",")], "K": [int(x) for x in a.txd_k.split(",")]}
+    phy_c, txl_p, phy_p = a.phy, a.txl, a.phy
+    if a.pinreg:
+        # +2 on ports whose codec is OUTSIDE the die master (slot pin flop + payload pin flop); the compute STATUS
+        # codec (port 2) sits inside qfd_d2d_static_core and keeps its latency
+        ext = {"C": [2, 2, 0, 2], "K": [2, 2, 2, 2]}
+        txd = {k: [x + e for x, e in zip(v, ext[k])] for k, v in txd.items()}
+        phy_c = a.phy + 2                      # compiled pin-to-pin: TX pin flop + far RX pin flop
+        txl_p, phy_p = a.txl + 2, a.phy + 2    # message placement: slot->codec-out budget grows by 4 (see docstring)
     layout = None
     if a.spec:
         msgs = json.load(open(a.spec))
     elif a.profile == "program":
-        msgs, layout = program_profile(a.txl, a.phy, a.token_path, host_stages=a.host_stages)
+        msgs, layout = program_profile(txl_p, phy_p, a.token_path, host_stages=a.host_stages,
+                                        st_ofs=40 if a.pinreg else 38)   # STATUS capture after the (+2) KVN captures
         if a.host_stages:
             txd["K"][1] += a.host_stages   # HOST record words reach the end's capture edge host_stages later
     elif a.profile == "dies_token":
         msgs = dies_layer() + token_run()
     else:
         msgs = dies_layer() if a.profile == "dies" else bench_layer()
-    imgs, table, base = compile_cal(msgs, a.txl, a.phy, a.ofs, txd)
+    imgs, table, base = compile_cal(msgs, a.txl, phy_c, a.ofs, txd)
     import os
     os.makedirs(a.out, exist_ok=True)
     for k, v in imgs.items():
@@ -232,7 +244,7 @@ def main():
         with open(f"{a.out}/cal_{k}_seg1.memh", "w") as f:
             f.write(f"{base.get(k, 0):08x}\n")
     spans = {sg: max(max(t["rx_out"], t["cyc"]) for t in table if t["seg"] == sg) for sg in {t["seg"] for t in table}}
-    rec = dict(txl=a.txl, phy=a.phy, ofs=a.ofs, txd=txd, entries={k: len(v) for k, v in imgs.items()},
+    rec = dict(txl=a.txl, phy=a.phy, phy_compiled=phy_c, pinreg=a.pinreg, ofs=a.ofs, txd=txd, entries={k: len(v) for k, v in imgs.items()},
                seg1_base=base, span=spans.get(0, 0), spans=spans, messages=table)
     if layout:
         # absolute program: segment 0 replayed at every priced layer start, segment 1 at token start (cycle 0)

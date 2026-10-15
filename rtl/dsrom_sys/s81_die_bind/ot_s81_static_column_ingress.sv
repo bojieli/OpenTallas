@@ -10,19 +10,20 @@
 // equal frequency, fixed phase, with the ordinary related-clock setup/hold guard.
 // All words, including bubbles, traverse exactly the same slots. No alignment
 // training, occupancy state, credits, queue grants or traffic-dependent latency.
-module ot_s81_static_column_ingress(
- input wire f_ck,input wire [1101:0] i,
+// W (S-BIND r6 --bf-x2-pair): record width without the marker; default 1101 = the single packed lane (unchanged).
+module ot_s81_static_column_ingress #(parameter integer W=1101)(
+ input wire f_ck,input wire [W:0] i,
  input wire ck,rst_n,
- output wire [1100:0] o,output wire fault
+ output wire [W-1:0] o,output wire fault
 );
- reg [1101:0] pin;
+ reg [W:0] pin;
  always @(posedge f_ck)pin<=i;
  (* async_reg="true" *)reg [1:0] epoch_reset;
  always @(posedge ck or negedge rst_n)
    if(!rst_n)epoch_reset<=0;
    else epoch_reset<={epoch_reset[0],pin[0]};
- ot_s81_static_lane_cross #(.W(1101),.EPOCH_SHIFT(1))u_cross(
-   .w_ck(f_ck),.w_rst_n(pin[0]),.i(pin[1101:1]),
+ ot_s81_static_lane_cross #(.W(W),.EPOCH_SHIFT(1))u_cross(
+   .w_ck(f_ck),.w_rst_n(pin[0]),.i(pin[W:1]),
    .r_ck(ck),.r_rst_n(epoch_reset[1]),.o(o),.fault(fault));
 endmodule
 `default_nettype wire

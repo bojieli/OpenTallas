@@ -45,6 +45,16 @@ class ModeTests(unittest.TestCase):
         self.assertEqual(self.mode(job("rec_on_main", status="CLOSED", tt=20, ff=20)), "closed")
         self.assertIsNone(self.mode(job("not_recorded", status="CLOSED", tt=20, ff=20)))
 
+    def test_collect_crash_after_closed_verdict_is_retained(self):
+        ev = [f"{OLD} route done (rc=0)", f"{OLD} verdict TT +333.72 / FF +29.90 / DRC 0 / checks failed [] -> CLOSED",
+              f"{OLD} NEEDS_HUMAN: collect crashed twice (rc=1; resource=False)"]
+        self.assertIsNone(self.mode(job("s81fill", status="NEEDS_HUMAN", tt=333, ff=29, stage_key="collect", events=ev)))
+        # a failing verdict that crashed in collect is an ordinary failure
+        bad = [e.replace("-> CLOSED", "-> NEEDS_RTL") for e in ev]
+        self.assertEqual(self.mode(job("s81fill", status="NEEDS_HUMAN", stage_key="collect", events=bad)), "fail")
+        # cancelled = the owner gave it up: released
+        self.assertEqual(self.mode(job("s81fill", status="CANCELLED", stage_key="collect", events=ev)), "fail")
+
     def test_release_bookkeeping_does_not_reset_the_age(self):
         j = job("a")
         j["events"].append(f"{NEW} route bulk released (cancelled; MB before/after 1 1)")

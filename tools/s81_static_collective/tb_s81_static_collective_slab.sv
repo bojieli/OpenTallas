@@ -20,7 +20,7 @@ module tb_s81_static_collective_slab;
  reg[15:0]su_rqv=0;reg[223:0]su_rq=0;wire[15:0]su_rsv;wire[8191:0]su_rs;wire[1:0]vm_status;
  // VM clock/reset categories (558adb0f7 / a2a504bd4): t = the collective clock, s = the VM service clock,
  // connected as rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm_static.sv does.
- dsfd_sp_vm vm(.cks(clk),.rss(rst_n),
+ dsfd_sp_vm vm(
   .ck_read_data_t({64{clk}}),.ck_read_valid_t({8{clk}}),.rss_read_data_t({64{rst_n}}),.rss_read_valid_t({8{rst_n}}),
   .ck_core_t(clk),.ck_rsched_t(clk),.ck_seq_t(clk),.ck_landing_t(clk),
   .ck_mem_fsr_t({16{clk}}),.ck_mem_return_t({16{clk}}),.ck_mem_bank_t({128{clk}}),
@@ -110,7 +110,8 @@ module tb_s81_static_collective_slab;
   for(e=0;e<2150;e=e+1)begin
    c_cmd=e<2141 ? image[e][468+:85]:85'd0;
    f_wfc=e==348 ? {1'b1,value(3,7,0),1'b1}:514'd0;
-   f_host=e==348 ? {1'b1,11'h523,1'b1,64'h123456789abcdef0}:77'd0;
+   // S-BIND r6 static host face: alive + status levels, the completion a single-edge pulse 8 edges before the host slot 348
+   f_host={1'b1,11'h523,e==340,e==340 ? 64'h123456789abcdef0:64'd0};
    @(posedge clk);#2;
    if(status[0]||vm_status[0]||(|peer_fault))$fatal(1,"fullslab fault edge%0d slab%h VM%h peer%h pack%b transport%b raw%b channel%b reduce%b assemble%b",e,status,vm_status,peer_fault,dut.pack_bad,dut.transport_fault,dut.raw_fault,dut.channel_fault,dut.reduce_fault,dut.assemble_fault);
    if(e>=2&&e<2143)begin

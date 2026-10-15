@@ -1,0 +1,19 @@
+module top(input ck,rom,d,en,output q,output [545:0] qa);
+DFFHQNx1_ASAP7_75t_R r0(.CLK(ck),.D(d),.QN(q0));
+DFFHQNx1_ASAP7_75t_R r1(.CLK(ck),.D(d),.QN(q1));
+DFFHQNx1_ASAP7_75t_R r2(.CLK(ck),.D(d),.QN(q2));
+DFFHQNx1_ASAP7_75t_R r3(.CLK(ck),.D(d),.QN(q3));
+DFFHQNx1_ASAP7_75t_R r4(.CLK(ck),.D(d),.QN(q4));
+DFFHQNx1_ASAP7_75t_R r5(.CLK(ck),.D(d),.QN(q5));
+DFFHQNx1_ASAP7_75t_R r6(.CLK(ck),.D(d),.QN(q6));
+DFFHQNx1_ASAP7_75t_R r7(.CLK(ck),.D(d),.QN(q7));
+DFFHQNx1_ASAP7_75t_R r8(.CLK(ck),.D(d),.QN(q8));
+DFFHQNx1_ASAP7_75t_R r9(.CLK(ck),.D(d),.QN(q9));
+DFFHQNx1_ASAP7_75t_R r10(.CLK(ck),.D(d),.QN(q10));
+DFFHQNx1_ASAP7_75t_R r11(.CLK(ck),.D(d),.QN(q11));
+DFFHQNx1_ASAP7_75t_R r12(.CLK(ck),.D(d),.QN(q12));
+DFFHQNx1_ASAP7_75t_R r13(.CLK(ck),.D(d),.QN(q13));
+DFFHQNx1_ASAP7_75t_R r14(.CLK(ck),.D(d),.QN(q14));
+DFFHQNx1_ASAP7_75t_R r15(.CLK(ck),.D(d),.QN(q15));
+ot_sram_1r1w_32x546_m1 u_m(.clk(rom),.r_ce_in(en),.rd_out(qa));
+assign q=q0;endmodule

@@ -3,7 +3,8 @@
 module qkd_host_root_composed #(
  parameter T_LINK=200000,T_HBM=200000,WDOG=1<<22,
  parameter ENABLE_SERVICE=0,ENABLE_NATIVE=0,ENABLE_TOKEN=0,
- parameter PHY_MUT=0,QM_MUT=0,ORDER_MUT=0,BRIDGE_MUT=0,HC_MUT=0,PROMPT_MUT=0
+ parameter PHY_MUT=0,QM_MUT=0,ORDER_MUT=0,BRIDGE_MUT=0,HC_MUT=0,PROMPT_MUT=0,
+ parameter NL=6
 )(
  input wire[7:0] ck_phy,
  input wire ck_pad,
@@ -74,7 +75,7 @@ module qkd_host_root_composed #(
  input wire[1042:0] phy_rx_flit,
  output wire phy_tx_v,
  output wire[1042:0] phy_tx_flit,
- input wire[5:0] link_up,
+ input wire[NL-1:0] link_up,
  input wire[7:0] transport_fault,
  input wire[7:0] physical_fault,
  input wire crom_fault,
@@ -142,11 +143,14 @@ module qkd_host_root_composed #(
  output wire program_consensus,output wire coordinator_fault,output wire recovery_complete,
  // kvsys v1.4 (2026-10-15, HOST owner = KV die lead; Q-LINK request): the peer protocol's exceptional link-recovery
  // controls leave the root for the static D2D end qkd_d2d_static (host_link_reset_req / host_recovery_clear)
- output wire host_link_reset_req,output wire host_recovery_clear
+ output wire host_link_reset_req,output wire host_recovery_clear,
+ // kvsys v1.4.1 (HOST owner = KV die lead, Q-LINK request): the local HOST interface drained level for the D2D end's
+ // native_host_drained (= the observed host interface idle: no inflight request, both FSMs idle, no events, AXI quiet)
+ output wire host_drained_local
 );
 
  wire[1163:0]chain_f;wire[127:0]chain_c,chain_a,slice_ack,slice_boot_done,slice_boot_ok,slice_boot_fault;wire[3:0]chain_fault_i;
- qkd_host_root_pt #(.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_NATIVE(ENABLE_NATIVE),.ENABLE_TOKEN(ENABLE_TOKEN),.PHY_MUT(PHY_MUT),.QM_MUT(QM_MUT),.ORDER_MUT(ORDER_MUT),.BRIDGE_MUT(BRIDGE_MUT),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT)) u_core(
+ qkd_host_root_pt #(.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_NATIVE(ENABLE_NATIVE),.ENABLE_TOKEN(ENABLE_TOKEN),.PHY_MUT(PHY_MUT),.QM_MUT(QM_MUT),.ORDER_MUT(ORDER_MUT),.BRIDGE_MUT(BRIDGE_MUT),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT),.NL(NL)) u_core(
   .ck_phy(ck_phy),
   .ck_pad(ck_pad),
   .ck_phy_rx_w(ck_phy_rx_w),
@@ -294,6 +298,7 @@ module qkd_host_root_composed #(
   .recovery_complete(recovery_complete),
   .host_link_reset_req(host_link_reset_req),
   .host_recovery_clear(host_recovery_clear),
+  .host_drained_local(host_drained_local),
   .chain_f(chain_f),
   .chain_c(chain_c),
   .chain_a(chain_a),
