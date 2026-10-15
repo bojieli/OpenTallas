@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.hbm.engram.actual_rank_completion.v1",
+  "status": "pass",
+  "mode": "early",
+  "runs": [
+    {
+      "name": "baseline",
+      "returncode": 0,
+      "output": "PASS actual8 local native completion barriers reject early64 fence without modeled home_done\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/ranklocal_completion_early_bound/tb.sv:111: $finish called at 322085591 (1fs)"
+    },
+    {
+      "name": "constant_done_mutant",
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/ranklocal_completion_early_bound/tb.sv:288: lost actual local completion check\n       Time: 322085591  Scope: tb"
+    }
+  ],
+  "programme_FETCH_EDGES": 64,
+  "physical_home_done_edges": 8228,
+  "local_participants": 1,
+  "independent_ranks": 8,
+  "wall_seconds": 99.73057635000441,
+  "reference_source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_hash_clock_roots.sv": "49edac680059b3543cd2d642c47b9b80e8afaf6994e3f7c965155a65e375e953",
+    "rtl/hdc/v41/ot_hdc_engram_gather.sv": "2edd7582a38629ebd662f68eff7eb88c5f90d88c689157cbbe2acf5d5a2099ed",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_lease.sv": "c16adc653eff8bce34ace00d6b4753b6937e758604b8d809183e14e85ea8be4c",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_owned_stack.sv": "53774057356d0d09c4b6687bcd2760dec8a8a23c6ac02caf522fd72a587869c1",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_dispatch.sv": "1132b94038342443ba24380f1a1e697ebb8c7aa7c2fea231d2e83a991f8a94f9",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_hash_home_clock_roots.sv": "4717c84d8b910f853b3d5f24901cf3977b703eb313a13950b01cc39fbf3831b9",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_row_store_decode.sv": "e450c13fee2e85d1c5099f225875af1914075ba7154894c5b50659e46505df2d",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_fetch_program.sv": "b6492ec5c60a92098ce5448e41da1ef86b77295fc67bb4c05ebd5e17c7715031",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_client.sv": "19e48f32d77050f56dda5373ecdda52cc0a1578e00eb9fdd3639f999bd6d5014",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_shared_stack.sv": "502a7b161f5f1c4af2e3d9d7b9f23f28838089e988ff99f965731efd8de98e0f",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_native_client_mux.sv": "506cab52f8a800393910c54886ff0f20a8cd11d3593d8a5b6ec6e2b07c105101",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_rank_fetch.sv": "729fc49b168c41ffceb7a6de76aaa9475354f2cb13dc7f4666bcc8da59479b60"
+  },
+  "actual_rank_source_sha256": "bed7c2bd8163c544d2017453562a95dbd0ef267624abe9b74449c04b6150c028",
+  "scope": "Actual independent rank programme/hash/controller/staging hardware. Early fence rejects absent real completion; late production-default18944 fence retains actual local completion and next actual issuer EPOCH clears it. External model only actual DRAM command/data. No universal service timing, wholekernel/96-rank or physical qualification."
+}

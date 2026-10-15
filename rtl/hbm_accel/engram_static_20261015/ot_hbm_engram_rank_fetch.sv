@@ -37,10 +37,12 @@ module ot_hbm_engram_rank_fetch #(
 );
     localparam integer LAYER=(HOME_RANK>=8)?1:0;
     localparam[7:0]LOCAL_PARTICIPANT=8'b1<<(HOME_RANK%8);
-    wire home_fault;reg local_fault;
+    wire home_fault;reg local_fault,local_complete;
     // This rank owns ONE participant. The other seven barrier positions are
     // statically inactive neutral AND terms; they do not represent remote status.
-    wire[7:0]local_done_vector=(~LOCAL_PARTICIPANT)|({8{done}}&LOCAL_PARTICIPANT);
+    // Retain actual local completion until EPOCH so a later programme fence does
+    // not depend on coinciding with a one-edge local done pulse.
+    wire[7:0]local_done_vector=(~LOCAL_PARTICIPANT)|({8{done|local_complete}}&LOCAL_PARTICIPANT);
     wire[7:0]local_fault_vector={8{home_fault|hash_fault|local_fault}}&LOCAL_PARTICIPANT;
     ot_hbm_engram_fetch_program #(.FETCH_EDGES(FETCH_EDGES)) programme(
         .clk_control(core_clk),.clk_mem(core_clk),.rst_n(rst_n),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
@@ -55,8 +57,12 @@ module ot_hbm_engram_rank_fetch #(
         .request_valid(request_valid),.request_rank(request_rank),.request_address(request_address),.request_local_row(request_local_row),
         .request_staging_slot(request_staging_slot),.gather_slot_id(gather_slot_id),.request_list_index(request_list_index),.done(hash_done),.fault(hash_fault));
     always @(posedge core_clk or negedge rst_n)begin
-        if(!rst_n)local_fault<=0;
-        else if((context_v&&programme_busy) || (programme_busy&&(HOME_RANK<0 || HOME_RANK>15)))local_fault<=1;
+        if(!rst_n)begin local_fault<=0;local_complete<=0;end
+        else begin
+            if(programme_epoch)local_complete<=0;
+            else if(done)local_complete<=1;
+            if((context_v&&programme_busy) || (programme_busy&&(HOME_RANK<0 || HOME_RANK>15)))local_fault<=1;
+        end
     end
     wire descriptor_v=programme_busy&&request_valid[LAYER];
     wire[6:0]descriptor_rank=request_rank[LAYER*7+:7];
