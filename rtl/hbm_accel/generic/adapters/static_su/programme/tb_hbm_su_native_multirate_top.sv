@@ -24,12 +24,12 @@ module tb_hbm_su_native_multirate_top;
  wire serial_busy,serial_valid,serial_done,serial_fault,stream_busy,stream_valid,stream_done,stream_fault;
  wire [15:0] serial_edge,stream_edge;
  wire [9687:0] serial_command;wire [63:0] stream_command;
- ot_hbm_su_programme #(.LINE_BITS(9688),.EDGES(NE),.DICT_BANKS(SERIAL_DICT_BANKS),.MACROS(SERIAL_MACROS)) serial_programme(
+ ot_hbm_su_programme #(.LINE_BITS(9688),.COLS(SERIAL_COLS),.EDGES(NE),.DICT_BANKS(SERIAL_DICT_BANKS),.MACROS(SERIAL_MACROS)) serial_programme(
   .clk(serial_clk),.clk_macro({SERIAL_MACROS{serial_clk}}),.rst_n(rst_n),
   .cfg_we(serial_cfg_we),.cfg_bank(serial_cfg_bank),.cfg_row(serial_cfg_row),.cfg_data(serial_cfg_data),
   .start(serial_start),.length(16'(NE)),.busy(serial_busy),.valid(serial_valid),.done(serial_done),
   .fault(serial_fault),.edge_index(serial_edge),.command(serial_command));
- ot_hbm_su_programme #(.LINE_BITS(64),.EDGES(PE),.DICT_BANKS(STREAM_DICT_BANKS),.MACROS(STREAM_MACROS)) stream_programme(
+ ot_hbm_su_programme #(.LINE_BITS(64),.COLS(STREAM_COLS),.INDEX_PACK(STREAM_INDEX_PACK),.EDGES(PE),.DICT_BANKS(STREAM_DICT_BANKS),.MACROS(STREAM_MACROS)) stream_programme(
   .clk(stream_clk),.clk_macro({STREAM_MACROS{stream_clk}}),.rst_n(rst_n),
   .cfg_we(stream_cfg_we),.cfg_bank(stream_cfg_bank),.cfg_row(stream_cfg_row),.cfg_data(stream_cfg_data),
   .start(stream_start),.length(16'(PE)),.busy(stream_busy),.valid(stream_valid),.done(stream_done),
