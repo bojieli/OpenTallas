@@ -1702,7 +1702,12 @@ def _wrap(v, m, G, peers):
                 VIEWS[MASTER] = VIEW
                 install_leaf_master(M, model, Master, view_pins(MASTER))
                 band = M.get('qfd_sp_band_lanes')
-                if band is not None and 'pw' in band.ports:
+                if band is not None and 'pw_l0' in band.ports:
+                    # Source-exact ABI includes quarter outputs AND legacy
+                    # outputs. Partition only connected real quarter bits.
+                    rects=v.pin_rects(band,1,{p:sp[1] for p,sp in band.ports.items()})
+                    partition_master(band,join_plan['qfd_sp_band_lanes'],rects)
+                elif band is not None and 'pw' in band.ports:
                     # Four true registered quarter-valid outputs avoid an
                     # unrelayed long fanout from the legacy single valid pin.
                     pwsp=band.ports.pop('pw');band.order[:]=[p for p in band.order if p!='pw']
