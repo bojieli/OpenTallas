@@ -15327,6 +15327,10 @@
   "dsfd_svc_c_native_ingress": {
    "source": "physical/s81_die_pins/v20_svc_native/ingress_layout.json",
    "qualification": "OPEN native full parent, slots reserved for actual masters"
+  },
+  "sp_vm_static_v3_banks": {
+   "source": "physical/s81_die_pins/v20_vm_static/bank_slots.json",
+   "qualification": "128actual1R1Wbankslotsassigned; wholeparenttransport remainsOPEN"
   }
  },
  "layer_cap_grants": {
