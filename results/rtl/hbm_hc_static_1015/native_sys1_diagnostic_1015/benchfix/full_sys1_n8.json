@@ -1,0 +1,70 @@
+{
+  "positions": 8,
+  "rows": 24,
+  "configuration_words": 1950,
+  "programme_pages": 2,
+  "SYS_LAT": 86,
+  "additional_pipeline_cycles": 53,
+  "row": {
+    "start_base": 0,
+    "start_limit": 1453,
+    "start_loops": 24,
+    "ROW_LOOP": 1,
+    "body_cycles": 1453,
+    "events_relative_consumer0": {
+      "launch": 0,
+      "raw_ss": [
+        213,
+        373,
+        533,
+        693,
+        853,
+        1013,
+        1173,
+        1333
+      ],
+      "raw_row": [
+        317,
+        477,
+        637,
+        797,
+        957,
+        1117,
+        1277,
+        1437
+      ],
+      "results": [
+        322,
+        482,
+        642,
+        802,
+        962,
+        1122,
+        1282,
+        1442
+      ],
+      "next_row_earliest": 1453
+    }
+  },
+  "tail": {
+    "start_base": 1453,
+    "start_limit": 1950,
+    "start_loops": 8,
+    "TAIL_LOOP": 1,
+    "body_cycles": 497,
+    "events_relative_consumer0": {
+      "launch": 0,
+      "exponentials_ready": 197,
+      "sink_launch": 203,
+      "sink_capture": 492,
+      "result": 493
+    }
+  },
+  "first_row_consumer_cycle": 7,
+  "first_tail_consumer_cycle": 34895,
+  "sink_divisor": 7,
+  "sink_phase": 0,
+  "reconfigure_between_components": false,
+  "canonical_G25_P1_qualified": false,
+  "scope": "Prepared SYS1 MTP component image; requires actual engine and native joined verdict, separate physical qualification"
+}

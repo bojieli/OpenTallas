@@ -1,0 +1,152 @@
+{
+  "compile_cache_copied_from": "/srv/opentallas-scratch/claude/codex-hc-native-sys1-resident-1015/run_hc_command_native_sys1_mtp/obj",
+  "engine_receipt_sha256": "9e850c018b80460f2313084403979766a9ea317761413cb6f7fe631b1a0214cf",
+  "engine_sources_match": true,
+  "status": "PASS_ACTUAL_SYS1_NATIVE_VM_COMPONENT_ONLY",
+  "SYS_LAT": 86,
+  "additional_pipeline_cycles": 53,
+  "residual_base_scales": "synthetic fixture; actual checkpoint FN only",
+  "canonical_G25_P1_qualified": false,
+  "full_native_chip_qualified": false,
+  "scope": "actual paged programme SRAM to SYS1 shared3830pin bankmemory/shell/32LG8MAC/core projection/tail; actual4SID32bankVM96SRAM and12LGtaps joined plus realresultVMwrites/readback; actual20GiB checkpoint PHY CDC staging128SRAM joined; only offchip PHY data model; no wholechip/physical qualification",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_owned_stack.sv": "53774057356d0d09c4b6687bcd2760dec8a8a23c6ac02caf522fd72a587869c1",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_lease.sv": "c16adc653eff8bce34ace00d6b4753b6937e758604b8d809183e14e85ea8be4c",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv": "3bb69a5cd9d058bfd28df57acee4fb24e2a3d4992b4a468dbb638c4e5c8ade8f",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "6cda2575be0adfb73e8ff45893b86689ad7f5a823a4b66f04823d4446841b1cb",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_native_sys1_mtp_static.sv": "aab03294faa4be03e08603ca47251949d4612685d2da30797b108a6da087bea0",
+    "rtl/hbm_accel/generic/peers/hc_prefetch_static/ot_hgi_hc_prefetch_resident_static.sv": "2f48b7acfbc645bb919e3e33b2b90cdb080e24c821b966088e3806d548b603a3",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_region_cdc.sv": "2dda0c920f3c295bb27507ef08da28e8ab418864e86cef56a68bbf8b7b9a6f96",
+    "rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/lib/ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv": "7baf37a97f136e3e847430baea1cdd50667c495cdf3fcd032afa2a89c12c574b",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_vm_gather_adapter_static.sv": "ce2420b8573850d223f5fb2c130fd4a8941f074dbc57e938f0e23622ea08660b",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv": "345e8db865751a19491a08145ea081883cd104669ab830e1dacbf0e062ccffa7",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv": "7c9d159338edceb7d2c3686600d3a7fb44f684d57de23799502b4232871d5b75",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv": "cc7c0d00ead994fb66360a00da7acd4b70e8a2f9f6e2a3b8013a9672d1ab29de",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_programmed_sys1_mtp_static.sv": "2a778b8492687b9efd2fcc835e1ae196969049264bc54ce11e811c3ff430ff9c",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_programme_mtp_static.sv": "c1989cccab9eca6492179acedde45f4d95cd579eb7c4b4d1e51e7c16b17e6b1c",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv": "cfc58626830f0e8fe6c66488b7768e48a6e38cc124983d0483ec1221aca6c6ee",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_engine_sys1_mtp_static.sv": "8ad7e6ac5d40041546844d7fb6a6fd0532b2cb05e535beffe3bc92737ce42a87",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv": "2c46f5896bf69561d0b3c4d3e08dd8c7a67bdaf03297559a9de17be7e5984c69",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_projection_sys1_static.sv": "925d48f60ea938e96065845f2d13a94268550af1354a1f9b2e7e2c452242585e",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_memory_shared_static.sv": "c636d1c4db55c11f916bb86733047b9fba2f006b6bee25555ac59f3eb788a031",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_shell_shared_static.sv": "c4f5fb132e176e1991182a5c768e67f9ba1df184b05c78afde919b2af8132e7a",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv": "31623c863d461c38f417c8c15ecd1bbec22b2d3a947aedd1daa4e5c7f5e6676b",
+    "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv": "af5e2377cfbf5bd0ac524f58bb6597cb853eed7f41e097e419354eb931728762",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fastfp_lat.sv": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "a719521c87012ec5117e6b92f2089ade75b1a6faf727193543b758cf3ee8989f",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+    "rtl/test/tb_hgi_hc_checkpoint_native_sys1_mtp_static.sv": "7090325e8019fbddb2d12a77e3bac32b99f4628974fe0fa0edf4cd2c8085f8f5",
+    "rtl/test/hgi_hc_checkpoint_native_sys1_mtp_static_harness.cpp": "10928afbf3871792493f8febe64f2aaa89293cf99c73e7a49083d4658bf038a3",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+    "tools/rtl_hgi_hc_checkpoint_native_sys1_mtp_static_gate.py": "07d14aa385e2f6138e3c0dba38bd93ba75f04073b79cd60a8b5f208b7cab8f36",
+    "tools/rtl_hdc_v41x_hcp_campaign.py": "99606af2292c827d5ebe935cdd4f2ddc1e06bf5744b95d555985af6853585b41",
+    "tools/lower_hbm_hc_mtp_static_calendar.py": "b72e686a90cc2fa34f246957c6eff870d0fe742a4ca94bb6e2b86e649e5fc156",
+    "tools/lower_hbm_hc_tail_loop_calendar.py": "1e47f29af6ab269495b3520628b2ed0bb8f3ebfdd3432486bb1eeefa29cbb969",
+    "tools/lower_hbm_hc_sys1_mtp_static_calendar.py": "98b6cc93b9ee89700a59d9e5de15be2c12979b8e96e9e364a1710107a1f71848",
+    "tools/lower_hbm_hc_native_sys1_component_calendar.py": "b3a2a71e41e066feaf5be53d5ba2c823446a43a79390c441b1547b6d4aa9a8b0"
+  },
+  "fixture_sha256": {
+    "full_sys1_n6.mem": "ef0d283cd716baa87e6d41350b6fa42cfd000055609beef10b353eeac2288274",
+    "full_sys1_n8.mem": "c1939aee8a1a6985b5f6f21322866ef153da5bc58a713195a3da67afd84355d6",
+    "hc_static_w.mem": "796251d7bf22718183a8cbbea157145b9e17044fdeac9b098e740e8a64977ba8",
+    "hc_static_exp.mem": "a92f237100de21b491e1a0e477acfbd8645ad438cb5a727c40720fb12d1dfd85",
+    "hc_static_x.mem": "5eae9cb9cbcf2bb426a7bc22b109815e3e06bcfcf61556ccf9ab6a9fbf6329f0",
+    "engine_scale.mem": "2004b0ccf47d710b55058a36be10e495599db45819f5238841fb9e2d4bea62cc",
+    "engine_tail_exp.mem": "351f7fba0057ec2bc127bdabb4a1c04ee7aef58adee4164f5de38507de85093b",
+    "engine_base.mem": "366a8a5262ae8bb9a836722f9d2fff72bb1c7dac64fb99a5bc8782fa2f12e5fe",
+    "all24rows.hex": "b5ef59ab107235b56394c372b73bb8648b68cf4a8050d3469778049cf915d5e8"
+  },
+  "K": 20480,
+  "positions": [
+    6,
+    8
+  ],
+  "projection_rows": 24,
+  "tail_words_per_position": 24,
+  "sink_clock_divisor": 7,
+  "checkpoint_fn_sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+  "actual_SRAMs": 434,
+  "command_native": 1,
+  "build_threads": 8,
+  "tail_configuration_words": 497,
+  "tail_programme_reconfigure_between_positions": false,
+  "tail_body_period": 497,
+  "configuration_words_n6": 1630,
+  "configuration_words_n8": 1950,
+  "host_reconfigure_between_projection_and_tail": false,
+  "PHY_model": "strict command-only offchipfixture canonical23edge; corrected owned-stacka7b86347d actualcontroller",
+  "nominal_row_result_ages": [
+    342,
+    502,
+    662,
+    822,
+    982,
+    1142,
+    1302,
+    1462
+  ],
+  "nominal_row_periods": {
+    "6": 1153,
+    "8": 1473
+  },
+  "early_row_result_ages": [
+    322,
+    482,
+    642,
+    802,
+    962,
+    1122,
+    1282,
+    1442
+  ],
+  "early_row_periods": {
+    "6": 1133,
+    "8": 1453
+  },
+  "structural_warning_analysis": {
+    "accepted_indexed_prefix_headers": [
+      "%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-hc-native-sys1-resident-benchfix-1015/rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'tb_hgi_hc_checkpoint_native_sys1_mtp_static.dut.arithmetic.engine.projection.bank[0].mac[0].lanes.g_lane[0].u_mul.u_pw.g'",
+      "%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-hc-native-sys1-resident-benchfix-1015/rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'tb_hgi_hc_checkpoint_native_sys1_mtp_static.dut.arithmetic.engine.projection.bank[0].mac[0].lanes.g_lane[0].u_mul.u_pw.p'"
+    ],
+    "source_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "reason": "g/p at level l+1 depend only on level l; no directed bit-level cycle. Exact source/line/signal match only; raw warnings preserved.",
+    "all_other_UNOPTFLAT": 0,
+    "LATCH": 0,
+    "MULTIDRIVEN": 0
+  },
+  "exact6": {
+    "exit_code": 0,
+    "log_sha256": "2a39bd41512902d9bb27a22352a18db6278df23819c6abca54069b8ad6efd107"
+  },
+  "exact8": {
+    "exit_code": 0,
+    "log_sha256": "6130d23e4f554296f5d88f567b89b393060d7d63dc32b59fa51206cc23963024"
+  },
+  "mutant6": {
+    "exit_code": -6,
+    "log_sha256": "5772305c35ac0716d7f1dd8ca91e39bd570b8a26e709493d14dcdc5f4923745b"
+  },
+  "mutant8": {
+    "exit_code": -6,
+    "log_sha256": "b34d96db3c1154d74aa702d27019fadc4119b3777b8300b5ea0e4ab9c2832bef"
+  },
+  "source_hashes_match": true
+}

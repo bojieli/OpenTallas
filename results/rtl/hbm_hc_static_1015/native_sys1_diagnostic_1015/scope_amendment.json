@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.hc.memory-provider-scope-amendment.v1",
+  "status": "DIAGNOSTIC_IDEAL128_PROVIDER_ONLY_NOT_ACTUAL_GENERATED128_SRAM_QUALIFICATION",
+  "original_receipts_preserved": true,
+  "raw_diagnostic_receipt_sha256": "bdf5b4b604858ec774713421890a4fca1edd741def95decf5af20d447f898302",
+  "compiled_inputs_verified": 52,
+  "ideal_provider": {
+    "path": "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+    "sha256": "af5e2377cfbf5bd0ac524f58bb6597cb853eed7f41e097e419354eb931728762",
+    "limitation": "behavioral128word array ignores w_mask_in, differs from generated physical128 primitive; macro names and instance counts alone do not qualify actual mapped SRAM"
+  },
+  "affected_historical_scope": [
+    "parent178/306 native HC arithmetic/VM compositions when compiled with af5 idealprovider",
+    "parent306 receipt38e3091a7 and parent434 bc677 native-controller composition",
+    "parent44/92 SYS1 arithmetic receipts using af5 provider",
+    "own44root fullnative SYS1 diagnostic: initial57123 bench-latch rejection; successor3125 numericalPASS"
+  ],
+  "successor_diagnostic": {
+    "session": 3125,
+    "scope": "oth-ubuntu-2138214-1792064486",
+    "exit": 0,
+    "6pos": {
+      "projection": 144,
+      "tails": 6,
+      "native_VM_readback_words": 144,
+      "cycles": 38921,
+      "cold_cycles": 2487
+    },
+    "8pos": {
+      "projection": 192,
+      "tails": 8,
+      "native_VM_readback_words": 192,
+      "cycles": 48238,
+      "cold_cycles": 1531
+    },
+    "both_actual_DRAM_payload_mutants": "rejectedrow0pos0age322",
+    "structural_analysis": {
+      "accepted_indexed_prefix_headers": [
+        "%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-hc-native-sys1-resident-benchfix-1015/rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'tb_hgi_hc_checkpoint_native_sys1_mtp_static.dut.arithmetic.engine.projection.bank[0].mac[0].lanes.g_lane[0].u_mul.u_pw.g'",
+        "%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-hc-native-sys1-resident-benchfix-1015/rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'tb_hgi_hc_checkpoint_native_sys1_mtp_static.dut.arithmetic.engine.projection.bank[0].mac[0].lanes.g_lane[0].u_mul.u_pw.p'"
+      ],
+      "source_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "reason": "g/p at level l+1 depend only on level l; no directed bit-level cycle. Exact source/line/signal match only; raw warnings preserved.",
+      "all_other_UNOPTFLAT": 0,
+      "LATCH": 0,
+      "MULTIDRIVEN": 0
+    },
+    "actual_generated128_native_composition_qualified": false,
+    "physical_qualified": false
+  },
+  "unaffected_provider_scope": {
+    "own_native320_component_receipts": [
+      "21a5201c6",
+      "d81e5236e"
+    ],
+    "provider_sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "provider_ref": "4b9a13572",
+    "provider_path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "accepted_source_equivalence": "exactonecomment normalization to473756fb3 dba769...; independent per-bit mask test passed",
+    "prior_functional_performance_limits_unchanged": true,
+    "full2064row_checkpoint_export": "independent of SRAM simulation provider; unchanged"
+  },
+  "accepted_provider_semantics_receipt": "../physical128_provider_mask/receipt.json",
+  "prepared92_successor": "2428b6a87 uses accepted dba physicalpath and requires matching actual92 engine source receipt; no launch",
+  "whole_native_chip_qualified": false
+}

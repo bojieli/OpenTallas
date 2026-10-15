@@ -1,0 +1,11 @@
+{
+  "accepted_indexed_prefix_headers": [
+    "%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-hc-native-sys1-resident-benchfix-1015/rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'tb_hgi_hc_checkpoint_native_sys1_mtp_static.dut.arithmetic.engine.projection.bank[0].mac[0].lanes.g_lane[0].u_mul.u_pw.g'",
+    "%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-hc-native-sys1-resident-benchfix-1015/rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'tb_hgi_hc_checkpoint_native_sys1_mtp_static.dut.arithmetic.engine.projection.bank[0].mac[0].lanes.g_lane[0].u_mul.u_pw.p'"
+  ],
+  "source_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "reason": "g/p at level l+1 depend only on level l; no directed bit-level cycle. Exact source/line/signal match only; raw warnings preserved.",
+  "all_other_UNOPTFLAT": 0,
+  "LATCH": 0,
+  "MULTIDRIVEN": 0
+}

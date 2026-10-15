@@ -1,0 +1,44 @@
+{
+  "accepted_ref": "473756fb3",
+  "accepted_path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "accepted_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+  "compiled_component_sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "normalization": "one generator-version comment string v1.0+aligned-v2 replaced by v1.0; normalized entire file equals accepted bytes",
+  "body_equivalent": true,
+  "ideal_provider_original_sha256": "af5e2377cfbf5bd0ac524f58bb6597cb853eed7f41e097e419354eb931728762",
+  "ideal_mutant_change": "module name only; body unchanged",
+  "schema": "opentallas.hc.physical128-provider.semantic-source-audit.v1",
+  "status": "PASS_SOURCE_NORMALIZATION_AND_INDEPENDENT_MASK_SEMANTICS",
+  "component_exact_ref": "4b9a13572",
+  "component_exact_path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "session": 51035,
+  "host": "ot-epyc1tb",
+  "scope": "oth-ubuntu-1502685-1792064957",
+  "terminal_exit": 0,
+  "positive": {
+    "addresses": 128,
+    "read_comparisons": 513,
+    "per_bit_masks": true,
+    "zero_mask_no_write": true,
+    "write_enable": true,
+    "read_before_write": true,
+    "read_enable_hold": true
+  },
+  "negative": {
+    "provider": "ideal128sim af5; module name only changed",
+    "expected": "MASK_SEMANTICS_MISMATCH phase1 address0 ideal1",
+    "exit": 134
+  },
+  "all_remote_source_hashes_match": true,
+  "source_and_log_sha256": {
+    "positive.log": "ca115f276d9090c2b3a3fe2dca764267da74e11ad103081aa2e729a37d73594c",
+    "normalization.json": "dd23e823e65d0dee69211675f391af0ff62ea306b542f6b17ac1b60776a79b25",
+    "build.log": "69cf73ffa37ebf8b9fe812039914d6a9e383cb5c838515d4ba9b8efeaeaf79ea",
+    "ideal_mutant.sv": "9ec9fe1f9356131f35dd721724dcfe1701a768fa31961a54e2c0d7e0ad059d12",
+    "ideal-mutant.log": "371815782ca4ea7eb2686713de0d032b1793da4bd55e9d589b57b24dd965c64b",
+    "physical128.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "tb_hgi_hc_physical128_provider_mask.sv": "32e8339c9750a19e5818d8e586c82aedb163637695c0b4d0a03308113cb1ca0a"
+  },
+  "physical_timing_qualified": false,
+  "full_native_chip_qualified": false
+}

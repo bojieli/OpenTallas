@@ -1,0 +1,4 @@
+HC_SYS1_COLD_READY cycle=6362 cold_cycles=2487 resident=ffffffff
+[0] %Fatal: tb_hgi_hc_checkpoint_native_sys1_mtp_static.sv:263: Assertion failed in TOP.tb_hgi_hc_checkpoint_native_sys1_mtp_static: programmed row data/time mismatch row0 pos0 age322
+%Error: /srv/opentallas-scratch/claude/codex-hc-native-sys1-resident-benchfix-1015/rtl/test/tb_hgi_hc_checkpoint_native_sys1_mtp_static.sv:263: Verilog $stop
+Aborting...
