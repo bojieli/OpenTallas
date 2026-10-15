@@ -1,229 +1,231 @@
 {
- "name": "s81_pq_ctl_state_calcap",
- "top": "ot_s81_pq_ctl_state_phw10",
- "kind": "tile",
- "sources": [
-  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv",
-  "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
-  "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv",
-  "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv",
-  "rtl/v41rom/ot_v41_kreg.sv",
-  "rtl/common/ot_prefix.sv",
-  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_state_phw10.sv"
- ],
- "params": {},
- "clock_port": "clk",
- "reset_ports": [
-  "rst_n"
- ],
- "outline": {
-  "w": 432,
-  "h": 86.4
- },
- "pins": {
-  "N": [
-   "rom_pq0",
-   "rom_pq1",
-   "rom_sq"
+  "name": "s81_pq_ctl_state_calcap",
+  "top": "ot_s81_pq_ctl_state_phw10",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv",
+    "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
+    "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv",
+    "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv",
+    "rtl/v41rom/ot_v41_kreg.sv",
+    "rtl/common/ot_prefix.sv",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_state_phw10.sv"
   ],
-  "S": [
-   "clk",
-   "rst_n",
-   "q_consume",
-   "b_consume",
-   "aq_vin",
-   "aqf",
-   "aqi_o",
-   "ba_v_o",
-   "ba_wv_o",
-   "ba_blk_o",
-   "hw_o",
-   "h_hi_o",
-   "h_b0_o",
-   "h_b1_o",
-   "mdr_o",
-   "q2f_i",
-   "ga_i",
-   "bc_hr_o",
-   "x_re",
-   "x_addr",
-   "x_rv",
-   "f_fault"
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
   ],
-  "E": [
-   "calendar_v",
-   "calendar_action",
-   "go",
-   "i_ph",
-   "i_np",
-   "i_xbase",
-   "i_xps",
-   "i_obase",
-   "i_ops",
-   "i_fmt",
-   "ready",
-   "idle",
-   "fault",
-   "phase_cycles",
-   "ev_go",
-   "ev_end",
-   "stream_end_v",
-   "stream_end_tag",
-   "ev_tag"
-  ],
-  "W": []
- },
- "layer_cap": "M5",
- "recipe": 2,
- "route": {
-  "pd": 0.5,
-  "threads": 16,
-  "peak_ram_gb": 16,
-  "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
- },
- "structural_change": "c2: output hold pads dropped (native launch 236 -> pin flop direct). | 10-15 S-ELEM-B CALCAP: the INCAP view CLOSED (TT +152.17/FF +14.39, DRC 0) but FAILED the native pin audit: calendar_action/calendar_v/go capture 343-386 ps > 190 (23+1+1 pins decode straight into the state machine), q/b_consume launch 236/264 and idle 253 > 220 (AND/OR after the flops). Fix: every command/calendar input (calendar_v/action, go, i_*) is captured in a pin register in the leaf wrapper -> the whole PQ timeline moves +1 edge uniformly (compiler duration 34 -> 35, endpoint completion 35 -> 36; responses stay relative to this leaf); q/b_consume launch from own flops loaded from r3 on the he/hv edge (0 edges); idle is a registered status (+1, never gates events). Cost: +1 edge per PQ command (~0.1% of a 936-cycle phase). | 10-15 ctl_state CTS (edd4f7e93) FAIL: in->reg 189 paths worst -237.3 ps (q2f_i/aqf/x_rv/f_fault -> 13-level fault OR -> registered fault output; ga_i -> popcount adders), in->out aq_vin -84.5 ps, one reset relay driving 681 flops (2352 loads), 432x259.2 outline at 1.8% util giving TT insertion 309.7 / spread 93.8 ps. Structure: OT_PQ_CTL_INCAP pin-captures every fault-cause input and ga_i (fault diagnosed +1 edge, never gates events; count chain +1 edge: CTL count +3 -> +4, root->retire 8 -> 9 vs compiler minimum 11); OT_PQ_AQ_PIN_LAUNCH registers aq_vin (AQ leaves already build with it, the previous ctl kit lacked it: an AQ validity off-by-one in the produced composition); reset relay 4 regions <= 256 flops each; outline height 259.2 -> 86.4 within the granted 432 x 259.2 slot (pin-dominated S face unchanged), so the clock tree spans a third of the area. Area cost: +210 capture flops (~60 um2); cycle cost: +1 edge count chain and fault only.",
- "slot_change_request": {
-  "name": "s81-expanded-native-PQ-row-1015",
-  "owner": "/root/s_die/mix4_sizing",
-  "outline": [
-   432,
-   86.4
-  ],
-  "pin_faces": {
-   "N": [
-    "rom_pq0",
-    "rom_pq1",
-    "rom_sq"
-   ],
-   "S": [
-    "clk",
-    "rst_n",
-    "q_consume",
-    "b_consume",
-    "aq_vin",
-    "aqf",
-    "aqi_o",
-    "ba_v_o",
-    "ba_wv_o",
-    "ba_blk_o",
-    "hw_o",
-    "h_hi_o",
-    "h_b0_o",
-    "h_b1_o",
-    "mdr_o",
-    "q2f_i",
-    "ga_i",
-    "bc_hr_o",
-    "x_re",
-    "x_addr",
-    "x_rv",
-    "f_fault"
-   ],
-   "E": [
-    "calendar_v",
-    "calendar_action",
-    "go",
-    "i_ph",
-    "i_np",
-    "i_xbase",
-    "i_xps",
-    "i_obase",
-    "i_ops",
-    "i_fmt",
-    "ready",
-    "idle",
-    "fault",
-    "phase_cycles",
-    "ev_go",
-    "ev_end",
-    "stream_end_v",
-    "stream_end_tag",
-    "ev_tag"
-   ],
-   "W": []
+  "outline": {
+    "w": 432,
+    "h": 86.4
   },
-  "basis": "Same pin faces; height reduced inside the granted 432 x 259.2 slot (die may place the master at the slot's south edge facing the S bus); full parent/hub placement remains unadopted."
- },
- "job": {
-  "peak_ram_gb": 16,
-  "views_to": "physical/ref_tile/s81_pq_ctl_state_calcap/views",
-  "record_to": "results/rtl/ref_tile/s81_pq_ctl_state_calcap",
-  "extra_paths": [
-   "rtl/dsrom_sys/s81_static_control",
-   "rtl/dsrom_sys/s81_die_bind",
-   "rtl/dsrom_sys/s81_ph/pq",
-   "rtl/test/dsrom_sys",
-   "physical/s81_pq_hier/pinned",
-   "tools/s81",
-   "tools/s81_static_control",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8"
+  "pins": {
+    "N": [
+      "rom_pq0",
+      "rom_pq1",
+      "rom_sq"
+    ],
+    "S": [
+      "clk",
+      "rst_n",
+      "q_consume",
+      "b_consume",
+      "aq_vin",
+      "aqf",
+      "aqi_o",
+      "ba_v_o",
+      "ba_wv_o",
+      "ba_blk_o",
+      "hw_o",
+      "h_hi_o",
+      "h_b0_o",
+      "h_b1_o",
+      "mdr_o",
+      "q2f_i",
+      "ga_i",
+      "bc_hr_o",
+      "x_re",
+      "x_addr",
+      "x_rv",
+      "f_fault"
+    ],
+    "E": [
+      "calendar_v",
+      "calendar_action",
+      "go",
+      "i_ph",
+      "i_np",
+      "i_xbase",
+      "i_xps",
+      "i_obase",
+      "i_ops",
+      "i_fmt",
+      "ready",
+      "idle",
+      "fault",
+      "phase_cycles",
+      "ev_go",
+      "ev_end",
+      "stream_end_v",
+      "stream_end_tag",
+      "ev_tag"
+    ],
+    "W": []
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "structural_change": "c2: output hold pads dropped (native launch 236 -> pin flop direct). | 10-15 S-ELEM-B CALCAP: the INCAP view CLOSED (TT +152.17/FF +14.39, DRC 0) but FAILED the native pin audit: calendar_action/calendar_v/go capture 343-386 ps > 190 (23+1+1 pins decode straight into the state machine), q/b_consume launch 236/264 and idle 253 > 220 (AND/OR after the flops). Fix: every command/calendar input (calendar_v/action, go, i_*) is captured in a pin register in the leaf wrapper -> the whole PQ timeline moves +1 edge uniformly (compiler duration 34 -> 35, endpoint completion 35 -> 36; responses stay relative to this leaf); q/b_consume launch from own flops loaded from r3 on the he/hv edge (0 edges); idle is a registered status (+1, never gates events). Cost: +1 edge per PQ command (~0.1% of a 936-cycle phase). | 10-15 ctl_state CTS (edd4f7e93) FAIL: in->reg 189 paths worst -237.3 ps (q2f_i/aqf/x_rv/f_fault -> 13-level fault OR -> registered fault output; ga_i -> popcount adders), in->out aq_vin -84.5 ps, one reset relay driving 681 flops (2352 loads), 432x259.2 outline at 1.8% util giving TT insertion 309.7 / spread 93.8 ps. Structure: OT_PQ_CTL_INCAP pin-captures every fault-cause input and ga_i (fault diagnosed +1 edge, never gates events; count chain +1 edge: CTL count +3 -> +4, root->retire 8 -> 9 vs compiler minimum 11); OT_PQ_AQ_PIN_LAUNCH registers aq_vin (AQ leaves already build with it, the previous ctl kit lacked it: an AQ validity off-by-one in the produced composition); reset relay 4 regions <= 256 flops each; outline height 259.2 -> 86.4 within the granted 432 x 259.2 slot (pin-dominated S face unchanged), so the clock tree spans a third of the area. Area cost: +210 capture flops (~60 um2); cycle cost: +1 edge count chain and fault only. | c2 exact route failed GRT-0116 after26244routednets/196016um wire; apply already-proven PQ even-per-face pin spreading, retaining432x86.4 and allN/S/Efaces. Remove localized autoIO bus bands; all data/clock/reset pin names and source stages unchanged. Top-down bounded candidate granted by S-DIE0757; incident peer reach remains unqualified.",
+  "slot_change_request": {
+    "name": "s81-expanded-native-PQ-row-1015",
+    "owner": "/root/s_die/mix4_sizing",
+    "outline": [
+      432,
+      86.4
+    ],
+    "pin_faces": {
+      "N": [
+        "rom_pq0",
+        "rom_pq1",
+        "rom_sq"
+      ],
+      "S": [
+        "clk",
+        "rst_n",
+        "q_consume",
+        "b_consume",
+        "aq_vin",
+        "aqf",
+        "aqi_o",
+        "ba_v_o",
+        "ba_wv_o",
+        "ba_blk_o",
+        "hw_o",
+        "h_hi_o",
+        "h_b0_o",
+        "h_b1_o",
+        "mdr_o",
+        "q2f_i",
+        "ga_i",
+        "bc_hr_o",
+        "x_re",
+        "x_addr",
+        "x_rv",
+        "f_fault"
+      ],
+      "E": [
+        "calendar_v",
+        "calendar_action",
+        "go",
+        "i_ph",
+        "i_np",
+        "i_xbase",
+        "i_xps",
+        "i_obase",
+        "i_ops",
+        "i_fmt",
+        "ready",
+        "idle",
+        "fault",
+        "phase_cycles",
+        "ev_go",
+        "ev_end",
+        "stream_end_v",
+        "stream_end_tag",
+        "ev_tag"
+      ],
+      "W": []
+    },
+    "basis": "Same pin faces; height reduced inside the granted 432 x 259.2 slot (die may place the master at the slot's south edge facing the S bus); full parent/hub placement remains unadopted."
+  },
+  "job": {
+    "peak_ram_gb": 16,
+    "views_to": "physical/ref_tile/s81_pq_ctl_state_calcap/views",
+    "record_to": "results/rtl/ref_tile/s81_pq_ctl_state_calcap",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_static_control",
+      "rtl/dsrom_sys/s81_die_bind",
+      "rtl/dsrom_sys/s81_ph/pq",
+      "rtl/test/dsrom_sys",
+      "physical/s81_pq_hier/pinned",
+      "tools/s81",
+      "tools/s81_static_control",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8"
+    ],
+    "benches": [
+      {
+        "name": "static_ctl_calcap_exact",
+        "cmd": "PQ_CTL_DEFS='-DOT_PQ_CTL_INCAP -DOT_PQ_AQ_PIN_LAUNCH -DOT_PQ_CTL_CALCAP' bash tools/s81/pq_ctl_static_bench.sh {RUN}/static_ctl",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "STATIC_CTL_GATE PASS"
+      },
+      {
+        "name": "actual_produced_calcap",
+        "cmd": "python3 tools/s81/pq_canonical_pins_gate.py --produced --calcap --work {RUN}/produced_exact",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "PRODUCED PASS"
+      },
+      {
+        "name": "actual_produced_go_capture_mutant",
+        "cmd": "python3 tools/s81/pq_canonical_pins_gate.py --produced --calcap --mut CALGO --work {RUN}/produced_mutant && {RUN}/produced_mutant/obj/Vtb_s81_pq_produced_pins +OT_ROM_DIR={RUN}/produced_mutant",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "PRODUCED FAIL"
+      }
+    ],
+    "tag": "c3",
+    "owner": "Claude:s81-elemB-1015",
+    "branch": "codex/s81-field-native-1015"
+  },
+  "defines": [
+    "OT_PQ_ROM_PORTS",
+    "OT_PQ_CTL_INCAP",
+    "OT_PQ_AQ_PIN_LAUNCH",
+    "OT_PQ_CTL_CALCAP"
   ],
-  "benches": [
-   {
-    "name": "static_ctl_calcap_exact",
-    "cmd": "PQ_CTL_DEFS='-DOT_PQ_CTL_INCAP -DOT_PQ_AQ_PIN_LAUNCH -DOT_PQ_CTL_CALCAP' bash tools/s81/pq_ctl_static_bench.sh {RUN}/static_ctl",
-    "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 4,
-    "needs": [
-     "iverilog"
-    ],
-    "pass_regex": "STATIC_CTL_GATE PASS"
-   },
-   {
-    "name": "actual_produced_calcap",
-    "cmd": "python3 tools/s81/pq_canonical_pins_gate.py --produced --calcap --work {RUN}/produced_exact",
-    "expect": "pass",
-    "threads": 8,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "pass_regex": "PRODUCED PASS"
-   },
-   {
-    "name": "actual_produced_go_capture_mutant",
-    "cmd": "python3 tools/s81/pq_canonical_pins_gate.py --produced --calcap --mut CALGO --work {RUN}/produced_mutant && {RUN}/produced_mutant/obj/Vtb_s81_pq_produced_pins +OT_ROM_DIR={RUN}/produced_mutant",
-    "expect": "fail",
-    "threads": 8,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "fail_regex": "PRODUCED FAIL"
-   }
-  ],
-  "tag": "c2",
-  "owner": "Claude:s81-elemB-1015",
-  "branch": "codex/s81-field-native-1015"
- },
- "defines": [
-  "OT_PQ_ROM_PORTS",
-  "OT_PQ_CTL_INCAP",
-  "OT_PQ_AQ_PIN_LAUNCH",
-  "OT_PQ_CTL_CALCAP"
- ],
- "macros": [],
- "children": [],
- "inter": [],
- "io_flop_at_pins": {
-  "cols": 4,
-  "allow_none": true
- },
- "inhold": true,
- "outhold": false,
- "keep_pin_regs": true,
- "pin_reg_split": true,
- "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
- },
- "reroute_reason": {
-  "kind": "native_launch",
-  "source": "results/rtl/s81_pq_native_audit_1015/ctl_state_calcap_c1.json",
-  "cell": "ot_s81_pq_ctl_state_phw10",
-  "launch_ps": 235.7,
-  "why": "c1 CLOSED (TT +236.90/FF +0.92) but native launch mdr_o 221-236 > 220 (5 pins) through the recipe-2 output hold pads; capture rom_pq1[13] 198.8. c2 = same RTL/outline/pins without output hold pads (common PQ cause, see spread_face_pins.py note)"
- }
+  "macros": [],
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": false,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "reroute_reason": {
+    "kind": "pin_register",
+    "source": "results/rtl/s81_pq_native_audit_1015/ctl_state_calcap_c1.json",
+    "cell": "ot_s81_pq_ctl_state_phw10",
+    "launch_ps": 235.7,
+    "capture_ps": 198.8,
+    "fix": "Source unchanged CALCAP boundary flops, no output hold pads, and explicit even-per-face pin spreading across same432x86.4 to repair c2 GRT congestion at localized autoIO bus bands; exact bit/face/pitch proof and native route required."
+  },
+  "io_tcl": "physical/ref_tile_specs/s81pq_native/s81_pq_ctl_state_calcap_spread_pins.tcl"
 }
