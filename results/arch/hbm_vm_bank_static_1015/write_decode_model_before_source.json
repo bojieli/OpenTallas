@@ -1,0 +1,61 @@
+{
+  "prior_source_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "new_module": "ot_vms_bank_static_wdecode",
+  "scope": "Distinct successor; prior source and running RG6 gate inputs untouched",
+  "schedule": {
+    "input_capture": "n encoded slot, requests and decoded onehot captured together",
+    "S1": "n+1 balanced masked payload tree",
+    "macro_pins": "n+2",
+    "commit": "n+3",
+    "response": "n+6",
+    "new_edges": 0
+  },
+  "shapes": {
+    "RG7WG3": {
+      "write_owners": 8,
+      "added_onehot_DFF": 8,
+      "encoded_owner_DFF_retained": 3,
+      "balanced_payload_bits": 276,
+      "AND_leaves": 2208,
+      "binary_OR_nodes": 1932,
+      "balanced_tree_depth": 3,
+      "max_control_fanout_before_buffering": 278,
+      "expected_added_clock_sinks": 8,
+      "root_sinks_upper_baseline_plus_decode": 6420
+    },
+    "RG5WG1": {
+      "write_owners": 6,
+      "added_onehot_DFF": 6,
+      "encoded_owner_DFF_retained": 3,
+      "balanced_payload_bits": 276,
+      "AND_leaves": 1656,
+      "binary_OR_nodes": 1380,
+      "balanced_tree_depth": 3,
+      "max_control_fanout_before_buffering": 278,
+      "expected_added_clock_sinks": 6,
+      "root_sinks_upper_baseline_plus_decode": 6418
+    },
+    "RG6WG2": {
+      "write_owners": 7,
+      "added_onehot_DFF": 7,
+      "encoded_owner_DFF_retained": 3,
+      "balanced_payload_bits": 276,
+      "AND_leaves": 1932,
+      "binary_OR_nodes": 1656,
+      "balanced_tree_depth": 3,
+      "max_control_fanout_before_buffering": 278,
+      "expected_added_clock_sinks": 7,
+      "root_sinks_upper_baseline_plus_decode": 6419
+    }
+  },
+  "mux_rule": "Each leaf uses a registered compiler onehot, never request priority. Pad to next power of two and explicit pairwise OR levels. Empty selected source is idle; unselected active sources fault.",
+  "identity": "Retain encoded slot for response owner metadata; packet tags, masks, SECDED and all later stages unchanged.",
+  "physical": "Same body and ports; +6 or8 DFF and input decode; real netlist/STA must confirm benefit and native input budget. No area/timing pass inferred.",
+  "functional_gates": [
+    "actual all-owner component with masked writes and CE/UE",
+    "actual eight-bank full-group readback",
+    "write-sector permutation mutant must fail actual memory readback",
+    "old and new response/commit cycle equivalence where payload valid"
+  ],
+  "clock_plan": "No clock implementation chosen yet. Inspect actual leaf BUF Liberty and final ODB branch; prove local buffering and phase effects in source-pinned STA diagnostic before one fresh structural gate. No SDC change or extra clock ports approved."
+}

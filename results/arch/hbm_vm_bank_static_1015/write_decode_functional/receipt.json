@@ -1,0 +1,80 @@
+{
+  "source_profile": "ot_vms_bank_static_wdecode:623a425557d7bd2106c51c638461e75e5bcdfaec45bf5cebd630df85f09a2679",
+  "prior_bank_sha256_unchanged": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode.sv": "623a425557d7bd2106c51c638461e75e5bcdfaec45bf5cebd630df85f09a2679",
+    "rtl/hbm_accel/generic/vm/static/wdecode/run_wdecode.sh": "b31f8f79a2ac6132305aae99006cb2321d4da2b1667b8d5978471d86be4eeb0e",
+    "rtl/hbm_accel/generic/vm/static/wdecode/run_wdecode_allowners.sh": "54c2e31f004f337d4dc316a25c4e5f672dc41cdc197555e381e23e4771c76827",
+    "rtl/hbm_accel/generic/vm/static/wdecode/tb_bank_wdecode.sv": "ab402731d88e776e8d4e6b9d21979aa592774a7cb12049ed7b87ca7dde629031",
+    "rtl/hbm_accel/generic/vm/static/wdecode/tb_bank_wdecode_allowners.sv": "d4a70bf2756bb100c048bfa7fa627df39c4726b42e8beeb75673b6a3caaae973",
+    "rtl/hbm_accel/generic/vm/static/wdecode/tb_hbm_vm_allgroups_wdecode.sv": "ca4ae950cdf10e2af0c5a97093d748ad7093fbb017ae061776267c9072e28669",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+  },
+  "host": "ot-epyc4",
+  "units": [
+    "oth-ubuntu-1677478-1792058869",
+    "oth-ubuntu-1693491-1792059075"
+  ],
+  "admission_gb_per_unit": 2,
+  "measured_peak_rss_kb": 20700,
+  "all_owner_shapes": {
+    "RG2WG2": {
+      "reads": 220,
+      "writes": 240,
+      "egress": 34,
+      "cycles": 352
+    },
+    "RG7WG3": {
+      "reads": 230,
+      "writes": 244,
+      "egress": 33,
+      "cycles": 356,
+      "all_eight_write_owners": true
+    },
+    "RG5WG1": {
+      "reads": 226,
+      "writes": 236,
+      "egress": 2,
+      "cycles": 354,
+      "all_six_write_owners": true
+    }
+  },
+  "all_owner_mechanisms": [
+    "actual three SRAM macros",
+    "all native write owners including packet, both ring directions, COLL and DMA",
+    "main and mirror spaces",
+    "partial word masks",
+    "simultaneous read/write read-before-write",
+    "CE correction and UE detection by actual array bit faults",
+    "wrong-address and unselected active source faults",
+    "no deferred replay"
+  ],
+  "wide_slice_shapes": {
+    "RG7WG3": {
+      "banks": 8,
+      "SRAMs": 24,
+      "writes": 1024,
+      "wide_reads": 7168,
+      "packet_reads": 8
+    },
+    "RG5WG1": {
+      "banks": 8,
+      "SRAMs": 24,
+      "writes": 1024,
+      "wide_reads": 5120,
+      "packet_reads": 8
+    }
+  },
+  "fixed_cycles": {
+    "commit": 3,
+    "read_response": 6,
+    "mirror_egress": 1,
+    "II": 1
+  },
+  "mutants": {
+    "wrong_read_owner": "KILLED",
+    "wrong_response_group_wiring": "KILLED",
+    "DMA_sector_bit3_permutation": "KILLED by actual SRAM payload mismatch in both shapes"
+  },
+  "scope": "Functional source profile frozen; new clock recipe remains separate and unqualified. No existing source or running RG6 input changed."
+}
