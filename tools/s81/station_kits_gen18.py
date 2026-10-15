@@ -64,6 +64,13 @@ def lef_macros(lef: str) -> dict:
     return out
 
 
+def snap(v: float) -> float:
+    """outline dimension up to a multiple of 2.16 um (rows 0.27, sites 0.054, M4/M5 tracks): the generator's 17.256 /
+    30.216 / ... slots are off that lattice and the exported view lost every full-length M5 PG stripe (child_lint (b)
+    0 stripes, 10:09 'collect crashed twice' on 14 hstnh)"""
+    return round(math.ceil(v / 2.16 - 1e-9) * 2.16, 3)
+
+
 def size(master: str, w_bits: int, mac: dict):
     horiz = master.startswith(('dsfd_hstnh_', 'dsfd_stnh_'))
     w, h = mac['w'], mac['h']
@@ -88,6 +95,7 @@ def main() -> int:
     ap.add_argument('--branch', default='claude/el1015-fill-1015')
     ap.add_argument('--tag', default='f1')
     ap.add_argument('--gen', action='store_true')
+    ap.add_argument('--snap', action='store_true', help='outline up to the 2.16-um lattice (PG full-length stripes)')
     ap.add_argument('--alt-vlayer', action='store_true', help='N/S-face data pins alternate M3 / M5 by bit index at the '
                     'generator coordinates (10.4 b/um/layer instead of 20.8 on M5 alone; verdict 10:00 pin_density limit 12)')
     a = ap.parse_args()
@@ -120,6 +128,9 @@ def main() -> int:
                    '    always @(posedge ck[0]) q <= di;\n    assign dq = q;\nendmodule\n')
         mac = macs[mst]
         dw, dh, grown = size(mst, wb, mac)
+        if a.snap:
+            dw, dh = snap(dw), snap(dh)
+            grown = grown or ('w' if horiz_of(mst) else 'h')
         sha = hashlib.sha256(txt.encode()).hexdigest()
         (ROOT / RTL_DIR / f'{mst}.sv').write_text(txt)
         horiz = mst.startswith(('dsfd_hstnh_', 'dsfd_stnh_'))
@@ -169,7 +180,7 @@ def main() -> int:
             'name': name, 'top': mst, 'kind': 'tile',
             'sources': ['rtl/common/ot_fwd_link_stage.sv', f'{RTL_DIR}/{mst}.sv'],
             'params': {}, 'clock_port': 'fi0' if fwd else 'ck', 'reset_ports': [],
-            **({'forwarded_clock': True} if fwd else {}),
+            **({'forwarded_clock': True, 'boundary_tcl': ['physical/s81_station_native/fwd_clock_out.tcl'], 'sdc_extra': ['physical/s81_station_native/fwd_clock_out.tcl']} if fwd else {}),
             'outline': {'w': dw, 'h': dh, 'exact': True},
             'layer_cap': 'M5',
             'pins': {f: sorted(v) for f, v in sorted(faces.items())},
@@ -199,7 +210,8 @@ def main() -> int:
                 'record_to': f'results/rtl/ref_tile/{name}',
                 'extra_paths': ['rtl/common', RTL_DIR, 'tools/s81_station_native', PIN_DIR,
                                 'physical/hbm_accel_die_views/stations/bench']
-                               + (['physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl'] if fwd else []),
+                               + (['physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl',
+                                   'physical/s81_station_native'] if fwd else []),
                 'benches': [
                     {'name': 'phase_words', 'cmd': f'bash {bench} pass {mst} {wb} {{RUN}}/bench_p', 'expect': 'pass',
                      'pass_regex': f'STATION PASS 20000 words {wb} bits {edge}', 'threads': 2, 'peak_ram_gb': 4},
@@ -226,6 +238,10 @@ def main() -> int:
     for s in summary:
         print('%-18s W=%-5d n=%-4d slot %.3fx%.3f -> %.3fx%.3f %s %s' % (*s[:7], 'GROWN' if s[7] else '', s[8]))
     return 0
+
+
+def horiz_of(m):
+    return m.startswith(('dsfd_hstnh_', 'dsfd_stnh_'))
 
 
 def face_area(mac, horiz):
