@@ -1,0 +1,102 @@
+[
+ {
+  "tag": "base_v15_noatt",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "v15/D boxes minus ATT",
+  "family": "baseline",
+  "note": "Current v15.1 + D layout with every ATT block removed; the 150-odd blocks without a v15 box placed by the shared greedy rule. J reference = 3.00 + penalties."
+ },
+ {
+  "tag": "base_v15_withatt_ref",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "v15/D with ATT (reference)",
+  "family": "history",
+  "note": "Same graph rules with the dedicated ATT tiles still in (owner-replaced). Shows what removing ATT alone buys.",
+  "graph": "graph_att.json"
+ },
+ {
+  "tag": "base_best_s1",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "v15 boxes kept, rest annealed",
+  "family": "incremental",
+  "note": "Keep every v15 box, anneal only the unplaced blocks. Cannot reach cut <= 0.60: the v15 skeleton is the limit."
+ },
+ {
+  "tag": "sa_free_s1",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "Free annealer",
+  "family": "own annealer",
+  "note": "All movable blocks annealed from the v15 start (PHY + SerDes fixed). Shortest wires but cut 0.83 and 2 LG fixed-return violations."
+ },
+ {
+  "tag": "rtlmp_width_raw",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "OpenROAD RTL-MP (width)",
+  "family": "RTL-MP",
+  "note": "rtl_macro_placer dataflow clustering on the die graph, legalized. Ignores the stack/quadrant structure: SMs leave their stacks, cut 38."
+ },
+ {
+  "tag": "T_nogap__none_s9",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "Edge block, engines free",
+  "family": "architect",
+  "note": "2x4 SM block at the die edge, no column gap; VM slice, engines, hub and COLL annealed into the free centre."
+ },
+ {
+  "tag": "T_spine1000__npg4_s6",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "1 mm VM spine",
+  "family": "architect",
+  "note": "1 mm vertical VM spine between the SM columns; SW/SE engines at 4 port groups."
+ },
+ {
+  "tag": "T_centre_spine2000__none_s1",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "Centre-hugging block + 2 mm spine",
+  "family": "architect",
+  "note": "SM block against the die centre line (1.6 mm SerDes channel), 2 mm spine."
+ },
+ {
+  "tag": "T_band0__hc_quad_s2",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "VM band at the PHY edge",
+  "family": "architect",
+  "note": "VM band between the PC row and SM row 0 (HBM->VM shortest); HC engine per quadrant. Qwen traffic-length +21%."
+ },
+ {
+  "tag": "T_band2__none_s5",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "Mid-block VM band",
+  "family": "architect",
+  "note": "1.8 mm VM band between SM rows 2 and 3: every SM is at most two rows from its VM slice. Cut 0.636."
+ },
+ {
+  "tag": "T_band2__npg4_s5",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "Mid-block VM band, NPG4 (recommended)",
+  "family": "architect",
+  "note": "Mid-block VM band + SW/SE engines at 4 bank-pair port groups (BANK_GROUP 0x33221100). Only v15-outline candidate with fr 0 and cut <= 0.60 at low traffic-length."
+ },
+ {
+  "tag": "IL_band2_s2",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "Mid-block band, KV interleaved",
+  "family": "KV home control",
+  "note": "Same family with one KV copy interleaved over stacks (top-k rows cross quadrants on the VM ring).",
+  "graph": "graph_sm_il.json"
+ },
+ {
+  "tag": "C226_band2_s2",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "Compact 22.6 mm outline, band",
+  "family": "compact outline",
+  "note": "Die height cut by the ATT area (745 mm2). Whole-design change: report only."
+ },
+ {
+  "tag": "C200_nogap_s2",
+  "dir": "/home/ubuntu/scratch-globalfp-hbm/v2/b2",
+  "label": "Compact 20.0 mm outline",
+  "family": "compact outline",
+  "note": "660 mm2 die (-197 mm2), cut 0.574, fr 0. Whole-design change: owner decision, not adopted."
+ }
+]

@@ -1,0 +1,35 @@
+ot-run: ot-epyc1tb     admits   156 GB (avail 456, growth 235, headroom 64, waiters 0/0 GB) load 90/128 running 29 disk 550 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3055880-1792073805 after 1 s
+==> log_phase0.txt <==
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=376 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=4160 meas_lu=53 meas_ls=376 pr_overlap=0 compiled_span=1541
+COLL_TP8SL PASS cases=4 latu=53 lats=376
+
+==> log_phase1.txt <==
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=376 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=4160 meas_lu=53 meas_ls=376 pr_overlap=0 compiled_span=1541
+COLL_TP8SL PASS cases=4 latu=53 lats=376
+
+==> log_phase2.txt <==
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=376 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=4160 meas_lu=53 meas_ls=376 pr_overlap=0 compiled_span=1541
+COLL_TP8SL PASS cases=4 latu=53 lats=376
+
+==> log_phase3.txt <==
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=376 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=4160 meas_lu=53 meas_ls=376 pr_overlap=0 compiled_span=1541
+COLL_TP8SL PASS cases=4 latu=53 lats=376
+
+==> log_phase4.txt <==
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=376 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=4160 meas_lu=53 meas_ls=376 pr_overlap=0 compiled_span=1541
+COLL_TP8SL PASS cases=4 latu=53 lats=376
+
+==> log_phase5.txt <==
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=376 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=4160 meas_lu=53 meas_ls=376 pr_overlap=0 compiled_span=1541
+COLL_TP8SL PASS cases=4 latu=53 lats=376
+
+==> log_tagbad.txt <==
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=376 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=0 extra=0 out_err=0 cmd_bad=8 coll_fault=11111111 issuer_fault=11111111 die_fault=11111111 words_out=4160 meas_lu=53 meas_ls=376 pr_overlap=0 compiled_span=1541
+COLL_TP8SL NEGATIVE-CONTROL PASS cases=4 latu=53 lats=376
+
+==> log_tokmut.txt <==
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=376 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=0 extra=0 out_err=0 cmd_bad=24 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=4160 meas_lu=53 meas_ls=376 pr_overlap=0 compiled_span=1541
+COLL_TP8SL NEGATIVE-CONTROL PASS cases=4 latu=53 lats=376
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3055880-1792073805): exit 0
