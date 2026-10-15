@@ -54,6 +54,7 @@ module qfd_seq_su (
     input  wire [9:0]    cbr0, cbr1, cbr2, cbr3, cbr4, cbr5, cbr6, cbr7,
     output wire [20:0]   vrd,
     input  wire [511:0]  vrq,
+    input  wire          svq_v, // actual scheduled row completion integrity
     output wire [532:0]  vwr
 );
     localparam integer NW = 18, AW = 24, D = 8;
@@ -119,7 +120,7 @@ module qfd_seq_su (
         .pw_v(dh[118]), .pw_addr(dh[117:108]), .pw_data(dh[107:44]),
         .dw_v(dh[186]), .dw_addr(dh[185:183]), .dw_data(dh[182:119]),
         .cb_st_rdy(cb_rdy_q), .cb_st_rdy_stage(cb_stg_q), .cb_stage(cb_stage), .cb_tok_start(cb_tok_start), .cb_tpos(cb_tpos),
-        .vm_rq(vrq), .c_ready(cd_cr),
+        .vm_rq(vrq), .vm_rvalid(svq_v), .c_ready(cd_cr),
         .r_valid(cc[517]), .r_data(cc[511:0]), .r_last(cc[512]), .r_rank(cc[515:513]), .r_err(cc[516]),
         .pi_su_rt_active(sd[0]), .pi_su_rt_inflight(sd[8:1]), .pi_su_ready(sd[9]), .pi_su_idle(sd[10]),
         .pi_su_kv_we(sd[74:11]), .pi_su_progress(sd[90:75]), .pi_su_progress_rows(sd[106:91]), .pi_su_fault(sd[107]),

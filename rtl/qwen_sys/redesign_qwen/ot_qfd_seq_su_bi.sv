@@ -1042,6 +1042,7 @@ module ot_qfd_seq_su_bi #(
     parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer TCUT = 7,
     parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,
     parameter integer RLY = 0, parameter integer CRED = 0,
+    parameter integer ROW_LAT = 13, // measured NOX native row response latency
     parameter integer VWA = 20, // native VM row address; no implicit base
     // PSRAM = 1 (hardcore-1010 D fallback, 2026-10-10; 0 = unchanged): the 64 x 1,024 program store is two
     // ot_sram_1r1w_64x512_m1_r2c2 macros (64 x 512, bit-masked 64-bit writes) instead of 65,536 flops; the read is
@@ -1074,6 +1075,7 @@ module ot_qfd_seq_su_bi #(
     input  wire [NW-1:0] tp_pos,
     input  wire [1-1:0] kv_write_drained,
     input  wire [512-1:0] vm_rq,
+    input  wire vm_rvalid, // actual completed row, aligned with vm_rq
     input  wire [1-1:0] c_ready,
     input  wire [1-1:0] r_valid,
     input  wire [512-1:0] r_data,
@@ -1205,6 +1207,8 @@ module ot_qfd_seq_su_bi #(
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_kv_write_drained (.clk(clk), .rst_n(rsv[5]), .d(kv_write_drained), .q(q_kv_write_drained));
     wire [512-1:0] q_vm_rq;
     ot_hdc_delay #(.W(512), .D(IS)) u_i_vm_rq (.clk(clk), .rst_n(rsv[5]), .d(vm_rq), .q(q_vm_rq));
+    wire q_vm_rvalid;
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_vm_rvalid (.clk(clk), .rst_n(rsv[5]), .d(vm_rvalid), .q(q_vm_rvalid));
     wire [1-1:0] q_c_ready;
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_c_ready (.clk(clk), .rst_n(rsv[5]), .d(c_ready), .q(q_c_ready));
     wire [1-1:0] q_r_valid;
@@ -1284,8 +1288,8 @@ module ot_qfd_seq_su_bi #(
     wire [1-1:0] b_kv_write_flush;
     ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kv_write_flush (.clk(clk), .rst_n(rsv[5]), .d(b_kv_write_flush), .q(kv_write_flush));
     wire [1-1:0] b_vm_re;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_re (.clk(clk), .rst_n(rsv[6]), .d(b_vm_re), .q(vm_re));
     wire [VWA-1:0] b_vm_raddr;
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_re (.clk(clk), .rst_n(rsv[6]), .d(b_vm_re), .q(vm_re));
     ot_hdc_delay #(.W(VWA), .D(OS)) u_o_vm_raddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_raddr), .q(vm_raddr));
     wire [1-1:0] b_vm_we;
     ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_we (.clk(clk), .rst_n(rsv[6]), .d(b_vm_we), .q(vm_we));
@@ -1668,14 +1672,14 @@ module ot_qfd_seq_su_bi #(
         .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
         .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok));
     ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rsv[6]), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
-    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N((TPMUT == 2) ? 4 : D), .NW(NW), .PAW(PAW), .VWA(VWA), .VM_ADDR_EXT(VWA > 8), .DAW(6), .FW(512), .TAGW(32),
+    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + ROW_LAT + 2 * RLY), .VARIABLE(0), .STATIC(1), .CRED(CRED), .N((TPMUT == 2) ? 4 : D), .NW(NW), .PAW(PAW), .VWA(VWA), .VM_ADDR_EXT(VWA > 8), .DAW(6), .FW(512), .TAGW(32),
         .QWEN_FULLSHAPE(1), .ENABLE_AR256(1), .RMUT(RRG >= 2 ? 1 : 0)) u_seq (
         .clk(clk), .rst_n(rsv[0]), .rst_nw(rsv[1]), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
         .core_start(core_start), .core_token(core_tokw), .core_pos(core_pos), .core_done(core_done),
         .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault_w), .prog_base(prog_base),
         .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q), .vm_re(b_vm_re), .vm_raddr(b_vm_raddr),
-        .vm_rq(q_vm_rq), .vm_we(b_vm_we), .vm_waddr(b_vm_waddr), .vm_wdata(b_vm_wdata), .c_valid(b_c_valid),
+        .vm_rq(q_vm_rq), .vm_rvalid(q_vm_rvalid), .vm_we(b_vm_we), .vm_waddr(b_vm_waddr), .vm_wdata(b_vm_wdata), .c_valid(b_c_valid),
         .c_ready(q_c_ready), .c_data(b_c_data), .c_last(b_c_last), .c_mode(b_c_mode), .c_tag(b_c_tag),
         .r_valid(q_r_valid), .r_data(q_r_data), .r_last(q_r_last), .r_rank(q_r_rank_s), .r_err(q_r_err));
     assign b_me_start_o = core_start;
@@ -1741,7 +1745,9 @@ endmodule
 // in a collective (the collective latency share of a step).
 // ---------------------------------------------------------------------------
 module ot_qwen_tp_seq_w12_vrl #(
-    parameter integer VRL = 1,     // vre -> vrq edges
+    parameter integer VRL = 1,     // scheduled request -> actual response edges
+    parameter integer VARIABLE = 0, // diagnostic only; absent from production hierarchy
+    parameter integer STATIC = 1, // fixed collective send slots, no runtime credit or readiness
     parameter integer RMUT = 0,    // el1011-q-seq negative control: vm_wdata bit 0 flipped on the AR write
     parameter integer CRED = 0,    // 0: c_ready = ready (base); > 0: c_ready = credit return pulse, CRED credits
     parameter integer ENABLE_AR256 = 0,
@@ -1787,6 +1793,7 @@ module ot_qwen_tp_seq_w12_vrl #(
     output reg               vm_re,
     output reg  [VWA-1:0]    vm_raddr,
     input  wire [FW-1:0]     vm_rq,
+    input  wire              vm_rvalid,
     output reg               vm_we,
     output reg  [VWA-1:0]    vm_waddr,
     output reg  [FW-1:0]     vm_wdata,
@@ -1829,26 +1836,30 @@ module ot_qwen_tp_seq_w12_vrl #(
     endfunction
 
     // -- transmit: vector-memory words (all-reduce) or the argmax record ------------------
-    localparam integer QB = (VRL > 1) ? $clog2(VRL + 4) : 2;   // queue address bits
+    localparam integer QB = (STATIC != 0) ? 2 : ((VRL > 1) ? $clog2(VRL + 4) : 2);   // queue address bits
     localparam integer QD = 1 << QB;
     reg [FW-1:0] q_d [0:QD-1];
     reg [QB-1:0] q_w, q_r;
     reg [QB:0]   q_n;
     reg [8:0]    rd_k, tx_k, rx_k;
-    reg [VRL-1:0] rd_p;                 // reads in flight, oldest at VRL-1
-    wire          rd_v = rd_p[VRL-1];
-    integer       rd_i, rd_n;
-    always @(*) begin rd_n = 0; for (rd_i = 0; rd_i < VRL; rd_i = rd_i + 1) rd_n = rd_n + rd_p[rd_i]; end
+    reg [VRL-1:0] rd_p;
+    integer rd_i, rd_n;
+    always @(*) begin rd_n = 0; for (rd_i=0; rd_i<VRL; rd_i=rd_i+1) rd_n=rd_n+rd_p[rd_i]; end
+    reg rd_pending;
+    wire rd_expected = (VARIABLE != 0) ? rd_pending : rd_p[VRL-1];
+    wire rd_v = vm_rvalid && rd_expected;
+    // Static downstream slots consume every completed row on the next edge.
+    // No outstanding-read capacity is charged to the tiny output FIFO.
     reg [7:0] c_cred;   // credit mode: a word leaves only with a credit (valid = send)
-    assign c_valid = (st == S_COLL) && (q_n != 0) && (CRED == 0 || c_cred != 8'd0);
+    assign c_valid = (st == S_COLL) && (q_n != 0) && (STATIC != 0 || CRED == 0 || c_cred != 8'd0);
     assign c_data  = q_d[q_r];
     assign c_mode  = (kind == K_ARGMAX);
     assign c_last  = (tx_k == ((kind == K_ARGMAX) ? 9'd0 : nw - 1'b1));
-    wire   c_fire  = c_valid && ((CRED == 0) ? c_ready : 1'b1);
+    wire   c_fire  = c_valid && ((STATIC != 0 || CRED != 0) ? 1'b1 : c_ready);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) c_cred <= 8'(CRED);
-        else if (CRED != 0) c_cred <= c_cred - (c_fire ? 8'd1 : 8'd0) + (c_ready ? 8'd1 : 8'd0);
-    wire   rd_go   = (st == S_COLL) && kind == K_AR && rd_k < nw && (q_n + rd_n) < QD;
+        else if (STATIC == 0 && CRED != 0) c_cred <= c_cred - (c_fire ? 8'd1 : 8'd0) + (c_ready ? 8'd1 : 8'd0);
+    wire   rd_go   = (st == S_COLL) && kind == K_AR && rd_k < nw && ((VARIABLE != 0) ? (!rd_pending && q_n < QD) : (STATIC != 0 || (q_n + rd_n) < QD));
 
     reg [NW-1:0] best_i;
     reg [31:0]   best_v;
@@ -1867,12 +1878,16 @@ module ot_qwen_tp_seq_w12_vrl #(
             tok_r <= 0; pos_r <= 0; seg <= 0; kind <= K_END; vw <= 0; nw <= 0; row0 <= 0;
             prog_base <= 0; desc_re <= 1'b0; desc_addr <= 0;
             vm_we <= 1'b0; vm_waddr <= 0;
-            q_w <= 0; q_r <= 0; q_n <= 0; rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_p <= {VRL{1'b0}};
+            q_w <= 0; q_r <= 0; q_n <= 0; rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_pending <= 1'b0; rd_p <= 0;
             best_i <= 0; best_v <= 0;
         end else begin
             desc_re <= 1'b0;
             vm_we <= 1'b0;
             rd_p <= (VRL > 1) ? {rd_p, rd_go} : rd_go;
+            if (rd_go) rd_pending <= 1'b1;
+            if (rd_v) rd_pending <= 1'b0;
+            if ((VARIABLE == 0 && vm_rvalid != rd_expected) ||
+                (vm_rvalid && (!rd_expected || st != S_COLL || kind != K_AR))) fault <= 1'b1;
             case (st)
                 S_IDLE: if (start) begin
                     tok_r <= token; pos_r <= pos; seg <= 0; done <= 1'b0;
@@ -1909,7 +1924,7 @@ module ot_qwen_tp_seq_w12_vrl #(
                     end
                 end
                 S_COLL: begin
-                    // queue: vector-memory words read one cycle earlier; pop on send
+                    // Queue actual completed rows; outstanding slot reserves capacity.
                     if (rd_go) rd_k <= rd_k + 1'b1;
                     if (rd_v) begin q_d[q_w] <= vm_rq; q_w <= q_w + 1'b1; end
                     if (c_fire) begin q_r <= q_r + 1'b1; tx_k <= tx_k + 1'b1; end
@@ -1949,4 +1964,23 @@ module ot_qwen_tp_seq_w12_vrl #(
     always @(posedge clk or negedge rst_nw)
         if (!rst_nw) vm_wdata <= {FW{1'b0}};
         else if (st == S_COLL && r_valid && kind == K_AR) vm_wdata <= r_data ^ FW'(RMUT != 0);
+endmodule
+
+// Hardened controller-owned row request station. Register at the actual pin;
+// preserve valid/address until external admission, never infer it upstream.
+module ot_qfd_row_request_pin #(parameter integer AW=20, OS=1)(
+    input wire clk, rst_n, request, input wire [AW-1:0] addr,
+    input wire ready, output reg valid, output reg [AW-1:0] pin_addr,
+    output wire pending);
+    wire request_d; wire [AW-1:0] addr_d;
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_v (.clk(clk), .rst_n(rst_n), .d(request), .q(request_d));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_a (.clk(clk), .rst_n(rst_n), .d(addr), .q(addr_d));
+    assign pending = valid;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin valid <= 1'b0; pin_addr <= 0; end
+        else begin
+            if (valid && ready) valid <= 1'b0;
+            if (request_d) begin valid <= 1'b1; pin_addr <= addr_d; end
+        end
+    end
 endmodule

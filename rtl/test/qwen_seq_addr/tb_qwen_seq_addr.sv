@@ -15,6 +15,7 @@ module tb_qwen_seq_addr;
     reg start = 0;
     wire core_start, done, fault, coll_busy; wire [NW-1:0] core_tok, core_pos, ntok; wire [31:0] nval;
     wire [11:0] prog_base; wire desc_re; wire [5:0] desc_addr; reg [63:0] desc_q;
+    wire vm_rvalid; reg m_valid=0;
     wire vm_re, vm_we; wire [19:0] vm_raddr, vm_waddr; wire [FW-1:0] vm_wdata, vm_rq;
     wire c_valid, c_last, c_mode; wire [FW-1:0] c_data; wire [31:0] c_tag;
     reg c_ready; reg r_valid = 0; reg [FW-1:0] r_data; reg r_last = 0;
@@ -29,7 +30,8 @@ module tb_qwen_seq_addr;
     endfunction
     wire m_re; wire [19:0] m_a; reg [FW-1:0] m_q;
     ot_hdc_delay #(.W(21), .D(OS + RLY)) u_dn (.clk(clk), .rst_n(rst_n), .d({vm_re, vm_raddr}), .q({m_re, m_a}));
-    always @(posedge clk) if (m_re) m_q <= expected(m_a);
+    always @(posedge clk) begin m_valid <= m_re; if (m_re) m_q <= expected(m_a); end
+    ot_hdc_delay #(.W(1), .D(RLY + IS), .RESET(1)) u_valid (.clk(clk), .rst_n(rst_n), .d(m_valid), .q(vm_rvalid));
     ot_hdc_delay #(.W(FW), .D(RLY + IS)) u_up (.clk(clk), .rst_n(rst_n), .d(m_q), .q(vm_rq));
     integer read_count = 0, write_count = 0;
     always @(posedge clk) if (rst_n) begin
@@ -68,11 +70,11 @@ module tb_qwen_seq_addr;
         if (sent == NWORDS && back < NWORDS) begin r_valid <= 1'b1; r_data <= expected(VW0 + back); r_last <= (back == NWORDS - 1); back = back + 1; end
     end
     generate begin : g_vrl
-        ot_qwen_tp_seq_w12_vrl #(.VRL(VRL), .VWA(20), .VM_ADDR_EXT(!TRUNC), .CRED(CRED), .ENABLE_AR256(1), .N(4), .NW(NW), .QWEN_FULLSHAPE(1)) u (
+        ot_qwen_tp_seq_w12_vrl #(.VRL(VRL), .STATIC(0), .VWA(20), .VM_ADDR_EXT(!TRUNC), .CRED(CRED), .ENABLE_AR256(1), .N(4), .NW(NW), .QWEN_FULLSHAPE(1)) u (
             .clk(clk), .rst_n(rst_n), .rst_nw(rst_n), .start(start), .token(18'd5), .pos(18'd9), .done(done), .next_token(ntok), .next_val(nval),
             .fault(fault), .coll_busy(coll_busy), .core_start(core_start), .core_token(core_tok), .core_pos(core_pos),
             .core_done(core_done), .core_next_token(18'd0), .core_next_val(32'd0), .core_fault(1'b0), .prog_base(prog_base),
-            .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q), .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq),
+            .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q), .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq), .vm_rvalid(vm_rvalid),
             .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .c_valid(c_valid), .c_ready(q_ready), .c_data(c_data),
             .c_last(c_last), .c_mode(c_mode), .c_tag(c_tag), .r_valid(r_valid), .r_data(r_data), .r_last(r_last), .r_rank(2'd0), .r_err(1'b0));
     end endgenerate
