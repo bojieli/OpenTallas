@@ -7,10 +7,12 @@ for mode in positive badvm badcount;do
  args=();if [[ $mode != positive ]];then args=("+$mode=1");fi
  vvp "$work/exact.vvp" "${args[@]}" > "$work/$mode.log";cat "$work/$mode.log"
 done
-iverilog -g2012 -s tb_s81_pq_ctl_static -DOT_S81_PQ_STATIC_MUT_TAG -o "$work/mut.vvp" "${sources[@]}"
-set +e
-vvp "$work/mut.vvp" > "$work/mut.log" 2>&1;rc=$?
-set -e
-if [[ $rc == 0 ]] || ! grep -q 'STATIC_CTL FAIL' "$work/mut.log";then cat "$work/mut.log";exit 1;fi
-cat "$work/mut.log"
-echo 'STATIC_CTL_GATE PASS positive=1 fault_only_timeline=2 tag_mutant=FAIL'
+for mutant in OT_S81_PQ_STATIC_MUT_TAG OT_S81_PQ_STATIC_MUT_PHW OT_S81_PQ_STATIC_MUT_SAW;do
+  iverilog -g2012 -s tb_s81_pq_ctl_static -D"$mutant" -o "$work/$mutant.vvp" "${sources[@]}"
+  set +e
+  vvp "$work/$mutant.vvp" > "$work/$mutant.log" 2>&1;rc=$?
+  set -e
+  if [[ $rc == 0 ]] || ! grep -q 'STATIC_CTL FAIL' "$work/$mutant.log";then cat "$work/$mutant.log";exit 1;fi
+  cat "$work/$mutant.log"
+done
+echo 'STATIC_CTL_GATE PASS positive=1 fault_only_timeline=2 actual_source_mutants=3 PHW=10 SAW=14'

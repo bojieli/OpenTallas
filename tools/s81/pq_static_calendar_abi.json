@@ -1,19 +1,19 @@
 {
-  "version": 1,
-  "action_bits": 72,
+  "version": 2,
+  "action_bits": 75,
   "row_bits": 144,
   "row_layout": {
     "action": [
       0,
-      72
+      75
     ],
     "timestamp": [
-      72,
+      75,
       24
     ],
     "reserved": [
-      96,
-      48
+      99,
+      45
     ]
   },
   "action_fields": {
@@ -51,54 +51,54 @@
     },
     "stream_addr": {
       "lsb": 40,
-      "width": 11
+      "width": 14
     },
     "stream_tag": {
-      "lsb": 51,
+      "lsb": 54,
       "width": 2
     },
     "stream_pos": {
-      "lsb": 53,
+      "lsb": 56,
       "width": 3
     },
     "stream_fam": {
-      "lsb": 56,
-      "width": 1
-    },
-    "stream_lastpos": {
-      "lsb": 57,
-      "width": 1
-    },
-    "stream_lastop": {
-      "lsb": 58,
-      "width": 1
-    },
-    "cfg": {
       "lsb": 59,
       "width": 1
     },
-    "cfg_tag": {
+    "stream_lastpos": {
       "lsb": 60,
-      "width": 2
+      "width": 1
     },
-    "launch": {
+    "stream_lastop": {
+      "lsb": 61,
+      "width": 1
+    },
+    "cfg": {
       "lsb": 62,
       "width": 1
     },
-    "launch_tag": {
+    "cfg_tag": {
       "lsb": 63,
       "width": 2
     },
-    "retire_mask": {
+    "launch": {
       "lsb": 65,
+      "width": 1
+    },
+    "launch_tag": {
+      "lsb": 66,
+      "width": 2
+    },
+    "retire_mask": {
+      "lsb": 68,
       "width": 4
     },
     "phase_end": {
-      "lsb": 69,
+      "lsb": 72,
       "width": 1
     },
     "reserved": {
-      "lsb": 70,
+      "lsb": 73,
       "width": 2
     }
   },
@@ -126,5 +126,12 @@
     "reader_owner": "q_native_compute",
     "reader_in_this_commit": false
   },
-  "native_end_to_end_qualified": false
+  "native_end_to_end_qualified": false,
+  "canonical": {
+    "PHW": 10,
+    "SAW": 14,
+    "pair_count": 2417,
+    "BF_count": 519,
+    "max_phases": 642
+  }
 }
