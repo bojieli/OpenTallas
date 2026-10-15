@@ -1,0 +1,51 @@
+{
+  "status": "CANDIDATE_LOCAL_PIN_CAPACITY_PASS",
+  "outline_um": [
+    80.64,
+    230.04
+  ],
+  "source_commit": "92154feb6",
+  "checks": [
+    {
+      "face": "N",
+      "bits": 832,
+      "native_track_pitch_um": 0.048,
+      "pin_pitch_um": 0.096,
+      "first_center_um": 0.396,
+      "last_center_um": 80.172,
+      "full_face_track_capacity": 1680,
+      "demand_over_raw_capacity": 0.49523809523809526,
+      "cut_limit": 0.6,
+      "raw_cut_pass": true
+    },
+    {
+      "face": "S",
+      "bits": 548,
+      "native_track_pitch_um": 0.048,
+      "pin_pitch_um": 0.096,
+      "first_center_um": 14.028,
+      "last_center_um": 66.54,
+      "full_face_track_capacity": 1680,
+      "demand_over_raw_capacity": 0.3261904761904762,
+      "cut_limit": 0.6,
+      "raw_cut_pass": true
+    },
+    {
+      "face": "W",
+      "bits": 7,
+      "native_track_pitch_um": 0.048,
+      "pin_pitch_um": 0.096,
+      "first_center_um": 4.044,
+      "last_center_um": 7.02,
+      "full_face_track_capacity": 4792,
+      "demand_over_raw_capacity": 0.0014607679465776294,
+      "cut_limit": 0.6,
+      "raw_cut_pass": true
+    }
+  ],
+  "all_bits": 1387,
+  "pin_pairs_to_parent_proven": false,
+  "global_cut_proven": false,
+  "pin_register_timing_proven": false,
+  "qualification": "Only boundary spacing, native tracks and raw face track capacity. No parent seam/placement/CTS/timing qualification."
+}

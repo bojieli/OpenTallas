@@ -1,0 +1,44 @@
+{
+  "source_commit": "92154feb6",
+  "top": "dsfd_vm_static_cap_leaf",
+  "parameters": {
+    "E": 8
+  },
+  "role": "One of 16 actual native-pin-register capture/assembly leaves, each with its own serial clock entry",
+  "candidate_outline_um": [
+    80.64,
+    230.04
+  ],
+  "parent_reservation_um": [
+    1541.784,
+    3952.776
+  ],
+  "state_scope": "Relocates existing parent f_c/gid and flush registers without adding a cycle; existing x34 dualclock bridges remain separate",
+  "clock_plan": "One independent serial root per capture leaf; preserve separate x34 dualclock bridge roots; never flatten all leaf registers onto one tree",
+  "source_gate": "Inspected committed92154feb6 hard_leaf receipt and raw base_s1/base_s2/mut_word logs:1735+8 and1194+7 complete/partial rows,zero bad/missing; mutant278missing and14638bad,observed FAIL. Five fault witnesses reported in source-pinned receipt.",
+  "physical_gate": "TT setup >=0, FF hold >=0, DRC0; SS sensitivity reported; no relaxed clocks or exception masking",
+  "pin_capacity_scope": "Candidate local boundary tracks only; exact parent pairings, channel cuts and per-bit reach remain required",
+  "adoption": "Sizing evidence and candidate pins only; no final parent fit, production throughput or timing claim",
+  "route_submission": false,
+  "pending": [
+    "Mapped cell area and mapped FF census from live admitted Yosys run",
+    "Final die-lead adoption of candidate exact pins",
+    "Source-pinned exact positive and observed mutant receipt verification",
+    "Actual native leaf CTS/TT/FF/DRC gate after source and pins frozen",
+    "Disjoint parent assembly packing, per-bit hop reach and cuts for all16lanes and x34 bridges",
+    "Actual static-schedule native composition throughput and SRAM visibility proof"
+  ],
+  "declared_state_bits": {
+    "assembly_V": 8,
+    "assembly_KEY": 80,
+    "assembly_MSK": 128,
+    "assembly_DAT": 4096,
+    "flush_state": 5,
+    "registered_outputs": 543,
+    "sticky_faults": 5,
+    "native_pin_registers": 837
+  },
+  "declared_state_bits_per_root": 5702,
+  "declared_state_below_15000": true,
+  "cts_submission_limit": "Exact parent pins not yet frozen; prepared unsubmitted candidate uses existing strict833.333ps signoff precedent tools/ref_tile/specs_s81vmfe/dsfd_vm_clt_m5.json. Runtime serial0.9GHz3:4 remains unchanged. ref_tile.py:909 hardcodes833.333 for singleleaf; no1111signoff claim."
+}

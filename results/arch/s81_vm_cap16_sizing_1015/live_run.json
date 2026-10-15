@@ -1,0 +1,15 @@
+{
+  "status": "LIVE_MAPPING_NOT_MEASURED",
+  "observed_utc": "2026-10-15T06:47:55.997675+00:00",
+  "source_commit": "92154feb6",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-271080-1792046481",
+  "yosys_pid": 271098,
+  "ot_run_session": 31377,
+  "remote_root": "/srv/opentallas-scratch/codex-cap16-sizing-1015",
+  "output": "map1",
+  "command": "ot-run --mem 8 --threads 1 --dir /srv/opentallas-scratch/codex-cap16-sizing-1015 -- python3 tools/s81_vm_cap16_sizing/measure.py --root /srv/opentallas-scratch/codex-cap16-sizing-1015 --out /srv/opentallas-scratch/codex-cap16-sizing-1015/map1 --lef /srv/opentallas-scratch/codex-cap16-sizing-1015/asap7_1x.lef",
+  "last_observation": "Yosys PROC_DLATCH CPU6min19s RSS260860kB,process live; no terminal area/census yet",
+  "routed": false,
+  "next": "Collect map1/area.json plus provenance/map.log when PID terminal; never restart based on observation timeout"
+}

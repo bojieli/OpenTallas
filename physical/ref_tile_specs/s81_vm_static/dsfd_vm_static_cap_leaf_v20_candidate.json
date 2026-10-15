@@ -1,0 +1,72 @@
+{
+  "name": "dsfd_vm_static_cap_leaf_v20_nativepinreg",
+  "top": "dsfd_vm_static_cap_leaf",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv"
+  ],
+  "clock_port": "ck",
+  "reset_ports": [
+    "rn"
+  ],
+  "outline": {
+    "w": 80.64,
+    "h": 230.04,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "signal_max_layer": "M5",
+  "pins": {
+    "N": [
+      "f_c"
+    ],
+    "S": [
+      "o_v",
+      "o_row",
+      "o_m",
+      "o_d",
+      "flt"
+    ],
+    "W": [
+      "ck",
+      "rn",
+      "gid",
+      "flush"
+    ],
+    "E": []
+  },
+  "io_tcl": "physical/s81_die_pins/v20_vm_cap16_candidate/dsfd_vm_static_cap_leaf.tcl",
+  "recipe": 2,
+  "route": {
+    "pd": 0.45,
+    "period_ps": 770,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pin_h": "M4",
+    "pin_v": "M5"
+  },
+  "structural_change": "Actual native-pin-register cap16 leaf relocates existing parent pin/flush flops without cycle change; one independent serial root per leaf. Existing x34 stays outside with separate roots.",
+  "clock_policy": "Runtime clock is approved serial0.9GHz3:4. This candidate follows existing dsfd_vm_clt_m5 strict833.333ps signoff precedent; no domain timing policy change. Sizing ABC1111ps does not establish closure at833ps.",
+  "open_points": [
+    "UNSUBMITTED candidate: die-lead must freeze exact parent per-bit seams before route",
+    "Actual mapped area and clock census must fit slot before admission",
+    "Leaf CTS+TTsetup+FFhold+DRC0 required; SS sensitivity only",
+    "Full128bank parent containment,x34 clock plan and static composition throughput remain unproven"
+  ],
+  "job": {
+    "owner": "Codex:S-DIE-cap16-sizing",
+    "tag": "v20nativepinreg",
+    "purpose": "Prepared unsubmitted nativepinreg candidate; strict833.333ps signoff follows old serialVM leaf precedent",
+    "benches": [
+      {
+        "name": "full128_capture_exact_and_word_mutant",
+        "cmd": "bash tools/s81_vm/static_cap_gate.sh {RUN}/bench/cap16native",
+        "expect": "pass",
+        "pass_regex": "VMCAP_GATE PASS",
+        "threads": 1,
+        "peak_ram_gb": 2
+      }
+    ]
+  }
+}
