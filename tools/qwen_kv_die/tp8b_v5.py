@@ -1161,6 +1161,15 @@ def _wrap(v, m, G, peers):
                 q.ports['xpf'] = ('face', _CS.TAP_PF, 'S', 'M5', 155.0, 2)
                 q.face('ck', 1, 'N', 'M5', 12.96, 1)
                 M['qfd_xs_tap'] = q
+            # f45805040 static die wrappers expose data and faults only.  The
+            # compiler reserves slots; no ready pin survives in the abstract.
+            for mn in ('qfd_xcst_n','qfd_xcst_s','qfd_xcol_e','qfd_xcol_w','qfd_xs_tap'):
+                q = M.get(mn)
+                if q is not None:
+                    for pn in list(q.ports):
+                        if pn.endswith('_r'):
+                            q.ports.pop(pn)
+                    q.order[:] = [pn for pn in q.order if pn in q.ports]
         t = M.get('qfd_tile_nk')
         if t is not None:
             sp = t.ports['tap']
