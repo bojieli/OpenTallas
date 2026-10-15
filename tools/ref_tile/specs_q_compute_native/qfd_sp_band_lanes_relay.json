@@ -1,0 +1,618 @@
+{
+ "name": "qfd_sp_band_lanes_relay",
+ "top": "qfd_sp_band_lanes",
+ "kind": "cluster",
+ "clock": "hybrid_entries",
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_l0",
+  "ck_l1",
+  "ck_l2",
+  "ck_l3",
+  "ck_l4",
+  "ck_l5",
+  "ck_l6",
+  "ck_l7",
+  "ck_l8",
+  "ck_l9",
+  "ck_l10",
+  "ck_l11",
+  "ck_l12",
+  "ck_l13",
+  "ck_l14",
+  "ck_l15",
+  "ck_fn[0]",
+  "ck_fn[1]",
+  "ck_fn[2]",
+  "ck_fn[3]",
+  "ck_fn[4]",
+  "ck_fn[5]",
+  "ck_fn[6]",
+  "ck_fn[7]",
+  "ck_fe0",
+  "ck_fe1",
+  "ck_st[0]",
+  "ck_st[1]",
+  "ck_st[2]",
+  "ck_st[3]",
+  "ck_st[4]",
+  "ck_st[5]",
+  "ck_st[6]",
+  "ck_st[7]",
+  "ck_st[8]",
+  "ck_st[9]",
+  "ck_st[10]",
+  "ck_st[11]",
+  "ck_st[12]",
+  "ck_st[13]",
+  "ck_st[14]",
+  "ck_st[15]",
+  "ck_st[16]",
+  "ck_st[17]",
+  "ck_st[18]",
+  "ck_st[19]",
+  "ck_st[20]",
+  "ck_st[21]",
+  "ck_st[22]",
+  "ck_st[23]",
+  "ck_st[24]",
+  "ck_st[25]",
+  "ck_st[26]",
+  "ck_st[27]",
+  "ck_st[28]",
+  "ck_st[29]",
+  "ck_st[30]",
+  "ck_st[31]",
+  "ck_st[32]",
+  "ck_st[33]",
+  "ck_st[34]",
+  "ck_st[35]",
+  "ck_st[36]",
+  "ck_st[37]",
+  "ck_st[38]",
+  "ck_st[39]",
+  "ck_st[40]",
+  "ck_st[41]",
+  "ck_fq[0]",
+  "ck_fq[1]",
+  "ck_fq[2]",
+  "ck_fq[3]",
+  "ck_fj"
+ ],
+ "outline": {
+  "w": 881.28,
+  "h": 1131.84
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[0].u_lane",
+   "at": [
+    25.92,
+    25.92
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[1].u_lane",
+   "at": [
+    311.04,
+    25.92
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[2].u_lane",
+   "at": [
+    596.16,
+    25.92
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[3].u_lane",
+   "at": [
+    25.92,
+    203.04
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[4].u_lane",
+   "at": [
+    311.04,
+    203.04
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[5].u_lane",
+   "at": [
+    596.16,
+    203.04
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[6].u_lane",
+   "at": [
+    25.92,
+    380.16
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[7].u_lane",
+   "at": [
+    311.04,
+    380.16
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[8].u_lane",
+   "at": [
+    596.16,
+    380.16
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[9].u_lane",
+   "at": [
+    25.92,
+    557.28
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[10].u_lane",
+   "at": [
+    311.04,
+    557.28
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[11].u_lane",
+   "at": [
+    596.16,
+    557.28
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[12].u_lane",
+   "at": [
+    25.92,
+    734.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[13].u_lane",
+   "at": [
+    311.04,
+    734.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[14].u_lane",
+   "at": [
+    596.16,
+    734.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+   "count": 1,
+   "inst": "u_core.g_lane[15].u_lane",
+   "at": [
+    25.92,
+    911.52
+   ],
+   "orient": "MX"
+  }
+ ],
+ "required_hybrid_roots": {
+  "standard_cell_cts": [
+   "ck",
+   "ck_fn[0]",
+   "ck_fn[1]",
+   "ck_fn[2]",
+   "ck_fn[3]",
+   "ck_fn[4]",
+   "ck_fn[5]",
+   "ck_fn[6]",
+   "ck_fn[7]",
+   "ck_fe0",
+   "ck_fe1",
+   "ck_st[0]",
+   "ck_st[1]",
+   "ck_st[2]",
+   "ck_st[3]",
+   "ck_st[4]",
+   "ck_st[5]",
+   "ck_st[6]",
+   "ck_st[7]",
+   "ck_st[8]",
+   "ck_st[9]",
+   "ck_st[10]",
+   "ck_st[11]",
+   "ck_st[12]",
+   "ck_st[13]",
+   "ck_st[14]",
+   "ck_st[15]",
+   "ck_st[16]",
+   "ck_st[17]",
+   "ck_st[18]",
+   "ck_st[19]",
+   "ck_st[20]",
+   "ck_st[21]",
+   "ck_st[22]",
+   "ck_st[23]",
+   "ck_st[24]",
+   "ck_st[25]",
+   "ck_st[26]",
+   "ck_st[27]",
+   "ck_st[28]",
+   "ck_st[29]",
+   "ck_st[30]",
+   "ck_st[31]",
+   "ck_st[32]",
+   "ck_st[33]",
+   "ck_st[34]",
+   "ck_st[35]",
+   "ck_st[36]",
+   "ck_st[37]",
+   "ck_st[38]",
+   "ck_st[39]",
+   "ck_st[40]",
+   "ck_st[41]",
+   "ck_fq[0]",
+   "ck_fq[1]",
+   "ck_fq[2]",
+   "ck_fq[3]",
+   "ck_fj"
+  ],
+  "hard_child_entry": {
+   "ck_l0": "u_core.g_lane[0].u_lane/ck",
+   "ck_l1": "u_core.g_lane[1].u_lane/ck",
+   "ck_l2": "u_core.g_lane[2].u_lane/ck",
+   "ck_l3": "u_core.g_lane[3].u_lane/ck",
+   "ck_l4": "u_core.g_lane[4].u_lane/ck",
+   "ck_l5": "u_core.g_lane[5].u_lane/ck",
+   "ck_l6": "u_core.g_lane[6].u_lane/ck",
+   "ck_l7": "u_core.g_lane[7].u_lane/ck",
+   "ck_l8": "u_core.g_lane[8].u_lane/ck",
+   "ck_l9": "u_core.g_lane[9].u_lane/ck",
+   "ck_l10": "u_core.g_lane[10].u_lane/ck",
+   "ck_l11": "u_core.g_lane[11].u_lane/ck",
+   "ck_l12": "u_core.g_lane[12].u_lane/ck",
+   "ck_l13": "u_core.g_lane[13].u_lane/ck",
+   "ck_l14": "u_core.g_lane[14].u_lane/ck",
+   "ck_l15": "u_core.g_lane[15].u_lane/ck"
+  }
+ },
+ "clock_cts_roots": [
+  "ck",
+  "ck_fn[0]",
+  "ck_fn[1]",
+  "ck_fn[2]",
+  "ck_fn[3]",
+  "ck_fn[4]",
+  "ck_fn[5]",
+  "ck_fn[6]",
+  "ck_fn[7]",
+  "ck_fe0",
+  "ck_fe1",
+  "ck_st[0]",
+  "ck_st[1]",
+  "ck_st[2]",
+  "ck_st[3]",
+  "ck_st[4]",
+  "ck_st[5]",
+  "ck_st[6]",
+  "ck_st[7]",
+  "ck_st[8]",
+  "ck_st[9]",
+  "ck_st[10]",
+  "ck_st[11]",
+  "ck_st[12]",
+  "ck_st[13]",
+  "ck_st[14]",
+  "ck_st[15]",
+  "ck_st[16]",
+  "ck_st[17]",
+  "ck_st[18]",
+  "ck_st[19]",
+  "ck_st[20]",
+  "ck_st[21]",
+  "ck_st[22]",
+  "ck_st[23]",
+  "ck_st[24]",
+  "ck_st[25]",
+  "ck_st[26]",
+  "ck_st[27]",
+  "ck_st[28]",
+  "ck_st[29]",
+  "ck_st[30]",
+  "ck_st[31]",
+  "ck_st[32]",
+  "ck_st[33]",
+  "ck_st[34]",
+  "ck_st[35]",
+  "ck_st[36]",
+  "ck_st[37]",
+  "ck_st[38]",
+  "ck_st[39]",
+  "ck_st[40]",
+  "ck_st[41]",
+  "ck_fq[0]",
+  "ck_fq[1]",
+  "ck_fq[2]",
+  "ck_fq[3]",
+  "ck_fj"
+ ],
+ "sources": [
+  "rtl/qwen_sys/band_fault_tree_20261015/ot_qfd_band_fault_tree3.sv",
+  "rtl/qwen_sys/band_relay_20261015/ot_qfd_band_relay.sv"
+ ],
+ "defines": [],
+ "layer_cap": "M7",
+ "recipe": 2,
+ "reset_ports": [
+  "rst_n"
+ ],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 8
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 8.64
+ },
+ "pins": {
+  "E": [
+   "pw",
+   "f",
+   "c",
+   "f_up",
+   "pw_l0",
+   "pw_l1",
+   "pw_l2",
+   "pw_l3",
+   "tt",
+   "ck_l5",
+   "ck_l8",
+   "ck_l11",
+   "ck_l14",
+   "ck_fe0",
+   "ck_fe1",
+   "ck_fj"
+  ],
+  "S": [
+   "rst_n",
+   "b0",
+   "lnk",
+   "ck_l1",
+   "ck_l4",
+   "ck_l2",
+   "ck",
+   "ck_fq"
+  ],
+  "N": [
+   "ty",
+   "tw",
+   "ck_l15",
+   "ck_l13",
+   "ck_fn"
+  ],
+  "W": [
+   "ck_l0",
+   "ck_l3",
+   "ck_l6",
+   "ck_l9",
+   "ck_l12",
+   "ck_l7",
+   "ck_l10",
+   "ck_st"
+  ]
+ },
+ "structural_change": "q15 r13 BAND relay successor (claude/q15-band-successor). Measured predecessor failure: one std-cell root over 10,798 pin flops on three faces (TT 997..1756 ps) AND single-cycle port<->lane paths of 1.4-1.8 mm (c17 pins interleave each lane's 256 tw/ty bits over the whole face). Fix: lanes MX (tw/ty face toward N), two relay stations per lane per bus group (TW, TY, TT, CP, S) at planned points (worst planned hop 666 um), station flops on 42 local std-cell roots, face pin flops on 12 segment roots, Codex tree3 valid/fault (3 edges). Edges: lane inputs +2, round trip +2 LNK units (pw/f +4, returned tt +4), ty +8. Exact equivalence vs predecessor: rtl/test/qwen_band_relay (3 mutants fail).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/rtl/qwen_band_relay_1015/station_plan.json",
+  "cell": "qfd_sp_band_lanes",
+  "why": "structural: relay stations + local roots replace the 10.8k-flop single root and 1.8 mm single-cycle paths"
+ },
+ "job": {
+  "owner": "Claude:q15_band_helper",
+  "branch": "claude/q15-band-successor",
+  "tag": "rl1",
+  "purpose": "BAND relay successor: 16 CLOSED lanes MX, 2 relay stations per lane/group, 70 clock entries",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/qwen_band_fault_tree_1015",
+   "physical/qwen_band_native_1014",
+   "physical/qwen_band_relay_1015",
+   "results/rtl/qwen_compute_native_glue_1014/band_native_io",
+   "rtl/hdc",
+   "rtl/physical/ot_qwen_spine_lane.sv",
+   "rtl/physical/ot_qwen_tt_up4_cluster.sv",
+   "rtl/qwen_sys/band_fault_tree_20261015",
+   "rtl/qwen_sys/band_relay_20261015",
+   "rtl/qwen_sys/lane_band_20261008",
+   "rtl/test/qwen_band_relay",
+   "rtl/test/qwen_lane_band",
+   "rtl/test/qwen_split/tb_qfd_upper_faces.sv",
+   "tools/qwen_split/run_up4_faces_bench.sh"
+  ],
+  "benches": [
+   {
+    "name": "equiv_relay_vs_predecessor",
+    "cmd": "bash rtl/test/qwen_band_relay/run_equiv.sh {RUN}/bench/equiv 0",
+    "expect": "pass",
+    "pass_regex": "^BAND_RELAY_EQUIV PASS",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "equiv_mut1_lnk_short",
+    "cmd": "bash rtl/test/qwen_band_relay/run_equiv.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "fail_regex": "^BAND_RELAY_EQUIV FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "equiv_mut2_station_skip",
+    "cmd": "bash rtl/test/qwen_band_relay/run_equiv.sh {RUN}/bench/m2 2",
+    "expect": "fail",
+    "fail_regex": "^BAND_RELAY_EQUIV FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "equiv_mut3_fault_drop",
+    "cmd": "bash rtl/test/qwen_band_relay/run_equiv.sh {RUN}/bench/m3 3",
+    "expect": "fail",
+    "fail_regex": "^BAND_RELAY_EQUIV FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "fault_tree3_formal",
+    "cmd": "bash physical/qwen_band_fault_tree_1015/run_proofs.sh {RUN}/bench/tree3",
+    "expect": "pass",
+    "pass_regex": "BAND_TREE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "yosys",
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_sp_band_lanes_relay/views",
+  "record_to": "results/rtl/ref_tile/qfd_sp_band_lanes_relay"
+ },
+ "child_lattice_um": 2.16,
+ "pin_ranges": {
+  "tt": [
+   676.188,
+   823.74
+  ],
+  "pw": [
+   325.404,
+   374.556
+  ],
+  "f": [
+   399.996,
+   399.996
+  ],
+  "c": [
+   428.796,
+   431.19599999999997
+  ],
+  "f_up": [
+   459.85200000000003,
+   460.14000000000004
+  ],
+  "pw_l0": [
+   494.7,
+   506.988
+  ],
+  "pw_l1": [
+   507.468,
+   519.756
+  ],
+  "pw_l2": [
+   520.236,
+   532.524
+  ],
+  "pw_l3": [
+   533.0039999999999,
+   545.2919999999999
+  ],
+  "rst_n": [
+   20.028,
+   20.028
+  ],
+  "b0": [
+   25.02,
+   25.02
+  ],
+  "lnk": [
+   32.028,
+   32.508
+  ],
+  "ty": [
+   33.42,
+   426.54
+  ],
+  "tw": [
+   453.42,
+   846.54
+  ]
+ },
+ "io_tcl": "physical/qwen_band_relay_1015/assigned_pins.tcl",
+ "pin_hook_before_flops": [
+  "physical/qwen_band_relay_1015/station_place.tcl"
+ ],
+ "orfs_vars": {
+  "POST_GLOBAL_PLACE_TCL": "physical/qwen_band_relay_1015/station_release.tcl",
+  "POST_RESIZE_TCL": "physical/common_flow/post_resize_relocate.tcl"
+ }
+}
