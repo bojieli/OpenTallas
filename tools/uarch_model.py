@@ -438,6 +438,12 @@ def hgi_collective_endpoint_model():
     return endpoint_model()
 
 
+def hgi_collective_core_fec_boundary_model():
+    """Actual core1.2/FEC16:17 finite CDC and stepped613/487 calendar."""
+    from hbm_io.core_fec_calendar import model
+    return model()
+
+
 def hgi_collective_capture_endpoint_model():
     """All command/data inputs first captured, native SRAM/CRC TX6/RX2."""
     from uarch_model_hcoll_capture import model

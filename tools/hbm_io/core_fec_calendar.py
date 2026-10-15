@@ -46,6 +46,7 @@ def model():
  return dict(core_GHz=1.2,FEC_GHz=1.2*16/17,core_period_ticks=16,FEC_period_ticks=17,
   core_period_ps=833.333333333,FEC_period_ps=885.416666667,tick_ps=52.083333333,
   words=2048,CDC_entries=16,Gray_sync_stages=2,
+  complete_frame_capacity=1627,tail_padding_bits=25,tail_frame_must_be_idle=True,
   actual_CDC_payload_register_bits=2*16*487,
   actual_CDC_read_face_register_bits=2*487,
   control_root_register_bits_upper_bound_per_domain=9000,

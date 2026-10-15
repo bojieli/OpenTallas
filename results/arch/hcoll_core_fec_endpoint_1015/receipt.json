@@ -1,0 +1,124 @@
+{
+  "source_sha256": {
+    "rtl/hbm_accel/io_static_20261015/tb_core_fec_endpoint.sv": "8a1d10e6b067765dcf1f9a9031039889f23d5e6d7f90ec140920225f01d91763",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_core_fec_word_window.sv": "268a267d80284b5ccfad46967dce7fe816962a1cbc73519b4674d6a8b43b5071",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_word_cdc.sv": "ad94b9faac315ceab60a97cfbc6c3242ab0872031b252132bb7f72b769182d0e",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_gearbox_step.sv": "8e46150b7c03250a472282f2dcc411513aa74d84822c5fd05488c2f5ad6a581c",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_frame_transport_step.sv": "e59bb8a2a6408757b899cab2ae8793677ac3d61791f8fbcd41e96e29588e62cb",
+    "rtl/hbm_accel/io_static_20261015/tb_stepped_frame_bits.sv": "7b30f18b70f320da64f84f0d384660bf7133fc84a1509b22bbffa09c7764db54",
+    "rtl/hbm_accel/io_static_20261015/CORE_FEC_BOUNDARY.md": "4cfec8b1768ad6517d7b3e04432c888aefe822d4c89a51d70f9b0463094679ce",
+    "rtl/hbm_accel/io_static_20261015/hfd_serdes487_phy512_static_window.sv": "6331e5cfe79c7065523dda4f078468cb6556d3857c8ca6f7b3d78dd76f4df461",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_pma_block_gearbox.sv": "f1088a53729847bfcf1bd6436a0c96c61083a86cee48941170d3aa72123ebe04",
+    "tools/hbm_io/run_core_fec_endpoint_gate.sh": "03195cacb95d7e0887bdcc15c5ec30ab784898441571d62aa765eb8f141760de",
+    "tools/hbm_io/run_stepped_frame_bits.sh": "936bc58d36a6e6ce1b5ae9f6458baf0f4952d85b2bb1734cca1fc3b149cb1923",
+    "tools/hbm_io/core_fec_calendar.py": "8e0525703b02bf0a0f0f12d0f9205d45589809617d799bfe5596ca7eb7fc07c8"
+  },
+  "model": {
+    "core_GHz": 1.2,
+    "FEC_GHz": 1.1294117647058823,
+    "core_period_ticks": 16,
+    "FEC_period_ticks": 17,
+    "core_period_ps": 833.333333333,
+    "FEC_period_ps": 885.416666667,
+    "tick_ps": 52.083333333,
+    "words": 2048,
+    "CDC_entries": 16,
+    "Gray_sync_stages": 2,
+    "complete_frame_capacity": 1627,
+    "tail_padding_bits": 25,
+    "tail_frame_must_be_idle": true,
+    "actual_CDC_payload_register_bits": 15584,
+    "actual_CDC_read_face_register_bits": 974,
+    "control_root_register_bits_upper_bound_per_domain": 9000,
+    "clock_groups": [
+      "core1.2:TXstorage+RXread",
+      "FEC16/17:RXstorage+TXread"
+    ],
+    "TX_word_steps": [
+      511,
+      2685
+    ],
+    "TX_CDC_writes": [
+      512,
+      2686
+    ],
+    "TX_CDC_FEC_reads": [
+      488,
+      2535
+    ],
+    "FEC_input_edges": [
+      489,
+      2536
+    ],
+    "FEC_age_edges": 151,
+    "FEC_capture_edges": [
+      640,
+      2687
+    ],
+    "internal_FEC_CDC_reads": [
+      648,
+      2695
+    ],
+    "RX_CDC_FEC_writes": [
+      649,
+      2696
+    ],
+    "RX_CDC_core_reads": [
+      697,
+      2871
+    ],
+    "RX_gearbox_core_steps": [
+      698,
+      2872
+    ],
+    "frame_acceptance": "511+floor(17*floor(613*j/487)/16)",
+    "endpoint_read": "A-7",
+    "endpoint_write": "A-11",
+    "endpoint_RX_capture": "700+floor(17*(ceil(613*(j+1)/487)-1)/16)",
+    "endpoint_RX_publish": "702+floor(17*(ceil(613*(j+1)/487)-1)/16)",
+    "stop_contract": "word_step=0 outside finite2048word reservations; core may continue local decode/store afterwindow; no missingword fault on unreserved edges",
+    "bandwidth_application_bytes_per_core_cycle": 47.85414067747817,
+    "scope": "model before new stepgearbox/real CDC RTL; actualclockphase/drift/physical and wholeintegration tests pending"
+  },
+  "positive": {
+    "payloads": 234,
+    "idle_slots": 66,
+    "actual_decoded_words": 2048,
+    "actual_internal_CDC_words": 2048,
+    "actual_external_CDCs": 2,
+    "actual_PMA_bits": 512,
+    "actual_FEC_age": 151,
+    "core_GHz": 1.2,
+    "FEC_GHz": 1.1294117647058823,
+    "final_core_cycle": 2900
+  },
+  "bit_gate": {
+    "full_frames": 1627,
+    "bits_checked": 997351,
+    "tail_idle_bits": 25,
+    "mutants_rejected": 2
+  },
+  "CDC_phase_drift_gate": "separateactual9profile proof results/arch/hcoll_core_fec_cdc_1015/receipt.json, exact487bits\u00d72048words\u00d72directions; nofullPMAphase/driftclaim",
+  "faults": [
+    "transportedvalidflip\u2192missingframe004",
+    "missingRXwordvalid\u2192gearboxfault (unchanged data stillfault)",
+    "wordcorruptionbeforeFEC\u2192CRC001",
+    "PHYdown\u2192TXabort010",
+    "ForneyactualDMUT2\u2192decodederrorF640"
+  ],
+  "runs": {
+    "host": "ot-agidock128",
+    "positive_unit": "oth-ubuntu-3838501-1792056498",
+    "forney_unit": "oth-ubuntu-3838502-1792056498",
+    "runner_exit": 0,
+    "memory_GB": 8,
+    "threads": 4
+  },
+  "scope": "Directactualcomponentassembly withrealnativeSRAM/CRC andreal16entryCDCs, actual512PMArootcomponent; newwiresonlyAPIc69d89367 independentwiringbenchinflight; noidealwireorcorefrequencyrelaxation",
+  "limitations": [
+    "physicalrootphase/MTBF/timingunqualified",
+    "FECroot151samephasefamilyprofilepreserved",
+    "fullG96/Engramtokrateunqualified",
+    "unboundedwindowstreaming/recoveryunimplemented"
+  ]
+}
