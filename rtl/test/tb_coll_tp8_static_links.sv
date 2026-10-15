@@ -167,7 +167,12 @@ module tb_coll_tp8_static_links #(
             assign shareflt[g]=0;
             // ---------------- collective ----------------
 `ifdef OT_TP8S_QFD
+`ifdef OT_TP8S_LOCAL_ROOTS
+            qfd_io_collective_local_roots u_die (
+                .clk_region({34{clk}}),
+`else
             qfd_io_collective_static u_die (       // the die-name master (LU / LS by +define)
+`endif
                 .clk(clk), .clk_pfold0(clk), .clk_pfold1(clk), .clk_pfold2(clk), .clk_pfold3(clk),
                 .clk_xfold0(clk), .clk_xfold1(clk), .clk_xfold2(clk), .clk_xfold3(clk),
                 .clk_pring0(clk),.clk_pring1(clk),.clk_sring0(clk),.clk_sring1(clk),.clk_sring2(clk),.clk_sring3(clk),.clk_sring4(clk),.clk_rring0(clk),.clk_rring1(clk),

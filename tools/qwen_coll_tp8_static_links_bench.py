@@ -84,8 +84,9 @@ def program_words(prog, nwords, cmd_pin_stages=0):
     return pw
 
 
-def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, relays=(0,0,0,0), shared=False, six_five=False, seqsu=False):
+def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, relays=(0,0,0,0), shared=False, six_five=False, seqsu=False, local_roots=False):
     obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}_phi{phi}{'_qfd' if qfd else ''}{'_seqsu' if seqsu else ''}{('_' + define) if define else ''}"
+    if local_roots:obj=Path(str(obj)+"_localroots")
     h = out / f"harness_phi{phi}.cpp"
     step = ("t->clk = 1; t->lck = 1; t->eval(); t->clk = 0; t->lck = 0; t->eval();" if phi == 0 else
             "t->clk = 1; t->eval(); t->lck = 1; t->eval(); t->clk = 0; t->eval(); t->lck = 0; t->eval();")
@@ -105,6 +106,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
           [str(h), "-CFLAGS", "-O1", "-j", "16"]
     if six_five:cmd += ["+define+OT_TP8S_PRODUCTION_WRAPPER"]
     if seqsu:cmd += ["+define+OT_TP8S_SEQSU"]
+    if local_roots:cmd += ["+define+OT_TP8S_LOCAL_ROOTS"]
     if parent:
         cmd += [f"-GSHARED={int(shared)}",f"-GSIXFIVE={int(six_five)}", "+define+OT_TP8S_PARENT"] + [f"-G{p}={v}" for p,v in zip(("RU","RS0","RS1","RS2"),relays)]
     if qfd:
@@ -118,9 +120,9 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
         exact_sources={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in SRC}
         if (prior.get("source_sha256")==exact_sources and
             prior.get("executable_sha256")==hashlib.sha256(exe.read_bytes()).hexdigest() and
-            all(prior.get(k)==v for k,v in dict(latu=lu,lats=ls,xu=xu,xs=xs,phi=phi,
+            all(prior.get(k,False if k=="local_roots" else None)==v for k,v in dict(latu=lu,lats=ls,xu=xu,xs=xs,phi=phi,
               phy_ucie=PU,phy_serdes=PS,die_name_master=qfd,production_parent=parent,
-              relays=list(relays),shared_ucie=shared,six_five=six_five,mutant=define,sequencer_face=seqsu).items())):
+              relays=list(relays),shared_ucie=shared,six_five=six_five,mutant=define,sequencer_face=seqsu,local_roots=local_roots).items())):
             return exe
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode:
@@ -142,6 +144,7 @@ def main():
     ap.add_argument("--mutant-define", default=None)
     ap.add_argument("--only", default=None)
     ap.add_argument("--qfd", action="store_true")
+    ap.add_argument("--local-roots",action="store_true",help="source candidate regional-clock collective; component only, no physical or production-parent qualification")
     ap.add_argument("--relays",type=int,nargs=4,default=[0,0,0,0],metavar=("U","S0","S1","S2"))
     ap.add_argument("--parent",action="store_true",help="actualproduction collective+fiveface parent")
     ap.add_argument("--shared-ucie",action="store_true")
@@ -155,6 +158,9 @@ def main():
         a.parent=True;a.shared_ucie=True
         PU=20  # r10 200 MHz block-stage gearbox: 19 core edges + registered codec pin
     if a.parent:a.qfd=True
+    if a.local_roots:
+        assert a.qfd and not a.parent,"regional source candidate requires --qfd and has no qualified production-parent binding"
+        SRC.extend([ROOT/"rtl/rom/ot_coll_tp8_local_roots.sv",ROOT/"rtl/physical/ot_qfd_io_collective_local_roots.sv"])
     a.out = a.out.resolve()
     a.out.mkdir(parents=True, exist_ok=True)
     cases = PRODUCTION if a.production else UNIT
@@ -166,7 +172,7 @@ def main():
         cases = [c for c in cases if c[4] == "pos"]
     if a.seqsu:
         assert a.production, "the sequencer face admits tags 0..2: production programs (<= 3 messages) only"
-    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.phi, a.mutant_define, a.qfd, a.parent, a.relays, a.shared_ucie, a.six_five, a.seqsu)
+    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.phi, a.mutant_define, a.qfd, a.parent, a.relays, a.shared_ucie, a.six_five, a.seqsu,a.local_roots)
     bad, records = [], []
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):
         rng = np.random.default_rng(100 + i)
@@ -211,7 +217,7 @@ def main():
         modelled="PHY frame pipes only (fixed latency); all on-chip blocks are the real RTL masters",
         mechanism="compiler program -> fixed-issue core -> collective tokens -> IO calendar slots; no credits/ready/"
                   "backpressure; observed validity, CRC and publication are fault-only checks",
-        cases=records, source_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SRC},
+        local_roots=a.local_roots,cases=records, source_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SRC},
         helper_sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in
           ("tools/qwen_coll_tp8_static_links_bench.py","tools/qwen_coll_tp8_static_bench.py","tools/qwen_coll_tp8_bench.py","tools/hdc_golden.py")},
         executable_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(), native_layer_qualified=False,
