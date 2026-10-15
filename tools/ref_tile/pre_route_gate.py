@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import re
 import shlex
@@ -689,6 +690,16 @@ def absent_working_inputs(seeds):
     return sorted(p for p in seen - soft - overlaid if not (ROOT / p).is_file())
 
 
+def gate_route_clock_hooks(script: str, spec: dict) -> str:
+    """Run the same supported physical clock hooks as a multi-root route job."""
+    if spec.get("clock") != "multiple_cts_roots":
+        return script
+    marker = "export OT_ORFS_CORNER_OVERRIDE=TC\n"
+    if script.count(marker) != 1:
+        raise ValueError("remote gate clock-hook insertion marker changed")
+    return script.replace(marker, marker + "export OT_CTS_FIX_HOOKS=" + shlex.quote(RT.clock_fix_hooks(spec)) + "\n", 1)
+
+
 def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool):
     fp = json.loads((kd / "floorplan.json").read_text())
     absent = absent_working_inputs(set(fp["referenced"]))
@@ -728,6 +739,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
+    sh = gate_route_clock_hooks(sh, spec)
     import hashlib
     binding["remote_script_sha256"] = hashlib.sha256(sh.encode()).hexdigest()
     binding["tool_image_requested"] = "openroad/orfs:latest"
@@ -904,6 +916,32 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
     ok, text = TL.clock_rule(rec["max_root_sinks"], rec)
     rec["verdict"] = "PASS" if ok and rec["max_root_sinks"] is not None else ("UNKNOWN" if ok else "REFUSE")
     rec["text"] = text
+    if (spec or {}).get("clock") == "multiple_cts_roots":
+        expected = set(spec["clock_ports"])
+        actual = [d.get("source") for d in domains]
+        issues = []
+        per_root = []
+        if not cts:
+            issues.append("multiple_cts_roots requires actual --cts measurement")
+        if len(actual) != len(set(actual)) or set(actual) != expected:
+            issues.append("actual per-root clock measurement coverage differs from clock_ports")
+        for domain in domains:
+            al = (domain.get("tt") or {}).get("all") or {}
+            try:
+                n = int(al["n"])
+                lo, hi = float(al["min"]), float(al["max"])
+                if n <= 0 or not math.isfinite(lo) or not math.isfinite(hi) or not 0 < lo <= hi:
+                    raise ValueError("invalid actual clock population")
+                measured = {"tt_insertion_ps": hi, "tt_spread_ps": hi - lo}
+                passed, why = TL.clock_rule(n, measured)
+                per_root.append(dict(source=domain.get("source"), sinks=n, **measured, verdict="PASS" if passed else "REFUSE", text=why))
+                if not passed:
+                    issues.append(f"{domain.get('source')}: {why}")
+            except (KeyError, TypeError, ValueError, OverflowError):
+                issues.append(f"{domain.get('source')}: missing finite positive actual TT root census")
+        rec["per_root"] = per_root
+        if issues:
+            rec["verdict"], rec["text"] = "REFUSE", "; ".join(issues)
     return rec
 
 
