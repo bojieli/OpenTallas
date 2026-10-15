@@ -1,0 +1,24 @@
+{
+  "scope": "New actual static PMAX8 bank memory shell only. Not adopted SYS1/full HC or physical qualification.",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_memory_static.sv": "520ea21fe63c7a3e005914192dda8070afecf9914218ebda3366e6ccfe00d7e1",
+    "rtl/test/tb_hgi_hc_bank_memory_static.sv": "8fa56e9579f117a433084381270ef6879797c36879b1d3092c6b85908c76c3b8",
+    "tools/hbm_hc/run_bank_memory.sh": "2964ae0da24a49ec9a49a25708f116acb688ebf9b28812de3275a240c59bac99",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  },
+  "positive": "1280 streaming paired reads PASS; full2slots128weightrows and640residualwords, including32partial-mask writes retaining disabled words",
+  "mutant": "Wrong captured-slot select rejected at first checked word after both slots warmed; finite wrong data, not unknown initial SRAM output",
+  "actual_macros": {
+    "weight128x256": 8,
+    "residual1024x256": 2
+  },
+  "payload_capture_FF": 4096,
+  "pipeline": "macro read edge n, raw both-slot/residual capture n+1, selected output capture n+2, downstream MAC input capture n+3; TML3 must be adopted explicitly",
+  "write_timing": "Existing aperture one-edge staging preserved; residual direct writes preserved",
+  "unit": "oth-ubuntu-1872693-1792061619",
+  "host": "ot-epyc4",
+  "terminal_exit": 0,
+  "physical_qualified": false,
+  "blocking_physical_dependency": "Assigned actual shell slot and pins not yet provided by geometry owner; stage/controller/clock composition remains source work"
+}

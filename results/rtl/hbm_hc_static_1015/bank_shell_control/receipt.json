@@ -1,0 +1,22 @@
+{
+  "scope": "Actual combined memory+stage-control shell; exact control lockstep with unchanged legacy stage W32ML3LA7SOR1LG8; MAC arithmetic stubbed explicitly for this control-only comparison",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_shell_static.sv": "923e1e8a19ff482a855bb39efcccf9d32f2ee796aa76f97947183bd16095fda3",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_memory_static.sv": "520ea21fe63c7a3e005914192dda8070afecf9914218ebda3366e6ccfe00d7e1",
+    "rtl/test/tb_hgi_hc_bank_shell_control_static.sv": "5785792fb3c516632dd5c99a61bc537e6d60c11431662a96cb5c9a63cc6e06a0",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "eac33983ff7fb15706851dbc14dc89cb6986bfa0abdfd98c850b3c7379dee474",
+    "tools/hbm_hc/run_bank_shell_control.sh": "5c0ce174075b4125ab44848105f3d9a12b7dc0a9fd55d5b79bc3bee1366f89e3"
+  },
+  "positive": "1027cycles PASS descriptor, lane_valid/lane_ss/lane_go, memoryreadsignals/addresses, upstreamfault propagation",
+  "mutant": "Actual descriptor output tap8->7 rejected atcycle13",
+  "unit": "oth-ubuntu-1888210-1792061756",
+  "host": "ot-epyc4",
+  "terminal_exit": 0,
+  "clock_partition": "This shell one root; four acceptedLG8 MAC roots outside it. Eightbanks=>40bankroots plus globalcontroller/tree/tail>=3; actual global composition unimplemented",
+  "wa_slot_mapping": "wa[7]=slot,wa[6:0]=row; owner-approved productionnout1/R80 only",
+  "limitations": [
+    "No physical pin/slot contract yet",
+    "No full arithmetic/system composition or calendar claim",
+    "Residualwrites remain direct, aperture+1, readsTML3"
+  ]
+}

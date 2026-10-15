@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.hbm.lg-native-route-launch.v1",
+  "owner": "/root/h_vm",
+  "status": "ACTIVE at2026-10-15T10:51UTC; revalidate handle",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-947834-1792061427",
+  "directory": "/srv/opentallas-scratch/codex/lg-native-route-1015",
+  "local_exec": 31302,
+  "source_snapshot": "Exact source copy from /srv/opentallas-scratch/claude/ref_gate/vm_lg_bank_hc_static_1015-20261015-023632/src",
+  "prior_gate_receipt": "results/arch/hbm_vm_lg_split_1015/physical_leaf_gate/receipt.json",
+  "leaf_sha256": "31acf6679c2fcd95c2abd3897daae041710f7c7a5f318d9d2e1f8541c8b377a4",
+  "pin_hook": "7eb4de7d2 actual direct ODB rectangles",
+  "outline_um": [
+    150.336,
+    151.2
+  ],
+  "orientation": "R0 only",
+  "signal_pins": 1673,
+  "root_sinks_prior_gate": 1448,
+  "resources": {
+    "GB": 8,
+    "threads": 8,
+    "synth_timeout": "unlimited"
+  },
+  "constraints": "Existing published native833.333ps clock with60ps setup25ps hold uncertainty, actual TT/FF multicorner repair, M5 signal cap. No bank-local ECO imported.",
+  "acceptance": [
+    "actual final ODB pin/PG/on-track/spacing audit",
+    "actual routed DRC",
+    "TT setup and independent FF min-path hold from routed SPEF and exact signoffSDC",
+    "routed boundary clock insertion/spread at all actual interfaces",
+    "root fanout/slew",
+    "native source/phase timing bench matched same2edge transport"
+  ],
+  "scope": "Single independent leaf prototype; three stage near/mid/far and96leaf whole-die station reach/relativephase/consumer programme composition remain separate; no qualification inferred from launch"
+}

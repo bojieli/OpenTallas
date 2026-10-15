@@ -1,0 +1,67 @@
+[
+  {
+    "schema": "opentallas.qwen-central-vm-control-leaf.v1",
+    "master": "ot_qfd_vm_bctl_nx",
+    "parameters": {
+      "LAW": 8,
+      "NRI": 2
+    },
+    "macs_per_cycle": 0,
+    "memory_bytes_per_cycle": 0,
+    "memory_macros": 0,
+    "input_bits_per_cycle": 35,
+    "output_bits_per_cycle": 35,
+    "commands_per_cycle": 1,
+    "fixed_data_edges": 2,
+    "added_fixed_data_edges": 0,
+    "register_bits": 70,
+    "replicas": 64,
+    "clock_roots_per_replica": 1,
+    "outline_um": [
+      12.96,
+      17.28
+    ],
+    "outline_area_um2": 223.94880000000003,
+    "total_area_um2": 14332.723200000002,
+    "worst_face_tracks": 35,
+    "estimated_face_tracks": 67.5,
+    "estimated_face_cut_ratio": 0.5185185185185185,
+    "mux_demux_cost": "observer 16-bit write mask gating; bank controller registered direct relay",
+    "memory_bandwidth_bytes_per_cycle": 0,
+    "placement": "beside actual bank; homes pending geometry lead",
+    "token_latency_change_edges": 0,
+    "qualification": "sizing only; actual mapped area/CTS/route/native pins pending"
+  },
+  {
+    "schema": "opentallas.qwen-central-vm-control-leaf.v1",
+    "master": "qfd_vm_qcommit",
+    "parameters": {
+      "LAW": 8
+    },
+    "macs_per_cycle": 0,
+    "memory_bytes_per_cycle": 0,
+    "memory_macros": 0,
+    "input_bits_per_cycle": 27,
+    "output_bits_per_cycle": 25,
+    "commands_per_cycle": 1,
+    "fixed_data_edges": 2,
+    "added_fixed_data_edges": 0,
+    "register_bits": 51,
+    "replicas": 39,
+    "clock_roots_per_replica": 1,
+    "outline_um": [
+      12.96,
+      15.12
+    ],
+    "outline_area_um2": 195.9552,
+    "total_area_um2": 7642.252799999999,
+    "worst_face_tracks": 27,
+    "estimated_face_tracks": 44.999999999999986,
+    "estimated_face_cut_ratio": 0.6000000000000002,
+    "mux_demux_cost": "observer 16-bit write mask gating; bank controller registered direct relay",
+    "memory_bandwidth_bytes_per_cycle": 0,
+    "placement": "beside actual bank; homes pending geometry lead",
+    "token_latency_change_edges": 0,
+    "qualification": "sizing only; actual mapped area/CTS/route/native pins pending"
+  }
+]
