@@ -46,7 +46,8 @@ module tb_hbm_sm_attn;
                     .i_run_first(c_tag[14]), .i_run_last(c_tag[13]), .i_tag(c_tag),
                     .i_w(c_w[256*q +: 256]), .i_x(c_x[1024*cc + 256*q +: 256]),
                     .ov(ov[I]), .y(y[32*I +: 32]), .otag(otag[16*I +: 16]),
-                    .pv_v(pvv[I]), .pv_y(pvy[512*I +: 512]), .pv_tag(pvt[16*I +: 16]), .fault(cf[I]));
+                    .pv_v(pvv[I]), .pv_y(pvy[512*I +: 512]), .pv_tag(pvt[16*I +: 16]), .fault(cf[I]),
+                    .pub_start(1'b0), .pub_slot(3'd0), .pub_v(), .pub_data(), .pub_word(), .pub_out_slot(), .pub_tag());
             end else begin : g_flat
             ot_hbm_sm_tcpv_col #(.L(16), .IL(8), .TAGW(16), .ALAT(7), .LV(LV), .MUT(PVMUT)) u_c (.clk(clk), .rst_n(rst_n),
                 .v(c_v), .first(c_first), .last(c_last), .tag(c_tag), .w(c_w[256*q +: 256]), .x(c_x[1024*cc + 256*q +: 256]),

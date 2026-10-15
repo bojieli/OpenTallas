@@ -6,7 +6,7 @@
 // This parent is wires only. New sum-capture and merge leaves have separate
 // names; no physical view is inherited from a closed master.
 module ot_hbm_sm_attn_native_col #(
-    parameter integer TAGW=16, LV=4, MUT=0
+    parameter integer TAGW=16, LV=4, MUT=0, PUBLISH=0
 )(
     input wire clk, rst_n,
     input wire i_v, i_first, i_qk_last, i_pv_last,
@@ -19,7 +19,14 @@ module ot_hbm_sm_attn_native_col #(
     output wire pv_v,
     output wire [511:0] pv_y,
     output wire [TAGW-1:0] pv_tag,
-    output wire fault
+    output wire fault,
+    input wire pub_start,
+    input wire [2:0] pub_slot,
+    output wire pub_v,
+    output wire [31:0] pub_data,
+    output wire [3:0] pub_word,
+    output wire [2:0] pub_out_slot,
+    output wire [TAGW-1:0] pub_tag
 );
     wire [255:0] s0,s1;
     wire lf0,lf1,qf,mf;
@@ -36,8 +43,9 @@ module ot_hbm_sm_attn_native_col #(
     ot_hbm_sm_attn_sum_capture #(.TAGW(TAGW)) u_cap(.clk(clk),.rst_n(rst_n),
         .i_v(i_v),.i_last(i_pv_last),.i_run_first(i_run_first),.i_run_last(i_run_last),
         .i_tag(i_tag),.sum_i({s1,s0}),.event_v(event_v),.event_sum(event_sum),.event_tag(event_tag));
-    ot_hbm_sm_pv_merge #(.TAGW(TAGW),.LV(LV),.MUT(MUT)) u_merge(.clk(clk),.rst_n(rst_n),
-        .ev(event_v),.sum(event_sum),.tag_d(event_tag),.pv_v(pv_v),.pv_y(pv_y),.pv_tag(pv_tag),.fault(mf));
+    ot_hbm_sm_pv_merge #(.TAGW(TAGW),.LV(LV),.MUT(MUT),.PUBLISH(PUBLISH)) u_merge(.clk(clk),.rst_n(rst_n),
+        .ev(event_v),.sum(event_sum),.tag_d(event_tag),.pv_v(pv_v),.pv_y(pv_y),.pv_tag(pv_tag),.fault(mf),.pub_start(pub_start),.pub_slot(pub_slot),
+        .pub_v(pub_v),.pub_data(pub_data),.pub_word(pub_word),.pub_out_slot(pub_out_slot),.pub_tag(pub_tag));
     assign fault=qf|mf;
 endmodule
 

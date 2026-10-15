@@ -111,7 +111,8 @@ module ot_hbm_sm_tcpv_col #(
     wire merge_fault;
     ot_hbm_sm_pv_merge #(.L(L), .IL(IL), .TAGW(TAGW), .ALAT(ALAT), .LV(LV), .MUT(MUT)) u_pv (
         .clk(clk), .rst_n(rst_n), .ev(ll[LL] && pvd), .sum(sum), .tag_d(tag_d),
-        .pv_v(pv_v), .pv_y(pv_y), .pv_tag(pv_tag), .fault(merge_fault));
+        .pv_v(pv_v), .pv_y(pv_y), .pv_tag(pv_tag), .fault(merge_fault),
+        .pub_start(1'b0), .pub_slot(3'd0), .pub_v(), .pub_data(), .pub_word(), .pub_out_slot(), .pub_tag());
     assign fault = lane_fault | tfault_q | merge_fault;
 endmodule
 `default_nettype wire

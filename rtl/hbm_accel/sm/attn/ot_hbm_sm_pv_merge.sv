@@ -7,7 +7,7 @@
 // The production hierarchical caller reuses CLOSED tcl halves and provides ev
 // at closed tct's LL=16 boundary. The flat component caller retains LL=12.
 module ot_hbm_sm_pv_merge #(
-    parameter integer L=16, IL=8, TAGW=16, ALAT=7, LV=4, MUT=0
+    parameter integer L=16, IL=8, TAGW=16, ALAT=7, LV=4, MUT=0, PUBLISH=0
 )(
     input wire clk, rst_n,
     input wire ev,
@@ -16,11 +16,29 @@ module ot_hbm_sm_pv_merge #(
     output reg pv_v,
     output reg [L*32-1:0] pv_y,
     output reg [TAGW-1:0] pv_tag,
-    output wire fault
+    output wire fault,
+    // Compiler-fixed publication requests; next request may prefetch while
+    // word14 of the preceding node is emitted. No ready or retry port.
+    input wire pub_start,
+    input wire [2:0] pub_slot,
+    output reg pub_v,
+    output reg [31:0] pub_data,
+    output reg [3:0] pub_word,
+    output reg [2:0] pub_out_slot,
+    output reg [TAGW-1:0] pub_tag
 );
     initial if (L!=16 || IL!=8 || ALAT!=7 || LV<1 || LV>8 || TAGW<6)
         $fatal(1,"PV merge requires16lanes,8slots,LAT7,LV1..8,TAGW>=6");
+    initial if(PUBLISH && LV>7)$fatal(1,"publication reserves unused stack level7");
     genvar l;
+    wire publish_request=PUBLISH ? pub_start : 1'b0;
+    wire finish;
+    wire [2:0] finish_slot;
+    wire [5:0] stack_read_addr;
+    wire [5:0] stack_write_addr;
+    wire stack_write_en;
+    wire [511:0] stack_write_data;
+
     // ---------------- PV: barrel binary-counter merge ----------------
     localparam integer KW = 3;
     reg  [2:0]  bp;                                   // entry whose turn it is
@@ -39,8 +57,8 @@ module ot_hbm_sm_pv_merge #(
     reg         sw_ce;
     reg  [5:0]  sw_a;
     reg  [L*32-1:0] sw_d;
-    ot_sram_1r1w_64x512_m1_r2c2 u_stack (.clk(clk), .r_ce_in(1'b1), .r_addr_in(sr_a), .rd_out(st_rd),
-        .w_ce_in(sw_ce), .w_addr_in(sw_a), .wd_in(sw_d), .w_mask_in({512{1'b1}}),
+    ot_sram_1r1w_64x512_m1_r2c2 u_stack (.clk(clk), .r_ce_in(1'b1), .r_addr_in(stack_read_addr), .rd_out(st_rd),
+        .w_ce_in(stack_write_en), .w_addr_in(stack_write_addr), .wd_in(stack_write_data), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     // merge adder operands of this turn
     reg  [L*32-1:0] ma, mb;
@@ -55,6 +73,13 @@ module ot_hbm_sm_pv_merge #(
     always @(posedge clk) vreg <= my;
     // turn logic (combinational) for entry r = bp
     wire [2:0] r = bp;
+    assign finish=e_busy[r] && e_fl[r] && !(e_k[r]<LV) && !ev;
+    assign finish_slot=e_tag[r][2:0];
+    assign stack_read_addr=publish_request ? {pub_slot,3'd7} : sr_a;
+    assign stack_write_en=sw_ce || (PUBLISH && finish);
+    assign stack_write_addr=(PUBLISH && finish) ? {finish_slot,3'd7} : sw_a;
+    assign stack_write_data=(PUBLISH && finish) ? vreg : sw_d;
+
     wire       ev_first = tag_d[TAGW-2], ev_last = tag_d[TAGW-3];
     wire [7:0] ev_c = ev_first ? 8'd0 : e_n[r][7:0];
     reg        m_fault;
@@ -100,6 +125,45 @@ module ot_hbm_sm_pv_merge #(
         end
     end
     always @(posedge clk) if (e_busy[r] && e_fl[r] && !(e_k[r] < LV) && !ev) begin pv_y <= vreg; pv_tag <= e_tag[r]; end
-    assign fault = m_fault;
+    // The unused level7 stores one final512bit node for each logical slot.
+    // Publication shares the existing1R1W macro after the merge is quiescent.
+    // Macro read -> buffer capture -> first scalar is exactly2edges. Requests
+    // at word14 prefetch the next node without a gap or another memory macro.
+    reg [7:0] node_valid;
+    reg [TAGW-1:0] node_tag[0:7];
+    reg pub_d0,pub_d1,pub_active,pub_fault;
+    reg [2:0] slot0,slot1;
+    reg [TAGW-1:0] tag0,tag1;
+    reg [511:0] pub_buffer;
+    reg [3:0] word_next;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)begin
+            node_valid<=0;pub_d0<=0;pub_d1<=0;pub_active<=0;pub_fault<=0;
+            pub_v<=0;word_next<=0;
+        end else begin
+            pub_d0<=publish_request;pub_d1<=pub_d0;
+            pub_v<=pub_d1 || pub_active;
+            if(PUBLISH && ev && ev_first)node_valid[tag_d[2:0]]<=0;
+            if(PUBLISH && finish)begin
+                node_valid[finish_slot]<=1;node_tag[finish_slot]<=e_tag[r];
+                if(sw_ce)pub_fault<=1;
+            end
+            if(publish_request)begin
+                slot0<=pub_slot;tag0<=node_tag[pub_slot];
+                if(!node_valid[pub_slot] || ev || (|e_busy) || pub_d0 || pub_d1 ||
+                   (pub_active && word_next!=14))pub_fault<=1;
+            end
+            if(ev && (pub_active || pub_d0 || pub_d1))pub_fault<=1;
+            if(pub_d0)begin pub_buffer<=st_rd;slot1<=slot0;tag1<=tag0;end
+            if(pub_d1)begin
+                pub_data<=pub_buffer[((MUT==3)?32:0)+:32];pub_word<=0;pub_out_slot<=slot1;pub_tag<=tag1;
+                word_next<=1;pub_active<=1;
+            end else if(pub_active)begin
+                pub_data<=pub_buffer[32*(word_next ^ ((MUT==3)?4'd1:4'd0))+:32];pub_word<=word_next;
+                if(word_next==15)begin pub_active<=0;word_next<=0;end
+                else word_next<=word_next+1;
+            end
+        end
+    assign fault = m_fault | pub_fault;
 endmodule
 `default_nettype wire

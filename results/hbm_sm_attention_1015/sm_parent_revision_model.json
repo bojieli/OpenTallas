@@ -47,7 +47,9 @@
     "ds_output_words_per_column": 64,
     "ds_publish_serial_cycles": 64,
     "qwen_output_words_per_column_per_op": 256,
-    "qwen_publish_serial_cycles_per_op": 256
+    "qwen_publish_serial_cycles_per_op": 256,
+    "compact_p_write_visibility_after_load_edge": 1,
+    "native_tcl_tct_vs_flat_component": 6
   },
   "execution_requirements": [
     "all8columns active for attention; DS samep in8columns with onebeat/slot assigned percolumn",
@@ -76,5 +78,26 @@
     "scalar_load_group": 127,
     "backend_mode": "revisioned static control; explicit physical pin/relay schedule required",
     "status": "encoding modeled; full front/XS/BE integration not implemented"
+  },
+  "measured_native_ds640": {
+    "source": "8727296e9",
+    "qk_span": 304,
+    "pv_span": 386,
+    "component_ops_passed": 52,
+    "qk_scores": 640,
+    "golden_cross_sm_merge": true
+  },
+  "publication_protocol": {
+    "initial_read_cycles": 2,
+    "words_per_node": 16,
+    "next_node_request_word": 14,
+    "new_memories": 0,
+    "physical_status": "unassigned revisioned merge leaf; old closed tcl/tct untouched"
+  },
+  "result_mapping": {
+    "DS_PV": "all8columns duplicate p; columnb publishes slotb, leafj lane l uses rrow16*j+l; row*8+column equals dimension8*(16*j+l)+b",
+    "Qwen_PV": "columnc maps queryc//2,replicac%2; roundr0..3 maps slot4*(c%2)+r; rrow64*r+16*leaf+lane; scratch address8*rrow+c. Decode stream2*(c%2)+(r>>1), dimension8*lane+4*(r&1)+leaf. Requires COLL scratch-permutation agreement.",
+    "QK": "bounded real score landing plus compiled publish slots required; DS row%8 selectsphysicalcolumn; Qwen columnpairs own score-row parity. Legacy result-valid cannot accept partial column valids.",
+    "status": "modeled result permutation; complete static front/tile/BE path remains open"
   }
 }
