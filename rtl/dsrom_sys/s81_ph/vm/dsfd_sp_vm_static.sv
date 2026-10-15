@@ -27,10 +27,11 @@
 // +define+DSFD_SP_VM_MIX4 once the die wires the MIX4 slot (no die net today: without the define the core's MIX
 // inputs are held idle and its outputs unread, the MIX function is absent from this die revision, not stubbed).
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_sp_vm #(parameter integer CAP_PIPE=0) (
+module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0) (
     input  wire [0:0]    cks, rss,
     input  wire          ck_core_t, ck_rsched_t, ck_seq_t, ck_landing_t,
-    input  wire [3:0]    ck_mem_fsr_t, ck_mem_return_t,
+    input  wire [15:0]   ck_mem_fsr_t,
+    input  wire [3:0]    ck_mem_return_t,
     input  wire [127:0]  ck_mem_bank_t, ck_mem_wcapture_t,
     input  wire [15:0]   ck_mem_wscatter_t,
     input  wire [47:0]   ck_mem_relay_req_t, ck_mem_relay_rsp_t,
@@ -40,7 +41,8 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0) (
     input  wire [127:0]  ck_write_stage_t,
     input  wire [2:0]    ck_landing_x34_s, ck_landing_x34_t,
     input  wire          rss_core_t, rss_rsched_t, rss_seq_t, rss_landing_t,
-    input  wire [3:0]    rss_mem_fsr_t, rss_mem_return_t,
+    input  wire [15:0]   rss_mem_fsr_t,
+    input  wire [3:0]    rss_mem_return_t,
     input  wire [127:0]  rss_mem_bank_t, rss_mem_wcapture_t,
     input  wire [15:0]   rss_mem_wscatter_t,
     input  wire [47:0]   rss_mem_relay_t,
@@ -56,6 +58,8 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0) (
     input  wire          rst_wfc_control_s, rss_wfc_control_t, rst_wfc_x34_s, rss_wfc_x34_t, rst_wfc_x43_s, rss_wfc_x43_t,
     input  wire          ck_xio_control_s, ck_xio_control_t, rst_xio_control_s, rss_xio_control_t,
     input  wire [1:0]    ck_xio_x43_s, ck_xio_x43_t, rst_xio_x43_s, rss_xio_x43_t,
+    input  wire [63:0]   ck_read_data_t, rss_read_data_t,
+    input  wire [7:0]    ck_read_valid_t, rss_read_valid_t,
     input  wire [84:0]   c_cmd, output wire [8:0] c_done, output wire [1:0] c_st,
     output wire [0:0]    t_inp_su, t_inp_hc,
     input  wire [15:0]   f_su_rqv, input wire [223:0] f_su_rq, output wire [15:0] t_su_rsv, output wire [8191:0] t_su_rs,
@@ -102,13 +106,13 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0) (
     wire [7:0] x_rv; wire [4095:0] x_rd; wire [3:0] xa_v; wire [55:0] xa_row; wire xio_f; wire vm_fault;
     wire n_v; wire [83:0] n_d;
     wire [3:0] cl_v; wire [55:0] cl_row; wire [2047:0] cl_d; wire [63:0] cl_m; wire [31:0] cl_t;
-    dsfd_vm_static_wfc u_wfc (
+    dsfd_vm_static_wfc #(.RLAT(13+READ_PIPE), .RESPONSE_PAD(3*READ_PIPE)) u_wfc (
         .ck_control_s(ck_wfc_control_s), .ck_control_t(ck_wfc_control_t), .ck_x34_s(ck_wfc_x34_s), .ck_x34_t(ck_wfc_x34_t),
         .ck_x43_s(ck_wfc_x43_s), .ck_x43_t(ck_wfc_x43_t), .rst_control_s(rst_wfc_control_s), .rss_control_t(rss_wfc_control_t),
         .rst_x34_s(rst_wfc_x34_s), .rss_x34_t(rss_wfc_x34_t), .rst_x43_s(rst_wfc_x43_s), .rss_x43_t(rss_wfc_x43_t), .f_wfc(f_wfc), .t_wfc(t_wfc),
         .w_v(wf_v), .w_row(wf_row), .w_d(wf_d), .a_v(wa_v), .a_row(wa_row), .e_v(x_rv[7:4]), .e_d(x_rd[4095:2048]),
         .vm_fault(vm_fault), .fault(wfc_f));
-    dsfd_vm_static_xio u_xio (
+    dsfd_vm_static_xio #(.RLAT(13+READ_PIPE)) u_xio (
         .ck_control_s(ck_xio_control_s), .ck_control_t(ck_xio_control_t), .ck_x43_s(ck_xio_x43_s), .ck_x43_t(ck_xio_x43_t),
         .rst_control_s(rst_xio_control_s), .rss_control_t(rss_xio_control_t), .rst_x43_s(rst_xio_x43_s), .rss_x43_t(rss_xio_x43_t), .n_v(n_v), .n_d(n_d),
         .a_v(xa_v), .a_row(xa_row), .e_v(x_rv[3:0]), .e_d(x_rd[2047:0]),
@@ -118,12 +122,13 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0) (
     // edge faults -> engine 12 legacy-fault input (c_st[0]); serial levels registered once in the stream domain
     reg e_flt;
     always @(posedge cks[0] or negedge rss[0]) if (!rss[0]) e_flt <= 1'b0; else if (cap_f | wfc_f | xio_f) e_flt <= 1'b1;
-    dsfd_vm_static_core u_core (.cks(ck_core_t), .rss(rss_core_t),
+    dsfd_vm_static_core #(.READ_PIPE(READ_PIPE)) u_core (.cks(ck_core_t), .rss(rss_core_t),
         .rst_rsched_n(rss_rsched_t), .rst_seq_n(rss_seq_t), .rst_landing_n(rss_landing_t),
         .rst_mem_fsr_n(rss_mem_fsr_t), .rst_mem_return_n(rss_mem_return_t), .rst_mem_bank_n(rss_mem_bank_t),
         .rst_mem_wcapture_n(rss_mem_wcapture_t), .rst_mem_wscatter_n(rss_mem_wscatter_t), .rst_mem_relay_n(rss_mem_relay_t),
         .rst_write_control_n(rss_write_control_t), .rst_write_header_n(rss_write_header_t), .rst_write_payload_n(rss_write_payload_t),
         .rst_write_dispatch_n(rss_write_dispatch_t), .rst_write_stage_n(rss_write_stage_t),
+        .ck_read_data(ck_read_data_t), .ck_read_valid(ck_read_valid_t), .rst_read_data_n(rss_read_data_t), .rst_read_valid_n(rss_read_valid_t),
         .ck_rsched(ck_rsched_t), .ck_seq(ck_seq_t), .ck_landing(ck_landing_t),
         .ck_mem_fsr(ck_mem_fsr_t), .ck_mem_return(ck_mem_return_t), .ck_mem_bank(ck_mem_bank_t),
         .ck_mem_wcapture(ck_mem_wcapture_t), .ck_mem_wscatter(ck_mem_wscatter_t),

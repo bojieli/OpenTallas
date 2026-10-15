@@ -14,6 +14,17 @@
 //   +mode 0 base (expect no fault); 1 four sources on one bank (lane >= 3); 2 drain collision; 3 PQ misaligned;
 //   4 P2RD native op; 5 duplicate read bank (FSR); 6 MIX and SU on one logical port -- each must raise ITS fault source.
 module tb_dsfd_vm_static_core;
+`ifdef OT_VM_NATIVE_READ
+    localparam integer READ_PIPE=1;
+`else
+    localparam integer READ_PIPE=0;
+`endif
+`ifdef OT_VM_NATIVE_CAP
+    localparam integer CAP_PIPE=1;
+`else
+    localparam integer CAP_PIPE=0;
+`endif
+
     reg ck = 1'b0; reg rss = 1'b0;
     always #0.4167 ck = ~ck;
     reg  [84:0] c_cmd = 0; wire [8:0] c_done; wire [1:0] c_st; wire t_inp_su, t_inp_hc;
@@ -27,12 +38,12 @@ module tb_dsfd_vm_static_core;
     reg  [3:0] mx_wqv = 0; reg [55:0] mx_wq = 0; reg [63:0] mx_wqm = 0; reg [2047:0] mx_wqd = 0;
     // Compatibility stimulus adapter for the core's explicit auxiliary and row-write ports.
     wire [7:0] xv; wire [4095:0] xd;
-    reg [1:0] crlane [0:12]; integer ci;
+    reg [1:0] crlane [0:12+READ_PIPE]; integer ci;
     always @(posedge ck) begin
         crlane[0] <= crq[2:1];
-        for (ci = 1; ci < 13; ci = ci + 1) crlane[ci] <= crlane[ci-1];
+        for (ci = 1; ci < 13+READ_PIPE; ci = ci + 1) crlane[ci] <= crlane[ci-1];
     end
-    assign crs = {xd[512*crlane[12] +: 512], xv[crlane[12]]};
+    assign crs = {xd[512*crlane[12+READ_PIPE] +: 512], xv[crlane[12+READ_PIPE]]};
     wire [31:0] clt; wire [3:0] clv; wire [55:0] clr; wire [63:0] clm; wire [2047:0] cld;
     genvar cl;
     generate for (cl = 0; cl < 4; cl = cl + 1) begin
@@ -43,15 +54,16 @@ module tb_dsfd_vm_static_core;
         assign cld[512*cl +: 512] = cvm[551*cl+31 +: 512];
     end endgenerate
     wire vm_fault;
-    dsfd_vm_static_core dut (.cks(ck), .rss(rss),
+    dsfd_vm_static_core #(.READ_PIPE(READ_PIPE)) dut (.cks(ck), .rss(rss),
+        .ck_read_data({64{ck}}), .ck_read_valid({8{ck}}), .rst_read_data_n({64{rss}}), .rst_read_valid_n({8{rss}}),
         .ck_rsched(ck), .ck_seq(ck), .ck_landing(ck),
-        .ck_mem_fsr({4{ck}}), .ck_mem_return({4{ck}}), .ck_mem_bank({128{ck}}),
+        .ck_mem_fsr({16{ck}}), .ck_mem_return({4{ck}}), .ck_mem_bank({128{ck}}),
         .ck_mem_wcapture({128{ck}}), .ck_mem_wscatter({16{ck}}),
         .ck_mem_relay_req({48{ck}}), .ck_mem_relay_rsp({48{ck}}),
         .ck_write_control(ck), .ck_write_header(ck), .ck_write_payload({4{ck}}),
         .ck_write_dispatch({16{ck}}), .ck_write_stage({128{ck}}),
         .rst_rsched_n(rss), .rst_seq_n(rss), .rst_landing_n(rss),
-        .rst_mem_fsr_n({4{rss}}), .rst_mem_return_n({4{rss}}), .rst_mem_bank_n({128{rss}}),
+        .rst_mem_fsr_n({16{rss}}), .rst_mem_return_n({4{rss}}), .rst_mem_bank_n({128{rss}}),
         .rst_mem_wcapture_n({128{rss}}), .rst_mem_wscatter_n({16{rss}}), .rst_mem_relay_n({48{rss}}),
         .rst_write_control_n(rss), .rst_write_header_n(rss), .rst_write_payload_n({4{rss}}),
         .rst_write_dispatch_n({16{rss}}), .rst_write_stage_n({128{rss}}), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .t_inp_su(t_inp_su),
@@ -62,7 +74,7 @@ module tb_dsfd_vm_static_core;
         .f_mx_wqv(mx_wqv), .f_mx_wq(mx_wq), .f_mx_wqm(mx_wqm), .f_mx_wqd(mx_wqd),
         .l_v(l_v), .l_d(l_d), .cp_v(16'd0), .cp_row(224'd0), .cp_m(256'd0), .cp_d(8192'd0), .cl_t(clt), .cl_v(clv), .cl_row(clr), .cl_m(clm), .cl_d(cld), .wf_v(1'b0), .wf_row(14'd0), .wf_d(512'd0), .x_flt(1'b0), .vm_fault(vm_fault));
 
-    localparam integer RL = 12, DL = 6;      // Exact elapsed edges from command/read sampling to output.
+    localparam integer RL = 12+READ_PIPE, DL = 6;      // Exact elapsed edges from command/read sampling to output.
     integer cy = 0, bad = 0, mode = 0, seed = 1, nreads = 4000, K = -1, commits = 0, reads = 0, rows_checked = 0;
     integer dones = 0, pqreads = 0, cmds = 0, mxreads = 0, mxwrites = 0, fault_seen = 0;
     reg [7:0] ver [0:16383];                 // stimulus version of each row (value function input)

@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import die_port_bind as D
 
-def prepare(out):
+def prepare(out, read_pipeline=1):
     clocks={}; resets={}
     def add(table,port,paths):
         assert port not in table
@@ -19,9 +19,15 @@ def prepare(out):
     for cat,child,cp,rp in [('core','', 'cks','rss'),('rsched','.u_rs','ck','rst_n'),('seq','.u_seq','ck','rst'),('landing','.u_land','ck','rst_n')]:
         add(clocks,'ck_'+cat+'_t','dut.u_core'+child+'.'+cp)
         add(resets,'rss_'+cat+'_t','dut.u_core'+child+'.'+rp)
-    for cat,child in [('fsr','u_slice.u_r'),('return','u_return')]:
+    for cat,child in [('return','u_return')]:
         add(clocks,'ck_mem_'+cat+'_t',[f'{mem}.slice[{s}].{child}.ck' for s in range(4)])
         add(resets,'rss_mem_'+cat+'_t',[f'{mem}.slice[{s}].{child}.rst_n' for s in range(4)])
+    fsrpaths=[f'{mem}.slice[{s}].u_slice.u_r.b{b}.leaf' for s in range(4) for b in range(4)]
+    add(clocks,'ck_mem_fsr_t',[p+'.ck' for p in fsrpaths]);add(resets,'rss_mem_fsr_t',[p+'.rst_n' for p in fsrpaths])
+    if read_pipeline:
+        for cat,count in [('data',64),('valid',8)]:
+            paths=[f'dut.u_core.bounded_read.u_read.{"d" if cat=="data" else "v"}{b}.leaf' for b in range(count)]
+            add(clocks,'ck_read_'+cat+'_t',[p+'.ck' for p in paths]);add(resets,'rss_read_'+cat+'_t',[p+'.rst_n' for p in paths])
     for cat,child,width in [('bank','bank',32),('wcapture','write_group',32),('wscatter','write_group',4)]:
         paths=[]
         for s in range(4):
@@ -59,13 +65,13 @@ def prepare(out):
             mapping[port]={'kind':vec,'start':start,'width':len(paths),'leaf_pins':paths}
             if vec=='clocks':c+=len(paths)
             else:r+=len(paths)
-    assert (c,r)==(598,534),(c,r)
+    assert (c,r)==(610+72*read_pipeline,546+72*read_pipeline),(c,r)
     for port,(direction,_) in mod.ports.items():
         if direction=='input' and port not in mapping:
             width=mod.width(port,env);cons.append(f'.{port}({width}\'d0)')
     tb='`timescale 1ns/1ps\nmodule tb_vm_native_clock_pins;\n'
     tb+=f'reg [{c-1}:0] clocks=0;reg [{r-1}:0] resets=0;wire [{r-1}:0] observed_reset;integer counts[0:{c-1}];integer i,j,bad=0;\n'
-    tb+='dsfd_sp_vm dut ('+',\n'.join(cons)+');\n'
+    tb+=f'dsfd_sp_vm #(.READ_PIPE({read_pipeline}), .CAP_PIPE(1)) dut ('+',\n'.join(cons)+');\n'
     for i,p in obs:tb+=f'always @(posedge {p}) counts[{i}]=counts[{i}]+1;\n'
     for i,p in robs:tb+=f'assign observed_reset[{i}]={p};\n'
     tb+=f'''initial begin
@@ -85,4 +91,4 @@ endmodule
     (out/'mapping.json').write_text(json.dumps({'source_sha256':hashlib.sha256(text.encode()).hexdigest(),'clocks':c,'raw_reset_pins':r,'cap_rn_distribution':'16synchronous lane rn pins remain driven by existing cap-control rq2; physicalreset delivery unqualified','categories':mapping},indent=2)+'\n')
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);a=ap.parse_args();prepare(a.out)
+    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--read-pipe',type=int,choices=[0,1],default=1);a=ap.parse_args();prepare(a.out,a.read_pipe)
