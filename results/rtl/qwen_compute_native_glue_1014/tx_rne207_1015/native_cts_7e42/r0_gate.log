@@ -1,0 +1,19 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc1tb for 8 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qwen_tx_rne_r0_20261015-045524.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qwen_tx_rne_r0_20261015-045524.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/qwen_tx_rne_r0-20261015-045524
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 17 s (gate total 77 s)
+GATE WARN util: synthesized std area 107 um2 + macros 0 in core 653: util 16%  -> FIX: set "std_area_um2": 107 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN qwen_tx_rne_r0 cells 650 flops 211 depth 11.7 ps util 0.1772 reach 33.4 um (0.0 s)
+GATE WARN textbook.util_channel: utilisation 17.7% outside 45%-65% (std 116 + macro 0 um2 in 653 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 99.1..102.6 ps (spread 3.5), boundary mean 100.8; tt insertion all 73.2..76.3 ps (spread 3.1), boundary mean 74.7; ff insertion all 58.2..61.3 ps (spread 3.1), boundary mean 59.7; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qwen_tx_rne_r0/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->out      207 paths, worst slack 281.0 ps (e.g. q[131])
+GATE INFO path_classes: in->reg        97 paths, worst slack 302.4 ps (e.g. capture.q[199]$_DFF_PN0_/D)
+GATE INFO path_classes: reg->reg      207 paths, worst slack 505.9 ps (e.g. capture.q[175]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 2.809742993825637e-10 hold WNS 2.6430163613255786e-11
+GATE INFO clock_rule: root port:clk: 211 sinks on the largest root <= 15,000; measured TT insertion 76.3 ps, leaf spread 3.1 ps
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/q-compute-parent-prune-1015/physical/ref_tile/qwen_tx_rne_r0/source_binding_history/25a4d2d64ba648760f10d3edebb29b9d4e57d882592bda8205e9b957303fc707.json
+GATE: qwen_tx_rne_r0/gate_result.json written (exact staged source binding; commit it with the kit)
