@@ -46,10 +46,13 @@
     "VM_read_bytes_per_edge": 256,
     "used_prefetch_bytes_per_edge": 128,
     "output_drain_bytes_per_edge": 64,
-    "actual_exact_gate": "pending",
+    "actual_exact_gate": "PASS3072 plus loadedIOmutant on historicalbank7828; correctedcurrentbank7b2gate LIVE, source-caveat explicit",
     "ratio_if_pass": 3.6,
     "capacity_2048_protected_words": true,
-    "native_epoch_overlap_proven": false
+    "native_epoch_overlap_proven": false,
+    "historical_receipt": "qswiglu_overlap/receipt.json",
+    "fixed_start_to_observer_window_edges": 442,
+    "upper_bound_window_to_price": 3.683333333333333
   },
   "lower_bounds": {
     "cold_VM_input_edges_at_full_8sectors": 96,
