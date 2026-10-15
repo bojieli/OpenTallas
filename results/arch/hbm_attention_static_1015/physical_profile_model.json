@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.hbm_attention.physical_profile.v1",
+  "source_sha256": "13dfe762acd2c4daa5f05f9d405e01b12d2e07790789725fbf1b78ab8a964975",
+  "closed_leaf_source": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_m8_phys.sv:46 ot_attn_hgrp_m6h1",
+  "params": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NL": 2,
+    "PWORDS": 2,
+    "FPL": 6,
+    "FML": 8,
+    "F12": 1,
+    "TILE_S": 1,
+    "NBANKP": 5,
+    "ILV": 0,
+    "REPL": 0,
+    "SRAM_MACRO": 1,
+    "PHYS": 0
+  },
+  "physical_tile_pairs": 32,
+  "logical_full_tiles": 32,
+  "MACs_per_cycle": 16384,
+  "clock_period_ps": 833.333,
+  "source_query_prefetch_edges": 128,
+  "kv8_source_bytes_per_row": 544,
+  "source_bandwidth_one32PCstack_Bper_edge": 791.667,
+  "source_BW_lower_bound_cycles": {
+    "128": 87.95617349213748,
+    "640": 439.7808674606874
+  },
+  "qualification": false,
+  "remaining": [
+    "Root confirms per-quadrant row and price ownership; no historical H4NL4 price transfer",
+    "Exacthalfparentinserted register ages and clock phi-R binding",
+    "ActualregisteredPSrow producer storage/source allocation and finalnativeprogramme",
+    "FullH16TD32NL2FPL6FML8 exact golden+mutant proof",
+    "Actualcontroller/gather/staging footprint and physicalclosure"
+  ]
+}
