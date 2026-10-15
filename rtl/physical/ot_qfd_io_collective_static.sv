@@ -58,6 +58,7 @@ module qfd_io_collective_static (
 `ifndef OT_QFDS_LS
 `define OT_QFDS_LS 376
 `endif
+    initial if (`OT_QFDS_LU + 2 > 64) $error("collective direct SRAM entries require a four-bank physical profile for LU>62");
     // Command pin boundary: the compiler issues one core cycle earlier than
     // the internal collective command calendar. Payload/link calendars retain
     // their original cycles. This extra command lead is paid explicitly.

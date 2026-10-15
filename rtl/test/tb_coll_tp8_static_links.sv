@@ -33,6 +33,7 @@ module tb_coll_tp8_static_links #(
     parameter integer LATU = 37, LATS = 362,     // collective LU / LS (compiled, = the calendar's)
     parameter integer PU = 14, PS = 339,         // PHY latencies the calendar compiles
     parameter integer KC = 4, KW = 2,
+    parameter integer RU=0,RS0=0,RS1=0,RS2=0,
     parameter integer XU = 0, XS = 0             // extra PHY cycles vs compiled (negative control)
 ) (input wire clk, input wire lck);
     localparam integer ND = 8, LANES = 16, FW = 512, TAGW = 32, PW = FW + 2 + TAGW, RW = FW + 2, MAXW = 1 << 16;
@@ -102,7 +103,7 @@ module tb_coll_tp8_static_links #(
             assign {stxv[g*3+:3],rtxv[g],ptxv[g]}=ptv;
             assign stx[g*3*FP+:3*FP]=ptpack[2*597+:3*597];
             assign rtx[g*FR+:FR]=ptpack[597+:FR];assign ptx[g*FP+:FP]=ptpack[0+:FP];
-            qfd_collective_static_io #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS))u_parent(
+            qfd_collective_static_io #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2))u_parent(
               .clk(clk),.clk_pfold0(clk),.clk_pfold1(clk),.clk_pfold2(clk),.clk_pfold3(clk),
               .clk_xfold0(clk),.clk_xfold1(clk),.clk_xfold2(clk),.clk_xfold3(clk),
               .clk_pring0(clk),.clk_pring1(clk),.clk_sring0(clk),.clk_sring1(clk),.clk_sring2(clk),.clk_sring3(clk),.clk_sring4(clk),.clk_rring0(clk),.clk_rring1(clk),
@@ -111,7 +112,7 @@ module tb_coll_tp8_static_links #(
               .in_valid(iv[g]),.in_data(id[g*FW+:FW]),.in_last(il[g]),.in_mode(im[g]),.in_tag(it[g*TAGW+:TAGW]),
               .out_valid(ov[g]),.out_data(od[g*FW+:FW]),.out_last(ol[g]),.out_rank(orank[g*3+:3]),.out_err(oe[g]),
               .fault(flt[g]),.fault_code(fc[g*5+:5]),.cmd_free(cfree[g]),
-              .face_ck(fck),.phy_up(5'b11111),.phy_rx_valid(prv),.phy_rx(prpack),.phy_tx_valid(ptv),.phy_tx(ptpack),
+              .face_ck(fck),.relay_ck({((2*(2*RU+RS0+RS1+RS2)>0)?2*(2*RU+RS0+RS1+RS2):1){clk}}),.phy_up(5'b11111),.phy_rx_valid(prv),.phy_rx(prpack),.phy_tx_valid(ptv),.phy_tx(ptpack),
               .transport_cdc_fault(xflt[g*20+:20]),.transport_abort(cabort[g*5+:5]),.transport_fault_cause(ccause[g*40+:40]));
 `else
             // ---------------- collective ----------------

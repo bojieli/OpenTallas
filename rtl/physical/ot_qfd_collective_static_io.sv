@@ -48,6 +48,7 @@ module qfd_collective_static_io #(
  // Eleven physical roots per face: cal core/link, TXw/TXr,RXw/RXr,
  // codec control and four SRAM banks. Index0=P,1=R,2..4=SerDes0..2.
  input wire[54:0]face_ck,
+ input wire[((2*(2*RU+RS0+RS1+RS2)>0)?2*(2*RU+RS0+RS1+RS2):1)-1:0]relay_ck,
  input wire[4:0]phy_up,phy_rx_valid,input wire[5*597-1:0]phy_rx,
  output wire[4:0]phy_tx_valid,output wire[5*597-1:0]phy_tx,
  output wire[19:0]transport_cdc_fault,output wire[4:0]transport_abort,
@@ -148,6 +149,8 @@ module qfd_collective_static_io #(
  localparam integer PW=W+51;
  localparam integer R=f<2?RU:f==2?RS0:f==3?RS1:RS2;
  wire[W-1:0]td,rd;wire tv,ts,ps,rv;
+ wire[W-1:0]ftd,frd;wire ftv,fts,fps,frv;
+ localparam integer BASE=f==0?0:f==1?2*RU:f==2?4*RU:f==3?4*RU+2*RS0:4*RU+2*RS0+2*RS1;
  if(f==0)begin
  assign td=up_rec;assign tv=up_valid;assign ts=up_slot;assign ps=up_slot;
  assign dp_valid=rv;assign dp_rec=rd;
@@ -164,17 +167,34 @@ module qfd_collective_static_io #(
  assign td=sx2_rec;assign tv=sx2_valid;assign ts=sx0_valid;assign ps=sx2_peer_slot;
  assign sr2_valid=rv;assign sr2_rec=rd;
  end
+ if(R==0)begin:g_direct
+ assign {ftd,ftv,fts,fps}={td,tv,ts,ps};assign {rd,rv}={frd,frv};
+ end else begin:g_relay
+ qfd_coll_static_relay #(.W(W+3),.N(R))u_txrelay(.ck(relay_ck[BASE+:R]),.rst_n(rst_n),.d({td,tv,ts,ps}),.q({ftd,ftv,fts,fps}));
+ qfd_coll_static_relay #(.W(W+1),.N(R))u_rxrelay(.ck(relay_ck[BASE+R+:R]),.rst_n(rst_n),.d({frd,frv}),.q({rd,rv}));
+ end
  wire[PW-1:0]pt;
  assign phy_tx[f*597+:PW]=pt;
  if(PW<597)assign phy_tx[f*597+PW+:(597-PW)]=0; // declared frame padding only
  qfd_coll_static_face #(.FW(W),.PHY(f<2?PU:PS),.L(f<2?LU:LS),.R(R))u_face(
  .cal_ck(face_ck[f*11]),.cal_lck(face_ck[f*11+1]),
  .tx_wck(face_ck[f*11+2]),.tx_rck(face_ck[f*11+3]),.rx_wck(face_ck[f*11+4]),.rx_rck(face_ck[f*11+5]),
- .codec_ck(face_ck[f*11+6+:5]),.rst_n(rst_n),.tx_slot(ts),.peer_slot(ps),.tx_valid(tv),.tx_data(td),
- .rx_valid(rv),.rx_data(rd),.phy_up(phy_up[f]),.phy_rx_valid(phy_rx_valid[f]),.phy_rx(phy_rx[f*597+:PW]),
+ .codec_ck(face_ck[f*11+6+:5]),.rst_n(rst_n),.tx_slot(fts),.peer_slot(fps),.tx_valid(ftv),.tx_data(ftd),
+ .rx_valid(frv),.rx_data(frd),.phy_up(phy_up[f]),.phy_rx_valid(phy_rx_valid[f]),.phy_rx(phy_rx[f*597+:PW]),
  .phy_tx_valid(phy_tx_valid[f]),.phy_tx(pt),.cdc_fault(transport_cdc_fault[f*4+:4]),
  .epoch_abort(transport_abort[f]),.fault_cause(transport_fault_cause[f*8+:8]));
  end endgenerate
  // The fixed die-name collective LU/LS defines and this parent must agree.
  initial if(LU!=`OT_QFDS_LU || LS!=`OT_QFDS_LS)$error("collective/link calendar latency profile mismatch");
+endmodule
+
+// Source-visible paid relay stages. Every row advances unconditionally.
+module qfd_coll_static_relay #(parameter integer W=549,N=1)(
+ input wire[N-1:0]ck,input wire rst_n,input wire[W-1:0]d,output wire[W-1:0]q);
+ wire[W-1:0]stage[0:N];assign stage[0]=d;assign q=stage[N];
+ for(genvar k=0;k<N;k=k+1)begin:g_stage
+ (* keep *)reg[W-1:0]r;
+ always @(posedge ck[k] or negedge rst_n)if(!rst_n)r<=0;else r<=stage[k];
+ assign stage[k+1]=r;
+ end
 endmodule

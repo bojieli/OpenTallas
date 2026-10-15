@@ -83,7 +83,7 @@ def program_words(prog, nwords, cmd_pin_stages=0):
     return pw
 
 
-def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False):
+def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, relays=(0,0,0,0)):
     obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}_phi{phi}{'_qfd' if qfd else ''}{('_' + define) if define else ''}"
     h = out / f"harness_phi{phi}.cpp"
     step = ("t->clk = 1; t->lck = 1; t->eval(); t->clk = 0; t->lck = 0; t->eval();" if phi == 0 else
@@ -99,7 +99,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False):
            f"-GXS={xs}", "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
           [str(h), "-CFLAGS", "-O1", "-j", "16"]
     if parent:
-        cmd += ["+define+OT_TP8S_PARENT"]
+        cmd += ["+define+OT_TP8S_PARENT"] + [f"-G{p}={v}" for p,v in zip(("RU","RS0","RS1","RS2"),relays)]
     if qfd:
         cmd += ["+define+OT_TP8S_QFD", f"+define+OT_QFDS_LU={lu}", f"+define+OT_QFDS_LS={ls}"]
     r = subprocess.run(cmd, capture_output=True, text=True)
@@ -121,6 +121,7 @@ def main():
     ap.add_argument("--mutant-define", default=None)
     ap.add_argument("--only", default=None)
     ap.add_argument("--qfd", action="store_true")
+    ap.add_argument("--relays",type=int,nargs=4,default=[0,0,0,0],metavar=("U","S0","S1","S2"))
     ap.add_argument("--parent",action="store_true",help="actualproduction collective+fiveface parent")
     a = ap.parse_args()
     if a.parent:a.qfd=True
@@ -133,7 +134,7 @@ def main():
         cases = [("phy_longer_than_compiled", 4, 8, "m", "link", {})]
     if a.expect_fail:
         cases = [c for c in cases if c[4] == "pos"]
-    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.phi, a.mutant_define, a.qfd, a.parent)
+    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.phi, a.mutant_define, a.qfd, a.parent, a.relays)
     bad, records = [], []
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):
         rng = np.random.default_rng(100 + i)
@@ -173,7 +174,7 @@ def main():
             bad.append(name)
     (a.out / "record.json").write_text(json.dumps(dict(
         schema="opentallas.qwen.tp8.collective.static_links.v1", ranks=ND, latu=a.latu, lats=a.lats, kc=KC, kw=KW,
-        phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, production_parent=a.parent, mutant=a.mutant_define,
+        phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, production_parent=a.parent, relays=a.relays, mutant=a.mutant_define,
         expect_fail=a.expect_fail, production=a.production, issuer_depth=DEPTH, stage_start=START, cmd_pin_stages=int(a.qfd),
         modelled="PHY frame pipes only (fixed latency); all on-chip blocks are the real RTL masters",
         mechanism="compiler program -> fixed-issue core -> collective tokens -> IO calendar slots; no credits/ready/"
