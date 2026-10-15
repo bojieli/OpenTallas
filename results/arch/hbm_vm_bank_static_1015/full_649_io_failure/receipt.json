@@ -1,0 +1,19 @@
+{
+  "source_commit": "491b3d024",
+  "hook_commit": "649e98850",
+  "bank_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "host": "ot-agidock128",
+  "run": "20261015-022055",
+  "verdict": "FAIL IO; native not qualified",
+  "reason": "Full IO same-process PPL moved requested5532 to5580 despite BPin deletion; separate diagnostic insufficient.",
+  "cts_completed": true,
+  "cts_seconds": 261.34,
+  "cts_peak_mb": 1156,
+  "cts_odb_sha1": "b3c9b244ce0242b8420d",
+  "tt_spread_ps": 65.3,
+  "tt_setup_wns_ps": -45.3,
+  "reset_slack_ps": -13.7,
+  "hold_wns_ps": 25.1,
+  "report_collection": "Original local frontend vanished; preserved remote CTS was allowed to terminal. Only ck/path reports rerun on completed exact ODB under3849882; no rebuild.",
+  "next": "Fresh full gate7eb directODB pins, same unchanged core/body."
+}
