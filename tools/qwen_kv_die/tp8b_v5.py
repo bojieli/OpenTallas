@@ -1724,6 +1724,9 @@ def _wrap(v, m, G, peers):
                         raise ValueError('band quarter fault requires a real face pin')
                     rects = v.pin_rects(band, 1, {p:sp[1] for p,sp in band.ports.items()})
                     partition_master(band, join_plan['qfd_sp_band_lanes'], rects)
+            if model.get('native_control_contract'):
+                from qwen_split.native_control_contract import install_master as install_native_control
+                install_native_control(M, model, Master)
             for mst_ in M.values():
                 mst_.order[:] = list(dict.fromkeys(mst_.order))
 

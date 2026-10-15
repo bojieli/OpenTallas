@@ -32,6 +32,7 @@ def export(v, model):
                for i in model['insts']],
         buses=[dict(b=b, c=c, n=n, e=[list(e) for e in es])
                for b,c,n,es in model['buses']],
+        native_control_contract=model.get('native_control_contract'),
         masters=pins, port_join=model.get('port_join', {}),
         port_split=model.get('port_split', {}),
         relay_equal_groups=model.get('relay_equal_groups', {}),

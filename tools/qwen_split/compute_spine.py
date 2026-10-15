@@ -551,6 +551,8 @@ def place(v, m, G):
     _slab_links(m, rec)
     from qwen_split.direct_up4 import apply as direct_up4
     rec['direct_up4'] = direct_up4(v, m)
+    from qwen_split.native_control_contract import apply as native_control_apply
+    rec['native_control_contract'] = native_control_apply(m)
     _child_clocks(m, rec)
     m['tie_self'] = sorted(TIE_SELF)
     rec['tie_self'] = sorted(TIE_SELF)
