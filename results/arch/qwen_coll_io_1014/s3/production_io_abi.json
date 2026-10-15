@@ -13,7 +13,7 @@
       "collective_face": "E",
       "relay_cycles": null,
       "PHY_latency_cycles": 14,
-      "minimum_composed_age_formula": "37+2*R",
+      "minimum_composed_age_formula": "37+local_R+peer_R",
       "roots": {
         "cal_ck": "core",
         "cal_lck": "link",
@@ -39,7 +39,7 @@
       "collective_face": "E",
       "relay_cycles": null,
       "PHY_latency_cycles": 14,
-      "minimum_composed_age_formula": "37+2*R",
+      "minimum_composed_age_formula": "37+local_R+peer_R",
       "roots": {
         "cal_ck": "core",
         "cal_lck": "link",
@@ -65,7 +65,7 @@
       "collective_face": "E",
       "relay_cycles": null,
       "PHY_latency_cycles": 339,
-      "minimum_composed_age_formula": "362+2*R",
+      "minimum_composed_age_formula": "362+local_R+peer_R",
       "roots": {
         "cal_ck": "core",
         "cal_lck": "link",
@@ -91,7 +91,7 @@
       "collective_face": "W",
       "relay_cycles": null,
       "PHY_latency_cycles": 339,
-      "minimum_composed_age_formula": "362+2*R",
+      "minimum_composed_age_formula": "362+local_R+peer_R",
       "roots": {
         "cal_ck": "core",
         "cal_lck": "link",
@@ -117,7 +117,7 @@
       "collective_face": "W",
       "relay_cycles": null,
       "PHY_latency_cycles": 339,
-      "minimum_composed_age_formula": "362+2*R",
+      "minimum_composed_age_formula": "362+local_R+peer_R",
       "roots": {
         "cal_ck": "core",
         "cal_lck": "link",
@@ -172,8 +172,8 @@
   "external_boundary": "actuallicensedPHY597/P597/R565frames only; paddedRlane32bits outsideframe ignored",
   "normal_schedule": "compiled slots only; fault/abort never reschedules",
   "source_sha256": {
-    "rtl/physical/ot_qfd_collective_static_io.sv": "b1f29acea8c468230c50729cc43056a47c2949e0d8b2cf946aca5b079b446ced",
-    "rtl/physical/ot_qfd_coll_static_face.sv": "8d278e49a717b267768bfb7066b875eb27d21e4ec0b0a98f4a52ce25d30179b9",
+    "rtl/physical/ot_qfd_collective_static_io.sv": "691a606ca53e36481c72cd2ed3f74be69e5a0e908bf4e7aae491c1ff59fc6be9",
+    "rtl/physical/ot_qfd_coll_static_face.sv": "514584ea3103da9a516372e8c25b2e4316eda0b1c904d2432d36114fe3dd1be5",
     "rtl/rom/ot_coll_tp8_static.sv": "8b32e6a42e3e68d8ba46ca1f9df8163da197faac898027c12548b5f618a0bcba",
     "rtl/physical/ot_qfd_io_collective_static.sv": "cb7e630802b54e9b089f4cf9a962793fe1aaf59ffe8a003bbe09a5016d6019df"
   },
@@ -183,5 +183,106 @@
   "relay_clock_ports": "2*(2*RU+RS0+RS1+RS2) individual core-phase roots (oneunusedplaceholderport for allzeroR)",
   "relay_rows": "actual kept fixed-cycle tx(payload+observed-valid+txslot+peerslot), rx(payload+valid) flop rows",
   "fault_output": "fault is collective fault only; caller must aggregate20CDCfault and5codecabort explicit outputs for native acceptance; none gates normal issue",
-  "initial_actual_parent_proof": "unit1378071:4/4zero-relayproduction exact; finalpaidrelayprofilebuildpending"
+  "initial_actual_parent_proof": "unit1378071:4/4zero-relayproduction exact; finalpaidrelayprofilebuildpending",
+  "peer_face_mapping": {
+    "P": "P",
+    "R": "R",
+    "SerDes0": "SerDes2",
+    "SerDes1": "SerDes1",
+    "SerDes2": "SerDes0"
+  },
+  "RX_PHY_expect_offset": "KC+4+KW+4+PHY+peer_R-local_R after peer slot reaches local face; source-visible static shift, no observation chooses event",
+  "relay_profile_status": "R0production4/4PASS; unequalR5/0/0/5 missingpeer-age correction counterexample retained, corrected frozen f4a4dfef3 build pending",
+  "per_face_room_proposal": {
+    "outline_um": [
+      720,
+      432
+    ],
+    "core_face": "E",
+    "PHY_face": "W",
+    "status": "PROPOSAL_NOT_ASSIGNED_OR_QUALIFIED",
+    "children": [
+      {
+        "master": "qfd_static_ch546",
+        "count": 2,
+        "outline_um": [
+          233.28,
+          151.2
+        ],
+        "at_um": [
+          [
+            466.56,
+            43.2
+          ],
+          [
+            466.56,
+            237.6
+          ]
+        ],
+        "actual_routed_view": "physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546",
+        "source": "rtl/physical/ot_qfd_static_transport.sv",
+        "closed_source": "885fe056c",
+        "TT_setup_ps": 46.88,
+        "FF_hold_ps": 9.11,
+        "native_pin_audit": "UNVERIFIED"
+      },
+      {
+        "master": "ot_qkvd_llr_replay_sram_leaf",
+        "count": 4,
+        "source": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+        "raw_macro": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+        "raw_macro_outline_um": [
+          171.288,
+          77.76
+        ],
+        "at_um": [
+          [
+            259.2,
+            0
+          ],
+          [
+            259.2,
+            108
+          ],
+          [
+            259.2,
+            216
+          ],
+          [
+            259.2,
+            324
+          ]
+        ],
+        "qualified_view": null
+      },
+      {
+        "master": "ot_qwen_static_slot_ctl",
+        "count": 1,
+        "params": "FW546or514,CW32",
+        "candidate_outline_um": [
+          216,
+          172.8
+        ],
+        "at_um": [
+          0,
+          129.6
+        ],
+        "qualified_view": null
+      },
+      {
+        "master": "actual_perface_calendar",
+        "count": 1,
+        "candidate_outline_um": [
+          216,
+          108
+        ],
+        "at_um": [
+          0,
+          324
+        ],
+        "qualified_view": null
+      }
+    ]
+  },
+  "calendar_legality": "L >= KC+KW+17+PHY+local_R+peer_R; RX local read offset L-4-2local_R; per-peer RXexpect offset PEER_R-local_R"
 }
