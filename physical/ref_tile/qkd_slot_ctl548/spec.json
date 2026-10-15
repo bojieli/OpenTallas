@@ -149,12 +149,12 @@
  "recipe": 2,
  "keep_pin_regs": true,
  "pin_reg_split": true,
- "structural_change": "True static normal link controller: compiler-issuedwr/rdslots with fixedTX2/RX1, CRC16 epoch+slot check, no credits/ACK/upselectnormalissue. Any slot/writeownership/timeline/CRC/PHYup error abortsepoch; explicitcompilerdrain/restart. Separate control root and four SRAM store roots; no parent-local payload flops. s2 consumes exact official assignmentbb56cc450 (clkS205..207) and freezes first epoch fault, ignoring only already-invalid idle/aborted payload. Parallel GF2 CRC matrix replaces87-level serial recurrence; dataFF have no reset/epochfanout. FixedTX2/RX1 unchanged. Observed producer valid is fault-only input: missing actual data at a compiled write sets causebit7, no new root or pipeline edge.",
+ "structural_change": "Compiler-assigned writes and reads retain fixed TX3/RX1. Parallel GF2 CRC uses balanced XOR trees. Payload and command metadata are captured at assigned pins; ownership bookkeeping follows captured commands one edge later and never reschedules normal issue. Missing observed producer valid sets fault bit 7. Exact pin assignment 284543fb0; separate control root and four SRAM roots. Abort freezes the first fault; compiler drains and restarts the epoch explicitly.",
  "job": {
   "owner": "Codex:q-link-replay",
   "branch": "codex/q-link-replay-1014",
-  "tag": "s3",
-  "purpose": "Real native Qwen CRC/retry replay leaf with independent clock and registered read pin face",
+  "tag": "s4",
+  "purpose": "Compiler scheduled Qwen native static slot controller with parallel CRC and fault-only ownership checks",
   "benches": [
    {
     "name": "compiled_static_slot_exact",

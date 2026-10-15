@@ -31,8 +31,10 @@ module ot_qwen_static_slot_ctl #(
     output reg [7:0] fault_cause
 );
     reg [63:0] written;
-    reg v1,v2,v3;
-    reg [5:0] s1,s2,s3;
+    reg v1,v2,v3,v4,cmd_wv;
+    reg cmd_ov;
+    reg [5:0] cmd_ws;
+    reg [5:0] s1,s2,s3,s4;
     reg [7:0] e1,e2,e3;
     wire issue_write=wr_v && !epoch_abort && !epoch_begin;
     reg [FW-1:0] q_pin;
@@ -49,14 +51,18 @@ module ot_qwen_static_slot_ctl #(
     wire crc_bad=rv && ev && (rx_crc!==rf[PW-1-:CW]);
     wire slot_bad=rv && ev && (rf[FW+7:FW]!=={2'b00,es} || rf[FW+17-:8]!==re ||
                          rf[FW+8]!==1'b1 || rf[FW+9]!==1'b0 || rf[FW+18]!==1'b0);
-    wire write_collision=wr_v && ((v1 && wr_slot==s1)||(v2 && wr_slot==s2)||(v3 && wr_slot==s3)||
-        (written[wr_slot] && !(rd_v && rd_slot==wr_slot)));
-    wire unread_slot=rd_v && !written[rd_slot] && !(wr_v && wr_slot==rd_slot);
-    wire [7:0] new_fault={wr_v && (wr_observed_v!==1'b1),write_collision,unread_slot,v3 && !p_tx_up,
+    // Ownership checks use pin-captured metadata. The written map follows the
+    // same captured commands, one edge behind physical bank issue; faults are
+    // still known before the earliest TX3 frame can leave. No calendar gating.
+    wire write_collision=cmd_wv && ((v2 && cmd_ws==s2)||(v3 && cmd_ws==s3)||(v4 && cmd_ws==s4)||
+        (written[cmd_ws] && !(v1 && s1==cmd_ws)));
+    wire unread_slot=v1 && !written[s1] && !(cmd_wv && cmd_ws==s1);
+    wire [7:0] new_fault={cmd_wv && (cmd_ov!==1'b1),write_collision,unread_slot,v3 && !p_tx_up,
                           rv && !ev,ev && !rv,slot_bad,crc_bad};
     // Payload registers have no reset/epoch enable. Validity controls their
     // observation; clocked pin registers stay real while reset fanout is small.
     always @(posedge clk)begin
+        cmd_ws<=wr_slot;cmd_ov<=wr_observed_v;
         q_pin<=q_data;
         rf<=p_rx_flit;
         p_tx_flit<={tx_crc,body};
@@ -64,21 +70,22 @@ module ot_qwen_static_slot_ctl #(
     end
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin
-            written<=0;v1<=0;v2<=0;v3<=0;s1<=0;s2<=0;s3<=0;e1<=0;e2<=0;e3<=0;
+            written<=0;cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;s1<=0;s2<=0;s3<=0;s4<=0;e1<=0;e2<=0;e3<=0;
             rv<=0;ev<=0;es<=0;re<=0;
             p_tx_v<=0;rx_v<=0;
             epoch_abort<=0;fault_cause<=0;
         end else if(epoch_begin)begin
-            written<=0;v1<=0;v2<=0;v3<=0;rv<=0;ev<=0;
+            written<=0;cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;rv<=0;ev<=0;
             p_tx_v<=0;rx_v<=0;epoch_abort<=0;fault_cause<=0;
         end else begin
-            if(issue_write)written[wr_slot]<=1'b1;
+            cmd_wv<=wr_v && !epoch_abort;
+            if(cmd_wv && !epoch_abort)written[cmd_ws]<=1'b1;
             // Every compiled read consumes exactly one publication, including
             // a concurrent write/read of an empty slot. A later lap requires
             // another write; stale contents with a good CRC cannot qualify.
-            if(rd_v && !epoch_abort)written[rd_slot]<=1'b0;
-            v1<=rd_v && !epoch_abort;v2<=v1;v3<=v2;
-            s1<=rd_slot;s2<=s1;s3<=s2;e1<=epoch;e2<=e1;e3<=e2;
+            if(v1 && !epoch_abort)written[s1]<=1'b0;
+            v1<=rd_v && !epoch_abort;v2<=v1;v3<=v2;v4<=v3;
+            s1<=rd_slot;s2<=s1;s3<=s2;s4<=s3;e1<=epoch;e2<=e1;e3<=e2;
             // Always issue at the compiled edge. PHY-up is a fault observation.
             p_tx_v<=v3 && !epoch_abort;
             rv<=p_rx_v;ev<=rx_expect_v;
