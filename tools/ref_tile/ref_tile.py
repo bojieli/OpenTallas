@@ -280,7 +280,7 @@ def load_spec(path: str) -> dict:
     # boundary insertion).  "clock_port" stays the first entry (kit CLKPORT, legacy readers).
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         cps = s.get("clock_ports")
-        if s["kind"] != ("tile" if s.get("clock") == "multiple_cts_roots" else "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
+        if (s.get("clock") == "multiple_cts_roots" and s["kind"] != "tile" or s.get("clock") == "entries" and s["kind"] != "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
             raise SpecError('spec: clock entries/hybrid_entries require kind cluster; multiple_cts_roots requires kind tile; '
                             'each requires clock_ports and clock_port == clock_ports[0]')
         if len(set(cps)) != len(cps) or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*(?:\[\d+\])?", c) for c in cps):
@@ -295,6 +295,13 @@ def load_spec(path: str) -> dict:
             roots = s.get("clock_cts_roots")
             if not isinstance(roots, list) or not roots or not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not set(roots) < set(cps):
                 raise SpecError("hybrid_entries needs distinct clock_cts_roots, a nonempty proper subset of clock_ports")
+            if s["kind"] == "tile":
+                if any(s.get(k) for k in ("sdc_extra", "boundary_tcl", "pre_cts_extra", "forwarded_clock")):
+                    raise SpecError("hybrid_entries leaf owns clock relationships and boundaries; custom timing hooks are unsupported")
+                direct = clock_entry_constraints.direct_macro_clock_entries.load(s, ROOT)
+                if {e["port"] for e in direct["entries"]} != set(cps) - set(roots):
+                    raise SpecError("hybrid_entries leaf requires explicit raw macro clock entries for every non-CTS port")
+                clock_entry_constraints.domains(s)
         elif s.get("clock_cts_roots") is not None:
             raise SpecError("clock_cts_roots requires hybrid_entries")
         if s.get("clock_entry_domains") is not None:
