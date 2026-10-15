@@ -24,9 +24,18 @@ NODES={
  'embed':('qkd_embedding_static_core_provider','rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_provider.sv','96f30a6a0')}
 
 
-def load_nodes():
+def profile_config(path=None):
+    profile=json.loads(Path(path).read_text()) if path else {}
+    specs=dict(NODES)
+    unknown=set(profile.get("nodes",{}))-set(specs)
+    if unknown:raise ValueError(f"unknown actual node overrides: {unknown}")
+    specs.update(profile.get("nodes",{}))
+    return profile,specs
+
+
+def load_nodes(specs=None):
     nodes={}
-    for name,(top,path,ref)in NODES.items():
+    for name,(top,path,ref)in (NODES if specs is None else specs).items():
         text=subprocess.check_output(['git','show',ref+':'+path],cwd=ROOT,text=True)
         mods=[m for m in parse_modules(text,path)if m.name==top]
         if len(mods)!=1 or mods[0].port_parse_errors:raise ValueError(f'{name}: incomplete actual source ABI')
@@ -95,11 +104,12 @@ def build(nodes):
     return dict(nodes=nodes,joins=joins,assigned=assigned,used_outputs=used_outputs,return_parts=ret)
 
 
-def render(model):
+def render(model,profile=None):
+    profile=profile or {}
     nodes=model['nodes'];assigned=model['assigned'];used=model['used_outputs']
     lines=['`timescale 1ns/1ps','// Real wires-only native compute/control join; external ports are unresolved REAL hardware boundaries.',
       '// Individual clocks require actual physical phi-R delivery; defaults refuse unassigned production route ages.',
-      'module qfd_native_compute_join #(parameter integer XPF_TRANSPORT_EDGES=-1,NATIVE_PROFILE=1,',
+      'module '+profile.get('top_module','qfd_native_compute_join')+' #(parameter integer XPF_TRANSPORT_EDGES=-1,NATIVE_PROFILE=1,',
       ' parameter integer VM_ROUTE_QUALIFIED=0,VM_FORWARD_EDGES=-1,VM_RETURN_EDGES=-1,VM_PHASE_EDGES=-1) (']
     ext=[]
     for name,node in nodes.items():
@@ -121,6 +131,7 @@ def render(model):
     params={'tt':'#(.XPF_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES))','su':'#(.EXTERNAL_EMBED(1))',
         'vm':'#(.USE_MACRO(1),.USE_LEAF_CLOCKS(1))',
         'native':'#(.NATIVE_PROFILE(NATIVE_PROFILE),.VM_ROUTE_QUALIFIED(VM_ROUTE_QUALIFIED),.VM_FORWARD_EDGES(VM_FORWARD_EDGES),.VM_RETURN_EDGES(VM_RETURN_EDGES),.VM_PHASE_EDGES(VM_PHASE_EDGES))'}
+    params.update(profile.get('parameters',{}))
     for n,node in nodes.items():
         lines.append(' '+node['top']+' '+params.get(n,'')+' u_'+n+' (')
         for k,(p,s)in enumerate(node['ports'].items()):
@@ -132,12 +143,13 @@ def render(model):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--rtl',type=Path,default=ROOT/'rtl/qwen_split/qfd_native_compute_join.sv');a=p.parse_args()
-    m=build(load_nodes());rtl,ext=render(m);a.out.mkdir(parents=True,exist_ok=True)
+    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--profile',type=Path);p.add_argument('--rtl',type=Path,default=ROOT/'rtl/qwen_split/qfd_native_compute_join.sv');a=p.parse_args()
+    profile,specs=profile_config(a.profile)
+    m=build(load_nodes(specs));rtl,ext=render(m,profile);a.out.mkdir(parents=True,exist_ok=True)
     a.rtl.parent.mkdir(parents=True,exist_ok=True);a.rtl.write_text(rtl)
     manifest=dict(schema='opentallas.qwen.actual-native-compute-join.v1',qualified=False,
       scope='real source-output to source-input wires; no physical roots/homes/route ages or whole-die workload qualification',
-      nodes=m['nodes'],joins=m['joins'],actual_clock_roots={n:sum(s['bits']for p,s in node['ports'].items()if s['direction']=='input'and(p in('ck','clk','face_ck','relay_ck')or p.startswith(('ck_','clk_'))))for n,node in m['nodes'].items()},external_ports=[dict(node=n,port=p,**s)for n,p,s in ext],
+      profile=profile, nodes=m['nodes'],joins=m['joins'],actual_clock_roots={n:sum(s['bits']for p,s in node['ports'].items()if s['direction']=='input'and(p in('ck','clk','face_ck','relay_ck')or p.startswith(('ck_','clk_'))or p.endswith('_ck')))for n,node in m['nodes'].items()},external_ports=[dict(node=n,port=p,**s)for n,p,s in ext],
       source_register_edges=dict(copy_active=1,su_image_ready=1,su_issue_observer=1,native_return=1),
       clock_binding='all real roots exposed independently; no common phase or physical insertion invented',
       default_profile='production1, unknown routes refuse; diagnostic0 requires explicit nonnegative component ages and remains unqualified',
