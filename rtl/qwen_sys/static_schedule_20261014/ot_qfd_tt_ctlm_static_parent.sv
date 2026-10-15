@@ -1,5 +1,7 @@
 // Static successor parent: actual WSRC classification and real native status.
 // No native command reaches the ROM tree; native completion comes from endpoint.
+// r13 2026-10-15: regrouped into the head-side leaf ot_qfd_tt_ctlm_static_hr + the ROM tree leaf
+// (physical cluster); behaviour identical to the original body (formal equivalence physical/qwen_tt_static_cluster_1015).
 module ot_qfd_tt_ctlm_static_parent (
     input wire ck_me_sched,
     input wire cp_active,output wire [55:0] cp,
@@ -67,33 +69,23 @@ module ot_qfd_tt_ctlm_static_parent (
     output wire [16-1:0] mx_mask,
     output wire [16*32-1:0] mx_data
 );
-    wire [379:0] cmd;
-    wire [94:0] ret,rom_ret;
-    wire [379:0] local_rom_cmd;
-    wire head_fault,relocation_fault;
-    reg [5:0] loaded_stage;
-    reg relocation_sticky;
-    always @(posedge ck_head or negedge rst_n)
-      if(!rst_n)begin loaded_stage<=0;relocation_sticky<=0;end
-      else begin
-        if(pw_v && pw_addr==1017 && pw_data[63:32]==32'h43414c53)
-          loaded_stage<=pw_data[17:12];
-        if(relocation_fault)relocation_sticky<=1;
-      end
-    assign command_stage=loaded_stage;
-    ot_qwen_tp8_rom_relocate u_resident_relocation(
-      .in_cmd(local_rom_cmd),.in_stage(loaded_stage),.out_cmd(rom_cmd),.fault(relocation_fault));
-    assign c_fault=head_fault|relocation_sticky;
-    ot_qfd_native_cmd_route u_native_route (
-      .clk(ck_head),.rst_n(rst_n),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
-      .rom_cmd(local_rom_cmd),.native_cmd(native_cmd),.ret(ret));
-    qfd_tt_ctlm_head_static u_head (
-        .me_observe(me_observe),.cp_active(cp_active),.cp(cp),
-        .me_image_ready(me_image_ready),.program_obs(program_obs),
-        .layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),
-
-        .clk(ck_head),
-        .ck_sched(ck_me_sched),
+    wire [94:0] rom_ret;
+    ot_qfd_tt_ctlm_static_hr u_hr (
+        .rom_ret_i(rom_ret),
+        .ck_me_sched(ck_me_sched),
+        .cp_active(cp_active),
+        .cp(cp),
+        .me_image_ready(me_image_ready),
+        .program_obs(program_obs),
+        .layer_context_v(layer_context_v),
+        .native_tok(native_tok),
+        .native_pos(native_pos),
+        .rom_cmd(rom_cmd),
+        .command_stage(command_stage),
+        .native_cmd(native_cmd),
+        .me_observe(me_observe),
+        .native_ret(native_ret),
+        .ck_head(ck_head),
         .rst_n(rst_n),
         .h_start(h_start),
         .token(token),
@@ -112,8 +104,6 @@ module ot_qfd_tt_ctlm_static_parent (
         .m_fin_o(m_fin_o),
         .m_fidx_o(m_fidx_o),
         .m_fval_o(m_fval_o),
-        .me_clk_en(me_clk_en),
-        .c_fault(head_fault),
         .kvd_v(kvd_v),
         .kvd_wbase(kvd_wbase),
         .kvd_ts(kvd_ts),
@@ -127,7 +117,8 @@ module ot_qfd_tt_ctlm_static_parent (
         .kvd_nout(kvd_nout),
         .kvd_kindk(kvd_kindk),
         .kvd_pos(kvd_pos),
-        .cmd(cmd),.ret(ret));
+        .me_clk_en(me_clk_en),
+        .c_fault(c_fault));
     qfd_tt_ctlm_tree_static u_tree (
 
         .clk(ck_tree),

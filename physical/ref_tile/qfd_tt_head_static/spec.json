@@ -1,0 +1,241 @@
+{
+ "name": "qfd_tt_head_static",
+ "top": "ot_qfd_tt_ctlm_static_hr",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv",
+  "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+  "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv",
+  "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv"
+ ],
+ "params": {},
+ "clock_port": "ck_head",
+ "clock_ports": [
+  "ck_head",
+  "ck_me_sched"
+ ],
+ "clock": "multiple_cts_roots",
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_head"
+   ],
+   "inputs": [
+    "native_ret",
+    "h_start",
+    "token",
+    "pos",
+    "prog_base",
+    "pw_v",
+    "pw_addr",
+    "pw_data",
+    "x_oacc",
+    "x_oidle",
+    "x_oprog",
+    "x_orows",
+    "kv_ok",
+    "kv_write_drained",
+    "me_mem_ok",
+    "rom_ret_i",
+    "rst_n"
+   ],
+   "outputs": [
+    "cp",
+    "program_obs",
+    "layer_context_v",
+    "native_tok",
+    "native_pos",
+    "command_stage",
+    "native_cmd",
+    "m_fin_o",
+    "m_fidx_o",
+    "m_fval_o",
+    "c_fault",
+    "rom_cmd",
+    "me_observe",
+    "me_clk_en",
+    "kvd_v",
+    "kvd_wbase",
+    "kvd_ts",
+    "kvd_ks",
+    "kvd_js",
+    "kvd_wcs",
+    "kvd_split",
+    "kvd_jsh",
+    "kvd_tiles",
+    "kvd_k",
+    "kvd_nout",
+    "kvd_kindk",
+    "kvd_pos"
+   ]
+  },
+  "sched": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_me_sched"
+   ],
+   "inputs": [
+    "cp_active"
+   ],
+   "outputs": [
+    "me_image_ready"
+   ]
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 259.2
+ },
+ "recipe": 2,
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*u_head*g_m?0?*u_pm"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    151.2
+   ],
+   "orient": "R0",
+   "inst": "*u_head*g_m?1?*u_pm"
+  }
+ ],
+ "pins": {
+  "E": [
+   "cp_active",
+   "cp",
+   "me_image_ready",
+   "program_obs",
+   "layer_context_v",
+   "native_tok",
+   "native_pos",
+   "command_stage",
+   "native_cmd",
+   "native_ret",
+   "h_start",
+   "token",
+   "pos",
+   "prog_base",
+   "pw_v",
+   "pw_addr",
+   "pw_data",
+   "x_oacc",
+   "x_oidle",
+   "x_oprog",
+   "x_orows",
+   "kv_ok",
+   "kv_write_drained",
+   "me_mem_ok",
+   "m_fin_o",
+   "m_fidx_o",
+   "m_fval_o",
+   "c_fault",
+   "kvd_v",
+   "kvd_wbase",
+   "kvd_ts",
+   "kvd_ks",
+   "kvd_js",
+   "kvd_wcs",
+   "kvd_split",
+   "kvd_jsh",
+   "kvd_tiles",
+   "kvd_k",
+   "kvd_nout",
+   "kvd_kindk",
+   "kvd_pos"
+  ],
+  "W": [
+   "rom_cmd",
+   "rom_ret_i",
+   "me_observe",
+   "me_clk_en"
+  ],
+  "N": [
+   "ck_head",
+   "ck_me_sched",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/common_flow/macro_channel_block.tcl",
+  "POST_RESIZE_TCL": "physical/common_flow/post_resize_relocate.tcl",
+  "OT_CHANNEL_BLOCK_UM": "20",
+  "OT_ROW_MIN_UM": "6"
+ },
+ "structural_change": "NEW head-side leaf of the selected static TT controller: exact original parent body minus the ROM tree (u_head + native route + resident relocation + loaded stage), formally equivalent regrouping (physical/qwen_tt_static_cluster_1015). Roots ck_head (4,813+route) / ck_me_sched (877), related phase-0; 2 SRAM 64x512; no ICG.",
+ "job": {
+  "owner": "Claude:q15_compute_elem",
+  "branch": "claude/q15-tt-static",
+  "tag": "h1",
+  "purpose": "Static TT head-side leaf (exact regrouped RTL, two related roots) for the qfd_tt_ctlm_static_s cluster"
+ },
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
