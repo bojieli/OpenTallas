@@ -1,0 +1,76 @@
+{
+  "schema": "opentallas.hier_contract.child_lint.v1",
+  "lef": "/srv/opentallas-scratch/codex/su-relay-r0-route-v1/views_checked/qsu_lane_relay_r0/ot_qfd_su_lane_relay_native.lef",
+  "verdict": "PASS",
+  "fails": [],
+  "warns": [
+    "(f) face-pin access: 2126 of 2126 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. b_d[0] M4 (0.060,13.776), b_d[100] M4 (0.060,13.776), b_d[101] M4 (0.060,13.776))"
+  ],
+  "summary": "ot_qfd_su_lane_relay_native 71.28 x 71.28: PG M5 VDD 13 stripes (91% spread, 100% cov) / VSS 13 stripes (91% spread, 100% cov); strap M6; face pins 2126 blocked-above 0 blocked-same 0; clock clk insertion 143 ps; pockets M5 0 (closed)",
+  "info": {
+    "cell": "ot_qfd_su_lane_relay_native",
+    "W": 71.28,
+    "H": 71.28,
+    "pg": {
+      "nets": {
+        "VDD": {
+          "top_layer": "M5",
+          "stripes": 13,
+          "dir": "V",
+          "spread": 0.909,
+          "coverage": 1.0,
+          "shapes_on_top": 13
+        },
+        "VSS": {
+          "top_layer": "M5",
+          "stripes": 13,
+          "dir": "V",
+          "spread": 0.909,
+          "coverage": 1.0,
+          "shapes_on_top": 13
+        }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+    },
+    "pg_layer": "M5",
+    "strap_layer": "M6",
+    "cap": null,
+    "face": {
+      "face_pins": 2126,
+      "blocked_above": 0,
+      "covered_below": 46,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 2126,
+      "band_examples": [
+        "b_d[0] M4 (0.060,13.776)",
+        "b_d[100] M4 (0.060,13.776)",
+        "b_d[101] M4 (0.060,13.776)",
+        "b_d[102] M4 (0.060,13.776)",
+        "b_d[103] M4 (0.060,13.776)",
+        "b_d[104] M4 (0.060,13.776)"
+      ]
+    },
+    "clock_insertion": {
+      "clk": {
+        "max_ps": 142.55,
+        "min_ps": 106.99
+      }
+    },
+    "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "added": 157
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+    }
+  }
+}

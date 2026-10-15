@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.qwen-su-checked-leaf-export.v1",
+  "top": "ot_qfd_su_copy_core",
+  "route": "/srv/opentallas-scratch/codex/su-copy-route-v1/routes/qsu_copy_core",
+  "source_commit": "1fc7ce85c",
+  "corner_sta_sha256": "46772ffb06fb66011aab577129362413f237f535a1c2965bfdb4ed2d69a33d1b",
+  "setup_tt_ps": 10.99,
+  "hold_ff_ps": 26.29,
+  "setup_ss_sensitivity_ps": -200.42,
+  "timing_replay_checked": true,
+  "child_lint": "PASS",
+  "files": {
+    "ot_qfd_su_copy_core_ff.lib": "ee3696aebbcdc2349e453e83baaa7d908a833cbffd944f21e9efa51ecf27ab75",
+    "ot_qfd_su_copy_core_ss.lib": "0a5adaf323631f45a17d95aed88ed07e7a0fcfbac93bbc6661f53b71028a20f3",
+    "ot_qfd_su_copy_core.lef": "1a41bb790984a66bcf65fdf1b1021c259b9b8e4f08dd825385a9a046a5a6b8db",
+    "insertion.json": "8f05b82476937f9f6f54b7b823db8791aac8f485b45cdb56c97e832fac521e79",
+    "ot_qfd_su_copy_core_tt.lib": "9c496902dd1c75736cfefc16e9a8e37842af3c4282dd734eb8acaef7326d28a9"
+  },
+  "scope": "actual routed leaf; parent clockentry wiring/phi-R/boundary pairs/die assembly remain separate"
+}

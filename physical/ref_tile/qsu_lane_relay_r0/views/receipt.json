@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.qwen-su-checked-leaf-export.v1",
+  "top": "ot_qfd_su_lane_relay_native",
+  "route": "/srv/opentallas-scratch/codex/su-relay-r0-route-v1/routes/qsu_lane_relay_r0",
+  "source_commit": "63d070372",
+  "corner_sta_sha256": "54eaf72fa2c0e9607130c2d06597e574c0addd4f4e190ace988209e200a3e8dc",
+  "setup_tt_ps": 149.13,
+  "hold_ff_ps": 22.46,
+  "setup_ss_sensitivity_ps": -2.23,
+  "timing_replay_checked": true,
+  "child_lint": "PASS",
+  "files": {
+    "ot_qfd_su_lane_relay_native_ff.lib": "eb01e3178e185bfa186308e8a85fbd82d187b6d7a759d275157e8526bfa9beda",
+    "insertion.json": "cfe209cb32dd85986ed385a902856e57b6f74acab5846695b7bcd759ddadd0b6",
+    "ot_qfd_su_lane_relay_native_ss.lib": "8364bff8823edbf8d176e47f565c75e6b92111a8f35687825fd34488226a236f",
+    "ot_qfd_su_lane_relay_native_tt.lib": "45acaa75e19315514ef87b3b58b8aefaa6d3f31ebc9ecdfbde49c4324a650efc",
+    "ot_qfd_su_lane_relay_native.lef": "fde7fbb18df209a6d1d40e934dc49d5464a3f8503a2cd71ce9b3370fa21d7d25"
+  },
+  "scope": "actual routed leaf; parent clockentry wiring/phi-R/boundary pairs/die assembly remain separate"
+}

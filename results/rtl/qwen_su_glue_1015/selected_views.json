@@ -1,0 +1,148 @@
+{
+  "schema": "opentallas.qwen-su-glue-actual-views.v1",
+  "source_batch": "79cf22d0b",
+  "acceptance": "Owner OptionB TTsetup>=0 FFhold>=0 DRC0; no15ps rework",
+  "views": {
+    "qsu_lane_relay_r0": {
+      "view": "physical/ref_tile/qsu_lane_relay_r0/views",
+      "clock": {
+        "tt": {
+          "n": 1621,
+          "mean": 124.3,
+          "min": 114.3,
+          "max": 135.5
+        },
+        "ff": {
+          "n": 1621,
+          "mean": 100.3,
+          "min": 91.4,
+          "max": 111.1
+        },
+        "ss": {
+          "n": 1621,
+          "mean": 166.8,
+          "min": 154.3,
+          "max": 179.1
+        }
+      },
+      "setup_tt_ps": 149.13,
+      "setup_ss_ps": -2.23,
+      "hold_ff_ps": 22.46,
+      "checked": true,
+      "child_lint": "PASS",
+      "files": {
+        "ot_qfd_su_lane_relay_native_ff.lib": "eb01e3178e185bfa186308e8a85fbd82d187b6d7a759d275157e8526bfa9beda",
+        "insertion.json": "cfe209cb32dd85986ed385a902856e57b6f74acab5846695b7bcd759ddadd0b6",
+        "ot_qfd_su_lane_relay_native_ss.lib": "8364bff8823edbf8d176e47f565c75e6b92111a8f35687825fd34488226a236f",
+        "ot_qfd_su_lane_relay_native_tt.lib": "45acaa75e19315514ef87b3b58b8aefaa6d3f31ebc9ecdfbde49c4324a650efc",
+        "ot_qfd_su_lane_relay_native.lef": "fde7fbb18df209a6d1d40e934dc49d5464a3f8503a2cd71ce9b3370fa21d7d25"
+      }
+    },
+    "qsu_align_mc6_hold": {
+      "view": "physical/ref_tile/qsu_align_mc6_hold/views",
+      "clock": {
+        "tt": {
+          "n": 1724,
+          "mean": 150.2,
+          "min": 137.7,
+          "max": 167.4
+        },
+        "ff": {
+          "n": 1724,
+          "mean": 123.4,
+          "min": 111.1,
+          "max": 139.8
+        },
+        "ss": {
+          "n": 1724,
+          "mean": 196.2,
+          "min": 183.0,
+          "max": 214.4
+        }
+      },
+      "setup_tt_ps": 208.51,
+      "setup_ss_ps": 99.55,
+      "hold_ff_ps": 13.96,
+      "checked": true,
+      "child_lint": "PASS",
+      "files": {
+        "ot_qfd_su_align_group4_hold.lef": "fe15a13644a214a12b39e904a1bd851b1b0f7ecd3200b09a165aa6ff314c9ba6",
+        "ot_qfd_su_align_group4_hold_ss.lib": "b60c70aaf090baf49cf34fcf8f17c0e0b21e1bac21a29a932e60054e16d8a432",
+        "insertion.json": "bef5a5ebbbd442a0afdc7f80f0d2368fbab1111a74db9dca9fd26352800a49e0",
+        "ot_qfd_su_align_group4_hold_ff.lib": "0dea44258da8ae615b4a1b48450066a01f4e48433deb5a49f0e44d1d2e2d076f",
+        "ot_qfd_su_align_group4_hold_tt.lib": "74eaee01c6e481f8194704c29c8795cf075e3b1af4a9265cff29da0673f083f1"
+      }
+    },
+    "qsu_align_mc9": {
+      "view": "physical/ref_tile/qsu_align_mc9/views",
+      "clock": {
+        "tt": {
+          "n": 1724,
+          "mean": 141.1,
+          "min": 126.4,
+          "max": 158.8
+        },
+        "ff": {
+          "n": 1724,
+          "mean": 113.9,
+          "min": 99.7,
+          "max": 131.1
+        },
+        "ss": {
+          "n": 1724,
+          "mean": 189.1,
+          "min": 172.9,
+          "max": 209.3
+        }
+      },
+      "setup_tt_ps": 195.77,
+      "setup_ss_ps": 80.68,
+      "hold_ff_ps": 15.14,
+      "checked": true,
+      "child_lint": "PASS",
+      "files": {
+        "insertion.json": "05f48cc73caec639ffd3b8dbc3ab32e1903d2e4a03ef12408ccfa1410f448f0a",
+        "ot_qfd_su_align_group4.lef": "0b856ab363ddc22a276e9b5afe3e83538e82c42151ccfc6d23153c71eb6e82e5",
+        "ot_qfd_su_align_group4_ff.lib": "c9fcb74a96cd0528a07c81ca995aa0059d0cde8f972e2b870252f05c31e16757",
+        "ot_qfd_su_align_group4_tt.lib": "3bf7561979f547bd791350d85c046a8bdfbc6fbac969fd9033dc31f86a4ee7c0",
+        "ot_qfd_su_align_group4_ss.lib": "6a7112c31f354292f4c8d1058ff7d2cee5f379455c9c6e51cf4359782ef85e08"
+      }
+    },
+    "qsu_copy_core": {
+      "view": "physical/ref_tile/qsu_copy_core/views",
+      "clock": {
+        "tt": {
+          "n": 4671,
+          "mean": 174.3,
+          "min": 163.9,
+          "max": 193.7
+        },
+        "ff": {
+          "n": 4671,
+          "mean": 142.8,
+          "min": 132.7,
+          "max": 162.4
+        },
+        "ss": {
+          "n": 4671,
+          "mean": 227.5,
+          "min": 216.2,
+          "max": 246.4
+        }
+      },
+      "setup_tt_ps": 10.99,
+      "setup_ss_ps": -200.42,
+      "hold_ff_ps": 26.29,
+      "checked": true,
+      "child_lint": "PASS",
+      "files": {
+        "ot_qfd_su_copy_core_ff.lib": "ee3696aebbcdc2349e453e83baaa7d908a833cbffd944f21e9efa51ecf27ab75",
+        "ot_qfd_su_copy_core_ss.lib": "0a5adaf323631f45a17d95aed88ed07e7a0fcfbac93bbc6661f53b71028a20f3",
+        "ot_qfd_su_copy_core.lef": "1a41bb790984a66bcf65fdf1b1021c259b9b8e4f08dd825385a9a046a5a6b8db",
+        "insertion.json": "8f05b82476937f9f6f54b7b823db8791aac8f485b45cdb56c97e832fac521e79",
+        "ot_qfd_su_copy_core_tt.lib": "9c496902dd1c75736cfefc16e9a8e37842af3c4282dd734eb8acaef7326d28a9"
+      }
+    }
+  },
+  "scope": "real leaf views only;347-root parent actual base/clockentry routes, phi-R, pinpair reach/hold and fullarithmetic throughput are unqualified"
+}

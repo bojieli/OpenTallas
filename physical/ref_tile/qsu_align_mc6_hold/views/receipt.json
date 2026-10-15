@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.qwen-su-checked-leaf-export.v1",
+  "top": "ot_qfd_su_align_group4_hold",
+  "route": "/srv/opentallas-scratch/codex/su-align-hold-route-v1/routes/qsu_align_mc6_hold",
+  "source_commit": "63d070372",
+  "corner_sta_sha256": "32d1b0910ff6d42b6ea21a60c38dbb35ce8f8eb7b8c211f7f6170f0b963e3b79",
+  "setup_tt_ps": 208.51,
+  "hold_ff_ps": 13.96,
+  "setup_ss_sensitivity_ps": 99.55,
+  "timing_replay_checked": true,
+  "child_lint": "PASS",
+  "files": {
+    "ot_qfd_su_align_group4_hold.lef": "fe15a13644a214a12b39e904a1bd851b1b0f7ecd3200b09a165aa6ff314c9ba6",
+    "ot_qfd_su_align_group4_hold_ss.lib": "b60c70aaf090baf49cf34fcf8f17c0e0b21e1bac21a29a932e60054e16d8a432",
+    "insertion.json": "bef5a5ebbbd442a0afdc7f80f0d2368fbab1111a74db9dca9fd26352800a49e0",
+    "ot_qfd_su_align_group4_hold_ff.lib": "0dea44258da8ae615b4a1b48450066a01f4e48433deb5a49f0e44d1d2e2d076f",
+    "ot_qfd_su_align_group4_hold_tt.lib": "74eaee01c6e481f8194704c29c8795cf075e3b1af4a9265cff29da0673f083f1"
+  },
+  "scope": "actual routed leaf; parent clockentry wiring/phi-R/boundary pairs/die assembly remain separate"
+}
