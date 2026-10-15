@@ -73,7 +73,7 @@ endmodule
 // Wires-only native Quant parent; every physical child retains its own clock pin.
 // Programme done reports issue completion; record_done includes fixed bank commit.
 module ot_hgi_qdq_sw_host_static #(
-    parameter integer RL=7,WC=4,MUT=0,COMPACT=1,PIN_BOUNDARY=0
+    parameter integer RL=7,WC=4,MUT=0,COMPACT=1,PIN_BOUNDARY=0,IO_REGS=0
 )(
     input wire clk_program,clk_transport,clk_dxl,clk_dbq,clk_daq,rst_n,
     input wire cfg_v,
@@ -99,7 +99,7 @@ module ot_hgi_qdq_sw_host_static #(
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .command(command),.command_v(command_v),.ordinal(ordinal),.active(program_active),.done(program_done),
         .configured(configured),.fault(pfault));
-    ot_hgi_qdq_static #(.RL(RL),.WC(WC),.MUT(MUT)) engine(
+    ot_hgi_qdq_static #(.IO_REGS(IO_REGS),.RL(RL),.WC(WC),.MUT(MUT)) engine(
         .clk_transport(clk_transport),.clk_dxl(clk_dxl),.clk_dbq(clk_dbq),.clk_daq(clk_daq),.rst_n(rst_n),
         .cmd_v(command_v&&command[0]),.cmd_op(command[6:1]),.cmd_block(command[14:7]),
         .cmd_src(command[30:15]),.cmd_dst(command[46:31]),.cmd_last(command[47]),

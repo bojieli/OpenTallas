@@ -3,7 +3,7 @@
 // Golden vectors and external preload are declared component-boundary stimuli.
 // SW replica component boundary: real L0 FP8 shape; external original operands and expected golden,
 // no substitution inside arithmetic. SU producer norm/rope and DMA consumer epochs remain unbound.
-module tb_hgi_qdq_sw_host_static #(parameter integer MUT=0,PIN_BOUNDARY=0);
+module tb_hgi_qdq_sw_host_static #(parameter integer MUT=0,PIN_BOUNDARY=0,IO_REGS=0);
     reg clk=0; always #5 clk=~clk;
     reg rst_n=0, cv=0, last=0;
     reg [5:0] op=0; reg [7:0] block_n=0;
@@ -79,7 +79,7 @@ module tb_hgi_qdq_sw_host_static #(parameter integer MUT=0,PIN_BOUNDARY=0);
     reg [2247:0] pwq=0;
     reg [135:0] prq=0;
     wire [143:0] status;
-    ot_hgi_qdq_sw_host_static #(.MUT(MUT==1?1:MUT==2?2:0),.COMPACT(1),.PIN_BOUNDARY(PIN_BOUNDARY)) dut(
+    ot_hgi_qdq_sw_host_static #(.MUT(MUT==1?1:MUT==2?2:0),.COMPACT(1),.IO_REGS(IO_REGS),.PIN_BOUNDARY(PIN_BOUNDARY)) dut(
         .clk_program(clk),.clk_transport(clk),.clk_dxl(clk),.clk_dbq(clk),.clk_daq(clk),.rst_n(rst_n),
         .cfg_v(ext_cfg_v),.cfg_target(ext_target),.cfg_addr(ext_cfg_addr),.cfg_data(ext_cfg_data),
         .desc_v(ext_desc_v),.desc_base(ext_base),.desc_limit(ext_limit),.desc_loops(ext_loops),.launch_v(ext_launch_v),
@@ -115,11 +115,11 @@ module tb_hgi_qdq_sw_host_static #(parameter integer MUT=0,PIN_BOUNDARY=0);
         assign status[g*18+:18]=st;
     end
     reg [255:0] gi[0:127],go[0:127];
-    reg [255:0] program_image[0:1023],nw_program_image[0:174];
+    reg [255:0] program_image[0:1023],nw_program_image[0:174+2*IO_REGS];
     integer fd,nrec,k,s,j,n[0:15],ab[0:15],ob[0:15],ops[0:15],blks[0:15],costs[0:15];
     integer cyc=0,t0=0,total_cost=0,nbeat=0,nreturn=0,nrecord=0,nwrite=0,nissue=0,total_beats=0,ncheck=0,bad=0,exp_commit,last_write=0,last_commit=0,ncommit=0;
     reg launched=0;
-    reg check_fault=0; string dir,fn,programfile;
+    reg check_fault=0; string dir,fn,programfile,vm_programfile;
     // Independent scoreboard: compare every actual bank write to immutable golden sectors,
     // then read the physically mapped macro output back after commit.
     reg [255:0] expect_word[0:32767]; reg [32767:0] expect_valid='0;
@@ -137,7 +137,7 @@ module tb_hgi_qdq_sw_host_static #(parameter integer MUT=0,PIN_BOUNDARY=0);
     always @(negedge clk) if(!preload && rst_n) begin
         if((host_fault || loader_fault || (|program_fault)) && !check_fault) $fatal(1,"native host/calendar fault");
         if(fault && !check_fault) $fatal(1,"unexpected static fault at cycle %0d vo=%b expected=%b",cyc-t0,dut.engine.vo,dut.engine.transport.dv[24]);
-        if(launched && cyc-t0>181 && nreturn!=nbeat) $fatal(1,"native fixed completion missing");
+        if(launched && cyc-t0>181+2*IO_REGS && nreturn!=nbeat) $fatal(1,"native fixed completion missing");
         if(done) nreturn=nreturn+1;
         if(done != (|bankdone)) $fatal(1,"fixed done differs from actual bank commit cycle%0d",cyc-t0);
         for(integer b=0;b<8;b=b+1) if(bankdone[b]) begin ncommit++;last_commit=cyc-t0;end
@@ -173,7 +173,8 @@ module tb_hgi_qdq_sw_host_static #(parameter integer MUT=0,PIN_BOUNDARY=0);
         for(k=0;k<nrec;k=k+1) total_beats+=n[k]/32;
         if(!$value$plusargs("PROGRAM=%s",programfile)) $fatal(1,"+PROGRAM required");
         $readmemh(programfile,program_image,0,nrec-1);
-        $readmemh("results/hbm_static_quant_1015/SW_replica/SW_program.hex",nw_program_image,0,174);
+        if(!$value$plusargs("VM_PROGRAM=%s",vm_programfile))vm_programfile="results/hbm_static_quant_1015/SW_replica/SW_program.hex";
+        $readmemh(vm_programfile,nw_program_image,0,174+2*IO_REGS);
         repeat(8) @(negedge clk);rst_n=1;repeat(8) @(negedge clk);
         for(k=0;k<nrec;k=k+1) begin
             fn=$sformatf("%s/in_%0d.hex",dir,k);$readmemh(fn,gi,0,n[k]/8-1);
@@ -190,13 +191,13 @@ module tb_hgi_qdq_sw_host_static #(parameter integer MUT=0,PIN_BOUNDARY=0);
         // Real AXI F-window, actual loader CP doorbell, actual local target125.
         for(integer quadrant=0;quadrant<4;quadrant++) begin
             write32(12'hf00,32'(quadrant));
-            for(integer pc=0;pc<175;pc++) begin
+            for(integer pc=0;pc<175+2*IO_REGS;pc++) begin
                 reg [255:0] word_;
                 word_=0;word_[255:240]=16'hc7a1;word_[233:224]=10'(pc);
                 if(quadrant==0) word_=nw_program_image[pc];
                 for(integer piece=0;piece<8;piece++) write32(12'hf04,word_[piece*32+:32]);
             end
-            write32(12'hf08,32'(175<<10));write32(12'hf0c,1);
+            write32(12'hf08,32'((175+2*IO_REGS)<<10));write32(12'hf0c,1);
         end
         write32(12'hf20,32'(MUT==5?48:125));
         for(integer pc=0;pc<nrec;pc++) begin

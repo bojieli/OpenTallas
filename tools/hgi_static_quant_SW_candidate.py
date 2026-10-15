@@ -16,7 +16,7 @@ from hgi_static_quant_calendar import compact_record_words,lower_record
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,default=Path('results/hbm_static_quant_1015/SW_replica'))
-    a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=True);vectors=a.out/'vectors';vectors.mkdir(exist_ok=True)
+    ap.add_argument('--io-regs',type=int,choices=[0,1],default=0);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=True);vectors=a.out/'vectors';vectors.mkdir(exist_ok=True)
     source=Path('results/hbm_static_quant_1015/native_inventory/records.json')
     original=next(x for x in json.loads(source.read_text()) if x['source_profile']=='full_rank0_g25')
     r,end=decode_one(bytes.fromhex(original['record_hex']),0)
@@ -40,9 +40,9 @@ def main():
     commands=[c for r,t in zip(records,times) for c in lower_record(r,t,0)]
     # Real host timing: SW programme reaches bank ordinal+7; command at tickt
     # reaches engine LCP+t+7. Read bank tick+8; write bank tick+42.
-    length=max(c['cycle']+35 for c in commands)+5;slots=[0]*length
+    write_delta=35+2*a.io_regs;length=max(c['cycle']+write_delta for c in commands)+5;slots=[0]*length
     for c in commands:
-        for delta,address,enabled,selected,owner in [(1,'src','rslot_v','rslot',5),(35,'dst','wslot_v','wslot',1)]:
+        for delta,address,enabled,selected,owner in [(1,'src','rslot_v','rslot',5),(write_delta,'dst','wslot_v','wslot',1)]:
             e,s=fields[enabled],fields[selected]
             for lane in range(4):
                 bank=(c[address]+lane)&7;pc=c['cycle']+delta
@@ -53,7 +53,7 @@ def main():
     receipt=dict(component_boundary_only=True,target=125,resident_SID=0,native_source=original['source_path'],
         inventory_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),layout_sha256=hashlib.sha256(layout_source.read_bytes()).hexdigest(),
         records=8,beats=128,words=4096,immutable_per_record_price=24,immutable_sum_price=192,
-        source_programme_words=8,SW_programme_words=length,model_elapsed_LCP_to_commit=181,
+        source_programme_words=8,SW_programme_words=length,model_elapsed_LCP_to_commit=181+2*a.io_regs,io_registered_boundary=a.io_regs,
         actual_SU_norm_rope_producer_join=False,actual_DMA_consumer_join=False)
     (a.out/'compiler_receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
     print(json.dumps(receipt))
