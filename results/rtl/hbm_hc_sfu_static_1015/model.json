@@ -1,0 +1,21 @@
+{
+  "unit": "ot_hgi_sfu_static_quarter",
+  "uarch_model": "tools/uarch_model.py BASE su_lanes=16 sfu_lanes=8 historical; actual candidate 16 physical SFU lanes; no system speedup claimed",
+  "lanes": 16,
+  "replicas_for64lanes": 4,
+  "word_bits": 32,
+  "operands_per_lane": 4,
+  "max_operand_bytes_per_edge": 256,
+  "index_bytes_per_edge": 64,
+  "result_bytes_per_edge": 64,
+  "compiler_control_bits_per_edge": 1742,
+  "extra_pin_register_edges": 1,
+  "lane_map_edges": 4,
+  "throughput_items_per_edge": 16,
+  "mapped_memories_inside": 0,
+  "memory": "external physical local-store/VM adapter required; no cache allocation claimed",
+  "fixed_control_buffer_bits_4096edges": 7135232,
+  "physical_qualification": false,
+  "full_layer_calendar": false,
+  "outline_fit": "unmeasured; existing immutable arithmetic lanes reused; added1742pinFF and existingmapper logic only; no route launched"
+}
