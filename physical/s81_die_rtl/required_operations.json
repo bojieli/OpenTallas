@@ -4,7 +4,9 @@
   "canonical": {
     "field_pairs": 2417,
     "bf_pairs": 519,
-    "phase_width": 10
+    "phase_width": 10,
+    "stages": 81,
+    "rank_dies": 324
   },
   "operations": [
     {
@@ -48,6 +50,18 @@
         "i": 1102,
         "o": 1101
       }
+    },
+    {
+      "operation": "bf_static_execution",
+      "module": "dsfd_bf_front_static",
+      "source": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv",
+      "owner": "S-ELEM/BF-static-core",
+      "required_ports": {
+        "f_prog": 38
+      },
+      "static_semantics_evidence": null,
+      "candidate_ref": "fc29b45a3",
+      "scope_note": "Actual recovered source exists; native static master/programme/io_clk adoption and production evidence remain separate."
     },
     {
       "operation": "field_gather",
@@ -107,7 +121,9 @@
         "t_crs": 513,
         "f_mx_rqv": 20,
         "t_mx_rs": 10240
-      }
+      },
+      "native_clock_delivery_evidence": null,
+      "clock_boundary_contract": "results/arch/s81_vm_native_clock_abi_1015/contract.json"
     },
     {
       "operation": "engram_mix4",
@@ -125,7 +141,8 @@
       "operation": "engram_lookup",
       "module": "dsfd_engram_lkp",
       "source": "rtl/dsrom_sys/engram/dsfd_engram_lkp.sv",
-      "owner": "S-FUNC/S-ELEM"
+      "owner": "S-FUNC/S-ELEM",
+      "static_semantics_evidence": null
     },
     {
       "operation": "markov_static",
