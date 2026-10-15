@@ -4,6 +4,11 @@
 // prepare is exactly the release descriptor one edge early (rsched stage9).
 // The completion token describes state AFTER this edge's release and arrivals.
 // All four lane tokens are checked INSIDE every leaf: no free parent reduction.
+// Native5 structural repair (measured native4 CTS: release_group[0] input ->12 levels
+// -> completion/valid state, TT -79.8ps at 770): the E10 release STATE update uses the
+// leaf's own registered copy of the stage9 prepare descriptor (the same compiled
+// descriptor one edge early). The release_* pins only feed a shallow equality check
+// (descriptor mismatch = sticky fault + suppressed release), never the slot state.
 module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer LANE=0)(
  input wire ck,rst_n,
  input wire [7:0] i_v,input wire [63:0] i_tag,input wire [8*DW-1:0] i_data,
@@ -23,6 +28,8 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
  reg [DW-1:0] data[0:15];
  wire [15:0] hit;
  reg [7:0] prepared_mask;
+ reg prepared_v;reg [2:0] prepared_group;
+ wire rel_mismatch=(release_v!=prepared_v) || (release_v && (release_group!=prepared_group || release_mask!=prepared_mask));
  reg [7:0] prepared_parity;
  reg bad,complete;reg [7:0] prepare_complete;
  integer j,idx,s,p;
@@ -32,13 +39,14 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
 `ifdef OT_VM_RETURN_BANK8_MUT_LOCAL
    if(p==LANE)
 `endif
-   if(!peer_token[12*p+11] || peer_token[12*p+8+:3]!=release_group || peer_token[12*p+:8]!=8'hff)complete=0;
+   if(!peer_token[12*p+11] || peer_token[12*p+8+:3]!=prepared_group || peer_token[12*p+:8]!=8'hff)complete=0;
   end
-  if(prepared_mask!=release_mask)complete=0;
+  if(rel_mismatch)complete=0;
   used=0;bad=0;
   if(release_v)begin
    if(!complete)bad=1;
   end
+  if(rel_mismatch)bad=1;
   for(j=0;j<8;j=j+1)if(i_v[j])begin
    idx=i_tag[8*j+2+:4];
    if(i_tag[8*j+:2]!=2'(LANE))bad=1;
@@ -51,13 +59,13 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
   end
  end
  always @(posedge ck or negedge rn)begin
-  if(!rn)begin valid<=0;o_v<=0;fault<=0;o_group<=0;completion_token<=0;prepared_mask<=0;end
+  if(!rn)begin valid<=0;o_v<=0;fault<=0;o_group<=0;completion_token<=0;prepared_mask<=0;prepared_v<=0;prepared_group<=0;end
   else begin
    valid<=valid_n;fault<=fault|bad;
    o_v<=release_v && complete ? release_mask : 8'b0;
-   o_group<=release_group;
+   o_group<=prepared_group;
    completion_token<={prepare_v,prepare_group,prepare_complete};
-   prepared_mask<=prepare_mask;
+   prepared_mask<=prepare_mask;prepared_v<=prepare_v;prepared_group<=prepare_group;
   end
  end
  // Eight genuinely separate row controls: conditional mask enables prevent
@@ -82,7 +90,7 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
    end
   end
   assign hit[g]=h;
-  assign occupied[g]=valid[g] && !(release_v && release_group[0]==(g/8) && release_mask[g%8]);
+  assign occupied[g]=valid[g] && !(prepared_v && prepared_group[0]==(g/8) && prepared_mask[g%8]);
   assign valid_n[g]=occupied[g] || incoming_valid;
   assign prepare_ok[g]=valid_n[g] && groups_next[g]==prepare_group;
   assign groups_next[g]=h ? ng : groups[g];
