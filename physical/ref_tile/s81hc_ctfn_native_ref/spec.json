@@ -73,7 +73,8 @@
   "purpose": "Actual native boundary repair of inherited ctfn; strict launch220/capture190/spread80; same RTL arithmetic and reset epoch; immutable published predecessor remains separate",
   "no_bench_reason": "Source-bound PIPE1 full-shape numerical exact and prior observed within-leaf mutant receipts reused with all source/module SHA checks in results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/source_reuse.json. Physical mapped reset/clone equivalence and native timing are independent adoption gates; no full-native claim.",
   "views_to": "physical/ref_tile/s81hc_ctfn_native_ref/views",
-  "record_to": "results/rtl/ref_tile/s81hc_ctfn_native_ref"
+  "record_to": "results/rtl/ref_tile/s81hc_ctfn_native_ref",
+  "hold_merge": "Held physical-only native boundary candidate: source-bound numerical proof is reused separately; actual mapped clone/reset equivalence, immutable rectangles and native timing/CTS must pass before any adoption."
  },
  "params": {},
  "children": [],
@@ -90,6 +91,10 @@
   "fix": "Replace unanchored/shared boundary topology with recipe2 dedicated output-flop cloning and pure capture endpoint anchoring, with exact die-assigned original pin positions. No RTL, clock, SDC, reset or edge changes."
  },
  "structural_change": "Replace unanchored/shared boundary topology with recipe2 dedicated output-flop cloning and pure capture endpoint anchoring, with exact die-assigned original pin positions. No RTL, clock, SDC, reset or edge changes.",
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "tools/s81_suhc/inherited_exact_iop.tcl",
+  "OT_HC_NATIVE_IO_TCL": "/src/physical/s81_die_pins/v20_hc_inherited/ot_s81_hc_ctfn.tcl"
+ },
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
