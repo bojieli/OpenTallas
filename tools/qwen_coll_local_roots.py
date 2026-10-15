@@ -25,6 +25,8 @@ def derive(root=ROOT):
         text = text.replace(old, new)
 
     change("module ot_coll_tp8_static #(", "module ot_coll_tp8_local_roots #(")
+    change("LU > 126 || LS < 1", "LU > 62 || LS < 1")
+    change("1 <= LU <= 126, 1 <= LS <= 509, GC 8\");", "1 <= LU <= 62, 1 <= LS <= 509, GC 8\");")
     change("    input  wire              clk,", "    input  wire              clk,\n    input wire [67:0] clk_region, // same compiled edge; independent physical roots")
     change("    input wire [8:0] clk_mem, // CCLK1: P0/P1,S0..S4,R0/R1 direct macro entries",
            "    input wire [24:0] clk_mem, // P five quarters x two banks; S five; R five quarters x two banks")

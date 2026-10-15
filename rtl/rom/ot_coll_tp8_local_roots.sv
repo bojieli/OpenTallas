@@ -102,8 +102,8 @@ module ot_coll_tp8_local_roots #(
     localparam integer NS = FW / 128;
     localparam integer SL = 3 * ADD_LAT + 2;     // ot_coll_fold_slice red_in -> v_out (N 4, SEAM 1)
     localparam integer SEW = 640;                // S ring width (5 x 128)
-    initial if (FW != 512 || TAGW != 32 || LU < 1 || LU > 126 || LS < 1 || LS > 509 || GC != 8)
-        $error("ot_coll_tp8_static: FW 512, TAGW 32, 1 <= LU <= 126, 1 <= LS <= 509, GC 8");
+    initial if (FW != 512 || TAGW != 32 || LU < 1 || LU > 62 || LS < 1 || LS > 509 || GC != 8)
+        $error("ot_coll_tp8_static: FW 512, TAGW 32, 1 <= LU <= 62, 1 <= LS <= 509, GC 8");
 
     // ---------------- straps and reset leaves ----------------
     reg [1:0] pkg_q; reg die_q;
