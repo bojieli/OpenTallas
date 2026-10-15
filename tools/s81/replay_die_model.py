@@ -13,7 +13,7 @@ from pathlib import Path
 import runpy
 import shlex
 import sys
-import source_manifest
+import die_source_manifest
 
 
 def digest(path):
@@ -41,7 +41,7 @@ def validate(source, capture, metadata):
     manifest = json.loads(manifest_path.read_text())
     if manifest['source_commit'] != metadata['source_commit']:
         raise ValueError('captured source manifest commit differs')
-    source_manifest.verify(source, manifest)
+    die_source_manifest.verify(source, manifest)
     if digest(capture) != metadata['capture_sha256']:
         raise ValueError('captured model digest differs')
     return manifest
