@@ -1,6 +1,8 @@
 `timescale 1ns/1ps
 module host_su_tb #(parameter integer MUT_READY=0);
 localparam integer B=@BITS@,N=@EDGES@,W=@WRITES@,M=@MACROS@,FIRST_DICT=@DICT@;
+localparam integer DE[0:(B+255)/256-1]=@ENTRIES@;
+localparam integer DB[0:(B+255)/256-1]=@BANKS@;
 logic clk=0;always #5 clk=~clk;
 logic rst_n=0,cfg_v=0,validate_v=0,launch_v=0;
 logic[15:0] cfg_bank=0,length=N;logic[6:0] cfg_row=0;logic[255:0] cfg_data=0;
@@ -8,7 +10,7 @@ wire cfg_ready,cfg_accept,block_ready,busy,valid,done,fault;
 wire[15:0] edge_index;wire[B-1:0] command;
 reg[279:0] config_words[0:W-1];reg[B-1:0] expected_words[0:N-1];
 string dir;integer data_mut,addr_mut,phase_mut,mode;
-host_su_target #(.LINE_BITS(B),.EDGES(N),.COLS((B+255)/256),.DICT_ENTRIES(@ENTRIES@),.DICT_BANKS(@BANKS@),.MACROS(M),.MUT_READY(MUT_READY)) dut(
+host_su_target #(.LINE_BITS(B),.EDGES(N),.COLS((B+255)/256),.DICT_ENTRIES(DE),.DICT_BANKS(DB),.MACROS(M),.MUT_READY(MUT_READY)) dut(
  .clk(clk),.rst_n(rst_n),.clk_macro({M{clk}}),.cfg_v(cfg_v),.cfg_bank(cfg_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
  .cfg_ready(cfg_ready),.cfg_accept(cfg_accept),.validate_v(validate_v),.launch_v(launch_v),.length(length),
  .block_ready(block_ready),.busy(busy),.valid(valid),.done(done),.fault(fault),.edge_index(edge_index),.command(command));
