@@ -1,0 +1,8 @@
+{
+  "receipt": "results/physical/hbm_native_pc340_p0_ref/functional/receipt.json",
+  "receipt_sha256": "3ad502cf300b54fb782046d44cbff74afc5e87c2c2ca12989e887b91b7f071f7",
+  "positive_command": "python3 tools/hbm_svc_native_pc_functional.py exact --out {RUN}/bench/native_pc_exact",
+  "negative_command": "python3 tools/hbm_svc_native_pc_functional.py mutant --out {RUN}/bench/native_pc_mutant",
+  "scope": "Canonical unchanged strict23-command DRAM fixture/golden through all32 actual physical PC source instances. Exact constant PC/PHASE substitutions; original CA fault owner preserved. Behavioral pass does not waive performance gate.",
+  "performance_gate_waived": false
+}

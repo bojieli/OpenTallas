@@ -1,0 +1,31 @@
+{
+  "PC_instances": 32,
+  "all_parameters": {
+    "AQ_ROW_LEASE": 1,
+    "COLUMN_CLOSE_GUARD": 1,
+    "FAST_IDLE_DESC": 1,
+    "PC": "0..31",
+    "PHASE": 0
+  },
+  "composition_source_sha256": "04873fff81b953ac2b70e626340bab46bc8e44f440fdf281b7f9a03295842b8e",
+  "functional_evidence_scope": "exact original command fixture and golden payload; no model timing changes or performance gate waiver",
+  "mutant": false,
+  "mutant_scope": null,
+  "parent_performance_status": "FUNCTIONAL_PASS_2048_PERFORMANCE_PASS_640_PERFORMANCE_FAIL",
+  "physical_source_sha256": "61f9f0876da04a4f11215de3fa335cc78740bd3d24e3f4eb0a7526227ab425cc",
+  "production_generate_body_sha256": "039a708bfba3205c507e47e3c5974e30f2382872f08a8199df2a3c93074cd387",
+  "profile": "340cfd747",
+  "schema": "opentallas.native_PC_physical_composition_witness.v1",
+  "source_sha256": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": "e83b7120ff9c6b00eb1a7892bdfd0d4a8e9717fdf055f975f96fa879bb6c91b8",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_lease.sv": "c16adc653eff8bce34ace00d6b4753b6937e758604b8d809183e14e85ea8be4c",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv": "d2f90481dbc9953481195d63630a25a19ff3e64b16dcec87382ad9e33e713b77",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_cdc.sv": "0d7c1a839621c7c0be2122a9a39900a1d48779e1062c71f798efdffd1168d773",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv": "8e52a6d1897b678d1af735915ccc01b8d9f100922448627dadc2a9b64d71b66e",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv": "3bb69a5cd9d058bfd28df57acee4fb24e2a3d4992b4a468dbb638c4e5c8ade8f",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_fast_original.sv": "cc2cfc9e534ba656015e1d661d975adfdec256ae2f2728eb9ed6170158716c93",
+    "rtl/lib/ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+  }
+}

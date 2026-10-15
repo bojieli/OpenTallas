@@ -1,0 +1,66 @@
+{
+  "actual_exact_vectors": 5376,
+  "artifacts_sha256": {
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof/exact/build.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof/exact/composition_stack.sv": "04873fff81b953ac2b70e626340bab46bc8e44f440fdf281b7f9a03295842b8e",
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof/exact/phase_137_case_1.log.gz": "53407c7c4a86a96a00de98b58327f475fd2fcf86db6fd4046534ea1d7cf032ad",
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof/exact/phase_137_case_2.log.gz": "9a1efc693b25b8b070b78b3971f4e139a3e92c925dae410d7f0bc84af8d17582",
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof/exact/phase_773_case_1.log.gz": "be0d69f8a806af8bc88a768a44d78358aa15c6bb295f201795dfd29972bc4f4e",
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof/exact/phase_773_case_2.log.gz": "df4383dc6aad7fdc5c32a33e3dca412c45b814b0bee0c460d84451597eb935d2",
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof/exact/physical_leaf.sv": "61f9f0876da04a4f11215de3fa335cc78740bd3d24e3f4eb0a7526227ab425cc",
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof/exact/witness.json": "a00511573906bdb9a50ad8c5a72bfe4ec53c06749e18212ea78ce2508587e7d6",
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof/mutant/mutant.log.gz": "f691bcaa5cc359f20e15221dbc7016649e8efa7b64f5087546d8ae8df62ed3b8",
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof/mutant/physical_leaf.sv": "ee93df05582c98e8d611f061a2091fc5c087d086c40872d23d1d81a14fdf9a1d",
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof/mutant/witness.json": "f9b582d97bbaba6c0bcca9b0083d2462d2ecbe5d4e55759a5c7b98935f734b49",
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof_exact.log.gz": "1cf6c94dfc2aff3fc408ebaca3c6ec818bb76c98ed2072634b333a2b55f51f9b",
+    "results/physical/hbm_native_pc340_p0_ref/functional/proof_mutant.log.gz": "d25ef5497b9bff6ac21d4217838680a98e5fb274987b02b23a60bac0b2fa75ed"
+  },
+  "cases": [
+    {
+      "functional": "PASS",
+      "performance": "FAIL",
+      "phase": 137,
+      "total": 640
+    },
+    {
+      "functional": "PASS",
+      "performance": "PASS",
+      "phase": 137,
+      "total": 2048
+    },
+    {
+      "functional": "PASS",
+      "performance": "FAIL",
+      "phase": 773,
+      "total": 640
+    },
+    {
+      "functional": "PASS",
+      "performance": "PASS",
+      "phase": 773,
+      "total": 2048
+    }
+  ],
+  "fleet": {
+    "admission_GB": 2,
+    "host": "ot-epyc4",
+    "source_stage": "/home/ubuntu/native-pc-physical-functional-340cfd",
+    "terminal_exit_code": 0,
+    "threads": 1,
+    "unit": "oth-ubuntu-1995245-1792062592"
+  },
+  "mutant": {
+    "expected": "SRAM exact payload failure",
+    "scope": "actual extracted response SRAM registered read address XOR1",
+    "status": "rejected"
+  },
+  "physical_qualified": false,
+  "profile": "340cfd747",
+  "schema": "opentallas.native_PC_physical_functional.v1",
+  "scope": "Canonical unchanged strict23-command DRAM fixture/golden through all32 actual physical PC source instances. Exact constant PC/PHASE substitutions; original CA fault owner preserved. Behavioral pass does not waive performance gate.",
+  "source_sha256": {
+    "physical/hbm_accel_die_views/svc/native_pc_340cfd747/rtl/native_pc.sv": "61f9f0876da04a4f11215de3fa335cc78740bd3d24e3f4eb0a7526227ab425cc",
+    "tools/hbm_svc_native_pc_functional.py": "c0e8bc0c404819d342e7c52516ed25f180367789f221ffc43b979ad8d71eaa19"
+  },
+  "status": "PASS_real_extracted_source_composition_and_SRAM_mutant"
+}
