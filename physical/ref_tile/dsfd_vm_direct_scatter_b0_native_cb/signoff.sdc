@@ -8,8 +8,8 @@ set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set ::env(OT_IO_SKEW) 90
 set ::env(OT_IO_HOLD_SKEW) 50
-set ::env(OT_IO_IN_BUDGET_PS) 500.0
-set ::env(OT_IO_OUT_BUDGET_PS) 475.0
+set ::env(OT_IO_IN_BUDGET_PS) 458.333
+set ::env(OT_IO_OUT_BUDGET_PS) 458.333
 set ::env(OT_REF_GLOB) {*}
 set ::env(OT_IO_INTER) {none_*}
 set ::env(OT_IO_SKEW_INTER) 150

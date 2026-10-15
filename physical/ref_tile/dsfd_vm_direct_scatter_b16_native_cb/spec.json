@@ -50,7 +50,12 @@
   "threads": 4,
   "peak_ram_gb": 8,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 24,
+   "extra": "-distance_between_buffers 20"
+  }
  },
  "recipe": 2,
  "io_flop_at_pins": {
@@ -58,13 +63,14 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": false,
+ "outhold": true,
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
  },
- "structural_change": "STRUCTURAL native re-close of the direct-write scatter (S81 VM F6 cb2, 2026-10-15): bank-hit compare drives only o_v; we/addr/mask/data/tag registered straight from pins (valid-qualified); fault from a raw valid pin flop vs registered o_v (FAULT_AGE 3); io_budget in 0.6 / out 0.57 at route, post-CTS boundary and sign-off; outhold off. Same pins/outline/root, zero data cycles.",
+ "structural_change": "STRUCTURAL native re-close of the direct-write scatter (S81 VM F6 cb3, 2026-10-15): cb2 RTL (compare drives only o_v; payload/we registered from pins; fault flop-to-flop) + fixed HB1 output hold stage at every output pin + clustered clock tree (leaf spread 54 -> 29 ps) + io_budget 0.55/0.55. Same pins/outline/root, zero cycles.",
  "slot_change_request": {
   "contract": "S81 static VM direct q8 native option",
   "version": "30421c7c5/a60002977/eaca93a88",
@@ -73,7 +79,7 @@
  "job": {
   "owner": "Claude:S81 VM F6 scatter",
   "branch": "claude/s81-vm-f6-scatter-1015",
-  "tag": "cb2",
+  "tag": "cb3",
   "purpose": "Composed-budget native re-close of the direct-write scatter: native pin audit launch<=220/capture<=190 with exact/mutant benches; same RTL/pins/outline/2 stages",
   "extra_paths": [
    "physical/s81_die_pins/v20_vm_direct_write",
@@ -125,8 +131,8 @@
  "children": [],
  "inter": [],
  "io_budget": {
-  "in": 0.6,
-  "out": 0.57
+  "in": 0.55,
+  "out": 0.55
  },
  "reroute_reason": {
   "kind": "rtl_change",
@@ -134,6 +140,6 @@
   "launch_ps": 233.7,
   "capture_ps": 332.0,
   "source": "results/physical/s81_vm_static_ownership_1015/scatter_native_audit_1015.json",
-  "fix": "native pin audit FAIL on the CLOSED view: capture 332.0 ps on 72 pins (i_row hash bits 64 + i_v 8: the bank-hit compare zero-gated ~155 output flops per record behind the pin; CTS gate with the composed 0.6T input budget alone still in->reg -142..-228 ps, so a constraint change cannot fix it) and launch 233.7 ps (unconditional FIRM outhold BUF-HB2-BUF). STRUCTURAL: the compare drives only o_v (fanout 1 per record); we/address/mask/data/tag are registered straight from the pins (as the upstream capture stage) and meaningful only with o_v; the relay->bank consumer writes only on valid (static512_suhc 128-SRAM gate: 3857 requests restored, bad 0, unchanged). cb1 (b0 0306988ee) closed NEEDS_RTL TT -23.03 / FF -22.66: setup on i_row->XNOR->AND5->rebuffer->AND3->o_we (206 ps: the shared compare also fed o_we and bad_q), hold on output ports (sender min L+75 ps vs flop->pin 52 ps with no room under the 0.6T output budget, worst output setup +18 ps). cb2: compare fanout 1 (we is payload; fault = registered raw v & !o_v, FAULT_AGE 3 unchanged), io_budget in 0.6 / out 0.57 (launch <= ~208 ps <= 220 at sign-off, leaves room for the 25 ps sender-min hold pads), outhold off. Same pins, outline, one root, two data stages, zero data cycles."
+  "fix": "native pin audit FAIL on the CLOSED view: capture 332.0 ps on 72 pins (i_row hash bits 64 + i_v 8: the bank-hit compare zero-gated ~155 output flops per record behind the pin; CTS gate with the composed 0.6T input budget alone still in->reg -142..-228 ps, so a constraint change cannot fix it) and launch 233.7 ps (unconditional FIRM outhold BUF-HB2-BUF). STRUCTURAL: the compare drives only o_v (fanout 1 per record); we/address/mask/data/tag are registered straight from the pins (as the upstream capture stage) and meaningful only with o_v; the relay->bank consumer writes only on valid (static512_suhc 128-SRAM gate: 3857 requests restored, bad 0, unchanged). cb1 (b0) NEEDS_RTL TT -23.03 / FF -22.66; cb2 (c36bbc33c) near-misses b0 +4.12/-3.03, b8 +2.67/-14.62, b16 +3.87/-3.21, b24 -3.08/-4.87. Sign-off STA on the cb2 odbs: FF misses are output ports (o_data/o_addr/o_tag/o_mask: flop->pin 52 ps vs sender min L+75 ps; route hold repair left -1.5..-4.9) and, on b8, the cloned o_v pin flop whose clock leaf (clkbuf_leaf_43, 81.6 ps vs 36-44 ps typical) sits +44 ps late (i_row hold -14.6, b24 setup -3.1 on the same class). cb3, structural on both sides: (1) every flop-driven output gets a FIRM BUF->HB1->BUF hold stage at its pin (hold_pad.out_cell HB1, ~38 ps FF fixed sender-min delay; inputs keep HB2); (2) clock tree sink clustering 16 sinks / 24 um / 20 um buffer spacing: CTS gate leaf spread 54 -> 29 ps (TT insertion 211 ps <= 300); (3) io_budget 0.55/0.55 (launch with pad est. <= ~200 <= 220, capture cone ~150 <= 190 at the native audit). Same RTL as cb2, pins, outline, one root, zero cycles."
  }
 }
