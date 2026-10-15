@@ -5,8 +5,12 @@ set ::ot_ref_pre_cts 1
 # OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
 create_clock -name core_clk -period 770.000000000
 create_clock -name ot_io_sched -period 770.000000000
+create_clock -name ot_io_pm0 -period 770.000000000
+create_clock -name ot_io_pm1 -period 770.000000000
 create_clock -name ot_entry_0 -period 770.000000000 [get_ports {ck_head}]
 create_clock -name ot_entry_1 -period 770.000000000 [get_ports {ck_me_sched}]
+create_clock -name ot_entry_2 -period 770.000000000 [get_ports {ck_pm0}]
+create_clock -name ot_entry_3 -period 770.000000000 [get_ports {ck_pm1}]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]
@@ -21,12 +25,195 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{native_ret} {h_start} {token} {pos} {prog_base} {pw_v} {pw_addr} {pw_data} {x_oacc} {x_oidle} {x_oprog} {x_orows} {kv_ok} {kv_write_drained} {me_mem_ok} {rom_ret_i} {rst_n}} outputs {{cp} {program_obs} {layer_context_v} {native_tok} {native_pos} {command_stage} {native_cmd} {m_fin_o} {m_fidx_o} {m_fval_o} {c_fault} {rom_cmd} {me_observe} {me_clk_en} {kvd_v} {kvd_wbase} {kvd_ts} {kvd_ks} {kvd_js} {kvd_wcs} {kvd_split} {kvd_jsh} {kvd_tiles} {kvd_k} {kvd_nout} {kvd_kindk} {kvd_pos}}} {sched} {clock ot_io_sched io_budget_ps 166.667 inputs {{cp_active}} outputs {{me_image_ready}}}]
-set ::ot_ce_source_domains [dict create {ck_head} {core} {ck_me_sched} {sched}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{native_ret} {h_start} {token} {pos} {prog_base} {pw_v} {pw_addr} {pw_data} {x_oacc} {x_oidle} {x_oprog} {x_orows} {kv_ok} {kv_write_drained} {me_mem_ok} {rom_ret_i} {rst_n}} outputs {{cp} {program_obs} {layer_context_v} {native_tok} {native_pos} {command_stage} {native_cmd} {m_fin_o} {m_fidx_o} {m_fval_o} {c_fault} {rom_cmd} {me_observe} {me_clk_en} {kvd_v} {kvd_wbase} {kvd_ts} {kvd_ks} {kvd_js} {kvd_wcs} {kvd_split} {kvd_jsh} {kvd_tiles} {kvd_k} {kvd_nout} {kvd_kindk} {kvd_pos}}} {sched} {clock ot_io_sched io_budget_ps 166.667 inputs {{cp_active}} outputs {{me_image_ready}}} {pm0} {clock ot_io_pm0 io_budget_ps 166.667 inputs {} outputs {}} {pm1} {clock ot_io_pm1 io_budget_ps 166.667 inputs {} outputs {}}]
+set ::ot_ce_source_domains [dict create {ck_head} {core} {ck_me_sched} {sched} {ck_pm0} {pm0} {ck_pm1} {pm1}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{ck_head} {ck_me_sched}}
-set ::ot_ce_ports {{ck_head} {ck_me_sched}}
+set ::ot_ce_ports {{ck_head} {ck_me_sched} {ck_pm0} {ck_pm1}}
+set ::ot_ce_direct_masters {ot_sram_1r1w_64x512_m1_r2c2}
+set ::ot_ce_direct_entries {{{ot_sram_1r1w_64x512_m1_r2c2} {*u_head*g_m?0?*u_pm} {ck_pm0} {clk} {{tt} {{ot_sram_1r1w_64x512_m1_r2c2_tt} {6b00b7c554b89a7d24e02281ebef210c45b9de8b659130daeb852fd159c43d54}} {ff} {{ot_sram_1r1w_64x512_m1_r2c2_ff} {85b4a968d61b464fba5cda0954b638999b6178c220e76b4708fa5cc6c69659c1}} {ss} {{ot_sram_1r1w_64x512_m1_r2c2_ss} {226bc7f1d4120781b36447cac7083f7a2d1d8a9802c906cb46f7c9bb0c8e407d}}}} {{ot_sram_1r1w_64x512_m1_r2c2} {*u_head*g_m?1?*u_pm} {ck_pm1} {clk} {{tt} {{ot_sram_1r1w_64x512_m1_r2c2_tt} {6b00b7c554b89a7d24e02281ebef210c45b9de8b659130daeb852fd159c43d54}} {ff} {{ot_sram_1r1w_64x512_m1_r2c2_ff} {85b4a968d61b464fba5cda0954b638999b6178c220e76b4708fa5cc6c69659c1}} {ss} {{ot_sram_1r1w_64x512_m1_r2c2_ss} {226bc7f1d4120781b36447cac7083f7a2d1d8a9802c906cb46f7c9bb0c8e407d}}}}}
+set ::ot_scene_accessor_source_b64 {Ly8gUmVhZC1vbmx5IE9wZW5TVEEgc2NlbmUgYmluZGluZyBjZW5zdXMuIEJ1aWxkIGFnYWluc3QgdGhlIHJ1bm5pbmcgT1JGUyBpbWFnZS4KI2luY2x1ZGUgPHRjbC5oPgojaW5jbHVkZSA8ZXhjZXB0aW9uPgojaW5jbHVkZSA8c3RyaW5nPgojaW5jbHVkZSAic3RhL01pbk1heC5oaCIKI2luY2x1ZGUgInN0YS9TY2VuZS5oaCIKI2luY2x1ZGUgInN0YS9TdGEuaGgiCiNpbmNsdWRlICJzdGEvTmV0d29yay5oaCIKI2luY2x1ZGUgInN0YS9MaWJlcnR5LmhoIgojaW5jbHVkZSAic3RhL1RpbWluZ0FyYy5oaCIKI2luY2x1ZGUgInN0YS9UaW1pbmdSb2xlLmhoIgojaW5jbHVkZSAic3RhL1BvcnREaXJlY3Rpb24uaGgiCgpuYW1lc3BhY2Ugewp2b2lkIGZpZWxkKFRjbF9JbnRlcnAqIGlwLCBUY2xfT2JqKiBkLCBjb25zdCBjaGFyKiBrZXksIGNvbnN0IHN0ZDo6c3RyaW5nJiB2YWx1ZSkgewogIFRjbF9EaWN0T2JqUHV0KGlwLCBkLCBUY2xfTmV3U3RyaW5nT2JqKGtleSwgLTEpLCBUY2xfTmV3U3RyaW5nT2JqKHZhbHVlLmNfc3RyKCksIC0xKSk7Cn0KaW50IGNlbnN1cyhDbGllbnREYXRhLCBUY2xfSW50ZXJwKiBpcCwgaW50IGFyZ2MsIFRjbF9PYmoqIGNvbnN0IGFyZ3ZbXSkgewogIGlmIChhcmdjICE9IDMpIHtUY2xfV3JvbmdOdW1BcmdzKGlwLCAxLCBhcmd2LCAiaW5zdGFuY2UgY2xvY2tfcGluIik7IHJldHVybiBUQ0xfRVJST1I7fQogIHRyeSB7CiAgICBhdXRvKiBzdGEgPSBzdGE6OlN0YTo6c3RhKCk7CiAgICBhdXRvKiBzY2VuZSA9IHN0YS0+Y21kU2NlbmUoKTsKICAgIGlmICghc2NlbmUpIHRocm93IHN0ZDo6cnVudGltZV9lcnJvcigibWlzc2luZyBhY3R1YWwgYWN0aXZlIHNjZW5lIik7CiAgICBhdXRvKiBuZXR3b3JrID0gc3RhLT5uZXR3b3JrKCk7CiAgICBjb25zdCBzdGQ6OnN0cmluZyB3YW50ID0gVGNsX0dldFN0cmluZyhhcmd2WzFdKTsKICAgIGF1dG8qIG5hbWVzID0gc3RhLT5jbWROZXR3b3JrKCk7CiAgICBhdXRvKiBpbnN0ID0gbmFtZXMtPmZpbmRJbnN0YW5jZSh3YW50LmNfc3RyKCkpOwogICAgaWYgKCFpbnN0KSB7CiAgICAgIC8vIFRoZSBjYWxsZXIgcGFzc2VzIGdldF9mdWxsX25hbWUgb2YgdGhlIGNlbGwgaXQgZm91bmQ7IGEgZmxhdHRlbmVkIGVzY2FwZWQgbmFtZQogICAgICAvLyAoZS5nLiB1X2NvbGwuZ19zcmluZ1xbMFxdLnVfbSkgZG9lcyBub3Qgcm91bmQtdHJpcCB0aHJvdWdoIGZpbmRJbnN0YW5jZSdzIHBhdGggcGFyc2VyLgogICAgICAvLyBNYXRjaCB0aGUgc2FtZSBwYXRoTmFtZSBleGFjdGx5IG92ZXIgdGhlIGxlYWYgaW5zdGFuY2VzOyBuZXZlciBhIHBhdHRlcm4sIG5ldmVyIGFtYmlndW91cy4KICAgICAgaW50IGhpdHMgPSAwOwogICAgICBhdXRvKiBpdCA9IG5ldHdvcmstPmxlYWZJbnN0YW5jZUl0ZXJhdG9yKCk7CiAgICAgIHdoaWxlIChpdC0+aGFzTmV4dCgpKSB7CiAgICAgICAgYXV0byogbGVhZiA9IGl0LT5uZXh0KCk7CiAgICAgICAgaWYgKG5hbWVzLT5wYXRoTmFtZShsZWFmKSA9PSB3YW50KSB7IGluc3QgPSBsZWFmOyArK2hpdHM7IH0KICAgICAgfQogICAgICBkZWxldGUgaXQ7CiAgICAgIGlmIChoaXRzID4gMSkgdGhyb3cgc3RkOjpydW50aW1lX2Vycm9yKCJhbWJpZ3VvdXMgYWN0dWFsIGluc3RhbmNlIHBhdGggbmFtZSIpOwogICAgfQogICAgaWYgKCFpbnN0KSB0aHJvdyBzdGQ6OnJ1bnRpbWVfZXJyb3IoIm1pc3NpbmcgYWN0dWFsIGluc3RhbmNlIik7CiAgICBhdXRvKiBiYXNlID0gbmV0d29yay0+bGliZXJ0eUNlbGwoaW5zdCk7CiAgICBpZiAoIWJhc2UpIHRocm93IHN0ZDo6cnVudGltZV9lcnJvcigibWlzc2luZyBhY3R1YWwgaW5zdGFuY2UgTGliZXJ0eSBjZWxsIik7CiAgICBhdXRvKiByZXN1bHQgPSBUY2xfTmV3RGljdE9iaigpOwogICAgZmllbGQoaXAsIHJlc3VsdCwgInNjZW5lIiwgc2NlbmUtPm5hbWUoKSk7CiAgICBmb3IgKGNvbnN0IGF1dG8qIG1tIDoge3N0YTo6TWluTWF4OjptaW4oKSwgc3RhOjpNaW5NYXg6Om1heCgpfSkgewogICAgICBhdXRvKiBjZWxsID0gYmFzZS0+c2NlbmVDZWxsKHNjZW5lLCBtbSk7CiAgICAgIGlmICghY2VsbCkgdGhyb3cgc3RkOjpydW50aW1lX2Vycm9yKCJtaXNzaW5nIGFjdHVhbCBzY2VuZS1tYXBwZWQgY2VsbCIpOwogICAgICBhdXRvKiBsaWJyYXJ5ID0gY2VsbC0+bGliZXJ0eUxpYnJhcnkoKTsKICAgICAgYXV0byogY2xvY2sgPSBjZWxsLT5maW5kTGliZXJ0eVBvcnQoVGNsX0dldFN0cmluZyhhcmd2WzJdKSk7CiAgICAgIGlmICghY2xvY2sgfHwgIWNsb2NrLT5pc0Nsb2NrKCkgfHwgIWNsb2NrLT5kaXJlY3Rpb24oKS0+aXNJbnB1dCgpKQogICAgICAgIHRocm93IHN0ZDo6cnVudGltZV9lcnJvcigibWlzc2luZyBhY3R1YWwgaW5wdXQgY2xvY2sgcGluIik7CiAgICAgIGlmICghY2VsbC0+aXNNZW1vcnkoKSkgdGhyb3cgc3RkOjpydW50aW1lX2Vycm9yKCJhY3R1YWwgc2NlbmUgY2VsbCBoYXMgbm8gbWVtb3J5IHNlbWFudGljcyIpOwogICAgICBhdXRvKiByb3cgPSBUY2xfTmV3RGljdE9iaigpOwogICAgICBmaWVsZChpcCwgcm93LCAiY2VsbCIsIGNlbGwtPm5hbWUoKSk7CiAgICAgIGZpZWxkKGlwLCByb3csICJsaWJyYXJ5IiwgbGlicmFyeS0+bmFtZSgpKTsKICAgICAgZmllbGQoaXAsIHJvdywgImZpbGVuYW1lIiwgbGlicmFyeS0+ZmlsZW5hbWUoKSk7CiAgICAgIGZpZWxkKGlwLCByb3csICJjbG9ja19waW4iLCBjbG9jay0+bmFtZSgpKTsKICAgICAgLy8gQ2hlY2sgdGhlIHNhbWUgcGVyLXNjZW5lIGFyYyBtYXBwaW5nIHVzZWQgYnkgZGVsYXkgY2FsY3VsYXRpb24sCiAgICAgIC8vIGluY2x1ZGluZyBhbnkgbWlzc2luZy1hcmMgZmFsbGJhY2sgdG8gdGhlIHJlcHJlc2VudGF0aXZlIGNlbGwuCiAgICAgIGF1dG8qIGJhc2VfY2xvY2sgPSBiYXNlLT5maW5kTGliZXJ0eVBvcnQoVGNsX0dldFN0cmluZyhhcmd2WzJdKSk7CiAgICAgIGlmICghYmFzZV9jbG9jayB8fCBiYXNlX2Nsb2NrLT5zY2VuZVBvcnQoc2NlbmUsIG1tKSAhPSBjbG9jaykKICAgICAgICB0aHJvdyBzdGQ6OnJ1bnRpbWVfZXJyb3IoImFjdHVhbCBzY2VuZSBjbG9jay1wb3J0IG1hcHBpbmcgbWlzbWF0Y2giKTsKICAgICAgZm9yIChhdXRvKiBzZXQgOiBiYXNlLT50aW1pbmdBcmNTZXRzKCkpIHsKICAgICAgICBpZiAoc2V0LT5mcm9tKCkgIT0gYmFzZV9jbG9jaykgY29udGludWU7CiAgICAgICAgZm9yIChhdXRvKiBhcmMgOiBzZXQtPmFyY3MoKSkgewogICAgICAgICAgYXV0byogbWFwcGVkID0gYXJjLT5zY2VuZUFyYyhzY2VuZS0+bGliZXJ0eUluZGV4KG1tKSk7CiAgICAgICAgICBpZiAoIW1hcHBlZCB8fCAhbWFwcGVkLT5tb2RlbCgpIHx8ICFtYXBwZWQtPmZyb20oKSB8fCAhbWFwcGVkLT50bygpCiAgICAgICAgICAgICAgfHwgbWFwcGVkLT5mcm9tKCktPmxpYmVydHlDZWxsKCkgIT0gY2VsbAogICAgICAgICAgICAgIHx8IG1hcHBlZC0+dG8oKS0+bGliZXJ0eUNlbGwoKSAhPSBjZWxsCiAgICAgICAgICAgICAgfHwgbWFwcGVkLT5yb2xlKCkgIT0gYXJjLT5yb2xlKCkpCiAgICAgICAgICAgIHRocm93IHN0ZDo6cnVudGltZV9lcnJvcigiYWN0dWFsIHNjZW5lIGFyYyBtYXBwaW5nL3NvdXJjZSBtaXNtYXRjaCIpOwogICAgICAgIH0KICAgICAgfQogICAgICBhdXRvKiBhcmNzID0gVGNsX05ld0xpc3RPYmooMCwgbnVsbHB0cik7CiAgICAgIGJvb2wgc2V0dXAgPSBmYWxzZSwgaG9sZCA9IGZhbHNlLCBjcSA9IGZhbHNlOwogICAgICBmb3IgKGF1dG8qIGFyYyA6IGNlbGwtPnRpbWluZ0FyY1NldHMoKSkgewogICAgICAgIGlmIChhcmMtPmZyb20oKSAhPSBjbG9jaykgY29udGludWU7CiAgICAgICAgY29uc3QgYXV0byogcm9sZSA9IGFyYy0+cm9sZSgpOwogICAgICAgIHNldHVwIHw9IHJvbGUgPT0gc3RhOjpUaW1pbmdSb2xlOjpzZXR1cCgpOwogICAgICAgIGhvbGQgfD0gcm9sZSA9PSBzdGE6OlRpbWluZ1JvbGU6OmhvbGQoKTsKICAgICAgICBjcSB8PSByb2xlID09IHN0YTo6VGltaW5nUm9sZTo6cmVnQ2xrVG9RKCk7CiAgICAgICAgYXV0byogYSA9IFRjbF9OZXdEaWN0T2JqKCk7CiAgICAgICAgZmllbGQoaXAsIGEsICJmcm9tIiwgYXJjLT5mcm9tKCktPm5hbWUoKSk7CiAgICAgICAgZmllbGQoaXAsIGEsICJ0byIsIGFyYy0+dG8oKS0+bmFtZSgpKTsKICAgICAgICBmaWVsZChpcCwgYSwgInJvbGUiLCByb2xlLT50b19zdHJpbmcoKSk7CiAgICAgICAgVGNsX0xpc3RPYmpBcHBlbmRFbGVtZW50KGlwLCBhcmNzLCBhKTsKICAgICAgfQogICAgICBpZiAoIXNldHVwIHx8ICFob2xkIHx8ICFjcSkgdGhyb3cgc3RkOjpydW50aW1lX2Vycm9yKCJhY3R1YWwgc2NlbmUgY2xvY2sgbGFja3Mgc2V0dXAvaG9sZC9jbG9jay10by1RIGFyY3MiKTsKICAgICAgVGNsX0RpY3RPYmpQdXQoaXAsIHJvdywgVGNsX05ld1N0cmluZ09iaigiYXJjcyIsIC0xKSwgYXJjcyk7CiAgICAgIFRjbF9EaWN0T2JqUHV0KGlwLCByZXN1bHQsIFRjbF9OZXdTdHJpbmdPYmoobW0gPT0gc3RhOjpNaW5NYXg6Om1pbigpID8gIm1pbiIgOiAibWF4IiwgLTEpLCByb3cpOwogICAgfQogICAgVGNsX1NldE9ialJlc3VsdChpcCwgcmVzdWx0KTsKICAgIHJldHVybiBUQ0xfT0s7CiAgfSBjYXRjaCAoY29uc3Qgc3RkOjpleGNlcHRpb24mIGVycm9yKSB7CiAgICBUY2xfU2V0T2JqUmVzdWx0KGlwLCBUY2xfTmV3U3RyaW5nT2JqKGVycm9yLndoYXQoKSwgLTEpKTsKICAgIHJldHVybiBUQ0xfRVJST1I7CiAgfQp9Cn0KZXh0ZXJuICJDIiBpbnQgT3RzY2VuZWJpbmRpbmdfSW5pdChUY2xfSW50ZXJwKiBpcCkgewogIFRjbF9DcmVhdGVPYmpDb21tYW5kKGlwLCAib3Rfc3RhX3NjZW5lX2JpbmRpbmciLCBjZW5zdXMsIG51bGxwdHIsIG51bGxwdHIpOwogIHJldHVybiBUY2xfUGtnUHJvdmlkZShpcCwgIm90X3N0YV9zY2VuZV9iaW5kaW5nIiwgIjEuMCIpOwp9Cg==}
+set ::ot_scene_accessor_source_sha256 {61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777}
 
+proc ot_direct_sha256 {filename} {
+  if {![file isfile $filename]} {error "OT_DIRECT_MACRO: missing source file $filename"}
+  set result [exec sha256sum -- $filename]
+  if {![regexp {^([0-9a-f]{64}) } $result -> digest]} {error "OT_DIRECT_MACRO: invalid source digest $filename"}
+  return $digest
+}
+proc ot_direct_load_scene_accessor {} {
+  if {[info exists ::ot_scene_accessor_loaded]} {return}
+  # Compile within the exact running image against its installed headers. A
+  # missing compiler/header/symbol is an admission failure, never a fallback.
+  set channel [file tempfile directory ot_sta_scene_]
+  close $channel; file delete $directory; file mkdir $directory
+  set source [file join $directory sta_scene_binding.cc]
+  set channel [open $source w]; fconfigure $channel -translation binary
+  puts -nonewline $channel [binary decode base64 $::ot_scene_accessor_source_b64]; close $channel
+  if {[ot_direct_sha256 $source] ne $::ot_scene_accessor_source_sha256} {error "OT_DIRECT_MACRO: accessor source digest mismatch"}
+  set executable [file normalize [file readlink /proc/self/exe]]
+  set include [file normalize [file join [file dirname $executable] .. include]]
+  set flags [list -std=c++20 -shared -fPIC -I$include -I/usr/include/tcl]
+  if {![file isfile /usr/include/fmt/core.h] && ![file isfile /usr/local/include/fmt/core.h]} {
+    set bundled /usr/local/include/spdlog/fmt/bundled
+    if {![file isfile $bundled/core.h]} {error "OT_DIRECT_MACRO: matching image fmt headers missing"}
+    file link -symbolic [file join $directory fmt] $bundled
+    lappend flags -I$directory
+  }
+  set module [file join $directory ot_scene_binding.so]
+  if {[catch {exec g++ {*}$flags $source -o $module 2>@1} output]} {
+    error "OT_DIRECT_MACRO: accessor compile failed ($directory): $output"
+  }
+  if {[catch {load $module Otscenebinding} output]} {error "OT_DIRECT_MACRO: accessor ABI/load failed: $output"}
+  set version [lindex [split [exec g++ --version] \n] 0]
+  puts "OT_DIRECT_MACRO ACCESSOR source_sha256=$::ot_scene_accessor_source_sha256 executable_sha256=[ot_direct_sha256 $executable] module_sha256=[ot_direct_sha256 $module] compiler=$version"
+  set ::ot_scene_accessor_loaded 1
+  file delete -force $directory
+}
+
+# Return existing CE row shape. Zero internal OFFSET means Liberty-pin reference;
+# it is not a measured zero SRAM insertion and does not modify any macro arcs.
+proc ot_ce_direct_rows {corner} {
+  if {[llength $::ot_ce_direct_entries]} {ot_direct_load_scene_accessor}
+  set rows {}; set cells_seen {}
+  foreach entry $::ot_ce_direct_entries {
+    lassign $entry master pattern name libpin libraries
+    set cells [get_cells -quiet -hierarchical $pattern]
+    if {[llength $cells] != 1} { error "OT_DIRECT_MACRO: instance ownership is not unique: $pattern" }
+    set cell [lindex $cells 0]; set cellname [get_full_name $cell]
+    if {[dict exists $cells_seen $cellname] || [get_property $cell ref_name] ne $master} {
+      error "OT_DIRECT_MACRO: duplicate/wrong actual macro $cellname"
+    }
+    dict set cells_seen $cellname 1
+    lassign [dict get $libraries $corner] expected_library expected_sha
+    set expected "$expected_library/$master"
+    if {[catch {ot_sta_scene_binding $cellname $libpin} binding]} {
+      error "OT_DIRECT_MACRO: actual scene binding failed: $binding"
+    }
+    foreach mm {min max} {
+      set actual [dict get $binding $mm]
+      set want_library $expected_library; set want_sha $expected_sha
+      # The multi-mode route's synthesis SDC read happens before any scene is
+      # defined: the unscened default scene binds the LAST-read corner library
+      # (FF after TT). That read carries no timing claim, so pre-CTS only it is
+      # admitted when it is exactly one DECLARED corner library (digest-checked).
+      # Every defined scene and every post-CTS read stays strict.
+      if {[dict get $binding scene] eq "default" && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+          [dict get $actual library] ne $expected_library} {
+        dict for {c lib} $libraries {
+          if {[lindex $lib 0] eq [dict get $actual library]} { lassign $lib want_library want_sha }
+        }
+        puts "OT_DIRECT_MACRO PRE_CTS_DEFAULT_SCENE $cellname $mm=$want_library (declared corner library, no timing claim)"
+      }
+      if {[dict get $actual library] ne $want_library || [dict get $actual cell] ne $master ||
+          [dict get $actual clock_pin] ne $libpin} {
+        error "OT_DIRECT_MACRO: actual corner mismatch: scene=[dict get $binding scene] $mm [dict get $actual library]/[dict get $actual cell] expected $expected"
+      }
+      if {[ot_direct_sha256 [dict get $actual filename]] ne $want_sha} {
+        error "OT_DIRECT_MACRO: actual scene Liberty source digest mismatch $want_library/$master"
+      }
+    }
+    set pins {}
+    foreach p [get_pins -of_objects $cell] {
+      if {[get_property $p lib_pin_name] eq $libpin} { lappend pins $p }
+    }
+    if {[llength $pins] != 1} { error "OT_DIRECT_MACRO: missing actual clock pin $cellname/$libpin" }
+    set pin [lindex $pins 0]
+    set net [get_nets -quiet -of_objects $pin]
+    set sources [get_ports -quiet -of_objects $net]
+    set sinks [get_pins -quiet -of_objects $net]
+    if {[llength $sources] != 1 || [get_full_name [lindex $sources 0]] ne $name ||
+        [llength $sinks] != 1 || [get_full_name [lindex $sinks 0]] ne [get_full_name $pin]} {
+      error "OT_DIRECT_MACRO: actual exclusive direct source/pin ownership mismatch $name -> $cellname/$libpin"
+    }
+    set i [lsearch -exact $::ot_ce_ports $name]
+    if {$i < 0 || $name in $::ot_ce_cts_roots} { error "OT_DIRECT_MACRO: undeclared/nonhard source $name" }
+    set clock [get_clocks ot_entry_$i]
+    if {[llength $clock] != 1} { error "OT_DIRECT_MACRO: missing source clock $name" }
+    set wire [ot_ce_clock_wire $pin $clock]
+    if {![ot_ce_finite $wire]} { error "OT_DIRECT_MACRO: nonfinite clock wire $name" }
+    if {[info exists ::ot_ce_require_wire] && $::ot_ce_require_wire && $wire <= 0} {
+      error "OT_DIRECT_MACRO: actual positive propagated source-to-SRAM wire required $name"
+    }
+    set domain [dict get $::ot_ce_source_domains $name]
+    set vc [get_clocks [dict get $::ot_ce_domains $domain clock]]
+    if {abs([get_property $vc period]-[get_property $clock period])>0.001} {
+      error "OT_DIRECT_MACRO: domain/source period mismatch $name"
+    }
+    lappend rows [list [lindex $sources 0] $pin $wire 0 0 0 $clock 0 $domain]
+    puts "OT_DIRECT_MACRO RAW_LIBERTY_PIN $corner $name -> [get_full_name $pin] wire=$wire library=$expected (internal arcs retained)"
+  }
+  return $rows
+}
+
+# Constants are proved from actual OpenDB connectivity and the loaded Liberty
+# output functions. Cell/port names, case analysis and timing-graph constant
+# pruning are never proofs. A cell output is constant when every loaded corner
+# gives its master the same Liberty function and that function is a literal, or a
+# combinational expression whose every variable is an input pin of the same
+# instance on a net with no input port and exactly one driver that is itself
+# constant (TIEHI/TIELO prove themselves through their literal function; a
+# synthesis buffer/inverter or any gate of constants follows). Registers never
+# qualify; unknown or unparsable functions fail closed.
+proc ot_ce_constant_net {net seen remaining} {
+  if {$remaining <= 0 || $net in {"" NULL}} {return 0}
+  foreach port [$net getBTerms] {if {[$port getIoType] ne "OUTPUT"} {return 0}}
+  set drivers {}
+  foreach pin [$net getITerms] {if {[$pin isOutputSignal]} {lappend drivers $pin}}
+  if {[llength $drivers] != 1} {return 0}
+  return [ot_ce_constant_iterm [lindex $drivers 0] $seen $remaining]
+}
+proc ot_ce_constant_iterm {pin seen remaining} {
+  if {$remaining <= 0 || ![$pin isOutputSignal]} {return 0}
+  set inst [$pin getInst];set name "[$inst getName]/[[$pin getMTerm] getName]"
+  if {[dict exists $seen $name]} {return 0}
+  if {[info exists ::ot_ce_const_memo] && [dict exists $::ot_ce_const_memo $name]} {return [dict get $::ot_ce_const_memo $name]}
+  dict set seen $name 1
+  set result [ot_ce_constant_iterm_eval $inst $pin $seen $remaining]
+  dict set ::ot_ce_const_memo $name $result
+  return $result
+}
+proc ot_ce_constant_iterm_eval {inst pin seen remaining} {
+  if {[info exists ::ot_ce_register_cells] && [dict exists $::ot_ce_register_cells [$inst getName]]} {return 0}
+  set master [[$inst getMaster] getName];set output [[$pin getMTerm] getName]
+  set functions {};set matched 0
+  foreach library [get_libs -quiet *] {
+    set cell [$library find_liberty_cell $master]
+    if {$cell in {"" NULL}} continue
+    set lp [$cell find_liberty_port $output]
+    if {$lp in {"" NULL} || [sta::liberty_port_direction $lp] ne "output"} {return 0}
+    dict set functions [string map {" " "" "\t" "" "\n" ""} [$lp function]] 1
+    incr matched
+  }
+  if {!$matched || [dict size $functions] != 1} {return 0}
+  set function [lindex [dict keys $functions] 0]
+  if {$function in {0 1}} {return 1}
+  if {$function eq "" || ![regexp {^[A-Za-z0-9_!'*&+|^()]+$} $function]} {return 0}
+  set inputs [lsort -unique [regexp -all -inline {[A-Za-z_][A-Za-z0-9_]*} $function]]
+  if {![llength $inputs]} {return 0}
+  foreach input $inputs {
+    set in [$inst findITerm $input]
+    if {$in in {"" NULL} || ![$in isInputSignal]} {return 0}
+    if {![ot_ce_constant_net [$in getNet] $seen [expr {$remaining-1}]]} {return 0}
+  }
+  return 1
+}
+# Timing startpoint -> constant proof. An output-port startpoint is followed to
+# its net driver; an input port is never constant.
+proc ot_ce_constant_cone {start} {
+  set block [ord::get_db_block]
+  if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+    set port [$block findBTerm [get_full_name $start]]
+    if {$port in {"" NULL} || [$port getIoType] ne "OUTPUT"} {return 0}
+    return [ot_ce_constant_net [$port getNet] {} 64]
+  }
+  if {[sta::object_type $start] ne "Pin"} {return 0}
+  set inst [$block findInst [get_full_name [$start instance]]]
+  if {$inst in {"" NULL}} {return 0}
+  set pin [$inst findITerm [get_property $start lib_pin_name]]
+  if {$pin in {"" NULL}} {return 0}
+  return [ot_ce_constant_iterm $pin {} 64]
+}
 # A multi-root leaf contains independent synchronous datapaths. Domain declarations
 # are checked against the real synthesized timing graph, not trusted as metadata.
 proc ot_ce_leaf_ownership {inputs outputs} {
@@ -37,7 +224,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   foreach c [all_clocks] {lappend actual [get_full_name $c]}
   if {[lsort $actual] ne [lsort $expected]} {error "OT_MULTI_ROOT: undeclared clock alias or relationship"}
   set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}
-  foreach root $::ot_ce_cts_roots {
+  foreach root $::ot_ce_ports {
     set domain [dict get $::ot_ce_source_domains $root]
     dict set domain_roots $domain $root
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
@@ -51,6 +238,9 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     set cell [get_full_name [get_cells -of_objects $pin]]
     if {![dict exists $cells $cell]} { error "OT_MULTI_ROOT: unowned register $cell" }
   }
+  set ::ot_ce_register_cells {}
+  foreach r [all_registers -cells] {dict set ::ot_ce_register_cells [get_full_name $r] 1}
+  set ::ot_ce_const_memo {}
   # OpenSTA's -data_pins population includes asynchronous clear/preset
   # controls. Classify these from the actual loaded Liberty sequential arcs,
   # never from port names or reset_ports. They retain recovery/removal timing;
@@ -71,6 +261,10 @@ proc ot_ce_leaf_ownership {inputs outputs} {
       } else {
         set source [get_full_name [get_cells -quiet -of_objects $start]]
         if {![dict exists $cells $source]} {
+          if {[ot_ce_constant_cone $start]} {
+            puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> [get_full_name $pin]"
+            continue
+          }
           error "OT_MULTI_ROOT: unowned data path $source -> $cell"
         }
         set source_domain [dict get $cells $source]
@@ -83,12 +277,19 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   }
   dict for {name domain} $outputs {
     foreach start [get_fanin -flat -startpoints_only -to [get_ports $name]] {
+      # A die-strap tie output (contract v1.2 tie_hi/tie_lo), possibly
+      # synthesis-buffered, has no clock and no data domain to own; it must be
+      # proved constant above. Registers and ports keep their domain checks.
+      if {[sta::object_type $start] eq "Pin" && [$start is_top_level_port]} {
+        if {[ot_ce_constant_cone $start]} {
+          puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
+          continue
+        }
+        error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]"
+      }
       set source [get_full_name [get_cells -quiet -of_objects $start]]
-      # A die strap tie output (contract v1.2 tie_hi/tie_lo) is a library
-      # TIEHI/TIELO constant: it has no clock and no data domain to own.
-      set source_cell [get_cells -quiet -of_objects $start]
-      if {[llength $source_cell] == 1 && [regexp {^TIE(HI|LO)} [get_property $source_cell ref_name]]} {
-        puts "OT_MULTI_ROOT constant output $name <- [get_property $source_cell ref_name] $source"
+      if {![dict exists $cells $source] && [ot_ce_constant_cone $start]} {
+        puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
         continue
       }
       if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {
@@ -271,6 +472,12 @@ proc ot_ce_apply {} {
   dict for {m n} $::ot_ce_counts {
     if {![dict exists $counts $m] || [dict get $counts $m] != $n} { error "OT_ENTRIES: bound child count mismatch $m" }
   }
+  foreach row [ot_ce_direct_rows $corner] {
+    set name [get_full_name [lindex $row 0]]
+    if {[dict exists $seen $name]} {error "OT_DIRECT_MACRO: duplicate hard-source ownership $name"}
+    dict set seen $name 1
+    lappend rows $row
+  }
   # Each glue root owns a real CTS tree. Measure every propagated standard-cell
   # clock sink in the current scene; never substitute a declared/common phase.
   foreach name $::ot_ce_cts_roots {
@@ -281,7 +488,7 @@ proc ot_ce_apply {} {
     foreach pin $pins {
       set cell [get_cells -of_objects $pin]
       set master [get_property $cell ref_name]
-      if {[dict exists $::ot_ce_counts $master]} { error "OT_HYBRID: CTS root $name reaches a hard child" }
+      if {[dict exists $::ot_ce_counts $master] || $master in $::ot_ce_direct_masters} { error "OT_HYBRID: CTS root $name reaches a hard child" }
       set arrival [ot_ce_clock_wire $pin $clock]
       lappend arrivals $arrival
       dict set measured [get_full_name $pin] $arrival
@@ -372,6 +579,9 @@ proc ot_ce_apply {} {
     set dlmax [lindex [lsort -real [dict get $domain_high $domain]] end]
     set vc [get_clocks [dict get $info clock]]
     set budget [dict get $info io_budget_ps]
+    # Optional composition-derived output budget (domain "io_budget": {"out": f}, f >= 0.2): the outside share of the
+    # cycle on this domain's outputs; larger = a TIGHTER launch (flop -> pin) inside the child, never a relaxation.
+    set budget_out [expr {[dict exists $info io_budget_out_ps] ? [dict get $info io_budget_out_ps] : $budget}]
     set inputs {}; set outputs {}
     foreach pattern [dict get $info inputs] {
       set match [get_ports -quiet $pattern -filter "direction == input"]
@@ -399,7 +609,7 @@ proc ot_ce_apply {} {
       set_input_delay [expr {$dlmin-$hki}] -min -clock $vc $inputs
     }
     if {[llength $outputs]} {
-      set_output_delay [expr {$budget-$dlmax+$sk}] -max -clock $vc $outputs
+      set_output_delay [expr {$budget_out-$dlmax+$sk}] -max -clock $vc $outputs
       set_output_delay [expr {-$dlmin-$hk}] -min -clock $vc $outputs
     }
     if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
@@ -410,7 +620,7 @@ proc ot_ce_apply {} {
             set_input_delay [expr {$budget+$dlmax+150}] -max -clock $vc $p
           }
           if {[dict exists $covered_out $n] && [dict get $covered_out $n] eq $domain} {
-            set_output_delay [expr {$budget-$dlmax+150}] -max -clock $vc $p
+            set_output_delay [expr {$budget_out-$dlmax+150}] -max -clock $vc $p
           }
         }
       }

@@ -4,6 +4,7 @@
  "kind": "tile",
  "sources": [
   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv",
   "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
@@ -32,9 +33,11 @@
  "clock_port": "ck_head",
  "clock_ports": [
   "ck_head",
-  "ck_me_sched"
+  "ck_me_sched",
+  "ck_pm0",
+  "ck_pm1"
  ],
- "clock": "multiple_cts_roots",
+ "clock": "hybrid_entries",
  "clock_entry_domains": {
   "core": {
    "ratio": [
@@ -107,6 +110,28 @@
    "outputs": [
     "me_image_ready"
    ]
+  },
+  "pm0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_pm0"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "pm1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_pm1"
+   ],
+   "inputs": [],
+   "outputs": []
   }
  },
  "clock_data_paths": "related_same_frequency",
@@ -136,7 +161,12 @@
     43.2
    ],
    "orient": "R0",
-   "inst": "*u_head*g_m?0?*u_pm"
+   "inst": "*u_head*g_m?0?*u_pm",
+   "clock_entry": {
+    "port": "ck_pm0",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
@@ -146,7 +176,12 @@
     151.2
    ],
    "orient": "R0",
-   "inst": "*u_head*g_m?1?*u_pm"
+   "inst": "*u_head*g_m?1?*u_pm",
+   "clock_entry": {
+    "port": "ck_pm1",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   }
  ],
  "pins": {
@@ -197,7 +232,9 @@
    "rom_cmd",
    "rom_ret_i",
    "me_observe",
-   "me_clk_en"
+   "me_clk_en",
+   "ck_pm0",
+   "ck_pm1"
   ],
   "N": [
    "ck_head",
@@ -224,12 +261,51 @@
   "OT_CHANNEL_BLOCK_UM": "20",
   "OT_ROW_MIN_UM": "6"
  },
- "structural_change": "NEW head-side leaf of the selected static TT controller: exact original parent body minus the ROM tree (u_head + native route + resident relocation + loaded stage), formally equivalent regrouping (physical/qwen_tt_static_cluster_1015). Roots ck_head (4,813+route) / ck_me_sched (877), related phase-0; 2 SRAM 64x512; no ICG.",
+ "structural_change": "h3 (Q-COMPUTE-ELEM r14): h2 CTS refused by the strict multiple-CTS profile (ck_head drove 4,831 std FF + 2 raw SRAM clock pins: mixed source). The two program SRAMs now take explicit raw-macro clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk, derived by tools/qwen_split/derive_tt_head_rawck.py; shared source unchanged), W-face pins at the SRAM clk heights; std roots ck_head / ck_me_sched unchanged (clock hybrid_entries, flow 891a5f188). Parent delivers ck_pm0/1 from the same PLL phase as ck_head (same_pll_fixed_phase 0 ps). Logic, edges and outline unchanged. NEW head-side leaf of the selected static TT controller: exact original parent body minus the ROM tree (u_head + native route + resident relocation + loaded stage), formally equivalent regrouping (physical/qwen_tt_static_cluster_1015). Roots ck_head (4,813+route) / ck_me_sched (877), related phase-0; 2 SRAM 64x512; no ICG.",
  "job": {
   "owner": "Claude:q15_compute_elem",
   "branch": "claude/q15-tt-static",
-  "tag": "h1",
-  "purpose": "Static TT head-side leaf (exact regrouped RTL, two related roots) for the qfd_tt_ctlm_static_s cluster"
+  "tag": "h3",
+  "purpose": "Static TT head-side leaf, raw SRAM clock entries (h3) for the qfd_tt_ctlm_static_s cluster",
+  "extra_paths": [
+   "physical/qwen_tt_static_cluster_1015",
+   "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan"
+  ],
+  "benches": [
+   {
+    "name": "bench_tt_regroup_m0",
+    "cmd": "RG_OBJ={RUN}/bench/rg_m0 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "REGROUP_PASS"
+   },
+   {
+    "name": "bench_tt_regroup_m1",
+    "cmd": "RG_OBJ={RUN}/bench/rg_m1 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 1 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL"
+   },
+   {
+    "name": "bench_tt_regroup_m2",
+    "cmd": "RG_OBJ={RUN}/bench/rg_m2 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 2 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL"
+   }
+  ]
  },
  "children": [],
  "inter": [],
@@ -237,5 +313,19 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock_cts_roots": [
+  "ck_head",
+  "ck_me_sched"
+ ],
+ "pin_ranges": {
+  "ck_pm0": [
+   42.0,
+   46.0
+  ],
+  "ck_pm1": [
+   150.0,
+   154.0
+  ]
  }
 }

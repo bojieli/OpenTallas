@@ -76,7 +76,9 @@
    "rom_cmd",
    "rom_ret_i",
    "me_observe",
-   "me_clk_en"
+   "me_clk_en",
+   "ck_pm0",
+   "ck_pm1"
   ],
   "N": [
    "ck_head",
@@ -86,6 +88,12 @@
  },
  "clock_port": "ck_head",
  "clock_ports": [
+  "ck_head",
+  "ck_me_sched",
+  "ck_pm0",
+  "ck_pm1"
+ ],
+ "clock_cts_roots": [
   "ck_head",
   "ck_me_sched"
  ],
@@ -120,6 +128,7 @@
  "findings": [],
  "referenced": [
   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv",
   "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
