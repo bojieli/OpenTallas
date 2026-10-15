@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.qwen-xpf-producer-schedule.v1",
+  "program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+  "records": [
+    {
+      "consumer_pc": 1,
+      "consumer_unit": 1,
+      "xpf_hex": "800112002010002001",
+      "x_elements": 4096,
+      "producer_pcs": [],
+      "arm_before_pc": null,
+      "producer_unit": null
+    },
+    {
+      "consumer_pc": 12,
+      "consumer_unit": 1,
+      "xpf_hex": "800050002004018be1",
+      "x_elements": 512,
+      "producer_pcs": [
+        11
+      ],
+      "arm_before_pc": 11,
+      "producer_unit": 1
+    },
+    {
+      "consumer_pc": 16,
+      "consumer_unit": 1,
+      "xpf_hex": "80040e002040002001",
+      "x_elements": 4096,
+      "producer_pcs": [
+        15
+      ],
+      "arm_before_pc": 15,
+      "producer_unit": 2
+    },
+    {
+      "consumer_pc": 20,
+      "consumer_unit": 1,
+      "xpf_hex": "8000d000200c01afe1",
+      "x_elements": 1536,
+      "producer_pcs": [
+        19
+      ],
+      "arm_before_pc": 19,
+      "producer_unit": 2
+    }
+  ],
+  "external_effects": [
+    {
+      "producer_pc": 11,
+      "producer_unit": 1,
+      "base": 50672,
+      "count": 512,
+      "source": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_native_services_frontend_native59.sv",
+      "source_sha256": "7f09088bb568c5305ba96192f647f6019fb0332a5a39db0871fcf8210dd1d3ab"
+    }
+  ],
+  "unresolved": [
+    {
+      "consumer_pc": 1,
+      "live_in_elements": 4096,
+      "first_live_in": 4096,
+      "last_live_in": 8191,
+      "required_action": "arm in actual preceding producer stage or measured VM replay"
+    }
+  ],
+  "status": "PRECEDING_STAGE_REQUIRED",
+  "claim": "Static instruction-bound arm records only; relay latency, table loading, epoch ownership and release guard require RTL composition.",
+  "program_git_source": "origin/main:results/arch/qwen_tp8_native_dispatch_1014/actual_fused_layer0/die0/program.hex",
+  "program_git_commit": "cbf5b1da88d4f63d6f51d558c3b72290a6cad3c0"
+}
