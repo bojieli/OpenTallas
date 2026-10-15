@@ -1,0 +1,128 @@
+{
+  "status": "SELECTED_SOURCE_CANDIDATE_NOT_PHYSICALLY_QUALIFIED",
+  "source_sha256": {
+    "rtl/qwen_sys/split_20261014/qkd_astk_native_stack_s.sv": "7f30b6d4e5b090b7903fec2f9540c6f58f9e8a29028ab3176343defe725112a0",
+    "rtl/qwen_sys/split_20261014/qkd_astk_native_er_service.sv": "6625f3b5fe5a69eddf6649ca88af22889464879fb64871e942234397779ea5a1",
+    "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv": "197468906d50384682c695a399ae755de3a8dc66db32d8f9275382d2f48b1325",
+    "rtl/test/qwen_kv_die/tb_qkd_astk_native_stack.sv": "c9fb9fab4f33e38ed37ff89e4f26f473d724cd68e1b2cfb5c1399adfc0d391bb",
+    "tools/qwen_kv_die/native_stack_bench.sh": "bad5f58de997d61a42225a7d06845c7fc1019b28ebed2a07428ab0a838feaf39"
+  },
+  "physical_homes": {
+    "commit": "b0cc24a03",
+    "path": "results/arch/qwen_split_1014/kvsys_v1_3_candidate/astk_selected_nonpv_homes.json",
+    "children_per_stack": 45,
+    "roots_per_stack": 46,
+    "head_roots_separate": 86,
+    "open": "EP ks4 route overflow403; static EP and CTL require new physical profile views. Existing home/view candidates are not qualification."
+  },
+  "clock_roots": {
+    "ck_c": "u_ctl",
+    "ck_z[0:3]": "g_zn[z].u_zn",
+    "ck_x[0:31]": "g_ep[e].g_ex[h].u_ex; index=4*e+h",
+    "ck_e[0:7]": "g_ep[e].u_ep",
+    "ck_r": "actual command/return/e-row relay chain and er response metadata; distinct physical root"
+  },
+  "calendar": {
+    "status": "FIXTURE_DERIVED_PENDING_STATIC_COMPONENT_PROOF",
+    "fixture": "T8192 stack0, score writes t40..295 all8 engines, AM t360..363, normalized common-clock boundary; not final head/ECTL/native phi-R calendar",
+    "measured_diagnostic_exp_local_ages": [
+      365,
+      375,
+      386,
+      396,
+      407,
+      417,
+      428,
+      438
+    ],
+    "selected_trial": {
+      "EXP_START_AGE": 365,
+      "LMAX_START_AGE": 350,
+      "Z_START_AGE": 900,
+      "Z_STRIDE": 16
+    },
+    "local_exp_formula": "base+9*e+RL*(e+floor(e/2))",
+    "er_latency": 3,
+    "legacy_pv_leaves": 0,
+    "availability_gates": 0
+  },
+  "abi": {
+    "AQ540": "{Q512,qbeat6,qv,layer6,T14,start1}",
+    "AM36": "{M32,hh2,g1,v1}",
+    "AP563": "{legacy_pv_payload520,sideband43}; legacy payload inactive; bit43 legacyPV valid must0",
+    "AP_sideband43": "{data32,any1,k4,hh2,g1,type2,v1}; type0=lmax,1=Z,2=Zdone",
+    "SO425": {
+      "er_valid": 0,
+      "er_addr": [
+        12,
+        1
+      ],
+      "score_valid": 13,
+      "score_addr": [
+        25,
+        14
+      ],
+      "score_data": [
+        153,
+        26
+      ],
+      "lmax": [
+        409,
+        154
+      ],
+      "lmax_any": [
+        411,
+        410
+      ],
+      "legacy_nb_valid": 412,
+      "k_done": 422,
+      "v_done": 423,
+      "fault": 424
+    },
+    "SI634": {
+      "start": 0,
+      "T": [
+        14,
+        1
+      ],
+      "cyc8": [
+        17,
+        15
+      ],
+      "qv": 18,
+      "qbeat": [
+        24,
+        19
+      ],
+      "Q": [
+        536,
+        25
+      ],
+      "EXP_done": [
+        568,
+        537
+      ],
+      "er_data": [
+        632,
+        569
+      ],
+      "legacy_credit": 633
+    },
+    "er_addr11": "{k4,gam4,j3}; selected engine=gam[2:0]; g0 only",
+    "er_response": "rsp_v/rsp_addr/data64 exactly3 memory edges from request under normalized clocks; final phi-R transport must preserve measured contract"
+  },
+  "fault_paths": [
+    "EX arithmetic xe[1] -> EP e_f -> XO[0] return chain -> CTL af",
+    "SO fault424 -> EP XO[0] -> CTL af",
+    "EP schedule/join/SRAM coverage f -> XO[0] -> CTL af",
+    "ZN fault chain -> CTL af",
+    "er mapping/read conflict/visibility and forbidden legacy node input -> af",
+    "EP/EX passthrough lane fo -> af"
+  ],
+  "open": [
+    "Final QK static head/ECTL join calendar and root phases",
+    "Static native hub reciprocal and AM source",
+    "New native PV256/finalizer outside selected stack owned q_native_attention",
+    "No native timing/power/cost claim from normalized-clock component"
+  ]
+}
