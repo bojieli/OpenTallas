@@ -7,7 +7,7 @@
  "clock_port": "ck",
  "reset_ports": [],
  "macros": [],
- "outhold": true,
+ "outhold": false,
  "recipe": 1,
  "layer_cap": "M5",
  "children": [],
@@ -22,14 +22,12 @@
  "pins": {
   "W": [
    "ti_a",
-   "e_a"
+   "e_a",
+   "ck"
   ],
   "E": [
    "ti_b",
    "e_b"
-  ],
-  "S": [
-   "ck"
   ]
  },
  "route": {
@@ -39,14 +37,15 @@
   "m5_pg_pitch": 2.7,
   "pin_balance": {
    "group_max": 1
-  }
+  },
+  "hold_margin_ns": 0.03
  },
  "why_floorplan": "Pin-density-sized die relay leaf (1,575 b: head t word 1,559 + e 16), one flop a bit, straight-through. hs1 (21.6 x 166.32, PPL 32-bit groups) EARLY_FAIL_CONGESTION: GRT-0116 vertical overflow M3 2,341 / M5 1,204 in y 67-99 um; nets ti_a[179]/[1041]/[1297] share one gcell = the W and E groups were placed independently in different orders, so bits crossed vertically in a 17-um-wide core (840 vertical tracks per cut); pin slots 2 x 1,575 = 3,150 of 3,465 M4 face tracks (0.91). hs2: height from pin density = 2-track slots <= 0.60 of M4 face tracks -> 259.2 um (5,310 usable tracks, occupancy 0.593, 0.297 bits/track, both faces), exact io_tcl pins: bit k on the SAME M4 track W (in) and E (out), index order, >= 3-track pitch, so every bit is one horizontal route and vertical demand is only the clock. Fits the 43.2-um head-column gaps (head slot 492.48 tall).",
- "structural_change": "NEW (v1.4 queue rank 1, kvsys lead r7 07:02): ECTL -> head per-head registered copy, N = 2 stages uniform (two instances a head; stage 1 at the ECTL C face removes the 1-flop -> 8 front-leaf fan-out over ~1 mm, -1388 ps), +2 cycles on every ECTL->head issue, compiler-scheduled; no valid/ready/credit. hs2: outline 21.6 x 166.32 -> 21.6 x 259.2 (+56 % leaf area, +194 um2 per instance, 2 a head) sized from face pin density, and exact straight-through pin order replacing per-face PPL groups; RTL, cycles and benches unchanged.",
+ "structural_change": "NEW (v1.4 queue rank 1, kvsys lead r7 07:02): ECTL -> head per-head registered copy, N = 2 stages uniform (two instances a head; stage 1 at the ECTL C face removes the 1-flop -> 8 front-leaf fan-out over ~1 mm, -1388 ps), +2 cycles on every ECTL->head issue, compiler-scheduled; no valid/ready/credit. hs2: outline 21.6 x 166.32 -> 21.6 x 259.2 (+56 % leaf area, +194 um2 per instance, 2 a head) sized from face pin density, and exact straight-through pin order replacing per-face PPL groups; RTL, cycles and benches unchanged. hs3 (after hs2 route: GRT clean, wirelength 154,694 -> 48,403 um, TT +289.4, DRC 0, but FF hold -0.3 ps on 1 input->reg pin): coordinator/S-ELEM-B ee058260f shared fix applied -- no output hold pads (outhold off: 1,575 x 3 cells removed from the E band), ck at the centre of the long W face (was the S end of a 259-um tree span), boundary hold repair margin 30 ps (recipe-2 value; sign-off SDC unchanged).",
  "job": {
   "owner": "Claude:el1014-qwen-kvsys-elements",
   "branch": "claude/qwen-kvsys-el-r5-1015",
-  "tag": "hs2",
+  "tag": "hs3",
   "purpose": "Qwen KV/system die v1.4 head stage leaf qkh_head_tstage: one register stage of the ECTL -> head t + e word per head (contract compiler_stages.head_stages, N = 2).",
   "benches": [
    {
