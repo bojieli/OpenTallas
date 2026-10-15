@@ -1,0 +1,79 @@
+{
+  "scope": "Technology-mapped standardcell area, ASAP7 RVT TT library via Yosys synth/dfflibmap/ABC; area sizing only, no CTS, placement/pinfit, timing or routing qualification",
+  "library_cells_area_units": "um^2 (Liberty area)",
+  "mapping_script": "map_area.sh",
+  "tool_container": "openroad/orfs:asap7lock",
+  "source_hierarchy_sha256": "36cf2afbb78c6c8848e810441a704273a028ccdf08b5012cf87beb4cf5799255",
+  "mapped_standardcell_area_um2": 260840.58857999998,
+  "hard_owner_standardcell_area_um2": {
+    "shell": 12870.990719993675,
+    "top/g_bank[0].child": 1381.5862200000786,
+    "top/g_bank[1].child": 1381.5862200000786,
+    "top/g_bank[2].child": 1381.5862200000786,
+    "top/g_bank[3].child": 1381.5862200000786,
+    "top/g_bank[4].child": 1381.5862200000786,
+    "top/g_bank[5].child": 1381.5862200000786,
+    "top/g_bank[6].child": 1381.5862200000786,
+    "top/g_bank[7].child": 1381.5862200000786,
+    "top/hcp/g_flat.g_grp[0].g_hard_lane[0].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[0].g_hard_lane[1].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[0].g_hard_lane[2].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[0].g_hard_lane[3].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[1].g_hard_lane[0].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[1].g_hard_lane[1].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[1].g_hard_lane[2].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[1].g_hard_lane[3].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[2].g_hard_lane[0].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[2].g_hard_lane[1].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[2].g_hard_lane[2].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[2].g_hard_lane[3].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[3].g_hard_lane[0].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[3].g_hard_lane[1].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[3].g_hard_lane[2].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[3].g_hard_lane[3].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[4].g_hard_lane[0].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[4].g_hard_lane[1].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[4].g_hard_lane[2].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[4].g_hard_lane[3].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[5].g_hard_lane[0].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[5].g_hard_lane[1].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[5].g_hard_lane[2].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[5].g_hard_lane[3].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[6].g_hard_lane[0].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[6].g_hard_lane[1].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[6].g_hard_lane[2].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[6].g_hard_lane[3].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[7].g_hard_lane[0].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[7].g_hard_lane[1].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[7].g_hard_lane[2].child": 7186.817340004665,
+    "top/hcp/g_flat.g_grp[7].g_hard_lane[3].child": 7186.817340004665,
+    "top/hcp/u_tree": 6938.753220004612
+  },
+  "summary": {
+    "lane8": {
+      "count": 32,
+      "min_stdcell_area_um2": 7186.817340004665,
+      "max_stdcell_area_um2": 7186.817340004665
+    },
+    "bank": {
+      "count": 8,
+      "min_stdcell_area_um2": 1381.5862200000786,
+      "max_stdcell_area_um2": 1381.5862200000786,
+      "macro_area_um2_each": 69094.73664
+    },
+    "tree_stdcell_area_um2": [
+      6938.753220004612
+    ],
+    "shell_stdcell_area_um2": 12870.990719993675
+  },
+  "macro_areas_um2": {
+    "ROM4096x266_each": 7663.94784,
+    "SRAM128x256_each": 3891.57696,
+    "total": 552757.89312
+  },
+  "slot_area_um2": 1492992,
+  "standardcell_fraction_after_macro_area": 0.27742089621227756,
+  "tool_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "mapping_log_sha256": "d79599106d2de43096b5dcc340202b2de0d23be19470d36c110748755e43a557",
+  "mapping_script_sha256": "13d86d225e8f3d84e96df840c5213939ad1b59a5c0f28a92c28c3568394aff4b"
+}
