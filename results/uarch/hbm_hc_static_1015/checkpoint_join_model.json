@@ -2,9 +2,9 @@
   "scope": "RTL component composition of released L0 attention HC weights with declared native VM input and result apertures; not whole-token allocation or physical qualification",
   "sources": {
     "engine": "16b885432",
-    "prefetch": "pending accepted-mask successor of58af1e8ba",
+    "prefetch": "0f8c8b224",
     "book": "4b9a13572",
-    "join": "de0ca7df8",
+    "join": "1c74fb939",
     "PHY_window": "942124cb2",
     "tail_issuer": "76522e515"
   },
@@ -60,7 +60,10 @@
       8
     ],
     "tail_configuration_words": 497,
-    "host_programme_reconfigure_between_tail_positions": false
+    "host_programme_reconfigure_between_tail_positions": false,
+    "host_programme_reconfigure_between_projection_and_tail": false,
+    "combined_configuration_words_n6": 1577,
+    "combined_configuration_words_n8": 1897
   },
   "ports": {
     "PHY_stacks": 4,
@@ -95,5 +98,5 @@
     "immutable full-dataflow throughput price and SS/FF timing closure"
   ],
   "historical_PHY_issue_width1_failure": "Published refresh-aware model failed fixed1080 row4half1; bounded80..92edge predecessor passed. Failure retained by child.",
-  "successor_scope": "Nativewrapper binds opt-in TAIL_LOOP to one497wordbody6/8positions; single finalcomposition gate pending no-feedback guarded PHY source."
+  "successor_scope": "Registered accepted-mask WIDTH4 requests independent of ready; no combinational feedback. Actual publishedPHY component24rows/stalled-ready/default/ownerfault gates passed. Fullnative24row+alltailpositions onepreinstalledimage arithmetic/readback gate next."
 }
