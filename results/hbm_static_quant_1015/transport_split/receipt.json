@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.quant.transport_split.v1",
+ "date": "2026-10-15",
+ "owner": "Claude:H-ATTQ",
+ "problem": "r3 monolith ot_hgi_qdq_static_transport (IO_REGS=1): one CTS root over a 453.6x345.6 um face-pinned slot at 2% util; 5,895 sinks, TT insertion 555.6 ps, spread 62.7 ps (physical/ref_tile/hgi_qdq_static_transport_sw125_r3/gate_result.json)",
+ "structure": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv: control leaf + NS=4 word-sliced read leaves + 4 write leaves (two masters, each hardened once); bank selects registered one edge earlier in control (sp[NP-3], dst[ND-3]) and re-registered in each slice",
+ "selection": "ot_hgi_qdq_program_static / ot_hgi_qdq_static parameter TSPLIT=1 (default 0 keeps the monolith)",
+ "bench": {
+  "host": "ot-epyc4 unit oth-ubuntu-3470361-1792073150",
+  "cmd": "IO_REGS=1 LG=1 TSPLIT=1 bash tools/hgi_unit_tput/run_qdq_static.sh",
+  "split": "PASS HGI_QDQ_STATIC_PROGRAM records=8 beats=104 sectors=416 commit_cycles=152 immutable_price=168",
+  "monolith_same_run": "PASS ... commit_cycles=152",
+  "mutants_killed": ["m1 sector-map", "m2 write-map", "m3 late-response", "m4 LG-group-binding"],
+  "cycles_added": 0
+ },
+ "cts_smoke_gate_commit": "5b259b05e",
+ "cts_smoke": {
+  "ot_hgi_qdq_transport_rslice (NW=2, 129.6x86.4)": {"sinks": 792, "tt_insertion_ps": 190.0, "tt_spread_ps": 57.2, "std_area_um2": 546},
+  "ot_hgi_qdq_transport_wslice (NW=2, 86.4x43.2)": {"sinks": 408, "tt_insertion_ps": 133.9, "tt_spread_ps": 31.6, "std_area_um2": 277},
+  "ot_hgi_qdq_transport_ctl (RL=9 DL=25 WC=5, 86.4x86.4)": {"sinks": 1245, "tt_insertion_ps": 151.4, "tt_spread_ps": 19.6, "std_area_um2": 482}
+ },
+ "area_cost": "leaf outlines 4x(129.6x86.4)+4x(86.4x43.2)+86.4x86.4 = 0.067 mm2 vs monolith slot 0.157 mm2 (pin-limited; util 5-9%)",
+ "open": ["die slots for the 9 transport leaves: H-DIE (v15 contract has no quant producer slot yet)", "routes not submitted until slots exist", "ctl textbook.boundary WARN cmd_src->rq 5 levels (same as monolith 6 levels)"],
+ "qualification": false
+}
