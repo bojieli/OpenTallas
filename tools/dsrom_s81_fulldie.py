@@ -7303,9 +7303,16 @@ def finalize_r8(m):
             it.master = 'dsfd_node_%s%s%s%s' % ('L' if u['a'][1] == LEAF else 'N', 'L' if u['b'][1] == LEAF else 'N',
                                                 'f' if 'fi' in u else '', 'u' if py > it.y else 'd')
     pdir = defaultdict(dict)
+    real_ = set(real_ports()) if RTL_BIND else set()
     for it in m['insts']:
         for p_, (d, b) in use.get(it.name, {}).items():
             old = pdir[it.master].get(p_)
+            if old and old[0] == d == 'output' and it.master in real_:
+                # --rtl-bind: a REAL macro's output bundle may be read to different depths per instance (cfg ROM rd 48 for
+                # the field sequencers, 64 for the PQ phase ROMs): the netlist binds the read bits by pin name and gives
+                # the rest spare no-load nets, so the master records the widest use
+                pdir[it.master][p_] = (d, max(b, old[1]))
+                continue
             if old and (old[0] != d or old[1] != b):
                 raise ValueError(f'{it.master}.{p_}: {old} vs {(d, b)} on {it.name}')
             pdir[it.master][p_] = (d, b)
