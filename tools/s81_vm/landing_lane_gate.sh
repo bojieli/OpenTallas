@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eu
+set -euo pipefail
 cd "$(dirname "$0")/../.."
 out=${1:?outdir}; mode=${2:-base}
 mkdir -p "$out"
