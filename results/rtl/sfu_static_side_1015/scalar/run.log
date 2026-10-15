@@ -1,0 +1,5 @@
+PASS actualKIND2head6SRAM nativeSIDE320outputs320inputs checks=650 depths37/31/162/104 normDIVIMM19+EPS→RSQRT extra16 OUTemitdelta60/54/185/127/76 rootmax13902 fullN512UNQUALIFIED physicalUNQUALIFIED
+- rtl/test/hbm_accel/generic/tb_hbm_su_static_scalar.sv:84: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 1.085 s; speed 3.483 us/s
+- Verilator: cpu 1.085 s on 1 threads; allocated 14 MB

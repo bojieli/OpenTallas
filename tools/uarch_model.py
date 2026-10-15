@@ -13955,7 +13955,7 @@ def hbm_su_static_side_model():
             SRAM_macro_area_um2=6*3891.57696, SRAM_total_bytes=6*128*32,
             extra_fetch_edges=2, write_commit_extra_edges=1,
             expected_emit_to_OUT_preNBA=dict(rsqrt=60,sqrt=54,spsqrt=185,egate=127,divimm_rsqrt=76),
-            source_only_before_actual_gate=True, full_grid_qualification=False),
+            source_only_before_actual_gate=False, full_grid_qualification=False),
         primitive_mul_latency=3, primitive_add_latency=3, primitive_div_latency=19,
         initiation_interval=1, replicas=1, MACs_per_cycle=0,
         arithmetic=dict(mul=35, add=30, div=2, sqrt=3),
@@ -13974,7 +13974,9 @@ def hbm_su_static_side_model():
         outline_area_reservation_um2=4*37368/.55, utilization=.55,
         proposed_outline_um=[648,432], slot_fit=False,
         clock_period_ps=833.333, SS_uncertainty_ps=60, FF_uncertainty_ps=25,
-        adopted=False, physical_qualified=False, numerical_qualified=False,
+        adopted=False, physical_qualified=False, numerical_qualified=True,
+        numerical_scope="16384standalonegolden/originalcycleequiv +320trueKIND2headoutputs/6realSRAMs;fullN512unqualified",
+        evidence_path="results/rtl/sfu_static_side_1015",
         production_throughput_qualified=False, token_rate_credit=0,
         qualification='old3stage arithmetic misses production clock; six-root partition addresses sinks only; requires real physical timing evidence')
 

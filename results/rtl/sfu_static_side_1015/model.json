@@ -30,7 +30,7 @@
       "egate": 127,
       "divimm_rsqrt": 76
     },
-    "source_only_before_actual_gate": true,
+    "source_only_before_actual_gate": false,
     "full_grid_qualification": false
   },
   "primitive_mul_latency": 3,
@@ -82,7 +82,9 @@
   "FF_uncertainty_ps": 25,
   "adopted": false,
   "physical_qualified": false,
-  "numerical_qualified": false,
+  "numerical_qualified": true,
+  "numerical_scope": "16384standalonegolden/originalcycleequiv +320trueKIND2headoutputs/6realSRAMs;fullN512unqualified",
+  "evidence_path": "results/rtl/sfu_static_side_1015",
   "production_throughput_qualified": false,
   "token_rate_credit": 0,
   "qualification": "old3stage arithmetic misses production clock; six-root partition addresses sinks only; requires real physical timing evidence"

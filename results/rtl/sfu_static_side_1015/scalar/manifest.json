@@ -1,0 +1,37 @@
+{
+  "ops": [
+    [
+      "RSQRT",
+      2,
+      false
+    ],
+    [
+      "SQRT",
+      3,
+      false
+    ],
+    [
+      "SPSQRT",
+      6,
+      false
+    ],
+    [
+      "EGATE",
+      7,
+      false
+    ],
+    [
+      "DIVIMM_EPS_RSQRT",
+      2,
+      true
+    ]
+  ],
+  "inputs_per_op": 64,
+  "cycles_per_op": 320,
+  "total_scalar_outputs": 320,
+  "actual_scalar_capacity": 1,
+  "SRAM_readers": 6,
+  "SRAM_read_extra_edges": 2,
+  "SRAM_write_extra_edges": 1,
+  "programme": "raw1742 compiler ABI, one registered nativeheadbroadcast; normativeDIVIMM512+EPS1e-6\u2192RSQRT actual19edgeM1"
+}

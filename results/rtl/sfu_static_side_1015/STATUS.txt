@@ -1,0 +1,12 @@
+Actual scalar SIDE37/31/162/104, six related1:1 phase0 clocks, zero added edges.
+Standalone16384golden +16384original cycle equivalence PASS; actual fnmux and
+Engram sign mutants fail. Actual clock sinks8521/3814/10813/10794/9139/13902.
+Actual single KIND2 head slot uses source-owned native lane/metadata and six
+pinned physical SRAM replicas.320actualOUT+330SRAMreadbacks incl10neighbors,
+plus320 actual SIDEinputR goldenchecks PASS; DIVIMM512+EPS→RSQRT is actualRTL.
+Loaded cs_sfu and cp_imm1 control mutants fail real outputword checks.
+Fixed rawemit→OUT pre-NBA60/54/185/127/76; rawemit→SIDE16 orDIV32; II1 bursts64.
+Single scalar slot is actual N512 scalar capacity, not fullgrid qualification.
+Original71b52 source and frozen arithmetic bytes unchanged. Clock partition
+controls sink count only: old MLAT3/ALAT3 paths are physically UNQUALIFIED at833ps.
+No nativeVM composition, timing closure, completecanonicalcalendar, or rate credit.

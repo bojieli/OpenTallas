@@ -5,7 +5,9 @@ import hashlib,re
 root=Path(__file__).resolve().parents[2]
 original=root/'rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv'
 assert hashlib.sha256(original.read_bytes()).hexdigest()=='71b52f3016e76f1ef9ed3ca81333a73a0866b071dd4fa1c9f5727c49701c550b'
-s=(root/'rtl/hdc/v41x/ot_hdc_v41x_sfu.sv').read_text()
+sfusource=root/'rtl/hdc/v41x/ot_hdc_v41x_sfu.sv'
+assert hashlib.sha256(sfusource.read_bytes()).hexdigest()=='804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b'
+s=sfusource.read_text()
 sp=s[s.index('module ot_hdc_v41x_softplus #('):];sp=sp[:sp.index('endmodule')+len('endmodule')]
 sp=sp.replace('module ot_hdc_v41x_softplus #(', 'module ot_hbm_su_static_side_softplus #(')
 sp=sp.replace('input  wire        clk,','input wire [2:0] clk,')

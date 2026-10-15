@@ -1,0 +1,32 @@
+{
+  "source_commit": "1a291c29e",
+  "admitted_job": "oth-ubuntu-1750974-1792059725",
+  "capacity": "exactly one KIND2 scalar slot in N512",
+  "physical_SRAM_macros": 6,
+  "actual_SIDE_input_R_checks": 320,
+  "actual_OUT_checks": 320,
+  "actual_SRAM_readback_checks": 330,
+  "neighbor_words": 10,
+  "actual_total_checks": 970,
+  "per_operation_issues": 64,
+  "initiation_interval": 1,
+  "native_emit_to_OUT_preNBA_edges": {
+    "rsqrt": 60,
+    "sqrt": 54,
+    "spsqrt": 185,
+    "egate": 127,
+    "divimm_eps_rsqrt": 76
+  },
+  "native_emit_to_SIDE_sample_preNBA_edges": {
+    "normal": 16,
+    "divimm": 32
+  },
+  "normative_path": "actual DIVIMM512 19edges + EPS1e-6 ADD3 \u2192 RSQRT37; no idealSIDEinput/output",
+  "actual_loaded_cs_sfu_mutant": "fails HEAD_WORD atRSQRTword0",
+  "actual_loaded_cp_imm1_mutant": "actualnormdivider operand512\u21921024 fails HEAD_WORD",
+  "all_clocks": "20 related1:1phase0 roots including physical bank",
+  "physical_qualified": false,
+  "full_grid_qualified": false,
+  "native_VM_qualified": false,
+  "production_throughput_qualified": false
+}

@@ -1,0 +1,25 @@
+{
+  "source_commit": "f85d8f0c5",
+  "admitted_job": "oth-ubuntu-1713983-1792059298",
+  "exact_words": 16384,
+  "per_function_words": 4096,
+  "original_cycle_equivalence_words": 16384,
+  "functions": {
+    "rsqrt": 37,
+    "sqrt": 31,
+    "spsqrt": 162,
+    "egate": 104
+  },
+  "actual_result_mux_mutant": "fails SIDE_FN_MUTANT;16384differences",
+  "actual_egate_sign_mutant": "fails SIDE_EG_MUTANT;4096differences",
+  "root_counts": [
+    8521,
+    3814,
+    10813,
+    10794,
+    9139,
+    13902
+  ],
+  "root_counter_job": "oth-ubuntu-1724538-1792059337",
+  "physical_qualified": false
+}
