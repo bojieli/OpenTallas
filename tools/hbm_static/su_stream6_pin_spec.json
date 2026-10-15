@@ -125,7 +125,7 @@
     "owner": "Codex:HBM-SU-stream-calendar",
     "branch": "codex/hbm-su-multirate-1417",
     "tag": "pin6",
-    "purpose": "New actual six-SRAM fixed stream-calendar physical boundary: registered config/start/reset inputs, registered core outputs, six raw macro clock entries plus a CTS control root. Actual9489-edge/restart/data/address/phase/clock-halt and36clockownership/2clockmutants PASS. Extra1config/start/reset edge; sameII1. Not fullSU/native clock qualification before actual gate/route and currentdie slot.",
+    "purpose": "New actual six-SRAM fixed stream-calendar physical boundary: registered config/start/reset inputs, registered core outputs, six raw macro clock entries plus a CTS control root. Actual9489-edge/restart/data/address/phase/clock-halt and36clockownership/2clockmutants PASS. Extra1config/start/reset edge; sameII1. Not fullSU/native clock qualification before actual gate/route and currentdie slot. Existing ORFS slang frontend selected for the exact SystemVerilog typed parameter arrays; no RTL substitution.",
     "auto_merge": false,
     "hold_merge": "Current die slot/pins/clock epoch and parent production joins remain OPEN.",
     "views_to": "physical/ref_tile/hbm_su_stream6_pin_1015/views",
@@ -147,7 +147,8 @@
   },
   "recipe": 2,
   "orfs_vars": {
-    "OT_MEG_DEPTH_UM": "2.4"
+    "OT_MEG_DEPTH_UM": "2.4",
+    "SYNTH_HDL_FRONTEND": "slang"
   },
   "clock": "hybrid_entries",
   "clock_ports": [
