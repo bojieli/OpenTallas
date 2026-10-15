@@ -60,9 +60,9 @@ module tb_hgi_coll_qslots;
             prev_d=sd;
             prev_slot=cs;
             #0.01;
+            if(ov!==expected_v) $fatal(1,"fixed output cycle mismatch q%0d",q);
             if(BAD_SLOT==0) begin
                 if(fault[q]) $fatal(1,"unexpected schedule fault q%0d kind%h",q,fk);
-                if(ov!==expected_v) $fatal(1,"fixed output cycle mismatch q%0d",q);
                 for(integer d=0;d<ND;d=d+1) if(ov[d]) begin
                     if(od[d*545+:545]!==expected_d[d*545+:545]) $fatal(1,"bit-exact transport mismatch q%0d d%0d cyc%0d",q,d,cyc);
                     checked=checked+1;
