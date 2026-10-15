@@ -16,7 +16,7 @@
   23.76
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 2604.0,
+ "std_area_um2": 2469,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -49,7 +49,7 @@
   [
    "WARN",
    "util",
-   "utilisation 21% outside 45%-60% (std 2604 + macro 0 in core 12364 um2)",
+   "utilisation 20% outside 45%-60% (std 2469 + macro 0 in core 12364 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],
@@ -83,6 +83,8 @@
   "rtl/hdc/v41/ot_hdc_actquant.sv",
   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
   "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "physical/common_flow/hold_pad_hb4.tcl",
+  "physical/ref_tile/s81hc_ctfn_native_ref/clock_split.tcl",
   "physical/ref_tile/s81hc_ctfn_native_ref/kit.env",
   "physical/ref_tile/s81hc_ctfn_native_ref/clock.sdc",
   "physical/ref_tile/s81hc_ctfn_native_ref/signoff.sdc",
