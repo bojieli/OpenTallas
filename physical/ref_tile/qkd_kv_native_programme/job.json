@@ -1,5 +1,5 @@
 {
- "name": "qkd_kv_native_programme-p1-COMMIT",
+ "name": "qkd_kv_native_programme-p1-ecfd152ef",
  "block": "qkd_kv_native_programme",
  "ref_tile": true,
  "owner": "Codex:qwen_elements_1103",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/qwen-elements-1103",
-  "commit": "COMMIT",
+  "commit": "ecfd152efda8fa734ac29c3339f002fd04c5368f",
   "extra_paths": [
    "tools/qwen_static_kv/bench_native_programme_leaf.sh",
    "results/rtl/qwen_native_kv_programme_1103/leaf_package_v1",
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_kv_native_programme/qkd_kv_native_programme-p1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_kv_native_programme/qkd_kv_native_programme-p1-ecfd152ef"
   }
  ],
  "cycles_added": 0,
