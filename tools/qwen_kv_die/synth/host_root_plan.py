@@ -24,6 +24,8 @@ MACROS = [
     ("physical/hbm_accel_macros", "ot_sram_1r1w_512x256_m1_r2c2"),
     # Required by the actual HOST peer-link s81ph SRAM wrapper.
     ("physical/asap7_memory_macros", "ot_sram_1r1w_512x128_m4_r2c2"),
+    # kvsys lead r8: the program loader's 1024 x 64 image (was 65,536 FF on ck_program_loader) = 4 x 256 x 64 1RW.
+    ("physical/asap7_memory_macros", "ot_sram_1rw_256x64_m4_r2c2"),
 ]
 
 def digest(raw):
