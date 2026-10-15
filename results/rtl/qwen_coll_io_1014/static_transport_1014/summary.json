@@ -44,5 +44,12 @@
         1
       ]
     }
-  ]
+  ],
+  "rtl_latency_mutant": {
+    "verdict": "FAIL_EXPECTED",
+    "data_mismatch": 1,
+    "timeline_mismatch": 2,
+    "words": 4096,
+    "evidence": "latency_mutant.log"
+  }
 }
