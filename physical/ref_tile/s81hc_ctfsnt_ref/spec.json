@@ -74,8 +74,8 @@
   "benches_from": "tools/s81_suhc/hc_ntree_benches.json",
   "owner": "Claude:el1014-s81-norm-tree",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "v3-ck4",
-  "structural_change": "Re-pin (S-DIE r11 table entry): fdm N face becomes the full-width straight bus matching ctfn.fdm (1.5x span) so ctfn routes; HB4 hold pads. Same RTL/cycles/SDC. + per-cluster clock roots (clock_split_x.tcl, K=4): single-root gate TT spread was 87-132 ps over the full-span pins.",
+  "tag": "v4-straight",
+  "structural_change": "v23 straight chain (S-NORM 2026-10-15, 220c62a71): one fd/fv bit order for producer + all consumers - ctfs_nt fdm/fd_out at the same x (relay cut 0; v3 1,974 -> GRT 229,288), ctfn fd_in/fdm at the same x (+128-slot y-shift cut 600), every chain seam vertical <= 416.88 um (v22 728.88). 0 cycles, 0 area, RTL unchanged. Recipe = the native-PASS v1 kit (HB2 pads, single clock root).",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_ctfs_nt: the forward relay/out strip + the partial lane relay",
   "views_to": "physical/ref_tile/s81hc_ctfsnt_ref/views",
@@ -94,9 +94,9 @@
    }
   ],
   "reroute_reason": {
-   "kind": "die_repin",
-   "fix": "Re-pin (S-DIE r11 table entry): fdm N face becomes the full-width straight bus matching ctfn.fdm (1.5x span) so ctfn routes; HB4 hold pads. Same RTL/cycles/SDC.",
-   "source": "el1011-s81die.log 06:27 S-DIE r11 grant (3)"
+   "kind": "slot_change",
+   "source": "results/rtl/ref_tile/s81hc_ctfsnt_ref (v3 GRT-0116 229,288)",
+   "fix": "v23 straight chain (S-NORM 2026-10-15, 220c62a71): one fd/fv bit order for producer + all consumers - ctfs_nt fdm/fd_out at the same x (relay cut 0; v3 1,974 -> GRT 229,288), ctfn fd_in/fdm at the same x (+128-slot y-shift cut 600), every chain seam vertical <= 416.88 um (v22 728.88). 0 cycles, 0 area, RTL unchanged. Recipe = the native-PASS v1 kit (HB2 pads, single clock root)."
   }
  },
  "params": {},
@@ -115,19 +115,14 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "io_tcl": "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfs_nt.tcl",
+ "io_tcl": "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfs_nt.tcl",
  "assigned_pins": {
-  "file": "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfs_nt.json",
-  "source": "S81 die lead r11 grant main 5c3c7fd7a / bb1b07c55 (tools/s81/hc_local_split_pins.py); table entry names CLOSED ctfs_nt (fdm N re-pinned to the full-span straight bus)",
-  "layout": "physical/s81_die_pins/v22_hc_local_split/layout.json"
+  "file": "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfs_nt.json",
+  "source": "S-NORM v23 candidate 220c62a71 (tools/s81/hc_norm_straight_pins.py)",
+  "layout": "physical/s81_die_pins/v23_hc_norm_straight_candidate/report.json"
  },
- "boundary_tcl": [
-  "physical/common_flow/hold_pad_hb4.tcl"
- ],
- "pre_cts_extra": [
-  "physical/common_flow/clock_split_x.tcl"
- ],
- "orfs_vars": {
-  "OT_CKS_K": "4"
+ "slot_change_request": {
+  "file": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v23_straight/request.json",
+  "note": "S-NORM v23 straight fd/fv chain candidate (tools/s81/hc_norm_straight_pins.py, 220c62a71): pins differ from the v22 grant; request posted to S-DIE el1011-s81die.log"
  }
 }
