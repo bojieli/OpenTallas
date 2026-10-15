@@ -1,0 +1,2450 @@
+{
+ "scope": "Production hard-child geometry audit only; pins/real views/clock/cuts unproven",
+ "input_path": "physical/s81_die_pins/v20_vm_static_standard/layout_candidate.json",
+ "input_sha256": "6a311fa5f0f41d88a8bee1212e14ffed9bf5ed768085dffb9c49ef3402d1b961",
+ "tool_sha256": "57fd157f3fafc7a68f1754437aa3275fa81cc7c28fe5ede9d7a0d57568b79b87",
+ "status": "FAIL",
+ "parent_outline_um": [
+  1541.784,
+  3952.776
+ ],
+ "hard_children": 164,
+ "rules": {
+  "channel_um": 20.0,
+  "child_lattice_um": 43.2,
+  "diagnostic_abut_plan": false
+ },
+ "counts": {
+  "WARN:macro_grid": 164,
+  "FAIL:macro_outside": 4,
+  "FAIL:macro_edge": 4,
+  "FAIL:channel": 232
+ },
+ "checks": [
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#0: origin (64.8, 108.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#1: origin (64.8, 185.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#2: origin (64.8, 263.52) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#3: origin (64.8, 341.28) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#4: origin (64.8, 419.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#5: origin (64.8, 496.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#6: origin (64.8, 574.56) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#7: origin (64.8, 652.32) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#8: origin (349.92, 108.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#9: origin (349.92, 185.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#10: origin (349.92, 263.52) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#11: origin (349.92, 341.28) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#12: origin (349.92, 419.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#13: origin (349.92, 496.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#14: origin (349.92, 574.56) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#15: origin (349.92, 652.32) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#16: origin (64.8, 1099.44) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#17: origin (64.8, 1177.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#18: origin (64.8, 1254.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#19: origin (64.8, 1332.72) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#20: origin (64.8, 1410.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#21: origin (64.8, 1488.24) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#22: origin (64.8, 1566.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#23: origin (64.8, 1643.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#24: origin (349.92, 1099.44) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#25: origin (349.92, 1177.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#26: origin (349.92, 1254.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#27: origin (349.92, 1332.72) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#28: origin (349.92, 1410.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#29: origin (349.92, 1488.24) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#30: origin (349.92, 1566.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#31: origin (349.92, 1643.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_scatter#32: origin (144.72, 730.08) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_suhc_fsr#33: origin (144.72, 835.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_return#34: origin (144.72, 889.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b16#35: origin (285.12, 500.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b16#36: origin (285.12, 1150.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "FAIL",
+   "macro_outside",
+   "dsfd_vm_static_relay128_b8#37 at (0.0,365.04) leaves the core",
+   "enlarge the outline"
+  ],
+  [
+   "FAIL",
+   "macro_edge",
+   "dsfd_vm_static_relay128_b8#37 -2.2 um from the W core edge (< 20 um, a pin face)",
+   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#37: origin (0.0, 365.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#38: origin (570.24, 365.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "FAIL",
+   "macro_outside",
+   "dsfd_vm_static_relay128_b8#39 at (0.0,1352.16) leaves the core",
+   "enlarge the outline"
+  ],
+  [
+   "FAIL",
+   "macro_edge",
+   "dsfd_vm_static_relay128_b8#39 -2.2 um from the W core edge (< 20 um, a pin face)",
+   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#39: origin (0.0, 1352.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#40: origin (570.24, 1352.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#41: origin (721.44, 108.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#42: origin (721.44, 185.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#43: origin (721.44, 263.52) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#44: origin (721.44, 341.28) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#45: origin (721.44, 419.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#46: origin (721.44, 496.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#47: origin (721.44, 574.56) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#48: origin (721.44, 652.32) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#49: origin (1006.56, 108.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#50: origin (1006.56, 185.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#51: origin (1006.56, 263.52) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#52: origin (1006.56, 341.28) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#53: origin (1006.56, 419.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#54: origin (1006.56, 496.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#55: origin (1006.56, 574.56) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#56: origin (1006.56, 652.32) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#57: origin (721.44, 1099.44) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#58: origin (721.44, 1177.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#59: origin (721.44, 1254.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#60: origin (721.44, 1332.72) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#61: origin (721.44, 1410.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#62: origin (721.44, 1488.24) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#63: origin (721.44, 1566.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#64: origin (721.44, 1643.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#65: origin (1006.56, 1099.44) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#66: origin (1006.56, 1177.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#67: origin (1006.56, 1254.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#68: origin (1006.56, 1332.72) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#69: origin (1006.56, 1410.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#70: origin (1006.56, 1488.24) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#71: origin (1006.56, 1566.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#72: origin (1006.56, 1643.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_scatter#73: origin (801.36, 730.08) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_suhc_fsr#74: origin (801.36, 835.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_return#75: origin (801.36, 889.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b16#76: origin (941.76, 500.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b16#77: origin (941.76, 1150.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#78: origin (656.64, 365.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#79: origin (1226.88, 365.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#80: origin (656.64, 1352.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#81: origin (1226.88, 1352.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#82: origin (64.8, 1861.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#83: origin (64.8, 1939.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#84: origin (64.8, 2017.44) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#85: origin (64.8, 2095.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#86: origin (64.8, 2172.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#87: origin (64.8, 2250.72) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#88: origin (64.8, 2328.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#89: origin (64.8, 2406.24) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#90: origin (349.92, 1861.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#91: origin (349.92, 1939.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#92: origin (349.92, 2017.44) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#93: origin (349.92, 2095.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#94: origin (349.92, 2172.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#95: origin (349.92, 2250.72) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#96: origin (349.92, 2328.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#97: origin (349.92, 2406.24) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#98: origin (64.8, 2853.36) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#99: origin (64.8, 2931.12) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#100: origin (64.8, 3008.88) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#101: origin (64.8, 3086.64) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#102: origin (64.8, 3164.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#103: origin (64.8, 3242.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#104: origin (64.8, 3319.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#105: origin (64.8, 3397.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#106: origin (349.92, 2853.36) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#107: origin (349.92, 2931.12) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#108: origin (349.92, 3008.88) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#109: origin (349.92, 3086.64) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#110: origin (349.92, 3164.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#111: origin (349.92, 3242.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#112: origin (349.92, 3319.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#113: origin (349.92, 3397.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_scatter#114: origin (144.72, 2484.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_suhc_fsr#115: origin (144.72, 2589.84) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_return#116: origin (144.72, 2643.84) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b16#117: origin (285.12, 2253.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b16#118: origin (285.12, 2904.12) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "FAIL",
+   "macro_outside",
+   "dsfd_vm_static_relay128_b8#119 at (0.0,2118.96) leaves the core",
+   "enlarge the outline"
+  ],
+  [
+   "FAIL",
+   "macro_edge",
+   "dsfd_vm_static_relay128_b8#119 -2.2 um from the W core edge (< 20 um, a pin face)",
+   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#119: origin (0.0, 2118.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#120: origin (570.24, 2118.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "FAIL",
+   "macro_outside",
+   "dsfd_vm_static_relay128_b8#121 at (0.0,3106.08) leaves the core",
+   "enlarge the outline"
+  ],
+  [
+   "FAIL",
+   "macro_edge",
+   "dsfd_vm_static_relay128_b8#121 -2.2 um from the W core edge (< 20 um, a pin face)",
+   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#121: origin (0.0, 3106.08) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#122: origin (570.24, 3106.08) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#123: origin (721.44, 1861.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#124: origin (721.44, 1939.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#125: origin (721.44, 2017.44) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#126: origin (721.44, 2095.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#127: origin (721.44, 2172.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#128: origin (721.44, 2250.72) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#129: origin (721.44, 2328.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#130: origin (721.44, 2406.24) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#131: origin (1006.56, 1861.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#132: origin (1006.56, 1939.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#133: origin (1006.56, 2017.44) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#134: origin (1006.56, 2095.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#135: origin (1006.56, 2172.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#136: origin (1006.56, 2250.72) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#137: origin (1006.56, 2328.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#138: origin (1006.56, 2406.24) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#139: origin (721.44, 2853.36) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#140: origin (721.44, 2931.12) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#141: origin (721.44, 3008.88) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#142: origin (721.44, 3086.64) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#143: origin (721.44, 3164.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#144: origin (721.44, 3242.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#145: origin (721.44, 3319.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#146: origin (721.44, 3397.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#147: origin (1006.56, 2853.36) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#148: origin (1006.56, 2931.12) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#149: origin (1006.56, 3008.88) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#150: origin (1006.56, 3086.64) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#151: origin (1006.56, 3164.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#152: origin (1006.56, 3242.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#153: origin (1006.56, 3319.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_bank128#154: origin (1006.56, 3397.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_scatter#155: origin (801.36, 2484.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_suhc_fsr#156: origin (801.36, 2589.84) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_return#157: origin (801.36, 2643.84) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b16#158: origin (941.76, 2253.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b16#159: origin (941.76, 2904.12) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#160: origin (656.64, 2118.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#161: origin (1226.88, 2118.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#162: origin (656.64, 3106.08) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "dsfd_vm_static_relay128_b8#163: origin (1226.88, 3106.08) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#0 / dsfd_vm_static_bank128#1 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#1 / dsfd_vm_static_bank128#2 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#2 / dsfd_vm_static_bank128#3 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#3 / dsfd_vm_static_bank128#4 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#3 / dsfd_vm_static_relay128_b8#37 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#4 / dsfd_vm_static_bank128#5 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#4 / dsfd_vm_static_relay128_b16#35 channel 5.4 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#4 / dsfd_vm_static_relay128_b8#37 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#5 / dsfd_vm_static_bank128#6 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#5 / dsfd_vm_static_relay128_b16#35 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#6 / dsfd_vm_static_bank128#7 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#6 / dsfd_vm_static_relay128_b16#35 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#7 / dsfd_vm_static_scatter#32 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#7 / dsfd_vm_static_relay128_b16#35 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#8 / dsfd_vm_static_bank128#9 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#9 / dsfd_vm_static_bank128#10 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#10 / dsfd_vm_static_bank128#11 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#11 / dsfd_vm_static_bank128#12 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#11 / dsfd_vm_static_relay128_b8#38 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#12 / dsfd_vm_static_bank128#13 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#12 / dsfd_vm_static_relay128_b16#35 channel 5.4 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#12 / dsfd_vm_static_relay128_b8#38 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#13 / dsfd_vm_static_bank128#14 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#13 / dsfd_vm_static_relay128_b16#35 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#14 / dsfd_vm_static_bank128#15 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#14 / dsfd_vm_static_relay128_b16#35 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#15 / dsfd_vm_static_scatter#32 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#15 / dsfd_vm_static_relay128_b16#35 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#16 / dsfd_vm_static_bank128#17 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#16 / dsfd_vm_static_return#34 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#16 / dsfd_vm_static_relay128_b16#36 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#17 / dsfd_vm_static_bank128#18 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#17 / dsfd_vm_static_relay128_b16#36 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#18 / dsfd_vm_static_bank128#19 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#18 / dsfd_vm_static_relay128_b16#36 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#19 / dsfd_vm_static_bank128#20 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#19 / dsfd_vm_static_relay128_b16#36 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#19 / dsfd_vm_static_relay128_b8#39 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#20 / dsfd_vm_static_bank128#21 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#20 / dsfd_vm_static_relay128_b8#39 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#21 / dsfd_vm_static_bank128#22 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#22 / dsfd_vm_static_bank128#23 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#24 / dsfd_vm_static_bank128#25 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#24 / dsfd_vm_static_return#34 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#24 / dsfd_vm_static_relay128_b16#36 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#25 / dsfd_vm_static_bank128#26 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#25 / dsfd_vm_static_relay128_b16#36 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#26 / dsfd_vm_static_bank128#27 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#26 / dsfd_vm_static_relay128_b16#36 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#27 / dsfd_vm_static_bank128#28 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#27 / dsfd_vm_static_relay128_b16#36 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#27 / dsfd_vm_static_relay128_b8#40 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#28 / dsfd_vm_static_bank128#29 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#28 / dsfd_vm_static_relay128_b8#40 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#29 / dsfd_vm_static_bank128#30 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#30 / dsfd_vm_static_bank128#31 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_scatter#32 / dsfd_vm_static_suhc_fsr#33 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_suhc_fsr#33 / dsfd_vm_static_return#34 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#41 / dsfd_vm_static_bank128#42 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#42 / dsfd_vm_static_bank128#43 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#43 / dsfd_vm_static_bank128#44 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#44 / dsfd_vm_static_bank128#45 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#44 / dsfd_vm_static_relay128_b8#78 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#45 / dsfd_vm_static_bank128#46 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#45 / dsfd_vm_static_relay128_b16#76 channel 5.4 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#45 / dsfd_vm_static_relay128_b8#78 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#46 / dsfd_vm_static_bank128#47 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#46 / dsfd_vm_static_relay128_b16#76 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#47 / dsfd_vm_static_bank128#48 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#47 / dsfd_vm_static_relay128_b16#76 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#48 / dsfd_vm_static_scatter#73 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#48 / dsfd_vm_static_relay128_b16#76 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#49 / dsfd_vm_static_bank128#50 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#50 / dsfd_vm_static_bank128#51 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#51 / dsfd_vm_static_bank128#52 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#52 / dsfd_vm_static_bank128#53 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#52 / dsfd_vm_static_relay128_b8#79 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#53 / dsfd_vm_static_bank128#54 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#53 / dsfd_vm_static_relay128_b16#76 channel 5.4 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#53 / dsfd_vm_static_relay128_b8#79 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#54 / dsfd_vm_static_bank128#55 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#54 / dsfd_vm_static_relay128_b16#76 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#55 / dsfd_vm_static_bank128#56 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#55 / dsfd_vm_static_relay128_b16#76 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#56 / dsfd_vm_static_scatter#73 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#56 / dsfd_vm_static_relay128_b16#76 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#57 / dsfd_vm_static_bank128#58 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#57 / dsfd_vm_static_return#75 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#57 / dsfd_vm_static_relay128_b16#77 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#58 / dsfd_vm_static_bank128#59 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#58 / dsfd_vm_static_relay128_b16#77 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#59 / dsfd_vm_static_bank128#60 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#59 / dsfd_vm_static_relay128_b16#77 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#60 / dsfd_vm_static_bank128#61 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#60 / dsfd_vm_static_relay128_b16#77 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#60 / dsfd_vm_static_relay128_b8#80 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#61 / dsfd_vm_static_bank128#62 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#61 / dsfd_vm_static_relay128_b8#80 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#62 / dsfd_vm_static_bank128#63 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#63 / dsfd_vm_static_bank128#64 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#65 / dsfd_vm_static_bank128#66 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#65 / dsfd_vm_static_return#75 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#65 / dsfd_vm_static_relay128_b16#77 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#66 / dsfd_vm_static_bank128#67 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#66 / dsfd_vm_static_relay128_b16#77 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#67 / dsfd_vm_static_bank128#68 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#67 / dsfd_vm_static_relay128_b16#77 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#68 / dsfd_vm_static_bank128#69 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#68 / dsfd_vm_static_relay128_b16#77 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#68 / dsfd_vm_static_relay128_b8#81 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#69 / dsfd_vm_static_bank128#70 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#69 / dsfd_vm_static_relay128_b8#81 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#70 / dsfd_vm_static_bank128#71 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#71 / dsfd_vm_static_bank128#72 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_scatter#73 / dsfd_vm_static_suhc_fsr#74 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_suhc_fsr#74 / dsfd_vm_static_return#75 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#82 / dsfd_vm_static_bank128#83 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#83 / dsfd_vm_static_bank128#84 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#84 / dsfd_vm_static_bank128#85 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#85 / dsfd_vm_static_bank128#86 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#85 / dsfd_vm_static_relay128_b8#119 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#86 / dsfd_vm_static_bank128#87 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#86 / dsfd_vm_static_relay128_b16#117 channel 5.4 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#86 / dsfd_vm_static_relay128_b8#119 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#87 / dsfd_vm_static_bank128#88 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#87 / dsfd_vm_static_relay128_b16#117 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#88 / dsfd_vm_static_bank128#89 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#88 / dsfd_vm_static_relay128_b16#117 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#89 / dsfd_vm_static_scatter#114 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#89 / dsfd_vm_static_relay128_b16#117 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#90 / dsfd_vm_static_bank128#91 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#91 / dsfd_vm_static_bank128#92 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#92 / dsfd_vm_static_bank128#93 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#93 / dsfd_vm_static_bank128#94 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#93 / dsfd_vm_static_relay128_b8#120 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#94 / dsfd_vm_static_bank128#95 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#94 / dsfd_vm_static_relay128_b16#117 channel 5.4 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#94 / dsfd_vm_static_relay128_b8#120 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#95 / dsfd_vm_static_bank128#96 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#95 / dsfd_vm_static_relay128_b16#117 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#96 / dsfd_vm_static_bank128#97 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#96 / dsfd_vm_static_relay128_b16#117 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#97 / dsfd_vm_static_scatter#114 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#97 / dsfd_vm_static_relay128_b16#117 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#98 / dsfd_vm_static_bank128#99 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#98 / dsfd_vm_static_return#116 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#98 / dsfd_vm_static_relay128_b16#118 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#99 / dsfd_vm_static_bank128#100 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#99 / dsfd_vm_static_relay128_b16#118 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#100 / dsfd_vm_static_bank128#101 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#100 / dsfd_vm_static_relay128_b16#118 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#101 / dsfd_vm_static_bank128#102 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#101 / dsfd_vm_static_relay128_b16#118 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#101 / dsfd_vm_static_relay128_b8#121 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#102 / dsfd_vm_static_bank128#103 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#102 / dsfd_vm_static_relay128_b8#121 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#103 / dsfd_vm_static_bank128#104 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#104 / dsfd_vm_static_bank128#105 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#106 / dsfd_vm_static_bank128#107 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#106 / dsfd_vm_static_return#116 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#106 / dsfd_vm_static_relay128_b16#118 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#107 / dsfd_vm_static_bank128#108 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#107 / dsfd_vm_static_relay128_b16#118 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#108 / dsfd_vm_static_bank128#109 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#108 / dsfd_vm_static_relay128_b16#118 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#109 / dsfd_vm_static_bank128#110 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#109 / dsfd_vm_static_relay128_b16#118 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#109 / dsfd_vm_static_relay128_b8#122 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#110 / dsfd_vm_static_bank128#111 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#110 / dsfd_vm_static_relay128_b8#122 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#111 / dsfd_vm_static_bank128#112 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#112 / dsfd_vm_static_bank128#113 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_scatter#114 / dsfd_vm_static_suhc_fsr#115 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_suhc_fsr#115 / dsfd_vm_static_return#116 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#123 / dsfd_vm_static_bank128#124 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#124 / dsfd_vm_static_bank128#125 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#125 / dsfd_vm_static_bank128#126 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#126 / dsfd_vm_static_bank128#127 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#126 / dsfd_vm_static_relay128_b8#160 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#127 / dsfd_vm_static_bank128#128 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#127 / dsfd_vm_static_relay128_b16#158 channel 5.4 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#127 / dsfd_vm_static_relay128_b8#160 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#128 / dsfd_vm_static_bank128#129 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#128 / dsfd_vm_static_relay128_b16#158 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#129 / dsfd_vm_static_bank128#130 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#129 / dsfd_vm_static_relay128_b16#158 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#130 / dsfd_vm_static_scatter#155 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#130 / dsfd_vm_static_relay128_b16#158 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#131 / dsfd_vm_static_bank128#132 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#132 / dsfd_vm_static_bank128#133 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#133 / dsfd_vm_static_bank128#134 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#134 / dsfd_vm_static_bank128#135 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#134 / dsfd_vm_static_relay128_b8#161 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#135 / dsfd_vm_static_bank128#136 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#135 / dsfd_vm_static_relay128_b16#158 channel 5.4 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#135 / dsfd_vm_static_relay128_b8#161 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#136 / dsfd_vm_static_bank128#137 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#136 / dsfd_vm_static_relay128_b16#158 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#137 / dsfd_vm_static_bank128#138 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#137 / dsfd_vm_static_relay128_b16#158 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#138 / dsfd_vm_static_scatter#155 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#138 / dsfd_vm_static_relay128_b16#158 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#139 / dsfd_vm_static_bank128#140 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#139 / dsfd_vm_static_return#157 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#139 / dsfd_vm_static_relay128_b16#159 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#140 / dsfd_vm_static_bank128#141 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#140 / dsfd_vm_static_relay128_b16#159 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#141 / dsfd_vm_static_bank128#142 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#141 / dsfd_vm_static_relay128_b16#159 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#142 / dsfd_vm_static_bank128#143 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#142 / dsfd_vm_static_relay128_b16#159 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#142 / dsfd_vm_static_relay128_b8#162 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#143 / dsfd_vm_static_bank128#144 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#143 / dsfd_vm_static_relay128_b8#162 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#144 / dsfd_vm_static_bank128#145 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#145 / dsfd_vm_static_bank128#146 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#147 / dsfd_vm_static_bank128#148 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#147 / dsfd_vm_static_return#157 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#147 / dsfd_vm_static_relay128_b16#159 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#148 / dsfd_vm_static_bank128#149 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#148 / dsfd_vm_static_relay128_b16#159 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#149 / dsfd_vm_static_bank128#150 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#149 / dsfd_vm_static_relay128_b16#159 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#150 / dsfd_vm_static_bank128#151 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#150 / dsfd_vm_static_relay128_b16#159 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#150 / dsfd_vm_static_relay128_b8#163 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#151 / dsfd_vm_static_bank128#152 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#151 / dsfd_vm_static_relay128_b8#163 channel 0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#152 / dsfd_vm_static_bank128#153 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_bank128#153 / dsfd_vm_static_bank128#154 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_scatter#155 / dsfd_vm_static_suhc_fsr#156 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "dsfd_vm_static_suhc_fsr#156 / dsfd_vm_static_return#157 channel 2.2 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ]
+ ],
+ "remedy": "Repack real hard children with production20um channels and audit all actual pins/cuts; preserve current bank leaf geometry"
+}

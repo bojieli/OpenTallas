@@ -1,0 +1,36 @@
+{
+  "status": "ACTUAL_RVT_TT_MAPPING_PASS",
+  "scope": "native duplex relay area/FF/port census only; actual pin/clock/route unqualified",
+  "measurement_script_sha256": "421208be69e09374a0ff77bf419013134f5fcb4576bdbad2b37d2ea895847db7",
+  "jobs": {
+    "b8": "oth-ubuntu-3768327-1792053428",
+    "b16": "oth-ubuntu-3768328-1792053428"
+  },
+  "host": "ot-agidock128",
+  "b8": {
+    "area_um2": 881.74008,
+    "flops": 2620,
+    "cells": 5240,
+    "unknown_cells": 0,
+    "pin_outline_um": [
+      172.8,
+      172.8
+    ]
+  },
+  "b16": {
+    "area_um2": 1761.78888,
+    "flops": 5236,
+    "cells": 10472,
+    "unknown_cells": 0,
+    "pin_outline_um": [
+      345.6,
+      345.6
+    ]
+  },
+  "initial_driver_failure": "Copied sizing driver did not read_liberty -lib, so postmap check-assert sees mappedDFF outputs undriven; librarydefinitions loaded beforemapping, both map2runs terminal0. Failurelogs retained. No RTL defect/change and no physical reroute.",
+  "next": [
+    "dualclock tile boundary eachdomain phi-R and declared root; do not use wire-only clock-entry mode to waive ownedflops",
+    "actualnativepin-seam assignment and CTS/timing/DRC",
+    "fullVMphysical placement and producer calendar"
+  ]
+}

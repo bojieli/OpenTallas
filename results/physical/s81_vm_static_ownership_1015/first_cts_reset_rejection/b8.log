@@ -1,0 +1,10 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (o_sv, o_cv, o_sd): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO oflop: N face 10.5 pins/um (i_rv, i_wv, i_ra): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (o_rv, o_wv, o_ra): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO oflop: W face 10.5 pins/um (ck_req, ck_rsp, rst_n): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc1tb for 8 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsfd_vm_static_relay128_b8_native_option_20261015-015844.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsfd_vm_static_relay128_b8_native_option_20261015-015844.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_static_relay128_b8_native_option-20261015-015844
+GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:; Error: 1_2_yosys.sdc, 383 OT_MULTI_ROOT: input rst_n has wrong domain for u_relay.sr[0]$_DFF_PN0_; Error: 1_2_yosys.sdc, 383 OT_MULTI_ROOT: input rst_n has wrong domain for u_relay.sr[0]$_DFF_PN0_  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
+PRE_ROUTE_GATE: FAIL (1 fail, 0 warn)

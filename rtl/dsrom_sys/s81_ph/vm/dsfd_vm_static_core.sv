@@ -120,13 +120,14 @@ module dsfd_vm_static_core (
         s_v[52] = wf_v; s_row[14*52 +: 14] = wf_row; s_m[16*52 +: 16] = 16'hffff; s_d[512*52 +: 512] = wf_d; s_t[8*52 +: 8] = 8'd52;
     end
     wire [31:0] wq_v; wire [447:0] wq_row; wire [511:0] wq_mask; wire [16383:0] wq_data; wire [255:0] wq_tag; wire w_flt;
-    dsfd_vm_static_wsched #(.NSRC(NSRC)) u_ws (.ck(ck), .rst_n(rss), .i_v(s_v), .i_row(s_row), .i_mask(s_m), .i_data(s_d),
+    dsfd_vm_static_wsched #(.NSRC(NSRC)) u_ws (.ck_control(ck), .ck_header(ck), .ck_payload({4{ck}}),
+        .ck_dispatch({16{ck}}), .ck_stage({128{ck}}), .rst_n(rss), .i_v(s_v), .i_row(s_row), .i_mask(s_m), .i_data(s_d),
         .i_tag(s_t), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_data(wq_data), .wq_tag(wq_tag), .fault(w_flt));
 
     // ---------------------------------------------------------------- native memory
     wire [71:0] nat_v; wire [9215:0] nat_d; wire [127:0] grp_v; wire [16383:0] grp_d; wire [11:0] grp_id;
     wire [127:0] cm_v; wire [1151:0] cm_a; wire [511:0] cm_m; wire [1023:0] cm_t; wire [15:0] m_flt;
-    dsfd_vm_static512_suhc u_mem (.ck_rscatter({4{ck}}), .ck_wscatter({4{ck}}), .ck_return({4{ck}}), .ck_bank({128{ck}}),
+    dsfd_vm_static512_suhc u_mem (.ck_rscatter({4{ck}}), .ck_wcapture({128{ck}}),.ck_wscatter({16{ck}}), .ck_return({4{ck}}), .ck_bank({128{ck}}),
         .rst_n(rss), .ck_relay_req({48{ck}}), .ck_relay_rsp({48{ck}}),
         .native_rq_v(n_v), .native_rq_row(n_row), .native_rq_slot(n_slot), .native_rq_group(n_group),
         .aux_rq_v(a_v), .aux_rq_row(a_row),

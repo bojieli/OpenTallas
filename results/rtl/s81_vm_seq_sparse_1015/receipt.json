@@ -1,0 +1,146 @@
+{
+  "result": "PASS",
+  "source_commit": "b8f854d2d",
+  "timestamp": "2026-10-15T09:17:27.332673+00:00",
+  "sparse_positive_modes": [
+    0,
+    4,
+    8
+  ],
+  "sparse_fault_modes": [
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    9
+  ],
+  "sparse_mutants": [
+    "DENSECOUNT",
+    "SLICE",
+    "DLAT"
+  ],
+  "dense_1500_jobs": {
+    "base_seeds": [
+      1,
+      2,
+      3
+    ],
+    "faults": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "mutants": [
+      "SLICE",
+      "RANGE",
+      "DLAT",
+      "HASH"
+    ]
+  },
+  "actual_vectors": [
+    {
+      "slot": 0,
+      "base_row": 6000,
+      "stride": 4,
+      "nrows": 80,
+      "expected_committed_words": 1280
+    },
+    {
+      "slot": 1,
+      "base_row": 6321,
+      "stride": 4,
+      "nrows": 80,
+      "expected_committed_words": 1280
+    },
+    {
+      "slot": 2,
+      "base_row": 6642,
+      "stride": 4,
+      "nrows": 80,
+      "expected_committed_words": 1280
+    },
+    {
+      "slot": 3,
+      "base_row": 6963,
+      "stride": 4,
+      "nrows": 80,
+      "expected_committed_words": 1280
+    },
+    {
+      "slot": 4,
+      "base_row": 7312,
+      "stride": 4,
+      "nrows": 80,
+      "expected_committed_words": 1280
+    },
+    {
+      "slot": 5,
+      "base_row": 7633,
+      "stride": 4,
+      "nrows": 80,
+      "expected_committed_words": 1280
+    },
+    {
+      "slot": 6,
+      "base_row": 7954,
+      "stride": 4,
+      "nrows": 80,
+      "expected_committed_words": 1280
+    }
+  ],
+  "actual_owned_row_identities": 560,
+  "total_expected_owned_words": 8960,
+  "command_completion_elapsed_pin_edges": 6,
+  "yosys_structural_check": "0 problems",
+  "python_tests": 6,
+  "scope": "Engine component using actual commit observation ports. No native full-layer, field producer calendar, physical closure or throughput qualification.",
+  "limitation": "Count-based completion cannot distinguish a missing word replaced by an equal-count duplicate. Native producer identity coverage remains required.",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv": "1daf84f497824a7a4fd2571a462f922b94b670cfcb543ef69954862f22702cc7",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_seq_sparse.sv": "c4d627624cafb61b7c33e4061bf6ca0c6f1ccce0f6ef012c31811873f0a1d2ea",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_seq_static.sv": "c7a63995cf135240a1a6b5f5c62466c46ad4147873cdf1552a13ae2135bcaf1d",
+    "tools/s81_vm/static_vm_engine.py": "3d5561218deee459939e86c9ce9fd8b47258aadb17cc6d230c9c3dc80ae1594c",
+    "tools/s81_vm/sparse_engine_gate.sh": "0de1b92e048a2895311a4edabe6578fd6d5fbdb0cb1712b33fe76076703e3744",
+    "tools/s81_vm/vm_seq_static_gate.sh": "22afd4d0528585a32059ab261533f91f91920b0484a97c0d791ccc2d38ba1b64",
+    "tools/s81_vm/test_sparse_vm_engine.py": "eb7bdedae61dbd481e9428b038a3844a962923e5ef71771e4296cd11819d677f"
+  },
+  "evidence_sha256": {
+    "dense/base_s1.log": "3311376fbb86a6f9fc20588f1cbab65dd7a9088d5fde0654b76b38999c0d123f",
+    "dense/base_s2.log": "349aa0fdc24f15f334aaf6063f55095b54a577e82962018f1fe81d9dc3a3fa38",
+    "dense/base_s3.log": "645fb787fdc25935d795a497364052ad1095e538e4e5042addcf7dfafbe09b38",
+    "dense/fault_m1.log": "92b8e99808610c3e0bc87841d563b18f3cb77b1afea873909e08fd6e84544485",
+    "dense/fault_m2.log": "007d630d9e1e87c729ee4fc06c1beec5d035ef65b134720e7016d3ff51d16e72",
+    "dense/fault_m3.log": "4fc8db25725782612aeedff1092d6e32bb0627a1625d16d6a04851ea73dba471",
+    "dense/fault_m4.log": "77531dc5fb7d7c949061a6f169a09871a1a55bd03740cb9530fdbe2b64cc7082",
+    "dense/fault_m5.log": "d3beb73c7183b1a9dcbfd59727802fa696ffbd2b1bb4c00691e53f23e81f6815",
+    "dense/fault_m6.log": "0666eaf974f467e4123388940c46f3ff83f8bc3c87a01e60f76844071bc4f2d4",
+    "dense/mut_DLAT.log": "5683b86a15d2a91986f54d8f03f94fbb1cffb3ae0463c1e24959b726a9fffd19",
+    "dense/mut_HASH.log": "630f7d0a32df05513d041f90ef2779ddc3a58a714da8c92dbc37e7fc6788f117",
+    "dense/mut_RANGE.log": "90b9464ab6fc7fc4d5e8a2f6cf56913159283f2bfe6b8538c5326d90b5435de6",
+    "dense/mut_SLICE.log": "f7e146ffc42083d04bed879b86e7d5fed5a84c78af692d5d853b00814eb3b16d",
+    "ot_run_dense.log": "dba7eb5cc2982b93787d1471f8b1b31429cb4b1114fc52715a531e8e86093277",
+    "ot_run_sparse.log": "7c717f8e6872c1863e9be0152dc45552703cf295f65ec90edb760e3d6282ceb9",
+    "ot_run_synth.log": "da377588ad37a8b5e87e6c17bc4a777b82f91afb25450f68a52071b002953c23",
+    "python.log": "62cfbeb2911bb226088bfb0918eb4b05008ea70b20bce854ee2ca8a564bd37a5",
+    "remote_sha256.txt": "2215a8980cf0a7a9516247c33f05cccb4301e2ff250abe1e58d2bf9125953e66",
+    "source_manifest.json": "5a9a42997f0e5d0538bfabf3a4a8cc2e842e3b2d146ab33328b28f593eb1952c",
+    "sparse/base_mode0.log": "ff0f29902a1a613f12aeb2dc72b19b95e13f3e798d1dd85fb355a9fe7fd50a0c",
+    "sparse/base_mode1.log": "2c4da183721d1b59195d97cc640c58aa4c9d0f13e6420df96560076e23378324",
+    "sparse/base_mode2.log": "822303b52861fc70dcf8ed62a2549fb2455328834142a7239d51acaf21f25c7b",
+    "sparse/base_mode3.log": "ab6bab892b3c5745127eee50508207d89eaec64e13170003781f8a5c73109f97",
+    "sparse/base_mode4.log": "3e5e767f5470d69710df8ca0642266ffc8a5ae931074824b5542006c7628372a",
+    "sparse/base_mode5.log": "d50a2a4cea9c1f8d3e781e40aaa8feca95844ce3af9b96cfbe49a9fd56d4f8d6",
+    "sparse/base_mode6.log": "a577dbb6ccdcd234c0106987caaee51031e928565d943d97ae0045784f7f34e3",
+    "sparse/base_mode7.log": "64aab5dbd18a4fa125ccfe70f55a2e49aaa80f68e94079084c2a038f34f4525d",
+    "sparse/base_mode8.log": "c567665bd5c50d67908b7ffdf36eaf507292493c5f3a0b5a8f16514f434d3aed",
+    "sparse/base_mode9.log": "b4de2de7111aa514eeed636511b5345455e6004d31e35b773f5be17922254b1d",
+    "sparse/mut_densecount.log": "168478d1407ae9c4b3e78c7b095e8ef0b132d2b5a91c6d790eedd1b4a9126a94",
+    "sparse/mut_dlat.log": "386150e0a48499308968efe16f99af512606293b186baf4e9c4af2eb95dfcf23",
+    "sparse/mut_slice.log": "28053c90378a6b4217ecad87f07e450f911f6ae1076c306b6db8dda29d6ba433"
+  }
+}

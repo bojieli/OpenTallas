@@ -130,7 +130,7 @@ module tb_dsfd_vm_seq_static;
             slot_last[s] = jb;
             // native op now and then
             if (urand(5) == 0) begin
-                put_cmd(c + urand(8), {3'(4 + urand(4)), 21'(urand(2097152))}, pin);
+                put_cmd(c + urand(8), {3'(4 + 2*urand(2)), 21'(urand(2097152))}, pin);
                 k = pin + 3 + urand(20); while (vdv_at[k]) k = k + 1; vdv_at[k] = 1'b1;
             end
             c = c + 1 + urand(nr / 8 + 2);

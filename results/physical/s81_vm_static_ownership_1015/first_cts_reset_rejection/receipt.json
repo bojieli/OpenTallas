@@ -1,0 +1,12 @@
+{
+  "result": "SHARED_RUNTIME_OWNERSHIP_REJECTED_BEFORE_CTS",
+  "b4_log": "b4.log",
+  "b8_log": "b8.log",
+  "source_commit": "3c0d344fa",
+  "host": "ot-epyc1tb",
+  "timestamp": "20261015-015844",
+  "error": "input rst_n has wrong domain for u_relay.sr[0]$_DFF_PN0_",
+  "action": "root flow_tile_clock_roots reviewing actual Liberty clear/preset semantics plus actual mappedb4/b8fixtures and reset-to-Dmutant; no resetname waiver/falsepath/RTL rewrite",
+  "reroute_started": false,
+  "next": "onefreshsourceboundnativeCTSgate after sharedfix reviewed/published/deployed"
+}

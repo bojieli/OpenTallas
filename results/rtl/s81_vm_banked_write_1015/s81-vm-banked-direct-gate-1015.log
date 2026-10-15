@@ -1,0 +1,13 @@
+ot-run: ot-epyc1tb     admits   524 GB (avail 751, growth 60, headroom 64, waiters 0/0 GB) load 41/128 running 14 disk 669 GB 
+ot-run: ot-epyc4       admits   528 GB (avail 755, growth 94, headroom 48, waiters 0/0 GB) load 36/128 running 21 disk 468 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    44 GB (avail 74, growth 13, headroom 24, waiters 0/0 GB) load 8/64 running 8 disk 23 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3893134-1792058943 after 0 s
+TB_VM_DIRECT_SCATTER PASS mode 0 checks 1003
+TB_VM_DIRECT_SCATTER PASS mode 1 checks 1003
+TB_VM_DIRECT_SCATTER PASS mode 2 checks 1003
+TB_VM_DIRECT_SCATTER FAIL mode 0 checks 1003 bad 860
+TB_VM_DIRECT_SCATTER FAIL mode 0 checks 1003 bad 860
+STATIC_DIRECT_SCATTER_GATE PASS actual32capture4output twoedges 3modes 2mutants
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3893134-1792058943): exit 0

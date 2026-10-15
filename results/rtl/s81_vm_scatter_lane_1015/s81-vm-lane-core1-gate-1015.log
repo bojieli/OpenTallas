@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits   364 GB (avail 590, growth 93, headroom 64, waiters 0/0 GB) load 39/128 running 16 disk 678 GB 
+ot-run: ot-epyc4       admits   567 GB (avail 793, growth 88, headroom 48, waiters 0/0 GB) load 42/128 running 22 disk 487 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-801589-1792058017 after 0 s
+cp: cannot stat 'rtl/dsrom_sys/s81_ph/vm/*.v': No such file or directory
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-801589-1792058017): exit 1

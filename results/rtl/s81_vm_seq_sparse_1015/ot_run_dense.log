@@ -1,0 +1,21 @@
+ot-run: ot-epyc1tb     admits   422 GB (avail 649, growth 73, headroom 64, waiters 0/0 GB) load 46/128 running 15 disk 692 GB 
+ot-run: ot-epyc4       admits   537 GB (avail 764, growth 97, headroom 48, waiters 0/0 GB) load 56/128 running 23 disk 505 GB 
+ot-run: ot-pve1        admits   154 GB (avail 202, growth 6, headroom 32, waiters 0/0 GB) load 35/28 running 2 disk 1310 GB 
+ot-run: ot-agidock128  admits    51 GB (avail 80, growth 20, headroom 24, waiters 0/0 GB) load 6/64 running 5 disk 41 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3821112-1792055545 after 0 s
+TB_VMSS RESULT mode 0 cycles 7511 commands 3287 dones 3287 commits 426043 inp_cycles 6678 errors 0
+TB_VMSS RESULT mode 0 cycles 7521 commands 3284 dones 3284 commits 442653 inp_cycles 6286 errors 0
+TB_VMSS RESULT mode 0 cycles 7496 commands 3319 dones 3319 commits 424890 inp_cycles 6470 errors 0
+TB_VMSS RESULT mode 1 cycles 7562 commands 3288 dones 3288 commits 403829 inp_cycles 6798 errors 0
+TB_VMSS RESULT mode 2 cycles 7562 commands 3288 dones 3288 commits 403830 inp_cycles 6798 errors 0
+TB_VMSS RESULT mode 3 cycles 7562 commands 3288 dones 3288 commits 403829 inp_cycles 6798 errors 0
+TB_VMSS RESULT mode 4 cycles 7562 commands 3288 dones 3289 commits 403829 inp_cycles 6798 errors 0
+TB_VMSS RESULT mode 5 cycles 7562 commands 3288 dones 3288 commits 403829 inp_cycles 6798 errors 0
+TB_VMSS RESULT mode 6 cycles 7562 commands 3288 dones 3289 commits 403829 inp_cycles 6798 errors 0
+TB_VMSS RESULT mode 0 cycles 7511 commands 3287 dones 3287 commits 426043 inp_cycles 6678 errors 4658
+TB_VMSS RESULT mode 0 cycles 7511 commands 3287 dones 3287 commits 426043 inp_cycles 6678 errors 11036
+TB_VMSS RESULT mode 0 cycles 7511 commands 3287 dones 3287 commits 426043 inp_cycles 6678 errors 8803
+TB_VMSS RESULT mode 0 cycles 7511 commands 3287 dones 3287 commits 426043 inp_cycles 6678 errors 14159
+VMSS_GATE PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3821112-1792055545): exit 0

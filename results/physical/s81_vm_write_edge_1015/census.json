@@ -1,0 +1,132 @@
+{
+  "schema": "opentallas.s81.vm-write-edge-measured-census.v1",
+  "status": "MAPPED_CELL_AREA_FF_AND_ACTUAL_PORTS_ONLY_NOT_PHYSICAL_QUALIFICATION",
+  "rows": [
+    {
+      "kind": "dispatch_b0",
+      "instances": 4,
+      "top": "dsfd_vm_static_wdispatch128",
+      "parameters": {
+        "NSRC": 53,
+        "NBANK": 8,
+        "BANK_BASE": 0
+      },
+      "source_sha256": "28bd561ffe0bf79ccd9de80b657f5ac04c1f2678741233eb6f19240c4d82ea81",
+      "mapped_ff_bits_per_instance": 12198,
+      "mapped_cell_area_um2_per_instance": 15601.518540000001,
+      "receipt": "results/physical/s81_vm_write_edge_1015/raw/dispatch_b0.json",
+      "receipt_sha256": "702f32c03bd8aa117f689ec92597812409dda3bbd1e9d7c1dd974a5b8216d6c8"
+    },
+    {
+      "kind": "dispatch_b8",
+      "instances": 4,
+      "top": "dsfd_vm_static_wdispatch128",
+      "parameters": {
+        "NSRC": 53,
+        "NBANK": 8,
+        "BANK_BASE": 8
+      },
+      "source_sha256": "28bd561ffe0bf79ccd9de80b657f5ac04c1f2678741233eb6f19240c4d82ea81",
+      "mapped_ff_bits_per_instance": 12198,
+      "mapped_cell_area_um2_per_instance": 15609.522960000004,
+      "receipt": "results/physical/s81_vm_write_edge_1015/raw/dispatch_b8.json",
+      "receipt_sha256": "9cd47339fed646f63d699ffaa896879ed2ee5abb2dfc620b8637971e343e19db"
+    },
+    {
+      "kind": "dispatch_b16",
+      "instances": 4,
+      "top": "dsfd_vm_static_wdispatch128",
+      "parameters": {
+        "NSRC": 53,
+        "NBANK": 8,
+        "BANK_BASE": 16
+      },
+      "source_sha256": "28bd561ffe0bf79ccd9de80b657f5ac04c1f2678741233eb6f19240c4d82ea81",
+      "mapped_ff_bits_per_instance": 12198,
+      "mapped_cell_area_um2_per_instance": 15642.459179999998,
+      "receipt": "results/physical/s81_vm_write_edge_1015/raw/dispatch_b16.json",
+      "receipt_sha256": "40e7b179a3c6a132223f0abd8128e8bc965aba199593dd9d33e9db2d6086def0"
+    },
+    {
+      "kind": "dispatch_b24",
+      "instances": 4,
+      "top": "dsfd_vm_static_wdispatch128",
+      "parameters": {
+        "NSRC": 53,
+        "NBANK": 8,
+        "BANK_BASE": 24
+      },
+      "source_sha256": "28bd561ffe0bf79ccd9de80b657f5ac04c1f2678741233eb6f19240c4d82ea81",
+      "mapped_ff_bits_per_instance": 12198,
+      "mapped_cell_area_um2_per_instance": 15686.257500000002,
+      "receipt": "results/physical/s81_vm_write_edge_1015/raw/dispatch_b24.json",
+      "receipt_sha256": "e408c004585c88a5fd0b45dd579b573397a67e29f9eebb31499fdbb177b72a5f"
+    },
+    {
+      "kind": "stage_d3",
+      "instances": 128,
+      "top": "dsfd_vm_static_wstage128",
+      "parameters": {
+        "DEPTH": 3
+      },
+      "source_sha256": "effa6053cf176b39cc7e237045c8505c4ee8343ea979cd22ef3bc542cd989457",
+      "mapped_ff_bits_per_instance": 468,
+      "mapped_cell_area_um2_per_instance": 270.98387999999994,
+      "receipt": "results/physical/s81_vm_write_edge_1015/raw/stage_d3.json",
+      "receipt_sha256": "24e326f30cf85f0fc8cd53eba4124952f5e1a93c444a9b76af5748f8bd8c2119"
+    },
+    {
+      "kind": "w0_header",
+      "instances": 1,
+      "top": "dsfd_vm_static_w0_header",
+      "parameters": {
+        "NSRC": 53
+      },
+      "source_sha256": "4baa6926cec55bafa02e25fbd5a98513c3c95850d8db69536f598e05b7da147d",
+      "mapped_ff_bits_per_instance": 1224,
+      "mapped_cell_area_um2_per_instance": 416.46312,
+      "receipt": "results/physical/s81_vm_write_edge_1015/raw/w0_header.json",
+      "receipt_sha256": "52befd8a7ddcf9e38b9054a25449931f711c01310329fc5538abc13200b6aa02"
+    },
+    {
+      "kind": "w0_payload",
+      "instances": 4,
+      "top": "dsfd_vm_static_w0_payload",
+      "parameters": {
+        "NSRC": 53
+      },
+      "source_sha256": "4baa6926cec55bafa02e25fbd5a98513c3c95850d8db69536f598e05b7da147d",
+      "mapped_ff_bits_per_instance": 7001,
+      "mapped_cell_area_um2_per_instance": 2348.3131200000003,
+      "receipt": "results/physical/s81_vm_write_edge_1015/raw/w0_payload.json",
+      "receipt_sha256": "384e7efefaa4cd67699a86081eaaff79b3c8194fe2c573af4d2e72ba4830751b"
+    },
+    {
+      "kind": "control",
+      "instances": 1,
+      "top": "dsfd_vm_static_wcontrol",
+      "parameters": {
+        "NSRC": 53
+      },
+      "source_sha256": "3690b2d8ba93e4c725411b056c66cfbf7a46cccff013902e1a9cba7aba288dc1",
+      "mapped_ff_bits_per_instance": 200,
+      "mapped_cell_area_um2_per_instance": 1821.2461200000002,
+      "receipt": "results/physical/s81_vm_write_edge_1015/raw/control.json",
+      "receipt_sha256": "54b61d2ee19fbf62739f056b9beebede6d110db7c26c9a642f92617d8ed0ef83"
+    }
+  ],
+  "total_hard_leaf_instances": 150,
+  "total_mapped_ff_bits": 284500,
+  "total_mapped_cell_area_um2": 296475.93108,
+  "scope": "Actual NSRC53 dispatch BANK_BASE0/8/16/24,NBANK8,stageDEPTH3,header/payloadNSRC53/controlNSRC53. No pad reduction or source ties; scalar functional core clocks are not physical qualification.",
+  "raw_receipt_correction": "Raw b0/stage mapped_area_native_um2 is incorrectly divided16 by initial mapper. The authoritative mapped_area_lib_units is native area at factor1, verified enrolled 1x LEF0.2916um\u00b2 DFF matches Liberty0.2916. Immutable raw receipts retained.",
+  "control_declared_vs_mapped": "Control RTL declares296flopbits; unused h2/h3 drain lanes remove96, actual map200FF.",
+  "remote_artifacts": "ot-epyc1tb:/srv/opentallas-scratch/codex/s81-write-edge-1015",
+  "source_origin": "origin/main4bb5ee22d; originaldispatch/stage match actualcd1242953 hashes; wsched actual188 owner branch source identical before split",
+  "qualification_gates_open": [
+    "Real individually owned clock/reset ports on native parent ABI; CTSrootcount/insertion/spread",
+    "TTsetup/FFhold/DRC0 at actual facepins including stage drain mux",
+    "Global W0 to4dispatch/slice and header/control to16dispatch plus stage/scatter/bank uniform registered hops",
+    "Canonical2417/BF519/PHW10 full die geometry/cut/PG and production calendar/throughput"
+  ]
+}
