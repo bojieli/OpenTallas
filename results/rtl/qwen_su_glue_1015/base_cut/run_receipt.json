@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.qwen-su-base-cut-run.v1",
+  "source_commit": "685dad9b5",
+  "script_sha256": "5b8d6cbf20fc100b7c256ae96f2dcb13863ded3c1d9270b2531ad0030a2a028e",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-3909907-1792059971",
+  "outer_exit": 0,
+  "mem_gb": 2,
+  "threads": 1,
+  "source_netlist": "/srv/opentallas-scratch/codex/su-glue-1015/base_inventory/base_native_current.json",
+  "first_failure": {
+    "unit": "oth-ubuntu-3907866-1792059827",
+    "outer_exit": 1,
+    "reason": "audit temporary variable shadowed immutable netlist path; no source or netlist changed"
+  },
+  "intermediate_success_units": [
+    "oth-ubuntu-3907986-1792059841",
+    "oth-ubuntu-3908162-1792059879",
+    "oth-ubuntu-3908771-1792059931"
+  ],
+  "preserved_jobs": [
+    "Qmath3786061",
+    "embedding1293985",
+    "copy_bounds8_3905092"
+  ],
+  "no_physical_job_launched": true
+}
