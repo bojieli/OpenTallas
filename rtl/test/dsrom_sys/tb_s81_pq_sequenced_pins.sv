@@ -17,10 +17,15 @@ module tb_s81_pq_sequenced_pins;
  reg[514:0]host_in=0;wire[76:0]host_out;wire[35:0]host_pw,host_pq;wire[7:0]plen;
  wire[5:0]seq_status;wire[53:0]kit_done;reg[52:0]ks=0;
  wire[291:0]hw;wire[84:0]unused_cmd[0:12];
- dsfd_host_c #(.NS(1)) host(.ck(clk),.rst(rst_n),.ckv(ckv),.rsv(rst_n),
+ `ifdef OT_SSEQS_MUT_PQ_HOST_DROP
+ localparam integer HOST_MUT=1;
+`else
+ localparam integer HOST_MUT=0;
+`endif
+ dsfd_host_c #(.NS(1),.MUT(HOST_MUT)) host(.ck(clk),.rst(rst_n),.ckv(ckv),.rsv(rst_n),
   .f_collective(host_in),.t_collective(host_out),.f_lf(4'b0101),.t_sseq_pw(host_pw),
   .ck_ingest({ingest_i,ingest_h}),.t_pq_pw(host_pq),.t_sseq_plen(plen),.f_sseq_st(seq_status),.f_wfc_ft(4'd0),.hw(hw),.hc(9'd0));
- dsfd_stage_seq_static_c9 #(.NOPS(128),.STAGE(7)) seq(.ck(clk),.rst(rst_n),.ckv(ckv),.rsv(rst_n),
+ dsfd_stage_seq_static_c9 #(.NOPS(128),.STAGE(0)) seq(.ck(clk),.rst(rst_n),.ckv(ckv),.rsv(rst_n),
   .f_ks(ks),.t_kd(kit_done),.f_pw(host_pw),.f_plen(plen),.t_st(seq_status),
   .f_pq_pw(host_pq),.t_pq_desc_pw(desc),.calendar_prime(prime),.stage_start(start),
   .calendar_base(calendar_base),.calendar_length(calendar_length),.pq_image_sealed(sealed),
