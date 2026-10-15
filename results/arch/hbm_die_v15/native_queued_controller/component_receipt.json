@@ -1,0 +1,47 @@
+{
+  "scope": "Actual32nativeR/Wcontrollers to command-only externalDRAM; nobehavioral DRAMscheduler insideDUT",
+  "unit": "oth-ubuntu-3817783-1792055300",
+  "terminal_exit": 0,
+  "original_baseline": {
+    "physical_WR": 64,
+    "true_ACK": 64,
+    "physical_RD": 64,
+    "exact_response": 64,
+    "REFpb": 534,
+    "max_single_sector_WR_cycles": 192,
+    "max_single_sector_RD_cycles": 245
+  },
+  "same_row_queued_production": {
+    "physical_WR": 640,
+    "true_ACK": 640,
+    "physical_RD": 640,
+    "exact_response": 640,
+    "REFpb": 303,
+    "first_request_HBM_edge": 13,
+    "last_true_ACK_HBM_edge": 68,
+    "WR_elapsed_HBM_cycles": 55
+  },
+  "mutants": {
+    "enqueue_ACK": "rejected",
+    "wrong_FIFO_head": "rejected"
+  },
+  "clock_period_ps": 1024,
+  "clock_root_ports": 32,
+  "source_sha256": {
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "36ab8140f3a9f14d4098729f79f5091f1e67156409997dc2d6276387a23315c8",
+    "rtl/hbm_accel/loader/service_native/run_native_sector_queued_bench.sh": "8c9ea5a13c022dcb7c1b991c4b6839b1550fdf0a81c4e06789e6adcfb931ca7a",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_native_sector_queued_production.sv": "e2e05a727e8edc9ac7028a3cb189d55410d69f1a48b390b61edb8ed479614da4",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_native_sector_queued_stack.sv": "b7030c8dc1c49792a21e81b9b7960e4afa84931f3904b6f2604522700445b1ea",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_queued_stack.sv": "5f1aee6df4632f9f23c7723b1858f548b9d0f9f54e7def9ac6130ab1af471cda"
+  },
+  "raw_log_sha256": {
+    "results/arch/hbm_die_v15/native_queued_controller/component/production.log": "58843dd109fd5cfb32d9fd50bf23fe6f738372b53286849d2a76f4800ee0a89a",
+    "results/arch/hbm_die_v15/native_queued_controller/component/enqueue_ACK.log": "ea9b81232c559b13920635eba6932191c465f9e97a8742e96b9613921ca7ae8b",
+    "results/arch/hbm_die_v15/native_queued_controller/component/stack.log": "e040d69eacb593e9d6ceafc86f95aea9a382ad8d5ed83c7845e068d2c953f9f9",
+    "results/arch/hbm_die_v15/native_queued_controller/component/wrong_FIFO_head.log": "ba8a22eefc78b3343f8e3d33cc3cb1c4e3eaa00edda021dc01b0a1e862c3dfa2"
+  },
+  "full_DMA_272_gate": "pending",
+  "physical_qualified": false,
+  "protected_state_admitted": false,
+  "read_burst_len_gt1_qualified": false
+}
