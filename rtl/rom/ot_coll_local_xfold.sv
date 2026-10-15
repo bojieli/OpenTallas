@@ -26,12 +26,14 @@ module ot_coll_local_xfold #(
     generate for (rank = 0; rank < 4; rank = rank + 1) begin : g_rank
         wire [1:0] jqs = 2'(rank) - pkg_s + 2'd3;
         // RST=0 in the original ot_coll_rep_reg: no new data/control reset.
-        (* keep = "true" *) reg [3:0] sel;
-        always @(posedge ctl_ck)
-            sel <= {2'(rank) == pkg_s,
+        // Keep each rank's physical copy, including equivalent permuted bits.
+        wire [3:0] sel;
+        (* keep_hierarchy = 1 *) ot_coll_local_xfold_select #(.ID(32 + 4*rank)) u_sel (
+            .clk(ctl_ck),
+            .d({2'(rank) == pkg_s,
                     (2'(rank) != pkg_s) && jqs == 2'd2,
                     (2'(rank) != pkg_s) && jqs == 2'd1,
-                    (2'(rank) != pkg_s) && jqs == 2'd0};
+                    (2'(rank) != pkg_s) && jqs == 2'd0}), .q(sel));
         assign src[128*rank +: 128] = (td  & {128{sel[3]}})
                                            | (sr2 & {128{sel[2]}})
                                            | (sr1 & {128{sel[1]}})
@@ -42,4 +44,14 @@ module ot_coll_local_xfold #(
     (* keep_hierarchy = "yes" *) ot_coll_fold_slice #(.N(4), .ADD_LAT(7), .SEAM(1)) u_fold (
         .clk(fold_ck), .rst_n(rst_n), .red_in(red_in), .src(ranked_src),
         .sum(sum), .v_out(v_out), .e_out(e_out));
+endmodule
+
+// Private original-RST0 register copies: hierarchy prevents cross-rank merging
+// into four one-hot flops with four times the intended physical fanout.
+(* keep_hierarchy = 1 *) module ot_coll_local_xfold_select #(parameter integer ID = 0) (
+    input wire clk,
+    input wire [3:0] d,
+    output reg [3:0] q
+);
+    always @(posedge clk) q <= d;
 endmodule

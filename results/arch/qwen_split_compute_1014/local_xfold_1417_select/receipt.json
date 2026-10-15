@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.qwen.local_xfold_component.v1",
+  "source_pins": {
+    "rtl/rom/ot_coll_local_xfold.sv": "9a3266346b48e625b0deffe9c1a7c22874f754a7cabff0acc48f97332eb941aa",
+    "rtl/rom/ot_coll_fold_slice.sv": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+    "rtl/rom/ot_coll_rst_leaf.sv": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/rom/ot_coll_tp8_static.sv": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336",
+    "tools/qwen_coll_local_xfold/tb.sv": "594d0d4ec83405a1ab7637378f2c7602199f8c6fdb4dac393148580f5286dc48",
+    "tools/qwen_coll_local_xfold/run.py": "db7c0c16ccafb2d59b5df88af0b4bc723572c2f69bd63682c6a40b448b366d69"
+  },
+  "inputs": "4 x 128-bit raw words; pkg straps0..3, resets, bubbles, full-rate words, FP32 cancellation/special/subnormal cases",
+  "scope": "Old real registered selectors + real ot_coll_fold_slice versus new local wrapper, common-phase control/fold clocks; no physical qualification",
+  "extra_data_edges": 0,
+  "expected_red_sampling_edges": 23,
+  "compared_output_words": 448,
+  "actual_fold_master_unchanged": true,
+  "clocks": [
+    "ctl_ck",
+    "fold_ck"
+  ],
+  "runs": [
+    {
+      "name": "positive",
+      "exit": 0,
+      "binary_sha256": "523d7f43bcd5df19f4347fd8fe416c75e4389b24928645f69ba40d28c041fc9e",
+      "observed": {
+        "mutant": 0,
+        "samples": 448,
+        "data_errors": 0,
+        "valid_errors": 0,
+        "error_errors": 0,
+        "errors": 0
+      },
+      "ok": true
+    },
+    {
+      "name": "wrong_rank",
+      "exit": 1,
+      "binary_sha256": "9ce468f043cc2aafa61cc8ee3df823930c929029a12210836e7eb6a9a2a54428",
+      "observed": {
+        "mutant": 1,
+        "samples": 448,
+        "data_errors": 116,
+        "valid_errors": 0,
+        "error_errors": 0,
+        "errors": 116
+      },
+      "ok": true
+    }
+  ],
+  "ok": true
+}
