@@ -63,6 +63,13 @@ def resolve(contract: dict, source_root: Path | None = None):
     bad = []
     if req.get('rtl_tuple') != prof['rtl_tuple']:
         bad.append('vm_service_profile_rtl_tuple_mismatch')
+    # Every logical 512-bit row spans four physical 128-bit SRAMs;
+    # there are 32 address banks, selected by the actual RTL XOR map.
+    # A different map can conceal collisions even with correct edge ages.
+    if contract.get('banks') != 32 or contract.get('bank_mapping', 'rowmod') != 'xor_row7_5_shift2':
+        bad.append('vm_service_profile_bank_mapping_mismatch')
+    if contract.get('bank_port_capacities') is None and contract.get('bank_ops_per_cycle') != 1:
+        bad.append('vm_service_profile_bank_capacity_mismatch')
     root = (source_root or ROOT).resolve()
     pinned = {}
     for item in req.get('evidence') or []:
@@ -94,6 +101,8 @@ def check_event(prof: dict, event: dict) -> list:
     out = []
     eid = event.get('id')
     p = event['issue_cycle']
+    if type(event.get('raw_cycle')) is not int or event['raw_cycle'] < 0:
+        out.append(dict(kind='profile_raw_cycle_unbound', event=eid, actual=event.get('raw_cycle')))
     if event['kind'] == 'read':
         if event.get('raw_cycle') != p + prof['read_raw']:
             out.append(dict(kind='profile_read_raw_edge', event=eid, expected=p + prof['read_raw'], actual=event.get('raw_cycle')))
