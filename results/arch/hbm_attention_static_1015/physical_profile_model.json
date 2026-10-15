@@ -56,7 +56,18 @@
     "macro_area_total_um2": 418683.12912,
     "source_legacy_NL4_256macro_area_um2": 482236.416,
     "source_note": "Only256/1024x256 real library masters exist; macro storage area is smaller than previous68x256 allocation but placement and route remain unqualified.",
-    "instances_per_full_H16_engine": 34
+    "instances_per_full_H16_engine": 34,
+    "view_versions": [
+      {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "sha256": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+        "bbox_um": [
+          174.744,
+          70.47
+        ],
+        "role": "functionalproof sourcehistoricalLEF"
+      }
+    ]
   },
   "headgroup_source_inventory": {
     "functional_full_tile_count": 32,
