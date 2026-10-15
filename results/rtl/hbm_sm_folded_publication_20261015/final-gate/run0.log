@@ -1,0 +1,5 @@
+FOLDED_LEAF PASS words=512 columns=8 rows=4 first=291 row_stagger=16
+- /tmp/sm-fold-leaf-d1e507311/rtl/test/hbm_accel/sm_attn/tb_hbm_sm_folded_leaf.sv:81: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 0.431 s; speed 37.551 us/s
+- Verilator: cpu 0.431 s on 1 threads; allocated 9 MB

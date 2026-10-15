@@ -1,0 +1,7 @@
+Thu Oct 15 21:48:00 UTC 2026
+  oth-ubuntu-1628736-1792094236.scope                                                                       loaded    active   running   /usr/bin/python3 tools/hbm_sm_attention/sm_elem_bench.py run --shape ds640 --ops qk_sm0,pv_sm0 --probe --work /srv/opentallas-scratch/claude/smatt-r2/w-elem1 --out /srv/opentallas-scratch/claude/smatt-r2/elem1.json
+  oth-ubuntu-1628737-1792094236.scope                                                                       loaded    active   running   /usr/bin/python3 tools/hbm_sm_attention/sm_attn_bench.py run --shape qwen8192 --native-column --only qk_h0_sm0,pv_h0_sm0_b0,pv_h0_sm0_b4 --work /srv/opentallas-scratch/claude/smatt-r2/w-smoke2 --out /srv/opentallas-scratch/claude/smatt-r2/smoke2.json --jobs 3
+w-elem1
+3
+w-smoke2
+20
