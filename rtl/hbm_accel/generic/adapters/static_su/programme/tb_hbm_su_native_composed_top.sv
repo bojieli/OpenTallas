@@ -18,13 +18,12 @@ module tb_hbm_su_native_composed_top;
  wire programme_busy,programme_valid,programme_done,programme_fault;
  wire [15:0] programme_edge;
  wire [PROGRAMME_BITS-1:0] programme_command;
- reg [4*QW-1:0] previous_line=0;
  ot_hbm_su_programme #(.LINE_BITS(PROGRAMME_BITS),.EDGES(NE),.DICT_BANKS(PROGRAMME_DICT_BANKS)) programme(
   .clk(clk),.rst_n(rst_n),.cfg_we(programme_cfg_we),.cfg_bank(programme_cfg_bank),
   .cfg_row(programme_cfg_row),.cfg_data(programme_cfg_data),.start(programme_start),.length(16'(NE)),
   .busy(programme_busy),.valid(programme_valid),.done(programme_done),.fault(programme_fault),
   .edge_index(programme_edge),.command(programme_command));
- reg [4*QW-1:0] line=0;
+ reg [4*QW-1:0] line;
  reg [31:0] seed [0:262143];
  reg [319:0] expw [0:NW-1];
  reg [127:0] exps [0:NS-1];
@@ -35,7 +34,7 @@ module tb_hbm_su_native_composed_top;
  end
  wire [4*8*17-1:0] lg_rq; wire [4*8*281-1:0] lg_wq; wire [4*8*257-1:0] lg_rr; wire [31:0] lg_w_done;
 
- reg [63:0] cal_line=0;
+ reg [63:0] cal_line;
  reg [32*281-1:0] preload_wq=0;
  wire [31:0] preload_done,lg_fault;
  wire [32*18-1:0] bank_status;
@@ -63,6 +62,16 @@ module tb_hbm_su_native_composed_top;
  integer stop=NE;
  integer cyc=-1,errors=0,ew=0,es=0,reads=0,writes=0,scalars=0,i,q,p,k;
  bit mut_data,mut_addr,mut_rf,mut_red,mut_cal;
+ // Direct DUT-to-DUT command connection. Only explicit negative-test masks
+ // alter programme outputs; the positive case is a combinational wire.
+ always_comb begin
+  line=programme_valid ? programme_command[0+:4*QW] : '0;
+  cal_line=programme_valid ? programme_command[4*QW+:64] : '0;
+  if(mut_cal && programme_edge==777)cal_line[8]=0;
+  if(mut_addr && programme_edge==1040)line[QW+680+(1742-2-1200)+:24]=24'd3;
+  if(mut_rf && line[74+9+8])line[74+9+:8]=8'd3;
+  if(mut_red && programme_edge>=1040+176+FO && programme_edge<1040+176+FO+2)line[0+:74]='0;
+ end
  reg pend_v [0:31][0:3][0:7]; reg [15:0] pend_s [0:31][0:3][0:7]; reg pend_w [0:31][0:3][0:7];
  task fail(input string m); begin if(errors<12)$display("SU_NATIVE_COMPOSED_TOP ERROR cyc=%0d %s",cyc,m); errors=errors+1; end endtask
  always @(posedge clk)if(rst_n&&cyc>=0)begin
@@ -150,18 +159,10 @@ module tb_hbm_su_native_composed_top;
   @(negedge clk);
   for(i=0;i<stop;i=i+1)begin
    if(!programme_valid || programme_edge!==i || programme_fault)$fatal(1,"programme cycle/index/fault");
-   line=programme_command[0+:4*QW];cal_line=programme_command[4*QW+:64];
-   if(mut_cal&&i==777)cal_line[8]=0;
-   // quarter-1 A affine term bit 0 (control field ld_c, stream A term 0) corrupted at an op's load edge
-   if(mut_addr&&i==1040)line[QW+680+(1742-2-1200)+:24]=24'd3;
-   if(mut_rf&&line[0*QW+74+9+8])line[0*QW+74+9+:8]=8'd3;
-   if(mut_red&&i>=1040+176+FO&&i<1040+176+FO+2)line[0+:74]=previous_line[0+:74];
-   previous_line=programme_command[0+:4*QW];
    cyc=i;
    @(negedge clk);
   end
   if(stop==NE && (programme_valid || programme_busy || programme_fault))$fatal(1,"programme tail/fault");
-  line=0;cal_line=0;
   for(i=0;i<40;i=i+1)begin cyc=stop+i; @(negedge clk); end
   if(stop<NE)begin
    // debug run: only expectations due before the stop edge are required
