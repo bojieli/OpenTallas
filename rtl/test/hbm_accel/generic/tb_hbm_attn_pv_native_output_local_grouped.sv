@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_hbm_attn_pv_native_output_local;
+module tb_hbm_attn_pv_native_output_local_grouped;
  localparam integer VM_SID=3,VM_BASE=VM_SID*8192;
  reg clk=0;always #2 clk=~clk;reg rst_n=0;
  reg cv=0,ce=0,dv=0,de=0;reg[3:0]cd=0,dh=0;reg[2:0]db=0;reg[15:0]base=0,tag_=0;
