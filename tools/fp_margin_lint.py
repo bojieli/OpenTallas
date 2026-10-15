@@ -766,6 +766,12 @@ def channel_cuts(core, macros, masters, net_terms, layers, rmin, rmax, T):
         # a vertical cut (x = c) is crossed by horizontal wires, and vice versa
         want = "HORIZONTAL" if axis == "x" else "VERTICAL"
         lys = [l for l in layers if l["dir"] == want and max(rmin, T["channel_min_layer"]) <= l["level"] <= rmax]
+        if not lys:
+            # explicit signal cap below the long-haul floor (e.g. RLAYERS M2..M4: the only vertical routing layer is
+            # M3): the crossing nets use the TOP same-direction layer the router may use, not none (S81 VM bank v20,
+            # 2026-10-14: 2 vertical ck/rst nets beside a 174-um macro judged 'tracks 0' with 46 um of free M3)
+            cand = [l for l in layers if l["dir"] == want and rmin <= l["level"] <= rmax]
+            lys = [max(cand, key=lambda l: l["level"])] if cand else []
         cuts = set()
         for m in macros:
             b = m["bbox"]
