@@ -1,0 +1,115 @@
+{
+ "name": "qkd_kv_fault_stage",
+ "top": "qkd_kv_fault_stage",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/qkd_kv_fault_stage.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "macros": [],
+ "children": [],
+ "outhold": true,
+ "recipe": 1,
+ "layer_cap": "M5",
+ "outline": {
+  "w": 21.6,
+  "h": 21.6,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "a",
+   "ck"
+  ],
+  "E": [
+   "b"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/qkd_kv_fault_stage/io_pins.tcl",
+ "inter": [],
+ "route": {
+  "pd": 0.45,
+  "threads": 2,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7
+ },
+ "why_floorplan": "Dedicated one-bit CDC fault observation stage in 21.6 square die grant; exact M4 face pins; nominal rawframe21.576 square sits within closed21.6 square plus24nm allowance.",
+ "structural_change": "NEW source-real fault-only stage, not a qkd_rly1 view alias; one observation edge, zero normal payload edges.",
+ "domain_contract": {
+  "nominal_period_ps": 833.334,
+  "helper_signoff_period_ps": 833.333,
+  "period_note": "Existing single-root helper signoff is conservative by0.001ps; no extra root or threshold change",
+  "setup_skew_ps": 90,
+  "hold_skew_ps": 50,
+  "pins": {
+   "a": {
+    "face": "W",
+    "layer": "M4",
+    "nominal_y": 5.4,
+    "actual_y": 5.388
+   },
+   "b": {
+    "face": "E",
+    "layer": "M4",
+    "nominal_y": 16.2,
+    "actual_y": 16.188
+   },
+   "ck": {
+    "face": "W",
+    "layer": "M4",
+    "nominal_y": 10.8,
+    "actual_y": 10.812
+   }
+  }
+ },
+ "job": {
+  "owner": "Codex:qwen-kvsys-boundary-1103",
+  "branch": "codex/qwen-kvboundary-1103",
+  "tag": "fs1",
+  "purpose": "Explicit one-bit fault stage for all-current-pin wcf CDC->landing reach repair; not normal payload transport.",
+  "cycles_added": 0,
+  "hold_merge": true,
+  "notes": "Fault observation +1 core edge only. Native timing and current parent audit remain required; root owns placement/binding.",
+  "extra_paths": [
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_kv_die/run_fault_stage_bench.py"
+  ],
+  "benches": [
+   {
+    "name": "fault_stage_normal",
+    "cmd": "python3 -B tools/qwen_kv_die/run_fault_stage_bench.py --out {RUN}/bench/normal --mode normal",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "KV_FAULT_STAGE PASS 20000 words"
+   },
+   {
+    "name": "fault_stage_missing",
+    "cmd": "python3 -B tools/qwen_kv_die/run_fault_stage_bench.py --out {RUN}/bench/missing --mode missing",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "KV_FAULT_STAGE FAIL"
+   },
+   {
+    "name": "fault_stage_bitflip",
+    "cmd": "python3 -B tools/qwen_kv_die/run_fault_stage_bench.py --out {RUN}/bench/bitflip --mode bitflip",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "KV_FAULT_STAGE FAIL"
+   }
+  ]
+ }
+}

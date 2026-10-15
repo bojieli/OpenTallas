@@ -1,5 +1,6 @@
 import unittest
 from types import SimpleNamespace
+from unittest.mock import patch
 import kv_die as K
 
 class ActualBitReach(unittest.TestCase):
@@ -27,6 +28,12 @@ class ActualBitReach(unittest.TestCase):
         result=K.stack_local_reach(m,masters)
         self.assertEqual(result['unmeasured'],1)
         self.assertEqual(result['bits_checked'],0)
+    def test_case_refuses_unmeasured_assigned_bits(self):
+        m,masters=self.model(capture_bits=100)
+        m['geo']={'split':True}
+        with patch.object(K,'masters',return_value=masters):
+            with self.assertRaisesRegex(ValueError,'1 unmeasured'):
+                K.case(m,None)
     def test_identical_facing_words_pass(self):
         m,masters=self.model(capture_pitch=2)
         result=K.stack_local_reach(m,masters,reach=30)
