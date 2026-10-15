@@ -21,11 +21,11 @@ module ot_hgi_coll_sm_stage #(
     input wire [3:0] prefetch_dimvec,
     input wire release_v, release_bank,
     output reg [511:0] vectors,
-    output reg vector_ready, prefetch_done,
+    output reg vector_valid, prefetch_done,
     output reg vector_bank,
     output reg [1:0] vector_head,
     output reg [3:0] vector_dimvec,
-    output reg [1:0] bank_ready,
+    output reg [1:0] bank_full,
     output reg fault
 );
     // No data/control path bypasses this unconditional first face capture.
@@ -79,9 +79,9 @@ module ot_hgi_coll_sm_stage #(
     always @(posedge clk_control or negedge rst_n)begin
         if(!rst_n)begin
             fill_active<=0;active_fill_bank<=0;fill_count<=0;pack_v<=0;
-            row_valid[0]<=0;row_valid[1]<=0;bank_ready<=0;held<=0;
+            row_valid[0]<=0;row_valid[1]<=0;bank_full<=0;held<=0;
             write_v<=0;write_last<=0;issuing<=0;issue_idx<=0;read_v<=0;
-            gather_v<=0;vector_ready<=0;prefetch_done<=0;fault<=0;
+            gather_v<=0;vector_valid<=0;prefetch_done<=0;fault<=0;
             vector_bank<=0;vector_head<=0;vector_dimvec<=0;drain_bank<=0;
         end else begin
             write_v<=0;read_v<=0;prefetch_done<=0;
@@ -90,7 +90,7 @@ module ot_hgi_coll_sm_stage #(
             // This edge is the actual macro write edge, not merely issue.
             if(|write_v)begin
                 row_valid[write_logical_bank][write_row]<=1;
-                if(write_last)bank_ready[write_logical_bank]<=1;
+                if(write_last)bank_full[write_logical_bank]<=1;
             end
             if(cap_release_v)begin
                 if(!held[cap_release_bank] || ((issuing||(|gather_v)) && drain_bank==cap_release_bank))fault<=1;
@@ -99,8 +99,8 @@ module ot_hgi_coll_sm_stage #(
             if(cap_fill_begin)begin
                 if(fill_active || held[cap_fill_bank] || ((|write_v)&&write_logical_bank==cap_fill_bank) || cap_pub_slot)fault<=1;
                 active_fill_bank<=cap_fill_bank;fill_active<=1;fill_count<=0;pack_v<=0;
-                row_valid[cap_fill_bank]<=0;bank_ready[cap_fill_bank]<=0;
-                if(vector_bank==cap_fill_bank)vector_ready<=0;
+                row_valid[cap_fill_bank]<=0;bank_full[cap_fill_bank]<=0;
+                if(vector_bank==cap_fill_bank)vector_valid<=0;
             end
             if(cap_rv!=cap_pub_slot)fault<=1;
             if(cap_pub_slot)begin
@@ -124,11 +124,11 @@ module ot_hgi_coll_sm_stage #(
                 end
             end
             if(cap_prefetch_begin)begin
-                if(issuing || (|gather_v) || !bank_ready[cap_prefetch_bank] || !(&row_valid[cap_prefetch_bank]) ||
+                if(issuing || (|gather_v) || !bank_full[cap_prefetch_bank] || !(&row_valid[cap_prefetch_bank]) ||
                    (fill_active&&active_fill_bank==cap_prefetch_bank) ||
                    ((|write_v)&&write_logical_bank==cap_prefetch_bank))fault<=1;
                 drain_bank<=cap_prefetch_bank;held[cap_prefetch_bank]<=1;
-                vector_ready<=0;vector_bank<=cap_prefetch_bank;
+                vector_valid<=0;vector_bank<=cap_prefetch_bank;
                 vector_head<=cap_prefetch_head;vector_dimvec<=cap_prefetch_dimvec;
                 issuing<=1;issue_idx<=1;
                 read_base<=cap_prefetch_dimvec[2:0];
@@ -146,7 +146,7 @@ module ot_hgi_coll_sm_stage #(
             if(gather_v[2])begin
                 for(integer j=0;j<8;j=j+1)
                     if(gather_i2==3'(j))vectors[j*64+:64]<=pair_data[drain_bank];
-                if(gather_i2==7)begin vector_ready<=1;prefetch_done<=1;end
+                if(gather_i2==7)begin vector_valid<=1;prefetch_done<=1;end
             end
         end
     end
@@ -199,8 +199,8 @@ module ot_hgi_coll_sm_stage_q #(parameter integer MUT_BANK=0,MUT_COLUMN=0)(
     output reg lp_v,
     output reg [255:0] lp_data,
     output reg [3:0] lp_group_o,
-    output wire [7:0] vector_ready,prefetch_done,leaf_fault,
-    output wire [15:0] bank_ready,
+    output wire [7:0] vector_valid,prefetch_done,leaf_fault,
+    output wire [15:0] bank_full,
     output reg selector_fault
 );
     wire [511:0] vectors[0:7];
@@ -213,9 +213,9 @@ module ot_hgi_coll_sm_stage_q #(parameter integer MUT_BANK=0,MUT_COLUMN=0)(
             .fill_begin(fill_begin[s]),.fill_bank(fill_bank[s]),.pub_slot(pub_slot[s]),.pub_block(pub_block[s]),
             .pub_beat(pub_beat[s*6+:6]),.rv(rv[s]),.rrow(rrow[s*12+:12]),.rdata(rdata[s*256+:256]),
             .prefetch_begin(prefetch_begin),.prefetch_bank(prefetch_bank),.prefetch_head(prefetch_head),.prefetch_dimvec(prefetch_dimvec),
-            .release_v(release_v),.release_bank(release_bank),.vectors(vectors[s]),.vector_ready(vector_ready[s]),
+            .release_v(release_v),.release_bank(release_bank),.vectors(vectors[s]),.vector_valid(vector_valid[s]),
             .prefetch_done(prefetch_done[s]),.vector_bank(vector_bank[s]),.vector_head(vector_head[s]),
-            .vector_dimvec(vector_dimvec[s]),.bank_ready(bank_ready[s*2+:2]),.fault(leaf_fault[s]));
+            .vector_dimvec(vector_dimvec[s]),.bank_full(bank_full[s*2+:2]),.fault(leaf_fault[s]));
     end
     (* keep=1, dont_touch=1 *) reg cap_lp_issue,cap_lp_bank;
     (* keep=1, dont_touch=1 *) reg [3:0] cap_lp_group,cap_lp_dimvec;
@@ -230,7 +230,7 @@ module ot_hgi_coll_sm_stage_q #(parameter integer MUT_BANK=0,MUT_COLUMN=0)(
             lp_v<=cap_lp_issue;lp_group_o<=cap_lp_group;
             if(cap_lp_issue)begin
                 lp_data<=vectors[cap_lp_group[3:1]][cap_lp_group[0]*256+:256];
-                if(!vector_ready[cap_lp_group[3:1]] || vector_bank[cap_lp_group[3:1]]!=cap_lp_bank ||
+                if(!vector_valid[cap_lp_group[3:1]] || vector_bank[cap_lp_group[3:1]]!=cap_lp_bank ||
                    vector_head[cap_lp_group[3:1]]!=cap_lp_head || vector_dimvec[cap_lp_group[3:1]]!=cap_lp_dimvec)selector_fault<=1;
             end
         end

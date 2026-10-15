@@ -25,8 +25,8 @@ module tb_hgi_coll_sm_stage;
             .rv(rv),.rrow(row),.rdata(data[q]),.prefetch_begin(pre),.prefetch_bank(pbank),
             .prefetch_head(head),.prefetch_dimvec(dimvec),.release_v(rel),.release_bank(relbank),
             .lp_issue(lpi),.lp_group(group),.lp_bank(lpbank),.lp_head(lphead),.lp_dimvec(lpvec),
-            .lp_v(lpv[q]),.lp_data(lpd[q]),.lp_group_o(group_o[q]),.vector_ready(ready[q]),
-            .prefetch_done(done[q]),.leaf_fault(fault[q]),.bank_ready(banks[q]),.selector_fault(selector_fault[q]));
+            .lp_v(lpv[q]),.lp_data(lpd[q]),.lp_group_o(group_o[q]),.vector_valid(ready[q]),
+            .prefetch_done(done[q]),.leaf_fault(fault[q]),.bank_full(banks[q]),.selector_fault(selector_fault[q]));
     end
     // Test oracle uses only the actual producer pins and registered LP outputs.
     // Every word has a unique finite FP32 payload; no DUT SRAM/internal array is read.
