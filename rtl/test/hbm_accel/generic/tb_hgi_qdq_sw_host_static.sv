@@ -131,12 +131,12 @@ module tb_hgi_qdq_sw_host_static #(parameter integer MUT=0,PIN_BOUNDARY=0,IO_REG
             if(dut.ordinal!=nissue || cyc-t0!=nissue+15) $fatal(1,"programme fixed issue expected%0d actualordinal%0d cycle%0d",nissue,dut.ordinal,cyc-t0);
             nissue++;
         end
-        if(!preload && (dut.engine.transport.bad || dut.engine.decode_fault || (dut.engine.vo&&dut.engine.qfault) || dut.engine.vo!=dut.engine.transport.dv[24]))
-            $display("FAULT_CAUSE cycle=%0d bad=%b decode=%b qfault=%b vo=%b expected=%b rr_mask=%b",cyc-t0,dut.engine.transport.bad,dut.engine.decode_fault,dut.engine.qfault,dut.engine.vo,dut.engine.transport.dv[24],dut.engine.transport.expected);
+        if(!preload && (dut.engine.monolith_transport.transport.bad || dut.engine.decode_fault || (dut.engine.vo&&dut.engine.qfault) || dut.engine.vo!=dut.engine.monolith_transport.transport.dv[24]))
+            $display("FAULT_CAUSE cycle=%0d bad=%b decode=%b qfault=%b vo=%b expected=%b rr_mask=%b",cyc-t0,dut.engine.monolith_transport.transport.bad,dut.engine.decode_fault,dut.engine.qfault,dut.engine.vo,dut.engine.monolith_transport.transport.dv[24],dut.engine.monolith_transport.transport.expected);
     end
     always @(negedge clk) if(!preload && rst_n) begin
         if((host_fault || loader_fault || (|program_fault)) && !check_fault) $fatal(1,"native host/calendar fault");
-        if(fault && !check_fault) $fatal(1,"unexpected static fault at cycle %0d vo=%b expected=%b",cyc-t0,dut.engine.vo,dut.engine.transport.dv[24]);
+        if(fault && !check_fault) $fatal(1,"unexpected static fault at cycle %0d vo=%b expected=%b",cyc-t0,dut.engine.vo,dut.engine.monolith_transport.transport.dv[24]);
         if(launched && cyc-t0>181+2*IO_REGS && nreturn!=nbeat) $fatal(1,"native fixed completion missing");
         if(done) nreturn=nreturn+1;
         if(done != (|bankdone)) $fatal(1,"fixed done differs from actual bank commit cycle%0d",cyc-t0);

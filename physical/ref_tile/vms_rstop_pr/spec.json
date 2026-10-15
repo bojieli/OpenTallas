@@ -1,0 +1,118 @@
+{
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "name": "vms_rstop_pr",
+ "top": "ot_vms_rstop",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv"
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "sid",
+   "dir",
+   "l_in",
+   "l_in_cr",
+   "pi",
+   "pi_cr",
+   "ri",
+   "ri_cr",
+   "wki",
+   "wki_cr",
+   "ack_i"
+  ],
+  "E": [
+   "l_out",
+   "l_out_cr",
+   "rce",
+   "rce_cr",
+   "cco",
+   "wko",
+   "wko_cr",
+   "ack_o",
+   "mirror_busy"
+  ],
+  "S": [
+   "eg",
+   "eg_cr"
+  ],
+  "N": [
+   "xq",
+   "xq_cr",
+   "xq_done"
+  ]
+ },
+ "params": {
+  "PHYSICAL_RING": 1,
+  "HF": 2,
+  "EGC": 1
+ },
+ "outline": {
+  "w": 241.92,
+  "h": 302.4
+ },
+ "job": {
+  "owner": "Claude:H-COLL",
+  "branch": "claude/hbm-p2p-coll-1014",
+  "tag": "r1",
+  "hold_merge": "Individual leaf route; SW slice parent ot_vms_slice_coll_sw native pin/reset/clock integration qualification remains required.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm",
+   "rtl/hbm_accel/generic/collective",
+   "rtl/link",
+   "physical/asap7_memory_macros"
+  ],
+  "purpose": "B2 VM ring stop with PHYSICAL_RING 1 (perimeter SID order SW0,SE1,NE3,NW2; all four slices); RTL = closed vms_rstop v04 + P2P ring mapping; M5 leaf (legacy kit was PG M6)",
+  "benches": [
+   {
+    "name": "b2vm_nc4_pos",
+    "cmd": "JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_nc4_pos -GRLY=20 -GSNC=4",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "b2vm_route_mut",
+    "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_route_mut -GRLY=20 -GSNC=4 -GROUTE_MUT=1; then exit 0; elif test -s {RUN}/b2vm_route_mut/run.log && ! grep -q '^B2_COLL_VMPORT PASS' {RUN}/b2vm_route_mut/run.log; then exit 1; else exit 0; fi",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/vms_rstop_pr/views",
+  "record_to": "results/rtl/ref_tile/vms_rstop_pr"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

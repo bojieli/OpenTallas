@@ -14,7 +14,16 @@
 //   +mode 0 base (expect no fault); 1 four sources on one bank (lane >= 3); 2 drain collision; 3 PQ misaligned;
 //   4 P2RD native op; 5 duplicate read bank (FSR); 6 MIX and SU on one logical port -- each must raise ITS fault source.
 module tb_dsfd_vm_static_core;
-`ifdef OT_VM_NATIVE_READ_PINREG
+    // landing commit age (edges from the row's pin edge): 2 with the native pin stage (dsfd_vm_static_landing PINREG=1, F8
+    // 2026-10-15), 1 for the r1 PINREG=0 reference.  The compiler's LARM row-commit constant follows the same value.
+`ifdef OT_VM_LANDING_PINREG0
+    localparam integer LAND_AGE = 1;
+`else
+    localparam integer LAND_AGE = 2;
+`endif
+`ifdef OT_VM_NATIVE_READ_L16
+    localparam integer READ_PIPE=4;     // + pin-registered rsched / return lanes (L16)
+`elsif OT_VM_NATIVE_READ_PINREG
     localparam integer READ_PIPE=2;
 `elsif OT_VM_NATIVE_READ
     localparam integer READ_PIPE=1;
@@ -202,12 +211,12 @@ module tb_dsfd_vm_static_core;
             repeat (6) step;
             for (k = 0; k < 8; k = k + 1) begin
                 step;                                   // selector row k (even edges), scan pair k (odd edges)
-                l_v[2] = 1; l_d[1024 +: 512] = rowdata(3000 + k, 3); ver[3000 + k] = 3; exp_c[3000 + k] = cy + 1; exp_sl[3000 + k] = 0; exp_m[3000 + k] = 16'hffff;
+                l_v[2] = 1; l_d[1024 +: 512] = rowdata(3000 + k, 3); ver[3000 + k] = 3; exp_c[3000 + k] = cy + LAND_AGE; exp_sl[3000 + k] = 0; exp_m[3000 + k] = 16'hffff;
                 step;
                 if (k < 4) begin
                     l_v[0] = 1; l_v[1] = 1; l_d[0 +: 512] = rowdata(5000 + 2 * k, 3); l_d[512 +: 512] = rowdata(5001 + 2 * k, 3);
                     ver[5000 + 2 * k] = 3; ver[5001 + 2 * k] = 3;
-                    exp_c[5000 + 2 * k] = cy + 1; exp_c[5001 + 2 * k] = cy + 1; exp_sl[5000 + 2 * k] = 0; exp_sl[5001 + 2 * k] = 0;
+                    exp_c[5000 + 2 * k] = cy + LAND_AGE; exp_c[5001 + 2 * k] = cy + LAND_AGE; exp_sl[5000 + 2 * k] = 0; exp_sl[5001 + 2 * k] = 0;
                     exp_m[5000 + 2 * k] = 16'hffff; exp_m[5001 + 2 * k] = 16'hffff;
                 end
             end

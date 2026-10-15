@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/hd/sub2/hbm_v15_sw_vm.v",
+ "die_v": "results/arch/hbm_die_v15/sw_vm_bind/hbm_v15_sw_vm.v",
  "top": "hbm_v15_sw_vm",
  "verdict": "FAIL",
  "failing": [
@@ -66,13 +66,13 @@
    "width_mismatch": {},
    "unparsed_conn": []
   },
-  "ot_hbm_idx_scheduled_static": {
+  "ot_hbm_idx_client_static": {
    "verdict": "FAIL",
    "fails": [
     "INPUT_TIED"
    ],
    "instances": 1,
-   "rtl": "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv",
+   "rtl": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -102,7 +102,7 @@
     "hb_su_SW"
    ],
    "param_sets": {
-    "{\"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1
+    "{\"BANK_GROUP\": \"1126306048\", \"NPG\": \"5\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -254,7 +254,7 @@
  "multi_driven_nets": {},
  "top_assigns": [],
  "params_not_in_rtl": [],
- "die_sha256": "f42facef4a26392f84d2e3691f653afd6937235ea1dea3e762efa40cf9644c15",
+ "die_sha256": "ef090b2e62c7c31a46c9ba6918755c5fef25fab8377789b0a75ac4209bcda383",
  "straps_declared": [],
  "params_file": null,
  "rtl_roots": [

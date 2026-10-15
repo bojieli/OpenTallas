@@ -1,0 +1,4 @@
+payload mismatch cycle4963 got1abcdef01bf91bf90bf8fbf8ebf8dbf8cbf8bbf8abf89bf88bf87bf86bf85bf84bf83bf823f903f8f3f8e3f8d3f8c3f8b3f8a3f893f883f873f863f853f843f833f823f81 want1abcdef01bf90bf90bf8ebf8ebf8cbf8cbf8abf8abf88bf88bf86bf86bf84bf84bf82bf823f903f8e3f8e3f8c3f8c3f8a3f8a3f883f883f863f863f843f843f823f823f80
+[49650000] %Fatal: tb_hgi_coll_reduce_static.sv:159: Assertion failed in tb_hgi_coll_reduce_static: STATIC_REDUCE FAIL errors1 cause00
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_reduce_static.sv:159: Verilog $stop
+Aborting...

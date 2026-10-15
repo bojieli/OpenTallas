@@ -2,7 +2,7 @@
 // Actual QDQ decoder + eight actual VM bank pipelines and 24 mapped SRAM macros.
 // Golden vectors and external preload are declared component-boundary stimuli.
 // This does not claim native whole-chip programme execution.
-module tb_hgi_qdq_static #(parameter integer MUT=0,IO_REGS=0,LG=0);
+module tb_hgi_qdq_static #(parameter integer MUT=0,IO_REGS=0,LG=0,TSPLIT=0,NPG=4,parameter [31:0] BANK_GROUP=32'h33221100);
     reg clk=0; always #1 clk=~clk;
     reg rst_n=0, cv=0, last=0;
     reg [5:0] op=0; reg [7:0] block_n=0;
@@ -17,12 +17,23 @@ module tb_hgi_qdq_static #(parameter integer MUT=0,IO_REGS=0,LG=0);
     reg [2247:0] pwq=0;
     reg [135:0] prq=0;
     wire [143:0] status;
-    ot_hgi_qdq_program_static #(.IO_REGS(IO_REGS),.LG(LG),.LGMUT(MUT==4?1:0),.MUT(MUT==1?1:MUT==2?2:0)) dut(
-        .clk_program(clk),.clk_lg({4{clk}}),.clk_transport(clk),.clk_dxl(clk),.clk_dbq(clk),.clk_daq(clk),.rst_n(rst_n),
+    ot_hgi_qdq_program_static #(.IO_REGS(IO_REGS),.LG(LG),.TSPLIT(TSPLIT),.NPG(NPG),.BANK_GROUP(BANK_GROUP),.LGMUT(MUT==4?1:0),.MUT(MUT==1?1:MUT==2?2:0)) dut(
+        .clk_program(clk),.clk_lg({NPG{clk}}),.clk_transport(clk),.clk_dxl(clk),.clk_dbq(clk),.clk_daq(clk),.rst_n(rst_n),
         .cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .start_v(start_v),.start_base(10'd0),.start_limit(start_limit),.start_loops(16'd1),
         .program_active(program_active),.program_done(program_done),
         .rq(rq),.rr(rr),.wq(wq),.beat_done(done),.record_done(rdone),.fault(fault));
+    // Fault-cause probes into the transport control (monolith or split control leaf).
+    wire tr_bad,tr_dv24; wire [7:0] tr_expected;
+    generate if(TSPLIT!=0) begin: probe_split
+        assign tr_bad=dut.engine.split_transport.transport.ctl.bad;
+        assign tr_dv24=dut.engine.split_transport.transport.ctl.dv[24];
+        assign tr_expected=dut.engine.split_transport.transport.ctl.expected;
+    end else begin: probe_mono
+        assign tr_bad=dut.engine.monolith_transport.transport.bad;
+        assign tr_dv24=dut.engine.monolith_transport.transport.dv[24];
+        assign tr_expected=dut.engine.monolith_transport.transport.expected;
+    end endgenerate
     for(genvar g=0;g<8;g=g+1) begin: banks
         wire [16:0] arq=preload?prq[g*17+:17]:rq[g*17+:17];
         wire [280:0] awq=preload?pwq[g*281+:281]:wq[g*281+:281];
@@ -51,11 +62,11 @@ module tb_hgi_qdq_static #(parameter integer MUT=0,IO_REGS=0,LG=0);
             if(dut.ordinal!=nissue || cyc-t0!=nissue+5) $fatal(1,"programme fixed issue expected%0d actualordinal%0d cycle%0d",nissue,dut.ordinal,cyc-t0);
             nissue++;
         end
-        if(!preload && (dut.engine.transport.bad || dut.engine.decode_fault || (dut.engine.vo&&dut.engine.qfault) || dut.engine.vo!=dut.engine.transport.dv[24]))
-            $display("FAULT_CAUSE cycle=%0d bad=%b decode=%b qfault=%b vo=%b expected=%b rr_mask=%b",cyc-t0,dut.engine.transport.bad,dut.engine.decode_fault,dut.engine.qfault,dut.engine.vo,dut.engine.transport.dv[24],dut.engine.transport.expected);
+        if(!preload && (tr_bad || dut.engine.decode_fault || (dut.engine.vo&&dut.engine.qfault) || dut.engine.vo!=tr_dv24))
+            $display("FAULT_CAUSE cycle=%0d bad=%b decode=%b qfault=%b vo=%b expected=%b rr_mask=%b",cyc-t0,tr_bad,dut.engine.decode_fault,dut.engine.qfault,dut.engine.vo,tr_dv24,tr_expected);
     end
     always @(negedge clk) if(!preload && rst_n) begin
-        if(fault && !check_fault) $fatal(1,"unexpected static fault at cycle %0d vo=%b expected=%b",cyc-t0,dut.engine.vo,dut.engine.transport.dv[24]);
+        if(fault && !check_fault) $fatal(1,"unexpected static fault at cycle %0d vo=%b expected=%b",cyc-t0,dut.engine.vo,tr_dv24);
         if(done) nreturn=nreturn+1;
         if(done != (|bankdone)) $fatal(1,"fixed done differs from actual bank commit cycle%0d",cyc-t0);
         for(integer b=0;b<8;b=b+1) if(bankdone[b]) begin ncommit++;last_commit=cyc-t0;end

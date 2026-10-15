@@ -14,7 +14,7 @@ attend.norm                  priced     76 edges    47 issues    4 rd    64 wr  
 attend.inv_rope.tail         priced     60 edges    29 issues    1 rd     0 wr     8 reuse    128 elide      0
 attn.res_copy                priced     99 edges   128 issues   40 rd  2560 wr  2560 reuse      0 elide      0  OVER
 router_act                   priced    339 edges   231 issues    4 rd     1 wr     4 reuse      0 elide      0
-route.scores_bias            priced     60 edges    52 issues    1 rd    96 wr    48 reuse      0 elide      0
+route.scores_bias            priced     60 edges    60 issues    3 rd    96 wr    48 reuse      0 elide      0
 route.gather0                priced     60 edges    37 issues    1 rd     0 wr     1 reuse      1 elide      0
 route.gather1                priced     60 edges     1 issues    1 rd     0 wr     1 reuse      1 elide      0
 route.gather2                priced     60 edges     1 issues    1 rd     0 wr     1 reuse      1 elide      0
@@ -31,4 +31,4 @@ moe_sum.4                    priced     60 edges    40 issues    1 rd    14 wr  
 moe_sum.6                    priced     60 edges    38 issues    1 rd     7 wr     7 reuse     53 elide      0
 ffn.res_copy                 priced     99 edges   128 issues   40 rd  2560 wr  2560 reuse      0 elide      0  OVER
 pre <- ffn mix pre           priced     60 edges    48 issues    1 rd     1 wr     1 reuse      0 elide      0
-deepseek {'priced': 3272.0, 'edges': 2086, 'ratio': 0.638} slices [14077, 12752, 12432, 11824] replicated 964 conflicts 0 affine_fail 0
+deepseek {'priced': 3272.0, 'edges': 2094, 'ratio': 0.64} slices [14845, 12368, 12048, 11824] replicated 964 conflicts 0 affine_fail 0

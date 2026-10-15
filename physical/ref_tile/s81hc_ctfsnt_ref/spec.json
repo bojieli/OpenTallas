@@ -74,8 +74,8 @@
   "benches_from": "tools/s81_suhc/hc_ntree_benches.json",
   "owner": "Claude:el1014-s81-norm-tree",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "v2-fullspan",
-  "structural_change": "Re-pin (S-DIE r11 table entry): fdm N face becomes the full-width straight bus matching ctfn.fdm (1.5x span) so ctfn routes; HB4 hold pads. Same RTL/cycles/SDC.",
+  "tag": "v3-ck4",
+  "structural_change": "Re-pin (S-DIE r11 table entry): fdm N face becomes the full-width straight bus matching ctfn.fdm (1.5x span) so ctfn routes; HB4 hold pads. Same RTL/cycles/SDC. + per-cluster clock roots (clock_split_x.tcl, K=4): single-root gate TT spread was 87-132 ps over the full-span pins.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_ctfs_nt: the forward relay/out strip + the partial lane relay",
   "views_to": "physical/ref_tile/s81hc_ctfsnt_ref/views",
@@ -123,5 +123,11 @@
  },
  "boundary_tcl": [
   "physical/common_flow/hold_pad_hb4.tcl"
- ]
+ ],
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_x.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKS_K": "4"
+ }
 }

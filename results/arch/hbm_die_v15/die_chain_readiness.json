@@ -152,7 +152,7 @@
    "hb_su_NW",
    "hb_su_NE"
   ],
-  "ot_hbm_idx_scheduled_static": [
+  "ot_hbm_idx_client_static": [
    "hb_idx"
   ]
  },
@@ -164,11 +164,13 @@
   "VM bank RG7/WG3 kit: NW pin B re-pin -> route at 833.333 (H-ELEM-A, VM banks)",
   "VM bank RG5/WG1 kit: structural CTS fix for 143.2 ps spread -> route (H-ELEM-A)",
   "LG split parent + VM calendar + hub/ring/replay + status4 + delivery leaves (h_vm / service_native)",
-  "static SU VM port groups ot_hbm_su_static_vm_ports: 4 bank-pair leaves, 5th group SW/SE (H-ELEM-B + H-DIE)",
+  "static SU VM port groups ot_hbm_su_static_vm_ports: NPG 4 NW/NE, 5 SW/SE (BANK_GROUP 0x43221100 provisional) leaves (H-ELEM-B)",
   "SFU scheduled engine / DMA back static: kits with >=4 LG port groups (engine owners)",
-  "IDX parent + 7 cq/cr record clients: static sources, IDX-reads-only-SW answer (H-IDX, el1015-hbm-idx.log)",
-  "SM xload static successor (H-ELEM-A); compact SM tile view 11.316 mm2 (H-ELEM-A)",
+  "VM ABI shrink (H-ELEM-A): SW NC 7->3, drop IDX RG in SE/NW/NE; static argmax (H-IDX); hb_idx = ot_hbm_idx_client_static kit",
+  "SM xload static successor ot_hgi_sm_xload_static 2ae9a6d93 (H-ELEM-A, merge to main; BF16 only, DS block-dot not static); compact SM tile view 11.316 mm2 (H-ELEM-A)",
   "svc_v15 bands + COLL q2/q3 static parents (service_native, H-COLL)",
   "then: die floorplan from GEO-H D2 candidate -> GRT (overflow 0) -> TT/FF STA"
- ]
+ ],
+ "floorplan_direction": "HBM D local PV (owner-approved 2026-10-15); attention resources ON HOLD",
+ "attention_placeholder": "ON HOLD (owner 10:30 2026-10-15): H-ATTQ compares dedicated attention tiles vs attention on SM engines + SU/SFU softmax. No ATT-specific die resources in v15 until the verdict (no attention instance, per-quadrant attention write groups, PV drain/return). Existing VM ABI NE WG1/RG3 attention slots untouched. Previously noted PV drain long return (2,248 b/edge to NE WG1) withdrawn with the binding."
 }
