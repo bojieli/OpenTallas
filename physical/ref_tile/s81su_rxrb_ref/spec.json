@@ -54,13 +54,38 @@
  "aspect": 1.0,
  "recipe": 2,
  "job": {
-  "benched_by": "s81su_rxh_eq",
   "owner": "Claude:S-ELEM-C",
   "branch": "claude/s81-surx-engram-1015",
   "tag": "g2",
   "purpose": "S81 SU rx cluster RB + RW leaf: 16 score+bias adders + ot_s81_su_rw (ffn.weights); operands = rxc xq_x",
   "views_to": "physical/ref_tile/s81su_rxrb_ref/views",
-  "record_to": "results/rtl/ref_tile/s81su_rxrb_ref"
+  "record_to": "results/rtl/ref_tile/s81su_rxrb_ref",
+  "benches": [
+   {
+    "name": "rxh_eq_exact",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "pass_regex": "x0 s2 RXH_EQ PASS shadow_fail=0",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; NJOB=48 XLIST=0 RAW=1 bash tools/s81_suhc/rxh_eq_gate.sh {RUN}/bench/eq0 \"1 2\""
+   },
+   {
+    "name": "rxh_eq_mut2",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "fail_regex": "x2 s1 RXH_EQ FAIL",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; NJOB=48 XLIST=2 RAW=1 bash tools/s81_suhc/rxh_eq_gate.sh {RUN}/bench/eq2 \"1\""
+   },
+   {
+    "name": "rxh_eq_mut4",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "fail_regex": "x4 s1 RXH_EQ FAIL",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; NJOB=48 XLIST=4 RAW=1 bash tools/s81_suhc/rxh_eq_gate.sh {RUN}/bench/eq4 \"1\""
+   }
+  ]
  },
  "std_area_um2": 12418,
  "params": {},

@@ -8,7 +8,8 @@
 // operands (zeros, subnormals, infinities, NaN).  Every result row (address, mask, data; both write slots) must match
 // in order; sticky faults must match.  The per-kind first-result latency difference is printed (the cluster's added
 // fixed stages).  XMUT (cluster only): 1 RA returns sp, 2 RB drops the bias, 3 QR inverse rotation, 4 RW skips the
-// route scale -> the run must FAIL (negative controls).
+// route scale, 5 RA front leaf without the max(x, 0) clamp,
+// 6 control leaf QR row-index stuck at 0 -> the run must FAIL (negative controls).
 module tb_s81_su_rxh_eq;
     parameter integer NJOB = 48, SEED = 1, XMUT = 0;
     localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10, K_RW = 11;
@@ -20,10 +21,19 @@ module tb_s81_su_rxh_eq;
     ot_s81_su_rxt #(.S_RD(5), .LM(5), .LA(4), .QW(2)) u_flat (.clk(clk), .rst_in(rst), .dn_st_i(st), .dn_kind_i(kind),
         .dn_jid_i(jid), .dn_v_i(dv), .dn_d_i(dd), .o_v(fv), .o_a(fa), .o_m(fm), .o_d(fd), .o_v2(fv2), .o_a2(fa2), .o_d2(fd2),
         .o_fu(ffu), .o_fo(ffo), .o_alive(), .o_den(), .o_rdy(), .o_rjid());
-    ot_s81_su_rxh #(.S_RD(5), .LM(5), .LA(4), .XMUT(XMUT)) u_clu (.clk(clk), .rst_in(rst), .dn_st_i(st), .dn_kind_i(kind),
+    ot_s81_su_rxh #(.S_RD(5), .LM(5), .LA(4), .XMUT(XMUT >= 5 ? 0 : XMUT)) u_clu (.clk(clk), .rst_in(rst), .dn_st_i(st), .dn_kind_i(kind),
         .dn_jid_i(jid), .dn_v_i(dv), .dn_d_i(dd), .o_v(cv), .o_a(ca), .o_m(cm), .o_d(cd), .o_v2(cv2), .o_a2(ca2), .o_d2(cd2),
         .o_fu(cfu), .o_fo(cfo), .o_alive(), .o_den(), .o_rdy(), .o_rjid());
 
+    // XMUT 5 (RA FRONT leaf negative control, injected here so the leaf source stays the gated one): lane 3's front leaf
+    // loses its max(x, 0) clamp (its NaN guard forced true: negative x pass through to sp = x + l)
+    generate if (XMUT == 5) begin : g_m5
+        initial force u_clu.g_ra[3].u_f.x_nan = 1'b1;
+    end endgenerate
+    // XMUT 6 (control leaf negative control): the QR coefficient row-index copies stuck at row 0
+    generate if (XMUT == 6) begin : g_m6
+        initial force u_clu.u_c.cj = 16'd0;
+    end endgenerate
     // ---------------------------------------------------------------- result queues
     reg [541:0] qf [0:65535]; reg [541:0] qc [0:65535];
     reg [525:0] qf2 [0:65535]; reg [525:0] qc2 [0:65535];

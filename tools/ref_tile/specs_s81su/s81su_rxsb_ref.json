@@ -51,13 +51,30 @@
  "aspect": 1.0,
  "recipe": 2,
  "job": {
-  "benched_by": "s81su_rxh_eq",
   "owner": "Claude:S-ELEM-C",
   "branch": "claude/s81-surx-engram-1015",
   "tag": "g1",
   "purpose": "S81 SU rx cluster RA lane BACK leaf (1 lane: Horner in u^2, 2up, max(x,0)+l, sqrt), x16 in the cluster",
   "views_to": "physical/ref_tile/s81su_rxsb_ref/views",
-  "record_to": "results/rtl/ref_tile/s81su_rxsb_ref"
+  "record_to": "results/rtl/ref_tile/s81su_rxsb_ref",
+  "benches": [
+   {
+    "name": "rxh_eq_exact",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "pass_regex": "x0 s2 RXH_EQ PASS shadow_fail=0",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; NJOB=48 XLIST=0 RAW=1 bash tools/s81_suhc/rxh_eq_gate.sh {RUN}/bench/eq0 \"1 2\""
+   },
+   {
+    "name": "rxh_eq_mut1",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "fail_regex": "x1 s1 RXH_EQ FAIL",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; NJOB=48 XLIST=1 RAW=1 bash tools/s81_suhc/rxh_eq_gate.sh {RUN}/bench/eq1 \"1\""
+   }
+  ]
  },
  "std_area_um2": 11000,
  "params": {},
