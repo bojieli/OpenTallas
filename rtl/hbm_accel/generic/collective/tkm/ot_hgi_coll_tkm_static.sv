@@ -51,6 +51,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
     endfunction
 
  reg[31:0]tick,ingress_end,first,clear2,read2,second,finish;
+ reg[31:0]valid_pairs;reg[12:0]k;
  reg[23:0]flits;reg[12:0]nout,cells;reg[7:0]gb,g;
  reg[15:0]pf;reg[39:0]ob,rb;reg hr;
  reg[2179:0]beat;
@@ -121,7 +122,14 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
    if(busy)begin
     tick<=tick+1;stat_cycles<=tick+1;
     if(del_valid!=expected||del_slot!=expected)fault<=1;
+    if(issue1)begin:count_pairs
+     integer added;added=0;for(integer s=0;s<4;s=s+1)added=added+int'(raw[s][83]);
+     valid_pairs<=valid_pairs+32'(added);
+    end
     if(capture)for(integer l=0;l<4;l=l+1)if(expected[l])begin
+     for(integer s=0;s<8;s=s+1)begin
+      if(del_flit[545*l+32*s+23+:8]==8'hff&&del_flit[545*l+32*s+:23]!=0&&del_flit[545*l+32*s+:32]!=32'hffffffff)fault<=1;
+     end
      if(!del_flit[545*l+544]||del_flit[545*l+528+:8]<gb||del_flit[545*l+528+:8]>=gb+g)fault<=1;
     end
     if(conv_pipe[2]&&tick<clear2)begin
@@ -150,7 +158,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
      end
     end
     if(tick==finish)begin
-     if(cap1!=32'(cells)||cap2!=32'(cells)||pending_r)fault<=1;
+     if(cap1!=32'(cells)||cap2!=32'(cells)||pending_r||32'(nout)!=((32'(k)<valid_pairs)?32'(k):valid_pairs))fault<=1;
      busy<=0;done<=1;
     end
    end
@@ -163,7 +171,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
      fault<=cfg_g==0||cfg_g>96||cfg_pf!=(16'(cfg_n)+7)/8||cfg_nout==0||cfg_nout>KMAX||cfg_k>KMAX||
         cfg_nout>cfg_k||cfg_obase[3:0]!=0||cfg_rbase[3:0]!=0;
      busy<=1;tick<=0;stat_cycles<=0;ingress_end<=i_;first<=a_;clear2<=b_;read2<=r_;second<=s_;finish<=f_;
-     flits<=24'(fl_);cells<=13'(c_);nout<=cfg_nout;gb<=cfg_gbase;g<=cfg_g;pf<=cfg_pf;ob<=cfg_obase;rb<=cfg_rbase;hr<=cfg_has_r;
+     valid_pairs<=0;k<=cfg_k;flits<=24'(fl_);cells<=13'(c_);nout<=cfg_nout;gb<=cfg_gbase;g<=cfg_g;pf<=cfg_pf;ob<=cfg_obase;rb<=cfg_rbase;hr<=cfg_has_r;
      cap1<=0;cap2<=0;conv_pipe<=0;pending_r<=0;
     end
    end
