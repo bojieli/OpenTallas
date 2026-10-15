@@ -37,13 +37,27 @@ r=json.loads((Path(sys.argv[1]).parent/'receipt.json').read_text())
 assert r['exit']==0 and '-GLV=6' in r['command'] and '-GG=3072' in r['command'], r
 PY
 # LV6_HIER=1: hierarchical LV6 build (hier FP blocks are separate archives).
-if [[ "${LV6_HIER:-0}" == 1 ]]; then mapfile -t lv6a < <(find "$lv6" -name '*.a' | sort); else lv6a=("$lv6/Vot_hdc_core_vector_weight_native_candidate__ALL.a"); fi
+core_flags=()
+if [[ "${LV6_HIER:-0}" == 1 ]]; then
+ [[ -n "${PROBE_OBJ:-}" ]] || { echo 'hierarchical core requires a probe rebuilt against its own generated root' >&2; exit 2; }
+ python3 - "$lv6" "$probe" <<'PYPROBE'
+import hashlib,sys
+from pathlib import Path
+core,probe=map(Path,sys.argv[1:])
+manifest=(probe.parent/'inputs.sha256').read_text().splitlines()
+for f in (core/'Vot_hdc_core_vector_weight_native_candidate___024root.h',probe):
+ h=hashlib.sha256(f.read_bytes()).hexdigest()
+ assert any(line.split(maxsplit=1)==[h,str(f)] for line in manifest), f'probe provenance mismatch: {f}'
+PYPROBE
+ core_flags=(-DOT_CORE_HIERARCHICAL=1)
+ python3 "$stage/src/core_arithmetic_receipt.py" --core "$lv6" --output "$out/core_arithmetic.json"
+ mapfile -t lv6a < <(find "$lv6" -name '*.a' | sort); else lv6a=("$lv6/Vot_hdc_core_vector_weight_native_candidate__ALL.a"); fi
 arch=("${lv6a[@]}" "$front/Vot_qwen_tp8_native_services_frontend_native59__ALL.a"
  "$sector/Vot_qwen_tp8_kv_sector_adapter__ALL.a" "$pc/Vqwen_native_hbm_pc_provider__ALL.a"
  "$helper/Vot_qwen_native59__ALL.a" "$host/Vqkd_host_token_service__ALL.a" "$board/Vqkd_host_board_port_fixture__ALL.a"
  "$alloc/Vot_qwen_tp8_token_epoch_allocator__ALL.a" "$cohort/Vot_qwen_tp8_token_cohort__ALL.a" "$embed/obj/Vot_qwen_tp8_embedding_core__ALL.a")
 sha256sum $(find "$stage/src" -maxdepth 1 -type f) "${arch[@]}" "$probe" "$collector" "$kso/libot_qwen_tp8_attention_service.so" $(ls "$kso"/generated_sources.sha256 "$kso"/source.sha256 2>/dev/null) "$kernel/sim_hdc_v41x_fastfp_dpi.o" "$kernel/sim_nhb_fp_lat_dpi.o" > "$out/inputs.sha256"
-g++ -std=c++20 -O1 -pthread -rdynamic "${inc[@]}" "$stage/src/whole_token.cpp" "$probe" -Wl,--start-group "${arch[@]}" -Wl,--end-group \
+g++ -std=c++20 -O1 -pthread -rdynamic "${core_flags[@]}" "${inc[@]}" "$stage/src/whole_token.cpp" "$probe" -Wl,--start-group "${arch[@]}" -Wl,--end-group \
  "$kernel/sim_hdc_v41x_fastfp_dpi.o" "$kernel/sim_nhb_fp_lat_dpi.o" \
  "$vroot/verilated.cpp" "$vroot/verilated_threads.cpp" "$vroot/verilated_dpi.cpp" "$kso/libot_qwen_tp8_attention_service.so" -Wl,-rpath,"$kso" -ldl -o "$out/whole_token" > "$out/link.log" 2>&1
 sha256sum "$out/whole_token" > "$out/binary.sha256"
