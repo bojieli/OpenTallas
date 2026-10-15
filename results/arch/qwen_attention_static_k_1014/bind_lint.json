@@ -1,0 +1,22 @@
+{
+  "scope": "FULL_SHAPE_SERVICE_STATIC_K_ELABORATION_ONLY",
+  "status": "PASS",
+  "source_commit": "7e9ff562c",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-3576293-1792031373",
+  "session": 94793,
+  "exit": 0,
+  "static_k_channels": 32,
+  "walltime_seconds": 359.269,
+  "verilator_allocated_mb": 13095.891,
+  "parameters": {
+    "KVD_HEADS": 1,
+    "KVD_Q_FP32": 1,
+    "KVD_QK_ONLY": 1,
+    "KVD_ECTL3": true,
+    "STATIC_K_TRANSPORT": 1
+  },
+  "arithmetic": "C/DPI stand-ins for binding-only elaboration; not native arithmetic proof",
+  "full_native_token_qualified": false,
+  "static_production_schedule_qualified": false
+}

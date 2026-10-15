@@ -13,6 +13,8 @@ mkdir -p "$out"; cd "$root"
 sha256sum $src "$here/qwen_tp8_attention_service_rtl.vlt" "$0" > "$out/source.sha256"
 start=$(date +%s)
 $vl --cc --build --hierarchical -j ${JOBS:-1} -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qwen_tp8_attention_service \
+ -GSTATIC_K_TRANSPORT="${STATIC_K_TRANSPORT:-0}" -GK_RETURN_LATENCY="${K_RETURN_LATENCY:-16}" \
+ -GSTATIC_V_TRANSPORT="${STATIC_V_TRANSPORT:-0}" -GV_RETURN_LATENCY="${V_RETURN_LATENCY:-17}" \
  +define+KVD_HEADS=1 +define+KVD_Q_FP32=1 +define+KVD_QK_ONLY=1 +define+KVD_ECTL3 -CFLAGS "-O2 -fPIC" --Mdir "$out/obj" "$here/qwen_tp8_attention_service_rtl.vlt" $src > "$out/build.log" 2>&1
 cd "$out/obj"
 libs=$(find . -name "*.a" | sort)
