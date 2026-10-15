@@ -54,7 +54,7 @@ SV
 python3 - "$d/tb_dma_back_static.sv" "$out/production_tb.sv" <<'PYCODE'
 import pathlib,sys
 s=pathlib.Path(sys.argv[1]).read_text()
-a='while(cycle<drain_at+84)';b='while(cycle<drain_at+82)'
+a='while(cycle<drain_at+84)';b='while(cycle<drain_at+81)'
 assert s.count(a)==1
 s=s.replace(a,b).replace("clear();repeat(3)@(negedge clk);rst_n=1;", "clear();repeat(3)@(negedge clk);rst_n=1;repeat(3)@(negedge clk);")
 # VM producer is actually prefilled before the command. Advance only issue
@@ -64,7 +64,7 @@ for a,b in [('source_at=start_at+16;drain_at=source_at+10','source_at=start_at+1
  s=s.replace(a,b)
 pathlib.Path(sys.argv[2]).write_text(s)
 PYCODE
-echo IC_SRAM_COMMAND_CAPTURE_1_VM_ISSUE_ADVANCE_1_DRAIN_WB_CALENDAR_UNCHANGED_CANDIDATE
+echo IC_SRAM_CAPTURE_1_VM_ISSUE_ADVANCE_1_PRE_COMMAND_ADVANCE_3_DRAIN_WB_UNCHANGED_CANDIDATE
 mr=physical/asap7_memory_macros
 iverilog -g2012 -s tb_dma_back_static -o "$out/production.vvp" "$out/banks.sv" "$out/vp.sv" "$out/as_back.sv" "$d/ot_hgi_b2_swap_disp_static.sv" "$d/ot_hgi_b2_swap_grp_static.sv" rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv "$mr/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v" "$mr/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v" "$out/production_tb.sv"
 vvp "$out/production.vvp" > "$out/production.log" 2>&1 || { cat "$out/production.log";exit 1; };cat "$out/production.log";grep -q 'PASS DMA static actual production' "$out/production.log"
