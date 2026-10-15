@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       admits   427 GB (avail 653, growth 131, headroom 48, waiters 0/0 GB) load 78/128 running 18 disk 560 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-336382-1792040022 after 0 s
+case reduce_8w_x16 kind=pos latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL mismatches=704 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=1024 compiled_span=567
+case reduce_1w_x9_odd kind=pos latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL mismatches=32 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=72 compiled_span=448
+case reduce_3w_x8_odd kind=pos latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL mismatches=112 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=192 compiled_span=463
+case gather_1w_x6 kind=pos latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=384 compiled_span=418
+case gather_4w_x4 kind=pos latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=1024 compiled_span=498
+case mixed_8w_x24 kind=pos latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL mismatches=448 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=7808 compiled_span=1691
+case fault_nan kind=inject latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK PASS mismatches=0 extra=0 out_err=8 fault=11111111 code=0000100001000010000100001000010000100001 words_out=256 compiled_span=471
+case fault_inf kind=inject latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK PASS mismatches=0 extra=0 out_err=8 fault=11111111 code=0000100001000010000100001000010000100001 words_out=256 compiled_span=471
+/srv/opentallas-scratch/claude/qcoll-static-1014/src/tools/hdc_golden.py:97: RuntimeWarning: overflow encountered in add
+  return z(np.asarray(a, dtype=F) + np.asarray(b, dtype=F))
+case fault_overflow kind=inject_big latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK PASS mismatches=0 extra=0 out_err=8 fault=11111111 code=0000100001000010000100001000010000100001 words_out=256 compiled_span=471
+case fault_tag kind=fault latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK PASS mismatches=200 extra=0 out_err=0 fault=01011101 code=0000000010000000001000010001100000000010 words_out=256 compiled_span=471
+case fault_drop_word kind=fault latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK PASS mismatches=176 extra=0 out_err=0 fault=00110000 code=0000000000001000100000000000000000000000 words_out=256 compiled_span=471
+case fault_late_producer kind=fault latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK PASS mismatches=160 extra=0 out_err=0 fault=00110000 code=0000000000001000100000000000000000000000 words_out=704 compiled_span=596
+case fault_unreserved_schedule kind=conf latu=19 lats=344 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK PASS mismatches=248 extra=0 out_err=0 fault=11111111 code=1000010000100001000010000100001000010000 words_out=1752 compiled_span=621
+COLL_TP8S FAIL mutant=OT_TP8S_MUT_RANK failed=reduce_8w_x16,reduce_1w_x9_odd,reduce_3w_x8_odd,mixed_8w_x24
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-336382-1792040022): exit 1

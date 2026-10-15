@@ -1,0 +1,181 @@
+{
+ "name": "qkd_llr_ctl",
+ "top": "ot_qkvd_d2d_llr_ctl",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216,
+  "h": 172.8
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "p_tx_up",
+   "p_tx_v",
+   "p_rx_v",
+   "p_rx_flit",
+   "p_tx_flit"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "a_tx_up",
+   "a_tx_v",
+   "a_rx_v",
+   "a_rx_flit",
+   "fault",
+   "fault_cause"
+  ],
+  "W": [
+   "q_wa",
+   "q_ra",
+   "q_dout"
+  ],
+  "E": []
+ },
+ "pin_ranges": {
+  "p_tx_up": [
+   5,
+   6
+  ],
+  "p_tx_v": [
+   8,
+   9
+  ],
+  "p_rx_v": [
+   10,
+   11
+  ],
+  "p_rx_flit": [
+   30,
+   100
+  ],
+  "p_tx_flit": [
+   110,
+   180
+  ],
+  "clk": [
+   8,
+   9
+  ],
+  "rst_n": [
+   10,
+   11
+  ],
+  "a_tx_up": [
+   12,
+   13
+  ],
+  "a_tx_v": [
+   14,
+   15
+  ],
+  "a_rx_v": [
+   16,
+   17
+  ],
+  "fault": [
+   18,
+   19
+  ],
+  "fault_cause": [
+   20,
+   21
+  ],
+  "a_rx_flit": [
+   50,
+   180
+  ],
+  "q_wa": [
+   80,
+   86
+  ],
+  "q_ra": [
+   88,
+   94
+  ],
+  "q_dout": [
+   8,
+   164
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M5"
+ },
+ "recipe": 2,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "structural_change": "Real CRC16/retry sequence/control leaf separated from four independently clocked replaybanks. Native1776generic clocksink bound; pin assignment from KVdie lead2026-10-14 uses PHY N adapter S, replay quarterwords W/E. q_ra predictedprefetch launch requires actual native audit. No qualification claim from passing RTL.",
+ "job": {
+  "owner": "Codex:q-link-replay",
+  "branch": "codex/q-link-replay-1014",
+  "tag": "r1",
+  "purpose": "Real native Qwen CRC/retry replay leaf with independent clock and registered read pin face",
+  "benches": [
+   {
+    "name": "native_split_exact_loss",
+    "cmd": "bash rtl/test/qwen_split/run_native_split_link.sh {RUN}/bench/positive -Ptb_qwen_split_link.ERRP=501",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 3,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "SPLIT_LINK_PASS"
+   },
+   {
+    "name": "native_split_replay_mut",
+    "cmd": "bash rtl/test/qwen_split/run_native_split_link.sh {RUN}/bench/mutant -Ptb_qwen_split_link.MUT=6",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 3,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "SPLIT_LINK_PASS"
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_split",
+   "rtl/test/qwen_split",
+   "rtl/qwen_sys",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/qwen_kv_die_phy",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qkd_llr_ctl/views",
+  "record_to": "results/rtl/ref_tile/qkd_llr_ctl"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "physical/ref_tile/qkd_llr_ctl/assigned_pins.tcl"
+}

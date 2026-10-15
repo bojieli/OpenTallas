@@ -1,0 +1,193 @@
+{
+  "schema": "opentallas.die_assigned_leaf_pins.v1",
+  "master": "ot_qwen_static_slot_ctl",
+  "contract": "Qwen KV/system v1.3 candidate",
+  "outline": {
+    "w": 216,
+    "h": 172.8
+  },
+  "pins": {
+    "N": [
+      "p_tx_up",
+      "p_tx_v",
+      "p_tx_flit",
+      "p_rx_v",
+      "p_rx_flit"
+    ],
+    "S": [
+      "epoch_begin",
+      "epoch",
+      "wr_v",
+      "wr_slot",
+      "rd_v",
+      "rd_slot",
+      "rx_expect_v",
+      "rx_expect_slot",
+      "wr_observed_v",
+      "rx_v",
+      "rx_flit",
+      "epoch_abort",
+      "fault_cause",
+      "clk",
+      "rst_n"
+    ],
+    "W": []
+  },
+  "pin_ranges": {
+    "p_tx_up": [
+      8,
+      9
+    ],
+    "p_rx_v": [
+      20,
+      21
+    ],
+    "p_tx_v": [
+      25,
+      26
+    ],
+    "p_rx_flit": [
+      30,
+      100
+    ],
+    "p_tx_flit": [
+      110,
+      180
+    ],
+    "fault_cause": [
+      194,
+      198
+    ],
+    "clk": [
+      205,
+      207
+    ],
+    "rst_n": [
+      202,
+      203
+    ],
+    "epoch_begin": [
+      3,
+      4
+    ],
+    "epoch": [
+      5,
+      9
+    ],
+    "wr_v": [
+      11,
+      12
+    ],
+    "wr_slot": [
+      14,
+      18
+    ],
+    "rd_v": [
+      20,
+      21
+    ],
+    "rd_slot": [
+      23,
+      27
+    ],
+    "rx_expect_v": [
+      29,
+      30
+    ],
+    "rx_expect_slot": [
+      32,
+      36
+    ],
+    "rx_v": [
+      45,
+      46
+    ],
+    "rx_flit": [
+      50,
+      180
+    ],
+    "epoch_abort": [
+      190,
+      191
+    ],
+    "wr_observed_v": [
+      38,
+      39
+    ]
+  },
+  "split_ports": {
+    "q_data": [
+      {
+        "bits": [
+          136,
+          0
+        ],
+        "face": "W",
+        "range": [
+          8,
+          76
+        ]
+      },
+      {
+        "bits": [
+          273,
+          137
+        ],
+        "face": "W",
+        "range": [
+          96,
+          164
+        ]
+      },
+      {
+        "bits": [
+          410,
+          274
+        ],
+        "face": "E",
+        "range": [
+          8,
+          76
+        ]
+      },
+      {
+        "bits": [
+          547,
+          411
+        ],
+        "face": "E",
+        "range": [
+          96,
+          164
+        ]
+      }
+    ]
+  },
+  "face_layers": {
+    "W": "M4",
+    "E": "M4",
+    "N": "M5",
+    "S": "M5"
+  },
+  "requires_io_tcl": "q_data groups must be placed per bit by these four ranges; io_tcl must also place every other port from pins/pin_ranges",
+  "placement": {
+    "xy": [
+      237.6,
+      97.2
+    ],
+    "orient": "R0",
+    "bank_plan": "qkd_llr_replay_leaf.json"
+  },
+  "qualification": "ASSIGNED_PINS_ONLY; actual mapped fit, native pin/clock/reset and TT/FF/DRC required",
+  "source_commit": "cd708c730",
+  "source_file": "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "new_protocol_note": "Compiled epoch/write/read/expected-RX calendar ports require real die producers. No metadata tieoffs; root owns calendar and adoption. Assignment does not qualify new transport or measured cost.",
+  "observation_contract": {
+    "wr_observed_v": "actual source write event; compiler expectation is fault check only, never normal issue gating",
+    "fault_cause_bits": 8,
+    "normal_latency_edges": {
+      "tx": 3,
+      "rx": 1
+    }
+  }
+}

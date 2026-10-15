@@ -1,0 +1,42 @@
+{
+  "scope": "UNQUALIFIED endpoint-center cut demand from actual failed global-route ODB. Not track or DRC signoff; inst bbox centers approximate pin locations. GRT overflow is authoritative.",
+  "serial": {
+    "all_nets": 22921,
+    "x_cut": {
+      "nets_crossing": 286,
+      "cut_coordinate_dbu": 276060.0
+    },
+    "y_cut": {
+      "nets_crossing": 5547,
+      "cut_coordinate_dbu": 9855.0
+    },
+    "signal_x_cut": {
+      "nets_crossing": 267,
+      "cut_coordinate_dbu": 276060.0
+    },
+    "signal_y_cut": {
+      "nets_crossing": 5482,
+      "cut_coordinate_dbu": 9855.0
+    }
+  },
+  "nt": {
+    "all_nets": 29552,
+    "x_cut": {
+      "nets_crossing": 354,
+      "cut_coordinate_dbu": 282684.0
+    },
+    "y_cut": {
+      "nets_crossing": 6095,
+      "cut_coordinate_dbu": 9585.0
+    },
+    "signal_x_cut": {
+      "nets_crossing": 328,
+      "cut_coordinate_dbu": 282684.0
+    },
+    "signal_y_cut": {
+      "nets_crossing": 6011,
+      "cut_coordinate_dbu": 9585.0
+    }
+  },
+  "structural_cause": "Both D copies make data input nets multi-sink; old leaf_inhold skipped all 1137 ports; serial CTS inserted 11428 distributed hold buffers. Shared multi-D pad fix restores exactly one configured input pad before D fanout and leaves asynchronous reset loads on original port net. SDC/native budgets remain unchanged."
+}

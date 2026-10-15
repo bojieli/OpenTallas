@@ -1,0 +1,23 @@
+{
+  "cell": "ot_hgi_coll_pring_add_lane",
+  "view": "physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_add_lane",
+  "lib_cell": "ot_hgi_coll_pring_add_lane",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 97.6,
+  "spread_ps": 4.2,
+  "outputs": 33,
+  "inputs": 66,
+  "launch_ps": 172.0,
+  "launch_pin": "valid_out",
+  "capture_ps": 125.8,
+  "capture_pin": "b[31]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+}

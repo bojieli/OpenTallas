@@ -1,0 +1,272 @@
+{
+ "schema": "opentallas.s81_suhc.hc_gate.run.v1",
+ "generated_utc": "2026-10-15T02:31:55.054198Z",
+ "ng": 256,
+ "fp": "dpi",
+ "mut": 0,
+ "amut": 0,
+ "lvm": 10,
+ "hier": 3,
+ "cnl_pin": 1,
+ "chain_step": 6,
+ "lane_specialize": 1,
+ "pipe": 1,
+ "pipe_pd": 40,
+ "ntree": 1,
+ "nt_k": 67,
+ "runs": [
+  {
+   "run": "golden_L0_L2",
+   "jobs": 20,
+   "done": 7,
+   "err_rows": 1940,
+   "rows": 1940,
+   "fault": 0,
+   "fault_code": 0,
+   "cycles": 30199,
+   "bad_tag": 0,
+   "ok": false,
+   "job_cycles": [
+    {
+     "op": 0,
+     "kind": 5,
+     "start": 16,
+     "done": 206
+    },
+    {
+     "op": 1,
+     "kind": 5,
+     "start": 192,
+     "done": 382
+    },
+    {
+     "op": 2,
+     "kind": 5,
+     "start": 368,
+     "done": 557
+    },
+    {
+     "op": 3,
+     "kind": 5,
+     "start": 544,
+     "done": 734
+    },
+    {
+     "op": 4,
+     "kind": 0,
+     "start": 720,
+     "done": 1069
+    },
+    {
+     "op": 5,
+     "kind": 0,
+     "start": 1056,
+     "done": 1406
+    },
+    {
+     "op": 6,
+     "kind": 2,
+     "start": 1392,
+     "done": 1423
+    }
+   ],
+   "mismatches": [
+    "mismatch row 3072 got 0000000000000000 want f67379e8d8d9e0db",
+    "mismatch row 3073 got 0000000000000000 want 6478f9e765636fc4",
+    "mismatch row 3074 got 0000000000000000 want dd5d72dee7565ff8",
+    "mismatch row 3075 got 0000000000000000 want f1f0db5ee4e561e9",
+    "mismatch row 3076 got 0000000000000000 want f7fcf455f77af86c"
+   ]
+  },
+  {
+   "run": "stress_0",
+   "jobs": 20,
+   "done": 7,
+   "err_rows": 1940,
+   "rows": 1940,
+   "fault": 0,
+   "fault_code": 0,
+   "cycles": 30199,
+   "bad_tag": 0,
+   "ok": false,
+   "job_cycles": [
+    {
+     "op": 0,
+     "kind": 5,
+     "start": 16,
+     "done": 206
+    },
+    {
+     "op": 1,
+     "kind": 5,
+     "start": 192,
+     "done": 382
+    },
+    {
+     "op": 2,
+     "kind": 5,
+     "start": 368,
+     "done": 557
+    },
+    {
+     "op": 3,
+     "kind": 5,
+     "start": 544,
+     "done": 734
+    },
+    {
+     "op": 4,
+     "kind": 0,
+     "start": 720,
+     "done": 1069
+    },
+    {
+     "op": 5,
+     "kind": 0,
+     "start": 1056,
+     "done": 1406
+    },
+    {
+     "op": 6,
+     "kind": 2,
+     "start": 1392,
+     "done": 1423
+    }
+   ],
+   "mismatches": [
+    "mismatch row 3072 got 0000000000000000 want c9ea6df16e73e7f5",
+    "mismatch row 3073 got 0000000000000000 want 61efec68eaf47373",
+    "mismatch row 3074 got 0000000000000000 want f2efcf70ef65604d",
+    "mismatch row 3075 got 0000000000000000 want fce3d9d5e1e8c17c",
+    "mismatch row 3076 got 0000000000000000 want 3865615361ec62e8"
+   ]
+  },
+  {
+   "run": "stress_1",
+   "jobs": 20,
+   "done": 7,
+   "err_rows": 1940,
+   "rows": 1940,
+   "fault": 0,
+   "fault_code": 0,
+   "cycles": 30199,
+   "bad_tag": 0,
+   "ok": false,
+   "job_cycles": [
+    {
+     "op": 0,
+     "kind": 5,
+     "start": 16,
+     "done": 206
+    },
+    {
+     "op": 1,
+     "kind": 5,
+     "start": 192,
+     "done": 382
+    },
+    {
+     "op": 2,
+     "kind": 5,
+     "start": 368,
+     "done": 557
+    },
+    {
+     "op": 3,
+     "kind": 5,
+     "start": 544,
+     "done": 734
+    },
+    {
+     "op": 4,
+     "kind": 0,
+     "start": 720,
+     "done": 1069
+    },
+    {
+     "op": 5,
+     "kind": 0,
+     "start": 1056,
+     "done": 1406
+    },
+    {
+     "op": 6,
+     "kind": 2,
+     "start": 1392,
+     "done": 1423
+    }
+   ],
+   "mismatches": [
+    "mismatch row 3072 got 0000000000000000 want d5800080f8008437",
+    "mismatch row 3073 got 0000000000000000 want 32a1f89370000008",
+    "mismatch row 3074 got 0000000000000000 want 80000000807680d4",
+    "mismatch row 3075 got 0000000000000000 want 8080418002b1010a",
+    "mismatch row 3076 got 0000000000000000 want 6dfaf5003d78bd7c"
+   ]
+  }
+ ],
+ "status": "fail",
+ "pad_hard": 0,
+ "tile_mut": "ot_s81_hc_ctfx_nt",
+ "tile_mut_edit": [
+  "if (!rst_in) v <= 0; else v <= fv;",
+  "if (!rst_in) v <= 0; else v <= 0;"
+ ],
+ "tiles": null,
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "source_sha256": {
+  "rtl/test/sim_hdc_v41x_fastfp_dpi.sv": "10e824a48481aed1cefda70a785dae6fb574ad2f88e7ea01041da55bcbfd2545",
+  "rtl/test/sim_hdc_v41x_fastfp_wrap.sv": "c75679080901259e29aa150a804927d6f5e0934ebf2dcc2cf7be09644f2f8459",
+  "rtl/test/sim_hdc_v41x_fastfp_dpi.cpp": "0454f0c8bbbb5dead3229ce5e571f89de9b65d3b824542cb45454b1b0a78101e",
+  "rtl/test/sim_hdc_fp32_f12_dpi_tops.sv": "863a6af4522f3677fc8e196e1a60c3082ff21d35e0539344e6b87461e521184b",
+  "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.sv": "6ec0843db11721a81d6049047f04e9d8552157d32b8d0344dcaaef7b34386cc9",
+  "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.cpp": "c00bcabe9e0cfdbb1f01ea410819996c85acdfc1daf1edd8c50e85c8a486f974",
+  "rtl/test/sim_hdc_fp32_lat_tops.sv": "4f8fbce86ce9adb2b90aee5fd08640026d4bcce5546908eddb7813d2000dc23e",
+  "rtl/test/sim_hdc_prefix_beh.sv": "75c1a57d38d81da07b7ff70a37d6660c563ccfa6fa921edc53b21b68635b50b5",
+  "rtl/test/sim_dsrom_fp32_add_l6_dpi.sv": "11fae84900616ad993513b319366beb0f44637b3be420caaa9c98ddd652b7fc2",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv": "ca1e3bbc1bd884ba4a93e886be743c921b8bd9bb1c1adf874773e04db1fda4a6",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv": "a0e6085f7995bcdc2dd298cba373371fa6a5a42bd8104481b556245aa07dee33",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpin.sv": "e976ff6dc7191aabc1790b98625e6c58da88765f618399497669a728b33bb360",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv": "13da39dd43f6b874db5d52af59e252c8a187e3e43d69349cc7a1628ce0088b6b",
+  "rtl/link/ot_fifo_sram_fwft.sv": "b50f9c177198b74b9749e1f9780e63820586d06c035d2a5bcd43c93a31392685",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_croot.sv": "94cc6d07b506015829a7a1673503921f81bb30fcce08d7d29a69863cc86d418e",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crooty.sv": "d52e67a0b6c81967b4a00d58adb3358a4d96d59cd29dad7cdf4f55f72b32047d",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crootr.sv": "9469da8aed2f8826a064662d22cd9194b5b94e87f07af107ff85caa908e10099",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv": "46ac12fc2932d5dd4a50593d5c26a8683fbbd76e1d62c975b9b4609f614e8e27",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hroot.sv": "d22b3923be74dd9581e7d44de2b0ea6a8a1d3c5304979fe5e973f929c599b27b",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cseq.sv": "9b6e4bca86f05e56d949dc382af6febae533f02a30b35f9f52f7198a664e4dad",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crx.sv": "82e12586a79afe191d01c97409f9a400cf8a023ef30cfc3e9c0a1ce5eeb995a8",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_caq.sv": "57ab44125365ec1e03d4a624079a23925de579ff99348f2a4f3ab1b1b18dc26a",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cntree.sv": "730a96d59983fdd675691c4f8e5467807563b7dd6dd57267379d909fe440b6e1",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccr.sv": "cc10441fcd181aae7e1644d6c85f3c642268b4751c4aca4863d2ed9daeba2f88",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpad.sv": "b71ea6ed2e1f7843fdfc681600813024fe3594339240068358645e59e97f8b29",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf.sv": "66e3539c087733db60c9b8ddf481cb0b49f09276dd444295abe81dfbdb45a42d",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctile.sv": "daae86b539f59bff5b5077cbb778af16dc900cb11f4f5c292bc3c8c5ead860a1",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "0c59126aea67920489f47ce5c3fdd12b197f90c2aeb4973de83c59da7dcac74d",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv": "046421309e9687cf2304e916786c6986de741e4cfb4b9c3a0c1d451af22b18a2",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv": "65082c19e4f0ad9c5b8e3ee49ab81c2d3983dcdcbcbb53c8abe827d1c8addf8e",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv": "23aa6cf6006c2ecd9012903246a18efcfd616c1ff9c453ca5a5a5b18ada134d6",
+  "rtl/lib/ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+  "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+  "rtl/lib/ot_skid_buffer.sv": "4837dc61b4a89a53e68b05f16b46e1717e79f4817bf5b812afba0dc3cd32008a",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv": "c30d4547f90149895e501063639ca1ad0e394fb23031bd4df21f947385eac638",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+  "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+  "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv": "2f7ec21829e132dc0be7fb8c7de896e4a50456220498f1dc7ee298a386a98aa1",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+  "rtl/dsrom_sys/s81_suhc/test/tb_s81_hc_master.sv": "170845d536ca15fe150a2fb7075c44c4915ab71312ca4377a273c94e637b9971"
+ }
+}

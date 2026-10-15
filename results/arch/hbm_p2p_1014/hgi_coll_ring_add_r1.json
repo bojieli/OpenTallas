@@ -1,0 +1,79 @@
+{
+  "kind": "tile",
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "layer_cap": "M5",
+  "route": {
+    "peak_ram_gb": 24,
+    "threads": 8
+  },
+  "job": {
+    "owner": "Codex:H-COLL",
+    "branch": "claude/hbm-p2p-coll-1014",
+    "tag": "r1",
+    "hold_merge": "Individual leaf route only; native parent pin/reset/clock integration qualification remains required.",
+    "purpose": "Real native leaf with official H-DIE pins, exact bench and sensitized negative controls",
+    "benches": [
+      {
+        "name": "native_ring_r20",
+        "cmd": "JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_pring_bench.sh {RUN}/native_ring_r20 -GRLY=20",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "native_ring_carry",
+        "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_pring_bench.sh {RUN}/native_ring_carry -GRLY=20 -GMUT_CARRY=1; then exit 0; elif test -s {RUN}/native_ring_carry/run.log && grep -q \"carry arithmetic mismatch\" {RUN}/native_ring_carry/run.log; then exit 1; else exit 0; fi",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "native_ring_order",
+        "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_pring_bench.sh {RUN}/native_ring_order -GRLY=20 -GMUT_ORDER=1; then exit 0; elif test -s {RUN}/native_ring_order/run.log && grep -q \"carry arithmetic mismatch\" {RUN}/native_ring_order/run.log; then exit 1; else exit 0; fi",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ]
+  },
+  "name": "hgi_coll_ring_add_r1",
+  "top": "ot_hgi_coll_pring_add_lane",
+  "sources": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv"
+  ],
+  "params": {
+    "LAT": 8
+  },
+  "pins": {
+    "S": [
+      "valid_in",
+      "a",
+      "b"
+    ],
+    "N": [
+      "y",
+      "valid_out"
+    ],
+    "W": [
+      "clk",
+      "rst_n"
+    ]
+  },
+  "std_area_um2": 527,
+  "io_tcl": "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_ring_add_n2_io.tcl"
+}

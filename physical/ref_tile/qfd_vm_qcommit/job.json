@@ -1,24 +1,36 @@
 {
- "name": "qfd_vm_qcommit-obs1-COMMIT",
+ "name": "qfd_vm_qcommit-raw2-ff602c0d7",
  "block": "qfd_vm_qcommit",
  "ref_tile": true,
- "owner": "Codex:el1014-qwen-dvm-build",
- "purpose": "Actual copy0 Q-row write commit observer.32 separate native roots mirror closed bank input flops at its SRAM consume edge; no bank RTL change.",
- "threads": 8,
- "peak_ram_gb": 16,
+ "owner": "Claude:q_compute_die",
+ "purpose": "39real raw SRAM consume observers banks24..62; independent root at each actual macro consumeedge; raw2: M5 PG pitch 2.7 (raw1 CLOSED TT+343.68/FF+28.97 but export child_lint (b) FAIL: 2 M5 stripes/net span 42% < 50% of the 12.96-um width, collect crashed twice)",
+ "threads": 4,
+ "peak_ram_gb": 8,
  "source": {
-  "branch": "claude/qwen-dvm-1014",
-  "commit": "COMMIT",
+  "branch": "claude/qwen-split-compute-1014",
+  "commit": "ff602c0d7",
   "extra_paths": [
    "rtl/qwen_sys/vm_nox_20261014",
-   "rtl/hdc"
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/qwen_sys/vm_plane_20261013",
+   "rtl/qwen_sys/vm_die_split_20261012",
+   "rtl/qwen_sys/rtl_finish_20261007",
+   "rtl/qwen_sys/dvm_20261014",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/physical/ot_qwen_tree_delay.sv",
+   "rtl/physical/ot_qwen_tree_delay_tiles.sv",
+   "rtl/qwen_split/qfd_su_vm_pack.sv",
+   "tools/qwen_tp8/vm_die_static_bench.sh",
+   "tools/qwen_tp8/vm_attention_commit_gate.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
   ]
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_vm_qcommit #(.LAW(8), .QLINE(13)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_vm_qcommit #(.LAW(8)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -27,15 +39,23 @@
     ]
    },
    {
-    "name": "static_macro",
-    "cmd": "bash tools/qwen_tp8/vm_die_static_bench.sh {RUN}/bench/obs -GMEM=1",
+    "name": "actual_macro_consumption_and_eight_fault_mutants",
+    "cmd": "bash tools/qwen_tp8/vm_attention_commit_gate.sh {RUN}/bench/raw_commit",
     "expect": "pass",
     "pass_regex": "^PASS vm_die_static",
     "threads": 8,
-    "peak_ram_gb": 32,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "actual_macro_missing_commit_mutant",
+    "cmd": "ulimit -c 0; {RUN}/bench/raw_commit/obj/Vtb_qfd_vm_die_static +COMMIT_MUT=1",
+    "expect": "fail",
+    "fail_regex": "FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
    }
   ],
   "calibrate": {
@@ -48,8 +68,8 @@
    "logs": [
     "{RUN}/routes/{LABEL}/flow.log"
    ],
-   "threads": 8,
-   "peak_ram_gb": 16
+   "threads": 4,
+   "peak_ram_gb": 8
   },
   "collect": {
    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_vm_qcommit --out {RUN}/record/views/qfd_vm_qcommit  > {RUN}/record/route/export.log 2>&1"
@@ -86,7 +106,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_qcommit/qfd_vm_qcommit-obs1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_qcommit/qfd_vm_qcommit-raw2-ff602c0d7"
   }
  ],
  "cycles_added": 0,
