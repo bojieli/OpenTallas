@@ -41,7 +41,7 @@
   "single_user_latency": "candidate SYS1 raw accumulation is53edges later than flat SYS0 (86 vs33 leaf tap), calendar must move; exact scalar readiness and row period pending actual proof",
   "canonical_whole_kernel_allocator": "h_vm owner; P1 frozen MDESC, P6/P8 component-only",
   "physical_qualified": false,
-  "functional_qualified": false,
+  "functional_qualified": true,
   "engine_root_lower_bound_with_Sinkhorn": 44,
   "physical_boundary_bits": {
     "per_bank_weight_local_to_MACs": 1024,
@@ -104,6 +104,77 @@
     "period8": 1453,
     "programme_words6": 1630,
     "programme_words8": 1950,
-    "actualprogrammeSRAMs": 2
-  }
+    "actualprogrammeSRAMs": 2,
+    "verification": "all4 nominal/early P6/P8 PASS; true SRAM position-address mutant384mismatches"
+  },
+  "physical_followup": {
+    "owner": "/root/h_hc_physical",
+    "3830_native_CTS": "WARN timing failure, not qualified",
+    "TT_clock_delay_ps": [
+      515,
+      636.9
+    ],
+    "clock_spread_ps": 121.9,
+    "input_macro_setup_slack_ps": -176.1,
+    "input_register_setup_slack_ps": -176.5,
+    "register_register_slack_ps": 69.9,
+    "register_macro_slack_ps": 91.9,
+    "planned_successor": "versioned first-pin residual write register:523FF, +1actualwriteedge; aperture/readTML3 unchanged; source/proof/clock distribution pending",
+    "current_functional_gate": "frozen3830 unchanged, session60977, no physical qualification"
+  },
+  "clock_root_instances": {
+    "scope": "projection subtree of native.arithmetic.engine; logical source-pinned roots, physical census/closure required",
+    "command": "arithmetic.engine.projection.core.clk",
+    "reduction": "arithmetic.engine.projection.core.reduction_clk",
+    "scalar": "arithmetic.engine.projection.core.scalar_clk",
+    "banks": [
+      "arithmetic.engine.projection.bank[0].shell.clk",
+      "arithmetic.engine.projection.bank[1].shell.clk",
+      "arithmetic.engine.projection.bank[2].shell.clk",
+      "arithmetic.engine.projection.bank[3].shell.clk",
+      "arithmetic.engine.projection.bank[4].shell.clk",
+      "arithmetic.engine.projection.bank[5].shell.clk",
+      "arithmetic.engine.projection.bank[6].shell.clk",
+      "arithmetic.engine.projection.bank[7].shell.clk"
+    ],
+    "MACs": [
+      "arithmetic.engine.projection.bank[0].mac[0].lanes.clk",
+      "arithmetic.engine.projection.bank[0].mac[1].lanes.clk",
+      "arithmetic.engine.projection.bank[0].mac[2].lanes.clk",
+      "arithmetic.engine.projection.bank[0].mac[3].lanes.clk",
+      "arithmetic.engine.projection.bank[1].mac[0].lanes.clk",
+      "arithmetic.engine.projection.bank[1].mac[1].lanes.clk",
+      "arithmetic.engine.projection.bank[1].mac[2].lanes.clk",
+      "arithmetic.engine.projection.bank[1].mac[3].lanes.clk",
+      "arithmetic.engine.projection.bank[2].mac[0].lanes.clk",
+      "arithmetic.engine.projection.bank[2].mac[1].lanes.clk",
+      "arithmetic.engine.projection.bank[2].mac[2].lanes.clk",
+      "arithmetic.engine.projection.bank[2].mac[3].lanes.clk",
+      "arithmetic.engine.projection.bank[3].mac[0].lanes.clk",
+      "arithmetic.engine.projection.bank[3].mac[1].lanes.clk",
+      "arithmetic.engine.projection.bank[3].mac[2].lanes.clk",
+      "arithmetic.engine.projection.bank[3].mac[3].lanes.clk",
+      "arithmetic.engine.projection.bank[4].mac[0].lanes.clk",
+      "arithmetic.engine.projection.bank[4].mac[1].lanes.clk",
+      "arithmetic.engine.projection.bank[4].mac[2].lanes.clk",
+      "arithmetic.engine.projection.bank[4].mac[3].lanes.clk",
+      "arithmetic.engine.projection.bank[5].mac[0].lanes.clk",
+      "arithmetic.engine.projection.bank[5].mac[1].lanes.clk",
+      "arithmetic.engine.projection.bank[5].mac[2].lanes.clk",
+      "arithmetic.engine.projection.bank[5].mac[3].lanes.clk",
+      "arithmetic.engine.projection.bank[6].mac[0].lanes.clk",
+      "arithmetic.engine.projection.bank[6].mac[1].lanes.clk",
+      "arithmetic.engine.projection.bank[6].mac[2].lanes.clk",
+      "arithmetic.engine.projection.bank[6].mac[3].lanes.clk",
+      "arithmetic.engine.projection.bank[7].mac[0].lanes.clk",
+      "arithmetic.engine.projection.bank[7].mac[1].lanes.clk",
+      "arithmetic.engine.projection.bank[7].mac[2].lanes.clk",
+      "arithmetic.engine.projection.bank[7].mac[3].lanes.clk"
+    ],
+    "separate_engine_sinkhorn": "arithmetic.engine.tail.sink_clk",
+    "native_prefetch_and_issuer": "additional actual memories and source partitions outside projection census"
+  },
+  "functional_scope": "synthetic fullshape P6/P8 24row actual80SRAM\u219232LG8\u2192tail equal-phase proof only",
+  "functional_receipt": "results/rtl/hbm_hc_static_1015/sys1_shared_766/receipt.json",
+  "SYS_LAT_verified": 86
 }
