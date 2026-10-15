@@ -1,0 +1,88 @@
+{
+  "schema": "opentallas.qwen.gateway-clock-cut.v1",
+  "qualified": false,
+  "data_state_added": 0,
+  "data_edges_added": 0,
+  "additional_clock_roots": 1,
+  "seq_clock_roots": 3,
+  "gateway_path": "u_seq.u_seq.u_ctrl.u_a_gateway",
+  "source_gate_evidence": "1680c684e",
+  "sources": [
+    {
+      "source_ref": "d8fdf94f1",
+      "source": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv",
+      "source_sha256": "ff68725d44e125c666863bfa6a1cacfe1eb075eb086a542198a63975a5431d77",
+      "target": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv",
+      "target_sha256": "a85d67bcbea77bfe6f8a73b8c1e94f3edeea9aa5d2c69152a1b116316c381502",
+      "exact_except_module_references_and_gateway_clock": true,
+      "edits": [
+        {
+          "before": "module ot_qwen_rom_core_ctrl_su_static #(",
+          "after": "module ot_qwen_rom_core_ctrl_su_gateway #("
+        },
+        {
+          "before": "    input  wire              clk,",
+          "after": "    input wire ck_gateway,\n    input  wire              clk,"
+        },
+        {
+          "before": "u_a_gateway (\n      .clk(clk),",
+          "after": "u_a_gateway (\n      .clk(ck_gateway),"
+        }
+      ]
+    },
+    {
+      "source_ref": "96f30a6a0",
+      "source": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv",
+      "source_sha256": "f8c409895d094a8deb288375147533132c2d264852a89768ed630a3bd8a64a6a",
+      "target": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_gateway.sv",
+      "target_sha256": "41a5470f3ea691d0914721f89f9dd531ba51482b02d191b9f445c9ff8013d1bf",
+      "exact_except_module_references_and_gateway_clock": true,
+      "edits": [
+        {
+          "before": "module ot_qfd_seq_su_bi_static #(",
+          "after": "module ot_qfd_seq_su_bi_gateway #("
+        },
+        {
+          "before": "    input wire clk,",
+          "after": "    input wire ck_gateway,\n    input wire clk,"
+        },
+        {
+          "before": "ot_qwen_rom_core_ctrl_su_static #(",
+          "after": "ot_qwen_rom_core_ctrl_su_gateway #("
+        },
+        {
+          "before": "u_ctrl (\n        .clk(clk),",
+          "after": "u_ctrl (\n        .clk(clk),.ck_gateway(ck_gateway),"
+        }
+      ]
+    },
+    {
+      "source_ref": "96f30a6a0",
+      "source": "rtl/qwen_split/qfd_seq_su_static.sv",
+      "source_sha256": "47a85c1ad213437a73a3c0436d149975bfc292812910d08d76a86b967cecf672",
+      "target": "rtl/qwen_split/qfd_seq_su_gateway.sv",
+      "target_sha256": "bcf425f5a227a208cad0bdef4f0a252e8523784f01342db64012a837a350b199",
+      "exact_except_module_references_and_gateway_clock": true,
+      "edits": [
+        {
+          "before": "module qfd_seq_su_static (",
+          "after": "module qfd_seq_su_gateway ("
+        },
+        {
+          "before": "    input wire ck_sched,",
+          "after": "    input wire ck_sched,\n    input wire ck_gateway,"
+        },
+        {
+          "before": "ot_qfd_seq_su_bi_static #(",
+          "after": "ot_qfd_seq_su_bi_gateway #("
+        },
+        {
+          "before": ".clk(ck),.ck_sched(ck_sched),",
+          "after": ".clk(ck),.ck_sched(ck_sched),.ck_gateway(ck_gateway),"
+        }
+      ]
+    }
+  ],
+  "physical_phase_binding": null,
+  "scope": "Exact source clock cut; physical timing and complete successor hierarchy remain separate gates."
+}
