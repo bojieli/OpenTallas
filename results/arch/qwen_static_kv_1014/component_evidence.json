@@ -1,0 +1,62 @@
+{
+  "source_commit": "f027470b0",
+  "scope": "component proofs; no native attention or physical return-calendar qualification",
+  "native_qualified": false,
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv": "1923be9e88fe9f50463888f892fd966679e5dfaaebeab0578a486bdf32309dc9",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2696dffd6f14016bd7c4fc1fc5147d0bdec1f3399071260a3dfc4f4ddf5367c",
+    "rtl/test/qwen_static_kv/tb_static_landing.sv": "bafe84c0c6054221b7d228a9908cca1926b066b31989be9b807272ea9c87c7c9",
+    "rtl/test/qwen_static_kv/tb_static_kv_timing.sv": "2f024490c421785e357ac3731e2216c57a2a27e21a1bb6e9e22c4780ca72f5c6",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "landing": {
+    "groups": 32,
+    "physical_pc_srams": 128,
+    "ctx": 8192,
+    "rows": 16384,
+    "quarters": 65536,
+    "common_clock_response_edges": 5,
+    "positive": "PASS",
+    "negative_cases": {
+      "1": "missing quarter response",
+      "2": "wrong sector",
+      "3": "late old sector",
+      "4": "data corruption"
+    },
+    "all_negative_rejected": true,
+    "unit": "oth-ubuntu-578953-1792033998"
+  },
+  "timing": {
+    "PCs": 128,
+    "sectors_per_PC": 512,
+    "K_range": [
+      0,
+      255
+    ],
+    "V_range": [
+      512,
+      767
+    ],
+    "hbm_period_ps": 1024,
+    "profile_cycles": 2200,
+    "fresh_reset_frozen_production_replay": "PASS",
+    "row_slot_pair_collisions": 0,
+    "read_credit_port": false,
+    "mutants": {
+      "1": "reserved reads shifted one cycle",
+      "2": "PC0 read slot200 deleted",
+      "3": "V descriptor first sector513"
+    },
+    "all_negative_rejected": true,
+    "unit": "oth-ubuntu-595625-1792034005",
+    "mutant_unit": "oth-ubuntu-984393-1792034153"
+  },
+  "remaining": [
+    "single persistent PHY/refresh owner shared with host and KV writes",
+    "source-pinned off-chip timing and raw PHY response proof",
+    "actual ECC/CDC prefix delivery calendar",
+    "physical request/return relay7edge candidate timing",
+    "per-leaf clock insertion and pin contracts",
+    "full-service native math and whole-token backing removal"
+  ]
+}
