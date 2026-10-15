@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.s81.topdown.r2l-groups-leaf-grant.v1",
+  "at": "2026-10-15T14:45:58.216654-07:00",
+  "owner": "s81_die_1417",
+  "candidate_commit": "b9473c4ea",
+  "request_path": "results/arch/s81_r2l_groups_1417/slot_request.json",
+  "request_sha256": "2d8c1164b01631a53cf991206ec2ab89e83b23eb22f9b6e9fa5d4f7971bef908",
+  "files": {
+    "tools/ref_tile/specs_s81_r2l_groups_1417/slice64.json": "b61d046d72338107ca0de71129968298df1b5b2b3322c7b72413f76e5afbdd0c",
+    "physical/s81_r2l_groups_1417/slice64_pins.tcl": "92d3f98da4cd34bc83d4b3a923f499e190833acd70f08f79763a1fd6b92bf386",
+    "tools/ref_tile/specs_s81_r2l_groups_1417/join8.json": "dcc6c780fd51e417c663b2246216418fc630036c4d185ee924b079fdc2ef5209",
+    "physical/s81_r2l_groups_1417/join8_pins.tcl": "7eeba488ffc3a18195cd87b17b1843e80af906cba5c5de2b8f75172b0cf4005a"
+  },
+  "leaves": {
+    "data_leaf": {
+      "top": "ot_s81_r2l_slice64",
+      "outline_um": [
+        43.2,
+        38.88
+      ],
+      "pins": 136,
+      "copies_per_parent": 8,
+      "clock_ports": {
+        "fi": "actualforwardedstream1.2GHz phase_i_minus_R_fi",
+        "ck": "actualserial0.9GHz phase_i_minus_R_ck"
+      },
+      "strict_domain_api": "multiple_cts_roots related_pll_ratio phase0; NO1190pscrossing maxdelay waiver"
+    },
+    "status_leaf": {
+      "top": "ot_s81_r2l_join8",
+      "outline_um": [
+        43.2,
+        21.6
+      ],
+      "pins": 28,
+      "copies_per_parent": 1,
+      "clock": "actualserial0.9GHz phase_i_minus_R"
+    }
+  },
+  "parent_clock_abi": {
+    "ck": "[8:0] nine individually delivered serial entries",
+    "fi": "[7:0] eight individually delivered forwardedstream entries"
+  },
+  "pin_audit": {
+    "physical/s81_r2l_groups_1417/slice64_pins.tcl": {
+      "pins": 136,
+      "unique_names": true,
+      "unique_layer_locations": true,
+      "within_requested_outline": true
+    },
+    "physical/s81_r2l_groups_1417/join8_pins.tcl": {
+      "pins": 28,
+      "unique_names": true,
+      "unique_layer_locations": true,
+      "within_requested_outline": true
+    }
+  },
+  "grant": "independent exact leaf outlines/pins and17-entryparent clockABI only; parent/diefit,actualR_i/phi,TT/FF/DRC/native qualification remain OPEN",
+  "normal_extra_edges": 0,
+  "phase_rule": "measured source phase proof only; preserve ordinary related-root checks, no1190psmaxdelay waiver",
+  "reroute_reason": "rtl_change: replace4031sinkhalfcyclemarker fanout by8local64payloadgroups+statusjoin; preserveall512payloadbits"
+}
