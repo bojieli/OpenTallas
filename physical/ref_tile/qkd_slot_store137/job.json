@@ -1,5 +1,5 @@
 {
- "name": "qkd_slot_store137-s2-COMMIT",
+ "name": "qkd_slot_store137-s2-5f8109ed6",
  "block": "ot_qkvd_llr_replay_sram_leaf",
  "ref_tile": true,
  "owner": "Codex:q-link-replay",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex/q-link-replay-1014",
-  "commit": "COMMIT",
+  "commit": "5f8109ed6",
   "extra_paths": [
    "rtl/qwen_split",
    "rtl/test/qwen_split",
@@ -105,7 +105,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_slot_store137/qkd_slot_store137-s2-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_slot_store137/qkd_slot_store137-s2-5f8109ed6"
   }
  ],
  "cycles_added": 0,

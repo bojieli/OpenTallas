@@ -1,0 +1,996 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/3_2_place_iop.odb
+read_sdc /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_global_place_pre_gpl.tcl
+OT_PRS: 137 output pins already on a dedicated flop, 0 pins split onto a cloned flop (0 cells added, 0 load-less cells removed), 0 outputs not flop-driven
+INHOLD: 0 input hold cells (HB2xp67_ASAP7_75t_R; 0 strong pads by OT_HOLD_PAD_STRONG_RE, dont_touch; driver 'BUFx4f_ASAP7_75t_R', 0 FIRM for GPL), 151 inputs skipped (clock / reset / multi-sink / non-DFF)
+OUTHOLD: 137 output hold stages (BUF + HB2xp67_ASAP7_75t_R + BUF FIRM at the pin, 0 with the strong pad by OT_HOLD_PAD_STRONG_RE, hold cell dont_touch), 0 outputs skipped (not flop-driven)
+OT_IOFLOP fixed 137 output-port and 0 input-port flops at their pins (151 ports not single-flop)
+[INFO RSZ-0026] Removed 106 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 150 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 137 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.52 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 213.840 170.640 ) um
+[INFO GPL-0016] Core area:                   35663.846 um^2
+[INFO GPL-0036] Movable instances area:        235.175 um^2
+[INFO GPL-0037] Total instances area:        13859.252 um^2
+[INFO GPL-0035] Pin density area adjust:        15.525 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:              6930
+[INFO GPL-0007] Movable instances:                2636
+[INFO GPL-0008] Fixed instances:                  3701
+[INFO GPL-0009] Dummy instances:                   593
+[INFO GPL-0010] Number of nets:                   3847
+[INFO GPL-0011] Number of pins:                   9158
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 216.000 172.800 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 213.840 170.640 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                 35663.846 um^2
+[INFO GPL-0017] Fixed instances area:        14654.650 um^2
+[INFO GPL-0018] Movable instances area:        250.700 um^2
+[INFO GPL-0019] Utilization:                     1.193 %
+[INFO GPL-0020] Standard cells area:           250.700 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 2636	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00000012 HPWL: 487948672
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00000011 HPWL: 416068098
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00000011 HPWL: 416090836
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00000010 HPWL: 416098708
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00000011 HPWL: 416094239
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5200
+[INFO GPL-0024] Movable insts average area:      0.095 um^2
+[INFO GPL-0025] Ideal bin area:                  0.183 um^2
+[INFO GPL-0026] Ideal bin count:                194995
+[INFO GPL-0027] Total bin area:              35663.846 um^2
+[INFO GPL-0028] Bin count (X, Y):         256 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.827 *  0.658 um
+[INFO GPL-0030] Number of bins:                  65536
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.7414 |  2.936090e+04 |   +0.00% |  1.88e-13 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 3, overflow: 0.579, keep resizer changes at: 1, HPWL: 30483028
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |      3847
+    final |     +0.0% |     141 |      27 |             7 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 144 slew violations.
+[INFO RSZ-0035] Found 7 fanout violations.
+[INFO RSZ-0036] Found 2 capacitance violations.
+[INFO RSZ-0039] Resized 141 instances.
+[INFO RSZ-0038] Inserted 27 buffers in 7 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |      2363
+      230 |     +0.1% |       0 |      128 |      2133
+      460 |     +0.2% |       0 |      172 |      1903
+      690 |     +0.2% |      17 |      199 |      1673
+      920 |     +0.2% |      27 |      207 |      1443
+     1150 |     +0.2% |      27 |      207 |      1213
+     1380 |     +0.2% |      27 |      207 |       983
+     1610 |     +0.2% |      27 |      207 |       753
+     1840 |     +0.2% |      27 |      207 |       523
+     2070 |     +0.2% |      27 |      207 |       293
+     2300 |     +0.2% |      27 |      207 |        63
+    final |     +0.2% |      27 |      207 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack 1.4505905e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: 30.344 um^2 (+12.10%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 207 (+7.85%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 234, deleted: 27
+[INFO GPL-0110] Timing-driven: new target density: 0.52144426
+[INFO GPL-0038] Routability snapshot saved at iter = 3
+        2 |   0.5787 |  3.069728e+04 |          |           |      
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+       10 |   0.4225 |  3.223057e+04 |   +9.77% |  3.05e-13 |      
+       20 |   0.3858 |  3.189054e+04 |   -1.05% |  4.97e-13 |      
+       30 |   0.3741 |  3.196383e+04 |   +0.23% |  8.10e-13 |      
+       40 |   0.3606 |  3.213690e+04 |   +0.54% |  1.32e-12 |      
+       50 |   0.3496 |  3.229332e+04 |   +0.49% |  2.15e-12 |      
+       60 |   0.3217 |  3.232967e+04 |   +0.11% |  3.20e-12 |      
+       70 |   0.3190 |  3.228393e+04 |   -0.14% |  4.71e-12 |      
+       80 |   0.3246 |  3.228498e+04 |   +0.00% |  6.94e-12 |      
+       90 |   0.3269 |  3.223153e+04 |   -0.17% |  1.02e-11 |      
+      100 |   0.3335 |  3.216956e+04 |   -0.19% |  1.51e-11 |      
+      110 |   0.3422 |  3.213417e+04 |   -0.11% |  2.22e-11 |      
+      120 |   0.3463 |  3.209386e+04 |   -0.13% |  3.27e-11 |      
+      130 |   0.3435 |  3.207215e+04 |   -0.07% |  4.81e-11 |      
+      140 |   0.3387 |  3.209591e+04 |   +0.07% |  7.09e-11 |      
+      150 |   0.3385 |  3.213872e+04 |   +0.13% |  1.04e-10 |      
+      160 |   0.3368 |  3.218042e+04 |   +0.13% |  1.54e-10 |      
+      170 |   0.3328 |  3.218516e+04 |   +0.01% |  2.27e-10 |      
+      180 |   0.3326 |  3.219145e+04 |   +0.02% |  3.34e-10 |      
+      190 |   0.3361 |  3.220014e+04 |   +0.03% |  4.92e-10 |      
+      200 |   0.3360 |  3.219308e+04 |   -0.02% |  7.25e-10 |      
+      210 |   0.3366 |  3.219586e+04 |   +0.01% |  1.07e-09 |      
+      220 |   0.3378 |  3.222915e+04 |   +0.10% |  1.57e-09 |      
+      230 |   0.3396 |  3.234130e+04 |   +0.35% |  2.32e-09 |      
+      240 |   0.3338 |  3.245862e+04 |   +0.36% |  3.41e-09 |      
+      250 |   0.3233 |  3.253198e+04 |   +0.23% |  5.03e-09 |      
+      260 |   0.3233 |  3.296273e+04 |   +1.32% |  7.41e-09 |      
+      270 |   0.3383 |  3.403032e+04 |   +3.24% |  1.09e-08 |      
+      280 |   0.3314 |  3.406266e+04 |   +0.10% |  1.61e-08 |      
+      290 |   0.3469 |  3.366964e+04 |   -1.15% |  2.37e-08 |      
+      300 |   0.3235 |  3.496918e+04 |   +3.86% |  3.49e-08 |      
+      310 |   0.3221 |  3.438795e+04 |   -1.66% |  5.13e-08 |      
+      320 |   0.3315 |  3.412652e+04 |   -0.76% |  7.56e-08 |      
+      330 |   0.3196 |  3.390857e+04 |   -0.64% |  1.11e-07 |      
+      340 |   0.3038 |  3.348845e+04 |   -1.24% |  1.64e-07 |      
+[INFO GPL-0040] Routability iteration: 1
+[INFO GPL-0041] Total routing overflow: 10.4193
+[INFO GPL-0042] Number of overflowed tiles: 19856 (17.34%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.0118
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.0060
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.0031
+[INFO GPL-0046] Average top 5.0% routing congestion: 1.0013
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.0089
+[INFO GPL-0050] Weighted routing congestion is lower than target routing congestion(1.0100), end routability optimization.
+[INFO GPL-0090] Routability finished. Target routing congestion achieved succesfully.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      350 |   0.2979 |  3.318222e+04 |   -0.91% |  2.42e-07 |      
+      360 |   0.2905 |  3.274330e+04 |   -1.32% |  3.56e-07 |      
+      370 |   0.2837 |  3.218549e+04 |   -1.70% |  5.24e-07 |      
+      380 |   0.2681 |  3.222556e+04 |   +0.12% |  7.72e-07 |      
+      390 |   0.2602 |  3.205295e+04 |   -0.54% |  1.14e-06 |      
+      400 |   0.2525 |  3.206772e+04 |   +0.05% |  1.68e-06 |      
+      410 |   0.2400 |  3.215830e+04 |   +0.28% |  2.47e-06 |      
+      420 |   0.2274 |  3.220126e+04 |   +0.13% |  3.64e-06 |      
+      430 |   0.2198 |  3.225372e+04 |   +0.16% |  5.36e-06 |      
+      440 |   0.2134 |  3.236084e+04 |   +0.33% |  7.89e-06 |      
+      450 |   0.1924 |  3.247357e+04 |   +0.35% |  1.16e-05 |      
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 451, overflow: 0.192, keep resizer changes at: 1, HPWL: 32473571
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |      4054
+    final |     +0.0% |       0 |       2 |             1 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0038] Inserted 2 buffers in 1 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |      2363
+      230 |     -0.0% |      35 |        0 |      2133
+      460 |     -0.0% |      35 |        0 |      1903
+      690 |     -0.0% |      62 |       36 |      1673
+      920 |     -0.0% |      72 |       45 |      1443
+     1150 |     -0.0% |      72 |       45 |      1213
+     1380 |     -0.0% |      72 |       45 |       983
+     1610 |     -0.0% |      72 |       45 |       753
+     1840 |     -0.0% |      72 |       45 |       523
+     2070 |     -0.0% |      72 |       45 |       293
+     2300 |     -0.0% |      72 |       46 |        63
+    final |     -0.0% |      72 |       46 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack 9.781494e-11
+[INFO GPL-0107] Timing-driven: repair_design delta area: -4.082 um^2 (-1.45%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -24 (-0.84%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 48, deleted: 72
+[INFO GPL-0110] Timing-driven: new target density: 0.52124995
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      460 |   0.1616 |  3.252160e+04 |   +0.15% |  1.71e-05 |      
+      470 |   0.1287 |  3.213494e+04 |   -1.19% |  2.52e-05 |      
+      478 |   0.0989 |  3.220946e+04 |          |  3.58e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 478
+[INFO GPL-1017] Routability mode iteration count: 344
+[INFO GPL-1005] Routability final weighted congestion: 1.0076
+[INFO GPL-1002] Placed Cell Area              276.9616
+[INFO GPL-1003] Available Free Area         21009.1968
+[INFO GPL-1004] Minimum Feasible Density        0.0200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0146
+[INFO GPL-1008]     - For 80% usage of free space: 0.0165
+[INFO GPL-1009]     - For 50% usage of free space: 0.0264
+[INFO GPL-1011] Original area (um^2): 250.70
+[INFO GPL-1012] Total routability artificial inflation: 0.00 (+0.00%)
+[INFO GPL-1013] Total timing-driven delta area: 26.26 (+10.48%)
+[INFO GPL-1014] Final placement area: 276.96 (+10.48%)
+Took 17 seconds: global_placement -density 0.52 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Report metrics stage 3, global place...
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 13759 um^2 39% utilization.
+write_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/3_3_place_gp.odb
+Elapsed time: 0:21.91[h:]min:sec. CPU time: user 81.98 sys 1.45 (380%). Peak memory: 609896KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb           21            595 468254f85cf4419cce33
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_4_place_resized resize
+Running resize.tcl, stage 3_4_place_resized
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/3_3_place_gp.odb
+read_sdc /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+estimate_parasitics -placement
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |      4030
+       10 |     +0.0% |       0 |       0 |             0 |      4020
+       20 |     +0.0% |       0 |       0 |             0 |      4010
+       30 |     +0.0% |       0 |       0 |             0 |      4000
+       40 |     +0.0% |       0 |       0 |             0 |      3990
+       50 |     +0.0% |       0 |       0 |             0 |      3980
+       60 |     +0.0% |       0 |       0 |             0 |      3970
+       70 |     +0.0% |       0 |       0 |             0 |      3960
+       80 |     +0.0% |       0 |       0 |             0 |      3950
+       90 |     +0.0% |       0 |       0 |             0 |      3940
+      100 |     +0.0% |       0 |       0 |             0 |      3930
+      110 |     +0.0% |       0 |       0 |             0 |      3920
+      120 |     +0.0% |       0 |       0 |             0 |      3910
+      130 |     +0.0% |       0 |       0 |             0 |      3900
+      140 |     +0.0% |       0 |       0 |             0 |      3890
+      150 |     +0.0% |       0 |       0 |             0 |      3880
+      160 |     +0.0% |       0 |       0 |             0 |      3870
+      170 |     +0.0% |       0 |       0 |             0 |      3860
+      180 |     +0.0% |       0 |       0 |             0 |      3850
+      190 |     +0.0% |       0 |       0 |             0 |      3840
+      200 |     +0.0% |       0 |       0 |             0 |      3830
+      210 |     +0.0% |       0 |       0 |             0 |      3820
+      220 |     +0.0% |       0 |       0 |             0 |      3810
+      230 |     +0.0% |       0 |       0 |             0 |      3800
+      240 |     +0.0% |       0 |       0 |             0 |      3790
+      250 |     +0.0% |       0 |       0 |             0 |      3780
+      260 |     +0.0% |       0 |       0 |             0 |      3770
+      270 |     +0.0% |       0 |       0 |             0 |      3760
+      280 |     +0.0% |       0 |       0 |             0 |      3750
+      290 |     +0.0% |       0 |       0 |             0 |      3740
+      300 |     +0.0% |       0 |       0 |             0 |      3730
+      310 |     +0.0% |       0 |       0 |             0 |      3720
+      320 |     +0.0% |       0 |       0 |             0 |      3710
+      330 |     +0.0% |       0 |       0 |             0 |      3700
+      340 |     +0.0% |       0 |       0 |             0 |      3690
+      350 |     +0.0% |       0 |       0 |             0 |      3680
+      360 |     +0.0% |       0 |       0 |             0 |      3670
+      370 |     +0.0% |       0 |       0 |             0 |      3660
+      380 |     +0.0% |       0 |       0 |             0 |      3650
+      390 |     +0.0% |       0 |       0 |             0 |      3640
+      400 |     +0.0% |       0 |       0 |             0 |      3630
+      410 |     +0.0% |       0 |       0 |             0 |      3620
+      420 |     +0.0% |       0 |       0 |             0 |      3610
+      430 |     +0.0% |       0 |       0 |             0 |      3600
+      440 |     +0.0% |       0 |       0 |             0 |      3590
+      450 |     +0.0% |       0 |       0 |             0 |      3580
+      460 |     +0.0% |       0 |       0 |             0 |      3570
+      470 |     +0.0% |       0 |       0 |             0 |      3560
+      480 |     +0.0% |       0 |       0 |             0 |      3550
+      490 |     +0.0% |       0 |       0 |             0 |      3540
+      500 |     +0.0% |       0 |       0 |             0 |      3530
+      510 |     +0.0% |       0 |       0 |             0 |      3520
+      520 |     +0.0% |       0 |       0 |             0 |      3510
+      530 |     +0.0% |       0 |       0 |             0 |      3500
+      540 |     +0.0% |       0 |       0 |             0 |      3490
+      550 |     +0.0% |       0 |       0 |             0 |      3480
+      560 |     +0.0% |       0 |       0 |             0 |      3470
+      570 |     +0.0% |       0 |       0 |             0 |      3460
+      580 |     +0.0% |       0 |       0 |             0 |      3450
+      590 |     +0.0% |       0 |       0 |             0 |      3440
+      600 |     +0.0% |       0 |       0 |             0 |      3430
+      610 |     +0.0% |       0 |       0 |             0 |      3420
+      620 |     +0.0% |       0 |       0 |             0 |      3410
+      630 |     +0.0% |       0 |       0 |             0 |      3400
+      640 |     +0.0% |       0 |       0 |             0 |      3390
+      650 |     +0.0% |       0 |       0 |             0 |      3380
+      660 |     +0.0% |       0 |       0 |             0 |      3370
+      670 |     +0.0% |       0 |       0 |             0 |      3360
+      680 |     +0.0% |       0 |       0 |             0 |      3350
+      690 |     +0.0% |       0 |       0 |             0 |      3340
+      700 |     +0.0% |       0 |       0 |             0 |      3330
+      710 |     +0.0% |       0 |       0 |             0 |      3320
+      720 |     +0.0% |       0 |       0 |             0 |      3310
+      730 |     +0.0% |       0 |       0 |             0 |      3300
+      740 |     +0.0% |       0 |       0 |             0 |      3290
+      750 |     +0.0% |       0 |       0 |             0 |      3280
+      760 |     +0.0% |       0 |       0 |             0 |      3270
+      770 |     +0.0% |       0 |       0 |             0 |      3260
+      780 |     +0.0% |       0 |       0 |             0 |      3250
+      790 |     +0.0% |       0 |       0 |             0 |      3240
+      800 |     +0.0% |       0 |       0 |             0 |      3230
+      810 |     +0.0% |       0 |       0 |             0 |      3220
+      820 |     +0.0% |       0 |       0 |             0 |      3210
+      830 |     +0.0% |       0 |       0 |             0 |      3200
+      840 |     +0.0% |       0 |       0 |             0 |      3190
+      850 |     +0.0% |       0 |       0 |             0 |      3180
+      860 |     +0.0% |       0 |       0 |             0 |      3170
+      870 |     +0.0% |       0 |       0 |             0 |      3160
+      880 |     +0.0% |       0 |       0 |             0 |      3150
+      890 |     +0.0% |       0 |       0 |             0 |      3140
+      900 |     +0.0% |       0 |       0 |             0 |      3130
+      910 |     +0.0% |       0 |       0 |             0 |      3120
+      920 |     +0.0% |       0 |       0 |             0 |      3110
+      930 |     +0.0% |       0 |       0 |             0 |      3100
+      940 |     +0.0% |       0 |       0 |             0 |      3090
+      950 |     +0.0% |       0 |       0 |             0 |      3080
+      960 |     +0.0% |       0 |       0 |             0 |      3070
+      970 |     +0.0% |       0 |       0 |             0 |      3060
+      980 |     +0.0% |       0 |       0 |             0 |      3050
+      990 |     +0.0% |       0 |       0 |             0 |      3040
+     1000 |     +0.0% |       0 |       0 |             0 |      3030
+     1010 |     +0.0% |       0 |       0 |             0 |      3020
+     1020 |     +0.0% |       0 |       0 |             0 |      3010
+     1030 |     +0.0% |       0 |       0 |             0 |      3000
+     1040 |     +0.0% |       0 |       0 |             0 |      2990
+     1050 |     +0.0% |       0 |       0 |             0 |      2980
+     1060 |     +0.0% |       0 |       0 |             0 |      2970
+     1070 |     +0.0% |       0 |       0 |             0 |      2960
+     1080 |     +0.0% |       0 |       0 |             0 |      2950
+     1090 |     +0.0% |       0 |       0 |             0 |      2940
+     1100 |     +0.0% |       0 |       0 |             0 |      2930
+     1110 |     +0.0% |       0 |       0 |             0 |      2920
+     1120 |     +0.0% |       0 |       0 |             0 |      2910
+     1130 |     +0.0% |       0 |       0 |             0 |      2900
+     1140 |     +0.0% |       0 |       0 |             0 |      2890
+     1150 |     +0.0% |       0 |       0 |             0 |      2880
+     1160 |     +0.0% |       0 |       0 |             0 |      2870
+     1170 |     +0.0% |       0 |       0 |             0 |      2860
+     1180 |     +0.0% |       0 |       0 |             0 |      2850
+     1190 |     +0.0% |       0 |       0 |             0 |      2840
+     1200 |     +0.0% |       0 |       0 |             0 |      2830
+     1210 |     +0.0% |       0 |       0 |             0 |      2820
+     1220 |     +0.0% |       0 |       0 |             0 |      2810
+     1230 |     +0.0% |       0 |       0 |             0 |      2800
+     1240 |     +0.0% |       0 |       0 |             0 |      2790
+     1250 |     +0.0% |       0 |       0 |             0 |      2780
+     1260 |     +0.0% |       0 |       0 |             0 |      2770
+     1270 |     +0.0% |       0 |       0 |             0 |      2760
+     1280 |     +0.0% |       0 |       0 |             0 |      2750
+     1290 |     +0.0% |       0 |       0 |             0 |      2740
+     1300 |     +0.0% |       0 |       0 |             0 |      2730
+     1310 |     +0.0% |       0 |       0 |             0 |      2720
+     1320 |     +0.0% |       0 |       0 |             0 |      2710
+     1330 |     +0.0% |       0 |       0 |             0 |      2700
+     1340 |     +0.0% |       0 |       0 |             0 |      2690
+     1350 |     +0.0% |       0 |       0 |             0 |      2680
+     1360 |     +0.0% |       0 |       0 |             0 |      2670
+     1370 |     +0.0% |       0 |       0 |             0 |      2660
+     1380 |     +0.0% |       0 |       0 |             0 |      2650
+     1390 |     +0.0% |       0 |       0 |             0 |      2640
+     1400 |     +0.0% |       0 |       0 |             0 |      2630
+     1410 |     +0.0% |       0 |       0 |             0 |      2620
+     1420 |     +0.0% |       0 |       0 |             0 |      2610
+     1430 |     +0.0% |       0 |       0 |             0 |      2600
+     1440 |     +0.0% |       0 |       0 |             0 |      2590
+     1450 |     +0.0% |       0 |       0 |             0 |      2580
+     1460 |     +0.0% |       0 |       0 |             0 |      2570
+     1470 |     +0.0% |       0 |       0 |             0 |      2560
+     1480 |     +0.0% |       0 |       0 |             0 |      2550
+     1490 |     +0.0% |       0 |       0 |             0 |      2540
+     1500 |     +0.0% |       0 |       0 |             0 |      2530
+     1510 |     +0.0% |       0 |       0 |             0 |      2520
+     1520 |     +0.0% |       0 |       0 |             0 |      2510
+     1530 |     +0.0% |       0 |       0 |             0 |      2500
+     1540 |     +0.0% |       0 |       0 |             0 |      2490
+     1550 |     +0.0% |       0 |       0 |             0 |      2480
+     1560 |     +0.0% |       0 |       0 |             0 |      2470
+     1570 |     +0.0% |       0 |       0 |             0 |      2460
+     1580 |     +0.0% |       0 |       0 |             0 |      2450
+     1590 |     +0.0% |       0 |       0 |             0 |      2440
+     1600 |     +0.0% |       0 |       0 |             0 |      2430
+     1610 |     +0.0% |       0 |       0 |             0 |      2420
+     1620 |     +0.0% |       0 |       0 |             0 |      2410
+     1630 |     +0.0% |       0 |       0 |             0 |      2400
+     1640 |     +0.0% |       0 |       0 |             0 |      2390
+     1650 |     +0.0% |       0 |       0 |             0 |      2380
+     1660 |     +0.0% |       0 |       0 |             0 |      2370
+     1670 |     +0.0% |       0 |       0 |             0 |      2360
+     1680 |     +0.0% |       0 |       0 |             0 |      2350
+     1690 |     +0.0% |       0 |       0 |             0 |      2340
+     1700 |     +0.0% |       0 |       0 |             0 |      2330
+     1710 |     +0.0% |       0 |       0 |             0 |      2320
+     1720 |     +0.0% |       0 |       0 |             0 |      2310
+     1730 |     +0.0% |       0 |       0 |             0 |      2300
+     1740 |     +0.0% |       0 |       0 |             0 |      2290
+     1750 |     +0.0% |       0 |       0 |             0 |      2280
+     1760 |     +0.0% |       0 |       0 |             0 |      2270
+     1770 |     +0.0% |       0 |       0 |             0 |      2260
+     1780 |     +0.0% |       0 |       0 |             0 |      2250
+     1790 |     +0.0% |       0 |       0 |             0 |      2240
+     1800 |     +0.0% |       0 |       0 |             0 |      2230
+     1810 |     +0.0% |       0 |       0 |             0 |      2220
+     1820 |     +0.0% |       0 |       0 |             0 |      2210
+     1830 |     +0.0% |       0 |       0 |             0 |      2200
+     1840 |     +0.0% |       0 |       0 |             0 |      2190
+     1850 |     +0.0% |       0 |       0 |             0 |      2180
+     1860 |     +0.0% |       0 |       0 |             0 |      2170
+     1870 |     +0.0% |       0 |       0 |             0 |      2160
+     1880 |     +0.0% |       0 |       0 |             0 |      2150
+     1890 |     +0.0% |       0 |       0 |             0 |      2140
+     1900 |     +0.0% |       0 |       0 |             0 |      2130
+     1910 |     +0.0% |       0 |       0 |             0 |      2120
+     1920 |     +0.0% |       0 |       0 |             0 |      2110
+     1930 |     +0.0% |       0 |       0 |             0 |      2100
+     1940 |     +0.0% |       0 |       0 |             0 |      2090
+     1950 |     +0.0% |       0 |       0 |             0 |      2080
+     1960 |     +0.0% |       0 |       0 |             0 |      2070
+     1970 |     +0.0% |       0 |       0 |             0 |      2060
+     1980 |     +0.0% |       0 |       0 |             0 |      2050
+     1990 |     +0.0% |       0 |       0 |             0 |      2040
+     2000 |     +0.0% |       0 |       0 |             0 |      2030
+     2010 |     +0.0% |       0 |       0 |             0 |      2020
+     2020 |     +0.0% |       0 |       0 |             0 |      2010
+     2030 |     +0.0% |       0 |       0 |             0 |      2000
+     2040 |     +0.0% |       0 |       0 |             0 |      1990
+     2050 |     +0.0% |       0 |       0 |             0 |      1980
+     2060 |     +0.0% |       0 |       0 |             0 |      1970
+     2070 |     +0.0% |       0 |       0 |             0 |      1960
+     2080 |     +0.0% |       0 |       0 |             0 |      1950
+     2090 |     +0.0% |       0 |       0 |             0 |      1940
+     2100 |     +0.0% |       0 |       0 |             0 |      1930
+     2110 |     +0.0% |       0 |       0 |             0 |      1920
+     2120 |     +0.0% |       0 |       0 |             0 |      1910
+     2130 |     +0.0% |       0 |       0 |             0 |      1900
+     2140 |     +0.0% |       0 |       0 |             0 |      1890
+     2150 |     +0.0% |       0 |       0 |             0 |      1880
+     2160 |     +0.0% |       0 |       0 |             0 |      1870
+     2170 |     +0.0% |       0 |       0 |             0 |      1860
+     2180 |     +0.0% |       0 |       0 |             0 |      1850
+     2190 |     +0.0% |       0 |       0 |             0 |      1840
+     2200 |     +0.0% |       0 |       0 |             0 |      1830
+     2210 |     +0.0% |       0 |       0 |             0 |      1820
+     2220 |     +0.0% |       0 |       0 |             0 |      1810
+     2230 |     +0.0% |       0 |       0 |             0 |      1800
+     2240 |     +0.0% |       0 |       0 |             0 |      1790
+     2250 |     +0.0% |       0 |       0 |             0 |      1780
+     2260 |     +0.0% |       0 |       0 |             0 |      1770
+     2270 |     +0.0% |       0 |       0 |             0 |      1760
+     2280 |     +0.0% |       0 |       0 |             0 |      1750
+     2290 |     +0.0% |       0 |       0 |             0 |      1740
+     2300 |     +0.0% |       0 |       0 |             0 |      1730
+     2310 |     +0.0% |       0 |       0 |             0 |      1720
+     2320 |     +0.0% |       0 |       0 |             0 |      1710
+     2330 |     +0.0% |       0 |       0 |             0 |      1700
+     2340 |     +0.0% |       0 |       0 |             0 |      1690
+     2350 |     +0.0% |       0 |       0 |             0 |      1680
+     2360 |     +0.0% |       0 |       0 |             0 |      1670
+     2370 |     +0.0% |       0 |       0 |             0 |      1660
+     2380 |     +0.0% |       0 |       0 |             0 |      1650
+     2390 |     +0.0% |       0 |       0 |             0 |      1640
+     2400 |     +0.0% |       0 |       0 |             0 |      1630
+     2410 |     +0.0% |       0 |       0 |             0 |      1620
+     2420 |     +0.0% |       0 |       0 |             0 |      1610
+     2430 |     +0.0% |       0 |       0 |             0 |      1600
+     2440 |     +0.0% |       0 |       0 |             0 |      1590
+     2450 |     +0.0% |       0 |       0 |             0 |      1580
+     2460 |     +0.0% |       0 |       0 |             0 |      1570
+     2470 |     +0.0% |       0 |       0 |             0 |      1560
+     2480 |     +0.0% |       0 |       0 |             0 |      1550
+     2490 |     +0.0% |       0 |       0 |             0 |      1540
+     2500 |     +0.0% |       0 |       0 |             0 |      1530
+     2510 |     +0.0% |       0 |       0 |             0 |      1520
+     2520 |     +0.0% |       0 |       0 |             0 |      1510
+     2530 |     +0.0% |       0 |       0 |             0 |      1500
+     2540 |     +0.0% |       0 |       0 |             0 |      1490
+     2550 |     +0.0% |       0 |       0 |             0 |      1480
+     2560 |     +0.0% |       0 |       0 |             0 |      1470
+     2570 |     +0.0% |       0 |       0 |             0 |      1460
+     2580 |     +0.0% |       0 |       0 |             0 |      1450
+     2590 |     +0.0% |       0 |       0 |             0 |      1440
+     2600 |     +0.0% |       0 |       0 |             0 |      1430
+     2610 |     +0.0% |       0 |       0 |             0 |      1420
+     2620 |     +0.0% |       0 |       0 |             0 |      1410
+     2630 |     +0.0% |       0 |       0 |             0 |      1400
+     2640 |     +0.0% |       0 |       0 |             0 |      1390
+     2650 |     +0.0% |       0 |       0 |             0 |      1380
+     2660 |     +0.0% |       0 |       0 |             0 |      1370
+     2670 |     +0.0% |       0 |       0 |             0 |      1360
+     2680 |     +0.0% |       0 |       0 |             0 |      1350
+     2690 |     +0.0% |       0 |       0 |             0 |      1340
+     2700 |     +0.0% |       0 |       0 |             0 |      1330
+     2710 |     +0.0% |       0 |       0 |             0 |      1320
+     2720 |     +0.0% |       0 |       0 |             0 |      1310
+     2730 |     +0.0% |       0 |       0 |             0 |      1300
+     2740 |     +0.0% |       0 |       0 |             0 |      1290
+     2750 |     +0.0% |       0 |       0 |             0 |      1280
+     2760 |     +0.0% |       0 |       0 |             0 |      1270
+     2770 |     +0.0% |       0 |       0 |             0 |      1260
+     2780 |     +0.0% |       0 |       0 |             0 |      1250
+     2790 |     +0.0% |       0 |       0 |             0 |      1240
+     2800 |     +0.0% |       0 |       0 |             0 |      1230
+     2810 |     +0.0% |       0 |       0 |             0 |      1220
+     2820 |     +0.0% |       0 |       0 |             0 |      1210
+     2830 |     +0.0% |       0 |       0 |             0 |      1200
+     2840 |     +0.0% |       0 |       0 |             0 |      1190
+     2850 |     +0.0% |       0 |       0 |             0 |      1180
+     2860 |     +0.0% |       0 |       0 |             0 |      1170
+     2870 |     +0.0% |       0 |       0 |             0 |      1160
+     2880 |     +0.0% |       0 |       0 |             0 |      1150
+     2890 |     +0.0% |       0 |       0 |             0 |      1140
+     2900 |     +0.0% |       0 |       0 |             0 |      1130
+     2910 |     +0.0% |       0 |       0 |             0 |      1120
+     2920 |     +0.0% |       0 |       0 |             0 |      1110
+     2930 |     +0.0% |       0 |       0 |             0 |      1100
+     2940 |     +0.0% |       0 |       0 |             0 |      1090
+     2950 |     +0.0% |       0 |       0 |             0 |      1080
+     2960 |     +0.0% |       0 |       0 |             0 |      1070
+     2970 |     +0.0% |       0 |       0 |             0 |      1060
+     2980 |     +0.0% |       0 |       0 |             0 |      1050
+     2990 |     +0.0% |       0 |       0 |             0 |      1040
+     3000 |     +0.0% |       0 |       0 |             0 |      1030
+     3010 |     +0.0% |       0 |       0 |             0 |      1020
+     3020 |     +0.0% |       0 |       0 |             0 |      1010
+     3030 |     +0.0% |       0 |       0 |             0 |      1000
+     3040 |     +0.0% |       0 |       0 |             0 |       990
+     3050 |     +0.0% |       0 |       0 |             0 |       980
+     3060 |     +0.0% |       0 |       0 |             0 |       970
+     3070 |     +0.0% |       0 |       0 |             0 |       960
+     3080 |     +0.0% |       0 |       0 |             0 |       950
+     3090 |     +0.0% |       0 |       0 |             0 |       940
+     3100 |     +0.0% |       0 |       0 |             0 |       930
+     3110 |     +0.0% |       0 |       0 |             0 |       920
+     3120 |     +0.0% |       0 |       0 |             0 |       910
+     3130 |     +0.0% |       0 |       0 |             0 |       900
+     3140 |     +0.0% |       0 |       0 |             0 |       890
+     3150 |     +0.0% |       0 |       0 |             0 |       880
+     3160 |     +0.0% |       0 |       0 |             0 |       870
+     3170 |     +0.0% |       0 |       0 |             0 |       860
+     3180 |     +0.0% |       0 |       0 |             0 |       850
+     3190 |     +0.0% |       0 |       0 |             0 |       840
+     3200 |     +0.0% |       0 |       0 |             0 |       830
+     3210 |     +0.0% |       0 |       0 |             0 |       820
+     3220 |     +0.0% |       0 |       0 |             0 |       810
+     3230 |     +0.0% |       0 |       0 |             0 |       800
+     3240 |     +0.0% |       0 |       0 |             0 |       790
+     3250 |     +0.0% |       0 |       0 |             0 |       780
+     3260 |     +0.0% |       0 |       0 |             0 |       770
+     3270 |     +0.0% |       0 |       0 |             0 |       760
+     3280 |     +0.0% |       0 |       0 |             0 |       750
+     3290 |     +0.0% |       0 |       0 |             0 |       740
+     3300 |     +0.0% |       0 |       0 |             0 |       730
+     3310 |     +0.0% |       0 |       0 |             0 |       720
+     3320 |     +0.0% |       0 |       0 |             0 |       710
+     3330 |     +0.0% |       0 |       0 |             0 |       700
+     3340 |     +0.0% |       0 |       0 |             0 |       690
+     3350 |     +0.0% |       0 |       0 |             0 |       680
+     3360 |     +0.0% |       0 |       0 |             0 |       670
+     3370 |     +0.0% |       0 |       0 |             0 |       660
+     3380 |     +0.0% |       0 |       0 |             0 |       650
+     3390 |     +0.0% |       0 |       0 |             0 |       640
+     3400 |     +0.0% |       0 |       0 |             0 |       630
+     3410 |     +0.0% |       0 |       0 |             0 |       620
+     3420 |     +0.0% |       0 |       0 |             0 |       610
+     3430 |     +0.0% |       0 |       0 |             0 |       600
+     3440 |     +0.0% |       0 |       0 |             0 |       590
+     3450 |     +0.0% |       0 |       0 |             0 |       580
+     3460 |     +0.0% |       0 |       0 |             0 |       570
+     3470 |     +0.0% |       0 |       0 |             0 |       560
+     3480 |     +0.0% |       0 |       0 |             0 |       550
+     3490 |     +0.0% |       0 |       0 |             0 |       540
+     3500 |     +0.0% |       0 |       0 |             0 |       530
+     3510 |     +0.0% |       0 |       0 |             0 |       520
+     3520 |     +0.0% |       0 |       0 |             0 |       510
+     3530 |     +0.0% |       0 |       0 |             0 |       500
+     3540 |     +0.0% |       0 |       0 |             0 |       490
+     3550 |     +0.0% |       0 |       0 |             0 |       480
+     3560 |     +0.0% |       0 |       0 |             0 |       470
+     3570 |     +0.0% |       0 |       0 |             0 |       460
+     3580 |     +0.0% |       0 |       0 |             0 |       450
+     3590 |     +0.0% |       0 |       0 |             0 |       440
+     3600 |     +0.0% |       0 |       0 |             0 |       430
+     3610 |     +0.0% |       0 |       0 |             0 |       420
+     3620 |     +0.0% |       0 |       0 |             0 |       410
+     3630 |     +0.0% |       0 |       0 |             0 |       400
+     3640 |     +0.0% |       0 |       0 |             0 |       390
+     3650 |     +0.0% |       0 |       0 |             0 |       380
+     3660 |     +0.0% |       0 |       0 |             0 |       370
+     3670 |     +0.0% |       0 |       0 |             0 |       360
+     3680 |     +0.0% |       0 |       0 |             0 |       350
+     3690 |     +0.0% |       0 |       0 |             0 |       340
+     3700 |     +0.0% |       0 |       0 |             0 |       330
+     3710 |     +0.0% |       0 |       0 |             0 |       320
+     3720 |     +0.0% |       0 |       0 |             0 |       310
+     3730 |     +0.0% |       0 |       0 |             0 |       300
+     3740 |     +0.0% |       0 |       0 |             0 |       290
+     3750 |     +0.0% |       0 |       0 |             0 |       280
+     3760 |     +0.0% |       0 |       0 |             0 |       270
+     3770 |     +0.0% |       0 |       0 |             0 |       260
+     3780 |     +0.0% |       0 |       0 |             0 |       250
+     3790 |     +0.0% |       0 |       0 |             0 |       240
+     3800 |     +0.0% |       0 |       0 |             0 |       230
+     3810 |     +0.0% |       0 |       0 |             0 |       220
+     3820 |     +0.0% |       0 |       0 |             0 |       210
+     3830 |     +0.0% |       0 |       0 |             0 |       200
+     3840 |     +0.0% |       0 |       0 |             0 |       190
+     3850 |     +0.0% |       0 |       0 |             0 |       180
+     3860 |     +0.0% |       0 |       0 |             0 |       170
+     3870 |     +0.0% |       0 |       0 |             0 |       160
+     3880 |     +0.0% |       0 |       0 |             0 |       150
+     3890 |     +0.0% |       0 |       0 |             0 |       140
+     3900 |     +0.0% |       0 |       0 |             0 |       130
+     3910 |     +0.0% |       0 |       0 |             0 |       120
+     3920 |     +0.0% |       0 |       0 |             0 |       110
+     3930 |     +0.0% |       0 |       0 |             0 |       100
+     3940 |     +0.0% |       0 |       0 |             0 |        90
+     3950 |     +0.0% |       0 |       0 |             0 |        80
+     3960 |     +0.0% |       0 |       0 |             0 |        70
+     3970 |     +0.0% |       0 |       0 |             0 |        60
+     3980 |     +0.0% |       0 |       0 |             0 |        50
+     3990 |     +0.0% |       0 |       0 |             0 |        40
+     4000 |     +0.0% |       0 |       0 |             0 |        30
+     4010 |     +0.0% |       0 |       0 |             0 |        20
+     4020 |     +0.0% |       0 |       0 |             0 |        10
+     4030 |     +0.0% |       0 |       0 |             0 |         0
+    final |     +0.0% |       0 |       0 |             0 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0504] Runtime: 0.41s
+Floating nets: 
+Report metrics stage 3, resizer...
+
+==========================================================================
+resizer report_design_area
+--------------------------------------------------------------------------
+Design area 13759 um^2 39% utilization.
+Instance count before 6520, after 6520
+Pin count before 9236, after 9236
+write_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/3_4_place_resized.odb
+Elapsed time: 0:05.29[h:]min:sec. CPU time: user 5.52 sys 0.74 (118%). Peak memory: 338292KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_4_place_resized         .odb            5            330 468254f85cf4419cce33
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+Running detail_place.tcl, stage 3_5_place_dp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/3_4_place_resized.odb
+read_sdc /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_detail_place_pre_dpl.tcl
+INHOLD released 411 FIRM hold cells / drivers for DPL
+OT_OFLOP released 137 output-port flops for DPL
+detailed_placement
+[INFO DPL-0006] Core area: 35663.85 um^2
+[INFO DPL-0007] Movable instances area: 343.45 um^2
+[INFO DPL-0008] Fixed instances area within core: 13415.38 um^2
+[INFO DPL-0009] Utilization: 38.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 6519 cells
+[INFO DPL-0393]   height 289 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       1076 |       304 |       772
+        1 |        187 |        39 |       148
+        2 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 2.
+[INFO DPL-0500] Runtime: 0.25s
+Placement Analysis
+---------------------------------
+total displacement       1408.5 u
+average displacement        0.2 u
+max displacement            2.9 u
+original HPWL           32252.7 u
+legalized HPWL          32990.3 u
+delta HPWL                    2 %
+
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 3745 fixed cells.
+[INFO DPL-0318] Collected 3367 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (2160, 2160) - (213840, 170640)
+[INFO DPL-0310] Assigned 3367 cells into segments.  Movement in X-direction is 0.000000, movement in Y-direction is 0.000000.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 3.294186e+07.
+[INFO DPL-0302] End of matching; objective is 3.286794e+07, improvement is 0.22 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 3.261594e+07.
+[INFO DPL-0307] End of global swaps; objective is 3.261594e+07, improvement is 0.77 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 3.255644e+07.
+[INFO DPL-0309] End of vertical swaps; objective is 3.255644e+07, improvement is 0.18 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 3.253701e+07.
+[INFO DPL-0305] End of reordering; objective is 3.253701e+07, improvement is 0.06 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 67340 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 67340, swaps 5657, moves 21822 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 3.227327e+07, Scratch cost 3.208872e+07, Incremental cost 3.208872e+07, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 3.208872e+07.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.57 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.571851 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 2112 cell flips.
+[INFO DPL-0384] End of flipping; objective is 3.176336e+07, improvement is 1.82 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL            32990.3 u (    9799.0,    23191.3)
+Final HPWL               31715.6 u (    8832.7,    22882.9)
+Delta HPWL                  -3.9 % (      -9.9,       -1.3)
+
+optimize_mirroring
+[INFO DPL-0020] Mirrored 121 instances
+[INFO DPL-0021] HPWL before           31715.6 u
+[INFO DPL-0022] HPWL after            31707.0 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 13759 um^2 39% utilization.
+write_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/3_place.sdc
+Elapsed time: 0:05.75[h:]min:sec. CPU time: user 6.01 sys 0.65 (115%). Peak memory: 448072KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb            5            437 817a3ad1a10188097c26
+cp /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/3_5_place_dp.odb /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/3_place.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/3_place.odb
+read_sdc /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_pre_cts.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_MACRO_CTS skipped: 1 clocked macro(s)
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "ck" found for clock "core_clk".
+[INFO CTS-0011]  Clock net "ck" for macros has 1 sinks.
+[INFO CTS-0011]  Clock net "ck_regs" for registers has 431 sinks.
+[INFO CTS-0008] TritonCTS found 2 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 1 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck.
+[INFO CTS-0028]  Total number of sinks: 1.
+[INFO CTS-0029]  Macro  sinks will be clustered in groups of up to 4 and with maximum cluster diameter of 342.6 um.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(22476, 43980), (22476, 43980)].
+[INFO CTS-0024]  Normalized sink region: [(16.6489, 32.5778), (16.6489, 32.5778)].
+[INFO CTS-0025]     Width:  0.0000.
+[INFO CTS-0026]     Height: 0.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 1
+    Sub-region size: 0.0000 X 0.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 1.
+[INFO CTS-0201] 1 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_regs.
+[INFO CTS-0028]  Total number of sinks: 431.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 8.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 17.
+[INFO CTS-0024]  Normalized sink region: [(3.49167, 66.3533), (13.1213, 113.878)].
+[INFO CTS-0025]     Width:  9.6296.
+[INFO CTS-0026]     Height: 47.5244.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 9.6296 X 23.7622
+[INFO CTS-0034]     Segment length (rounded): 12.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 17.
+[INFO CTS-0018]     Created 2 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 2 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 20 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 20 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 6:1, 11:1, 12:1, 19:1, 22:2, 23:1, 26:4, 27:2, 28:3, 30:2, 31:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0124] Clock net "ck"
+[INFO CTS-0125]  Sinks 1
+[INFO CTS-0098] Clock net "ck_regs"
+[INFO CTS-0099]  Sinks 446
+[INFO CTS-0100]  Leaf buffers 17
+[INFO CTS-0101]  Average sink wire length 37.79 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 15
+[INFO RSZ-0047] Found 1 long wires.
+[INFO RSZ-0048] Inserted 1 buffers in 1 nets.
+[INFO CTS-0033] Balancing latency for clock core_clk
+[INFO CTS-0036]  inserted 3 delay buffers
+[INFO CTS-0037] Total number of delay buffers: 3
+[INFO CTS-0500] Runtime: 1.63s
+QDM PINFLOP reference: 150 input pin flops, median arrival 207.746033 (range 204.803894 .. 211.518173)
+QDM reference pin dq[50]$_DFF_P_/CLK clock arrival max 207.746033 min 164.135269 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 35663.85 um^2
+[INFO DPL-0007] Movable instances area: 359.50 um^2
+[INFO DPL-0008] Fixed instances area within core: 13415.38 um^2
+[INFO DPL-0009] Utilization: 38.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 6561 cells
+[INFO DPL-0393]   height 289 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.16s
+Placement Analysis
+---------------------------------
+total displacement        735.8 u
+average displacement        0.1 u
+max displacement            3.2 u
+original HPWL           32148.2 u
+legalized HPWL          32855.9 u
+delta HPWL                    2 %
+
+estimate_parasitics -placement
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 0.40s
+OT_HOLD_GUARD start: hold ws -27.92 tns -641.4 viol 88 (margin 10, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 143 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -27.917 | -641.370 | aq[3]$_DFF_P_/D
+       10 |       0 |      18 |            0 |    +0.0% | -12.957 | -442.091 | dq[134]$_DFF_P_/D
+       20 |       0 |      38 |            0 |    +0.0% | -10.824 | -322.118 | dq[119]$_DFF_P_/D
+       30 |       0 |      58 |            0 |    +0.0% |  -9.004 | -220.915 | dq[108]$_DFF_P_/D
+       40 |       0 |      78 |            0 |    +0.0% |  -6.958 | -135.918 | dq[117]$_DFF_P_/D
+       50 |       0 |      88 |            0 |    +0.0% |  -4.606 | -72.989 | dq[102]$_DFF_P_/D
+       60 |       0 |      98 |            0 |    +0.1% |  -2.876 | -36.959 | dq[67]$_DFF_P_/D
+       70 |       0 |     108 |            0 |    +0.1% |  -1.560 | -14.625 | dq[65]$_DFF_P_/D
+       80 |       0 |     118 |            0 |    +0.1% |  -0.610 |  -3.381 | dq[2]$_DFF_P_/D
+       90 |       0 |     128 |            0 |    +0.1% |   0.035 |   0.000 | dq[1]$_DFF_P_/D
+      100 |       0 |     138 |            0 |    +0.1% |   0.842 |   0.000 | dq[9]$_DFF_P_/D
+      110 |       0 |     148 |            0 |    +0.1% |   1.442 |   0.000 | dq[55]$_DFF_P_/D
+      120 |       0 |     158 |            0 |    +0.1% |   2.291 |   0.000 | dq[49]$_DFF_P_/D
+      130 |       0 |     168 |            0 |    +0.1% |   3.113 |   0.000 | dq[81]$_DFF_P_/D
+      140 |       0 |     178 |            0 |    +0.1% |   4.840 |   0.000 | dq[39]$_DFF_P_/D
+    final |       0 |     182 |            0 |    +0.1% |  10.028 |   0.000 | dq[101]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 182 hold buffers.
+[INFO RSZ-0506] Runtime: 1.32s
+OT_HOLD_GUARD chunk 1: hold ws 10.03 (+37.95) tns 0.0 (+100.0%) viol 0, 1 s
+detailed_placement
+[INFO DPL-0006] Core area: 35663.85 um^2
+[INFO DPL-0007] Movable instances area: 372.77 um^2
+[INFO DPL-0008] Fixed instances area within core: 13415.38 um^2
+[INFO DPL-0009] Utilization: 38.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 6743 cells
+[INFO DPL-0393]   height 289 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.10s
+Placement Analysis
+---------------------------------
+total displacement         50.9 u
+average displacement        0.0 u
+max displacement            1.4 u
+original HPWL           33574.3 u
+legalized HPWL          33573.0 u
+delta HPWL                    0 %
+
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 13788 um^2 39% utilization.
+source /work/hooks/post_cts_post_cts.tcl
+write_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/4_cts.sdc
+Elapsed time: 0:08.99[h:]min:sec. CPU time: user 11.16 sys 1.24 (137%). Peak memory: 469532KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb            8            458 16ca66106eda083c5e2e
+cp /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/4_1_cts.odb /work/results/asap7/opentallas_ot_qkvd_llr_replay_sram_leaf_asap7_ref_gate/base/4_cts.odb

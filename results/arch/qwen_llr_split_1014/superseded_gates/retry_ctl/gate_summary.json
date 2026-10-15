@@ -1,0 +1,98 @@
+{
+  "schema": "opentallas.ref_tile.gate_result.v2",
+  "kit": "qkd_llr_ctl",
+  "verdict": "WARN",
+  "generated": "2026-10-14T19:24:45-0700",
+  "host": "ot-agidock128",
+  "cts": true,
+  "commit": null,
+  "clock": {
+    "max_root_sinks": 1776,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": 270.6,
+    "tt_spread_ps": 49.0,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 2913,
+            "mean": 244.9,
+            "min": 221.6,
+            "max": 270.6
+          },
+          "all": {
+            "n": 2913,
+            "mean": 244.9,
+            "min": 221.6,
+            "max": 270.6
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "1,776 sinks on the largest root <= 15,000; measured TT insertion 270.6 ps, leaf spread 49.0 ps"
+  },
+  "items": [
+    {
+      "severity": "WARN",
+      "check": "util",
+      "message": "synthesized std area 1822 um2 + macros 0 in core 35664: util 5%",
+      "fix": "set \"std_area_um2\": 1822 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.high_fanout",
+      "message": "reset port rst_n: 1,194 loads (645 flops, e.g. a_rx_v$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+      "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.high_fanout",
+      "message": "port p_tx_up: 616 loads (1 flops, e.g. p_tx_v$_DFF_PN0_) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+      "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "6 output bit(s) combinational from input ports (e.g. p_tx_up->q_ra[5] 7 lv, p_tx_up->q_ra[4] 6 lv, p_tx_up->q_ra[3] 6 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "28 input->register endpoint(s) > 3 levels (worst q_dout[539]->p_tx_flit[581]$_DFFE_PN0P_/D 89 lv, q_dout[539]->p_tx_flit[580]$_DFFE_PN0P_/D 89 lv, q_dout[539]->p_tx_flit[579]$_DFFE_PN0P_/D 89 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "6 register->output bit(s) > 3 levels (worst rf[548]$_DFF_P_->q_ra[0] 88 lv, rf[548]$_DFF_P_->q_ra[5] 87 lv, rf[548]$_DFF_P_->q_ra[4] 87 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.logic_depth",
+      "message": "reg->reg stage rf[548]$_DFF_P_ -> exp_s[7]$_DFFE_PN0P_/D: ~3289 ps estimated (89 logic levels) > 600 ps: pipeline / restructure the stage",
+      "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.util_channel",
+      "message": "utilisation 5.2% outside 45%-65% (std 1868 + macro 0 um2 in 35664 um2): shrink the outline (long wires / sparse placement)",
+      "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    }
+  ]
+}

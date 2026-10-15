@@ -1,0 +1,139 @@
+{
+ "cells": 11415,
+ "flops": 1776,
+ "icgs": 0,
+ "macros": 0,
+ "findings": {
+  "high_fanout": [
+   "reset port rst_n: 1,194 loads (645 flops, e.g. a_rx_v$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "port p_tx_up: 616 loads (1 flops, e.g. p_tx_v$_DFF_PN0_) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast"
+  ],
+  "boundary": [
+   "6 output bit(s) combinational from input ports (e.g. p_tx_up->q_ra[5] 7 lv, p_tx_up->q_ra[4] 6 lv, p_tx_up->q_ra[3] 6 lv): register the boundary (pin flops / registered outputs)",
+   "28 input->register endpoint(s) > 3 levels (worst q_dout[539]->p_tx_flit[581]$_DFFE_PN0P_/D 89 lv, q_dout[539]->p_tx_flit[580]$_DFFE_PN0P_/D 89 lv, q_dout[539]->p_tx_flit[579]$_DFFE_PN0P_/D 89 lv): register the boundary (pin flops / registered outputs)",
+   "6 register->output bit(s) > 3 levels (worst rf[548]$_DFF_P_->q_ra[0] 88 lv, rf[548]$_DFF_P_->q_ra[5] 87 lv, rf[548]$_DFF_P_->q_ra[4] 87 lv): register the boundary (pin flops / registered outputs)"
+  ],
+  "logic_depth": [
+   "reg->reg stage rf[548]$_DFF_P_ -> exp_s[7]$_DFFE_PN0P_/D: ~3289 ps estimated (89 logic levels) > 600 ps: pipeline / restructure the stage"
+  ],
+  "util_channel": [
+   "utilisation 5.2% outside 45%-65% (std 1868 + macro 0 um2 in 35664 um2): shrink the outline (long wires / sparse placement)"
+  ]
+ },
+ "refuse": {
+  "boundary": [
+   "6 combinational input->output bit(s)",
+   "input->register 89 levels > 9 (q_dout[539] -> p_tx_flit[581]$_DFFE_PN0P_/D)",
+   "register->output 88 levels > 3 (rf[548]$_DFF_P_ -> q_ra[0])"
+  ],
+  "logic_depth": [
+   "~3289 ps > 700 ps (rf[548]$_DFF_P_ -> exp_s[7]$_DFFE_PN0P_/D)"
+  ]
+ },
+ "metrics": {
+  "core_um": [
+   211.7,
+   168.5
+  ],
+  "clock_roots": [
+   {
+    "root": "port:clk",
+    "ff": 1776,
+    "icg": 0,
+    "macro_pins": 0,
+    "example": "a_rx_flit[0]$_DFFE_PP_"
+   }
+  ],
+  "hier_subblocks": 0,
+  "clock_max_root_sinks": 1776,
+  "clock_max_root": "port:clk",
+  "high_fanout_top": [
+   {
+    "net": "port rst_n",
+    "loads": 1194,
+    "flops": 645
+   },
+   {
+    "net": "_15516_/Y (OA21x2_ASAP7_75t_R)",
+    "loads": 789,
+    "flops": 0
+   },
+   {
+    "net": "port p_tx_up",
+    "loads": 616,
+    "flops": 1
+   },
+   {
+    "net": "_14185_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 559,
+    "flops": 1
+   },
+   {
+    "net": "_14486_/Y (NAND2x2_ASAP7_75t_R)",
+    "loads": 548,
+    "flops": 0
+   }
+  ],
+  "hf_max_port": 616,
+  "hf_max_reset": 1194,
+  "hf_max_net": 789,
+  "in_to_out_bits": 6,
+  "in_to_reg_levels": 89,
+  "reg_to_out_levels": 88,
+  "icg_enable_from_port": 0,
+  "depth_ps": 3289.0,
+  "depth_path": [
+   "rf[548]$_DFF_P_",
+   "exp_s[7]$_DFFE_PN0P_/D"
+  ],
+  "depth_levels": 89,
+  "reach_worst_um": 187.5,
+  "reach_violations": 0,
+  "util": 0.0524
+ },
+ "top": "ot_qkvd_d2d_llr_ctl",
+ "netlist": "/srv/opentallas-scratch/claude/ref_gate/qkd_llr_ctl-20261014-190224/routes/gate/work/orfs/results/asap7/opentallas_ot_qkvd_d2d_llr_ctl_asap7_ref_gate/base/1_2_yosys.v",
+ "seconds": 0.4,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 256,
+  "hf_max": 3000,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "channel_um": 20.0
+ },
+ "clock_rule": {
+  "max_root_sinks": 1776,
+  "root": "port:clk",
+  "ok": true,
+  "text": "1,776 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "high_fanout: reset port rst_n: 1,194 loads (645 flops, e.g. a_rx_v$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region) | boundary: 6 output bit(s) combinational from input ports (e.g. p_tx_up->q_ra[5] 7 lv, p_tx_up->q_ra[4] 6 lv, p_tx_up->q_ra[3] 6 lv): register the boundary (pin flops / registered outputs) | logic_depth: reg->reg stage rf[548]$_DFF_P_ -> exp_s[7]$_DFFE_PN0P_/D: ~3289 ps estimated (89 logic levels) > 600 ps: pipeline / restructure the stage | util_channel: utilisation 5.2% outside 45%-65% (std 1868 + macro 0 um2 in 35664 um2): shrink the outline (long wires / sparse placement)"
+}
