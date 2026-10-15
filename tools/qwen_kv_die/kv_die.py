@@ -241,7 +241,7 @@ SPLIT_BINDINGS = dict(
     # v1.1: the three native TP8 control leaves A / B / C behind the wires-only qkd_ectl3_s, ck[0..2] = die ck_a / ck_b / ck_c
     # v1.2: the DIRECT-seam parent (Codex 5f3e5767f / 00f42ca01: no B feed-through flops; C launches straight to A over B;
     # exact 3,705 / 4,137 PASS, A/B/C mutants FAIL) = the structural fix of the tp3 views' native-audit FAIL; same ports
-    qkd_ectl=dict(module='qkd_ectl3_direct_s', file='rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv',
+    qkd_ectl=dict(module='qkd_ectl3_epoch_direct_s', file='rtl/qwen_sys/split_20261014/qkd_ectl3_epoch_direct_s.sv',
                   ports=dict(si=['si'], so=['so'], t0=['t0'], t1=['t1'], e0=['e0'], e1=['e1'], e2=['e2'], e3=['e3'],
                              s0=['s0'], s1=['s1'], s2=['s2'], s3=['s3'], rq=['rq'], rs=['rs'], ck_a=['ck'], rst_n=['rst_n']),
                   sliced=dict(ck_b='ck_a', ck_c='ck_a'),
@@ -696,6 +696,13 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
         if nv < best[0]:
             best = (nv, m)
     _PIN_HINT.clear()
+    if split and best[0]:
+        import kv_pin_repair
+        repaired = kv_pin_repair.repair(sys.modules[__name__], best[1])
+        failures = pin_reach(repaired, masters(repaired, 1))
+        if failures['violations']:
+            raise ValueError(f"split KV die has {failures['violations']} unrepaired pin hops: {failures['worst'][:3]}")
+        return repaired
     return best[1]
 
 
@@ -893,7 +900,7 @@ def _buses(m, T, r):
                 add((f'te_{st}_{e}_{h}', 'stack_local', T_E, [(c_, f'e{h}'), (hd_, 'e')]))
                 add((f'ts_{st}_{e}_{h}', 'stack_local', T_RET, [(hd_, 's'), (c_, f's{h}')]))
                 add((f'nb_{st}_{e}_{h}', 'stack_local', HEAD_NB, [(hd_, 'nb'), (f'astk_{st}', f'f{e}{h}')]))
-            add((f'krq_{st}_{e}', 'spine_local', 16, [(c_, 'rq'), (f'land_{st}', f'rq{e}')]))
+            add((f'krq_{st}_{e}', 'spine_local', KS.W_RQ if split else 16, [(c_, 'rq'), (f'land_{st}', f'rq{e}')]))
             add((f'krs_{st}_{e}', 'spine_local', 1 + 1024, [(f'land_{st}', f'rs{e}'), (c_, 'rs')]))
         add((f'kvn_{st}', 'kvn', 1024 + 2 + 14 + 6 + 1 + 1, [('seq', f'kvn_{st}'), (f'land_{st}', 'kvn')]))
         # qwen-1010/b 2026-10-11: stream-command net -- the descriptor issuer in qkd_seq (ot_qkvd_kv_desc, KDESC 1) posts
@@ -901,8 +908,8 @@ def _buses(m, T, r):
         # the stack's controller element, whose W-face kc port enters the async FIFO and the hclk tap chain to the 32
         # per-PC heads (ot_qkvd_kcmd_tap).  No ready: the issuer bounds its outstanding layers.
         add((f'kc_{st}', 'kv_oneway', 1 + 32, [('seq', f'kc_{st}'), (f'ctrl_{st}', 'kc')]))
-        add((f'emf_{st}', 'kvn', W + 2, [('embgw', f'emf_{st}'), (f'land_{st}', 'emf')]))
-        add((f'emr_{st}', 'kvn', W + 2, [(f'land_{st}', 'emr'), ('embgw', f'emr_{st}')]))
+        add((f'emf_{st}', 'kvn', KS.W_EMF if split else W + 2, [('embgw', f'emf_{st}'), (f'land_{st}', 'emf')]))
+        add((f'emr_{st}', 'kvn', KS.W_EMR if split else W + 2, [(f'land_{st}', 'emr'), ('embgw', f'emr_{st}')]))
         if not m['geo'].get('split'):
             add((f'ing_{st}', 'kvn', W + 2, [('host', f'ing_{st}'), (f'land_{st}', 'ing')]))
         else:
@@ -1466,6 +1473,9 @@ def masters(m, k=1, port_bits=None):
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)
+    for name, ports in m.get('assigned_ports', {}).items():
+        if name in M:
+            M[name].ports.update({p: tuple(v) for p, v in ports.items() if p in M[name].ports})
     return M
 
 
@@ -1805,7 +1815,7 @@ def pin_xy(it, mm, port):
     return it.x + x, it.y + y
 
 
-def pin_reach(m, M, reach=504.0, skip=('clock_trunk', 'reset', 'constant')):
+def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
     """qwen-1010/b 2026-10-10: the pin-to-pin register hops of every point-to-point die bus (Manhattan between the two
     drawn pins; the frame-to-frame margin lint cannot see a pin on a far face or far along a long face)."""
     by = {i.name: i for i in m['insts']}
