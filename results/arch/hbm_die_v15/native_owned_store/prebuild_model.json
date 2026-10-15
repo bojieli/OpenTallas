@@ -1,0 +1,20 @@
+{
+  "baseline_commit": "6789f8620",
+  "profile_commit": "a7b86347d",
+  "current_VM_bank_SHA256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "change": "Stable-row lease avoids opportunistic PRE while outer owner still has same-row work; initial actual descriptor handshake; explicit write-done per-PC ownership. Same single bank/REF state owner perPC.",
+  "payload_storage_delta": 0,
+  "state_root_delta_vs340cfd": 0,
+  "workload": "Unchanged2561 realWR/trueACK/RL23readback per MAIN/MIRROR campaign, actual verification history retained, earlyACK negative.",
+  "immutable_price": 248,
+  "unchanged_gate": 272,
+  "baseline_cycles": [
+    148,
+    565
+  ],
+  "resources": "32VMbanks/96macros+32landing+128WB+128native response=384macros;128nativePCcontrollers; measuredPCclockpins13650 each",
+  "qualification": "No warmup/reset/model changes; full timing/physical not qualified.",
+  "source_SHA256": {
+    "rtl/hbm_accel/loader/service_native/tb_dma_native_owned_store_static.sv": "288056a3a51db1429c322fe82737ac37ec620db053b5a05e0a33d2b380116e59"
+  }
+}
