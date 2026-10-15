@@ -388,11 +388,18 @@ module tb_s81_die_layer;
     wire [12:0] mx_av = {2'b0,est[10][1],10'b0};
     wire [12:0] mx_dv = {2'b0,d[10][8],10'b0};
     wire [103:0] mx_dt = {16'b0,d[10][7:0],80'b0};
+    // Reset release is a compiler startup edge, driven on the opposite phase;
+    // do not derive async reset from an NBA-updated stream counter expression.
+    reg mx_rst_n=0;
+    initial begin
+        while(cyc<1000) @(negedge ck);
+        mx_rst_n=1;
+    end
     reg mx_pw_v=0; reg [6:0] mx_pw_a=0; reg [27:0] mx_pw_d=0;
     wire mx_is_fault; wire [3:0] mx_is_code; wire [1:0] mx_phase;
     reg [34:0] mx_pmem [0:7];
     ot_s81_fixed_issue #(.NOPS(2),.NENG(13),.STAGE(0),.OP_BASE(2),.ENG_PRESENT(13'h400)) mx_issuer(
-        .clk(ck),.rst_n(rst && cyc>=1000),.pw_v(mx_pw_v),.pw_a(mx_pw_a),.pw_d(mx_pw_d),.prog_len(8'd2),
+        .clk(ck),.rst_n(mx_rst_n),.pw_v(mx_pw_v),.pw_a(mx_pw_a),.pw_d(mx_pw_d),.prog_len(8'd2),
         .job_v(cyc==1250),.job_user(10'd0),.job_pos(21'd0),.job_tok(21'd1000),
         .cmd_v(mx_cv),.cmd_d(mx_cd),.engine_available(mx_av),.dn_v(mx_dv),.dn_tag(mx_dt),
         .fault(mx_is_fault),.fault_code(mx_is_code),.phase(mx_phase),
@@ -407,7 +414,7 @@ module tb_s81_die_layer;
             @(negedge ck); mx_pw_v=0; @(negedge ck);
         end
     end
-    always @(posedge ck) if(rst && mx_is_fault) $fatal(1,"MIX_FIXED_ISSUER fault code=%0d cycle=%0d phase=%0d",mx_is_code,cyc,mx_phase);
+    always @(posedge ck) if(rst && mx_is_fault) $fatal(1,"MIX_FIXED_ISSUER fault code=%0d cycle=%0d phase=%0d sealed=%0d cfg=%0d",mx_is_code,cyc,mx_phase,mx_issuer.sealed,mx_issuer.cfg_fault);
     initial begin
         if(JOBS!=1) $fatal(1,"MIX fixed component calendar contains one context; compile all contexts before use");
 `ifdef TB_SEQC
