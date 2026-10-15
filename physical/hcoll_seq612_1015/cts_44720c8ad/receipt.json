@@ -1,0 +1,23 @@
+{
+  "source_commit": "44720c8ad6ad",
+  "job": "hcoll-pinreg-store141-44720c8ad-tc",
+  "host": "ot-epyc4",
+  "remote_root": "/srv/opentallas-scratch2/claude/closure-loop/hcoll-pinreg-store141-44720c8ad-tc",
+  "scope": "actual ot_hgi_coll_static_pinreg_store standalone hardleaf CTS only, placement parasitics, no repair",
+  "leaf_outline_um": [
+    207.36,
+    129.6
+  ],
+  "registered_bits": 597,
+  "clock_sinks_including_macro": 598,
+  "closed": false,
+  "unrepaired_CTS_clock_ps": 770,
+  "CTS_setup_ps": 190.586,
+  "CTS_hold_ps": -29.9287,
+  "limitations": [
+    "No detailed route/DRC/finalcorner verdict yet.",
+    "Post-measure sdc_cmd informational echo executed unintended no command after semicolon; calib.json/env valid.",
+    "Resume existing source job at route after terminal recipe failure; preserve CTS results.",
+    "Full controller/endpt hierarchy and token price unqualified."
+  ]
+}
