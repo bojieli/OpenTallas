@@ -6023,14 +6023,14 @@ BANK_PORTS = {}
 RLY_FACES = {}
 
 
-def _q_port_face(rq, port):
+def _q_port_face(rq, port, port_map=None):
     """'S' or 'N': face of a q element port group (from the LEF pin y)"""
-    nm = real_ports_r8()[rq['name']][port][0]
+    nm = (real_ports_r8()[rq['name']] if port_map is None else port_map)[port][0]
     return 'S' if rq['pins'][nm][1][1] < rq['h'] / 2 else 'N'
 
 
-def _q_port_xc(rq, port):
-    nms = real_ports_r8()[rq['name']][port]
+def _q_port_xc(rq, port, port_map=None):
+    nms = (real_ports_r8()[rq['name']] if port_map is None else port_map)[port]
     xs = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for n in nms if n in rq['pins']]
     return sum(xs) / len(xs)
 
@@ -6065,27 +6065,29 @@ def _q_banks(p, ex, ey, rq, region, mirror=False):
     """one bank per element face (S below, N above), at the centre of its ports' pins.  --q-x1b (option B, s81-gen
     2026-10-10): x1 is its own S-face bank 'bx' at the x1 pins' centre (element x 400.08-505.44: over the slot station,
     not the packed cfg ROM row), and a mirrored (MY, right-lane) element mirrors the bank x."""
+    # One current, authoritative map per element; no cache survives a view change.
+    port_map = real_ports_r8()[rq['name']]
     out = []
     groups = []
     if Q_X1B:
         # A default/legacy q LEF must never silently stand in for the selected
         # split x1 face plan.  A stub is allowed for integration, not closure.
-        assert _q_port_face(rq, 'x1') == 'S', '--q-x1b requires x1 on the S face'
-        x1c = _q_port_xc(rq, 'x1')
+        assert _q_port_face(rq, 'x1', port_map) == 'S', '--q-x1b requires x1 on the S face'
+        x1c = _q_port_xc(rq, 'x1', port_map)
         assert 400.08 <= x1c <= 505.44, ('--q-x1b requires the east-end x1 view', x1c)
     for face in 'SN':
-        ports = [q_ for q_ in QBANK_IN + QBANK_OUT if _q_port_face(rq, q_) == face]
+        ports = [q_ for q_ in QBANK_IN + QBANK_OUT if _q_port_face(rq, q_, port_map) == face]
         if Q_X1B and face == 'S' and 'x1' in ports:
             ports.remove('x1')
             groups.append(('S', 'bx', ['x1']))
         if ports:
             groups.append((face, f'b{face.lower()}', ports))
     for face, tag, ports in groups:
-        xc = sum(_q_port_xc(rq, q_) for q_ in ports) / len(ports)
+        xc = sum(_q_port_xc(rq, q_, port_map) for q_ in ports) / len(ports)
         if PIN_ALIGN:
             # --pin-align: the bank stands under the EXTENT of its element pins (S bank: x0 / x1 / cfg / go pins span
             # 226.1-284.6, the unweighted port-centroid mean put the 60.5-um bank at 213.8-274.3, 10 um short of x0)
-            xs_ = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for q_ in ports for n in real_ports_r8()[rq['name']][q_]
+            xs_ = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for q_ in ports for n in port_map[q_]
                    if n in rq['pins']]
             assert max(xs_) - min(xs_) <= 60.48 - SHAVE - 0.4, ('qbank narrower than its element pins', face, min(xs_), max(xs_))
             xc = (min(xs_) + max(xs_)) / 2
