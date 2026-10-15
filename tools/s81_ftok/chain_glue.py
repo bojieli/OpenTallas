@@ -9,7 +9,7 @@
                                       the last DSpark stage's hop output of row i == golden stage-2 output, and its
                                       hc_pre + norm == the draft-head bench's xf of row i
 """
-import argparse, os, pickle, sys
+import argparse, os, pickle, sys, json, hashlib
 from pathlib import Path
 os.environ.setdefault("HDC_V41_ARITH", "chunk8")
 import numpy as np
@@ -51,15 +51,33 @@ def main():
     ap.add_argument("--mtp")
     ap.add_argument("--out")
     ap.add_argument("--row", type=int, default=0)
+    ap.add_argument("--native-prep", type=Path, help="actual RTL head preparation output directory (xf.npy and source provenance)")
     a = ap.parse_args()
     import hdc_golden_v41 as V
     import rtl_v41_fullshape_layer_campaign as LC
+    def native_xf():
+        if a.native_prep is None:
+            return None
+        w = a.native_prep
+        m = json.loads((w / "xf.provenance.json").read_text())
+        digest = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+        assert m["gate"] == "PASS" and m["arithmetic"] == "RTL only; no DPI", "unqualified head prep"
+        assert m["actual_output_sha256"] == digest(w / "xf.mem"), "head prep output changed"
+        assert m["inputs"]["hout"]["sha256"] == digest(a.hout), "wrong upstream hop handoff"
+        xf = np.load(w / "xf.npy")
+        words = np.array([int(x,16) for x in (w / "xf.mem").read_text().split()], np.uint32)
+        assert same(xf, (words << 16).view(F)), "xf.npy differs from actual RTL dump"
+        assert xf.shape == (5120,), "head output shape"
+        return xf
     if a.step == "head":
         h = rows_to_h(a.hout)
         z = np.load(GOLD / "ctx1048576_L39.npz"); zh = np.load(GOLD / "ctx1048576_head.npz")
         assert same(h, z["h_out"]), "L39 hop output != shard h_out"
-        ck = LC.Checkpoint(); m, _ = LC.build_model(ck, engram=False)
-        xf = V.rmsnorm_fold(m.hc_pre(h, z["pre_out"]), m.w["norm.weight"], m.eps)
+        xf = native_xf()
+        if xf is None:
+            ck = LC.Checkpoint(); m, _ = LC.build_model(ck, engram=False)
+            xf = V.rmsnorm_fold(m.hc_pre(h, z["pre_out"]), m.w["norm.weight"], m.eps)
+            print("HISTORICAL_REFERENCE_GLUE: HC_PRE+RMSNorm supplied by Python; not native qualification")
         assert same(xf, zh["xf"]), "head xf from the RTL rows != shard xf"
         print("HEAD_GLUE PASS: L39 hop output == h_out; hc_pre + norm == xf (the head bench's input)")
     elif a.step == "mtp0":
@@ -77,9 +95,12 @@ def main():
         fx = pickle.loads((Path(a.mtp) / f"hc_chain_M2R{a.row}.pkl").read_bytes())
         assert same(h, fx["chain"]["h_out"]), f"M2R{a.row} hop output != golden stage-2 output"
         z = np.load(Path(a.mtp) / "draft_head.npz")
-        ck = LC.Checkpoint(); m, _ = LC.build_model(ck, engram=False)
-        Lf = m.L + m.n_mtp - 1
-        xn = V.rmsnorm_bf16(V.to_bf16(m.hc_pre(h, fx["chain"]["pre_out"])), m.lw(Lf, "norm.weight"), m.eps)
+        xn = native_xf()
+        if xn is None:
+            ck = LC.Checkpoint(); m, _ = LC.build_model(ck, engram=False)
+            Lf = m.L + m.n_mtp - 1
+            xn = V.rmsnorm_bf16(V.to_bf16(m.hc_pre(h, fx["chain"]["pre_out"])), m.lw(Lf, "norm.weight"), m.eps)
+            print("HISTORICAL_REFERENCE_GLUE: HC_PRE+RMSNorm supplied by Python; not native qualification")
         assert same(xn, z["xf"][a.row]), f"draft row {a.row}: xf from the RTL rows != golden"
         print(f"MTPO_GLUE PASS row {a.row}: stage-2 hop output == golden; hc_pre + norm == draft-head xf")
 
