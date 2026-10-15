@@ -1317,6 +1317,7 @@ def _relays(m):
     # Reservations are allocator obstacles only, never fake die instances/views.
     obstacles = m['insts'] + m.get('placement_keepouts', [])
     by = {i.name: i for i in obstacles}
+    exact_reservations = {i.name for i in m.get('placement_keepouts', [])}
     Wd, Hd = m['die']['w'], m['die']['h']
     # The south-face leaf fits inside the CDC-column gap.  A43.2um occupancy
     # cell falsely merges that gap with the adjacent control tile; half-grid
@@ -1344,7 +1345,11 @@ def _relays(m):
                         return False
                 for n in owner.get((gx, gy), ()):
                     it = by[n]
-                    if it.x < x + w + bgap and x - bgap < it.x + it.w and it.y < y + h + bgap and y - bgap < it.y + it.h:
+                    # New source-band reservations already lie on their exact
+                    # site/track CRT. Keep the required5.4um physical clearance;
+                    # legacy frames retain their21.6um independent-snap guard.
+                    guard = 5.4 if n in exact_reservations else bgap
+                    if it.x < x + w + guard and x - guard < it.x + it.w and it.y < y + h + guard and y - guard < it.y + it.h:
                         return False
         return True
 
@@ -1686,6 +1691,16 @@ def _relays(m):
                 break
             except ValueError:
                 if attempt or not m['geo'].get('split'):
+                    if m.get('head_source_bands'):
+                        # Save an explicit partial-construction refusal. Original
+                        # buses and incomplete new chains are never a die plan.
+                        import head_source_bands as HSB
+                        failure = ValueError(f'kv die relays: no legal chain for {bid}; stage {st_["k"]}; path index {st_["idx0"]}; remaining {remaining_():.3f}um')
+                        failure.relay_construction = dict(model=m,failed_bus=bid,source=[a,pa],target=[b,pb],bits=bits,
+                            previous_endpoint=st_['prev_ep'],previous_pin=st_['prev_pt'],path_index=st_['idx0'],
+                            failed_stage=st_['k'],remaining_um=remaining_(),path=st_['path'],partial_buses=nb,
+                            reservation_guard_um=5.4,legacy_frame_guard_um=21.6,relay_guard_um=4.32)
+                        raise failure
                     raise
                 # v1.1 (split): the chain ran out of relay spots in a corridor other chains fill: re-route it around
                 # every cell those chains' relays hold and place it again
@@ -2772,6 +2787,9 @@ def main(argv=None):
     try:
         m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split, reserve_static_memory=a.reserve_static_memory, reserve_native_astk=a.reserve_native_astk, head_source_bands=a.head_source_bands, head_source_bands_n4=a.head_source_bands_n4)
     except ValueError as failure:
+        if hasattr(failure,'relay_construction'):
+            import head_source_bands as HSB
+            HSB.write_relay_failure(failure.relay_construction,sys.modules[__name__],a.out,str(failure))
         if (a.head_source_bands or a.head_source_bands_n4) and hasattr(failure, "candidate_plan"):
             import head_source_bands as HSB
             HSB.write_failure(failure.candidate_plan, sys.modules[__name__], a.out, str(failure))

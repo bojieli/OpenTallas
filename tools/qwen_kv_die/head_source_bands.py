@@ -169,3 +169,19 @@ def load_allocation(path, K):
     m['insts']=[K.F.Inst(**i)for i in m['insts']]
     m['head_source_bands']=rec['head_source_bands']
     return m
+
+
+def write_relay_failure(failure,K,out,reason):
+    """Construction stopped before complete fresh chains; never a usable plan."""
+    m=failure['model'];out.mkdir(parents=True,exist_ok=True)
+    record={k:v for k,v in failure.items()if k!='model'}
+    record.update(schema='opentallas.qwen-head-rejected-relay-construction.v1',
+        qualified=False,adopted=False,status='REFUSED_PARTIAL_RELAY_CONSTRUCTION',reason=reason,
+        scope='Partial allocator state only. Original buses have NOT been replaced by completed chains; clocks, reset depth, pin reach, fine cuts and full-body legality are UNPROVEN.',
+        head_source_bands=m['head_source_bands'],die=m['die'],
+        source_sha256={str(p.relative_to(K.ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in (Path(K.__file__),Path(__file__),Path(ingress.__file__),
+                K.ROOT/'tools/qwen_kv_die/head_n4_request.py',K.ROOT/'tools/qwen_kv_die/head_placement_lattice.py')})
+    (out/'rejected_relay_construction.json').write_text(json.dumps(record,indent=1)+'\n')
+    (out/'partial_insts.json').write_text(json.dumps([i.d()for i in m['insts']],indent=1)+'\n')
+    print(json.dumps({k:record[k]for k in ('status','failed_bus','failed_stage','previous_pin','remaining_um')}))
