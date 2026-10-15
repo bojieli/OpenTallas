@@ -22,7 +22,7 @@ module tb_qfd_ucie_static;
  if(!rst_n)begin a_p_vp<=0;b_p_vp<=0;a_p_fp<=0;b_p_fp<=0;end
  else begin
  a_p_vp<={a_p_vp,a_p_tv};b_p_vp<={b_p_vp,b_p_tv};
- a_p_fp<={a_p_fp,a_p_tf ^ ((MUT==1 && a_p_tv)?597'b1:598'b0)};
+ a_p_fp<={a_p_fp,a_p_tf ^ ((MUT==1 && a_p_tv)?597'b1:597'b0)};
  b_p_fp<={b_p_fp,b_p_tf};
  end end
  reg r_wr=0,r_rd=0,r_ev=0;
@@ -147,7 +147,7 @@ initial begin
  if(rst_n)begin
  if(a_p_abort || a_r_abort || b_p_abort || b_r_abort)aborts=aborts+1;
  if(MUT==0 && ({a_p_abort,a_r_abort,b_p_abort,b_r_abort}!==4'b0 ||
- {a_p_cause,a_r_cause,b_p_cause,b_r_cause}!==28'b0))bad=bad+1;
+ {a_p_cause,a_r_cause,b_p_cause,b_r_cause}!==32'b0))bad=bad+1;
  if(MUT==0 && (a_p_tv && a_r_tv || b_p_tv && b_r_tv))bad=bad+1;
  if(cyc>=51 && cyc<51+N)begin checks=checks+2;
  if(a_p_rv!==1'b1 || a_p_word!==pw(1,cyc-51))bad=bad+1;
