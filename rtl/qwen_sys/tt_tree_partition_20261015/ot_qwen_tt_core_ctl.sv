@@ -49,14 +49,14 @@ module ot_qwen_tt_core_ctl #(
     parameter integer OKEEP = 0,          // el1011-q-seq: output stations through (* keep *) wires (no merge with internal flops)
     parameter integer PK = 0,             // el1011-q-seq: spctl PK (exact path cuts: KS progress subtract, registered u_ttag read)
     parameter integer SC = 0,             // el1011-q-seq: spctl SC (exact setup cuts: pre-scale compare, mx write, scale_addr)
+    parameter integer PORT_AM_EXTRA_EDGES = 0,
     parameter integer AMI = 0             // el1011-q-seq: spctl AMI (1 = p_am pin register, argmax loop +1 cycle; 2 = uncompensated mutant)
 ) (
     input  wire              clk,
     input  wire              rst_n,
-    output wire [(1+1+1+1+1+4+AW+AW+3*(NW+1)+1+3+1+AW+AW)-1:0] scale_tag,
+    output wire [91-1:0] scale_tag,
     output wire scale_v,
-    output wire [NW-1:0] scale_t,
-
+    
     // the upper sub-tiles' fault (OR over the tiles, relayed): registered here into the control element's fault
     input  wire              up_fault,
     input  wire [15:0]       land_cnt,     // LANDED: the memory's landed-burst count (ot_qfd_res_merge), IS-stationed
@@ -149,7 +149,7 @@ module ot_qwen_tt_core_ctl #(
     wire [W-1:0] c_mxmask;
     wire [W*32-1:0] c_mxdata;
     wire [15:0] c_prog;
-    ot_qwen_tt_core_spctl #(.XADDR(XADDR), .RDMEM(RDMEM), .PK(PK), .SC(SC), .W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT),
+    ot_qwen_tt_core_spctl #(.PORT_AM_EXTRA_EDGES(PORT_AM_EXTRA_EDGES), .XADDR(XADDR), .RDMEM(RDMEM), .PK(PK), .SC(SC), .W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT),
         .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD((BAND != 0) ? XD - CLNK : XD), .XVM(XVM), .ORD(ORD),
         .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE),
         .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT), .LANDED(LANDED),
@@ -162,7 +162,7 @@ module ot_qwen_tt_core_ctl #(
         .i_obase(q_obase), .i_ots(q_ots), .i_ojs(q_ojs),
         .i_mmode(q_mmode), .i_oen(q_oen), .i_amax(q_amax), .i_rmax(q_rmax), .i_mbase(q_mbase),
         .wrom_re(c_wrom_re), .wrom_addr(c_wrom_addr), .kv_re(c_kv_re),
-        .scale_tag(scale_tag), .scale_v(scale_v), .scale_t(scale_t),
+        .scale_tag(scale_tag), .scale_v(scale_v),
         .x_re(), .x_addr(), .x_q({((1<<SMAX)*32){1'b0}}), .xl0(),
         .x_dv(c_xdv), .x_dc(c_xdc), .x_dcs(c_xdcs), .x_dsp(c_xdsp),
         .t_sel_e(c_sel), .t_tv_e(c_tv), .tr_fault(trf_q | {{(W-1){1'b0}}, u_fault}),

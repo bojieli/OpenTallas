@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module qfd_tt_tree_partition #(parameter integer MUT=0,
+module qfd_tt_tree_partition #(parameter integer MUT=0, PORT_AM_EXTRA_EDGES=0,
     parameter integer DCU_M = 2, parameter integer DUC_M = 2,   // in-tile issue / status stations
     parameter integer XW = 24, parameter integer IS = 1, parameter integer OS = 1,
     // PSRAM = 1 (fe-push-qwen-1010, port of the seq_su_bi hardcore-1010 PSRAM; 0 = unchanged): the 64 x 1,024 program
@@ -51,16 +51,16 @@ module qfd_tt_tree_partition #(parameter integer MUT=0,
     input wire [379:0] cmd,
     output wire [94:0] ret
 );
-    wire [166:0] scale_tag; wire scale_v; wire [17:0] scale_t; wire scale_rst_n;
-    qfd_tt_core_leaf u_core(.clk(ck_core),
+    wire [90:0] scale_tag; wire scale_v; wire scale_rst_n;
+    qfd_tt_core_leaf #(.PORT_AM_EXTRA_EDGES(PORT_AM_EXTRA_EDGES)) u_core(.clk(ck_core),
       .rst_n(rst_n),.me_acc_o(me_acc_o),.me_idle_o(me_idle_o),.me_prog_o(me_prog_o),.up_fault(up_fault),.land_cnt(land_cnt),.t_sel_e(t_sel_e),.t_tv_e(t_tv_e),.tr_fault(tr_fault),.p_v_e2(p_v_e2),.p_f_e2(p_f_e2),.p_am(p_am),.p_fault(p_fault),.fab_fault(fab_fault),.ov(ov),.mx_we(mx_we),.mx_addr(mx_addr),.mx_mask(mx_mask),.mx_data(mx_data),.cmd(cmd),.ret(ret),
-      .scale_tag(scale_tag),.scale_v(scale_v),.scale_t(scale_t),.scale_rst_n(scale_rst_n));
-    wire [166:0] scale_tag_m=scale_tag ^ ((MUT==1) ? 167'd1 : 167'd0);
+      .scale_tag(scale_tag),.scale_v(scale_v),.scale_rst_n(scale_rst_n));
+    wire [90:0] scale_tag_m=scale_tag ^ ((MUT==1) ? 91'd1 : 91'd0);
     generate if(MUT==2)begin:g_mut_station
-      ot_qwen_tt_scale_body u_scale(.clk(ck_scale),.rst_n(scale_rst_n),.s3_tag(scale_tag_m),
-        .s3_v(scale_v),.s3_t(scale_t),.scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr));
+      ot_qwen_tt_scale_body u_scale(.clk(ck_scale),.rst_n(scale_rst_n),.tag_payload(scale_tag_m),
+        .s3_v(scale_v),.scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr));
     end else begin:g_scale
-      qfd_tt_scale_leaf u_scale(.clk(ck_scale),.rst_n(scale_rst_n),.s3_tag(scale_tag_m),
-        .s3_v(scale_v),.s3_t(scale_t),.scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr));
+      qfd_tt_scale_leaf u_scale(.clk(ck_scale),.rst_n(scale_rst_n),.tag_payload(scale_tag_m),
+        .s3_v(scale_v),.scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr));
     end endgenerate
 endmodule

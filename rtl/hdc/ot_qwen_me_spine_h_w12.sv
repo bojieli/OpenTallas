@@ -268,8 +268,11 @@ module ot_qwen_me_spctl_w12 #(
                                          //   result-side argmax / mx timing (tree valid line tv, tag line u_ttag, accumulator clear RXA) one
                                          //   edge later to match: am_* / mx_* / idle settle one edge later, the result sequence is unchanged;
                                          //   2 = negative control (the register without the +1 compensation: MUST FAIL)
-    parameter integer PK = 0             // el1011-q-seq (exact, 0 cycles): 1 = progress subtract as a kept Kogge-Stone (was a 16-b MAJ ripple behind the
+    parameter integer PK = 0,            // el1011-q-seq (exact, 0 cycles): 1 = progress subtract as a kept Kogge-Stone (was a 16-b MAJ ripple behind the
                                          //   land_cnt pin flop) and the u_ttag line read from a register (ring D-1 + output flop: t_* straight from flops); 2 = negative control (KS carry-in dropped: progress one low)
+    // Extra fixed edges in the real port argmax tree (e.g. popcount(APIPE)).
+    // Bind this only with the matching producer; default preserves archived timing.
+    parameter integer PORT_AM_EXTRA_EDGES = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -1026,7 +1029,8 @@ end endgenerate
     localparam integer CW = 1 + 32 + NW;
     wire [CW*AN-1:0] alv [LPT:LV];
     //: AMI: AMC = the +1 compensation (AMI 1 only; AMI 2 registers p_am without it); LVT = the tree-top valid tap
-    localparam integer AMC = (AMI == 1) ? 1 : 0;
+    initial if (PORT_AM_EXTRA_EDGES < 0) $fatal(1, "negative PORT_AM_EXTRA_EDGES");
+    localparam integer AMC = ((AMI == 1) ? 1 : 0) + PORT_AM_EXTRA_EDGES;
     localparam integer LVT = LV + AMC;
     reg  [LVT:0] tv;
     always @(posedge clk or negedge rst_n) begin
@@ -1429,12 +1433,7 @@ module ot_qwen_me_spport_w12 #(
     // q15 port-tiles: QOTS_SMALL 1 = pt_id < 32 is guaranteed by the instantiating leaf (die strap 8*BAND+4*HALF+q);
     // (q0+g)*ots is then formed as ((bb*ots) << (TB-split)) + kk*ots (bb = qp[4:3], kk = qp[2:0]), the exact same
     // value mod 2^AW as the 16-row qrows sum, with 5 partial products instead of 16.  Default 0 = original.
-    parameter integer QOTS_SMALL = 0,
-    // q15 port-tiles r2 (coordinator 12:50 10-15, accepted +1 cycle per split level): APIPE bit (al-1) splits argmax level al
-    // into a compare stage (gt and both operands registered) and a select stage; am leaves popcount(APIPE) edges later,
-    // the selected value is identical (pl4 gate: x0 -> 48-bit compare -> 49-bit select through long wires, -645.6 ps).
-    // The consumer (spctl AMC) must add popcount(APIPE).  Default 0 = original single-cycle levels.
-    parameter integer APIPE = 0
+    parameter integer QOTS_SMALL = 0
 ) (
     input wire [15:0] ck_mul,
     input  wire              clk,
@@ -1650,13 +1649,7 @@ module ot_qwen_me_spport_w12 #(
                 assign gt = gt_c;
                 wire          x0_wins = x0[CW-1] && (!x1[CW-1] || gt);
                 reg  [CW-1:0] c;
-                if (((APIPE >> (al - 1)) & 1) != 0) begin : g_split
-                    reg w_q; reg [CW-1:0] x0_q, x1_q;
-                    always @(posedge clk) begin w_q <= x0_wins; x0_q <= x0; x1_q <= x1; end
-                    always @(posedge clk) c <= w_q ? x0_q : x1_q;
-                end else begin : g_one
-                    always @(posedge clk) c <= x0_wins ? x0 : x1;
-                end
+                always @(posedge clk) c <= x0_wins ? x0 : x1;
                 assign alv[al*CW*NL + CW*e +: CW] = c;
             end
             assign alv[al*CW*NL + CW*NL-1 : al*CW*NL + CW*(NL >> al)] = 0;

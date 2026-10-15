@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module qfd_tt_core_leaf #(
+module qfd_tt_core_leaf #(parameter integer PORT_AM_EXTRA_EDGES=0,
     parameter integer DCU_M = 2, parameter integer DUC_M = 2,   // in-tile issue / status stations
     parameter integer XW = 24, parameter integer IS = 1, parameter integer OS = 1,
     // PSRAM = 1 (fe-push-qwen-1010, port of the seq_su_bi hardcore-1010 PSRAM; 0 = unchanged): the 64 x 1,024 program
@@ -27,11 +27,10 @@ module qfd_tt_core_leaf #(
 ) (
     input wire  clk,
     input wire  rst_n,
-    output wire [(1+1+1+1+1+4+24+24+3*(18+1)+1+3+1+24+24)-1:0] scale_tag,
+    output wire [91-1:0] scale_tag,
     output wire scale_v,
     output wire scale_rst_n,
-    output wire [18-1:0] scale_t,
-
+    
     output wire [XW-1:0] me_acc_o,
     output wire  me_idle_o,
     output wire [15:0] me_prog_o,
@@ -118,11 +117,11 @@ module qfd_tt_core_leaf #(
     reg [94:0] ret_q;
     always @(posedge ec or negedge rs) if(!rs) ret_q<=0; else ret_q<={u_me_fault, u_me_progress, u_me_am_any, u_me_am_val, u_me_am_idx, u_me_wrom_addr, u_me_wrom_re, u_me_idle, u_me_ready};
     assign ret=ret_q;
-    ot_qwen_tt_core_ctl #(.W(16), .IL(8), .AW(24), .NW(18), .GT(G), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0), .OKEEP(((AUD & 32) != 0) ? 1 : 0), .PK(((AUD & 256) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .SC(((AUD & 1024) != 0) ? (1 | ((AUD >> 10) & 14)) : 0), .AMI(((AUD & 65536) != 0) ? 2 : ((AUD & 32768) != 0) ? 1 : 0)) u_tt (
+    ot_qwen_tt_core_ctl #(.PORT_AM_EXTRA_EDGES(PORT_AM_EXTRA_EDGES),.W(16), .IL(8), .AW(24), .NW(18), .GT(G), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0), .OKEEP(((AUD & 32) != 0) ? 1 : 0), .PK(((AUD & 256) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .SC(((AUD & 1024) != 0) ? (1 | ((AUD >> 10) & 14)) : 0), .AMI(((AUD & 65536) != 0) ? 2 : ((AUD & 32768) != 0) ? 1 : 0)) u_tt (
         .clk(ec), .rst_n(rs), .up_fault(up_fault_c), .land_cnt(land_cnt_c), .go(u_me_go), .ready(u_me_ready),
         .idle(u_me_idle), .i_nout(u_me_i_nout), .i_tiles(u_me_i_tiles), .i_k(u_me_i_k), .i_wsrc(u_me_i_wsrc), .i_wbase(u_me_i_wbase), .i_ts(u_me_i_ts), .i_ks(u_me_i_ks), .i_js(u_me_i_js), .i_xbase(u_me_i_xbase), .i_xks(u_me_i_xks), .i_xjs(u_me_i_xjs), .i_xcs(u_me_i_xcs), .i_jsh(u_me_i_jsh), .i_split(u_me_i_split), .i_wcs(u_me_i_wcs), .i_round(u_me_i_round), .i_obase(u_me_i_obase), .i_ots(u_me_i_ots), .i_ojs(u_me_i_ojs), .i_mmode(u_me_i_mmode), .i_oen(u_me_i_oen), .i_amax(u_me_i_amax), .i_rmax(u_me_i_rmax), .i_mbase(u_me_i_mbase),
         .wrom_re(u_me_wrom_re), .wrom_addr(u_me_wrom_addr), .kv_re(),
-        .scale_tag(scale_tag), .scale_v(scale_v), .scale_t(scale_t),
+        .scale_tag(scale_tag), .scale_v(scale_v),
         .x_dv(), .x_dc(), .x_dcs(), .x_dsp(),
         .t_sel_e(t_sel_e), .t_tv_e(t_tv_e), .tr_fault(tr_fault_c),
         .p_v_e2(p_v_e2), .p_f_e2(p_f_e2), .p_am(p_am), .p_fault(p_fault_c), .fab_fault(fab_fault_c),

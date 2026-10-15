@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module ot_qwen_tt_scale_body (
     input wire clk, input wire rst_n,
-    input wire [166:0] s3_tag, input wire s3_v, input wire [17:0] s3_t,
+    input wire [90:0] tag_payload, input wire s3_v,
     output reg scale_re, output reg [23:0] scale_gre,
     output reg [575:0] scale_addr
 );
@@ -12,6 +12,9 @@ module ot_qwen_tt_scale_body (
       SD=MUL_LAT+ACC_LAT, TL=TREE_LAT+1, OD=TL*LG, XDD=XD,
       TW=1+1+1+1+1+4+AW+AW+3*(NW+1)+1+3+1+AW+AW;
     wire [31:0] gb=0;
+    wire [17:0] s3_t=0;
+    wire [166:0] s3_tag={tag_payload[90],2'b0,tag_payload[89:84],48'd0,
+      tag_payload[83:27],1'b0,tag_payload[26:24],1'b0,24'd0,tag_payload[23:0]};
     // -- post-scale: the scale requests, ONE CYCLE EARLIER than the monolithic engine's ---------------------
     //: pre = s3 + (SD - 2 + OD + XDD) in ot_qwen_w12_matvec_part; here s3 + (SD - 3 + OD + XDD); the port element
     //: registers scale_q once before its multiplier, so the multiplier sees the same word on the same edge
@@ -213,13 +216,13 @@ endmodule
 
 module qfd_tt_scale_leaf (
     input wire clk, input wire rst_n,
-    input wire [166:0] s3_tag, input wire s3_v, input wire [17:0] s3_t,
+    input wire [90:0] tag_payload, input wire s3_v,
     output reg scale_re, output reg [23:0] scale_gre,
     output reg [575:0] scale_addr
 );
     wire raw_re; wire [23:0]raw_gre; wire [575:0]raw_addr;
-    ot_qwen_tt_scale_body u_scale(.clk(clk),.rst_n(rst_n),.s3_tag(s3_tag),
-      .s3_v(s3_v),.s3_t(s3_t),.scale_re(raw_re),.scale_gre(raw_gre),.scale_addr(raw_addr));
+    ot_qwen_tt_scale_body u_scale(.clk(clk),.rst_n(rst_n),.tag_payload(tag_payload),
+      .s3_v(s3_v),.scale_re(raw_re),.scale_gre(raw_gre),.scale_addr(raw_addr));
     always @(posedge clk or negedge rst_n)
       if(!rst_n)begin scale_re<=0;scale_gre<=0;end
       else begin scale_re<=raw_re;scale_gre<=raw_gre;end

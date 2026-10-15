@@ -1,16 +1,15 @@
 {
   "schema": "opentallas.tt_functional_partition.v1",
   "source_sha256": {
-    "rtl/hdc/ot_qwen_me_spine_h_w12.sv": "81add515483fcdcd612675eb13bca0c5505dc128df33c2d1d3c9df1566a72e43",
+    "rtl/hdc/ot_qwen_me_spine_h_w12.sv": "b76cb9a539d88175abf8267a52c96dc81f0cc396f1c36b0dd725e58da897cdbe",
     "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv": "da7cf20895f792ef6d8a1e77e7168d84820f5ee97c1423373780f6562f3bd8b9",
     "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv": "f8bd427f35cb8aeab4643c7c5d4a2bee1d9c516d01bdc63133e819be32861fc4"
   },
   "data_cycles_added": 0,
   "status": "candidate_unqualified",
   "seam": {
-    "scale_tag": 167,
+    "scale_tag": 91,
     "scale_v": 1,
-    "scale_t": 18,
     "scale_rst_n": 1
   },
   "memory_inventory": {
