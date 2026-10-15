@@ -765,6 +765,114 @@
       "replica_scope": "one configured target per physical die; RANK physical strap;96 replicas source owner model",
       "status": "Actual source written; native programme/kernel gate pending",
       "source_sha256_at_contract": "16b07e4b76b499b21bd414a494e3bfd92143168090468870a7bfed989ff6c127"
+    },
+    "128": {
+      "owner": "SFU IO programme",
+      "source_owner": "/root/h_hc_sfu",
+      "quadrant": "SW",
+      "plane": 0,
+      "status": "reserved_no_source",
+      "encoding": "pending_source_contract",
+      "scope": "471-bit IO control across three planes; exact widths/source pending. Current hostPC<=12;13-bit profile unsupported until versioned actual transport exists."
+    },
+    "129": {
+      "owner": "SFU IO programme",
+      "source_owner": "/root/h_hc_sfu",
+      "quadrant": "SW",
+      "plane": 1,
+      "status": "reserved_no_source",
+      "encoding": "pending_source_contract",
+      "scope": "471-bit IO control across three planes; exact widths/source pending. Current hostPC<=12;13-bit profile unsupported until versioned actual transport exists."
+    },
+    "130": {
+      "owner": "SFU IO programme",
+      "source_owner": "/root/h_hc_sfu",
+      "quadrant": "SW",
+      "plane": 2,
+      "status": "reserved_no_source",
+      "encoding": "pending_source_contract",
+      "scope": "471-bit IO control across three planes; exact widths/source pending. Current hostPC<=12;13-bit profile unsupported until versioned actual transport exists."
+    },
+    "132": {
+      "owner": "SFU IO programme",
+      "source_owner": "/root/h_hc_sfu",
+      "quadrant": "SE",
+      "plane": 0,
+      "status": "reserved_no_source",
+      "encoding": "pending_source_contract",
+      "scope": "471-bit IO control across three planes; exact widths/source pending. Current hostPC<=12;13-bit profile unsupported until versioned actual transport exists."
+    },
+    "133": {
+      "owner": "SFU IO programme",
+      "source_owner": "/root/h_hc_sfu",
+      "quadrant": "SE",
+      "plane": 1,
+      "status": "reserved_no_source",
+      "encoding": "pending_source_contract",
+      "scope": "471-bit IO control across three planes; exact widths/source pending. Current hostPC<=12;13-bit profile unsupported until versioned actual transport exists."
+    },
+    "134": {
+      "owner": "SFU IO programme",
+      "source_owner": "/root/h_hc_sfu",
+      "quadrant": "SE",
+      "plane": 2,
+      "status": "reserved_no_source",
+      "encoding": "pending_source_contract",
+      "scope": "471-bit IO control across three planes; exact widths/source pending. Current hostPC<=12;13-bit profile unsupported until versioned actual transport exists."
+    },
+    "136": {
+      "owner": "SFU IO programme",
+      "source_owner": "/root/h_hc_sfu",
+      "quadrant": "NW",
+      "plane": 0,
+      "status": "reserved_no_source",
+      "encoding": "pending_source_contract",
+      "scope": "471-bit IO control across three planes; exact widths/source pending. Current hostPC<=12;13-bit profile unsupported until versioned actual transport exists."
+    },
+    "137": {
+      "owner": "SFU IO programme",
+      "source_owner": "/root/h_hc_sfu",
+      "quadrant": "NW",
+      "plane": 1,
+      "status": "reserved_no_source",
+      "encoding": "pending_source_contract",
+      "scope": "471-bit IO control across three planes; exact widths/source pending. Current hostPC<=12;13-bit profile unsupported until versioned actual transport exists."
+    },
+    "138": {
+      "owner": "SFU IO programme",
+      "source_owner": "/root/h_hc_sfu",
+      "quadrant": "NW",
+      "plane": 2,
+      "status": "reserved_no_source",
+      "encoding": "pending_source_contract",
+      "scope": "471-bit IO control across three planes; exact widths/source pending. Current hostPC<=12;13-bit profile unsupported until versioned actual transport exists."
+    },
+    "140": {
+      "owner": "SFU IO programme",
+      "source_owner": "/root/h_hc_sfu",
+      "quadrant": "NE",
+      "plane": 0,
+      "status": "reserved_no_source",
+      "encoding": "pending_source_contract",
+      "scope": "471-bit IO control across three planes; exact widths/source pending. Current hostPC<=12;13-bit profile unsupported until versioned actual transport exists."
+    },
+    "141": {
+      "owner": "SFU IO programme",
+      "source_owner": "/root/h_hc_sfu",
+      "quadrant": "NE",
+      "plane": 1,
+      "status": "reserved_no_source",
+      "encoding": "pending_source_contract",
+      "scope": "471-bit IO control across three planes; exact widths/source pending. Current hostPC<=12;13-bit profile unsupported until versioned actual transport exists."
+    },
+    "142": {
+      "owner": "SFU IO programme",
+      "source_owner": "/root/h_hc_sfu",
+      "quadrant": "NE",
+      "plane": 2,
+      "status": "reserved_no_source",
+      "encoding": "pending_source_contract",
+      "scope": "471-bit IO control across three planes; exact widths/source pending. Current hostPC<=12;13-bit profile unsupported until versioned actual transport exists."
     }
   },
   "map": "F20={PC12 bits19:8,target8 bits7:0}; F24 eight32b pieces; F28={limit13 bits24:12,base12 bits11:0}; F2c loops16; VM F00/F08 retains10/11 addresses",
@@ -775,5 +883,6 @@
   "implementation_limits": "Only actual instantiated collars/controllers are consumers. This map reserves identifiers and does not claim missing engines, PHY or placement implemented. Every required target and word plane must be emitted and bound before release.",
   "external_PCW": "8..12 typed local endpoint; refuses high address/limit bits before any narrow output; no alias",
   "legacy_profile": "v1 DMA309 reservation56..59 was not an instantiated consumer; actual v2 bridge49 owns56..59. Historical v1 document remains in git.",
-  "unallocated_policy": "Only explicitly listed targets are allocated. No implicit use of gaps or truncating payloads. New allocations require registry revision and source consumer owner."
+  "unallocated_policy": "Only explicitly listed targets are allocated. No implicit use of gaps or truncating payloads. New allocations require registry revision and source consumer owner.",
+  "launch_mask_contract": "C10 broadcasts to all configured external consumers; no per-target runtime mask. Generic/256 unconfigured targets stay inactive; complete boot/residency census and kernel transition reset/reconfiguration remain required."
 }

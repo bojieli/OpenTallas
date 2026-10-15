@@ -16,6 +16,33 @@ def integer(value):
     return int(value, 0) if isinstance(value, str) else int(value)
 
 
+def raw_fragment(image):
+    """Serialize one real native image, without inventing other profiles or C10.
+
+    The caller must compose all required configuration fragments, wait at least
+    launch_guard_core_edges after the last descriptor, and issue the real C10.
+    """
+    encoding = image.get('encoding')
+    validators = {'raw_control256': raw_control256, 'raw_engram_fetch7x32': raw_engram_fetch}
+    if encoding not in validators:
+        raise ValueError('Fragment requires an actual registered raw encoding')
+    start, words, contract = validators[encoding](image)
+    target, writes = integer(image['target']), []
+    for address, word in sorted(words.items()):
+        writes.append(dict(address=0xf20, data=(address << 8) | target))
+        for piece in range(8):
+            writes.append(dict(address=0xf24, data=(word >> (32*piece)) & 0xffffffff))
+    writes.append(dict(idle_core_edges=contract.get('cfg_to_descriptor_min_edges', 2),
+                       reason='actual raw programme final-word commit before descriptor'))
+    writes += [dict(address=0xf28, data=(start['limit'] << 12) | start['base']),
+               dict(address=0xf2c, data=1)]
+    return dict(schema='opentallas.hbm.actual-host-program-fragment.v1', axi_writes=writes,
+                launch_guard_core_edges=contract['descriptor_to_launch_min_edges'],
+                target_manifest=dict(target=target, encoding=encoding, payload_bits=contract['payload_bits'],
+                                     transport_bits=256, words=len(words), start=start,
+                                     source=contract['source'], native_op_pc_bits=contract['native_op_pc_bits']))
+
+
 def build(spec):
     required = {integer(t) for t in spec['required_targets']}
     if not {0, 1, 2, 3} <= required:
@@ -32,22 +59,13 @@ def build(spec):
         if not (target in range(4) or 16 <= target <= 255):
             raise ValueError('Target is outside the actual direct-VM/extended-engine map')
         if image.get('encoding') in ('raw_control256', 'raw_engram_fetch7x32'):
-            validate = raw_control256 if image['encoding'] == 'raw_control256' else raw_engram_fetch
-            start, words, contract = validate(image)
-            for address, word in sorted(words.items()):
-                # Explicit select per frame: preserve raw half addressing exactly.
-                writes.append(dict(address=0xf20, data=(address << 8) | target))
-                for piece in range(8):
-                    writes.append(dict(address=0xf24, data=(word >> (32*piece)) & 0xffffffff))
-            writes.append(dict(idle_core_edges=contract.get('cfg_to_descriptor_min_edges', 2),
-                               reason='actual raw programme final-word commit before descriptor'))
-            writes += [dict(address=0xf28, data=(start['limit'] << 12) | start['base']),
-                       dict(address=0xf2c, data=1)]
-            launch_idle = max(launch_idle, contract['descriptor_to_launch_min_edges'])
-            manifest.append(dict(target=target, encoding=image['encoding'], payload_bits=contract['payload_bits'],
-                                 transport_bits=256, words=len(words), start=start,
-                                 source=contract['source'], native_op_pc_bits=contract['native_op_pc_bits']))
+            fragment = raw_fragment(image)
+            writes.extend(fragment['axi_writes'])
+            launch_idle = max(launch_idle, fragment['launch_guard_core_edges'])
+            manifest.append(fragment['target_manifest'])
             continue
+        if target >= 16 and target_contract(target).get('status') == 'reserved_no_source':
+            raise ValueError('Target is reserved but has no actual source contract')
         if target >= 16 and target_contract(target).get('encoding') in ('raw_control256', 'raw_engram_fetch7x32'):
             raise ValueError('Raw native target cannot consume protected programme images')
         pcw = integer(image['PCW'])
