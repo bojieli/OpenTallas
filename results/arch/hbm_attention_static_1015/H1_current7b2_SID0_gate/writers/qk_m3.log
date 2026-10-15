@@ -1,0 +1,5 @@
+PASS QK_NATIVE H1 T128/T640 epochs0,1,0 words2304 commits36 actualSID0 exclusiveWG0_RG0 fixedcommit3 safe_retire faultcase1
+- rtl/test/hbm_accel/generic/tb_hbm_attn_qk_native_output_h1.sv:78: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.025 s; speed 225.849 us/s
+- Verilator: cpu 0.025 s on 1 threads; allocated 10 MB

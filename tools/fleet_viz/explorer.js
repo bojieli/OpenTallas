@@ -25,7 +25,9 @@ const JOB_COL = s => s === 'CLOSED' ? ST_COL.closed : ['RUNNING', 'QUEUED', 'REA
   : s === 'CANCELLED' ? ST_COL.superseded : /NEEDS|INVALID|REFUSED|FAIL/.test(s || '') ? ST_COL.failing : ST_COL.revoked;
 const S = { meta: null, die: null, geo: {}, colour: 'status', sel: null, hover: -1, bus: true, view: null, focus: null, card: null, loading: {} };
 const cv = $('map'), ctx = cv.getContext('2d');
-const dataflow = window.ChipDataflow?.mount({state: () => S, redraw: () => draw()});
+// Data flow lives in /explorer/dataflow/ (one link model for the token replay, the die link map and the debug table).
+const DF_DESIGN = {qwen_r21b: 'qwen_rom', s81_layer_r3: 'ds_rom', hbm_r25gph: 'hbm_gen_qwen'};
+const dataflowLink = (id) => { const a = document.getElementById('dataflow'); if (a) a.href = '/explorer/dataflow/' + (DF_DESIGN[id] ? '#design=' + DF_DESIGN[id] + '&die=' + id : ''); };
 let CW = 0, CH = 0, DPR = 1;
 
 async function getJSON(u){ const r = await fetch(u, {cache: 'no-store'}); if (!r.ok) throw new Error(r.status + ' ' + u); return r.json(); }
@@ -123,7 +125,7 @@ async function setDie(id, keepSel){
   recolour(g); S.view = fitView(g); S.moved = false; S.hover = -1;
   if (S.sel && keepSel !== false){ const s = S.sel; S.sel = null; if (s.element) selectElement(s.element, {zoom: false, keepCard: true}); else if (s.master && s.die === id) selectMaster(id, s.master, {zoom: false}); }
   else if (keepSel === false){ /* initial */ }
-  dataflow?.setDie(id);
+  dataflowLink(id);
   dieInfo(); legend(); draw();
   if (!S.sel) setHash({die: id});
 }
@@ -260,7 +262,6 @@ function paint(){
     const i = S.hover; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
     ctx.strokeRect(X(g.x[i]) - 1.5, Y(g.y[i] + g.h[i]) - 1.5, Math.max(3, g.w[i] * s) + 3, Math.max(3, g.h[i] * s) + 3);
   }
-  dataflow?.paint(g, X, Y);
   scalebar(s);
   hud(g, nvis || g.n, list ? 'individual' : 'overview');
 }
@@ -389,7 +390,7 @@ cv.addEventListener('pointermove', e => {
 function pinchState(){ const p = [...ptrs.values()]; return {cx: (p[0][0] + p[1][0]) / 2, cy: (p[0][1] + p[1][1]) / 2, d: Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]) || 1}; }
 cv.addEventListener('pointerup', e => {
   ptrs.delete(e.pointerId); cv.classList.remove('drag');
-  if (drag && !drag.moved && ptrs.size === 0){ const i = hit(e.offsetX, e.offsetY); if (i >= 0) clickInst(i); else dataflow?.inspect(e.offsetX, e.offsetY); }
+  if (drag && !drag.moved && ptrs.size === 0){ const i = hit(e.offsetX, e.offsetY); if (i >= 0) clickInst(i); }
   if (ptrs.size === 0) drag = null;
 });
 cv.addEventListener('pointerleave', () => { S.hover = -1; S.cursor = null; hideTip(); draw(); });

@@ -1,0 +1,65 @@
+{
+  "name": "hbm_att_gather_onehot_1015",
+  "top": "ot_hbm_attn_pv_group_gather_registered_fanout",
+  "kind": "tile",
+  "sources": [
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_group_gather_registered_fanout.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "pins": {
+    "N": [
+      "clk",
+      "rst_n",
+      "capture_v",
+      "block_select"
+    ],
+    "W": [
+      "tile_data",
+      "tile_flags"
+    ],
+    "E": [
+      "bankpair_data",
+      "bankpair_flags",
+      "output_v"
+    ]
+  },
+  "outline": {
+    "w": 500.04,
+    "h": 450.36,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "route": {
+    "pd": 0.5,
+    "period_ps": 833.333,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03
+  },
+  "job": {
+    "owner": "Codex:H-ATT registered gather",
+    "branch": "codex/hbm-static-attn-quant-1014",
+    "tag": "attgatheronehot1015",
+    "purpose": "Fanout-repaired registered gather, unconditional payload capture plus8onehotFF; same2edge calendar and4759pins, independent physical PG/access/CTS measurement",
+    "extra_paths": [
+      "rtl/hdc/v41x/static/physical"
+    ],
+    "benched_by": "results/arch/hbm_attention_static_1015/pv_local_D_registered_gate/receipt.json",
+    "record_to": "results/rtl/ref_tile/hbm_att_gather_onehot_1015"
+  },
+  "orfs_vars": {
+    "POST_IO_PLACEMENT_TCL": "rtl/hdc/v41x/static/physical/gather_pin_audit.tcl",
+    "OT_OFLOP_GAP": "4.5"
+  },
+  "structural_change": "Source fanout repair replaces capture-gated payload with unconditional capture and3selectFF with8onehotFF (+5FF), preserving valid/output behavior andtwoextraedges. Originalphysicalsourcepreserved.",
+  "slot_change_request": {
+    "reason": "New independent gather slot requested; 500.04x450.36 planning outline with actual pin/PG/CTS pending."
+  },
+  "io_flop_at_pins": {
+    "cols": 6
+  }
+}

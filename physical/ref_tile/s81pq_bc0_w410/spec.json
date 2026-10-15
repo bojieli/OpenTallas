@@ -36,7 +36,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "10-15 S-ELEM-B: canonical PHW10 widens BC slice0 409 -> 410 (one registered/reset cfg bit; old bit 1632 is now phase bit 9). Same 43.2x34.56 outline and the bc0_ns exact M3/M5 track plan + one M5 pair at x 35.916. | Native PHW9/SAW11/KMAX6144/R128 BC physically sliced by one IX owner + QB/control subsets; slice0 409/408bits of1633, fourlogicalepochsunchanged,25physicalroots, sourcepermutation/resetmask exactfullshapevsunsplitBCgold. Replaces invalid onewide1633bit gather geometry. Diecandidate25rootlayout requests43.2x34.56NSdataexactnativeM3/M5tracks instead ofungateddieincompatible51.84HWEprototype; keep fourphysicalepochs.",
+ "structural_change": "w1 EARLY_FAIL_CONGESTION (GRT-0116, 971 overflow, all horizontal M2-M5 GCells at y 29-34 = the N output-pin band): every q pin carried two output hold pads (ot_outhold_p/n) between its pin flop and the 0.072-um pin pitch. q launches directly from the pin flop and the die receivers carry their own input hold stages, so the output pads are dropped (outhold false): ~820 fewer cells in the N band, same outline/pins. | 10-15 S-ELEM-B: canonical PHW10 widens BC slice0 409 -> 410 (one registered/reset cfg bit; old bit 1632 is now phase bit 9). Same 43.2x34.56 outline and the bc0_ns exact M3/M5 track plan + one M5 pair at x 35.916. | Native PHW9/SAW11/KMAX6144/R128 BC physically sliced by one IX owner + QB/control subsets; slice0 409/408bits of1633, fourlogicalepochsunchanged,25physicalroots, sourcepermutation/resetmask exactfullshapevsunsplitBCgold. Replaces invalid onewide1633bit gather geometry. Diecandidate25rootlayout requests43.2x34.56NSdataexactnativeM3/M5tracks instead ofungateddieincompatible51.84HWEprototype; keep fourphysicalepochs.",
  "slot_change_request": {
   "name": "s81pq_bc0_w410-1015",
   "outline": [
@@ -61,7 +61,7 @@
  "job": {
   "owner": "Claude:s81-elemB-1015",
   "branch": "codex/s81-field-native-1015",
-  "tag": "w1",
+  "tag": "w2",
   "purpose": "Native production PQ BC physical quarter-slice; currentnative bit permutation/reset semantics, no screen substitute",
   "benches": [
    {
@@ -73,8 +73,8 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "PQ_NATIVE_CORE PASS",
-    "min_count_regex": "compared=(\\d+)"
+    "pass_regex": "PQ_CORE_PIPE PASS",
+    "min_count_regex": "packets=(\\d+)"
    },
    {
     "name": "native_bc_mutant",
@@ -85,7 +85,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "PQ_NATIVE_CORE FAIL|mismatch"
+    "fail_regex": "PQ_CORE_PIPE FAIL|PQ_NATIVE_CORE FAIL"
    }
   ],
   "views_to": "physical/ref_tile/s81pq_bc0_w410/views",
@@ -106,6 +106,7 @@
   "kind": "rtl_change",
   "why": "ot_s81_pq_bc_slice0 ports d/q 409 -> 410 (canonical PHW10); closed bc0_ns view no longer binds"
  },
+ "outhold": false,
  "params": {},
  "macros": [],
  "children": [],
@@ -115,7 +116,6 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true,
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {

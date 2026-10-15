@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas/claude/closure-loop/qvm_data256_native-np1-0e820215a/record/views/qvm_data256_native/qvm_data256_native.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 513 of 513 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M4 (0.060,13.488), d[0] M4 (0.060,13.488), d[100] M4 (0.060,13.488))"
+ ],
+ "summary": "qvm_data256_native 25.92 x 51.84: PG M5 VDD 8 stripes (73% spread, 100% cov) / VSS 8 stripes (73% spread, 100% cov); strap M6; face pins 513 blocked-above 0 blocked-same 0; clock clk insertion 77 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "qvm_data256_native",
+  "W": 25.92,
+  "H": 51.84,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 8,
+     "dir": "V",
+     "spread": 0.729,
+     "coverage": 1.0,
+     "shapes_on_top": 8
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 8,
+     "dir": "V",
+     "spread": 0.729,
+     "coverage": 1.0,
+     "shapes_on_top": 8
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 513,
+   "blocked_above": 0,
+   "covered_below": 17,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 513,
+   "band_examples": [
+    "clk M4 (0.060,13.488)",
+    "d[0] M4 (0.060,13.488)",
+    "d[100] M4 (0.060,13.488)",
+    "d[101] M4 (0.060,13.488)",
+    "d[102] M4 (0.060,13.488)",
+    "d[103] M4 (0.060,13.488)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 76.84,
+    "min_ps": 63.32
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 24
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

@@ -14,7 +14,7 @@ Owned by the token-path stream; the explorer-core stream owns `server.py`, `inst
 | `token.js` | `mountTokenExplorer(el, opts)`: tabs, provenance banner, replay controls, the three views, share tables |
 | `flow.js` | (a) flow graph: `mountFlow(el, data, {clock, group, onDrill, onSelect})` |
 | `gantt.js` | (b) swimlane timeline: `mountGantt(el, data, {clock, range, onZoom, onSelect})` |
-| `overlay.js` | (c) floorplan driver: `overlayEvents`, `activeAt`, `resolveInstances`, `normalizeGeometry`, `DieReplay` |
+| (floorplan) | the "Data flow on the floorplan" panel is `/explorer/dataflow/dataflow.js` (`mountDataflow`), sharing this page's `Clock` |
 | `core.js` | shared: `prepare/P`, `Clock`, `critAt`, `detail`, `elementHref`, palette, formatting |
 | `data/*.json` | written by `python3 tools/token_path_export.py --viz-dir tools/fleet_viz/explorer/token` (main) |
 
@@ -24,7 +24,6 @@ critical, slack, share), `edges[]`, `critical_path[]` (node ids in order), `grou
 (element class -> `elements` = element names for `/explorer#element=`, `instances` = instance-name globs on the die),
 `totals` (cycles, tok/s, reproduction line, cycles by grade and by class), `headline`, `drill`, `notes`, `geometry`.
 Grades: `measured`, `measured+vendor`, `apportioned` (measured total, split by trace), `priced`, `lever`, `modelled`.
-`data/geo_<design>.json` are fallback die snapshots from `site/chip_explorer/inputs/geo.json`.
 
 ## Mounting the views elsewhere (e.g. inside /explorer)
 
@@ -33,30 +32,19 @@ import { mountTokenExplorer } from '/explorer/token/token.js';
 const api = await mountTokenExplorer(el, {
   base: '/explorer/token/data/',   // where <design>.json lives
   design: 'ds_rom', group: 'S029', // group = drill target (null = whole token)
-  geometryUrl: (design) => [...], // URL or URL list; default /api/explorer/geom?die=<die>, then data/geo_<design>.json
+  floorplan: true,                 // false hides the data-flow floorplan panel
   onState: ({design, group}) => {},
 });
 api.show('hbm_gen_ds', 'L20.attn'); api.clock.play(); api.clock.seek(cycles);
 ```
 
-Design -> die map used by default (`DESIGNS` in `token.js`): `qwen_rom` -> `qwen_r21b`, `ds_rom` -> `s81_layer_r3`,
-`hbm_gen_qwen`, `hbm_gen_ds` -> `hbm_r25gph` (the generic die R25GP with HGI-1 record dispatch; ids of `explorer_dies.json`).
+## Data flow on the floorplan
 
-## Floorplan-overlay driver for the explorer die map
-
-The die map does not need `DieReplay`; it can draw its own geometry and ask for the events:
-
-```js
-import { overlayEvents, activeAt } from '/explorer/token/overlay.js';
-const ev = overlayEvents(record, geom, { group: 'S029' });  // geom = the /api/explorer/geom record as returned
-// ev = {t0, t1, events: [{t0, t1, node, label, cls, color, critical, idx: [inst index], instances: [inst name]}],
-//       links: [{t0, t1, src, dst, from: [x, y], to: [x, y], critical, bytes, link}]}   (cycles; DEF µm, y up)
-const { events, links } = activeAt(ev, t);                 // what to light at token time t
-```
-
-`idx` indexes `geom.inst.name` directly (the columnar explorer export is accepted as is), so the die map can light its
-own instances by index. Instances resolve from the class's name globs plus any instance whose master is one of the
-class's elements.
+The floorplan panel is the data-flow view of `/explorer/dataflow/` (see `tools/fleet_viz/explorer/dataflow/`): one link
+record per die revision (`data/<id>.links.json.gz`, written by `tools/fleet_viz/dataflow_links.py` from the die plans,
+pins and geometry records), the token's operators mapped to die blocks through the class globs/masters of this record,
+and a replay of the links active in each schedule window. The die revision is chosen in the panel; each design's
+canonical revision is the default.
 
 ## Links out
 

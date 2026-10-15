@@ -2007,5 +2007,5 @@ place_pin -pin_name {compiled_identity[57]} -layer M4 -location {172.800 290.892
 place_pin -pin_name {compiled_identity[58]} -layer M4 -location {172.800 291.324} -pin_size {.144 .024}
 place_pin -pin_name {compiled_generation[0]} -layer M4 -location {172.800 291.756} -pin_size {.144 .024}
 place_pin -pin_name {compiled_generation[1]} -layer M4 -location {172.800 292.188} -pin_size {.144 .024}
-place_pin -pin_name {ck} -layer M5 -location {57.624 0.000} -pin_size {.024 .144}
-place_pin -pin_name {rst_n} -layer M5 -location {115.224 0.000} -pin_size {.024 .144}
+place_pin -pin_name {ck} -layer M5 -location {57.660 0.000} -pin_size {.024 .144}
+place_pin -pin_name {rst_n} -layer M5 -location {115.260 0.000} -pin_size {.024 .144}

@@ -1,0 +1,17 @@
+{
+  "status": "PASS: independent actual V2 expanded-word, chronological tag/visibility, qslot, replay64/full-sequence and613/487 idle-slot audit",
+  "checks": {
+    "qroute_word_checks": 194208,
+    "native_loads": 6144,
+    "native_adds": 5376,
+    "native_publications": 5760,
+    "quarter_lifetime_audits": 384,
+    "unique_indexed_BF16_deliveries": 36864,
+    "native_link_hops": 43392,
+    "replay64_and_sequence_audits": 672,
+    "actual_613_487_reserved_slots": 390985
+  },
+  "cycles": 1092,
+  "ratio_to_immutable1325_9": 0.8235915227392714,
+  "qualification": "candidate static schedule proof only; expanded program is not yet64row compressed, actual endpoint/FEC/physical/nativeSUjoin unqualified"
+}

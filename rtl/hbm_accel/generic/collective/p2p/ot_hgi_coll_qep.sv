@@ -1,4 +1,6 @@
 `timescale 1ns/1ps
+// HISTORICAL (OWNER 2026-10-14T23:16 HANDOFF 0an): credit/ready flow control on an on-chip HBM path. Diagnostic/component
+// evidence only; NOT the production schedule. Being replaced by compiler-assigned fixed transfer slots (H-COLL plan, el1014-hbm-p2p-coll.log).
 `default_nettype none
 // ot_hgi_coll_qep (HBM peer-to-peer step 1, 2026-10-14): the QUADRANT collective block body.  Derived from
 // rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv @ main 2a64aca68 (the central file is untouched); differences:

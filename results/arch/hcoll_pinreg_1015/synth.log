@@ -1,0 +1,1102 @@
+
+-- Running command `read_verilog -lib -sv /tmp/hcoll-pinreg-final-map/macro.v; read_verilog -sv /tmp/hcoll-pinreg-final-map/crc.sv /tmp/hcoll-pinreg-final-map/native.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_pinreg.sv; synth -top ot_hgi_coll_static_link_pinreg -flatten; write_json /tmp/hcoll-pinreg-final-map/mapped.json' --
+
+1. Executing Verilog-2005 frontend: /tmp/hcoll-pinreg-final-map/macro.v
+Parsing SystemVerilog input from `/tmp/hcoll-pinreg-final-map/macro.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_64x512_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /tmp/hcoll-pinreg-final-map/crc.sv
+Parsing SystemVerilog input from `/tmp/hcoll-pinreg-final-map/crc.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_crc_parallel'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /tmp/hcoll-pinreg-final-map/native.sv
+Parsing SystemVerilog input from `/tmp/hcoll-pinreg-final-map/native.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qkvd_d2d_llr_ctl'.
+Generating RTLIL representation for module `\ot_qkvd_llr_replay_sram_leaf'.
+Generating RTLIL representation for module `\ot_qkvd_d2d_llr_split'.
+Generating RTLIL representation for module `\ot_qkvd_d2d_llr'.
+Generating RTLIL representation for module `\ot_qkvd_llr_replay_leaf'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_coll_static_seq_ctl'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_coll_static_pinreg_ctl'.
+Warning: Replacing memory \readseq with list of registers. See rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:64
+Warning: Replacing memory \writeslot with list of registers. See rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:63
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_coll_static_pinreg_store'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_pinreg.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_pinreg.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_coll_static_link_pinreg'.
+Successfully finished Verilog frontend.
+
+8. Executing SYNTH pass.
+
+8.1. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1.1. Analyzing design hierarchy..
+Top module:  \ot_hgi_coll_static_link_pinreg
+Used module:     \ot_hgi_coll_static_pinreg_store
+Used module:         \ot_qkvd_llr_replay_sram_leaf
+Used module:     \ot_hgi_coll_static_pinreg_ctl
+Used module:         \ot_hgi_coll_static_seq_ctl
+Used module:             \ot_qwen_crc_parallel
+Parameter \DW = 580
+Parameter \CW = 32
+
+8.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_crc_parallel'.
+Parameter \DW = 580
+Parameter \CW = 32
+Generating RTLIL representation for module `$paramod$37265df9485f2296cbf9350cb5dad445b7947374\ot_qwen_crc_parallel'.
+Parameter \DW = 580
+Parameter \CW = 32
+Found cached RTLIL representation for module `$paramod$37265df9485f2296cbf9350cb5dad445b7947374\ot_qwen_crc_parallel'.
+Parameter \W = 141
+Parameter \MUT = 0
+
+8.1.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_llr_replay_sram_leaf'.
+Parameter \W = 141
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf'.
+Parameter \MUT = 1'0
+
+8.1.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_static_pinreg_store'.
+Parameter \MUT = 1'0
+Generating RTLIL representation for module `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0'.
+Parameter \MUT = 1'0
+Found cached RTLIL representation for module `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0'.
+Parameter \MUT = 1'0
+Found cached RTLIL representation for module `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0'.
+Parameter \MUT = 1'0
+Found cached RTLIL representation for module `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0'.
+Parameter \MUT = 0
+
+8.1.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_static_pinreg_ctl'.
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000'.
+Warning: Replacing memory \readseq with list of registers. See rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:64
+Warning: Replacing memory \writeslot with list of registers. See rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:63
+
+8.1.6. Analyzing design hierarchy..
+Top module:  \ot_hgi_coll_static_link_pinreg
+Used module:     $paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0
+Used module:         \ot_qkvd_llr_replay_sram_leaf
+Used module:     $paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000
+Used module:         \ot_hgi_coll_static_seq_ctl
+Used module:             $paramod$37265df9485f2296cbf9350cb5dad445b7947374\ot_qwen_crc_parallel
+Parameter \W = 141
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf'.
+
+8.1.7. Analyzing design hierarchy..
+Top module:  \ot_hgi_coll_static_link_pinreg
+Used module:     $paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0
+Used module:         $paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf
+Used module:     $paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000
+Used module:         \ot_hgi_coll_static_seq_ctl
+Used module:             $paramod$37265df9485f2296cbf9350cb5dad445b7947374\ot_qwen_crc_parallel
+
+8.1.8. Analyzing design hierarchy..
+Top module:  \ot_hgi_coll_static_link_pinreg
+Used module:     $paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0
+Used module:         $paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf
+Used module:     $paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000
+Used module:         \ot_hgi_coll_static_seq_ctl
+Used module:             $paramod$37265df9485f2296cbf9350cb5dad445b7947374\ot_qwen_crc_parallel
+Removing unused module `\ot_hgi_coll_static_pinreg_store'.
+Removing unused module `\ot_hgi_coll_static_pinreg_ctl'.
+Removing unused module `\ot_qkvd_llr_replay_leaf'.
+Removing unused module `\ot_qkvd_d2d_llr'.
+Removing unused module `\ot_qkvd_d2d_llr_split'.
+Removing unused module `\ot_qkvd_llr_replay_sram_leaf'.
+Removing unused module `\ot_qkvd_d2d_llr_ctl'.
+Removing unused module `\ot_qwen_crc_parallel'.
+Removed 8 unused modules.
+
+8.2. Executing PROC pass (convert processes to netlists).
+
+8.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+8.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:66$3942 in module $paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.
+Marked 2 switch rules as full_case in process $proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:39$3926 in module $paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.
+Marked 4 switch rules as full_case in process $proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643 in module ot_hgi_coll_static_seq_ctl.
+Removed a total of 0 dead cases.
+
+8.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 13 redundant assignments.
+Promoted 33 assignments to connections.
+
+8.2.4. Executing PROC_INIT pass (extract init attributes).
+
+8.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:66$3942'.
+Found async reset \rst_n in `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:39$3926'.
+Found async reset \rst_n in `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+
+8.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~10 debug messages>
+
+8.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.$proc$/tmp/hcoll-pinreg-final-map/native.sv:181$3888'.
+Creating decoders for process `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.$proc$/tmp/hcoll-pinreg-final-map/native.sv:171$3887'.
+Creating decoders for process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:66$3942'.
+     1/4: $0\rv[1:0]
+     2/4: $0\wo[1:0]
+     3/4: $0\wv[1:0]
+     4/4: $0\bank_we[0:0]
+Creating decoders for process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:60$3941'.
+Creating decoders for process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:39$3926'.
+     1/5: $0\epoch_active[0:0]
+     2/5: $0\active_epoch[7:0]
+     3/5: $0\rx_sequence[16:0]
+     4/5: $0\tx_sequence[16:0]
+     5/5: $0\write_sequence[16:0]
+Creating decoders for process `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv:10$3896'.
+Creating decoders for process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+     1/30: $4$lookahead\written$3642[63:0]$3670
+     2/30: $3$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:94$3582[5:0]$3669
+     3/30: $3$lookahead\written$3642[63:0]$3659
+     4/30: $3$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:90$3581[5:0]$3658
+     5/30: $0\rx_v[0:0]
+     6/30: $0\p_tx_v[0:0]
+     7/30: $0\ev[0:0]
+     8/30: $0\rv[0:0]
+     9/30: $0\v4[0:0]
+    10/30: $0\v3[0:0]
+    11/30: $0\v2[0:0]
+    12/30: $0\v1[0:0]
+    13/30: $0\cmd_wv[0:0]
+    14/30: $2$lookahead\written$3642[63:0]$3653
+    15/30: $2$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:94$3582[5:0]$3652
+    16/30: $2$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:90$3581[5:0]$3651
+    17/30: $1$lookahead\written$3642[63:0]$3650
+    18/30: $1$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:94$3582[5:0]$3649
+    19/30: $1$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:90$3581[5:0]$3648
+    20/30: $0\re[7:0]
+    21/30: $0\es[5:0]
+    22/30: $0\e3[7:0]
+    23/30: $0\e2[7:0]
+    24/30: $0\e1[7:0]
+    25/30: $0\s4[5:0]
+    26/30: $0\s3[5:0]
+    27/30: $0\s2[5:0]
+    28/30: $0\s1[5:0]
+    29/30: $0\epoch_abort[0:0]
+    30/30: $0\fault_cause[10:0]
+Creating decoders for process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:71$3641'.
+
+8.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+8.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.\dout' using process `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.$proc$/tmp/hcoll-pinreg-final-map/native.sv:181$3888'.
+  created $dff cell `$procdff$4080' with positive edge clock.
+Creating register for signal `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.\wq' using process `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.$proc$/tmp/hcoll-pinreg-final-map/native.sv:171$3887'.
+  created $dff cell `$procdff$4081' with positive edge clock.
+Creating register for signal `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.\wqq' using process `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.$proc$/tmp/hcoll-pinreg-final-map/native.sv:171$3887'.
+  created $dff cell `$procdff$4082' with positive edge clock.
+Creating register for signal `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.\aq' using process `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.$proc$/tmp/hcoll-pinreg-final-map/native.sv:171$3887'.
+  created $dff cell `$procdff$4083' with positive edge clock.
+Creating register for signal `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.\aqq' using process `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.$proc$/tmp/hcoll-pinreg-final-map/native.sv:171$3887'.
+  created $dff cell `$procdff$4084' with positive edge clock.
+Creating register for signal `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.\rq' using process `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.$proc$/tmp/hcoll-pinreg-final-map/native.sv:171$3887'.
+  created $dff cell `$procdff$4085' with positive edge clock.
+Creating register for signal `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.\dq' using process `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.$proc$/tmp/hcoll-pinreg-final-map/native.sv:171$3887'.
+  created $dff cell `$procdff$4086' with positive edge clock.
+Creating register for signal `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.\dqq' using process `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.$proc$/tmp/hcoll-pinreg-final-map/native.sv:171$3887'.
+  created $dff cell `$procdff$4087' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\rv' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:66$3942'.
+  created $adff cell `$procdff$4092' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\bank_we' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:66$3942'.
+  created $adff cell `$procdff$4097' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\wv' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:66$3942'.
+  created $adff cell `$procdff$4102' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\wo' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:66$3942'.
+  created $adff cell `$procdff$4107' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\bank_wa' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:60$3941'.
+  created $dff cell `$procdff$4108' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\bank_ra' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:60$3941'.
+  created $dff cell `$procdff$4109' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\bank_data' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:60$3941'.
+  created $dff cell `$procdff$4110' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\writeslot[0]' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:60$3941'.
+  created $dff cell `$procdff$4111' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\writeslot[1]' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:60$3941'.
+  created $dff cell `$procdff$4112' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\readseq[0]' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:60$3941'.
+  created $dff cell `$procdff$4113' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\readseq[1]' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:60$3941'.
+  created $dff cell `$procdff$4114' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\write_sequence' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:39$3926'.
+  created $adff cell `$procdff$4119' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\tx_sequence' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:39$3926'.
+  created $adff cell `$procdff$4124' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\rx_sequence' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:39$3926'.
+  created $adff cell `$procdff$4129' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\active_epoch' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:39$3926'.
+  created $adff cell `$procdff$4134' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.\epoch_active' using process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:39$3926'.
+  created $adff cell `$procdff$4139' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0.\we_pin' using process `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv:10$3896'.
+  created $dff cell `$procdff$4140' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0.\wa_pin' using process `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv:10$3896'.
+  created $dff cell `$procdff$4141' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0.\ra_pin' using process `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv:10$3896'.
+  created $dff cell `$procdff$4142' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0.\din_pin' using process `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv:10$3896'.
+  created $dff cell `$procdff$4143' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\p_tx_v' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4148' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\fault_cause' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4153' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\rv' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4158' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\rx_v' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4163' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\epoch_abort' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4168' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\written' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4173' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\v1' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4178' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\v2' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4183' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\v3' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4188' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\v4' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4193' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\cmd_wv' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4198' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\s1' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4203' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\s2' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4208' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\s3' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4213' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\s4' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4218' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\e1' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4223' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\e2' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4228' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\e3' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4233' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\ev' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4238' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\es' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4243' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\re' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4248' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:90$3581' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4253' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:94$3582' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4258' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.$lookahead\written$3642' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+  created $adff cell `$procdff$4263' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\p_tx_flit' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:71$3641'.
+  created $dff cell `$procdff$4264' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\rf' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:71$3641'.
+  created $dff cell `$procdff$4265' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\rx_flit' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:71$3641'.
+  created $dff cell `$procdff$4266' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\ts1' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:71$3641'.
+  created $dff cell `$procdff$4267' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\ts2' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:71$3641'.
+  created $dff cell `$procdff$4268' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\ts3' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:71$3641'.
+  created $dff cell `$procdff$4269' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\rs' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:71$3641'.
+  created $dff cell `$procdff$4270' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\cmd_ov' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:71$3641'.
+  created $dff cell `$procdff$4271' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\cmd_ws' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:71$3641'.
+  created $dff cell `$procdff$4272' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_static_seq_ctl.\q_pin' using process `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:71$3641'.
+  created $dff cell `$procdff$4273' with positive edge clock.
+
+8.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.$proc$/tmp/hcoll-pinreg-final-map/native.sv:181$3888'.
+Removing empty process `$paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.$proc$/tmp/hcoll-pinreg-final-map/native.sv:171$3887'.
+Found and cleaned up 1 empty switch in `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:66$3942'.
+Removing empty process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:66$3942'.
+Removing empty process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:60$3941'.
+Found and cleaned up 4 empty switches in `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:39$3926'.
+Removing empty process `$paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:39$3926'.
+Removing empty process `$paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv:10$3896'.
+Found and cleaned up 5 empty switches in `\ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+Removing empty process `ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:79$3643'.
+Removing empty process `ot_hgi_coll_static_seq_ctl.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:71$3641'.
+Cleaned up 10 empty switches.
+
+8.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$37265df9485f2296cbf9350cb5dad445b7947374\ot_qwen_crc_parallel.
+<suppressed ~64 debug messages>
+Optimizing module ot_hgi_coll_static_link_pinreg.
+Optimizing module $paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.
+<suppressed ~21 debug messages>
+Optimizing module $paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0.
+Optimizing module ot_hgi_coll_static_seq_ctl.
+<suppressed ~50 debug messages>
+
+8.3. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf...
+Checking module $paramod$37265df9485f2296cbf9350cb5dad445b7947374\ot_qwen_crc_parallel...
+Checking module ot_hgi_coll_static_link_pinreg...
+Checking module $paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000...
+Checking module $paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0...
+Checking module ot_hgi_coll_static_seq_ctl...
+Found and reported 0 problems.
+
+8.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$789553667dd7392d64fc2581799814b06cb629e8\ot_qkvd_llr_replay_sram_leaf.
+Deleting now unused module $paramod$37265df9485f2296cbf9350cb5dad445b7947374\ot_qwen_crc_parallel.
+Deleting now unused module $paramod\ot_hgi_coll_static_pinreg_ctl\MUT=s32'00000000000000000000000000000000.
+Deleting now unused module $paramod\ot_hgi_coll_static_pinreg_store\MUT=1'0.
+Deleting now unused module ot_hgi_coll_static_seq_ctl.
+<suppressed ~9 debug messages>
+
+8.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+Removed 51 unused cells and 461 unused wires.
+<suppressed ~53 debug messages>
+
+8.7. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hgi_coll_static_link_pinreg...
+Found and reported 0 problems.
+
+8.8. Executing OPT pass (performing simple optimizations).
+
+8.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 398 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 382 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 380 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+<suppressed ~54 debug messages>
+Removed a total of 18 cells.
+
+8.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_static_link_pinreg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port B of cell $flatten\u_ctl.\u_codec.$procmux$4070: \u_ctl.u_codec.epoch_abort -> 1'1
+      Replacing known input bits on port A of cell $flatten\u_ctl.\u_codec.$procmux$4068: \u_ctl.u_codec.epoch_abort -> 1'0
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $flatten\u_ctl.\u_codec.$procmux$3985.
+Removed 1 multiplexer ports.
+<suppressed ~83 debug messages>
+
+8.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_static_link_pinreg.
+Performed a total of 0 changes.
+
+8.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 379 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 561 on $flatten\u_ctl.$procdff$4110 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 0-bit at position 562 on $flatten\u_ctl.$procdff$4110 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 0-bit at position 563 on $flatten\u_ctl.$procdff$4110 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 0-bit at position 567 on $flatten\u_ctl.\u_codec.$procdff$4264 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 0-bit at position 568 on $flatten\u_ctl.\u_codec.$procdff$4264 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 1-bit at position 569 on $flatten\u_ctl.\u_codec.$procdff$4264 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 0-bit at position 570 on $flatten\u_ctl.\u_codec.$procdff$4264 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 0-bit at position 579 on $flatten\u_ctl.\u_codec.$procdff$4264 ($dff) from module ot_hgi_coll_static_link_pinreg.
+
+8.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+Removed 0 unused cells and 18 unused wires.
+<suppressed ~1 debug messages>
+
+8.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_static_link_pinreg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~82 debug messages>
+
+8.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_static_link_pinreg.
+Performed a total of 0 changes.
+
+8.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 379 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 138 on $flatten\g_bank[3].u_store.$procdff$4143 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 0-bit at position 139 on $flatten\g_bank[3].u_store.$procdff$4143 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 0-bit at position 140 on $flatten\g_bank[3].u_store.$procdff$4143 ($dff) from module ot_hgi_coll_static_link_pinreg.
+
+8.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+
+8.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_static_link_pinreg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~82 debug messages>
+
+8.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_static_link_pinreg.
+Performed a total of 0 changes.
+
+8.8.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 379 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 138 on $flatten\g_bank[3].u_store.\u_native.$procdff$4086 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 0-bit at position 139 on $flatten\g_bank[3].u_store.\u_native.$procdff$4086 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 0-bit at position 140 on $flatten\g_bank[3].u_store.\u_native.$procdff$4086 ($dff) from module ot_hgi_coll_static_link_pinreg.
+
+8.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+
+8.8.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.8.23. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.8.24. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_static_link_pinreg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~82 debug messages>
+
+8.8.25. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_static_link_pinreg.
+Performed a total of 0 changes.
+
+8.8.26. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 379 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.8.27. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 138 on $flatten\g_bank[3].u_store.\u_native.$procdff$4087 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 0-bit at position 139 on $flatten\g_bank[3].u_store.\u_native.$procdff$4087 ($dff) from module ot_hgi_coll_static_link_pinreg.
+Setting constant 0-bit at position 140 on $flatten\g_bank[3].u_store.\u_native.$procdff$4087 ($dff) from module ot_hgi_coll_static_link_pinreg.
+
+8.8.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+
+8.8.29. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.8.30. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.8.31. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_static_link_pinreg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~82 debug messages>
+
+8.8.32. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_static_link_pinreg.
+Performed a total of 0 changes.
+
+8.8.33. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 379 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.8.34. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.8.35. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+
+8.8.36. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.8.37. Finished fast OPT passes. (There is nothing left to do.)
+
+8.9. Executing FSM pass (extract and optimize FSM).
+
+8.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+8.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+8.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+8.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+
+8.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+8.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+8.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+8.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+8.10. Executing OPT pass (performing simple optimizations).
+
+8.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 379 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_static_link_pinreg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~82 debug messages>
+
+8.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_static_link_pinreg.
+Performed a total of 0 changes.
+
+8.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 379 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $flatten\g_bank[3].u_store.\u_native.$procdff$4080 ($dff) from module ot_hgi_coll_static_link_pinreg (D = \g_bank[3].u_store.u_native.mr [140:138], Q = \g_bank[3].u_store.u_native.dout [140:138], rval = 3'000).
+Adding EN signal on $flatten\u_ctl.\u_codec.$procdff$4243 ($adff) from module ot_hgi_coll_static_link_pinreg (D = \rx_expect_seq [5:0], Q = \u_ctl.u_codec.es).
+Adding EN signal on $flatten\u_ctl.\u_codec.$procdff$4153 ($adff) from module ot_hgi_coll_static_link_pinreg (D = $flatten\u_ctl.\u_codec.$0\fault_cause[10:0], Q = \u_ctl.u_codec.fault_cause).
+Adding EN signal on $flatten\u_ctl.\u_codec.$procdff$4248 ($adff) from module ot_hgi_coll_static_link_pinreg (D = \epoch, Q = \u_ctl.u_codec.re).
+Adding EN signal on $flatten\u_ctl.\u_codec.$procdff$4203 ($adff) from module ot_hgi_coll_static_link_pinreg (D = \u_ctl.readseq[1] [5:0], Q = \u_ctl.u_codec.s1).
+Adding EN signal on $flatten\u_ctl.\u_codec.$procdff$4208 ($adff) from module ot_hgi_coll_static_link_pinreg (D = \u_ctl.u_codec.s1, Q = \u_ctl.u_codec.s2).
+Adding EN signal on $flatten\u_ctl.\u_codec.$procdff$4213 ($adff) from module ot_hgi_coll_static_link_pinreg (D = \u_ctl.u_codec.s2, Q = \u_ctl.u_codec.s3).
+Adding EN signal on $flatten\u_ctl.\u_codec.$procdff$4218 ($adff) from module ot_hgi_coll_static_link_pinreg (D = \u_ctl.u_codec.s3, Q = \u_ctl.u_codec.s4).
+Adding EN signal on $flatten\u_ctl.\u_codec.$procdff$4223 ($adff) from module ot_hgi_coll_static_link_pinreg (D = \epoch, Q = \u_ctl.u_codec.e1).
+Adding EN signal on $flatten\u_ctl.\u_codec.$procdff$4228 ($adff) from module ot_hgi_coll_static_link_pinreg (D = \u_ctl.u_codec.e1, Q = \u_ctl.u_codec.e2).
+Adding EN signal on $flatten\u_ctl.\u_codec.$procdff$4233 ($adff) from module ot_hgi_coll_static_link_pinreg (D = \u_ctl.u_codec.e2, Q = \u_ctl.u_codec.e3).
+Adding EN signal on $flatten\u_ctl.$procdff$4119 ($adff) from module ot_hgi_coll_static_link_pinreg (D = $flatten\u_ctl.$0\write_sequence[16:0], Q = \u_ctl.write_sequence).
+Adding EN signal on $flatten\u_ctl.$procdff$4139 ($adff) from module ot_hgi_coll_static_link_pinreg (D = 1'1, Q = \u_ctl.epoch_active).
+Adding EN signal on $flatten\u_ctl.$procdff$4129 ($adff) from module ot_hgi_coll_static_link_pinreg (D = $flatten\u_ctl.$0\rx_sequence[16:0], Q = \u_ctl.rx_sequence).
+Adding EN signal on $flatten\u_ctl.$procdff$4134 ($adff) from module ot_hgi_coll_static_link_pinreg (D = \epoch, Q = \u_ctl.active_epoch).
+Adding EN signal on $flatten\u_ctl.$procdff$4124 ($adff) from module ot_hgi_coll_static_link_pinreg (D = $flatten\u_ctl.$0\tx_sequence[16:0], Q = \u_ctl.tx_sequence).
+
+8.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+Removed 13 unused cells and 12 unused wires.
+<suppressed ~14 debug messages>
+
+8.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+<suppressed ~3 debug messages>
+
+8.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_static_link_pinreg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~60 debug messages>
+
+8.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_static_link_pinreg.
+Performed a total of 0 changes.
+
+8.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 372 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 371 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+8.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+
+8.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_static_link_pinreg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~60 debug messages>
+
+8.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_static_link_pinreg.
+Performed a total of 0 changes.
+
+8.10.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 371 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+
+8.10.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.10.23. Finished fast OPT passes. (There is nothing left to do.)
+
+8.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 2 bits (of 8) from port B of cell ot_hgi_coll_static_link_pinreg.$flatten\u_ctl.\u_codec.$nex$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:53$3591 ($nex).
+Converting cell ot_hgi_coll_static_link_pinreg.$flatten\u_ctl.\u_codec.$neg$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:90$3664 ($neg) from signed to unsigned.
+Removed top 1 bits (of 7) from port A of cell ot_hgi_coll_static_link_pinreg.$flatten\u_ctl.\u_codec.$neg$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:90$3664 ($neg).
+Converting cell ot_hgi_coll_static_link_pinreg.$flatten\u_ctl.\u_codec.$neg$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:94$3675 ($neg) from signed to unsigned.
+Removed top 1 bits (of 7) from port A of cell ot_hgi_coll_static_link_pinreg.$flatten\u_ctl.\u_codec.$neg$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:94$3675 ($neg).
+Removed top 16 bits (of 561) from FF cell ot_hgi_coll_static_link_pinreg.$flatten\u_ctl.\u_codec.$procdff$4266 ($dff).
+Removed top 3 bits (of 141) from mux cell ot_hgi_coll_static_link_pinreg.$flatten\g_bank[3].u_store.\u_native.$ternary$/tmp/hcoll-pinreg-final-map/native.sv:185$3894 ($mux).
+Removed top 3 bits (of 141) from mux cell ot_hgi_coll_static_link_pinreg.$flatten\g_bank[3].u_store.\u_native.$ternary$/tmp/hcoll-pinreg-final-map/native.sv:186$3893 ($mux).
+Removed top 3 bits (of 141) from wire ot_hgi_coll_static_link_pinreg.$flatten\g_bank[3].u_store.\u_native.$0\dout[140:0].
+Removed top 3 bits (of 141) from wire ot_hgi_coll_static_link_pinreg.$flatten\g_bank[3].u_store.\u_native.$ternary$/tmp/hcoll-pinreg-final-map/native.sv:186$3893_Y.
+Removed top 3 bits (of 564) from wire ot_hgi_coll_static_link_pinreg.bank_data.
+
+8.12. Executing PEEPOPT pass (run peephole optimizers).
+
+8.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+8.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_hgi_coll_static_link_pinreg:
+  creating $macc model for $flatten\u_ctl.$add$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:48$3930 ($add).
+  creating $macc model for $flatten\u_ctl.$add$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:49$3933 ($add).
+  creating $macc model for $flatten\u_ctl.$add$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:50$3936 ($add).
+  creating $macc model for $flatten\u_ctl.\u_codec.$neg$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:94$3675 ($neg).
+  creating $macc model for $flatten\u_ctl.\u_codec.$neg$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:90$3664 ($neg).
+  creating $alu model for $macc $flatten\u_ctl.\u_codec.$neg$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:90$3664.
+  creating $alu model for $macc $flatten\u_ctl.\u_codec.$neg$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:94$3675.
+  creating $alu model for $macc $flatten\u_ctl.$add$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:50$3936.
+  creating $alu model for $macc $flatten\u_ctl.$add$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:49$3933.
+  creating $alu model for $macc $flatten\u_ctl.$add$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:48$3930.
+  creating $alu cell for $flatten\u_ctl.$add$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:48$3930: $auto$alumacc.cc:548:replace_alu$4344
+  creating $alu cell for $flatten\u_ctl.$add$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:49$3933: $auto$alumacc.cc:548:replace_alu$4347
+  creating $alu cell for $flatten\u_ctl.$add$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv:50$3936: $auto$alumacc.cc:548:replace_alu$4350
+  creating $alu cell for $flatten\u_ctl.\u_codec.$neg$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:94$3675: $auto$alumacc.cc:548:replace_alu$4353
+  creating $alu cell for $flatten\u_ctl.\u_codec.$neg$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv:90$3664: $auto$alumacc.cc:548:replace_alu$4356
+  created 5 $alu and 0 $macc cells.
+
+8.15. Executing SHARE pass (SAT-based resource sharing).
+
+8.16. Executing OPT pass (performing simple optimizations).
+
+8.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 371 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_static_link_pinreg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~60 debug messages>
+
+8.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_static_link_pinreg.
+Performed a total of 0 changes.
+
+8.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 371 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+
+8.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.16.9. Finished fast OPT passes. (There is nothing left to do.)
+
+8.17. Executing MEMORY pass.
+
+8.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+8.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+8.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+8.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+8.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+8.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+
+8.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+8.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+8.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+
+8.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+8.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+
+8.19. Executing OPT pass (performing simple optimizations).
+
+8.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+<suppressed ~24 debug messages>
+
+8.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 365 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+Removed 0 unused cells and 6 unused wires.
+<suppressed ~1 debug messages>
+
+8.19.5. Finished fast OPT passes.
+
+8.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+8.21. Executing OPT pass (performing simple optimizations).
+
+8.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 365 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_static_link_pinreg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~53 debug messages>
+
+8.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_static_link_pinreg.
+Performed a total of 0 changes.
+
+8.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 365 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.21.6. Executing OPT_SHARE pass.
+
+8.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+
+8.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+8.22. Executing TECHMAP pass (map to technology primitives).
+
+8.22.1. Executing Verilog-2005 frontend: /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+8.22.2. Continuing TECHMAP pass.
+Using template $paramod$25417eb1ceb444220a2cc387484bf7cf31b9177f\_90_alu for cells of type $alu.
+Using template $paramod$18205a5da979f93ffab44671dcc4a48cf14e25e2\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $reduce_xor.
+Using extmapper simplemap for cells of type $nex.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $eq.
+Using template $paramod$constmap:dba4f2067ffa567551fb10fb06b704ab22ef6e36$paramod$05fd02ee8975e559bee57b6e5e564b3ecd2ab687\_90_shift_shiftx for cells of type $shiftx.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $and.
+Using template $paramod$constmap:c741d8d15ca6ce9584b08ae063f00a8f71c9280d$paramod$26de505cffdea93ae4a65cab40d30691657b5725\_90_shift_shiftx for cells of type $shift.
+Analyzing pattern of constant bits for this cell:
+  Constant input on bit 0 of port A: 1'0
+Creating constmapped module `$paramod$constmap:f1a7c76c720d7b47219fb42b2f14cba5ebc71c24$paramod$26de505cffdea93ae4a65cab40d30691657b5725\_90_shift_shiftx'.
+
+8.22.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod$constmap:f1a7c76c720d7b47219fb42b2f14cba5ebc71c24$paramod$26de505cffdea93ae4a65cab40d30691657b5725\_90_shift_shiftx..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$7989.
+    dead port 2/2 on $mux $procmux$7995.
+    dead port 2/2 on $mux $procmux$8001.
+    dead port 2/2 on $mux $procmux$8007.
+    dead port 2/2 on $mux $procmux$8013.
+    dead port 2/2 on $mux $procmux$8019.
+Removed 6 multiplexer ports.
+<suppressed ~710 debug messages>
+
+8.22.18. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$constmap:f1a7c76c720d7b47219fb42b2f14cba5ebc71c24$paramod$26de505cffdea93ae4a65cab40d30691657b5725\_90_shift_shiftx.
+<suppressed ~9 debug messages>
+Removed 0 unused cells and 19 unused wires.
+Using template $paramod$constmap:f1a7c76c720d7b47219fb42b2f14cba5ebc71c24$paramod$26de505cffdea93ae4a65cab40d30691657b5725\_90_shift_shiftx for cells of type $shift.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000010001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000010001 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000111 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000111 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~844 debug messages>
+
+8.23. Executing OPT pass (performing simple optimizations).
+
+8.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+<suppressed ~21142 debug messages>
+
+8.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 27228 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 21965 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 20341 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 20195 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 20188 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 20187 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+<suppressed ~21123 debug messages>
+Removed a total of 7041 cells.
+
+8.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+Removed 692 unused cells and 526 unused wires.
+<suppressed ~693 debug messages>
+
+8.23.5. Finished fast OPT passes.
+
+8.24. Executing ABC pass (technology mapping using ABC).
+
+8.24.1. Extracting gate netlist of module `\ot_hgi_coll_static_link_pinreg' to `<abc-temp-dir>/input.blif'..
+
+8.24.1.1. Executed ABC.
+Extracted 13920 gates and 17141 wires to a netlist network with 3220 inputs and 740 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Aug 27 2026 23:31:10)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+8.24.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      628
+ABC RESULTS:            ANDNOT cells:      139
+ABC RESULTS:               MUX cells:     1159
+ABC RESULTS:              NAND cells:      200
+ABC RESULTS:               NOR cells:      249
+ABC RESULTS:               NOT cells:        2
+ABC RESULTS:                OR cells:       54
+ABC RESULTS:             ORNOT cells:      152
+ABC RESULTS:              XNOR cells:     8945
+ABC RESULTS:               XOR cells:     1914
+ABC RESULTS:        internal signals:    13181
+ABC RESULTS:           input signals:     3220
+ABC RESULTS:          output signals:      740
+Removing temp directory.
+Removing global temp directory.
+
+8.25. Executing OPT pass (performing simple optimizations).
+
+8.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_static_link_pinreg.
+
+8.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_static_link_pinreg'.
+Computing hashes of 19017 cells of `\ot_hgi_coll_static_link_pinreg'.
+Finding duplicate cells in `\ot_hgi_coll_static_link_pinreg'.
+Removed a total of 0 cells.
+
+8.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_static_link_pinreg..
+Removed 0 unused cells and 4158 unused wires.
+<suppressed ~16 debug messages>
+
+8.25.5. Finished fast OPT passes.
+
+8.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_hgi_coll_static_link_pinreg'. Setting top module to ot_hgi_coll_static_link_pinreg.
+
+8.26.1. Analyzing design hierarchy..
+Top module:  \ot_hgi_coll_static_link_pinreg
+
+8.26.2. Analyzing design hierarchy..
+Top module:  \ot_hgi_coll_static_link_pinreg
+Removed 0 unused modules.
+
+8.27. Printing statistics.
+
+=== ot_hgi_coll_static_link_pinreg ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    13627 wires
+    33016 wire bits
+      217 public wires
+    19606 public wire bits
+       22 ports
+     2398 port bits
+    19017 cells
+      139   $_ANDNOT_
+      628   $_AND_
+       54   $_DFFE_PN0N_
+       71   $_DFFE_PN0P_
+       81   $_DFF_PN0_
+     5353   $_DFF_P_
+     1159   $_MUX_
+      200   $_NAND_
+      249   $_NOR_
+        2   $_NOT_
+      152   $_ORNOT_
+       54   $_OR_
+     8945   $_XNOR_
+     1914   $_XOR_
+       12   $scopeinfo
+        4   ot_sram_1r1w_64x512_m1_r2c2
+
+8.28. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hgi_coll_static_link_pinreg...
+Found and reported 0 problems.
+
+9. Executing JSON backend.

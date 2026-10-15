@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.hbm_attn.qk_score_serializer_component.v1",
+  "source_commit": "0e40b8668",
+  "unit": "oth-ubuntu-1588543-1792057009",
+  "host": "ot-epyc4",
+  "exit_status": 0,
+  "qualification": false,
+  "full_native_qualified": false,
+  "physical_qualified": false,
+  "status": "PASS actual mapped-macro score store component; real QK arithmetic producer and VM WG1 join open",
+  "H": 16,
+  "T": [
+    128,
+    640
+  ],
+  "epochs_per_T": [
+    0,
+    1,
+    0
+  ],
+  "payload_words_checked": 36864,
+  "exact_flags_checked": 36864,
+  "read_beats": 576,
+  "real_SRAM_macros": 256,
+  "macro": "ot_sram_1r1w_32x128_m1",
+  "flag_storage_FF": 32768,
+  "flag_read_pipeline_FF": 1024,
+  "minimum_flag_roots_at_8192sinks": 5,
+  "write_ports": "16 banks x64 masked bits; remaining word bits retained",
+  "read_ports": "16 banks x128bits selected by head; head-major64 FP32 words/edge",
+  "overlap": "Completed64row chunks drain while next64rows captured, same-bank independent addresses; both epochs and epoch0 reuse",
+  "mutants_detected": [
+    "source row discontinuity",
+    "source lane mask missing",
+    "incoming perword flag corruption detected by exact output comparison"
+  ],
+  "remaining": [
+    "Actual arithmetic sc_* capture producer trace",
+    "Actual current VM bank and WG1 schedule/SC residency",
+    "Actual REDMAX/SFU/REDSUM P chain",
+    "Physical macro and clock placement/cut/routing",
+    "Immutable full-target throughput"
+  ],
+  "source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_qk_score_serializer.sv": "c004ae248dd91039526294c76937a0b8ec7ba0192d481c71f499f20e0d695db9",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_qk_score_serializer.sv": "4b2dfada0db9cb34e28620fce9ae55116e86b754a9568506fb35e0a2fff23fc2",
+    "tools/hbm_static_attention/run_qk_score_serializer.sh": "723462c973c03c3a38bba394e16c08765133aa242232133acaaf035f44e199da",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa"
+  }
+}

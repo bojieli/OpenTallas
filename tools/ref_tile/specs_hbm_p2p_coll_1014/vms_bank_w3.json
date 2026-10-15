@@ -1,0 +1,111 @@
+{
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "name": "vms_bank_w3",
+ "top": "ot_vms_bank",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "rq",
+   "rq_cr",
+   "rr",
+   "wq",
+   "wq_cr",
+   "wq_done"
+  ],
+  "S": [
+   "dq",
+   "dq_done",
+   "kq",
+   "kq_cr",
+   "kq_done",
+   "bid",
+   "sid",
+   "status"
+  ],
+  "N": [
+   "pq",
+   "pq_cr",
+   "pr"
+  ],
+  "E": [
+   "xq",
+   "xq_cr",
+   "xq_done",
+   "xq2",
+   "xq2_cr",
+   "xq2_done",
+   "eg",
+   "eg_cr"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 3
+  }
+ ],
+ "params": {
+  "EGC": 1,
+  "WG": 3,
+  "WRS": 51
+ },
+ "outline": {
+  "w": 308.88,
+  "h": 308.88
+ },
+ "job": {
+  "owner": "Claude:H-COLL",
+  "branch": "claude/hbm-p2p-coll-1014",
+  "tag": "r1",
+  "hold_merge": "Individual leaf route; SW slice parent ot_vms_slice_coll_sw native pin/reset/clock integration qualification remains required.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm",
+   "rtl/hbm_accel/generic/collective",
+   "rtl/link",
+   "physical/asap7_memory_macros"
+  ],
+  "purpose": "B2 VM bank for the SW slice: WG 3 = two die write groups (WRS 3) + the in-parent COLL write group (WRS 0: vmcore->bank registered direct, lane depth 4; keeps one clock root <= 15k sinks: WRS 3 measured 16,450 sinks, TT insertion 534 / spread 154 ps FAIL); RTL = closed vms_bank v08",
+  "benches": [
+   {
+    "name": "b2vm_nc4_pos",
+    "cmd": "JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_nc4_pos -GRLY=20 -GSNC=4",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "b2vm_early_credit",
+    "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_early_credit -GRLY=20 -GSNC=4 -GMUT=1; then exit 0; elif test -s {RUN}/b2vm_early_credit/run.log && ! grep -q '^B2_COLL_VMPORT PASS' {RUN}/b2vm_early_credit/run.log; then exit 1; else exit 0; fi",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/vms_bank_w3/views",
+  "record_to": "results/rtl/ref_tile/vms_bank_w3"
+ }
+}
