@@ -4428,7 +4428,7 @@ def _r18_post(v, m):
     _r18_masters(v, m)
 
 
-R18_CK = ('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'crst', 'hrst', 'rst_n', 'h_arst_n', 'c_arst_n') + tuple(f'ck{i}' for i in range(9)) + tuple(f'ck_l{i}' for i in range(4)) + ('ck_pin', 'mux_ck') + tuple(f'llr_ck{k}' for k in range(5)) + tuple(f'ck_r{r}_{k}' for r in range(8) for k in range(64)) + tuple(f'clk_{family}{k}' for family, count in [('colr', 4), ('ecol', 5), ('pfold', 4), ('efold', 4)] for k in range(count))
+R18_CK = ('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'crst', 'hrst', 'rst_n', 'h_arst_n', 'c_arst_n') + tuple(f'ck{i}' for i in range(9)) + tuple(f'ck_l{i}' for i in range(16)) + ('ck_pin', 'mux_ck', 'ck_node') + tuple(f'ck_rp{k}' for k in range(5)) + tuple(f'ck_lsl{k}' for k in range(8)) + tuple(f'llr_ck{k}' for k in range(5)) + tuple(f'ck_r{r}_{k}' for r in range(8) for k in range(64)) + tuple(f'clk_{family}{k}' for family, count in [('colr', 4), ('ecol', 5), ('pfold', 4), ('efold', 4)] for k in range(count))
 
 
 def _r18_masters(v, m):

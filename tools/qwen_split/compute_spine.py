@@ -26,7 +26,7 @@ CHE = 108.0                     # C7: spine EDGE channels (beside the tile field
                                 # ~80-um frame) must stand within 490 um of xcol_24's W face across tile column 24
 PORT_WH = (float(os.environ.get('OT_SPLIT_PORT_W', '1036.8')), 2462.4)      # qfd_port_tiles_* slot: 2.553 mm2 >= the measured 2.536 mm2 need (blockers G7)
 RES_WH = (777.6, 518.4)
-LANES_WH = (777.6, 1131.84)
+LANES_WH = (803.52, 1131.84)
 SU_WH = (3240.0, 3672.0)        # qfd_sp_su64_sfu: 64-lane component 4.84 mm2 children + reducer + glue (Codex 3434 x 2570 bbox)
 VM_WH = (4708.8, 2203.2)        # TRIMMED central VM (owner 08:20 PT 10-14: distributed x slices adopted; banks / SU ports / row reads only, M7 cap, no wall)
 CTLM_WH = (777.6, 1814.4)
@@ -62,7 +62,10 @@ CHILD_CK = {'qfd_tt_up4': ['ck_pin', 'ck_l0', 'ck_l1', 'ck_l2', 'ck_l3'],     # 
                                      + [f'ck_r{r}_{k}' for r in (3, 4, 5, 6) for k in range(56, 64)],
             'qfd_io_collective': ['clk'] + [f'clk_colr{k}' for k in range(4)] + [f'clk_ecol{k}' for k in range(5)]
                                 + [f'clk_pfold{k}' for k in range(4)] + [f'clk_efold{k}' for k in range(4)],
-            'qfd_d2d_rom': ['ck', 'mux_ck'] + [f'llr_ck{k}' for k in range(5)]}
+            'qfd_d2d_rom': ['ck', 'mux_ck'] + [f'llr_ck{k}' for k in range(5)],
+            'qfd_tile_nk': ['ck'] + [f'ck_rp{k}' for k in range(5)] + [f'ck_lsl{k}' for k in range(8)] + ['ck_node'],
+            'qfd_tile_nl': ['ck'] + [f'ck_rp{k}' for k in range(5)] + [f'ck_lsl{k}' for k in range(8)],
+            'qfd_sp_band_lanes': ['ck'] + [f'ck_l{k}' for k in range(16)]}
 
 
 
