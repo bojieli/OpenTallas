@@ -4,7 +4,11 @@
 # No clock/enable port, timing exception, or guessed insertion is introduced.
 if {[info procs ot_clock_spine] eq ""} {error "TT dual spine requires the standard spine hook first"}
 rename ot_clock_spine ::ot_tt_spine_native
-proc ot_clock_spine {} {
+# main 2e2b4f0e8 namespaced the spine builder: ot_clock_spine {requested_port prefix}; every rebuilt copy keeps that
+# signature (a no-argument copy fails at 'set ::ot_sp_prefix $prefix', the tr3 gate CTS error 10-14 21:4x).
+if {[info args ::ot_tt_spine_native] ne {requested_port prefix}} {error "TT dual spine: standard spine signature changed"}
+set ::ot_tt_spine_sig {{requested_port ""} {prefix clkbuf_sp_}}
+proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
   if {[ot_sp_env OT_SPINE_THROUGH_ICG 0] ne "1"} {error "TT dual spine needs the native ICG pass"}
   set ::env(OT_SPINE_CTS_REST) 0
   # The primary branch has its own balanced spine below. Its FFs and the
@@ -14,10 +18,10 @@ proc ot_clock_spine {} {
   set original [info body ::ot_tt_spine_native]
   set move {if {![[$i getMaster] isBlock] && [lsearch -exact $::ot_sp_icg_move $i] < 0} { lappend ::ot_sp_icg_move $i }}
   if {[string first $move $original] < 0} {error "TT primary relocation dependency changed"}
-  proc ::ot_tt_spine_native {} [string map [list $move {if {0} { lappend ::ot_sp_icg_move $i }}] $original]
+  proc ::ot_tt_spine_native $::ot_tt_spine_sig [string map [list $move {if {0} { lappend ::ot_sp_icg_move $i }}] $original]
   try {
-    if {![::ot_tt_spine_native]} {error "TT native GCLK spine was not built"}
-  } finally {proc ::ot_tt_spine_native {} $original}
+    if {![::ot_tt_spine_native $requested_port $prefix]} {error "TT native GCLK spine was not built"}
+  } finally {proc ::ot_tt_spine_native $::ot_tt_spine_sig $original}
   set gated [ot_sp_leaf_arrivals]
   set gate $::ot_sp_icg
   set gated_pins {}
@@ -50,18 +54,12 @@ proc ot_clock_spine {} {
   }
   # Separate names let the same measured placement/balance procedures build
   # both trees. Fail loudly if a standard implementation dependency changes.
-  set saved [dict create]
-  foreach p {ot_sp_emit ot_sp_checkpoint ot_sp_restore ot_sp_pad} {
-    set body [info body $p]
-    if {[string first clkbuf_sp_ $body] < 0} {error "TT spine dependency $p changed"}
-    dict set saved $p $body
-    proc $p [info args $p] [string map {clkbuf_sp_ clkbuf_tt_primary_} $body]
-  }
+  # (the standard builder takes the instance prefix as its argument since main 2e2b4f0e8)
   set native [info body ::ot_tt_spine_native]
   set old {&& [[[$it getInst] getMaster] isBlock]}
   set new {&& ([[[$it getInst] getMaster] isBlock] || [string match ICG* [[[$it getInst] getMaster] getName]])}
   if {[string first $old $native] < 0} {error "TT macro-leaf dependency changed"}
-  proc ::ot_tt_spine_native {} [string map [list $old $new] $native]
+  proc ::ot_tt_spine_native $::ot_tt_spine_sig [string map [list $old $new] $native]
   set ::env(OT_SPINE_THROUGH_ICG) 0
   set ::env(OT_SPINE_MACRO_LEAF) 1
   set ::env(OT_SPINE_SYM) 1
@@ -89,7 +87,7 @@ proc ot_clock_spine {} {
     return [::ot_tt_leaf_static]
   }
   try {
-    if {![::ot_tt_spine_native]} {error "TT primary spine was not built"}
+    if {![::ot_tt_spine_native $requested_port clkbuf_tt_primary_]} {error "TT primary spine was not built"}
     foreach i $primary_insts {
       if {[string match ICG* [[$i getMaster] getName]]} {
         $i setDoNotTouch 1
@@ -103,8 +101,7 @@ proc ot_clock_spine {} {
     rename ot_sp_leaf_arrivals {}
     rename ::ot_tt_leaf_static ot_sp_leaf_arrivals
     unset ::ot_tt_gated_sink_pins ::ot_tt_icg_input ::ot_tt_icg_master
-    dict for {p body} $saved {proc $p [info args $p] $body}
-    proc ::ot_tt_spine_native {} $native
+    proc ::ot_tt_spine_native $::ot_tt_spine_sig $native
   }
   return 1
 }
