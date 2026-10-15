@@ -1067,7 +1067,10 @@
           "pma_rck": "pad_N3_pma_rck"
         }
       }
-    ]
+    ],
+    "opt_in_rooted_master": "hfd_serdes487_rooted",
+    "opt_in_source": "rtl/hbm_accel/io_native_20261014/hfd_serdes487_rooted.sv",
+    "rooted_clock_contract": "4localENC+8recoveredDECdelivered entries perlane, source fec_clock_request.json; samefamilyphase mustbe actualnativequalified. No common-clock port fallback."
   },
   "model": {
     "stream_period_ps": 833.333,
