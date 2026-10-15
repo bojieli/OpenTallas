@@ -32,6 +32,9 @@ for f in "${SRC[@]}"; do [ -f "$f" ] || { echo "SLAB_GATE missing $f"; exit 2; }
 sha256sum "${SRC[@]}" > sources.sha256
 "$V" --binary --timing -j 16 -Wno-fatal -Wno-lint -Wno-style --top-module tb_s81_static_collective_slab -GMUT="$MUT" -GVMB_PINCAP="$PINCAP" "${DEFS[@]}" --Mdir obj "${SRC[@]}" > build.log 2>&1
 set +e; ./obj/Vtb_s81_static_collective_slab > run.log 2>&1; rc=$?; set -e
+# Preserve the actual work-count line for closure-loop non-vacuity admission.
+# Verilator appends four report lines after the DUT summary.
+grep -E '^PASS fullstatic slab|^FAIL|Assertion failed' run.log || true
 tail -n 3 run.log
 if [ "$MUT" != 0 ] || [ -n "${MUTANT:-}" ]; then
   if [ $rc -ne 0 ] || grep -q 'Assertion failed' run.log; then echo "SLAB_GATE MUTANT FAIL (detected)"; exit 1; fi
