@@ -7382,7 +7382,7 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
             ci = 0 if side == 'W' else 21
             roots = [r for r, f in m['frames'].items() if f['column_index'] == ci]
             rr = min(roots, key=lambda r: abs(m['frames'][r]['street'][1] + 79.8 - ly_t))
-            field_path = road.to_root(side, core[0], rr, 'x')
+            field_path = _dedup(core + road.to_root(side, core[-1], rr, 'x'))
             ry = field_path[-1][1]
             path = _dedup(field_path + [(edge[side], ry), (edge[side], ly_t), (lx, ly_t)])
         nm = f'K{side}{i}'

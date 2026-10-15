@@ -77,8 +77,14 @@ class Roadmap:
   self.graph.setdefault(a,{})[b]=abs(a[0]-b[0])+abs(a[1]-b[1]);self.graph.setdefault(b,{})[a]=self.graph[a][b]
  def to_root(self,side,source,r,kind):
   target=self.rootnode[(r,kind)];q=[];dist={};prev={}
+  stem=[source]
+  if side=='E' and source[0] < self.m['geo']['x_fe']:
+   cy=self.G.corr_y(self.m, 'xdn' if kind=='x' else 'r0')
+   sx=self.entry[side][0][0]
+   stem += [(source[0],cy),(sx,cy)]
+  base=stem[-1]
   for node in self.entry[side]:
-   d=abs(node[0]-source[0])+abs(node[1]-source[1]);dist[node]=d;prev[node]=None;heapq.heappush(q,(d,node))
+   d=abs(node[0]-base[0])+abs(node[1]-base[1]);dist[node]=d;prev[node]=None;heapq.heappush(q,(d,node))
   while q:
    d,n=heapq.heappop(q)
    if d!=dist[n]:continue
@@ -89,7 +95,7 @@ class Roadmap:
   assert target in dist,('canonical corridor graph disconnected',r,side)
   ns=[];n=target
   while n is not None:ns.append(n);n=prev[n]
-  ns.reverse();return self.G._dedup([source,(ns[0][0],source[1])]+ns)
+  ns.reverse();return self.G._dedup(stem+[(ns[0][0],base[1])]+ns)
 
 def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
  """Actual per-root chains, preserving immutable logical gather lane ordering.
