@@ -1,0 +1,7 @@
+read_verilog -sv /home/ubuntu/native-pc-census-340cfd747/rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_lease.sv /home/ubuntu/native-pc-census-340cfd747/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v /home/ubuntu/native-pc-census-340cfd747/results/arch/hbm_die_v15/native_pc_clock_census/single_pc.sv
+chparam -set PC 30 -set PHASE 0 ot_hbm_svc_native_pc_census
+hierarchy -check -top ot_hbm_svc_native_pc_census
+synth -top ot_hbm_svc_native_pc_census -flatten -noabc
+check
+write_json /home/ubuntu/native-pc-census-340cfd747/results/arch/hbm_die_v15/native_pc_clock_census/pc30/mapped.json
+stat

@@ -1,0 +1,45 @@
+{
+  "SRAM_clock_pins": 1,
+  "SRAM_macros": [
+    {
+      "clock_pins": 1,
+      "clock_root": "pc_clk[16]",
+      "instance": "u_response_payload",
+      "port_widths": {
+        "clk": 1,
+        "cr_en": 2,
+        "cr_sel": 16,
+        "r_addr_in": 7,
+        "r_ce_in": 1,
+        "rd_out": 256,
+        "rr_addr": 14,
+        "rr_en": 2,
+        "w_addr_in": 7,
+        "w_ce_in": 1,
+        "w_mask_in": 256,
+        "wd_in": 256
+      },
+      "type": "ot_sram_1r1w_128x256_m1_r2c2"
+    }
+  ],
+  "clock_root": "pc_clk[16]",
+  "latches": 0,
+  "log_sha256": "95b87d47a1afcfd74f734d5e09279c19ddd4cc4b620f347355407369d83d7bd7",
+  "mapped_FF_clock_pins": 13649,
+  "mapped_json_sha256": "da4ba5b9667673f8d172ae6f2a1dd0e8a525f591caa1a4c9b07e22c366a0c2d9",
+  "outputs_observed": 29,
+  "pc": 16,
+  "primitive_sequential_cells": {
+    "$_DFFE_PN0N_": 5,
+    "$_DFFE_PN0P_": 1197,
+    "$_DFFE_PN1P_": 1,
+    "$_DFFE_PP_": 11936,
+    "$_DFF_PN0_": 275,
+    "$_DFF_PN1_": 235
+  },
+  "refresh_phase": 59,
+  "source_manifest_sha256": "083bd0dfda6677b2dadefe937ac663656dcb08aff6895693fb55bfe50750af78",
+  "total_clock_pins": 13650,
+  "unmapped_storage": 0,
+  "wall_seconds": 24.82858110498637
+}
