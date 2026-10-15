@@ -3469,6 +3469,15 @@ def face_need(bits):
 
 def stn_dims(lanes, horiz):
     """station size: pins of every lane (fclk + data) on the input and the output face; ~0.7 um2 a stage bit"""
+    if STN70_SPLIT and len(lanes) in (2, 3, 4) and all(w == 70 for w in lanes):
+        # Independent forwarded roots require independent hardened leaves.  Reserve
+        # their final across-flow envelope BEFORE trunk placement; the late split
+        # must not grow a compact multi-lane placeholder into occupied streets.
+        # Keep the split's exact lattice offsets and allow the granted17.28 outline.
+        w1, h1 = stn_dims([70], horiz)
+        if horiz:
+            return w1 + SHAVE, (len(lanes) - 1) * up(h1 + 0.864 + SHAVE, GY) + h1 + SHAVE
+        return (len(lanes) - 1) * up(w1 + 0.864 + SHAVE, GX) + w1 + SHAVE, h1 + SHAVE
     pins = sum(w + 1 for w in lanes)
     bits = sum(lanes)
     face = face_need([b for w in lanes for b in (1, w)])
@@ -3522,9 +3531,9 @@ def _split_multi_lane_stations(m):
         subs = []
         for k in range(K):
             if horiz:      # flow W->E: stack in y
-                x0, y0 = it.x, up(it.y + k * (h1 + 0.864 + SHAVE), GY)
+                x0, y0 = it.x, up(it.y, GY) + k * up(h1 + 0.864 + SHAVE, GY)
             else:
-                x0, y0 = up(it.x + k * (w1 + 0.864 + SHAVE), GX), it.y
+                x0, y0 = up(it.x, GX) + k * up(w1 + 0.864 + SHAVE, GX), it.y
             box = (x0, y0, x0 + w1, y0 + h1)
             if not (P.occ.free(box, 0.432) and box[2] <= W and box[3] <= H):
                 pl = P.near(x0 + w1 / 2, y0 + h1 / 2, w1, h1, [(0.0, 0.0, W, H)], horiz=not horiz, span=120.0, rows=12)

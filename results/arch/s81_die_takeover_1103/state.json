@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.s81.die.takeover.v1",
-  "updated_utc": "2026-10-15T18:28:29.651639+00:00",
+  "updated_utc": "2026-10-15T18:45:00.332969+00:00",
   "source_commit": "eb9cfa044920f23a9565d6c5fda43d2d5f217d06",
   "native_qualified": false,
   "clock_source_join": {
@@ -247,7 +247,10 @@
       "pids": [
         1020722
       ],
-      "scope": "GEN20 old-topology/v23+stationgrants alternative; NOT SA; source20 andexactfinalmasterfootprintfix20ebb0973"
+      "scope": "GEN20 old-topology/v23+stationgrants alternative; NOT SA; source20 andexactfinalmasterfootprintfix20ebb0973",
+      "state": "TERMINAL_GEN_FAIL_2026-10-15_11:18_PT",
+      "error": "--stn70-split no box for lane f_crE4_E1_hub_10 lane0",
+      "next": "Reserve actual independent child envelope before trunk placement; preserve model_before_finalize0.pickle and failure history"
     }
   ],
   "pq_headpc_candidate_leaf_grant": {
@@ -290,5 +293,13 @@
     "verdict": "NO_BUILDABLE_REPAIR_YET",
     "artifact": "results/arch/s81_globalfp_1015/road_repair/ranked_report.json",
     "next": "Full source VM actual pin-local packing + system-level source-preserving geometry; reject432road BFx2cut0.643 and648road height overflow"
+  },
+  "station70_structural_fix": {
+    "cause": "The placer reserved a compact70xK station then expanded it to K hardened70x1 roots. Cumulative unsnapped offsets also collapsed one intended inter-child gap to0.024um.",
+    "correction": "Reserve actual K-child across-flow envelope before trunk placement; use one snapped pitch for both reservation and splitting, preserving >=0.864um intended clearance.",
+    "cycles_added": 0,
+    "rtl_changes": false,
+    "tests": "3tests PASS: all six K2/3/4 horizontal/vertical splits require no late search and preserve every lane endpoint; original compact reservation negative fails; single root/flag-off unchanged",
+    "scope": "Geometry only; all incident pin, actual orientation, native clock and real-view obligations still apply"
   }
 }
