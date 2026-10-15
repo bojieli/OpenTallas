@@ -1,0 +1,269 @@
+{
+  "schema": "opentallas.hbm.engram.static_registered_return_tree.v1",
+  "status": "pass",
+  "PCs": 32,
+  "first_stage_pair_collectors": 16,
+  "node_roots": 31,
+  "per_PC_reservation_edges": 64,
+  "global_minimum_response_spacing_HBM_edges": 2,
+  "balanced_sample_latency_edges": {
+    "two_row": 8,
+    "one_row": 12
+  },
+  "finite_CDC_entries": 16,
+  "payloads_per_positive": 1024,
+  "positive_phase_drift_cases": 32,
+  "runs": [
+    {
+      "name": "two_row",
+      "phase_ps": 0,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase0 ppm-100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2110205625 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 0,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase0 ppm100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2109797667 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 104,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase104 ppm-100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2110309625 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 104,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase104 ppm100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2109901667 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 208,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase208 ppm-100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2109580375 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 208,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase208 ppm100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2110005667 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 312,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase312 ppm-100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2109684375 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 312,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase312 ppm100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2110109667 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 416,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase416 ppm-100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2109788375 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 416,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase416 ppm100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2110213667 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 520,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase520 ppm-100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2109892375 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 520,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase520 ppm100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2110317667 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 624,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase624 ppm-100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2109996375 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 624,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase624 ppm100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2109588249 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 728,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase728 ppm-100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2110100375 (1fs)"
+    },
+    {
+      "name": "two_row",
+      "phase_ps": 728,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row0 phase728 ppm100 payload1024 perPC64 latency8 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2109692249 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 0,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase0 ppm-100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2114371875 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 0,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase0 ppm100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2113964757 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 104,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase104 ppm-100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2114475875 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 104,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase104 ppm100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2114068757 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 208,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase208 ppm-100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2113746625 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 208,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase208 ppm100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2114172757 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 312,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase312 ppm-100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2113850625 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 312,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase312 ppm100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2114276757 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 416,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase416 ppm-100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2113954625 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 416,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase416 ppm100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2114380757 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 520,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase520 ppm-100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2114058625 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 520,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase520 ppm100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2114484757 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 624,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase624 ppm-100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2114162625 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 624,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase624 ppm100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2113755339 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 728,
+      "core_drift_ppm": -100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase728 ppm-100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2114266625 (1fs)"
+    },
+    {
+      "name": "one_row",
+      "phase_ps": 728,
+      "core_drift_ppm": 100,
+      "returncode": 0,
+      "output": "PASS real return tree row1 phase728 ppm100 payload1024 perPC64 latency12 maxCDCused2\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:48: $finish called at 2113859339 (1fs)"
+    },
+    {
+      "name": "tag_data_mutant",
+      "phase_ps": 104,
+      "core_drift_ppm": 0,
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:35: tree exact native tag/data/order item0\n       Time: 12800000  Scope: tb"
+    },
+    {
+      "name": "branch_skew_mutant",
+      "phase_ps": 104,
+      "core_drift_ppm": 0,
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:34: unbalanced branch broke physical reservation arrival envelope\n       Time: 78336000  Scope: tb"
+    },
+    {
+      "name": "invalid_upper_tag",
+      "phase_ps": 104,
+      "core_drift_ppm": 0,
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/static_return_tree_component/tb.sv:39: tree fault or finiteCDC overflow\n       Time: 10754000  Scope: tb"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_return_tree_static.sv": "2cda05448cccc4ad2f0551ce3f707f426c80d7d5c9f070542a9317e6c3b5fd49"
+  },
+  "wall_seconds": 12.214779255969916,
+  "scope": "Actual registered source/finiteCDC component, synthetic native K-return pins as input boundary. Fixed reservations remove a long combinational ready path. No ideal internal FIFO/model. Actual32-PC controller/Engram/releasedrow join, exact pin/relay placement<=500um, CTS/STA, universal service and original performance remain unqualified; candidate service reduction is explicit, not waived."
+}
