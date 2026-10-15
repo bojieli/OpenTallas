@@ -1,0 +1,5 @@
+read_json ../census.json
+techmap t:$*dff*
+opt_clean
+stat
+write_json sequential_bitmapped.json

@@ -154,7 +154,7 @@
     "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-physical-1015",
     "purpose": "Production-param generic optimized clock sequential-bit census; no ABC/CTS/route",
     "terminal_exit": 0,
-    "state": "TERMINAL"
+    "state": "BOTH_SOURCE_CENSUS_AND_SEQUENTIAL_BITMAPPING_TERMINAL"
   },
   "physical_qualified": false,
   "boundary_ownership": {
@@ -270,7 +270,9 @@
       "stream_clk": 18760
     },
     "classification": "Clock bit counts after source-exact hierarchy/proc/opt/memory_map/opt. Generic sequential bits, NOT technology/CTS sink or signoff timing measurement. Source alone proves monolithic helper HBM root exceeds15000; no CTS allowed without split/exception gate.",
-    "unresolved_memories_or_clock_pins": 0
+    "unresolved_memories_or_clock_pins": 0,
+    "sequential_primitive_mapping_complete": true,
+    "bitmapped_counts": "bitmapped_root_counts.json"
   },
   "controller_cohardening_request": {
     "status": "REQUESTED_NOT_GRANTED",
@@ -312,5 +314,18 @@
       "Mapped root count and fanout on combined source",
       "Actual pinreg/CTS/insertion/corner timing evidence"
     ]
+  },
+  "upcoming_functional_successor": {
+    "status": "FUNCTIONAL_OWNER_MODELING_NOT_YET_SOURCE_FROZEN",
+    "reason": "Parent full434 actualnative commandcontroller composition missed fixeddeadline132cycles; baseline is not successorqualification",
+    "regions": 8,
+    "sector_capacity_per_region": 512,
+    "lookahead_rows": 4,
+    "source_SRAMs": 128,
+    "owner_region_extra_bits_per_entry": 2,
+    "extra_owner_FF_per_helper": 512,
+    "extra_owner_FF_per_PC": 16,
+    "candidate_native_PC_conservative_sinks_with_region_owner": 14034,
+    "policy": "No new physical sourcebuild until functional successor frozen/proved supplied; old exactcensus remains baseline. Carry source-exact ownerregion/pin/slot/clock proof forward; no functional frozenRTLedit here."
   }
 }

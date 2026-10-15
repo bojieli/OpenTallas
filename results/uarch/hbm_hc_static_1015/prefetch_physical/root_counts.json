@@ -4,6 +4,35 @@
     "hbm_clk": 21136,
     "stream_clk": 4690
   },
+  "root_sequential_cells": {
+    "hbm_clk": {
+      "$adffe": 1031,
+      "$adff": 119,
+      "$dffe": 32
+    },
+    "stream_clk": {
+      "$adffe": 15,
+      "$adff": 96,
+      "$dffe": 4
+    }
+  },
+  "sequential_cell_width_histogram": {
+    "1": 345,
+    "17": 257,
+    "11": 256,
+    "16": 261,
+    "32": 1,
+    "2": 23,
+    "12": 7,
+    "30": 1,
+    "4": 1,
+    "8": 35,
+    "2048": 2,
+    "284": 32,
+    "3": 72,
+    "61": 4
+  },
+  "bitwise_primitive_mapping_complete": false,
   "SRAM_clock_pins_additional": {
     "ot_sram_1r1w_128x256_m1_r2c2": 32
   },

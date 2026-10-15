@@ -1,0 +1,30 @@
+{
+  "top": "$paramod$54a7f5a6925e0bf17d35fea08276a08b05ab1333\\ot_hbm_svc_prefetch_block_cdc",
+  "root_sequential_bits": {
+    "hbm_clk": 21136,
+    "stream_clk": 4690
+  },
+  "root_sequential_cells": {
+    "hbm_clk": {
+      "$_DFF_PN0_": 435,
+      "$_DFFE_PN0P_": 11612,
+      "$_DFFE_PP_": 9088,
+      "$_DFF_PN1_": 1
+    },
+    "stream_clk": {
+      "$_DFF_PN0_": 4280,
+      "$_DFFE_PN0P_": 158,
+      "$_DFF_PN1_": 8,
+      "$_DFFE_PP_": 244
+    }
+  },
+  "sequential_cell_width_histogram": {
+    "1": 25826
+  },
+  "bitwise_primitive_mapping_complete": true,
+  "SRAM_clock_pins_additional": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 32
+  },
+  "unresolved": [],
+  "counts_are": "bitwise technology primitives before library mapping/clock gating, not CTS sinks or timing"
+}

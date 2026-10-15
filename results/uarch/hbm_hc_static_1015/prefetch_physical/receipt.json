@@ -47,5 +47,21 @@
     "run.sh": "6ec97a0f34a1dec49093dccf23658d2a70a0a0ad6e9730408ebbcfc245d2bac4",
     "census.json": "e51d51e34388f681107748e796f4515d3832ee2d6e2666e37c4f011c6c9c1ddc",
     "yosys.log": "6589176adab03b4bc4085dc781916a2cc81ee6f5d7f9aa43e97693205002f143"
+  },
+  "sequential_bitmapping": {
+    "terminal": "ot-run RAN ot-agidock128 unitoth-ubuntu-3967648-1792062329 exit0",
+    "session": 98391,
+    "command": "read_json ../census.json; techmap t:$*dff*; opt_clean; stat; write_json sequential_bitmapped.json",
+    "output_sha256": {
+      "../census.json": "e51d51e34388f681107748e796f4515d3832ee2d6e2666e37c4f011c6c9c1ddc",
+      "seqmap.ys": "2ba25fb36e3ce6e5686afe2220b70fa91f84a848241f66443e385a4ecbf89edb",
+      "run.sh": "12f4d69b622be1efd81ceef4e6745db3bfa177dadc95f55c9eac1743eb9b1eaa",
+      "sequential_bitmapped.json": "6772896368046f4cc4674d91468caf562c5893e49f78347acb7e4f8600a4281a",
+      "yosys.log": "c8aec3491b6f9b158392cb8ce687c0227293f28971dcaacc74a5a927b6d2df80"
+    },
+    "output_bytes": 61842998,
+    "counts_file": "bitmapped_root_counts.json",
+    "limits": "Complete1bitsequentialprimitive mapping only, combinational generic cells preserved; NOT standard-cell library mapping, CTS or signoff timing",
+    "result": "Exact same roots21136HBMFF,4690streamFF+32SRAMclockpins. Every25826sequential primitive in elaborated instance has Qwidth1; zero unresolved."
   }
 }
