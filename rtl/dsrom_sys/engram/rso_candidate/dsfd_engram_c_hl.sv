@@ -1,7 +1,7 @@
 // HARDENED-LEAF FORM of dsfd_engram_c_rso (die decision 10-14 06:36, el1013-s81-engram.log): the parent holds NO
 // flop. Its former own state is hardened into leaves: three same-edge return relay leaves at the bank source pins
-// (rd0 256 / rd1 256 / rd2 64 bits: ot_engc_rr256 x2, ot_engc_rr64 x1) and ONE control leaf ot_engc_ctl_leaf beside
-// IO_R1 (8 two-flop reset conditioners, the 16-bit status pipe, the 334-bit PB1->PB0 transit and the 4-bit release
+// (rd0 256 / rd1 256 / rd2 64 bits: ot_engc_rr256, ot_engc_rr256w, ot_engc_rr64) and TWO control leaves ot_engc_ctl_x /
+// ot_engc_ctl_s (die r6 16:26 split; formerly one ot_engc_ctl_leaf beside IO_R1) (8 two-flop reset conditioners, the 16-bit status pipe, the 334-bit PB1->PB0 transit and the 4-bit release
 // pipe, plus the registered consumer ACK rso = AND of the 8 conditioner terminals and the 6 child rso). Every leaf has
 // one clock pin (delivered at phi - R by the die/cluster); all flops keep their reference edge, so the data path is
 // cycle-identical to dsfd_engram_c_rso; rso is one registered edge later (asynchronously revoked by rst).
@@ -119,13 +119,22 @@ module dsfd_engram_c_hl #(
     // The two-stage conditioners are placed at the corresponding macro reset pins;
     // stage-to-stage and final stage-to-child reset timing remain ordinary checks.
     wire rst_win_n, rst_io_n, rst_ws_n, rst_pb1_n, rst_pb0_n, rst_pb2_n, rst_lkp_n, rst_sink_n;
-    ot_engc_ctl_leaf u_ctl (.ck(ck[0]), .rst(rst[0]),
-        .rst_win_n(rst_win_n), .rst_io_n(rst_io_n), .rst_ws_n(rst_ws_n), .rst_pb1_n(rst_pb1_n),
-        .rst_pb0_n(rst_pb0_n), .rst_pb2_n(rst_pb2_n), .rst_lkp_n(rst_lkp_n), .rst_sink_n(rst_sink_n),
-        .child_rso(child_rso), .states(ctl_states), .rso(rso),
-        .s_rdy(s_rdy), .s_perr(s_perr), .s_rdy_q(s_rdy_pipe), .s_perr_q(s_perr_pipe),
+    // Control leaves (die r6 16:26, v19_engram_hl): ctl_x in the pb1|pb0 column (transit, io/pb conditioners, partial
+    // ACK), ctl_s above the sink (status/release pipes, win/ws/lkp/sink conditioners, final ACK); ack_x -> ctl_s through
+    // one closed die relay dsfd_rly_1_EW (rs = parent reset).  ctl_states keeps the former bit order
+    // {sink, lkp, pb2, pb0, pb1, ws, io, win}, so rso_contributors is unchanged.
+    wire [3:0] states_x, states_s; wire ack_x, ack_x_i;
+    ot_engc_ctl_x u_ctl_x (.ck(ck[0]), .rst(rst[0]),
         .x_oh(x0_oh), .x_a(x0_a), .x_d(x0_d), .x_oh_q(x0_pipe_oh), .x_a_q(x0_pipe_a), .x_d_q(x0_pipe_d),
+        .rst_io_n(rst_io_n), .rst_pb1_n(rst_pb1_n), .rst_pb0_n(rst_pb0_n), .rst_pb2_n(rst_pb2_n),
+        .child_rso_x({child_rso[5], child_rso[4], child_rso[3], child_rso[1]}), .states_x(states_x), .ack_x(ack_x));
+    dsfd_rly_1_EW u_rly_ack (.ck(ck[0]), .rs(rst[0]), .i(ack_x), .o(ack_x_i));
+    ot_engc_ctl_s u_ctl_s (.ck(ck[0]), .rst(rst[0]),
+        .rst_win_n(rst_win_n), .rst_ws_n(rst_ws_n), .rst_lkp_n(rst_lkp_n), .rst_sink_n(rst_sink_n),
+        .child_rso_s({child_rso[2], child_rso[0]}), .states_s(states_s), .ack_x_i(ack_x_i), .rso(rso),
+        .s_rdy(s_rdy), .s_perr(s_perr), .s_rdy_q(s_rdy_pipe), .s_perr_q(s_perr_pipe),
         .vrel(vrel_sk), .vrel_q(vrel_sk_pipe));
+    assign ctl_states = {states_s[3], states_s[2], states_x[3], states_x[2], states_x[1], states_s[1], states_x[0], states_s[0]};
 
     ot_engc_t_win_rso u_win (
         .ck(ck_win), .rst(rst_win_n), .rso(child_rso[0]), .f_win(f_win), .t_collective(t_collective[0]),
@@ -157,9 +166,9 @@ module dsfd_engram_c_hl #(
         .x_oh(), .x_a(), .x_do(), .r_oh(r2_oh), .r_a(r2_a), .r_d(rd2w));
 
     // Same-edge return relay leaves at the bank source pins (reset by the IO conditioner, as before).
-    ot_engc_rr256 u_rr0 (.ck(ck[0]), .rst_n(rst_io_n), .d(rd0), .q(read_return_pipe[255:0]));
-    ot_engc_rr256 u_rr1 (.ck(ck[0]), .rst_n(rst_io_n), .d(rd1), .q(read_return_pipe[511:256]));
-    ot_engc_rr64  u_rr2 (.ck(ck[0]), .rst_n(rst_io_n), .d(rd2w[63:0]), .q(read_return_pipe[575:512]));
+    ot_engc_rr256 u_rr0 (.ck(ck[0]), .rst(rst[0]), .d(rd0), .q(read_return_pipe[255:0]));      // own conditioner
+    ot_engc_rr256w u_rr1 (.ck(ck[0]), .rst_n(rst_io_n), .d(rd1), .q(read_return_pipe[511:256]));
+    ot_engc_rr64   u_rr2 (.ck(ck[0]), .rst(rst[0]), .d(rd2w[63:0]), .q(read_return_pipe[575:512]));   // own conditioner
 
     // ---------------- closed leaves (in synthesis: hardened views, built at exactly these parameter values)
 `ifdef SYNTHESIS
