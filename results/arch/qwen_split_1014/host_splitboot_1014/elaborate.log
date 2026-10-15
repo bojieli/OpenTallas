@@ -968,5 +968,5 @@
   835 |                 always @(posedge clk_bank[gb/8]) begin ck_q[gb] <= mko[gb]; cv_q[gb] <= mvo[gb]; end    
       |                                                                             ^~~~
 - V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
-- Verilator: Built from 22.465 MB sources in 103 modules, into 13.756 MB in 18 C++ files needing 0.000 MB
-- Verilator: Walltime 4.618 s (elab=0.227, cvt=3.829, bld=0.000); cpu 4.255 s on 1 threads; allocated 197.391 MB
+- Verilator: Built from 22.505 MB sources in 103 modules, into 13.761 MB in 18 C++ files needing 0.000 MB
+- Verilator: Walltime 3.874 s (elab=0.219, cvt=3.379, bld=0.000); cpu 3.873 s on 1 threads; allocated 197.391 MB

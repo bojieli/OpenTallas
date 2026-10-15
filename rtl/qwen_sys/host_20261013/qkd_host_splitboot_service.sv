@@ -110,10 +110,10 @@ module qkd_host_splitboot_service #(
  .clk_i(ck_qm_ingest),.clk_i_bank(ck_qm_bank),.clk_i_out(ck_qm_out),.ck(ck_qm_core),
  .o_v(ov),.o_we(owe),.o_addr(oa),.o_d(od),.o_cr(ocr),.i_rv(1'b0),.i_rd(256'd0),.fault(qm_fault));
  wire[289:0]kv_ing;wire kv_ing_cr;wire[127:0]all_acks;wire global_prefix_v,dispatch_fault;
- wire[31:0]kv_issued,kv_landed;wire local_marker_v,local_marker_cr,bootbarrier_fault;wire[65:0]local_marker;
- qkd_host_emb_boot_barrier u_bootbarrier(.ck(ck_bootbarrier),.rst_n(host_rst_n),.in_v(local_marker_v),.in_d(local_marker),.in_cr(local_marker_cr),.est(est),.out_v(marker_v),.out_d(marker),.out_cr(marker_cr),.fault(bootbarrier_fault));
- qkd_host_boot_dispatch u_dispatch(.ck(ck_dispatch),.ck_order(ck_retire),.rst_n(host_rst_n),
- .ing({od,oa,owe,ov}),.ing_cr(ocr),.kv(kv_ing),.kv_cr(kv_ing_cr),.hb(hb),.hb_cr(hb_cr),
+ wire[31:0]kv_issued,kv_landed;wire local_marker_v,local_marker_cr,bootbarrier_fault,image_check;wire[65:0]local_marker;
+ qkd_host_emb_boot_barrier u_bootbarrier(.ck(ck_bootbarrier),.rst_n(host_rst_n),.in_v(local_marker_v),.in_d(local_marker),.in_cr(local_marker_cr),.est(est),.require_fresh(image_check),.out_v(marker_v),.out_d(marker),.out_cr(marker_cr),.fault(bootbarrier_fault));
+ qkd_host_boot_dispatch u_dispatch(.ck(ck_dispatch),.ck_order(ck_retire),.rst_n(host_rst_n),.boot_release(local_marker_cr),
+ .ing({od,oa,owe,ov}),.ing_cr(ocr),.kv(kv_ing),.kv_cr(kv_ing_cr),.hb(hb),.hb_cr(hb_cr),.image_check(image_check),
  .acks(all_acks),.prefix_v(global_prefix_v),.issued(issued),.landed(landed),.fault(dispatch_fault));
  wire map_fault,order_fault,fence_fault;wire[3:0]chain_fault;wire[7:0]prefix_ack_n;wire[31:0]fence_landed;
  qkd_host_ingest_chain_splitboot #(.ORDER_MUT(ORDER_MUT))u_chain(.ck_map(ck_map),.ck_sum(ck_sum),.ck_order(ck_order),.ck_station(ck_station),.ck_static(ck_static),.rst_n(host_rst_n),
