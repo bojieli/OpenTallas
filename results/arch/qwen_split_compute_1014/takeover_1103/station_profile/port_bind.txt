@@ -1,0 +1,9 @@
+FAIL qfd_collective_static_io_production x1      INPUT_UNCONNECTED in_unconn=die_ps,pkg_s
+FAIL qfd_d2d_static                     x1      INPUT_UNCONNECTED in_unconn=admit_ready,cal_seg,cal_start,cfg_addr,cfg_data,cfg_rx_we,cfg_tx_we,collective_busy
+FAIL qfd_native59_compute_service       x1      INPUT_UNCONNECTED in_unconn=complete_slot,host_epoch,host_epoch_valid,host_fused_capability,host_generation,host_tag,kv_word_index,kv_word_slot
+FAIL qfd_seq_su_static                  x1      INPUT_UNCONNECTED in_unconn=dh
+FAIL qfd_sp_res_ser                     x3      INPUT_UNCONNECTED in_unconn=cr
+FAIL qfd_sp_su64_sfu                    x1      INPUT_UNCONNECTED in_unconn=fill_begin,fill_epoch,fill_token,preload_data,preload_epoch,preload_scale,preload_slot,preload_token
+FAIL qfd_tt_ctlm_static_s               x1      INPUT_UNCONNECTED in_unconn=fab,kok,kwd,pw,uf
+FAIL qkd_embedding_static_core_provider x1      INPUT_UNCONNECTED in_unconn=beat_data,beat_epoch,beat_half,beat_scale,beat_slot,beat_token,beat_v,beat_word
+DIE_PORT_BIND FAIL masters=35 instances=1639 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=71 input_tied=0 unparsed_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=6

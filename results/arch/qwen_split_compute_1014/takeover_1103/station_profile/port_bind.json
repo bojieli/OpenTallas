@@ -1,0 +1,1105 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "/tmp/qwen-station-profile-1103/case/die.v",
+ "top": null,
+ "verdict": "FAIL",
+ "failing": [
+  "input_unconnected"
+ ],
+ "summary": {
+  "masters": 35,
+  "instances": 1639,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 71,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 6
+ },
+ "masters": {
+  "ot_qfd_band_upper": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "tt_up4_leaf0",
+    "tt_up4_leaf1",
+    "tt_up4_leaf2"
+   ],
+   "param_sets": {
+    "{\"DLY\": 1, \"LG\": 12, \"LNK\": 0, \"NB\": 3, \"NL\": 4, \"RPIN\": 1, \"TCUT\": 7, \"TREE_LAT\": 7}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "fault",
+    "tt_use",
+    "tt_v"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qfd_serdes_112g_x12_phy_s597": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "io_serdes",
+    "io_serdes_1",
+    "io_serdes_2"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qfd_ucie_x64_phy": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "io_ucie"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "ucie_kv"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_ckbump": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "ckb_rom"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_clkrx": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qwen-station-profile-1103/portbind/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "clk_rx"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_collective_static_io_production": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/physical/ot_qfd_collective_static_io_production.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "io_collective"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "die_ps",
+    "pkg_s"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "fault",
+    "fault_code",
+    "shared_fault",
+    "transport_abort",
+    "transport_cdc_fault",
+    "transport_fault_cause"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_crom_g": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8,
+   "rtl": "rtl/physical/ot_qwen_tp8_real_rom_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "crom_g_0",
+    "crom_g_1",
+    "crom_g_2"
+   ],
+   "param_sets": {
+    "{}": 8
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "crom_lb"
+   ],
+   "output_open": [
+    "fault_code"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_d2d_static": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "d2d_rom"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "admit_ready",
+    "cal_seg",
+    "cal_start",
+    "cfg_addr",
+    "cfg_data",
+    "cfg_rx_we",
+    "cfg_tx_we",
+    "collective_busy",
+    "collective_drained",
+    "crom_fault",
+    "execution_active",
+    "prog_tx_observed_v",
+    "prog_tx_record",
+    "result_cause",
+    "result_cycles",
+    "result_done",
+    "result_fault",
+    "result_gen",
+    "result_tag",
+    "result_token",
+    "result_v",
+    "result_value",
+    "status_epoch16",
+    "vm_drained"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "emb_rx_slot",
+    "emb_rx_v",
+    "epoch_abort",
+    "fault",
+    "prog_auth_slot",
+    "prog_context_slot",
+    "prog_rx_v",
+    "prog_witness_slot",
+    "transport_fault"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_native59_compute_service": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_native59_compute_service.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "native59"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "complete_slot",
+    "host_epoch",
+    "host_epoch_valid",
+    "host_fused_capability",
+    "host_generation",
+    "host_tag",
+    "kv_word_index",
+    "kv_word_slot",
+    "q_slot",
+    "q_slot_beat",
+    "visibility_slot"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "completed",
+    "fault"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_port_tiles_0": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_port_tiles.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_port_tiles_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_port_tiles_0_f1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_port_tiles.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_port_tiles_0_f1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_port_tiles_1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_port_tiles.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_port_tiles_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_port_tiles_1_f1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_port_tiles.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_port_tiles_1_f1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_port_tiles_2": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_port_tiles.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_port_tiles_2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_port_tiles_2_f1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_port_tiles.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_port_tiles_2_f1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_rly_26_NE_9x9": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/tmp/qwen-station-profile-1103/portbind/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "up4_sel_station",
+    "up4_sel_branch0",
+    "up4_sel_branch1"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_rstseq": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rstseq_rom"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_rstsync": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rs_bump"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_seq_su_static": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_seq_su_static.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "seq_su"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "dh"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "dc",
+    "descriptor_obs",
+    "kvd",
+    "program_obs"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_sigbump": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "bump_fwd_epoch",
+    "bump_fwd_lrst"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_sp_band_lanes": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "rtl/physical/ot_qwen_band_lanes_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_band_lanes_1",
+    "sp_band_lanes_2",
+    "sp_band_lanes_0"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "b0",
+    "lnk",
+    "tt"
+   ],
+   "output_open": [
+    "f",
+    "pw"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_sp_res_ser": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 3,
+   "rtl": "rtl/qwen_sys/vm_me_20261008/qfd_sp_res_ser.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_res_ser_1",
+    "sp_res_ser_2",
+    "sp_res_ser_0"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "cr"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "ok"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_sp_su64_sfu": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_sp_su64_sfu.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_su64_sfu"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "fill_begin",
+    "fill_epoch",
+    "fill_token",
+    "preload_data",
+    "preload_epoch",
+    "preload_scale",
+    "preload_slot",
+    "preload_token",
+    "preload_v",
+    "preload_word"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "cp_done"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_sp_vector_memory": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_vector_memory"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "q_done",
+    "svr_rdy"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_su_cbuf_g": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8,
+   "rtl": "rtl/physical/ot_qwen_tp8_real_rom_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "cbuf_g_0",
+    "cbuf_g_1",
+    "cbuf_g_2"
+   ],
+   "param_sets": {
+    "{}": 8
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "f_lat",
+    "grp"
+   ],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_tile_nk": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 720,
+   "rtl": "rtl/physical/qfd_tile_nk_slot.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "t_0_1",
+    "t_0_2",
+    "t_0_3"
+   ],
+   "param_sets": {
+    "{}": 720
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_tile_nl": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 48,
+   "rtl": "rtl/physical/qfd_tile_nk_slot.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "t_0_0",
+    "t_0_4",
+    "t_0_8"
+   ],
+   "param_sets": {
+    "{}": 48
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_tt_ctlm_static_s": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "tt_ctlm"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "fab",
+    "kok",
+    "kwd",
+    "pw",
+    "uf"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "cf",
+    "control_stores_ready",
+    "ovf",
+    "program_obs"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_xcol_e": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 24,
+   "rtl": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "h_24",
+    "h_25",
+    "h_26"
+   ],
+   "param_sets": {
+    "{}": 24
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "e_d"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_xcol_w": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 24,
+   "rtl": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "h_0",
+    "h_1",
+    "h_2"
+   ],
+   "param_sets": {
+    "{}": 24
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "w_d"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_xcst_n_m5": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 384,
+   "rtl": "rtl/qwen_sys/dvm_20261014/qfd_xcst_m5.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "s_0_8",
+    "s_0_9",
+    "s_0_10"
+   ],
+   "param_sets": {
+    "{}": 384
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "a_d"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_xcst_s_m5": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 384,
+   "rtl": "rtl/qwen_sys/dvm_20261014/qfd_xcst_m5.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "s_0_0",
+    "s_0_1",
+    "s_0_2"
+   ],
+   "param_sets": {
+    "{}": 384
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "b_d"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qfd_xs_tap": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "xs_tap"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_embedding_static_core_provider": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_provider.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "embed_prov"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "beat_data",
+    "beat_epoch",
+    "beat_half",
+    "beat_scale",
+    "beat_slot",
+    "beat_token",
+    "beat_v",
+    "beat_word",
+    "core_epoch",
+    "expected_epoch",
+    "expected_scale",
+    "expected_token",
+    "expected_word",
+    "expected_word_slot",
+    "fill_begin",
+    "fill_epoch",
+    "fill_token"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  }
+ },
+ "undriven_nets": {},
+ "undriven_classes": {},
+ "multi_driven_classes": {},
+ "multi_driven_nets": {},
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "die_sha256": "8b0aa93eac66bcf4b1951335c0e3c4497c8794c6c2fbd38aaecf871d9d06e076",
+ "straps_declared": [
+  "qfd_crom_g:crom_lb",
+  "qfd_sp_band_lanes:b0",
+  "qfd_sp_band_lanes:lnk",
+  "qfd_sp_band_lanes:tt",
+  "qfd_su_cbuf_g:f_lat",
+  "qfd_su_cbuf_g:grp",
+  "qfd_tile_nk:tile_id",
+  "qfd_xcol_e:tids",
+  "qfd_xcol_w:tids",
+  "qfd_xcst_n:sidx",
+  "qfd_xcst_n_m5:sidx",
+  "qfd_xcst_s:sidx",
+  "qfd_xcst_s_m5:sidx"
+ ],
+ "params_file": "/tmp/qwen-station-profile-1103/case/die.v.params.json",
+ "rtl_roots": [
+  "rtl",
+  "physical/hbm_accel_die_views/att_su_relay/rtl",
+  "physical/hbm_accel_die_views/attn_tile/rtl",
+  "physical/hbm_accel_die_views/barrier/rtl",
+  "physical/hbm_accel_die_views/cmdproc/rtl",
+  "physical/hbm_accel_die_views/cmdproc_hgi/rtl",
+  "physical/hbm_accel_die_views/cmdproc_hgi_am/rtl",
+  "physical/hbm_accel_die_views/coll/rtl",
+  "physical/hbm_accel_die_views/coll_hgi/rtl",
+  "physical/hbm_accel_die_views/coll_r25gq/rtl",
+  "physical/hbm_accel_die_views/hc/rtl",
+  "physical/hbm_accel_die_views/hc_eng_hgi/rtl",
+  "physical/hbm_accel_die_views/hc_hgi/rtl",
+  "physical/hbm_accel_die_views/hcp/rtl",
+  "physical/hbm_accel_die_views/hgi_idx/rtl",
+  "physical/hbm_accel_die_views/hgi_idx_native/rtl",
+  "physical/hbm_accel_die_views/hgi_vm/rtl",
+  "physical/hbm_accel_die_views/hgi_vm2/rtl",
+  "physical/hbm_accel_die_views/hgi_vm3/rtl",
+  "physical/hbm_accel_die_views/hgi_vm4/rtl",
+  "physical/hbm_accel_die_views/hgi_vm5/rtl",
+  "physical/hbm_accel_die_views/index/rtl",
+  "physical/hbm_accel_die_views/index_q/rtl",
+  "physical/hbm_accel_die_views/loader/rtl",
+  "physical/hbm_accel_die_views/loader_hgi/rtl",
+  "physical/hbm_accel_die_views/loader_hgi_dma/rtl",
+  "physical/hbm_accel_die_views/quant/rtl",
+  "physical/hbm_accel_die_views/quant_hgi/rtl",
+  "physical/hbm_accel_die_views/router/rtl",
+  "physical/hbm_accel_die_views/router_hgi/rtl",
+  "physical/hbm_accel_die_views/sfu/rtl",
+  "physical/hbm_accel_die_views/sfu_hgi/rtl",
+  "physical/hbm_accel_die_views/stations/rtl",
+  "physical/hbm_accel_die_views/su/rtl",
+  "physical/hbm_accel_die_views/su_hgi/rtl",
+  "physical/hbm_accel_die_views/svc/rtl",
+  "physical/hbm_accel_die_views/svc/v15/rtl",
+  "physical/hbm_accel_die_views/vm/cp/rtl",
+  "physical/hbm_accel_die_views/vm/rtl",
+  "physical/hbm_cp_mtp_native/rtl",
+  "physical/hbm_generic/argmax18/rtl",
+  "physical/hbm_mtp/rtl",
+  "physical/hfd_hc_gather_cx_20261009/rtl",
+  "physical/ref_tile/dscoll_lane_w_rt/src/rtl",
+  "physical/ref_tile/dsfd_coll_cbq0_m5/src/rtl",
+  "physical/ref_tile/dsfd_coll_cbq_m5/src/rtl",
+  "physical/ref_tile/dsfd_coll_cbr_m5/src/rtl",
+  "physical/ref_tile/dsfd_coll_ct_rt/src/rtl",
+  "physical/ref_tile/hfd_gath_r25_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_gath_r25_m5/src/rtl",
+  "physical/ref_tile/hfd_gath_r9_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_gath_r9_m5/src/rtl",
+  "physical/ref_tile/hfd_index_q_b2_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_mcast_r6a_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_mcast_r6a_m5/src/rtl",
+  "physical/ref_tile/hfd_mcast_r6b_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_mcast_r6b_m5/src/rtl",
+  "physical/ref_tile/hfd_stn_r36_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_stn_r36_m5/src/rtl",
+  "physical/ref_tile/hfd_svc_se_s1_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_se_s3_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_se_s4_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_se_s7_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_se_s8_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s0_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s1_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s2_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s3_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s4_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/ot_coll_fold_slice_m5/src/rtl",
+  "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl",
+  "physical/ref_tile/ot_hgi_qw_dec_m5/src/physical/hbm_accel_die_views/quant/rtl",
+  "physical/ref_tile/ot_hgi_qw_dec_m5/src/rtl",
+  "physical/ref_tile/ot_hgi_topk_heap_tile_m5/src/rtl",
+  "physical/ref_tile/ot_nhb_pbst_m5/src/rtl",
+  "physical/ref_tile/ot_nhb_zh_m5/src/rtl",
+  "physical/ref_tile/ot_pqc_t_qb_m5/src/physical/s81_pq_hier/pinned/rtl",
+  "physical/ref_tile/ot_pqc_t_ret_m5/src/physical/s81_pq_hier/pinned/rtl",
+  "physical/ref_tile/ot_qkh_ktree_m5/src/rtl",
+  "physical/ref_tile/ot_qkh_lane8_m5/src/rtl",
+  "physical/ref_tile/pqc_ix_rt/src/physical/s81_pq_hier/pinned/rtl",
+  "physical/ref_tile/qfd_chead_m5/src/rtl",
+  "physical/ref_tile/qfd_cst_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_00_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_06_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_11_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_14_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_16_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_17_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_19_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_20_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_31_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_ready_00_m5/src/rtl",
+  "physical/ref_tile/qfd_emb_pcport_m5/src/rtl",
+  "physical/ref_tile/qfd_io_emb_tap_m5/src/rtl",
+  "physical/ref_tile/qfd_kvc_decode_pc_m5/src/rtl",
+  "physical/ref_tile/qfd_lst_v_m5/src/rtl",
+  "physical/ref_tile/qfd_res_slot_m5/src/rtl",
+  "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl",
+  "physical/ref_tile/val_bad_ctile5db/src/rtl",
+  "physical/ref_tile/val_bad_kvw/src/rtl",
+  "physical/ref_tile/val_bad_su9eff/src/rtl",
+  "physical/ref_tile/val_good_cbq0/src/rtl",
+  "physical/ref_tile/val_good_clt6/src/rtl",
+  "physical/rom_host_ingest/rtl",
+  "physical/s81_bf_root_phase/oracle_pinned/rtl",
+  "physical/s81_bf_root_phase/pinned/rtl",
+  "physical/s81_ctrl/rtl",
+  "physical/s81_fe_fcc_pipe/rtl",
+  "physical/s81_fe_fcn_cmdpipe/rtl",
+  "physical/s81_fe_fcn_onehot/rtl",
+  "physical/s81_fe_fcn_sumpipe/rtl",
+  "physical/s81_fe_fcn_xgos/rtl",
+  "physical/s81_fe_fld_parallel/rtl",
+  "physical/s81_fe_fld_ranks/rtl",
+  "physical/s81_fe_fsr_m5_port_major/rtl",
+  "physical/s81_pq_hier/pinned/rtl",
+  "physical/s81_pq_r128_expanded/pinned/rtl",
+  "physical/s81_pq_tiles/rtl",
+  "physical/s81_pq_xrv/pinned/rtl"
+ ],
+ "rtl_files": [
+  "/tmp/qwen-station-profile-1103/portbind/die_glue.sv",
+  "/home/ubuntu/wt/codex-qwen-compute-die-1103/rtl/qwen_split/qfd_link_slots.sv",
+  "/home/ubuntu/wt/codex-qwen-compute-die-1103/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+  "/home/ubuntu/wt/codex-qwen-compute-die-1103/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv",
+  "/home/ubuntu/wt/codex-qwen-compute-die-1103/physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+  "/home/ubuntu/wt/codex-qwen-compute-die-1103/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v"
+ ],
+ "defines": [
+  "OT_QFD_UP4_CK_ENTRIES"
+ ]
+}
