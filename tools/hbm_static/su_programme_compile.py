@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """Losslessly lower whole-SU command images to physical SRAM config transactions."""
-import argparse, hashlib, json
+import argparse, hashlib, json, re
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[2]
 
 def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
-def lower(source, out, extra=None, extra_bits=0):
+def lower(source, out, extra=None, extra_bits=0, line_bits=9688, param_prefix="PROGRAMME"):
+    assert 0<line_bits<=65536
+    assert re.fullmatch(r"[A-Z][A-Z0-9_]*",param_prefix)
     out.mkdir(parents=True,exist_ok=True)
     rows=[int(s,16) for s in source.read_text().split()]
-    bits=9688
+    bits=line_bits
     assert rows and all(0<=r<1<<bits for r in rows)
     if extra:
         xs=[int(s,16) for s in extra.read_text().split()]
@@ -60,8 +62,8 @@ def lower(source, out, extra=None, extra_bits=0):
     (out/'manifest.json').write_text(json.dumps(m,indent=2)+'\n')
     dbstr="'{"+','.join(map(str,db))+"}"
     (out/'programme_params.svh').write_text(
-        f'localparam integer PROGRAMME_BITS={bits}, PROGRAMME_COLS={cols}, PROGRAMME_WRITES={len(config)}, PROGRAMME_MACROS={base};\n'
-        f'localparam integer PROGRAMME_DICT_BANKS[0:PROGRAMME_COLS-1]={dbstr};\n')
+        f'localparam integer {param_prefix}_BITS={bits}, {param_prefix}_COLS={cols}, {param_prefix}_WRITES={len(config)}, {param_prefix}_MACROS={base};\n'
+        f'localparam integer {param_prefix}_DICT_BANKS[0:{param_prefix}_COLS-1]={dbstr};\n')
     (out/'tb.sv').write_text(TB.replace('@BITS@',str(bits)).replace('@EDGES@',str(len(rows)))
         .replace('@WRITES@',str(len(config))).replace('@DB@',dbstr).replace('@DICT@',str(groups*ib)).replace('@MACROS@',str(base)))
     return m
@@ -111,5 +113,7 @@ endmodule
 def main():
     p=argparse.ArgumentParser(); p.add_argument('source',type=Path); p.add_argument('out',type=Path)
     p.add_argument('--extra-mem',type=Path); p.add_argument('--extra-bits',type=int,default=0)
-    a=p.parse_args(); print(json.dumps(lower(a.source,a.out,a.extra_mem,a.extra_bits),indent=2))
+    p.add_argument('--line-bits',type=int,default=9688)
+    p.add_argument('--param-prefix',default='PROGRAMME')
+    a=p.parse_args(); print(json.dumps(lower(a.source,a.out,a.extra_mem,a.extra_bits,a.line_bits,a.param_prefix),indent=2))
 if __name__=='__main__': main()
