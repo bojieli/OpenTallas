@@ -1,0 +1,2461 @@
+{
+  "schema": "opentallas.qcoll.physical_partition_model.v1",
+  "qualified": false,
+  "adopted": false,
+  "scope": "Planning budget only; no route and no RTL edits",
+  "outer_frame": {
+    "n": "io_collective",
+    "m": "qfd_collective_static_io_production",
+    "x": 11992.32,
+    "y": 21.6,
+    "w": 4157.976,
+    "h": 1563.816,
+    "o": "R0"
+  },
+  "die_sha256": "94cc645afdf61f7710bfe5aa25cc3512223e28b855d721d6a9d863db9930ca33",
+  "inner_frame": {
+    "w": 864.0,
+    "h": 950.4
+  },
+  "existing_blocks": [
+    {
+      "name": "*g_xf?0?*u_fs",
+      "kind": "fold",
+      "x": 86.4,
+      "y": 43.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "R0"
+    },
+    {
+      "name": "*g_xf?1?*u_fs",
+      "kind": "fold",
+      "x": 86.4,
+      "y": 259.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "R0"
+    },
+    {
+      "name": "*g_xf?2?*u_fs",
+      "kind": "fold",
+      "x": 86.4,
+      "y": 475.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "R0"
+    },
+    {
+      "name": "*g_xf?3?*u_fs",
+      "kind": "fold",
+      "x": 86.4,
+      "y": 691.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "R0"
+    },
+    {
+      "name": "*g_pf?0?*u_fs",
+      "kind": "fold",
+      "x": 600.456,
+      "y": 43.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "MY"
+    },
+    {
+      "name": "*g_pf?1?*u_fs",
+      "kind": "fold",
+      "x": 600.456,
+      "y": 259.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "MY"
+    },
+    {
+      "name": "*g_pf?2?*u_fs",
+      "kind": "fold",
+      "x": 600.456,
+      "y": 475.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "MY"
+    },
+    {
+      "name": "*g_pf?3?*u_fs",
+      "kind": "fold",
+      "x": 600.456,
+      "y": 691.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "MY"
+    },
+    {
+      "name": "*g_sring?0?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 64.8,
+      "w": 174.096,
+      "h": 29.7,
+      "orient": "R0"
+    },
+    {
+      "name": "*g_sring?1?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 237.6,
+      "w": 174.096,
+      "h": 29.7,
+      "orient": "R0"
+    },
+    {
+      "name": "*g_sring?2?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 453.6,
+      "w": 174.096,
+      "h": 29.7,
+      "orient": "R0"
+    },
+    {
+      "name": "*g_sring?3?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 691.2,
+      "w": 174.096,
+      "h": 29.7,
+      "orient": "R0"
+    },
+    {
+      "name": "*g_sring?4?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 864.0,
+      "w": 174.096,
+      "h": 29.7,
+      "orient": "R0"
+    },
+    {
+      "name": "*u_pring*g_b?0?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 120.96,
+      "w": 177.768,
+      "h": 81.0,
+      "orient": "R0"
+    },
+    {
+      "name": "*u_pring*g_b?1?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 302.4,
+      "w": 177.768,
+      "h": 81.0,
+      "orient": "R0"
+    },
+    {
+      "name": "*u_rring*g_b?0?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 518.4,
+      "w": 177.768,
+      "h": 81.0,
+      "orient": "R0"
+    },
+    {
+      "name": "*u_rring*g_b?1?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 756.0,
+      "w": 177.768,
+      "h": 81.0,
+      "orient": "R0"
+    }
+  ],
+  "candidate_leaves": [
+    {
+      "name": "input",
+      "ff": 547,
+      "x": 280.8,
+      "y": 907.2,
+      "w": 129.6,
+      "h": 21.6,
+      "data_face": "SN",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "input_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "out",
+      "ff": 518,
+      "x": 561.6,
+      "y": 907.2,
+      "w": 129.6,
+      "h": 21.6,
+      "data_face": "SN",
+      "conservative_two_track_pin_cut": 0.4185858585858586,
+      "root": "out_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "srr0",
+      "ff": 547,
+      "x": 820.8,
+      "y": 43.2,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "srr0_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "sx0",
+      "ff": 547,
+      "x": 820.8,
+      "y": 183.6,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "sx0_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "drr",
+      "ff": 515,
+      "x": 820.8,
+      "y": 324,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.4161616161616162,
+      "root": "drr_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "ur",
+      "ff": 515,
+      "x": 820.8,
+      "y": 464.4,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.4161616161616162,
+      "root": "ur_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "dpr",
+      "ff": 547,
+      "x": 820.8,
+      "y": 604.8,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "dpr_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "up",
+      "ff": 547,
+      "x": 820.8,
+      "y": 745.2,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "up_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "srr2",
+      "ff": 547,
+      "x": 21.6,
+      "y": 194.4,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "srr2_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "sx2",
+      "ff": 547,
+      "x": 21.6,
+      "y": 334.8,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "sx2_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "srr1",
+      "ff": 547,
+      "x": 21.6,
+      "y": 475.2,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "srr1_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "sx1",
+      "ff": 547,
+      "x": 21.6,
+      "y": 615.6,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "sx1_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "lohi0",
+      "ff": 256,
+      "x": 540,
+      "y": 75.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.45511111111111113,
+      "root": "lohi0_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "lohi1",
+      "ff": 256,
+      "x": 540,
+      "y": 291.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.45511111111111113,
+      "root": "lohi1_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "lohi2",
+      "ff": 256,
+      "x": 540,
+      "y": 507.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.45511111111111113,
+      "root": "lohi2_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "lohi3",
+      "ff": 256,
+      "x": 540,
+      "y": 723.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.45511111111111113,
+      "root": "lohi3_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "pf0",
+      "ff": 128,
+      "x": 540,
+      "y": 151.2,
+      "w": 32.4,
+      "h": 43.2,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.3792592592592592,
+      "root": "pf0_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "pf1",
+      "ff": 128,
+      "x": 540,
+      "y": 367.2,
+      "w": 32.4,
+      "h": 43.2,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.3792592592592592,
+      "root": "pf1_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "pf2",
+      "ff": 128,
+      "x": 540,
+      "y": 583.2,
+      "w": 32.4,
+      "h": 43.2,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.3792592592592592,
+      "root": "pf2_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "pf3",
+      "ff": 128,
+      "x": 540,
+      "y": 799.2,
+      "w": 32.4,
+      "h": 43.2,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.3792592592592592,
+      "root": "pf3_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "xr",
+      "ff": 512,
+      "x": 291.6,
+      "y": 399.6,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.41373737373737374,
+      "root": "xr_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "tbc0",
+      "ff": 219,
+      "x": 291.6,
+      "y": 75.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.38933333333333336,
+      "root": "tbc0_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "tbc1",
+      "ff": 219,
+      "x": 291.6,
+      "y": 291.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.38933333333333336,
+      "root": "tbc1_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "tbc2",
+      "ff": 219,
+      "x": 291.6,
+      "y": 615.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.38933333333333336,
+      "root": "tbc2_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "tbc3",
+      "ff": 218,
+      "x": 291.6,
+      "y": 756,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.3875555555555556,
+      "root": "tbc3_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "tab",
+      "ff": 220,
+      "x": 540,
+      "y": 221.4,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.39111111111111113,
+      "root": "tab_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "tef",
+      "ff": 165,
+      "x": 540,
+      "y": 437.4,
+      "w": 43.2,
+      "h": 54,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.36666666666666664,
+      "root": "tef_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "tde",
+      "ff": 72,
+      "x": 540,
+      "y": 653.4,
+      "w": 32.4,
+      "h": 32.4,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.32,
+      "root": "tde_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "controller",
+      "ff": 200,
+      "x": 291.6,
+      "y": 550.8,
+      "w": 43.2,
+      "h": 54,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.4444444444444444,
+      "root": "controller_ck",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    }
+  ],
+  "leaf_count": 29,
+  "leaf_FF_total": 10051,
+  "candidate_leaf_area_um2": 72900.0,
+  "existing_block_area_um2": 346813.8768,
+  "overlaps": [],
+  "leaf_pin_budget_max": 0.45511111111111113,
+  "baseline_coarse_cuts": [
+    {
+      "axis": "vertical",
+      "pos": 177.12,
+      "bits": 2790,
+      "capacity": 7712.639999999998,
+      "ratio": 0.36174383868558635
+    },
+    {
+      "axis": "vertical",
+      "pos": 306.72,
+      "bits": 2840,
+      "capacity": 32630.4,
+      "ratio": 0.08703540256938315
+    },
+    {
+      "axis": "vertical",
+      "pos": 432.648,
+      "bits": 5062,
+      "capacity": 22786.649999999994,
+      "ratio": 0.22214761713547193
+    },
+    {
+      "axis": "vertical",
+      "pos": 432.65000000000003,
+      "bits": 5062,
+      "capacity": 22786.649999999994,
+      "ratio": 0.22214761713547193
+    },
+    {
+      "axis": "vertical",
+      "pos": 434.48400000000004,
+      "bits": 5062,
+      "capacity": 22786.649999999994,
+      "ratio": 0.22214761713547193
+    },
+    {
+      "axis": "vertical",
+      "pos": 521.5350000000001,
+      "bits": 5030,
+      "capacity": 25880.399999999998,
+      "ratio": 0.19435557410240956
+    },
+    {
+      "axis": "vertical",
+      "pos": 561.915,
+      "bits": 4868,
+      "capacity": 32630.4,
+      "ratio": 0.1491860351083652
+    },
+    {
+      "axis": "vertical",
+      "pos": 691.176,
+      "bits": 4236,
+      "capacity": 7712.639999999998,
+      "ratio": 0.5492282798108042
+    },
+    {
+      "axis": "vertical",
+      "pos": 691.1800000000001,
+      "bits": 4236,
+      "capacity": 7712.639999999998,
+      "ratio": 0.5492282798108042
+    },
+    {
+      "axis": "horizontal",
+      "pos": 54.0,
+      "bits": 0,
+      "capacity": 17400.0,
+      "ratio": 0.0
+    },
+    {
+      "axis": "horizontal",
+      "pos": 79.64999999999999,
+      "bits": 0,
+      "capacity": 14982.0,
+      "ratio": 0.0
+    },
+    {
+      "axis": "horizontal",
+      "pos": 79.65,
+      "bits": 0,
+      "capacity": 14982.0,
+      "ratio": 0.0
+    },
+    {
+      "axis": "horizontal",
+      "pos": 107.72999999999999,
+      "bits": 546,
+      "capacity": 17400.0,
+      "ratio": 0.031379310344827584
+    },
+    {
+      "axis": "horizontal",
+      "pos": 133.92000000000002,
+      "bits": 546,
+      "capacity": 14931.0,
+      "ratio": 0.03656821378340366
+    },
+    {
+      "axis": "horizontal",
+      "pos": 161.45999999999998,
+      "bits": 546,
+      "capacity": 14931.0,
+      "ratio": 0.03656821378340366
+    },
+    {
+      "axis": "horizontal",
+      "pos": 161.46,
+      "bits": 546,
+      "capacity": 14931.0,
+      "ratio": 0.03656821378340366
+    },
+    {
+      "axis": "horizontal",
+      "pos": 213.3,
+      "bits": 546,
+      "capacity": 17400.0,
+      "ratio": 0.031379310344827584
+    },
+    {
+      "axis": "horizontal",
+      "pos": 231.12,
+      "bits": 546,
+      "capacity": 30000.0,
+      "ratio": 0.0182
+    },
+    {
+      "axis": "horizontal",
+      "pos": 248.39999999999998,
+      "bits": 546,
+      "capacity": 27582.0,
+      "ratio": 0.019795518816619534
+    },
+    {
+      "axis": "horizontal",
+      "pos": 252.45,
+      "bits": 546,
+      "capacity": 27582.0,
+      "ratio": 0.019795518816619534
+    },
+    {
+      "axis": "horizontal",
+      "pos": 263.25,
+      "bits": 1638,
+      "capacity": 14982.0,
+      "ratio": 0.10933119743692431
+    },
+    {
+      "axis": "horizontal",
+      "pos": 284.85,
+      "bits": 2730,
+      "capacity": 17400.0,
+      "ratio": 0.15689655172413794
+    },
+    {
+      "axis": "horizontal",
+      "pos": 342.9,
+      "bits": 2730,
+      "capacity": 14931.0,
+      "ratio": 0.1828410689170183
+    },
+    {
+      "axis": "horizontal",
+      "pos": 349.91999999999996,
+      "bits": 2730,
+      "capacity": 14931.0,
+      "ratio": 0.1828410689170183
+    },
+    {
+      "axis": "horizontal",
+      "pos": 412.02,
+      "bits": 3790,
+      "capacity": 17400.0,
+      "ratio": 0.217816091954023
+    },
+    {
+      "axis": "horizontal",
+      "pos": 447.12,
+      "bits": 3790,
+      "capacity": 30000.0,
+      "ratio": 0.12633333333333333
+    },
+    {
+      "axis": "horizontal",
+      "pos": 464.4,
+      "bits": 3790,
+      "capacity": 27582.0,
+      "ratio": 0.13740845478935537
+    },
+    {
+      "axis": "horizontal",
+      "pos": 468.45000000000005,
+      "bits": 3790,
+      "capacity": 27582.0,
+      "ratio": 0.13740845478935537
+    },
+    {
+      "axis": "horizontal",
+      "pos": 479.25,
+      "bits": 4270,
+      "capacity": 14982.0,
+      "ratio": 0.28500867707916167
+    },
+    {
+      "axis": "horizontal",
+      "pos": 500.85,
+      "bits": 3210,
+      "capacity": 17400.0,
+      "ratio": 0.18448275862068966
+    },
+    {
+      "axis": "horizontal",
+      "pos": 558.9,
+      "bits": 3210,
+      "capacity": 14931.0,
+      "ratio": 0.21498894916616434
+    },
+    {
+      "axis": "horizontal",
+      "pos": 565.92,
+      "bits": 3210,
+      "capacity": 14931.0,
+      "ratio": 0.21498894916616434
+    },
+    {
+      "axis": "horizontal",
+      "pos": 628.02,
+      "bits": 2118,
+      "capacity": 17400.0,
+      "ratio": 0.12172413793103448
+    },
+    {
+      "axis": "horizontal",
+      "pos": 673.9200000000001,
+      "bits": 2118,
+      "capacity": 30000.0,
+      "ratio": 0.0706
+    },
+    {
+      "axis": "horizontal",
+      "pos": 706.05,
+      "bits": 2664,
+      "capacity": 14982.0,
+      "ratio": 0.17781337605126152
+    },
+    {
+      "axis": "horizontal",
+      "pos": 706.0500000000001,
+      "bits": 2664,
+      "capacity": 14982.0,
+      "ratio": 0.17781337605126152
+    },
+    {
+      "axis": "horizontal",
+      "pos": 738.45,
+      "bits": 2632,
+      "capacity": 17400.0,
+      "ratio": 0.15126436781609195
+    },
+    {
+      "axis": "horizontal",
+      "pos": 781.9200000000001,
+      "bits": 2632,
+      "capacity": 14931.0,
+      "ratio": 0.17627754336615095
+    },
+    {
+      "axis": "horizontal",
+      "pos": 796.5,
+      "bits": 2632,
+      "capacity": 14931.0,
+      "ratio": 0.17627754336615095
+    },
+    {
+      "axis": "horizontal",
+      "pos": 850.5,
+      "bits": 2632,
+      "capacity": 17400.0,
+      "ratio": 0.15126436781609195
+    },
+    {
+      "axis": "horizontal",
+      "pos": 868.3199999999999,
+      "bits": 2632,
+      "capacity": 14982.0,
+      "ratio": 0.17567747964223734
+    },
+    {
+      "axis": "horizontal",
+      "pos": 878.85,
+      "bits": 2632,
+      "capacity": 27582.0,
+      "ratio": 0.09542455224421724
+    },
+    {
+      "axis": "horizontal",
+      "pos": 883.1700000000001,
+      "bits": 2632,
+      "capacity": 27582.0,
+      "ratio": 0.09542455224421724
+    }
+  ],
+  "baseline_coarse_worst_cut": {
+    "axis": "vertical",
+    "pos": 691.176,
+    "bits": 4236,
+    "capacity": 7712.639999999998,
+    "ratio": 0.5492282798108042
+  },
+  "external_incidents": [
+    {
+      "name": "rst_io",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "rstseq_rom",
+          "rso_io"
+        ],
+        [
+          "io_serdes_2",
+          "rst_n"
+        ],
+        [
+          "io_serdes_1",
+          "rst_n"
+        ],
+        [
+          "io_collective",
+          "rst_n"
+        ],
+        [
+          "io_serdes",
+          "rst_n"
+        ],
+        [
+          "io_ucie",
+          "rst_n"
+        ]
+      ],
+      "checked_pin_pairs": 5,
+      "missing": [],
+      "max_manhattan_um": 18721.032,
+      "over500": 5,
+      "min_500um_segments": 38,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ucie_tx",
+      "declared_bits": 1043,
+      "endpoints": [
+        [
+          "io_collective",
+          "shared_tx"
+        ],
+        [
+          "io_ucie",
+          "tx_flit"
+        ]
+      ],
+      "checked_pin_pairs": 1043,
+      "missing": [],
+      "max_manhattan_um": 2396.880000000002,
+      "over500": 1043,
+      "min_500um_segments": 5,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ucie_txv",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_collective",
+          "shared_tx_valid"
+        ],
+        [
+          "io_ucie",
+          "tx_v"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 2396.880000000002,
+      "over500": 1,
+      "min_500um_segments": 5,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ucie_rx",
+      "declared_bits": 1043,
+      "endpoints": [
+        [
+          "io_ucie",
+          "rx_flit"
+        ],
+        [
+          "io_collective",
+          "shared_rx"
+        ]
+      ],
+      "checked_pin_pairs": 1043,
+      "missing": [],
+      "max_manhattan_um": 2396.880000000002,
+      "over500": 1043,
+      "min_500um_segments": 5,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ucie_rxv",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_ucie",
+          "rx_v"
+        ],
+        [
+          "io_collective",
+          "shared_rx_valid"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 2396.880000000002,
+      "over500": 1,
+      "min_500um_segments": 5,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ucie_up",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_ucie",
+          "tx_up"
+        ],
+        [
+          "io_collective",
+          "ucie_up"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 2396.880000000002,
+      "over500": 1,
+      "min_500um_segments": 5,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes0_tx",
+      "declared_bits": 597,
+      "endpoints": [
+        [
+          "io_collective",
+          "stx0"
+        ],
+        [
+          "io_serdes",
+          "tx_flit"
+        ]
+      ],
+      "checked_pin_pairs": 597,
+      "missing": [],
+      "max_manhattan_um": 4.536000000000058,
+      "over500": 0,
+      "min_500um_segments": 1,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes0_txv",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_collective",
+          "serdes_tx_valid0"
+        ],
+        [
+          "io_serdes",
+          "tx_v"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 4.536000000000058,
+      "over500": 0,
+      "min_500um_segments": 1,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes0_rx",
+      "declared_bits": 597,
+      "endpoints": [
+        [
+          "io_serdes",
+          "rx_flit"
+        ],
+        [
+          "io_collective",
+          "srx0"
+        ]
+      ],
+      "checked_pin_pairs": 597,
+      "missing": [],
+      "max_manhattan_um": 4.536000000000058,
+      "over500": 0,
+      "min_500um_segments": 1,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes0_rxv",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_serdes",
+          "rx_v"
+        ],
+        [
+          "io_collective",
+          "serdes_rx_valid0"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 4.536000000000058,
+      "over500": 0,
+      "min_500um_segments": 1,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes0_up",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_serdes",
+          "tx_up"
+        ],
+        [
+          "io_collective",
+          "serdes_up0"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 4.536000000000058,
+      "over500": 0,
+      "min_500um_segments": 1,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes1_tx",
+      "declared_bits": 597,
+      "endpoints": [
+        [
+          "io_collective",
+          "stx1"
+        ],
+        [
+          "io_serdes_1",
+          "tx_flit"
+        ]
+      ],
+      "checked_pin_pairs": 597,
+      "missing": [],
+      "max_manhattan_um": 4.512000000000626,
+      "over500": 0,
+      "min_500um_segments": 1,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes1_txv",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_collective",
+          "serdes_tx_valid1"
+        ],
+        [
+          "io_serdes_1",
+          "tx_v"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 4.512000000000626,
+      "over500": 0,
+      "min_500um_segments": 1,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes1_rx",
+      "declared_bits": 597,
+      "endpoints": [
+        [
+          "io_serdes_1",
+          "rx_flit"
+        ],
+        [
+          "io_collective",
+          "srx1"
+        ]
+      ],
+      "checked_pin_pairs": 597,
+      "missing": [],
+      "max_manhattan_um": 4.512000000000626,
+      "over500": 0,
+      "min_500um_segments": 1,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes1_rxv",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_serdes_1",
+          "rx_v"
+        ],
+        [
+          "io_collective",
+          "serdes_rx_valid1"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 4.512000000000626,
+      "over500": 0,
+      "min_500um_segments": 1,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes1_up",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_serdes_1",
+          "tx_up"
+        ],
+        [
+          "io_collective",
+          "serdes_up1"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 4.512000000000626,
+      "over500": 0,
+      "min_500um_segments": 1,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes2_tx",
+      "declared_bits": 597,
+      "endpoints": [
+        [
+          "io_collective",
+          "stx2"
+        ],
+        [
+          "io_serdes_2",
+          "tx_flit"
+        ]
+      ],
+      "checked_pin_pairs": 597,
+      "missing": [],
+      "max_manhattan_um": 2394.407999999999,
+      "over500": 597,
+      "min_500um_segments": 5,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes2_txv",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_collective",
+          "serdes_tx_valid2"
+        ],
+        [
+          "io_serdes_2",
+          "tx_v"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 2394.407999999999,
+      "over500": 1,
+      "min_500um_segments": 5,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes2_rx",
+      "declared_bits": 597,
+      "endpoints": [
+        [
+          "io_serdes_2",
+          "rx_flit"
+        ],
+        [
+          "io_collective",
+          "srx2"
+        ]
+      ],
+      "checked_pin_pairs": 597,
+      "missing": [],
+      "max_manhattan_um": 2394.407999999999,
+      "over500": 597,
+      "min_500um_segments": 5,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes2_rxv",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_serdes_2",
+          "rx_v"
+        ],
+        [
+          "io_collective",
+          "serdes_rx_valid2"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 2394.407999999999,
+      "over500": 1,
+      "min_500um_segments": 5,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "serdes2_up",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_serdes_2",
+          "tx_up"
+        ],
+        [
+          "io_collective",
+          "serdes_up2"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 2394.407999999999,
+      "over500": 1,
+      "min_500um_segments": 5,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "clk_coll",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "clk_rx",
+          "pll_coll"
+        ],
+        [
+          "io_collective",
+          "clk"
+        ],
+        [
+          "io_collective",
+          "clk_pfold0"
+        ],
+        [
+          "io_collective",
+          "clk_pfold1"
+        ],
+        [
+          "io_collective",
+          "clk_pfold2"
+        ],
+        [
+          "io_collective",
+          "clk_pfold3"
+        ],
+        [
+          "io_collective",
+          "clk_xfold0"
+        ],
+        [
+          "io_collective",
+          "clk_xfold1"
+        ],
+        [
+          "io_collective",
+          "clk_xfold2"
+        ],
+        [
+          "io_collective",
+          "clk_xfold3"
+        ],
+        [
+          "io_collective",
+          "clk_pring0"
+        ],
+        [
+          "io_collective",
+          "clk_pring1"
+        ],
+        [
+          "io_collective",
+          "clk_sring0"
+        ],
+        [
+          "io_collective",
+          "clk_sring1"
+        ],
+        [
+          "io_collective",
+          "clk_sring2"
+        ],
+        [
+          "io_collective",
+          "clk_sring3"
+        ],
+        [
+          "io_collective",
+          "clk_sring4"
+        ],
+        [
+          "io_collective",
+          "clk_rring0"
+        ],
+        [
+          "io_collective",
+          "clk_rring1"
+        ],
+        [
+          "io_collective",
+          "face_ck0"
+        ],
+        [
+          "io_collective",
+          "face_ck1"
+        ],
+        [
+          "io_collective",
+          "face_ck2"
+        ],
+        [
+          "io_collective",
+          "face_ck3"
+        ],
+        [
+          "io_collective",
+          "face_ck4"
+        ],
+        [
+          "io_collective",
+          "face_ck5"
+        ],
+        [
+          "io_collective",
+          "face_ck6"
+        ],
+        [
+          "io_collective",
+          "face_ck7"
+        ],
+        [
+          "io_collective",
+          "face_ck8"
+        ],
+        [
+          "io_collective",
+          "face_ck9"
+        ],
+        [
+          "io_collective",
+          "face_ck10"
+        ],
+        [
+          "io_collective",
+          "face_ck11"
+        ],
+        [
+          "io_collective",
+          "face_ck12"
+        ],
+        [
+          "io_collective",
+          "face_ck13"
+        ],
+        [
+          "io_collective",
+          "face_ck14"
+        ],
+        [
+          "io_collective",
+          "face_ck15"
+        ],
+        [
+          "io_collective",
+          "face_ck16"
+        ],
+        [
+          "io_collective",
+          "face_ck17"
+        ],
+        [
+          "io_collective",
+          "face_ck18"
+        ],
+        [
+          "io_collective",
+          "face_ck19"
+        ],
+        [
+          "io_collective",
+          "face_ck20"
+        ],
+        [
+          "io_collective",
+          "face_ck21"
+        ],
+        [
+          "io_collective",
+          "face_ck22"
+        ],
+        [
+          "io_collective",
+          "face_ck23"
+        ],
+        [
+          "io_collective",
+          "face_ck24"
+        ],
+        [
+          "io_collective",
+          "face_ck25"
+        ],
+        [
+          "io_collective",
+          "face_ck26"
+        ],
+        [
+          "io_collective",
+          "face_ck27"
+        ],
+        [
+          "io_collective",
+          "face_ck28"
+        ],
+        [
+          "io_collective",
+          "face_ck29"
+        ],
+        [
+          "io_collective",
+          "face_ck30"
+        ],
+        [
+          "io_collective",
+          "face_ck31"
+        ],
+        [
+          "io_collective",
+          "face_ck32"
+        ],
+        [
+          "io_collective",
+          "face_ck33"
+        ],
+        [
+          "io_collective",
+          "face_ck34"
+        ],
+        [
+          "io_collective",
+          "face_ck35"
+        ],
+        [
+          "io_collective",
+          "face_ck36"
+        ],
+        [
+          "io_collective",
+          "face_ck37"
+        ],
+        [
+          "io_collective",
+          "face_ck38"
+        ],
+        [
+          "io_collective",
+          "face_ck39"
+        ],
+        [
+          "io_collective",
+          "face_ck40"
+        ],
+        [
+          "io_collective",
+          "face_ck41"
+        ],
+        [
+          "io_collective",
+          "face_ck42"
+        ],
+        [
+          "io_collective",
+          "face_ck43"
+        ],
+        [
+          "io_collective",
+          "face_ck44"
+        ],
+        [
+          "io_collective",
+          "face_ck45"
+        ],
+        [
+          "io_collective",
+          "face_ck46"
+        ],
+        [
+          "io_collective",
+          "face_ck47"
+        ],
+        [
+          "io_collective",
+          "face_ck48"
+        ],
+        [
+          "io_collective",
+          "face_ck49"
+        ],
+        [
+          "io_collective",
+          "face_ck50"
+        ],
+        [
+          "io_collective",
+          "face_ck51"
+        ],
+        [
+          "io_collective",
+          "face_ck52"
+        ],
+        [
+          "io_collective",
+          "face_ck53"
+        ],
+        [
+          "io_collective",
+          "face_ck54"
+        ],
+        [
+          "io_collective",
+          "relay_ck0"
+        ],
+        [
+          "io_collective",
+          "relay_ck1"
+        ],
+        [
+          "io_collective",
+          "relay_ck2"
+        ],
+        [
+          "io_collective",
+          "relay_ck3"
+        ],
+        [
+          "io_collective",
+          "relay_ck4"
+        ],
+        [
+          "io_collective",
+          "relay_ck5"
+        ],
+        [
+          "io_collective",
+          "relay_ck6"
+        ],
+        [
+          "io_collective",
+          "relay_ck7"
+        ],
+        [
+          "io_collective",
+          "relay_ck8"
+        ],
+        [
+          "io_collective",
+          "relay_ck9"
+        ],
+        [
+          "io_collective",
+          "relay_ck10"
+        ],
+        [
+          "io_collective",
+          "relay_ck11"
+        ],
+        [
+          "io_collective",
+          "relay_ck12"
+        ],
+        [
+          "io_collective",
+          "relay_ck13"
+        ],
+        [
+          "io_collective",
+          "relay_ck14"
+        ],
+        [
+          "io_collective",
+          "relay_ck15"
+        ],
+        [
+          "io_collective",
+          "relay_ck16"
+        ],
+        [
+          "io_collective",
+          "relay_ck17"
+        ],
+        [
+          "io_collective",
+          "relay_ck18"
+        ],
+        [
+          "io_collective",
+          "relay_ck19"
+        ],
+        [
+          "io_collective",
+          "relay_ck20"
+        ],
+        [
+          "io_collective",
+          "relay_ck21"
+        ],
+        [
+          "io_collective",
+          "relay_ck22"
+        ],
+        [
+          "io_collective",
+          "relay_ck23"
+        ],
+        [
+          "io_collective",
+          "relay_ck24"
+        ],
+        [
+          "io_collective",
+          "relay_ck25"
+        ],
+        [
+          "io_collective",
+          "relay_ck26"
+        ],
+        [
+          "io_collective",
+          "relay_ck27"
+        ],
+        [
+          "io_collective",
+          "relay_ck28"
+        ],
+        [
+          "io_collective",
+          "relay_ck29"
+        ],
+        [
+          "io_collective",
+          "gearbox_core_ck"
+        ]
+      ],
+      "checked_pin_pairs": 104,
+      "missing": [],
+      "max_manhattan_um": 13424.932000000003,
+      "over500": 104,
+      "min_500um_segments": 27,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "clk_ucie",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "clk_rx",
+          "pll_ucie"
+        ],
+        [
+          "io_collective",
+          "fdi_ck"
+        ],
+        [
+          "io_collective",
+          "fdi_rx_ck0"
+        ],
+        [
+          "io_ucie",
+          "clk"
+        ],
+        [
+          "io_serdes",
+          "clk"
+        ],
+        [
+          "io_serdes_1",
+          "clk"
+        ],
+        [
+          "io_serdes_2",
+          "clk"
+        ]
+      ],
+      "checked_pin_pairs": 6,
+      "missing": [],
+      "max_manhattan_um": 18698.82,
+      "over500": 6,
+      "min_500um_segments": 38,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "clk_coll_blk",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "clk_rx",
+          "pll_coll_blk"
+        ],
+        [
+          "io_collective",
+          "blk_ck0"
+        ],
+        [
+          "io_collective",
+          "blk_ck1"
+        ]
+      ],
+      "checked_pin_pairs": 2,
+      "missing": [],
+      "max_manhattan_um": 13217.460000000003,
+      "over500": 2,
+      "min_500um_segments": 27,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_seq_cd_d_0",
+      "declared_bits": 512,
+      "endpoints": [
+        [
+          "seq_su",
+          "cd_d__0_511"
+        ],
+        [
+          "io_collective",
+          "in_data"
+        ]
+      ],
+      "checked_pin_pairs": 512,
+      "missing": [],
+      "max_manhattan_um": 17854.152000000002,
+      "over500": 512,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_seq_cd_d_512",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "seq_su",
+          "cd_d__512_512"
+        ],
+        [
+          "io_collective",
+          "in_last"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 17853.096,
+      "over500": 1,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_seq_cd_d_513",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "seq_su",
+          "cd_d__513_513"
+        ],
+        [
+          "io_collective",
+          "in_mode"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 17852.04,
+      "over500": 1,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_seq_cd_d_514",
+      "declared_bits": 32,
+      "endpoints": [
+        [
+          "seq_su",
+          "cd_d__514_545"
+        ],
+        [
+          "io_collective",
+          "in_tag"
+        ]
+      ],
+      "checked_pin_pairs": 32,
+      "missing": [],
+      "max_manhattan_um": 17851.128000000004,
+      "over500": 32,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_seq_cd_d_546",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "seq_su",
+          "cd_d__546_546"
+        ],
+        [
+          "io_collective",
+          "in_valid"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 17912.568000000003,
+      "over500": 1,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_seq_coll_cmd_0",
+      "declared_bits": 16,
+      "endpoints": [
+        [
+          "seq_su",
+          "coll_cmd__0_15"
+        ],
+        [
+          "io_collective",
+          "cmd_words"
+        ]
+      ],
+      "checked_pin_pairs": 16,
+      "missing": [],
+      "max_manhattan_um": 17922.36,
+      "over500": 16,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_seq_coll_cmd_16",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "seq_su",
+          "coll_cmd__16_16"
+        ],
+        [
+          "io_collective",
+          "cmd_mode"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 17926.92,
+      "over500": 1,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_seq_coll_cmd_17",
+      "declared_bits": 32,
+      "endpoints": [
+        [
+          "seq_su",
+          "coll_cmd__17_48"
+        ],
+        [
+          "io_collective",
+          "cmd_tag"
+        ]
+      ],
+      "checked_pin_pairs": 32,
+      "missing": [],
+      "max_manhattan_um": 17922.456000000002,
+      "over500": 32,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_seq_coll_cmd_49",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "seq_su",
+          "coll_cmd__49_49"
+        ],
+        [
+          "io_collective",
+          "cmd_v"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 17934.216,
+      "over500": 1,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_io_cmd_free_0",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_collective",
+          "cmd_free"
+        ],
+        [
+          "seq_su",
+          "coll_cmd_free"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 17795.64,
+      "over500": 1,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_io_out_valid_0",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_collective",
+          "out_valid"
+        ],
+        [
+          "seq_su",
+          "cc__517_517"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 17792.568,
+      "over500": 1,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_io_out_err_0",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_collective",
+          "out_err"
+        ],
+        [
+          "seq_su",
+          "cc__516_516"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 17733.864,
+      "over500": 1,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_io_out_rank_0",
+      "declared_bits": 3,
+      "endpoints": [
+        [
+          "io_collective",
+          "out_rank"
+        ],
+        [
+          "seq_su",
+          "cc__513_515"
+        ]
+      ],
+      "checked_pin_pairs": 3,
+      "missing": [],
+      "max_manhattan_um": 17734.824,
+      "over500": 3,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_io_out_last_0",
+      "declared_bits": 1,
+      "endpoints": [
+        [
+          "io_collective",
+          "out_last"
+        ],
+        [
+          "seq_su",
+          "cc__512_512"
+        ]
+      ],
+      "checked_pin_pairs": 1,
+      "missing": [],
+      "max_manhattan_um": 17735.879999999997,
+      "over500": 1,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    },
+    {
+      "name": "ng_io_out_data_0",
+      "declared_bits": 512,
+      "endpoints": [
+        [
+          "io_collective",
+          "out_data"
+        ],
+        [
+          "seq_su",
+          "cc__0_511"
+        ]
+      ],
+      "checked_pin_pairs": 512,
+      "missing": [],
+      "max_manhattan_um": 17736.888000000003,
+      "over500": 512,
+      "min_500um_segments": 36,
+      "scope": "logicalendpoint lowerbound; existing physicalrelay map and calendar required before violation/adoption claim"
+    }
+  ],
+  "internal_critical_incidents": [
+    {
+      "name": "srr0 to XF0 selector",
+      "bits": 128,
+      "source_candidate_face_um": [
+        820.8,
+        108.0
+      ],
+      "fold_source_face_um": [
+        86.4,
+        133.92000000000002
+      ],
+      "centroid_manhattan_um": 760.3199999999999,
+      "horizontal_lower_bound_um": 734.4,
+      "requires_extra_physical_stage_or_relayout": true,
+      "exact_allbit_ABI_pending": true
+    },
+    {
+      "name": "srr0 to XF1 selector",
+      "bits": 128,
+      "source_candidate_face_um": [
+        820.8,
+        108.0
+      ],
+      "fold_source_face_um": [
+        86.4,
+        349.91999999999996
+      ],
+      "centroid_manhattan_um": 976.3199999999999,
+      "horizontal_lower_bound_um": 734.4,
+      "requires_extra_physical_stage_or_relayout": true,
+      "exact_allbit_ABI_pending": true
+    },
+    {
+      "name": "srr0 to XF2 selector",
+      "bits": 128,
+      "source_candidate_face_um": [
+        820.8,
+        108.0
+      ],
+      "fold_source_face_um": [
+        86.4,
+        565.92
+      ],
+      "centroid_manhattan_um": 1192.32,
+      "horizontal_lower_bound_um": 734.4,
+      "requires_extra_physical_stage_or_relayout": true,
+      "exact_allbit_ABI_pending": true
+    },
+    {
+      "name": "srr0 to XF3 selector",
+      "bits": 128,
+      "source_candidate_face_um": [
+        820.8,
+        108.0
+      ],
+      "fold_source_face_um": [
+        86.4,
+        781.9200000000001
+      ],
+      "centroid_manhattan_um": 1408.3200000000002,
+      "horizontal_lower_bound_um": 734.4,
+      "requires_extra_physical_stage_or_relayout": true,
+      "exact_allbit_ABI_pending": true
+    },
+    {
+      "name": "srr1 to XF0 selector",
+      "bits": 128,
+      "source_candidate_face_um": [
+        43.2,
+        540.0
+      ],
+      "fold_source_face_um": [
+        86.4,
+        133.92000000000002
+      ],
+      "centroid_manhattan_um": 449.28,
+      "horizontal_lower_bound_um": 43.2,
+      "requires_extra_physical_stage_or_relayout": false,
+      "exact_allbit_ABI_pending": true
+    },
+    {
+      "name": "srr1 to XF1 selector",
+      "bits": 128,
+      "source_candidate_face_um": [
+        43.2,
+        540.0
+      ],
+      "fold_source_face_um": [
+        86.4,
+        349.91999999999996
+      ],
+      "centroid_manhattan_um": 233.28000000000003,
+      "horizontal_lower_bound_um": 43.2,
+      "requires_extra_physical_stage_or_relayout": false,
+      "exact_allbit_ABI_pending": true
+    },
+    {
+      "name": "srr1 to XF2 selector",
+      "bits": 128,
+      "source_candidate_face_um": [
+        43.2,
+        540.0
+      ],
+      "fold_source_face_um": [
+        86.4,
+        565.92
+      ],
+      "centroid_manhattan_um": 69.11999999999996,
+      "horizontal_lower_bound_um": 43.2,
+      "requires_extra_physical_stage_or_relayout": false,
+      "exact_allbit_ABI_pending": true
+    },
+    {
+      "name": "srr1 to XF3 selector",
+      "bits": 128,
+      "source_candidate_face_um": [
+        43.2,
+        540.0
+      ],
+      "fold_source_face_um": [
+        86.4,
+        781.9200000000001
+      ],
+      "centroid_manhattan_um": 285.12000000000006,
+      "horizontal_lower_bound_um": 43.2,
+      "requires_extra_physical_stage_or_relayout": false,
+      "exact_allbit_ABI_pending": true
+    },
+    {
+      "name": "srr2 to XF0 selector",
+      "bits": 128,
+      "source_candidate_face_um": [
+        43.2,
+        259.2
+      ],
+      "fold_source_face_um": [
+        86.4,
+        133.92000000000002
+      ],
+      "centroid_manhattan_um": 168.47999999999996,
+      "horizontal_lower_bound_um": 43.2,
+      "requires_extra_physical_stage_or_relayout": false,
+      "exact_allbit_ABI_pending": true
+    },
+    {
+      "name": "srr2 to XF1 selector",
+      "bits": 128,
+      "source_candidate_face_um": [
+        43.2,
+        259.2
+      ],
+      "fold_source_face_um": [
+        86.4,
+        349.91999999999996
+      ],
+      "centroid_manhattan_um": 133.91999999999996,
+      "horizontal_lower_bound_um": 43.2,
+      "requires_extra_physical_stage_or_relayout": false,
+      "exact_allbit_ABI_pending": true
+    },
+    {
+      "name": "srr2 to XF2 selector",
+      "bits": 128,
+      "source_candidate_face_um": [
+        43.2,
+        259.2
+      ],
+      "fold_source_face_um": [
+        86.4,
+        565.92
+      ],
+      "centroid_manhattan_um": 349.91999999999996,
+      "horizontal_lower_bound_um": 43.2,
+      "requires_extra_physical_stage_or_relayout": false,
+      "exact_allbit_ABI_pending": true
+    },
+    {
+      "name": "srr2 to XF3 selector",
+      "bits": 128,
+      "source_candidate_face_um": [
+        43.2,
+        259.2
+      ],
+      "fold_source_face_um": [
+        86.4,
+        781.9200000000001
+      ],
+      "centroid_manhattan_um": 565.9200000000001,
+      "horizontal_lower_bound_um": 43.2,
+      "requires_extra_physical_stage_or_relayout": false,
+      "exact_allbit_ABI_pending": true
+    }
+  ],
+  "SRAM_clock_geometry": [
+    {
+      "macro": "*g_sring?0?*u_m",
+      "macro_clock_um": [
+        345.612,
+        65.58
+      ],
+      "current_N_entry_um": [
+        39.0,
+        950.4
+      ],
+      "current_wire_manhattan_um": 1191.432,
+      "proposed_local_entry_um": [
+        345.612,
+        65.58
+      ],
+      "proposed_entry_is_not_current_parent_face_grant": true
+    },
+    {
+      "macro": "*g_sring?1?*u_m",
+      "macro_clock_um": [
+        345.612,
+        238.38
+      ],
+      "current_N_entry_um": [
+        43.0,
+        950.4
+      ],
+      "current_wire_manhattan_um": 1014.6320000000001,
+      "proposed_local_entry_um": [
+        345.612,
+        238.38
+      ],
+      "proposed_entry_is_not_current_parent_face_grant": true
+    },
+    {
+      "macro": "*g_sring?2?*u_m",
+      "macro_clock_um": [
+        345.612,
+        454.38
+      ],
+      "current_N_entry_um": [
+        47.0,
+        950.4
+      ],
+      "current_wire_manhattan_um": 794.6320000000001,
+      "proposed_local_entry_um": [
+        345.612,
+        454.38
+      ],
+      "proposed_entry_is_not_current_parent_face_grant": true
+    },
+    {
+      "macro": "*g_sring?3?*u_m",
+      "macro_clock_um": [
+        345.612,
+        691.98
+      ],
+      "current_N_entry_um": [
+        51.0,
+        950.4
+      ],
+      "current_wire_manhattan_um": 553.0319999999999,
+      "proposed_local_entry_um": [
+        345.612,
+        691.98
+      ],
+      "proposed_entry_is_not_current_parent_face_grant": true
+    },
+    {
+      "macro": "*g_sring?4?*u_m",
+      "macro_clock_um": [
+        345.612,
+        864.78
+      ],
+      "current_N_entry_um": [
+        55.0,
+        950.4
+      ],
+      "current_wire_manhattan_um": 376.232,
+      "proposed_local_entry_um": [
+        345.612,
+        864.78
+      ],
+      "proposed_entry_is_not_current_parent_face_grant": true
+    },
+    {
+      "macro": "*u_pring*g_b?0?*u_m",
+      "macro_clock_um": [
+        345.612,
+        121.74
+      ],
+      "current_N_entry_um": [
+        31.0,
+        950.4
+      ],
+      "current_wire_manhattan_um": 1143.272,
+      "proposed_local_entry_um": [
+        345.612,
+        121.74
+      ],
+      "proposed_entry_is_not_current_parent_face_grant": true
+    },
+    {
+      "macro": "*u_pring*g_b?1?*u_m",
+      "macro_clock_um": [
+        345.612,
+        303.17999999999995
+      ],
+      "current_N_entry_um": [
+        35.0,
+        950.4
+      ],
+      "current_wire_manhattan_um": 957.8320000000001,
+      "proposed_local_entry_um": [
+        345.612,
+        303.17999999999995
+      ],
+      "proposed_entry_is_not_current_parent_face_grant": true
+    },
+    {
+      "macro": "*u_rring*g_b?0?*u_m",
+      "macro_clock_um": [
+        345.612,
+        519.18
+      ],
+      "current_N_entry_um": [
+        59.0,
+        950.4
+      ],
+      "current_wire_manhattan_um": 717.8320000000001,
+      "proposed_local_entry_um": [
+        345.612,
+        519.18
+      ],
+      "proposed_entry_is_not_current_parent_face_grant": true
+    },
+    {
+      "macro": "*u_rring*g_b?1?*u_m",
+      "macro_clock_um": [
+        345.612,
+        756.78
+      ],
+      "current_N_entry_um": [
+        63.0,
+        950.4
+      ],
+      "current_wire_manhattan_um": 476.232,
+      "proposed_local_entry_um": [
+        345.612,
+        756.78
+      ],
+      "proposed_entry_is_not_current_parent_face_grant": true
+    }
+  ],
+  "blockers": [
+    "Exact sourceleaf pinABI and muxlogic ownership not final. Genericcapture-only partition leaves xsrc,lo/hi,w_d,rf_d combinationalselection inparent; cannot call wires-only.",
+    "E sr0face864 toXF Wface86.4 is777.6um horizontal alone; facecapturetoall4quarterrows also crosses648um spread. Baseline noaddededge partition isnot allincident<=500.",
+    "All9current NfaceSRAMclockentries arefar from actualWmacroclockpins; localinteriorentry proposal requires actual topdown hierarchicalclockpin grant or relayout.",
+    "Outer4157.976frame includes productiongearbox/faces/relays but has no source-current hardchild home map; internalouterincidentcontinuity cannot be qualified from outerpins alone.",
+    "Baseline cutanalysis is coarse existing sourcegraph, not exact proposedleafbitgraph; PG/OBS-aware fullproposed cuts remainrequired.",
+    "SourceFF counts differ actualexistingmapped census; candidatecontroller200 is onlymodel allowance, not qualifiedmapped bound."
+  ]
+}
