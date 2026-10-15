@@ -1,0 +1,33 @@
+[
+ {
+  "cell": "qkd_embedding_static_return_hop",
+  "view": "physical/ref_tile/qkd_embedding_static_return_hop_r1/views/qkd_embedding_static_return_hop",
+  "lib_cell": "qkd_embedding_static_return_hop",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 164.5,
+  "spread_ps": 38.3,
+  "outputs": 300,
+  "inputs": 601,
+  "launch_ps": 177.8,
+  "launch_pin": "upo[204]",
+  "capture_ps": 179.7,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "qkd_embedding_static_return_hop_r1-r1-1e165e6ae",
+  "auto_merge": "37c1746c2",
+  "closed": "TT +324.36 / FF +15.86 ps DRC 0 (SS +155.14 sensitivity)",
+  "budgets": {
+   "launch_ps": 220.0,
+   "capture_ps": 190.0
+  },
+  "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT, phi - R, R = insertion.json boundary mean) on origin/main 37c1746c2 view"
+ }
+]

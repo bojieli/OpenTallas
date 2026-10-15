@@ -3,6 +3,7 @@
   "top": "qkd_kv_static_writer_native",
   "kind": "tile",
   "sources": [
+    "rtl/lib/ot_rst_relay.sv",
     "rtl/physical/ot_qkd_kv_static_writer_native.sv",
     "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv"
   ],
@@ -61,8 +62,8 @@
   "job": {
     "owner": "Claude:el1014-qwen-kvsys-elements",
     "branch": "claude/qwen-kvsys-el-r5-1015",
-    "tag": "r2",
-    "purpose": "Actual fixed-slot KV writer 649 functional inputs / 1360 outputs, exact fresh slot/pins from KV die lead. No credit or ACK scheduling. Full-sector intent retained and validated by source-bound wrapper face/semantic assertions. r2 (Claude kvsys-elements 10-15): structural fix of the gate placement reg->reg TT -125.6 on half_data[*]/D: the 512-bit low-half capture enable is the compiled slot alone (2 registered bits) instead of slot && good (59-bit identity/pair/program compares); good still qualifies half_live/identity, so a bad low half -> w_v 0 + sticky fault exactly as before. Cycle-identical, no added stage.",
+    "tag": "r3",
+    "purpose": "Actual fixed-slot KV writer 649 functional inputs / 1360 outputs, exact fresh slot/pins from KV die lead. No credit or ACK scheduling. Full-sector intent retained and validated by source-bound wrapper face/semantic assertions. r3 (Claude kvsys-elements 10-15): structural reset distribution: r2 gate textbook.high_fanout rst_n 1,812 async-reset loads -> 12 reset regions (control/ident, faults/expected/shared es address, half_data x2, es half-lane x8; each <= 256 flops) each driven by its own ot_rst_relay copy (async assert, sync release 2+1 edges); rst_n port now loads 2 sync + 12 relay flops (pin capture flop = native reset check). es bank/column/row/s_v/s_we were 4 identical lane copies -> one shared 31-bit register (same es vector). Cost: reset release +3 edges (boot schedule: first word slot >= 3 edges after port release; normal timing unchanged), ~-90 flops. Includes r2 (512-bit half_data enable = compiled slot only). Old-vs-new random equivalence (20k cohorts, mid-run resets) PASS for MUT0..6, direct and relayed. Also fixes r2's route crash (DRT-0255 'cannot find path of net ck / rst_n' at the S face): the die pin file put ck/rst_n at 57.624/115.224 = 36 nm off the ASAP7 M5 track lattice (.060 + .192k); snapped to 57.660/115.260 in the official static_io pin file + generator tools/qwen_kv_die/static_io_pins.py.",
     "benches": [
       {
         "name": "writer_native_shape",
@@ -93,6 +94,6 @@
     ],
     "views_to": "physical/ref_tile/qkd_kv_static_writer_native_r1/views",
     "record_to": "results/rtl/ref_tile/qkd_kv_static_writer_native_r1",
-    "structural_change": "half_data 512-flop enable decoupled from the 59-bit compare cone (slot-only enable); compare result kept on the 64-bit half_live/identity qualifiers"
+    "structural_change": "r3: reset distribution tree (12x ot_rst_relay regional copies) replaces the 1,812-load rst_n port net; shared es address register; S-face ck/rst_n on the M5 track lattice; r2: half_data 512-flop enable = compiled slot only"
   }
 }

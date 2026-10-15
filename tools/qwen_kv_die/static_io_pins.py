@@ -24,7 +24,9 @@ for name,path,w,h,clocks,resets,swap in [('qkd_kv_static_writer_native',a.writer
    y=.012+.048*round((10+(h-20)*(i+.5)/len(names)-.012)/.048)
    pins[p]=dict(face=face,layer='M4',xy=[0 if face=='W' else w,y])
  for i,p in enumerate(clocks+resets):
-  x=.024+.048*round((w*(i+1)/(len(clocks+resets)+1)-.024)/.048)
+  # S-face clock/reset pins on the ASAP7 M5 track lattice (offset .060, pitch .192): the old .024+.048k lattice put
+  # writer ck/rst_n 36 nm off-track (57.624 / 115.224) -> DRT-0255 'cannot find path of net ck' (r2 route, 10-15).
+  x=.06+.192*round((w*(i+1)/(len(clocks+resets)+1)-.06)/.192)
   pins[p]=dict(face='S',layer='M5',xy=[x,0])
  assert len(pins)==sum(widths.values())
  for face in ('W','E'):

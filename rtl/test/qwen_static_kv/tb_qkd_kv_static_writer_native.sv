@@ -59,6 +59,9 @@ module tb_qkd_kv_static_writer_native;
  initial begin
  tag=0;data=0;id=0;cid=0;gen=0;cgen=0;ix=0;
  repeat(3)step();rst_n=1;
+ // Physical master releases reset through ot_rst_relay (2 sync + 1 tree = 3 edges): the compiled boot
+ // schedule issues the first word slot no earlier than that (idle edges are still face-compared above).
+ repeat(3)step();
  // All36 stages and all8192 positions exercise every stack, bank, col, lane.
  for(layer=0;layer<36;layer=layer+1)for(pos=0;pos<8192;pos=pos+1)begin
   cid={16'(layer+9),6'(layer+1),18'(pos+13),13'(pos),6'd0};cgen=(pos+layer)%4;

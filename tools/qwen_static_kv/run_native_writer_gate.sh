@@ -4,7 +4,7 @@ set -euo pipefail
 root=$(cd "$(dirname "$0")/../.." && pwd)
 out=${1:?fresh output directory}; mkdir -p "$out"
 top=tb_qkd_kv_static_writer_native
-sources=("$root/rtl/physical/ot_qkd_kv_static_writer_native.sv" "$root/rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv" "$root/rtl/test/qwen_static_kv/$top.sv")
+sources=("$root/rtl/lib/ot_rst_relay.sv" "$root/rtl/physical/ot_qkd_kv_static_writer_native.sv" "$root/rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv" "$root/rtl/test/qwen_static_kv/$top.sv")
 if [[ -n "${NATIVE_WRITER_STRICT_MUT:-}" ]];then
   # Production-judged mutant (closure-loop "expect fail" bench): the tb checks a MUT/BAD build exactly as a
   # production run, so the command exits non-zero when (and only when) the defect is observed.
