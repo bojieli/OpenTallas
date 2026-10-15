@@ -37,6 +37,7 @@
 // other slot's h; 3 NORM skipped (done without running the norm); 4 done one write early; 5 done tag op bit flipped.
 // ---------------------------------------------------------------------------------------------------------------------
 module diag_ot_s81_hc_core #(
+    parameter integer CREDIT_MODE=0, PACING_MUT=0,
     parameter integer NG    = 256,          // hc_post element groups (row width); norm lanes N = 4 NG
     parameter integer D     = 5120,
     parameter integer S_RD  = 2,            // VM read row slots

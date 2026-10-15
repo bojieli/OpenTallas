@@ -10,7 +10,7 @@
       "host": "ot-epyc1tb",
       "exit_code": 143,
       "functional_verdict": "missing",
-      "reason": "Process terminated before build completed; no live child process remains."
+      "reason": "MEMCG OOM at 8 GB during parallel cc1plus, proven by kernel journal."
     },
     {
       "client": "hc",
@@ -21,6 +21,26 @@
       "exit_code": 1,
       "functional_verdict": "missing",
       "reason": "Build source omitted the two SRAM macro RTL models."
+    },
+    {
+      "client": "su",
+      "shape": "full",
+      "session": 55927,
+      "unit": "oth-ubuntu-3580790-1792030187",
+      "host": "ot-epyc1tb",
+      "exit_code": 143,
+      "functional_verdict": "missing",
+      "reason": "MEMCG OOM at 16 GB during parallel cc1plus, proven by kernel journal. Generated C++ reused with 32 GB / -j8 after process confirmed terminal."
+    },
+    {
+      "client": "hc",
+      "shape": "full",
+      "session": 8013,
+      "unit": "oth-ubuntu-4068347-1792030387",
+      "host": "ot-epyc1tb",
+      "exit_code": 2,
+      "functional_verdict": "missing",
+      "reason": "Isolated diagnostic copy omitted CREDIT_MODE/PACING_MUT parameter declaration and referenced d_v outside g_flat. Corrected; production RTL unchanged."
     }
   ]
 }

@@ -128,7 +128,7 @@ module tb_s81_hc_master;
                         if (wq_mask[16 * s + i]) vm[wq_row[14 * s +: 14]][32 * i +: 32] = wq_d[512 * s + 32 * i +: 32];
             end
         end
-        if (CREDIT_MODE && dut.d_v)
+        if (CREDIT_MODE && dut.g_flat.d_v)
             for (s=0;s<S_WR;s=s+1) if (wwait[s]!=0) $fatal(1,"done before actual write commit slot=%0d",s);
         // reads: fixed latency LVM
         for (i = 63; i > 0; i = i - 1) begin dl_v[i] = dl_v[i - 1]; dl_a[i] = dl_a[i - 1]; end

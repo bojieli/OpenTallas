@@ -1,0 +1,4 @@
+Oct 14 19:01:05 ot-epyc1tb kernel: memory: usage 8388608kB, limit 8388608kB, failcnt 82442
+Oct 14 19:01:05 ot-epyc1tb kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1826752-1792029261.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1826752-1792029261.scope,task=cc1plus,pid=2425229,uid=1000
+Oct 14 19:14:09 ot-epyc1tb kernel: memory: usage 16776308kB, limit 16777216kB, failcnt 115443
+Oct 14 19:14:09 ot-epyc1tb kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-3580790-1792030187.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-3580790-1792030187.scope,task=cc1plus,pid=4183833,uid=1000
