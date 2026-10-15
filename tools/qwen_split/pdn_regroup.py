@@ -44,10 +44,13 @@ def placed(def_path):
     return pos
 
 
-def regroup(case, p8, out, skip_prefix=()):
+def regroup(case, p8, out, skip_prefix=(), pos_json=None):
     case = Path(case)
     src = (case / 'pdn.tcl').read_text().split('\n')
-    pos = placed(case / 'floorplan_placed.def')
+    if pos_json:      # before the real case has placed the die: the build's own instance origins (rom_tp8b.json)
+        pos = {i['n']: (i['x'], i['y']) for i in json.loads(Path(pos_json).read_text())['insts']}
+    else:
+        pos = placed(case / 'floorplan_placed.def')
     if abs(p8 / GY - round(p8 / GY)) > 1e-9:
         raise SystemExit(f'--p8 {p8} is not a multiple of the {GY}-um macro lattice')
     head, m8, m5 = [], [], []
@@ -104,5 +107,6 @@ if __name__ == '__main__':
     ap.add_argument('--out', default='pdn_r6.tcl')
     ap.add_argument('--skip-prefix', action='append', default=[],
                     help='instances (name prefix) that get NO macro grid (r7: rly_ -- see the module note)')
+    ap.add_argument('--pos', help='instance origins from the build (OUT/rom_tp8b.json) instead of the placed DEF')
     a = ap.parse_args()
-    print(json.dumps(regroup(a.case, a.p8, a.out, a.skip_prefix)))
+    print(json.dumps(regroup(a.case, a.p8, a.out, a.skip_prefix, a.pos)))
