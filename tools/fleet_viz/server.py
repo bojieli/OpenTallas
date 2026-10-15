@@ -446,7 +446,7 @@ TOKEN_PLACEHOLDER = (b'<!doctype html><meta charset="utf-8"><meta name="viewport
                      b'here (tools/fleet_viz/explorer/token/).</p><p><a style="color:#5ee7ff" href="/explorer">&larr; Chip Explorer</a></p>')
 # /explorer/coverage/...: the coverage matrix view (results/arch/coverage_20261008 ledgers, joined with /api/elements)
 COVERAGE_DIR = HERE / 'explorer' / 'coverage'
-NATIVE = native_provenance.NativeLifecycle(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), TOKEN_DIR)
+NATIVE = native_provenance.NativeLifecycle(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), TOKEN_DIR, ref=os.environ.get('FLEET_VIZ_NATIVE_REF', 'origin/main'))
 COVERAGE = coverage.Coverage(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), ELEMENTS, TOKEN_DIR, log=log)
 # /explorer/element/...: per-element post-route pages (page + pages.json from the repo; data/ written by
 # tools/explorer_elem_export.py pack, never committed).  Share-safe requests get the data with raw names stripped.
