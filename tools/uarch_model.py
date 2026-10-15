@@ -16279,3 +16279,9 @@ def s81_native_functional_homes_1014_model():
             embedding='physical/s81_die_pins/v20_embedding/home.json: actual2SRAM expander, upstream full table and S000 source role OPEN',
             probability='physical/s81_die_pins/v20_svc_native/ingress_layout.json: actual 1030 closed-pin joins max25.464um; native full parent OPEN',
             capture='physical/s81_die_pins/v20_hc_capture/cpl_geometry.json: 9080 actual CPL joins <=499.782um, first-stage M5 preserved, local capture M3; actual leaf routes pending'))
+
+
+def s81_static_vm_face_model(entries=8):
+    """Static capture/WFC/outbound sizing; physical slots remain unqualified."""
+    from s81_vm.static_face_model import model
+    return model(entries)
