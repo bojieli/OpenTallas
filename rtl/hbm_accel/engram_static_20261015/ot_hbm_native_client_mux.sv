@@ -20,7 +20,8 @@ module ot_hbm_native_client_mux #(
     output wire[8191:0]k_wdata,output wire[1023:0]k_wstrb,
     input wire[31:0]kr_v,output wire[31:0]kr_rdy,
     input wire[543:0]kr_tag,input wire[127:0]kr_beat,input wire[8191:0]kr_data,
-    input wire[31:0]k_wr_done,output wire fault
+    input wire[31:0]k_wr_done,output wire fault,
+    output wire[31:0]owner_idle
 );
     localparam integer CW=(CLIENTS<2)?1:$clog2(CLIENTS);
     wire[31:0]pc_fault;assign fault=|pc_fault;
@@ -37,6 +38,7 @@ module ot_hbm_native_client_mux #(
         wire[CW-1:0]write_head=write_owner[write_rp];
         wire read_pop=kr_v[p]&&kr_rdy[p];
         wire write_pop=k_wr_done[p]&&write_count!=0;
+        assign owner_idle[p]=(read_count==0 && write_count==0 && !held);
         wire accepted=k_v[p]&&k_rdy[p];
         wire read_push=accepted&&!owe,write_push=accepted&&owe;
         wire[3:0]read_add=MUT_BURST_COUNT?4'd1:ol;

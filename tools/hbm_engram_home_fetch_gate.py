@@ -131,7 +131,7 @@ endmodule
 '''
     return t
 
-def run(out,inputs,li,compact=False,return_edges=6,local_reads=False,mutant_return_row=False,programme=False,grouped=False,phase_delay=0,mutant_head_block=False,strict_timing=False,guarded=False,shared_vehicle=False,shared_mux=False):
+def run(out,inputs,li,compact=False,return_edges=6,local_reads=False,mutant_return_row=False,programme=False,grouped=False,phase_delay=0,mutant_head_block=False,strict_timing=False,guarded=False,shared_vehicle=False,shared_mux=False,hash_clock_roots=False):
     out=Path(out);out.mkdir(parents=True,exist_ok=True);inputs=Path(inputs)
     binding=json.loads((inputs/'receipt.json').read_text());raw=(inputs/'external_hbm_sectors.hex').read_bytes()
     assert hashlib.sha256(raw).hexdigest()==binding['data_sha256']['external_hbm_sectors.hex']
@@ -275,7 +275,9 @@ ot_hbm_engram_fetch_program #(.FETCH_EDGES(2624)) fetch_program(
         assert shared_vehicle
         testbench=testbench.replace('ot_hbm_engram_home_fetch_shared_vehicle #','ot_hbm_engram_home_shared_stack #')
         testbench=testbench.replace('.hbm_clk(hbm_clk),.rst_n(rst_n),.epoch_begin',
-            ".hbm_clk(hbm_clk),.pc_clk({32{hbm_clk}}),.other_k_v(64'd0),.other_k_we(64'd0),.other_k_addr(1920'd0),.other_k_len(256'd0),.other_k_tag(1088'd0),.other_k_wdata(16384'd0),.other_k_wstrb(2048'd0),.other_kr_rdy(64'd0),.rst_n(rst_n),.epoch_begin")
+            ".hbm_clk(hbm_clk),.pc_clk({32{hbm_clk}}),.engram_reservation(1'b1),.owner_idle(),.other_k_v(64'd0),.other_k_we(64'd0),.other_k_addr(1920'd0),.other_k_len(256'd0),.other_k_tag(1088'd0),.other_k_wdata(16384'd0),.other_k_wstrb(2048'd0),.other_kr_rdy(64'd0),.rst_n(rst_n),.epoch_begin")
+    if hash_clock_roots:
+        testbench=testbench.replace('ot_hbm_engram_hash_home_native hash(', 'ot_hbm_engram_hash_home_clock_roots hash(.clk_columns({6{core_clk}}),')
     tb.write_text(testbench)
     paths=['physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v',
         'rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv','rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv','rtl/hdc/v41/ot_hdc_engram_gather.sv',
@@ -299,6 +301,9 @@ ot_hbm_engram_fetch_program #(.FETCH_EDGES(2624)) fetch_program(
         paths[5]='rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_owned_stack.sv'
         paths[-1]='rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_shared_stack.sv'
         paths.append('rtl/hbm_accel/engram_static_20261015/ot_hbm_native_client_mux.sv')
+    if hash_clock_roots:
+        paths[2]='rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_hash_clock_roots.sv'
+        paths[9]='rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_hash_home_clock_roots.sv'
     compiled_paths=[str(ROOT/p) for p in paths]
     mutant_index=paths.index('rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_client.sv') if shared_vehicle else -1
     mutation=None
@@ -321,8 +326,8 @@ ot_hbm_engram_fetch_program #(.FETCH_EDGES(2624)) fetch_program(
     receipt=dict(schema='opentallas.hbm.engram.native_home_fetch.v1',status='detected_mutant' if (mutant_return_row or mutant_head_block) else 'pass',mutation=mutation,layer=[1,14][li],homes=list(range(li*8,li*8+8)),
         rows=24,sectors=216,core_clock_ps=833.334,hbm_clock_ps=1024,external_HBM='physical DRAM row/column command/data only; original releasedtable bytes',
         fixed_fetch_core_edges=(8228 if grouped else 2624 if local_reads else 18944) if compact else 111104,compact_home_calendar=compact,output=rp.stdout.strip(),wall_seconds=time.monotonic()-start,
-        external_return_latency_edges=return_edges,local_slot_read_metadata=local_reads,source_binding=binding['data_sha256'],production_Kport_client=shared_vehicle,shared_three_client_mux=shared_mux,other_client_stimuli=False,guarded_common_controller=guarded,strict_external_read_timing=strict_timing,refresh_phase_setup_core_edges=phase_delay,row_grouped_per_PC=grouped,actual_programme_join=programme,collective_decode_join=False,full_layer_qualified=False,physical_qualified=False,
+        external_return_latency_edges=return_edges,local_slot_read_metadata=local_reads,source_binding=binding['data_sha256'],production_Kport_client=shared_vehicle,shared_three_client_mux=shared_mux,hash_seven_clock_roots=hash_clock_roots,other_client_stimuli=False,guarded_common_controller=guarded,strict_external_read_timing=strict_timing,refresh_phase_setup_core_edges=phase_delay,row_grouped_per_PC=grouped,actual_programme_join=programme,collective_decode_join=False,full_layer_qualified=False,physical_qualified=False,
         source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in paths})
     (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');return receipt
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--inputs',required=True);ap.add_argument('--layer-index',type=int,choices=[0,1],required=True);ap.add_argument('--compact',action='store_true');ap.add_argument('--return-edges',type=int,default=6);ap.add_argument('--local-reads',action='store_true');ap.add_argument('--mutant-return-row',action='store_true');ap.add_argument('--programme',action='store_true');ap.add_argument('--grouped',action='store_true');ap.add_argument('--phase-delay',type=int,default=0);ap.add_argument('--mutant-head-block',action='store_true');ap.add_argument('--strict-timing',action='store_true');ap.add_argument('--guarded',action='store_true');ap.add_argument('--shared-vehicle',action='store_true');ap.add_argument('--shared-mux',action='store_true');a=ap.parse_args();print(json.dumps(run(a.out,a.inputs,a.layer_index,a.compact,a.return_edges,a.local_reads,a.mutant_return_row,a.programme,a.grouped,a.phase_delay,a.mutant_head_block,a.strict_timing,a.guarded,a.shared_vehicle,a.shared_mux),indent=2))
+    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--inputs',required=True);ap.add_argument('--layer-index',type=int,choices=[0,1],required=True);ap.add_argument('--compact',action='store_true');ap.add_argument('--return-edges',type=int,default=6);ap.add_argument('--local-reads',action='store_true');ap.add_argument('--mutant-return-row',action='store_true');ap.add_argument('--programme',action='store_true');ap.add_argument('--grouped',action='store_true');ap.add_argument('--phase-delay',type=int,default=0);ap.add_argument('--mutant-head-block',action='store_true');ap.add_argument('--strict-timing',action='store_true');ap.add_argument('--guarded',action='store_true');ap.add_argument('--shared-vehicle',action='store_true');ap.add_argument('--shared-mux',action='store_true');ap.add_argument('--hash-clock-roots',action='store_true');a=ap.parse_args();print(json.dumps(run(a.out,a.inputs,a.layer_index,a.compact,a.return_edges,a.local_reads,a.mutant_return_row,a.programme,a.grouped,a.phase_delay,a.mutant_head_block,a.strict_timing,a.guarded,a.shared_vehicle,a.shared_mux,a.hash_clock_roots),indent=2))

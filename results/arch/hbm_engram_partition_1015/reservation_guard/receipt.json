@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.hbm.engram.actual_reservation.v1",
+  "status": "pass",
+  "runs": [
+    {
+      "name": "legal_drained_entry",
+      "returncode": 0,
+      "output": "PASS actual native WR trueACK drain then exclusive reservation blocks other clients\n/srv/opentallas-scratch/codex/hbm-engram-reservation-1015/reservation_guard/tb.sv:33: $finish called at 55296000 (1fs)"
+    },
+    {
+      "name": "busy_entry_rejected",
+      "returncode": 0,
+      "output": "PASS actual busy owner reservation entry rejected\n/srv/opentallas-scratch/codex/hbm-engram-reservation-1015/reservation_guard/tb.sv:26: $finish called at 10240000 (1fs)"
+    },
+    {
+      "name": "missing_guard_mutant",
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/hbm-engram-reservation-1015/reservation_guard/tb.sv:25: missing reservation entry drain protection\n       Time: 10240000  Scope: tb"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/hdc/v41/ot_hdc_engram_gather.sv": "2edd7582a38629ebd662f68eff7eb88c5f90d88c689157cbbe2acf5d5a2099ed",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_lease.sv": "c16adc653eff8bce34ace00d6b4753b6937e758604b8d809183e14e85ea8be4c",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_owned_stack.sv": "53774057356d0d09c4b6687bcd2760dec8a8a23c6ac02caf522fd72a587869c1",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv": "3bb69a5cd9d058bfd28df57acee4fb24e2a3d4992b4a468dbb638c4e5c8ade8f",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_row_store_decode.sv": "e450c13fee2e85d1c5099f225875af1914075ba7154894c5b50659e46505df2d",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_client.sv": "19e48f32d77050f56dda5373ecdda52cc0a1578e00eb9fdd3639f999bd6d5014",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_native_client_mux.sv": "506cab52f8a800393910c54886ff0f20a8cd11d3593d8a5b6ec6e2b07c105101",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_shared_stack.sv": "502a7b161f5f1c4af2e3d9d7b9f23f28838089e988ff99f965731efd8de98e0f"
+  },
+  "scope": "Actual source-owned reservation/drain component with sole native bank/REF controller, true physical WR posted completion, real owner queues. Physical bank/open/REF timing state is deliberately retained. No universal service deadline, active Engram operation, upstream DMA producer or whole-kernel calendar qualification."
+}
