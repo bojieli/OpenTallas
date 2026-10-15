@@ -35,7 +35,12 @@ both; bank `service_cycle` in the VM domain must identify the same physical time
 as `raw_cycle`. For profile `s81_vm_r4_c2_w1`, reads access SRAM at P+7 and return
 at P+16; lane n writes access SRAM at P+10+n and return commit at P+12+n.
 A dependent read Q requires Q+7 > P+10+n. The returned commit remains the
-producer completion fence. Absent profiles retain the historical contract
+producer completion fence. The service profile binds the immutable measured
+master manifest and its original receipt digests, checking all 46 implementation
+files within this boundary against the measured bytes. Rehashing changed RTL
+with `evidence_for()` cannot create a fresh measurement. The upstream serial
+CDC adapter and the testbench are the two explicit exclusions; their startup,
+phase and physical proofs remain separate. Absent profiles retain the historical contract
 checks; these mechanisms do not adopt a pipeline for the die.
 
 The generated schedule is checked using
