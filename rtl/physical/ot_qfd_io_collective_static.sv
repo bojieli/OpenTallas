@@ -5,6 +5,10 @@
 // own clock entry.  NO credit / ready ports: a compiler command per message (cmd_*), producer words at their compiled
 // slots, links as valid + record at fixed latencies.  LU / LS are the die's priced link latencies (compute-die lead):
 // LU = UCIe up-register -> peer dp pin incl. both static CDC channels, LS = SerDes sx-register -> peer sr pin.
+// r5 (composed on the real static link RTL, tools/qwen_coll_tp8_static_links_bench.py): L_min = KC 4 + KW 2 + 17 + PHY
+// + 2 R (R = on-die relay stages between this master and the link face, both directions): LU = 37 (UCIe PHY 14, R 0,
+// adjacent), LS = 362 + 2 R_max (board PHY 339; default R_max 7 = the compute lead's SerDes bound -> 376); faces nearer
+// than R_max pad their RX read slot in the IO calendar so every port lands at the one compiled LS.
 // Successor of qfd_io_collective (credit design, historical/diagnostic under 0ah).
 module qfd_io_collective_static (
     input  wire          clk,                   // parent root
@@ -30,23 +34,28 @@ module qfd_io_collective_static (
     output wire [513:0]  ur_rec,
     input  wire          dr_valid,
     input  wire [513:0]  dr_rec,
-    output wire [2:0]    sx_valid,
-    output wire [1637:0] sx_rec,
-    input  wire [2:0]    sr_valid,
-    input  wire [1637:0] sr_rec,
+    // SerDes faces: port 0 (E, beside the UCIe face), ports 1 / 2 (W); port j <-> package (rank + 1 + j) mod 4
+    output wire          sx0_valid, sx1_valid, sx2_valid,
+    output wire [545:0]  sx0_rec, sx1_rec, sx2_rec,
+    input  wire          sr0_valid, sr1_valid, sr2_valid,
+    input  wire [545:0]  sr0_rec, sr1_rec, sr2_rec,
     output wire          out_valid,
     output wire [511:0]  out_data,
     output wire          out_last,
     output wire [2:0]    out_rank,
     output wire          out_err,
     output wire          fault,
-    output wire [4:0]    fault_code
+    output wire [4:0]    fault_code,
+    output wire          up_slot,               // compiled link calendar -> the IO calendar qfd_coll_link_cal
+    output wire          ur_peer_slot,
+    output wire          sx0_peer_slot, sx1_peer_slot, sx2_peer_slot,
+    output wire          cmd_free               // -> collective command issuer (fault check only)
 );
 `ifndef OT_QFDS_LU
-`define OT_QFDS_LU 28
+`define OT_QFDS_LU 37
 `endif
 `ifndef OT_QFDS_LS
-`define OT_QFDS_LS 352
+`define OT_QFDS_LS 376
 `endif
     ot_coll_tp8_static #(.LANES(16), .TAGW(32), .ADD_LAT(7), .LU(`OT_QFDS_LU), .LS(`OT_QFDS_LS), .GC(8), .CCLK(1)) u_coll (
         .clk(clk), .clk_pfold({clk_pfold3, clk_pfold2, clk_pfold1, clk_pfold0}),
@@ -56,7 +65,9 @@ module qfd_io_collective_static (
         .in_valid(in_valid), .in_data(in_data), .in_last(in_last), .in_mode(in_mode), .in_tag(in_tag),
         .up_valid(up_valid), .up_rec(up_rec), .dp_valid(dp_valid), .dp_rec(dp_rec),
         .ur_valid(ur_valid), .ur_rec(ur_rec), .dr_valid(dr_valid), .dr_rec(dr_rec),
-        .sx_valid(sx_valid), .sx_rec(sx_rec), .sr_valid(sr_valid), .sr_rec(sr_rec),
+        .sx_valid({sx2_valid, sx1_valid, sx0_valid}), .sx_rec({sx2_rec, sx1_rec, sx0_rec}),
+        .sr_valid({sr2_valid, sr1_valid, sr0_valid}), .sr_rec({sr2_rec, sr1_rec, sr0_rec}),
         .out_valid(out_valid), .out_data(out_data), .out_last(out_last), .out_rank(out_rank), .out_err(out_err),
-        .fault(fault), .fault_code(fault_code));
+        .fault(fault), .fault_code(fault_code),
+        .up_slot(up_slot), .ur_peer_slot(ur_peer_slot), .sx_peer_slot({sx2_peer_slot, sx1_peer_slot, sx0_peer_slot}), .cmd_free(cmd_free));
 endmodule
