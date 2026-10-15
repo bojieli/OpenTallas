@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.qwen-production-stage-lowering.v1",
+  "stage": 1,
+  "source_program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+  "source_descriptor_sha256": "cacab45708d0502163266b18c3903a3ff81ddd03f249b1943316173ea70ed9d9",
+  "segments": [
+    {
+      "index": 0,
+      "descriptor": 1,
+      "first_pc": 0,
+      "end_pc": 13,
+      "kind": 1,
+      "vm_word": 0,
+      "words": 256,
+      "program_base": 0,
+      "row0": 0
+    },
+    {
+      "index": 1,
+      "descriptor": 60129542145,
+      "first_pc": 14,
+      "end_pc": 21,
+      "kind": 1,
+      "vm_word": 0,
+      "words": 256,
+      "program_base": 14,
+      "row0": 0
+    },
+    {
+      "index": 2,
+      "descriptor": 94489280512,
+      "first_pc": 22,
+      "end_pc": 24,
+      "kind": 0,
+      "vm_word": 0,
+      "words": 0,
+      "program_base": 22,
+      "row0": 0
+    }
+  ],
+  "status": "REFUSED_MISSING_PHYSICAL_PROFILE",
+  "missing_fields": [
+    "VM_response_edges",
+    "period_fs",
+    "phase_fs",
+    "physical_profile_status=MEASURED",
+    "receipt_path",
+    "receipt_sha256",
+    "segments",
+    "source_sha256",
+    "stop_cycle"
+  ]
+}
