@@ -1,0 +1,5 @@
+PROGRAM_JOIN FAULT PASS scenario=4
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_program_target.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 14ns; walltime 0.000 s; speed 249.461 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

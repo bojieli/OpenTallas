@@ -59,22 +59,25 @@ def probe(out, escaped=False):
     # and ot_mm_sync never calls set_scene: set_mode ff alone must select scene BC.
     # holdmm_bc_tt_library: same context, BC wrongly bound to the TT Liberty.
     holdmm=['holdmm_bc','holdmm_bc_tt_library']
-    cases=['pass','wrong_scene','wrong_cell','missing_arc','wrong_clock','wrong_source','mixed_minmax']+holdmm
+    # default_*: the multi-mode route's synthesis SDC read (read_liberty TT then FF, no scene defined,
+    # read_sdc -mode ss): the unscened default binds max TT / min FF. Admitted pre-CTS only.
+    default=['default_prects','default_postcts']
+    cases=['pass','wrong_scene','wrong_cell','missing_arc','wrong_clock','wrong_source','mixed_minmax']+holdmm+default
     for case in cases:
         libs={c:str(original/f'{MASTER}_{c}.lib') for c in D.CORNERS}
         if case in variants:libs['ff']=str(out/f'{case}.lib')
         script='read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\n'
         script+=f'read_lef {{{original}/{MASTER}.lef}}\n'
-        script+=''.join(f'read_liberty {{{v}}}\n' for v in libs.values())
+        script+=''.join(f'read_liberty {{{v}}}\n' for v in ((libs['tt'],libs['ff']) if case in default else libs.values()))
         script+=f'read_verilog {{{out}/probe.v}}\nlink_design probe\n'
-        for mode in ('tt','ff','ss'):
+        for mode in (('ss',) if case in default else ('tt','ff','ss')):
             script+=f'set_mode {mode}\n'+C.clocks(s,833.333)
             script+='set_propagated_clock [all_clocks]\n'
             script+='set_input_delay 0 -clock core_clk [get_ports en]\nset_output_delay 0 -clock core_clk [all_outputs]\n'
         if case in holdmm:
             script+=f'define_scene TC -mode ss -liberty {{{libs["tt"]}}}\n'
             script+=f'define_scene BC -mode ff -liberty {{{libs["tt" if case=="holdmm_bc_tt_library" else "ff"]}}}\n'
-        for c in (() if case in holdmm else D.CORNERS):
+        for c in (() if case in holdmm+default else D.CORNERS):
             if c=='ff' and case=='mixed_minmax':
                 script+=f'define_scene FF -mode ff -liberty_min {{{libs["tt"]}}} -liberty_max {{{libs["ff"]}}}\n'
             else:script+=f'define_scene {c.upper()} -mode {c} -liberty {{{libs[c]}}}\n'
@@ -85,6 +88,11 @@ def probe(out, escaped=False):
         if case=='wrong_cell':
             script+='set e [lindex $::ot_ce_direct_entries 0];lset e 0 wrong_master;lset ::ot_ce_direct_entries 0 $e\n'
         corners=D.CORNERS if case=='pass' else ('ff',)
+        if case in default:
+            script+=f'set ::ot_ref_pre_cts {int(case=="default_prects")}\n'
+            script+='if {[get_property [sta::cmd_scene] name] ne "default"} {error "fixture: expected the unscened default"}\n'
+            script+='set rows [ot_ce_direct_rows tt]\nif {[llength $rows]!=2} {error "missing raw SRAM rows"}\nputs SCENE_BINDING_PASS_tt\nexit\n'
+            corners=()
         if case in holdmm:
             script+='set_scene TC\nsta::worst_slack_cmd max\nset_mode ff\n'
             script+='set ::ot_ioref_scene BC\n'
@@ -104,13 +112,13 @@ def probe(out, escaped=False):
         path=out/f'{case}.tcl';path.write_text(script)
         run=subprocess.run([os.environ.get('OPENROAD','openroad'),'-no_init','-exit',str(path)],text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=120)
         (out/f'{case}.log').write_text(run.stdout)
-        expect=case in ('pass','holdmm_bc')
-        ok=run.returncode==0 and all(f'SCENE_BINDING_PASS_{c}' in run.stdout for c in (corners or ('ff',)))
+        expect=case in ('pass','holdmm_bc','default_prects')
+        ok=run.returncode==0 and all(f'SCENE_BINDING_PASS_{c}' in run.stdout for c in (corners or (('tt',) if case in default else ('ff',))))
         if ok != expect:raise RuntimeError(f'{case}: unexpected admission\n{run.stdout[-3000:]}')
         if not expect and 'OT_DIRECT_MACRO:' not in run.stdout and 'OT_ENTRIES:' not in run.stdout:raise RuntimeError(f'{case}: unrelated failure\n{run.stdout[-3000:]}')
         receipts.append(dict(case=case,returncode=run.returncode,expected_admitted=expect))
     (out/'receipt.json').write_text(json.dumps(receipts,indent=2)+'\n')
-    print('ACTUAL_SCENE_BINDING_SUITE_PASS TT/FF/SS, hold-mm BC context and seven mutants')
+    print('ACTUAL_SCENE_BINDING_SUITE_PASS TT/FF/SS, hold-mm BC context, pre-CTS default scene and eight mutants')
 
 
 if __name__=='__main__':

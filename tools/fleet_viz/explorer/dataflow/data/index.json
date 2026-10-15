@@ -1,0 +1,359 @@
+{
+ "schema": "opentallas.dataflow.links_index.v1",
+ "records": [
+  {
+   "id": "s81_gen17",
+   "file": "s81_gen17.links.json.gz",
+   "label": "DeepSeek ROM S81 die \u00b7 GEN17 pass0 (construction screen)",
+   "design": "ds_rom",
+   "token_designs": [
+    "ds_rom"
+   ],
+   "revision": "GEN17-pass0",
+   "role": "previous",
+   "candidate": null,
+   "scope": "COMPLETE_CONSTRUCTION_BEFORE_HOP_SIGNOFF_NOT_NATIVE",
+   "coverage": {
+    "links": 86043,
+    "placed": 86027,
+    "unplaced": 16,
+    "width_known": 86043,
+    "directed": 86043,
+    "pin_ends": 193764,
+    "box_ends": 17,
+    "unplaced_ends": 16,
+    "stages_known": 14728,
+    "bypass": 74,
+    "blocks": 78150,
+    "bits_total": 4915269,
+    "bit_um_total": 2225587423,
+    "metrics": {
+     "sum_width_length_bit_um": 1521207866,
+     "sum_bit_um_hops": 2225587423,
+     "sum_traffic_length": null,
+     "traffic_links": 0,
+     "over_reach_bits": 63079,
+     "relays": 41996,
+     "relay_bit_stages": 3895271,
+     "needed_relay_bit_stages_lower_bound": 1656937,
+     "worst_cut": 1.3867,
+     "cut_windows_over_limit": 110
+    }
+   },
+   "inputs": [
+    {
+     "path": "/home/ubuntu/geometry-s81-gen17/construction_pass0_plan.json.gz",
+     "sha256": "ea09377acb4d61cabbdb74039b3e9bc817fe10644402a46d6ffb6ab1c769ef9c"
+    },
+    {
+     "path": "/home/ubuntu/geometry-s81-gen17/construction_pass0_pins.lef.gz",
+     "sha256": "34d7ebab473d26cbe4c73e2a49db3f90b2e9e5c9fd7ae80ba6cfcbe7e43a35ba"
+    }
+   ],
+   "generated": "2026-10-15T14:20:58+00:00",
+   "bytes": 24128694
+  },
+  {
+   "id": "s81_gen18c",
+   "file": "s81_gen18c.links.json.gz",
+   "label": "DeepSeek ROM S81 die \u00b7 GEN18c pass0 (construction screen)",
+   "design": "ds_rom",
+   "token_designs": [
+    "ds_rom"
+   ],
+   "revision": "GEN18c-pass0",
+   "role": "canonical",
+   "candidate": null,
+   "scope": "COMPLETE_CONSTRUCTION_BEFORE_HOP_SIGNOFF_NOT_NATIVE",
+   "coverage": {
+    "links": 86040,
+    "placed": 86024,
+    "unplaced": 16,
+    "width_known": 86040,
+    "directed": 86040,
+    "pin_ends": 193758,
+    "box_ends": 17,
+    "unplaced_ends": 16,
+    "stages_known": 14725,
+    "bypass": 70,
+    "blocks": 78032,
+    "bits_total": 4917430,
+    "bit_um_total": 2232944498,
+    "metrics": {
+     "sum_width_length_bit_um": 1532584141,
+     "sum_bit_um_hops": 2232944498,
+     "sum_traffic_length": null,
+     "traffic_links": 0,
+     "over_reach_bits": 66857,
+     "relays": 41893,
+     "relay_bit_stages": 3947528,
+     "needed_relay_bit_stages_lower_bound": 1677867,
+     "worst_cut": 1.4053,
+     "cut_windows_over_limit": 124
+    }
+   },
+   "inputs": [
+    {
+     "path": "/home/ubuntu/geometry-s81-gen17/g18c/construction_pass0_plan.json.gz",
+     "sha256": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa"
+    },
+    {
+     "path": "/home/ubuntu/geometry-s81-gen17/g18c/construction_pass0_pins.lef.gz",
+     "sha256": "74ec6d9a072a806df6a5c8b645b3cbd9eaf0518f392d8d8de01165e360b7e2ca"
+    },
+    {
+     "path": "/home/ubuntu/geometry-s81-gen17/g18c/cut_pass0.json",
+     "sha256": "3156f4d367580d57179afbd90249c03ec6e9ea76999f20f33c2a0bfb63150708"
+    }
+   ],
+   "generated": "2026-10-15T14:20:45+00:00",
+   "bytes": 24109002
+  },
+  {
+   "id": "s81_layer_r3",
+   "file": "s81_layer_r3.links.json.gz",
+   "label": "DeepSeek ROM S81 layer die m221pq r3 (token-path die)",
+   "design": "ds_rom",
+   "token_designs": [
+    "ds_rom"
+   ],
+   "revision": "r3",
+   "role": "token-path",
+   "candidate": null,
+   "scope": "explorer recipe export a1f23fa0bd7f-7465adaf ({'commit': 'a1f23fa0b', 'opts': '--gen r8 --rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --hc-xface --link-split --sel-xstg --pin-relay --ch-heights 259.2,302.4,388.8,388.8,302.4,259.2,259.2 --bf-per-region 4 --geometry-fix --vch-w 1641.6 --hc-corr 1512 --hub-column-width 1728 --su-mm2 25.61188 --pairs 1792 --q-elem-h 221.4 --pq-place --die layer1', 'tool': \"tools/dsrom_s81_fulldie.py real <opts> (EPYC3 s81-die/m221pq_r3 via mk_chain3.sh; source tree src_fe09924a8 = a1f23fa0b+tt, whose generator files are a1f23fa0b's)\", 'note': 'r4 (= r3 + --nxt-reach) generation failed 2026-10-09 01:30 PT; r3 is the latest built die'})",
+   "coverage": {
+    "links": 59486,
+    "placed": 59486,
+    "unplaced": 0,
+    "width_known": 59486,
+    "directed": 0,
+    "pin_ends": 0,
+    "box_ends": 134446,
+    "unplaced_ends": 0,
+    "stages_known": 13767,
+    "bypass": 11,
+    "blocks": 54478,
+    "bits_total": 3097881,
+    "bit_um_total": 1212920822,
+    "metrics": {
+     "sum_width_length_bit_um": 978633830,
+     "sum_bit_um_hops": 1212920822,
+     "sum_traffic_length": null,
+     "traffic_links": 0,
+     "over_reach_bits": 0,
+     "relays": 30259,
+     "relay_bit_stages": 3287450,
+     "needed_relay_bit_stages_lower_bound": 1226529,
+     "worst_cut": 0.7695,
+     "cut_windows_over_limit": 9
+    }
+   },
+   "inputs": [
+    {
+     "path": "fleet-viz state explorer/geom/s81_layer_r3.json.gz",
+     "sha256": "844f8fb27b4c8fba4ed906e4ebf567e67e30caefcda918322eeb86e631a47a80"
+    }
+   ],
+   "generated": "2026-10-15T14:21:04+00:00",
+   "bytes": 16732787
+  },
+  {
+   "id": "hbm_r25gph",
+   "file": "hbm_r25gph.links.json.gz",
+   "label": "HBM generic die R25GP / HGI-1 (token-path die)",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "r25gph",
+   "role": "token-path",
+   "candidate": null,
+   "scope": "explorer recipe export 2e10984ffe7d-021adaee ({'ref': 'main', 'paths': ['tools/hbm_accel_die_fp.py', 'tools/hbm_die_views.py', 'tools/hbm_die_relays.py', 'tools/die_top_lint.py', 'physical/hbm_accel_die_views/index.json'], 'variant': 'r25gph', 'relays': True, 'tool': 'tools/hbm_die_views.py --variant r25gph die --case sta --relays (generic die R25GP + HGI-1 record dispatch; token-path hbm_gen_*)'})",
+   "coverage": {
+    "links": 754,
+    "placed": 754,
+    "unplaced": 0,
+    "width_known": 754,
+    "directed": 0,
+    "pin_ends": 0,
+    "box_ends": 1592,
+    "unplaced_ends": 0,
+    "stages_known": 349,
+    "bypass": 109,
+    "blocks": 6077,
+    "bits_total": 675040,
+    "bit_um_total": 2258802079,
+    "metrics": {
+     "sum_width_length_bit_um": 2011233547,
+     "sum_bit_um_hops": 2258802079,
+     "sum_traffic_length": null,
+     "traffic_links": 0,
+     "over_reach_bits": 177018,
+     "relays": 3872,
+     "relay_bit_stages": 2905807,
+     "needed_relay_bit_stages_lower_bound": 5481928,
+     "worst_cut": 2.0779,
+     "cut_windows_over_limit": 502
+    }
+   },
+   "inputs": [
+    {
+     "path": "fleet-viz state explorer/geom/hbm_r25gph.json.gz",
+     "sha256": "9963dc6ec7ac733a138ea815b7c7f3853a74a38c1e9542f90bcebc654966ef44"
+    }
+   ],
+   "generated": "2026-10-15T14:21:05+00:00",
+   "bytes": 942704
+  },
+  {
+   "id": "hbm_v15_compact",
+   "file": "hbm_v15_compact.links.json.gz",
+   "label": "HBM die \u00b7 v15 system geometry (compact one-row PC candidate)",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15 compact_PC_one_row (candidate)",
+   "role": "canonical",
+   "candidate": null,
+   "scope": "compact_SHARED_one_row_PC_UNQUALIFIED; adoption_allowed=False; graph complete=False",
+   "coverage": {
+    "links": 5011,
+    "placed": 3456,
+    "unplaced": 1555,
+    "width_known": 4995,
+    "directed": 5011,
+    "pin_ends": 0,
+    "box_ends": 7218,
+    "unplaced_ends": 2804,
+    "stages_known": 0,
+    "bypass": 0,
+    "blocks": 4125,
+    "bits_total": 3044962,
+    "bit_um_total": 151026400,
+    "metrics": {
+     "sum_width_length_bit_um": 151035002,
+     "sum_bit_um_hops": 151026400,
+     "sum_traffic_length": null,
+     "traffic_links": 0,
+     "over_reach_bits": 5888,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 5888,
+     "worst_cut": 0.6757,
+     "cut_windows_over_limit": 32
+    }
+   },
+   "inputs": [
+    {
+     "path": "results/arch/hbm_system_geometry_1015/compact_PC_one_row_alternative.json",
+     "sha256": "0f3f1129466237f91cbfa26d38206cfadbb3d561f662154e65af12652ece1518"
+    },
+    {
+     "path": "results/arch/hbm_system_geometry_1015/global_graph.json",
+     "sha256": "52035e20ff1886a1fff6a62ca1b7c073bfc4401f5979a29d9ed172c4cb1aa2a0"
+    }
+   ],
+   "generated": "2026-10-15T14:21:00+00:00",
+   "bytes": 1814228
+  },
+  {
+   "id": "qwen_c17_wide27",
+   "file": "qwen_c17_wide27.links.json.gz",
+   "label": "Qwen ROM compute die \u00b7 wide27/Band1 (current generated pins)",
+   "design": "qwen_rom",
+   "token_designs": [
+    "qwen_rom"
+   ],
+   "revision": "C17 wide27/Band1 (exporter 9579cbd4f)",
+   "role": "canonical",
+   "candidate": null,
+   "scope": "complete generated graph and local physical pin rectangles; no routed qualification",
+   "coverage": {
+    "links": 3333,
+    "placed": 3333,
+    "unplaced": 0,
+    "width_known": 3333,
+    "directed": 0,
+    "pin_ends": 6664,
+    "box_ends": 6,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 440,
+    "blocks": 1637,
+    "bits_total": 1738399,
+    "bit_um_total": 1740527960,
+    "metrics": {
+     "sum_width_length_bit_um": 1740516541,
+     "sum_bit_um_hops": 1740527960,
+     "sum_traffic_length": null,
+     "traffic_links": 0,
+     "over_reach_bits": 949469,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 2839982,
+     "worst_cut": 0.9751,
+     "cut_windows_over_limit": 28
+    }
+   },
+   "inputs": [
+    {
+     "path": "results/arch/qwen_split_compute_1014/system_geometry/inputs/current_generated_pins.json.gz",
+     "sha256": "5989a012f14f8c08bab52cecdb0fc43043a455e419448443214bfd7792a64fb3"
+    }
+   ],
+   "generated": "2026-10-15T14:21:00+00:00",
+   "bytes": 716884
+  },
+  {
+   "id": "qwen_r21b",
+   "file": "qwen_r21b.links.json.gz",
+   "label": "Qwen ROM die r21b (token-path die)",
+   "design": "qwen_rom",
+   "token_designs": [
+    "qwen_rom"
+   ],
+   "revision": "r21b",
+   "role": "token-path",
+   "candidate": null,
+   "scope": "explorer recipe export 5b0169dbaa04-0b66a01a ({'ref': 'main', 'paths': ['tools/qwen_rom_fulldie.py', 'tools/qwen_rom_fulldie_b3r2.py', 'tools/qwen_rom_fulldie_pg_r3.py', 'tools/die_top_lint.py'], 'recipe': 'r21b', 'tool': 'tools/qwen_rom_fulldie_b3r2.py --recipe r21b (die-evidence qwen_r21b_chain.sh)', 'note': 'die-evidence chain source: claude/die-evidence-20261008 (merged into main)'})",
+   "coverage": {
+    "links": 7538,
+    "placed": 7538,
+    "unplaced": 0,
+    "width_known": 7538,
+    "directed": 0,
+    "pin_ends": 0,
+    "box_ends": 15076,
+    "unplaced_ends": 0,
+    "stages_known": 2708,
+    "bypass": 2804,
+    "blocks": 13220,
+    "bits_total": 3673186,
+    "bit_um_total": 1555738340,
+    "metrics": {
+     "sum_width_length_bit_um": 1555669367,
+     "sum_bit_um_hops": 1555738340,
+     "sum_traffic_length": null,
+     "traffic_links": 0,
+     "over_reach_bits": 7383,
+     "relays": 9878,
+     "relay_bit_stages": 4210608,
+     "needed_relay_bit_stages_lower_bound": 2723115,
+     "worst_cut": 1.1287,
+     "cut_windows_over_limit": 18
+    }
+   },
+   "inputs": [
+    {
+     "path": "fleet-viz state explorer/geom/qwen_r21b.json.gz",
+     "sha256": "26cdfa80b285c9d8a9cef60a0725e2f781f558d132a012dad3b1b069760f0381"
+    }
+   ],
+   "generated": "2026-10-15T14:21:01+00:00",
+   "bytes": 2926863
+  }
+ ]
+}

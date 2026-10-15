@@ -1,0 +1,87 @@
+{
+  "status": "NATIVE_INDEX_TRANSPORT_PASS_FULL_TKM_PENDING",
+  "scope": "actual selector+staging20SRAMs -> typed shared ingress -> actual qslots -> TKM declared input boundary; real TKM instantiated in separate typed parent but not executed by seam bench",
+  "measured": {
+    "frames": 3,
+    "chosen_records": 1536,
+    "native_flits": 192,
+    "four_lane_beats": 48,
+    "beat_II": 8,
+    "first_transport_launch_frame_edge": 838,
+    "frame_edges_including_drain": 968,
+    "producer_emit_to_transport_launch_edges": 6,
+    "producer_emit_to_consumer_sample_edges": 7
+  },
+  "mutants": {
+    "1": "wrong compiler mode faults inactive source",
+    "2": "wrong qslot source produces duplicated/corrupted actual native records, expected-set check fails",
+    "3": "wrong ingress expected bitmap faults"
+  },
+  "ingress_component": {
+    "full_width_checks": 73,
+    "data_mux_mutant": "KILLED",
+    "disabled_checker_mutant": "KILLED",
+    "declared_FF_bits": 6558,
+    "added_qslot_source_capture_edges": 2
+  },
+  "real_TKM_contract": {
+    "native_KMAX": 2048,
+    "cfg_n": 512,
+    "cfg_pf": 64,
+    "first_sample_from_start": 9,
+    "for_emit_E_start": "E-2",
+    "full_runtime": "PENDING publisher actualengine build/object reuse, no duplicate heavycompile"
+  },
+  "upstream_source": {
+    "schema": "hcoll.idx_tkm.native_sources.v1",
+    "INDEX_revision": "39e0af759",
+    "selector_selected_scan_edges": 171,
+    "producer_first_launch_edge": 833,
+    "input_SHA256": {
+      "ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+      "ot_hbm_idx_topk_link_static.sv": "acf1b5aaef1b103a2bd540497a6f4890353b4feed7d54e9d8cac503d6eb6ef92",
+      "ot_hbm_idx_selector_static.sv": "41cf529b5f30e8d6446ac8e7070a3e4b6514a45eacbb65c6bb91512fd9df66b2",
+      "ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d"
+    },
+    "native_TKM_snapshot": {
+      "RTL_git_blob": "37ae51157804121460a5fe02863eecac368a9b12",
+      "scope": "typed API/timing inspection only; publisher runtime qualification and object reuse pending"
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_idx_tkm_join.sv": "bd6a952cb805cf5a9c16fa6d1659b236e15cbe8383e35550a93e70e1d70c89e7",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_vm_idx_ingress.sv": "99fb39d37c7301e8f1a704a847e15fd061e462214337953b81d97c3a58dd871a",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_idx_transport.sv": "712a35c8efd5be406f63c9dddca8e30db835187711504316b9fc9017f92b1ea2",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_vm_idx_ingress.sv": "81dbf3a556df4dcdf0cf051c6442c2945c670fac6680c48439e1547730813036",
+    "rtl/hbm_accel/generic/collective/p2p/run_idx_transport_bench.sh": "3049087d81f1f37e8ea1169c4e9312c9529d03edaa6308a9ececaf1ffe1ed69f",
+    "rtl/hbm_accel/generic/collective/p2p/run_vm_idx_ingress_bench.sh": "7581b9fe040167b061af5fcda901505fd94b34d50fa1b2e4f00f9da7a6153df2",
+    "rtl/hbm_accel/generic/collective/p2p/idx_tkm_native_sources.json": "1bca99eda98379db988d627cce84ef267b2ea2deacd9e31e9dda06bd23dbe57e",
+    "tools/hbm_coll_static/check_idx_tkm_wiring.py": "16c25039e9544bb64a6cd69b41872b54e57cd4740ff57f84056a15db7e78b27b"
+  },
+  "vectors_sha256": {
+    "lines1.hex": "e2bd0e686bd4b3d8bf7569e6f1e04fbc283a3fe82d8347a7e8058df9530eadc7",
+    "scores2.hex": "a0435739aa8cdee4476b625067d7fa74ca54dcf35502981488acfafcc8a9f154",
+    "gold0.hex": "991795fe506925cc889043ffe3c17c624a30d0fd177a5fdb6e1a776e636fd3d0",
+    "gold2.hex": "1910abb9333f7518bf938d1682c0c88fab687824ce7dcc71ac74881c56607a44",
+    "lines0.hex": "8310a29db1f389f7ff045fd506a2d0b16a80300d2b59403b61a3d17bd5b54a53",
+    "gold1.hex": "0f3b8ab6ca9936196130c8579e8802e1ef5415dda87b7d9634e099a39136fae1",
+    "scores0.hex": "a14f6dab7615c2d7d1a3074e6fd32b4566b3de1b4f0526aeae0f2548a02ab068",
+    "scores1.hex": "482c0980fd5dd9e3374709d75b06c6ce5ca6afd1f8ca76b4db33f81400eb6fa9",
+    "lines2.hex": "410017c8d067ee9674b7fe06aa5e069f6c9bbe01775bb52645e70472b4634548"
+  },
+  "execution": {
+    "tool": "ot-run",
+    "unit": "oth-ubuntu-1311489-1792052651",
+    "host": "ot-epyc4",
+    "exit": 0
+  },
+  "limitations": [
+    "full native TKM composition not yet executed",
+    "typed parent full elaboration awaits existing nativeengine object reuse",
+    "globalG>1 remote ranks not supplied by this local staging inventory",
+    "score boundary is actual selector input; upstream score arithmetic/VM service binding remains H-IDX production requirement",
+    "new shared station not yet adopted into full quadrant ISA/calendar",
+    "extra2edge latency and physical/cost effects must be measured in wholeprogram",
+    "no physical closure or fulltoken throughput claim"
+  ]
+}

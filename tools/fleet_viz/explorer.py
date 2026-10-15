@@ -15,7 +15,6 @@ Map status keys: closed, below (closed below the +15 ps design margin), running,
 placeholder (no closure-loop element, generated placeholder or interim view), macro (hard macro), relay (generated die
 register hop with no element of its own).
 """
-from explorer_dataflow import dataflow
 
 import collections, gzip, json, os, pathlib, re, shutil, subprocess, sys, threading, time
 
@@ -29,7 +28,8 @@ STATUS_LABEL = dict(closed='closed', below='closed below margin (<+15 ps)', runn
 CAT_STATUS = {'closed (TT era)': 'closed', 'closed (TT re-verified)': 'closed', 'closed (earlier)': 'closed',
               'first trial in flight': 'running', 'failed, re-running': 'failing', 'revoked, re-running': 'revoked',
               'revoked (no live job)': 'revoked', 'needs redesign (no live job)': 'failing',
-              'flow failure (no live job)': 'failing', 'cancelled only': 'failing', 'superseded': 'superseded'}
+              'flow failure (no live job)': 'failing', 'cancelled only': 'failing', 'superseded': 'superseded',
+              'not started (open)': 'placeholder', 'implementation recorded (no physical job)': 'placeholder'}
 ROLL = ['failing', 'revoked', 'running', 'below', 'closed', 'superseded']
 MARGIN = 15.0
 MASTER_TOKEN = re.compile(r'\b((?:hfd|qfd|dsfd)_[A-Za-z0-9_]+)')
@@ -468,22 +468,6 @@ class Explorer:
         b = gzip.compress(json.dumps(r, separators=(',', ':')).encode(), 6)
         self.safe_geom[die_id] = (g['key'], b)
         return b
-
-    def dataflow_bytes(self, die_id, safe=False):
-        g = self.geom.get(die_id) or self.load_geom(die_id)
-        if not g:
-            return None
-        cache = getattr(self, '_dataflow_cache', {})
-        key = (die_id, safe)
-        hit = cache.get(key)
-        # Raw-object identity changes even if a regenerated geometry keeps its recipe key.
-        if hit and hit[0] is g['raw']:
-            return hit[1]
-        value = dataflow(json.loads(gzip.decompress(g['raw'])), safe=safe)
-        encoded = gzip.compress(json.dumps(value, separators=(',', ':')).encode(), 3)
-        cache[key] = (g['raw'], encoded)
-        self._dataflow_cache = cache
-        return encoded
 
     def card(self, element=None, master=None, die=None, safe=False):
         with self.lock:

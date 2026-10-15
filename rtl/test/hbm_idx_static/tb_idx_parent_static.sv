@@ -26,7 +26,7 @@ module tb_idx_parent_static;
    .dq(281'd0),.dq_done(dqd),.kq(281'd0),.kq_done(kqd),.xq(276'd0),.xq_done(xd),.xq2(276'd0),.xq2_done(x2d),.eg(eg),.pq(285'd0),.pr(pr),.status(status[b*18+:18]));
  end
  reg[1023:0]x[0:127];reg[511:0]weights[0:0];reg[35167:0]keys[0:170];reg[15:0]scores[0:10927];reg gold[0:10927],seen[0:10927];reg[255:0]data;
- integer cycle=0,errors=0,checked=0,records=0,flits=0,firstscore=-1,lastscore=-1,firsttx=-1,lasttx=-1,scanstart;
+ integer guard_edges=100,mutation=0;integer cycle=0,errors=0,checked=0,records=0,flits=0,firstscore=-1,lastscore=-1,firsttx=-1,lasttx=-1,scanstart;
  always @(posedge clk)cycle<=cycle+1;
  always @(negedge clk)begin
   for(integer q=0;q<4;q=q+1)if(score_observe[q*610])begin
@@ -56,6 +56,8 @@ module tb_idx_parent_static;
   begin @(negedge clk);sel_op=4'(o);sel_addr=8'(a);sel_pass=2'(p);end
  endtask
  initial begin
+  if($value$plusargs("GAP=%d",guard_edges))begin end
+  if($value$plusargs("MUT=%d",mutation))begin end
   $readmemh("query.hex",x);$readmemh("weights.hex",weights);$readmemh("keylines.hex",keys);$readmemh("scores.hex",scores);$readmemh("gold.hex",gold);
   for(integer i=0;i<10928;i=i+1)seen[i]=0;
   repeat(4)@(negedge clk);rst_n=1;frame_start=1;sel_op=1;
@@ -71,13 +73,13 @@ module tb_idx_parent_static;
   for(integer b=0;b<2;b=b+1)wr[b*281+:281]={1'b1,1'b0,2'd0,10'd64,3'(b),weights[0][b*256+:256],8'hff};
   @(negedge clk);wr=0;repeat(8)@(negedge clk);
   weight_slot=1;@(negedge clk);weight_slot=0;repeat(16)@(negedge clk);
-  for(integer q=0;q<128;q=q+1)begin query_slot=1;query_index=7'(q);@(negedge clk);end
+  for(integer q=0;q<128;q=q+1)begin query_slot=1;query_index=7'((mutation==1&&q==63)?62:q);@(negedge clk);end
   query_slot=0;repeat(28)@(negedge clk);
   for(integer h=0;h<32;h=h+1)begin query_emit=1;query_emit_head=5'(h);@(negedge clk);end
-  query_emit=0;repeat(100)@(negedge clk);
+  query_emit=0;repeat(guard_edges)@(negedge clk);
   sel_op=3;@(negedge clk);sel_op=0;scanstart=cycle;
   for(integer t=0;t<294;t=t+1)begin
-   beat_v=t<171;beat_index=8'(t);if(t<171)key_lines=keys[t];
+   beat_v=t<171;beat_index=8'(t);if(t<171)begin key_lines=keys[t];if(mutation==2&&t==128)key_lines[11]=~key_lines[11];end
    sel_op=(t>=123)?2:0;sel_addr=8'(t-123);
    @(negedge clk);
   end
@@ -91,11 +93,11 @@ module tb_idx_parent_static;
    tick(0,0,p);
   end
   for(integer a=0;a<171;a=a+1)tick(6,a,2);
-  tick(0,0,2);tick(0,0,2);link_flush=1;tick(0,0,2);link_flush=0;
+  tick(0,0,2);tick(0,0,2);if(mutation!=3)tick(0,0,2);link_flush=1;tick(0,0,2);link_flush=0;
   for(integer a=0;a<16;a=a+1)begin link_emit=1;link_group=4'(a);tick(0,0,2);link_emit=0;repeat(7)tick(0,0,2);end
   repeat(4)tick(0,0,2);
   for(integer i=0;i<10928;i=i+1)if(gold[i]!==seen[i])errors++;
-  $display("IDX_PARENT_STATIC scores%0d records%0d flits%0d errors%0d fault%0d scoreedges%0d..%0d TXedges%0d..%0d",checked,records,flits,errors,fault,firstscore-scanstart,lastscore-scanstart,firsttx-scanstart,lasttx-scanstart);
+  $display("IDX_PARENT_STATIC gap%0d mutation%0d scores%0d records%0d flits%0d errors%0d fault%0d scoreedges%0d..%0d TXedges%0d..%0d",guard_edges,mutation,checked,records,flits,errors,fault,firstscore-scanstart,lastscore-scanstart,firsttx-scanstart,lasttx-scanstart);
   if(errors||fault||checked!=10928||records!=512||flits!=64)$fatal(1,"fullshape real static INDEX parent mismatch");$finish;
  end
 endmodule

@@ -1,0 +1,124 @@
+{
+  "schema": "opentallas.die_assigned_leaf_pins.v1",
+  "master": "qkd_llr_replay_leaf",
+  "contract": "Qwen KV/system v1.3 candidate",
+  "outline": {
+    "w": 216,
+    "h": 172.8
+  },
+  "pins": {
+    "W": [
+      "din",
+      "dout",
+      "we",
+      "wa",
+      "ra"
+    ],
+    "S": [
+      "ck"
+    ]
+  },
+  "pin_ranges": {
+    "din": [
+      8,
+      76
+    ],
+    "dout": [
+      84,
+      162
+    ],
+    "we": [
+      3,
+      4
+    ],
+    "wa": [
+      166,
+      167
+    ],
+    "ra": [
+      169,
+      170
+    ],
+    "ck": [
+      104,
+      106
+    ]
+  },
+  "port_widths": {
+    "din": 137,
+    "dout": 137,
+    "we": 1,
+    "wa": 6,
+    "ra": 6,
+    "ck": 1
+  },
+  "source": "KV/system die lead 2026-10-14: centrally placed split CRC/retry replay banks",
+  "placement": {
+    "banks": [
+      {
+        "bank": 0,
+        "xy": [
+          0,
+          0
+        ],
+        "orient": "MY"
+      },
+      {
+        "bank": 1,
+        "xy": [
+          0,
+          194.4
+        ],
+        "orient": "MY"
+      },
+      {
+        "bank": 2,
+        "xy": [
+          475.2,
+          0
+        ],
+        "orient": "R0"
+      },
+      {
+        "bank": 3,
+        "xy": [
+          475.2,
+          194.4
+        ],
+        "orient": "R0"
+      }
+    ],
+    "control_xy": [
+      237.6,
+      97.2
+    ],
+    "control_outline_um": [
+      216,
+      172.8
+    ],
+    "frame_outline_um": [
+      691.2,
+      367.2
+    ]
+  },
+  "qualification": "ASSIGNED_PINS_ONLY; mapped area, exact replay/CRC mutants, native pin/clock/reset and TT/FF/DRC are required",
+  "rationale": "One common W-face replay master mirrored for left pair; compact control-between-bank-columns topology avoids through-tile routing and long pin-to-flop output muxes.",
+  "face_layers": {
+    "W": "M4",
+    "E": "M4",
+    "N": "M5",
+    "S": "M5"
+  },
+  "implementation_note": "The flop-replay64-word mux measured about-900ps at dout. Replace with real64x512SRAM+registered output; fresh master/native gate, one TXmetadata edge measured, no oldview alias.",
+  "macro_request": {
+    "size_um": [
+      171.288,
+      77.784
+    ],
+    "xy": [
+      22,
+      43.2
+    ],
+    "halo_um": 5.4
+  }
+}

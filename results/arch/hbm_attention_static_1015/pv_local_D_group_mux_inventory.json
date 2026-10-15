@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.hbm_attn.pv_D_group_mux_inventory.v1",
+  "qualification": false,
+  "group_count": 4,
+  "leaf": "ot_hbm_attn_pv_group_mux",
+  "input_data_bits": 4096,
+  "input_flag_bits": 128,
+  "input_select_bits": 3,
+  "output_data_bits": 512,
+  "output_flag_bits": 16,
+  "clock_inputs": 0,
+  "FF": 0,
+  "added_pipeline_edges": 0,
+  "selected_tile": "4*block_select+group",
+  "canonical_VM_pair": "2*group,2*group+1",
+  "tile_leaf": "ot_hbm_attn_pv_serializer_local_tile",
+  "tile_leaf_count": 32,
+  "tile_macro_count": 64,
+  "whole_macro_count": 2048,
+  "global_clock_endpoints": 53,
+  "bankroot_endpoints": [
+    6688,
+    6688,
+    6688,
+    6688
+  ],
+  "remaining": [
+    "Exact standalone TT tile/groupmux area and mappedports",
+    "Qualified physical leaf pins/clocktree and route/stations",
+    "Current source fullshape/current7b2 proof after structural wrapper"
+  ]
+}

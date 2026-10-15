@@ -1,0 +1,119 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 10.5 pins/um (bank_data, bank_flags, output_v): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (kit OT_OFLOP_GAP=4.5)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "W face 10.5 pins/um (tile_data, tile_flags): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (kit OT_OFLOP_GAP=4.5)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "sources",
+   "message": "4 referenced file(s) do not exist: ['physical/common_flow/cg_pushdown.tcl', 'physical/common_flow/clk_net_protect.tcl', 'physical/common_flow/link_budget_consistent.sdc', 'physical/common_flow/link_budget_hook.tcl']",
+   "fix": "commit them / fix the path"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hbm_att_bank_gather_compact_1015_20261015-041541.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hbm_att_bank_gather_compact_1015_20261015-041541.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hbm_att_bank_gather_compact_1015-20261015-041541",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 21 s (gate total 240 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 971 um2 + macros 0 in core 30055: util 3%",
+   "fix": "set \"std_area_um2\": 971 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hbm_attn_pv_bank_gather_registered cells 4,547 flops 2,386 depth 156.7 ps util 0.0323 reach 21.6 um (0.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 3.2% outside 45%-65% (std 971 + macro 0 um2 in 30055 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 272.1..322.5 ps (spread 50.4), boundary mean 290.4; tt insertion all 212.2..261.9 ps (spread 49.7), boundary mean 230.5; ff insertion all 174.3..223.5 ps (spread 49.2), boundary mean 193.1; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hbm_att_bank_gather_compact_1015/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      293 paths, worst slack 137.2 ps (e.g. bank_data[112]$_DFFE_PP_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg         3 paths, worst slack 181.7 ps (e.g. select_q[4]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out        6 paths, worst slack 227.1 ps (e.g. bank_data[231])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 1.3720952152240784e-10 hold WNS 3.4594938025378497e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 2,386 sinks on the largest root <= 15,000; measured TT insertion 261.9 ps, leaf spread 49.7 ps",
+   "fix": ""
+  }
+ ]
+}

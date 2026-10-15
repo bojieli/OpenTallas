@@ -57,6 +57,7 @@ SLICE_WORDS = 1 << 16
 # (h_hc_sfu 1a291c29e); exp / sigmoid / SiLU / divider in the 32 SFU lanes are RTL depths, not yet benched at N512.
 # Exit-order (checkpoint) rule of the insertion lines: an issue may not leave the pipe before the issue before it.
 SFU_LANES_PER_Q, SIDE_FNS = 32, (2, 3, 6, 7)
+SW_ONLY_READERS = ('IDX',)                        # units whose VM face reads only SID 0 (SW)
 
 
 def depths(mlat=3, alat=3):
@@ -70,7 +71,7 @@ def depths(mlat=3, alat=3):
 DEPTHS = depths()
 
 
-def accesses(raw, rot=0):
+def accesses(raw, rot=0, pin0=False):
     """Per issue, per quarter: read words (with role) and elementwise-written words; reduction words."""
     dispatch, unit, sut, desc = decode(raw)
     ni, no = dispatch['n'][0], desc['A'].m
@@ -103,14 +104,23 @@ def accesses(raw, rot=0):
     # a LIGHT issue covers 512 positions (128 per quarter); an SFU/divider issue covers the 32 SFU lanes of each
     # quarter, i.e. sub-issue s of the same 512-position block takes positions 128q + 32s + j (same per-quarter VM
     # layout as the LIGHT records around it); a scalar-side issue is one position on global lane 0.
-    subs = 512 if side else 4 if cls == 'sfu' else 1
+    # pin0: the record's output is read by a unit that sees ONLY the SW slice (IDX, H-IDX 40e9f801e): the whole
+    # record runs on quarter 0 (SID 0 = SW), 128 positions (32 for SFU ops) per issue, so its output lands in SW.
+    if side:
+        subs = list(range(512))
+    else:
+        subs = [(a, c) for a in (range(4) if pin0 else [None]) for c in (range(4) if cls == 'sfu' else [None])]
     for outer, inner in positions:
-      for sub in range(subs):
+      for sub in subs:
         q_reads = [[] for _ in range(4)]
         q_writes = [[] for _ in range(4)]
         rows = set()
         for lane in range(512):
-            if (side and lane != sub) or (cls == 'sfu' and (lane % 128) // SFU_LANES_PER_Q != sub):
+            if side:
+                if lane != sub:
+                    continue
+            elif (sub[0] is not None and lane // 128 != sub[0]) or \
+                    (sub[1] is not None and (lane % 128) // SFU_LANES_PER_Q != sub[1]):
                 continue
             if ni <= 512:
                 o, i = outer + lane // slot, lane % slot
@@ -120,7 +130,7 @@ def accesses(raw, rot=0):
                 o, i = outer, inner + lane
                 if i >= ni:
                     continue
-            q = 0 if side else (lane // 128 + rot) % 4   # compiler-chosen executing quarter (rotation)
+            q = 0 if (side or pin0) else (lane // 128 + rot) % 4   # compiler-chosen executing quarter (rotation)
             plane = 0 if side else lane % SFU_LANES_PER_Q if cls == 'sfu' else lane % 128   # physical local lane
             rows.add(o)
             for name, md in roles.items():
@@ -146,7 +156,7 @@ def accesses(raw, rot=0):
         if not 0 <= w < 1 << 18:
             raise ValueError('tensor exceeds real 2^18-word store')
     return dict(unit=unit, ni=ni, no=no, slot=slot, red=bool(sut['red']), sut=sut, issues=issues, red_words=red, rot=rot,
-                cls=cls, lat=lat)
+                cls=cls, lat=lat, pin0=pin0)
 
 
 def canonical_trace(design, ds_program):
@@ -198,11 +208,18 @@ def compile_design(vectors, trace):
     cases = manifest['cases']
     # quarter rotation: each record runs on the quarters that already hold the words it reads (greedy, program
     # order); e.g. a 64-element rope tail of a 512-element norm output runs on quarter 3, where the norm wrote it.
+    # words read by a unit that sees only the SW slice (SID 0): IDX reads only SW (H-IDX, main 40e9f801e)
+    sw_only = set()
+    for n, (unit, _, _, _) in enumerate(trace):
+        if unit in SW_ONLY_READERS:
+            sw_only |= READS[n]
     recs, owner = [], {}
     for b in raw:
+        probe = accesses(b, 0)
+        pin0 = any(w in sw_only for iss in probe['issues'] for q in range(4) for w in iss['writes'][q])
         best = None
-        for rot in range(4):
-            cand = accesses(b, rot)
+        for rot in ([0] if pin0 else range(4)):
+            cand = accesses(b, rot, pin0)
             score = sum(1 for iss in cand['issues'] for q in range(4) for _, _, w in iss['reads'][q] if owner.get(w) == q)
             if best is None or score > best[0]:
                 best = (score, cand)
@@ -243,7 +260,12 @@ def compile_design(vectors, trace):
     home = {}
     for w in set(readq) | set(writeq) | redw:
         h = readq[w] | writeq[w]
+        if w in sw_only:
+            h = h | {0}                               # an SW-only external reader needs the SID 0 copy
         home[w] = sorted(h) if h else [0]            # a reduction result nobody in the SU reads: root slice 0
+    sw_conflict = sorted(w for w in sw_only & set(writeq) if 0 not in writeq[w] and w not in bcast_out)
+    if sw_conflict:
+        raise SystemExit(f'{len(sw_conflict)} SW-only words written outside quarter 0')
     # ---- per-slice packing in logical order, new sector at each logical run break
     phys = defaultdict(dict)                          # w -> {q: physical word in slice q}
     used = [0] * 4
@@ -419,7 +441,7 @@ def compile_design(vectors, trace):
         own = end - first
         inc = end - t_end if adjacent[k] else own
         t_end = max(t_end, end)
-        rows.append(dict(tag=cases[k]['tag'], priced=cases[k]['priced'], issues=len(r['issues']), lane_class=r['cls'],
+        rows.append(dict(tag=cases[k]['tag'], priced=cases[k]['priced'], issues=len(r['issues']), lane_class=r['cls'], pinned_sw=r['pin0'],
                          issue_to_local_store=r['lat'],
                          stage_sectors=nread, drain_sectors=nwrite, reused_words=reuse_words, elided_drain_words=elided,
                          adjacent_to_predecessor=adjacent[k], first_edge=first, end_edge=end, own_edges=own,

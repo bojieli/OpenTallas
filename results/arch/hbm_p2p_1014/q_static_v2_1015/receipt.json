@@ -1,0 +1,64 @@
+{
+  "scope": "native q2 V2 component operation through actual1536-bit issuer SRAM and16lane FP32 reducer; no full G96 claim",
+  "status": "PASS",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static_v2.sv": "d199ad158db31f6493c3b6e4f4b514390b7f389c5c0471b344fe3d44bcb5f37e",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv": "208ece87fe5d2beb545dcfa11ad50836a98d704bfc0b3afef06ddac940d4f5db",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv": "24a8a6253bf5d50ea8b238bda497487438f1c3702af3376573fd6066667879f7",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_seq.sv": "87af49ebf15625f6e58c912168512066428727c311f9b62bce86406afdf1ce7c",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv": "21a88e901f304638f66eaf743dfa4ef8555670db66bbe44ba2c489983b719c89",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_q_static_v2_reduce.sv": "335b7838047a6a5ee64ca16d825c5d5a03f80a94c1ba4cf6fdc1051895d224fb",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_v2_seqface.sv": "2bce800909c8b6d197c98df8c8f9cca49ee03a3c648a17a5f2e39b67d529e081",
+    "rtl/hbm_accel/generic/collective/p2p/static_uop_layout_v2.json": "9d64823c8ad0bd9214ed168a3956fce902aa266741e972eb492ebc22e622904c"
+  },
+  "q2_native_reduction": {
+    "operands": 2,
+    "lanes": 16,
+    "operation": "native FP32 add",
+    "publication_start_offset": 34,
+    "halt_start_offset": 38,
+    "mutants": [
+      "wrong qslots source",
+      "late add_issue"
+    ],
+    "unit": "oth-ubuntu-3713388-1792051257",
+    "host": "ot-agidock128",
+    "exit": 0
+  },
+  "q2_elaboration": {
+    "unit": "oth-ubuntu-3713387-1792051257",
+    "exit": 0,
+    "warnings": 0,
+    "allocated_MB": 377.988
+  },
+  "qslots_measured_roots": {
+    "ns10_nd15": {
+      "synthesized_register_bits": 13727,
+      "clock_root_limit": 15000,
+      "pass": true
+    },
+    "ns11_nd16": {
+      "synthesized_register_bits": 14824,
+      "clock_root_limit": 15000,
+      "pass": true
+    }
+  },
+  "sequence_face_test": {
+    "status": "PASS",
+    "full16_values": [
+      127,
+      65255
+    ],
+    "overflow": 65536,
+    "rule": "metadata registers one edge before reservation; overflow checked on reserved consumption"
+  },
+  "limitations": [
+    "q3 full current-source elaborate/runtime qualification remains open",
+    "ARG and BF16 separately proven components are instantiated but not exercised by this q2 FP32 parent test",
+    "declared SU input boundary; normative assembler is external and not qualified",
+    "clock counts do not prove CTS or timing",
+    "PHY package and full production programs unqualified"
+  ]
+}

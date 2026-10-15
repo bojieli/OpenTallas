@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "checked_parent_child_ports": [
+    "u_arg.start",
+    "u_arg.cfg_g",
+    "u_arg.cfg_gbase",
+    "u_arg.cfg_rank",
+    "u_arg.in_slot",
+    "u_arg.in_v",
+    "u_arg.in_flit",
+    "u_arg.flush_slot",
+    "u_arg.publish_slot",
+    "u_writer.rgx_v",
+    "u_writer.rgx_addr",
+    "u_writer.rgx_data",
+    "u_writer.rgx_vm",
+    "u_writer.ingress_slot",
+    "u_writer.slot_valid",
+    "u_writer.slot_owner",
+    "u_qslots.capture_slot",
+    "u_qslots.sink_slot",
+    "u_qslots.sink_select",
+    "u_control.inst",
+    "u_control.iteration",
+    "u_control.dest_v",
+    "u_control.vm_rr",
+    "u_control.rgx_addr_pin",
+    "u_control.vm_source_meta",
+    "u_control.vm_assembled",
+    "u_control.vm_assembled_v",
+    "u_issuer.cfg",
+    "u_issuer.uop",
+    "u_issuer.iteration"
+  ],
+  "selected_instances": [
+    "u_arg",
+    "u_writer",
+    "u_qslots",
+    "u_control",
+    "u_issuer"
+  ],
+  "excluded_subtrees": [
+    "TKM",
+    "reduction",
+    "ring",
+    "links"
+  ],
+  "scope": "selected native parent mechanism with checked connection expressions and ISA fields; not fullq3"
+}

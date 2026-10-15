@@ -13,6 +13,7 @@ run_target() {
   local defs=(); [ -z "$define" ] || defs+=("+define+$define")
   [ "${VM_READ_PIPE:-0}" = 0 ] || defs+=(+define+OT_VM_NATIVE_READ)
   [ "${VM_READ_PIPE:-0}" != 2 ] || defs+=(+define+OT_VM_NATIVE_READ_PINREG)
+  [ "${VM_READ_PIPE:-0}" != 4 ] || defs+=(+define+OT_VM_NATIVE_READ_L16)
   [ "${VM_CAP_PIPE:-0}" = 0 ] || defs+=(+define+OT_VM_NATIVE_CAP)
   "$V" --binary --timing -O1 -Wno-fatal -j 8 -MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0" --top-module tb_dsfd_sp_vm_static --Mdir "$O/obj_$name" -o tb "${defs[@]}" "${F[@]}" > "$O/build_$name.log" 2>&1 || { tail -30 "$O/build_$name.log"; return 2; }
   if [ "$name" = base ]; then

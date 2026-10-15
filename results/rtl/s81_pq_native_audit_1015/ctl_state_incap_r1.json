@@ -1,0 +1,57 @@
+{
+ "cell": "ot_s81_pq_ctl_state_phw10",
+ "view": "physical/ref_tile/s81_pq_ctl_state_incap/views/ot_s81_pq_ctl_state_phw10",
+ "lib_cell": "ot_s81_pq_ctl_state_phw10",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 194.6,
+ "spread_ps": 63.2,
+ "outputs": 729,
+ "inputs": 400,
+ "launch_ps": 263.9,
+ "launch_pin": "b_consume",
+ "capture_ps": 385.7,
+ "capture_pin": "calendar_v",
+ "launch_over": 3,
+ "capture_over": 28,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 263.9 > 220 (3 pins); capture 385.7 > 190 (28 pins)",
+ "failing_buses": {
+  "calendar_action": [
+   23,
+   343
+  ],
+  "calendar_v": [
+   1,
+   386
+  ],
+  "go": [
+   1,
+   362
+  ],
+  "rom_pq0": [
+   1,
+   191
+  ],
+  "rom_pq1": [
+   2,
+   212
+  ],
+  "b_consume": [
+   1,
+   264
+  ],
+  "idle": [
+   1,
+   253
+  ],
+  "q_consume": [
+   1,
+   236
+  ]
+ }
+}

@@ -1,0 +1,62 @@
+{
+  "source_commit": "5cacfb6f9",
+  "host_dependency_commit": "619da76cd",
+  "actual_unit": "oth-ubuntu-491005-1792051535",
+  "host": "ot-epyc1tb",
+  "status": "PASS actual host/CPloader/native target49/programme/query component",
+  "cold_boot_profiles": 4,
+  "native_read_group": 3,
+  "native_read_groups": 7,
+  "actual_query_heads": 32,
+  "actual_query_words": 16384,
+  "query_macros": 64,
+  "VM_macros": 24,
+  "programme_macros": 6,
+  "mutants_detected": [
+    "reserved outer instruction bit faults",
+    "wrong launch event profile fails independent event oracle",
+    "wrong actual NE read-owner fails independent query request/slot comparison"
+  ],
+  "source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_host_program_front.sv": "1332dd8b715ae4c01db908c68bdf2cbd5359052de853f4183008683c3be3c216",
+    "rtl/hdc/v41x/static/ot_hbm_attn_program_query_front.sv": "8a091daa9cd1965b2a052175a53c741ef315b5a0b93b7d89746dd91f81abd243",
+    "rtl/hdc/v41x/static/ot_hbm_attn_program_consumer.sv": "99535c9cc0c70fb3dfcedbb33fee802b9b2e841ab2797b07d97adb2dc9adaa45",
+    "rtl/hdc/v41x/static/ot_hbm_attn_event_program.sv": "68cfa747ef5d56c1799bb22b640e4110aee94cc99982f5023dc09860242415f3",
+    "rtl/hdc/v41x/static/ot_hbm_attn_query_prefetch.sv": "25c294bddb7940f57c7ff85667198aeec7759a63ab18402b9b90a900e59ab882",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_host_front.sv": "dba2ed8d9e11f19dd31ca23c7fe7e9b2f5b5f18b3f0e6c05239b9df27f256a98",
+    "tools/hbm_static_attention/run_host_front.sh": "d64bf70a3fa119e5d42539e4168d8bf3416b4e3637857f1a81793c745d1d4d08",
+    "tools/hbm_static_attention/prepare_front.py": "1b9a21cd3a312f9a95c752ceafe94516d6b0d8a19b35c24d4d84c111e8fbb7b2",
+    "tools/hbm_attention_static_calendar.py": "b16726cd60017b6edd6093cb9905a0c73b0489379eb0100b34844e0ea9292a22",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+    "rtl/hbm_accel/generic/loader/ot_hgi_loader_cp.sv": "b685e7bcf989682639044d1bccd9dce58b6aac5622eb322d677e4400285b8618",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_host_static.sv": "d64f4d37cede73a6fed44e59c7cd83b6cee8c21d6ea22d4828905f96c92a05c6",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv": "0c31136198128d00d69f24795e53c38764e790a5db4cad1ebd261ab0f2b67e3d",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197"
+  },
+  "remaining": [
+    "Actual fullH16 arithmetic/calendar proof currently compiling",
+    "Actualglobalv15NEclient/master source profile must match this source-qualifiedNC1/W147programme",
+    "RealPSrow/P producer and score/PV memory output drain/commit joins",
+    "Actual wholeprogramme CP lifecycle beyond these isolatedcoldboots",
+    "Physicalclockroots/pins/slots/cut/GRT/TTFF unqualified"
+  ],
+  "native_target_qualified": false,
+  "actual_NE_calendar": {
+    "module": "hfd_hgi_vm_calendar_NE",
+    "source_commit": "619da76cd",
+    "payload_bits": 147,
+    "NC": 1,
+    "read_groups": 7,
+    "read_group": 3,
+    "read_valid_lo": 25,
+    "read_owner_lo": 41,
+    "query_fixed_bank_slots": [
+      186,
+      313
+    ],
+    "instruction_initial_event_config": 182,
+    "VM_plane_from_real_LCP_edges": 6,
+    "engine_outer_plane_edges": 8,
+    "source_hash": "54e65855af142d95248e7d14df42fabdc404f9d1316446c0f21253c1829a4e70"
+  }
+}
