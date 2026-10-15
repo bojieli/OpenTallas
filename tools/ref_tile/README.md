@@ -281,3 +281,11 @@ remain in force. A false-path mutant is rejected because its required crossing
 has no timed path. The declaration expresses the leaf's required clock contract;
 production integration must prove that actual parent clock delivery supplies it.
 It is not a CDC waiver or evidence that the PLL/clock distribution is closed.
+
+Multi-root ownership classifies asynchronous clear/preset pins using OpenSTA's
+`all_registers -async_pins` on the actual loaded Liberty. OpenSTA also includes
+these controls in `-data_pins`; they are excluded only from the data-domain
+ownership walk and from synchronous crossing witnesses. Recovery/removal timing
+stays enabled. Names and `reset_ports` never exempt a real D path. The regression
+uses actual DFFASRHQN cells with a shared reset and rejects a mutant connecting
+that same reset port to the other domain's D input.
