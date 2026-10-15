@@ -1802,6 +1802,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     forwarded clock per relay hop; every other relay takes its source's region clock (stream) or domain clock.
     Not relayed: clock / reset trees, the tile tap and KV landing hops (<= 350 um by construction), CDC / HBM strip
     words (<= 350 um) and the DFI (417 um, HBM PHY interface timing, priced by the controller)."""
+    if os.environ.get('OT_RELAY_SKIP') == '1':     # smoke runs only (masters / pins / die.v without the relay plan)
+        m['r21_relays'] = dict(skipped=True)
+        return
     import bisect
     RMAX = max(RELAY_MAX_UM, pitch)   # a wire is relayed only when longer than the relay pitch
     pos = _pin_pos(v, m)
@@ -4136,6 +4139,8 @@ def _reset_tree(v, m):
     DEPTH per domain (bus name less the quadrant suffix): the slack of every tree edge is padded by a pad chain beside
     the child (RST_PAD cells of 10 cycles + plain repeaters), so every sink of a domain leaves reset in the same cycle.
     Power-on only: 0 cycles per token.  Raises on any reset net left over the reach."""
+    if os.environ.get('OT_RELAY_SKIP') == '1':
+        return
     import os as _os
     by = {i.name: i for i in m['insts']}
     pos = _pin_pos(v, m)
