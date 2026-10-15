@@ -1,0 +1,163 @@
+{
+ "name": "qfd_tt_scale_leaf_c108",
+ "top": "qfd_tt_scale_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_parent.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv",
+  "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+  "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv",
+  "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/qwen_sys/tt_tree_partition_20261015/ot_qwen_tt_core_spctl.sv",
+  "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_core_leaf.sv",
+  "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_tree_partition.sv",
+  "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_scale_leaf.sv",
+  "rtl/qwen_sys/tt_tree_partition_20261015/ot_qwen_tt_core_ctl.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 345.6,
+  "h": 216
+ },
+ "recipe": 2,
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "scale_addr",
+   "scale_gre",
+   "scale_re",
+   "clk"
+  ],
+  "S": [
+   "tag_payload",
+   "s3_v",
+   "rst_n"
+  ]
+ },
+ "io_tcl": "physical/qwen_tt_scale_clock108_1015/pins.tcl",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    32.4,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*u_pretag*g_b?0?*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    32.4,
+    129.6
+   ],
+   "orient": "R0",
+   "inst": "*u_pretag*g_b?1?*u_m"
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/common_flow/macro_channel_block.tcl",
+  "POST_RESIZE_TCL": "physical/common_flow/post_resize_relocate.tcl",
+  "OT_CHANNEL_BLOCK_UM": "20",
+  "OT_ROW_MIN_UM": "6"
+ },
+ "structural_change": "Actual functional CORE/SCALE partition of the failing 10622-FF/4-SRAM TT tree; separate clock roots, each owns two real SRAMs in a W column with >=20um corridors, existing registered 93-bit seam across21.6um candidate gap, all output stations retained, zero added data edges. Replaces t4 congestion3405 and insertion382/spread107.6; no inherited clock/native qualification. fs2 pinclock localization: fs1 measuredTTallmax455.2/spread82.8,boundaryR385/spread77.3,actualpostGPL2988FFcentroid(30.897,104.500); moveclkW190.032->W108,commonreW108->W118.08; all600otheroutputs/93seambits/homes/RTL/cycles unchanged. ActualmaxFFManhattan366.867->284.835um; no inheritedCTS/nativequalification.",
+ "slot_change_request": "Q-COMPUTE-DIE current-session topdown candidate: clockW108/commonreW118.08; allotherpins/homes/outline unchanged. physical/qwen_tt_scale_clock108_1015/pin_plan.json",
+ "job": {
+  "owner": "Codex:Q-COMPUTE-ELEM1417",
+  "branch": "codex/qwen-compute-elements-1417",
+  "tag": "fs2",
+  "hold_merge": true,
+  "purpose": "SCALE clock entry localized to actual post-GPL FF centroid; source/edges unchanged",
+  "benches": [
+   {
+    "name": "tt_split_m0_p1",
+    "cmd": "bash physical/qwen_tt_partition_1015/run_exact.sh 0 1 {RUN}/bench/tt_m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TT_SPLIT_PASS.*PROD=1"
+   },
+   {
+    "name": "tt_split_m1_p0",
+    "cmd": "bash physical/qwen_tt_partition_1015/run_exact.sh 1 0 {RUN}/bench/tt_m1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TT_SPLIT_FAIL.*valid_scale_errors=[1-9]"
+   },
+   {
+    "name": "tt_split_m2_p0",
+    "cmd": "bash physical/qwen_tt_partition_1015/run_exact.sh 2 0 {RUN}/bench/tt_m2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TT_SPLIT_FAIL.*valid_scale_errors=[1-9]"
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_sys/tt_tree_partition_20261015",
+   "physical/qwen_tt_scale_clock108_1015",
+   "physical/qwen_tt_partition_1015/run_exact.sh",
+   "tools/qwen_split/derive_tt_tree_partition.py"
+  ]
+ },
+ "children": [],
+ "inter": []
+}
