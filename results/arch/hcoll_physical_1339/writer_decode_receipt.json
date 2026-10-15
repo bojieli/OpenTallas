@@ -1,0 +1,44 @@
+{
+  "scope": "Source structural successor + exact behavior only; not a physical view, native gate or whole parent qualification",
+  "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+  "baseline_commit": "788ff16a329018897c03198be472f70ec0a71122",
+  "baseline_git_blob": "04f282fa567730f7c65167344ce793b23ec38cda",
+  "successor_sha256": "2527eaf792feaa56d85a72cefd4af6679118fc290215967f9526d477746410d0",
+  "change": "Eight constant destination bank slices replace variable wide scatter. No added registers, clocks, buffers or calendar edges. Illegal-bank OR behavior and schedule fault retained.",
+  "production_proof": {
+    "pass": "77 checks, 23 full-bank cycles, RGX4x512/TKW568, C+1/C+2 unchanged",
+    "mutants": "Data corruption and suppressed schedule fault both detected",
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1458702-1792096756",
+    "exit": 0
+  },
+  "equivalence": {
+    "reference": "Actual preceding writer RTL with only module name changed, pinned baseline Git blob",
+    "edges": 4096,
+    "shape": "RGX4x512/TKW568",
+    "asynchronous_resets": 241,
+    "invalid_slots": true,
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-1406872-1792096794",
+    "exit": 0
+  },
+  "generic_synthesis": {
+    "tool": "yosys0.68 proc/opt only",
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-2152770-1792096832",
+    "baseline": {
+      "shift_cells": 29,
+      "shift_output_bits": 42792,
+      "shiftx_cells": 40,
+      "shiftx_output_bits": 2870,
+      "total_cells": 324
+    },
+    "successor": {
+      "shift_cells": 0,
+      "shiftx_cells": 0,
+      "total_cells": 873
+    },
+    "limitation": "Generic cell counts mix widths and do not measure mapped area, delay, congestion or native boundary timing."
+  },
+  "open": "Same real canonical writer outline/pins need new mapped gate and physical/native launch/capture proof; prior CTS 21-level data path and 11-level slot_owner fault path are not qualified by behavioral PASS. No clock or timing gate waived."
+}
