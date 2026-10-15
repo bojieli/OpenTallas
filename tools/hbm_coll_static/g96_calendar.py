@@ -11,7 +11,7 @@ G=96;SUB=8;N=1024;QUADS=4;LANES=16;TAGS=16;F=613;W=487;PRICE=1325.9
 class CalendarError(ValueError):pass
 
 class Resources:
-    def __init__(self):self.events={};self.tags={};self.replay={};self.edges=[];self.txlog=None
+    def __init__(self,defer_replay=False):self.defer_replay=defer_replay;self.events={};self.tags={};self.replay={};self.edges=[];self.qroutes=[];self.loads=[];self.pubs=[];self.txlog=None
     def reserve(self,unit,cycle,identity):
         k=(str(unit),int(cycle))
         if k in self.events and self.events[k]==identity:return
@@ -24,6 +24,7 @@ class Resources:
         if k in self.tags:raise CalendarError(f'occupied tag {k}')
         self.tags[k]={'ready':cycle+1,'identity':identity,'pending':False}
         self.reserve(f'{owner}.reduce.input',cycle,('load',tag,identity))
+        self.loads.append({'owner':owner,'tag':tag,'cycle':cycle,'rank':identity})
     def tag_add(self,owner,tag,cycle,left,right):
         k=(owner,tag);s=self.tags.get(k)
         if s is None or s['ready']>cycle or s['pending'] or s['identity']!=left:raise CalendarError(f'bad exact left operand {k} at{cycle}')
@@ -43,10 +44,12 @@ class Resources:
         self.reserve(f'{owner}.reduce.pubissue',cycle+1,(tags,bf16,identity))
         if release:
             for t in tags:del self.tags[(owner,t)]
+        self.pubs.append({'owner':owner,'tags':tags,'read':cycle,'issue':cycle+1,'bf16':bf16,'identity':identity,'release':release})
         return cycle+1
     def qroute(self,owner,source,sink,capture,identity):
         self.reserve(f'{owner}.qsrc{source}',capture,identity)
         self.reserve(f'{owner}.qsink{sink}',capture+1,identity)
+        self.qroutes.append({'owner':owner,'source':source,'sink':sink,'capture':capture,'identity':identity})
         return capture+3 # registered output capture+2, child samples+3
     def replay_use(self,link,sequence,write,read):
         if not 0<=sequence<65536:raise CalendarError('logical sequence wrap')
@@ -54,7 +57,7 @@ class Resources:
         k=(link,sequence%64);old=self.replay.get(k)
         # Native ownership includes v2/v3/v4 plus captured write metadata.
         # Reuse after old read+4, independent of physical flight.
-        if old and write<old['read']+4:raise CalendarError(f'replay64 lifetime conflict {k}')
+        if not self.defer_replay and old and write<old['read']+4:raise CalendarError(f'replay64 lifetime conflict {k}')
         if self.txlog is not None:self.txlog.append(('replay',k,old))
         self.replay[k]={'sequence':sequence,'write':write,'read':read}
         self.reserve(f'{link}.wr',write,sequence);self.reserve(f'{link}.rd',read,sequence)
@@ -66,15 +69,24 @@ class Resources:
 
 class Gearbox:
     """Unconditional 613/487 slots including idles. Input valid never schedules."""
-    def __init__(self,start=17,tx_edges=3,word_flight=3):
-        self.start=start;self.tx_edges=tx_edges;self.word_flight=word_flight;self.used={};self.next_seq=0
+    def __init__(self,start=17,tx_edges=3,word_flight=3,insert_holes=False):
+        self.insert_holes=insert_holes;self.start=start;self.tx_edges=tx_edges;self.word_flight=word_flight;self.used={};self.next_seq=0
     def accept(self,j):return self.start+(F*j)//W
     def recover_index(self,j):return (F*(j+1)+W-1)//W-1
-    def reserve_after(self,earliest,identity):
+    def reserve_after(self,earliest,identity,write=None):
         j=max(0,((earliest-self.start)*W)//F-1)
-        if self.used:j=max(j,max(self.used)+1)
+        ceiling=None
+        if self.used:
+            if not self.insert_holes:j=max(j,max(self.used)+1)
+            else:
+                # Both native write and read counters must see the same order.
+                before=[k for k,v in self.used.items() if v[2]<=write]
+                after=[k for k,v in self.used.items() if v[2]>write]
+                if before:j=max(j,max(before)+1)
+                if after:ceiling=min(after)
         while self.accept(j)<earliest or j in self.used:j+=1
-        self.used[j]=(self.next_seq,identity);self.next_seq+=1
+        if ceiling is not None and j>=ceiling:raise CalendarError('no chronological gearbox hole')
+        self.used[j]=(self.next_seq,identity,write);self.next_seq+=1
         if self.next_seq>65536:raise CalendarError('endpoint sequence overflow')
         return j,self.accept(j),self.start+7+self.recover_index(j),self.next_seq-1
     def trace(self):
@@ -110,8 +122,8 @@ def verify_routes(v):
     if not v.get('source_binding'):raise CalendarError('route graph requires authoritative source binding')
     return by
 
-def compile_candidate(routes,tx_edges):
-    by=verify_routes(routes);r=Resources();gb={};links_by_source=collections.defaultdict(list)
+def compile_candidate(routes,tx_edges,bidirectional=False,insert_holes=False):
+    by=verify_routes(routes);r=Resources(defer_replay=insert_holes);gb={};links_by_source=collections.defaultdict(list)
     for (a,b,q),x in by.items():links_by_source[(a,q)].append((b,x))
     def route(src,dst,q):
         todo=collections.deque([(src,[]) ]);seen={src}
@@ -121,20 +133,23 @@ def compile_candidate(routes,tx_edges):
             for nxt,x in links_by_source[(node,q)]:
                 if nxt not in seen:seen.add(nxt);todo.append((nxt,path+[x]))
         raise CalendarError(f'no physical route {src}->{dst} quadrant{q}')
-    def transmit(path,earliest,identity,final_sink=None,deliver_each=False):
+    def transmit(path,earliest,identity,final_sink=None,deliver_each=False,deliver_local=False):
         # Planning is transactional. Re-plan the source start if a future
         # resource is occupied; this is compiler search, never runtime delay.
         nonlocal r,gb
         for delay in range(200000):
-            r.txlog=[];oldedges=len(r.edges);gbundo=[];capture=earliest+delay;first=capture
+            r.txlog=[];oldedges=len(r.edges);oldroutes=len(r.qroutes);gbundo=[];capture=earliest+delay;first=capture
             try:
+                if deliver_local:
+                    x=path[0];q=x['quadrant'];npt=3 if q==0 else 2
+                    r.qroute(f'd{x["src"]}q{q}',npt+6,npt,capture,identity['id'])
                 for h,x in enumerate(path):
                     a,b,q,rail=x['src'],x['dst'],x['quadrant'],x['rail'];owner=f'd{a}q{q}';key=f'd{a}q{q}r{rail}'
                     source=identity['source'] if h==0 else 2+path[h-1].get('dst_rail',path[h-1]['rail'])
                     if h==0 and source=='reduce':source=9 if q==0 else 8
                     write=r.qroute(owner,source,rail,capture,identity['id'])
-                    box=gb.setdefault(key,Gearbox(tx_edges=tx_edges))
-                    j,accept,receive,sequence=box.reserve_after(write+5+tx_edges,identity['id'])
+                    box=gb.setdefault(key,Gearbox(tx_edges=tx_edges,insert_holes=insert_holes))
+                    j,accept,receive,sequence=box.reserve_after(write+5+tx_edges,identity['id'],write)
                     gbundo.append((box,j))
                     read=accept-1-tx_edges
                     r.replay_use(key,sequence,write,read)
@@ -159,7 +174,7 @@ def compile_candidate(routes,tx_edges):
                     elif entry[2] is None:r.replay.pop(entry[1],None)
                     else:r.replay[entry[1]]=entry[2]
                 for box,j in reversed(gbundo):del box.used[j];box.next_seq-=1
-                del r.edges[oldedges:];r.txlog=None
+                del r.edges[oldedges:];del r.qroutes[oldroutes:];r.txlog=None
                 continue
         raise CalendarError('candidate compiler search exhausted; no resource-safe fixed schedule')
     # All96*4 quarter reducers load exactly16 native FP32 tags. Declared SU
@@ -194,31 +209,107 @@ def compile_candidate(routes,tx_edges):
             owner=f'd{source}q{q}';walk=routes.get('multicast_walks',{}).get(str(q))
             if walk is None or len(walk)!=96 or set(walk)!=set(range(96)):raise CalendarError('missing actual96rank multicast walk')
             start=walk.index(source);ordered=walk[start:]+walk[:start]
-            path=[]
-            for a,b in zip(ordered,ordered[1:]):
-                if (a,b,q) not in by:raise CalendarError('multicast requires missing physical edge')
-                path.append(by[(a,b,q)])
+            branches=[ordered]
+            if bidirectional:
+                branches=[ordered[:49],[source]+list(reversed(ordered[49:]))]
             for pair in range(8):
-                a,b=pair*2,pair*2+1;ready=max(r.tags[(owner,a)]['ready'],r.tags[(owner,b)]['ready'])
-                ident={'id':f'bf16.g{group}.q{q}.pair{pair}','source':'reduce'}
-                first,finish=transmit(path,ready+2,ident,deliver_each=True)
-                r.publish(owner,a,b,first-2,True,ident['id'])
-                r.qroute(owner,9 if q==0 else 8,(3 if q==0 else 2),first,ident['id'])
-                last_delivery=max(last_delivery,finish+2)
-                broadcasts.append({'group':group,'q':q,'pair':pair,'pub_read':first-2,'pub_issue':first-1,'local_capture':first,'last_delivery':finish+2,'rank_order':ordered})
+                ta,tb=pair*2,pair*2+1;ready=max(r.tags[(owner,ta)]['ready'],r.tags[(owner,tb)]['ready'])
+                for branch,walk in enumerate(branches):
+                    path=[]
+                    for src,dst in zip(walk,walk[1:]):
+                        if (src,dst,q) not in by:raise CalendarError('multicast requires missing physical edge')
+                        path.append(by[(src,dst,q)])
+                    ident={'id':f'bf16.g{group}.q{q}.pair{pair}.branch{branch}','source':'reduce'}
+                    first,finish=transmit(path,ready+2,ident,deliver_each=True,deliver_local=branch==0)
+                    r.publish(owner,ta,tb,first-2,True,ident['id'],release=branch==len(branches)-1)
+                    ready=first # second copy publication read cannot sharefirstcopy port
+                    last_delivery=max(last_delivery,finish+2)
+                    broadcasts.append({'group':group,'q':q,'pair':pair,'branch':branch,'pub_read':first-2,'pub_issue':first-1,'local_capture':first,'last_delivery':finish+2,'rank_order':walk})
     if r.tags:raise CalendarError('live accumulator tags after final publication')
     # Native tree identity must exactly match the normative rank-order pairwise tree.
     for a in arithmetic:
         if a['level']==2 and a['tree']!=exact_tree(list(range(a['group']*8,a['group']*8+8))):raise CalendarError('reassociated reduction tree')
+    if insert_holes:
+        by_endpoint=collections.defaultdict(list)
+        for e in r.edges:by_endpoint[f'd{e["src"]}q{e["q"]}r{e["rail"]}'].append(e)
+        for key,edges in by_endpoint.items():
+            ordered=sorted(edges,key=lambda e:e['read'])
+            if [e['write'] for e in ordered]!=sorted(e['write'] for e in edges):raise CalendarError('native write/read sequence order differs')
+            ownership={}
+            for seq,e in enumerate(ordered):
+                if seq>=65536:raise CalendarError('native sequence overflow')
+                slot=seq%64
+                if slot in ownership and e['write']<ownership[slot]+4:raise CalendarError('post-lowering replay64 lifetime conflict')
+                ownership[slot]=e['read'];e['seq']=seq;e['slot']=slot
+                old=gb[key].used[e['gearbox_ordinal']]
+                gb[key].used[e['gearbox_ordinal']]=(seq,old[1],old[2])
     trace={k:v.trace() for k,v in gb.items()}
     return {'status':'CANDIDATE_STATIC_CALENDAR_RESOURCE_PASS; not actual RTL/physical qualification',
             'cycles':last_delivery,'immutable_price_cycles':PRICE,'ratio':last_delivery/PRICE,
             'within_110percent':last_delivery<=PRICE*1.1,'arithmetic':arithmetic,'broadcasts':broadcasts,
-            'transport_hops':r.edges,'endpoint_slots':trace,'reserved_resources':len(r.events),
+            'transport_hops':r.edges,'endpoint_slots':trace,'qroutes':r.qroutes,'loads':r.loads,'publications':r.pubs,'reserved_resources':len(r.events),
             'tag_lifetimes':'all16tags perquarter loaded once; each rightsubtree publication releasesits tag; leftsubtree exactorder retained through nativeLAT8; final BF16 releasealltags',
             'program_fit':'Expanded1536 microop lowering and64row counted-loop compression pending; endpointperiod613 may exceed primitive64rowmemory without additional sequencer encoding',
             'ring':'no wide vector on256bit peer ring; routing stays within perquadrant physical vector rails. Ring/read/tag primitives independently checked, no ring operations silently substituted',
             'native_SU':'not claimed; declared input boundary at fixed12edge only'}
+
+def lower_expanded(full,layout):
+    import re
+    fields=layout['fields'];arfields=layout['ar_fields'];words=collections.defaultdict(dict)
+    def emit(owner,cycle,name,value,shift=0,width=None):
+        if cycle<0:raise CalendarError('negative instruction edge')
+        f=fields[name];lsb=f['lsb']+shift;w=width or f['width']
+        if not 0<=value<1<<w:raise CalendarError(f'field overflow {name}')
+        mask=((1<<w)-1)<<lsb;old=words[owner].get(cycle,0)
+        # Multiple disjoint fields compose the actual lowered V2 word.
+        have=old&mask
+        if have and have!=(value<<lsb):raise CalendarError(f'instruction conflict {owner} {cycle} {name}')
+        words[owner][cycle]=(old&~mask)|(value<<lsb)
+    def orfield(owner,cycle,name,value):
+        f=fields[name]
+        if not 0<=value<1<<f['width']:raise CalendarError('OR field overflow')
+        words[owner][cycle]=words[owner].get(cycle,0)|(value<<f['lsb'])
+    def ar(owner,cycle,values):
+        bits=sum(v<<arfields[k]['lsb'] for k,v in values.items())
+        orfield(owner,cycle,'ar_low',bits&((1<<31)-1));orfield(owner,cycle,'ar_high',bits>>31)
+    for x in full['qroutes']:
+        owner,c,source,sink=x['owner'],x['capture'],x['source'],x['sink']
+        if source<10:orfield(owner,c,'capture_slot',1<<source)
+        else:raise CalendarError('unexpected ARG source in group reduce')
+        orfield(owner,c+1,'sink_slot',1<<sink)
+        emit(owner,c+1,'sink_select',source,sink*4,4)
+    for x in full['loads']:
+        owner,c,t=x['owner'],x['cycle'],x['tag'];q=int(owner.split('q')[1]);rank=x['rank']
+        ar(owner,c,{'load_v':1,'load_tag':t})
+        req=c-15;orfield(owner,req,'inj_rd',1)
+        emit(owner,req,'inj_idx',q*16+t,0,16)
+        emit(owner,req,'inj_meta',(1<<32)|(255<<24)|(rank<<16)|(q*16+t),0,33)
+    for x in full['arithmetic']:
+        owner=f'd{x["rank"]}q{x["q"]}'
+        ar(owner,x['read'],{'add_read':1,'read_tag':x['tag']});ar(owner,x['issue'],{'add_issue':1})
+    for x in full['publications']:
+        tags=x['tags'];ident=x['identity'];match=re.search(r'g(\d+).*q(\d+).*pair(\d+)',ident)
+        group,q,pair=map(int,match.groups()) if match else (0,0,0)
+        source=group if x['bf16'] else int(x['owner'].split('q')[0][1:])
+        index=group*32+q*8+pair if x['bf16'] else tags[0]
+        ar(x['owner'],x['read'],{'pub_read':1,'pub_tag_a':tags[0],'pub_tag_b':tags[-1],
+             'pub_bf16':int(x['bf16']),'pub_release':int(x['release']),'pub_src':source,'pub_index':index})
+        ar(x['owner'],x['issue'],{'pub_issue':1})
+    for x in full['transport_hops']:
+        owner=f'd{x["src"]}q{x["q"]}';dst=f'd{x["dst"]}q{x["q"]}';rail=x['rail'];dr=x['dst_rail'];seq=x['seq']
+        for key,cycle in [('wr',x['write']),('rd',x['read'])]:
+            orfield(owner,cycle,'lk_'+key+'_v',1<<rail)
+            emit(owner,cycle-1,'lk_'+key+'_slot',seq&63,rail*6,6)
+            emit(owner,cycle-1,'lk_'+key+'_seq_high',seq>>6,rail*10,10)
+        orfield(dst,x['receive']-1,'lk_rx_expect',1<<dr)
+        emit(dst,x['receive']-2,'lk_rx_slot',seq&63,dr*6,6)
+        emit(dst,x['receive']-2,'lk_rx_seq_high',seq>>6,dr*10,10)
+    summary={}
+    for owner,code in words.items():
+        q=int(owner.split('q')[1]);emit(owner,0,'lk_epoch_begin',3);emit(owner,0,'lk_epoch',0x35)
+        unique=len(set(code.values())|{0})
+        summary[owner]={'active_words':len(code),'distinct_expanded_words':unique,'fits64rows_as_direct_words':len(code)<=64,'counted_affine_compression':'UNVERIFIED'}
+    return words,summary
 
 def candidate_rings():
     links=[]
@@ -229,17 +320,20 @@ def candidate_rings():
                 local=rank//4==dst//4
                 links.append({'src':rank,'dst':dst,'quadrant':q,'rail':rail,'dst_rail':dst_rail,
                               'scope':'same_package' if local else 'cross_package',
-                              'physical_binding':'UNBOUND_CANDIDATE','word_bits_per_coreedge':487,
+                              'physical_binding':'UNBOUND_CANDIDATE','source_port':[['lk_S0','lk_S1'],['lk_S3','lk_S4'],['lk_N0','lk_N1'],['lk_N2','lk_N3']][q][rail],
+                              'destination_port':[['lk_S0','lk_S1'],['lk_S3','lk_S4'],['lk_N0','lk_N1'],['lk_N2','lk_N3']][q][dst_rail],
+                              'word_bits_per_coreedge':487,
                               'full_FEC':'required for cross-package; unimplemented in present transport'})
     return {'schema':'hcoll.g96.candidate.routegraph.v1',
             'source_binding':'Owner/root authorized candidate allocation; actual96rank rail types and4die local map are absent. This is not an existing physical map.',
             'placement':'24 candidate packages of4 contiguous ranks',
             'links':links,'multicast_walks':{str(q):list(range(96)) for q in range(4)},
-            'unused_actual_rails':[{'rank':d,'quadrant':0,'rail':2} for d in range(96)],
+            'unused_actual_rails':[{'rank':d,'quadrant':0,'rail':2,'port':'lk_S2'} for d in range(96)],
             'unbound_resources':{'directed_endpoint_bindings':768,'same_package_directed_edges':576,'cross_package_directed_edges':192,
                                  'cross_package_full_duplex_links':96,'cross_package_links_per_boundary_die':4,
                                  'cross_package_boundary_dies':48,'full_FEC_required_cross_package_links':96,
                                  'clock_domain_and_physical_age':'unbound; candidate wordflight3 only, FEC latency not guessed'},
+            'actual_port_inventory_source':'359252cc2:tools/hbm_accel_die_fp.py lines4043-4080; 5 S-edge +4 N-edge SerDes; lk_host separate',
             'status':'CANDIDATE_ALLOCATION_ONLY; package/local-vs-board types and fullFEC physical ports unbound'}
 
 def selftest():
@@ -271,7 +365,7 @@ def selftest():
     return failures
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('out',type=pathlib.Path);p.add_argument('--routes',type=pathlib.Path);p.add_argument('--candidate-rings',action='store_true');p.add_argument('--tx-edges',type=int,choices=(3,5),default=5);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('out',type=pathlib.Path);p.add_argument('--routes',type=pathlib.Path);p.add_argument('--candidate-rings',action='store_true');p.add_argument('--layout',type=pathlib.Path);p.add_argument('--bidirectional',action='store_true');p.add_argument('--insert-holes',action='store_true');p.add_argument('--tx-edges',type=int,choices=(3,5),default=5);a=p.parse_args()
     a.out.mkdir(parents=True,exist_ok=True);checks=selftest()
     m={'schema':'hcoll.g96.native.calendar.v1','operation':operation(),'primitive_mutants_rejected':checks,
        'sources':{'V2_parent':'cc6d946ad (originala84885466)','transport':'359252cc2','reducer':'bd81c1706','golden':'tools/hgi_sim/machine.py:u_coll_group_reduce_mcast; tools/hgi_sim/lib.py:pairwise'},
@@ -282,7 +376,14 @@ def main():
         routes=candidate_rings() if a.candidate_rings else json.loads(a.routes.read_text())
         (a.out/'candidate_routes.json').write_text(json.dumps(routes,indent=2)+'\n')
         by=verify_routes(routes);m['verified_physical_directed_links']=len(by)
-        full=compile_candidate(routes,a.tx_edges)
+        full=compile_candidate(routes,a.tx_edges,a.bidirectional,a.insert_holes)
+        full['multicast_policy']='two native publications to two disjoint48/47hop branches' if a.bidirectional else 'one native publication to95hop branch'
+        if a.layout:
+            words,summary=lower_expanded(full,json.loads(a.layout.read_text()))
+            with (a.out/'expanded_uops.jsonl').open('w') as f:
+                for owner,code in sorted(words.items()):
+                    for c,w in sorted(code.items()):f.write(json.dumps({'owner':owner,'cycle':c,'word':f'{w:0384x}'})+'\n')
+            full['expanded_program_summary']=summary
         (a.out/'calendar.json').write_text(json.dumps(full,indent=2)+'\n')
         m['status']=full['status'];m['price_ratio']=full['ratio'];m['cycles']=full['cycles']
     (a.out/'model.json').write_text(json.dumps(m,indent=2)+'\n')
