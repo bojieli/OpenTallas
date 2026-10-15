@@ -105,9 +105,22 @@ def cmd_golden(a):
             if e["fn"] not in ("linear_q", "linear_bf16", "mv"):
                 continue
             n = names.get(id(e["args"][0]))
+            x = e["args"][1]
+            if n is None and e["fn"] == "mv" and m.ratio[L] > 1 and L in m.kv_src:
+                # a ratio-2 compressor issues ONE mv on concat(wkv, wgate) (FP32 out): split it per tensor
+                w = np.asarray(e["args"][0])
+                wk, wg = (np.asarray(m.lw(L, f"attn.compressor.{t}.weight")) for t in ("wkv", "wgate"))
+                if w.shape[0] == wk.shape[0] + wg.shape[0] and np.array_equal(w[:len(wk)], wk) \
+                        and np.array_equal(w[len(wk):], wg):
+                    o = np.asarray(e["out"], F)
+                    for t, part in (("wkv", o[:len(wk)]), ("wgate", o[len(wk):])):
+                        key = f"layers.{L}.attn.compressor.{t}.weight|mv_concat"
+                        if key not in seen:
+                            seen[key] = 1
+                            rec[key + "|x"], rec[key + "|out"] = bits(x), bits(part)
+                continue
             if n is None:
                 continue
-            x = e["args"][1]
             assert not isinstance(x, V.Folded), (L, n)
             key = f"{n}|{e['fn']}"
             xb, ob = bits(x), bits(e["out"])
@@ -139,7 +152,7 @@ def _xkey(cap, tensor, alias, rows0):
     """The captured key of the x a mat consumes (and its golden out), for tensor `tensor` (with '.weight')."""
     if ".attn.wo_a." in tensor:
         return f"{tensor}#g{rows0 // O_RANK}|matvec_c", rows0 // O_RANK * O_RANK
-    for fn in ("mv", "linear_q", "linear_bf16"):         # mv first: the FP32 out of a BF16 linear
+    for fn in ("mv", "mv_concat", "linear_q", "linear_bf16"):         # mv first: the FP32 out of a BF16 linear
         if f"{tensor}|{fn}|x" in cap.files:
             return f"{tensor}|{fn}", 0
     raise KeyError(f"{tensor} ({alias}) not captured")
