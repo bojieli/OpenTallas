@@ -103,7 +103,7 @@ def qwen_static_segment_calendar_model():
         segments=3,PW_first=961,PW_last=975,configuration_bits=3*4*64,
         existing_transmit_buffer_bits=4*512,MACs_per_cycle=0,
         max_VM_read_bits_per_cycle=512,max_VM_write_bits_per_cycle=512,
-        command_bits=32,real_descriptor_bits=64,added_memory_macros=0,
+        command_bits=32,SU_source_observer_bits=16,SU_source_observer_edges=1,real_descriptor_bits=64,added_memory_macros=0,
         clock_roots_added=0,configuration_port_bytes_per_cycle=8,
         fixed_events='core start/end, VM reads, payload TX, return RX, stage stop from compiled cycles',
         integrity='actual core done/descriptor/VM valid/collective valid check only; no runtime timeline stretching',
