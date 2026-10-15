@@ -23,7 +23,7 @@ bad=0
 "$O/obj_base/tb" +mode=0 +seed=1 +reads=$READS > "$O/base_s1.log" 2>&1
 "$O/obj_base/tb" +mode=0 +seed=2 +reads=$READS > "$O/base_s2.log" 2>&1
 for s in 1 2; do grep -q "TB_VMCORE PASS mode 0" "$O/base_s$s.log" || { echo "GATE FAIL base seed $s"; bad=1; }; done
-for m in 1 2 3 4 5 6; do "$O/obj_base/tb" +mode=$m > "$O/fault_m$m.log" 2>&1; grep -q "TB_VMCORE PASS mode $m" "$O/fault_m$m.log" || { echo "GATE FAIL fault witness $m"; bad=1; }; done
+for m in 1 2 3 4 5 6; do "$O/obj_base/tb" +mode=$m > "$O/fault_m$m.log" 2>&1; { grep -q "TB_VMCORE PASS mode $m" "$O/fault_m$m.log" && ! grep -q "TB_VMCORE FAIL mode $m" "$O/fault_m$m.log"; } || { echo "GATE FAIL fault witness $m"; bad=1; }; done
 for M in mlane mdrain mslot mstride mmix; do
   "$O/obj_$M/tb" +mode=0 +seed=1 +reads=$READS > "$O/$M.log" 2>&1
   grep -q "TB_VMCORE FAIL mode 0" "$O/$M.log" || { echo "GATE FAIL mutant $M escaped"; bad=1; }
