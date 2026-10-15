@@ -2607,7 +2607,26 @@ def case(m, work):
         F.masters, F.port_widths = saved
     _case_ties(m, work / 'die.v')
     run = (work / 'run.tcl').read_text()
-    (work / 'run_pdn.tcl').write_text((work / 'run_pa.tcl').read_text())
+    # KV uses the base generator's run_pa vehicle, independently of the
+    # compute-die run_pdn generator. Preserve its real PG/pin checks and enable
+    # the same temporary conservative OBS mechanism around pdngen only.
+    pdn_run = (work / 'run_pa.tcl').read_text()
+    guarded = """set ot_bbox 0
+if {[info exists ::env(OT_PDN_BBOX_OBS)] && $::env(OT_PDN_BBOX_OBS) eq "1"} {
+  source /work/pdn_bbox_obs.tcl
+  ot_pdn_bbox::begin /work
+  set ot_bbox 1
+}
+try {source /work/pdn.tcl; pdngen} finally {
+  if {$ot_bbox} {ot_pdn_bbox::restore}
+}
+source /work/die_constant_pg_check.tcl"""
+    original = 'source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl'
+    if pdn_run.count(original) != 1:
+        raise ValueError('KV PDN vehicle changed: guarded PDN hook unresolved')
+    (work / 'run_pdn.tcl').write_text(pdn_run.replace(original, guarded))
+    for helper in ('pdn_bbox_obs.py', 'pdn_bbox_obs.tcl'):
+        (work / helper).write_text((ROOT / 'tools/qwen_kv_die/chain' / helper).read_text())
     # the HBM PHY macros' own M4 power rails (the KV die's four PHY bands): a macro grid that straps them to M8 / M9,
     # so the PG check sees them connected (die_kv2..4: 1,000 PSM-0038 unconnected M4 shapes over x 20.8 - 853.3 um).
     # qwen-1010/b 2026-10-10: M4 and M8 are both horizontal, so an M4 -> M8 connect only forms where a strap happens to
