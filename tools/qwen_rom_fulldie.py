@@ -1357,7 +1357,8 @@ puts "OT_TIME pa_s=[expr {{[clock seconds]-$t0}}]"
 mem pa
 write_db /work/floorplan.odb
 """
-    (work / 'die_constant_cells.tcl').write_text((ROOT / 'physical/common_flow/die_constant_cells.tcl').read_text())
+    for helper in ('die_constant_cells.tcl', 'die_constant_pg_check.tcl'):
+        (work / helper).write_text((ROOT / 'physical/common_flow' / helper).read_text())
     (work / 'run.tcl').write_text(tcl)
     (work / 'run_pa.tcl').write_text(f"""# case (a) follow-on: pin access and die PDN on the placed floorplan
 proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
@@ -1370,7 +1371,7 @@ if {{[catch {{pin_access -verbose 1}} err]}} {{ puts "OT_PA FAIL $err"; error $e
 puts "OT_TIME pa_s=[expr {{[clock seconds]-$t0}}]"
 mem pa
 set t0 [clock seconds]
-if {{[catch {{source /work/pdn.tcl; pdngen}} err]}} {{ puts "OT_PDN FAIL $err"; error $err }} else {{
+if {{[catch {{source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl}} err]}} {{ puts "OT_PDN FAIL $err"; error $err }} else {{
   set nsw 0; foreach net [[ord::get_db_block] getNets] {{ foreach sw [$net getSWires] {{ incr nsw [llength [$sw getWires]] }} }}
   puts "OT_PDN PASS special_shapes=$nsw" }}
 puts "OT_TIME pdn_s=[expr {{[clock seconds]-$t0}}]"

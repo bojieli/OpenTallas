@@ -72,7 +72,7 @@ if {[catch {pin_access -verbose 1} err]} {puts "OT_PA FAIL $err"RAISE} else {put
 
 @unittest.skipUnless(docker_available(),'actual OpenROAD ORFS image required')
 class RealConstantMapping(unittest.TestCase):
-    def run_case(self, mapped=False, strict=False):
+    def run_case(self, mapped=False, strict=False, full=False, pg=None):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d)
             for name in ['die.v','hard.lef']:shutil.copyfile(HERE/'testdata/constants'/name,p/name)
@@ -84,12 +84,40 @@ foreach inst [$b getInsts] {
  if {[[$inst getMaster] getName] in {TIEHIx1_ASAP7_75t_R TIELOx1_ASAP7_75t_R}} {incr ties}
 }
 if {$ties != 2} {error "wrong physical tie count"}
+set boxes {}
+foreach inst [$b getInsts] {
+ set bb [$inst getBBox]
+ foreach other $boxes {
+  lassign $other x0 y0 x1 y1
+  if {[$bb xMin]<$x1 && [$bb xMax]>$x0 && [$bb yMin]<$y1 && [$bb yMax]>$y0} {error "constant placement overlap"}
+ }
+ lappend boxes [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+}
 if {[$i getLocation] ne "10800 10800"} {error "hard macro moved"}
 foreach net [$b getNets] {
  if {[$net getSigType] in {POWER GROUND} && ![$net isSpecial]} {error "unmapped constant net"}
 }
 '''
+            if full:
+                lef=p/'hard.lef';lef.write_text(lef.read_text().replace('SIZE 4 BY 4','SIZE 29.16 BY 29.16'))
             flow=FLOW.replace('MAPPING',mapping).replace('RAISE','; error $err' if strict else '')
+            if full:flow=flow.replace('$i setLocation 10800 10800','$i setLocation 5400 5400')
+            if pg == 'complete':
+                flow += """
+set_voltage_domain -name CORE -power VDD -ground VSS
+define_pdn_grid -name native -voltage_domains CORE -pins {M5}
+add_pdn_stripe -grid native -layer M1 -width 0.018 -followpins
+add_pdn_stripe -grid native -layer M2 -width 0.018 -followpins
+add_pdn_stripe -grid native -layer M3 -width 0.09 -pitch 1.08 -spacing 0.45 -offset 0.27 -extend_to_boundary
+add_pdn_stripe -grid native -layer M4 -width 0.12 -pitch 2.16 -spacing 0.96 -offset 0.54 -extend_to_boundary
+add_pdn_stripe -grid native -layer M5 -width 0.12 -pitch 2.16 -spacing 0.96 -offset 0.54 -extend_to_boundary
+foreach pair {{M1 M2} {M2 M3} {M3 M4} {M4 M5}} {add_pdn_connect -grid native -layers $pair}
+pdngen
+"""
+            if pg:
+                flow += '\nsource /src/physical/common_flow/die_constant_pg_check.tcl\n'
+            if pg == 'complete':
+                flow += 'foreach net {VDD VSS} {check_power_grid -net $net}\n'
             (p/'run.tcl').write_text(flow)
             run=subprocess.run(['docker','run','--rm','-v',f'{p}:/work','-v',f'{ROOT}:/src:ro',
                 'openroad/orfs:latest','/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad',
@@ -110,6 +138,24 @@ foreach net [$b getNets] {
         self.assertIn('OT_CONST PG_OPEN',log)
         self.assertIn('OT_PA DONE',log)
         self.assertNotIn('[ERROR',log)
+
+    def test_no_legal_gap_cannot_emit_an_unplaced_constant(self):
+        rc,log=self.run_case(mapped=True,strict=True,full=True)
+        self.assertNotEqual(rc,0,log[-3000:])
+        self.assertIn('OT_CONST: no legal row gap',log)
+
+    def test_actual_pin_rail_contacts_and_connected_grid(self):
+        rc,log=self.run_case(mapped=True,strict=True,pg='complete')
+        self.assertEqual(rc,0,log[-3000:])
+        self.assertIn('OT_CONST PG_CONTACT cells=2 pins=4',log)
+        self.assertIn('All shapes on net VDD are connected',log)
+        self.assertIn('All shapes on net VSS are connected',log)
+
+    def test_logical_pg_binding_cannot_replace_literal_supply_rails(self):
+        rc,log=self.run_case(mapped=True,strict=True,pg='missing')
+        self.assertNotEqual(rc,0,log[-3000:])
+        self.assertIn('missing literal M1 rail contact',log)
+        self.assertIn('PG remains OPEN',log)
 
     def test_direct_openroad_error_is_fatal_in_generated_contract(self):
         rc,log=self.run_case(strict=True)
