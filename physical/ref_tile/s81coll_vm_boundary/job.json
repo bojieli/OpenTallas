@@ -43,7 +43,7 @@
      "verilator"
     ],
     "pass_regex": "SLAB_GATE PASS",
-    "min_count_regex": "rows=(\\d+)"
+    "min_count_regex": "(?m)^PASS fullstatic slab actual128SRAM rows=([0-9]+)"
    },
    {
     "name": "slab_hc_bit_mutant",
