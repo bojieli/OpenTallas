@@ -1,0 +1,145 @@
+{
+  "schema": "opentallas.native_attention_record.v1",
+  "status": "COMPONENT_VERIFIED_NOT_NATIVE_INTEGRATED",
+  "rtl": "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "module": "qkd_native_attention_record",
+  "payload_bits": 548,
+  "encoding": {
+    "reserved_zero": [
+      547,
+      543
+    ],
+    "kind": [
+      542,
+      539
+    ],
+    "layer": [
+      538,
+      533
+    ],
+    "epoch": [
+      532,
+      517
+    ],
+    "beat": [
+      516,
+      512
+    ],
+    "data": [
+      511,
+      0
+    ]
+  },
+  "kinds": {
+    "CMD": {
+      "value": 1,
+      "direction": "compute_to_kv",
+      "beat": 0,
+      "data": {
+        "position": [
+          18,
+          1
+        ],
+        "capability": [
+          0,
+          0
+        ],
+        "reserved_zero": [
+          511,
+          19
+        ]
+      }
+    },
+    "Q": {
+      "value": 2,
+      "direction": "compute_to_kv",
+      "beats": 32,
+      "data_bits": 512
+    },
+    "RESULT": {
+      "value": 3,
+      "direction": "kv_to_compute",
+      "beats": 32,
+      "data_bits": 512
+    },
+    "STATUS": {
+      "value": 4,
+      "direction": "kv_to_compute",
+      "beat": 0,
+      "data": {
+        "ready": 0,
+        "busy": 1,
+        "fault": 2,
+        "done": 3,
+        "q_ready": 4,
+        "reserved_zero": [
+          511,
+          5
+        ]
+      },
+      "semantics": "Observed actual service signals, never normal issue pacing"
+    }
+  },
+  "timing": {
+    "codec_tx_capture_edges": 1,
+    "codec_rx_capture_edges": 1,
+    "static_link_native_tx_edges": 3,
+    "static_link_native_rx_edges": 1,
+    "phy_fixed_latency_edges": "MUST_SELECT_3_OR_5_OR_9_IN_COMPILER",
+    "physical_relay_stage_offsets": "MUST_BIND_ACTUAL_DIRECTIONAL_PATHS",
+    "service_rst_release_to_first_command_min_edges": 80,
+    "command_sample_edge": "R",
+    "service_q_sample_edges_relative_to_R": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33
+    ],
+    "service_q_forbidden_edge_relative_to_R": 1,
+    "result_deadline": "OPEN_SOURCE_DERIVATION_REQUIRED",
+    "clock_phase_crossing": "Each codec synchronous to ck; different clock-family connection requires actual RTL and compiled phase proof."
+  },
+  "required_producers": [
+    "Actual native59 compute-local request/context and Q rows",
+    "Actual KV attention_service results/status",
+    "Compiler tx/rx expected valid/kind/epoch/layer/beat per edge",
+    "Actual staticctl wr/read/RX slots and real write observation",
+    "Actual physical clocks/reset and clock-domain boundary RTL"
+  ],
+  "faults": "Missing/extra event, malformed/direction-invalid record or mismatched context faults sticky; no reschedule or inferred identity.",
+  "qualification_gaps": [
+    "Real static link codec integration",
+    "Full source-derived QK/PV/result calendar",
+    "Clock crossing physical implementation",
+    "Mapped area and native pin/reset/phi-R checks",
+    "Native whole-layer/full-token evidence"
+  ]
+}
