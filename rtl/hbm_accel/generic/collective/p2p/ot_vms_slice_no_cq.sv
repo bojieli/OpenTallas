@@ -2,6 +2,7 @@
 `default_nettype none
 // Real zero-local-client slice. No scalar CQ ports; native ring replay remains active.
 module ot_vms_slice_no_cq #(
+    parameter integer PHYSICAL_RING = 1,
     parameter integer RG = 2, parameter integer WG = 2,
     // relay stages each way between each wide lane group's farthest client and the slice face (die contract relay count;
     // SPEC v0.8 D-B2-12): every lane of group g gets 4 + 2 x RRS/WRS[g] credits (ot_vms_bank).  Default 3 = the local
@@ -35,7 +36,7 @@ module ot_vms_slice_no_cq #(
     output wire [2:0]           hub_status,
     output wire [1:0]           mirror_busy
 );
-    ot_vms_slice_clocked #(.NC(0),.RG(RG),.WG(WG),.RRS(RRS),.WRS(WRS),
+    ot_vms_slice_clocked #(.PHYSICAL_RING(PHYSICAL_RING),.NC(0),.RG(RG),.WG(WG),.RRS(RRS),.WRS(WRS),
         .BMUT(BMUT),.HMUT(HMUT),.CMUT(CMUT)) u_slice(
         .cq(1'b0),.cr(),
         .child_clk(child_clk),

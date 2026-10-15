@@ -7,6 +7,7 @@
 // the COLL star edge is 2,130 b + a 1-b credit.  mirror_busy = {CCW stop, CW stop} (the consumer ORs them).
 // Lane index of a wide group = g*8 + b (lane b <-> bank b); lane credits 4 + 2 x relay stages (RRS / WRS).  See ot_vms_bank / ot_vms_hub / ot_vms_rstop / ot_vms_rcl.
 module ot_vms_slice_clocked #(
+    parameter integer PHYSICAL_RING = 1,
     parameter integer NC = 4, parameter integer RG = 2, parameter integer WG = 2,
     // relay stages each way between each wide lane group's farthest client and the slice face (die contract relay count;
     // SPEC v0.8 D-B2-12): every lane of group g gets 4 + 2 x RRS/WRS[g] credits (ot_vms_bank).  Default 3 = the local
@@ -59,7 +60,7 @@ module ot_vms_slice_clocked #(
     wire [2:0] wk01, wk10; wire wk01_cr, wk10_cr; wire ack01, ack10;
     wire [8*281-1:0] kq; wire [7:0] kq_cr; wire [3:0] cb_epoch;
     localparam integer HF = 2, EGC = 1;  // one constant for both sides of each credit link
-    ot_vms_hub #(.NC(NC), .CWI(HF), .CCI(HF), .MUT(HMUT)) u_hub (.clk(child_clk[0]), .rst_n(rst_n), .sid(sid), .cq(hcq), .cr(hcr), .pq(pq), .pq_cr(pq_cr),
+    ot_vms_hub #(.PHYSICAL_RING(PHYSICAL_RING),.NC(NC), .CWI(HF), .CCI(HF), .MUT(HMUT)) u_hub (.clk(child_clk[0]), .rst_n(rst_n), .sid(sid), .cq(hcq), .cr(hcr), .pq(pq), .pq_cr(pq_cr),
         .pr(pr), .cwi(cwi), .cwi_cr(cwi_cr), .cci(cci), .cci_cr(cci_cr), .cco0(cco0), .cco1(cco1), .status(hub_status));
     genvar b, g;
     for (b = 0; b < 8; b = b + 1) begin : g_bank
@@ -80,11 +81,11 @@ module ot_vms_slice_clocked #(
             .eg(eg[b*276 +: 276]), .eg_cr({egc1[b], egc0[b]}),
             .pq(pq[b*285 +: 285]), .pq_cr(pq_cr[b]), .pr(pr[b*266 +: 266]), .status(bank_status[b*18 +: 18]));
     end
-    ot_vms_rstop #(.HF(HF), .EGC(EGC), .MUT(CMUT)) u_cw (.clk(child_clk[9]), .rst_n(rst_n), .sid(sid), .dir(1'b0),
+    ot_vms_rstop #(.PHYSICAL_RING(PHYSICAL_RING),.HF(HF), .EGC(EGC), .MUT(CMUT)) u_cw (.clk(child_clk[9]), .rst_n(rst_n), .sid(sid), .dir(1'b0),
         .l_in(cw_in), .l_in_cr(cw_in_cr), .l_out(cw_out), .l_out_cr(cw_out_cr), .pi(cwi), .pi_cr(cwi_cr),
         .eg(eg), .eg_cr(egc0), .xq(xq0), .xq_cr(xqc0), .xq_done(xqd0), .rce(rce0), .rce_cr(rce0_cr), .ri(ri0), .ri_cr(ri0_cr),
         .wko(wk01), .wko_cr(wk01_cr), .wki(wk10), .wki_cr(wk10_cr), .cco(cco0), .ack_o(ack01), .ack_i(ack10), .mirror_busy(mirror_busy[0]));
-    ot_vms_rstop #(.HF(HF), .EGC(EGC), .MUT(CMUT)) u_ccw (.clk(child_clk[10]), .rst_n(rst_n), .sid(sid), .dir(1'b1),
+    ot_vms_rstop #(.PHYSICAL_RING(PHYSICAL_RING),.HF(HF), .EGC(EGC), .MUT(CMUT)) u_ccw (.clk(child_clk[10]), .rst_n(rst_n), .sid(sid), .dir(1'b1),
         .l_in(ccw_in), .l_in_cr(ccw_in_cr), .l_out(ccw_out), .l_out_cr(ccw_out_cr), .pi(cci), .pi_cr(cci_cr),
         .eg(eg), .eg_cr(egc1), .xq(xq1), .xq_cr(xqc1), .xq_done(xqd1), .rce(rce1), .rce_cr(rce1_cr), .ri(ri1), .ri_cr(ri1_cr),
         .wko(wk10), .wko_cr(wk10_cr), .wki(wk01), .wki_cr(wk01_cr), .cco(cco1), .ack_o(ack10), .ack_i(ack01), .mirror_busy(mirror_busy[1]));

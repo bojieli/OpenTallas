@@ -26,6 +26,7 @@
 // tile edge); every input is pin-flopped, every output is a flop.
 // Bank tag = {client 4, entry 4}.  status = {range fault, mask fault, proto fault}.
 module ot_vms_hub #(
+    parameter integer PHYSICAL_RING = 0, // 1: global SID order SW0,SE1,NE3,NW2 on physical perimeter
     parameter integer NC  = 4,
     parameter integer PQ  = 4,      // bank packet credits (= ot_vms_bank PQ)
     parameter integer CWI = 4,      // CW inject credits (= the CW stop's hub FIFO depth)
@@ -49,6 +50,10 @@ module ot_vms_hub #(
     output reg  [2:0]              status
 );
     localparam integer N = NC + 1;
+    // Binary ring rank is separate from the unchanged global address SID.
+    wire [1:0] me_rank={me[1],me[1]^me[0]};
+    wire [1:0] prev_rank=me_rank+2'd3;
+    wire [1:0] prev_sid=PHYSICAL_RING?{prev_rank[1],prev_rank[1]^prev_rank[0]}:me+2'd3;
     // ------------------------------------------------------------------ pin flops (payload: no reset)
     // Reset only on control (valids, pointers, counters, credits, entry state); payload flops have no reset.
     reg [N*338-1:0] cq_d; reg [N-1:0] cq_v; reg [8*266-1:0] pr_d; reg [7:0] pr_v; reg [262:0] cc0_d, cc1_d; reg cc0_v, cc1_v;
@@ -257,7 +262,7 @@ module ot_vms_hub #(
                     e_nl[c][a] <= 1'b1; e_nr[c][a] <= 2'd0;
                 end else begin
                     e_nl[c][a] <= 1'b0; e_dm[c][a] <= 4'd1 << d;
-                    e_nr[c][a] <= (d == me + 2'd3) ? 2'd2 : 2'd1;
+                    e_nr[c][a] <= (d == prev_sid) ? 2'd2 : 2'd1;
                 end
             end
             // ---- responses

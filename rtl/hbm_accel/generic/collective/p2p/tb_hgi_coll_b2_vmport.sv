@@ -64,10 +64,11 @@ module tb_hgi_coll_b2_vmport;
             o=golden[key];for(integer w=0;w<8;w=w+1)if(m[h*8+w])o[w*32+:32]=d[(h*8+w)*32+:32];golden[key]=o;
         end end
     endtask
-    integer sent[0:3], ks=0, cycles=0, write_start=0, phase=0, ri=0, copies=0, checking=0, read_sid=0, checked=0, returned=0;
+    integer sent[0:3], ks=0, cycles=0, write_start=0, phase=0, ri=0, copies=0, checking=0, read_sid=0, checked=0, scalar_checked=0, returned=0;
+    integer cw_hops[0:3],ccw_hops[0:3],cw_credits[0:3],ccw_credits[0:3];
     reg [255:0] expected; reg [15:0] rtag=0;
     integer seed_i=0,seed_pending[0:3],seed_done=0;
-    initial begin for(integer l=0;l<4;l=l+1)sent[l]=0;for(integer s=0;s<4;s=s+1)begin readq[s]=0;verify_rq[s]=0;seed_pending[s]=0;end
+    initial begin for(integer l=0;l<4;l=l+1)sent[l]=0;for(integer s=0;s<4;s=s+1)begin readq[s]=0;verify_rq[s]=0;seed_pending[s]=0;cw_hops[s]=0;ccw_hops[s]=0;cw_credits[s]=0;ccw_credits[s]=0;end
         // Seed every touched sector with nonzero data so TOPK masks must preserve real prior words.
         for(integer l=0;l<5;l=l+1)for(integer i=0;i<(l==4?KLINES:N);i=i+1)begin
             integer key;key=int'(addr(l,i)>>3);
@@ -88,12 +89,22 @@ module tb_hgi_coll_b2_vmport;
             for(integer l=0;l<4;l=l+1)if(iv[l]&&ir[l])begin record_write(ia[l*40+:40],id[l*512+:512],16'hffff);sent[l]=sent[l]+1;end
             if(kv&&kr)begin record_write(kd[567:528],kd[511:0],kd[527:512]);ks=ks+1;end
         end
-        if(phase==2&&checking&&verify_rr[read_sid][257*(keys[ri]%8)+256])begin
+        if(phase>=1)for(integer s=0;s<4;s=s+1)begin
+            if(co[s][2223])cw_hops[s]=cw_hops[s]+1;
+            if(no[s][2223])ccw_hops[s]=ccw_hops[s]+1;
+            cw_credits[s]=cw_credits[s]+int'(coc[s][0])+int'(coc[s][1]);
+            ccw_credits[s]=ccw_credits[s]+int'(noc[s][0])+int'(noc[s][1]);
+        end
+        if(phase==2&&checking&&readr[0][273])begin
+            if(readr[0][272:257]!=rtag||readr[0][256]||readr[0][255:0]!==expected)$fatal(1,"scalar readback mismatch key%0d",keys[ri]);
+            scalar_checked=scalar_checked+1;checking=0;ri=ri+1;
+        end
+        if(phase==3&&checking&&verify_rr[read_sid][257*(keys[ri]%8)+256])begin
             if(verify_rr[read_sid][257*(keys[ri]%8)+:256]!==expected)$fatal(1,"readback mismatch key%0d copy%0d",keys[ri],copies);
             checked=checked+1;checking=0;
             if(keys[ri]>=32768&&copies<3)copies=copies+1;else begin ri=ri+1;copies=0;end
         end
-        if(cycles>300000)$fatal(1,"B2 writer did not drain sent%0d/%0d/%0d/%0d tk%0d checked%0d",sent[0],sent[1],sent[2],sent[3],ks,checked);
+        if(cycles>1000000)$fatal(1,"B2 writer did not drain sent%0d/%0d/%0d/%0d tk%0d checked%0d",sent[0],sent[1],sent[2],sent[3],ks,checked);
     end
     always @(negedge clk)if(rst_n)begin
         iv=0;kv=0;for(integer s=0;s<4;s=s+1)begin readq[s]=0;verify_rq[s]=0;end
@@ -116,7 +127,16 @@ module tb_hgi_coll_b2_vmport;
                 $display("B2_WRITE cycles=%0d rgx=%0d topk=%0d",cycles-write_start,4*N,KLINES);phase=2;
             end
         end else if(phase==2&&!checking)begin
-            if(ri==keys.size())begin $display("B2_COLL_VMPORT PASS flits=%0d checked=%0d",4*N+KLINES,checked);$finish;end
+            if(ri==keys.size())begin phase=3;ri=0;end
+            else begin
+                expected=golden[keys[ri]];rtag=16'(scalar_checked);
+                readq[0]={1'b1,1'b0,11'd0,16'(keys[ri]),5'd0,256'd0,32'd0,rtag};checking=1;
+            end
+        end else if(phase==3&&!checking)begin
+            if(ri==keys.size())begin
+                for(integer s=0;s<4;s=s+1)$display("B2_RING sid=%0d CW_hops=%0d CCW_hops=%0d CW_credits=%0d CCW_credits=%0d RLY=%0d VC=2 C=2",s,cw_hops[s],ccw_hops[s],cw_credits[s],ccw_credits[s],RLY);
+                $display("B2_COLL_VMPORT PASS flits=%0d checked=%0d scalar_checked=%0d",4*N+KLINES,checked,scalar_checked);$finish;
+            end
             read_sid=keys[ri]>=32768?copies:(keys[ri]>>13);expected=golden[keys[ri]];rtag=16'(checked);
             verify_rq[read_sid][17*(keys[ri]%8)+:17]={1'b1,16'(keys[ri])};checking=1;
         end

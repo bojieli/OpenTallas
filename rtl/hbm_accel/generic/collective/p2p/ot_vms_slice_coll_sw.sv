@@ -3,6 +3,7 @@
 // Real SW VM slice composition. The COLL adapter's extra packet clients and write group stay
 // inside this parent; the die sees narrow credit streams and the exact native B2 slice interface.
 module ot_vms_slice_coll_sw #(
+    parameter integer PHYSICAL_RING = 1,
     parameter integer NC = 1, RG = 2, WG = 2,
     parameter [RG*4-1:0] RRS = {RG{4'd3}}, parameter [WG*4-1:0] WRS = {WG{4'd3}},
     parameter integer CRD = 16, TCRD = 8, COLL_WRS = 3, MUT = 0,
@@ -59,7 +60,7 @@ module ot_vms_slice_coll_sw #(
         .rgx_t_v(rgx_t_v), .rgx_t_addr(rgx_t_addr), .rgx_t_data(rgx_t_data), .rgx_t_vm(rgx_t_vm), .rgx_f_cr(rgx_f_cr),
         .tkw_t_v(tkw_t_v), .tkw_t_d(tkw_t_d), .tkw_f_cr(tkw_f_cr), .fault(coll_fault),
         .cq(coll_cq), .cr(coll_cr), .wq(coll_wq), .wq_cr(coll_wcr), .wq_done(coll_wdone), .xw(coll_xw), .xwa(coll_xwa));
-    ot_vms_slice_clocked #(.NC(NC+5), .RG(RG), .WG(WG+1), .RRS(RRS), .WRS({4'(COLL_WRS),WRS}),
+    ot_vms_slice_clocked #(.PHYSICAL_RING(PHYSICAL_RING),.NC(NC+5), .RG(RG), .WG(WG+1), .RRS(RRS), .WRS({4'(COLL_WRS),WRS}),
         .BMUT(BMUT), .HMUT(HMUT), .CMUT(CMUT)) u_slice (.child_clk(clk_vm_child), .rst_n(rst_n), .sid(2'd0),
         .cq({coll_cq,cq}), .cr(all_cr), .rq(rq), .rq_cr(rq_cr), .rr(rr), .wq({coll_wq,wq}), .wq_cr(all_wcr), .wq_done(all_wdone), .dq(dq), .dq_done(dq_done), .vcb(vcb), .vcb_cr(vcb_cr), .kq_done(kq_done), .cw_in(cw_in), .cw_in_cr(cw_in_cr), .cw_out(cw_out), .cw_out_cr(cw_out_cr), .ccw_in(ccw_in), .ccw_in_cr(ccw_in_cr), .ccw_out(ccw_out), .ccw_out_cr(ccw_out_cr), .bank_status(bank_status), .hub_status(hub_status), .mirror_busy(mirror_busy));
 endmodule
