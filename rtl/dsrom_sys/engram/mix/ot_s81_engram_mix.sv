@@ -67,7 +67,40 @@ module ot_s81_engram_mix #(parameter integer N=32, D=5120, LM=5, LA=4, MUT=0)(
 
 endmodule
 
+// Control leaf with registered input pins (S-ELEM-C 2026-10-15: native capture at every pin; the CTS gate showed 238
+// in->reg paths through the gate multipliers).  Every input crosses one register, so the control runs its unchanged
+// calendar one cycle later as a whole (gate_v / fault +1 cycle; the in_v -> mvalid / avalid checks see both sides
+// shifted together).
 module ot_s81_engram_mix_control #(parameter integer N=32, D=5120, LM=5, LA=4, MUT=0, RLY=0)(
+ input wire clk,arst_n,go,phase,in_v,
+ input wire [1:0] copy,
+ input wire [31:0] scale,
+ output wire gate_v, output wire [1:0] gate_copy,
+ output wire [31:0] gate,hh,kk,dd,
+ output wire fault,
+ output wire g_v,
+ output wire [31:0] a_gate,g_x,
+ input wire [7:0] mvalid,mfault,input wire [3:0] avalid,af,input wire [7:0] add_copy,
+ input wire [1:0] nv,nf,input wire [63:0] norm_rstd,
+ input wire eg_valid,input wire [1:0] g_fault,input wire [31:0] gy,
+ input wire [2:0] rv,rf,input wire [31:0] rhh,rkk,rdd);
+ wire rn;ot_s81_engram_reset pin_reset(clk,arst_n,rn);
+ reg go_q,phase_q,in_v_q,eg_q;reg [7:0] mv_q,mf_q;reg [3:0] av_q,af_q;reg [1:0] nv_q,nf_q,gf_q;reg [2:0] rv_q,rf_q;
+ reg [1:0] copy_q;reg [31:0] scale_q,gy_q,rhh_q,rkk_q,rdd_q;reg [7:0] ac_q;reg [63:0] nr_q;
+ always @(posedge clk or negedge rn)if(!rn)begin
+  go_q<=0;phase_q<=0;in_v_q<=0;eg_q<=0;mv_q<=0;mf_q<=0;av_q<=0;af_q<=0;nv_q<=0;nf_q<=0;gf_q<=0;rv_q<=0;rf_q<=0;
+ end else begin
+  go_q<=go;phase_q<=phase;in_v_q<=in_v;eg_q<=eg_valid;mv_q<=mvalid;mf_q<=mfault;av_q<=avalid;af_q<=af;nv_q<=nv;nf_q<=nf;gf_q<=g_fault;rv_q<=rv;rf_q<=rf;
+ end
+ always @(posedge clk)begin copy_q<=copy;scale_q<=scale;gy_q<=gy;rhh_q<=rhh;rkk_q<=rkk;rdd_q<=rdd;ac_q<=add_copy;nr_q<=norm_rstd;end
+ ot_s81_engram_mix_control_core #(.N(N),.D(D),.LM(LM),.LA(LA),.MUT(MUT),.RLY(RLY)) core(
+  .clk(clk),.arst_n(arst_n),.go(go_q),.phase(phase_q),.in_v(in_v_q),.copy(copy_q),.scale(scale_q),
+  .gate_v(gate_v),.gate_copy(gate_copy),.gate(gate),.hh(hh),.kk(kk),.dd(dd),.fault(fault),.g_v(g_v),.a_gate(a_gate),.g_x(g_x),
+  .mvalid(mv_q),.mfault(mf_q),.avalid(av_q),.af(af_q),.add_copy(ac_q),.nv(nv_q),.nf(nf_q),.norm_rstd(nr_q),
+  .eg_valid(eg_q),.g_fault(gf_q),.gy(gy_q),.rv(rv_q),.rf(rf_q),.rhh(rhh_q),.rkk(rkk_q),.rdd(rdd_q));
+endmodule
+
+module ot_s81_engram_mix_control_core #(parameter integer N=32, D=5120, LM=5, LA=4, MUT=0, RLY=0)(
  input wire clk,arst_n,go,phase,in_v,
  input wire [1:0] copy,
  input wire [31:0] scale,

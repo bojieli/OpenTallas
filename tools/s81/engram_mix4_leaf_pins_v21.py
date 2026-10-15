@@ -52,8 +52,10 @@ def main():
     sh = {k: bits(w, env) for k, (d, w) in ports('ot_s81_engram_mixq_shell', t4).items()}
     ol = [742.284, 54.0]; P = 186.84
     cols = [(4.032 + P * c, [(f'{n}#{c}', 256) for n in ('h', 'kv', 'w', 'result')]) for c in range(4)]
+    # the scalar control bits sit at the middle of the S face, between the column-1 and column-2 groups, under the
+    # mid-cluster relay leaf
     misc = [(n, sh[n]) for n in ('go', 'iv', 'phase', 'copy', 'eps', 'scale', 'gv', 'gc', 'ov', 'oc', 'mf')]
-    cols[3][1].extend(misc)
+    cols.append((300.0, misc))
     north = [(n, sh[n]) for n in ('start', 'desc', 'rq_v', 'rq_row', 'vtag', 'rs_v', 'rs_d', 'wq_v', 'wq_row', 'wq_mask', 'wq_d', 'done', 'fault')]
     pp = place({'N': [(4.032, north)], 'S': cols}, ol)
     # merge the column slices of h / kv / w / result into whole buses (bit 256c + i)

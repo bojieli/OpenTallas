@@ -40,7 +40,7 @@ def main():
         spec = dict(name=f's81engm_{suf}', kind='tile', top=name, sources=SRCS + xsrc, params={}, clock_port=ck, reset_ports=[rs],
                     outline=dict(w=W, h=H, exact=True), util=0.5, layer_cap='M5', recipe=2, pins=faces,
                     io_tcl=f'physical/s81_die_pins/v21_engram_arithmetic/{name}.tcl',
-                    route=dict(pd=0.5, threads=8, peak_ram_gb=16, pin_v='M3 M5', pin_h='M4', pin_min_tracks=1, hold_margin_ns=0.03, macro_halo_um=5.4),
+                    route=dict(pd=0.7 if suf == 'shell' else 0.5, threads=8, peak_ram_gb=16, pin_v='M3 M5', pin_h='M4', pin_min_tracks=1, hold_margin_ns=0.03, macro_halo_um=5.4),
                     why_floorplan=f'{why}; one clock root per leaf (<=11,519 sinks); {COPIES[suf]} per cluster x 4 clusters',
                     structural_change='Engram MIX4 physical hierarchy (S-ELEM-C 2026-10-15): every arithmetic root of ot_s81_engram_mix is a hardened leaf master, hardened once and replicated; inputs registered at the S pins, outputs launched from registers at the N pins (no added cycle: the leaves are the unchanged exact arithmetic RTL).',
                     job=dict(owner='Claude:s81-surx-engram-1015', branch='claude/s81-mix4-phys-1015', tag='v21',
