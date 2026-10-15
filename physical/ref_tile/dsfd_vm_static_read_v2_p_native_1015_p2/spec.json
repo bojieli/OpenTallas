@@ -89,6 +89,13 @@
   ],
   "cycles_added": 1
  },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/physical/s81_vm_static_ownership_1015/vm_native_pin_audit_1015.json",
+  "cell": "dsfd_vm_static_read_v2_p",
+  "capture_ps": 236.5,
+  "fix": "o_valid completeness recomputed from pin-registered memory slot-valid bits (new S-face i_slot_valid); i_partial_valid / i_peer_valid feed only pin-registered fault checks"
+ },
  "params": {},
  "children": [],
  "inter": [],

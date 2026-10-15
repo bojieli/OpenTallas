@@ -92,6 +92,13 @@
   ],
   "cycles_added": 1
  },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/physical/s81_vm_static_ownership_1015/vm_native_pin_audit_1015.json",
+  "cell": "dsfd_vm_static_read_q0_p",
+  "capture_ps": 224.8,
+  "fix": "SU1 peer inputs moved N->S face east end beside their o_data[64..127] flops (~250 -> ~69 um); every other input already pin-registered (IN_REG=1)"
+ },
  "params": {},
  "children": [],
  "inter": [],
