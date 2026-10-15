@@ -3,7 +3,7 @@
 module tb_hgi_coll_b2_vmport;
     parameter integer RLY=8, MUT=0, N=128, KLINES=256, PHYSICAL_RING=1, ROUTE_MUT=0;
     // SNC: SW slice local clients (die production 4 -> hub NC 9); client 0 carries the readback, the others idle
-    parameter integer SNC=1, SCW=3;   // SCW: COLL write-group relay stages (bank lane depth 4 + 2 SCW)
+    parameter integer SNC=1, SCW=0;   // SCW: COLL write-group relay stages (bank lane depth 4 + 2 SCW)
     function automatic integer next_sid(input integer s);
         if(!PHYSICAL_RING)next_sid=(s+1)%4;else case(s)0:next_sid=1;1:next_sid=3;3:next_sid=2;default:next_sid=0;endcase
     endfunction

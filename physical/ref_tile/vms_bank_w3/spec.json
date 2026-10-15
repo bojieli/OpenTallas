@@ -86,7 +86,7 @@
   "benches": [
    {
     "name": "b2vm_nc4_pos",
-    "cmd": "JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_nc4_pos -GRLY=20 -GSNC=4 -GSCW=0",
+    "cmd": "JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_nc4_pos -GRLY=20 -GSNC=4",
     "expect": "pass",
     "threads": 4,
     "peak_ram_gb": 48,
@@ -96,7 +96,7 @@
    },
    {
     "name": "b2vm_early_credit",
-    "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_early_credit -GRLY=20 -GSNC=4 -GSCW=0 -GMUT=1; then exit 0; elif test -s {RUN}/b2vm_early_credit/run.log && ! grep -q '^B2_COLL_VMPORT PASS' {RUN}/b2vm_early_credit/run.log; then exit 1; else exit 0; fi",
+    "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_early_credit -GRLY=20 -GSNC=4 -GMUT=1; then exit 0; elif test -s {RUN}/b2vm_early_credit/run.log && ! grep -q '^B2_COLL_VMPORT PASS' {RUN}/b2vm_early_credit/run.log; then exit 1; else exit 0; fi",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 48,

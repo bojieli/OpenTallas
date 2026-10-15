@@ -21,7 +21,7 @@
  ],
  "params": {
   "CRD": 16,
-  "WCRD": 10
+  "WCRD": 4
  },
  "pins": {
   "S": [
@@ -61,7 +61,7 @@
  "job": {
   "owner": "Claude:H-COLL",
   "branch": "claude/hbm-p2p-coll-1014",
-  "tag": "r1",
+  "tag": "r2",
   "hold_merge": "Individual leaf route; SW slice parent ot_vms_slice_coll_sw native pin/reset/clock integration qualification remains required.",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
@@ -69,7 +69,7 @@
    "rtl/link",
    "physical/asap7_memory_macros"
   ],
-  "purpose": "SW VM slice COLL writer core leaf (split from ot_hgi_coll_b2_vmport 967f6c876, no logic change): five receive-leaf heads -> local wide writes (WG lane group) and B2 packets (5 hub clients), per-lane returns",
+  "purpose": "SW VM slice COLL writer core leaf r2 (26f8e459b): registered decode stage, one-hot bank issue, registered owner retire + popcount; WCRD 4 (COLL write group WRS 0 in-parent); bench 29,771 cyc vs 29,768 before",
   "benches": [
    {
     "name": "b2vm_nc4_pos",

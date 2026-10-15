@@ -1,9 +1,9 @@
 {
- "name": "coll_vmcore-r1-COMMIT",
+ "name": "coll_vmcore-r2-COMMIT",
  "block": "ot_hgi_coll_b2_vmcore",
  "ref_tile": true,
  "owner": "Claude:H-COLL",
- "purpose": "SW VM slice COLL writer core leaf (split from ot_hgi_coll_b2_vmport 967f6c876, no logic change): five receive-leaf heads -> local wide writes (WG lane group) and B2 packets (5 hub clients), per-lane returns",
+ "purpose": "SW VM slice COLL writer core leaf r2 (26f8e459b): registered decode stage, one-hot bank issue, registered owner retire + popcount; WCRD 4 (COLL write group WRS 0 in-parent); bench 29,771 cyc vs 29,768 before",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
@@ -20,7 +20,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_b2_vmcore #(.CRD(16), .WCRD(10)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_b2_vmport.sv rtl/hbm_accel/generic/collective/rgx/ot_hgi_coll_rgx_snk.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_b2_vmcore #(.CRD(16), .WCRD(4)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_b2_vmport.sv rtl/hbm_accel/generic/collective/rgx/ot_hgi_coll_rgx_snk.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -97,7 +97,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/coll_vmcore/coll_vmcore-r1-COMMIT"
+   "to": "results/rtl/ref_tile/coll_vmcore/coll_vmcore-r2-COMMIT"
   }
  ],
  "cycles_added": 0,
