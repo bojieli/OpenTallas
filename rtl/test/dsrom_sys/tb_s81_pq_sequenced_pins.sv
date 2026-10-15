@@ -7,6 +7,11 @@ module tb_s81_pq_sequenced_pins;
 `endif
  reg clk=0;always #3 clk=~clk;
  reg ckv=0;always #4 ckv=~ckv;
+ reg ingest_h=0,ingest_i=0;integer phase_h=0,phase_i=0,ingress_words=0,ingress_pops=0;
+ initial begin if(!$value$plusargs("phase_h=%d",phase_h))phase_h=0;#(phase_h);forever #3 ingest_h=~ingest_h;end
+ initial begin if(!$value$plusargs("phase_i=%d",phase_i))phase_i=0;#(phase_i);forever #3 ingest_i=~ingest_i;end
+ always @(posedge ingest_h)if(rst_n&&host.u_h.h_v)ingress_words=ingress_words+1;
+ always @(posedge ingest_i)if(rst_n&&host.u_h.host.u_hi.hx_pop)ingress_pops=ingress_pops+1;
  reg rst_n=0;wire[84:0]cmd;wire[35:0]desc;wire prime,start;
  wire[11:0]calendar_base;wire[12:0]calendar_length;
  reg[514:0]host_in=0;wire[76:0]host_out;wire[35:0]host_pw,host_pq;wire[7:0]plen;
@@ -14,7 +19,7 @@ module tb_s81_pq_sequenced_pins;
  wire[291:0]hw;wire[84:0]unused_cmd[0:12];
  dsfd_host_c #(.NS(1)) host(.ck(clk),.rst(rst_n),.ckv(ckv),.rsv(rst_n),
   .f_collective(host_in),.t_collective(host_out),.f_lf(4'b0101),.t_sseq_pw(host_pw),
-  .ck_ingest({2{clk}}),.t_pq_pw(host_pq),.t_sseq_plen(plen),.f_sseq_st(seq_status),.f_wfc_ft(4'd0),.hw(hw),.hc(9'd0));
+  .ck_ingest({ingest_i,ingest_h}),.t_pq_pw(host_pq),.t_sseq_plen(plen),.f_sseq_st(seq_status),.f_wfc_ft(4'd0),.hw(hw),.hc(9'd0));
  dsfd_stage_seq_static_c9 #(.NOPS(128),.STAGE(7)) seq(.ck(clk),.rst(rst_n),.ckv(ckv),.rsv(rst_n),
   .f_ks(ks),.t_kd(kit_done),.f_pw(host_pw),.f_plen(plen),.t_st(seq_status),
   .f_pq_pw(host_pq),.t_pq_desc_pw(desc),.calendar_prime(prime),.stage_start(start),
@@ -55,7 +60,9 @@ module tb_s81_pq_sequenced_pins;
   end
   if(fast==1650)begin
    $display("S81_PQ_SEQUENCED host=%0d boot=%0d prime=%0d start=%0d cmd=%0d done=%0d KIT=%0d valid=%0d J=%0d C=%0d D=%0d seq=%h endpoint=%h cal=%b core=%b hostfault=%b",packet_index,boot_seen,prime_seen,nstarts,ncommands,ndone,nkits,valids,launch_edge,cmd_edge,done_edge,seq_status,command_status,calendar_fault,status[2],host_out[75]);
+   if(ingress_words!=12||ingress_pops!=12)$fatal(1,"SEQUENCED FAIL actual ingest clock FIFO phase h=%0d i=%0d words=%0d pops=%0d",phase_h,phase_i,ingress_words,ingress_pops);
    if(packet_index!=packet_count||boot_seen!=7||prime_seen!=4||nstarts!=3||ncommands!=3||ndone!=3||nkits!=3||valids!=3||done_edge!=cmd_edge+37||seq_status[5]||calendar_fault||command_status[0]||status[2]||host_out[75])$fatal(1,"SEQUENCED FAIL real host->c9->PHW10/mappedROM timeline");
+   $display("INGEST_PHASE PASS h=%0d i=%0d actual_native_FIFO_words=%0d/pops=%0d",phase_h,phase_i,ingress_words,ingress_pops);
    $display("S81_PQ_SEQUENCED PASS actual host CSR->asyncFIFO->c9 mailbox->engine13->PQ mapped memory; component data zero ROM");$finish;
   end
  end

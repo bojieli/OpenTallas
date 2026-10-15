@@ -32,6 +32,9 @@ if a.sequenced:
  events=[dict(timestamp=1,action=dict(accept_tag=0)),dict(timestamp=10,action=dict(cfg=1)),dict(timestamp=14,action=dict(stream_req=1,stream_addr=16383)),dict(timestamp=32,action=dict(retire_mask=1)),dict(timestamp=42,action=dict(phase_end=1))]
  image=compile_stage(rows,descriptors,events,7,0)
  packets=image['host_packets']
+ # Declared external initialization CSR words exercise the real HOST h/i
+ # async FIFO; all22 programming packets above are intentionally intercepted.
+ packets=sorted(packets+[dict(host_stream_cycle=600+8*i,cls=0,data=0)for i in range(12)],key=lambda x:x['host_stream_cycle'])
  (a.work/'host_words.hex').write_text(''.join(f"{x['data']:0128x}\n"for x in packets))
  (a.work/'host_cycles.hex').write_text(''.join(f"{x['host_stream_cycle']:08x}\n"for x in packets))
  for name in ['action','time']:(a.work/f'pq_calendar_{name}.viamap.hex').write_text(image[f'calendar_{name}_viamap'])
@@ -55,4 +58,11 @@ with (a.work/'run.log').open('w') as f:rc=subprocess.run([str(a.work.resolve()/(
 if a.mut:
  if rc==0 or ('SEQUENCED FAIL' if a.sequenced else 'PRODUCED FAIL' if a.produced else 'CANONICAL_PINS FAIL') not in (a.work/'run.log').read_text():raise SystemExit('mutant did not fail the native pin gate')
 elif rc:raise SystemExit(rc)
+if a.sequenced and not a.mut:
+ for ph,pi in [(1,4),(4,1)]:
+  log=a.work/f'run.phase{ph}_{pi}.log'
+  with log.open('w')as f:
+   prc=subprocess.run([str(a.work.resolve()/'obj/Vtb_s81_pq_sequenced_pins'),'+OT_ROM_DIR='+str(a.work.resolve()),'+packets='+str(len(packets)),f'+phase_h={ph}',f'+phase_i={pi}'],stdout=f,stderr=subprocess.STDOUT,cwd=a.work.resolve()).returncode
+  if prc:raise SystemExit(log.read_text())
+  print(log.read_text())
 print((a.work/'run.log').read_text())
