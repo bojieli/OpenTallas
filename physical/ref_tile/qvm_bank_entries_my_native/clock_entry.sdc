@@ -70,12 +70,25 @@ proc ot_ce_direct_rows {corner} {
     }
     foreach mm {min max} {
       set actual [dict get $binding $mm]
-      if {[dict get $actual library] ne $expected_library || [dict get $actual cell] ne $master ||
+      set want_library $expected_library; set want_sha $expected_sha
+      # The multi-mode route's synthesis SDC read happens before any scene is
+      # defined: the unscened default scene binds the LAST-read corner library
+      # (FF after TT). That read carries no timing claim, so pre-CTS only it is
+      # admitted when it is exactly one DECLARED corner library (digest-checked).
+      # Every defined scene and every post-CTS read stays strict.
+      if {[dict get $binding scene] eq "default" && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+          [dict get $actual library] ne $expected_library} {
+        dict for {c lib} $libraries {
+          if {[lindex $lib 0] eq [dict get $actual library]} { lassign $lib want_library want_sha }
+        }
+        puts "OT_DIRECT_MACRO PRE_CTS_DEFAULT_SCENE $cellname $mm=$want_library (declared corner library, no timing claim)"
+      }
+      if {[dict get $actual library] ne $want_library || [dict get $actual cell] ne $master ||
           [dict get $actual clock_pin] ne $libpin} {
         error "OT_DIRECT_MACRO: actual corner mismatch: scene=[dict get $binding scene] $mm [dict get $actual library]/[dict get $actual cell] expected $expected"
       }
-      if {[ot_direct_sha256 [dict get $actual filename]] ne $expected_sha} {
-        error "OT_DIRECT_MACRO: actual scene Liberty source digest mismatch $expected"
+      if {[ot_direct_sha256 [dict get $actual filename]] ne $want_sha} {
+        error "OT_DIRECT_MACRO: actual scene Liberty source digest mismatch $want_library/$master"
       }
     }
     set pins {}

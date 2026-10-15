@@ -3,9 +3,9 @@
     "MUT": 0
   },
   "job": {
-    "owner": "Codex:q_vm_physical",
-    "branch": "codex/q-vm-physical-1015",
-    "tag": "ne1",
+    "owner": "Codex:takeover_qwen_elements_0757",
+    "branch": "codex/takeover-qvm-bank-0808",
+    "tag": "ne2",
     "purpose": "Actual9-entry wire parent over real native-audited data256/control35+2 rawSRAMs; same4edges; actual macro/clock/native route verification, no fullVM adoption.",
     "views_to": "physical/ref_tile/qvm_bank_entries_my_native/views",
     "record_to": "results/rtl/ref_tile/qvm_bank_entries_my_native",
@@ -54,7 +54,7 @@
         ]
       }
     ],
-    "structural_change": "Actual2084bit leg screen found SRAM WD pinsE/RD pinsW cause254negative R0read margins. Mirror both SRAMsMY so WD faces input and RD faces capture; same rawmacro clock entries, source/dataedges/capacity preserved; no unchanged placement retry."
+    "structural_change": "Actual2084bit leg screen found SRAM WD pinsE/RD pinsW cause254negative R0read margins. Mirror both SRAMsMY so WD faces input and RD faces capture; same rawmacro clock entries, source/dataedges/capacity preserved; no unchanged placement retry. Re-generated at main stage-aware PRE_CTS_DEFAULT_SCENE correction b3c6382fa after stale generated SDC refused valid early minFF/maxTT; no RTL/geometry/clock/edge changes."
   },
   "name": "qvm_bank_entries_my_native",
   "top": "qvm_bank_banked_native",
