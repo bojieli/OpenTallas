@@ -47,7 +47,8 @@ def main(argv=None):
         if not r.get('bound'):
             continue
         vd = ROOT / r['view']
-        b = K.BINDINGS[mst]
+        # v1.3: a die-placed leaf (kv_expand.py) is instantiated under its own module name with its RTL pins: identity
+        b = K.BINDINGS[mst] if not r.get('expanded_from') else None
         per = {}
         for c in CORNERS:
             lib = next(vd.glob(f'*_{c}.lib'), None)
@@ -60,6 +61,10 @@ def main(argv=None):
                     continue          # SS: sensitivity only; a view without an SS boundary measurement skips it
                 raise
             for rpin, rr in refs.items():
+                if b is None:
+                    per.setdefault(c, {})[rpin] = rr
+                    per[c][f'{rpin}[0]'] = rr
+                    continue
                 dps = [dp for dp, ps in b['ports'].items() if rpin in ps]
                 if len(dps) != 1:
                     raise ValueError(f'{mst}: clock pin {rpin} binds to {dps}')
