@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Real wires-only native compute/control join; external ports are unresolved REAL hardware boundaries.
 // Individual clocks require actual physical phi-R delivery; defaults refuse unassigned production route ages.
-module qfd_native_compute_join #(parameter integer XPF_TRANSPORT_EDGES=-1,
+module qfd_native_compute_join #(parameter integer XPF_TRANSPORT_EDGES=-1,NATIVE_PROFILE=1,
  parameter integer VM_ROUTE_QUALIFIED=0,VM_FORWARD_EDGES=-1,VM_RETURN_EDGES=-1,VM_PHASE_EDGES=-1) (
  input wire tt_ck_xpf,
  input wire tt_ck_me_sched,
@@ -2092,7 +2092,7 @@ module qfd_native_compute_join #(parameter integer XPF_TRANSPORT_EDGES=-1,
   .write_commit_mask(w_vm_write_commit_mask),
   .fault(w_vm_fault)
  );
- qfd_native59_compute_service #(.NATIVE_PROFILE(1),.VM_ROUTE_QUALIFIED(VM_ROUTE_QUALIFIED),.VM_FORWARD_EDGES(VM_FORWARD_EDGES),.VM_RETURN_EDGES(VM_RETURN_EDGES),.VM_PHASE_EDGES(VM_PHASE_EDGES)) u_native (
+ qfd_native59_compute_service #(.NATIVE_PROFILE(NATIVE_PROFILE),.VM_ROUTE_QUALIFIED(VM_ROUTE_QUALIFIED),.VM_FORWARD_EDGES(VM_FORWARD_EDGES),.VM_RETURN_EDGES(VM_RETURN_EDGES),.VM_PHASE_EDGES(VM_PHASE_EDGES)) u_native (
   .ck_context(native_ck_context),
   .ck_service(native_ck_service),
   .ck_format(native_ck_format),
