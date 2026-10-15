@@ -199,11 +199,21 @@ module ot_qfd_sp_su64_static_glue_entries #(
                 assign mk[o*4+:4]=vm_m1[o*SW+gl*4+:4];
                 assign vq_eff[o*SW*32+gl*128+:128]=ve[o*128+:128];
             end
+            // Native CROM5 uses the actual closed hold-cell successor.
+            // Both branches retain exactly the original sampled-edge state.
+            if(MC==6 && VL==14 && ML==15)begin:g_native_hold
+            ot_qfd_su_align_group4_hold #(.ML(ML),.VL(VL),.MC(MC)) u_align (
+                .clk(ck_align[gl]),.rst_n(rst_n),.vm_q(vq),.vm_mask(mk),.vm_eff(ve),
+                .crom_q(crq_q0[gl*256+:256]),.crom_m(crq_q[gl*256+:256]),
+                .emb_q(e_va_q[gl*128+:128]),.emb_m(emb_m[gl*128+:128]),
+                .emb_sel(emb_sel[gl*4+:4]),.emb_sel_m(emb_sel_m[gl*4+:4]));
+            end else begin:g_original_align
             ot_qfd_su_align_group4 #(.ML(ML),.VL(VL),.MC(MC)) u_align (
                 .clk(ck_align[gl]),.rst_n(rst_n),.vm_q(vq),.vm_mask(mk),.vm_eff(ve),
                 .crom_q(crq_q0[gl*256+:256]),.crom_m(crq_q[gl*256+:256]),
                 .emb_q(e_va_q[gl*128+:128]),.emb_m(emb_m[gl*128+:128]),
                 .emb_sel(emb_sel[gl*4+:4]),.emb_sel_m(emb_sel_m[gl*4+:4]));
+            end
         end
     end endgenerate
     assign {vcq_m, vbq_m, vaq_v} = vq_eff;

@@ -313,7 +313,7 @@ def qwen_su_endpoint_accept_model(os_stages=1):
         qualification="minimum real embedding-prefetch/vstream-control gate, lane arithmetic isolated; full controller integration and physical route gates pending")
 
 
-def qwen_su_actual_glue_partition_model(cbuf_edges=5, align_hold=False):
+def qwen_su_actual_glue_partition_model(cbuf_edges=5, align_hold=None):
     """Actual c6/96f SU state cuts; clock/RC joins remain unqualified.
 
     Source and gate receipts: results/arch/qwen_su_glue_1015 and
@@ -321,6 +321,8 @@ def qwen_su_actual_glue_partition_model(cbuf_edges=5, align_hold=False):
     """
     if cbuf_edges not in (5, 8):
         raise ValueError("source-pinned native CROM response is5 or8 edges")
+    if align_hold is None:
+        align_hold = cbuf_edges == 5
     mc = cbuf_edges + 1
     align_ff = 384 * (15 - 14) + 256 * (15 - mc) + 132 * 15 + 12 * 15 + 384
     align_area = 2366 if align_hold else (1871 if mc == 6 else 1613)
@@ -344,7 +346,7 @@ def qwen_su_actual_glue_partition_model(cbuf_edges=5, align_hold=False):
                   boundary_bits_per_cycle=4206, outline_um=[133.92,133.92],
                   exact_replay_words=12288, response_plus_copy_edges=16,
                   complete_after_start_edges=82),
-        base=dict(replicas=1, register_bits_metadata_predicted=13305,
+        base=dict(replicas=1, register_bits_metadata=13305,
                   offset_adders=256, offset_adder_bits=24,
                   area_qualification="residual actual base unpriced pending real cut/route; never zero-area"),
         mux_demux="native hold muxes, copy reservation mux and packaging preserved; no new FIFO/ready/credit",

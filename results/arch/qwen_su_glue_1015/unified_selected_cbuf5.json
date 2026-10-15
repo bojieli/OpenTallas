@@ -1,0 +1,72 @@
+{
+  "schema": "opentallas.qwen-su-actual-glue-partition.v1",
+  "source_parent": "c6c44c12c",
+  "status_parent": "96f30a6a0",
+  "parameters": {
+    "SW": 64,
+    "AW": 24,
+    "NW": 18,
+    "WR": 16,
+    "RD": 2,
+    "VL": 14,
+    "ML": 15,
+    "MC": 6,
+    "RTREE": 0,
+    "EXTERNAL_EMBED": 1
+  },
+  "added_cycles": 0,
+  "macs_per_cycle_added": 0,
+  "memory_bytes_per_cycle_added": 0,
+  "historical_clock_roots": 346,
+  "current_clock_roots": 347,
+  "clock_entries": "existing64 relay+16alignment+base, plus realcopycore entry; arithmetic roots unchanged",
+  "relay": {
+    "replicas": 64,
+    "register_bits_each": 1621,
+    "synth_area_um2_each": 587,
+    "boundary_bits_per_cycle_each": 2124,
+    "outline_um": [
+      71.28,
+      71.28
+    ],
+    "reset": "original parent wire retained; no reset output port in canonical hardleaf"
+  },
+  "alignment": {
+    "replicas": 16,
+    "register_bits_each": 5232,
+    "synth_area_um2_each": 2366,
+    "boundary_bits_per_cycle_each": 1556,
+    "kept_hold_cells_each": 4848,
+    "outline_um": [
+      97.2,
+      97.2
+    ]
+  },
+  "copy": {
+    "replicas": 1,
+    "register_bits": 2572,
+    "synth_area_um2": 1396,
+    "boundary_bits_per_cycle": 4206,
+    "outline_um": [
+      133.92,
+      133.92
+    ],
+    "exact_replay_words": 12288,
+    "response_plus_copy_edges": 16,
+    "complete_after_start_edges": 82
+  },
+  "base": {
+    "replicas": 1,
+    "register_bits_metadata": 13305,
+    "offset_adders": 256,
+    "offset_adder_bits": 24,
+    "area_qualification": "residual actual base unpriced pending real cut/route; never zero-area"
+  },
+  "mux_demux": "native hold muxes, copy reservation mux and packaging preserved; no new FIFO/ready/credit",
+  "fanout": "256 original AW24 offsetadders and eight broadcast groups stay actual parent source",
+  "routing_capacity": "real fourface M4/M5 pin fits; parent channels/RC/phi-R still required",
+  "latency_composition": "same existing RD2, ML15, IS1, OS1, copy15+1; separate clock entry adds no sampled edge",
+  "qualification": "component source/reset/mutation gates and partial leaf routes only; no fullSU/wholelayer credit",
+  "acceptance_policy": "Owner OptionB TTsetup>=0, FFhold>=0, DRC0; SS sensitivity only (root confirmation2026-10-15)",
+  "scope": "selectedleafcomposition only; native base/corridor/clockentry coverage not physically qualified"
+}
