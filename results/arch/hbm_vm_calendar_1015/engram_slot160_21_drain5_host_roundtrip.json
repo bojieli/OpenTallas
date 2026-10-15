@@ -1,0 +1,195 @@
+{
+  "schema": "opentallas.hbm.engram-native-host-roundtrip.v1",
+  "result": "PASS",
+  "images": [
+    {
+      "source": "layer1/n0.hex",
+      "source_sha256": "345ec61ab93de7b202b830997eda6de78391bee1f7eefb1f135512aa2af06bac",
+      "host_fragment_sha256": "7ad070195ef17e44e77955286c065e19a99a3876c524a980a4733152a0398061",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer1/n1.hex",
+      "source_sha256": "28d3116ae57f1f6dc04eefe396d3feddf5e0b1ba83ff4fa0cbd281a0e05fc5c7",
+      "host_fragment_sha256": "bc85bae4919451df7550f921f0721516435493fba125df312b52af1a5f0ab723",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer1/n2.hex",
+      "source_sha256": "d41a22c4608be147e520ce04d40441f62b3019bada93437afb0f98275a0c7c99",
+      "host_fragment_sha256": "3d09837b08e57bc721f7b8858581d84744bc8be91d32dcd506c9d6f418fc7ef5",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer1/n3.hex",
+      "source_sha256": "5e73b397296b52ee6ecc74c4004a53a6ba9e81ff34bc0eeb8512a79e1888eb29",
+      "host_fragment_sha256": "f08e019d51df7c9412a899d1443e66fc6b8e35288d3ddcf1910bd40e36163ff0",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer1/n4.hex",
+      "source_sha256": "e9c3cc690f2e9451b845d70c07685721eac05d67beaf159529cb0e841b2c35af",
+      "host_fragment_sha256": "a8aa07189d40e628d1df44ec533f026d19e115bcc1ce73872ffeeaacf55ea2d2",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer1/n5.hex",
+      "source_sha256": "14ada6f52bc4b32ed4d5ba9e0b99e4c85bcc97dc8c62c01abe31998e9b4a7122",
+      "host_fragment_sha256": "398b834bd551203471d2a92adb4c329c15efc9ae7b2be55f6f83d3c13c88392b",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer1/n6.hex",
+      "source_sha256": "fa41509739880eff9ffc39c5891847da560c7f96edc5d916f088a2dfe0a1de89",
+      "host_fragment_sha256": "2264072a522b74b1bc982d03a5bace07a1fc87291ba2cfdae2fa7cecc3ba2a09",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer1/n7.hex",
+      "source_sha256": "a9b946fd9519047626c9223e8f44f8f35a6847a105589d4fe242e5f95dc78dc7",
+      "host_fragment_sha256": "2ee4fd06eaadde2b8fb34aa09e975dca69c12096263d533a1965fa688e9694a7",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer1/n8.hex",
+      "source_sha256": "b5dc8b8f5957f06de31f8eae0e597de9d77a480def0eefcd533126f36c877db8",
+      "host_fragment_sha256": "b15e962f5bf0fc97ce58c32887d4294648bb984a4a574dabc92d31b3e55b672a",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer14/n0.hex",
+      "source_sha256": "345ec61ab93de7b202b830997eda6de78391bee1f7eefb1f135512aa2af06bac",
+      "host_fragment_sha256": "7ad070195ef17e44e77955286c065e19a99a3876c524a980a4733152a0398061",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer14/n1.hex",
+      "source_sha256": "28d3116ae57f1f6dc04eefe396d3feddf5e0b1ba83ff4fa0cbd281a0e05fc5c7",
+      "host_fragment_sha256": "bc85bae4919451df7550f921f0721516435493fba125df312b52af1a5f0ab723",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer14/n2.hex",
+      "source_sha256": "d41a22c4608be147e520ce04d40441f62b3019bada93437afb0f98275a0c7c99",
+      "host_fragment_sha256": "3d09837b08e57bc721f7b8858581d84744bc8be91d32dcd506c9d6f418fc7ef5",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer14/n3.hex",
+      "source_sha256": "5e73b397296b52ee6ecc74c4004a53a6ba9e81ff34bc0eeb8512a79e1888eb29",
+      "host_fragment_sha256": "f08e019d51df7c9412a899d1443e66fc6b8e35288d3ddcf1910bd40e36163ff0",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer14/n4.hex",
+      "source_sha256": "e9c3cc690f2e9451b845d70c07685721eac05d67beaf159529cb0e841b2c35af",
+      "host_fragment_sha256": "a8aa07189d40e628d1df44ec533f026d19e115bcc1ce73872ffeeaacf55ea2d2",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer14/n5.hex",
+      "source_sha256": "14ada6f52bc4b32ed4d5ba9e0b99e4c85bcc97dc8c62c01abe31998e9b4a7122",
+      "host_fragment_sha256": "398b834bd551203471d2a92adb4c329c15efc9ae7b2be55f6f83d3c13c88392b",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer14/n6.hex",
+      "source_sha256": "fa41509739880eff9ffc39c5891847da560c7f96edc5d916f088a2dfe0a1de89",
+      "host_fragment_sha256": "2264072a522b74b1bc982d03a5bace07a1fc87291ba2cfdae2fa7cecc3ba2a09",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer14/n7.hex",
+      "source_sha256": "a9b946fd9519047626c9223e8f44f8f35a6847a105589d4fe242e5f95dc78dc7",
+      "host_fragment_sha256": "2ee4fd06eaadde2b8fb34aa09e975dca69c12096263d533a1965fa688e9694a7",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    },
+    {
+      "source": "layer14/n8.hex",
+      "source_sha256": "0230679d0eb44e9c9c116a91ceba5caa1827398c8831b9200418bdb10553e5b2",
+      "host_fragment_sha256": "d66dc129b58c963d2191bc94d786f78a4bbba19ceb3b4424badcba3f4e735c5e",
+      "operations": 2432,
+      "executing_limit": 2574,
+      "axi_operations": 24195,
+      "target": 120,
+      "physical_scope": "one independent node image per physical rank; not eighteen consumers sharing one target"
+    }
+  ],
+  "exact_raw_operations": 48384,
+  "payload_bits": 238,
+  "frame_bits": 256,
+  "native_profile": "slot160_21_drain5",
+  "native_banks": 21,
+  "descriptor_guard_edges": 1346,
+  "source_issuer_commit": "79037c152",
+  "target_contract": "program_target_map.v2",
+  "scope": "Actual source compiler controls -> typed raw fragment -> exact CSR frame byte-order roundtrip only; full AXI/LCP/native issuer/kernel composition remains open"
+}
