@@ -1,0 +1,26 @@
+{
+  "scope": "PRE_RTL_STATIC_PV_CONTROL_MODEL",
+  "source_latency_edges": {
+    "product": 4,
+    "feedback_add": 7,
+    "input_to_macro_write": 11,
+    "reduction_issue_to_write": 7
+  },
+  "first_input_age": "129+V_RETURN_LATENCY; externally compiled profile supplies actual value",
+  "residue_reuse_edges": 128,
+  "feedback_safe": true,
+  "initialization_writes": 128,
+  "post_last_input_to_first_tree_read": 13,
+  "reduction_levels": [
+    64,
+    32,
+    16,
+    8,
+    4,
+    2,
+    1
+  ],
+  "tree_edges": 430,
+  "static_normal_advance": "fixed input age/ordinal, drain counter, reduction counter, output slot; ready/pending/inflight/commit valid are fault checks only",
+  "native_clock_or_physical_qualification": false
+}

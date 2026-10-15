@@ -313,7 +313,11 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
                               f"(RECIPE=2, pin_reg_split.tcl in pre_gpl.tcl, OT_KEEP_PIN_REGS=1): a re-route of the same "
                               f"output stage repeats the launch miss")
             old_gpl = show(_commit(last), f"{kd}/pre_gpl.tcl") or ""
-            if "pin_reg_split.tcl" in old_gpl:
+            # (Q-DVM 2026-10-15) a closed recipe-2 kit that ran WITHOUT the output hold pad (spec outhold false: no
+            # leaf_iohold.tcl) leaves FF out-min to hold repair, whose BUF chains land on the launch path (qfd_xcst_*_m5
+            # m5c: 6 x BUFx2 per pin, launch 224.7..235.5).  Re-kitting the same block WITH the pad is a different output
+            # stage, not a repeat; a closed kit that already had both still refuses.
+            if "pin_reg_split.tcl" in old_gpl and ("leaf_iohold.tcl" in old_gpl or "leaf_iohold.tcl" not in gpl):
                 return refuse(f"native_launch: closed {last['name']} already had the recipe-2 output stage; the launch "
                               f"miss has another cause (pin_register with the measured fix)")
         return admit(f"{rr['cell']} TT launch {lw} ps > {TL.PIN_LAUNCH_MAX_PS} at phi - R ({rr['source']}); same RTL "
