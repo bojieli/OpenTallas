@@ -4849,6 +4849,10 @@ def buses_r8(m):
             dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
         elif it.kind == 'pqcnt':          # --pq-cnt count leaves: PQ stream clock, RTL ports clk / rst_n
             dom['stream'].append((it.name, 'clk')); rst['stream'].append((it.name, 'rst_n'))
+        elif RTL_BIND and it.master == 'dsfd_sp_vm':
+            # VM memory side is serial; compact sequencer and client slots use stream cks/rss.
+            dom['serial'].append((it.name, 'ck')); rst['serial'].append((it.name, 'rst'))
+            dom['stream'].append((it.name, 'cks')); rst['stream'].append((it.name, 'rss'))
         elif RTL_BIND and it.master == PQ_RTL_MASTER:
             # s81-die-rtl-bind r3: the PQ cluster's per-child clock entries (stream; the die delivers phi - R at each pin)
             dom['stream'] += [(it.name, p_) for p_ in pq_rtl_clock_ports()]
@@ -5128,10 +5132,10 @@ def ctrl_adapter_buses(hb):
     sseq c<e> 85 -> slab c_cmd, slab c_done 9 -> d<e>, slab c_st 2 -> s<e> for every engine whose bindings-file
     master is a slab of this die; the fld path's capture -> gather drained event and gather -> VM field go."""
     bind = json.loads((ROOT / 'physical/s81_ctrl/die_ctrl_bindings.json').read_text())
-    eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11)
+    eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11, vm=12)
     out = []
     for e, k in eng.items():
-        if e == 'hop' and not RTL_BIND:
+        if e in ('hop', 'vm') and not RTL_BIND:
             continue          # F4 (--rtl-bind): the hop engine's endpoint lives in the WFC stage kit cluster (dsfd_wfc_hop_ep)
         # band blocks (bk_selector S / bk_collector N) sit in other clock regions across the die: their command lanes
         # need forwarded-clock lane chains with end blocks (as the svc -> selector / collector chains), not common-clock
@@ -7070,7 +7074,7 @@ def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, stri
     for the adjacent stack)."""
     hub = m['hub']
     bind = json.loads((ROOT / 'physical/s81_ctrl/die_ctrl_bindings.json').read_text())
-    eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11)
+    eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11, vm=12)
     sq = hub['sseq']
     starts = m.setdefault('_ctrl_starts', {})
 
