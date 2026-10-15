@@ -1,0 +1,42 @@
+{
+  "status": "PRE_NATIVE_ENDPOINT_ORDERED160",
+  "target": 120,
+  "native_profile": "slot160_21_ordered_drain5",
+  "banks_per_node": 21,
+  "capacity": 2688,
+  "descriptor_guard": 1346,
+  "base": 0,
+  "limit": 2091,
+  "loops": 1,
+  "launch": 399,
+  "first_control_consumer": 406,
+  "issuer_done": 2495,
+  "last_decoder_FF": 2494,
+  "drain_control_indices": [
+    2086,
+    2087,
+    2088,
+    2089,
+    2090
+  ],
+  "images_sha256": {
+    "n0.hex": "190c305677860ee145a5f94067e8942e6f97b647ae99b49064b0eb5d42f8b80c",
+    "n1.hex": "417ce2e7b3b6fc0271dc4ac37a27629242a5015cb0d488b3d413b9fe4bac8d3d",
+    "n2.hex": "9f79e9c3d37978ac36e6ef72d70fd602cec6e28b399ef5e0bd84c5a069921bd7",
+    "n3.hex": "ede35bce76f4b76d178c8b93bf1911574f0d838dc445616a06c85ca73ead07a0",
+    "n4.hex": "5c46412ee83069aa2e31c2d359f1511467b6dd8a2812de3df9a26b2471c39bac",
+    "n5.hex": "eccac4c5bd041e2a97e65a423c05469e8af29c365b83c29be10a8d9055e1faab",
+    "n6.hex": "9152d6265ff19ec7d339c72b08f109c3fcaec215ecaa562fa3477a76c8d3c35d",
+    "n7.hex": "6107b2c5788e944257a59a0b6937849800f0946e3c8cbb3928b7e0ff63a4796f",
+    "n8.hex": "35397a6d513a4574799f8daba5d7baf8d5eacaaeab33f8b53bc5d29b513ea089"
+  },
+  "field_audit": {
+    "status": "PASS compiledtypedfieldaudit",
+    "hops": 720,
+    "packets": 160,
+    "sectors": 216
+  },
+  "physical_qualified": false,
+  "full96_release": false,
+  "normative_unchanged_programme": false
+}
