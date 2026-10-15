@@ -35,7 +35,7 @@ def analyze_structural_warnings(build):
         'all_other_UNOPTFLAT':0,'LATCH':0,'MULTIDRIVEN':0}
 
 def main():
-    import os
+    import os,shutil
     command_native=1
     sys_latency=86
     sys_delta=sys_latency-33
@@ -47,6 +47,8 @@ def main():
     if build_threads<1:raise ValueError('positive build threads')
     if command_native not in (0,1):raise ValueError('HC_COMMAND_NATIVE0/1')
     run=ROOT/'run_hc_command_native_sys1_mtp';run.mkdir(exist_ok=False)
+    compile_cache=os.environ.get('HC_SYS1_COMPILE_CACHE')
+    if compile_cache:shutil.copytree(Path(compile_cache),run/'obj',copy_function=shutil.copy2)
     rng=np.random.default_rng(20261015)
     G.set_arith('chunk8')
     c=hc.synth_case('production K20480, 24rows',rng,20480,24,8,1,'typical',{'fn_std':.001,'x_std':1.})
@@ -122,7 +124,7 @@ def main():
     pins=files+['tools/hdc_golden.py','tools/hdc_golden_v41.py','tools/rtl_hgi_hc_checkpoint_native_sys1_mtp_static_gate.py','tools/rtl_hdc_v41x_hcp_campaign.py','tools/lower_hbm_hc_mtp_static_calendar.py','tools/lower_hbm_hc_tail_loop_calendar.py','tools/lower_hbm_hc_sys1_mtp_static_calendar.py','tools/lower_hbm_hc_native_sys1_component_calendar.py']
     for f in set(pins)&set(engine['source_sha256']):
         if hashlib.sha256((ROOT/f).read_bytes()).hexdigest()!=engine['source_sha256'][f]:raise RuntimeError(f'engine source mismatch: {f}')
-    receipt={'engine_receipt_sha256':hashlib.sha256(engine_path.read_bytes()).hexdigest(),'engine_sources_match':True,'status':'PREPARED_NOT_RUN', 'SYS_LAT':sys_latency,'additional_pipeline_cycles':sys_delta,'residual_base_scales':'synthetic fixture; actual checkpoint FN only','canonical_G25_P1_qualified':False,'full_native_chip_qualified':False,'scope':'actual paged programme SRAM to SYS1 shared3830pin bankmemory/shell/32LG8MAC/core projection/tail; actual4SID32bankVM96SRAM and12LGtaps joined plus realresultVMwrites/readback; actual20GiB checkpoint PHY CDC staging128SRAM joined; only offchip PHY data model; no wholechip/physical qualification',
+    receipt={'compile_cache_copied_from':compile_cache,'engine_receipt_sha256':hashlib.sha256(engine_path.read_bytes()).hexdigest(),'engine_sources_match':True,'status':'PREPARED_NOT_RUN', 'SYS_LAT':sys_latency,'additional_pipeline_cycles':sys_delta,'residual_base_scales':'synthetic fixture; actual checkpoint FN only','canonical_G25_P1_qualified':False,'full_native_chip_qualified':False,'scope':'actual paged programme SRAM to SYS1 shared3830pin bankmemory/shell/32LG8MAC/core projection/tail; actual4SID32bankVM96SRAM and12LGtaps joined plus realresultVMwrites/readback; actual20GiB checkpoint PHY CDC staging128SRAM joined; only offchip PHY data model; no wholechip/physical qualification',
         'source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in pins},
         'fixture_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [*run.glob('*.mem'),run/'all24rows.hex']},
         'K':20480,'positions':[6,8],'projection_rows':24,'tail_words_per_position':24,'sink_clock_divisor':7,'checkpoint_fn_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'actual_SRAMs':306+128*command_native,'command_native':command_native,'build_threads':build_threads,'tail_configuration_words':497,'tail_programme_reconfigure_between_positions':False,'tail_body_period':497,'configuration_words_n6':1577+sys_delta,'configuration_words_n8':1897+sys_delta,'host_reconfigure_between_projection_and_tail':False,'PHY_model':('strict command-only offchipfixture canonical23edge; corrected owned-stacka7b86347d actualcontroller' if command_native else 'published request-level refresh-aware ot_chip_v41x_hbm3e_phy') ,'nominal_row_result_ages':[289+sys_delta+160*p for p in range(8)],'nominal_row_periods':{'6':1100+sys_delta,'8':1420+sys_delta},'early_row_result_ages':[269+sys_delta+160*p for p in range(8)],'early_row_periods':{'6':1080+sys_delta,'8':1400+sys_delta}}
