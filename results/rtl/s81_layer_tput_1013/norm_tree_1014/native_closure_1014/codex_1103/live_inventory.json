@@ -1,0 +1,27 @@
+{
+  "source": "28dd8dbda",
+  "archive_sha256": "2a41fc51797cc561040869e06fd36465451a2e2728ddf038f9ed81dccd97a709",
+  "full_proof": {
+    "status": "memory_queued_no_PASS",
+    "local_pid": 1144499,
+    "session": 39862,
+    "host": "ot-epyc4",
+    "tag": "otrun-ubuntu-1144499-87968899",
+    "path": "/srv/opentallas-scratch/codex/s81-norm-1103",
+    "memory_gb": 40,
+    "threads": 16
+  },
+  "preserved_pre_route_gate_local_pids": [
+    1031405,
+    1031406,
+    1031407
+  ],
+  "preserved_ctfxs_gate_otrun_pid": 1034073,
+  "preserved_np5_eco": {
+    "host": "ot-epyc1tb",
+    "K8_wrapper_pid": 663707,
+    "K8_hold_pid": 663812,
+    "K4_openroad_pid": 763675
+  },
+  "next": "Collect retained gate native metrics; finish full proof; obtain die current allincident geometry grant; productionHM30/MM equivalence before any newroute."
+}
