@@ -24,6 +24,10 @@ module ot_hbm_attn_query_prefetch #(parameter integer FILL_LAT=8,MUT=0)(
   for(integer k=0;k<8;k=k+1)begin
    rq[k*17+:17]<={fetch_v,16'(fetch_base_sector+k)};
    if(rr[k*257+256]!=vp[FILL_LAT-1])fault<=1;
+   // Native source contract rejects a non-BF16-grid FP32 operand. Preserve
+   // upper16 extraction exactly, but never silently truncate nonzero lowbits.
+   if(vp[FILL_LAT-1])for(integer w=0;w<8;w=w+1)
+    if(rr[k*257+w*32+:16]!=16'd0)fault<=1;
   end
   if(fetch_v&&fetch_base_sector[2:0]!=0)fault<=1;
  end

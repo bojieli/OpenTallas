@@ -30,7 +30,7 @@ module tb_hbm_attn_query_prefetch;
    @(negedge clk);pwq=0;
    for(b=0;b<8;b++)begin
     pwq[b*281+:281]={1'b1,16'(ep*1024+h*64+s*8+b),256'd0,8'hff};
-    for(w=0;w<8;w++)pwq[b*281+8+w*32+:32]={word(ep,h,s*64+b*8+w),16'd0};
+    for(w=0;w<8;w++)pwq[b*281+8+w*32+:32]={word(ep,h,s*64+b*8+w),16'((mut==4&&ep==0&&h==0&&s==0&&b==0&&w==0)?1:0)};
    end
   end
   @(negedge clk);pwq=0;repeat(8)@(negedge clk);preload=0;
