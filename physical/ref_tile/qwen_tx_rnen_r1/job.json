@@ -1,5 +1,5 @@
 {
- "name": "qwen_tx_rnen_r1-n1-COMMIT",
+ "name": "qwen_tx_rnen_r1-n1-8ef69bd8d",
  "block": "qwen_tx_rnen_r1",
  "ref_tile": true,
  "owner": "Claude:q15_compute_elem",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/q15-rne-native",
-  "commit": "COMMIT",
+  "commit": "8ef69bd8d1d8ef1b59249b7af46be1ce81f374b9",
   "extra_paths": [
    "physical/qwen_tx_rne_retime_1015",
    "results/rtl/qwen_compute_native_glue_1014/tx_rne207_1015"
@@ -152,7 +152,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qwen_tx_rnen_r1/qwen_tx_rnen_r1-n1-COMMIT"
+   "to": "results/rtl/ref_tile/qwen_tx_rnen_r1/qwen_tx_rnen_r1-n1-8ef69bd8d"
   }
  ],
  "cycles_added": 0,
