@@ -818,6 +818,7 @@ def build_r25gq(variant):
         y_ = s.y if q[0] == 'S' else s.y + s.h - h_
         if V.get('idx_score_box'):      # hbmdie 10-14 v13: native IDX leaf+macro area 38.169 mm2 vs 4 x 5.292 slots
             ib_ = V['idx_score_box']    # (lower bound, no glue): each scorer takes its corner band (bottom edge kept)
+            y_ = dn(ib_['y'][q], GY) if q in (ib_.get('y') or {}) else y_
             add(s.name, s.name, dn(ib_['x'].get(q, ib_['x'][q[1]]), GX), y_, w=up(ib_['w'], GX), h=up(ib_['h'], GY),
                 master=V['idx_score_slot'][0] if V.get('idx_score_slot') else None)
             rmap[s.name] = s.name
@@ -8014,6 +8015,8 @@ def r25gq_v14():
     if v.get('idx_score_box'):
         v['idx_score_box'] = dict(v['idx_score_box'], x=dict(v['idx_score_box']['x'],
                                                              SE=float(os.environ.get('OT_HBMDIE_IDX_SE_X', '16699.0'))))
+        if os.environ.get('OT_HBMDIE_IDX_SW_Y'):
+            v['idx_score_box']['y'] = dict(v['idx_score_box'].get('y') or {}, SW=float(os.environ['OT_HBMDIE_IDX_SW_Y']))
         if os.environ.get('OT_HBMDIE_IDX_NE_X'):
             v['idx_score_box']['x']['NE'] = float(os.environ['OT_HBMDIE_IDX_NE_X'])
     if os.environ.get('OT_HBMDIE_EPS2_Y') and v.get('link_ep_v2'):
