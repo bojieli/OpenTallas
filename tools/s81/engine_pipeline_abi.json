@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.s81.engine_pipeline_abi.v1",
+ "rule": "A native job's duration_cycles is a measured command-pin -> done-pin latency (done = issue + 1 + latency). Every fixed pipeline stage added to an engine after a duration was measured invalidates that duration: the binding must carry the engine's current pipeline record (exact match) or the compiler refuses it.",
+ "engines": {
+  "hc": {
+   "return_columns_extra_edges": 1,
+   "change": "HC four-column return successor replacing ctra/ctrb: +1 fixed cycle on HC return data",
+   "source": "origin/claude/s81-return-columns-1015 @20c63c643 (IDLE-S)"
+  },
+  "su": {
+   "vm_link_relay_extra_edges": 3,
+   "change": "adopted S81 floorplan SA_2x2_RP: ~3 relay stages on the 17,137-bit SU-VM link (+3 fixed cycles on SU VM requests/returns)",
+   "source": "coordinator 2026-10-15 (S81 floorplan SA_2x2_RP adoption); re-measure SU durations on the relayed link"
+  },
+  "fld": {
+   "field_round_trip_cycles": 118,
+   "change": "adopted S81 floorplan SA_2x2_RP: field round trip 140 -> 118 cycles",
+   "source": "coordinator 2026-10-15 (S81 floorplan SA_2x2_RP adoption); field durations measured on the 140-cycle trip are stale"
+  }
+ }
+}

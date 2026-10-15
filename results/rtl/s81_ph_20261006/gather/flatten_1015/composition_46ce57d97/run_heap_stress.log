@@ -1,0 +1,22 @@
+ROW MISMATCH cycle 199 root 49: flat 0802c479f98445 cluster 0c00c489032988
+ROW MISMATCH cycle 199 root 100: flat 08059088e36df5 cluster 0805907ecbd0b2
+ROW MISMATCH cycle 199 root 102: flat 0a059866895a2c cluster 0a01996dcd0753
+ROW MISMATCH cycle 200 root 51: flat 0604cc8641a71d cluster 0c02cd7b0c96e4
+ROW MISMATCH cycle 200 root 97: flat 02058583403537 cluster 020384728360d4
+STATUS MISMATCH cycle 523: flat 110 cluster 111
+STATUS MISMATCH cycle 1027: flat 110 cluster 111
+RESTART drained boundary after phase 2
+STATUS MISMATCH cycle 1614: flat 110 cluster 111
+STATUS MISMATCH cycle 2083: flat 110 cluster 111
+RESTART drained boundary after phase 4
+STATUS MISMATCH cycle 2675: flat 110 cluster 111
+STATUS MISMATCH cycle 3142: flat 110 cluster 111
+RESTART drained boundary after phase 6
+READY_SUMMARY errors=0 early_command=0 ctl_words_flat=6
+SUMMARY phases=6 rows_flat=1921 rows_cluster=1299 row_mismatch=1235 ctl_mismatch=0 status_mismatch=6 first=199 roots_with_rows=128 xgo=6 done=6 ctl_words=6 busy_seen=1 fault_flat=0 fault_cluster=0 bad_before_fault=0 shift=R(c)+R(k)-2
+STATIC_SUMMARY cmd_to_xgo=9..9 done_after_drain=10..10 by_phase0..3=1073741824..-1/1073741824..-1/10..10/10..10 issue_wait=0 driver=open_loop deterministic=1
+RESULT FAIL
+- /srv/opentallas-scratch/claude/sgather-comp-46ce57d97/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gather_cl.sv:253: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 21us; walltime 4.526 s; speed 4.737 us/s
+- Verilator: cpu 4.525 s on 1 threads; alloced 1027 MB

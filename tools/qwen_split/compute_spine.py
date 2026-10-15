@@ -196,7 +196,14 @@ def _pair_mirror_hs(m, keep_rows=(7, 8)):
         else:
             i.x = round(nx + TW, 4)
         moved_s += 1
-    return dict(scheme='PM-H-S', kept_rows=list(keep_rows), inner_um=INNER, gapL_um=GAPL, gapR_um=64.8,
+    # relay corridor lanes (the relay planner's per-column station lane): even columns W of the MY tile (64.776),
+    # odd columns E of the R0 tile (64.800); head rows 7 / 8 keep the old station x (their hop costs the +1 stage)
+    lanes = []
+    for x in xs:
+        nx, o, side = newx[x]
+        lanes.append((round(nx - GAPL, 4), GAPL) if side == 'L' else (round(nx + TW, 4), 64.8))
+    m['corridor_lanes'] = lanes
+    return dict(scheme='PM-H-S', kept_rows=list(keep_rows), corridor_lanes_um=[64.776, 64.8], inner_um=INNER, gapL_um=GAPL, gapR_um=64.8,
                 my_station_shift_nm=-30, mirrored_tiles=sum(1 for i in tiles if i.orient == 'MY'),
                 moved_tiles=moved_t, moved_stations=moved_s, source='GEO-Q pmh_legality.py (main 48fab3baf)')
 
@@ -640,6 +647,9 @@ def place(v, m, G):
     if 'native_static_io_bind' in m and os.environ.get('OT_SPLIT_NATIVE_GRAPH', '1') != '0':
         from qwen_split.native_graph_bind import apply as native_graph_apply
         rec['native_graph_bind'] = native_graph_apply(m)
+        if os.environ.get('OT_SPLIT_STATIC_LINK', '1') != '0':
+            from qwen_split.static_link_bind import apply as static_link_apply
+            rec['static_link_bind'] = static_link_apply(m)
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         bus = [dict(b=b_, c=c_, n=n_, e=[list(x) for x in e_]) for b_, c_, n_, e_ in m.get('buses', [])]

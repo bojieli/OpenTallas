@@ -1,46 +1,46 @@
-ERR read data edge 252 q0 b0 rec 0 got 0000000000000000 exp 92017d5af3ca03a9
-ERR read data edge 252 q0 b1 rec 0 got 0000000000000000 exp 83bd4ae2e585d131
-ERR read data edge 252 q0 b2 rec 0 got 0000000000000000 exp e79aac2a49633279
-ERR read data edge 252 q0 b3 rec 0 got 0000000000000000 exp d95679b23b1f0001
-ERR read data edge 252 q0 b4 rec 0 got 0000000000000000 exp cb12473a2cdacd89
-ERR read data edge 252 q0 b5 rec 0 got 0000000000000000 exp bcce14c21e969b11
-ERR read data edge 252 q0 b6 rec 0 got 0000000000000000 exp ae89e24a10526899
-ERR read data edge 252 q0 b7 rec 0 got 0000000000000000 exp a045afd2020e3621
-ERR read data edge 252 q1 b0 rec 0 got 0000000000000000 exp 035784aa65200af9
-ERR read data edge 252 q1 b1 rec 0 got 0000000000000000 exp f513523256dbd881
+ERR read data edge 264 q0 b0 rec 0 got 0000000000000000 exp 92017d5af3ca03a9
+ERR read data edge 264 q0 b1 rec 0 got 0000000000000000 exp 83bd4ae2e585d131
+ERR read data edge 264 q0 b2 rec 0 got 0000000000000000 exp e79aac2a49633279
+ERR read data edge 264 q0 b3 rec 0 got 0000000000000000 exp d95679b23b1f0001
+ERR read data edge 264 q0 b4 rec 0 got 0000000000000000 exp cb12473a2cdacd89
+ERR read data edge 264 q0 b5 rec 0 got 0000000000000000 exp bcce14c21e969b11
+ERR read data edge 264 q0 b6 rec 0 got 0000000000000000 exp ae89e24a10526899
+ERR read data edge 264 q0 b7 rec 0 got 0000000000000000 exp a045afd2020e3621
+ERR read data edge 264 q1 b0 rec 0 got 0000000000000000 exp 035784aa65200af9
+ERR read data edge 264 q1 b1 rec 0 got 0000000000000000 exp f513523256dbd881
 RECORD 0 window measured 0..98 = 98 edges, compiler 0..98
-RECORD 1 window measured 124..131 = 7 edges, compiler 124..131
-RECORD 2 window measured 131..186 = 55 edges, compiler 131..186
-RECORD 3 window measured 186..262 = 76 edges, compiler 186..262
-RECORD 4 window measured 225..232 = 7 edges, compiler 225..232
-RECORD 5 window measured 188..264 = 76 edges, compiler 188..264
-RECORD 6 window measured 190..234 = 44 edges, compiler 190..234
-RECORD 7 window measured 264..308 = 44 edges, compiler 264..308
-RECORD 8 window measured 308..392 = 84 edges, compiler 308..392
-RECORD 9 window measured 346..394 = 48 edges, compiler 346..394
-RECORD 10 window measured 419..427 = 8 edges, compiler 419..427
-RECORD 11 window measured 427..471 = 44 edges, compiler 427..471
-RECORD 12 window measured 427..473 = 46 edges, compiler 427..473
-RECORD 13 window measured 466..473 = 7 edges, compiler 466..473
-RECORD 14 window measured 473..596 = 123 edges, compiler 473..596
-RECORD 15 window measured 596..639 = 43 edges, compiler 596..639
-RECORD 16 window measured 639..686 = 47 edges, compiler 639..686
-RECORD 17 window measured 711..718 = 7 edges, compiler 711..718
-RECORD 18 window measured 712..719 = 7 edges, compiler 712..719
-RECORD 19 window measured 713..720 = 7 edges, compiler 713..720
-RECORD 20 window measured 714..721 = 7 edges, compiler 714..721
-RECORD 21 window measured 746..753 = 7 edges, compiler 746..753
-RECORD 22 window measured 747..754 = 7 edges, compiler 747..754
-RECORD 23 window measured 764..771 = 7 edges, compiler 764..771
-RECORD 24 window measured 796..803 = 7 edges, compiler 796..803
-RECORD 25 window measured 829..836 = 7 edges, compiler 829..836
-RECORD 26 window measured 836..883 = 47 edges, compiler 836..883
-RECORD 27 window measured 883..927 = 44 edges, compiler 883..927
-RECORD 28 window measured 927..971 = 44 edges, compiler 927..971
-RECORD 29 window measured 971..982 = 11 edges, compiler 971..982
-RECORD 30 window measured 972..1016 = 44 edges, compiler 972..1016
-RECORD 31 window measured 1016..1139 = 123 edges, compiler 1016..1139
-RECORD 32 window measured 1139..1182 = 43 edges, compiler 1139..1182
-FATAL: /home/ubuntu/wt/hbm-elemb-spread-1015/rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_static_spread_vehicle.sv:152: SU_SPREAD_VEHICLE FAIL errors=12361 reads=12361 writes=11952
-       Time: 16660000 Scope: tb_hbm_su_static_spread_vehicle
+RECORD 1 window measured 177..184 = 7 edges, compiler 177..184
+RECORD 2 window measured 184..239 = 55 edges, compiler 184..239
+RECORD 3 window measured 239..315 = 76 edges, compiler 239..315
+RECORD 4 window measured 388..395 = 7 edges, compiler 388..395
+RECORD 5 window measured 241..420 = 179 edges, compiler 241..420
+RECORD 6 window measured 243..443 = 200 edges, compiler 243..443
+RECORD 7 window measured 443..487 = 44 edges, compiler 443..487
+RECORD 8 window measured 487..571 = 84 edges, compiler 487..571
+RECORD 9 window measured 639..689 = 50 edges, compiler 639..689
+RECORD 10 window measured 714..722 = 8 edges, compiler 714..722
+RECORD 11 window measured 722..815 = 93 edges, compiler 722..815
+RECORD 12 window measured 722..858 = 136 edges, compiler 722..858
+RECORD 13 window measured 875..882 = 7 edges, compiler 875..882
+RECORD 14 window measured 882..1005 = 123 edges, compiler 882..1005
+RECORD 15 window measured 1005..1213 = 208 edges, compiler 1005..1213
+RECORD 16 window measured 1213..1268 = 55 edges, compiler 1213..1268
+RECORD 17 window measured 1293..1300 = 7 edges, compiler 1293..1300
+RECORD 18 window measured 1294..1301 = 7 edges, compiler 1294..1301
+RECORD 19 window measured 1295..1302 = 7 edges, compiler 1295..1302
+RECORD 20 window measured 1296..1303 = 7 edges, compiler 1296..1303
+RECORD 21 window measured 1328..1335 = 7 edges, compiler 1328..1335
+RECORD 22 window measured 1329..1336 = 7 edges, compiler 1329..1336
+RECORD 23 window measured 1369..1376 = 7 edges, compiler 1369..1376
+RECORD 24 window measured 1401..1408 = 7 edges, compiler 1401..1408
+RECORD 25 window measured 1450..1457 = 7 edges, compiler 1450..1457
+RECORD 26 window measured 1457..1574 = 117 edges, compiler 1457..1574
+RECORD 27 window measured 1574..1618 = 44 edges, compiler 1574..1618
+RECORD 28 window measured 1618..1662 = 44 edges, compiler 1618..1662
+RECORD 29 window measured 1662..1673 = 11 edges, compiler 1662..1673
+RECORD 30 window measured 1663..1730 = 67 edges, compiler 1663..1730
+RECORD 31 window measured 1730..1853 = 123 edges, compiler 1730..1853
+RECORD 32 window measured 1853..1896 = 43 edges, compiler 1853..1896
+FATAL: /home/ubuntu/wt/hbm-elemb-sfu-1015/rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_static_spread_vehicle.sv:164: SU_SPREAD_VEHICLE FAIL errors=12361 reads=12361 writes=11955
+       Time: 24040000 Scope: tb_hbm_su_static_spread_vehicle
 exit=1

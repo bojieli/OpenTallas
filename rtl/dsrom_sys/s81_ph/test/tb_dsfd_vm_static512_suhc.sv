@@ -6,14 +6,16 @@ module tb_dsfd_vm_static512_suhc;
  reg [17:0] iv=0;reg [251:0] ir=0;reg [89:0] islot=0;reg [2:0] ig=0;
  reg [31:0] wv=0;reg [447:0] wr=0;reg [511:0] wm=0;reg [16383:0] wd=0;reg [255:0] wt=0;
  reg release_v=0;reg [2:0] release_group=0;reg [31:0] release_mask=0;
+ reg prepare_v=0;reg [2:0] prepare_group=0;reg [31:0] prepare_mask=0;
  reg [17:0] expected=0;reg [89:0] release_slot=0;
- wire [71:0] nv;wire [9215:0] nd;wire [27:0] fault;wire [127:0] gv;wire [11:0] gid;
- dsfd_vm_static512_suhc mem(.ck_rscatter({16{ck}}),.ck_wcapture({128{ck}}),.ck_wscatter({16{ck}}),.ck_return({4{ck}}),
+ wire [71:0] nv;wire [9215:0] nd;wire [39:0] fault;wire [127:0] gv;wire [11:0] gid;
+ dsfd_vm_static512_suhc mem(.ck_rscatter({16{ck}}),.ck_wcapture({128{ck}}),.ck_wscatter({16{ck}}),.ck_return({16{ck}}),
  .ck_bank({128{ck}}),.ck_relay_req({48{ck}}),.ck_relay_rsp({48{ck}}),
  .rst_rscatter_n({16{rn}}),.rst_return_n({4{rn}}),.rst_wcapture_n({128{rn}}),.rst_wscatter_n({16{rn}}),.rst_bank_n({128{rn}}),.rst_relay_n({48{rn}}),
  .native_rq_v(iv),.native_rq_row(ir),.native_rq_slot(islot),.native_rq_group(ig),
  .aux_rq_v(12'd0),.aux_rq_row(168'd0),.wq_v(wv),.wq_row(wr),.wq_mask(wm),.wq_data(wd),.wq_tag(wt),
  .release_v(release_v),.release_group(release_group),.release_mask(release_mask),
+ .prepare_v(prepare_v),.prepare_group(prepare_group),.prepare_mask(prepare_mask),
  .native_expected_v(expected),.native_release_slot(release_slot),.native_v(nv),.native_data(nd),
  .group_v(gv),.group_data(),.group_id(gid),.commit_v(),.commit_addr(),.commit_mask(),.commit_tag(),.fault(fault));
  reg [17:0] hv[0:9];reg [251:0] hr[0:9];reg [89:0] hs[0:9];reg [2:0] hg[0:9];
@@ -44,6 +46,9 @@ module tb_dsfd_vm_static512_suhc;
    release_v=|hv[9];release_group=hg[9];release_mask=0;
    expected=hv[9];release_slot=hs[9];
    for(integer p=0;p<18;p=p+1)if(expected[p])release_mask[hs[9][5*p+:5]]=1;
+   // the same compiled descriptor one edge early (rsched stage9)
+   prepare_v=|hv[8];prepare_group=hg[8];prepare_mask=0;
+   for(integer p=0;p<18;p=p+1)if(hv[8][p])prepare_mask[hs[8][5*p+:5]]=1;
    @(posedge ck);#0.1;
    if(fault||nv!=={4{expected}}||gv!=={4{release_mask}})bad=bad+1;
    if(release_v&&gid!=={4{release_group}})bad=bad+1;

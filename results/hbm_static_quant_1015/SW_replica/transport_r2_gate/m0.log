@@ -1,0 +1,5 @@
+PASS HGI_QDQ_SW_TARGET125_NATIVE_HOST RG5_WG1 records=8 beats=128 sectors=512 commit_cycles=183 immutable_price=192 historical_wq3_price_not_applied=1 programme_macros=5 data_macros=24 real_loaderCP_target125=1
+- rtl/test/hbm_accel/generic/tb_hgi_qdq_sw_host_static.sv:232: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 169us; walltime 0.145 s; speed 1.160 ms/s
+- Verilator: cpu 0.146 s on 1 threads; alloced 1021 MB

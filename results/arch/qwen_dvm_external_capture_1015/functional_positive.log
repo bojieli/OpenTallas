@@ -1,0 +1,15 @@
+ot-run: ot-epyc1tb     admits   557 GB (avail 783, growth 50, headroom 64, waiters 0/0 GB) load 46/128 running 13 disk 976 GB 
+ot-run: ot-epyc4       admits   654 GB (avail 880, growth 101, headroom 48, waiters 0/0 GB) load 34/128 running 22 disk 450 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-951254-1792061511 after 0 s
+PASS external capture leaf checks=129 good=128 invalid=1 same_read_age=1 fill_II=1 burst_words=128 payload_bytes_per_edge=128
+- rtl/qwen_sys/dvm_extcap_20261015/tb_qfd_xs_leaf_capture.sv:83: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.001 s; speed 1.219 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+PASS external capture early fill rejected
+- rtl/qwen_sys/dvm_extcap_20261015/tb_qfd_xs_leaf_capture.sv:51: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20ns; walltime 0.000 s; speed 229.031 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-951254-1792061511): exit 0

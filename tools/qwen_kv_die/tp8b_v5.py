@@ -1733,6 +1733,10 @@ def _wrap(v, m, G, peers):
             if model.get('native_graph_bind'):
                 from qwen_split.native_graph_bind import install_masters as install_native_graph
                 install_native_graph(M, model, Master, v.pin_rects)
+            if model.get('static_link_bind'):
+                from qwen_split.static_link_bind import install_masters as install_static_link
+                from qwen_split.direct_up4 import partition_master as _pm
+                install_static_link(M, model, Master, _pm)
             for mst_ in M.values():
                 mst_.order[:] = list(dict.fromkeys(mst_.order))
 
@@ -1771,8 +1775,17 @@ def _wrap(v, m, G, peers):
             for p in dict.fromkeys(q for q in mst.order if q in mine):
                 if mine[p][0] == 'xy':
                     _, n0, layer, poss, _ = mine[p]
+                    exact = getattr(mst, 'assigned_fragment_rects', {}).get(p)
+                    if exact is not None:
+                        if len(exact) != n0:
+                            raise ValueError(f'{mst.name}.{p}: incomplete assigned fragment rectangles')
+                        out.extend((f'{p}[{i}]', L, r) for i, (L, r) in enumerate(exact[:wmap.get(p, n0)]))
+                        continue
                     for i, (x, y) in enumerate(poss[:wmap.get(p, n0)]):
-                        out.append((f'{p}[{i}]', layer, (x-.012,y-.012,x+.012,y+.012)))
+                        # >= the layer's min area (M5 2000 nm2): a 24 x 24 nm interior square had no DRT access
+                        # point (C19s DRT-0073 on every interior clock entry); 24 x 96 nm along the preferred direction
+                        hx, hy = (.012, .048) if layer in ('M1', 'M3', 'M5', 'M7', 'M9') else (.048, .012)
+                        out.append((f'{p}[{i}]', layer, (x-hx,y-hy,x+hx,y+hy)))
                     continue
                 _, n0, f, layer, poss, _ = mine[p]
                 n = min(wmap.get(p, n0), len(poss))

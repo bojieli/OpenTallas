@@ -108,7 +108,16 @@ module ot_s81_pq_ctl_static_native (
  reg[18:0] rows_seen[0:3];
  reg[1:0] iss_tag;
  wire any_v=sv[0]|sv[1]|sv[2]|sv[3];
- assign ready=1'b1;assign idle=!any_v;
+ assign ready=1'b1;
+`ifdef OT_PQ_CTL_CALCAP
+ // CALCAP (native audit 10-15 of the closed INCAP view: idle launch 253 ps): idle is a registered status, +1 edge
+ // (status only, never gates an event: the static END is the calendar retire pulse).
+ reg idle_q;
+ always @(posedge clk or negedge rst_c) if(!rst_c) idle_q<=1'b1; else idle_q<=!any_v;
+ assign idle=idle_q;
+`else
+ assign idle=!any_v;
+`endif
  reg[31:0] cyc;
     genvar gst;
     generate for (gst = 0; gst < 4; gst = gst + 1) begin : g_st
@@ -145,7 +154,31 @@ module ot_s81_pq_ctl_static_native (
     wire [PHW-1:0] a_ph_n = go ? i_ph : a_ph;
 `endif
     assign rom_pa0 = {a_ph_n, 1'b0}; assign rom_pa1 = {a_ph_n, 1'b1};
-    assign ph_q0 = rom_pq0; assign ph_q1 = rom_pq1;           // two-cycle synchronous macro: valid with a_v2
+`ifdef OT_PQ_CTL_CALCAP
+    // c4: first own the phase-ROM response at the leaf pins. The four tagged
+    // hold-enable stores follow one edge later; config/launch keep their
+    // compiled edges, with a checked minimum phase-response preparation gap.
+    reg [63:0] phase0_pin;
+    reg [15:0] phase1_pin;
+    reg phase_pin_valid;
+    reg [1:0] phase_pin_tag;
+    always @(posedge clk) begin
+        phase0_pin <= rom_pq0;
+        phase1_pin <= rom_pq1[15:0];
+        phase_pin_tag <= a_tag2;
+    end
+    always @(posedge clk or negedge rst_c)
+        if (!rst_c) phase_pin_valid <= 1'b0;
+        else phase_pin_valid <= a_v2;
+    assign ph_q0 = phase0_pin;
+    assign ph_q1 = {48'd0,phase1_pin};
+    wire phase_store_valid = phase_pin_valid;
+    wire [1:0] phase_store_tag = phase_pin_tag;
+`else
+    assign ph_q0 = rom_pq0; assign ph_q1 = rom_pq1;
+    wire phase_store_valid = a_v2;
+    wire [1:0] phase_store_tag = a_tag2;
+`endif
 
     // v15: the two quantisers are T_AQ tiles (ot_dsrom_aq12t) in the spine wrapper
     localparam integer AQL = 29;
@@ -209,6 +242,13 @@ module ot_s81_pq_ctl_static_native (
     reg [1:0]     r1_tag;
     reg [2:0]     r1_pos;
     reg [47:0]    r1_w;
+`ifdef OT_PQ_CTL_CALCAP
+    // c4 direct ROM capture: the previous assignment lived in the reset-qualified
+    // state block, adding a reset-controlled hold mux ahead of every input flop.
+    // Payload captures every edge; r1_v alone carries reset/validity. This uses
+    // the same existing R1 edge and adds no compiler or endpoint latency.
+    always @(posedge clk) r1_w <= st_q;
+`endif
     // R2: derived fields
     wire          r1_spar = r1_tag[0] ^ r1_pos[0];
     wire [7:0]    r1_u  = r1_w[8:1];
@@ -259,8 +299,18 @@ module ot_s81_pq_ctl_static_native (
  wire[15:0] h_b0=he[EW-73 -:16],h_b1=he[EW-89 -:16];
  wire[35:0] h_hi=he[35:0];
  wire h_lastop=he[EW-66];
+`ifdef OT_PQ_CTL_CALCAP
+ // CALCAP: q/b_consume launch from their own flops, loaded from the r3 stage on the edge that loads he/hv
+ // (same cycle, 0 edges; native audit of the INCAP view: b_consume 264 / q_consume 236 ps > 220 through the AND).
+ reg qc_q,bc_q;
+ always @(posedge clk or negedge rst_c)
+  if(!rst_c) begin qc_q<=1'b0;bc_q<=1'b0; end
+  else begin qc_q<=r3_v&&r3_e[EW-48]&&!r3_e[EW-67];bc_q<=r3_v&&r3_e[EW-48]&&r3_e[EW-67]; end
+ assign q_consume=qc_q;assign b_consume=bc_q;
+`else
  assign q_consume=hv&&hw[0]&&!h_fam;
  assign b_consume=hv&&hw[0]&&h_fam;
+`endif
  assign hw_o=hw;assign h_hi_o=h_hi;assign h_b0_o=h_b0;assign h_b1_o=h_b1;
     reg         p1_xs_v, p1_xb_v, p1_go, p1_gobf, p1_cfg;
     reg [7:0]   p1_p;
@@ -393,6 +443,22 @@ module ot_s81_pq_ctl_static_native (
     end
 
  integer ks;
+`ifdef OT_PQ_CTL_INCAP
+ reg[74:0] dg_act;reg dg_go,dg_calv;reg[3:0] dg_sv,dg_sr,dg_si,dg_cnt_bad;
+ wire[1:0] dg_cfg=dg_act[64:63]
+`ifdef OT_S81_PQ_STATIC_MUT_TAG
+  ^2'd1
+`endif
+  ;
+ integer kd;
+ always @(posedge clk) begin
+  dg_act<=calendar_v?calendar_action:75'd0;dg_go<=go;dg_calv<=calendar_v;
+  for(kd=0;kd<4;kd=kd+1)begin
+   dg_sv[kd]<=sv[kd];dg_sr[kd]<=sr[kd];dg_si[kd]<=si[kd];
+   dg_cnt_bad[kd]<=!sv[kd]||rows_seen[kd]+19'(rc[kd])!=s_tot[kd];
+  end
+ end
+`endif
  always @(posedge clk or negedge rst_c) begin
   if(!rst_c) begin
    fault<=0;cyc<=0;phase_cycles<=0;ev_go<=0;ev_end<=0;ev_tag<=0;stream_end_v<=0;stream_end_tag<=0;
@@ -409,18 +475,32 @@ module ot_s81_pq_ctl_static_native (
    if(hv&&h_lastop)stream_end_tag<=h_tag;
    if(action[65])ev_tag<=launch_tag;
    if(|action[71:68])ev_tag<={action[71]|action[70],action[71]|action[69]};
+`ifndef OT_PQ_CTL_INCAP
    if((action[71:68]&(action[71:68]-4'd1))!=0)fault<=1;
+`endif
    // Faults diagnose violated compiler contracts; they never gate events.
 `ifdef OT_PQ_CTL_INCAP
    if(f_fault_s||(|aqf_s)||(|q2f_s)||x_rv_s!=rq_v_q||(|act_hi_q))fault<=1;
+   // Calendar-contract diagnosis one edge after the event, from the captured calendar word and the
+   // pre-event state snapshots taken at the same edge: same verdicts, no input pin -> logic -> fault path.
+   if((dg_act[71:68]&(dg_act[71:68]-4'd1))!=0)fault<=1;
+   if(dg_go&&dg_sv[dg_act[1:0]])fault<=1;
+   if(dg_go&&!dg_calv)fault<=1;
+   if(|(dg_act[71:68]&dg_cnt_bad))fault<=1;
+   if(dg_act[62]&&(!dg_sv[dg_cfg]||!dg_sr[dg_cfg]))fault<=1;
+   if(dg_act[65]&&(!dg_sv[dg_act[67:66]]||!dg_sr[dg_act[67:66]]||!dg_si[dg_act[67:66]]))fault<=1;
 `else
    if(f_fault||(|aqf)||(|q2f_i)||x_rv!=rq_v||(|action[74:73]))fault<=1;
 `endif
+`ifndef OT_PQ_CTL_INCAP
    if(go&&sv[accept_tag])fault<=1;
+`endif
+`ifndef OT_PQ_CTL_INCAP
    if(go&&!calendar_v)fault<=1;
+`endif
    a_v<=go;a_tag<=accept_tag;a_v2<=a_v;a_tag2<=a_tag;
    if(go)begin sv[accept_tag]<=1;sr[accept_tag]<=0;si[accept_tag]<=0;a_ph<=i_ph;end
-   if(a_v2)begin s_pw[a_tag2]<=ph_q0;s_rs[a_tag2]<=ph_q1[15:0];sr[a_tag2]<=1;end
+   if(phase_store_valid)begin s_pw[phase_store_tag]<=ph_q0;s_rs[phase_store_tag]<=ph_q1[15:0];sr[phase_store_tag]<=1;end
    for(ks=0;ks<4;ks=ks+1)begin
     s_tq[ks][0]<={3'd0,s_pw[ks][61:46]}&{19{s_np1[ks][0]}};
     s_tq[ks][1]<={2'd0,s_pw[ks][61:46],1'b0}&{19{s_np1[ks][1]}};
@@ -431,7 +511,9 @@ module ot_s81_pq_ctl_static_native (
     if(action[68+ks])begin
      // Retirement is fixed even on a count mismatch. No runtime drain wait.
      sv[ks]<=0;sr[ks]<=0;si[ks]<=0;rows_seen[ks]<=0;
+`ifndef OT_PQ_CTL_INCAP
      if(!sv[ks]||rows_seen[ks]+19'(rc[ks])!=s_tot[ks])fault<=1;
+`endif
     end
    end
    if(action[72])phase_cycles<=cyc+1'b1;
@@ -439,11 +521,15 @@ module ot_s81_pq_ctl_static_native (
    p1_cfg<=action[62];p1_go<=action[65];
    if(action[62])begin
     p1_ph<=s_ph[config_tag];p1_np<=s_np[config_tag];si[config_tag]<=1;iss_tag<=config_tag;
+`ifndef OT_PQ_CTL_INCAP
     if(!sv[config_tag]||!sr[config_tag])fault<=1;
+`endif
    end
    if(action[65])begin
     p1_gobf<=s_pw[launch_tag][0];p1_tag<=launch_tag;
+`ifndef OT_PQ_CTL_INCAP
     if(!sv[launch_tag]||!sr[launch_tag]||!si[launch_tag])fault<=1;
+`endif
    end
    x_re<=action[2];x_addr<=action[21:3];
    ba_v<=rq_v&&rq_fam;ba_par<=rq_par;ba_k<=rq_k;
@@ -451,7 +537,11 @@ module ot_s81_pq_ctl_static_native (
    r0_v<=action[39];r0_a<=action[53:40];r0_tag<=action[55:54];r0_pos<=action[58:56];
    r0_fam<=action[59];r0_lp<=action[60];r0_lo<=action[61];
    ra_v<=r0_v;ra_tag<=r0_tag;ra_pos<=r0_pos;ra_fam<=r0_fam;ra_lp<=r0_lp;ra_lo<=r0_lo;
-   r1_v<=ra_v;r1_w<=st_q;r1_tag<=ra_tag;r1_pos<=ra_pos;r1_fam<=ra_fam;r1_lp<=ra_lp;r1_lo<=ra_lo;
+   r1_v<=ra_v;
+`ifndef OT_PQ_CTL_CALCAP
+   r1_w<=st_q;
+`endif
+   r1_tag<=ra_tag;r1_pos<=ra_pos;r1_fam<=ra_fam;r1_lp<=ra_lp;r1_lo<=ra_lo;
    r2_v<=r1_v;r2_w<=r1_w;r2_tag<=r1_tag;r2_pos<=r1_pos;r2_fam<=r1_fam;r2_lp<=r1_lp;r2_lo<=r1_lo;
    r2_spar<=r1_spar;r2_nq<=r1_nq;r2_m01<=r1_m01;r2_m23<=r1_m23;r2_b0<=r1_blk0;r2_b1<=r1_blk1;
    for(kc=0;kc<4;kc=kc+1)r2_hi[9*kc+:9]<=(r1_spar ? 9'(KMAX/128):9'd0)+{1'b0,r1_w[8+8*kc+:8]};

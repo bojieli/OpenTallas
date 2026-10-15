@@ -1,0 +1,4 @@
+golden_L0_L2 20 jobs 1940 rows checks 8 [{'src': 'L0', 'attn_to_ffn_consistent': True}, {'src': 'L2', 'attn_to_ffn_consistent': True}]
+stress_0 20 jobs 1940 rows checks 0 [{'src': 'stress0', 'attn_to_ffn_consistent': None}, {'src': 'stress1', 'attn_to_ffn_consistent': None}]
+stress_1 20 jobs 1940 rows checks 0 [{'src': 'stress2', 'attn_to_ffn_consistent': None}, {'src': 'stress3', 'attn_to_ffn_consistent': None}]
+tile mutant ot_s81_hc_ctfx_nt: site not found

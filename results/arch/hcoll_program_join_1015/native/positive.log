@@ -1,0 +1,7 @@
+PROGRAM_JOIN EXEC PASS start=4110 first=4115 latency=5 words=65592 exact_bits=100749312
+PROGRAM_JOIN EXEC PASS start=69777 first=69782 latency=5 words=56 exact_bits=86016
+PROGRAM_JOIN PASS rows=64 native_macros=3 checked_uops=65648 metadata_loops=2048,2 frame_bits=256 instruction_bits=1536
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_program_target.sv:142: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 70us; walltime 0.277 s; speed 252.182 us/s
+- Verilator: cpu 0.277 s on 1 threads; allocated 7 MB

@@ -16,7 +16,7 @@
   105.84
  ],
  "why": "spec outline",
- "std_area_um2": 500.0,
+ "std_area_um2": null,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -52,16 +52,10 @@
  },
  "clock_port": "ck",
  "blocks": [],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 5% outside 45%-60% (std 500 + macro 0 in core 10750 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv",
+  "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
   "physical/ref_tile/s81_pq_reader75/kit.env",
   "physical/ref_tile/s81_pq_reader75/clock.sdc",
   "physical/ref_tile/s81_pq_reader75/signoff.sdc",

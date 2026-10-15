@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "qualified": false,
+  "source_sha256": "e63db189627cb3fb2c3b993b42e543fba404c378bd88f3e6ca8af75152df87b4",
+  "checks": [
+    "generated exact RTL byte equality",
+    "current actual scalar fdi_rx_ck",
+    "actual two-bit blk_ck",
+    "PU20/LU53",
+    "108 real IO roots",
+    "deleted-clock and return mutants rejected"
+  ]
+}

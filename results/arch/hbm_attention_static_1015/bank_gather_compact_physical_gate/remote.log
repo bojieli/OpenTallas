@@ -1,0 +1,30 @@
+GATE_SOURCE_ARCHIVE_SHA256=05525372aabc8cb0f39b80053efcb71d1ef2ddf55619c9c4dc6f5708849d3bd9
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=21
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN ot_hbm_attn_pv_bank_gather_registered cells 4,547 flops 2,386 depth 156.7 ps util 0.0323 reach 21.6 um (0.1 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=2386 root=port:clk rule=PASS: 2,386 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 3.2% outside 45%-65% (std 971 + macro 0 um2 in 30055 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "capture_v": [1, false], "tile_data": [null, true], "tile_flags": [null, true], "block_select": [null, true], "bank_data": [null, true], "bank_flags": [null, true], "output_v": [1, false]}
+GATE_AREA    Chip area for module '\ot_hbm_attn_pv_bank_gather_registered': 971.086320
+GATE_CTS_RC=0
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 272.1..322.5 ps (spread 50.4), boundary mean 290.4; tt insertion all 212.2..261.9 ps (spread 49.7), boundary mean 230.5; ff insertion all 174.3..223.5 ps (spread 49.2), boundary mean 193.1; macro_clk flag False
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 2386, "mean": 230.5, "min": 212.2, "max": 261.9}, "all": {"n": 2650, "mean": 230.1, "min": 212.2, "max": 261.9}, "errors": [], "macros": null, "macro_libs": 0}}
+GATE_PC constraints signoff /src/physical/ref_tile/hbm_att_bank_gather_compact_1015/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->reg      293 paths, worst slack 137.2 ps (e.g. bank_data[112]$_DFFE_PP_/D)
+GATE_PC in->reg         3 paths, worst slack 181.7 ps (e.g. select_q[4]$_DFF_P_/D)
+GATE_PC reg->out        6 paths, worst slack 227.1 ps (e.g. bank_data[231])
+GATE_PC setup WNS 1.3720952152240784e-10 hold WNS 3.4594938025378497e-11
+GATE_DONE
+
+--- stderr
+ot-run: ot-epyc4       admits   651 GB (avail 878, growth 80, headroom 48, waiters 0/0 GB) load 27/128 running 19 disk 434 GB 
+ot-run: -> ot-epyc4
+ot-heavy: request 24G is charged 10G (family 'ref_gate_*' seed 10G (class 'ref_gate_hbm_att_bank_gather_compact_#_#-#.sh' not measured yet)); the cap stays 24G
+ot-heavy: admitted on regular-crane as oth-ubuntu-2027435-1792062961 after 0 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2027435-1792062961): exit 0

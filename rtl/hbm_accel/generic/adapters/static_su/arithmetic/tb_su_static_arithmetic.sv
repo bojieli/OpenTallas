@@ -38,7 +38,7 @@ module tb_su_static_arithmetic;
   assign ra[5*9+:9]=drain_row;assign rv[5]=drain_v;
   assign bank_q[l*192+:192]=q;
   wire[23:0]wa=vm_waddr[l*24+:24];
-  ot_hbm_su_static_pinned_bank bank(.clk(clk),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
+  ot_hbm_su_static_pinned_bank bank(.clk(clk),.clk_macro({6{clk}}),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
    .read_data(q),.read_return(ret),.write_v(seed_v||vm_we[l]),
    .write_addr(seed_v?seed_row:{wa[17:16],wa[13:7]}),
    .write_data(seed_v?seed[seed_row*512+l]:vm_wdata[l*32+:32]));

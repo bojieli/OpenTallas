@@ -1,0 +1,60 @@
+{
+  "schema": "opentallas.quant.programme_cts_corners.v1",
+  "scope": "retained CTS ODB, placement RC; not routed signoff",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/hgi_qdq_program_sw125_r4b-20261015-053705",
+  "odb_sha256": "1b5eff208a8d11f44e2ce273a6e0e776bbf6c1045d7e77434844b8c0237ac6ff",
+  "saved_sdc_sha256": "468f500adfff6ae83cd5f970b2239612c60b4fb314d9c2a3e80a455735ada564",
+  "native_sdc_sha256": "02d122bc0b3bef39cccbb950dfc2228d3d13d010ab77248ec59c4b60f6cf1654",
+  "corner_helper_sha256": "7801f467617d68c7e8a3f906e5415c8913de77188a6af30dbfe835fc28b05fd1",
+  "corners": {
+    "tt": {
+      "check": "setup",
+      "tool_rc": 0,
+      "errors": [],
+      "worst_slack_ps": 78.2156006629009,
+      "script_sha256": "12b3271844b7d33eb878f134825da4469fbe74b8a5955c87faf1e6f0bd394ad9",
+      "log_sha256": "b67ebfc63e5cd5caa730b967f6c67208f8315fc2955bfe5880225b5bd742584e",
+      "std_libs": [
+        "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      ],
+      "macro_lib_sha256": "fd9e01f8ca926e05bf417b3219e9c2cb5659e8a072ec1d18017d3053b2f280a4"
+    },
+    "ff": {
+      "check": "hold",
+      "tool_rc": 0,
+      "errors": [],
+      "worst_slack_ps": 5.655809154347935,
+      "script_sha256": "484c8f690f1466e6afe59cff9122c43f002881a41643e803e9f0fd68ec3fc7c0",
+      "log_sha256": "e8c36f7d6d9048c507c8ac75b9cbb8b9cafa69dfc5c06dea24a3cf0bedce1187",
+      "std_libs": [
+        "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+        "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+        "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+      ],
+      "macro_lib_sha256": "b61a1754a9745d3a2039fcc7417f63f72082f4767028fdd4686b0ef18a075b1f"
+    },
+    "ss": {
+      "check": "setup",
+      "tool_rc": 0,
+      "errors": [],
+      "worst_slack_ps": -228.56583292707455,
+      "script_sha256": "acf8c51744641b4572877b152580deb991efe9b0b13d16797df2ecd0f6f1d08e",
+      "log_sha256": "47feeedb0128413fef67a7d17f3fd7c8ed971ab46ce0e0e1f711ae4a028c7461",
+      "std_libs": [
+        "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+        "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+        "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+        "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+        "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+      ],
+      "macro_lib_sha256": "a2dc21cb376ff58354fd4fe666ab6b4616336ae911ff252766408d3dc4a09a39"
+    }
+  },
+  "timing_pass": true
+}

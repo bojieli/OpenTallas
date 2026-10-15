@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm.actual-v15-source-contract.v1",
  "status": "FAIL_UNBOUND_NATIVE_PORTS",
  "source_sha256": {
-  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "592a461b693ad5a57539f7fd96056e682c1acf8e23549eb2b85e21dcd7ecb4c0",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "d42e083d5f7680cc6be3ae634cea0b1daf1834f6290eb5a2b6e74a97b569a03c",
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv": "91b0265ba4c0ce452cffbfd7776d25922dc6747de8a0a34b28c7b2e54354f3f2",
   "rtl/hbm_accel/control/hfd_ckgen.sv": "57f4afadd7cfc6ac10d0a83d26625970c10816ec752ac5c1462ae13de9ee8ca6",
   "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s0.sv": "0a473b1752b06da44388404c78fec7e5a32a5eaf9069f244c50535c8f46b5b6b",
@@ -23,17 +23,19 @@
   "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s7.sv": "1969bcc181be1bdc5f14b31fed1d639a771e89ab158d0aa81a32da206c7f92b0",
   "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s8.sv": "a1b8cc939e38874c2a765aeb739eaac4c4f3fc4f00925aeb436757a16c5b60b5",
   "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": "2b3a1d2d452bef84ac4e732012f9df5a40cfc216bee2fabeb344fcbd65812631",
-  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv": "54e65855af142d95248e7d14df42fabdc404f9d1316446c0f21253c1829a4e70",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv": "132f4636b012cd6a9d084ec00a9ed545190c0f30179917efe656658405b22999",
   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
   "rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv": "6ddcdcd4f3c56c56b27130cc0fa25a636fa1de1dc194c0732e537e77ad0d85a5",
-  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv": "e9fcc0f4d7a1a264cd0acc9a8f88c5ff29212bde184086159b1ccf342b09f223",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv": "43c4a6baf9e40d9d67043dd044e0848ba6c59433ecdd02788084a3c270704607",
   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv": "fd3c9a703e8de821595e38468f608b97337932aa34f2d8529189ced1102cd991",
   "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv": "11389d87c141c8a0e3c4ba3c1e5f0c2cafd88dce2c48f16c2e4d2356c2ffbf5f",
-  "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv": "622f92c2f9eb3f4a7f2eb28c55b00bd71c524be93ac58857112362204f4c423b"
+  "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "0dfabc97c63b91db654c393c8f8f79fb6fdc8b9a72087b589e825ea5465f81c9",
+  "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv": "039f3f6a2d325d95a744d0b68ad4b516dd4d6719c1dd89e7b1c548598122f0f0"
  },
  "dependency_inventory_sha256": {
-  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv": "54e65855af142d95248e7d14df42fabdc404f9d1316446c0f21253c1829a4e70",
-  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "592a461b693ad5a57539f7fd96056e682c1acf8e23549eb2b85e21dcd7ecb4c0",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_SW_quant.sv": "a99fb76b7457942973fea3cb6af2e56a82f133235899f2f319755a5679ec8c24",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv": "132f4636b012cd6a9d084ec00a9ed545190c0f30179917efe656658405b22999",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "d42e083d5f7680cc6be3ae634cea0b1daf1834f6290eb5a2b6e74a97b569a03c",
   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "31acf6679c2fcd95c2abd3897daae041710f7c7a5f318d9d2e1f8541c8b377a4",
   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv": "cc7c0d00ead994fb66360a00da7acd4b70e8a2f9f6e2a3b8013a9672d1ab29de",
@@ -70,7 +72,7 @@
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_phy_mux.sv": "86fa1f19baadad3168cb43aeea8a308e378c3abcfb8056b20a7a766a09d64745",
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_block_cdc.sv": "f32e3574435d9598361ec6c22404ba3ad7ac267d4f58867b52454fc360dd49fc",
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_landing.sv": "0c3122d06032896c52c97a11c3e65bf041ae5f420259671868e1f2ef988fab25",
-  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_pc.sv": "cd805d0891cd70c8d1ba94d16ce86f6654bfcb975101f9719932c094eb532585",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_pc.sv": "c8fc0f734883cb419a6854d3aa90205785deeb08f9b3490dd67b54cbfe2b6d5b",
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_rows.sv": "61e7596009657dd668189bce7ae45e7f6f4ce43f52225997656af4bc0a5dd907",
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv": "91b0265ba4c0ce452cffbfd7776d25922dc6747de8a0a34b28c7b2e54354f3f2",
@@ -212,7 +214,7 @@
    "family": "SE"
   }
  ],
- "abi_sha256": "ae241c67fdc7e24ca660fff45f12efdd6baeaf6e740a68ba49348523ebb65b05",
+ "abi_sha256": "860d50b4e7eb48ff29fc1f9dc8548c98dee5e0b5c11d3d8d0c208d29eb4a4566",
  "instances": {
   "hb_vms_SW": {
    "master": "hfd_hgi_vms_static_SW",
@@ -241,23 +243,23 @@
     },
     "cq": {
      "direction": "input",
-     "bits": 2366
+     "bits": 1014
     },
     "cr": {
      "direction": "output",
-     "bits": 1918
+     "bits": 822
     },
     "client_seq": {
      "direction": "input",
-     "bits": 16
+     "bits": 8
     },
     "response_enable": {
      "direction": "input",
-     "bits": 8
+     "bits": 4
     },
     "response_seq": {
      "direction": "input",
-     "bits": 16
+     "bits": 8
     },
     "bank_enable": {
      "direction": "input",
@@ -265,7 +267,7 @@
     },
     "bank_client": {
      "direction": "input",
-     "bits": 24
+     "bits": 16
     },
     "hub_ring_enable": {
      "direction": "input",
@@ -273,7 +275,7 @@
     },
     "hub_ring_client": {
      "direction": "input",
-     "bits": 6
+     "bits": 4
     },
     "rslot_v": {
      "direction": "input",
@@ -527,11 +529,11 @@
     },
     "rq": {
      "direction": "input",
-     "bits": 680
+     "bits": 544
     },
     "rr": {
      "direction": "output",
-     "bits": 10280
+     "bits": 8224
     },
     "wq": {
      "direction": "input",
@@ -769,11 +771,11 @@
     },
     "rq": {
      "direction": "input",
-     "bits": 952
+     "bits": 816
     },
     "rr": {
      "direction": "output",
-     "bits": 14392
+     "bits": 12336
     },
     "wq": {
      "direction": "input",
@@ -1003,11 +1005,11 @@
     },
     "rq": {
      "direction": "input",
-     "bits": 952
+     "bits": 816
     },
     "rr": {
      "direction": "output",
-     "bits": 14392
+     "bits": 12336
     },
     "wq": {
      "direction": "input",
@@ -8158,15 +8160,15 @@
     },
     "client_seq": {
      "direction": "output",
-     "bits": 16
+     "bits": 8
     },
     "response_enable": {
      "direction": "output",
-     "bits": 8
+     "bits": 4
     },
     "response_seq": {
      "direction": "output",
-     "bits": 16
+     "bits": 8
     },
     "bank_enable": {
      "direction": "output",
@@ -8174,7 +8176,7 @@
     },
     "bank_client": {
      "direction": "output",
-     "bits": 24
+     "bits": 16
     },
     "hub_ring_enable": {
      "direction": "output",
@@ -8182,7 +8184,7 @@
     },
     "hub_ring_client": {
      "direction": "output",
-     "bits": 6
+     "bits": 4
     },
     "rslot_v": {
      "direction": "output",
@@ -10598,6 +10600,63 @@
     }
    }
   },
+  "hb_su_SW": {
+   "master": "ot_hbm_su_static_vm_ports",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "params": {
+    "QID": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "NPG": 5,
+    "BANK_GROUP": 1126306048
+   },
+   "ports": {
+    "pg_clk": {
+     "direction": "input",
+     "bits": 5
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "su_rq": {
+     "direction": "input",
+     "bits": 136
+    },
+    "su_wq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "su_rr": {
+     "direction": "output",
+     "bits": 2056
+    },
+    "su_w_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_rq": {
+     "direction": "output",
+     "bits": 136
+    },
+    "lg_wq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "lg_rr": {
+     "direction": "input",
+     "bits": 2056
+    },
+    "lg_w_done": {
+     "direction": "input",
+     "bits": 8
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 5
+    }
+   }
+  },
   "hb_sfu_SE": {
    "master": "ot_hgi_sfu_scheduled_engine",
    "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
@@ -10895,6 +10954,63 @@
     "wa": {
      "direction": "input",
      "bits": 12
+    }
+   }
+  },
+  "hb_su_SE": {
+   "master": "ot_hbm_su_static_vm_ports",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "params": {
+    "QID": 1,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "NPG": 5,
+    "BANK_GROUP": 1126306048
+   },
+   "ports": {
+    "pg_clk": {
+     "direction": "input",
+     "bits": 5
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "su_rq": {
+     "direction": "input",
+     "bits": 136
+    },
+    "su_wq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "su_rr": {
+     "direction": "output",
+     "bits": 2056
+    },
+    "su_w_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_rq": {
+     "direction": "output",
+     "bits": 136
+    },
+    "lg_wq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "lg_rr": {
+     "direction": "input",
+     "bits": 2056
+    },
+    "lg_w_done": {
+     "direction": "input",
+     "bits": 8
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 5
     }
    }
   },
@@ -11198,6 +11314,63 @@
     }
    }
   },
+  "hb_su_NW": {
+   "master": "ot_hbm_su_static_vm_ports",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "params": {
+    "QID": 2,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "NPG": 4,
+    "BANK_GROUP": 857870592
+   },
+   "ports": {
+    "pg_clk": {
+     "direction": "input",
+     "bits": 4
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "su_rq": {
+     "direction": "input",
+     "bits": 136
+    },
+    "su_wq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "su_rr": {
+     "direction": "output",
+     "bits": 2056
+    },
+    "su_w_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_rq": {
+     "direction": "output",
+     "bits": 136
+    },
+    "lg_wq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "lg_rr": {
+     "direction": "input",
+     "bits": 2056
+    },
+    "lg_w_done": {
+     "direction": "input",
+     "bits": 8
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 4
+    }
+   }
+  },
   "hb_sfu_NE": {
    "master": "ot_hgi_sfu_scheduled_engine",
    "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
@@ -11498,9 +11671,66 @@
     }
    }
   },
+  "hb_su_NE": {
+   "master": "ot_hbm_su_static_vm_ports",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "params": {
+    "QID": 3,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "NPG": 4,
+    "BANK_GROUP": 857870592
+   },
+   "ports": {
+    "pg_clk": {
+     "direction": "input",
+     "bits": 4
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "su_rq": {
+     "direction": "input",
+     "bits": 136
+    },
+    "su_wq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "su_rr": {
+     "direction": "output",
+     "bits": 2056
+    },
+    "su_w_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_rq": {
+     "direction": "output",
+     "bits": 136
+    },
+    "lg_wq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "lg_rr": {
+     "direction": "input",
+     "bits": 2056
+    },
+    "lg_w_done": {
+     "direction": "input",
+     "bits": 8
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 4
+    }
+   }
+  },
   "hb_idx": {
-   "master": "ot_hbm_idx_scheduled_static",
-   "source": "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv",
+   "master": "ot_hbm_idx_client_static",
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv",
    "params": {},
    "ports": {
     "clk_program": {
@@ -11595,6 +11825,14 @@
      "direction": "input",
      "bits": 8
     },
+    "clk_pair": {
+     "direction": "input",
+     "bits": 4
+    },
+    "clk_topk": {
+     "direction": "input",
+     "bits": 1
+    },
     "rst_n": {
      "direction": "input",
      "bits": 1
@@ -11670,6 +11908,98 @@
     "fault": {
      "direction": "output",
      "bits": 1
+    },
+    "topk_go": {
+     "direction": "input",
+     "bits": 1
+    },
+    "topk_k": {
+     "direction": "input",
+     "bits": 4
+    },
+    "topk_order": {
+     "direction": "input",
+     "bits": 1
+    },
+    "topk_n": {
+     "direction": "input",
+     "bits": 20
+    },
+    "topk_m": {
+     "direction": "input",
+     "bits": 20
+    },
+    "topk_a_mirror": {
+     "direction": "input",
+     "bits": 1
+    },
+    "topk_a_base": {
+     "direction": "input",
+     "bits": 18
+    },
+    "topk_a_str": {
+     "direction": "input",
+     "bits": 18
+    },
+    "topk_o_mirror": {
+     "direction": "input",
+     "bits": 1
+    },
+    "topk_o_base": {
+     "direction": "input",
+     "bits": 18
+    },
+    "topk_o_str": {
+     "direction": "input",
+     "bits": 18
+    },
+    "topk_has_r": {
+     "direction": "input",
+     "bits": 1
+    },
+    "topk_r_base": {
+     "direction": "input",
+     "bits": 18
+    },
+    "topk_r_str": {
+     "direction": "input",
+     "bits": 18
+    },
+    "cq": {
+     "direction": "output",
+     "bits": 338
+    },
+    "cq_seq": {
+     "direction": "output",
+     "bits": 2
+    },
+    "cr": {
+     "direction": "input",
+     "bits": 274
+    },
+    "topk_busy": {
+     "direction": "output",
+     "bits": 1
+    },
+    "topk_done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "topk_fault": {
+     "direction": "output",
+     "bits": 1
+    },
+    "share_fault": {
+     "direction": "output",
+     "bits": 1
+    },
+    "argmax_rq": {
+     "direction": "input",
+     "bits": 136
+    },
+    "argmax_rr": {
+     "direction": "output",
+     "bits": 2056
     }
    }
   }
@@ -11677,7 +12007,7 @@
  "known_actual_edges": [
   {
    "name": "calendar_SW_client_seq",
-   "bits": 16,
+   "bits": 8,
    "source": [
     "calendar_SW",
     "client_seq"
@@ -11691,7 +12021,7 @@
   },
   {
    "name": "calendar_SW_response_enable",
-   "bits": 8,
+   "bits": 4,
    "source": [
     "calendar_SW",
     "response_enable"
@@ -11705,7 +12035,7 @@
   },
   {
    "name": "calendar_SW_response_seq",
-   "bits": 16,
+   "bits": 8,
    "source": [
     "calendar_SW",
     "response_seq"
@@ -11733,7 +12063,7 @@
   },
   {
    "name": "calendar_SW_bank_client",
-   "bits": 24,
+   "bits": 16,
    "source": [
     "calendar_SW",
     "bank_client"
@@ -11761,7 +12091,7 @@
   },
   {
    "name": "calendar_SW_hub_ring_client",
-   "bits": 6,
+   "bits": 4,
    "source": [
     "calendar_SW",
     "hub_ring_client"
@@ -14012,6 +14342,62 @@
    "ready_or_credit": false
   },
   {
+   "name": "hb_su_SW_rq",
+   "bits": 136,
+   "source": [
+    "hb_su_SW",
+    "lg_rq"
+   ],
+   "sink": [
+    "lg_SW_0",
+    "local_rq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SW_wq",
+   "bits": 2248,
+   "source": [
+    "hb_su_SW",
+    "lg_wq"
+   ],
+   "sink": [
+    "lg_SW_0",
+    "local_wq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SW_rr",
+   "bits": 2056,
+   "source": [
+    "lg_SW_0",
+    "local_rr"
+   ],
+   "sink": [
+    "hb_su_SW",
+    "lg_rr"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SW_w_done",
+   "bits": 8,
+   "source": [
+    "lg_SW_0",
+    "local_w_done"
+   ],
+   "sink": [
+    "hb_su_SW",
+    "lg_w_done"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
    "name": "hb_dbk_SW_rq",
    "bits": 136,
    "source": [
@@ -14099,6 +14485,62 @@
    "sink": [
     "hb_sfu_SE",
     "local_w_done"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SE_rq",
+   "bits": 136,
+   "source": [
+    "hb_su_SE",
+    "lg_rq"
+   ],
+   "sink": [
+    "lg_SE_0",
+    "local_rq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SE_wq",
+   "bits": 2248,
+   "source": [
+    "hb_su_SE",
+    "lg_wq"
+   ],
+   "sink": [
+    "lg_SE_0",
+    "local_wq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SE_rr",
+   "bits": 2056,
+   "source": [
+    "lg_SE_0",
+    "local_rr"
+   ],
+   "sink": [
+    "hb_su_SE",
+    "lg_rr"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SE_w_done",
+   "bits": 8,
+   "source": [
+    "lg_SE_0",
+    "local_w_done"
+   ],
+   "sink": [
+    "hb_su_SE",
+    "lg_w_done"
    ],
    "clock": "stream",
    "ready_or_credit": false
@@ -14196,6 +14638,62 @@
    "ready_or_credit": false
   },
   {
+   "name": "hb_su_NW_rq",
+   "bits": 136,
+   "source": [
+    "hb_su_NW",
+    "lg_rq"
+   ],
+   "sink": [
+    "lg_NW_0",
+    "local_rq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NW_wq",
+   "bits": 2248,
+   "source": [
+    "hb_su_NW",
+    "lg_wq"
+   ],
+   "sink": [
+    "lg_NW_0",
+    "local_wq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NW_rr",
+   "bits": 2056,
+   "source": [
+    "lg_NW_0",
+    "local_rr"
+   ],
+   "sink": [
+    "hb_su_NW",
+    "lg_rr"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NW_w_done",
+   "bits": 8,
+   "source": [
+    "lg_NW_0",
+    "local_w_done"
+   ],
+   "sink": [
+    "hb_su_NW",
+    "lg_w_done"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
    "name": "hb_dbk_NW_rq",
    "bits": 136,
    "source": [
@@ -14288,6 +14786,62 @@
    "ready_or_credit": false
   },
   {
+   "name": "hb_su_NE_rq",
+   "bits": 136,
+   "source": [
+    "hb_su_NE",
+    "lg_rq"
+   ],
+   "sink": [
+    "lg_NE_0",
+    "local_rq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NE_wq",
+   "bits": 2248,
+   "source": [
+    "hb_su_NE",
+    "lg_wq"
+   ],
+   "sink": [
+    "lg_NE_0",
+    "local_wq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NE_rr",
+   "bits": 2056,
+   "source": [
+    "lg_NE_0",
+    "local_rr"
+   ],
+   "sink": [
+    "hb_su_NE",
+    "lg_rr"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NE_w_done",
+   "bits": 8,
+   "source": [
+    "lg_NE_0",
+    "local_w_done"
+   ],
+   "sink": [
+    "hb_su_NE",
+    "lg_w_done"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
    "name": "hb_dbk_NE_rq",
    "bits": 136,
    "source": [
@@ -14355,6 +14909,42 @@
     "vm_rr",
     0,
     2056
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "idx_cq",
+   "bits": 338,
+   "source": [
+    "hb_idx",
+    "cq",
+    0,
+    338
+   ],
+   "sink": [
+    "hb_vms_SW",
+    "cq",
+    676,
+    1014
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "idx_cr",
+   "bits": 274,
+   "source": [
+    "hb_vms_SW",
+    "cr",
+    548,
+    822
+   ],
+   "sink": [
+    "hb_idx",
+    "cr",
+    0,
+    274
    ],
    "clock": "stream",
    "ready_or_credit": false
@@ -27178,6 +27768,61 @@
    "status": "NEEDS_REAL_CTS_VIEW"
   },
   {
+   "instance": "hb_su_SW",
+   "port": "pg_clk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "pg_clk",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "pg_clk",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "pg_clk",
+   "bit": 3,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "pg_clk",
+   "bit": 4,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
    "instance": "hb_sfu_SE",
    "port": "clk",
    "bit": 0,
@@ -27544,6 +28189,61 @@
    "instance": "hb_dbk_SE",
    "port": "clk",
    "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "pg_clk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "pg_clk",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "pg_clk",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "pg_clk",
+   "bit": 3,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "pg_clk",
+   "bit": 4,
    "source": [
     "hb_ckgen",
     "pll_stream"
@@ -27926,6 +28626,50 @@
    "status": "NEEDS_REAL_CTS_VIEW"
   },
   {
+   "instance": "hb_su_NW",
+   "port": "pg_clk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "pg_clk",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "pg_clk",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "pg_clk",
+   "bit": 3,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
    "instance": "hb_sfu_NE",
    "port": "clk",
    "bit": 0,
@@ -28292,6 +29036,50 @@
    "instance": "hb_dbk_NE",
    "port": "clk",
    "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "pg_clk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "pg_clk",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "pg_clk",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "pg_clk",
+   "bit": 3,
    "source": [
     "hb_ckgen",
     "pll_stream"
@@ -52498,55 +53286,104 @@
    ],
    "physical_insertion_reference": null,
    "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "clk_pair",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "clk_pair",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "clk_pair",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "clk_pair",
+   "bit": 3,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "clk_topk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
   }
  ],
  "vm_slice_bind": {
   "SW": {
    "read_groups": {
-    "0": "lg_SW_0..2 (SU near / SFU hb_sfu_SW mid / HC far)",
+    "0": "lg_SW_0..2 (SU hb_su_SW near / SFU hb_sfu_SW mid / HC far)",
     "1": "hb_dbk_SW",
     "3": "hb_coll_SW",
     "4": "hb_idx",
     "2": "UNBOUND: no static producer for \"SM xload\""
    },
    "write_groups": {
-    "0": "lg_SW_0..2 (SU/SFU hb_sfu_SW/HC)"
+    "0": "lg_SW_0..2 (SU hb_su_SW/SFU hb_sfu_SW/HC)"
    },
    "records": {
-    "0": "UNBOUND: record client \"argmax\" has no static cq338/cr274 source",
-    "1": "UNBOUND: record client \"coll\" has no static cq338/cr274 source",
-    "2": "UNBOUND: record client \"dma\" has no static cq338/cr274 source",
-    "3": "UNBOUND: record client \"hc\" has no static cq338/cr274 source",
-    "4": "UNBOUND: record client \"idx\" has no static cq338/cr274 source",
-    "5": "UNBOUND: record client \"sfu\" has no static cq338/cr274 source",
-    "6": "UNBOUND: record client \"su\" has no static cq338/cr274 source"
+    "0": "OPEN: needed for MTP; no static argmax RTL yet; owner H-IDX",
+    "1": "PENDING: DMA owner decides (static DMA back uses RG1)",
+    "2": "hb_idx (ot_hbm_idx_client_static TOPK O/R writes)"
    }
   },
   "SE": {
    "read_groups": {
-    "0": "lg_SE_0..2 (SU near / SFU hb_sfu_SE mid / HC far)",
+    "0": "lg_SE_0..2 (SU hb_su_SE near / SFU hb_sfu_SE mid / HC far)",
     "1": "hb_dbk_SE",
     "3": "hb_coll_SE",
-    "2": "UNBOUND: no static producer for \"SM xload\"",
-    "4": "UNBOUND: no static producer for \"IDX\""
+    "2": "UNBOUND: no static producer for \"SM xload\""
    },
    "write_groups": {
-    "0": "lg_SE_0..2 (SU/SFU hb_sfu_SE/HC)"
+    "0": "lg_SE_0..2 (SU hb_su_SE/SFU hb_sfu_SE/HC)"
    },
    "records": {}
   },
   "NW": {
    "read_groups": {
-    "0": "lg_NW_0..2 (SU near / SFU hb_sfu_NW mid / HC far)",
+    "0": "lg_NW_0..2 (SU hb_su_NW near / SFU hb_sfu_NW mid / HC far)",
     "1": "hb_dbk_NW",
     "5": "hb_coll_NW",
     "2": "UNBOUND: no static producer for \"SM xload\"",
     "3": "UNBOUND: no static producer for \"CP\"",
-    "4": "UNBOUND: no static producer for \"quant\"",
-    "6": "UNBOUND: no static producer for \"IDX\""
+    "4": "UNBOUND: no static producer for \"quant\""
    },
    "write_groups": {
-    "0": "lg_NW_0..2 (SU/SFU hb_sfu_NW/HC)",
+    "0": "lg_NW_0..2 (SU hb_su_NW/SFU hb_sfu_NW/HC)",
     "1": "UNBOUND: no static producer for \"CP\"",
     "2": "UNBOUND: no static producer for \"quant\""
    },
@@ -52559,16 +53396,15 @@
   },
   "NE": {
    "read_groups": {
-    "0": "lg_NE_0..2 (SU near / SFU hb_sfu_NE mid / HC far)",
+    "0": "lg_NE_0..2 (SU hb_su_NE near / SFU hb_sfu_NE mid / HC far)",
     "1": "hb_dbk_NE",
     "5": "hb_coll_NE",
     "2": "UNBOUND: no static producer for \"SM xload\"",
     "3": "UNBOUND: no static producer for \"attention\"",
-    "4": "UNBOUND: no static producer for \"HC engine\"",
-    "6": "UNBOUND: no static producer for \"IDX\""
+    "4": "UNBOUND: no static producer for \"HC engine\""
    },
    "write_groups": {
-    "0": "lg_NE_0..2 (SU/SFU hb_sfu_NE/HC)",
+    "0": "lg_NE_0..2 (SU hb_su_NE/SFU hb_sfu_NE/HC)",
     "1": "UNBOUND: no static producer for \"attention\"",
     "2": "UNBOUND: no static producer for \"HC engine\""
    },
@@ -52587,11 +53423,11 @@
   "engines": {
    "SU_SW": {
     "tap": "lg_SW_0",
-    "instance": null,
+    "instance": "hb_su_SW",
     "owner": "H-ELEM-B (static SU)",
     "required_port_groups": 5,
-    "physical_port_groups": null,
-    "status": "OPEN: engine not yet bound in contract"
+    "physical_port_groups": 5,
+    "status": "SOURCE MET (5 pg_clk groups, db4f2facb), BANK_GROUP 0x43221100 provisional (bank 7 alone) pending GEO-H RG5 readback; pins open"
    },
    "SFU_SW": {
     "tap": "lg_SW_1",
@@ -52611,11 +53447,11 @@
    },
    "SU_SE": {
     "tap": "lg_SE_0",
-    "instance": null,
+    "instance": "hb_su_SE",
     "owner": "H-ELEM-B (static SU)",
     "required_port_groups": 5,
-    "physical_port_groups": null,
-    "status": "OPEN: engine not yet bound in contract"
+    "physical_port_groups": 5,
+    "status": "SOURCE MET (5 pg_clk groups, db4f2facb), BANK_GROUP 0x43221100 provisional (bank 7 alone) pending GEO-H RG5 readback; pins open"
    },
    "SFU_SE": {
     "tap": "lg_SE_1",
@@ -52635,11 +53471,11 @@
    },
    "SU_NW": {
     "tap": "lg_NW_0",
-    "instance": null,
+    "instance": "hb_su_NW",
     "owner": "H-ELEM-B (static SU)",
     "required_port_groups": 4,
-    "physical_port_groups": null,
-    "status": "OPEN: engine not yet bound in contract"
+    "physical_port_groups": 4,
+    "status": "SOURCE MET (4 pg_clk groups, db4f2facb); pins open"
    },
    "SFU_NW": {
     "tap": "lg_NW_1",
@@ -52659,11 +53495,11 @@
    },
    "SU_NE": {
     "tap": "lg_NE_0",
-    "instance": null,
+    "instance": "hb_su_NE",
     "owner": "H-ELEM-B (static SU)",
     "required_port_groups": 4,
-    "physical_port_groups": null,
-    "status": "OPEN: engine not yet bound in contract"
+    "physical_port_groups": 4,
+    "status": "SOURCE MET (4 pg_clk groups, db4f2facb); pins open"
    },
    "SFU_NE": {
     "tap": "lg_NE_1",
@@ -52680,8 +53516,57 @@
     "required_port_groups": 4,
     "physical_port_groups": null,
     "status": "OPEN: engine not yet bound in contract"
+   },
+   "QUANT_SW": {
+    "tap": null,
+    "instance": null,
+    "owner": "H-ATTQ",
+    "required_port_groups": 5,
+    "physical_port_groups": 5,
+    "bank_group": "0x43221100 (same provisional SW/SE map as SU; H-ATTQ bench PASS 152 cy)",
+    "status": "RTL groups present (H-ATTQ); physical leaves open; quant not yet a contract instance"
    }
   }
+ },
+ "floorplan_direction": "HBM D local PV (owner-approved 2026-10-15); attention resources ON HOLD (owner 10:30, H-ATTQ comparison)",
+ "long_returns": [],
+ "vm_abi_change_requests": [
+  {
+   "change": "SW NC 7 -> 3 (keep idx, argmax, dma-pending; drop su/sfu/coll/hc)",
+   "source": "H-IDX 40e9f801e",
+   "owner": "H-ELEM-A (VM slice)",
+   "status": "APPLIED 2026-10-15 H-ELEM-A: gen_hbm_static_vm_wrappers.py PARAMS/clients, quadrant_abi.json, hfd_hgi_vms_static.sv, calendar wrappers; SW records argmax/dma/idx (idx = client 2)"
+  },
+  {
+   "change": "remove IDX read group in SE/NW/NE (RG 5->4 SE, 7->6 NW/NE); IDX reads only SW group 4",
+   "condition": "SU route.scores_bias.O must be REPL (H-ELEM-B)",
+   "source": "H-IDX 40e9f801e",
+   "owner": "H-ELEM-A (VM slice)",
+   "status": "APPLIED 2026-10-15 H-ELEM-A: condition met (H-ELEM-B main 9505d6569, scores_bias lands in SW); IDX was the last group so COLL stays RG3 (S) / RG5 (N); compiler fixtures re-packed with the 8 IDX bank slots/fixture removed"
+  }
+ ],
+ "flow_control_boundaries": {
+  "rule": "HANDOFF 0az: off-die boundaries keep link-level flow control; on-die fixed-slot from buffer-block ready",
+  "off_die_flow_control_allowed": [
+   {
+    "boundary": "HBM stack / PHY controller",
+    "ports": "phy_<q> <-> svc_<q>_s* pc fields (k_rdy/kr_rdy etc.)",
+    "note": "edges carry allowed_exception; on-die side starts at the landing buffer block ready"
+   },
+   {
+    "boundary": "die-to-die / package SerDes incl. cross-die collectives",
+    "ports": "hb_coll_<q> tx_pin_v/tx_pin_flit/rx_pin_v/rx_pin_flit/phy_up/retry_requested",
+    "note": "link CRC/retry and link credit allowed here only; quadrant ring pr_cw/pr_ccw is on-die = fixed slot"
+   },
+   {
+    "boundary": "host link",
+    "ports": "HOST/SerDes digital (not yet a v15 instance; root owns)",
+    "note": "same rule"
+   }
+  ],
+  "on_die": "every edge between v15 instances: ready_or_credit must be False (checked by this generator)",
+  "closed_blocks": "closed tiles with purely local never-stalling handshakes stand; no rework",
+  "redesign_scope": "remove credits on die-level links and in engines being redesigned only"
  },
  "registered_station_masters": [
   {
@@ -52691,7 +53576,7 @@
    "latency_cycles": 1,
    "sinks_per_root": 2224,
    "physical_qualified": false,
-   "bench_qualified": true
+   "bench_qualified": false
   },
   {
    "master": "hfd_stn_v15_cc2248",
@@ -52700,7 +53585,7 @@
    "latency_cycles": 1,
    "sinks_per_root": 2248,
    "physical_qualified": false,
-   "bench_qualified": true
+   "bench_qualified": false
   }
  ],
  "logical_constant_requests": [
@@ -52800,14 +53685,14 @@
    "instance": "hb_vms_SW",
    "port": "cq",
    "direction": "input",
-   "bits": 2366,
+   "bits": 1014,
    "required_owner": "actual static client source migration",
-   "bound_bits": 0,
-   "unbound_bits": 2366,
+   "bound_bits": 338,
+   "unbound_bits": 676,
    "unbound_ranges_half_open": [
     [
      0,
-     2366
+     676
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -52816,14 +53701,14 @@
    "instance": "hb_vms_SW",
    "port": "cr",
    "direction": "output",
-   "bits": 1918,
+   "bits": 822,
    "required_owner": "actual static client source migration",
-   "bound_bits": 0,
-   "unbound_bits": 1918,
+   "bound_bits": 274,
+   "unbound_bits": 548,
    "unbound_ranges_half_open": [
     [
      0,
-     1918
+     548
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -53200,18 +54085,14 @@
    "instance": "hb_vms_SE",
    "port": "rq",
    "direction": "input",
-   "bits": 680,
+   "bits": 544,
    "required_owner": "actual static client source migration",
    "bound_bits": 408,
-   "unbound_bits": 272,
+   "unbound_bits": 136,
    "unbound_ranges_half_open": [
     [
      272,
      408
-    ],
-    [
-     544,
-     680
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -53220,18 +54101,14 @@
    "instance": "hb_vms_SE",
    "port": "rr",
    "direction": "output",
-   "bits": 10280,
+   "bits": 8224,
    "required_owner": "actual static client source migration",
    "bound_bits": 6168,
-   "unbound_bits": 4112,
+   "unbound_bits": 2056,
    "unbound_ranges_half_open": [
     [
      4112,
      6168
-    ],
-    [
-     8224,
-     10280
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -53608,18 +54485,14 @@
    "instance": "hb_vms_NW",
    "port": "rq",
    "direction": "input",
-   "bits": 952,
+   "bits": 816,
    "required_owner": "actual static client source migration",
    "bound_bits": 408,
-   "unbound_bits": 544,
+   "unbound_bits": 408,
    "unbound_ranges_half_open": [
     [
      272,
      680
-    ],
-    [
-     816,
-     952
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -53628,18 +54501,14 @@
    "instance": "hb_vms_NW",
    "port": "rr",
    "direction": "output",
-   "bits": 14392,
+   "bits": 12336,
    "required_owner": "actual static client source migration",
    "bound_bits": 6168,
-   "unbound_bits": 8224,
+   "unbound_bits": 6168,
    "unbound_ranges_half_open": [
     [
      4112,
      10280
-    ],
-    [
-     12336,
-     14392
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -54016,18 +54885,14 @@
    "instance": "hb_vms_NE",
    "port": "rq",
    "direction": "input",
-   "bits": 952,
+   "bits": 816,
    "required_owner": "actual static client source migration",
    "bound_bits": 408,
-   "unbound_bits": 544,
+   "unbound_bits": 408,
    "unbound_ranges_half_open": [
     [
      272,
      680
-    ],
-    [
-     816,
-     952
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -54036,18 +54901,14 @@
    "instance": "hb_vms_NE",
    "port": "rr",
    "direction": "output",
-   "bits": 14392,
+   "bits": 12336,
    "required_owner": "actual static client source migration",
    "bound_bits": 6168,
-   "unbound_bits": 8224,
+   "unbound_bits": 6168,
    "unbound_ranges_half_open": [
     [
      4112,
      10280
-    ],
-    [
-     12336,
-     14392
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -71350,70 +72211,6 @@
   },
   {
    "instance": "lg_SW_0",
-   "port": "local_rq",
-   "direction": "input",
-   "bits": 136,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 136,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     136
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SW_0",
-   "port": "local_wq",
-   "direction": "input",
-   "bits": 2248,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2248,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2248
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SW_0",
-   "port": "local_rr",
-   "direction": "output",
-   "bits": 2056,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2056,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2056
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SW_0",
-   "port": "local_w_done",
-   "direction": "output",
-   "bits": 8,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 8,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     8
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SW_0",
    "port": "bank_fault",
    "direction": "output",
    "bits": 8,
@@ -71744,70 +72541,6 @@
     [
      0,
      32
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SE_0",
-   "port": "local_rq",
-   "direction": "input",
-   "bits": 136,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 136,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     136
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SE_0",
-   "port": "local_wq",
-   "direction": "input",
-   "bits": 2248,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2248,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2248
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SE_0",
-   "port": "local_rr",
-   "direction": "output",
-   "bits": 2056,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2056,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2056
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SE_0",
-   "port": "local_w_done",
-   "direction": "output",
-   "bits": 8,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 8,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     8
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -72150,70 +72883,6 @@
   },
   {
    "instance": "lg_NW_0",
-   "port": "local_rq",
-   "direction": "input",
-   "bits": 136,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 136,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     136
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NW_0",
-   "port": "local_wq",
-   "direction": "input",
-   "bits": 2248,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2248,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2248
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NW_0",
-   "port": "local_rr",
-   "direction": "output",
-   "bits": 2056,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2056,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2056
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NW_0",
-   "port": "local_w_done",
-   "direction": "output",
-   "bits": 8,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 8,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     8
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NW_0",
    "port": "bank_fault",
    "direction": "output",
    "bits": 8,
@@ -72544,70 +73213,6 @@
     [
      0,
      32
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NE_0",
-   "port": "local_rq",
-   "direction": "input",
-   "bits": 136,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 136,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     136
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NE_0",
-   "port": "local_wq",
-   "direction": "input",
-   "bits": 2248,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2248,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2248
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NE_0",
-   "port": "local_rr",
-   "direction": "output",
-   "bits": 2056,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2056,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2056
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NE_0",
-   "port": "local_w_done",
-   "direction": "output",
-   "bits": 8,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 8,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     8
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -73097,7 +73702,7 @@
    "port": "phy_up",
    "direction": "input",
    "bits": 3,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 3,
    "unbound_ranges_half_open": [
@@ -73113,7 +73718,7 @@
    "port": "tx_pin_v",
    "direction": "output",
    "bits": 3,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 3,
    "unbound_ranges_half_open": [
@@ -73129,7 +73734,7 @@
    "port": "tx_pin_flit",
    "direction": "output",
    "bits": 1788,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1788,
    "unbound_ranges_half_open": [
@@ -73145,7 +73750,7 @@
    "port": "rx_pin_v",
    "direction": "input",
    "bits": 3,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 3,
    "unbound_ranges_half_open": [
@@ -73161,7 +73766,7 @@
    "port": "rx_pin_flit",
    "direction": "input",
    "bits": 1788,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1788,
    "unbound_ranges_half_open": [
@@ -73177,7 +73782,7 @@
    "port": "retry_requested",
    "direction": "output",
    "bits": 3,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 3,
    "unbound_ranges_half_open": [
@@ -73561,7 +74166,7 @@
    "port": "phy_up",
    "direction": "input",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -73577,7 +74182,7 @@
    "port": "tx_pin_v",
    "direction": "output",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -73593,7 +74198,7 @@
    "port": "tx_pin_flit",
    "direction": "output",
    "bits": 1192,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1192,
    "unbound_ranges_half_open": [
@@ -73609,7 +74214,7 @@
    "port": "rx_pin_v",
    "direction": "input",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -73625,7 +74230,7 @@
    "port": "rx_pin_flit",
    "direction": "input",
    "bits": 1192,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1192,
    "unbound_ranges_half_open": [
@@ -73641,7 +74246,7 @@
    "port": "retry_requested",
    "direction": "output",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -74025,7 +74630,7 @@
    "port": "phy_up",
    "direction": "input",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -74041,7 +74646,7 @@
    "port": "tx_pin_v",
    "direction": "output",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -74057,7 +74662,7 @@
    "port": "tx_pin_flit",
    "direction": "output",
    "bits": 1192,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1192,
    "unbound_ranges_half_open": [
@@ -74073,7 +74678,7 @@
    "port": "rx_pin_v",
    "direction": "input",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -74089,7 +74694,7 @@
    "port": "rx_pin_flit",
    "direction": "input",
    "bits": 1192,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1192,
    "unbound_ranges_half_open": [
@@ -74105,7 +74710,7 @@
    "port": "retry_requested",
    "direction": "output",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -74489,7 +75094,7 @@
    "port": "phy_up",
    "direction": "input",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -74505,7 +75110,7 @@
    "port": "tx_pin_v",
    "direction": "output",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -74521,7 +75126,7 @@
    "port": "tx_pin_flit",
    "direction": "output",
    "bits": 1192,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1192,
    "unbound_ranges_half_open": [
@@ -74537,7 +75142,7 @@
    "port": "rx_pin_v",
    "direction": "input",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -74553,7 +75158,7 @@
    "port": "rx_pin_flit",
    "direction": "input",
    "bits": 1192,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1192,
    "unbound_ranges_half_open": [
@@ -74569,7 +75174,7 @@
    "port": "retry_requested",
    "direction": "output",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -75557,6 +76162,86 @@
    "status": "UNBOUND_FAIL"
   },
   {
+   "instance": "hb_su_SW",
+   "port": "su_rq",
+   "direction": "input",
+   "bits": 136,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 136,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     136
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "su_wq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2248,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2248
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "su_rr",
+   "direction": "output",
+   "bits": 2056,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2056,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2056
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "su_w_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "fault",
+   "direction": "output",
+   "bits": 5,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 5,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     5
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
    "instance": "hb_sfu_SE",
    "port": "rst_lane_n",
    "direction": "input",
@@ -76485,6 +77170,86 @@
    "status": "UNBOUND_FAIL"
   },
   {
+   "instance": "hb_su_SE",
+   "port": "su_rq",
+   "direction": "input",
+   "bits": 136,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 136,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     136
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "su_wq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2248,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2248
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "su_rr",
+   "direction": "output",
+   "bits": 2056,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2056,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2056
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "su_w_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "fault",
+   "direction": "output",
+   "bits": 5,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 5,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     5
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
    "instance": "hb_sfu_NW",
    "port": "rst_lane_n",
    "direction": "input",
@@ -77413,6 +78178,86 @@
    "status": "UNBOUND_FAIL"
   },
   {
+   "instance": "hb_su_NW",
+   "port": "su_rq",
+   "direction": "input",
+   "bits": 136,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 136,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     136
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "su_wq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2248,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2248
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "su_rr",
+   "direction": "output",
+   "bits": 2056,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2056,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2056
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "su_w_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "fault",
+   "direction": "output",
+   "bits": 4,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 4,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     4
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
    "instance": "hb_sfu_NE",
    "port": "rst_lane_n",
    "direction": "input",
@@ -78336,6 +79181,86 @@
     [
      0,
      12
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "su_rq",
+   "direction": "input",
+   "bits": 136,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 136,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     136
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "su_wq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2248,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2248
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "su_rr",
+   "direction": "output",
+   "bits": 2056,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2056,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2056
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "su_w_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "fault",
+   "direction": "output",
+   "bits": 4,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 4,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     4
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -78659,6 +79584,342 @@
     ]
    ],
    "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_go",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_k",
+   "direction": "input",
+   "bits": 4,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 4,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     4
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_order",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_n",
+   "direction": "input",
+   "bits": 20,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 20,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     20
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_m",
+   "direction": "input",
+   "bits": 20,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 20,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     20
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_mirror",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_base",
+   "direction": "input",
+   "bits": 18,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 18,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     18
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_str",
+   "direction": "input",
+   "bits": 18,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 18,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     18
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_mirror",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_base",
+   "direction": "input",
+   "bits": 18,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 18,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     18
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_str",
+   "direction": "input",
+   "bits": 18,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 18,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     18
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_has_r",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_r_base",
+   "direction": "input",
+   "bits": 18,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 18,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     18
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_r_str",
+   "direction": "input",
+   "bits": 18,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 18,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     18
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "cq_seq",
+   "direction": "output",
+   "bits": 2,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 2,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_busy",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_done",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_fault",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "share_fault",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 1,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     1
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "argmax_rq",
+   "direction": "input",
+   "bits": 136,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 136,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     136
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "argmax_rr",
+   "direction": "output",
+   "bits": 2056,
+   "required_owner": "actual INDEX programme loader / CP",
+   "bound_bits": 0,
+   "unbound_bits": 2056,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2056
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
   }
  ],
  "boundary_gaps": [
@@ -78666,13 +79927,13 @@
   "actual mapped PHY address/endian/PC striping proof required",
   "historical PC leaf rejected for address/clock semantics; actual block CDC replacement required"
  ],
- "unbound_count": 1615,
+ "unbound_count": 1640,
  "pin_only_placeholder_count": 0,
  "legacy_failures_disposition": "77 legacy station failures remain historical; v15 validates actual source ports independently",
  "qualification": {
   "native_complete": false,
   "pins": false,
-  "station_benches": true,
+  "station_benches": false,
   "clock_views": false,
   "TT": false,
   "FF": false,

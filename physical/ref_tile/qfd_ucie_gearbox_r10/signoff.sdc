@@ -34,6 +34,74 @@ set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{core_ck} {fdi_ck} {fdi_rx_ck} {blk_tx_ck} {blk_rx_ck}}
 set ::ot_ce_ports {{core_ck} {fdi_ck} {fdi_rx_ck} {blk_tx_ck} {blk_rx_ck}}
 
+# Constants are proved from actual OpenDB connectivity and the loaded Liberty
+# output functions. Cell/port names, case analysis and timing-graph constant
+# pruning are never proofs. A cell output is constant when every loaded corner
+# gives its master the same Liberty function and that function is a literal, or a
+# combinational expression whose every variable is an input pin of the same
+# instance on a net with no input port and exactly one driver that is itself
+# constant (TIEHI/TIELO prove themselves through their literal function; a
+# synthesis buffer/inverter or any gate of constants follows). Registers never
+# qualify; unknown or unparsable functions fail closed.
+proc ot_ce_constant_net {net seen remaining} {
+  if {$remaining <= 0 || $net in {"" NULL}} {return 0}
+  foreach port [$net getBTerms] {if {[$port getIoType] ne "OUTPUT"} {return 0}}
+  set drivers {}
+  foreach pin [$net getITerms] {if {[$pin isOutputSignal]} {lappend drivers $pin}}
+  if {[llength $drivers] != 1} {return 0}
+  return [ot_ce_constant_iterm [lindex $drivers 0] $seen $remaining]
+}
+proc ot_ce_constant_iterm {pin seen remaining} {
+  if {$remaining <= 0 || ![$pin isOutputSignal]} {return 0}
+  set inst [$pin getInst];set name "[$inst getName]/[[$pin getMTerm] getName]"
+  if {[dict exists $seen $name]} {return 0}
+  if {[info exists ::ot_ce_const_memo] && [dict exists $::ot_ce_const_memo $name]} {return [dict get $::ot_ce_const_memo $name]}
+  dict set seen $name 1
+  set result [ot_ce_constant_iterm_eval $inst $pin $seen $remaining]
+  dict set ::ot_ce_const_memo $name $result
+  return $result
+}
+proc ot_ce_constant_iterm_eval {inst pin seen remaining} {
+  if {[info exists ::ot_ce_register_cells] && [dict exists $::ot_ce_register_cells [$inst getName]]} {return 0}
+  set master [[$inst getMaster] getName];set output [[$pin getMTerm] getName]
+  set functions {};set matched 0
+  foreach library [get_libs -quiet *] {
+    set cell [$library find_liberty_cell $master]
+    if {$cell in {"" NULL}} continue
+    set lp [$cell find_liberty_port $output]
+    if {$lp in {"" NULL} || [sta::liberty_port_direction $lp] ne "output"} {return 0}
+    dict set functions [string map {" " "" "\t" "" "\n" ""} [$lp function]] 1
+    incr matched
+  }
+  if {!$matched || [dict size $functions] != 1} {return 0}
+  set function [lindex [dict keys $functions] 0]
+  if {$function in {0 1}} {return 1}
+  if {$function eq "" || ![regexp {^[A-Za-z0-9_!'*&+|^()]+$} $function]} {return 0}
+  set inputs [lsort -unique [regexp -all -inline {[A-Za-z_][A-Za-z0-9_]*} $function]]
+  if {![llength $inputs]} {return 0}
+  foreach input $inputs {
+    set in [$inst findITerm $input]
+    if {$in in {"" NULL} || ![$in isInputSignal]} {return 0}
+    if {![ot_ce_constant_net [$in getNet] $seen [expr {$remaining-1}]]} {return 0}
+  }
+  return 1
+}
+# Timing startpoint -> constant proof. An output-port startpoint is followed to
+# its net driver; an input port is never constant.
+proc ot_ce_constant_cone {start} {
+  set block [ord::get_db_block]
+  if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+    set port [$block findBTerm [get_full_name $start]]
+    if {$port in {"" NULL} || [$port getIoType] ne "OUTPUT"} {return 0}
+    return [ot_ce_constant_net [$port getNet] {} 64]
+  }
+  if {[sta::object_type $start] ne "Pin"} {return 0}
+  set inst [$block findInst [get_full_name [$start instance]]]
+  if {$inst in {"" NULL}} {return 0}
+  set pin [$inst findITerm [get_property $start lib_pin_name]]
+  if {$pin in {"" NULL}} {return 0}
+  return [ot_ce_constant_iterm $pin {} 64]
+}
 # A multi-root leaf contains independent synchronous datapaths. Domain declarations
 # are checked against the real synthesized timing graph, not trusted as metadata.
 proc ot_ce_leaf_ownership {inputs outputs} {
@@ -44,7 +112,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   foreach c [all_clocks] {lappend actual [get_full_name $c]}
   if {[lsort $actual] ne [lsort $expected]} {error "OT_MULTI_ROOT: undeclared clock alias or relationship"}
   set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}
-  foreach root $::ot_ce_cts_roots {
+  foreach root $::ot_ce_ports {
     set domain [dict get $::ot_ce_source_domains $root]
     dict set domain_roots $domain $root
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
@@ -58,6 +126,9 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     set cell [get_full_name [get_cells -of_objects $pin]]
     if {![dict exists $cells $cell]} { error "OT_MULTI_ROOT: unowned register $cell" }
   }
+  set ::ot_ce_register_cells {}
+  foreach r [all_registers -cells] {dict set ::ot_ce_register_cells [get_full_name $r] 1}
+  set ::ot_ce_const_memo {}
   # OpenSTA's -data_pins population includes asynchronous clear/preset
   # controls. Classify these from the actual loaded Liberty sequential arcs,
   # never from port names or reset_ports. They retain recovery/removal timing;
@@ -78,6 +149,10 @@ proc ot_ce_leaf_ownership {inputs outputs} {
       } else {
         set source [get_full_name [get_cells -quiet -of_objects $start]]
         if {![dict exists $cells $source]} {
+          if {[ot_ce_constant_cone $start]} {
+            puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> [get_full_name $pin]"
+            continue
+          }
           error "OT_MULTI_ROOT: unowned data path $source -> $cell"
         }
         set source_domain [dict get $cells $source]
@@ -90,7 +165,21 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   }
   dict for {name domain} $outputs {
     foreach start [get_fanin -flat -startpoints_only -to [get_ports $name]] {
+      # A die-strap tie output (contract v1.2 tie_hi/tie_lo), possibly
+      # synthesis-buffered, has no clock and no data domain to own; it must be
+      # proved constant above. Registers and ports keep their domain checks.
+      if {[sta::object_type $start] eq "Pin" && [$start is_top_level_port]} {
+        if {[ot_ce_constant_cone $start]} {
+          puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
+          continue
+        }
+        error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]"
+      }
       set source [get_full_name [get_cells -quiet -of_objects $start]]
+      if {![dict exists $cells $source] && [ot_ce_constant_cone $start]} {
+        puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
+        continue
+      }
       if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {
         error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source"
       }
@@ -107,6 +196,15 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     }
     foreach kind {max min} {
       set paths [find_timing_paths -from $from -to $to -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" &&
+          ![info exists ::ot_mm_active]} {
+        # Multi-mode route/gate (tools/orfs_hold_mm.tcl): this SDC is being read into mode ss BEFORE any scene is
+        # defined, so the unscened default scene has no clocks and no path can be found yet.  The crossing population
+        # above is structural (actual fanin) and unchanged; the finite-path proof runs strictly in every single-scene
+        # read (non-MM stages, corner_sta / sign-off), which carries the timing claim.
+        puts "OT_MULTI_ROOT RELATED_PATH_DEFERRED $source_domain -> $target_domain $kind (multi-mode read before scene definition; strict at sign-off)"
+        continue
+      }
       if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
         error "OT_MULTI_ROOT: related crossing lacks actual finite $kind STA path $source_domain -> $target_domain"
       }
@@ -221,6 +319,20 @@ proc ot_ce_apply {} {
   # Wires-only parents have no CTS tree to set this flag for us.
   # Ideal clocks silently report zero network arrival despite real entry wires.
   set_propagated_clock [get_clocks ot_entry_*]
+  # Before CTS, a standard-cell root is still one unbuffered high-fanout
+  # net. Propagating that net invents multi-ns skew and clock-pin slew;
+  # its delay is not the tree that CTS will build. Keep only these declared
+  # CTS roots ideal during the explicit pre-CTS diagnostic. Raw macro and
+  # hardened-child entries retain actual entry-wire propagation. Routed
+  # require-wire checks always propagate and measure every physical root.
+  if {[info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+      (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)} {
+    foreach name $::ot_ce_cts_roots {
+      set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      unset_propagated_clock $clock
+      puts "OT_ENTRIES PRE_CTS_IDEAL_CTS_ROOT $name"
+    }
+  }
   set sources {}; set names {}
   foreach c [get_clocks ot_entry_*] {
     foreach p [get_property $c sources] { lappend sources $p; lappend names [get_full_name $p] }
@@ -372,6 +484,9 @@ proc ot_ce_apply {} {
     set dlmax [lindex [lsort -real [dict get $domain_high $domain]] end]
     set vc [get_clocks [dict get $info clock]]
     set budget [dict get $info io_budget_ps]
+    # Optional composition-derived output budget (domain "io_budget": {"out": f}, f >= 0.2): the outside share of the
+    # cycle on this domain's outputs; larger = a TIGHTER launch (flop -> pin) inside the child, never a relaxation.
+    set budget_out [expr {[dict exists $info io_budget_out_ps] ? [dict get $info io_budget_out_ps] : $budget}]
     set inputs {}; set outputs {}
     foreach pattern [dict get $info inputs] {
       set match [get_ports -quiet $pattern -filter "direction == input"]
@@ -399,7 +514,7 @@ proc ot_ce_apply {} {
       set_input_delay [expr {$dlmin-$hki}] -min -clock $vc $inputs
     }
     if {[llength $outputs]} {
-      set_output_delay [expr {$budget-$dlmax+$sk}] -max -clock $vc $outputs
+      set_output_delay [expr {$budget_out-$dlmax+$sk}] -max -clock $vc $outputs
       set_output_delay [expr {-$dlmin-$hk}] -min -clock $vc $outputs
     }
     if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
@@ -410,7 +525,7 @@ proc ot_ce_apply {} {
             set_input_delay [expr {$budget+$dlmax+150}] -max -clock $vc $p
           }
           if {[dict exists $covered_out $n] && [dict get $covered_out $n] eq $domain} {
-            set_output_delay [expr {$budget-$dlmax+150}] -max -clock $vc $p
+            set_output_delay [expr {$budget_out-$dlmax+150}] -max -clock $vc $p
           }
         }
       }

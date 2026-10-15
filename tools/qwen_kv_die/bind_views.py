@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 import kv_die as KV  # noqa: E402
+from binding_order import sliced_order
 
 CORNERS = ('tt', 'ff')
 OPTIONAL_CORNERS = ('ss',)     # qwen-split kvsys: SS is a reported sensitivity only (owner option B), bound when the view has it
@@ -87,7 +88,7 @@ def pin_map(master, frame_w, real_w):
             if rp not in real_w:
                 raise ValueError(f'{master}: real view has no RTL port {rp}')
             seq += bit_names(rp, real_w[rp])
-        dps = [base] + sorted(d for d in dps if d != base) if base in dps else sorted(dps)
+        dps = sliced_order(base, dps)
         need = sum(max(frame_w[d], 1) for d in dps)
         if need != len(seq):
             raise ValueError(f'{master}: die ports {dps} carry {need} bits, RTL {b["ports"][base]} {len(seq)}')

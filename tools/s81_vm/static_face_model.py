@@ -5,8 +5,15 @@ from __future__ import annotations
 def model(entries: int = 8, cap_pipeline: int = 0, read_pipeline: int = 0) -> dict:
     if entries < 2 or entries & (entries - 1):
         raise ValueError('capture entries must be a power of two >= 2')
-    if cap_pipeline not in (0, 1) or read_pipeline not in (0, 1):
-        raise ValueError('only measured one-stage structural candidates are supported')
+    # read_pipeline 2 (claude S81 VM F5 2026-10-15): the read router leaves register every input at its pin
+    # (native capture audit); one more stream edge on every native read, WFC keeps one 4:3 epoch of total delay.
+    # cap_pipeline 2 (claude S81 VM F2 2026-10-15): the capture lane registers every input in a pure pin flop and the
+    # element validation / entry target one edge later (native capture audit of the pin-stage decode: 214..483 > 190 ps);
+    # +2 serial edges vs legacy, +1 vs cap 1, II 1; the 3:4 transfer runs NAT=1 (ICG-gated banks, stream side captures
+    # each bank at its read edge): +1 stream edge (production cap16 bench at q = P + 4, stream edge +1).
+    if cap_pipeline not in (0, 1, 2) or read_pipeline not in (0, 1, 2):
+        raise ValueError('only measured structural candidates are supported (cap 0/1/2, read 0/1/2)')
+    wfc_epochs = (read_pipeline + 3) // 4
     lane_state = entries * (1 + 10 + 16 + 512)
     return {
         'schema': 'opentallas.s81-static-vm-face-model.v1',
@@ -18,9 +25,10 @@ def model(entries: int = 8, cap_pipeline: int = 0, read_pipeline: int = 0) -> di
             'lane_output_age_from_physical_pin_sample_serial_edges': 1 + cap_pipeline,
             'x34_bank_write_age_from_physical_pin_sample_serial_edges': 2 + cap_pipeline,
             'added_fixed_serial_edges': cap_pipeline,
+            'added_fixed_stream_edges': 1 if cap_pipeline >= 2 else 0,
             'initiation_interval_serial_edges': 1,
-            'extra_capture_state_bits_per_lane_estimate': 9 * cap_pipeline,
-            'first_stream_visibility': 'P=zero-based physical PIN SAMPLE; q=P+2+cap_pipeline;4*(q//3)+2+(q%3); bench tk is one-based and adds1',
+            'extra_capture_state_bits_per_lane_estimate': 9 * min(cap_pipeline, 1) + (832 + 4 + 1 + 1 + 16 + 16 * entries + 2) * (cap_pipeline >= 2),
+            'first_stream_visibility': 'P=zero-based physical PIN SAMPLE; q=P+2+cap_pipeline;4*(q//3)+2+(q%3)+(cap_pipeline>=2); bench tk is one-based and adds1',
             'rows_per_stream_cycle_epoch_average_max': 12,
             'assembly_state_bits_per_lane': lane_state,
             'assembly_state_bits_total': 16 * lane_state,
@@ -36,9 +44,9 @@ def model(entries: int = 8, cap_pipeline: int = 0, read_pipeline: int = 0) -> di
             'writes_per_serial_cycle': 1, 'reads_per_serial_cycle_max': 2,
             'write_bytes_per_serial_cycle': 64, 'read_bytes_per_serial_cycle_max': 128,
             'boundary_request_bits': 560, 'boundary_response_bits': 1029,
-            'latency_serial_cycles': 15 + 3 * read_pipeline,
-            'added_stream_response_pad_edges': 3 * read_pipeline,
-            'added_response_pad_bits': 3 * 1026 * read_pipeline,
+            'latency_serial_cycles': 15 + 3 * wfc_epochs,
+            'added_stream_response_pad_edges': (4 - read_pipeline % 4) % 4,
+            'added_response_pad_bits': ((4 - read_pipeline % 4) % 4) * 1026,
             'phase_accounting': 'one core edge plus three actual response-pad edges preserves 4stream/3serial epoch and all x43 legal slots',
             'read_lane_rule': 'paired rows must have different low-two-bit lanes',
         },
@@ -80,15 +88,16 @@ def model(entries: int = 8, cap_pipeline: int = 0, read_pipeline: int = 0) -> di
         'structural_candidates': dict(cap_pipeline=cap_pipeline, read_pipeline=read_pipeline,
             opt_in_default=False, production_calendar_qualified=False,
             read_router_leaves=64 if read_pipeline else 0,
+            read_router_pin_registered=read_pipeline >= 2,
             read_valid_leaves=8 if read_pipeline else 0,
             read_router_mapped_FF=52440 if read_pipeline else 0,
             read_router_max_FF_per_root=1100 if read_pipeline else 0,
             fsr_split_leaves=16, fsr_mapped_FF_per_root=690,
             current_required_memory_write_read_leaf_instances=562,
-            current_required_memory_write_read_clock_roots=610,
-            current_outer_clock_pin_count=682 if read_pipeline else 610,
-            current_outer_raw_reset_pin_count=618 if read_pipeline else 546,
-            extra_dependency_latency_ns=dict(capture=cap_pipeline/0.9, native_read=read_pipeline/1.2, WFC=3*read_pipeline/0.9),
+            current_required_memory_write_read_clock_roots=621,
+            current_outer_clock_pin_count=693 if read_pipeline else 621,  # +12 one return entry per lane, -1 retired cks
+            current_outer_raw_reset_pin_count=617 if read_pipeline else 545,  # -1 retired rss
+            extra_dependency_latency_ns=dict(capture=cap_pipeline/0.9 + (1/1.2 if cap_pipeline >= 2 else 0), native_read=read_pipeline/1.2, WFC=3*wfc_epochs/0.9),
             read_peak_legal_rows_per_stream_edge=30,
             return_prepare_mask_pipeline_FF=320,
             return_prepare_descriptor_age='stage9, one edge before unchanged stage10release; pending returnstorage integration proof',

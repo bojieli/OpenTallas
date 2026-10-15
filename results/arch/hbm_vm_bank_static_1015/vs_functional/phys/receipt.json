@@ -1,0 +1,71 @@
+{
+  "scope": "literal physical-wrapper source gates for final native bank shapes;24SRAM macros per shape; registered-write-decode successor",
+  "sources_sha256": {
+    "tb_hbm_vm_physical_banks_vs.sv": "82ce5c4a69817f297e3c7465ca2736ccb4ee7eeb68108b5f46eaf301df4b02e1",
+    "hfd_vms_bank_vs_rg7wg3.sv": "42e58231cf300f8474a48dbe73fabdda7a8f302cf4eab91ccbd77313b3a3744c",
+    "hfd_vms_bank_vs_rg5wg1.sv": "34c562a64511b83e2bb6b6204f69de53a74d847a194b25d66f853593d8367c66",
+    "hfd_vms_bank_vs_rg6wg3.sv": "3d4fe388b28b21b458c29dab8eb2f853d1f6bbc61a7d715463d250ebdcc590f0",
+    "hfd_vms_bank_vs_rg4wg1.sv": "59b27e86035ca1da1fee41d08d6c6bb5b0909739d41e32f64e386f9607433016",
+    "ot_vms_bank_static_wdecode_vs.sv": "17ab27ec16aad4656137a6c8d995de0420b9169b47b2e538a86486debea4fbaa",
+    "ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+  },
+  "shapes": {
+    "NW_NE_RG7_WG3": {
+      "positive": "PASS",
+      "wrong_actual_return_group_wiring_mutant": "KILLED",
+      "DMA_writes": 1024,
+      "wide_reads": 7168,
+      "read_issue_cycles": 896,
+      "each_group_reads": 1024,
+      "COLL_group5_reads": 1024,
+      "IDX_group6_reads": 1024,
+      "packet_reads": 8
+    },
+    "SW_SE_RG5_WG1": {
+      "positive": "PASS",
+      "wrong_actual_return_group_wiring_mutant": "KILLED",
+      "DMA_writes": 1024,
+      "wide_reads": 5120,
+      "read_issue_cycles": 640,
+      "each_group_reads": 1024,
+      "packet_reads": 8
+    },
+    "v15_NW_NE_RG6_WG3": {
+      "positive": "PASS",
+      "wrong_actual_return_group_wiring_mutant": "KILLED",
+      "DMA_writes": 1024,
+      "wide_reads": 6144,
+      "read_issue_cycles": 768,
+      "each_group_reads": 1024,
+      "packet_reads": 8
+    },
+    "v15_SE_RG4_WG1": {
+      "positive": "PASS",
+      "wrong_actual_return_group_wiring_mutant": "KILLED",
+      "DMA_writes": 1024,
+      "wide_reads": 4096,
+      "read_issue_cycles": 512,
+      "each_group_reads": 1024,
+      "packet_reads": 8
+    }
+  },
+  "measured": {
+    "banks": 8,
+    "SRAM_macros_per_shape": 24,
+    "sectors_per_cycle": 8,
+    "read_return_edges": 6,
+    "DMA_commit_edges": 3
+  },
+  "mechanisms": [
+    "all wide outputs used, each reads every128row inventory in everybank",
+    "perbank compiler rslot changes eachcycle",
+    "only selected output group valid exactlysixsubsequenedgeslater",
+    "packet ownerRG remains distinct andreturns originalbanktag",
+    "twoactivegroups withonlygroup0reserved faults andservesgroup0 only; no arbitration/defer"
+  ],
+  "mutant_scope": "permuted response group wires carry actual bank SRAM return records; no substitute bank or payload oracle output",
+  "limitations": [
+    "source and exact throughput gate, no timing or physical closure claim",
+    "one representative8bank slice per finalshape, notfourquadrant simulation"
+  ]
+}

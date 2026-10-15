@@ -36,7 +36,16 @@ class ProgramTest(unittest.TestCase):
             self.assertTrue(all(w['word']<1<<35 for w in triplet))
     def test_source_pinned_fixture_encodes_but_not_qualifies(self):
         r=self.emit();self.assertTrue(r['dispatch_eligible'],r);self.assertFalse(r['qualified'])
-        self.assertEqual(r['rows'][-1]['issue'],24)
+        self.assertEqual(r['rows'][-1]['issue'],25)
+        # every engine row: done = issue + 1 + measured pin-to-pin latency
+        for row in r['rows'][:-1]:self.assertEqual(row['done'],row['issue']+1+row['pin_to_pin'])
+    def test_done_row_off_by_one_rejected(self):
+        # MIX4 off-by-one class (done = issue + pin_to_pin) is refused by encode and emit
+        good=[dict(engine=10,arg=1,issue=656,done=1429,pin_to_pin=772),dict(engine=15,arg=0,issue=1433,done=0)]
+        encode_program(good,0,3)
+        with self.assertRaisesRegex(ValueError,'issue \\+ 1'):
+            encode_program([dict(good[0],done=1428),good[1]],0,3)
+        self.program['ops'][1]['end']-=1;self.blocked()
     def test_missing_physical_epoch(self):
         del self.contract['native_clock_epoch'];self.blocked()
     def test_unqualified_physical_epoch(self):

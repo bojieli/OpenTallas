@@ -26,7 +26,7 @@ for ps in (1,2):
  for b in range(63 if ps==2 else 31,-1,-1):emit(op=5,ps=ps,addr=b)
  wait(1)
 for a in range(171):emit(op=6,ps=2,addr=a)
-wait(2);emit(flush=1);wait(1)
+wait(3);emit(flush=1);wait(1)
 marks['first_emit_instruction']=len(p)
 for b in range(16):emit(link=1,group=b);wait(7)
 wait(4)

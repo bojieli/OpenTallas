@@ -1,0 +1,214 @@
+{
+  "qualified": false,
+  "scope": "Recovered original exact-content gates: all nine declared RTL inputs match snapshot start_commit3d11c89bb. Pending host-stage compiler changes were not evaluated by these gates.",
+  "summary": {
+    "qfd": {
+      "verdict": "WARN",
+      "clock": {
+        "max_root_sinks": 7175,
+        "root": "port:ck",
+        "cts": true,
+        "tt_insertion_ps": 561.2,
+        "tt_spread_ps": 132.3,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "ck",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 5507,
+                "mean": 473.7,
+                "min": 428.9,
+                "max": 559.4
+              },
+              "all": {
+                "n": 7175,
+                "mean": 479.0,
+                "min": 428.9,
+                "max": 561.2
+              },
+              "errors": [],
+              "macros": {
+                "n": 4,
+                "nets": 2,
+                "max_per_net": 2,
+                "reg_mean": 479.0,
+                "max_slew": 234.3,
+                "max_late": -15.7,
+                "pins": [
+                  {
+                    "pin": "u_end.u_link.g_bank[0].u_store.u_sram/clk",
+                    "arr": 463.3,
+                    "slew": 234.3,
+                    "late": -15.7,
+                    "net": "clknet_1_0_0_ck"
+                  },
+                  {
+                    "pin": "u_end.u_link.g_bank[1].u_store.u_sram/clk",
+                    "arr": 461.6,
+                    "slew": 229.9,
+                    "late": -17.4,
+                    "net": "clknet_1_1_0_ck"
+                  },
+                  {
+                    "pin": "u_end.u_link.g_bank[2].u_store.u_sram/clk",
+                    "arr": 443.2,
+                    "slew": 174.6,
+                    "late": -35.8,
+                    "net": "clknet_1_0_0_ck"
+                  },
+                  {
+                    "pin": "u_end.u_link.g_bank[3].u_store.u_sram/clk",
+                    "arr": 440.8,
+                    "slew": 168.1,
+                    "late": -38.2,
+                    "net": "clknet_1_1_0_ck"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "7,175 sinks on the largest root <= 15,000; measured TT insertion 561.2 ps, leaf spread 132.3 ps"
+      },
+      "all_declared_rtl_sources": {
+        "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+        "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "3b4d10d5d8f86557f3a6a342d9964ecad6d99579c90fc9438d469b14a5da478c",
+        "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "df23697e8d58e67ae3209eac9162d1393bed3a510a6e090149c2694bea9eacd8",
+        "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8822195c0d888cd132e9a828fc7367d3d3c1eddc28dfcfab01f905d9c881abfd",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv": "79170555930cc83ce57570d9f4542d12b8c1446e4f6fccad5e20ea7c0d8b47cc",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv": "4a7b6350dc48f6082c55855e67fe7f45857e216634f91f2c7457e0ff1a262452",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv": "a07782eafeb1cf8d500628d2eab1ca2f2bb8f4f8b27d3bf8dc40b34be2ac1cc4",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v": "619a3fc13acb0c172387f5564dee71faa3161ddc1ce000fd53353fbb2c4845b6"
+      },
+      "fail_items": []
+    },
+    "qkd": {
+      "verdict": "FAIL",
+      "clock": {
+        "max_root_sinks": 7105,
+        "root": "port:ck",
+        "cts": true,
+        "tt_insertion_ps": 606.6,
+        "tt_spread_ps": 186.1,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "ck",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 5437,
+                "mean": 461.5,
+                "min": 444.0,
+                "max": 606.6
+              },
+              "all": {
+                "n": 7105,
+                "mean": 463.6,
+                "min": 420.5,
+                "max": 606.6
+              },
+              "errors": [],
+              "macros": {
+                "n": 4,
+                "nets": 2,
+                "max_per_net": 2,
+                "reg_mean": 463.6,
+                "max_slew": 234.3,
+                "max_late": -20.5,
+                "pins": [
+                  {
+                    "pin": "u_end.u_link.g_bank[0].u_store.u_sram/clk",
+                    "arr": 443.1,
+                    "slew": 234.3,
+                    "late": -20.5,
+                    "net": "clknet_1_0_0_ck"
+                  },
+                  {
+                    "pin": "u_end.u_link.g_bank[1].u_store.u_sram/clk",
+                    "arr": 441.0,
+                    "slew": 229.2,
+                    "late": -22.6,
+                    "net": "clknet_1_1_0_ck"
+                  },
+                  {
+                    "pin": "u_end.u_link.g_bank[2].u_store.u_sram/clk",
+                    "arr": 423.1,
+                    "slew": 174.6,
+                    "late": -40.5,
+                    "net": "clknet_1_0_0_ck"
+                  },
+                  {
+                    "pin": "u_end.u_link.g_bank[3].u_store.u_sram/clk",
+                    "arr": 420.5,
+                    "slew": 168.5,
+                    "late": -43.1,
+                    "net": "clknet_1_1_0_ck"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "7,105 sinks on the largest root <= 15,000; measured TT insertion 606.6 ps, leaf spread 186.1 ps"
+      },
+      "all_declared_rtl_sources": {
+        "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+        "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "3b4d10d5d8f86557f3a6a342d9964ecad6d99579c90fc9438d469b14a5da478c",
+        "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "df23697e8d58e67ae3209eac9162d1393bed3a510a6e090149c2694bea9eacd8",
+        "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8822195c0d888cd132e9a828fc7367d3d3c1eddc28dfcfab01f905d9c881abfd",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv": "79170555930cc83ce57570d9f4542d12b8c1446e4f6fccad5e20ea7c0d8b47cc",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv": "4a7b6350dc48f6082c55855e67fe7f45857e216634f91f2c7457e0ff1a262452",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv": "a07782eafeb1cf8d500628d2eab1ca2f2bb8f4f8b27d3bf8dc40b34be2ac1cc4",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v": "619a3fc13acb0c172387f5564dee71faa3161ddc1ce000fd53353fbb2c4845b6"
+      },
+      "fail_items": [
+        {
+          "severity": "FAIL",
+          "check": "textbook.wire_reach",
+          "message": "3 stage(s) beyond 500 um reach: insert relay flops",
+          "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+        },
+        {
+          "severity": "FAIL",
+          "check": "textbook.wire_reach",
+          "message": "combinational path pin fdi_tx_up -> pin link_up[0]: up to 500 um with no register (> 500 um)",
+          "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+        },
+        {
+          "severity": "FAIL",
+          "check": "textbook.wire_reach",
+          "message": "combinational path pin fdi_tx_up -> pin link_up[0]: up to 500 um with no register (> 500 um)",
+          "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+        },
+        {
+          "severity": "FAIL",
+          "check": "textbook.wire_reach",
+          "message": "combinational path pin fdi_tx_up -> pin link_up[0]: up to 500 um with no register (> 500 um)",
+          "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+        }
+      ]
+    }
+  },
+  "calendar_checks": "pending preserved, measured3 advances budget exactly3, -1/bool/float/string rejected"
+}

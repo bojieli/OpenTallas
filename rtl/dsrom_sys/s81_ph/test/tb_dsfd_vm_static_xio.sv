@@ -3,7 +3,7 @@ module tb_dsfd_vm_static_xio;
 reg cks=0,ck=0,rss=0,rst=0; always #417 cks=~cks; always #556 ck=~ck;
 reg [14:0] rq=0; reg [2203:0] cvm=0; wire [512:0] rs; wire [3:0] av,wv; wire [55:0] ar,wr; wire [2047:0] wd; wire[63:0] wm; reg[3:0] ev=0;reg [2047:0] ed=0;wire fault; wire [31:0] wt;
 reg[3:0] pv[0:12]; reg[2047:0] pd[0:12]; integer i,k,n=0,got=0;
-dsfd_vm_static_xio d(.cks(cks),.rss(rss),.ck(ck),.rst(rst),.n_v(1'b0),.n_d(84'd0),.a_v(av),.a_row(ar),.e_v(ev),.e_d(ed),.f_collective(cvm),.f_crq(rq),.t_crs(rs),.w_v(wv),.w_row(wr),.w_d(wd),.w_m(wm),.w_t(wt),.f_xgo(11'd0),.qSWs(3'b011),.fault(fault));
+dsfd_vm_static_xio d(.ck_control_t(cks),.ck_control_s(ck),.ck_x43_t({2{cks}}),.ck_x43_s({2{ck}}),.rss_control_t(rss),.rst_control_s(rst),.rss_x43_t({2{rss}}),.rst_x43_s({2{rst}}),.n_v(1'b0),.n_d(84'd0),.a_v(av),.a_row(ar),.e_v(ev),.e_d(ed),.f_collective(cvm),.f_crq(rq),.t_crs(rs),.w_v(wv),.w_row(wr),.w_d(wd),.w_m(wm),.w_t(wt),.f_xgo(11'd0),.qSWs(3'b011),.fault(fault));
 always @(posedge cks) begin
  pv[0]<=av; for(k=0;k<4;k=k+1) pd[0][512*k+:512]<={498'd0,ar[14*k+:14]};
  for(i=1;i<13;i=i+1) begin pv[i]<=pv[i-1];pd[i]<=pd[i-1];end

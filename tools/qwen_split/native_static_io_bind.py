@@ -28,7 +28,7 @@ from qwen_split.source_pin_plan import rtl_ports, snap
 ROOT = Path(__file__).resolve().parents[2]
 MASTER = 'qfd_collective_static_io_production'
 SOURCE = 'rtl/physical/ot_qfd_collective_static_io_production.sv'
-ABI = 'results/arch/qwen_coll_io_1014/shared_ucie_1015/production_boundary.json'
+ABI = 'results/arch/qwen_coll_io_1014/block_stage_r10_1015/production_boundary.json'
 UCIE = 'ot_qfd_ucie_x64_phy'
 UCIE_VIEW = 'physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy'
 SERDES = 'ot_qfd_serdes_112g_x12_phy_s597'
@@ -48,8 +48,9 @@ OPEN_INPUTS = ('cmd_v', 'cmd_mode', 'cmd_words', 'cmd_tag', 'pkg_s', 'die_ps')
 def _aliases(ports):
     """Die-level single-bit / slice names for the vector clock and SerDes ports (port_join: alias -> real bits)."""
     a = {}
-    for p in ('face_ck', 'relay_ck', 'fdi_rx_ck'):
-        a.update({f'{p}{k}': (p, [k]) for k in range(ports[p][0])})
+    for p in ('face_ck', 'relay_ck', 'fdi_rx_ck', 'blk_ck'):
+        if p in ports:
+            a.update({f'{p}{k}': (p, [k]) for k in range(ports[p][0])})
     for s in range(3):
         a[f'stx{s}'] = ('serdes_tx', list(range(s * FW_S, (s + 1) * FW_S)))
         a[f'srx{s}'] = ('serdes_rx', list(range(s * FW_S, (s + 1) * FW_S)))
@@ -137,6 +138,12 @@ def apply(model):
     new += [('clk_coll', 'clock_trunk', 1, [('clk_rx', 'pll_coll')] + [('io_collective', p) for p in core_clock_pins(ports)]),
             ('clk_ucie', 'clock_trunk', 1, [('clk_rx', 'pll_ucie')] + [('io_collective', p) for p in fdi_clock_pins(ports)] +
              [(n, 'clk') for n in ('io_ucie',) + SERDES_INST])]
+    if 'blk_ck' in ports:
+        # These are actual 200 MHz clock inputs, not 1.2 GHz roots with a
+        # pessimistic timing annotation. Their common-PLL implementation and
+        # physical phase delivery remain explicit integration obligations.
+        new.append(('clk_coll_blk', 'clock_trunk', 1, [('clk_rx', 'pll_coll_blk')] +
+                    [('io_collective', f'blk_ck{k}') for k in range(ports['blk_ck'][0])]))
     model['buses'] = [q for q in kept if q[0] not in ('clk_ucie', 'clk_coll')] + new
     split = model.setdefault('port_split', {})
     split[MASTER] = dict(cd=[('in_data', 512), ('in_last', 1), ('in_mode', 1), ('in_tag', 32), ('in_valid', 1)],
@@ -272,13 +279,21 @@ def phy_master(Master, name, view):
             continue
         r = re.search(r'LAYER (\S+) ;\s*\n\s*RECT ([-\d. ]+) ;', m.group(2))
         x0, y0, x1, y1 = map(float, r.group(2).split()[:4])
-        if x0 > 1e-6:
-            raise ValueError(f'{name}.{m.group(1)}: PHY FDI pin not on the W face')
+        if x0 <= 1e-6:
+            f, z = 'W', (y0 + y1) / 2
+        elif x1 >= w - 1e-6:
+            f, z = 'E', (y0 + y1) / 2
+        elif y0 <= 1e-6:
+            f, z = 'S', (x0 + x1) / 2
+        elif y1 >= h - 1e-6:
+            f, z = 'N', (x0 + x1) / 2
+        else:
+            raise ValueError(f'{name}.{m.group(1)}: PHY pin not on a face')
         base, _, idx = m.group(1).partition('[')
-        bits.setdefault(base, {})[int(idx[:-1]) if idx else 0] = (r.group(1), round((y0 + y1) / 2, 4))
+        bits.setdefault(base, {})[int(idx[:-1]) if idx else 0] = (r.group(1), round(z, 4), f)
     for base, d in bits.items():
-        if set(d) != set(range(len(d))):
-            raise ValueError(f'{name}.{base}: incomplete bus in LEF')
-        q.ports[base] = ('pins', len(d), 'W', d[0][0], [d[k][1] for k in range(len(d))], 1)
+        if set(d) != set(range(len(d))) or len({v_[2] for v_ in d.values()}) != 1:
+            raise ValueError(f'{name}.{base}: incomplete or multi-face bus in LEF')
+        q.ports[base] = ('pins', len(d), d[0][2], d[0][0], [d[k][1] for k in range(len(d))], 1)
         q.order.append(base)
     return q

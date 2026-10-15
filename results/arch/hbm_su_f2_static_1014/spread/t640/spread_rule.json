@@ -1,0 +1,1057 @@
+{
+ "schema": "opentallas.hbm.su_f2_spread.v1",
+ "tool": "tools/hbm_static/su_f2_spread.py",
+ "design": "deepseek",
+ "qualification": false,
+ "ds_layer": 3,
+ "balanced_tail": false,
+ "kind": "compiler placement + static transport calendar; transport re-executed on RTL by the vehicle",
+ "constants": {
+  "VM_RD": 10,
+  "VM_WR": 7,
+  "LS_WR": 1,
+  "LS_RD": 2,
+  "ARITH": 23,
+  "RED_DEP": 8,
+  "MLAT": 3,
+  "ALAT": 3,
+  "DIV_EXTRA": 16,
+  "S_DEPTH": {
+   "0": 0,
+   "1": 49,
+   "2": 37,
+   "3": 31,
+   "4": 71,
+   "5": 71,
+   "6": 162,
+   "7": 104
+  },
+  "SFU_LANES_PER_QUARTER": 32,
+  "SCALAR_SIDE_LANES": 1
+ },
+ "inputs": {
+  "su_prod.json": "07d9ba6198a4ba554f463f37764d0adec6d152c1438ec0a44c85b06b5927fa89",
+  "su_rec.mem": "09836ab2c7c190935fa3f717cfce92bdbe2b74f43f69ae3e68da5cdf71f5bca4"
+ },
+ "slice_words_used": [
+  15229,
+  12760,
+  12440,
+  12216
+ ],
+ "replicated_words": 965,
+ "cross_quarter_conflict_words": 0,
+ "affine_base_failures": 0,
+ "affine_failures_at": [],
+ "broadcast_written_words": 4,
+ "rotations": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  3,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  3,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "invalidated_local_words": 20656,
+ "chains": [
+  {
+   "tags": [
+    "q_norm.ss"
+   ],
+   "priced": 165.0,
+   "first": 0,
+   "end": 98,
+   "edges": 98,
+   "ratio": 0.594
+  },
+  {
+   "tags": [
+    "q_norm.rs",
+    "q_norm.y"
+   ],
+   "priced": 214.0,
+   "first": 98,
+   "end": 213,
+   "edges": 115,
+   "ratio": 0.537
+  },
+  {
+   "tags": [
+    "kv_norm.ss",
+    "kv_norm.rs"
+   ],
+   "priced": 303.0,
+   "first": 213,
+   "end": 369,
+   "edges": 156,
+   "ratio": 0.515
+  },
+  {
+   "tags": [
+    "kv_norm.y",
+    "kv_rope.tail"
+   ],
+   "priced": 120.0,
+   "first": 369,
+   "end": 437,
+   "edges": 68,
+   "ratio": 0.567
+  },
+  {
+   "tags": [
+    "q_rope.tail"
+   ],
+   "priced": 60.0,
+   "first": 437,
+   "end": 481,
+   "edges": 44,
+   "ratio": 0.733
+  },
+  {
+   "tags": [
+    "attend.max",
+    "attend.exp_sum",
+    "attend.bf16_p"
+   ],
+   "priced": 472.0,
+   "first": 481,
+   "end": 741,
+   "edges": 260,
+   "ratio": 0.551
+  },
+  {
+   "tags": [
+    "attend.den",
+    "attend.norm",
+    "attend.inv_rope.tail"
+   ],
+   "priced": 290.0,
+   "first": 741,
+   "end": 901,
+   "edges": 160,
+   "ratio": 0.552
+  },
+  {
+   "tags": [
+    "attn.res_copy"
+   ],
+   "priced": 99.0,
+   "first": 901,
+   "end": 1024,
+   "edges": 123,
+   "ratio": 1.242
+  },
+  {
+   "tags": [
+    "router_act"
+   ],
+   "priced": 339.0,
+   "first": 1024,
+   "end": 1232,
+   "edges": 208,
+   "ratio": 0.614
+  },
+  {
+   "tags": [
+    "ffn.res_copy",
+    "route.scores_bias"
+   ],
+   "priced": 159.0,
+   "first": 1232,
+   "end": 1367,
+   "edges": 135,
+   "ratio": 0.849
+  },
+  {
+   "tags": [
+    "pre <- ffn mix pre",
+    "route.gather0",
+    "route.gather1"
+   ],
+   "priced": 180.0,
+   "first": 1367,
+   "end": 1412,
+   "edges": 45,
+   "ratio": 0.25
+  },
+  {
+   "tags": [
+    "route.gather2",
+    "route.gather3"
+   ],
+   "priced": 120.0,
+   "first": 1412,
+   "end": 1445,
+   "edges": 33,
+   "ratio": 0.275
+  },
+  {
+   "tags": [
+    "route.gather4"
+   ],
+   "priced": 60.0,
+   "first": 1445,
+   "end": 1477,
+   "edges": 32,
+   "ratio": 0.533
+  },
+  {
+   "tags": [
+    "route.gather5"
+   ],
+   "priced": 60.0,
+   "first": 1477,
+   "end": 1509,
+   "edges": 32,
+   "ratio": 0.533
+  },
+  {
+   "tags": [
+    "route.total"
+   ],
+   "priced": 115.0,
+   "first": 1509,
+   "end": 1557,
+   "edges": 48,
+   "ratio": 0.417
+  },
+  {
+   "tags": [
+    "route.den",
+    "route.weights",
+    "swiglu"
+   ],
+   "priced": 316.0,
+   "first": 1557,
+   "end": 1728,
+   "edges": 171,
+   "ratio": 0.541
+  },
+  {
+   "tags": [
+    "moe_sum.0"
+   ],
+   "priced": 60.0,
+   "first": 1728,
+   "end": 1772,
+   "edges": 44,
+   "ratio": 0.733
+  },
+  {
+   "tags": [
+    "moe_sum.2"
+   ],
+   "priced": 60.0,
+   "first": 1772,
+   "end": 1816,
+   "edges": 44,
+   "ratio": 0.733
+  },
+  {
+   "tags": [
+    "moe_sum.4",
+    "moe_sum.6"
+   ],
+   "priced": 120.0,
+   "first": 1816,
+   "end": 1884,
+   "edges": 68,
+   "ratio": 0.567
+  }
+ ],
+ "records": [
+  {
+   "tag": "q_norm.ss",
+   "priced": 165.0,
+   "issues": 4,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 160,
+   "drain_sectors": 1,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 0,
+   "end_edge": 98,
+   "own_edges": 98,
+   "edges": 98,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "q_norm.rs",
+   "priced": 152.0,
+   "issues": 1,
+   "lane_class": "side",
+   "pinned_sw": false,
+   "issue_to_local_store": 76,
+   "stage_sectors": 0,
+   "drain_sectors": 4,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 98,
+   "end_edge": 184,
+   "own_edges": 86,
+   "edges": 86,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "q_norm.y",
+   "priced": 62.0,
+   "issues": 3,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 272,
+   "drain_sectors": 160,
+   "reused_words": 388,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 98,
+   "end_edge": 213,
+   "own_edges": 115,
+   "edges": 29,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "kv_norm.ss",
+   "priced": 151.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 64,
+   "drain_sectors": 1,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 213,
+   "end_edge": 289,
+   "own_edges": 76,
+   "edges": 76,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "kv_norm.rs",
+   "priced": 152.0,
+   "issues": 1,
+   "lane_class": "side",
+   "pinned_sw": false,
+   "issue_to_local_store": 76,
+   "stage_sectors": 0,
+   "drain_sectors": 4,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 283,
+   "end_edge": 369,
+   "own_edges": 86,
+   "edges": 80,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "kv_norm.y",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 64,
+   "drain_sectors": 56,
+   "reused_words": 516,
+   "elided_drain_words": 64,
+   "adjacent_to_predecessor": false,
+   "first_edge": 369,
+   "end_edge": 414,
+   "own_edges": 45,
+   "edges": 45,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "kv_rope.tail",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 8,
+   "drain_sectors": 8,
+   "reused_words": 64,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 371,
+   "end_edge": 437,
+   "own_edges": 66,
+   "edges": 23,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "q_rope.tail",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 16,
+   "drain_sectors": 8,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 437,
+   "end_edge": 481,
+   "own_edges": 44,
+   "edges": 44,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attend.max",
+   "priced": 158.0,
+   "issues": 2,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 80,
+   "drain_sectors": 4,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 481,
+   "end_edge": 591,
+   "own_edges": 110,
+   "edges": 110,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "attend.exp_sum",
+   "priced": 253.0,
+   "issues": 8,
+   "lane_class": "sfu",
+   "pinned_sw": false,
+   "issue_to_local_store": 72,
+   "stage_sectors": 0,
+   "drain_sectors": 81,
+   "reused_words": 644,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 585,
+   "end_edge": 737,
+   "own_edges": 152,
+   "edges": 146,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "attend.bf16_p",
+   "priced": 61.0,
+   "issues": 2,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 80,
+   "reused_words": 640,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 661,
+   "end_edge": 741,
+   "own_edges": 80,
+   "edges": 4,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attend.den",
+   "priced": 154.0,
+   "issues": 1,
+   "lane_class": "sfu",
+   "pinned_sw": false,
+   "issue_to_local_store": 72,
+   "stage_sectors": 1,
+   "drain_sectors": 4,
+   "reused_words": 2,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 741,
+   "end_edge": 834,
+   "own_edges": 93,
+   "edges": 93,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attend.norm",
+   "priced": 76.0,
+   "issues": 4,
+   "lane_class": "sfu",
+   "pinned_sw": false,
+   "issue_to_local_store": 39,
+   "stage_sectors": 64,
+   "drain_sectors": 56,
+   "reused_words": 4,
+   "elided_drain_words": 64,
+   "adjacent_to_predecessor": true,
+   "first_edge": 741,
+   "end_edge": 877,
+   "own_edges": 136,
+   "edges": 43,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attend.inv_rope.tail",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 8,
+   "reused_words": 128,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 869,
+   "end_edge": 901,
+   "own_edges": 32,
+   "edges": 24,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attn.res_copy",
+   "priced": 99.0,
+   "issues": 40,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 2560,
+   "drain_sectors": 2560,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 901,
+   "end_edge": 1024,
+   "own_edges": 123,
+   "edges": 123,
+   "over_price": true,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "router_act",
+   "priced": 339.0,
+   "issues": 4,
+   "lane_class": "side",
+   "pinned_sw": false,
+   "issue_to_local_store": 185,
+   "stage_sectors": 1,
+   "drain_sectors": 4,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1024,
+   "end_edge": 1232,
+   "own_edges": 208,
+   "edges": 208,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "ffn.res_copy",
+   "priced": 99.0,
+   "issues": 40,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 2560,
+   "drain_sectors": 2560,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1232,
+   "end_edge": 1355,
+   "own_edges": 123,
+   "edges": 123,
+   "over_price": true,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.scores_bias",
+   "priced": 60.0,
+   "issues": 3,
+   "lane_class": "light",
+   "pinned_sw": true,
+   "issue_to_local_store": 23,
+   "stage_sectors": 96,
+   "drain_sectors": 48,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1312,
+   "end_edge": 1367,
+   "own_edges": 55,
+   "edges": 12,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "pre <- ffn mix pre",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 1,
+   "drain_sectors": 1,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1367,
+   "end_edge": 1410,
+   "own_edges": 43,
+   "edges": 43,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather0",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1379,
+   "end_edge": 1411,
+   "own_edges": 32,
+   "edges": 1,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather1",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1380,
+   "end_edge": 1412,
+   "own_edges": 32,
+   "edges": 1,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather2",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1412,
+   "end_edge": 1444,
+   "own_edges": 32,
+   "edges": 32,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather3",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1413,
+   "end_edge": 1445,
+   "own_edges": 32,
+   "edges": 1,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather4",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1445,
+   "end_edge": 1477,
+   "own_edges": 32,
+   "edges": 32,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather5",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1477,
+   "end_edge": 1509,
+   "own_edges": 32,
+   "edges": 32,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.total",
+   "priced": 115.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 6,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1509,
+   "end_edge": 1557,
+   "own_edges": 48,
+   "edges": 48,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "route.den",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1557,
+   "end_edge": 1589,
+   "own_edges": 32,
+   "edges": 32,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.weights",
+   "priced": 75.0,
+   "issues": 1,
+   "lane_class": "sfu",
+   "pinned_sw": false,
+   "issue_to_local_store": 39,
+   "stage_sectors": 0,
+   "drain_sectors": 2,
+   "reused_words": 7,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1581,
+   "end_edge": 1630,
+   "own_edges": 49,
+   "edges": 41,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "swiglu",
+   "priced": 181.0,
+   "issues": 4,
+   "lane_class": "sfu",
+   "pinned_sw": false,
+   "issue_to_local_store": 94,
+   "stage_sectors": 43,
+   "drain_sectors": 21,
+   "reused_words": 6,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1557,
+   "end_edge": 1728,
+   "own_edges": 171,
+   "edges": 98,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "moe_sum.0",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 14,
+   "drain_sectors": 7,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1728,
+   "end_edge": 1772,
+   "own_edges": 44,
+   "edges": 44,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "moe_sum.2",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 14,
+   "drain_sectors": 7,
+   "reused_words": 53,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1772,
+   "end_edge": 1816,
+   "own_edges": 44,
+   "edges": 44,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "moe_sum.4",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 14,
+   "drain_sectors": 0,
+   "reused_words": 53,
+   "elided_drain_words": 53,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1816,
+   "end_edge": 1851,
+   "own_edges": 35,
+   "edges": 35,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "moe_sum.6",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "pinned_sw": false,
+   "issue_to_local_store": 23,
+   "stage_sectors": 7,
+   "drain_sectors": 7,
+   "reused_words": 53,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1817,
+   "end_edge": 1884,
+   "own_edges": 67,
+   "edges": 33,
+   "over_price": false,
+   "reduction_tail_model": false
+  }
+ ],
+ "total": {
+  "priced": 3312.0,
+  "edges": 1884,
+  "ratio": 0.569
+ },
+ "vehicle_transport_windows": {
+  "q_norm.ss#0": [
+   0,
+   98
+  ],
+  "q_norm.rs#1": [
+   177,
+   184
+  ],
+  "q_norm.y#2": [
+   98,
+   213
+  ],
+  "kv_norm.ss#3": [
+   213,
+   289
+  ],
+  "kv_norm.rs#4": [
+   362,
+   369
+  ],
+  "kv_norm.y#5": [
+   369,
+   414
+  ],
+  "kv_rope.tail#6": [
+   371,
+   437
+  ],
+  "q_rope.tail#7": [
+   437,
+   481
+  ],
+  "attend.max#8": [
+   481,
+   591
+  ],
+  "attend.exp_sum#9": [
+   659,
+   737
+  ],
+  "attend.bf16_p#10": [
+   686,
+   741
+  ],
+  "attend.den#11": [
+   741,
+   834
+  ],
+  "attend.norm#12": [
+   741,
+   877
+  ],
+  "attend.inv_rope.tail#13": [
+   894,
+   901
+  ],
+  "attn.res_copy#14": [
+   901,
+   1024
+  ],
+  "router_act#15": [
+   1024,
+   1232
+  ],
+  "ffn.res_copy#16": [
+   1232,
+   1355
+  ],
+  "route.scores_bias#17": [
+   1312,
+   1367
+  ],
+  "pre <- ffn mix pre#18": [
+   1367,
+   1410
+  ],
+  "route.gather0#19": [
+   1404,
+   1411
+  ],
+  "route.gather1#20": [
+   1405,
+   1412
+  ],
+  "route.gather2#21": [
+   1437,
+   1444
+  ],
+  "route.gather3#22": [
+   1438,
+   1445
+  ],
+  "route.gather4#23": [
+   1470,
+   1477
+  ],
+  "route.gather5#24": [
+   1502,
+   1509
+  ],
+  "route.total#25": [
+   1550,
+   1557
+  ],
+  "route.den#26": [
+   1582,
+   1589
+  ],
+  "route.weights#27": [
+   1623,
+   1630
+  ],
+  "swiglu#28": [
+   1557,
+   1728
+  ],
+  "moe_sum.0#29": [
+   1728,
+   1772
+  ],
+  "moe_sum.2#30": [
+   1772,
+   1816
+  ],
+  "moe_sum.4#31": [
+   1816,
+   1827
+  ],
+  "moe_sum.6#32": [
+   1817,
+   1884
+  ]
+ }
+}

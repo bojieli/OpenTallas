@@ -1104,7 +1104,13 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                 v.V5_FINAL_MASTERS(model, o, k)
                 return o
             v.masters = _mfinal
-        _relays(v, m, relay_pitch)
+        _corr0 = v.CORR
+        if m.get('corridor_lanes'):
+            v.CORR = min(w_ for _, w_ in m['corridor_lanes'])
+        try:
+            _relays(v, m, relay_pitch)
+        finally:
+            v.CORR = _corr0
         if getattr(v, 'RELAY_REACH_GATE', False):   # tp8b (die timing by construction)
             _reset_tree(v, m)     # after the relays: legalised against the FINAL placement
         if before_relays is not None:
@@ -1223,7 +1229,7 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
             # These are unbound abstract pins, not a reusable physical view.
             for retired in ('xd', 'xr'):
                 q.ports.pop(retired, None)
-                q.order[:] = [p for p in q.order if p != retired]
+                q.order[:] = [x_ for x_ in q.order if x_ != retired]   # not 'p': py3.12+ inlined comprehension
         for M_, f, mine in ((s, 'S' if north else 'N', ('va', 'vq')), (q, 'N' if north else 'S', ('sa', 'sq'))):
             for pn in mine:                 # the base wrapper's default pin group for the new bus: replaced here
                 if pn in M_.ports:
@@ -1823,6 +1829,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     COLS = v.COLS
     cx_list = [m['col_x'](c) + v.TILE_BODY_W + v.CORR / 2 for c in range(COLS)]
     corr_x0 = [m['col_x'](c) + v.TILE_BODY_W for c in range(COLS)]
+    if m.get('corridor_lanes'):
+        # split compute PM-H-S: per-column station lanes (even W of its MY tile, odd E of its R0 tile); v.CORR is the
+        # lane width for the whole relay plan (set by the caller)
+        corr_x0 = [x0 for x0, _ in m['corridor_lanes']]
+        cx_list = [x0 + v.CORR / 2 for x0 in corr_x0]
     fields = [r['rect'] for r in m['regions'] if r['kind'] == 'tile_field']
     fw, fe = fields[0], fields[1]
 
@@ -2826,6 +2837,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     # net is never planned by itself: it rides the forward chain's relay frames (one registered hop each way per frame,
     # the closed station family ot_qwen_die_station TAP=0), relay ports a_d / a_r (upstream face) and b_d / b_r
     pair = dict(m.get('bus_pair') or {})          # forward bid -> reverse bid
+    # static schedule (owner 10-14): a static DVM corridor has no ready net any more; a pair whose reverse bus is gone
+    # is an ordinary forward bus
+    _names = {b_[0] for b_ in m['buses']}
+    pair = {f_: r_ for f_, r_ in pair.items() if r_ in _names}
     rev_idx = {b_[0]: j_ for j_, b_ in enumerate(m['buses']) if b_[0] in set(pair.values())}
     feedback = []        # it24: (bid, max hop before, after, accepted)
     plans = {}
@@ -6337,6 +6352,11 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
     pg_f = PG.F
     if rev == 'r5':
         PG.F = v
+    # split compute C20s: the powered rewrite must emit the SAME pin names as die.v (split bundles and port_join
+    # aliases renamed to the real RTL bits, as case_real does); without it every alias / split master had LEF pins
+    # the netlist never names
+    emit0 = getattr(v, 'EMIT_SPLIT', False)
+    v.EMIT_SPLIT = True
     try:
         for name, mst in M.items():
             wm_ = {q: pw.get((name, q), 0) for q in mst.order}
@@ -6349,6 +6369,7 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
             parts.append(text)
     finally:
         PG.F = pg_f
+        v.EMIT_SPLIT = emit0
     (work / 'elements.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(parts) +
                                        'END LIBRARY\n')
     _gate_track_lattice(work / 'elements.lef', m)

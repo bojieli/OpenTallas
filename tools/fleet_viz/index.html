@@ -21,6 +21,8 @@ header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
 h1{margin:0;font-size:clamp(18px,2.4vw,26px);font-weight:800;letter-spacing:-.02em;line-height:1.1}
 h1 .g{background:linear-gradient(90deg,var(--accent),#a78bfa 60%,var(--hot));-webkit-background-clip:text;background-clip:text;color:transparent}
 .sub{color:var(--dim);font-size:13px;margin-top:4px}
+.dsum{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px;font-size:12px;color:var(--dim)}
+.dsum span.d{white-space:nowrap;cursor:pointer}.dsum b{color:var(--fg,#e6edf3)}.dsum .do{color:#fbbf24}.dsum .dc{color:#4ade80}.dsum .dn{color:#f472b6}
 .live{display:inline-flex;align-items:center;gap:8px;font:600 12px var(--mono);color:var(--ink);padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#0b1020cc}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--hot);box-shadow:0 0 10px var(--hot);animation:pulse 1.6s infinite}
 .live.stale .dot{background:var(--faint);box-shadow:none;animation:none}
@@ -97,6 +99,11 @@ canvas.chart{width:100%;display:block}
 #rclock{position:fixed;right:16px;bottom:16px;z-index:9;font:800 20px var(--mono);color:var(--ink);background:#0b1020e6;border:1px solid var(--accent);border-radius:12px;padding:8px 14px;box-shadow:0 8px 40px #5ee7ff33;pointer-events:none}
 #rclock small{display:block;font:600 11px var(--mono);color:var(--dim);letter-spacing:.08em}
 .jobs{margin-top:14px}
+.hsum{color:var(--dim);font:11.5px var(--mono);margin-top:4px;line-height:1.45}.hsum b{color:var(--ink);font-weight:600}.hsum .wq{color:#fbbf24}
+.fjnote{color:var(--dim);font:11.5px var(--mono);margin:-2px 0 8px}
+.jt td.num{text-align:right}.jt th.num{text-align:right}
+.jt td.dt{max-width:520px;color:var(--dim)}
+@media (max-width:640px){.jt td.dt{max-width:220px}.ctl input[type=search]{min-width:0;flex:1 1 140px}}
 .ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;font:12px var(--mono)}
 .ctl select,.ctl input{background:#0b1020;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:4px 7px;font:12px var(--mono)}
 .ctl input[type=search]{min-width:200px}
@@ -185,6 +192,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
     <div>
       <h1><span class="g">OpenTallas</span> compute fleet</h1>
       <div class="sub">Chip-design place-and-route, synthesis and RTL simulation, live</div>
+      <div class="dsum" id="dieSum" title="Per die, from the current die contracts (results/fleet_viz/die_contracts.json): contract masters + physical leaves; open = in flight + failed + not started"></div>
     </div>
     <a class="xnav" id="xnav" href="/explorer">Chip Explorer &rarr;</a>
     <a class="xnav" id="covnav" href="/explorer/coverage/" style="margin-left:0">Coverage &rarr;</a>
@@ -234,6 +242,17 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
     </div>
   </div>
 
+  <section class="panel jobs" id="fjPanel" hidden>
+    <div class="ptitle"><span>Fleet jobs · everything running on every host</span><b id="fjNow"></b></div>
+    <div class="fjnote">Loop routes are the closure-loop subset (their progress is in the next table). ot-run / ot-heavy jobs are memory-admitted units (Verilator builds, gates, die chains, benches); a container they start is folded into their row. Waiters sit in a host's ot-heavy admission queue; held = ot-run's coordinator-side load hold. Memory = cgroup current (peak / limit on hover); CPU = cores busy.</div>
+    <div class="ctl">
+      <select id="gHost"><option value="">all hosts</option></select>
+      <span id="gKind"></span>
+      <input id="gTxt" placeholder="filter name / owner / stream / command" type="search">
+      <label><input type="checkbox" id="gGrp" checked> group by host</label>
+    </div>
+    <div class="tblwrap"><table class="jt"><thead><tr id="gHead"></tr></thead><tbody id="gBody"></tbody></table></div>
+  </section>
   <section class="panel jobs" id="jobsPanel" hidden>
     <div class="ptitle"><span>Closure loop · live progress (every active job)</span><b id="jobsNow"></b></div>
     <div class="ctl">
@@ -251,13 +270,14 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
   </section>
 
   <section class="panel elems" id="elPanel" hidden>
-    <div class="ptitle"><span>Elements · per-block closure status</span><b id="elNow"></b></div>
+    <div class="ptitle"><span>Elements · independent master closure</span><b id="elNow"></b></div>
     <div class="sumwrap"><table class="esum" id="elSum"></table></div>
     <div class="ctl" id="elCtl">
       <select id="eTgt"><option value="">all targets</option></select>
       <span id="eSt"></span>
       <input id="eTxt" placeholder="filter element / description / job / event" type="search">
       <label><input type="checkbox" id="eGrp" checked> group by target</label>
+      <label><input type="checkbox" id="eIntegration"> integration backlog</label>
     </div>
     <div class="tblwrap" id="elWrap"><table class="jt" id="elTable"><thead><tr id="eHead"></tr></thead><tbody id="eBody"></tbody></table></div>
   </section>
@@ -356,7 +376,7 @@ function card(h, i) {
   el.innerHTML = `<div class="hh"><div><div class="hn"><span class="sw"></span><span class="nm"></span><span class="sdot" hidden></span></div><div class="hk"></div></div><div class="hb"></div></div>
     <canvas class="grid"></canvas><div class="offline" hidden></div>
     <div class="hm"><span>RAM <b class="mu"></b></span><span class="mp"></span></div><div class="bar"><i></i></div>
-    <div class="hm"><span>load <b class="ld"></b></span><span>containers <b class="dk"></b></span><span>routes <b class="rt"></b></span></div><div class="gpu" hidden></div>`;
+    <div class="hm"><span>load <b class="ld"></b></span><span>containers <b class="dk"></b></span><span>loop routes <b class="rt"></b></span></div><div class="hsum" title="every job on this host (Fleet jobs table): closure-loop routes, other ot-heavy/ot-run jobs and containers, ot-heavy waiters in the admission queue"></div><div class="gpu" hidden></div>`;
   el.classList.add(/EPYC/.test(h.kind) ? 'bigc' : 'smallc');
   $(/EPYC/.test(h.kind) ? 'hostsBig' : 'hostsSmall').appendChild(el);
   c = {el, cv: el.querySelector('canvas'), cur: [], tgt: [], n: 0};
@@ -408,6 +428,19 @@ function drawGrid(c, t) {
     else { g.fillStyle = col(fi); g.beginPath(); g.roundRect ? g.roundRect(x, y, cell, cell, r) : g.rect(x, y, cell, cell); g.fill(); }
   }
 }
+function hostSum(el, h) {   // one line: loop routes N · other jobs M · waiters W · load L/cores · mem used/total
+  const j = h.jobs, up = h.cores && h.cores.length, x = el.querySelector('.hsum');
+  if (!x) return;
+  const lr = j && j.loop != null ? j.loop : h.routes;   // RUNNING + SYNC + ECO on this host (the Fleet jobs table's loop rows)
+  setText(el.querySelector('.rt'), lr);
+  const p = [`loop routes <b>${fmt(lr)}</b>`];
+  if (j && j.inv) {
+    p.push(`other jobs <b>${fmt(j.other)}</b>`);
+    p.push(`<span class="${j.waiters ? 'wq' : ''}">waiters <b>${fmt(j.waiters)}</b></span>` + (j.held ? ` (+${fmt(j.held)} held)` : ''));
+  } else p.push('other jobs <b>-</b>');
+  if (up) p.push(`load <b>${fmt(h.load)}</b>/${h.cores.length}`, `mem <b>${fmt(h.mem_used)}</b>/${fmt(h.mem_total)} GB`);
+  setHTML(x, p.join(' · '));
+}
 function updateHosts(d) {
   d.hosts.forEach((h, i) => {
     const c = card(h, i), el = c.el, up = h.cores && h.cores.length && (h.state === 'up' || h.state === 'stale');
@@ -421,6 +454,7 @@ function updateHosts(d) {
       setHTML(el.querySelector('.hb'), '<small>' + (h.state === 'pending' ? 'soon' : 'offline') + '</small>');
       for (const s of ['.mu', '.mp', '.ld', '.dk']) el.querySelector(s).textContent = '-';
       setText(el.querySelector('.rt'), h.routes); el.querySelector('.bar i').style.width = '0';
+      hostSum(el, h);
       return;
     }
     if (c.n !== h.cores.length) { c.n = h.cores.length; c.cur = h.cores.slice(); layoutGrid(c); }
@@ -435,6 +469,7 @@ function updateHosts(d) {
     setText(el.querySelector('.ld'), fmt(h.load, 0));
     setText(el.querySelector('.dk'), h.docker ?? '-');
     setText(el.querySelector('.rt'), h.routes);
+    hostSum(el, h);
     const gp = el.querySelector('.gpu');
     gp.hidden = !(h.gpu && h.gpu.length);
     if (!gp.hidden) setHTML(gp, h.gpu.map(g => `GPU <b>${g.util}%</b> · ${fmt(g.mem_used)}/${fmt(g.mem_total)} GB · ${g.power} W · ${g.temp}°C`).join('<br>'));
@@ -821,13 +856,70 @@ $('fTxt').oninput = e => { F.txt = e.target.value; renderJobs(); };
 $('fSt').onclick = e => { const s = e.target.dataset && e.target.dataset.s; if (!s) return; F.sts = F.sts.includes(s) ? F.sts.filter(x => x !== s) : F.sts.concat(s); renderJobs(); };
 $('jHead').onclick = e => { const c = e.target.dataset && e.target.dataset.c; if (!c) return; if (F.sort === c) F.dir = -F.dir; else { F.sort = c; F.dir = c === 'age' ? -1 : 1; } renderJobs(); };
 if (!REPLAY) pollJobs();
+
+// ---- fleet jobs (/api/fleetjobs): loop routes + ot-heavy/ot-run units + other containers + waiters on every host
+const FJKINDS = ['loop route', 'ot-run job', 'ot-heavy job', 'container', 'waiter', 'held (ot-run)'];
+const FJKCOL = {'loop route': '#4ade80', 'ot-run job': '#5ee7ff', 'ot-heavy job': '#a78bfa', container: '#93c5fd', waiter: '#fbbf24', 'held (ot-run)': '#fb923c'};
+const FJCOLS = [['kind', 'kind', ''], ['name', 'name', ''], ['owner', 'owner', ''], ['host', 'host', ''], ['run', 'runtime', 'num'], ['memv', 'memory GB', 'num'], ['cpu', 'CPU', 'num'], ['detail', 'command / mounts', '']];
+const G = Object.assign({host: '', txt: '', grp: true, kinds: FJKINDS.slice(), sort: 'memv', dir: -1}, ls('g') || {});
+let FJ = null, fjHash = null;
+function renderFJ() {
+  if (!FJ) return;
+  lsw('g', G);
+  const now = NOW(), order = FJ.order || [];
+  const rows = FJ.rows.map(r => Object.assign({}, r, {run: r.start ? now - r.start : 0, memv: r.mem != null ? r.mem : (r.req != null ? r.req : 0),
+    own: (r.owner || '') + (r.stream ? (r.owner ? ' · ' : '') + r.stream : '')}));
+  const cnt = {}; rows.forEach(r => cnt[r.kind] = (cnt[r.kind] || 0) + 1);
+  setHTML($('gKind'), FJKINDS.filter(k => cnt[k] || G.kinds.includes(k) && k !== 'held (ot-run)').map(k => `<span class="chip ${G.kinds.includes(k) ? 'on' : ''}" data-k="${k}" style="${G.kinds.includes(k) ? 'background:' + FJKCOL[k] : ''}">${k} ${cnt[k] || 0}</span>`).join(' '));
+  const hs = [...new Set(rows.map(r => r.host))].sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99) || a.localeCompare(b));
+  const sel = $('gHost'); if (sel.options.length - 1 !== hs.length) sel.innerHTML = '<option value="">all hosts</option>' + hs.map(h => `<option>${esc(h)}</option>`).join('');
+  if (sel.value !== G.host) sel.value = G.host; $('gGrp').checked = G.grp; if (document.activeElement !== $('gTxt')) $('gTxt').value = G.txt;
+  const tx = G.txt.toLowerCase();
+  const vis = rows.filter(r => G.kinds.includes(r.kind) && (!G.host || r.host === G.host) &&
+    (!tx || (r.name + ' ' + r.own + ' ' + r.detail + ' ' + (r.cwd || '')).toLowerCase().includes(tx)));
+  const k = G.sort === 'owner' ? 'own' : G.sort, dir = G.dir;
+  vis.sort((a, b) => (G.grp ? (hs.indexOf(a.host) - hs.indexOf(b.host)) : 0) || ((a[k] > b[k]) - (a[k] < b[k])) * dir || String(a.name).localeCompare(b.name));
+  setHTML($('gHead'), FJCOLS.map(([c, t, cl]) => `<th data-c="${c}" class="${cl} ${G.sort === c ? 's' + (G.dir < 0 ? ' d' : '') : ''}">${t}</th>`).join(''));
+  const items = []; let g = null;
+  for (const r of vis) {
+    if (G.grp && r.host !== g) {
+      g = r.host; const hsm = (FJ.hosts || {})[g] || {}, gr = vis.filter(x => x.host === g), mem = gr.reduce((a, x) => a + (x.mem || 0), 0);
+      items.push(['h|' + g, `<tr class="grp"><td colspan="8">${esc(g)} · ${gr.length} shown<small>loop routes ${fmt(hsm.loop)} · other jobs ${hsm.inv ? fmt(hsm.other) : '-'} · waiters ${hsm.inv ? fmt(hsm.waiters) : '-'}${hsm.held ? ' · held ' + fmt(hsm.held) : ''} · ${fmt(mem)} GB in shown jobs${hsm.inv ? '' : ' · no job inventory (host down or not reporting)'}</small></td></tr>`]);
+    }
+    const memT = r.mem != null ? `current ${fmt(r.mem, 2)} GB` + (r.peak != null ? ` · peak ${fmt(r.peak, 1)} GB` : '') + (r.max != null ? ` · limit ${fmt(r.max)} GB` : '') + (r.ctr ? ` · incl. ${r.ctr} container${r.ctr > 1 ? 's' : ''}` : '') : (r.req != null ? `requested ${fmt(r.req)} GB (not admitted yet)` : '');
+    const memC = r.mem != null ? fmt(r.mem, 1) + (r.max ? `<small style="color:var(--dim)"> /${fmt(r.max)}</small>` : '') : (r.req != null ? `<small style="color:var(--dim)">req </small>${fmt(r.req)}` : '-');
+    const tip = [r.unit, r.tag, r.cwd && 'cwd ' + r.cwd, r.n ? r.n + ' procs' : ''].filter(Boolean).join(' · ');
+    items.push(['r|' + r.host + '|' + r.kind + '|' + (r.unit || r.name) + '|' + (r.start || ''), `<tr><td><span class="st" style="background:${FJKCOL[r.kind] || '#8a97b8'}">${esc(r.kind)}</span></td><td title="${esc(tip)}">${esc(r.name)}</td><td title="${esc(r.own)}">${esc(r.own)}</td><td>${esc(r.host)}</td>` +
+      `<td class="num fa" data-s="${r.start || ''}"></td><td class="num" title="${esc(memT)}">${memC}</td><td class="num">${r.cpu == null ? '-' : fmt(r.cpu, 1)}</td><td class="dt" title="${esc(r.detail)}">${esc(r.detail)}</td></tr>`]);
+  }
+  if (!items.length) items.push(['__none', '<tr><td colspan="8">no matching jobs</td></tr>']);
+  reconcile($('gBody'), items); fjAges();
+  const tot = {loop: 0, other: 0, waiters: 0}; Object.values(FJ.hosts || {}).forEach(h => { tot.loop += h.loop || 0; tot.other += h.other || 0; tot.waiters += h.waiters || 0; });
+  setText($('fjNow'), `${vis.length} shown of ${rows.length} · loop routes ${tot.loop} · other jobs ${tot.other} · waiters ${tot.waiters}`);
+}
+function fjAges() { const now = NOW(); for (const e of $('gBody').querySelectorAll('td.fa')) setText(e, e.dataset.s ? dur(now - e.dataset.s) : '-'); }
+function pollFJ() {
+  (FV ? FV.getJSON('/api/fleetjobs', 8000) : fetch('/api/fleetjobs').then(r => r.ok ? r.json() : null)).then(d => {
+    if (d == null) return;
+    if (FV) FV.ok('fleetjobs-fetch');
+    const x = JSON.stringify([d.rows, d.hosts]); if (x === fjHash) { fjAges(); return; } fjHash = x; FJ = d; if ($('fjPanel').hidden) $('fjPanel').hidden = false; renderFJ();
+  }).catch(e => { if (FV) FV.fail('fleetjobs-fetch', 'fleet jobs: ' + e.message, null); }).finally(() => setTimeout(pollFJ, 15000));
+}
+$('gHost').onchange = e => { G.host = e.target.value; renderFJ(); };
+$('gGrp').onchange = e => { G.grp = e.target.checked; renderFJ(); };
+$('gTxt').oninput = e => { G.txt = e.target.value; renderFJ(); };
+$('gKind').onclick = e => { const k = e.target.dataset && e.target.dataset.k; if (!k) return; G.kinds = G.kinds.includes(k) ? G.kinds.filter(x => x !== k) : G.kinds.concat(k); renderFJ(); };
+$('gHead').onclick = e => { const c = e.target.dataset && e.target.dataset.c; if (!c) return; if (G.sort === c) G.dir = -G.dir; else { G.sort = c; G.dir = ['run', 'memv', 'cpu'].includes(c) ? -1 : 1; } renderFJ(); };
+setInterval(() => { if (FJ) fjAges(); }, 15000);
+if (!REPLAY) pollFJ();
 window.addEventListener('resize', () => { for (const c of cards.values()) layoutGrid(c); drawCpu(); drawClosures(); areaT0 = 0; });
 
 // ---- per-element closure status (/api/elements; replay: RP.elems; share-safe: summary counts only)
 const ECOL = {'closed (TT era)': '#4ade80', 'closed (TT re-verified)': '#2dd4bf', 'closed (earlier)': '#a3e635', 'first trial in flight': '#5ee7ff',
   'failed, re-running': '#fbbf24', 'revoked, re-running': '#fb923c', 'revoked (no live job)': '#f97316', 'needs redesign (no live job)': '#ff5d73',
-  'flow failure (no live job)': '#c084fc', 'cancelled only': '#8a97b8', 'superseded': '#64748b', 'implementation recorded (no physical job)': '#93c5fd'};
-const ECOLS = [['element', 'element'], ['category', 'status'], ['purpose', 'what it is'], ['tt', 'TT setup'], ['ff', 'FF hold'], ['ss', 'SS sens.'], ['drc', 'DRC'],
+  'flow failure (no live job)': '#c084fc', 'cancelled only': '#8a97b8', 'superseded': '#64748b', 'implementation recorded (no physical job)': '#93c5fd',
+  'not started (open)': '#f472b6'};
+const ECOLS = [['element', 'element'], ['category', 'status'], ['dietxt', 'die · owner'], ['purpose', 'what it is'], ['tt', 'TT setup'], ['ff', 'FF hold'], ['ss', 'SS sens.'], ['drc', 'DRC'],
   ['die', 'die µm²'], ['util', 'util'], ['live', 'live'], ['failed', 'failed'], ['jobs', 'jobs'], ['closed_t', 'closed'], ['qualification', 'qualification'], ['lt', 'latest event']];
 const EF = Object.assign({tgt: '', txt: '', grp: true, sts: null, sort: 'category', dir: 1}, relabel(ls('ef')) || {});
 let ED = null, eHash = null;
@@ -839,8 +931,18 @@ function elementQualification(q) {
   return `source ${q.source.commit} · RTL ${st(q.implementation)} · model ${st(q.model)} · exact +${st(e.positive)} / -${st(e.negative)} · physical ${st(q.physical)} · corners ${JSON.stringify(q.physical && q.physical.corners || {})} · dependencies ${(q.dependencies || []).join(', ')} · integration ${st(q.integration)} · ${q.registry_path}`;
 }
 const NOCOUNT = new Set(['superseded']);   // cancellation ends a job, not its outstanding requirement
+function dieText(r) {   // contract membership: die label + role + owner stream (registry-sync 10-15)
+  if (!r.dies || !r.dies.length) return r.contract || '';
+  return r.dies.map(x => x.label.replace(/ die$/, '') + ' ' + (x.role || '') + (x.parents && x.parents.length ? ' < ' + x.parents.slice(0, 2).join(', ') : '')).join('; ') + (r.owner_stream ? ' · ' + r.owner_stream : '');
+}
+function nativeText(r) { return (r.native || []).map(c => `${c.kind}: ${c.verdict || '?'} (${c.path || ''})`).join('; '); }
+function renderDieSum() {
+  const D = ED && ED.designs; if (!D) return;
+  setHTML($('dieSum'), Object.entries(D).map(([k, s]) => `<span class="d" data-k="${esc(k)}" title="${esc(s.revision + ' · lead ' + (s.lead || '') + ' · in flight ' + s.in_flight + ', failed ' + s.failed + ', superseded ' + s.superseded + (s.complete ? '' : ' · contract incomplete'))}"><b>${esc(s.label)}</b> <span class="do">${s.open} open</span> / <span class="dc">${s.closed} closed</span> / <span class="dn">${s.not_started} not started</span></span>`).join(''));
+}
 function renderElements() {
   if (!ED) return;
+  renderDieSum();
   if ($('elPanel').hidden) $('elPanel').hidden = false; lsw('ef', EF);
   const cats = ED.cats, tg = ED.targets.filter(t => ED.summary[t]);
   const tot = {}; let all = 0;
@@ -852,7 +954,7 @@ function renderElements() {
   sh += '<tr><td><b>all</b></td>' + cats.map(c => `<td class="${tot[c] && !SAFE ? 'c' : ''}" data-t="" data-c="${esc(c)}"><b>${tot[c] || '·'}</b></td>`).join('') + `<td><b>${all}</b></td></tr>`;
   setHTML($('elSum'), sh);
   const closed = cats.filter(c => c.startsWith('closed')).reduce((a, c) => a + (tot[c] || 0), 0);
-  setText($('elNow'), `${closed} of ${all} closed · ${all - closed} open` + ([...NOCOUNT].some(c => tot[c]) ? ` (not counted: ${[...NOCOUNT].filter(c => tot[c]).map(c => tot[c] + ' ' + c).join(', ')})` : '') + ` · as of ${ago(ED.t)}`);
+  setText($('elNow'), `${closed} of ${all} closed · ${all - closed} open` + ([...NOCOUNT].some(c => tot[c]) ? ` (not counted: ${[...NOCOUNT].filter(c => tot[c]).map(c => tot[c] + ' ' + c).join(', ')})` : '') + ` · ${(ED.integration_rows || []).length} integration records separate · as of ${ago(ED.t)}`);
   const rowsOK = !SAFE && ED.rows;
   for (const id of ['elCtl', 'elWrap']) if ($(id).hidden !== !rowsOK) $(id).hidden = !rowsOK;
   if (!rowsOK) return;
@@ -860,15 +962,16 @@ function renderElements() {
   if (EF.knownCats) { for (const c of cats) if (!EF.knownCats.includes(c) && !EF.sts.includes(c)) EF.sts.push(c); }
   else if (!EF.sts.includes('implementation recorded (no physical job)')) EF.sts.push('implementation recorded (no physical job)');
   EF.knownCats = cats.slice();
-  const cnt = {}; ED.rows.forEach(r => cnt[r.category] = (cnt[r.category] || 0) + 1);
+  const displayRows = $('eIntegration').checked ? (ED.integration_rows || []) : (ED.independent_rows || ED.rows);
+  const cnt = {}; displayRows.forEach(r => cnt[r.category] = (cnt[r.category] || 0) + 1);
   setHTML($('eSt'), cats.filter(c => cnt[c]).map(c => `<span class="chip ${EF.sts.includes(c) ? 'on' : ''}" data-s="${esc(c)}" style="${EF.sts.includes(c) ? 'background:' + ECOL[c] : ''}">${esc(c)} ${cnt[c]}</span>`).join(' '));
   const sel = $('eTgt'); if (sel.options.length - 1 !== tg.length) sel.innerHTML = '<option value="">all targets</option>' + tg.map(t => `<option>${esc(t)}</option>`).join('');
   if (sel.value !== EF.tgt) sel.value = EF.tgt; $('eGrp').checked = EF.grp; if (document.activeElement !== $('eTxt')) $('eTxt').value = EF.txt;
   const tx = EF.txt.toLowerCase();
-  const rows = ED.rows.map(r => Object.assign({}, r, {tt: r.best.tt, ff: r.best.ff, ss: r.best.ss, drc: r.best.drc, die: r.area && r.area.die, util: r.area && r.area.util,
-    qualification: elementQualification(r.qualification), lt: r.latest ? r.latest.t : 0, cix: cats.indexOf(r.category)}));
+  const rows = displayRows.map(r => Object.assign({}, r, {tt: r.best.tt, ff: r.best.ff, ss: r.best.ss, drc: r.best.drc, die: r.area && r.area.die, util: r.area && r.area.util,
+    qualification: elementQualification(r.qualification), lt: r.latest ? r.latest.t : 0, cix: cats.indexOf(r.category), dietxt: dieText(r)}));
   const vis = rows.filter(r => EF.sts.includes(r.category) && (!EF.tgt || r.target === EF.tgt) &&
-    (!tx || [r.element, r.variants.join(' '), r.purpose, r.category, r.qualification, r.best.job, r.owner, r.latest && r.latest.text].join(' ').toLowerCase().includes(tx)));
+    (!tx || [r.element, r.variants.join(' '), r.purpose, r.category, r.qualification, r.best.job, r.owner, r.dietxt, r.latest && r.latest.text].join(' ').toLowerCase().includes(tx)));
   const k = EF.sort === 'category' ? 'cix' : EF.sort, dir = EF.dir;
   const v = x => x == null ? -Infinity : x;
   vis.sort((a, b) => (EF.grp ? tg.indexOf(a.target) - tg.indexOf(b.target) : 0) || ((v(a[k]) > v(b[k])) - (v(a[k]) < v(b[k]))) * dir || a.cix - b.cix || a.element.localeCompare(b.element));
@@ -883,8 +986,8 @@ function renderElements() {
     }
     const b = r.best, lt = r.latest;
     const tip = `best job ${b.job || '-'} (${b.corner || '-'} line), source ${b.source_commit || 'unrecorded'}` + (r.via ? ` · via ${r.via}` : '') + (r.superseded ? ` · superseded by ${r.superseded.by}: ${r.superseded.reason}` : '') + (r.revoked ? (r.revoked.reason ? ` · revoked: ${r.revoked.reason} · re-timed FF ${r.revoked.ff ?? '-'} ps (${Object.entries(r.revoked.jobs || {}).map(([k, v]) => k + ' ' + v).join(', ')})` : ` · revoked ${r.revoked.verdict || ''} TT link budget ${r.revoked.tt_lb ?? ''}`) : '') + ` · owner ${r.owner}`;
-    items.push(['e|' + r.target + '|' + r.element, `<tr class="el" style="--c:${ECOL[r.category]}"><td class="enm" title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}; open its Chip Explorer card"><a class="xl" href="/explorer#element=${encodeURIComponent(r.element)}">${esc(r.element)}</a>${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
-      `<td class="est"><span class="st" style="background:${ECOL[r.category]}" title="${esc(tip)}">${esc(r.category)}</span></td><td class="pu" title="${esc(r.purpose)}"><div>${esc(r.purpose)}</div></td>` +
+    items.push(['e|' + r.target + '|' + r.element, `<tr class="el" style="--c:${ECOL[r.category]}"><td class="enm" title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}; open its Chip Explorer card"><a class="xl" href="/explorer#element=${encodeURIComponent(r.element)}">${esc(r.element)}</a>${r.replica_aliases ? ` <small title="${esc(r.replica_aliases.join(', '))}">${r.replica_records.length} aliases, one master</small>` : ''}${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
+      `<td class="est"><span class="st" style="background:${ECOL[r.category]}" title="${esc(tip)}">${esc(r.category)}</span></td><td class="pu" title="${esc(r.dietxt + (r.native ? ' · native check ' + nativeText(r) : '') + (r.contract ? ' · ' + r.contract : ''))}"><div>${esc(r.dietxt)}</div></td><td class="pu" title="${esc(r.purpose)}"><div>${esc(r.purpose)}${r.integration_status ? ' · ' + esc(r.integration_status) : ''}</div></td>` +
       `<td class="${ecls(b.tt)}">${esgn(b.tt)}</td><td class="${ecls(b.ff)}">${esgn(b.ff)}</td><td class="en" style="color:var(--dim)">${esgn(b.ss)}</td>` +
       `<td class="${b.drc == null ? 'en' : b.drc ? 'en eneg' : 'en'}">${b.drc ?? ''}</td><td class="en">${r.die == null ? '' : Math.round(r.die).toLocaleString('en-US')}</td>` +
       `<td class="en">${r.util == null ? '' : Math.round(r.util * 100) + '%'}</td><td class="en">${r.live || ''}</td><td class="en">${r.failed || ''}</td><td class="en">${r.jobs}</td>` +
@@ -907,6 +1010,8 @@ $('eGrp').onchange = e => { EF.grp = e.target.checked; renderElements(); };
 $('eTxt').oninput = e => { EF.txt = e.target.value; renderElements(); };
 $('eSt').onclick = e => { const s = e.target.dataset && e.target.dataset.s; if (!s) return; EF.sts = EF.sts.includes(s) ? EF.sts.filter(x => x !== s) : EF.sts.concat(s); renderElements(); };
 $('eHead').onclick = e => { const c = e.target.dataset && e.target.dataset.c; if (!c) return; if (EF.sort === c) EF.dir = -EF.dir; else { EF.sort = c; EF.dir = ['lt', 'closed_t', 'tt', 'ff', 'ss', 'die', 'util', 'live', 'failed', 'jobs'].includes(c) ? -1 : 1; } renderElements(); };
+$('dieSum').onclick = e => { const sp = e.target.closest('span.d'); if (!sp || !ED || !ED.designs) return; const s = ED.designs[sp.dataset.k]; EF.tgt = s.target; EF.txt = s.label.replace(/ die$/, ''); EF.sts = ED.cats.filter(c => !c.startsWith('closed') && c !== 'superseded'); renderElements(); $('elWrap').scrollIntoView({behavior: 'smooth', block: 'start'}); };
+$('eIntegration').onchange = renderElements;
 $('elSum').onclick = e => { const td = e.target.closest('td.c'); if (!td) return; EF.sts = [td.dataset.c]; EF.tgt = td.dataset.t; renderElements(); $('elWrap').scrollIntoView({behavior: 'smooth', block: 'start'}); };
 if (!REPLAY) pollElements();
 

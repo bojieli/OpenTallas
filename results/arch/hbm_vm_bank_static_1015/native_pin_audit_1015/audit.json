@@ -1,0 +1,118 @@
+{
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (origin/main 4036bb736)",
+ "budgets": {
+  "launch_ps": 220,
+  "capture_ps": 190
+ },
+ "date": "2026-10-15",
+ "views": [
+  {
+   "cell": "hfd_vms_bank_ft_rg5wg1",
+   "view": "physical/ref_tile/vms_bank_ft_rg5wg1_1015/views/hfd_vms_bank_ft_rg5wg1",
+   "lib_cell": "hfd_vms_bank_ft_rg5wg1",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 726.5,
+   "spread_ps": 54.4,
+   "outputs": 1850,
+   "inputs": 1779,
+   "launch_ps": 216.8,
+   "launch_pin": "rr1[110]",
+   "capture_ps": 286.0,
+   "capture_pin": "wslot[1]",
+   "launch_over": 0,
+   "capture_over": 30,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 285.98575 > 190 (30 pins)",
+   "job": "vms_bank_ft_rg5wg1_1015-sp2-a3813e240",
+   "over_by_bus": {
+    "capture wslot_v": {
+     "pins": 1,
+     "worst_ps": 218.7
+    },
+    "capture dq": {
+     "pins": 8,
+     "worst_ps": 195.0
+    },
+    "capture kq": {
+     "pins": 6,
+     "worst_ps": 192.4
+    },
+    "capture pq": {
+     "pins": 1,
+     "worst_ps": 190.2
+    },
+    "capture wslot": {
+     "pins": 3,
+     "worst_ps": 286.0
+    },
+    "capture xq": {
+     "pins": 8,
+     "worst_ps": 209.7
+    },
+    "capture xq2": {
+     "pins": 3,
+     "worst_ps": 191.8
+    }
+   }
+  },
+  {
+   "cell": "hfd_vms_bank_ft_rg4wg1",
+   "view": "physical/ref_tile/vms_bank_ft_rg4wg1_1015/views/hfd_vms_bank_ft_rg4wg1",
+   "lib_cell": "hfd_vms_bank_ft_rg4wg1",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 642.6,
+   "spread_ps": 51.9,
+   "outputs": 1593,
+   "inputs": 1762,
+   "launch_ps": 224.4,
+   "launch_pin": "rr1[25]",
+   "capture_ps": 309.7,
+   "capture_pin": "wslot[2]",
+   "launch_over": 1,
+   "capture_over": 71,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 224.37882 > 220 (1 pins); capture 309.73223 > 190 (71 pins)",
+   "job": "vms_bank_ft_rg4wg1_1015-v15a-5c1e17498",
+   "over_by_bus": {
+    "capture wslot_v": {
+     "pins": 1,
+     "worst_ps": 300.1
+    },
+    "capture kq": {
+     "pins": 3,
+     "worst_ps": 194.0
+    },
+    "capture pq": {
+     "pins": 25,
+     "worst_ps": 201.2
+    },
+    "capture rq2": {
+     "pins": 2,
+     "worst_ps": 190.6
+    },
+    "launch rr1": {
+     "pins": 1,
+     "worst_ps": 224.4
+    },
+    "capture wq0": {
+     "pins": 37,
+     "worst_ps": 197.9
+    },
+    "capture wslot": {
+     "pins": 3,
+     "worst_ps": 309.7
+    }
+   }
+  }
+ ]
+}

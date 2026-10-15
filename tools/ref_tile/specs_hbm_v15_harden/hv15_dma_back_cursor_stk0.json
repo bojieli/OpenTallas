@@ -1,0 +1,123 @@
+{
+  "name": "hv15_dma_back_cursor_stk0",
+  "top": "ot_hgi_dma_back_static_cursor",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_cursor.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "pins": {
+    "N": [
+      "rq",
+      "rr"
+    ],
+    "S": [
+      "wd",
+      "wa",
+      "wb_reserve_v",
+      "wb_reserve_bank",
+      "wb_fill_bank",
+      "wb_reserve_epoch",
+      "wb_fill_epoch",
+      "wb_reserve_sectors",
+      "wb_reserve_base",
+      "wb_fill_start",
+      "wb_ready"
+    ],
+    "W": [
+      "clk",
+      "rst_n",
+      "cycle",
+      "mv_v",
+      "mv",
+      "issue_at",
+      "drain_at",
+      "mv_wb_bank",
+      "mv_wb_epoch",
+      "mv_src",
+      "mv_done",
+      "mv_fault",
+      "quiet",
+      "busy"
+    ]
+  },
+  "outline": {
+    "w": 432.0,
+    "h": 302.4
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 8
+    }
+  ],
+  "route": {
+    "pd": 0.5,
+    "period_ps": 833.333,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "job": {
+    "owner": "Codex:HBM-V15-HARDEN",
+    "branch": "codex/hbm-v15-harden-takeover-0757",
+    "tag": "cursor1",
+    "purpose": "Structural diagnostic candidate: deterministic drain cursor removes128x40 FF metadata table; exact cycles/ports/SRAM inventory and prior432x302.4um rectangle retained. Parent source adoption and actual native qualification pending.",
+    "extra_paths": [
+      "tools/hbm_v15_harden",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+      "rtl/hbm_accel/generic/vm/static"
+    ],
+    "record_to": "results/rtl/ref_tile/hv15_dma_back_cursor_stk0",
+    "benches": [
+      {
+        "name": "exact",
+        "cmd": "mkdir -p {RUN}/tmp && TMPDIR={RUN}/tmp bash tools/hbm_v15_harden/bench_dma_cursor.sh {RUN}/bench/exact 0",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "DMA_CURSOR_BENCH_PASS"
+      },
+      {
+        "name": "wrong_drain_stride",
+        "cmd": "mkdir -p {RUN}/tmp && TMPDIR={RUN}/tmp bash tools/hbm_v15_harden/bench_dma_cursor.sh {RUN}/bench/mutant 1",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ]
+  },
+  "params": {
+    "STK": 0
+  },
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "structural_change": "Remove deterministic per-chunk route-address/mask tables (5120 FF bits +128:1 mux), replace with separate fixed-cycle drain row/column cursor; 0 added cycles or SRAM; projected5112FF reduction requires mapping."
+}

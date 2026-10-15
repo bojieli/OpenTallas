@@ -1,0 +1,55 @@
+{
+  "scope": "32bank native VM transport component; full512lane composed bench source provided but not yet run",
+  "component_gate": "PASS",
+  "positive": {
+    "reads": 64,
+    "writes": 32,
+    "masked_readbacks": 32,
+    "read_return_edges": 10,
+    "write_done_edges": 7
+  },
+  "negative_controls": [
+    "calendar slot omitted: FAIL",
+    "LG write payload chooses inactive far face: FAIL",
+    "native bank read owner selects inactive face: FAIL"
+  ],
+  "bank_count": 32,
+  "real_macros": 96,
+  "bank_read_groups": 3,
+  "bank_write_groups": 1,
+  "wrapper_state_bits": 0,
+  "operand_source": "DMA preload into real native bank SRAMs",
+  "selectors": "compiled input calendar; never DUT request-derived",
+  "calendar_audit": {
+    "edges": 7116,
+    "read_slots": 32768,
+    "write_slots": 135184,
+    "write_calendar_exactly_matches_expected_identity": true,
+    "expected_used_only_for_audit": true
+  },
+  "lat4_vectors": {
+    "mlat": 4,
+    "alat": 3,
+    "leaf": 1,
+    "firstoutput_edges": 36,
+    "extra_edges_vs_baseline": 5
+  },
+  "sources": {
+    "rtl/hbm_accel/generic/adapters/static_su/native_vm/ot_hbm_su_native_vm.sv": "8254e7f0194c13e0398b01c2a448d5e97c1a8484275127b2d5457646bd9136fd",
+    "rtl/hbm_accel/generic/adapters/static_su/native_vm/tb_hbm_su_native_vm.sv": "1b4ed149582f6b1be2d1783da698b556d4a1279e469fc118d262c23da197aed6",
+    "rtl/hbm_accel/generic/adapters/static_su/native_vm/tb_hbm_su_native_vm_top.sv": "9ebb2d10c4cc329109b02eea943c76c5a72fba6215b07a68f4d8d3ed633c8711",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "31acf6679c2fcd95c2abd3897daae041710f7c7a5f318d9d2e1f8541c8b377a4",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "tools/hbm_static/su_native_vm_calendar.py": "85841977d640e7b31f67a0e35745c2858f63e2a10a424794f00fce6661ad82ab",
+    "tools/hbm_static/su_top_compile.py": "d615417861609445d71e9dda447e3864edf25fc41f5e113b72da71f8cc37435f"
+  },
+  "inputs": {
+    "cal.mem": "d03c107efd6f119ba0c056682a96b98577d46feb628945e38e69a76da2c3d277",
+    "prog.mem": "9de4e4f95c9899ceea6f94f2d5fd84ae0648ca030bbb5a24eece5d6c88e6257e",
+    "explw.mem": "dba66dd4c4357e13c302e06b5c39052cc3d3f1fef74b5be72a34c3e887ce51ed",
+    "expw.mem": "1c10f6b4e54822d35673ec92dd996668c8dcef3836693ffdcdeb59e3dbc6f562",
+    "exps.mem": "fc5864af98178325e71bf11536d10fd0dca41ac193362339e4c08c2b50e0738f"
+  }
+}

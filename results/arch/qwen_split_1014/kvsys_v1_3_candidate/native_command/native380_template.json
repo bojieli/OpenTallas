@@ -1,0 +1,190 @@
+{
+  "schema": "opentallas.qwen-native380-template.v1",
+  "program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+  "source": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+  "source_sha256": "6ef7f0d6ccd034649c4384e8d30ccf9ac41621f1fb7efb3e494c70f6c2d98c1b",
+  "pc": 11,
+  "command_hex": "0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401",
+  "bits": 380,
+  "fields": {
+    "go": 1,
+    "me_nout": 512,
+    "me_tiles": 1,
+    "me_k": 128,
+    "me_wsrc": 1,
+    "me_wbase": 0,
+    "me_ts": 0,
+    "me_ks": 0,
+    "me_js": 0,
+    "me_xbase": 13696,
+    "me_xks": 1,
+    "me_xjs": 0,
+    "me_xcs": 0,
+    "me_jsh": 0,
+    "me_split": 0,
+    "me_wcs": 0,
+    "me_round": 0,
+    "me_obase": 3167,
+    "me_ots": 1,
+    "me_ojs": 1,
+    "me_mmode": 1,
+    "me_oen": 1,
+    "me_amax": 0,
+    "me_rmax": 0,
+    "me_mbase": 0
+  },
+  "layout": [
+    {
+      "name": "go",
+      "rtl_signal": "u_me_go",
+      "offset": 0,
+      "width": 1
+    },
+    {
+      "name": "me_nout",
+      "rtl_signal": "u_me_i_nout",
+      "offset": 1,
+      "width": 18
+    },
+    {
+      "name": "me_tiles",
+      "rtl_signal": "u_me_i_tiles",
+      "offset": 19,
+      "width": 18
+    },
+    {
+      "name": "me_k",
+      "rtl_signal": "u_me_i_k",
+      "offset": 37,
+      "width": 18
+    },
+    {
+      "name": "me_wsrc",
+      "rtl_signal": "u_me_i_wsrc",
+      "offset": 55,
+      "width": 1
+    },
+    {
+      "name": "me_wbase",
+      "rtl_signal": "u_me_i_wbase",
+      "offset": 56,
+      "width": 24
+    },
+    {
+      "name": "me_ts",
+      "rtl_signal": "u_me_i_ts",
+      "offset": 80,
+      "width": 24
+    },
+    {
+      "name": "me_ks",
+      "rtl_signal": "u_me_i_ks",
+      "offset": 104,
+      "width": 24
+    },
+    {
+      "name": "me_js",
+      "rtl_signal": "u_me_i_js",
+      "offset": 128,
+      "width": 24
+    },
+    {
+      "name": "me_xbase",
+      "rtl_signal": "u_me_i_xbase",
+      "offset": 152,
+      "width": 24
+    },
+    {
+      "name": "me_xks",
+      "rtl_signal": "u_me_i_xks",
+      "offset": 176,
+      "width": 24
+    },
+    {
+      "name": "me_xjs",
+      "rtl_signal": "u_me_i_xjs",
+      "offset": 200,
+      "width": 24
+    },
+    {
+      "name": "me_xcs",
+      "rtl_signal": "u_me_i_xcs",
+      "offset": 224,
+      "width": 24
+    },
+    {
+      "name": "me_jsh",
+      "rtl_signal": "u_me_i_jsh",
+      "offset": 248,
+      "width": 3
+    },
+    {
+      "name": "me_split",
+      "rtl_signal": "u_me_i_split",
+      "offset": 251,
+      "width": 4
+    },
+    {
+      "name": "me_wcs",
+      "rtl_signal": "u_me_i_wcs",
+      "offset": 255,
+      "width": 24
+    },
+    {
+      "name": "me_round",
+      "rtl_signal": "u_me_i_round",
+      "offset": 279,
+      "width": 1
+    },
+    {
+      "name": "me_obase",
+      "rtl_signal": "u_me_i_obase",
+      "offset": 280,
+      "width": 24
+    },
+    {
+      "name": "me_ots",
+      "rtl_signal": "u_me_i_ots",
+      "offset": 304,
+      "width": 24
+    },
+    {
+      "name": "me_ojs",
+      "rtl_signal": "u_me_i_ojs",
+      "offset": 328,
+      "width": 24
+    },
+    {
+      "name": "me_mmode",
+      "rtl_signal": "u_me_i_mmode",
+      "offset": 352,
+      "width": 1
+    },
+    {
+      "name": "me_oen",
+      "rtl_signal": "u_me_i_oen",
+      "offset": 353,
+      "width": 1
+    },
+    {
+      "name": "me_amax",
+      "rtl_signal": "u_me_i_amax",
+      "offset": 354,
+      "width": 1
+    },
+    {
+      "name": "me_rmax",
+      "rtl_signal": "u_me_i_rmax",
+      "offset": 355,
+      "width": 1
+    },
+    {
+      "name": "me_mbase",
+      "rtl_signal": "u_me_i_mbase",
+      "offset": 356,
+      "width": 24
+    }
+  ],
+  "context_variable_command_bits": [],
+  "context": "epoch16/stage6/token18/pos13 from real host control, separate from descriptor"
+}

@@ -1,0 +1,13 @@
+ot-run: ot-epyc1tb     admits  -372 GB (avail 176, growth 193, headroom 64, waiters 3/291 GB) load 57/128 running 18 disk 361 GB 
+ot-run: ot-epyc4       admits  -367 GB (avail 236, growth 219, headroom 48, waiters 20/336 GB) load 119/128 running 35 disk 302 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    -5 GB (avail 64, growth 35, headroom 24, waiters 1/16 GB) load 31/64 running 8 disk 133 GB 
+ot-run: -> ot-agidock128 (will queue: admits -5 GB < 16 GB)
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 16 GB, admissible 13 GB: available 64 GB, growth charged 33 GB, young 25 GB, headroom 24 GB, real floor 25 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-911884-1792088047 after 142 s
+qwen_m0 {'name': 'qwen_m0', 'rc': 0, 'semantic_gate_pass': True}
+qwen_kv2 {'name': 'qwen_kv2', 'rc': 1, 'semantic_gate_pass': True}
+qwen_kv4 {'name': 'qwen_kv4', 'rc': 1, 'semantic_gate_pass': True}
+qwen_pv1 {'name': 'qwen_pv1', 'rc': 1, 'semantic_gate_pass': True}
+qwen_pv2 {'name': 'qwen_pv2', 'rc': 1, 'semantic_gate_pass': True}
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-911884-1792088047): exit 0

@@ -1,0 +1,96 @@
+{
+ "schema": "opentallas.s81.hub_layout.v1",
+ "source": "GLOBAL-FP-S SA_2x2_RP (candidates.json.gz main 7285fb9ad), coordinator-adopted 10-15",
+ "blocks": {
+  "sp_su_s": [
+   13876.984,
+   9854.035,
+   1889.976,
+   10709.256
+  ],
+  "sp_vm": [
+   13592.0,
+   4626.835,
+   4168.8,
+   3715.2,
+   true
+  ],
+  "sp_capture": [
+   17810.012,
+   6713.443,
+   1727.976,
+   561.576
+  ],
+  "sp_gather": [
+   17810.012,
+   7296.619,
+   1727.976,
+   1045.416
+  ],
+  "sp_pq": [
+   17810.0,
+   6242.587,
+   1728.0,
+   449.256
+  ],
+  "sp_wfc": [
+   17810.012,
+   5782.555,
+   1727.976,
+   328.296
+  ],
+  "sp_sseq": [
+   17810.012,
+   6132.451,
+   1727.976,
+   88.536
+  ],
+  "sp_collective": [
+   17765.744,
+   10005.211,
+   1727.976,
+   2721.576
+  ],
+  "sp_host": [
+   17765.744,
+   9854.035,
+   1727.976,
+   129.576
+  ],
+  "sp_hc_s": [
+   15835.944,
+   9854.035,
+   1816.536,
+   8806.296
+  ],
+  "sp_hc_t": [
+   17721.464,
+   12748.387,
+   1816.536,
+   9227.496
+  ]
+ },
+ "corridor": [
+  13592.0,
+  8342.035240786938,
+  5946.0,
+  1512.0
+ ],
+ "e_stack": {
+  "order": [
+   "sp_wfc",
+   "sp_sseq",
+   "sp_pq",
+   "sp_capture",
+   "sp_gather"
+  ],
+  "note": "re-packed bottom-up with generator gaps (contract outlines)"
+ },
+ "mix4": [
+  14869.65,
+  3063.035,
+  1613.5,
+  1542.2
+ ],
+ "relay_required": "SU-VM 17,137 b across the corridor: ~3 relay stages (+3 SU cycles, S-FUNC)"
+}
