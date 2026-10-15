@@ -148,6 +148,7 @@ def fmt1_model() -> dict:
         vm_read_pin_latency_edges=12, vm_request_register_edges=1,
         endpoint_samples_return_on_following_edge=True,
         core_leaf_clock_bits=8380, lane_leaf_clock_bits=[4547,4547,4548],
+        vm_service_output_leaf_clock_bits=2228,
         leaf_clock_rule='each hardened leaf has its own clock root, not one combined root',
         old_two_beat_model='historical prototype only; calendar()/model() do not describe FMT1',
         normal_mode_ready=False, normal_mode_credits=False,
