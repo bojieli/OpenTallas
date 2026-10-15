@@ -1,0 +1,57 @@
+{
+  "kind": "tail",
+  "instruction_payload_bits": 44,
+  "field_lsb_width": {
+    "clear": [
+      0,
+      1
+    ],
+    "row_launch": [
+      1,
+      1
+    ],
+    "row_raw_read": [
+      2,
+      1
+    ],
+    "row_weight_slot": [
+      3,
+      1
+    ],
+    "row_id": [
+      4,
+      5
+    ],
+    "tail_launch": [
+      9,
+      1
+    ],
+    "sink_launch": [
+      10,
+      1
+    ],
+    "sink_capture": [
+      11,
+      1
+    ],
+    "norm_eps": [
+      12,
+      32
+    ]
+  },
+  "first_consumer_cycle": 405,
+  "programme_start_edge": 400,
+  "start_base": 0,
+  "start_limit": 496,
+  "start_loops": 1,
+  "sink_divisor": 7,
+  "sink_phase": 0,
+  "events_relative_consumer0": {
+    "launch": 0,
+    "exponentials_ready": 197,
+    "sink_launch": 204,
+    "sink_capture": 493,
+    "result": 494
+  },
+  "scope": "fixed HC component image; full layer and physical phase integration pending"
+}
