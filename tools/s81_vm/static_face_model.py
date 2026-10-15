@@ -94,9 +94,9 @@ def model(entries: int = 8, cap_pipeline: int = 0, read_pipeline: int = 0) -> di
             read_router_max_FF_per_root=1100 if read_pipeline else 0,
             fsr_split_leaves=16, fsr_mapped_FF_per_root=690,
             current_required_memory_write_read_leaf_instances=562,
-            current_required_memory_write_read_clock_roots=622,
-            current_outer_clock_pin_count=694 if read_pipeline else 622,  # +12: one return clock entry per lane
-            current_outer_raw_reset_pin_count=618 if read_pipeline else 546,
+            current_required_memory_write_read_clock_roots=621,
+            current_outer_clock_pin_count=693 if read_pipeline else 621,  # +12 one return entry per lane, -1 retired cks
+            current_outer_raw_reset_pin_count=617 if read_pipeline else 545,  # -1 retired rss
             extra_dependency_latency_ns=dict(capture=cap_pipeline/0.9 + (1/1.2 if cap_pipeline >= 2 else 0), native_read=read_pipeline/1.2, WFC=3*wfc_epochs/0.9),
             read_peak_legal_rows_per_stream_edge=30,
             return_prepare_mask_pipeline_FF=320,
