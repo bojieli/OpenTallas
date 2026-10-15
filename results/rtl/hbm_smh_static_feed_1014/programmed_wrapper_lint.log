@@ -1,0 +1,601 @@
+%Warning-PINMISSING: rtl/hbm_accel/sm/ot_hbm_accel_sm_pq.sv:147:88: Cell has missing pin: 'iss_line_end'
+  147 |     ot_hbm_accel_issue_pq #(.IL(IL), .RMAX(RMAX), .XDEPTH(XD), .NOUT(NOUT), .HAZ(HAZ)) u_issue (
+      |                                                                                        ^~~~~~~
+                     rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:55:34: ... Location of port declaration
+   55 |     output wire                  iss_line_end,
+      |                                  ^~~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.032
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv:131:35: Operator VAR 'SA1' expects 11 bits on the Initial value, but Initial value's MODDIVS generates 32 bits.
+                                                                              : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm'
+  131 |                 localparam [10:0] SA1 = FA % 2048;
+      |                                   ^~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv:132:35: Operator VAR 'SA2' expects 11 bits on the Initial value, but Initial value's MODDIVS generates 32 bits.
+                                                                              : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm'
+  132 |                 localparam [10:0] SA2 = FB % 2048;
+      |                                   ^~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv:133:35: Operator VAR 'SG1' expects 5 bits on the Initial value, but Initial value's DIVS generates 32 bits.
+                                                                              : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm'
+  133 |                 localparam [4:0]  SG1 = FA / 2048;
+      |                                   ^~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv:134:35: Operator VAR 'SG2' expects 5 bits on the Initial value, but Initial value's DIVS generates 32 bits.
+                                                                              : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm'
+  134 |                 localparam [4:0]  SG2 = FB / 2048;
+      |                                   ^~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:70:56: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                         : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf.g_k.u_tc.u_tree.g_lv[3].g_add[0].u_add.u'
+   70 |     ot_hdc_w11_cut #(.W(WA + 1), .CUT(CUT_A), .VB(DRST ? -1 : WA - 1)) u_ca (.clk(clk), .rst_n(rst_n), .d({a1_swap, a1}), .q(a2_in));
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:123:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                          : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf.g_k.u_tc.u_tree.g_lv[3].g_add[0].u_add.u'
+  123 |     ot_hdc_w11_cut #(.W(WB), .CUT(CUT_B), .VB(DRST ? -1 : WB - 1)) u_cb (.clk(clk), .rst_n(rst_n),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:141:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                          : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf.g_k.u_tc.u_tree.g_lv[3].g_add[0].u_add.u'
+  141 |     ot_hdc_w11_cut #(.W(WD), .CUT(CUT_D), .VB(DRST ? -1 : WD - 1)) u_cd (.clk(clk), .rst_n(rst_n),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:180:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                          : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf.g_k.u_tc.u_tree.g_lv[3].g_add[0].u_add.u'
+  180 |     ot_hdc_w11_cut #(.W(WC), .CUT(CUT_C), .VB(DRST ? -1 : WC - 1)) u_cc (.clk(clk), .rst_n(rst_n),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:225:22: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'CUT' generates 32 bits.
+                                                          : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf.g_k.u_tc.u_tree.g_lv[3].g_add[0].u_add.u.u_ca'
+  225 |     generate if (CUT && VB < 0) begin : g_r
+      |                      ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv:510:43: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                                    : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf.g_k.u_tc.g_lane[15].u_mul'
+  510 |             if (e != 0) dec = {1'b1, m, e - 10'sd127};
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1543:1536 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1551:1544 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1559:1552 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1567:1560 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1575:1568 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1583:1576 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1591:1584 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1599:1592 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1607:1600 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1615:1608 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1623:1616 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1631:1624 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1639:1632 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1647:1640 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1655:1648 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1663:1656 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1671:1664 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1679:1672 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1687:1680 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1695:1688 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1703:1696 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1711:1704 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1719:1712 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1727:1720 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1735:1728 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1743:1736 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1751:1744 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1759:1752 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1767:1760 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1775:1768 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1783:1776 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1791:1784 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1799:1792 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1807:1800 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1815:1808 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1823:1816 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1831:1824 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1839:1832 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1847:1840 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1855:1848 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1863:1856 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1871:1864 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1879:1872 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1887:1880 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1895:1888 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1903:1896 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1911:1904 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1919:1912 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1927:1920 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1935:1928 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1943:1936 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1951:1944 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1959:1952 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1967:1960 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1975:1968 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1983:1976 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1991:1984 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1999:1992 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 2007:2000 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 2015:2008 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 2023:2016 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 2031:2024 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 2039:2032 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 2047:2040 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1866:54: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_INT8' generates 32 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u3'
+ 1866 |     wire bf_op = (fr[33:32] == 2'd0) || (ENABLE_INT8 && fr[33:32] == 2'd3);
+      |                                                      ^~
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1095:1088 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1103:1096 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1111:1104 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1119:1112 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1127:1120 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1135:1128 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1143:1136 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1151:1144 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1159:1152 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1167:1160 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1175:1168 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1183:1176 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1191:1184 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1199:1192 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1207:1200 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1215:1208 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1223:1216 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1231:1224 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1239:1232 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1247:1240 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1255:1248 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1263:1256 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1271:1264 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1279:1272 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1287:1280 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1295:1288 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1303:1296 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1311:1304 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1319:1312 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1327:1320 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1335:1328 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1343:1336 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1351:1344 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1359:1352 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1367:1360 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1375:1368 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1383:1376 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1391:1384 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1399:1392 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1407:1400 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1415:1408 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1423:1416 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1431:1424 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1439:1432 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1447:1440 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1455:1448 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1463:1456 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1471:1464 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1479:1472 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1487:1480 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1495:1488 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1503:1496 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1511:1504 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1519:1512 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1527:1520 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1535:1528 outside 1087:0
+                                                               : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:2599:46: Operator ADD expects 32 bits on the RHS, but RHS's REPLICATE generates 11 bits.
+                                                                  : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf'
+ 2599 |         assign blk_0[sk*CK +: CK] = dd[sk*CK + {a[10:RM], {RM{1'b0}}} +: CK];
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:2603:45: Operator ADD expects 32 bits on the RHS, but RHS's REPLICATE generates 11 bits.
+                                                                  : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf'
+ 2603 |         assign bf_0[sk*CK +: CK] = dd[sk*CK + {a[10:RM], {RM{1'b0}}} +: CK];
+      |                                             ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:2624:49: Operator ADD expects 32 bits on the RHS, but RHS's REPLICATE generates 8 bits.
+                                                                  : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf'
+ 2624 |         assign blk_h[sk*CK +: CK] = blk0x[sk*CK + {a[RM-1:RH], {RH{1'b0}}} +: CK];
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:2628:47: Operator ADD expects 32 bits on the RHS, but RHS's REPLICATE generates 8 bits.
+                                                                  : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf'
+ 2628 |         assign bf_h[sk*CK +: CK] = bf0x[sk*CK + {a[RM-1:RH], {RH{1'b0}}} +: CK];
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:2644:27: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'g0' generates 5 bits.
+                                                                  : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf'
+ 2644 |             ml1[b] <= (g0 < NBEAT) ? oh[g0] : 1'b0;
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:2644:40: Bit extraction of var[12:0] requires 4 bit index, not 5 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf'
+ 2644 |             ml1[b] <= (g0 < NBEAT) ? oh[g0] : 1'b0;
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:2645:28: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'g1n' generates 6 bits.
+                                                                  : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf'
+ 2645 |             mh1[b] <= (g1n < NBEAT) ? oh[g1n] : 1'b0;
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:2645:41: Bit extraction of var[12:0] requires 4 bit index, not 6 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf'
+ 2645 |             mh1[b] <= (g1n < NBEAT) ? oh[g1n] : 1'b0;
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:2664:49: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 6 bits.
+                                                                  : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf'
+ 2664 |         assign blk_l[sk*CK +: CK] = blk1x[sk*CK + a[RH-1:0] +: CK];
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:2672:47: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 6 bits.
+                                                                  : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf'
+ 2672 |         assign bf_l[sk*CK +: CK] = bf1x[sk*CK + a[RH-1:0] +: CK];
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:2738:29: Input port connection 'rr_addr' expects 14 bits on the pin connection, but pin connection's CONST '12'h0' generates 12 bits.
+                                                                  : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[1].u_leaf'
+ 2738 |             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));
+      |                             ^~~~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:3488:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_result_valid'
+ 3488 |     assign row_valid = ENABLE ? all_valid : valids[0];
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:3489:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.u_front.u_result_valid'
+ 3489 |     assign fault_event = ENABLE ? ((|(faults & valids)) | partial_valid) : (|faults);
+      |                                 ^
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'ot_hbm_accel_smh_programmed.u_sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_bd.g_bt[0].u_bt.u_lo.g'
+                                                  : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_bd.g_bt[0].u_bt'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_hbm_accel_smh_programmed.u_sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_bd.g_bt[0].u_bt.u_lo.g
+                    rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_hbm_accel_smh_programmed.u_sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_bd.g_bt[0].u_bt.u_lo.g
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'ot_hbm_accel_smh_programmed.u_sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_bd.g_bt[0].u_bt.u_lo.p'
+                                                  : ... note: In instance 'ot_hbm_accel_smh_programmed.u_sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_bd.g_bt[0].u_bt'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_hbm_accel_smh_programmed.u_sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_bd.g_bt[0].u_bt.u_lo.p
+                    rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_hbm_accel_smh_programmed.u_sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_bd.g_bt[0].u_bt.u_lo.p
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 9.051 MB sources in 139 modules, into 267.850 MB in 261 C++ files needing 0.000 MB
+- Verilator: Walltime 183.936 s (elab=1.546, cvt=178.374, bld=0.000); cpu 183.911 s on 1 threads; alloced 17655.316 MB
