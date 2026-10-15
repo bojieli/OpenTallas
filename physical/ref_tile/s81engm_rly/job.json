@@ -1,5 +1,5 @@
 {
- "name": "s81engm_rly-native2-0810-0ab015a5a",
+ "name": "s81engm_rly-component-0822-772decf15",
  "block": "ot_s81_engram_rly",
  "ref_tile": true,
  "owner": "Codex:s81-engram-0810",
@@ -7,8 +7,8 @@
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "codex/s81-engram-0810",
-  "commit": "0ab015a5ac271f4e847197649f4247cd80e797fe",
+  "branch": "codex/s81-engram-rly-0822",
+  "commit": "772decf15",
   "extra_paths": [
    "physical/s81_die_pins/v21_engram_arithmetic",
    "rtl/dsrom_sys",
@@ -32,26 +32,37 @@
     ]
    },
    {
-    "name": "mix4_exact_L01",
-    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --out {RUN}/mix4_m0",
+    "name": "relay_exact",
+    "cmd": "python3 tools/s81_engram_mix/relay_gate.py --mut 0 --out {RUN}/relay_m0",
     "expect": "pass",
-    "threads": 16,
-    "peak_ram_gb": 48,
+    "threads": 2,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "PASS native Engram MIX4"
+    "pass_regex": "PASS Engram relay actual105bits vectors4096 checks860160 resets4 exact1edge"
    },
    {
-    "name": "mix4_mut1_key",
-    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 1 --out {RUN}/mix4_m1",
+    "name": "relay_mut1",
+    "cmd": "python3 tools/s81_engram_mix/relay_gate.py --mut 1 --out {RUN}/relay_m1",
     "expect": "fail",
-    "threads": 16,
-    "peak_ram_gb": 48,
+    "threads": 2,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "FAIL [0-9]+ words"
+    "fail_regex": "RELAY_FAIL edge"
+   },
+   {
+    "name": "relay_mut2",
+    "cmd": "python3 tools/s81_engram_mix/relay_gate.py --mut 2 --out {RUN}/relay_m2",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "RELAY_FAIL edge"
    }
   ],
   "calibrate": {
@@ -102,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81engm_rly/s81engm_rly-native2-0810-0ab015a5a"
+   "to": "results/rtl/ref_tile/s81engm_rly/s81engm_rly-component-0822-772decf15"
   }
  ],
  "cycles_added": 0,
