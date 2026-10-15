@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.program-receiver-source.v1",
+  "source_sha256": {
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv": "a4c78d4fd566434e359dde71d4a11be2d8bbf88487cb659c62afb0c3388428b4",
+    "rtl/qwen_sys/program_receiver_20261014/tb_qkd_program_commit.sv": "75966a35602a3d90d6dc0b6dbbab69654e602b725a8162eefa5b915fe71abfce",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+  },
+  "proof": "real2x64x512macro input observation and readback1024PW,8DW descriptor bench write/readback; receiverledger normal and8mutants; delayedcontrolstorevalid and capability0 checks",
+  "mutants": {
+    "1": "missingPW53",
+    "2": "duplicatePW53",
+    "3": "wrongPWaddress53",
+    "4": "actualmacrodataflipPW53",
+    "5": "wrongauthenticatedepoch",
+    "6": "actualmacro partial64maskPW53",
+    "7": "missingfinalDW: noCAP/commit, remainsincomplete",
+    "8": "DWnonfullwordflag"
+  },
+  "scope": "ActualfunctionalSRAM macro proof plus bench descriptor array; productionTT/SU pin export and metadata548route joins owned separately. No controllerintegration/physical/throughput qualification.",
+  "log_sha256": "628e7e05536c28b01557d83099d2e77d9aca647d58d4bc685de1ca95d3d38990",
+  "join_gate": "PASS both matching physical copies; stale/missing copy does not commit; mismatched copy faults",
+  "capability_gate": "PASS delayedactualstorevalid preventsready/cap; correctimagefooterbit12=0 yieldsready/cap0; newBEGIN revokespriorcap"
+}
