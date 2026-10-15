@@ -1,0 +1,5 @@
+PASS HC_ROOTCUT equivalence cycles=1500 checks=2939 reset_reassert=1
+- results/physical/s81_collective_graph_1103/rootcuts/tb_hc_rootcuts.sv:52: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 150us; walltime 0.042 s; speed 3.532 ms/s
+- Verilator: cpu 0.042 s on 1 threads; allocated 9 MB

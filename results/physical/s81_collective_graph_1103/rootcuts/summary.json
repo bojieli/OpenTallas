@@ -1,0 +1,462 @@
+{
+  "base_commit": "2eb33e9a8e8046d4f579fc1395e0ac6038a11341",
+  "status": "SOURCE_CANDIDATES_NOT_IN_PRODUCTION_PARENT",
+  "cuts": [
+    {
+      "module": "s81_static_hc_payload_root",
+      "source_path": "rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_payload_root.sv",
+      "source_sha256": "0c8386eb5358d8782415b170a98989f294358c46e0923a997029d5f0d01d7449",
+      "generic_sequential_sinks": 3079,
+      "sequential_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105,
+        "$_DFFE_PP_": 1024
+      },
+      "mapped_standard_cell_area_um2": 1658.1834,
+      "hard_macros": {},
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "reduce_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rank_data": {
+          "direction": "input",
+          "bits": 128
+        },
+        "word_data": {
+          "direction": "output",
+          "bits": 32
+        },
+        "word_valid": {
+          "direction": "output",
+          "bits": 1
+        },
+        "word_error": {
+          "direction": "output",
+          "bits": 1
+        },
+        "write_good": {
+          "direction": "input",
+          "bits": 1
+        },
+        "emit_good": {
+          "direction": "input",
+          "bits": 1
+        },
+        "word_index": {
+          "direction": "input",
+          "bits": 4
+        },
+        "row_data": {
+          "direction": "output",
+          "bits": 512
+        }
+      },
+      "physical_outline": null,
+      "placed_home": null
+    },
+    {
+      "module": "s81_static_hc_metadata_root",
+      "source_path": "rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv",
+      "source_sha256": "771cd82c889ffcf6fd77133070f2f9dcd32509a7f34d3e7fc2940b94b633d0c2",
+      "generic_sequential_sinks": 967,
+      "sequential_types": {
+        "$_DFF_P_": 882,
+        "$_DFF_PN0_": 3,
+        "$_DFFE_PN0P_": 18,
+        "$_DFFE_PP_": 64
+      },
+      "mapped_standard_cell_area_um2": 354.2211,
+      "hard_macros": {},
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "reduce_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rank_valid": {
+          "direction": "input",
+          "bits": 4
+        },
+        "tag": {
+          "direction": "input",
+          "bits": 32
+        },
+        "seq": {
+          "direction": "input",
+          "bits": 16
+        },
+        "last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "lane_valid": {
+          "direction": "input",
+          "bits": 16
+        },
+        "lane_error": {
+          "direction": "input",
+          "bits": 16
+        },
+        "word_valid": {
+          "direction": "output",
+          "bits": 1
+        },
+        "word_error": {
+          "direction": "output",
+          "bits": 1
+        },
+        "word_tag": {
+          "direction": "output",
+          "bits": 32
+        },
+        "word_seq": {
+          "direction": "output",
+          "bits": 16
+        },
+        "word_last": {
+          "direction": "output",
+          "bits": 1
+        },
+        "reduce_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "assemble_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "word_index": {
+          "direction": "input",
+          "bits": 4
+        },
+        "emit_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "emit_tag": {
+          "direction": "input",
+          "bits": 32
+        },
+        "rst_n_hc": {
+          "direction": "output",
+          "bits": 1
+        },
+        "qualified_reduce_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "write_good": {
+          "direction": "output",
+          "bits": 1
+        },
+        "emit_good": {
+          "direction": "output",
+          "bits": 1
+        },
+        "destination_index": {
+          "direction": "output",
+          "bits": 4
+        },
+        "row_valid": {
+          "direction": "output",
+          "bits": 1
+        },
+        "row_tag": {
+          "direction": "output",
+          "bits": 32
+        },
+        "assemble_fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "physical_outline": null,
+      "placed_home": null
+    },
+    {
+      "module": "s81_static_calendar_root",
+      "source_path": "rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv",
+      "source_sha256": "f819df0af2bba5dfe7a46a0b58cea703e1864ecac13d98635acb83c40d5978b2",
+      "generic_sequential_sinks": 1149,
+      "sequential_types": {
+        "$_DFFE_PP_": 564,
+        "$_DFF_PN0_": 569,
+        "$_DFFE_PN0P_": 16
+      },
+      "mapped_standard_cell_area_um2": 527.54814,
+      "hard_macros": {
+        "ot_rom_4096x266_m8": 3
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "c_cmd": {
+          "direction": "input",
+          "bits": 85
+        },
+        "c_done": {
+          "direction": "output",
+          "bits": 9
+        },
+        "c_st": {
+          "direction": "output",
+          "bits": 2
+        },
+        "datapath_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "read_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "read_row": {
+          "direction": "output",
+          "bits": 14
+        },
+        "issue_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tag": {
+          "direction": "output",
+          "bits": 32
+        },
+        "seq": {
+          "direction": "output",
+          "bits": 16
+        },
+        "last": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rankmask": {
+          "direction": "output",
+          "bits": 4
+        },
+        "commit_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "commit_tag": {
+          "direction": "output",
+          "bits": 32
+        },
+        "commit_seq": {
+          "direction": "output",
+          "bits": 16
+        },
+        "commit_last": {
+          "direction": "output",
+          "bits": 1
+        },
+        "commit_rankmask": {
+          "direction": "output",
+          "bits": 4
+        },
+        "commit_rows": {
+          "direction": "output",
+          "bits": 60
+        },
+        "tx_beat_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tx_phase": {
+          "direction": "output",
+          "bits": 2
+        },
+        "tx_frame_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rx_beat_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rx_phase": {
+          "direction": "output",
+          "bits": 2
+        },
+        "rx_frame_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "channel_tx_slot": {
+          "direction": "output",
+          "bits": 5
+        },
+        "channel_tx_kind": {
+          "direction": "output",
+          "bits": 10
+        },
+        "channel_tx_seq": {
+          "direction": "output",
+          "bits": 50
+        },
+        "channel_tx_last": {
+          "direction": "output",
+          "bits": 5
+        },
+        "channel_rx_slot": {
+          "direction": "output",
+          "bits": 5
+        },
+        "channel_rx_kind": {
+          "direction": "output",
+          "bits": 10
+        },
+        "channel_rx_seq": {
+          "direction": "output",
+          "bits": 50
+        },
+        "channel_rx_last": {
+          "direction": "output",
+          "bits": 5
+        },
+        "channel_tx_beat_slot": {
+          "direction": "output",
+          "bits": 5
+        },
+        "channel_tx_frame_slot": {
+          "direction": "output",
+          "bits": 5
+        },
+        "channel_tx_phase": {
+          "direction": "output",
+          "bits": 10
+        },
+        "channel_rx_beat_slot": {
+          "direction": "output",
+          "bits": 5
+        },
+        "channel_rx_frame_slot": {
+          "direction": "output",
+          "bits": 5
+        },
+        "channel_rx_phase": {
+          "direction": "output",
+          "bits": 10
+        },
+        "hc_reduce_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hc_write_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hc_word_index": {
+          "direction": "output",
+          "bits": 4
+        },
+        "hc_expect_seq": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hc_expect_last": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hc_emit_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hc_emit_tag": {
+          "direction": "output",
+          "bits": 32
+        },
+        "commit_gather": {
+          "direction": "output",
+          "bits": 1
+        },
+        "raw_capture_payload_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "raw_capture_meta_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "raw_rx_write_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "raw_rx_payload_row": {
+          "direction": "output",
+          "bits": 14
+        },
+        "raw_rx_meta_row": {
+          "direction": "output",
+          "bits": 14
+        },
+        "raw_rx_tag": {
+          "direction": "output",
+          "bits": 8
+        },
+        "hc_assemble_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "busy": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rst_n_slab": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rst_n_calendar": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "physical_outline": null,
+      "placed_home": null
+    }
+  ],
+  "scope": "HC arithmetic modules instantiated unchanged. Metadata state extracted exactly, including original slab control4 reset. Calendar root is current oneclock baseline with original four wrapper/slab reset flops, not sevenroot candidate.",
+  "proof": {
+    "metadata": "PASS143of143 equiv cells versus mechanically extracted original metadata processes; async2sync proof abstraction",
+    "composition_commonphase": "PASS1500cycles2939eventchecks against original unmodified clocked modules",
+    "composition_skew": "PASS1500cycles47024eventchecks with16lanephases andasyncresetreassert",
+    "payload_copy_reference_proof": "OMITTED: copied-wrapper check is not independent source equivalence",
+    "full128sram_join": "RUNNING: parent must collect remote actual result"
+  },
+  "heavy_job": {
+    "host": "ot-epyc1tb",
+    "directory": "/srv/opentallas-scratch/codex/s81-hc-rootcuts-1103",
+    "command": "ot-run --mem 24 --threads 16 --dir /srv/opentallas-scratch/codex/s81-hc-rootcuts-1103 --max-wait 300 -- bash run_join.sh",
+    "exec_session_id": 92269,
+    "admission_unit": "oth-ubuntu-1091923-1792089500",
+    "remote_launcher_pid": 1091922,
+    "remote_verilator_guard_pid": 1092058,
+    "build_log": "/srv/opentallas-scratch/codex/s81-hc-rootcuts-1103/join_run/build.log",
+    "run_log": "/srv/opentallas-scratch/codex/s81-hc-rootcuts-1103/join_run/run.log",
+    "source_manifest": "join_source_manifest.json",
+    "warning": "Job intentionally left running for parent handoff; fulljoin result is not claimed."
+  }
+}

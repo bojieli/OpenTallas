@@ -1,0 +1,1293 @@
+
+-- Executing script file `results/physical/s81_collective_graph_1103/rootcuts/s81_static_calendar_root.ys' --
+
+1. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv' to AST representation.
+Storing AST representation for module `$abstract\dsfd_coll_ck'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv' to AST representation.
+Storing AST representation for module `$abstract\dsfd_coll_static_channels'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_s81ph_ckbuf'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_optreg'.
+Storing AST representation for module `$abstract\ot_s81ph_fp32_add_rne_preexp'.
+Storing AST representation for module `$abstract\ot_s81ph_fp32_exp_prefix'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv' to AST representation.
+Storing AST representation for module `$abstract\dsfd_sp_collective_static_c'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_calendar_controller'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_calendar_controller7'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_collective_slab'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_channels'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_channels_clocked'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_codec'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_codec_dynamic'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_core'.
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_core_dynamic'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_gearbox'.
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_lane'.
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_lane_dynamic'.
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_rank'.
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_rank_dynamic'.
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_rank_dynamic_clocked'.
+Successfully finished Verilog frontend.
+
+21. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_vm_rank'.
+Successfully finished Verilog frontend.
+
+22. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_vm_rank_dynamic'.
+Successfully finished Verilog frontend.
+
+23. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_host_queue'.
+Successfully finished Verilog frontend.
+
+24. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_phy_digital.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_phy_digital.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_phy_digital'.
+Successfully finished Verilog frontend.
+
+25. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_raw_fmt1_codec'.
+Successfully finished Verilog frontend.
+
+26. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_raw_fmt1_lane'.
+Successfully finished Verilog frontend.
+
+27. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_vm_rows.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_vm_rows.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_raw_vm_rows'.
+Successfully finished Verilog frontend.
+
+28. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_endpoint'.
+Successfully finished Verilog frontend.
+
+29. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_endpoint_dynamic'.
+Successfully finished Verilog frontend.
+
+30. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_rank.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_rank.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_rank'.
+Successfully finished Verilog frontend.
+
+31. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_producer.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_producer.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_vm_producer'.
+Successfully finished Verilog frontend.
+
+32. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_read_source.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_read_source.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_vm_read_source'.
+Successfully finished Verilog frontend.
+
+33. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_vm_boundary'.
+Successfully finished Verilog frontend.
+
+34. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_assemble_clocked'.
+Storing AST representation for module `$abstract\s81_static_hc_scalar_assemble'.
+Storing AST representation for module `$abstract\s81_static_hc_assemble'.
+Successfully finished Verilog frontend.
+
+35. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_reduce_clocked'.
+Storing AST representation for module `$abstract\s81_static_hc_scalar_reduce'.
+Storing AST representation for module `$abstract\s81_static_hc_reduce'.
+Successfully finished Verilog frontend.
+
+36. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/hdc/ot_hdc_prefix.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/hdc/ot_hdc_prefix.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_ksadd_k'.
+Storing AST representation for module `$abstract\ot_hdc_inc_k'.
+Successfully finished Verilog frontend.
+
+37. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/link/ot_link_crc32.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/link/ot_link_crc32.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_link_crc32'.
+Successfully finished Verilog frontend.
+
+38. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_calendar_root'.
+Successfully finished Verilog frontend.
+
+39. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/rom_blackbox.v
+Parsing Verilog input from `results/physical/s81_collective_graph_1103/census/rom_blackbox.v' to AST representation.
+Generating RTLIL representation for module `\ot_rom_4096x266_m8'.
+Successfully finished Verilog frontend.
+
+40. Executing HIERARCHY pass (managing design hierarchy).
+
+41. Executing AST frontend in derive mode using pre-parsed AST for module `\s81_static_calendar_root'.
+Generating RTLIL representation for module `\s81_static_calendar_root'.
+
+41.1. Analyzing design hierarchy..
+Top module:  \s81_static_calendar_root
+Parameter \ROM_FILE = { }
+Parameter \CYCLES = 1
+Parameter \AW = 1
+
+41.2. Executing AST frontend in derive mode using pre-parsed AST for module `\s81_static_calendar_controller'.
+Parameter \ROM_FILE = { }
+Parameter \CYCLES = 1
+Parameter \AW = 1
+Generating RTLIL representation for module `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller'.
+
+41.3. Analyzing design hierarchy..
+Top module:  \s81_static_calendar_root
+Used module:     $paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller
+
+41.4. Analyzing design hierarchy..
+Top module:  \s81_static_calendar_root
+Used module:     $paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller
+Removing unused module `$abstract\s81_static_calendar_root'.
+Removing unused module `$abstract\ot_link_crc32'.
+Removing unused module `$abstract\ot_hdc_inc_k'.
+Removing unused module `$abstract\ot_hdc_ksadd_k'.
+Removing unused module `$abstract\s81_static_hc_reduce'.
+Removing unused module `$abstract\s81_static_hc_scalar_reduce'.
+Removing unused module `$abstract\s81_static_hc_reduce_clocked'.
+Removing unused module `$abstract\s81_static_hc_assemble'.
+Removing unused module `$abstract\s81_static_hc_scalar_assemble'.
+Removing unused module `$abstract\s81_static_hc_assemble_clocked'.
+Removing unused module `$abstract\s81_static_vm_boundary'.
+Removing unused module `$abstract\s81_static_tp4_vm_read_source'.
+Removing unused module `$abstract\s81_static_tp4_vm_producer'.
+Removing unused module `$abstract\s81_static_tp4_rank'.
+Removing unused module `$abstract\s81_static_tp4_endpoint_dynamic'.
+Removing unused module `$abstract\s81_static_tp4_endpoint'.
+Removing unused module `$abstract\s81_static_raw_vm_rows'.
+Removing unused module `$abstract\s81_static_raw_fmt1_lane'.
+Removing unused module `$abstract\s81_static_raw_fmt1_codec'.
+Removing unused module `$abstract\s81_static_phy_digital'.
+Removing unused module `$abstract\s81_static_host_queue'.
+Removing unused module `$abstract\s81_static_fmt1_vm_rank_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_vm_rank'.
+Removing unused module `$abstract\s81_static_fmt1_rank_dynamic_clocked'.
+Removing unused module `$abstract\s81_static_fmt1_rank_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_rank'.
+Removing unused module `$abstract\s81_static_fmt1_lane_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_lane'.
+Removing unused module `$abstract\s81_static_fmt1_gearbox'.
+Removing unused module `$abstract\s81_static_fmt1_core_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_core'.
+Removing unused module `$abstract\s81_static_fmt1_codec_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_codec'.
+Removing unused module `$abstract\s81_static_fmt1_channels_clocked'.
+Removing unused module `$abstract\s81_static_fmt1_channels'.
+Removing unused module `$abstract\s81_static_collective_slab'.
+Removing unused module `$abstract\s81_static_calendar_controller7'.
+Removing unused module `$abstract\s81_static_calendar_controller'.
+Removing unused module `$abstract\dsfd_sp_collective_static_c'.
+Removing unused module `$abstract\ot_s81ph_fp32_exp_prefix'.
+Removing unused module `$abstract\ot_s81ph_fp32_add_rne_preexp'.
+Removing unused module `$abstract\ot_optreg'.
+Removing unused module `$abstract\ot_s81ph_ckbuf'.
+Removing unused module `$abstract\dsfd_coll_static_channels'.
+Removing unused module `$abstract\dsfd_coll_ck'.
+Removed 45 unused modules.
+
+42. Executing SYNTH pass.
+
+42.1. Executing HIERARCHY pass (managing design hierarchy).
+
+42.1.1. Analyzing design hierarchy..
+Top module:  \s81_static_calendar_root
+Used module:     $paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller
+
+42.1.2. Analyzing design hierarchy..
+Top module:  \s81_static_calendar_root
+Used module:     $paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller
+Removed 0 unused modules.
+
+42.2. Executing PROC pass (convert processes to netlists).
+
+42.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+42.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 5 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104 in module $paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.
+Marked 1 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:145$90 in module $paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.
+Marked 2 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:140$86 in module $paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.
+Marked 1 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:103$56 in module $paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.
+Marked 1 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:97$50 in module $paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.
+Marked 1 switch rules as full_case in process $proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv:67$47 in module s81_static_calendar_root.
+Marked 1 switch rules as full_case in process $proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv:64$45 in module s81_static_calendar_root.
+Removed a total of 0 dead cases.
+
+42.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 54 redundant assignments.
+Promoted 0 assignments to connections.
+
+42.2.4. Executing PROC_INIT pass (extract init attributes).
+
+42.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+Found async reset \rst_n in `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:145$90'.
+Found async reset \rst_n in `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:140$86'.
+Found async reset \rst_n in `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:103$56'.
+Found async reset \rst_n in `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:97$50'.
+Found async reset \rst_n_slab in `\s81_static_calendar_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv:67$47'.
+Found async reset \rst_n_in in `\s81_static_calendar_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv:64$45'.
+
+42.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~10 debug messages>
+
+42.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+     1/53: $0\c_done[8:0]
+     2/53: $0\online[0:0]
+     3/53: $0\hc_assemble_slot[0:0]
+     4/53: $0\raw_rx_tag[7:0]
+     5/53: $0\raw_rx_meta_row[13:0]
+     6/53: $0\raw_rx_payload_row[13:0]
+     7/53: $0\raw_rx_write_slot[0:0]
+     8/53: $0\raw_capture_meta_slot[0:0]
+     9/53: $0\raw_capture_payload_slot[0:0]
+    10/53: $0\commit_gather[0:0]
+    11/53: $0\hc_emit_tag[31:0]
+    12/53: $0\hc_emit_slot[0:0]
+    13/53: $0\hc_expect_last[0:0]
+    14/53: $0\hc_expect_seq[15:0]
+    15/53: $0\hc_word_index[3:0]
+    16/53: $0\hc_write_slot[0:0]
+    17/53: $0\hc_reduce_slot[0:0]
+    18/53: $0\channel_rx_phase[9:0]
+    19/53: $0\channel_rx_frame_slot[4:0]
+    20/53: $0\channel_rx_beat_slot[4:0]
+    21/53: $0\channel_tx_phase[9:0]
+    22/53: $0\channel_tx_frame_slot[4:0]
+    23/53: $0\channel_tx_beat_slot[4:0]
+    24/53: $0\channel_rx_last[4:0]
+    25/53: $0\channel_rx_seq[49:0]
+    26/53: $0\channel_rx_kind[9:0]
+    27/53: $0\channel_rx_slot[4:0]
+    28/53: $0\channel_tx_last[4:0]
+    29/53: $0\channel_tx_seq[49:0]
+    30/53: $0\channel_tx_kind[9:0]
+    31/53: $0\channel_tx_slot[4:0]
+    32/53: $0\rx_frame_slot[0:0]
+    33/53: $0\rx_phase[1:0]
+    34/53: $0\rx_beat_slot[0:0]
+    35/53: $0\tx_frame_slot[0:0]
+    36/53: $0\tx_phase[1:0]
+    37/53: $0\tx_beat_slot[0:0]
+    38/53: $0\commit_rows[59:0]
+    39/53: $0\commit_rankmask[3:0]
+    40/53: $0\commit_last[0:0]
+    41/53: $0\commit_seq[15:0]
+    42/53: $0\commit_tag[31:0]
+    43/53: $0\commit_slot[0:0]
+    44/53: $0\rankmask[3:0]
+    45/53: $0\last[0:0]
+    46/53: $0\seq[15:0]
+    47/53: $0\tag[31:0]
+    48/53: $0\issue_slot[0:0]
+    49/53: $0\read_row[13:0]
+    50/53: $0\read_slot[0:0]
+    51/53: $0\cursor[0:0]
+    52/53: $0\fault[0:0]
+    53/53: $0\active[0:0]
+Creating decoders for process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:145$90'.
+     1/1: $0\slow_bad_q[0:0]
+Creating decoders for process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:140$86'.
+     1/1: $0\rom_addr_q[11:0]
+Creating decoders for process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:112$61'.
+     1/1: $0\entry_q[564:0]
+Creating decoders for process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:103$56'.
+     1/1: $0\c_cmd_q[84:0]
+Creating decoders for process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:97$50'.
+     1/1: $0\init_q[1:0]
+Creating decoders for process `\s81_static_calendar_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv:67$47'.
+     1/1: $0\rr[1:0]
+Creating decoders for process `\s81_static_calendar_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv:64$45'.
+     1/1: $0\reset_q[1:0]
+
+42.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+42.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\c_done' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$228' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\read_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$233' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\read_row' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$238' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\issue_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$243' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\tag' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$248' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\seq' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$253' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\last' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$258' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\rankmask' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$263' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\commit_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$268' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\commit_tag' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$273' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\commit_seq' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$278' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\commit_last' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$283' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\commit_rankmask' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$288' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\commit_rows' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$293' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\tx_beat_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$298' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\tx_phase' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$303' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\tx_frame_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$308' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\rx_beat_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$313' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\rx_phase' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$318' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\rx_frame_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$323' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_tx_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$328' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_tx_kind' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$333' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_tx_seq' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$338' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_tx_last' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$343' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_rx_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$348' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_rx_kind' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$353' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_rx_seq' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$358' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_rx_last' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$363' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_tx_beat_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$368' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_tx_frame_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$373' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_tx_phase' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$378' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_rx_beat_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$383' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_rx_frame_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$388' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\channel_rx_phase' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$393' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\hc_reduce_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$398' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\hc_write_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$403' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\hc_word_index' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$408' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\hc_expect_seq' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$413' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\hc_expect_last' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$418' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\hc_emit_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$423' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\hc_emit_tag' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$428' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\commit_gather' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$433' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\raw_capture_payload_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$438' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\raw_capture_meta_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$443' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\raw_rx_write_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$448' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\raw_rx_payload_row' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$453' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\raw_rx_meta_row' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$458' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\raw_rx_tag' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$463' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\hc_assemble_slot' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$468' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\active' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$473' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\fault' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$478' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\online' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$483' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\cursor' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+  created $adff cell `$procdff$488' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\slow_bad_q' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:145$90'.
+  created $adff cell `$procdff$493' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\rom_addr_q' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:140$86'.
+  created $adff cell `$procdff$498' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\entry_q' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:112$61'.
+  created $dff cell `$procdff$499' with positive edge clock.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\c_cmd_q' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:103$56'.
+  created $adff cell `$procdff$504' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.\init_q' using process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:97$50'.
+  created $adff cell `$procdff$509' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_calendar_root.\rr' using process `\s81_static_calendar_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv:67$47'.
+  created $adff cell `$procdff$514' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_calendar_root.\reset_q' using process `\s81_static_calendar_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv:64$45'.
+  created $adff cell `$procdff$519' with positive edge clock and positive level reset.
+
+42.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+42.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 6 empty switches in `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+Removing empty process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:151$104'.
+Removing empty process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:145$90'.
+Found and cleaned up 2 empty switches in `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:140$86'.
+Removing empty process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:140$86'.
+Found and cleaned up 1 empty switch in `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:112$61'.
+Removing empty process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:112$61'.
+Removing empty process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:103$56'.
+Found and cleaned up 1 empty switch in `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:97$50'.
+Removing empty process `$paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:97$50'.
+Removing empty process `s81_static_calendar_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv:67$47'.
+Removing empty process `s81_static_calendar_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_calendar_root.sv:64$45'.
+Cleaned up 10 empty switches.
+
+42.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.
+<suppressed ~121 debug messages>
+Optimizing module s81_static_calendar_root.
+<suppressed ~4 debug messages>
+
+42.3. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller...
+Checking module s81_static_calendar_root...
+Found and reported 0 problems.
+
+42.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$4674c49f831e6df91cedd63e11f7e6763d097934\s81_static_calendar_controller.
+<suppressed ~1 debug messages>
+
+42.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+
+42.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+Removed 66 unused cells and 221 unused wires.
+<suppressed ~67 debug messages>
+
+42.7. Executing CHECK pass (checking for obvious problems).
+Checking module s81_static_calendar_root...
+Found and reported 0 problems.
+
+42.8. Executing OPT pass (performing simple optimizations).
+
+42.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+
+42.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 187 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Computing hashes of 184 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Computing hashes of 183 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+42.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_calendar_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~137 debug messages>
+
+42.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_calendar_root.
+Performed a total of 0 changes.
+
+42.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 183 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Computing hashes of 182 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+42.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+Removed 0 unused cells and 5 unused wires.
+<suppressed ~1 debug messages>
+
+42.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+
+42.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+42.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_calendar_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~135 debug messages>
+
+42.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_calendar_root.
+Performed a total of 0 changes.
+
+42.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 182 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Removed a total of 0 cells.
+
+42.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+
+42.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+
+42.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+42.9. Executing FSM pass (extract and optimize FSM).
+
+42.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+42.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+42.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+42.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+
+42.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+42.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+42.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+42.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+42.10. Executing OPT pass (performing simple optimizations).
+
+42.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+
+42.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 182 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Removed a total of 0 cells.
+
+42.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_calendar_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~135 debug messages>
+
+42.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_calendar_root.
+Performed a total of 0 changes.
+
+42.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 182 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Removed a total of 0 cells.
+
+42.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\calendar.$procdff$499 ($dff) from module s81_static_calendar_root (D = \calendar.macro_data [564:0], Q = \calendar.entry_q).
+Adding EN signal on $flatten\calendar.$procdff$473 ($adff) from module s81_static_calendar_root (D = $flatten\calendar.$0\active[0:0], Q = \calendar.active).
+Adding EN signal on $flatten\calendar.$procdff$498 ($adff) from module s81_static_calendar_root (D = $flatten\calendar.$0\rom_addr_q[11:0], Q = \calendar.rom_addr_q).
+Adding EN signal on $flatten\calendar.$procdff$488 ($adff) from module s81_static_calendar_root (D = $flatten\calendar.$procmux$175_Y, Q = \calendar.cursor).
+Adding EN signal on $flatten\calendar.$procdff$509 ($adff) from module s81_static_calendar_root (D = $flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:98$54_Y, Q = \calendar.init_q).
+
+42.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+Removed 5 unused cells and 5 unused wires.
+<suppressed ~6 debug messages>
+
+42.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+<suppressed ~2 debug messages>
+
+42.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+42.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_calendar_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~128 debug messages>
+
+42.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_calendar_root.
+Performed a total of 0 changes.
+
+42.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 183 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Removed a total of 0 cells.
+
+42.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+
+42.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+
+42.10.16. Finished fast OPT passes. (There is nothing left to do.)
+
+42.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 2) from port B of cell s81_static_calendar_root.$auto$opt_dff.cc:320:make_patterns_logic$530 ($ne).
+Removed top 31 bits (of 32) from port B of cell s81_static_calendar_root.$flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:212$162 ($add).
+Removed top 31 bits (of 32) from port Y of cell s81_static_calendar_root.$flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:212$162 ($add).
+Removed top 31 bits (of 32) from port A of cell s81_static_calendar_root.$flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:212$162 ($add).
+Removed top 31 bits (of 32) from mux cell s81_static_calendar_root.$flatten\calendar.$ternary$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:211$159 ($mux).
+Removed top 11 bits (of 12) from port B of cell s81_static_calendar_root.$flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:138$82 ($add).
+Removed top 20 bits (of 32) from port A of cell s81_static_calendar_root.$flatten\calendar.$ge$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:138$80 ($ge).
+Removed top 31 bits (of 32) from port B of cell s81_static_calendar_root.$flatten\calendar.$ge$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:138$80 ($ge).
+Removed top 5 bits (of 16) from port B of cell s81_static_calendar_root.$flatten\calendar.$gt$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:115$65 ($gt).
+Removed top 1 bits (of 2) from port B of cell s81_static_calendar_root.$flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:98$54 ($add).
+Removed top 31 bits (of 32) from wire s81_static_calendar_root.$flatten\calendar.$ternary$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:211$159_Y.
+Removed top 31 bits (of 32) from wire s81_static_calendar_root.$flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:212$162_Y.
+
+42.12. Executing PEEPOPT pass (run peephole optimizers).
+
+42.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+42.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module s81_static_calendar_root:
+  creating $macc model for $flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:212$162 ($add).
+  creating $macc model for $flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:138$82 ($add).
+  creating $macc model for $flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:98$54 ($add).
+  creating $alu model for $macc $flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:98$54.
+  creating $alu model for $macc $flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:138$82.
+  creating $alu model for $macc $flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:212$162.
+  creating $alu model for $flatten\calendar.$ge$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:138$80 ($ge): new $alu
+  creating $alu model for $flatten\calendar.$gt$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:115$65 ($gt): new $alu
+  creating $alu cell for $flatten\calendar.$gt$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:115$65: $auto$alumacc.cc:512:replace_alu$542
+  creating $alu cell for $flatten\calendar.$ge$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:138$80: $auto$alumacc.cc:512:replace_alu$553
+  creating $alu cell for $flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:212$162: $auto$alumacc.cc:512:replace_alu$566
+  creating $alu cell for $flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:138$82: $auto$alumacc.cc:512:replace_alu$569
+  creating $alu cell for $flatten\calendar.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:98$54: $auto$alumacc.cc:512:replace_alu$572
+  created 5 $alu and 0 $macc cells.
+
+42.15. Executing SHARE pass (SAT-based resource sharing).
+
+42.16. Executing OPT pass (performing simple optimizations).
+
+42.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+<suppressed ~6 debug messages>
+
+42.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 188 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Removed a total of 0 cells.
+
+42.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_calendar_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~127 debug messages>
+
+42.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_calendar_root.
+Performed a total of 0 changes.
+
+42.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 188 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Removed a total of 0 cells.
+
+42.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+Removed 4 unused cells and 15 unused wires.
+<suppressed ~6 debug messages>
+
+42.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+
+42.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+42.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_calendar_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~127 debug messages>
+
+42.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_calendar_root.
+Performed a total of 0 changes.
+
+42.16.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 183 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Removed a total of 0 cells.
+
+42.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+
+42.16.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+
+42.16.16. Finished fast OPT passes. (There is nothing left to do.)
+
+42.17. Executing MEMORY pass.
+
+42.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+42.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+42.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+42.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+42.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+42.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+
+42.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+42.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+42.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+
+42.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+42.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+
+42.19. Executing OPT pass (performing simple optimizations).
+
+42.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+<suppressed ~30 debug messages>
+
+42.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 189 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Removed a total of 0 cells.
+
+42.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+Removed 0 unused cells and 14 unused wires.
+<suppressed ~1 debug messages>
+
+42.19.5. Finished fast OPT passes.
+
+42.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+42.21. Executing OPT pass (performing simple optimizations).
+
+42.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+
+42.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 189 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Removed a total of 0 cells.
+
+42.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_calendar_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~79 debug messages>
+
+42.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_calendar_root.
+Performed a total of 0 changes.
+
+42.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 189 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Removed a total of 0 cells.
+
+42.21.6. Executing OPT_SHARE pass.
+
+42.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+
+42.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+
+42.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+42.22. Executing TECHMAP pass (map to technology primitives).
+
+42.22.1. Executing Verilog-2005 frontend: /usr/local/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/local/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+42.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod$175e67c02b86e96b1288b9dc100122520d7240d8\_90_alu for cells of type $alu.
+Using template $paramod$fc972a7a46956c1788f3cb5257b53c8f1df2d0cc\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$a04dd9d4d8b430140c4ff94b50470fb380fda2a0\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $dffe.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000110 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000110 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000001 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000010 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000010 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~742 debug messages>
+
+42.23. Executing OPT pass (performing simple optimizations).
+
+42.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+<suppressed ~81 debug messages>
+
+42.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 1981 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Computing hashes of 1972 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Computing hashes of 1971 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+<suppressed ~30 debug messages>
+Removed a total of 10 cells.
+
+42.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+Removed 12 unused cells and 155 unused wires.
+<suppressed ~13 debug messages>
+
+42.23.5. Finished fast OPT passes.
+
+42.24. Executing ABC pass (technology mapping using ABC).
+
+42.24.1. Extracting gate netlist of module `\s81_static_calendar_root' to `<abc-temp-dir>/input.blif'..
+
+42.24.1.1. Executed ABC.
+Extracted 806 gates and 1477 wires to a netlist network with 669 inputs and 513 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+42.24.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      655
+ABC RESULTS:            ANDNOT cells:        9
+ABC RESULTS:               MUX cells:        1
+ABC RESULTS:              NAND cells:        7
+ABC RESULTS:               NOR cells:       15
+ABC RESULTS:               NOT cells:        2
+ABC RESULTS:                OR cells:        3
+ABC RESULTS:             ORNOT cells:       89
+ABC RESULTS:              XNOR cells:       41
+ABC RESULTS:               XOR cells:        1
+ABC RESULTS:        internal signals:      295
+ABC RESULTS:           input signals:      669
+ABC RESULTS:          output signals:      513
+Removing temp directory.
+Removing global temp directory.
+
+42.25. Executing OPT pass (performing simple optimizations).
+
+42.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_calendar_root.
+
+42.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_calendar_root'.
+Computing hashes of 1976 cells of `\s81_static_calendar_root'.
+Finding duplicate cells in `\s81_static_calendar_root'.
+Removed a total of 0 cells.
+
+42.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_calendar_root..
+Removed 0 unused cells and 820 unused wires.
+<suppressed ~8 debug messages>
+
+42.25.5. Finished fast OPT passes.
+
+42.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `s81_static_calendar_root'. Setting top module to s81_static_calendar_root.
+
+42.26.1. Analyzing design hierarchy..
+Top module:  \s81_static_calendar_root
+
+42.26.2. Analyzing design hierarchy..
+Top module:  \s81_static_calendar_root
+Removed 0 unused modules.
+
+42.27. Printing statistics.
+
+=== s81_static_calendar_root ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      941 wires
+     4109 wire bits
+      131 public wires
+     3297 public wire bits
+       57 ports
+      570 port bits
+     1976 cells
+        9   $_ANDNOT_
+      655   $_AND_
+       16   $_DFFE_PN0P_
+      564   $_DFFE_PP_
+      569   $_DFF_PN0_
+        1   $_MUX_
+        7   $_NAND_
+       15   $_NOR_
+        2   $_NOT_
+       89   $_ORNOT_
+        3   $_OR_
+       41   $_XNOR_
+        1   $_XOR_
+        1   $scopeinfo
+        3   ot_rom_4096x266_m8
+
+42.28. Executing CHECK pass (checking for obvious problems).
+Checking module s81_static_calendar_root...
+Found and reported 0 problems.
+
+43. Executing JSON backend.
+
+44. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+45. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+45.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\s81_static_calendar_root':
+  mapped 585 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 564 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+46. Executing ABC pass (technology mapping using ABC).
+
+46.1. Extracting gate netlist of module `\s81_static_calendar_root' to `<abc-temp-dir>/input.blif'..
+
+46.1.1. Executed ABC.
+Extracted 2552 gates and 4266 wires to a netlist network with 1714 inputs and 1556 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_7f237910.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+46.1.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:        3
+ABC RESULTS:   AO221x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AO22x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:        3
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:       12
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:       13
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:      552
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:      569
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:        3
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:        5
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:        6
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:      497
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:       18
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:        4
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:        2
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:      565
+ABC RESULTS:   OAI221xp5_ASAP7_75t_R cells:        9
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:       17
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:       19
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:       13
+ABC RESULTS:        internal signals:      996
+ABC RESULTS:           input signals:     1714
+ABC RESULTS:          output signals:     1556
+Removing temp directory.
+Removing global temp directory.
+Removed 0 unused cells and 3609 unused wires.
+
+47. Printing statistics.
+
+=== s81_static_calendar_root ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     3097        - wires
+     4955        - wire bits
+      122        - public wires
+     1980        - public wire bits
+       57        - ports
+      570        - port bits
+     3475  527.548 cells
+        1        -   $scopeinfo
+        1    0.087   A2O1A1Ixp33_ASAP7_75t_R
+        1    0.087   AND2x2_ASAP7_75t_R
+        2    0.204   AND4x1_ASAP7_75t_R
+        3    0.262   AO21x1_ASAP7_75t_R
+        1    0.146   AO221x1_ASAP7_75t_R
+        1    0.131   AO22x1_ASAP7_75t_R
+        3    0.219   AOI21xp33_ASAP7_75t_R
+       12    1.225   AOI221xp5_ASAP7_75t_R
+       13    1.137   AOI22xp33_ASAP7_75t_R
+        1    0.087   AOI31xp33_ASAP7_75t_R
+        1    0.102   AOI32xp33_ASAP7_75t_R
+      585  221.762   DFFASRHQNx1_ASAP7_75t_R
+      564  164.462   DFFHQNx1_ASAP7_75t_R
+      552   24.144   INVx1_ASAP7_75t_R
+      569   33.184   NAND2xp33_ASAP7_75t_R
+        3    0.219   NAND3xp33_ASAP7_75t_R
+        5    0.437   NAND4xp25_ASAP7_75t_R
+        6    0.612   NAND5xp2_ASAP7_75t_R
+      497   28.985   NOR2xp33_ASAP7_75t_R
+       18    1.312   NOR3xp33_ASAP7_75t_R
+        4     0.35   NOR4xp25_ASAP7_75t_R
+        2    0.204   NOR5xp2_ASAP7_75t_R
+        1    0.117   OA211x2_ASAP7_75t_R
+      565   41.188   OAI21xp33_ASAP7_75t_R
+        9    0.919   OAI221xp5_ASAP7_75t_R
+       17    1.487   OAI22xp33_ASAP7_75t_R
+        2    0.175   OR3x1_ASAP7_75t_R
+        1    0.102   OR4x1_ASAP7_75t_R
+       19    2.493   XNOR2xp5_ASAP7_75t_R
+       13    1.706   XOR2xp5_ASAP7_75t_R
+        3        -   ot_rom_4096x266_m8
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_rom_4096x266_m8 is unknown!
+
+   Chip area for module '\s81_static_calendar_root': 527.548140
+     of which used for sequential elements: 386.224200 (73.21%)
+
+48. Executing JSON backend.
+
+End of script. Logfile hash: 96352e06e1, time: 1.02s, user: 0.49s, system: 0.07s, MEM: 147.03 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 56% 2x abc (0 sec), 14% 2x stat (0 sec), ...

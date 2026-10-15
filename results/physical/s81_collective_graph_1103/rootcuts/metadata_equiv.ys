@@ -1,0 +1,22 @@
+read_verilog -sv -defer results/physical/s81_collective_graph_1103/census/source/rtl/hdc/ot_hdc_prefix.sv results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv
+prep -top s81_static_hc_metadata_reference -flatten
+async2sync
+opt_clean
+select -module s81_static_hc_metadata_reference
+rename assemble.seen seen
+rename assemble.assembly_tag assembly_tag
+select -clear
+design -stash gold
+read_verilog -sv -defer results/physical/s81_collective_graph_1103/census/source/rtl/hdc/ot_hdc_prefix.sv results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv
+prep -top s81_static_hc_metadata_root -flatten
+async2sync
+opt_clean
+design -stash gate
+design -copy-from gold -as gold s81_static_hc_metadata_reference
+design -copy-from gate -as gate s81_static_hc_metadata_root
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_struct
+equiv_simple -seq 20
+equiv_induct -seq 2
+equiv_status -assert

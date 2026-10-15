@@ -1,0 +1,1244 @@
+
+-- Executing script file `results/physical/s81_collective_graph_1103/rootcuts/metadata_equiv.ys' --
+
+1. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/hdc/ot_hdc_prefix.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/hdc/ot_hdc_prefix.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_ksadd_k'.
+Storing AST representation for module `$abstract\ot_hdc_inc_k'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_optreg'.
+Storing AST representation for module `$abstract\ot_s81ph_fp32_add_rne_preexp'.
+Storing AST representation for module `$abstract\ot_s81ph_fp32_exp_prefix'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_reduce_clocked'.
+Storing AST representation for module `$abstract\s81_static_hc_scalar_reduce'.
+Storing AST representation for module `$abstract\s81_static_hc_reduce'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_assemble_clocked'.
+Storing AST representation for module `$abstract\s81_static_hc_scalar_assemble'.
+Storing AST representation for module `$abstract\s81_static_hc_assemble'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_reduce_metadata_reference'.
+Storing AST representation for module `$abstract\s81_static_hc_assemble_metadata_reference'.
+Storing AST representation for module `$abstract\s81_static_hc_metadata_reference'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_metadata_root'.
+Successfully finished Verilog frontend.
+
+7. Executing PREP pass.
+
+7.1. Executing HIERARCHY pass (managing design hierarchy).
+
+7.2. Executing AST frontend in derive mode using pre-parsed AST for module `\s81_static_hc_metadata_reference'.
+Generating RTLIL representation for module `\s81_static_hc_metadata_reference'.
+
+7.2.1. Analyzing design hierarchy..
+Top module:  \s81_static_hc_metadata_reference
+Parameter \MUT = 0
+
+7.2.2. Executing AST frontend in derive mode using pre-parsed AST for module `\s81_static_hc_assemble_metadata_reference'.
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000'.
+
+7.2.3. Executing AST frontend in derive mode using pre-parsed AST for module `\s81_static_hc_reduce_metadata_reference'.
+Generating RTLIL representation for module `\s81_static_hc_reduce_metadata_reference'.
+Warning: Replacing memory \identity with list of registers. See results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:21
+
+7.2.4. Analyzing design hierarchy..
+Top module:  \s81_static_hc_metadata_reference
+Used module:     $paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000
+Used module:     \s81_static_hc_reduce_metadata_reference
+
+7.2.5. Analyzing design hierarchy..
+Top module:  \s81_static_hc_metadata_reference
+Used module:     $paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000
+Used module:     \s81_static_hc_reduce_metadata_reference
+Removing unused module `$abstract\s81_static_hc_metadata_root'.
+Removing unused module `$abstract\s81_static_hc_metadata_reference'.
+Removing unused module `$abstract\s81_static_hc_assemble_metadata_reference'.
+Removing unused module `$abstract\s81_static_hc_reduce_metadata_reference'.
+Removing unused module `$abstract\s81_static_hc_assemble'.
+Removing unused module `$abstract\s81_static_hc_scalar_assemble'.
+Removing unused module `$abstract\s81_static_hc_assemble_clocked'.
+Removing unused module `$abstract\s81_static_hc_reduce'.
+Removing unused module `$abstract\s81_static_hc_scalar_reduce'.
+Removing unused module `$abstract\s81_static_hc_reduce_clocked'.
+Removing unused module `$abstract\ot_s81ph_fp32_exp_prefix'.
+Removing unused module `$abstract\ot_s81ph_fp32_add_rne_preexp'.
+Removing unused module `$abstract\ot_optreg'.
+Removing unused module `$abstract\ot_hdc_inc_k'.
+Removing unused module `$abstract\ot_hdc_ksadd_k'.
+Removed 15 unused modules.
+
+7.3. Executing PROC pass (convert processes to netlists).
+
+7.3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7.3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:27$59 in module s81_static_hc_reduce_metadata_reference.
+Marked 3 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:52$29 in module $paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.
+Marked 1 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:79$6 in module s81_static_hc_metadata_reference.
+Removed a total of 0 dead cases.
+
+7.3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 2 redundant assignments.
+Promoted 22 assignments to connections.
+
+7.3.4. Executing PROC_INIT pass (extract init attributes).
+
+7.3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:27$59'.
+Found async reset \rst_n in `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:52$29'.
+Found async reset \rst_n in `\s81_static_hc_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:79$6'.
+
+7.3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~6 debug messages>
+
+7.3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:27$59'.
+     1/1: $0\fault[0:0]
+Creating decoders for process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+Creating decoders for process `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:61$52'.
+     1/2: $0\assembly_tag[31:0]
+     2/2: $0\row_tag[31:0]
+Creating decoders for process `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:52$29'.
+     1/7: $3$lookahead\seen$28[15:0]$51
+     2/7: $2$lookahead\seen$28[15:0]$43
+     3/7: $2$bitselwrite$pos$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$11[3:0]$42
+     4/7: $1$lookahead\seen$28[15:0]$34
+     5/7: $1$bitselwrite$pos$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$11[3:0]$33
+     6/7: $0\row_valid[0:0]
+     7/7: $0\fault[0:0]
+Creating decoders for process `\s81_static_hc_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:79$6'.
+     1/1: $0\rr[1:0]
+
+7.3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+7.3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\fault' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:27$59'.
+  created $adff cell `$procdff$95' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\k' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$96' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[0]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$97' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[1]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$98' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[2]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$99' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[3]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$100' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[4]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$101' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[5]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$102' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[6]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$103' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[7]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$104' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[8]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$105' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[9]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$106' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[10]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$107' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[11]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$108' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[12]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$109' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[13]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$110' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[14]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$111' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[15]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$112' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[16]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$113' with positive edge clock.
+Creating register for signal `\s81_static_hc_reduce_metadata_reference.\identity[17]' using process `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+  created $dff cell `$procdff$114' with positive edge clock.
+Creating register for signal `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.\row_tag' using process `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:61$52'.
+  created $dff cell `$procdff$115' with positive edge clock.
+Creating register for signal `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.\assembly_tag' using process `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:61$52'.
+  created $dff cell `$procdff$116' with positive edge clock.
+Creating register for signal `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.\row_valid' using process `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:52$29'.
+  created $adff cell `$procdff$121' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.\fault' using process `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:52$29'.
+  created $adff cell `$procdff$126' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.\seen' using process `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:52$29'.
+  created $adff cell `$procdff$131' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$bitselwrite$pos$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$11' using process `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:52$29'.
+  created $adff cell `$procdff$136' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$lookahead\seen$28' using process `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:52$29'.
+  created $adff cell `$procdff$141' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_hc_metadata_reference.\rr' using process `\s81_static_hc_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:79$6'.
+  created $adff cell `$procdff$146' with positive edge clock and positive level reset.
+
+7.3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:27$59'.
+Removing empty process `s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:27$59'.
+Removing empty process `s81_static_hc_reduce_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:20$55'.
+Found and cleaned up 2 empty switches in `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:61$52'.
+Removing empty process `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:61$52'.
+Found and cleaned up 3 empty switches in `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:52$29'.
+Removing empty process `$paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:52$29'.
+Removing empty process `s81_static_hc_metadata_reference.$proc$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:79$6'.
+Cleaned up 6 empty switches.
+
+7.3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_hc_reduce_metadata_reference.
+<suppressed ~2 debug messages>
+Optimizing module $paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.
+<suppressed ~12 debug messages>
+Optimizing module s81_static_hc_metadata_reference.
+<suppressed ~2 debug messages>
+
+7.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module s81_static_hc_reduce_metadata_reference.
+Deleting now unused module $paramod\s81_static_hc_assemble_metadata_reference\MUT=s32'00000000000000000000000000000000.
+<suppressed ~2 debug messages>
+
+7.5. Executing FUTURE pass.
+
+7.6. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_hc_metadata_reference.
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_hc_metadata_reference..
+Removed 14 unused cells and 69 unused wires.
+<suppressed ~18 debug messages>
+
+7.8. Executing CHECK pass (checking for obvious problems).
+Checking module s81_static_hc_metadata_reference...
+Found and reported 0 problems.
+
+7.9. Executing OPT pass (performing simple optimizations).
+
+7.9.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_hc_metadata_reference.
+
+7.9.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_hc_metadata_reference'.
+Computing hashes of 84 cells of `\s81_static_hc_metadata_reference'.
+Finding duplicate cells in `\s81_static_hc_metadata_reference'.
+Computing hashes of 81 cells of `\s81_static_hc_metadata_reference'.
+Finding duplicate cells in `\s81_static_hc_metadata_reference'.
+Computing hashes of 80 cells of `\s81_static_hc_metadata_reference'.
+Finding duplicate cells in `\s81_static_hc_metadata_reference'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+7.9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_hc_metadata_reference..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~11 debug messages>
+
+7.9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_hc_metadata_reference.
+Performed a total of 0 changes.
+
+7.9.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_hc_metadata_reference'.
+Computing hashes of 80 cells of `\s81_static_hc_metadata_reference'.
+Finding duplicate cells in `\s81_static_hc_metadata_reference'.
+Removed a total of 0 cells.
+
+7.9.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_hc_metadata_reference..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+7.9.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_hc_metadata_reference.
+
+7.9.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.9.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_hc_metadata_reference..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~11 debug messages>
+
+7.9.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_hc_metadata_reference.
+Performed a total of 0 changes.
+
+7.9.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_hc_metadata_reference'.
+Computing hashes of 80 cells of `\s81_static_hc_metadata_reference'.
+Finding duplicate cells in `\s81_static_hc_metadata_reference'.
+Removed a total of 0 cells.
+
+7.9.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_hc_metadata_reference..
+
+7.9.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_hc_metadata_reference.
+
+7.9.14. Finished fast OPT passes. (There is nothing left to do.)
+
+7.10. Executing WREDUCE pass (reducing word size of cells).
+Removed top 16 bits (of 32) from port Y of cell s81_static_hc_metadata_reference.$flatten\assemble.$or$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$50 ($or).
+Removed top 16 bits (of 32) from port A of cell s81_static_hc_metadata_reference.$flatten\assemble.$or$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$50 ($or).
+Removed top 16 bits (of 32) from port B of cell s81_static_hc_metadata_reference.$flatten\assemble.$or$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$50 ($or).
+Removed top 16 bits (of 32) from port Y of cell s81_static_hc_metadata_reference.$flatten\assemble.$and$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$47 ($and).
+Removed top 16 bits (of 32) from port B of cell s81_static_hc_metadata_reference.$flatten\assemble.$and$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$47 ($and).
+Removed top 16 bits (of 32) from port Y of cell s81_static_hc_metadata_reference.$flatten\assemble.$not$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$46 ($not).
+Removed top 16 bits (of 32) from port A of cell s81_static_hc_metadata_reference.$flatten\assemble.$not$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$46 ($not).
+Removed top 16 bits (of 32) from port Y of cell s81_static_hc_metadata_reference.$flatten\assemble.$shift$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$45 ($shift).
+Converting cell s81_static_hc_metadata_reference.$flatten\assemble.$neg$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$44 ($neg) from signed to unsigned.
+Removed top 1 bits (of 5) from port A of cell s81_static_hc_metadata_reference.$flatten\assemble.$neg$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$44 ($neg).
+Removed top 16 bits (of 32) from wire s81_static_hc_metadata_reference.$flatten\assemble.$and$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$47_Y.
+Removed top 16 bits (of 32) from wire s81_static_hc_metadata_reference.$flatten\assemble.$or$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$50_Y.
+Removed top 16 bits (of 32) from wire s81_static_hc_metadata_reference.$flatten\assemble.$shift$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$45_Y.
+Removed top 16 bits (of 32) from wire s81_static_hc_metadata_reference.$flatten\assemble.$not$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$46_Y.
+
+7.11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_hc_metadata_reference..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+7.12. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+7.13. Executing OPT pass (performing simple optimizations).
+
+7.13.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_hc_metadata_reference.
+
+7.13.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_hc_metadata_reference'.
+Computing hashes of 80 cells of `\s81_static_hc_metadata_reference'.
+Finding duplicate cells in `\s81_static_hc_metadata_reference'.
+Removed a total of 0 cells.
+
+7.13.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_hc_metadata_reference..
+
+7.13.4. Finished fast OPT passes.
+
+7.14. Executing SORT pass.
+
+7.15. Printing statistics.
+
+=== s81_static_hc_metadata_reference ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      131 wires
+     4297 wire bits
+       84 public wires
+     4030 public wire bits
+       27 ports
+      220 port bits
+       80 cells
+        5   $adff
+        1   $and
+       20   $dff
+        2   $eq
+       17   $logic_and
+        8   $logic_not
+        6   $logic_or
+        6   $mux
+        2   $ne
+        1   $neg
+        1   $not
+        1   $or
+        3   $reduce_and
+        3   $reduce_or
+        2   $scopeinfo
+        1   $shift
+        1   $shiftx
+
+7.16. Executing CHECK pass (checking for obvious problems).
+Checking module s81_static_hc_metadata_reference...
+Found and reported 0 problems.
+
+8. Executing ASYNC2SYNC pass.
+Replacing s81_static_hc_metadata_reference.$flatten\assemble.$procdff$121 ($adff): ARST=\rr [1], D=\assemble.emit_good, Q=\assemble.row_valid
+Replacing s81_static_hc_metadata_reference.$flatten\assemble.$procdff$126 ($adff): ARST=\rr [1], D=$flatten\assemble.$0\fault[0:0], Q=\assemble.fault
+Replacing s81_static_hc_metadata_reference.$flatten\assemble.$procdff$131 ($adff): ARST=\rr [1], D=$flatten\assemble.$0$lookahead\seen$28[15:0]$31, Q=\assemble.seen
+Replacing s81_static_hc_metadata_reference.$flatten\reduce.$procdff$95 ($adff): ARST=\rr [1], D=$flatten\reduce.$0\fault[0:0], Q=\reduce.fault
+Replacing s81_static_hc_metadata_reference.$procdff$146 ($adff): ARST=\rst_n, D={ \rr [0] 1'1 }, Q=\rr
+
+9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_hc_metadata_reference..
+Renaming wire assemble.seen to seen in module s81_static_hc_metadata_reference.
+Renaming wire assemble.assembly_tag to assembly_tag in module s81_static_hc_metadata_reference.
+
+10. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/hdc/ot_hdc_prefix.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/hdc/ot_hdc_prefix.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_ksadd_k'.
+Storing AST representation for module `$abstract\ot_hdc_inc_k'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_optreg'.
+Storing AST representation for module `$abstract\ot_s81ph_fp32_add_rne_preexp'.
+Storing AST representation for module `$abstract\ot_s81ph_fp32_exp_prefix'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_reduce_clocked'.
+Storing AST representation for module `$abstract\s81_static_hc_scalar_reduce'.
+Storing AST representation for module `$abstract\s81_static_hc_reduce'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_assemble_clocked'.
+Storing AST representation for module `$abstract\s81_static_hc_scalar_assemble'.
+Storing AST representation for module `$abstract\s81_static_hc_assemble'.
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_reduce_metadata_reference'.
+Storing AST representation for module `$abstract\s81_static_hc_assemble_metadata_reference'.
+Storing AST representation for module `$abstract\s81_static_hc_metadata_reference'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_metadata_root'.
+Successfully finished Verilog frontend.
+
+16. Executing PREP pass.
+
+16.1. Executing HIERARCHY pass (managing design hierarchy).
+
+16.2. Executing AST frontend in derive mode using pre-parsed AST for module `\s81_static_hc_metadata_root'.
+Generating RTLIL representation for module `\s81_static_hc_metadata_root'.
+Warning: Replacing memory \identity with list of registers. See rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:22
+
+16.2.1. Analyzing design hierarchy..
+Top module:  \s81_static_hc_metadata_root
+
+16.2.2. Analyzing design hierarchy..
+Top module:  \s81_static_hc_metadata_root
+Removing unused module `$abstract\s81_static_hc_metadata_root'.
+Removing unused module `$abstract\s81_static_hc_metadata_reference'.
+Removing unused module `$abstract\s81_static_hc_assemble_metadata_reference'.
+Removing unused module `$abstract\s81_static_hc_reduce_metadata_reference'.
+Removing unused module `$abstract\s81_static_hc_assemble'.
+Removing unused module `$abstract\s81_static_hc_scalar_assemble'.
+Removing unused module `$abstract\s81_static_hc_assemble_clocked'.
+Removing unused module `$abstract\s81_static_hc_reduce'.
+Removing unused module `$abstract\s81_static_hc_scalar_reduce'.
+Removing unused module `$abstract\s81_static_hc_reduce_clocked'.
+Removing unused module `$abstract\ot_s81ph_fp32_exp_prefix'.
+Removing unused module `$abstract\ot_s81ph_fp32_add_rne_preexp'.
+Removing unused module `$abstract\ot_optreg'.
+Removing unused module `$abstract\ot_hdc_inc_k'.
+Removing unused module `$abstract\ot_hdc_ksadd_k'.
+Removed 15 unused modules.
+
+16.3. Executing PROC pass (convert processes to netlists).
+
+16.3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+16.3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 3 switch rules as full_case in process $proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:40$210 in module s81_static_hc_metadata_root.
+Marked 1 switch rules as full_case in process $proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:29$177 in module s81_static_hc_metadata_root.
+Marked 1 switch rules as full_case in process $proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:17$169 in module s81_static_hc_metadata_root.
+Removed a total of 0 dead cases.
+
+16.3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 2 redundant assignments.
+Promoted 22 assignments to connections.
+
+16.3.4. Executing PROC_INIT pass (extract init attributes).
+
+16.3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n_hc in `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:40$210'.
+Found async reset \rst_n_hc in `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:29$177'.
+Found async reset \rst_n in `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:17$169'.
+
+16.3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~6 debug messages>
+
+16.3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:49$233'.
+     1/2: $0\assembly_tag[31:0]
+     2/2: $0\row_tag[31:0]
+Creating decoders for process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:40$210'.
+     1/7: $3$lookahead\seen$209[15:0]$232
+     2/7: $2$lookahead\seen$209[15:0]$223
+     3/7: $2$bitselwrite$pos$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$168[3:0]$224
+     4/7: $1$lookahead\seen$209[15:0]$214
+     5/7: $1$bitselwrite$pos$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$168[3:0]$215
+     6/7: $0\row_valid[0:0]
+     7/7: $0\assemble_fault[0:0]
+Creating decoders for process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:29$177'.
+     1/1: $0\reduce_fault[0:0]
+Creating decoders for process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+Creating decoders for process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:17$169'.
+     1/1: $0\rr[1:0]
+
+16.3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+16.3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\s81_static_hc_metadata_root.\row_tag' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:49$233'.
+  created $dff cell `$procdff$253' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\assembly_tag' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:49$233'.
+  created $dff cell `$procdff$254' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\row_valid' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:40$210'.
+  created $adff cell `$procdff$259' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_hc_metadata_root.\assemble_fault' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:40$210'.
+  created $adff cell `$procdff$264' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_hc_metadata_root.$lookahead\seen$209' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:40$210'.
+  created $adff cell `$procdff$269' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_hc_metadata_root.\seen' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:40$210'.
+  created $adff cell `$procdff$274' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_hc_metadata_root.$bitselwrite$pos$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$168' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:40$210'.
+  created $adff cell `$procdff$279' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_hc_metadata_root.\reduce_fault' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:29$177'.
+  created $adff cell `$procdff$284' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[17]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$285' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[16]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$286' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[15]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$287' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[14]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$288' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[13]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$289' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[12]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$290' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[11]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$291' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[10]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$292' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[9]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$293' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[8]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$294' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[7]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$295' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[6]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$296' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[5]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$297' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[4]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$298' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[3]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$299' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[2]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$300' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[1]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$301' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\identity[0]' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$302' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\k' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+  created $dff cell `$procdff$303' with positive edge clock.
+Creating register for signal `\s81_static_hc_metadata_root.\rr' using process `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:17$169'.
+  created $adff cell `$procdff$308' with positive edge clock and positive level reset.
+
+16.3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+16.3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:49$233'.
+Removing empty process `s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:49$233'.
+Found and cleaned up 3 empty switches in `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:40$210'.
+Removing empty process `s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:40$210'.
+Found and cleaned up 1 empty switch in `\s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:29$177'.
+Removing empty process `s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:29$177'.
+Removing empty process `s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:21$171'.
+Removing empty process `s81_static_hc_metadata_root.$proc$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:17$169'.
+Cleaned up 6 empty switches.
+
+16.3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_hc_metadata_root.
+<suppressed ~16 debug messages>
+
+16.4. Executing FLATTEN pass (flatten design).
+
+16.5. Executing FUTURE pass.
+
+16.6. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_hc_metadata_root.
+
+16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_hc_metadata_root..
+Removed 14 unused cells and 67 unused wires.
+<suppressed ~16 debug messages>
+
+16.8. Executing CHECK pass (checking for obvious problems).
+Checking module s81_static_hc_metadata_root...
+Found and reported 0 problems.
+
+16.9. Executing OPT pass (performing simple optimizations).
+
+16.9.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_hc_metadata_root.
+
+16.9.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_hc_metadata_root'.
+Computing hashes of 82 cells of `\s81_static_hc_metadata_root'.
+Finding duplicate cells in `\s81_static_hc_metadata_root'.
+Computing hashes of 79 cells of `\s81_static_hc_metadata_root'.
+Finding duplicate cells in `\s81_static_hc_metadata_root'.
+Computing hashes of 78 cells of `\s81_static_hc_metadata_root'.
+Finding duplicate cells in `\s81_static_hc_metadata_root'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+16.9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_hc_metadata_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~11 debug messages>
+
+16.9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_hc_metadata_root.
+Performed a total of 0 changes.
+
+16.9.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_hc_metadata_root'.
+Computing hashes of 78 cells of `\s81_static_hc_metadata_root'.
+Finding duplicate cells in `\s81_static_hc_metadata_root'.
+Removed a total of 0 cells.
+
+16.9.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_hc_metadata_root..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+16.9.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_hc_metadata_root.
+
+16.9.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+16.9.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_hc_metadata_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~11 debug messages>
+
+16.9.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_hc_metadata_root.
+Performed a total of 0 changes.
+
+16.9.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_hc_metadata_root'.
+Computing hashes of 78 cells of `\s81_static_hc_metadata_root'.
+Finding duplicate cells in `\s81_static_hc_metadata_root'.
+Removed a total of 0 cells.
+
+16.9.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_hc_metadata_root..
+
+16.9.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_hc_metadata_root.
+
+16.9.14. Finished fast OPT passes. (There is nothing left to do.)
+
+16.10. Executing WREDUCE pass (reducing word size of cells).
+Removed top 16 bits (of 32) from port Y of cell s81_static_hc_metadata_root.$or$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$231 ($or).
+Removed top 16 bits (of 32) from port A of cell s81_static_hc_metadata_root.$or$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$231 ($or).
+Removed top 16 bits (of 32) from port B of cell s81_static_hc_metadata_root.$or$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$231 ($or).
+Converting cell s81_static_hc_metadata_root.$neg$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$229 ($neg) from signed to unsigned.
+Removed top 1 bits (of 5) from port A of cell s81_static_hc_metadata_root.$neg$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$229 ($neg).
+Removed top 16 bits (of 32) from port Y of cell s81_static_hc_metadata_root.$and$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$228 ($and).
+Removed top 16 bits (of 32) from port B of cell s81_static_hc_metadata_root.$and$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$228 ($and).
+Removed top 16 bits (of 32) from port Y of cell s81_static_hc_metadata_root.$not$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$227 ($not).
+Removed top 16 bits (of 32) from port A of cell s81_static_hc_metadata_root.$not$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$227 ($not).
+Removed top 16 bits (of 32) from port Y of cell s81_static_hc_metadata_root.$shift$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$230 ($shift).
+Removed top 16 bits (of 32) from wire s81_static_hc_metadata_root.$not$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$227_Y.
+Removed top 16 bits (of 32) from wire s81_static_hc_metadata_root.$and$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$228_Y.
+Removed top 16 bits (of 32) from wire s81_static_hc_metadata_root.$or$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$231_Y.
+Removed top 16 bits (of 32) from wire s81_static_hc_metadata_root.$shift$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$226_Y.
+
+16.11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_hc_metadata_root..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+16.12. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+16.13. Executing OPT pass (performing simple optimizations).
+
+16.13.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_hc_metadata_root.
+
+16.13.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_hc_metadata_root'.
+Computing hashes of 78 cells of `\s81_static_hc_metadata_root'.
+Finding duplicate cells in `\s81_static_hc_metadata_root'.
+Removed a total of 0 cells.
+
+16.13.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_hc_metadata_root..
+
+16.13.4. Finished fast OPT passes.
+
+16.14. Executing SORT pass.
+
+16.15. Printing statistics.
+
+=== s81_static_hc_metadata_root ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       96 wires
+     1404 wire bits
+       49 public wires
+     1153 public wire bits
+       27 ports
+      220 port bits
+       78 cells
+        5   $adff
+        1   $and
+       20   $dff
+        2   $eq
+       17   $logic_and
+        8   $logic_not
+        6   $logic_or
+        6   $mux
+        2   $ne
+        1   $neg
+        1   $not
+        1   $or
+        3   $reduce_and
+        3   $reduce_or
+        1   $shift
+        1   $shiftx
+
+16.16. Executing CHECK pass (checking for obvious problems).
+Checking module s81_static_hc_metadata_root...
+Found and reported 0 problems.
+
+17. Executing ASYNC2SYNC pass.
+Replacing s81_static_hc_metadata_root.$procdff$259 ($adff): ARST=\rr [1], D=\emit_good, Q=\row_valid
+Replacing s81_static_hc_metadata_root.$procdff$264 ($adff): ARST=\rr [1], D=$0\assemble_fault[0:0], Q=\assemble_fault
+Replacing s81_static_hc_metadata_root.$procdff$274 ($adff): ARST=\rr [1], D=$0$lookahead\seen$209[15:0]$211, Q=\seen
+Replacing s81_static_hc_metadata_root.$procdff$284 ($adff): ARST=\rr [1], D=$0\reduce_fault[0:0], Q=\reduce_fault
+Replacing s81_static_hc_metadata_root.$procdff$308 ($adff): ARST=\rst_n, D={ \rr [0] 1'1 }, Q=\rr
+
+18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_hc_metadata_root..
+
+19. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: assembly_tag_gold (\assembly_tag_gold), assembly_tag_gate (\assembly_tag_gate) -> assembly_tag
+Presumably equivalent wires: seen_gold (\seen_gold), seen_gate (\seen_gate) -> seen
+Presumably equivalent wires: assemble_fault_gold (\assemble.fault_gold), assemble_fault_gate (\assemble_fault_gate) -> assemble_fault
+Presumably equivalent wires: assemble_slot_gold (\assemble_slot_gold), assemble_slot_gate (\assemble_slot_gate) -> assemble_slot
+Presumably equivalent wires: clk_gold (\clk_gold), clk_gate (\clk_gate) -> clk
+Presumably equivalent wires: destination_index_gold (\word_index_gold), destination_index_gate (\word_index_gate) -> destination_index
+Presumably equivalent wires: emit_good_gold (\assemble.emit_good_gold), emit_good_gate (\emit_good_gate) -> emit_good
+Presumably equivalent wires: emit_slot_gold (\emit_slot_gold), emit_slot_gate (\emit_slot_gate) -> emit_slot
+Presumably equivalent wires: emit_tag_gold (\emit_tag_gold), emit_tag_gate (\emit_tag_gate) -> emit_tag
+Presumably equivalent wires: lane_error_gold (\lane_error_gold), lane_error_gate (\lane_error_gate) -> lane_error
+Presumably equivalent wires: lane_valid_gold (\lane_valid_gold), lane_valid_gate (\lane_valid_gate) -> lane_valid
+Presumably equivalent wires: last_gold (\last_gold), last_gate (\last_gate) -> last
+Presumably equivalent wires: qualified_reduce_slot_gold (\qualified_reduce_slot_gold), qualified_reduce_slot_gate (\qualified_reduce_slot_gate) -> qualified_reduce_slot
+Presumably equivalent wires: rank_valid_gold (\rank_valid_gold), rank_valid_gate (\rank_valid_gate) -> rank_valid
+Presumably equivalent wires: reduce_fault_gold (\reduce.fault_gold), reduce_fault_gate (\reduce_fault_gate) -> reduce_fault
+Presumably equivalent wires: reduce_slot_gold (\reduce_slot_gold), reduce_slot_gate (\reduce_slot_gate) -> reduce_slot
+Presumably equivalent wires: row_tag_gold (\assemble.row_tag_gold), row_tag_gate (\row_tag_gate) -> row_tag
+Presumably equivalent wires: row_valid_gold (\assemble.row_valid_gold), row_valid_gate (\row_valid_gate) -> row_valid
+Presumably equivalent wires: rr_gold (\rr_gold), rr_gate (\rr_gate) -> rr
+Presumably equivalent wires: rst_n_gold (\rst_n_gold), rst_n_gate (\rst_n_gate) -> rst_n
+Presumably equivalent wires: rst_n_hc_gold (\rr_gold [1]), rst_n_hc_gate (\rr_gate [1]) -> rst_n_hc
+Presumably equivalent wires: seq_gold (\seq_gold), seq_gate (\seq_gate) -> seq
+Presumably equivalent wires: tag_gold (\tag_gold), tag_gate (\tag_gate) -> tag
+Presumably equivalent wires: word_error_gold (\assemble.word_error_gold), word_error_gate (\word_error_gate) -> word_error
+Presumably equivalent wires: word_index_gold (\word_index_gold), word_index_gate (\word_index_gate) -> word_index
+Presumably equivalent wires: word_last_gold (\reduce.identity[17]_gold [0]), word_last_gate (\identity[17]_gate [0]) -> word_last
+Presumably equivalent wires: word_seq_gold (\reduce.identity[17]_gold [16:1]), word_seq_gate (\identity[17]_gate [16:1]) -> word_seq
+Presumably equivalent wires: word_tag_gold (\reduce.identity[17]_gold [48:17]), word_tag_gate (\identity[17]_gate [48:17]) -> word_tag
+Presumably equivalent wires: word_valid_gold (\word_valid_gold), word_valid_gate (\word_valid_gate) -> word_valid
+Presumably equivalent wires: write_good_gold (\assemble.write_good_gold), write_good_gate (\write_good_gate) -> write_good
+Changing input SRST of cell $procdff$284_gate ($sdff): \rr_gate [1] -> \rst_n_hc
+Changing input SRST of cell $procdff$274_gate ($sdff): \rr_gate [1] -> \rst_n_hc
+Changing input SRST of cell $procdff$264_gate ($sdff): \rr_gate [1] -> \rst_n_hc
+Changing input D of cell $procdff$259_gate ($sdff): \emit_good_gate -> \emit_good
+Changing input SRST of cell $procdff$259_gate ($sdff): \rr_gate [1] -> \rst_n_hc
+Changing input A of cell $and$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:45$228_gate ($and): \seen_gate -> \seen
+Changing input A of cell $eq$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:38$200_gate ($eq): \assembly_tag_gate -> \assembly_tag
+Changing input B of cell $eq$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:38$200_gate ($eq): \identity[17]_gate [48:17] -> \word_tag
+Changing input A of cell $eq$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:39$207_gate ($eq): \assembly_tag_gate -> \assembly_tag
+Changing input A of cell $eq$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:50$234_gate ($logic_not): \seen_gate -> \seen
+Changing input A of cell $logic_and$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:27$174_gate ($logic_and): \word_valid_gate -> \word_valid
+Changing input A of cell $logic_and$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:32$185_gate ($logic_and): \word_valid_gate -> \word_valid
+Changing input B of cell $logic_and$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:32$185_gate ($logic_and): \word_error_gate -> \word_error
+Changing input A of cell $logic_and$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:36$192_gate ($logic_and): \word_valid_gate -> \word_valid
+Changing input A of cell $logic_and$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:50$235_gate ($logic_and): \write_good_gate -> \write_good
+Changing input A of cell $logic_not$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:32$189_gate ($logic_not): \word_valid_gate -> \word_valid
+Changing input A of cell $logic_not$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:38$194_gate ($logic_not): \word_error_gate -> \word_error
+Changing input A of cell $logic_not$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:44$217_gate ($logic_not): \write_good_gate -> \write_good
+Changing input A of cell $logic_not$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:44$220_gate ($logic_not): \emit_good_gate -> \emit_good
+Changing input S of cell $auto$async2sync.cc:262:execute$314_gate ($mux): \rr_gate [1] -> \rst_n_hc
+Changing input S of cell $auto$async2sync.cc:262:execute$316_gate ($mux): \rr_gate [1] -> \rst_n_hc
+Changing input S of cell $auto$async2sync.cc:262:execute$318_gate ($mux): \rr_gate [1] -> \rst_n_hc
+Changing input S of cell $auto$async2sync.cc:262:execute$320_gate ($mux): \rr_gate [1] -> \rst_n_hc
+Changing input A of cell $procmux$236_gate ($mux): \assembly_tag_gate -> \assembly_tag
+Changing input B of cell $procmux$236_gate ($mux): \identity[17]_gate [48:17] -> \word_tag
+Changing input A of cell $procmux$238_gate ($mux): \row_tag_gate -> \row_tag
+Changing input B of cell $procmux$238_gate ($mux): \assembly_tag_gate -> \assembly_tag
+Changing input S of cell $procmux$238_gate ($mux): \emit_good_gate -> \emit_good
+Changing input A of cell $procmux$244_gate ($mux): \seen_gate -> \seen
+Changing input S of cell $procmux$244_gate ($mux): \write_good_gate -> \write_good
+Changing input A of cell $procmux$249_gate ($mux): \assemble_fault_gate -> \assemble_fault
+Changing input A of cell $procmux$251_gate ($mux): \reduce_fault_gate -> \reduce_fault
+Changing input A of cell $reduce_and$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:39$205_gate ($reduce_and): \seen_gate -> \seen
+Changing input A of cell $shiftx$rtl/dsrom_sys/s81_static_collective/physical_roots/s81_static_hc_metadata_root.sv:38$196_gate ($shiftx): \seen_gate -> \seen
+Changing input D of cell $procdff$308_gate ($sdff): { \rr_gate [0] 1'1 } -> { \rr [0] 1'1 }
+Changing input SRST of cell $flatten\reduce.$procdff$95_gold ($sdff): \rr_gold [1] -> \rst_n_hc
+Changing input SRST of cell $flatten\assemble.$procdff$131_gold ($sdff): \rr_gold [1] -> \rst_n_hc
+Changing input SRST of cell $flatten\assemble.$procdff$126_gold ($sdff): \rr_gold [1] -> \rst_n_hc
+Changing input D of cell $flatten\assemble.$procdff$121_gold ($sdff): \assemble.emit_good_gold -> \emit_good
+Changing input SRST of cell $flatten\assemble.$procdff$121_gold ($sdff): \rr_gold [1] -> \rst_n_hc
+Changing input A of cell $flatten\assemble.$and$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:57$47_gold ($and): \seen_gold -> \seen
+Changing input A of cell $flatten\assemble.$eq$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:50$19_gold ($eq): \assembly_tag_gold -> \assembly_tag
+Changing input B of cell $flatten\assemble.$eq$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:50$19_gold ($eq): \reduce.identity[17]_gold [48:17] -> \word_tag
+Changing input A of cell $flatten\assemble.$eq$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:51$26_gold ($eq): \assembly_tag_gold -> \assembly_tag
+Changing input A of cell $flatten\assemble.$eq$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:62$53_gold ($logic_not): \seen_gold -> \seen
+Changing input A of cell $flatten\assemble.$logic_and$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:62$54_gold ($logic_and): \assemble.write_good_gold -> \write_good
+Changing input A of cell $flatten\assemble.$logic_not$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:50$13_gold ($logic_not): \assemble.word_error_gold -> \word_error
+Changing input A of cell $flatten\assemble.$logic_not$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:56$36_gold ($logic_not): \assemble.write_good_gold -> \write_good
+Changing input A of cell $flatten\assemble.$logic_not$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:56$39_gold ($logic_not): \assemble.emit_good_gold -> \emit_good
+Changing input S of cell $auto$async2sync.cc:262:execute$154_gold ($mux): \rr_gold [1] -> \rst_n_hc
+Changing input S of cell $auto$async2sync.cc:262:execute$156_gold ($mux): \rr_gold [1] -> \rst_n_hc
+Changing input S of cell $auto$async2sync.cc:262:execute$158_gold ($mux): \rr_gold [1] -> \rst_n_hc
+Changing input A of cell $flatten\assemble.$procmux$76_gold ($mux): \assembly_tag_gold -> \assembly_tag
+Changing input B of cell $flatten\assemble.$procmux$76_gold ($mux): \reduce.identity[17]_gold [48:17] -> \word_tag
+Changing input A of cell $flatten\assemble.$procmux$78_gold ($mux): \assemble.row_tag_gold -> \row_tag
+Changing input B of cell $flatten\assemble.$procmux$78_gold ($mux): \assembly_tag_gold -> \assembly_tag
+Changing input S of cell $flatten\assemble.$procmux$78_gold ($mux): \assemble.emit_good_gold -> \emit_good
+Changing input A of cell $flatten\assemble.$procmux$84_gold ($mux): \seen_gold -> \seen
+Changing input S of cell $flatten\assemble.$procmux$84_gold ($mux): \assemble.write_good_gold -> \write_good
+Changing input A of cell $flatten\assemble.$procmux$89_gold ($mux): \assemble.fault_gold -> \assemble_fault
+Changing input A of cell $flatten\assemble.$reduce_and$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:51$24_gold ($reduce_and): \seen_gold -> \seen
+Changing input A of cell $flatten\assemble.$shiftx$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:50$15_gold ($shiftx): \seen_gold -> \seen
+Changing input A of cell $flatten\reduce.$logic_and$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:26$58_gold ($logic_and): \word_valid_gold -> \word_valid
+Changing input A of cell $flatten\reduce.$logic_and$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:30$67_gold ($logic_and): \word_valid_gold -> \word_valid
+Changing input B of cell $flatten\reduce.$logic_and$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:30$67_gold ($logic_and): \assemble.word_error_gold -> \word_error
+Changing input A of cell $flatten\reduce.$logic_not$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:30$71_gold ($logic_not): \word_valid_gold -> \word_valid
+Changing input S of cell $auto$async2sync.cc:262:execute$160_gold ($mux): \rr_gold [1] -> \rst_n_hc
+Changing input A of cell $flatten\reduce.$procmux$74_gold ($mux): \reduce.fault_gold -> \reduce_fault
+Changing input A of cell $logic_and$results/physical/s81_collective_graph_1103/rootcuts/metadata_reference.sv:83$10_gold ($logic_and): \word_valid_gold -> \word_valid
+Changing input D of cell $procdff$146_gold ($sdff): { \rr_gold [0] 1'1 } -> { \rr [0] 1'1 }
+Setting undriven nets to undef: $auto$wreduce.cc:514:run$149_gold [31:16]
+Setting undriven nets to undef: $auto$wreduce.cc:514:run$150_gold [31:16]
+Setting undriven nets to undef: $auto$wreduce.cc:514:run$151_gold [31:16]
+Setting undriven nets to undef: $auto$wreduce.cc:514:run$152_gold [31:16]
+Setting undriven nets to undef: $auto$wreduce.cc:514:run$312_gate [31:16]
+Setting undriven nets to undef: $auto$wreduce.cc:514:run$311_gate [31:16]
+Setting undriven nets to undef: $auto$wreduce.cc:514:run$309_gate [31:16]
+
+20. Executing HIERARCHY pass (managing design hierarchy).
+
+20.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+20.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+21. Executing EQUIV_STRUCT pass.
+Running equiv_struct on module equiv:
+  Starting iteration 1.
+    Fwd merging 2 $equiv cells (from group of 2) using strategy deduplicate:
+      Merging cells $auto$equiv_make.cc:258:find_same_wires$414 and $auto$equiv_make.cc:295:find_same_wires$413.
+  Starting iteration 2.
+    Nothing to merge.
+  Performed a total of 1 merges in module equiv.
+
+22. Executing EQUIV_SIMPLE pass.
+Found 143 unproven $equiv cells (17 groups) in equiv:
+  Trying to prove $equiv for \word_valid:ezsat
+ success!
+  Trying to prove $equiv for \word_error:ezsat
+ success!
+ Grouping SAT models for \word_tag:
+  Trying to prove $equiv for \word_tag [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \word_tag [1]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [2]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [3]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [4]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [5]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [6]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [7]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [8]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [9]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [10]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [11]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [12]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [13]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [14]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [15]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [16]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [17]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [18]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [19]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [20]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [21]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [22]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [23]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [24]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [25]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [26]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [27]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [28]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [29]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [30]:ezsat
+ success!
+  Trying to prove $equiv for \word_tag [31]:ezsat
+ success!
+ Grouping SAT models for \word_seq:
+  Trying to prove $equiv for \word_seq [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \word_seq [1]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [2]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [3]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [4]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [5]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [6]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [7]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [8]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [9]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [10]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [11]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [12]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [13]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [14]:ezsat
+ success!
+  Trying to prove $equiv for \word_seq [15]:ezsat
+ success!
+  Trying to prove $equiv for \word_last:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \reduce_fault:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \rst_n_hc:ezsat
+ success!
+  Trying to prove $equiv for \qualified_reduce_slot:ezsat
+ success!
+  Trying to prove $equiv for \write_good:ezsat
+ success!
+  Trying to prove $equiv for \emit_good:ezsat
+ success!
+ Grouping SAT models for \destination_index:
+  Trying to prove $equiv for \destination_index [0]:ezsat
+ success!
+  Trying to prove $equiv for \destination_index [1]:ezsat
+ success!
+  Trying to prove $equiv for \destination_index [2]:ezsat
+ success!
+  Trying to prove $equiv for \destination_index [3]:ezsat
+ success!
+  Trying to prove $equiv for \row_valid:ezsat
+ success!
+ Grouping SAT models for \row_tag:
+  Trying to prove $equiv for \row_tag [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \row_tag [1]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [2]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [3]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [4]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [5]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [6]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [7]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [8]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [9]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [10]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [11]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [12]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [13]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [14]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [15]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [16]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [17]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [18]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [19]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [20]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [21]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [22]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [23]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [24]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [25]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [26]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [27]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [28]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [29]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [30]:ezsat
+ success!
+  Trying to prove $equiv for \row_tag [31]:ezsat
+ success!
+  Trying to prove $equiv for \assemble_fault:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \rr [0]:ezsat
+ success!
+ Grouping SAT models for \assembly_tag:
+  Trying to prove $equiv for \assembly_tag [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [1]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [2]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [3]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [4]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [5]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [6]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [7]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [8]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [9]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [10]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [11]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [12]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [13]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [14]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [15]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [16]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [17]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [18]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [19]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [20]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [21]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [22]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [23]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [24]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [25]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [26]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [27]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [28]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [29]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [30]:ezsat
+ success!
+  Trying to prove $equiv for \assembly_tag [31]:ezsat
+ success!
+ Grouping SAT models for \seen:
+  Trying to prove $equiv for \seen [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \seen [1]:ezsat
+ success!
+  Trying to prove $equiv for \seen [2]:ezsat
+ success!
+  Trying to prove $equiv for \seen [3]:ezsat
+ success!
+  Trying to prove $equiv for \seen [4]:ezsat
+ success!
+  Trying to prove $equiv for \seen [5]:ezsat
+ success!
+  Trying to prove $equiv for \seen [6]:ezsat
+ success!
+  Trying to prove $equiv for \seen [7]:ezsat
+ success!
+  Trying to prove $equiv for \seen [8]:ezsat
+ success!
+  Trying to prove $equiv for \seen [9]:ezsat
+ success!
+  Trying to prove $equiv for \seen [10]:ezsat
+ success!
+  Trying to prove $equiv for \seen [11]:ezsat
+ success!
+  Trying to prove $equiv for \seen [12]:ezsat
+ success!
+  Trying to prove $equiv for \seen [13]:ezsat
+ success!
+  Trying to prove $equiv for \seen [14]:ezsat
+ success!
+  Trying to prove $equiv for \seen [15]:ezsat
+ success!
+Proved 143 previously unproven $equiv cells.
+
+23. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+24. Executing EQUIV_STATUS pass.
+Found 143 $equiv cells in equiv:
+  Of those cells 143 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+Warnings: 2 unique messages, 2 total
+End of script. Logfile hash: 32e6a4dd26, time: 0.12s, user: 0.13s, system: 0.01s, MEM: 28.45 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 51% 1x equiv_simple (0 sec), 13% 12x opt_clean (0 sec), ...
