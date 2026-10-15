@@ -815,55 +815,17 @@ localparam integer W_ME_AMC = 1;
     wire [SW-1:0] su_va_re;
     wire [SW*AW-1:0] su_va_addr;
     wire [SW*32-1:0] su_va_q;
-    reg embed_active, embed_scale_pending;
-    reg [15:0] embed_scale_hold;
-    reg [SW-1:0] embed_sel;
-    reg [SW*$clog2(EMB_CODE_LANES)-1:0] embed_lanes;
     wire [SW-1:0] embed_faults;
-    assign embed_scale_re = (INT8_EMBED != 0) && start && st == S_IDLE;
-    assign embed_scale_addr = token;
-    assign embed_code_re = (INT8_EMBED != 0) && (|(su_va_re & {SW{embed_active}}));
-    // The stream's element address is AW bits; token*HID wraps for vocab
-    // rows >= 2^(AW-log2(HID)). Recover the in-row offset from those low
-    // bits, then form the code-word address from the full NW-bit token.
-    assign embed_code_addr = (QWEN_FULLSHAPE != 0) ?
-        ((tok_r * (HID / EMB_CODE_LANES)) +
-         (((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) /
-          EMB_CODE_LANES)) :
-        ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES));
-    assign va_re = su_va_re & ~({SW{(INT8_EMBED != 0) && embed_active}});
-    assign va_addr = su_va_addr;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            embed_active <= 1'b0;
-            embed_scale_pending <= 1'b0;
-            embed_sel <= 0;
-        end else begin
-            if (su_go) embed_active <= (INT8_EMBED != 0) && a_src;
-            embed_scale_pending <= embed_scale_re;
-            embed_sel <= su_va_re & {SW{(INT8_EMBED != 0) && embed_active}};
-        end
-    end
-    always @(posedge clk) begin
-        if (embed_scale_pending) embed_scale_hold <= embed_scale_q;
-    end
-    genvar el;
-    generate if (INT8_EMBED != 0) begin : g_int8_embed
-    for (el = 0; el < SW; el = el + 1) begin : g_embed_decode
-        localparam integer ELI = $clog2(EMB_CODE_LANES);
-        always @(posedge clk) embed_lanes[el*ELI +: ELI] <= su_va_addr[el*AW +: ELI];
-        wire [31:0] decoded;
-        wire bad;
-        ot_hdc_qwen_int8_embed_decode u_decode (
-            .code(embed_code_q[8*embed_lanes[el*ELI +: ELI] +: 8]),
-            .scale(embed_scale_hold), .value(decoded), .fault(bad));
-        assign su_va_q[el*32 +: 32] = embed_sel[el] ? decoded : va_q[el*32 +: 32];
-        assign embed_faults[el] = embed_sel[el] && bad;
-    end
-    end else begin : g_plain_embed
-        assign su_va_q = va_q;
-        assign embed_faults = 0;
-    end endgenerate
+    ot_qwen_a_operand_gateway_v1 #(.SW(SW),.AW(AW),.NW(NW),.HID(HID),
+      .EMB_CODE_LANES(EMB_CODE_LANES),.EMB_ADDR_BASE(EMB_ADDR_BASE),
+      .INT8_EMBED(INT8_EMBED),.QWEN_FULLSHAPE(QWEN_FULLSHAPE)) u_a_gateway (
+      .clk(clk),.rst_n(rst_n),.start_idle(start && st == S_IDLE),
+      .su_go(su_go),.a_src(a_src),.token(token),.tok_r(tok_r),
+      .a_re(su_va_re),.a_addr(su_va_addr),.a_q(su_va_q),
+      .vm_re(va_re),.vm_addr(va_addr),.vm_q(va_q),
+      .embed_code_re(embed_code_re),.embed_code_addr(embed_code_addr),.embed_code_q(embed_code_q),
+      .embed_scale_re(embed_scale_re),.embed_scale_addr(embed_scale_addr),.embed_scale_q(embed_scale_q),
+      .embed_faults(embed_faults));
     // -- engine clock enable (ME_STALL) ------------------------------------------
     //: rst_n forces the enable so the gated registers see reset edges (see
     //: ot_hdc_cg).  The enable is combinational from the supply's view of the

@@ -161,6 +161,25 @@ def qwen_xpf_static_control_model(entries=4, program_words=64):
                 qualification='mechanism bench only; actual producer trace/calendar, native pin/reset/clock, area and measured layer cost remain unqualified')
 
 
+
+def qwen_a_operand_gateway_model(octets=1):
+    """Partition existing exact INT8 decode/VM mux state beside SU and VM."""
+    if octets not in (1,8):raise ValueError('one existing gateway or eight full-codeword octets')
+    return dict(schema='opentallas.qwen-a-operand-gateway.v1',replicas=octets,
+        register_bits=64*6+64+octets*18,incremental_register_bits=(octets-1)*18,
+        decoder_count=64,INT8_scale_products_per_cycle=64,return_mux_bits=2048,MACs_per_cycle=0,
+        SRAM_macros_added=0,clock_roots_added=octets,
+        memory_port_bytes_per_cycle=dict(code=64,scale=2,VM_A=256),
+        boundary_bits_per_cycle=dict(SU_request=1600,VM_request=1600,VM_return=2048,SU_return=2048,
+                                     code_to_each_gateway=512,scale_to_each_gateway=16,control=39,fault=64),
+        fanout=dict(code_word=octets,scale=octets,epoch_owner=1),
+        mux_demux_cost='64 unchanged INT8 decoders and64x32 two-input return mux; split code stays512bits peroctet',
+        logical_data_edge_delta=0,latency='unchanged local state edges; physical phase and transport require measured native route',
+        outline_um=None,slot_fit='UNASSIGNED; geometry owner must bind physical homes and pin reach',
+        price_policy='no repricing or new timing assumptions; activity ledger covers sourceprogramme only',
+        qualification='RTL equivalence component; no full token, cut, native physical or throughput claim')
+
+
 def qwen_static_segment_calendar_model():
     """Replace runtime segment/collective waits with three compiled windows."""
     return dict(schema='opentallas.qwen-static-segment-calendar.v1',replicas=1,

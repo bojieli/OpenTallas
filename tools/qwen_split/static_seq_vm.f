@@ -1,3 +1,4 @@
+rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv
 physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
 rtl/hdc/ot_hdc_delay.sv
 rtl/hdc/ot_hdc_dyn_ttiles.sv
