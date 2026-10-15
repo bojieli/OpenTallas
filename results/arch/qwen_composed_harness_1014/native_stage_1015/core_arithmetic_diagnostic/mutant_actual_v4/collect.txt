@@ -1,0 +1,13 @@
+2
+rank evaluation parallel x8
+seed /srv/opentallas-scratch/codex/qwen-native-fulltoken-1014/banks/oracle/cold_token0_first2/layer0/vm_x_fp32.hex head_first 0 layer 0
+FAIL actual output mismatch; refusing warm bank transition
+PROGRESS core_edges 25500 layer_index 0 head 0 dispatch 1 begun 1 running 8 core_evals 51950 skipped 101049 memo_hits 0 memo_verified 0 memo_records 0 wall_s 2275.78
+total 28
+drwxrwxr-x  3 ubuntu ubuntu 4096 Oct 15 02:36 .
+drwxrwxr-x 10 ubuntu ubuntu 4096 Oct 15 01:57 ..
+drwxrwxr-x  4 ubuntu ubuntu 4096 Oct 15 02:36 actual
+-rw-rw-r--  1 ubuntu ubuntu    2 Oct 15 02:36 executable_status.txt
+-rw-rw-r--  1 ubuntu ubuntu 8604 Oct 15 02:36 run.err
+-rw-rw-r--  1 ubuntu ubuntu    0 Oct 15 01:57 run.log
+108

@@ -1,0 +1,12 @@
+{
+  "schema": "opentallas.qwen_rtlfp_layer0_mutant.v1",
+  "collected": "2026-10-15T05:11:22-07:00",
+  "run": "EPYC4 unit oth-ubuntu-1452218-1792054674 session16755 PID1452271 (terminal; process absent at collection)",
+  "scratch": "/srv/opentallas-scratch/claude/qwen-wholetoken-1014/qfunc_rtlfp_2328/mutant_actual_v4",
+  "binary_sha256": "191a9787551e754f784081dea846b3c8c5fd7bbcc67bf29cd4744fc6466f3ac0 (same binary as positive_v4 layer0 PASS, no rebuild)",
+  "mutant": "layer0 rank3 weight mutant (mutant_l0r3), seed cold_token0_first2/layer0",
+  "executable_status": 2,
+  "verdict": "MUTANT REJECTED by numerical comparison: 'FAIL actual output mismatch; refusing warm bank transition' after 25500 core edges / 2275.8 s (cohort dispatch reached, 8 ranks running); not an abort or compiler/link failure",
+  "positive": "positive_v4 layer0 PASS errors 0 / 25585 core edges / 3139.96 s (same binary)",
+  "scope": "DIAGNOSTIC core arithmetic: LV6 G3072 core FP units are RTL; attention service FP still C-DPI, ROM/VM C++ arrays, modeled internal links => NOT native full-layer qualification"
+}
