@@ -1,5 +1,5 @@
 {
- "name": "qvm_su_bank_ctrl_native-np1-82944166c",
+ "name": "qvm_su_bank_ctrl_native-np1-f9e55e7a5",
  "block": "qvm_su_bank_ctrl_native",
  "ref_tile": true,
  "owner": "Codex:q_vm_physical",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex/q-vm-physical-1015",
-  "commit": "82944166c",
+  "commit": "f9e55e7a5",
   "extra_paths": [
    "rtl/qwen_sys/vm_native_physical_20261015",
    "rtl/qwen_sys/vm_plane_20261013",
@@ -112,7 +112,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qvm_su_bank_ctrl_native/qvm_su_bank_ctrl_native-np1-82944166c"
+   "to": "results/rtl/ref_tile/qvm_su_bank_ctrl_native/qvm_su_bank_ctrl_native-np1-f9e55e7a5"
   }
  ],
  "cycles_added": 0,
