@@ -1,0 +1,175 @@
+{
+ "name": "qfd_ucie_gearbox_r10",
+ "top": "qfd_ucie_six_five",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qfd_ucie_six_five.sv"
+ ],
+ "params": {},
+ "clock_port": "core_ck",
+ "clock_ports": [
+  "core_ck",
+  "fdi_ck",
+  "fdi_rx_ck",
+  "blk_tx_ck",
+  "blk_rx_ck"
+ ],
+ "clock": "multiple_cts_roots",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "core_ck"
+   ],
+   "inputs": [
+    "tx_valid",
+    "tx_frame",
+    "rst_n"
+   ],
+   "outputs": [
+    "rx_valid",
+    "rx_frame",
+    "core_fault"
+   ]
+  },
+  "fdi": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "fdi_ck"
+   ],
+   "inputs": [
+    "phy_rx_valid"
+   ],
+   "outputs": [
+    "phy_tx_valid",
+    "phy_tx_frame",
+    "fdi_fault"
+   ]
+  },
+  "fdirx": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "fdi_rx_ck"
+   ],
+   "inputs": [
+    "phy_rx_frame"
+   ],
+   "outputs": []
+  },
+  "blktx": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "blk_tx_ck"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "blkrx": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "blk_rx_ck"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "outline": {
+  "w": 129.6,
+  "h": 216.0
+ },
+ "recipe": 2,
+ "io_flop_at_pins": false,
+ "macros": [],
+ "pins": {
+  "W": [
+   "tx_valid",
+   "tx_frame",
+   "rx_valid",
+   "rx_frame",
+   "core_fault"
+  ],
+  "E": [
+   "phy_tx_valid",
+   "phy_tx_frame",
+   "phy_rx_valid",
+   "phy_rx_frame",
+   "fdi_fault"
+  ],
+  "S": [
+   "core_ck",
+   "fdi_ck",
+   "fdi_rx_ck",
+   "blk_tx_ck",
+   "blk_rx_ck",
+   "rst_n"
+  ],
+  "N": []
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "conservative_timing_envelope": "All five roots are signed off as related same-PLL phase-0 roots at the common 833.333 ps leaf period. True periods: core 833.333, fdi/fdi_rx 1000, blk_tx/blk_rx 5000 (one PLL, aligned 5 ns frame). The r10 RTL has no core<->FDI path; every true cross-root setup relation is >= 833.333 ps (results/rtl/qwen_coll_io_1014/block_stage_sta_r10_1015/r10/record.json, ordinary STA from one 200 MHz reference, no exceptions) and every true hold relation is >= the modelled coincident-edge 0, so the common-period sign-off is strictly tighter than the true relation for every path. Die STA applies the true generated clocks.",
+ "why_floorplan": "W face = core side (597+1 in, 597+1 out, fault); E face = UCIe FDI side (1043+1 TX, 1043+1 RX, fault) to abut the PHY W-face pin block; S = five roots + reset. Block registers (txblk/rxblk) between the two faces.",
+ "slot_change_request": "NEW leaf inside the compute-die IO collective band next to ot_qfd_ucie_x64_phy W face (pin block y 600..700.4). Outline provisional, sized by this gate; compute lead / geometry must grant the slot before routing.",
+ "structural_change": "r10 replaces the r9 direct 1.2 GHz core <-> 1 GHz FDI gearbox (ordinary STA relation 166.7 ps, slack -48..-633 ps pre-placement) with a 200 MHz block stage: 4x3588 payload FF (r9: 5x3588), constant 19 core edges (r9: 24), same 1043-bit 4-of-5 FDI beat calendar.",
+ "job": {
+  "owner": "Claude:Q-COLL",
+  "branch": "claude/qwen-coll-io-1014",
+  "tag": "r10",
+  "purpose": "Harden the r10 block-stage UCIe gearbox leaf; measure area and TT/FF at the conservative common 833.333 ps envelope.",
+  "benches": [
+   {
+    "name": "gearbox_r10_component",
+    "cmd": "python3 tools/qwen_ucie_six_five_bench.py --out {RUN}/gearbox_r10",
+    "expect": "pass",
+    "pass_regex": "PASS qfd_ucie_six_five r10 block-stage component",
+    "threads": 4,
+    "peak_ram_gb": 8
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/tb_qfd_ucie_six_five.sv",
+   "tools/qwen_ucie_six_five_bench.py",
+   "results/rtl/qwen_coll_io_1014/block_stage_component_r10_1015",
+   "results/rtl/qwen_coll_io_1014/block_stage_sta_r10_1015"
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
