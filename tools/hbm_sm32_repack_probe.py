@@ -67,6 +67,56 @@ def run(model, compact, clearance=21.6):
                                 'real-view die TT setup/FF hold and DRC0'])
 
 
+def repack(model, probe):
+    """Construct the full count-preserving relocation, using only source outlines.
+
+    Endpoint moves use existing empty core rows; the large SW collective moves
+    above the north compute band. Four small attention rows move 43.2um inward.
+    This changes placement and therefore requires complete pin/routing/timing
+    regeneration; no old route or clock plan is transferable proof.
+    """
+    insts = pickle.loads(model.read_bytes())['insts']
+    blocks = {n: list(v) for n, v in insts.items() if v[1] != 'waypoint'}
+    for item in probe['proposed_sms']:
+        blocks[item['name']][2:7] = item['box_um'] + [item['orient']]
+    moves = {
+        'ep_S0': (11175.84,7045.92), 'ep_S1': (18761.76,7045.92),
+        'ep_S4': (16139.52,7045.92), 'ep_N0': (16665.408,20008.08),
+        'ep_N1': (13262.4,19135.44), 'ep_N2': (15884.64,19135.44),
+        'ep_N3': (18506.88,19135.44), 'hb_coll_NW': (11175.84,12474.72),
+        'hb_coll_SE': (18932.544,12474.72), 'hb_coll_SW': (10986.912,18325.44),
+    }
+    for name, v in blocks.items():
+        if name.startswith(('at_SW_0','at_SE_0')):
+            moves[name] = (v[2], round(v[3]+43.2,4))
+        if name.startswith(('at_NW_1','at_NE_1')):
+            moves[name] = (v[2], round(v[3]-43.2,4))
+    for name, xy in moves.items():
+        blocks[name][2:4] = xy
+    overlaps, outside = [], []
+    names = sorted(blocks)
+    for i, name in enumerate(names):
+        _, _, x, y, w, h, _ = blocks[name]
+        if x < 0 or y < 0 or x+w > 32984.288+1e-6 or y+h > 25980.528+1e-6:
+            outside.append(name)
+        for peer in names[i+1:]:
+            _, _, bx, by, bw, bh, _ = blocks[peer]
+            if x < bx+bw-1e-6 and bx < x+w-1e-6 and y < by+bh-1e-6 and by < y+h-1e-6:
+                overlaps.append([name,peer])
+    assert len([v for v in blocks.values() if v[1]=='sm']) == 32
+    assert len(blocks) == probe['retained_non_sm_count']+32
+    return dict(status='GEOMETRIC_CANDIDATE_NOT_PHYSICALLY_QUALIFIED',
+                retained_master_instances=len(blocks), sm_count=32,
+                non_sm_removed=[], non_sm_resized=[], orientation_90_count=0,
+                moved_non_sm_count=len(moves), moved_non_sm={n: dict(old_xy_um=list(insts[n][2:4]),
+                new_xy_um=list(xy)) for n,xy in moves.items()},
+                overlaps=overlaps,outside=outside,instances=blocks,
+                limitations=['compact tile outline is a plan pending real route',
+                             'all displaced endpoint/collective and attention paths need new static cycle prices',
+                             'pin faces, PG, detailed cut capacity, clocks and timing are unverified',
+                             'large SW collective moved to north core: logical quadrant reach must be repriced'])
+
+
 if __name__ == '__main__':
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--model',type=Path,required=True)
@@ -74,7 +124,9 @@ if __name__ == '__main__':
     ap.add_argument('--out',type=Path,required=True)
     args=ap.parse_args()
     result=run(args.model,args.compact)
+    result['full_repack_candidate']=repack(args.model,result)
     args.out.parent.mkdir(parents=True,exist_ok=True)
     args.out.write_text(json.dumps(result,indent=1)+'\n')
     print(json.dumps({k:result[k] for k in ('sm_count','total_sm_mm2','outside')}))
-    print('Obstructions:',', '.join(result['unique_obstructions']))
+    print('Repack:',{k:result['full_repack_candidate'][k] for k in ('retained_master_instances','sm_count','overlaps','outside')})
+    print('Original obstructions:',', '.join(result['unique_obstructions']))
