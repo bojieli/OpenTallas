@@ -1,0 +1,23 @@
+{
+  "job": "qvm_bank_entries_my_native-ne2-8e2cd3d55",
+  "scope": "Additive offline measurement/export only; original frozen helpers and physical inputs preserved; not normal collection or closure",
+  "helper_commits": [
+    "20cc62be8",
+    "69410535e"
+  ],
+  "current_helper_sha256": {
+    "tools/closure_loop/meas_resta.py": "983f0a6887fd2289698e01649a55acc5839a0f00bb498b722134753a92beab72",
+    "tools/closure_loop/closure_loop.py": "bfc24fb374fd324c43580902e44e3f6645b02b4b0820043d411f42896a1d80ed",
+    "tools/closure_loop/test_meas_resta_corner.py": "327f709fc5c16203f3e0e65a176d904d074e7f40b3e2b1f81b1d970e179c332f",
+    "tools/tt_views/view_export.py": "0afa30db35fd1cd94bfe6a4b27c297e136a6f7cd5973703a75af9cd2dc195e4a",
+    "tools/tt_views/test_view_export_corner.py": "278f43e67ebf4bfe1b8d5457b80da1354c1b75b1cf2913e112c510d62ca407ee"
+  },
+  "measurement_receipt_sha256": "d313ee0dba1503ca8af1d802326f92b5691698fe343d2e919ebe60f91776c04d",
+  "export_receipt_sha256": "aacdaa1174cb305db2327bd2a25cfcf891331c26edc5675a85af41f666e7c699",
+  "original_physical_sha256": {
+    "6_final.odb": "1c53f39ef53110e9670791d575da419ba74d22290d0ae02fc06adc8342885e49",
+    "6_final.sdc": "277014d19bcfd6fcb7a02c86aa62512390d6b79885cc7c71bba7d98404649143",
+    "6_final.spef": "8882c4f270b9420cd7fa6ec15272a7f2d81d3bc7764a4ee8c87d346ba8a10169"
+  },
+  "job_recovery": "BLOCKED pending reviewed explicit postroute frozen-helper recovery; do not clear freeze or replace original manifests"
+}
