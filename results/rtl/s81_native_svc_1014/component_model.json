@@ -1,6 +1,6 @@
 {
   "640": {
-    "status": "candidate only; native full layer and physical route unqualified",
+    "status": "routed leaf CLOSED; full native service and token adoption unqualified",
     "source": "rtl/dsrom_sys/s81_ph/svc/ot_s81_svc_probability_frame.sv",
     "arithmetic": {
       "MACs_per_cycle": 0,
@@ -56,9 +56,17 @@
       "per_q_face_tracks": 515,
       "actual_assigned_join_max_um": 25.464,
       "raw_source_join_capacity_proven": false,
-      "clock_TT_max_ps": 171.4,
-      "clock_TT_spread_ps": 20.7,
-      "routed_view_qualified": false
+      "clock_TT_max_ps": 157.2,
+      "clock_TT_spread_ps": 20.9,
+      "clock_TT_boundary_min_ps": 136.3,
+      "clock_TT_boundary_max_ps": 152.7,
+      "TT_setup_margin_ps": 157.0,
+      "FF_hold_margin_ps": 22.16,
+      "DRC": 0,
+      "routed_view_qualified": true,
+      "exact_assigned_center_match": false,
+      "side_pin_y_quantization_um": 0.012,
+      "routed_proof": "results/closure_loop/s81_svc_probability_native_ref-native2-eb1c52d15/verdict.json"
     },
     "timing": {
       "clock_Hz": 1200000000,
@@ -88,7 +96,7 @@
     }
   },
   "133": {
-    "status": "candidate only; native full layer and physical route unqualified",
+    "status": "routed leaf CLOSED; full native service and token adoption unqualified",
     "source": "rtl/dsrom_sys/s81_ph/svc/ot_s81_svc_probability_frame.sv",
     "arithmetic": {
       "MACs_per_cycle": 0,
@@ -144,9 +152,17 @@
       "per_q_face_tracks": 515,
       "actual_assigned_join_max_um": 25.464,
       "raw_source_join_capacity_proven": false,
-      "clock_TT_max_ps": 171.4,
-      "clock_TT_spread_ps": 20.7,
-      "routed_view_qualified": false
+      "clock_TT_max_ps": 157.2,
+      "clock_TT_spread_ps": 20.9,
+      "clock_TT_boundary_min_ps": 136.3,
+      "clock_TT_boundary_max_ps": 152.7,
+      "TT_setup_margin_ps": 157.0,
+      "FF_hold_margin_ps": 22.16,
+      "DRC": 0,
+      "routed_view_qualified": true,
+      "exact_assigned_center_match": false,
+      "side_pin_y_quantization_um": 0.012,
+      "routed_proof": "results/closure_loop/s81_svc_probability_native_ref-native2-eb1c52d15/verdict.json"
     },
     "timing": {
       "clock_Hz": 1200000000,

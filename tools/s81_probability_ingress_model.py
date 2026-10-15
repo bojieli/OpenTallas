@@ -21,7 +21,7 @@ def model(rows=640, *, replicas_per_die=4, frame_rows=250):
     legacy_words = legacy_payload + math.ceil(legacy_payload/frame_rows)
     native_output_words = sum(math.ceil(k/2)+1 for k in chunks)
     return dict(
-        status='candidate only; native full layer and physical route unqualified',
+        status='routed leaf CLOSED; full native service and token adoption unqualified',
         source='rtl/dsrom_sys/s81_ph/svc/ot_s81_svc_probability_frame.sv',
         arithmetic=dict(MACs_per_cycle=0, FP32_to_BF16_RNE_lanes=16,
                         natural_rows_per_cycle=1, scalar_RNEs_per_cycle=16),
@@ -47,8 +47,12 @@ def model(rows=640, *, replicas_per_die=4, frame_rows=250):
                       assigned_pin_pitch_um=0.096, logical_boundary_tracks=1030,
                       per_q_face_tracks=515, actual_assigned_join_max_um=25.464,
                       raw_source_join_capacity_proven=False,
-                      clock_TT_max_ps=171.4, clock_TT_spread_ps=20.7,
-                      routed_view_qualified=False),
+                      clock_TT_max_ps=157.2, clock_TT_spread_ps=20.9,
+                      clock_TT_boundary_min_ps=136.3, clock_TT_boundary_max_ps=152.7,
+                      TT_setup_margin_ps=157.0, FF_hold_margin_ps=22.16, DRC=0,
+                      routed_view_qualified=True, exact_assigned_center_match=False,
+                      side_pin_y_quantization_um=0.012,
+                      routed_proof='results/closure_loop/s81_svc_probability_native_ref-native2-eb1c52d15/verdict.json'),
         timing=dict(clock_Hz=1_200_000_000, register_edges=3,
                     launch_to_launch_cycles=3,
                     accepted_edge_C_to_output_valid_edge='C+2 (after edge)',
