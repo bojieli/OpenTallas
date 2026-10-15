@@ -29,7 +29,7 @@
 //   acc[23:0]  in   SU accepted ops
 //   cbc<g>[24:0] out (g = 0..7) constant-buffer control = qfd_su_cbuf_g {tpos 18, tok_start, stage 6}
 //   cbr<g>[9:0]  in  constant-buffer status = qfd_su_cbuf_g {fault_code 2, fault, st_rdy_stage 6, st_rdy}
-//   vrd[8:0]   out  VM read {re, raddr 8};  vrq[511:0] in  VM read data;  vwr[520:0] out  VM write {we, waddr 8, wdata 512}
+//   vrd[20:0]   out  VM read {re, raddr 20};  vrq[511:0] in  VM read data;  vwr[532:0] out  VM write {we, waddr 20, wdata 512}
 //   rsi        in   the sequencer's reset (die reset sequencer, released last)
 // Constant-buffer readiness: the 8 groups prefetch the same stage; the sequencer's single cb_st_rdy is the registered AND
 // of the 8 groups' st_rdy with all 8 st_rdy_stage equal (+1 edge on the stage-ready handshake, once per stage).
@@ -57,9 +57,9 @@ module qfd_seq_su (
     input  wire [23:0]   acc,
     output wire [24:0]   cbc0, cbc1, cbc2, cbc3, cbc4, cbc5, cbc6, cbc7,
     input  wire [9:0]    cbr0, cbr1, cbr2, cbr3, cbr4, cbr5, cbr6, cbr7,
-    output wire [8:0]    vrd,
+    output wire [20:0]   vrd,
     input  wire [511:0]  vrq,
-    output wire [520:0]  vwr
+    output wire [532:0]  vwr
 );
     localparam integer NW = 18, AW = 24, D = 8;
     // ---- constant-buffer readiness merge (8 groups) ----
@@ -95,7 +95,7 @@ module qfd_seq_su (
     wire        cb_tok_start;
     wire [NW-1:0] cb_tpos;
     wire        vm_re, vm_we;
-    wire [7:0]  vm_raddr, vm_waddr;
+    wire [19:0] vm_raddr, vm_waddr;
     wire [511:0] vm_wdata;
     wire        c_valid, c_last, c_mode;
     wire [511:0] c_data;
