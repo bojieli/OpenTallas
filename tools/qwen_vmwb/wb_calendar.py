@@ -20,6 +20,7 @@ of the shipped programme, results/arch/qwen_split_compute_1014/res_train_decisio
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -28,17 +29,43 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/throughput"))
 import accepted_cost as ac  # noqa: E402
+sys.path.insert(0, str(ROOT / "tools"))
+import hdc_isa as isa  # noqa: E402
 
 GT, TB, D, NB = 3072, 10, 2, 3
 DECISION = ROOT / "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json"
 PCS = ROOT / "results/arch/qwen_split_compute_1014/vmwb_1015/pcs.txt"
 NODE = {"PC1": "qkv", "PC11": "attn_kv", "PC12": "o_proj", "PC16": "gate_up", "PC20": "down"}
+NATIVE_ROUTE = ROOT / "rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv"
+
+
+def check_native_route(text=None):
+    text = NATIVE_ROUTE.read_text() if text is None else text
+    compact = re.sub(r"\s+", "", text)
+    required = ("assignrom_cmd={cmd[379:1],cmd[0]&&!cmd[55]};",
+                "assignnative_cmd={cmd[379:1],cmd[0]&&cmd[55]};")
+    if not all(statement in compact for statement in required):
+        raise ValueError("native WSRC dispatch changed: source-specific route classification requires review")
+
+
+def shipped_me_operations(stage="decoder"):
+    path = ROOT / f"tools/qwen_producer_train/{stage}_program.hex"
+    operations = {}
+    for pc, word in enumerate(path.read_text().splitlines()):
+        if not word.strip():
+            continue
+        fields = isa.decode(int(word, 16))
+        if fields["unit"] == isa.UNIT_ME:
+            operations[f"PC{pc}"] = fields
+    return operations
 
 
 def fields(line):
     pc, *args = line.split()
     f = dict(nout=0, tiles=1, k=1, ts=0, split=0, oen=0, obase=0, ots=0, ojs=0)
     supported = set("nout tiles k ts split oen obase ots ojs wsrc round mmode wbase ks js xbase xks xjs xcs wcs".split())
+    for key in supported:
+        f.setdefault(key, 0)
     seen = set()
     for a in args:
         m = re.fullmatch(r"\+(\w+)=(\d+)", a)
@@ -242,6 +269,10 @@ def read_program(path, dec):
     Capture profiles remain measured inputs; changing the shape requires new profiles.
     """
     program = {}
+    check_native_route()
+    shipped = shipped_me_operations()
+    if set(shipped) != set(NODE):
+        raise ValueError("shipped decoder ME operations differ from the supported measured profile")
     for line in Path(path).read_text().splitlines():
         if not line.strip():
             continue
@@ -256,6 +287,8 @@ def read_program(path, dec):
         expected = [caps[0] + (k // 8) * f["ts"] + k % 8 for k in range(8 * f["tiles"])]
         if caps != expected:
             raise ValueError(f"{pc}: workload capture shape differs from measured profile")
+        if any(value != shipped[pc]["me_" + key] for key, value in f.items()):
+            raise ValueError(f"{pc}: workload fields differ from the actual shipped programme")
         program[pc] = f
     if set(program) != set(NODE):
         raise ValueError(f"incomplete decoder result programme: missing {sorted(set(NODE) - set(program))}")
@@ -277,6 +310,9 @@ def main(argv=None):
         rw = rows(f)
         rec = dict(fields=f, train=train(f), real_rows=len(rw), first_capture_after_go=c0,
                    last_capture_after_go=caps[-1], unconstrained_last_landing=caps[-1] + D + 25)
+        native = shipped_me_operations()[pc]["me_wsrc"] != 0
+        rec["actual_native_route"] = "native59_service_to_vm_ar" if native else "rom_ports_to_serializer_to_vm_rb"
+        rec["component_serializer_path_is_production_route"] = not native
         if a.rows_dir:
             same, n = check_rtl_rows(pc, f, a.rows_dir)
             rec["row_law_matches_rtl"] = same
@@ -304,6 +340,9 @@ def main(argv=None):
                              face_cycles_per_layer_token_ops=sum(d_tok.values()),
                              e2e_loss_pct_incl_pc11=e2e(d)[0], e2e_loss_pct_token_ops=e2e(d_tok)[0])
     out = dict(schema="opentallas.qwen.vm_writeback_calendar.v1", tool="tools/qwen_vmwb/wb_calendar.py",
+               decoder_program_sha256=hashlib.sha256((ROOT / "tools/qwen_producer_train/decoder_program.hex").read_bytes()).hexdigest(),
+               native_dispatch_source_sha256=hashlib.sha256(NATIVE_ROUTE.read_bytes()).hexdigest(),
+               routing_scope="PC11 standalone serializer evidence is diagnostic: native WSRC dispatch bypasses rom_cmd/serializer. The incl-PC11 price is a conservative component envelope, not measured native-layer latency.",
                law=dict(row="obase + (k//8)*ots*(GT>>split) + (k%8)*ojs + g(split,pt)*ots",
                         emission="c0 + D + b*NS + (k//8)*P + (k%8)*NS + s, P = max(8NS, stride)",
                         bank="distinct mod 16 and mod 64 per edge (proved)"),

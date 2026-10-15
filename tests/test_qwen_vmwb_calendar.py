@@ -37,6 +37,22 @@ class WritebackCalendarTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "capture shape"):
             self.parse(changed)
 
+    def test_changed_workload_fields_rejected_without_new_measured_profile(self):
+        # K can change the first capture even when the burst count is identical.
+        # WSRC changes the actual native dispatch family, not just a row field.
+        for old, new in (("+K=8", "+K=9"), ("+ROUND=1", "+ROUND=0")):
+            with self.subTest(field=old), self.assertRaisesRegex(ValueError, "actual shipped"):
+                self.parse([self.lines[0].replace(old, new)] + self.lines[1:])
+
+    def test_shipped_pc11_native_dispatch_family_is_preserved(self):
+        shipped = wc.shipped_me_operations()
+        self.assertEqual(shipped["PC11"]["me_wsrc"], 1)
+        self.assertEqual(sum(8 * fields["me_tiles"] for fields in shipped.values()), 72)
+        self.assertEqual(sum(8 * fields["me_tiles"] for fields in shipped.values() if not fields["me_wsrc"]), 64)
+        self.assertEqual(sum(8 * fields["me_tiles"] for fields in wc.shipped_me_operations("head").values()), 200)
+        with self.assertRaisesRegex(ValueError, "dispatch changed"):
+            wc.check_native_route(wc.NATIVE_ROUTE.read_text().replace("cmd[0]&&!cmd[55]", "cmd[0]&&cmd[55]"))
+
     def test_malformed_and_duplicate_fields_rejected(self):
         for extra in ("+SPLIT=8oops", "+SPLTI=8", "+TILES=1"):
             with self.subTest(extra=extra), self.assertRaises(ValueError):
