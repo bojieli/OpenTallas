@@ -67,7 +67,12 @@ module tb_hgi_hc_residual_vm_static;
                 .local_rr(lrr[(2)*2056+:2056]),.far_rr(frr[(2)*2056+:2056]),.local_w_done(ld[(2)*8+:8]),.far_w_done(fd[(2)*8+:8]),.fault(tapfault[sid*3+2]));
         end
     end
-    for(genvar b=0;b<8;b=b+1)assign rr[b*257+:257]=responses[b*257+:257]|responses[2056+b*257+:257]|responses[4112+b*257+:257]|responses[6168+b*257+:257];
+    for(genvar b=0;b<8;b=b+1)begin:return_mux
+        wire [256:0] sid_response[0:3];
+        for(genvar q=0;q<4;q=q+1)assign sid_response[q]=responses[q*2056+b*257+:257]&{257{responses[q*2056+b*257+256]}};
+        assign rr[b*257+:257]=sid_response[0]|sid_response[1]|sid_response[2]|sid_response[3];
+    end
+
     always @(posedge clk)begin
         cycle<=cycle+1;
         if(rst_n&&(fault||(|tapfault)||(|status)))$fatal(1,"native VM fault cycle%0d",cycle);
