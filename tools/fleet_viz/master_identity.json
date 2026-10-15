@@ -1,0 +1,121 @@
+{
+  "schema": "opentallas.master_identity.v1",
+  "compositions": [
+    {
+      "element": "qfd_port_tiles_0_f1",
+      "path": "rtl/qwen_split/qfd_port_tiles.sv",
+      "module": "qfd_port_tiles_0_f1",
+      "body_sha256": "55d4cac3bc4458d281f0605e27f1c7db3ab58502aa3c1c285080bfecf3df8314",
+      "reason": "Wires-only parent of word/result half children; own-state BAND/HALF siblings remain distinct.",
+      "evidence": [
+        "rtl/qwen_split/qfd_port_tiles.sv"
+      ]
+    },
+    {
+      "element": "qfd_port_tiles_1_f1",
+      "path": "rtl/qwen_split/qfd_port_tiles.sv",
+      "module": "qfd_port_tiles_1_f1",
+      "body_sha256": "8c36cf1be67be116bddc6b2b4c53d2c9ab32d51ec6a65f30b6445a56356b01b3",
+      "reason": "Wires-only parent of word/result half children; own-state BAND/HALF siblings remain distinct.",
+      "evidence": [
+        "rtl/qwen_split/qfd_port_tiles.sv"
+      ]
+    },
+    {
+      "element": "qfd_port_tiles_2_f1",
+      "path": "rtl/qwen_split/qfd_port_tiles.sv",
+      "module": "qfd_port_tiles_2_f1",
+      "body_sha256": "54f61fbbc663c032fd6b481289be1cf92a493e987fa0a88e2b4613b2b2fe9a95",
+      "reason": "Wires-only parent of word/result half children; own-state BAND/HALF siblings remain distinct.",
+      "evidence": [
+        "rtl/qwen_split/qfd_port_tiles.sv"
+      ]
+    },
+    {
+      "element": "qkd_land",
+      "path": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+      "module": "qkd_land_strip_s",
+      "body_sha256": "4015751a08297d6cd174898fc3e2c34c0e468bc4964d2f2d161e8d65576641f8",
+      "reason": "Generated wires-only strip of child leaves/relay instances; physical integration and clock delivery remain open.",
+      "evidence": [
+        "tools/qwen_kv_die/kv_strips.py",
+        "results/arch/qwen_split_1014/kvsys_v1_3_candidate/port_bind.json"
+      ]
+    },
+    {
+      "element": "qkd_land_n",
+      "path": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+      "module": "qkd_land_strip_s",
+      "body_sha256": "4015751a08297d6cd174898fc3e2c34c0e468bc4964d2f2d161e8d65576641f8",
+      "reason": "Generated wires-only strip of child leaves/relay instances; physical integration and clock delivery remain open.",
+      "evidence": [
+        "tools/qwen_kv_die/kv_strips.py",
+        "results/arch/qwen_split_1014/kvsys_v1_3_candidate/port_bind.json"
+      ]
+    },
+    {
+      "element": "qkd_astk",
+      "path": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+      "module": "qkd_astk_strip_s",
+      "body_sha256": "e3aeb9d7feb5ad5d0f39fd29ab178dcd628d93a5f2736745508ad4078b7708ba",
+      "reason": "Generated wires-only strip of child leaves/relay instances; physical integration and clock delivery remain open.",
+      "evidence": [
+        "tools/qwen_kv_die/kv_strips.py",
+        "results/arch/qwen_split_1014/kvsys_v1_3_candidate/port_bind.json"
+      ]
+    },
+    {
+      "element": "qkd_astk_n",
+      "path": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+      "module": "qkd_astk_strip_s",
+      "body_sha256": "e3aeb9d7feb5ad5d0f39fd29ab178dcd628d93a5f2736745508ad4078b7708ba",
+      "reason": "Generated wires-only strip of child leaves/relay instances; physical integration and clock delivery remain open.",
+      "evidence": [
+        "tools/qwen_kv_die/kv_strips.py",
+        "results/arch/qwen_split_1014/kvsys_v1_3_candidate/port_bind.json"
+      ]
+    },
+    {
+      "element": "qkd_ctrl",
+      "path": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+      "module": "qkd_ctrl_strip_s",
+      "body_sha256": "18588c8484d22c42e536f5bd020230dd4e8f07afb441541d6f49bf7b370b62b5",
+      "reason": "Generated wires-only strip of child leaves/relay instances; physical integration and clock delivery remain open.",
+      "evidence": [
+        "tools/qwen_kv_die/kv_strips.py",
+        "results/arch/qwen_split_1014/kvsys_v1_3_candidate/port_bind.json"
+      ]
+    },
+    {
+      "element": "qkd_ctrl_n",
+      "path": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+      "module": "qkd_ctrl_strip_sr",
+      "body_sha256": "5d30f31beb950c90a25b8b928d225f92fbf730dcf8cd27609dc75e2cb324921b",
+      "reason": "Generated wires-only strip of child leaves/relay instances; physical integration and clock delivery remain open.",
+      "evidence": [
+        "tools/qwen_kv_die/kv_strips.py",
+        "results/arch/qwen_split_1014/kvsys_v1_3_candidate/port_bind.json"
+      ]
+    }
+  ],
+  "replica_groups": [
+    {
+      "canonical": "hfd_hgi_vm_calendar_SE",
+      "reason": "Exact name-normalized W147 RTL and generated physical contract identity; both quadrant integrations/jobs retained.",
+      "members": [
+        {
+          "element": "hfd_hgi_vm_calendar_SE",
+          "path": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+          "module": "hfd_hgi_vm_calendar_SE",
+          "kit": "physical/ref_tile/hv15_vm_cal_se"
+        },
+        {
+          "element": "hfd_hgi_vm_calendar_NE",
+          "path": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+          "module": "hfd_hgi_vm_calendar_NE",
+          "kit": "physical/ref_tile/hv15_vm_cal_ne"
+        }
+      ]
+    }
+  ]
+}
