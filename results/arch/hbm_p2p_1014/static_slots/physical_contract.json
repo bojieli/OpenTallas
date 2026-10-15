@@ -1,0 +1,128 @@
+{
+  "schema": "hcoll.static.leaf-contract-proposal.v1",
+  "qualification": "UNQUALIFIED: no static successor physical gates, published views or assigned final die slots yet",
+  "logical_cycle_ps": 833.333,
+  "corners": {
+    "setup": "TT",
+    "hold": "FF",
+    "sensitivity": "SS"
+  },
+  "layer_cap": "M5",
+  "clock_delivery": "each real child clock pin at phi-R from its own insertion.json; synchronous cycle phase",
+  "new_leaves": [
+    {
+      "top": "ot_hgi_coll_qslots_capture",
+      "replicas": {
+        "NS10": 1,
+        "NS9": 3
+      },
+      "payload_flops": {
+        "NS10": 5450,
+        "NS9": 4905
+      },
+      "pin_faces": {
+        "S": [
+          "src_v",
+          "src_d",
+          "capture_slot"
+        ],
+        "N": [
+          "captured",
+          "captured_slot",
+          "fault"
+        ],
+        "W": [
+          "clk",
+          "rst_n"
+        ]
+      },
+      "outline": "synthesis and die assignment pending"
+    },
+    {
+      "top": "ot_hgi_coll_qslots_output",
+      "replicas": {
+        "NS10_ND16": 1,
+        "NS9_ND15": 3
+      },
+      "payload_flops": {
+        "NS10_ND16": 14170,
+        "NS9_ND15": 13080
+      },
+      "pin_faces": {
+        "S": [
+          "captured",
+          "captured_slot",
+          "sink_slot",
+          "sink_select"
+        ],
+        "N": [
+          "dst_v",
+          "dst_d",
+          "select_fault",
+          "unavailable_fault"
+        ],
+        "W": [
+          "clk",
+          "rst_n"
+        ]
+      },
+      "outline": "synthesis and die assignment pending"
+    },
+    {
+      "top": "ot_hgi_coll_static_vmwrite",
+      "replicas": 4,
+      "declared_flop_upper_bound": 7944,
+      "pin_faces": {
+        "S": [
+          "rgx_v",
+          "rgx_addr",
+          "rgx_data",
+          "rgx_vm",
+          "tkw_v",
+          "tkw_d",
+          "ingress_slot",
+          "slot_valid",
+          "slot_owner"
+        ],
+        "N": [
+          "kq",
+          "launch_done",
+          "fault"
+        ],
+        "W": [
+          "clk",
+          "rst_n",
+          "sid"
+        ]
+      },
+      "outline": "synthesis and die assignment pending"
+    }
+  ],
+  "transport_latency": "source capture C -> switch input capture C+1 -> registered sink C+2; each physical relay adds a compiler cycle",
+  "writer_latency": "input capture C -> registered low C+1 / high C+2; bank samples C+2 / C+3; launch_done is not commit",
+  "ring": {
+    "status": "registered face RTL, not physically qualified",
+    "state_master": "ot_hgi_coll_pring_static_state_lane",
+    "state_replicas_per_quadrant": 8,
+    "state_register_bits_per_root": 1664,
+    "state_registered_output_bits": 128,
+    "adder_master": "ot_hgi_coll_pring_static_add_lane",
+    "adder_replicas_per_quadrant": 8,
+    "adder_register_bits_per_root": 676,
+    "protocol_own_register_bits": 1493,
+    "aggregate_register_bits_per_quadrant": 20213,
+    "compiler_read_to_consumer_edges": 1,
+    "eight_tag_serial_last_result_cycle": 65,
+    "eight_tag_tree_last_result_cycle": 49,
+    "note": "actual pin placement, input capture reach and clock insertion still need mapped gates/route"
+  },
+  "legacy_rx_views": "w552/w568 names are unique on predecessor branch, but those FIFOs remain historical credit evidence",
+  "required_before_die_binding": [
+    "actual controller instruction source and producer calendars",
+    "fullshape operation arithmetic including TOPK k2048",
+    "actual static link wrapper and exceptional CRC recovery contract",
+    "compile all VM read/write users into shared resource slots",
+    "static leaf synthesis, official pins/slots, TT/FF route, pinreg/insertion evidence",
+    "production price at immutable DS G96 n1024 GROUP_REDUCE_MCAST 1325.9 cycles"
+  ]
+}

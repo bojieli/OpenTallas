@@ -1,0 +1,85 @@
+{
+  "npt2_g8": {
+    "schema": "hcoll.quadrant-calendar.v1",
+    "npt": 2,
+    "sources": 9,
+    "sinks": 15,
+    "source_select_bits": 4,
+    "word_bits": 84,
+    "packed_order_lsb": [
+      "capture_slot",
+      "sink_slot",
+      "sink_select"
+    ],
+    "cycles": 769,
+    "last_output_edge": 769,
+    "transport_latency_edges": 2,
+    "transfers": 1536,
+    "unique_captures": 768,
+    "scope": "transport reservation compilation; production issuer, topology, arithmetic and slot closure pending"
+  },
+  "npt2_g96": {
+    "schema": "hcoll.quadrant-calendar.v1",
+    "npt": 2,
+    "sources": 9,
+    "sinks": 15,
+    "source_select_bits": 4,
+    "word_bits": 84,
+    "packed_order_lsb": [
+      "capture_slot",
+      "sink_slot",
+      "sink_select"
+    ],
+    "cycles": 9217,
+    "last_output_edge": 9217,
+    "transport_latency_edges": 2,
+    "transfers": 18432,
+    "unique_captures": 9216,
+    "scope": "transport reservation compilation; production issuer, topology, arithmetic and slot closure pending"
+  },
+  "npt3_g8": {
+    "schema": "hcoll.quadrant-calendar.v1",
+    "npt": 3,
+    "sources": 10,
+    "sinks": 16,
+    "source_select_bits": 4,
+    "word_bits": 90,
+    "packed_order_lsb": [
+      "capture_slot",
+      "sink_slot",
+      "sink_select"
+    ],
+    "cycles": 769,
+    "last_output_edge": 769,
+    "transport_latency_edges": 2,
+    "transfers": 1536,
+    "unique_captures": 768,
+    "scope": "transport reservation compilation; production issuer, topology, arithmetic and slot closure pending"
+  },
+  "npt3_g96": {
+    "schema": "hcoll.quadrant-calendar.v1",
+    "npt": 3,
+    "sources": 10,
+    "sinks": 16,
+    "source_select_bits": 4,
+    "word_bits": 90,
+    "packed_order_lsb": [
+      "capture_slot",
+      "sink_slot",
+      "sink_select"
+    ],
+    "cycles": 9217,
+    "last_output_edge": 9217,
+    "transport_latency_edges": 2,
+    "transfers": 18432,
+    "unique_captures": 9216,
+    "scope": "transport reservation compilation; production issuer, topology, arithmetic and slot closure pending"
+  },
+  "rejected": [
+    "sink_collision",
+    "source_conflict",
+    "invalid_source",
+    "invalid_sink",
+    "negative_cycle"
+  ]
+}
