@@ -4,13 +4,13 @@
   "clock": "ck_service",
   "boundary_width": 95,
   "register_declared_bits": 95,
-  "variable_bits": 19,
-  "unused_constant_bits": 76,
+  "variable_bits": 9,
+  "unused_constant_bits": 86,
   "added_observation_edges": 1,
   "internal_service_deadlines_changed": false,
   "commit_or_visibility_edges_changed": false,
   "maximum_observation_bandwidth_bits_per_cycle": 95,
-  "added_variable_FF_standard_cell_area_estimate_um2": 7.20252,
+  "added_variable_FF_standard_cell_area_estimate_um2": 3.41172,
   "estimate_not_physical": true,
   "physical_qualified": false,
   "native_route_profile_qualified": false,
@@ -26,5 +26,7 @@
     "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
     "rtl/test/qwen_split/tb_qfd_native59_ar520_component.sv": "67a2109e4d55fb525ba87a09dabf9f9aa11d71a2fce53b9c47eb0a3ad9fbecd1",
     "tools/qwen_split/run_native59_ar520_gate.sh": "56d4d3de8cdcaf664b147b8a5d9a7d0748321236345976cdbecb98aba85499ae"
-  }
+  },
+  "potential_distinct_FF_after_duplicate_merge": 8,
+  "synthesis_count_qualified": false
 }
