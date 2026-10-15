@@ -3,18 +3,21 @@
 #  (1) lockstep vs ot_hgi_dma_back_static_cursor fed the same command 2 cycles later (valid shapes + 10 invalid
 #      descriptors: every control output, request and write beat, cycle for cycle);
 #  (2) the unchanged four-quadrant VM/SRAM production bench with vp as the back engine (wrapper keeps the port names).
-#  MUT=1 drain row stride off by one chunk; MUT=2 product operand truncated one bit too far (rows-1 6 bits).
+#  MUT=1 drain row stride off by one chunk; MUT=2 product operand truncated one bit too far (rows-1 6 bits);
+#  MUT=3 landing bank leaf write-beat address bit 0 flipped.
 set -euo pipefail
 out=${1:?output};mut=${2:-0};mkdir -p "$out"
 d=rtl/hbm_accel/generic/peers/static
 m=physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
 cp "$d/ot_hgi_dma_back_static_vp4_banks.sv" "$out/vp.sv"
+cp "$d/ot_hgi_dma_back_static_vp_banks.sv" "$out/banks.sv"   # landing bank leaf ot_hgi_dma_back_landing_bank
 case "$mut" in
  1) sed -i "s/drain_row_hbm+37'(hbm_stride)/drain_row_hbm+37'(hbm_stride)+37'd256/g" "$out/vp.sv";;
+ 3) sed -i "s/wd_payload<={capture_addr,capture};/wd_payload<={capture_addr^32'd1,capture};/" "$out/banks.sv";;
  2) sed -i "s/wire \[6:0\] a_rows_m1=7'(a_mv\[192:186\]-7'd1);/wire [6:0] a_rows_m1=7'(6'(a_mv[191:186]-6'd1));/" "$out/vp.sv";;
 esac
-if [ "$mut" != 0 ];then ! cmp -s "$out/vp.sv" "$d/ot_hgi_dma_back_static_vp4_banks.sv";fi
-iverilog -g2012 -s tb_dma_back_vp4_banks_equiv -o "$out/eq.vvp" "$m" "$d/ot_hgi_dma_back_static_cursor.sv" "$d/ot_hgi_dma_back_static_vp_banks.sv" "$out/vp.sv" "$d/tb_dma_back_vp4_banks_equiv.sv"
+if [ "$mut" != 0 ];then if cmp -s "$out/vp.sv" "$d/ot_hgi_dma_back_static_vp4_banks.sv" && cmp -s "$out/banks.sv" "$d/ot_hgi_dma_back_static_vp_banks.sv";then echo MUTANT_NOT_APPLIED;exit 3;fi;fi
+iverilog -g2012 -s tb_dma_back_vp4_banks_equiv -o "$out/eq.vvp" "$m" "$d/ot_hgi_dma_back_static_cursor.sv" "$out/banks.sv" "$out/vp.sv" "$d/tb_dma_back_vp4_banks_equiv.sv"
 vvp "$out/eq.vvp" > "$out/eq.log" 2>&1 || { cat "$out/eq.log";exit 1; };cat "$out/eq.log";grep -q 'DMA_VP_EQUIV PASS' "$out/eq.log"
 cat > "$out/as_back.sv" <<'SV'
 module ot_hgi_dma_back_static #(parameter integer STK=0, parameter integer QID=STK, parameter [35:0] STACK_BYTES=36'd22500000000, parameter integer MUT=0)(
@@ -42,6 +45,6 @@ pathlib.Path(sys.argv[2]).write_text(s.replace(a,b))
 PYCODE
 echo STATIC_DESC_LAT4_PRE_COMMAND_ADVANCE_2_DATA_CALENDAR_UNCHANGED
 mr=physical/asap7_memory_macros
-iverilog -g2012 -s tb_dma_back_static -o "$out/production.vvp" "$d/ot_hgi_dma_back_static_vp_banks.sv" "$out/vp.sv" "$out/as_back.sv" "$d/ot_hgi_b2_swap_disp_static.sv" "$d/ot_hgi_b2_swap_grp_static.sv" rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv "$mr/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v" "$mr/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v" "$out/production_tb.sv"
+iverilog -g2012 -s tb_dma_back_static -o "$out/production.vvp" "$out/banks.sv" "$out/vp.sv" "$out/as_back.sv" "$d/ot_hgi_b2_swap_disp_static.sv" "$d/ot_hgi_b2_swap_grp_static.sv" rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv "$mr/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v" "$mr/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v" "$out/production_tb.sv"
 vvp "$out/production.vvp" > "$out/production.log" 2>&1 || { cat "$out/production.log";exit 1; };cat "$out/production.log";grep -q 'PASS DMA static actual production' "$out/production.log"
 echo DMA_VP4_BANKS_BENCH_PASS
