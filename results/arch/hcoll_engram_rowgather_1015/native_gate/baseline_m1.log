@@ -1,0 +1,14 @@
+SLOT_CHAIN_PROGRESS globalC2048 phaseC-13252
+SLOT_CHAIN_PROGRESS globalC4096 phaseC-11204
+SLOT_CHAIN_PROGRESS globalC6144 phaseC-9156
+SLOT_CHAIN_PROGRESS globalC8192 phaseC-7108
+SLOT_CHAIN_PROGRESS globalC10240 phaseC-5060
+SLOT_CHAIN_PROGRESS globalC12288 phaseC-3012
+SLOT_CHAIN_PROGRESS globalC14336 phaseC-964
+ENGRAM_SLOT_PROGRAM_MUTANT_PASS
+- /tmp/hcoll-engram-slot-chain-1015/tb.sv:353: Verilog $finish
+[12598000000] %Fatal: tb.sv:354: Assertion failed in tb: nativecatalogue_notconfigured
+SLOT_CHAIN_PREFLIGHT actual24rows216DRAMreads 9x21nativeprogrammeSRAMs ready C15118
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 13us; walltime 14.922 s; speed 844.259 ns/s
+- Verilator: cpu 14.925 s on 1 threads; allocated 50 MB

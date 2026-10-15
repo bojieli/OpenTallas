@@ -1,0 +1,140 @@
+{
+  "status": "PASS requested guarded160 actual9node cases",
+  "cases": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "native_profile": "slot160_21_ordered_drain5",
+  "descriptor_limit": 2091,
+  "native_nodes": 9,
+  "native_links": 8,
+  "programme_banks_per_node": 21,
+  "rows": 24,
+  "physical_packets": 160,
+  "application_NOPs": 40,
+  "physical_hops": 720,
+  "raw_sectors": 216,
+  "decoded_blocks": 192,
+  "producer_guarded23": true,
+  "prefill_deadline": 8228,
+  "prefix": 15300,
+  "transport_decode_done": 2495,
+  "clock_startup": "native link roots held reset/stopped during setup; fixed clock origin then unchanged16:17 startup and continuous active profile",
+  "source_sha256": {
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hcoll_engram_chain_slot_node.sv": "1bdb6bdc0c9edb770cba921682aa6b5aaba301e81ea028e18b79ecf3aac0369b",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hcoll_engram_slot_transport.sv": "effb72897087699be344a31bcae12651d5235ad6fa5c09ac2654612f73cf23ea",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_control256_program.sv": "25dcd51a52b5ff57aac1804725844f707db9d953a1e4895eaf3c3af4a3659bcc",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_quarter_bridge.sv": "cd080c0c18a65303095a101a181f57872c180b0e574035c197622a82fbb86fae",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv": "f50bc60bfb5d3da810fc50007154aa9ceb90f86e60c757031c0bb7293c855c76",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv": "6a419f79c71a5d4d556411ba392262c79dd112bcf0863af4cd8fc0c4eacf8cb8",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv": "d24045a84d64fdd69ab9f15ad9ccc3f8d6b5ccad712da8df51ac2d67db001326",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv": "d5e879e1e76a0b5f4145279c55a53154401b5b3e3a47aa16b33f82612933937a",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv": "21a88e901f304638f66eaf743dfa4ef8555670db66bbe44ba2c489983b719c89",
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "df23697e8d58e67ae3209eac9162d1393bed3a510a6e090149c2694bea9eacd8",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+    "rtl/hdc/v41/ot_hdc_engram_gather.sv": "2edd7582a38629ebd662f68eff7eb88c5f90d88c689157cbbe2acf5d5a2099ed",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc.sv": "f18b70157a6502526b56227ebba05d252897cce1d09a80cc08f7fc67bb713bde",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_guarded_stack.sv": "a38dae243ea6cb4167b1a75e484c37237819c15624c9fbb09aba6d6933be0992",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_dispatch.sv": "1132b94038342443ba24380f1a1e697ebb8c7aa7c2fea231d2e83a991f8a94f9",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_hash_home_native.sv": "23bdc9cc444b51b85bf0b7c353998cc4394cce6a73d843d973e2c98327f68f78",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_row_store_decode.sv": "e450c13fee2e85d1c5099f225875af1914075ba7154894c5b50659e46505df2d",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_fetch_grouped_guarded.sv": "a442f0b186b6ae3a90834aa4e001914303dbf147b0607c9c327cf3a25a9909b6",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_core_fec_frame_link.sv": "ff9068ebfec6f23e445508ea20d842cc6131e63c14132e38a379c731cd876507",
+    "rtl/hbm_accel/io_static_20261015/hfd_serdes487_static_window.sv": "98749b360c86041a02ff88c42e048bbee34ea1f4bede7f37a61198f864d601aa",
+    "rtl/hbm_accel/io_static_20261015/hfd_serdes487_phy512_static_window.sv": "6331e5cfe79c7065523dda4f078468cb6556d3857c8ca6f7b3d78dd76f4df461",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_pma_block_gearbox.sv": "f1088a53729847bfcf1bd6436a0c96c61083a86cee48941170d3aa72123ebe04",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_core_fec_word_window.sv": "268a267d80284b5ccfad46967dce7fe816962a1cbc73519b4674d6a8b43b5071",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_word_cdc.sv": "ad94b9faac315ceab60a97cfbc6c3242ab0872031b252132bb7f72b769182d0e",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_frame_transport_step.sv": "e59bb8a2a6408757b899cab2ae8793677ac3d61791f8fbcd41e96e29588e62cb",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_gearbox_step.sv": "8e46150b7c03250a472282f2dcc411513aa74d84822c5fd05488c2f5ad6a581c",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_enc_rooted.sv": "f6c0ab6832cadd0f5caf3de18164fdec6335cdbd513107231a8ba1d4000588fa",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv": "15923b429259c028375c48d617189468528b3089047ecab648208c5c0cbd4d10",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_encode52_map.sv": "401ecc4c70ebfc04a624faee5540fc625c4c7bddc8a3f4c6bc48ba30d22b81a3",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_syndrome55_map.sv": "ade2e0bbf131d65d979f693ea4347c6431f9d7cfb420d9273c04849a57fbc27c",
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41"
+  },
+  "full96_release": false,
+  "normative_unchanged_programme": false,
+  "universal_producer_service_bound": false,
+  "physical_qualified": false,
+  "raw_receipt_sha256": "f3e8601c9909c7315c22d3a91e468088bcbba3be376c52c253a51d2c9081d233",
+  "benchmark_source_commit": "104f44b63",
+  "ot_run_session": 90158,
+  "unit": "oth-ubuntu-2096621-1792063999",
+  "ot_run_exit": 0,
+  "layer": 1,
+  "consumer_rank": 8,
+  "source_ranks": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "centralized_hash_fixture": true,
+  "source_data_hashes": {
+    "tb.sv": "2a032d16fdc1ccccd7076260d98261e382112cf04513c121a4ac41defac817b2",
+    "external_hbm_sectors.hex": "ac4d7ba200db8e9f93fef59783ec78aff7eb2205661006e93b582fa75b7ead74",
+    "expected_bf16.hex": "5ce905a3deb3996bf985b2f2252a9ee5c07ff1942e14eeffe9f5e8f72bc9ec7f",
+    "run_engram_slot_chain.py": "41dd33e108bd095c998a719f1a363d159fbc256ba8d17b2cd13f58b6b113caf4",
+    "n0.hex": "190c305677860ee145a5f94067e8942e6f97b647ae99b49064b0eb5d42f8b80c",
+    "n1.hex": "417ce2e7b3b6fc0271dc4ac37a27629242a5015cb0d488b3d413b9fe4bac8d3d",
+    "n2.hex": "9f79e9c3d37978ac36e6ef72d70fd602cec6e28b399ef5e0bd84c5a069921bd7",
+    "n3.hex": "ede35bce76f4b76d178c8b93bf1911574f0d838dc445616a06c85ca73ead07a0",
+    "n4.hex": "5c46412ee83069aa2e31c2d359f1511467b6dd8a2812de3df9a26b2471c39bac",
+    "n5.hex": "eccac4c5bd041e2a97e65a423c05469e8af29c365b83c29be10a8d9055e1faab",
+    "n6.hex": "9152d6265ff19ec7d339c72b08f109c3fcaec215ecaa562fa3477a76c8d3c35d",
+    "n7.hex": "6107b2c5788e944257a59a0b6937849800f0946e3c8cbb3928b7e0ff63a4796f",
+    "n8.hex": "1f0d8be68d0a441002a39c901cd0a27c23125e10b5893a1f71241e23cd3a9499"
+  },
+  "native_binary_sha256": "c1ac0eb1e3f4466dc5701eba34889ca0a29710b72bd8717c6081f0b58c30345f",
+  "runs": [
+    {
+      "mutant": 0,
+      "log": "baseline_m0.log",
+      "log_sha256": "c08dff27eea0f663fe8dc77079a46fbf491822ca2e3f02b6792414e82b9960c2",
+      "markers": [
+        "ENGRAM_WHOLE_CHAIN_PASS actual8homehash guarded23 sectors216 rows24 packets160 NOP40 hops720 nodes9 programme189SRAM links8 TX6RX2 FEC151 age16:17 decoded192 BF166144"
+      ]
+    },
+    {
+      "mutant": 1,
+      "log": "baseline_m1.log",
+      "log_sha256": "9021364763381ec425467d2aeee7e82d16ed5dcdef26a8c25a1528b691ab781b",
+      "markers": [
+        "ENGRAM_SLOT_PROGRAM_MUTANT_PASS",
+        "[12598000000] %Fatal: tb.sv:354: Assertion failed in tb: nativecatalogue_notconfigured"
+      ]
+    },
+    {
+      "mutant": 2,
+      "log": "baseline_m2.log",
+      "log_sha256": "cd9d59b56a2862ba68aae25e4b179fa93caf5401ac0558e8220aa8e80ec2e61e",
+      "markers": [
+        "ENGRAM_WHOLE_CHAIN_MUTANT_PASS m2 mismatch2 nodefault000"
+      ]
+    },
+    {
+      "mutant": 3,
+      "log": "baseline_m3.log",
+      "log_sha256": "6527fb4e4608364bee852ada31ea166c36e98046b83ac407f4f50500d92b228a",
+      "markers": [
+        "ENGRAM_WHOLE_CHAIN_MUTANT_PASS m3 mismatch49 nodefault103"
+      ]
+    }
+  ],
+  "configuration_case_diagnostic": "M1 DUT rejection proved; normal configured oracle continued after $finish and printed expected notconfigured diagnostic; superseded by clean isolated M1 branch proof before final consolidated qualification"
+}

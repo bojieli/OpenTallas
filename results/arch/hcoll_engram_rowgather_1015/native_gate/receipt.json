@@ -1,0 +1,132 @@
+{
+  "status": "PASS_SOURCE_PINNED_NATIVE_L1_ROW_GATHER_COMPONENT",
+  "layer": 1,
+  "source_ranks": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "consumer_rank": 8,
+  "rows": 24,
+  "bytes_per_row": 288,
+  "raw_sectors": 216,
+  "decoded_blocks": 192,
+  "bf16_values": 6144,
+  "physical_packets": 160,
+  "payload_packets": 120,
+  "application_NOPs": 40,
+  "physical_hops": 720,
+  "native_links": 8,
+  "native_nodes": 9,
+  "programme_banks_per_node": 21,
+  "programme_macros": 189,
+  "programme_root_entries_per_node": 43,
+  "profile": "slot160_21_ordered_drain5",
+  "descriptor": {
+    "base": 0,
+    "limit": 2091,
+    "loops": 1,
+    "capacity": 2688,
+    "guard": 1346,
+    "drain_indices": [
+      2086,
+      2087,
+      2088,
+      2089,
+      2090
+    ]
+  },
+  "timing": {
+    "first_TX_pin": 510,
+    "first_RX_endpoint_input": 701,
+    "programme_done_FF": 2495,
+    "derived_last_decoder_FF": 2494,
+    "producer_prefill_candidate": 8228,
+    "setup_prefix": 15300,
+    "fixture_check_end": 3050,
+    "core_period_fs": 833334,
+    "FEC_period_fs": 885416,
+    "first_local_FEC_halfperiod_fs": 442708,
+    "whole_PMA_phase_proof": "nominal API phase only; occupancy tolerance is not an exact-arrival grant"
+  },
+  "source": {
+    "compiler": "456c80b6c",
+    "baseline_driver": "104f44b63",
+    "clean_configuration_driver": "283bbe32a",
+    "producer": [
+      "95c1d6f0e",
+      "cbd92c1cc"
+    ],
+    "control256": "79037c152",
+    "endpoint": "f7280c70d",
+    "composite": "c69d89367",
+    "PMA512": "79c582847",
+    "same_39_DUT_source_hashes": true
+  },
+  "gates": [
+    {
+      "cases": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "unit": "oth-ubuntu-2096621-1792063999",
+      "session": 90158,
+      "exit": 0,
+      "binary": "c1ac0eb1e3f4466dc5701eba34889ca0a29710b72bd8717c6081f0b58c30345f",
+      "note": "Original M1 raw log retains post-$finish normal configured assertion; superseded only for configuration classification by clean gate"
+    },
+    {
+      "cases": [
+        1
+      ],
+      "unit": "oth-ubuntu-2199740-1792065038",
+      "session": 39864,
+      "exit": 0,
+      "binary": "78cd7cb177f7e1ee2ba2cdd36898cfd5126aa58da91cc562d13d9e9f1762b94d",
+      "note": "Clean configuration rejection; only exclusive testbench branch changes; exact DUT sources identical"
+    }
+  ],
+  "mutants": {
+    "configuration": "Reserved control bit238 rejected before launch; clean marker and no Fatal",
+    "payload": "Actual external DRAM return bit0 flipped; raw/decode oracle mismatches2, protocol nodefault000",
+    "sequence": "Actual first endpoint read sequence bit0 flipped; native TXcause100, mismatches49/nodefault103; schedule still retires"
+  },
+  "memory_observed": {
+    "peak_bytes": 6414577664,
+    "cap_GiB": 24,
+    "events_all_zero": true,
+    "qualification": "Observed during baseline scope, not a claimed final cgroup lifetime census"
+  },
+  "qualification": {
+    "centralized_hash_and_start_fixture": true,
+    "rank_local_producer": false,
+    "real_external_DRAM_boundary_oracle": true,
+    "whole96_release": false,
+    "WKV_consumer": false,
+    "unchanged_four_VM_programme": false,
+    "real_HOST_CID": false,
+    "universal_REF_service_bound": false,
+    "multi_token_epoch_overlap": false,
+    "physical": false
+  },
+  "evidence_sha256": {
+    "baseline_build.log": "98e3f6a3bc3ce8b27db6bdf62e43a899d2541a2b4ceee8e7088b59a61559482a",
+    "baseline_m0.log": "c08dff27eea0f663fe8dc77079a46fbf491822ca2e3f02b6792414e82b9960c2",
+    "baseline_m1.log": "9021364763381ec425467d2aeee7e82d16ed5dcdef26a8c25a1528b691ab781b",
+    "baseline_m2.log": "cd9d59b56a2862ba68aae25e4b179fa93caf5401ac0558e8220aa8e80ec2e61e",
+    "baseline_m3.log": "6527fb4e4608364bee852ada31ea166c36e98046b83ac407f4f50500d92b228a",
+    "baseline_receipt.json": "2bae2bd02fe801af68f2c1085470471a52be4fbb95548885f4ec138de30700c0",
+    "baseline_tb.sv": "2a032d16fdc1ccccd7076260d98261e382112cf04513c121a4ac41defac817b2",
+    "clean_program_mutant.log": "a83df57fb91d14c2711c047e41238b0ae5042630401e28ea7d65caad06e160b8",
+    "clean_program_mutant_receipt.json": "63173c70ccab32d03894d0543ac8a709ed811ed02df3f4b9b178a4a49fef9e29",
+    "clean_program_mutant_tb.diff": "f63de0e9fc5de8ad8fb4142b22f86df909245b9c4fb8f88b27743f844e3390bb",
+    "clean_program_mutant_tb.sv": "671a2bb25e1c2ad0cd41528157825b645e5de1d55c29cc3e3e6e769805ba2882"
+  }
+}
