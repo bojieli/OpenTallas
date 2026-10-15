@@ -7,6 +7,8 @@ ports, source bindings, pin plans, CTS results or inter-band timing closure.
 import argparse
 import hashlib
 import json
+import subprocess
+import tempfile
 from pathlib import Path
 import hbm_die_views as V
 
@@ -54,8 +56,24 @@ def build(write=False):
     return dict(schema='opentallas.actual-native-service-bands.v1',leaves=leaves,masters=records,instance_count=sum(len(v['instances']) for v in records.values()),dependency_sha256={str(inventory):hashlib.sha256((ROOT/inventory).read_bytes()).hexdigest()},native_leaf_hardware=True,qualified=False,remaining=['No new pin plan/physical hardened view/slot-fit proof','Native top descriptor/response crossbar/control joins not partitioned into timed registered interband edges','Separate leaf clock/reset inputs require actual parent clock and domain-local reset contracts','WB/SMpacked cache/loader/ATT sources are not silently substituted for these PF-only leaves'])
 
 
+def elaborate(d):
+    dependencies=[BASE/(name+'.sv') for name in LEAVES.values()]
+    dependencies+=[BASE/'ot_hbm_svc_async_fifo.sv',Path('rtl/lib/ot_reset_sync.sv'),Path('physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v')]
+    records=[]
+    with tempfile.TemporaryDirectory(prefix='hbm-native-bands-') as tmp:
+        for top,master in sorted(d['masters'].items()):
+            sources=[Path(master['source'])]+dependencies
+            args=['iverilog','-g2012','-s',top,'-o',str(Path(tmp)/top)]+[str(p) for p in sources]
+            run=subprocess.run(args,cwd=ROOT,capture_output=True,text=True)
+            records.append(dict(top=top,elaboration_exit_code=run.returncode,source_sha256={str(p):hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sources},diagnostics=run.stdout+run.stderr))
+    receipt=dict(scope='actual native owner/bank module hierarchy; not physical qualification',tool=subprocess.run(['iverilog','-V'],capture_output=True,text=True).stdout.splitlines()[0],masters=records,all_pass=all(r['elaboration_exit_code']==0 for r in records))
+    (ROOT/OUT/'elaboration.json').write_text(json.dumps(receipt,indent=2)+'\n')
+    if not receipt['all_pass']:raise ValueError('actual native band hierarchy elaboration failed')
+
+
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--generate',action='store_true');p.add_argument('--require-qualified',action='store_true');a=p.parse_args();d=build(a.generate)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--generate',action='store_true');p.add_argument('--elaborate',action='store_true');p.add_argument('--require-qualified',action='store_true');a=p.parse_args();d=build(a.generate)
     o=ROOT/OUT/'contract.json';o.parent.mkdir(parents=True,exist_ok=True);o.write_text(json.dumps(d,indent=2)+'\n')
     print(f'Native hardware masters={len(d["masters"])} instances={d["instance_count"]} PC/bank coverage exact; qualified=False')
+    if a.elaborate:elaborate(d)
     if a.require_qualified:raise SystemExit(2)
