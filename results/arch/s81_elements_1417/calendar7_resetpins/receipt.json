@@ -1,6 +1,6 @@
 {
  "source_commit": "9f5af3545",
- "record_commit": null,
+ "record_commit": "393f54ffc",
  "status": "CLOSED",
  "reason": "CLOSED TT +7.45 / FF +11.20 ps DRC 0; SS sensitivity -279.07 ps | record codex/s81-elements-1319 393f54ffc (19 files) | AUTO-MERGE skipped: spec opts out (Per-root reset candidate requires strict native clock/ETM and actual die reset binding; no standalone view adoption.)",
  "scope": "Native component PASS at formal TT833/FF/DRC0 and actual per-clock exported ETM. No parent/die reset clock binding, no compiler whole-program qualification.",
@@ -17,5 +17,6 @@
   "2026-10-15T14:36:38-07:00 child-lint gate (cf) PASS on /srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/record/views/s81_static_calendar_controller7_resetpins/s81_static_calendar_controller7_resetpins.lef",
   "2026-10-15T14:36:59-07:00 CLOSED: CLOSED TT +7.45 / FF +11.20 ps DRC 0; SS sensitivity -279.07 ps | record codex/s81-elements-1319 393f54ffc (19 files) | AUTO-MERGE skipped: spec opts out (Per-root reset candidate requires strict native clock/ETM and actual die reset binding; no standalone view adoption.)",
   "2026-10-15T14:37:00-07:00 viz-elem: element page export started (explorer_elem_export.py auto)"
- ]
+ ],
+ "record_branch": "codex/s81-elements-1319"
 }
