@@ -15,8 +15,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 259.2,
-  "h": 259.2
+  "w": 129.6,
+  "h": 129.6
  },
  "pins": {
   "N": [],
@@ -48,8 +48,8 @@
   "name": "s81-expanded-native-PQ-row-1015",
   "owner": "/root/s_die/mix4_sizing",
   "outline": [
-   259.2,
-   259.2
+   129.6,
+   129.6
   ],
   "pin_faces": {
    "N": [],
@@ -69,7 +69,7 @@
     "f_iss"
    ]
   },
-  "basis": "Independent native CTS dimensions and producer/consumer facing pins granted in live coordinator stream; full parent/hub placement remains unadopted."
+  "basis": "10-15 S-ELEM-B: CTS gate in the granted 259.2 square at util 8% gave reg->reg -21.0 ps (f_iss[22]) from sparse placement; same faces in a 129.6 square inside the granted slot (E 133 bits, W 131 bits at 2 tracks = 38 um)."
  },
  "job": {
   "peak_ram_gb": 16,
