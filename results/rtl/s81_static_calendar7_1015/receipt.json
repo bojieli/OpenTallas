@@ -1,0 +1,110 @@
+{
+  "base_sha256": "ed584619c336e8340155d839eb0f119c115146b32a4fc83b3d3d68b8c5554490",
+  "source": "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv",
+  "source_sha256": {
+    "tools/s81_static_collective/build_calendar7.py": "84830b7f06330c3c83a94ae3562942166ebd7fc708962c573aeaa325e121456a",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv": "8254a83f87ceee4309d20b98ad9693fa1ddea6e3dcd37f61f218c5c770c557bc",
+    "tools/s81_static_collective/test_controller_image.py": "371d7dce9bfa730c530ed2692bd29a6bf93df0d30d88fd188b9ac7d2ad44ad2e",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv": "ed584619c336e8340155d839eb0f119c115146b32a4fc83b3d3d68b8c5554490",
+    "tools/s81_static_collective/controller_image.py": "09c13d1b75f7076313866a5418bb73a16a48968cb85ca9a91682fdb0d7ba7947",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b"
+  },
+  "clocks": [
+    "clk",
+    "clk_rom[0]",
+    "clk_rom[1]",
+    "clk_rom[2]",
+    "clk_outputs[0]",
+    "clk_outputs[1]",
+    "clk_outputs[2]"
+  ],
+  "output_groups": [
+    {
+      "clock": "clk_outputs[0]",
+      "bits": 183,
+      "ports": [
+        "read_slot",
+        "read_row",
+        "issue_slot",
+        "tag",
+        "seq",
+        "last",
+        "rankmask",
+        "commit_slot",
+        "commit_tag",
+        "commit_seq",
+        "commit_last",
+        "commit_rankmask",
+        "commit_rows"
+      ]
+    },
+    {
+      "clock": "clk_outputs[1]",
+      "bits": 143,
+      "ports": [
+        "tx_beat_slot",
+        "tx_phase",
+        "tx_frame_slot",
+        "rx_beat_slot",
+        "rx_phase",
+        "rx_frame_slot",
+        "channel_tx_slot",
+        "channel_tx_kind",
+        "channel_tx_seq",
+        "channel_tx_last",
+        "channel_rx_slot",
+        "channel_rx_kind",
+        "channel_rx_seq"
+      ]
+    },
+    {
+      "clock": "clk_outputs[2]",
+      "bits": 142,
+      "ports": [
+        "channel_rx_last",
+        "channel_tx_beat_slot",
+        "channel_tx_frame_slot",
+        "channel_tx_phase",
+        "channel_rx_beat_slot",
+        "channel_rx_frame_slot",
+        "channel_rx_phase",
+        "hc_reduce_slot",
+        "hc_write_slot",
+        "hc_word_index",
+        "hc_expect_seq",
+        "hc_expect_last",
+        "hc_emit_slot",
+        "hc_emit_tag",
+        "commit_gather",
+        "raw_capture_payload_slot",
+        "raw_capture_meta_slot",
+        "raw_rx_write_slot",
+        "raw_rx_payload_row",
+        "raw_rx_meta_row",
+        "raw_rx_tag",
+        "hc_assemble_slot"
+      ]
+    }
+  ],
+  "added_data_edges": 0,
+  "added_data_registers": 0,
+  "rom_macros": 3,
+  "qualification": false,
+  "proof": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-362685-1792077380",
+    "terminal_exit": 0,
+    "command": "python3 -m unittest test_controller_image.Check.test_rtl_calendar7_exact_and_clock_mutant",
+    "positive": "All468 registered controls and completion/status compared to compiled actual3ROM image over two complete30-edge replays, including raw channel fields and descriptor/calendar/missingimage/oversize faults.",
+    "negative": [
+      "stopped ROM clock 0",
+      "stopped ROM clock 1",
+      "stopped ROM clock 2",
+      "stopped output register clock 0",
+      "stopped output register clock 1",
+      "stopped output register clock 2"
+    ],
+    "negative_result": "All six actual DUT clock disconnections cause the exact functional gate to fail.",
+    "scope": "Related-clock, equal phase component proof; no physical/native/die/calendar production qualification."
+  }
+}

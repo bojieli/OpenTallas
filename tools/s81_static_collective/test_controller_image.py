@@ -121,7 +121,8 @@ class Check(unittest.TestCase):
         wrong=copy.deepcopy(assembled);wrong['cycles'][44]['controls']['hc_word_index']=1
         with self.assertRaises(ValueError):compile_image(wrong,ROOT)
 
-    def run_rtl(self,request,name,mutate=False):
+    def run_rtl(self,request,name,mutate=False,partitioned=False,clock_mutant=False):
+        selected_rtl=RTL.with_name("s81_static_calendar_controller7.sv") if partitioned else RTL
         with tempfile.TemporaryDirectory() as scratch:
             p=Path(scratch);emit(request,ROOT,p/'calendar.mem');n=len(request['cycles'])
             # Icarus11 cannot parse typed string parameters. Remove only that
@@ -168,20 +169,36 @@ endmodule
 '''.replace('CONNECTIONS',','.join(connections)).replace('CALENDAR',str(p/'calendar.mem')).replace('CB',str(CONTROL_BITS)).replace('RW',str(ROM_BITS)).replace('N',str(n))
             # N replacement is only the standalone placeholder above; source
             # text contains no other uppercase N after CONNECTIONS substitution.
+            if partitioned:
+                tb=tb.replace('s81_static_calendar_controller #','s81_static_calendar_controller7 #').replace('s81_static_calendar_controller blank','s81_static_calendar_controller7 blank')
+                romclocks=outclocks='{3{clk}}'
+                if clock_mutant:
+                    family,index=clock_mutant
+                    vector=['clk','clk','clk'];vector[2-index]="1'b0"
+                    stopped='{'+','.join(vector)+'}'
+                    if family=='rom':romclocks=stopped
+                    else:outclocks=stopped
+                tb=tb.replace('.clk(clk),','.clk(clk),.clk_rom('+romclocks+'),.clk_outputs('+outclocks+'),')
             (p/'tb.sv').write_text(tb)
-            subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'sim'),str(RTL),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
+            subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'sim'),str(selected_rtl),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
+            if clock_mutant:
+                negative=subprocess.run(['vvp',str(p/'sim')],capture_output=True,text=True)
+                self.assertNotEqual(negative.returncode,0)
+                self.assertRegex(negative.stdout,'control slot mismatch|unexpected configured fault')
+                print('PASS calendar7 stopped-clock mutant rejected',clock_mutant)
+                return
             output=subprocess.run(['vvp',str(p/'sim')],check=True,capture_output=True,text=True).stdout
             self.assertIn('PASS v2 controller',output)
             mutant_output=None;macro_mutant_output=None
             if mutate:
-                mutant=RTL.read_text().replace('raw_rx_tag<=enabled ?', 'raw_rx_tag<=1\'b0 ?')
-                self.assertNotEqual(mutant,RTL.read_text());(p/'mut.sv').write_text(mutant)
+                mutant=selected_rtl.read_text().replace('raw_rx_tag<=enabled ?', 'raw_rx_tag<=1\'b0 ?')
+                self.assertNotEqual(mutant,selected_rtl.read_text());(p/'mut.sv').write_text(mutant)
                 subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'mut'),str(p/'mut.sv'),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
                 result=subprocess.run(['vvp',str(p/'mut')],capture_output=True,text=True)
                 self.assertNotEqual(result.returncode,0);self.assertIn('control slot mismatch 22',result.stdout)
                 mutant_output=result.stdout+result.stderr
-                wrong_address=RTL.read_text().replace('.addr_in(macro_addr)',".addr_in(macro_addr ^ 12'd1)")
-                self.assertNotEqual(wrong_address,RTL.read_text());(p/'macro_mut.sv').write_text(wrong_address)
+                wrong_address=selected_rtl.read_text().replace('.addr_in(macro_addr)',".addr_in(macro_addr ^ 12'd1)")
+                self.assertNotEqual(wrong_address,selected_rtl.read_text());(p/'macro_mut.sv').write_text(wrong_address)
                 subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'macro_mut'),str(p/'macro_mut.sv'),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
                 result=subprocess.run(['vvp',str(p/'macro_mut')],capture_output=True,text=True)
                 self.assertNotEqual(result.returncode,0);self.assertIn('control slot mismatch 1',result.stdout)
@@ -196,6 +213,12 @@ endmodule
                 if mutate:
                     (dest/'mutant_suppressed_raw_tag.log').write_text(mutant_output)
                     (dest/'mutant_actual_macro_address.log').write_text(macro_mutant_output)
+
+    def test_rtl_calendar7_exact_and_clock_mutant(self):
+        self.run_rtl(fixture(raw=True),'calendar7_exact',partitioned=True)
+        for family in ('rom','output'):
+            for index in range(3):
+                self.run_rtl(fixture(raw=True),'calendar7_clock_mutant',partitioned=True,clock_mutant=(family,index))
 
     def test_rtl_gather_and_raw_fields(self):self.run_rtl(fixture(raw=True),'gather_raw',True)
     def test_rtl_actual_2400cycle_page(self):self.run_rtl(fixture_page(),'page2400_twojobs')
