@@ -114,6 +114,14 @@ if {[llength [info commands ::qdm_cts_orig]] && ![llength [info commands ::ot_be
     if {![info exists ::env(OT_BESL_BAL)] || $::env(OT_BESL_BAL) ne "0"} { ot_besl_clk_balance }
     ot_besl_str_boundary
   }
+  # claude s81-grpA r5 (2026-10-14): ref_tile kits generated after 6a3b8e235 source this file from THEIR OWN wrapper,
+  # i.e. AFTER the tree is built (ot_ref_cts_boundary_orig + ::ot_ref_pre_cts 0).  The wrapper installed above then never
+  # runs, so r5 dsfd_vm_be_sl-r5-21672a82e-g5 routed with NO balance: ck 271 / cks 153 ps (routed insertion), every
+  # core->str crossing (u_rc*.mem -> sh) lost 118 ps of its 208 ps window -> TT -69.37 on 2,060 D pins.  Balance now.
+  if {[llength [info commands ::ot_ref_cts_boundary_orig]] && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts == 0} {
+    if {![info exists ::env(OT_BESL_BAL)] || $::env(OT_BESL_BAL) ne "0"} { ot_besl_clk_balance }
+    ot_besl_str_boundary
+  }
 } else {
   ot_besl_str_boundary
 }

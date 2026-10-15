@@ -393,8 +393,16 @@ endmodule
 
 // the cluster parent: wires and five constant ties (the WFC's unused SOURCE inputs); every net child pin -> child pin
 // or child pin -> cluster pin, driven and captured by registers inside the children
+// s81-die-rtl-bind 2026-10-14 (F4 hop): the die binds this cluster under the die master name dsfd_wfc_stg
+// (+define+DSFD_WFC_STG_CL_DIE: physical/s81_die_rtl/layer1.f) and the cluster carries the stage hand-off engine's
+// endpoint (engine 7 hop, ADAPTER_CONTRACT_1011 pins c_cmd / c_done / c_st): child dsfd_wfc_hop_ep below.
+`ifdef DSFD_WFC_STG_CL_DIE
+module dsfd_wfc_stg (
+`else
 module dsfd_wfc_stg_cl (
+`endif
     input  wire [0:0] ck, ckv, rst, rsv,
+    input  wire [84:0] c_cmd, output wire [8:0] c_done, output wire [1:0] c_st,   // engine 7 (hop) endpoint
     input  wire [0:0] f_liv, input  wire [512:0] f_lid, output wire [0:0] t_lir,
     output wire [0:0] t_lov, output wire [512:0] t_lod, input  wire [0:0] f_lor,
     output wire [0:0] t_swv, output wire [526:0] t_swd, input wire [0:0] f_swr, input wire [0:0] f_swa,
@@ -433,4 +441,40 @@ module dsfd_wfc_stg_cl (
         .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq), .t_cd(cd), .t_vc(vc_ret), .f_pf(proto_fault), .f_lf(lnk_ft),
         .t_swv(t_swv), .t_swd(t_swd), .f_swr(f_swr), .f_swa(f_swa), .t_srv(t_srv), .t_srd(t_srd), .f_srr(f_srr),
         .f_srq(f_srq), .t_ks(t_ks), .f_kd(f_kd), .t_hep(t_hep), .t_ft(t_ft));
+    dsfd_wfc_hop_ep #(.MUT(`ifdef DSFD_WFC_HOP_MUT `DSFD_WFC_HOP_MUT `else 0 `endif)) u_hop (.ck(ck), .rst(rst),
+        .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .f_lov(t_lov), .f_lol(t_lod[512]));
+endmodule
+
+// dsfd_wfc_hop_ep (s81-die-rtl-bind 2026-10-14, die item F4): the stage hand-off engine (port 7, hop) of a layer die =
+// the WFC stage kit.  The stage program's last op (L<n>.substage_hop0) is the HIDDEN hand-off; the kit starts it at its
+// done (the sequencer's kit done t_kd excludes engine 7: dsfd_stage_seq_c8 KDX 7), so a hop job completes when the
+// kit's link out has transferred the LAST flit of its next message (t_lov && last: the grant-protocol sender moves one
+// flit every cycle its valid is high).  Messages that end before their descriptor is queued are counted (in order), so
+// a fast hand-off never loses its completion.  The descriptor is accepted ahead (dataflow start: inputs present 1).
+// MUT 6 (negative control): the job completes at its descriptor, not at the message end.
+module dsfd_wfc_hop_ep #(parameter integer MUT = 0) (
+    input  wire [0:0]  ck, rst,
+    input  wire [84:0] c_cmd,
+    output wire [8:0]  c_done,
+    output wire [1:0]  c_st,
+    input  wire [0:0]  f_lov, f_lol            // the kit's link out: valid, last
+);
+    wire clk = ck[0];
+    reg [1:0] rs_q;
+    always @(posedge clk or negedge rst[0]) if (!rst[0]) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
+    wire rn = rs_q[1];
+    reg mend; always @(posedge clk or negedge rn) if (!rn) mend <= 1'b0; else mend <= f_lov[0] && f_lol[0];
+    reg [7:0] mcnt;                            // message ends not yet matched to a hop job
+    wire j_v; wire [83:0] j_d, jn_d; wire j_new, ep_f;
+    wire j_done = j_v && ((MUT == 6) ? 1'b1 : (mcnt != 0 || mend));
+    reg f_ov;
+    always @(posedge clk or negedge rn)
+        if (!rn) begin mcnt <= 0; f_ov <= 1'b0; end
+        else begin
+            mcnt <= mcnt + mend - ((j_done && MUT != 6) ? 8'd1 : 8'd0);   // one message end per hop job, in order
+            if (mcnt == 8'hFF && mend) f_ov <= 1'b1;
+        end
+    ot_s81_slab_ep #(.QD(8), .JQ(2), .MUT((MUT == 6) ? 0 : MUT)) u_ep (.c_clk(clk), .c_rst_n(rst[0]), .c_cmd(c_cmd),
+        .c_done(c_done), .c_st(c_st), .e_clk(clk), .e_rst_n(rst[0]), .j_v(j_v), .j_d(j_d), .j_new(j_new),
+        .j_new_d(jn_d), .j_present(1'b1), .j_done(j_done), .slab_fault(f_ov), .ep_fault(ep_f));
 endmodule

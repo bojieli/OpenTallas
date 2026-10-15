@@ -44,7 +44,12 @@ module ot_coll_tp8_die #(
                                          //     in a pin flop: each leaf = the WT 2 column one edge late, s_lo / s_hi
                                          //     two) + the metadata column flat beside the controller (MEM 2 core);
                                          //     every parent signal paired with a leaf output is delayed to match
-    parameter integer CT      = 1,       // qwen-tp8/coll4: engine column datapath in hardened ot_coll_col_tile leaves
+    parameter integer CT      = 1,
+    // STRAP = 1 (qwen-coll-io r3 2026-10-14, WT 3 only): ONE hardened cluster for all 8 compute dies of the one die type:
+    // the package rank and the die-in-package come from the static straps pkg_s / die_ps (die bumps, one pin flop each)
+    // instead of PKG / DIE: engine own-source (RSTRAP), SerDes port <-> engine source rotation, owner half (leaf die_s),
+    // package tag and merger order become strap-selected.  STRAP = 0: the straps are unused, PKG / DIE as before.
+    parameter integer STRAP   = 0,       // qwen-tp8/coll4: engine column datapath in hardened ot_coll_col_tile leaves
     parameter integer ICR     = 32,      // credits held by the die's sequencer (<= LBD, <= PQD)
     parameter integer LBD     = 64,      // local partial buffer (words), 32 * k with QMEM 1
     parameter integer PQD     = 64,      // peer partial receive queue (= P-channel credits)
@@ -98,7 +103,10 @@ module ot_coll_tp8_die #(
     output wire [2:0]        out_rank,
     output wire              out_err,
     output wire              fault,
-    output wire [4:0]        fault_code
+    output wire [4:0]        fault_code,
+    // STRAP = 1: static rank straps (TP8 rank = 4 * die_ps + pkg_s)
+    input  wire [1:0]        pkg_s,
+    input  wire              die_ps
 );
     localparam integer N  = 4;
     localparam integer SL = 3 * 7 + 2;      // hardened slice latency (N 4, ADD_LAT 7, SEAM 1): red_in -> v_out
@@ -107,6 +115,13 @@ module ot_coll_tp8_die #(
     localparam integer NS = FW / 128;
     initial if (FW % 128 != 0 || DIE > 1 || PKG > 3 || ICR > LBD || ICR > PQD) $error("ot_coll_tp8_die: FW multiple of 128, DIE 0..1, PKG 0..3, ICR <= LBD, PQD");
     // control reset: one leaf per region (input / pairing + engine feed / results + merger); every queue has its own
+    initial if (STRAP != 0 && WT != 3) $error("ot_coll_tp8_die: STRAP needs WT 3");
+    // rank straps: one pin flop each (static; captured every edge, settled long before the reset release)
+    reg [1:0] pkg_q; reg die_q;
+    always @(posedge clk) begin pkg_q <= pkg_s; die_q <= die_ps; end
+    wire [1:0] PK = (STRAP != 0) ? pkg_q : PKG[1:0];
+    wire       DI = (STRAP != 0) ? die_q : DIE[0];
+    wire [3:0] self_oh = 4'b0001 << PK;
     wire rs_a, rs, rs_m;
     (* keep_hierarchy *) ot_coll_rst_leaf u_rsa (.clk(clk), .arst_n(rst_n), .q(rs_a));
     (* keep_hierarchy *) ot_coll_rst_leaf u_rs  (.clk(clk), .arst_n(rst_n), .q(rs));
@@ -166,10 +181,10 @@ module ot_coll_tp8_die #(
 
     // ---------------- D: pairing, owner half, pre-fold slices ----------------
     wire [FW-1:0]   lw = lb_hd[FW-1:0], pw = pq_hd[FW-1:0];
-    wire [FW-1:0]   lo = (DIE == 0) ? lw : pw;
-    wire [FW-1:0]   hi = (DIE == 0) ? pw : lw;
+    wire [FW-1:0]   lo = !DI ? lw : pw;
+    wire [FW-1:0]   hi = !DI ? pw : lw;
     wire            p_last = lb_hd[FW], p_mode = lb_hd[FW+1];
-    wire [TAGW-1:0] p_tag = (DIE == 0) ? lb_hd[FW+2 +: TAGW] : pq_hd[FW+2 +: TAGW];   // the package message tag
+    wire [TAGW-1:0] p_tag = !DI ? lb_hd[FW+2 +: TAGW] : pq_hd[FW+2 +: TAGW];   // the package message tag
     wire            p_bad = (lb_hd[FW+2 +: TAGW] != pq_hd[FW+2 +: TAGW]) || (lb_hd[FW +: 2] != pq_hd[FW +: 2]);
     reg  [7:0] eq_res, infl;
     reg        wpar, gh_v;
@@ -299,7 +314,20 @@ module ot_coll_tp8_die #(
     wire [N*PW-1:0] e_rxr;
     genvar gj, gq;
     generate for (gq = 0; gq < N; gq = gq + 1) begin : g_port
-        if (gq == PKG) begin : g_self
+        if (STRAP != 0) begin : g_st
+            // engine source gq <-> SerDes port jq = (gq - PK + 3) mod 4 (jq = 3: the die's own source)
+            localparam [1:0] G3 = (gq + 3) % 4;
+            wire [1:0] jq = G3 - PK;              // 2-bit wrap = mod 4
+            wire       me = self_oh[gq];
+            wire [2:0] rdy = sxr_q2, crn = sxc_q2, rxv = srv_q2;
+            assign e_txrdy[gq] = me ? 1'b1 : rdy[jq];
+            assign e_crin[gq]  = me ? 1'b0 : crn[jq];
+            assign e_rxv[gq]   = me ? 1'b0 : rxv[jq];
+            // decoded constant-index AND-OR (no runtime-indexed 546-bit part-select)
+            wire [2:0] js = {jq == 2'd2, jq == 2'd1, jq == 2'd0};
+            assign e_rxr[gq*PW +: PW] = ({PW{js[0]}} & srr_q[0 +: PW]) | ({PW{js[1]}} & srr_q[PW +: PW])
+                                      | ({PW{js[2]}} & srr_q[2*PW +: PW]);
+        end else if (gq == PKG) begin : g_self
             assign e_txrdy[gq] = 1'b1; assign e_crin[gq] = 1'b0; assign e_rxv[gq] = 1'b0;
             assign e_rxr[gq*PW +: PW] = {PW{1'b0}};
         end else begin : g_sx
@@ -311,6 +339,13 @@ module ot_coll_tp8_die #(
             always @(posedge clk or negedge rs) if (!rs) src_q[J] <= 1'b0; else src_q[J] <= e_crout[gq];
         end
     end endgenerate
+    generate if (STRAP != 0) begin : g_st_cr
+        for (gj = 0; gj < 3; gj = gj + 1) begin : g_j
+            localparam [1:0] J1 = gj + 1;
+            wire [1:0] sq = PK + J1;              // 2-bit wrap = mod 4
+            always @(posedge clk or negedge rs) if (!rs) src_q[gj] <= 1'b0; else src_q[gj] <= e_crout[sq];
+        end
+    end endgenerate
     // tx: one registered copy per SerDes port (each placed at its own face)
     generate if (WT == 0) begin
     always @(posedge clk) begin sxrec_q <= {3{e_txr}}; srr_q <= sr_rec; end
@@ -320,8 +355,9 @@ module ot_coll_tp8_die #(
         else begin sxv_q <= {3{e_txv}}; sxr_q <= sx_ready; sxc_q <= sx_cr_in; srv_q <= sr_valid; end
     assign sx_valid = (WT == 3) ? sxv_q2 : sxv_q; assign sx_rec = sxrec_q; assign sr_cr_out = src_q;
     ot_rom_oneshot_die_m #(.N(N), .RANK(PKG), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .ADD_LAT(ADD_LAT), .IB(4),
-        .PR(PR), .OPQ(0), .TXK(TXK), .FPIPE(FPIPE), .HDLO(HDLO), .MEMM(MEMM), .FSL(FSL), .IBH(IBH), .CT(CT)) u_eng (
-        .clk(clk), .rst_n(rst_n),
+        .PR(PR), .OPQ(0), .TXK(TXK), .FPIPE(FPIPE), .HDLO(HDLO), .MEMM(MEMM), .FSL(FSL), .IBH(IBH), .CT(CT),
+        .RSTRAP(STRAP)) u_eng (
+        .clk(clk), .rst_n(rst_n), .self_s(self_oh),
         .in_valid(e_iv), .in_cr(e_icr), .in_data(eq_hd[FW-1:0]), .in_last(e_il), .in_mode(e_im),
         .in_tag(e_itg),
         .tx_valid(e_txv), .tx_rec(e_txr), .tx_ready(e_txrdy), .cr_in(e_crin),
@@ -375,7 +411,7 @@ module ot_coll_tp8_die #(
     // ---------------- I: merger (in-package all-gather) ----------------
     reg [15:0] mc; reg cur_mode;
     wire m_mode = (mc == 0) ? lq_hd[FW+4] : cur_mode;
-    wire take_l = m_mode || (mc[0] == DIE[0]);
+    wire take_l = m_mode || (mc[0] == DI);
     // a message's mode is read from the LQ head at its first word (LQ always holds a word of the message by then)
     wire m_go   = (take_l ? lq_hv : rq_hv) && (mc != 0 || lq_hv);
     assign lq_pop = m_go && take_l;
@@ -537,7 +573,7 @@ module ot_coll_tp8_die #(
         wire [3*MW-1:0] m_sr, m_sx;
         wire [5:0] m_hv, m_ovf;
         ot_coll_tp8_col_core #(.W(MW), .WLQ(5), .WTQ(2), .WRQ(2), .MEM(2)) u_meta (.clk(clk), .rst_n(rst_n),
-            .die_s(DIE[0]), .meta_s(1'b1),
+            .die_s(DI), .meta_s(1'b1),
             .in_d(m_ind), .dp_d(dp_rec[FW +: MW]), .dr_d(m_dr),
             .sr_d({sr_rec[2*PW+FW +: MW], sr_rec[PW+FW +: MW], sr_rec[FW +: MW]}),
             .sum_d(m_smd), .lq_wd(m_lwc), .tq_wd(m_tw), .e_tx(e_txr[FW +: MW]),
@@ -555,7 +591,7 @@ module ot_coll_tp8_die #(
         for (genvar c=0;c<4;c=c+1) begin : g_col
             wire [383:0] sri = {sr_rec[2*PW+c*128 +: 128], sr_rec[PW+c*128 +: 128], sr_rec[c*128 +: 128]};
             wire [383:0] sro, sxo;
-            ot_coll_tp8_col_tile_r3 u_wc (.clk(clk),.rst_n(rst_n),.die_s(DIE[0]),
+            ot_coll_tp8_col_tile_r3 u_wc (.clk(clk),.rst_n(rst_n),.die_s(DI),
                 .in_d(in_data[c*128 +: 128]),.dp_d(dp_rec[c*128 +: 128]),.dr_d(dr_rec[c*128 +: 128]),.sr_d(sri),
                 .sum_d(sl_sum_f[c*128 +: 128]),.lq_wd(e_od[c*128 +: 128]),.tq_wd(e_od[c*128 +: 128]),
                 .e_tx(e_txr[c*128 +: 128]),
