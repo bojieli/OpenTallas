@@ -71,14 +71,21 @@ def main():
     ap.add_argument('--snaps', required=True, type=Path)
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--layers', default=','.join(map(str, range(40))))
+    ap.add_argument('--mtp', type=Path, default=None, help='DSpark rows instead: tools/s81_ftok/mtp_golden.py out dir '
+                    '(snap_M<st>R<i>.pkl; weights mtp.<st>.hc_*: run with the REAL mtp shards, not a zero-filled subset)')
     a = ap.parse_args()
     G.set_arith('chunk8')
     import rtl_v41_fullshape_layer_campaign as LC
     ck = LC.Checkpoint()
     eps_bits = None
-    for L in [int(x) for x in a.layers.split(',')]:
-        s = pickle.loads((a.snaps / f'snap_L{L:02d}.pkl').read_bytes())
-        out = a.out / f'L{L:02d}'
+    if a.mtp:
+        items = [(p.stem[5:], p, f"mtp.{int(p.stem[6])}") for p in sorted(a.mtp.glob('snap_M*R*.pkl'))]
+    else:
+        items = [(f'L{L:02d}', a.snaps / f'snap_L{L:02d}.pkl', f'layers.{L}') for L in map(int, a.layers.split(','))]
+    for name, sp, wp in items:
+        L = name
+        s = pickle.loads(sp.read_bytes())
+        out = a.out / name
         out.mkdir(parents=True, exist_ok=True)
         eb = struct.unpack('<I', struct.pack('<f', float(s['eps'])))[0]
         assert eps_bits in (None, eb)
@@ -88,14 +95,15 @@ def main():
         bsec = 0x300000
         for j, blk in enumerate(('attn', 'ffn')):
             c = s['hc'][f'hc.{blk}']
-            fn = np.asarray(ck.get(f'layers.{L}.hc_{blk}_fn'), F)
-            scale = np.asarray(ck.get(f'layers.{L}.hc_{blk}_scale'), F)
-            base = np.asarray(ck.get(f'layers.{L}.hc_{blk}_base'), F)
+            fn = np.asarray(ck.get(f'{wp}.hc_{blk}_fn'), F)
+            scale = np.asarray(ck.get(f'{wp}.hc_{blk}_scale'), F)
+            base = np.asarray(ck.get(f'{wp}.hc_{blk}_base'), F)
             assert np.array_equal(u32(scale), u32(c['scale'])) and np.array_equal(u32(base), u32(c['base'])), (L, blk)
             x = np.asarray(c['x'], F).reshape(4, D)
             st = Stand(fn, scale, base)
             st.eps = F(s['eps'])
-            pre, post, comb = G.Model.hc_mixes(st, x, L, blk)
+            assert np.any(fn != 0), (name, blk, 'zero-filled hc fn: not the released weights')
+            pre, post, comb = G.Model.hc_mixes(st, x, 0, blk)
             want = np.concatenate([np.asarray(c['pre'], F), np.asarray(c['post'], F), np.asarray(c['comb'], F).reshape(-1)])
             got = np.concatenate([np.asarray(pre, F), np.asarray(post, F), np.asarray(comb, F).reshape(-1)])
             assert np.array_equal(u32(want), u32(got)), (L, blk, 'fresh hc_mixes != the replay snapshot')
@@ -109,7 +117,7 @@ def main():
             ex = u32(want)
             exp.extend((ob + i, int(ex[i])) for i in range(24))
             cases.append((K, v0, len(vmi) - v0, 0, len(hbm), e0, 24, H.pack(d)))
-            tags.append(f'L{L} {blk} HC_MIX')
+            tags.append(f'{name} {blk} HC_MIX')
             bsec += -(-nsec // 1024) * 1024
         (out / 'hu_case.mem').write_text(''.join(''.join(f'{x:08X}' for x in c[:7]) + C.hexw(c[7], 938) + '\n' for c in cases))
         (out / 'hu_vmi.mem').write_text(''.join(f'{a_:08X}{w:08X}\n' for a_, w in vmi))
@@ -120,7 +128,7 @@ def main():
         (out / 'hu_sizes.svh').write_text(f'localparam integer NCASE = {len(cases)};\nlocalparam integer NVMI = {len(vmi)};\n'
                                           f'localparam integer NHBM = {len(hbm)};\nlocalparam integer NEXP = {len(exp)};\n'
                                           f"localparam [31:0] NEPS = 32'h{eps_bits:08X};\n")
-        print(f'L{L:02d}: 2 records, {len(hbm)} HBM sectors, x/pre/post/comb from the replay, fresh hc_mixes equal',
+        print(f'{name}: 2 records, {len(hbm)} HBM sectors, x/pre/post/comb from the replay, fresh hc_mixes equal',
               flush=True)
     return 0
 
