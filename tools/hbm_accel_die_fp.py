@@ -8019,6 +8019,13 @@ def r25gq_v14():
             v['idx_score_box']['y'] = dict(v['idx_score_box'].get('y') or {}, SW=float(os.environ['OT_HBMDIE_IDX_SW_Y']))
         if os.environ.get('OT_HBMDIE_IDX_NE_X'):
             v['idx_score_box']['x']['NE'] = float(os.environ['OT_HBMDIE_IDX_NE_X'])
+    vdx_ = os.environ.get('OT_HBMDIE_VMS_DX')       # iteration override 'dxW,dxE': slices toward the spine
+    if vdx_ and v.get('vm_b2'):
+        dw_, de_ = (float(t_) for t_ in vdx_.split(','))
+        xy_ = {q_: ((p_[0] + dw_) if q_[1] == 'W' else (p_[0] - de_), p_[1]) for q_, p_ in v['vm_b2']['xy'].items()}
+        v['vm_b2'] = dict(v['vm_b2'], xy=xy_)
+        v['die_slots'] = [dict(d_, xy=(xy_[d_['name'][-2:]][0] - 43.2 - d_['wh'][0], d_['xy'][1]))
+                          if d_['name'] in ('hb_dbk_SE', 'hb_dbk_NE') else d_ for d_ in v['die_slots']]
     if os.environ.get('OT_HBMDIE_EPS2_Y') and v.get('link_ep_v2'):
         xy_ = dict(v['link_ep_v2']['xy'])
         s_ = list(xy_['S'])
