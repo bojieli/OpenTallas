@@ -1,0 +1,22 @@
+{
+  "status": "component design budget; NOT production-qualified",
+  "owner_rule": "HANDOFF 0an, 2026-10-14: compiler assigned fixed slots, no on-chip ready/credits",
+  "topology": [0, 1, 3, 2],
+  "quadrants": 4,
+  "reduction_lanes": 8,
+  "fp32_adds_per_quadrant_cycle": 8,
+  "adder_latency_cycles": 8,
+  "add_writeback_cycles_after_issue": 8,
+  "first_readable_accumulator_cycles_after_issue": 9,
+  "directed_link_bits_per_cycle": 280,
+  "directions_per_stop": 2,
+  "payload_bits_per_flit": 256,
+  "link_cycles_per_hop_without_physical_relays": 2,
+  "tags": 8,
+  "state_payload_bits_per_stop": 12288,
+  "state_formula": "8 tags * (local + accumulator + 4 carry sources) * 256 bits",
+  "routing_policy": "Compiler reserves every receive, transit and injection edge; no runtime arbitration. Physical relays add explicit compiler slots.",
+  "memory_ports": "one local write, two carry arrival writes, one add writeback; distributed per-tag flop storage",
+  "floorplan": "successor uses existing H-COLL ring stop slots; physical leaves/area/TT setup/FF hold remain unqualified",
+  "composition": "SERIAL ((P0+P1)+P2)+P3; TREE (P0+P1)+(P2+P3); fixed schedule bench derives explicit cycle trace; no token rate claim"
+}
