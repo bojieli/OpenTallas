@@ -1,0 +1,4 @@
+HC_DIRECT_ROW row=0 fixed_start=4042 last_actual_store_age=655 next_ready=00
+[4268327000] %Fatal: tb_hgi_hc_prefetch_direct_static.sv:81: Assertion failed in tb_hgi_hc_prefetch_direct_static.configure_drain: compiler deadline missed row1 half0 cycle5122 ready00000000
+%Error: tb_hgi_hc_prefetch_direct_static.sv:81: Verilog $stop
+Aborting...

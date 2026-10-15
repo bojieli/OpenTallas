@@ -1,0 +1,29 @@
+HC_DIRECT_ROW row=0 fixed_start=1038 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=1 fixed_start=2438 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=2 fixed_start=3838 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=3 fixed_start=5238 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=4 fixed_start=6638 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=5 fixed_start=8038 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=6 fixed_start=9438 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=7 fixed_start=10838 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=8 fixed_start=12238 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=9 fixed_start=13638 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=10 fixed_start=15038 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=11 fixed_start=16438 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=12 fixed_start=17838 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=13 fixed_start=19238 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=14 fixed_start=20638 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=15 fixed_start=22038 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=16 fixed_start=23438 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=17 fixed_start=24838 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=18 fixed_start=26238 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=19 fixed_start=27638 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=20 fixed_start=29038 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=21 fixed_start=30438 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=22 fixed_start=31838 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=23 fixed_start=33238 last_actual_store_age=655 next_ready=00
+HC_PREFETCH_DIRECT PASS rows=24 actualPHYrequests=61440 responses=61440 actualSRAMreadbacks=61440 steady_row_period=1400 production_edges=33600 actualSRAMs=192 HBM1024 stream833 PHYlatency=80
+- tb_hgi_hc_prefetch_direct_static.sv:128: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 29us; walltime 0.610 s; speed 47.242 us/s
+- Verilator: cpu 0.611 s on 1 threads; alloced 1021 MB

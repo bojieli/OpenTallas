@@ -1,0 +1,120 @@
+{
+  "schema": "opentallas.hc.realweight.production-refill.v1",
+  "status": "ACTUAL_CHECKPOINT_24ROWS_REFILL_BANDWIDTH_PASS_NATIVE_JOIN_OPEN",
+  "source_commit": "152715556",
+  "actual_compiled_source_sha256": {
+    "ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "tb_hgi_hc_prefetch_direct_static.sv": "b4770d9e3a1571ab223fc75828c3f8eb7d954fbf71c1048d17a23b94b6807ed8",
+    "ot_hgi_hc_aperture_static.sv": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae",
+    "ot_hbm_svc_prefetch_block_cdc.sv": "8760ea770345bb8cfa317dc447377e0ab0b9afc50d5e7299b7d2fae6bb6bfb14",
+    "ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "ot_hgi_hc_prefetch_direct_static.sv": "006e60503b61a7bff3174c63dbdf17940fd77b26ad2f55e4790fc7c9f07f33b7",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "all_actual_compiled_hashes_verified": 8,
+  "scope": "actual20GiB STRIPE4 read requests/nativePCownerstate/responseCDC/mappedsourceSRAM/fixed4laneHCweightaperturewrites/actual64HCweightSRAMreadback; externalPHYresponse and componentcontrolstimuli only",
+  "released_tensor": {
+    "name": "layers.0.hc_attn_fn",
+    "shape": [
+      24,
+      20480
+    ],
+    "dtype": "F32",
+    "bytes": 1966080,
+    "raw_tensor_sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+    "external_sector_hex_sha256": "b5ef59ab107235b56394c372b73bb8648b68cf4a8050d3469778049cf915d5e8",
+    "export": "tools/export_hbm_hc_stripe_row.py --checkpoint <releasedmodel00003shard> --tensor layers.0.hc_attn_fn --all-rows --out <dir>",
+    "source_base_bytes": 21474836480,
+    "row_stride_bytes": 81920,
+    "bank_segment_bytes": 10240,
+    "bank_stack": "bank%4",
+    "image_exported": true,
+    "loader_hardware_installed": false
+  },
+  "measured": {
+    "cases": [
+      {
+        "npos_budget": 6,
+        "row_period": 1080,
+        "rows": 24,
+        "production_cycles": 25920,
+        "exact_PHYrequests": 61440,
+        "exact_responses": 61440,
+        "actual_SRAM_readback_sectors": 61440
+      },
+      {
+        "npos_budget": 8,
+        "row_period": 1400,
+        "rows": 24,
+        "production_cycles": 33600,
+        "exact_PHYrequests": 61440,
+        "exact_responses": 61440,
+        "actual_SRAM_readback_sectors": 61440
+      }
+    ],
+    "last_actual_aperture_store_age_each_row": 655,
+    "initial_steady_start_cycle": 1038,
+    "initial_resets_and_setup_cycles": 16,
+    "initial_source_prefetch_and_CDC_cycles": 1022,
+    "source_positions_perbank": 320,
+    "HC_consumed_rows_perbank": 80,
+    "unused_HC_rows_not_written": [
+      80,
+      128
+    ],
+    "direct_payload_sectors_percycle": 4,
+    "nominal_payload_transfer_cycles_perrow": 640,
+    "actual_schedule_drain0_edge": 0,
+    "actual_schedule_drain1_edge": 330,
+    "reserve_nextrow_half0_edge": 330,
+    "reserve_nextrow_half1_edge": 660,
+    "stream_period_ps": 833.332,
+    "HBM_period_ps": 1024,
+    "external_PHY_response_latency_HBMedges": [
+      80,
+      92
+    ],
+    "fixed_deadline_stalls": 0,
+    "row_period_repriced": false
+  },
+  "mechanism": {
+    "max_outstanding_per_PC": 8,
+    "owner_entries": 1024,
+    "owner_bits_perentry": 46,
+    "owner_register_bits": 47104,
+    "tagcounter_register_bits": 68,
+    "capture_register_bits": 8192,
+    "PHY_tag": "unique17bitmonotonic; candidatecollisionguard; full16bitepoch+bank+sourceordinal+tagretainedinactualownerstate",
+    "request_order": "64-sector tile transpose; source-relative owner ordinal retained",
+    "source_staging_SRAMs": 128,
+    "HC_aperture_SRAMs": 64,
+    "total_actual_SRAMs": 192,
+    "actual_SRAM_bytes": 786432,
+    "intermediate_landing_SRAMs": 0,
+    "zero_padding_writes": 0,
+    "full_parent_join_expected_actual_SRAMs": 306
+  },
+  "gates": {
+    "wrong_unissued_tag": "REFUSED actualownerfault",
+    "stale_prior_block_tag": "REFUSED actualownerfault",
+    "late_unowned_duplicate_reply": "REFUSED actualownerfault",
+    "actual_payload_mutant": "FAIL actualSRAMreadbackrow0bank5position319",
+    "legacy_one_outstanding_comparison": "FAIL compilerrow1half0deadline cycle5122, ready0; initboundaryallowedbeforefixedtimeline"
+  },
+  "runtime": {
+    "host": "ot-epyc4",
+    "scope": "oth-ubuntu-1675105-1792058842",
+    "session": 34114,
+    "exit": 0,
+    "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-multi80-v3-1015"
+  },
+  "limitations": [
+    "Actual compiler/nativeHC arithmetic chain integration owned parent; componentcontrolinputs external",
+    "Physical timing/clock/slot/routes not closed",
+    "Full43layer2064rowimage notexported/installed",
+    "ImmutablecompleteHCprice/endtoendtokenrate notqualifiedbycomponent",
+    "OnlyexternalPHYresponse80..92cyclemodelmeasured; noactualDRAMrefreshworstcaselatencyguarantee",
+    "Nochipnativequalification"
+  ]
+}
