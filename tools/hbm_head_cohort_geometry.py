@@ -41,7 +41,7 @@ def build(g):
  return c
 
 def draw(c,path,quad):
- scale=.025;x0=20;y0=90;svg=['<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="950">','<rect width="100%" height="100%" fill="white"/>','<text x="20" y="25" font-size="19">Head-cohort alternative: shared arithmetic, NEW bank/control profile (unqualified)</text>','<text x="20" y="48" font-size="12">Actual macro shapes / true32.984×25.981mm aspect. Four headsets,32feature quads each; shared QK/PV compute.</text>']
+ scale=.025;x0=20;y0=90;svg=['<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="980">','<rect width="100%" height="100%" fill="white"/>','<text x="20" y="25" font-size="19">H16 head-cohort component alternative: new bank/control profile (unqualified)</text>','<text x="20" y="48" font-size="12">Actual macro shapes / true32.984×25.981mm aspect. Four headsets,32feature quads each; shared QK/PV compute.</text>']
  colors={'SM_frame':'#ddd9e8','ATT_quad':'#d99035','KV_code':'#3c9b5e','KV_metadata':'#3c9b5e','PV_memory':'#c5508a','P_Q_memory':'#4e93bf','VM_bank':'#dfbf42','LG_prototype':'#adc592','HBM_PHY_abstract':'#aaa','SerDes':'#666','endpoint_group':'#9db9b5','programme':'#795f9f','gather_reservation':'#f1b0b5'}
  for i,(label,role) in enumerate([('32 full SM frames','SM_frame'),('shared QK/PV quads','ATT_quad'),('K/V banks','KV_code'),('local PV stores','PV_memory'),('Q/P stores','P_Q_memory'),('VM banks','VM_bank'),('LG taps','LG_prototype'),('gather reservations','gather_reservation')]):
   xx=20+(i%4)*215;yy=64+(i//4)*17
@@ -64,7 +64,7 @@ def draw(c,path,quad):
     x,y=xy(e);u,v=xy(mid);svg.append(f'<line x1="{x}" y1="{y}" x2="{u}" y2="{v}" stroke="#b42543" stroke-dasharray="3 2" stroke-width="1"/>')
    nxt.append(mid)
   pts=nxt
- notes=['Only head0/lane0 QK connectivity shown; real reduction nodes, clocks and stations remain unplaced.','K/V136macros (+102 /1.256370mm²); Q64 rebanks (schedule unproved); P128 (−384/.410409mm² vsP4).','D2048 banks use actual quad headsets; a new selector/control profile needs RTL and mutation proofs.','16registered gathers total76112FF (+57084vsD); modeled25748 sinks/cohort EXCEEDS15k: split clock roots.','3.6mm² gather reservations are UNQUALIFIED. Cohort→VM2048b selector and registered faces are UNPLACED.','Canonical head-major output still reaches ALL8NE banks. SU/SFU/SC/normalization/HC/IDX/PC/PG remain unplaced.']
+ notes=['Frozen G25 opcode369 is logical H1; this H16 component alternative is NOT canonical workload mapping.','Only head0/lane0 QK connectivity shown; real reduction nodes, clocks and stations remain unplaced.','K/V136macros (+102 /1.256370mm²); Q64 rebanks (schedule unproved); P128 (−384/.410409mm² vsP4).','D2048 banks use actual quad headsets; a new selector/control profile needs RTL and mutation proofs.','16registered gathers total76112FF (+57084vsD); modeled25748 sinks/cohort EXCEEDS15k: split clock roots.','3.6mm² gather reservations are UNQUALIFIED. Cohort→VM2048b selector and registered faces are UNPLACED.','Canonical head-major output still reaches ALL8NE banks. SU/SFU/SC/normalization/HC/IDX/PC/PG remain unplaced.']
  for i,n in enumerate(notes):svg.append(f'<text x="20" y="{780+23*i}" font-size="12">{n}</text>')
  sx,sy=xy((2000,1200));svg.append(f'<line x1="{sx}" y1="{sy}" x2="{sx+5000*scale}" y2="{sy}" stroke="black" stroke-width="2"/><text x="{sx}" y="{sy-5}" font-size="11">5000µm</text>')
  svg.append('</svg>');Path(path).write_text('\n'.join(svg))

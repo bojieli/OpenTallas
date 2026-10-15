@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="950">
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="980">
 <rect width="100%" height="100%" fill="white"/>
-<text x="20" y="25" font-size="19">Head-cohort alternative: shared arithmetic, NEW bank/control profile (unqualified)</text>
+<text x="20" y="25" font-size="19">H16 head-cohort component alternative: new bank/control profile (unqualified)</text>
 <text x="20" y="48" font-size="12">Actual macro shapes / true32.984×25.981mm aspect. Four headsets,32feature quads each; shared QK/PV compute.</text>
 <rect x="20" y="56" width="10" height="10" fill="#ddd9e8"/><text x="34" y="64" font-size="11">32 full SM frames</text>
 <rect x="235" y="56" width="10" height="10" fill="#d99035"/><text x="249" y="64" font-size="11">shared QK/PV quads</text>
@@ -2748,11 +2748,12 @@
 <line x1="292.99887500000006" y1="441.10044999999997" x2="292.99887500000006" y2="446.677325" stroke="#b42543" stroke-dasharray="3 2" stroke-width="1"/>
 <line x1="292.99887500000006" y1="476.984825" x2="292.99887500000006" y2="459.831075" stroke="#b42543" stroke-dasharray="3 2" stroke-width="1"/>
 <line x1="292.99887500000006" y1="446.677325" x2="292.99887500000006" y2="459.831075" stroke="#b42543" stroke-dasharray="3 2" stroke-width="1"/>
-<text x="20" y="780" font-size="12">Only head0/lane0 QK connectivity shown; real reduction nodes, clocks and stations remain unplaced.</text>
-<text x="20" y="803" font-size="12">K/V136macros (+102 /1.256370mm²); Q64 rebanks (schedule unproved); P128 (−384/.410409mm² vsP4).</text>
-<text x="20" y="826" font-size="12">D2048 banks use actual quad headsets; a new selector/control profile needs RTL and mutation proofs.</text>
-<text x="20" y="849" font-size="12">16registered gathers total76112FF (+57084vsD); modeled25748 sinks/cohort EXCEEDS15k: split clock roots.</text>
-<text x="20" y="872" font-size="12">3.6mm² gather reservations are UNQUALIFIED. Cohort→VM2048b selector and registered faces are UNPLACED.</text>
-<text x="20" y="895" font-size="12">Canonical head-major output still reaches ALL8NE banks. SU/SFU/SC/normalization/HC/IDX/PC/PG remain unplaced.</text>
+<text x="20" y="780" font-size="12">Frozen G25 opcode369 is logical H1; this H16 component alternative is NOT canonical workload mapping.</text>
+<text x="20" y="803" font-size="12">Only head0/lane0 QK connectivity shown; real reduction nodes, clocks and stations remain unplaced.</text>
+<text x="20" y="826" font-size="12">K/V136macros (+102 /1.256370mm²); Q64 rebanks (schedule unproved); P128 (−384/.410409mm² vsP4).</text>
+<text x="20" y="849" font-size="12">D2048 banks use actual quad headsets; a new selector/control profile needs RTL and mutation proofs.</text>
+<text x="20" y="872" font-size="12">16registered gathers total76112FF (+57084vsD); modeled25748 sinks/cohort EXCEEDS15k: split clock roots.</text>
+<text x="20" y="895" font-size="12">3.6mm² gather reservations are UNQUALIFIED. Cohort→VM2048b selector and registered faces are UNPLACED.</text>
+<text x="20" y="918" font-size="12">Canonical head-major output still reaches ALL8NE banks. SU/SFU/SC/normalization/HC/IDX/PC/PG remain unplaced.</text>
 <line x1="70.0" y1="709.5132" x2="195.0" y2="709.5132" stroke="black" stroke-width="2"/><text x="70.0" y="704.5132" font-size="11">5000µm</text>
 </svg>
