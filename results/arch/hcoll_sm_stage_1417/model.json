@@ -54,7 +54,24 @@
   "bank_selected_pair_Q": 128,
   "row_bitmap": 128
  },
- "std_ff_total": "Mapped count pending; subtotal1825 excludes descriptors/counters/ownership/context. Charge all32replicas and clocks.",
+ "std_ff_total": "Actual genericRTL1905/SM +274/qselector =62056dieFF. Not mappedstandardcell area or timing.",
  "physical_qualified": false,
- "actual_SM_producer_join_qualified": false
+ "actual_SM_producer_join_qualified": false,
+ "generic_RTL_FF_per_SM": 1905,
+ "generic_RTL_FF_per_quad_selector": 274,
+ "generic_RTL_FF_die": 62056,
+ "clock_root_FF_per_SM": {
+  "clk_control": 1769,
+  "clk_mem[0]": 68,
+  "clk_mem[1]": 68
+ },
+ "common_master_logic_pin_bits": 817,
+ "common_master_replicated_logic_pin_endpoints": 26144,
+ "producer_rv_rrow_data_bits_per_edge_die": 8608,
+ "prefetch_vector_data_bits_per_quadrant": 4096,
+ "vector_route_single_layer_min_corridor_um": 393.216,
+ "vector_route_face_length_at_60pct_um": 655.36,
+ "prefetch_input_to_first_ring_LP_min_edges": 14,
+ "physical_geometry_qualified": false,
+ "source_ref": "141d2de68"
 }
