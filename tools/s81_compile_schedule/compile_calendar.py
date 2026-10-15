@@ -152,6 +152,10 @@ def compile_program(program, binding, contract, root=ROOT):
                 event['mask'] = integer(access.get('mask', 65535), 'mask', 1)
                 if event['mask'] > 65535:
                     raise ValueError('mask exceeds physical row width')
+                if 'read_visibility' in access:
+                    event['read_visibility'] = access['read_visibility']
+                if 'ingress_resource' in access:
+                    event['ingress_resource'] = access['ingress_resource']
                 if 'group' in access:
                     event['group'] = f'{ident}/{access["group"]}'
                 schedule['events'].append(event)
@@ -183,7 +187,7 @@ def compile_program(program, binding, contract, root=ROOT):
             if type(pred) is not int or not 0 <= pred < len(ops) or ops[pred]['end'] > op['start']:
                 reject('invalid_job_dependency', job=op['id'], predecessor=pred)
     schedule['trace_complete'] = not rejected
-    checked = check(schedule, contract) if not rejected else None
+    checked = check(schedule, contract, root) if not rejected else None
     ready = not rejected and checked['status'] == 'pass'
     return dict(status='COMPILED_STATIC_CALENDAR' if ready else 'STATIC_COMPILE_BLOCKED',
                 dispatch_eligible=ready, qualified=False, stage=program.get('stage'),
