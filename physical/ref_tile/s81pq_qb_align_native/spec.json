@@ -122,6 +122,11 @@
   "OT_PQ_ROM_PORTS"
  ],
  "io_tcl": "physical/ref_tile_specs/s81pq_native/s81pq_qb_align_native_spread_pins.tcl",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "native audit of CLOSED p2 view FAILS: 47 bc_hr_q output pins launch up to 274.3 ps vs 220 (results/rtl/s81_pq_native_audit_1015/qb_align_p2.json; paths /home/ubuntu/artifacts/s81-pq-native-paths-1015/qb_align_p2_bad_pin_inventory.json): 115 ps DFFASRHQNx1 clk->QN; p3 RTL removes the async reset from output stage hr1",
+  "evidence": "results/rtl/s81_pq_native_audit_1015/qb_align_p2.json"
+ },
  "params": {},
  "children": [],
  "inter": []
