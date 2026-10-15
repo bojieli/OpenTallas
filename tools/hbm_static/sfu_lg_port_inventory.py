@@ -29,7 +29,9 @@ def inventory():
     files = sorted(PEER.glob("ot_hgi_sfu_*static*.sv")) + [PEER / "ot_hgi_sfu_scheduled_engine.sv",PEER / "ot_hgi_sfu_programmed_engine.sv",PEER / "ot_hgi_su_unit.sv"]
     lower = sum(m["area_um2"] for m in macros)
     return dict(top="ot_hgi_sfu_scheduled_engine",parameters=dict(PAGE_AW=1,AW=11,LWB=15),
-                lanes=16, lane_clocks=16, mapper_clocks=16, lg_clocks=4,
+                lanes=16, lane_clocks=16, mapper_clocks=16, lg_clocks=4, total_clock_pins=37,
+                arithmetic_broadcast_tree=0,
+                broadcast_tree_note="static_engine does not override static_quarter BTREE=0; the separate BTREE=1 proof is not this master.",
                 common_clock="clk (programme, operand/output store, scalar publication and fault aggregation)",
                 clock_relationship="Same-frequency related roots; no asynchronous CDC contract. Die STA must cover group-to-store and programme-to-group crossings.",
                 groups=group, logical_widths=dict(local_rq=136,local_wq=2248,local_rr=2056,local_w_done=8),

@@ -1,0 +1,48 @@
+{
+  "source_commit": "27aef8834 plus private per-group output register refactor in containing commit",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv": "195776339665673c005bf23751556ab0dec6009a74bb5deae25a7018e73ec6dc",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_vm_static_bridge.sv": "e3f6f45b9b4a1f3250d2b31d7ddd4671a8f3cded1ce6939586fb00cec5892805",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv": "04c4f92245f4a8384e10e11826b93eb0952fb27fda56d42f043f0f97b4832cdf",
+    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv": "cc7c0d00ead994fb66360a00da7acd4b70e8a2f9f6e2a3b8013a9672d1ab29de",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+    "tools/hgi_unit_tput/run_sfu_vm_static_bridge.sh": "4d4958c67d4509b166496c0c341e2d13af7044e79b64c75ef4a0057a1fc6c5db",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "native_bridge": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-961476-1792088585",
+    "exit": 0,
+    "exact_words": 1280,
+    "VM_macros": 24,
+    "local_macros": 80,
+    "read_return": 14,
+    "write_return": 11,
+    "prefetch_sectors_per_edge": 8,
+    "drain_sectors_per_edge": 2,
+    "positive": "bridge/run.log",
+    "return_suppression": {
+      "exit": 1,
+      "log": "bridge/mutant_return.log"
+    },
+    "missing_group_clock": {
+      "group": 1,
+      "exit": 1,
+      "log": "bridge/mutant_clock.log"
+    },
+    "scratch": "/srv/opentallas-scratch/codex/sfu-lg4-1103/out_r2"
+  },
+  "scheduled_engine": {
+    "status": "PENDING_ADMISSION_OR_RUNNING",
+    "local_session": 33477,
+    "scratch": "/srv/opentallas-scratch/codex/sfu-scheduled-lg4-1103-r2",
+    "mem_gb": 14,
+    "threads": 8
+  },
+  "physical_qualified": false,
+  "throughput_qualified": false,
+  "scope": "Real native 8-bank/SRAM bridge proof; does not establish full arithmetic/production or die reach."
+}
