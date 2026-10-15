@@ -1,0 +1,39 @@
+{
+  "schema": "hcoll-pv-stream-native-proof-v1",
+  "source_commit": "5766ffffa4d254f5a1b55b6db3337aa9eff0be98",
+  "rtl_compiler_commit": "5d0f0c5f7",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1686794-1792100738",
+  "ot_run_exit": 0,
+  "mem_request_GB": 8,
+  "build_threads": 4,
+  "source_hash_inventory": "final/source.sha256",
+  "batches": 128,
+  "FP32_output_words": 1024,
+  "initial_reset_pulses": 1,
+  "first_output": 165,
+  "last_output": 10579,
+  "steady_batch_period": 82,
+  "programme_last_edge": 10581,
+  "actual_ring_landing_writes": 2048,
+  "actual_local_capture_writes": 1792,
+  "actual_scratch_reads": 3840,
+  "measured_ring_write_and_local_read_edges": 731,
+  "measured_ring_write_and_local_write_edges": 32,
+  "measured_ring_write_and_reducer_active_edges": 1048,
+  "native_SRAM_64x512_banks": 2,
+  "positive_status": "PASS: exact final_v each edge; all 8-lane data and batch/destination identities; zero all faults",
+  "controls": {
+    "localfirst": "no-fault data mismatch at165",
+    "earlypub": "local native cause0c at163; exit0 expected rejection; no Fatal or positive PASS",
+    "MUT_CARRY": "no-fault data mismatch at165",
+    "MUT_BANK": "scratch fault at117"
+  },
+  "scope": "canonical128-row SM-subtree boundary into four real ring stops and real static reducer + two actual SRAM functional models",
+  "open": [
+    "actual native SM producer binding",
+    "physical slot/pin/clock/SS+FF closure",
+    "full v15/HOST production ISA integration",
+    "end-to-end attention/G96 throughput price"
+  ]
+}

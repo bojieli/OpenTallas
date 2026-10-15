@@ -1,0 +1,5 @@
+PV_STREAM_PASS checked1024 batches128 resets1 first165 last10579 period82 ring_writes2048 local_writes1792 reads3840 overlap_read731 overlap_write32 overlap_reducer1048 SRAM2
+- /srv/opentallas-scratch/claude/hcoll-attn-stream-f23c17757/rtl/hbm_accel/generic/collective/p2p/tb_hgi_attn_pv_stream.sv:101: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 0.364 s; speed 29.077 us/s
+- Verilator: cpu 0.364 s on 1 threads; allocated 13 MB
