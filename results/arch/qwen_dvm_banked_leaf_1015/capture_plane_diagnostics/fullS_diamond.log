@@ -1,0 +1,23 @@
+ot-run: ot-epyc4       admits   661 GB (avail 887, growth 90, headroom 48, waiters 0/0 GB) load 24/128 running 18 disk 458 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1786948-1792060485 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+FULL_S_PLACEMENT_MODEL {"capture_FF": 1170, "S_resident_cells": 5943, "area_um2": 731.0557799999845, "region_um": [2.16, 2.16, 62.64, 24.84], "util": 0.5329613095237982, "added_FF": 0, "added_edges": 0, "fill_II": 1, "fill_bytes_per_cycle": 128, "source_logic_unchanged": true, "route_qualified": false}
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+[INFO DPL-0006] Core area: 9536.49 um^2
+[INFO DPL-0007] Movable instances area: 5199.07 um^2
+[INFO DPL-0008] Fixed instances area within core: 51.15 um^2
+[INFO DPL-0009] Utilization: 55.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1101] Legalizing using diamond search.
+[ERROR DPL-0016] cannot place instance ot_ihdrv_00587.
+Error: fullS_diamond.tcl, 3 DPL-0016
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1786948-1792060485): exit 1
