@@ -19,6 +19,32 @@ for m in manifest['masters']:
     assert not(set(ports)&{'sid','bid'});assert {p['name'].split('[')[0] for p in s['pins']}==set(ports)
     for p in s['pins']:
         n=p['name'].split('[')[0];width=ports[n][1];assert abs(p['span_um'][1]-p['span_um'][0]-width*.096)<1e-5
+    # Spread each vector over real usable face length rather than packing at minimum pitch.
+    spread=[]; ranges={}
+    def region(items,face,lo,hi):
+        if not items:return
+        count=sum(ports[p['name'].split('[')[0]][1] for p in items)
+        pitch=int((hi-lo)/count/.096)*.096
+        assert pitch>=.192-1e-8, (m['top'],face,count,pitch)
+        cursor=(lo+hi-count*pitch)/2
+        for pin in items:
+            n=pin['name'].split('[')[0];width=ports[n][1];a,b=round(cursor,6),round(cursor+width*pitch,6)
+            pin.update(offset=round((a+b)/2,6),span_um=[a,b],bit_pitch_um=round(pitch,6),bit_centres_rule='lo + (bit_index + 0.5) * bit_pitch_um')
+            spread.append(pin);ranges[n]=[a,b];cursor=b
+    for face in 'WES':region([p for p in s['pins'] if p['face']==face],face,2,(s['outline']['w'] if face=='S' else s['outline']['h'])-2)
+    north=[p for p in s['pins'] if p['face']=='N' and p['name'] not in ('clk','rst_n')]
+    half=sum(ports[p['name'].split('[')[0]][1] for p in north)/2;left=[];right=[];nleft=0
+    for pin in north:
+        width=ports[pin['name'].split('[')[0]][1]
+        if nleft+width<=half:left.append(pin);nleft+=width
+        else:right.append(pin)
+    mid=s['outline']['w']/2
+    region(left,'N',2,mid-2);region(right,'N',mid+2,s['outline']['w']-2)
+    for n,center in [('clk',mid),('rst_n',mid+.192)]:
+        pin=next(p for p in s['pins'] if p['name']==n);a,b=round(center-.048,6),round(center+.048,6);pin.update(offset=center,span_um=[a,b],bit_pitch_um=.096);spread.append(pin);ranges[n]=[a,b]
+    s['pins']=spread;s['pin_ranges']=ranges;s['clock_entry']['offset']=mid
+    s['minimum_nonclock_bit_pitch_um']=min(p['bit_pitch_um'] for p in spread if p['name'] not in ('clk','rst_n'))
+    s['pin_assignment_note']='Supersedes packed5afa: four-face vectors spread with local occupancy <=0.50; clock centered N. Exact per-bit centers and actual ODB pin rectangles must match; no native/route qualification inherited.'
     deps=[m['source'],manifest['core'],'rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv']
     s.update(name=parent+'_identity_diagnostic',parent=parent,cell=m['top'],source=m['source'],source_sha256=m['sha256'],source_prerequisite=REF,source_dependencies_sha256={p:hashlib.sha256(blob(p)).hexdigest() for p in deps},parent_plan_window=window,origin=dict(x=(window['w']-s['outline']['w'])/2,y=0,orient='R0'),compile_time_identity=dict(SLICE_ID=m['sid'],BANK_ID=m['bid']),grant='source_specialized_bank_identity_diagnostic_1417',scope='Distinct source and independently qualified view required for each identity. Candidate physical slot only; actual production slice still binds old dynamic bank. No constant SID/BID port tie, falsepath, case analysis or inherited view. Actual bank/hub packing and all incident paths remain OPEN.')
     s['face_density']['N']-=5*.096/s['outline']['w'];slots.append(s)
