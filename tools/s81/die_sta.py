@@ -650,6 +650,31 @@ def interim_lib(cells, corner, pads=None):
     return '\n'.join(L) + '\n'
 
 
+
+def real_view_gate(required_masters, corner_views):
+    """Refuse planning cells and cross-corner substitutions for a real-view kit.
+
+    Call after the normal source-qualified binding filter and collective overrides.
+    The gate covers the libraries only; physical clocks and complete hardware
+    composition remain separate obligations.
+    """
+    missing = {}
+    for master in sorted(required_masters):
+        for corner in ('ss', 'tt', 'ff'):
+            source = corner_views.get(corner, {}).get(master)
+            if source is None:
+                missing.setdefault(master, {})[corner] = 'missing_real_corner_view'
+            elif source[1] not in ('closed', 'assembled', 'macro'):
+                missing.setdefault(master, {})[corner] = 'planning_view_' + str(source[1])
+            elif not Path(source[0]).is_file():
+                missing.setdefault(master, {})[corner] = 'missing_library_file'
+    return dict(schema='opentallas.s81.real_view_gate.v1',
+                verdict='FAIL' if missing else 'PASS',
+                required_masters=len(set(required_masters)), missing=missing,
+                scope='Source-filtered three-corner libraries only; not native die qualification',
+                tt_fallback_to_ss=False, interim_libraries_allowed=False)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('mode', choices=['kit'])
@@ -665,6 +690,8 @@ def main():
                     help='closure-loop routed block clock insertion: the in-arc insertion of closed / assembled views, '
                          'subtracted from their planned pin latency (balanced die tree, balance_latency)')
     ap.add_argument('--require-qualified-collective', action='store_true', help='reject an unqualified opt-in split3CR collective instead of writing an interim planning kit')
+    ap.add_argument('--require-real-views', action='store_true',
+                    help='refuse missing real SS/TT/FF views before writing timing libraries; no interim cells or SS-as-TT substitution')
     ap.add_argument('--planning-hold-pads', action='store_true',
                     help='planning sensitivity only: model unbuilt 120 ps FF receiver delay chains; '
                          'the default kit uses unpadded timing and never treats these chains as physical evidence')
@@ -677,6 +704,8 @@ def main():
                          'Default: such a master is timed with the interim pin-registered lib and listed under '
                          'unqualified_views_not_bound; only for re-running a kit of an earlier case')
     a = ap.parse_args()
+    if a.require_real_views and (a.legacy_unqualified_libs or a.planning_hold_pads):
+        ap.error('--require-real-views is incompatible with legacy unqualified libraries or planning hold pads')
     S.apply_options(S.die_options(argparse.ArgumentParser()).parse_args(shlex.split(a.s81_opts) + ['--die', a.die]))
     m = S.build()
     pdir = S.finalize_r8(m)
@@ -753,6 +782,12 @@ def main():
     rec['view_binding'] = dict(table=getattr(S, 'VIEW_BINDING', None), bound_masters=sorted(m_ for m_ in bound if m_ in first),
                                legacy_unqualified_libs=bool(a.legacy_unqualified_libs),
                                unqualified_views_not_bound=dict(sorted(not_bound.items())))
+    if a.require_real_views:
+        gate = real_view_gate(first, cls_)
+        (a.out / 'real_view_gate.json').write_text(json.dumps(gate, indent=1) + '\n')
+        if gate['verdict'] != 'PASS':
+            raise ValueError('REAL_VIEW_GATE FAIL: missing source-qualified three-corner views; see real_view_gate.json')
+        rec['real_view_gate'] = gate
     for corner in ('ss', 'tt', 'ff'):
         cl = cls_[corner]
         cells, libs = [], set()

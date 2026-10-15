@@ -52,6 +52,12 @@ module ot_s81_pq_ctl_state_phw10 (
  // they decode straight into the state machine): every command/calendar input is captured in a pin register.
  // The whole PQ timeline moves +1 edge uniformly against the reader/endpoint (calendar, go and its i_* fields
  // together); responses (ROM, VM, roots, AQ) stay relative to this leaf's own outputs. Endpoint completion +1.
+ // c4: the external reset reaches one boundary-owned reset relay, rather
+ // than the distributed state reset tree. Deassertion priming grows by three
+ // edges; asynchronous assertion and every accepted production edge remain.
+ wire state_rst_n;
+ ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_pin_reset
+     (.clk(clk), .rst_n_in(rst_n), .rst_n(state_rst_n));
  reg cv_q,go_q;reg[74:0] ca_q;reg[9:0] iph_q;reg[2:0] inp_q;reg[18:0] ixb_q,ixps_q,iob_q,iops_q;reg[1:0] ifm_q;
  always @(posedge clk) begin
   cv_q<=calendar_v;ca_q<=calendar_action;iph_q<=i_ph;inp_q<=i_np;ixb_q<=i_xbase;ixps_q<=i_xps;
@@ -63,7 +69,7 @@ module ot_s81_pq_ctl_state_phw10 (
   go_q<=go;
  end
 `endif
- ot_s81_pq_ctl_static_native u_state (.rom_pa0(),.rom_pa1(),.rom_sa(),.calendar_v(cv_q),.calendar_action(ca_q),.go(go_q),
+ ot_s81_pq_ctl_static_native u_state (.rst_n(state_rst_n),.rom_pa0(),.rom_pa1(),.rom_sa(),.calendar_v(cv_q),.calendar_action(ca_q),.go(go_q),
   .i_ph(iph_q),.i_np(inp_q),.i_xbase(ixb_q),.i_xps(ixps_q),.i_obase(iob_q),.i_ops(iops_q),.i_fmt(ifm_q),.*);
 `else
  ot_s81_pq_ctl_static_native u_state (.rom_pa0(),.rom_pa1(),.rom_sa(),.*);

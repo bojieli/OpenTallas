@@ -2923,6 +2923,150 @@ QWEN_WIRE = dict(
 # spine centre, 0.76 ps/um): per matrix-engine op the instruction/x broadcast, the tree levels above the tile and
 # the tree words' return to the spine are register stages of the RTL array (ot_qwen_me_array: BD, NWS, TWS, ORD).
 # They replace W5's x + conflict + write per-op terms and its per-token tree term; the UCIe crossing stays.
+def qwen_dvm_banked_leaf_model():
+    """Unadopted structural bank pipeline: source default remains flat/5-edge leaf."""
+    # Two tiles, 128 {valid,BF16} entries each. Four 32-entry local banks
+    # replace the routed flat128 selector. Bank outputs are registered before
+    # the final4:1 mux: one genuine read edge, no change to IL8 throughput.
+    return dict(schema="opentallas.qwen.dvm.banked_leaf.v1", adopted=False,
+        parameter="BANK_PIPE", default=0, scope="Qwen ROM DVM leaf only",
+        macs_per_cycle=0, tiles_per_leaf=2, entries_per_tile=128,
+        entry_bits=17, storage_bits=4352, banks_per_tile=4,
+        local_bank_storage_bits=544, bank_output_register_bits=136,
+        extra_select_register_bits=28, extra_control_register_bits=8,
+        extra_collision_register_bits=1, extra_register_bits=173,
+        extra_head_control_register_bits_per_column=6,
+        total_extra_register_bits_384leaves_48heads=384*173+48*6,
+        mux2_bit_cells_before=4318, mux2_bit_cells_after=4318,
+        mux_depth_before=7, mux_depth_stages_after=[5, 2],
+        cross_bank_data_bits_before=4352, cross_bank_data_bits_after=136,
+        external_read_request_bits=31, external_read_response_bits=66,
+        fill_payload_bits_per_cycle=1024, fill_bytes_per_cycle=128,
+        storage_read_bytes_per_cycle_per_tile=2,
+        useful_quad_bytes=8, quad_service_edges=4, same_tile_request_ii=8,
+        extra_memory_ports=0, extra_external_bits_per_cycle=0,
+        dimensions_um=[64.8, 149.04], corridor_width_um=73.008,
+        side_clearance_total_um=8.208,
+        baseline_measured_cell_area_um2=4600, extra_measured_area_um2=None,
+        local_bank_fences_required=8, route_layers=["M2", "M3", "M4", "M5"],
+        routing_track_demand=None, routing_track_capacity=None,
+        capacity_reason="Must extract per-bank cut demand, pin access and OBS from candidate placed DB before route",
+        placement_qualified=False, routing_capacity_qualified=False,
+        clock_sinks_bound_per_root=15000, new_clock_sinks=173,
+        clock_rule_source="RESUME_AGENT_HEADER_1013.md:32 / HANDOFF.md:479",
+        source_flops_before=5789, source_flops_after=5962,
+        clock_sinks_after_pin_cloning=None,
+        leaf_response_edges_before=5, leaf_response_edges_after=6,
+        added_read_cycles=1, head_QD_before=7, head_QD_after=8,
+        head_DX_before=10, head_DX_after=11,
+        native_XVM_before=13, native_XVM_after=14,
+        historical_vehicle_BD_before=89, historical_vehicle_BD_after=90,
+        projected_serial_added_cycles_per_layer=6,
+        projected_serial_added_cycles_per_36layer_token=216,
+        token_delta_measured=False, enrolled_target_changed=False,
+        streaming_GHz=1.2, setup_capture_limit_ps=190, launch_limit_ps=220,
+        boundary_spread_limit_ps=80, clocks_or_uncertainty_relaxed=False,
+        physical_admission="REFUSE route until actual bank locality, cut/OBS/pinaccess and clocks prove capacity",
+        qualification="Bit exact leaf+mutant then actual column/station fixed-edge proof; measured cycles/area and original gates required",
+        unchanged_designs=["Qwen HBM", "DeepSeek-V4.1 ROM", "DeepSeek-V4.1 HBM"])
+
+
+def qwen_dvm_registered_fill_model():
+    """Second structural candidate, from actual failed124% strip cut; unadopted."""
+    return dict(schema="opentallas.qwen.dvm.registered_fill.v1", adopted=False,
+        parameters=dict(BANK_PIPE=1, FILL_PIPE=1), defaults=dict(BANK_PIPE=0,FILL_PIPE=0),
+        frame_um=[64.8,162.0], tiles=2, epochs=2, local_banks=8,
+        storage_bits=4352, bank_read_pipeline_edges=1,
+        source_baseline="47ec4feb7 / nativeCTS723401b85 (route refused onactualcut)",
+        measured_source_flops_before=5962, measured_post_pin_flops_before=7058,
+        extra_source_write_relay_ff=1152, expected_removed_output_clone_ff=1096,
+        projected_source_flops_after=7114, projected_post_pin_flops_after=7114,
+        original_flat_measured_post_pin_flops=6885,
+        projected_physical_extra_flops_vs_original_per_leaf=229,
+        extra_head_control_ff_vs_original=9,
+        projected_physical_extra_flops_384leaves_48heads=88368,
+        measured_post_pin_flops_after=None,
+        fill_word_bits=1170, constant_output_control_bits=18,
+        fill_pass_edges_before=1, fill_pass_edges_after=2,
+        fill_payload_bytes_per_cycle=128, fill_II=1,
+        local_read_bytes_per_cycle_per_tile=2, same_tile_quad_II=8,
+        new_external_ports=0, external_width_changed=False, extra_memory_ports=0,
+        macs_per_cycle=0, mux2_read_bit_cells=4318,
+        bank_read_plus_unique_write_measured_area_um2=[374.8518,374.5602,378.4968,379.25496,378.90504,379.31328,382.60836,379.83816],
+        shared_write_comb_cells_before=3208,
+        encapsulated_full_bank_modules=True,
+        ABC_cross_bank_data_mask_sharing_allowed=False,
+        capture_polarity_restoration_local=True,
+        estimated_extra_mask_gate_instances=3072,
+        extra_mask_area_measured_um2=None,
+        minimum_bank_fence_um=[51.84,12.96], maximum_projected_bank_util=0.60,
+        added_leaf_frame_area_mm2_384=0.322486272,
+        proposed_column_um=[64.8,1641.6],
+        geometry_fit_qualified=False,
+        selected_fixed_candidate_master="qfd_xs_leaf_banked",
+        local_write_muxes_fenced=True, late_data_buffers_rebound_before_CTS=True,
+        actual_strip_cut_before=dict(nets=3811,available_tracks=3066,lower_bound_util=1.243),
+        raw_input_hold_to_N_capture_cut_nets_before=1096,
+        actual_cut_after=None, signal_layers=["M2","M3","M4","M5"],
+        route_admitted=False, route_requires="Measured whole-strip cuts with headroom, via/OBS/pin access, nativeCTS and original corners",
+        FILL_LEAD_before=2,FILL_LEAD_after=5,
+        fill_reason="Four-leaf chain has3 upstream hops;2edges/pass adds3 genuine last-fill-to-read edges",
+        head_QD=8,head_DX_before=10,head_DX_after=14,
+        native_XVM_before=13,native_XVM_after=17,
+        added_operation_edges_vs_original=4,
+        projected_serial_layer_cycles=24,projected_serial_36layer_cycles=864,
+        possible_extra_serial_LM_cycles=4,
+        token_delta_measured=False, ledger_or_target_changed=False,
+        clock_sinks_limit=15000,clock_insertion_limit_ps=300,clock_spread_limit_ps=80,
+        native_launch_limit_ps=220,native_capture_limit_ps=190,
+        added_clock_domains=0,clock_or_uncertainty_relaxed=False,
+        qualification="Actual producer/calendar price and physical routing remain OPEN",
+        unchanged_designs=["Qwen HBM","DeepSeek-V4.1 ROM","DeepSeek-V4.1 HBM"])
+
+
+def qwen_dvm_external_capture_model():
+    """Source-bound external capture successor; preserves the existing fill ages."""
+    return dict(schema="opentallas.qwen.dvm.external_capture.v1",adopted=False,
+        source_baseline="db8fea5da / failed nativeCTS062a6aac8",
+        capture_master="qwen_glue_v514",capture_source_commit="86fe4c922",
+        capture_record_commit="53fc78c0192f2173246b23f93e2314b541ee5b69",
+        capture_master_um=[21.6,75.6],capture_masters_per_leaf=2,
+        capture_roots_per_leaf=2,extra_roots_384leaves=768,
+        old_WD_capture_FF=1024,measured_new_capture_FF=2*521,
+        capture_payload_FF=1024,capture_valid_epoch_copies_FF=4,
+        capture_local_reset_FF=14,core_boot_fault_metadata_FF=5,
+        total_extra_FF_vs_banked_leaf=23,projected_extra_FF_384=8832,
+        leaf_source_FF_before=7114,projected_leaf_source_FF_after=7114-1024+5,
+        measured_capture_native_launch_ps=185.0,measured_capture_native_capture_ps=128.5,
+        measured_capture_R_ps=83.7,measured_capture_spread_ps=8.9,
+        measured_capture_TT_setup_ps=331.72,measured_capture_FF_hold_ps=26.85,
+        measured_capture_DRC=0,capture_reset_release_edges=3,
+        first_operational_capture_edge=4,early_fill_is_fault=True,
+        fill_payload_bytes_per_cycle=128,fill_word_unique_BF16=64,fill_II=1,
+        per_tile_simultaneous_storage_writes=64,tiles_per_leaf=2,
+        macs_per_cycle=0,extra_memory_ports=0,
+        physical_core_um=[64.8,162.0],capture_outside_store_strip=True,
+        proposed_capture_reservation_um2_per_leaf=2*21.6*75.6,
+        proposed_capture_reservation_mm2_384=2*21.6*75.6*384/1e6,
+        raw_to_WD_edges=1,raw_to_storage_edges=2,raw_to_WO_edges=2,
+        extra_fill_edges_vs_banked_leaf=0,extra_read_edges_vs_banked_leaf=0,
+        head_FILL_LEAD=5,head_QD=8,head_DX=14,native_XVM=17,
+        total_added_operation_edges_vs_original=4,
+        metadata_capture_bits_in_leaf=146,
+        bank_storage_bits=4352,bank_mux_partition="8 actual32-entry banks",
+        connections="rawWD->two512payloadGW; GW.Q->leafWD banks and existing pd forwarding FF; metadata captures remain edge1",
+        raw_boundary_bits_to_capture=2*514,capture_to_core_bits=1024,
+        core_fill_forward_bits=1170,core_capture_flag_input_bits=4,core_fault_output_bits=1,
+        column_physical_roots=25,column_monitor_parent_FF=0,
+        head_candidate_um=[129.6,345.6],head_extra_frame_mm2_48=1.07495424,
+        head_candidate_physical_qualified=False,
+        column_fault_OR_gate_cost="8 leaf fault bits plus neighbor into actual head fault_i; physical cells/home/timing required",
+        requirement="Exact homes, actual M2..M5 cuts/OBS/pinaccess, separate phi-R delivery and reset/warmup proof before native parent claim",
+        physical_qualified=False,geometry_homes_qualified=False,phase_qualified=False,
+        token_delta_measured=False,ledger_or_target_changed=False,
+        clocks_or_uncertainty_relaxed=False)
+
+
 def qwen_slab_m3_closure_model():
     """Unadopted LAT10/KCP4/OREG1 successor of LAT7/noOREG; no array timing assumption."""
     # Historical Qwen AR count used by QWEN_WIRE.result_write_extra:
@@ -17105,20 +17249,30 @@ def hbm_smh_split_west_transport_model():
 
 
 def dsrom_wfc_static_link_price():
-    """S81 WFC stage kit STATIC die form (dsfd_wfc_stg_cl.sv +define DSFD_WFC_STG_STATIC, S-VM F7 2026-10-15): the
-    compiler-scheduled link to the static collective.  Measured on tools/dsrom_wfc_static_bench.py (PRICED stage shape,
-    static VM, RXWORDS 41 / XWORDS 46, 40 jobs) against the grant form on the same bench with an ideal collective."""
-    grant = dict(period_edges=12023 / 40, rx_last_to_tx_header_edges=(241, 244))
-    static = dict(period_edges_min=298, calendar_period_edges=300, tx_off_edges=272, tx_off_min_measured=264,
-                  rx_last_to_tx_header_edges=274, rx_buffer_flits=32, rx_max_occupancy=14,
-                  tx_buffer_flits=64, tx_max_occupancy=9, buffer_bits=(32 + 64) * 513)
-    return dict(schema='opentallas.s81.wfc_static_link_price.v1', clock='fast (stream) edges', grant_form=grant,
-                static_form=static,
-                added_latency_edges_per_stage_handoff=static['rx_last_to_tx_header_edges'] - grant['rx_last_to_tx_header_edges'][0],
-                throughput_change='none: calendar period 300 >= the grant form 300.6 edges/job; 298 measured minimum',
-                compiler_constants=dict(TX_OFF=272, tx_slots='consecutive edges from last RX arrival + TX_OFF',
-                                        rx_slots='any calendar edge; occupancy <= 32 flits'),
-                open=['TX_OFF is measured at the bench stage-core time (T_CORE 80): set per production stage programme',
-                      'internal WFC tokpipe in/out grants and VM write credits stay inside the master (absorbed by the '
-                      'static buffers; any would-be wait at the boundary is a sticky fault)',
-                      'buffers as flops (49,248 b): map to ot_sram_1r1w_64x512 macros at hardening'])
+    """S81 WFC stage kit, STATIC (rtl/dsrom_sys/mtp/dsfd_wfc_stg_static.sv, die name dsfd_wfc_stg; S-VM F7 static-wfc2
+    2026-10-15).  No ready / grant / credit on any production path; every stage at a fixed offset from its scheduling
+    event (RX header, DONE).  Measured on tools/dsrom_wfc_static_bench.py (PRICED stage shape RXW 41 / TXW 46, static VM
+    endpoint behaviour RLAT 17 / WLAT 5, T_CORE 80 serial) and against the grant form (dsfd_wfc_stg_cl) on its own bench.
+    Stage accounting (fast = stream 1.2 GHz edges, serial = 0.9 GHz edges):"""
+    stages = dict(
+        rx_pin_flop=('fast', 1), rx_parse_to_first_write_slot=('fast', 2), writer_out_flop=('fast', 1),
+        x43_transfer=('fast->serial', '1..3 serial (fixed per phase)'), write_copy_pin_flop=('serial', 1),
+        vm_writes=('serial', 41), doorbell=('serial', 1), start_gap=('serial', 4 + 1),
+        stage_core=('serial', 'T_stage (programme)'), done_pin_flop=('serial', 1), read_launch=('serial', 1),
+        reads=('serial', 46), vm_read_latency=('serial', 'RLAT = 17 + die stations'), return_out_flop=('serial', 1),
+        x34_transfer=('serial->fast', '1..3 fast (fixed per phase)'), return_pin_flop=('fast', 1),
+        tx_buffer_write=('fast', 1), tx_header_offset=('fast', 'TXD = (4 (RLAT + 1 + TXW) + 2) / 3 - (TXW - 1) + 3 = 44 at RLAT 17'),
+        tx_launch=('fast', 1))
+    measured = dict(done_to_tx_header_fast=(53, 54), rx_header_to_tx_header_fast_at_tcore80=(232, 233), txd_margin_fast=3,
+                    min_period_fast=175, grant_form_period_fast=12023 / 40, grant_form_rx_last_to_tx_header_fast=(241, 244))
+    return dict(schema='opentallas.s81.wfc_static_kit_price.v2', stages=stages, measured=measured,
+                tx_off_formula='TX header (fast edge) = RX header + 2 + 56 + 5 serial-equivalent + T_stage(L) + 51; i.e. '
+                               'TX_OFF(L) = T_stage(L) + K with K = rx_tx(T_CORE 80) - 80 serial = 233 - 107 = 126 fast edges '
+                               '(T_stage from the stage programme, e.g. results/rtl/s81_functional_token_1014 layer_cycles)',
+                throughput='period >= 175 fast edges / job at T_CORE 80 (grant form 300.6): the next job\'s RX header may '
+                           'arrive once its first write lands on or after the previous job\'s first outbound read',
+                area=dict(macros=['ot_sram_1r1w_64x512 x2 (RX, TX)', 'ot_sram_1r1w_128x256 (position table)',
+                                  'ot_sram_1r1w_512x64 (HEP)'], removed=['tokpipe WFC', 'dsfd_wfc_lnk credits / skids',
+                                  'vmx_p ratio FIFOs, response queue (5 x 128x256), staging banks (2 x 64x512)']),
+                open=['RLAT is a leaf build constant (17 = no stations): the die value = 17 + VM<->WFC station hops',
+                      'START_GAP 4 assumes the static VM write visibility (x34 + decode + core write <= 4 serial)'])

@@ -1,0 +1,37 @@
+{
+  "qualified": false,
+  "bench_qualified": true,
+  "candidate": "six raw Liberty SRAM clock entries and one boundary-register CTS root; word select flops stay on register root",
+  "period_ps": 1111.111111,
+  "read_latency_edges": 2,
+  "write_commit_edges": 1,
+  "previous_attempt": "attempt1: exact bench passed but mixed macro/standard CTS roots rejected by native ownership; retained as historical evidence",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_bank6_clock_physical.sv": "4a9675738390cf36037b8cae2da86cd6103cb708a1a69707f3a7baa6aedd1e07",
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv": "b6b35b5e1da5b641b3465a8c22aeeba9959f5a10d852d4c1fe16a3eb6a820931",
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219"
+  },
+  "positive": {
+    "checks": 3598,
+    "SRAMs": 6,
+    "independent_macro_ports": 6,
+    "read_latency_edges": 2,
+    "write_commit_edges": 1,
+    "II": 1
+  },
+  "clock_halt_mutant": {
+    "same_binary": true,
+    "halt_macro": 5,
+    "read_edges": [
+      64,
+      79
+    ],
+    "mismatches": 12,
+    "expected_fail_seen": true
+  },
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-944449-1792088591",
+  "ot_run_exit": 0,
+  "CTS": "waiting for shared helper b3d0ea974 main publication before renewed physical gate",
+  "remote_bench_run": "/srv/opentallas-scratch/codex/su-bank-clock7-hybrid-1103"
+}

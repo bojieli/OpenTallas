@@ -1,0 +1,3 @@
+MTP_STG PASS jobs=60 starts=60 out=60 cycles=17939 vmslow=0 core_user_mismatch_at_start=0
+MTP_STG_CYC start_mean=31.00 start_max=31 done_mean=92.00 done_max=92 link_in_mean=13.80 link_in_max=237 txw=46 (fast cycles; done = k_done -> WFC core_done incl. the 46-word prefetch)
+/srv/opentallas-scratch/codex/s81-wfc-recovery-1103/proof/equiv_stg_r1/ref/tb.sv:253: $finish called at 53818500 (1ps)
