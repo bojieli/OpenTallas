@@ -1,0 +1,632 @@
+{
+ "schema": "opentallas.hbm.sm32_repack_probe.v1",
+ "status": "RELOCATION_REQUIRED_NOT_QUALIFIED",
+ "model_sha256": "2ddfc7c012fc16f14d384fa982d4be337e2a9f5bf50d3936bd15b92e27e63598",
+ "compact_sha256": "8032ddf32e5bdbd9136f7c16af9409511faf0a6a17857e74661bf534c71cada8",
+ "sm_count": 32,
+ "sm_outline_um": [
+  5460.48,
+  1723.68
+ ],
+ "clearance_um": 21.6,
+ "outline_limit_um": [
+  32984.288,
+  25980.528
+ ],
+ "total_sm_mm2": 301.18784532480004,
+ "retained_non_sm_count": 165,
+ "dropped_non_sm_count": 0,
+ "rotated_90_count": 0,
+ "sm_overlap_count": 0,
+ "sm_overlaps": [],
+ "outside": [],
+ "unique_obstructions": {
+  "ep_S0": {
+   "kind": "hub",
+   "box_um": [
+    7885.728,
+    6016.0,
+    2600.0,
+    830.52
+   ]
+  },
+  "at_SW_00_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    557.28,
+    8678.88,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_SW_01_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    2595.0,
+    8678.88,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_SW_02_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    4632.72,
+    8678.88,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_SW_03_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    6670.44,
+    8678.88,
+    1778.52,
+    1263.6
+   ]
+  },
+  "hb_coll_SW": {
+   "kind": "hub",
+   "box_um": [
+    8699.616,
+    7948.8,
+    2255.04,
+    2708.64
+   ]
+  },
+  "ep_S1": {
+   "kind": "hub",
+   "box_um": [
+    7885.728,
+    7046.0,
+    2600.0,
+    830.52
+   ]
+  },
+  "at_SE_00_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    23671.904,
+    8678.88,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_SE_01_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    25709.624,
+    8678.88,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_SE_02_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    27747.344,
+    8678.88,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_SE_03_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    29785.064,
+    8678.88,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_NW_10_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    557.28,
+    16038.048,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_NW_11_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    2595.0,
+    16038.048,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_NW_12_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    4632.72,
+    16038.048,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_NW_13_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    6670.44,
+    16038.048,
+    1778.52,
+    1263.6
+   ]
+  },
+  "ep_N0": {
+   "kind": "hub",
+   "box_um": [
+    9983.952,
+    19135.0,
+    2600.0,
+    830.52
+   ]
+  },
+  "at_NE_10_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    23671.904,
+    16038.048,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_NE_11_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    25709.624,
+    16038.048,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_NE_12_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    27747.344,
+    16038.048,
+    1778.52,
+    1263.6
+   ]
+  },
+  "at_NE_13_lo": {
+   "kind": "attn_tile",
+   "box_um": [
+    29785.064,
+    16038.048,
+    1778.52,
+    1263.6
+   ]
+  }
+ },
+ "proposed_sms": [
+  {
+   "name": "sm0",
+   "quadrant": "SW",
+   "box_um": [
+    21.6,
+    1730.16,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MY",
+   "conflicts": []
+  },
+  {
+   "name": "sm1",
+   "quadrant": "SW",
+   "box_um": [
+    5503.68,
+    1730.16,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MY",
+   "conflicts": []
+  },
+  {
+   "name": "sm2",
+   "quadrant": "SW",
+   "box_um": [
+    21.6,
+    3475.44,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MY",
+   "conflicts": []
+  },
+  {
+   "name": "sm3",
+   "quadrant": "SW",
+   "box_um": [
+    5503.68,
+    3475.44,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MY",
+   "conflicts": []
+  },
+  {
+   "name": "sm4",
+   "quadrant": "SW",
+   "box_um": [
+    21.6,
+    5220.72,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MY",
+   "conflicts": []
+  },
+  {
+   "name": "sm5",
+   "quadrant": "SW",
+   "box_um": [
+    5503.68,
+    5220.72,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MY",
+   "conflicts": [
+    "ep_S0"
+   ]
+  },
+  {
+   "name": "sm6",
+   "quadrant": "SW",
+   "box_um": [
+    21.6,
+    6966.0,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MY",
+   "conflicts": [
+    "at_SW_00_lo",
+    "at_SW_01_lo",
+    "at_SW_02_lo"
+   ]
+  },
+  {
+   "name": "sm7",
+   "quadrant": "SW",
+   "box_um": [
+    5503.68,
+    6966.0,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MY",
+   "conflicts": [
+    "at_SW_02_lo",
+    "at_SW_03_lo",
+    "hb_coll_SW",
+    "ep_S1"
+   ]
+  },
+  {
+   "name": "sm8",
+   "quadrant": "SE",
+   "box_um": [
+    21405.6,
+    1730.16,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R0",
+   "conflicts": []
+  },
+  {
+   "name": "sm9",
+   "quadrant": "SE",
+   "box_um": [
+    26887.68,
+    1730.16,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R0",
+   "conflicts": []
+  },
+  {
+   "name": "sm10",
+   "quadrant": "SE",
+   "box_um": [
+    21405.6,
+    3475.44,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R0",
+   "conflicts": []
+  },
+  {
+   "name": "sm11",
+   "quadrant": "SE",
+   "box_um": [
+    26887.68,
+    3475.44,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R0",
+   "conflicts": []
+  },
+  {
+   "name": "sm12",
+   "quadrant": "SE",
+   "box_um": [
+    21405.6,
+    5220.72,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R0",
+   "conflicts": []
+  },
+  {
+   "name": "sm13",
+   "quadrant": "SE",
+   "box_um": [
+    26887.68,
+    5220.72,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R0",
+   "conflicts": []
+  },
+  {
+   "name": "sm14",
+   "quadrant": "SE",
+   "box_um": [
+    21405.6,
+    6966.0,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R0",
+   "conflicts": [
+    "at_SE_00_lo",
+    "at_SE_01_lo"
+   ]
+  },
+  {
+   "name": "sm15",
+   "quadrant": "SE",
+   "box_um": [
+    26887.68,
+    6966.0,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R0",
+   "conflicts": [
+    "at_SE_01_lo",
+    "at_SE_02_lo",
+    "at_SE_03_lo"
+   ]
+  },
+  {
+   "name": "sm16",
+   "quadrant": "NW",
+   "box_um": [
+    21.6,
+    17290.8,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R180",
+   "conflicts": [
+    "at_NW_10_lo",
+    "at_NW_11_lo",
+    "at_NW_12_lo"
+   ]
+  },
+  {
+   "name": "sm17",
+   "quadrant": "NW",
+   "box_um": [
+    5503.68,
+    17290.8,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R180",
+   "conflicts": [
+    "at_NW_12_lo",
+    "at_NW_13_lo"
+   ]
+  },
+  {
+   "name": "sm18",
+   "quadrant": "NW",
+   "box_um": [
+    21.6,
+    19036.08,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R180",
+   "conflicts": []
+  },
+  {
+   "name": "sm19",
+   "quadrant": "NW",
+   "box_um": [
+    5503.68,
+    19036.08,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R180",
+   "conflicts": [
+    "ep_N0"
+   ]
+  },
+  {
+   "name": "sm20",
+   "quadrant": "NW",
+   "box_um": [
+    21.6,
+    20781.36,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R180",
+   "conflicts": []
+  },
+  {
+   "name": "sm21",
+   "quadrant": "NW",
+   "box_um": [
+    5503.68,
+    20781.36,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R180",
+   "conflicts": []
+  },
+  {
+   "name": "sm22",
+   "quadrant": "NW",
+   "box_um": [
+    21.6,
+    22526.64,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R180",
+   "conflicts": []
+  },
+  {
+   "name": "sm23",
+   "quadrant": "NW",
+   "box_um": [
+    5503.68,
+    22526.64,
+    5460.48,
+    1723.68
+   ],
+   "orient": "R180",
+   "conflicts": []
+  },
+  {
+   "name": "sm24",
+   "quadrant": "NE",
+   "box_um": [
+    21405.6,
+    17290.8,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MX",
+   "conflicts": [
+    "at_NE_10_lo",
+    "at_NE_11_lo"
+   ]
+  },
+  {
+   "name": "sm25",
+   "quadrant": "NE",
+   "box_um": [
+    26887.68,
+    17290.8,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MX",
+   "conflicts": [
+    "at_NE_11_lo",
+    "at_NE_12_lo",
+    "at_NE_13_lo"
+   ]
+  },
+  {
+   "name": "sm26",
+   "quadrant": "NE",
+   "box_um": [
+    21405.6,
+    19036.08,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MX",
+   "conflicts": []
+  },
+  {
+   "name": "sm27",
+   "quadrant": "NE",
+   "box_um": [
+    26887.68,
+    19036.08,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MX",
+   "conflicts": []
+  },
+  {
+   "name": "sm28",
+   "quadrant": "NE",
+   "box_um": [
+    21405.6,
+    20781.36,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MX",
+   "conflicts": []
+  },
+  {
+   "name": "sm29",
+   "quadrant": "NE",
+   "box_um": [
+    26887.68,
+    20781.36,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MX",
+   "conflicts": []
+  },
+  {
+   "name": "sm30",
+   "quadrant": "NE",
+   "box_um": [
+    21405.6,
+    22526.64,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MX",
+   "conflicts": []
+  },
+  {
+   "name": "sm31",
+   "quadrant": "NE",
+   "box_um": [
+    26887.68,
+    22526.64,
+    5460.48,
+    1723.68
+   ],
+   "orient": "MX",
+   "conflicts": []
+  }
+ ],
+ "required_gates": [
+  "relocate every obstruction without new overlap",
+  "pin geometry and source ABI",
+  "static cycle schedule including all transport",
+  "cut capacity and GRT overflow0",
+  "real-view die TT setup/FF hold and DRC0"
+ ]
+}
