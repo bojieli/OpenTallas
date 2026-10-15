@@ -1,0 +1,21 @@
+CURRENT ELEMENT GAP AUDIT — 2026-10-14T19:29:29.737053-07:00
+
+Read current gaps below, not old API failure labels. Work is underway for most items; closure still needs actual native static composition.
+
+Die/group | Classification | Owner | Concrete evidence
+Qwen compute/collective/IO | floorplan + interface + static schedule | Q-COLL/Q-DIE | Closed colr3 native PASS. Parent w3 real long-wire failure. New real IO RTL started; C13 stale ports. CK169.1->21.1 helper proof, raw regout-758.4 still open.
+Qwen compute/SU/slab frame | native wrapper + bandwidth + leaf capture | Q-ELEM | 6frame wrappers absent; 32LEF layout fits old frame; four-position2050b transport not built. SU3capturepins194.0>190, successor running.
+Qwen compute/DVM/control | interface + schedule + measured cost | Q-DVM/Q-CONTROL | Real NOX/tap and Q exporter started. Old row8 API insufficient; actual static commit/arm/die wiring not qualified.
+Qwen compute/die geometry/power | real route/cost + power-pin flow | Q-DIE | C8cut1.129/239overreach/840.7mm2. C13placement0overlap; power-pin PA failure. C14not full built.
+Qwen compute/WSRC1 descriptor/KV endpoint | UNOWNED native implementation | UNASSIGNED | Emerging gap identified by compute lead; assign owner before new route.
+Qwen KV/HOST/PLL/PHY and expanded leaves | missing native binding + pin/clock + schedule | KV-DIE/KV-ELEM/HOST/LINK | PublishedHOST/PLLSTUB; current rawPHY and new epoch/API not yet actual die-composed. Head closed stands; ECTLB native PASS; DQ128~-735ps.
+S81/VM/BF/PQ/gather | real route/rate + native/static binding | S-VM/S-BIND/S-DIE | VMseq/trueSRAMcommit and BFx2 started; fullVM wrapper pending. FEactualcut.610/.626+93overreach. Gather48clock admission and dieBFalignment pending.
+S81/MIX/HC/NORM homes | new native hardware + floorplan + throughput | S-ELEM-B/S-FUNC/S-DIE | MIX43k+flops needs partition; realHC arithmetic exists but S81ROM/staging homes missing;2/6HC homes169relay overlaps.
+S81/c9p bind harness | FLOW defect; RTL verdict missing | S-DIE | Missingnl/gen.ctrl_gate.json parent dir, fixc6dca3111; rc1 was not nativeRTL FAIL. Await exact rerun.
+HBM/VM/SM native parents | missing native binding + area/rate | H-DIE/H-ELEM-A/H-COLL | Pin-only VM quadrant masters cannot alias real17b/281b/2224+VCcredit API. Compact96slice source started; measured outlines missing.
+HBM/generated stations / shell interfaces | source-admission flow + true API mismatch | H-DIE | Actual1572masters bind687unbound/23ambiguous includes FAILED station generator: q2W.b layout(1,1,0)vsNone,rc1,PIDgone; not687new engines. Native functional unknown/open width ports still actual gaps.
+HBM/HOST/SerDes/PHY models | ownership/source admission UNVERIFIED | H-DIE confirmation requested | Unbound actual masters; analog model allowed but digital layer must bind. No current named implementation owner confirmed.
+
+API160 die_used includes superseded VM leaves/old Qwen jobs. Full per-master flags and source hashes in audit.json.
+No clock/SDC/threshold changes or new runs performed by this audit.
+No complete-current-die native/static release proven.
