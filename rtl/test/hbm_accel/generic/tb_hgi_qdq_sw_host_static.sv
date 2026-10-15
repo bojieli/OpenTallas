@@ -3,7 +3,7 @@
 // Golden vectors and external preload are declared component-boundary stimuli.
 // SW replica component boundary: real L0 FP8 shape; external original operands and expected golden,
 // no substitution inside arithmetic. SU producer norm/rope and DMA consumer epochs remain unbound.
-module tb_hgi_qdq_sw_host_static #(parameter integer MUT=0);
+module tb_hgi_qdq_sw_host_static #(parameter integer MUT=0,PIN_BOUNDARY=0);
     reg clk=0; always #5 clk=~clk;
     reg rst_n=0, cv=0, last=0;
     reg [5:0] op=0; reg [7:0] block_n=0;
@@ -79,7 +79,7 @@ module tb_hgi_qdq_sw_host_static #(parameter integer MUT=0);
     reg [2247:0] pwq=0;
     reg [135:0] prq=0;
     wire [143:0] status;
-    ot_hgi_qdq_sw_host_static #(.MUT(MUT==1?1:MUT==2?2:0),.COMPACT(1)) dut(
+    ot_hgi_qdq_sw_host_static #(.MUT(MUT==1?1:MUT==2?2:0),.COMPACT(1),.PIN_BOUNDARY(PIN_BOUNDARY)) dut(
         .clk_program(clk),.clk_transport(clk),.clk_dxl(clk),.clk_dbq(clk),.clk_daq(clk),.rst_n(rst_n),
         .cfg_v(ext_cfg_v),.cfg_target(ext_target),.cfg_addr(ext_cfg_addr),.cfg_data(ext_cfg_data),
         .desc_v(ext_desc_v),.desc_base(ext_base),.desc_limit(ext_limit),.desc_loops(ext_loops),.launch_v(ext_launch_v),

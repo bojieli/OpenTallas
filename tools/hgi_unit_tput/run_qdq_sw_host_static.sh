@@ -21,7 +21,7 @@ src=(rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.
  rtl/test/hbm_accel/generic/tb_hgi_qdq_sw_host_static.sv)
 if [[ ${2:-} == --manifest ]]; then printf '%s\n' "${src[@]}"; exit; fi
 for m in 0 1 2 3 4 5 6; do
- verilator --binary --timing -O2 -j 8 -Wno-fatal -Wno-lint -Wno-style -GMUT=$m --top-module tb_hgi_qdq_sw_host_static \
+ verilator --binary --timing -O2 -j 8 -Wno-fatal -Wno-lint -Wno-style -GMUT=$m -GPIN_BOUNDARY=${PIN_BOUNDARY:-0} --top-module tb_hgi_qdq_sw_host_static \
   -Mdir "$out/m$m.obj" -o sim "${src[@]}" > "$out/m$m.build" 2>&1
  set +e; "$out/m$m.obj/sim" +DIR=results/hbm_static_quant_1015/SW_replica/vectors +PROGRAM=results/hbm_static_quant_1015/SW_replica/program.hex > "$out/m$m.log" 2>&1; rc=$?;set -e
  echo "$rc" > "$out/m$m.rc"
