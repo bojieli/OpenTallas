@@ -31,14 +31,14 @@
  "pins": {
   "N": [
    "a_d",
-   "a_r",
    "ck",
    "rst_n",
-   "sidx"
+   "sidx",
+   "tie_hi",
+   "tie_lo"
   ],
   "S": [
-   "b_d",
-   "b_r"
+   "b_d"
   ],
   "W": [
    "tap_d"

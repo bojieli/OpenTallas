@@ -20,14 +20,14 @@
  "pins": {
   "N": [
    "a_d",
-   "a_r",
    "ck",
    "rst_n",
-   "sidx"
+   "sidx",
+   "tie_hi",
+   "tie_lo"
   ],
   "S": [
-   "b_d",
-   "b_r"
+   "b_d"
   ],
   "W": [
    "tap_d"
@@ -97,10 +97,6 @@
    26.94,
    77.436
   ],
-  "a_r": [
-   52.0,
-   52.4
-  ],
   "ck": [
    52.5,
    52.9
@@ -111,11 +107,15 @@
   ],
   "sidx": [
    0.2,
-   1.3
+   0.8
   ],
-  "b_r": [
-   52.0,
-   53.0
+  "tie_hi": [
+   0.85,
+   1.05
+  ],
+  "tie_lo": [
+   1.1,
+   1.3
   ]
  },
  "pin_source": "die-assigned pin file of the master it replaces (c3_codex out/pins/qfd_cst_n.json, relay_data_run.py --case, src b723ed282): corridor and tap ranges taken verbatim; +8 TDM tag bits share the corridor range; pin_balance M3+M5 (516 b on the assigned 50.5-um M5 range alone overflow by one PPL group: gate pin_fit 11:3x)"

@@ -2019,7 +2019,6 @@ place_pin -pin_name {hw_d[1563]} -layer M5 -location {182.844 216.000} -pin_size
 place_pin -pin_name {hw_d[1564]} -layer M5 -location {182.940 216.000} -pin_size {.024 .192} -force_to_die_boundary
 place_pin -pin_name {hw_d[1565]} -layer M5 -location {183.036 216.000} -pin_size {.024 .192} -force_to_die_boundary
 place_pin -pin_name {hw_d[1566]} -layer M5 -location {183.132 216.000} -pin_size {.024 .192} -force_to_die_boundary
-place_pin -pin_name {hw_r} -layer M5 -location {183.228 216.000} -pin_size {.024 .192} -force_to_die_boundary
 place_pin -pin_name {he_d[0]} -layer M4 -location {216.000 32.796} -pin_size {.192 .024} -force_to_die_boundary
 place_pin -pin_name {he_d[1]} -layer M4 -location {216.000 32.892} -pin_size {.192 .024} -force_to_die_boundary
 place_pin -pin_name {he_d[2]} -layer M4 -location {216.000 32.988} -pin_size {.192 .024} -force_to_die_boundary
@@ -3587,7 +3586,6 @@ place_pin -pin_name {he_d[1563]} -layer M4 -location {216.000 182.844} -pin_size
 place_pin -pin_name {he_d[1564]} -layer M4 -location {216.000 182.940} -pin_size {.192 .024} -force_to_die_boundary
 place_pin -pin_name {he_d[1565]} -layer M4 -location {216.000 183.036} -pin_size {.192 .024} -force_to_die_boundary
 place_pin -pin_name {he_d[1566]} -layer M4 -location {216.000 183.132} -pin_size {.192 .024} -force_to_die_boundary
-place_pin -pin_name {he_r} -layer M4 -location {216.000 183.228} -pin_size {.192 .024} -force_to_die_boundary
 place_pin -pin_name {sw[0]} -layer M4 -location {0.000 5.436} -pin_size {.192 .024} -force_to_die_boundary
 place_pin -pin_name {sw[1]} -layer M4 -location {0.000 5.532} -pin_size {.192 .024} -force_to_die_boundary
 place_pin -pin_name {sw[2]} -layer M4 -location {0.000 5.628} -pin_size {.192 .024} -force_to_die_boundary
