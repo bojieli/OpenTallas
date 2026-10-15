@@ -1,5 +1,5 @@
 {
- "name": "qfd_tile_lsl_fp1-p1-cff513c82",
+ "name": "qfd_tile_lsl_fp1-p1-e63a36620",
  "block": "ot_qwen_tile_lsl_fp1",
  "ref_tile": true,
  "owner": "Codex:qwen_lsl_fault_pin",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/q-lsl-fault-pin-1014",
-  "commit": "cff513c82",
+  "commit": "e63a36620530e38ce711bddd91805ae2b264d7b1",
   "extra_paths": [
    "physical/qwen_die_masters/cfg",
    "rtl/test/qwen_split",
@@ -110,7 +110,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tile_lsl_fp1/qfd_tile_lsl_fp1-p1-cff513c82"
+   "to": "results/rtl/ref_tile/qfd_tile_lsl_fp1/qfd_tile_lsl_fp1-p1-e63a36620"
   }
  ],
  "cycles_added": 0,
