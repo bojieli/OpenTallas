@@ -205,9 +205,12 @@ BINDINGS['qkd_lnk'] = dict(module='ot_qkvd_split_kvlink', file='rtl/qwen_sys/spl
 _BASE = dict(HEAD=HEAD, ECTL=ECTL, ENG_H=ENG_H, RENG=RENG, TILE_Y=dict(TILE_Y), FRAMES=dict(FRAMES))
 
 
-def _set_geometry(split):
+def _set_geometry(split, reserve_static_memory=False):
     """module geometry for the plain KV die (split False) or the split KV/system die (split True)"""
-    global HEAD, ENG_H, RENG, TILE_Y, FRAMES
+    global HEAD, ENG_H, RENG, TILE_Y, FRAMES, LAND_W
+    if reserve_static_memory and not split:
+        raise ValueError('native static memory reservation requires split KV/system die')
+    LAND_W = 237.6 if reserve_static_memory else 172.8
     HEAD = SPLIT_HEAD_V11 if split else _BASE['HEAD']
     ENG_H = 4 * HEAD[1] + ECTL[1] + 4 * GY
     RENG = (HEAD[0], ENG_H)
@@ -657,12 +660,12 @@ def _band(T, side, Wk):
 _PIN_HINT = {}
 
 
-def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False):
+def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False):
     """qwen-1010/b 2026-10-10: two passes -- the second plans every relay chain from the pins the first pass drew (a
     shared master's pin is the one its first instance's peers set), so each hop is measured pin to pin on the die."""
     kw = dict(r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, kv_wq_head=kv_wq_head,
               kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror, split=split)
-    _set_geometry(split)
+    _set_geometry(split, reserve_static_memory=reserve_static_memory)
     _PIN_HINT.clear()
     m = _build(**kw)
     best = None
@@ -826,7 +829,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     add('host', 'qkd_host', xc - tw / 2, MARGIN + SERDES[2] + GY, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
     # v1.2 candidate lanes are OFF by default (kvs2 T2 try: window fine H 1.37 -> 1.25, coarse 1.32 -> 1.17 H but 0.80 -> 1.10 V,
     # lx 1 -> 2 stages, one re-plan reach miss): OT_KV_LANES=1 turns them on for the next revision's work
-    m['geo'] = dict(grp_y=grp_y, split=split, lanes=bool(split and __import__('os').environ.get('OT_KV_LANES', '2') in ('1', '2')), stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
+    m['geo'] = dict(grp_y=grp_y, split=split, land_width_um=LAND_W, static_memory_reservation=LAND_W > 172.8, lanes=bool(split and __import__('os').environ.get('OT_KV_LANES', '2') in ('1', '2')), stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
                     ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, leaf_shift=leaf_shift, edge_channel=edge_chan, kv_wq_head=kv_wq_head, kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror)
     if kv_wq_leaves:
         _write_tiles(m, add)
@@ -1933,6 +1936,8 @@ def record(m):
                 template=dict(path=str(TPL_PATH.relative_to(ROOT)), sha256=hashlib.sha256(TPL_PATH.read_bytes()).hexdigest()),
                 die_um=[die['w'], die['h']], die_mm2=die['mm2'], instances=len(m['insts']), buses=len(m['buses']),
                 instance_mm2=round(inst_mm2, 3), fill=round(inst_mm2 / die['mm2'], 4),
+                static_memory_reservation=dict(enabled=m['geo'].get('static_memory_reservation',False),
+                    land_width_um=LAND_W, status='PLAN_ONLY_ACTUAL_ADAPTER_BINDING_REQUIRED' if m['geo'].get('static_memory_reservation') else 'LEGACY_LANDING_PROFILE'),
                 masters={k_: dict(n=v_['n'], mm2=round(v_['mm2'], 4)) for k_, v_ in sorted(by_m.items())},
                 ucie=dict(macro=UCIE[0], mm2=round(UCIE[1] * UCIE[2] / 1e6, 4), edge_um=UCIE[1], edge='N (abuts the '
                           'ROM die S edge under spine column M)'),
@@ -1970,6 +1975,8 @@ def case(m, work):
     """the die-level case of the r21 Qwen chain (tools/qwen_rom_fulldie.case_real: elements.lef from these masters,
     phy_ew.lef, die.v, place.tcl, run.tcl legality / on-track / pin access, run_pa.tcl PDN), written by the base
     generator's writer with this die's masters and port widths."""
+    if m['geo'].get('static_memory_reservation'):
+        raise ValueError('static memory shape reservation is plan-only until actual adapter ports/relays replace old landing binding')
     # qwen-1010/b 2026-10-11: the mirror leaf plan is the ADOPTED write queue (ctl_bin + leaf_s_w129(_m) closed, bound
     # in superseded_elements.json); the other leaf candidates stay plan-only
     if m['geo'].get('kv_wq_leaves') and not m['geo'].get('kv_wq_mirror'):
@@ -2069,6 +2076,7 @@ def main(argv=None):
     ap.add_argument('--kv-wq-head', action='store_true', help='candidate 216x648 binary ctl with one head capture edge')
     ap.add_argument('--kv-wq-wide', action='store_true', help='candidate 129.6um south-face leaf')
     ap.add_argument('--kv-wq-mirror', action='store_true', help='candidate single-layer mirror-legal wide leaf; head capture remains opt-in')
+    ap.add_argument('--reserve-static-memory', action='store_true', help='plan-only native151.2umPC SRAM column plus86.4um row-control column; actual adapter binding still required')
     ap.add_argument('--split', action='store_true', help='qwen-split 2026-10-14: the KV/SYSTEM die of the two-die split (CONTRACT_KVSYS.md)')
     a = ap.parse_args(argv)
     a.kv_wq_wide = a.kv_wq_wide or a.kv_wq_mirror
@@ -2077,7 +2085,7 @@ def main(argv=None):
     a.kv_wq_leaves = a.kv_wq_leaves or a.kv_wq_binary
     if a.mode == 'case' and a.kv_wq_leaves and not a.kv_wq_mirror:
         ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
-    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split)
+    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split, reserve_static_memory=a.reserve_static_memory)
     if a.mode == 'case':
         m['buses'] = [(bid, cls, bits, eps) for bid, cls, bits, eps in m['buses']]
         print(json.dumps(case(m, a.out)))
