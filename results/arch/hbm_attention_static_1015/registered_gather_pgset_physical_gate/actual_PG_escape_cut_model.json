@@ -1,0 +1,45 @@
+{
+  "scope": "ActualODBpinandPDNgeometry; conservative3umfaceescape-cut model usingactualtechnologypitchandtrackphasefromplacedpins. Uniformtrack-gridmodel, notroutedaccess/DRCproof.",
+  "source_sha256": "0371514380bf17d0cb98cebbb8948d50c700769511660dffa1e9a72eee4b8ec5",
+  "outline_um": [
+    0.0,
+    0.0,
+    500.04,
+    450.36
+  ],
+  "face_band_um": 3,
+  "corner_margin_um": 5.4,
+  "signal_pitch_um": 0.096,
+  "PG_spacing_um": 0.024,
+  "headroom_limit": 0.6,
+  "faces": {
+    "W": {
+      "pins": 2112,
+      "layer": "M4",
+      "actual_PG_wire_or_via_shapes_in_band": 0,
+      "actual_placed_track_phase_um": 0.012,
+      "conservative_available_separated_slots": 4579,
+      "utilization": 0.4612360777462328,
+      "pass": true
+    },
+    "E": {
+      "pins": 2641,
+      "layer": "M4",
+      "actual_PG_wire_or_via_shapes_in_band": 0,
+      "actual_placed_track_phase_um": 0.012,
+      "conservative_available_separated_slots": 4579,
+      "utilization": 0.5767634854771784,
+      "pass": true
+    },
+    "N": {
+      "pins": 6,
+      "layer": "M5",
+      "actual_PG_wire_or_via_shapes_in_band": 552,
+      "actual_placed_track_phase_um": 0.012,
+      "conservative_available_separated_slots": 4827,
+      "utilization": 0.001243008079552517,
+      "pass": true
+    }
+  },
+  "pass": true
+}
