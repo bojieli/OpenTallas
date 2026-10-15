@@ -15,7 +15,7 @@ module tb_qfd_serdes_static;
  integer cyc,checks=0,errors=0,aborts=0;
  function automatic [FW-1:0] word(input integer endpoint,input integer slot);
    integer k;begin
-    for(k=0;k<FW;k=k+1)word[k]=((k*13+slot*17+endpoint*29)^(slot>>(k%6)))&1;
+    for(k=0;k<FW;k=k+1)word[k]=((k*13+slot*17+endpoint*29)^(slot>>(k%13)))&1;
    end
  endfunction
  assign aw=word(0,cyc-8);assign bw=word(1,cyc-8);
