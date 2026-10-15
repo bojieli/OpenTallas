@@ -25,7 +25,7 @@
     "bench": [
       {
         "name": "lint",
-        "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_sp_band_lanes u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSYNTHESIS -DOT_QFD_BL_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qwen_band_lanes_slots.sv && echo lint-ok",
+        "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_sp_band_lanes u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSYNTHESIS -DOT_QFD_BL_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qwen_band_lanes_slots.sv physical/qwen_band_native_1014/qfd_bl_lane_bb.v && echo lint-ok",
         "expect": "pass",
         "threads": 1,
         "peak_ram_gb": 4,
