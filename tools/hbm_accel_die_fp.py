@@ -2125,8 +2125,8 @@ def build_r25gq_net(variant):
                 for t_, (sn_, ch_) in enumerate(kids.items()):
                     nid = f'{bid}_t{t_}'
                     nb_.append((nid, cls, bits, [(sn_, 'b')] + ch_))
-                    if bid in fcl_:
-                        fclk_new_[nid] = fcl_[bid]
+                    if bid in fcl_ or bid in fclk_new_:     # H-DIE 1014pm: a segment split after the fcl_ snapshot
+                        fclk_new_[nid] = fcl_.get(bid) or fclk_new_[bid]
                 nb_.append((bid, cls, bits, keep))
                 continue
             for j_, e in enumerate(far_):
@@ -2147,8 +2147,8 @@ def build_r25gq_net(variant):
                 for k_ in range(len(rl)):
                     nid = f'{bid}_p{j_}_{k_}'
                     nb_.append((nid, cls, bits, [(rl[k_], 'b'), (rl[k_ + 1], 'a') if k_ + 1 < len(rl) else e]))
-                    if bid in fcl_:
-                        fclk_new_[nid] = fcl_[bid]
+                    if bid in fcl_ or bid in fclk_new_:     # H-DIE 1014pm: a segment split after the fcl_ snapshot
+                        fclk_new_[nid] = fcl_.get(bid) or fclk_new_[bid]
             nb_.append((bid, cls, bits, keep))
         buses[:] = nb_
         phys_rec = dict(data_chains=n_ch, data_relays=n_rl)
@@ -2243,12 +2243,12 @@ def build_r25gq_net(variant):
                         # linked to each other (rl[0].b and rl[-1].a dangling whenever ns_ > 1)
                         nid_ = f'{bid}_r{_r}{j_}_{k_}'
                         nb_.append((nid_, cls, bits, [(rl[k_], 'b'), (rl[k_ + 1], 'a')]))
-                        if bid in fcl_:
-                            fclk_new_[nid_] = fcl_[bid]
+                        if bid in fcl_ or bid in fclk_new_:     # H-DIE 1014pm: a segment split after the fcl_ snapshot
+                            fclk_new_[nid_] = fcl_.get(bid) or fclk_new_[bid]
                     nid = f'{bid}_r{_r}{j_}'
                     nb_.append((nid, cls, bits, [(rl[-1], 'b'), e]))
-                    if bid in fcl_:
-                        fclk_new_[nid] = fcl_[bid]
+                    if bid in fcl_ or bid in fclk_new_:     # H-DIE 1014pm: a segment split after the fcl_ snapshot
+                        fclk_new_[nid] = fcl_.get(bid) or fclk_new_[bid]
                 nb_.append((bid, cls, bits, keep))
             buses[:] = nb_
         phys_rec['data_reach_left'] = len(bad_)
@@ -2683,8 +2683,8 @@ def build_r25gq_net(variant):
                 for c_, nm_ in enumerate(order_):
                     nid_ = f'{bid}_q{_pr}n{c_}'
                     nb_.append((nid_, cls, bits, [(nm_, 'b')] + nodes[nm_]['loads']))
-                    if bid in fcl_:
-                        fclk_new_[nid_] = fcl_[bid]
+                    if bid in fcl_ or bid in fclk_new_:     # H-DIE 1014pm: a segment split after the fcl_ snapshot
+                        fclk_new_[nid_] = fcl_.get(bid) or fclk_new_[bid]
                 nb_.append((bid, cls, bits, keep))
             buses[:] = nb_
             pin_rec['rounds'].append(dict(nets_over=n_bad, worst_um=round(worst_, 1), stations=n_new, stuck=n_stuck,
@@ -8014,6 +8014,14 @@ def r25gq_v14():
     if v.get('idx_score_box'):
         v['idx_score_box'] = dict(v['idx_score_box'], x=dict(v['idx_score_box']['x'],
                                                              SE=float(os.environ.get('OT_HBMDIE_IDX_SE_X', '16699.0'))))
+        if os.environ.get('OT_HBMDIE_IDX_NE_X'):
+            v['idx_score_box']['x']['NE'] = float(os.environ['OT_HBMDIE_IDX_NE_X'])
+    if os.environ.get('OT_HBMDIE_EPS2_Y') and v.get('link_ep_v2'):
+        xy_ = dict(v['link_ep_v2']['xy'])
+        s_ = list(xy_['S'])
+        s_[2] = (s_[2][0], float(os.environ['OT_HBMDIE_EPS2_Y']))
+        xy_['S'] = tuple(s_)
+        v['link_ep_v2'] = dict(v['link_ep_v2'], xy=xy_)
     v['drop_blocks'] = tuple(v['drop_blocks']) + ('hb_coll',)
     v['drop_buses'] = v['drop_buses'] + (r'|lk_lk_[NS]\d\w*|hb_su_[NS][EW]_coll\w*|hb_coll_su_[NS][EW]\w*|hgi_vmaddr_[NS][EW]\w*'
                                          r'|hgi_coll_(cmd|ret)\w*|hgi_cfg_coll\w*|hgi_rgx[qrwa][01]\w*|hgi_vm[qr]_coll\w*'
