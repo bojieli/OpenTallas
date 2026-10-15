@@ -29,7 +29,8 @@
     },
     "tech.lef": {
       "sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
-      "source": "/home/ubuntu/wt-mtp-hrow/results/uarch/topk_finite_track_turn_model_20261002/inputs/tech.lef"
+      "source": "/home/ubuntu/wt-mtp-hrow/results/uarch/topk_finite_track_turn_model_20261002/inputs/tech.lef",
+      "pinned_ORFS_source": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef (same SHA256 confirmed)"
     }
   },
   "limits": [
@@ -37,5 +38,16 @@
     "Conservative bounding boxes can reduce available PG access; failure stays a failure.",
     "No full-die speed or RAM reduction claimed.",
     "Current actual PDN uses instance selectors; master-name selectors would need explicit remapping."
-  ]
+  ],
+  "all42_preflight": {
+    "helper_source": "1ff777323",
+    "input_sha256": "a0a24275622a60249e492adb7e4ce70c1141a2dc4810dba3465d28add3a2f458",
+    "unit": "oth-ubuntu-1400729-1792096700",
+    "result": "All42 exact master pin/outline signatures, conservative OpenDB containment, instance swap and exact original detailed-OBS restoration PASS",
+    "elapsed_seconds": 24.02,
+    "max_RSS_KiB": 1426056,
+    "unique_master_OBS_rectangles": 60584,
+    "unique_master_temporary_OBS_rectangles": 262,
+    "scope": "One instance per actual current case master; this is not full die PDN or a measured PDN RAM reduction."
+  }
 }
