@@ -90,6 +90,8 @@
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/ot_hbm_idx_hslice_ready_native_c0/pre_gpl.tcl",

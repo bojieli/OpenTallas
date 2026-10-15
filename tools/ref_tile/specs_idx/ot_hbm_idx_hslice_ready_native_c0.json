@@ -60,9 +60,9 @@
     "QL": 5
   },
   "job": {
-    "owner": "Claude:hbm-group-B5-1014",
-    "branch": "claude/hbm-idx-ready2-1014",
-    "tag": "ready2",
+    "owner": "Claude:hbm-group-B6-1014",
+    "branch": "claude/hbm-idx-ready3-1014",
+    "tag": "ready3",
     "purpose": "Distinct actual reset-ready successor. Requested same related legacy outline, not an accepted physical view or alias. Fresh CTS required for nominal15335 sinks: measured300ps insertion/80ps spread rule or partition. Source exact full2048/parent gold and actual stopped-clock negatives published. No physical or die-slot claim.",
     "benches": [
       {
@@ -103,10 +103,13 @@
   },
   "recipe": 2,
   "slot_change_request": "Distinct native reset-ready successor requests standalone172.8x103.68um outline only. Actual full scorer2048 placement remains unassigned; no legacy view or old2000.16x2646 parent slot alias.",
-  "structural_change": "ready2 (Claude group-B5 10-14): native audit of CLOSED ready1pin-bfba4a98a (TT +107.44 / FF +18.17): launch 224.2 / 221.1 ps on ko_key[127] / ko_key[388] (> 220) and capture 215.5 ps on rst_n (> 190), R 206.3 / spread 34.7. Routed paths: (1) every output = DFF QN -> repair HB2 (43 ps) -> INV -> recipe-2 outhold stage BUFx4f + HB2 + BUFx4f (86 ps) -> output BUFx2: two hold stages in series on one hop; (2) rst_n -> in-hold HB2 driving a tile-crossing wire (128.7 ps) -> BUFx10 -> 4 loads incl. the online flop's async clear at the S face (the port drove more than the relay). Fix: RTL online cleared by the relay output rs (port -> relay only, cycle-identical: assert async through rs, release already rs && rn_p); kit outhold false: the hold margin of the outgoing hop is the receiver's input hold stage (every slice input keeps its HB2 in-hold; the S81 SU tap precedent s81su_qbtl/swtl v2 closed this way).",
+  "structural_change": "ready3 (Claude group-B6 10-14): ready2-0137554eb (relay-cleared online, outhold off) failed GRT-0116 at the S output face after a DPL-0033 CTS crash: without the recipe-2 out pads the flow's hold repair clustered buffers at the output pins (M3 44->57 %, M5 12->27 % vs CLOSED ready1pin). RTL = ready2 (rst_n -> relay only, fixes ready1pin capture 215.5 on rst_n); kit = ready1pin recipe 2 with outhold ON and HB1xp67 pin pads (ready1pin launch 224.2 / 221.1 ps on 2 ko_key pins was the HB2 out pad).",
   "reroute_reason": {
     "kind": "rtl_change",
     "why": "online flop async clear moved from the rst_n port to the relay output (native capture 215.5 on rst_n); outhold off for the 2 launch pins over 220"
   },
-  "outhold": false
+  "hold_pad": {
+    "cell": "HB1xp67_ASAP7_75t_R",
+    "basis": "ready3 (B6 10-14): ready2 with outhold off routed GRT-0116 (173 overflow at the S output face, M3/M5 use 44->57 % / 12->27 % vs ready1pin: flow hold repair replaced the pin pads); ready1pin native launch 224.2/221.1 on 2 ko_key pins came from the HB2 out pad -> HB1 pads on every pin, outhold back on"
+  }
 }
