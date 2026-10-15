@@ -1,0 +1,11 @@
+read_verilog -sv rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback.sv rtl/qwen_sys/split_20261014/qkd_hbm_boot_pc.sv rtl/qwen_sys/split_20261014/qkd_hbm_boot_static.sv rtl/qwen_sys/split_20261014/qkd_hbm_boot_static_completion.sv rtl/qwen_sys/split_20261014/qkd_host_pc_slice.sv rtl/qwen_sys/split_20261014/qkd_static_completion_ownerdemux.sv  rtl/test/qwen_split/qkd_host_pc_slice_ref.sv
+proc
+memory_map
+async2sync
+flatten
+opt_clean
+equiv_make qkd_host_pc_slice_ref qkd_host_pc_slice equiv
+hierarchy -top equiv
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert

@@ -1,0 +1,13 @@
+{
+  "unit": "oth-ubuntu-4058210-1792076831",
+  "host": "ot-epyc4",
+  "exit_code": 0,
+  "case_count": 22,
+  "source_sha256": {
+    "tools/ref_tile/sta_scene_binding.cc": "61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777",
+    "tools/ref_tile/direct_macro_clock_entries.py": "7495d6181fb3cdb436f19c0d3fe09573fcc83f329dd5e5d5ff7e846bfa64bab5",
+    "tools/ref_tile/test_direct_macro_scene_binding.py": "56a3b1105d7a1627ca414056f8079a6d2c913ef1a2d06c3c344304a5c6e7fe2b"
+  },
+  "scope": "Actual ORFS OpenSTA source/corner/clock/arc validation only; ideal wires are not routed timing qualification. Plain and escaped instance topology each run all 11 cases.",
+  "regression": "The exact-path fallback alone from dae4ae1fa fails escaped pre-ODB fixture; command namespace resolution passes, with actual underlying network Liberty/scene arc checks unchanged."
+}

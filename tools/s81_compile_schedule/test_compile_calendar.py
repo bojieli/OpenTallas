@@ -106,6 +106,18 @@ class CompileTest(unittest.TestCase):
         for bad in [(656,0),(-1,772),(656,True and 1.0)]:
             with self.assertRaises(ValueError): issuer_done_row(*bad)
 
+    def test_hc_return_columns_stage_requires_remeasured_duration(self):
+        from compile_calendar import PIPELINE_ABI
+        self.binding['jobs']['su']['engine']='hc'; self.program['ops'][1]['eng']='hc'
+        r=self.run_compile(); self.assertFalse(r['dispatch_eligible'])
+        self.assertTrue(any('stale hc pipeline' in e.get('reason','') for e in r['rejections']), r['rejections'])
+        stale=dict(PIPELINE_ABI['hc'], return_columns_extra_edges=0)
+        self.binding['jobs']['su']['pipeline_abi']=stale
+        self.assertFalse(self.run_compile()['dispatch_eligible'])
+        with self.assertRaises(ValueError): schedule_jobs(self.program,self.binding)
+        self.binding['jobs']['su']['pipeline_abi']=dict(PIPELINE_ABI['hc'])
+        self.assertTrue(self.run_compile()['dispatch_eligible'])
+
     def test_clock_phase_mismatch_rejected(self):
         self.binding['jobs']['su']['phase_period_stream']=4
         self.binding['jobs']['su']['start_phase_stream']=1

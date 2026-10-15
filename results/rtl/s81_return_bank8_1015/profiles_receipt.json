@@ -1,0 +1,63 @@
+{
+  "schema": "opentallas.s81.return-bank8-profiles-proof.v1",
+  "source": "1423ee8be",
+  "hashes": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return_bank8.sv": "cb69d9b650a98a917c68cd674c47bdcf9274780993e329a2723f3b30cfc46240",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return_bank8_profiles.sv": "d8434ba8d3aaee39ab6ddc646aff3d35464905cfe24a8a9bbff826ec4a77cdd7",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return32_lanes.sv": "66c9a2494b49615f0ec4d26ebef63f0b7d62e4233d93d872558364e183e09f56",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return32_native_lanes.sv": "a35bc2f942592ced316e8c371ae4694d5edb9621ce4fd740a4272332fc8a9cb0",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return.sv": "5201f61b7992c9c330197c82cf84d6a059c13732fd908a804339f90b456022e2",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_return_bank8.sv": "c24eda79d23e8b4c1c4a707412b0828c2687ef2e5644e482d48939a59b333267",
+    "tools/s81_vm/return_bank8_gate.sh": "bc1d1578a0e808bd17952777b130c53664cd4c533a2807a85d6f400fb310c1fb"
+  },
+  "master_profiles": [
+    "dsfd_vm_static_return_bank8_l0",
+    "dsfd_vm_static_return_bank8_l1",
+    "dsfd_vm_static_return_bank8_l2",
+    "dsfd_vm_static_return_bank8_l3"
+  ],
+  "actual_dut": "dsfd_vm_static_return32_native_lanes",
+  "clock_pins": "ck[3:0]",
+  "reset_pins": "rst_n[3:0]",
+  "reset_protocol": "independent existing twoedge resetrelease inside each actualleaf; benchcommonreset only",
+  "full": {
+    "result": "PASS",
+    "unit": "oth-ubuntu-1569031-1792065436",
+    "host": "ot-epyc1tb",
+    "issued_edges": 1000,
+    "rows_per_edge": 32,
+    "issued_rows": 32000,
+    "checked_words": 32224,
+    "releases": 1014,
+    "errors": 0,
+    "log": "profiles_full_rate.log"
+  },
+  "random": {
+    "result": "PASS",
+    "unit": "oth-ubuntu-1569031-1792065436",
+    "words": 20233,
+    "groups": 1014,
+    "errors": 0,
+    "log": "profiles_random.log"
+  },
+  "mutant": {
+    "result": "EXPECTED_FAIL",
+    "define": "OT_VM_RETURN_BANK8_MUT_LOCAL",
+    "unit": "oth-ubuntu-1570198-1792065450",
+    "errors": 11,
+    "atomic_missing": 0,
+    "log": "profiles_local_mutant.log"
+  },
+  "global_atomic_missing_lanes": 4,
+  "storage_edge": "E9",
+  "release_edge": "E10",
+  "extra_cycles": 0,
+  "semantics": "old/newvalid/group/fault lockstep; independentpayload oracle; duplicate/overwrite/wronggroup/clear+arrival; invaliddata wheno_v0 unobserved",
+  "qualification": false,
+  "open": [
+    "allfour actualnative CTS/TT/FF/DRC",
+    "parent stage9 releaseprepare metadata integration",
+    "exactglobal bankdata/token/outputpins+reach",
+    "canonical2417/BF519/PHW10 producer/rate composition"
+  ]
+}

@@ -1,5 +1,10 @@
 `timescale 1ns/1ps
 module tb_s81_pq_produced_pins;
+`ifdef OT_PQ_CTL_CALCAP
+ localparam integer DONE_EDGE=36;   // ctl pin-captures calendar/go/i_*: the PQ timeline moves +1 edge
+`else
+ localparam integer DONE_EDGE=35;
+`endif
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0;reg[84:0]cmd=0;reg[35:0]desc=0;reg prime=0,start=0;
  wire[8:0]done;wire[1:0]command_status;wire sealed,primed,calendar_fault;
@@ -30,7 +35,7 @@ module tb_s81_pq_produced_pins;
   for(phase=511;phase<=514;phase=phase+1)begin
    rst_n=0;cmd=0;desc=0;prime=0;start=0;valids=0;completed=0;
    repeat(8)@(negedge clk);rst_n=1;repeat(8)@(negedge clk);
-   descriptor=117'(phase)|(117'd34<<91);
+   descriptor=117'(phase)|(117'(DONE_EDGE-1)<<91);   // compiler duration (34; +1 under CALCAP)
    write_desc((36'd7<<25)|1);
    for(page=0;page<5;page=page+1)write_desc((36'(page)<<25)|36'((descriptor>>(24*page))&24'hffffff));
    write_desc((36'd7<<25)|(36'd1<<24)|1);
@@ -48,7 +53,7 @@ module tb_s81_pq_produced_pins;
      if(xw[561:552]!==10'(phase)||!xw[551])$fatal(1,"PRODUCED FAIL native config payload");
     end
     if(done[8])begin
-     if(c!=35)$fatal(1,"PRODUCED FAIL fixed completion edge c=%0d",c);
+     if(c!=DONE_EDGE)$fatal(1,"PRODUCED FAIL fixed completion edge c=%0d want %0d",c,DONE_EDGE);
      completed=completed+1;end
     if(calendar_fault||command_status[0]||status[2])$fatal(1,"PRODUCED FAIL faults c=%0d cal=%d cmd=%d core=%d",c,calendar_fault,command_status[0],status[2]);
     checks=checks+1;

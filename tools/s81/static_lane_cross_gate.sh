@@ -15,5 +15,5 @@ iverilog -g2012 -DOT_S81_STATIC_CROSS_MUT_OFFSET -s tb_static_lane_cross -o "$ou
 if vvp "$out/mut" > "$out/mut.log" 2>&1; then
   echo 'static crossing mutant escaped' >&2; exit 1
 fi
-rg 'data mismatch' "$out/mut.log"
+grep -E 'data mismatch' "$out/mut.log"
 echo 'STATIC_LANE_CROSS_GATE PASS six phases, reset epochs, slip fault, offset mutant rejected'

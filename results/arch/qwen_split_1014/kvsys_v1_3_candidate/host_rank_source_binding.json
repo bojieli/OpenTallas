@@ -1,0 +1,4359 @@
+{
+  "binding": {
+    "module": "qkd_host_rank_services",
+    "file": "rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv",
+    "ports": {
+      "ck_pad": [
+        "ck_pad"
+      ],
+      "ck_phy_rx_w": [
+        "ck_phy_rx_w"
+      ],
+      "ck_phy_rx_r": [
+        "ck_phy_rx_r"
+      ],
+      "ck_phy_tx_w": [
+        "ck_phy_tx_w"
+      ],
+      "ck_phy_tx_r": [
+        "ck_phy_tx_r"
+      ],
+      "ck_program_rx": [
+        "ck_program_rx"
+      ],
+      "ck_program_loader": [
+        "ck_program_loader"
+      ],
+      "ck_host": [
+        "ck_host"
+      ],
+      "ck_csr": [
+        "ck_csr"
+      ],
+      "ck_rst": [
+        "ck_rst"
+      ],
+      "ck_ctl": [
+        "ck_ctl"
+      ],
+      "ck_prompt": [
+        "ck_prompt"
+      ],
+      "ck_rx": [
+        "ck_rx"
+      ],
+      "ck_tx": [
+        "ck_tx"
+      ],
+      "ck_axi": [
+        "ck_axi"
+      ],
+      "ck_ctrl": [
+        "ck_ctrl"
+      ],
+      "ck_hc": [
+        "ck_hc"
+      ],
+      "ck_qm_queue": [
+        "ck_qm_queue"
+      ],
+      "ck_qm_ing_w": [
+        "ck_qm_ing_w"
+      ],
+      "ck_qm_ing_r": [
+        "ck_qm_ing_r"
+      ],
+      "ck_qm_credit": [
+        "ck_qm_credit"
+      ],
+      "ck_qm_done_w": [
+        "ck_qm_done_w"
+      ],
+      "ck_qm_done_r": [
+        "ck_qm_done_r"
+      ],
+      "ck_qm_core": [
+        "ck_qm_core"
+      ],
+      "ck_qm_host": [
+        "ck_qm_host"
+      ],
+      "ck_qm_ingest": [
+        "ck_qm_ingest"
+      ],
+      "ck_qm_out": [
+        "ck_qm_out"
+      ],
+      "ck_map": [
+        "ck_map"
+      ],
+      "ck_sum": [
+        "ck_sum"
+      ],
+      "ck_order": [
+        "ck_order"
+      ],
+      "ck_dispatch": [
+        "ck_dispatch"
+      ],
+      "ck_retire": [
+        "ck_retire"
+      ],
+      "ck_bootbarrier": [
+        "ck_bootbarrier"
+      ],
+      "ck_fence_core": [
+        "ck_fence_core"
+      ],
+      "ck_fence_host": [
+        "ck_fence_host"
+      ],
+      "ck_guard": [
+        "ck_guard"
+      ],
+      "ck_native": [
+        "ck_native"
+      ],
+      "token_allocator_fault": [
+        "token_allocator_fault"
+      ],
+      "token_wrap_fence_valid": [
+        "token_wrap_fence_valid"
+      ],
+      "token_wrap_drained": [
+        "token_wrap_drained"
+      ],
+      "token_wrap_link_reset_seen": [
+        "token_wrap_link_reset_seen"
+      ],
+      "token_wrap_retraining_done": [
+        "token_wrap_retraining_done"
+      ],
+      "package_abort": [
+        "package_abort"
+      ],
+      "abort_drained": [
+        "abort_drained"
+      ],
+      "token_request_valid": [
+        "token_request_valid"
+      ],
+      "token_request_ready": [
+        "token_request_ready"
+      ],
+      "token_request_token": [
+        "token_request_token"
+      ],
+      "token_request_position": [
+        "token_request_position"
+      ],
+      "token_request_generation": [
+        "token_request_generation"
+      ],
+      "token_grant_valid": [
+        "token_grant_valid"
+      ],
+      "token_grant_ready": [
+        "token_grant_ready"
+      ],
+      "token_grant_epoch": [
+        "token_grant_epoch"
+      ],
+      "token_grant_token": [
+        "token_grant_token"
+      ],
+      "token_grant_position": [
+        "token_grant_position"
+      ],
+      "token_grant_generation": [
+        "token_grant_generation"
+      ],
+      "token_grant_tag": [
+        "token_grant_tag"
+      ],
+      "allocated_valid": [
+        "allocated_valid"
+      ],
+      "allocated_delivered": [
+        "allocated_delivered"
+      ],
+      "allocated_epoch": [
+        "allocated_epoch"
+      ],
+      "allocated_token": [
+        "allocated_token"
+      ],
+      "allocated_position": [
+        "allocated_position"
+      ],
+      "allocated_generation": [
+        "allocated_generation"
+      ],
+      "token_epoch_valid": [
+        "token_epoch_valid"
+      ],
+      "token_epoch": [
+        "token_epoch"
+      ],
+      "cancel_valid": [
+        "cancel_valid"
+      ],
+      "cancel_tag": [
+        "cancel_tag"
+      ],
+      "cancel_generation": [
+        "cancel_generation"
+      ],
+      "cancel_done": [
+        "cancel_done"
+      ],
+      "cancel_fault": [
+        "cancel_fault"
+      ],
+      "cancel_drained": [
+        "cancel_drained"
+      ],
+      "token_cancel_accepted": [
+        "token_cancel_accepted"
+      ],
+      "native_request_v": [
+        "native_request_v"
+      ],
+      "native_request_tag": [
+        "native_request_tag"
+      ],
+      "native_request_trace": [
+        "native_request_trace"
+      ],
+      "native_request_gen": [
+        "native_request_gen"
+      ],
+      "native_request_token": [
+        "native_request_token"
+      ],
+      "native_request_pos": [
+        "native_request_pos"
+      ],
+      "native_request_cr": [
+        "native_request_cr"
+      ],
+      "native_pr": [
+        "native_pr"
+      ],
+      "native_result_v": [
+        "native_result_v"
+      ],
+      "native_result_tag": [
+        "native_result_tag"
+      ],
+      "native_result_gen": [
+        "native_result_gen"
+      ],
+      "native_result_done": [
+        "native_result_done"
+      ],
+      "native_result_fault": [
+        "native_result_fault"
+      ],
+      "native_result_cause": [
+        "native_result_cause"
+      ],
+      "native_result_token": [
+        "native_result_token"
+      ],
+      "native_result_value": [
+        "native_result_value"
+      ],
+      "native_result_cycles": [
+        "native_result_cycles"
+      ],
+      "native_result_cr": [
+        "native_result_cr"
+      ],
+      "native_kv_drained": [
+        "native_kv_drained"
+      ],
+      "native_vm_drained": [
+        "native_vm_drained"
+      ],
+      "native_collective_drained": [
+        "native_collective_drained"
+      ],
+      "native_host_drained": [
+        "native_host_drained"
+      ],
+      "native_collective_busy": [
+        "native_collective_busy"
+      ],
+      "native_kv_flush": [
+        "native_kv_flush"
+      ],
+      "service_ready": [
+        "service_ready"
+      ],
+      "service_abort": [
+        "service_abort"
+      ],
+      "ingest_permission": [
+        "ingest_permission"
+      ],
+      "local_service_epoch": [
+        "local_service_epoch"
+      ],
+      "service_diag_raw": [
+        "service_diag_raw"
+      ],
+      "service_status": [
+        "service_status"
+      ],
+      "die_id": [
+        "die_id"
+      ],
+      "por_n": [
+        "por_n"
+      ],
+      "pll_locked": [
+        "pll_locked"
+      ],
+      "link_up": [
+        "link_up"
+      ],
+      "transport_fault": [
+        "transport_fault"
+      ],
+      "physical_fault": [
+        "physical_fault"
+      ],
+      "crom_fault": [
+        "crom_fault"
+      ],
+      "execution_active": [
+        "execution_active"
+      ],
+      "program_commit_v": [
+        "program_commit_v"
+      ],
+      "program_commit_epoch": [
+        "program_commit_epoch"
+      ],
+      "program_commit_digest": [
+        "program_commit_digest"
+      ],
+      "program_ready": [
+        "program_ready"
+      ],
+      "program_epoch": [
+        "program_epoch"
+      ],
+      "program_digest": [
+        "program_digest"
+      ],
+      "hc": [
+        "hc"
+      ],
+      "seen": [
+        "seen"
+      ],
+      "irq": [
+        "irq"
+      ],
+      "host_rst_n": [
+        "host_rst_n"
+      ],
+      "link_rst_n": [
+        "link_rst_n"
+      ],
+      "hbm_rst_n": [
+        "hbm_rst_n"
+      ],
+      "boot_go": [
+        "boot_go"
+      ],
+      "die_rst_n": [
+        "die_rst_n"
+      ],
+      "sys_ready": [
+        "sys_ready"
+      ],
+      "fault_src": [
+        "fault_src"
+      ],
+      "source_cr": [
+        "source_cr"
+      ],
+      "available": [
+        "available"
+      ],
+      "hb": [
+        "hb"
+      ],
+      "hb_cr": [
+        "hb_cr"
+      ],
+      "est": [
+        "est"
+      ],
+      "land_es": [
+        "land_es"
+      ],
+      "land_er": [
+        "land_er"
+      ],
+      "ctrl_es": [
+        "ctrl_es"
+      ],
+      "ctrl_er": [
+        "ctrl_er"
+      ],
+      "ctrl_completion_v": [
+        "ctrl_completion_v"
+      ],
+      "ctrl_completion_we": [
+        "ctrl_completion_we"
+      ],
+      "ctrl_completion_fault": [
+        "ctrl_completion_fault"
+      ],
+      "marker_v": [
+        "marker_v"
+      ],
+      "marker": [
+        "marker"
+      ],
+      "marker_cr": [
+        "marker_cr"
+      ],
+      "issued": [
+        "issued"
+      ],
+      "landed": [
+        "landed"
+      ],
+      "physical_ack_n": [
+        "physical_ack_n"
+      ],
+      "service_faults": [
+        "service_faults"
+      ],
+      "ck_phy0": [
+        "ck_phy"
+      ],
+      "ck_boot0": [
+        "ck_boot"
+      ],
+      "ck_boot_test0": [
+        "ck_boot_test"
+      ],
+      "ck_qm_bank0": [
+        "ck_qm_bank"
+      ],
+      "ck_station0": [
+        "ck_station"
+      ],
+      "ck_static0": [
+        "ck_static"
+      ],
+      "fdi": [
+        "phy_up",
+        "phy_tx_v",
+        "phy_tx_flit",
+        "phy_rx_v",
+        "phy_rx_flit"
+      ],
+      "tk": [
+        "local_tk"
+      ],
+      "kst": [
+        "local_kst"
+      ]
+    },
+    "sliced": {
+      "ck_phy1": "ck_phy0",
+      "ck_phy2": "ck_phy0",
+      "ck_phy3": "ck_phy0",
+      "ck_phy4": "ck_phy0",
+      "ck_phy5": "ck_phy0",
+      "ck_phy6": "ck_phy0",
+      "ck_phy7": "ck_phy0",
+      "ck_boot1": "ck_boot0",
+      "ck_boot2": "ck_boot0",
+      "ck_boot3": "ck_boot0",
+      "ck_boot4": "ck_boot0",
+      "ck_boot5": "ck_boot0",
+      "ck_boot6": "ck_boot0",
+      "ck_boot7": "ck_boot0",
+      "ck_boot8": "ck_boot0",
+      "ck_boot9": "ck_boot0",
+      "ck_boot10": "ck_boot0",
+      "ck_boot11": "ck_boot0",
+      "ck_boot12": "ck_boot0",
+      "ck_boot13": "ck_boot0",
+      "ck_boot14": "ck_boot0",
+      "ck_boot15": "ck_boot0",
+      "ck_boot16": "ck_boot0",
+      "ck_boot17": "ck_boot0",
+      "ck_boot18": "ck_boot0",
+      "ck_boot19": "ck_boot0",
+      "ck_boot20": "ck_boot0",
+      "ck_boot21": "ck_boot0",
+      "ck_boot22": "ck_boot0",
+      "ck_boot23": "ck_boot0",
+      "ck_boot24": "ck_boot0",
+      "ck_boot25": "ck_boot0",
+      "ck_boot26": "ck_boot0",
+      "ck_boot27": "ck_boot0",
+      "ck_boot28": "ck_boot0",
+      "ck_boot29": "ck_boot0",
+      "ck_boot30": "ck_boot0",
+      "ck_boot31": "ck_boot0",
+      "ck_boot32": "ck_boot0",
+      "ck_boot33": "ck_boot0",
+      "ck_boot34": "ck_boot0",
+      "ck_boot35": "ck_boot0",
+      "ck_boot36": "ck_boot0",
+      "ck_boot37": "ck_boot0",
+      "ck_boot38": "ck_boot0",
+      "ck_boot39": "ck_boot0",
+      "ck_boot40": "ck_boot0",
+      "ck_boot41": "ck_boot0",
+      "ck_boot42": "ck_boot0",
+      "ck_boot43": "ck_boot0",
+      "ck_boot44": "ck_boot0",
+      "ck_boot45": "ck_boot0",
+      "ck_boot46": "ck_boot0",
+      "ck_boot47": "ck_boot0",
+      "ck_boot48": "ck_boot0",
+      "ck_boot49": "ck_boot0",
+      "ck_boot50": "ck_boot0",
+      "ck_boot51": "ck_boot0",
+      "ck_boot52": "ck_boot0",
+      "ck_boot53": "ck_boot0",
+      "ck_boot54": "ck_boot0",
+      "ck_boot55": "ck_boot0",
+      "ck_boot56": "ck_boot0",
+      "ck_boot57": "ck_boot0",
+      "ck_boot58": "ck_boot0",
+      "ck_boot59": "ck_boot0",
+      "ck_boot60": "ck_boot0",
+      "ck_boot61": "ck_boot0",
+      "ck_boot62": "ck_boot0",
+      "ck_boot63": "ck_boot0",
+      "ck_boot64": "ck_boot0",
+      "ck_boot65": "ck_boot0",
+      "ck_boot66": "ck_boot0",
+      "ck_boot67": "ck_boot0",
+      "ck_boot68": "ck_boot0",
+      "ck_boot69": "ck_boot0",
+      "ck_boot70": "ck_boot0",
+      "ck_boot71": "ck_boot0",
+      "ck_boot72": "ck_boot0",
+      "ck_boot73": "ck_boot0",
+      "ck_boot74": "ck_boot0",
+      "ck_boot75": "ck_boot0",
+      "ck_boot76": "ck_boot0",
+      "ck_boot77": "ck_boot0",
+      "ck_boot78": "ck_boot0",
+      "ck_boot79": "ck_boot0",
+      "ck_boot80": "ck_boot0",
+      "ck_boot81": "ck_boot0",
+      "ck_boot82": "ck_boot0",
+      "ck_boot83": "ck_boot0",
+      "ck_boot84": "ck_boot0",
+      "ck_boot85": "ck_boot0",
+      "ck_boot86": "ck_boot0",
+      "ck_boot87": "ck_boot0",
+      "ck_boot88": "ck_boot0",
+      "ck_boot89": "ck_boot0",
+      "ck_boot90": "ck_boot0",
+      "ck_boot91": "ck_boot0",
+      "ck_boot92": "ck_boot0",
+      "ck_boot93": "ck_boot0",
+      "ck_boot94": "ck_boot0",
+      "ck_boot95": "ck_boot0",
+      "ck_boot96": "ck_boot0",
+      "ck_boot97": "ck_boot0",
+      "ck_boot98": "ck_boot0",
+      "ck_boot99": "ck_boot0",
+      "ck_boot100": "ck_boot0",
+      "ck_boot101": "ck_boot0",
+      "ck_boot102": "ck_boot0",
+      "ck_boot103": "ck_boot0",
+      "ck_boot104": "ck_boot0",
+      "ck_boot105": "ck_boot0",
+      "ck_boot106": "ck_boot0",
+      "ck_boot107": "ck_boot0",
+      "ck_boot108": "ck_boot0",
+      "ck_boot109": "ck_boot0",
+      "ck_boot110": "ck_boot0",
+      "ck_boot111": "ck_boot0",
+      "ck_boot112": "ck_boot0",
+      "ck_boot113": "ck_boot0",
+      "ck_boot114": "ck_boot0",
+      "ck_boot115": "ck_boot0",
+      "ck_boot116": "ck_boot0",
+      "ck_boot117": "ck_boot0",
+      "ck_boot118": "ck_boot0",
+      "ck_boot119": "ck_boot0",
+      "ck_boot120": "ck_boot0",
+      "ck_boot121": "ck_boot0",
+      "ck_boot122": "ck_boot0",
+      "ck_boot123": "ck_boot0",
+      "ck_boot124": "ck_boot0",
+      "ck_boot125": "ck_boot0",
+      "ck_boot126": "ck_boot0",
+      "ck_boot127": "ck_boot0",
+      "ck_boot_test1": "ck_boot_test0",
+      "ck_boot_test2": "ck_boot_test0",
+      "ck_boot_test3": "ck_boot_test0",
+      "ck_boot_test4": "ck_boot_test0",
+      "ck_boot_test5": "ck_boot_test0",
+      "ck_boot_test6": "ck_boot_test0",
+      "ck_boot_test7": "ck_boot_test0",
+      "ck_boot_test8": "ck_boot_test0",
+      "ck_boot_test9": "ck_boot_test0",
+      "ck_boot_test10": "ck_boot_test0",
+      "ck_boot_test11": "ck_boot_test0",
+      "ck_boot_test12": "ck_boot_test0",
+      "ck_boot_test13": "ck_boot_test0",
+      "ck_boot_test14": "ck_boot_test0",
+      "ck_boot_test15": "ck_boot_test0",
+      "ck_boot_test16": "ck_boot_test0",
+      "ck_boot_test17": "ck_boot_test0",
+      "ck_boot_test18": "ck_boot_test0",
+      "ck_boot_test19": "ck_boot_test0",
+      "ck_boot_test20": "ck_boot_test0",
+      "ck_boot_test21": "ck_boot_test0",
+      "ck_boot_test22": "ck_boot_test0",
+      "ck_boot_test23": "ck_boot_test0",
+      "ck_boot_test24": "ck_boot_test0",
+      "ck_boot_test25": "ck_boot_test0",
+      "ck_boot_test26": "ck_boot_test0",
+      "ck_boot_test27": "ck_boot_test0",
+      "ck_boot_test28": "ck_boot_test0",
+      "ck_boot_test29": "ck_boot_test0",
+      "ck_boot_test30": "ck_boot_test0",
+      "ck_boot_test31": "ck_boot_test0",
+      "ck_boot_test32": "ck_boot_test0",
+      "ck_boot_test33": "ck_boot_test0",
+      "ck_boot_test34": "ck_boot_test0",
+      "ck_boot_test35": "ck_boot_test0",
+      "ck_boot_test36": "ck_boot_test0",
+      "ck_boot_test37": "ck_boot_test0",
+      "ck_boot_test38": "ck_boot_test0",
+      "ck_boot_test39": "ck_boot_test0",
+      "ck_boot_test40": "ck_boot_test0",
+      "ck_boot_test41": "ck_boot_test0",
+      "ck_boot_test42": "ck_boot_test0",
+      "ck_boot_test43": "ck_boot_test0",
+      "ck_boot_test44": "ck_boot_test0",
+      "ck_boot_test45": "ck_boot_test0",
+      "ck_boot_test46": "ck_boot_test0",
+      "ck_boot_test47": "ck_boot_test0",
+      "ck_boot_test48": "ck_boot_test0",
+      "ck_boot_test49": "ck_boot_test0",
+      "ck_boot_test50": "ck_boot_test0",
+      "ck_boot_test51": "ck_boot_test0",
+      "ck_boot_test52": "ck_boot_test0",
+      "ck_boot_test53": "ck_boot_test0",
+      "ck_boot_test54": "ck_boot_test0",
+      "ck_boot_test55": "ck_boot_test0",
+      "ck_boot_test56": "ck_boot_test0",
+      "ck_boot_test57": "ck_boot_test0",
+      "ck_boot_test58": "ck_boot_test0",
+      "ck_boot_test59": "ck_boot_test0",
+      "ck_boot_test60": "ck_boot_test0",
+      "ck_boot_test61": "ck_boot_test0",
+      "ck_boot_test62": "ck_boot_test0",
+      "ck_boot_test63": "ck_boot_test0",
+      "ck_boot_test64": "ck_boot_test0",
+      "ck_boot_test65": "ck_boot_test0",
+      "ck_boot_test66": "ck_boot_test0",
+      "ck_boot_test67": "ck_boot_test0",
+      "ck_boot_test68": "ck_boot_test0",
+      "ck_boot_test69": "ck_boot_test0",
+      "ck_boot_test70": "ck_boot_test0",
+      "ck_boot_test71": "ck_boot_test0",
+      "ck_boot_test72": "ck_boot_test0",
+      "ck_boot_test73": "ck_boot_test0",
+      "ck_boot_test74": "ck_boot_test0",
+      "ck_boot_test75": "ck_boot_test0",
+      "ck_boot_test76": "ck_boot_test0",
+      "ck_boot_test77": "ck_boot_test0",
+      "ck_boot_test78": "ck_boot_test0",
+      "ck_boot_test79": "ck_boot_test0",
+      "ck_boot_test80": "ck_boot_test0",
+      "ck_boot_test81": "ck_boot_test0",
+      "ck_boot_test82": "ck_boot_test0",
+      "ck_boot_test83": "ck_boot_test0",
+      "ck_boot_test84": "ck_boot_test0",
+      "ck_boot_test85": "ck_boot_test0",
+      "ck_boot_test86": "ck_boot_test0",
+      "ck_boot_test87": "ck_boot_test0",
+      "ck_boot_test88": "ck_boot_test0",
+      "ck_boot_test89": "ck_boot_test0",
+      "ck_boot_test90": "ck_boot_test0",
+      "ck_boot_test91": "ck_boot_test0",
+      "ck_boot_test92": "ck_boot_test0",
+      "ck_boot_test93": "ck_boot_test0",
+      "ck_boot_test94": "ck_boot_test0",
+      "ck_boot_test95": "ck_boot_test0",
+      "ck_boot_test96": "ck_boot_test0",
+      "ck_boot_test97": "ck_boot_test0",
+      "ck_boot_test98": "ck_boot_test0",
+      "ck_boot_test99": "ck_boot_test0",
+      "ck_boot_test100": "ck_boot_test0",
+      "ck_boot_test101": "ck_boot_test0",
+      "ck_boot_test102": "ck_boot_test0",
+      "ck_boot_test103": "ck_boot_test0",
+      "ck_boot_test104": "ck_boot_test0",
+      "ck_boot_test105": "ck_boot_test0",
+      "ck_boot_test106": "ck_boot_test0",
+      "ck_boot_test107": "ck_boot_test0",
+      "ck_boot_test108": "ck_boot_test0",
+      "ck_boot_test109": "ck_boot_test0",
+      "ck_boot_test110": "ck_boot_test0",
+      "ck_boot_test111": "ck_boot_test0",
+      "ck_boot_test112": "ck_boot_test0",
+      "ck_boot_test113": "ck_boot_test0",
+      "ck_boot_test114": "ck_boot_test0",
+      "ck_boot_test115": "ck_boot_test0",
+      "ck_boot_test116": "ck_boot_test0",
+      "ck_boot_test117": "ck_boot_test0",
+      "ck_boot_test118": "ck_boot_test0",
+      "ck_boot_test119": "ck_boot_test0",
+      "ck_boot_test120": "ck_boot_test0",
+      "ck_boot_test121": "ck_boot_test0",
+      "ck_boot_test122": "ck_boot_test0",
+      "ck_boot_test123": "ck_boot_test0",
+      "ck_boot_test124": "ck_boot_test0",
+      "ck_boot_test125": "ck_boot_test0",
+      "ck_boot_test126": "ck_boot_test0",
+      "ck_boot_test127": "ck_boot_test0",
+      "ck_qm_bank1": "ck_qm_bank0",
+      "ck_station1": "ck_station0",
+      "ck_station2": "ck_station0",
+      "ck_station3": "ck_station0",
+      "ck_station4": "ck_station0",
+      "ck_station5": "ck_station0",
+      "ck_station6": "ck_station0",
+      "ck_station7": "ck_station0",
+      "ck_station8": "ck_station0",
+      "ck_station9": "ck_station0",
+      "ck_station10": "ck_station0",
+      "ck_station11": "ck_station0",
+      "ck_station12": "ck_station0",
+      "ck_station13": "ck_station0",
+      "ck_station14": "ck_station0",
+      "ck_station15": "ck_station0",
+      "ck_station16": "ck_station0",
+      "ck_station17": "ck_station0",
+      "ck_station18": "ck_station0",
+      "ck_station19": "ck_station0",
+      "ck_station20": "ck_station0",
+      "ck_station21": "ck_station0",
+      "ck_station22": "ck_station0",
+      "ck_station23": "ck_station0",
+      "ck_station24": "ck_station0",
+      "ck_station25": "ck_station0",
+      "ck_station26": "ck_station0",
+      "ck_station27": "ck_station0",
+      "ck_station28": "ck_station0",
+      "ck_station29": "ck_station0",
+      "ck_station30": "ck_station0",
+      "ck_station31": "ck_station0",
+      "ck_station32": "ck_station0",
+      "ck_station33": "ck_station0",
+      "ck_station34": "ck_station0",
+      "ck_station35": "ck_station0",
+      "ck_station36": "ck_station0",
+      "ck_station37": "ck_station0",
+      "ck_station38": "ck_station0",
+      "ck_station39": "ck_station0",
+      "ck_station40": "ck_station0",
+      "ck_station41": "ck_station0",
+      "ck_station42": "ck_station0",
+      "ck_station43": "ck_station0",
+      "ck_station44": "ck_station0",
+      "ck_station45": "ck_station0",
+      "ck_station46": "ck_station0",
+      "ck_station47": "ck_station0",
+      "ck_station48": "ck_station0",
+      "ck_station49": "ck_station0",
+      "ck_station50": "ck_station0",
+      "ck_station51": "ck_station0",
+      "ck_station52": "ck_station0",
+      "ck_station53": "ck_station0",
+      "ck_station54": "ck_station0",
+      "ck_station55": "ck_station0",
+      "ck_station56": "ck_station0",
+      "ck_station57": "ck_station0",
+      "ck_station58": "ck_station0",
+      "ck_station59": "ck_station0",
+      "ck_station60": "ck_station0",
+      "ck_station61": "ck_station0",
+      "ck_station62": "ck_station0",
+      "ck_station63": "ck_station0",
+      "ck_station64": "ck_station0",
+      "ck_station65": "ck_station0",
+      "ck_station66": "ck_station0",
+      "ck_station67": "ck_station0",
+      "ck_station68": "ck_station0",
+      "ck_station69": "ck_station0",
+      "ck_station70": "ck_station0",
+      "ck_station71": "ck_station0",
+      "ck_station72": "ck_station0",
+      "ck_station73": "ck_station0",
+      "ck_station74": "ck_station0",
+      "ck_station75": "ck_station0",
+      "ck_station76": "ck_station0",
+      "ck_station77": "ck_station0",
+      "ck_station78": "ck_station0",
+      "ck_station79": "ck_station0",
+      "ck_station80": "ck_station0",
+      "ck_station81": "ck_station0",
+      "ck_station82": "ck_station0",
+      "ck_station83": "ck_station0",
+      "ck_station84": "ck_station0",
+      "ck_station85": "ck_station0",
+      "ck_station86": "ck_station0",
+      "ck_station87": "ck_station0",
+      "ck_station88": "ck_station0",
+      "ck_station89": "ck_station0",
+      "ck_station90": "ck_station0",
+      "ck_station91": "ck_station0",
+      "ck_station92": "ck_station0",
+      "ck_station93": "ck_station0",
+      "ck_station94": "ck_station0",
+      "ck_station95": "ck_station0",
+      "ck_station96": "ck_station0",
+      "ck_station97": "ck_station0",
+      "ck_station98": "ck_station0",
+      "ck_station99": "ck_station0",
+      "ck_station100": "ck_station0",
+      "ck_station101": "ck_station0",
+      "ck_station102": "ck_station0",
+      "ck_station103": "ck_station0",
+      "ck_station104": "ck_station0",
+      "ck_station105": "ck_station0",
+      "ck_station106": "ck_station0",
+      "ck_station107": "ck_station0",
+      "ck_station108": "ck_station0",
+      "ck_station109": "ck_station0",
+      "ck_station110": "ck_station0",
+      "ck_station111": "ck_station0",
+      "ck_station112": "ck_station0",
+      "ck_station113": "ck_station0",
+      "ck_station114": "ck_station0",
+      "ck_station115": "ck_station0",
+      "ck_station116": "ck_station0",
+      "ck_station117": "ck_station0",
+      "ck_station118": "ck_station0",
+      "ck_station119": "ck_station0",
+      "ck_station120": "ck_station0",
+      "ck_station121": "ck_station0",
+      "ck_station122": "ck_station0",
+      "ck_station123": "ck_station0",
+      "ck_station124": "ck_station0",
+      "ck_station125": "ck_station0",
+      "ck_station126": "ck_station0",
+      "ck_station127": "ck_station0",
+      "ck_static1": "ck_static0",
+      "ck_static2": "ck_static0",
+      "ck_static3": "ck_static0",
+      "ck_static4": "ck_static0",
+      "ck_static5": "ck_static0",
+      "ck_static6": "ck_static0",
+      "ck_static7": "ck_static0",
+      "ck_static8": "ck_static0",
+      "ck_static9": "ck_static0",
+      "ck_static10": "ck_static0",
+      "ck_static11": "ck_static0",
+      "ck_static12": "ck_static0",
+      "ck_static13": "ck_static0",
+      "ck_static14": "ck_static0",
+      "ck_static15": "ck_static0",
+      "ck_static16": "ck_static0",
+      "ck_static17": "ck_static0",
+      "ck_static18": "ck_static0",
+      "ck_static19": "ck_static0",
+      "ck_static20": "ck_static0",
+      "ck_static21": "ck_static0",
+      "ck_static22": "ck_static0",
+      "ck_static23": "ck_static0",
+      "ck_static24": "ck_static0",
+      "ck_static25": "ck_static0",
+      "ck_static26": "ck_static0",
+      "ck_static27": "ck_static0",
+      "ck_static28": "ck_static0",
+      "ck_static29": "ck_static0",
+      "ck_static30": "ck_static0",
+      "ck_static31": "ck_static0",
+      "ck_static32": "ck_static0",
+      "ck_static33": "ck_static0",
+      "ck_static34": "ck_static0",
+      "ck_static35": "ck_static0",
+      "ck_static36": "ck_static0",
+      "ck_static37": "ck_static0",
+      "ck_static38": "ck_static0",
+      "ck_static39": "ck_static0",
+      "ck_static40": "ck_static0",
+      "ck_static41": "ck_static0",
+      "ck_static42": "ck_static0",
+      "ck_static43": "ck_static0",
+      "ck_static44": "ck_static0",
+      "ck_static45": "ck_static0",
+      "ck_static46": "ck_static0",
+      "ck_static47": "ck_static0",
+      "ck_static48": "ck_static0",
+      "ck_static49": "ck_static0",
+      "ck_static50": "ck_static0",
+      "ck_static51": "ck_static0",
+      "ck_static52": "ck_static0",
+      "ck_static53": "ck_static0",
+      "ck_static54": "ck_static0",
+      "ck_static55": "ck_static0",
+      "ck_static56": "ck_static0",
+      "ck_static57": "ck_static0",
+      "ck_static58": "ck_static0",
+      "ck_static59": "ck_static0",
+      "ck_static60": "ck_static0",
+      "ck_static61": "ck_static0",
+      "ck_static62": "ck_static0",
+      "ck_static63": "ck_static0",
+      "ck_static64": "ck_static0",
+      "ck_static65": "ck_static0",
+      "ck_static66": "ck_static0",
+      "ck_static67": "ck_static0",
+      "ck_static68": "ck_static0",
+      "ck_static69": "ck_static0",
+      "ck_static70": "ck_static0",
+      "ck_static71": "ck_static0",
+      "ck_static72": "ck_static0",
+      "ck_static73": "ck_static0",
+      "ck_static74": "ck_static0",
+      "ck_static75": "ck_static0",
+      "ck_static76": "ck_static0",
+      "ck_static77": "ck_static0",
+      "ck_static78": "ck_static0",
+      "ck_static79": "ck_static0",
+      "ck_static80": "ck_static0",
+      "ck_static81": "ck_static0",
+      "ck_static82": "ck_static0",
+      "ck_static83": "ck_static0",
+      "ck_static84": "ck_static0",
+      "ck_static85": "ck_static0",
+      "ck_static86": "ck_static0",
+      "ck_static87": "ck_static0",
+      "ck_static88": "ck_static0",
+      "ck_static89": "ck_static0",
+      "ck_static90": "ck_static0",
+      "ck_static91": "ck_static0",
+      "ck_static92": "ck_static0",
+      "ck_static93": "ck_static0",
+      "ck_static94": "ck_static0",
+      "ck_static95": "ck_static0",
+      "ck_static96": "ck_static0",
+      "ck_static97": "ck_static0",
+      "ck_static98": "ck_static0",
+      "ck_static99": "ck_static0",
+      "ck_static100": "ck_static0",
+      "ck_static101": "ck_static0",
+      "ck_static102": "ck_static0",
+      "ck_static103": "ck_static0",
+      "ck_static104": "ck_static0",
+      "ck_static105": "ck_static0",
+      "ck_static106": "ck_static0",
+      "ck_static107": "ck_static0",
+      "ck_static108": "ck_static0",
+      "ck_static109": "ck_static0",
+      "ck_static110": "ck_static0",
+      "ck_static111": "ck_static0",
+      "ck_static112": "ck_static0",
+      "ck_static113": "ck_static0",
+      "ck_static114": "ck_static0",
+      "ck_static115": "ck_static0",
+      "ck_static116": "ck_static0",
+      "ck_static117": "ck_static0",
+      "ck_static118": "ck_static0",
+      "ck_static119": "ck_static0",
+      "ck_static120": "ck_static0",
+      "ck_static121": "ck_static0",
+      "ck_static122": "ck_static0",
+      "ck_static123": "ck_static0",
+      "ck_static124": "ck_static0",
+      "ck_static125": "ck_static0",
+      "ck_static126": "ck_static0",
+      "ck_static127": "ck_static0"
+    },
+    "parameters": {
+      "ENABLE_SERVICE": 1,
+      "ENABLE_TOKEN": 1,
+      "ENABLE_NATIVE": 1
+    },
+    "classed": {},
+    "clock_domains": {
+      "ck_phy0": {
+        "rtl_port": "ck_phy",
+        "bit": 0,
+        "family": "phy",
+        "period_ps": 1043.0
+      },
+      "ck_phy1": {
+        "rtl_port": "ck_phy",
+        "bit": 1,
+        "family": "phy",
+        "period_ps": 1043.0
+      },
+      "ck_phy2": {
+        "rtl_port": "ck_phy",
+        "bit": 2,
+        "family": "phy",
+        "period_ps": 1043.0
+      },
+      "ck_phy3": {
+        "rtl_port": "ck_phy",
+        "bit": 3,
+        "family": "phy",
+        "period_ps": 1043.0
+      },
+      "ck_phy4": {
+        "rtl_port": "ck_phy",
+        "bit": 4,
+        "family": "phy",
+        "period_ps": 1043.0
+      },
+      "ck_phy5": {
+        "rtl_port": "ck_phy",
+        "bit": 5,
+        "family": "phy",
+        "period_ps": 1043.0
+      },
+      "ck_phy6": {
+        "rtl_port": "ck_phy",
+        "bit": 6,
+        "family": "phy",
+        "period_ps": 1043.0
+      },
+      "ck_phy7": {
+        "rtl_port": "ck_phy",
+        "bit": 7,
+        "family": "phy",
+        "period_ps": 1043.0
+      },
+      "ck_pad": {
+        "rtl_port": "ck_pad",
+        "bit": 0,
+        "family": "phy",
+        "period_ps": 1043.0
+      },
+      "ck_phy_rx_w": {
+        "rtl_port": "ck_phy_rx_w",
+        "bit": 0,
+        "family": "phy",
+        "period_ps": 1043.0
+      },
+      "ck_phy_rx_r": {
+        "rtl_port": "ck_phy_rx_r",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_phy_tx_w": {
+        "rtl_port": "ck_phy_tx_w",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_phy_tx_r": {
+        "rtl_port": "ck_phy_tx_r",
+        "bit": 0,
+        "family": "phy",
+        "period_ps": 1043.0
+      },
+      "ck_program_rx": {
+        "rtl_port": "ck_program_rx",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_program_loader": {
+        "rtl_port": "ck_program_loader",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot0": {
+        "rtl_port": "ck_boot",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot1": {
+        "rtl_port": "ck_boot",
+        "bit": 1,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot2": {
+        "rtl_port": "ck_boot",
+        "bit": 2,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot3": {
+        "rtl_port": "ck_boot",
+        "bit": 3,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot4": {
+        "rtl_port": "ck_boot",
+        "bit": 4,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot5": {
+        "rtl_port": "ck_boot",
+        "bit": 5,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot6": {
+        "rtl_port": "ck_boot",
+        "bit": 6,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot7": {
+        "rtl_port": "ck_boot",
+        "bit": 7,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot8": {
+        "rtl_port": "ck_boot",
+        "bit": 8,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot9": {
+        "rtl_port": "ck_boot",
+        "bit": 9,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot10": {
+        "rtl_port": "ck_boot",
+        "bit": 10,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot11": {
+        "rtl_port": "ck_boot",
+        "bit": 11,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot12": {
+        "rtl_port": "ck_boot",
+        "bit": 12,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot13": {
+        "rtl_port": "ck_boot",
+        "bit": 13,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot14": {
+        "rtl_port": "ck_boot",
+        "bit": 14,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot15": {
+        "rtl_port": "ck_boot",
+        "bit": 15,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot16": {
+        "rtl_port": "ck_boot",
+        "bit": 16,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot17": {
+        "rtl_port": "ck_boot",
+        "bit": 17,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot18": {
+        "rtl_port": "ck_boot",
+        "bit": 18,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot19": {
+        "rtl_port": "ck_boot",
+        "bit": 19,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot20": {
+        "rtl_port": "ck_boot",
+        "bit": 20,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot21": {
+        "rtl_port": "ck_boot",
+        "bit": 21,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot22": {
+        "rtl_port": "ck_boot",
+        "bit": 22,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot23": {
+        "rtl_port": "ck_boot",
+        "bit": 23,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot24": {
+        "rtl_port": "ck_boot",
+        "bit": 24,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot25": {
+        "rtl_port": "ck_boot",
+        "bit": 25,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot26": {
+        "rtl_port": "ck_boot",
+        "bit": 26,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot27": {
+        "rtl_port": "ck_boot",
+        "bit": 27,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot28": {
+        "rtl_port": "ck_boot",
+        "bit": 28,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot29": {
+        "rtl_port": "ck_boot",
+        "bit": 29,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot30": {
+        "rtl_port": "ck_boot",
+        "bit": 30,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot31": {
+        "rtl_port": "ck_boot",
+        "bit": 31,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot32": {
+        "rtl_port": "ck_boot",
+        "bit": 32,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot33": {
+        "rtl_port": "ck_boot",
+        "bit": 33,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot34": {
+        "rtl_port": "ck_boot",
+        "bit": 34,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot35": {
+        "rtl_port": "ck_boot",
+        "bit": 35,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot36": {
+        "rtl_port": "ck_boot",
+        "bit": 36,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot37": {
+        "rtl_port": "ck_boot",
+        "bit": 37,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot38": {
+        "rtl_port": "ck_boot",
+        "bit": 38,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot39": {
+        "rtl_port": "ck_boot",
+        "bit": 39,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot40": {
+        "rtl_port": "ck_boot",
+        "bit": 40,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot41": {
+        "rtl_port": "ck_boot",
+        "bit": 41,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot42": {
+        "rtl_port": "ck_boot",
+        "bit": 42,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot43": {
+        "rtl_port": "ck_boot",
+        "bit": 43,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot44": {
+        "rtl_port": "ck_boot",
+        "bit": 44,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot45": {
+        "rtl_port": "ck_boot",
+        "bit": 45,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot46": {
+        "rtl_port": "ck_boot",
+        "bit": 46,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot47": {
+        "rtl_port": "ck_boot",
+        "bit": 47,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot48": {
+        "rtl_port": "ck_boot",
+        "bit": 48,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot49": {
+        "rtl_port": "ck_boot",
+        "bit": 49,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot50": {
+        "rtl_port": "ck_boot",
+        "bit": 50,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot51": {
+        "rtl_port": "ck_boot",
+        "bit": 51,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot52": {
+        "rtl_port": "ck_boot",
+        "bit": 52,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot53": {
+        "rtl_port": "ck_boot",
+        "bit": 53,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot54": {
+        "rtl_port": "ck_boot",
+        "bit": 54,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot55": {
+        "rtl_port": "ck_boot",
+        "bit": 55,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot56": {
+        "rtl_port": "ck_boot",
+        "bit": 56,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot57": {
+        "rtl_port": "ck_boot",
+        "bit": 57,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot58": {
+        "rtl_port": "ck_boot",
+        "bit": 58,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot59": {
+        "rtl_port": "ck_boot",
+        "bit": 59,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot60": {
+        "rtl_port": "ck_boot",
+        "bit": 60,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot61": {
+        "rtl_port": "ck_boot",
+        "bit": 61,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot62": {
+        "rtl_port": "ck_boot",
+        "bit": 62,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot63": {
+        "rtl_port": "ck_boot",
+        "bit": 63,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot64": {
+        "rtl_port": "ck_boot",
+        "bit": 64,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot65": {
+        "rtl_port": "ck_boot",
+        "bit": 65,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot66": {
+        "rtl_port": "ck_boot",
+        "bit": 66,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot67": {
+        "rtl_port": "ck_boot",
+        "bit": 67,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot68": {
+        "rtl_port": "ck_boot",
+        "bit": 68,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot69": {
+        "rtl_port": "ck_boot",
+        "bit": 69,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot70": {
+        "rtl_port": "ck_boot",
+        "bit": 70,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot71": {
+        "rtl_port": "ck_boot",
+        "bit": 71,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot72": {
+        "rtl_port": "ck_boot",
+        "bit": 72,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot73": {
+        "rtl_port": "ck_boot",
+        "bit": 73,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot74": {
+        "rtl_port": "ck_boot",
+        "bit": 74,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot75": {
+        "rtl_port": "ck_boot",
+        "bit": 75,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot76": {
+        "rtl_port": "ck_boot",
+        "bit": 76,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot77": {
+        "rtl_port": "ck_boot",
+        "bit": 77,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot78": {
+        "rtl_port": "ck_boot",
+        "bit": 78,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot79": {
+        "rtl_port": "ck_boot",
+        "bit": 79,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot80": {
+        "rtl_port": "ck_boot",
+        "bit": 80,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot81": {
+        "rtl_port": "ck_boot",
+        "bit": 81,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot82": {
+        "rtl_port": "ck_boot",
+        "bit": 82,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot83": {
+        "rtl_port": "ck_boot",
+        "bit": 83,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot84": {
+        "rtl_port": "ck_boot",
+        "bit": 84,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot85": {
+        "rtl_port": "ck_boot",
+        "bit": 85,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot86": {
+        "rtl_port": "ck_boot",
+        "bit": 86,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot87": {
+        "rtl_port": "ck_boot",
+        "bit": 87,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot88": {
+        "rtl_port": "ck_boot",
+        "bit": 88,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot89": {
+        "rtl_port": "ck_boot",
+        "bit": 89,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot90": {
+        "rtl_port": "ck_boot",
+        "bit": 90,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot91": {
+        "rtl_port": "ck_boot",
+        "bit": 91,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot92": {
+        "rtl_port": "ck_boot",
+        "bit": 92,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot93": {
+        "rtl_port": "ck_boot",
+        "bit": 93,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot94": {
+        "rtl_port": "ck_boot",
+        "bit": 94,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot95": {
+        "rtl_port": "ck_boot",
+        "bit": 95,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot96": {
+        "rtl_port": "ck_boot",
+        "bit": 96,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot97": {
+        "rtl_port": "ck_boot",
+        "bit": 97,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot98": {
+        "rtl_port": "ck_boot",
+        "bit": 98,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot99": {
+        "rtl_port": "ck_boot",
+        "bit": 99,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot100": {
+        "rtl_port": "ck_boot",
+        "bit": 100,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot101": {
+        "rtl_port": "ck_boot",
+        "bit": 101,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot102": {
+        "rtl_port": "ck_boot",
+        "bit": 102,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot103": {
+        "rtl_port": "ck_boot",
+        "bit": 103,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot104": {
+        "rtl_port": "ck_boot",
+        "bit": 104,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot105": {
+        "rtl_port": "ck_boot",
+        "bit": 105,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot106": {
+        "rtl_port": "ck_boot",
+        "bit": 106,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot107": {
+        "rtl_port": "ck_boot",
+        "bit": 107,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot108": {
+        "rtl_port": "ck_boot",
+        "bit": 108,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot109": {
+        "rtl_port": "ck_boot",
+        "bit": 109,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot110": {
+        "rtl_port": "ck_boot",
+        "bit": 110,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot111": {
+        "rtl_port": "ck_boot",
+        "bit": 111,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot112": {
+        "rtl_port": "ck_boot",
+        "bit": 112,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot113": {
+        "rtl_port": "ck_boot",
+        "bit": 113,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot114": {
+        "rtl_port": "ck_boot",
+        "bit": 114,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot115": {
+        "rtl_port": "ck_boot",
+        "bit": 115,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot116": {
+        "rtl_port": "ck_boot",
+        "bit": 116,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot117": {
+        "rtl_port": "ck_boot",
+        "bit": 117,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot118": {
+        "rtl_port": "ck_boot",
+        "bit": 118,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot119": {
+        "rtl_port": "ck_boot",
+        "bit": 119,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot120": {
+        "rtl_port": "ck_boot",
+        "bit": 120,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot121": {
+        "rtl_port": "ck_boot",
+        "bit": 121,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot122": {
+        "rtl_port": "ck_boot",
+        "bit": 122,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot123": {
+        "rtl_port": "ck_boot",
+        "bit": 123,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot124": {
+        "rtl_port": "ck_boot",
+        "bit": 124,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot125": {
+        "rtl_port": "ck_boot",
+        "bit": 125,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot126": {
+        "rtl_port": "ck_boot",
+        "bit": 126,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot127": {
+        "rtl_port": "ck_boot",
+        "bit": 127,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test0": {
+        "rtl_port": "ck_boot_test",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test1": {
+        "rtl_port": "ck_boot_test",
+        "bit": 1,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test2": {
+        "rtl_port": "ck_boot_test",
+        "bit": 2,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test3": {
+        "rtl_port": "ck_boot_test",
+        "bit": 3,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test4": {
+        "rtl_port": "ck_boot_test",
+        "bit": 4,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test5": {
+        "rtl_port": "ck_boot_test",
+        "bit": 5,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test6": {
+        "rtl_port": "ck_boot_test",
+        "bit": 6,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test7": {
+        "rtl_port": "ck_boot_test",
+        "bit": 7,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test8": {
+        "rtl_port": "ck_boot_test",
+        "bit": 8,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test9": {
+        "rtl_port": "ck_boot_test",
+        "bit": 9,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test10": {
+        "rtl_port": "ck_boot_test",
+        "bit": 10,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test11": {
+        "rtl_port": "ck_boot_test",
+        "bit": 11,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test12": {
+        "rtl_port": "ck_boot_test",
+        "bit": 12,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test13": {
+        "rtl_port": "ck_boot_test",
+        "bit": 13,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test14": {
+        "rtl_port": "ck_boot_test",
+        "bit": 14,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test15": {
+        "rtl_port": "ck_boot_test",
+        "bit": 15,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test16": {
+        "rtl_port": "ck_boot_test",
+        "bit": 16,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test17": {
+        "rtl_port": "ck_boot_test",
+        "bit": 17,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test18": {
+        "rtl_port": "ck_boot_test",
+        "bit": 18,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test19": {
+        "rtl_port": "ck_boot_test",
+        "bit": 19,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test20": {
+        "rtl_port": "ck_boot_test",
+        "bit": 20,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test21": {
+        "rtl_port": "ck_boot_test",
+        "bit": 21,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test22": {
+        "rtl_port": "ck_boot_test",
+        "bit": 22,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test23": {
+        "rtl_port": "ck_boot_test",
+        "bit": 23,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test24": {
+        "rtl_port": "ck_boot_test",
+        "bit": 24,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test25": {
+        "rtl_port": "ck_boot_test",
+        "bit": 25,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test26": {
+        "rtl_port": "ck_boot_test",
+        "bit": 26,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test27": {
+        "rtl_port": "ck_boot_test",
+        "bit": 27,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test28": {
+        "rtl_port": "ck_boot_test",
+        "bit": 28,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test29": {
+        "rtl_port": "ck_boot_test",
+        "bit": 29,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test30": {
+        "rtl_port": "ck_boot_test",
+        "bit": 30,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test31": {
+        "rtl_port": "ck_boot_test",
+        "bit": 31,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test32": {
+        "rtl_port": "ck_boot_test",
+        "bit": 32,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test33": {
+        "rtl_port": "ck_boot_test",
+        "bit": 33,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test34": {
+        "rtl_port": "ck_boot_test",
+        "bit": 34,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test35": {
+        "rtl_port": "ck_boot_test",
+        "bit": 35,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test36": {
+        "rtl_port": "ck_boot_test",
+        "bit": 36,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test37": {
+        "rtl_port": "ck_boot_test",
+        "bit": 37,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test38": {
+        "rtl_port": "ck_boot_test",
+        "bit": 38,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test39": {
+        "rtl_port": "ck_boot_test",
+        "bit": 39,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test40": {
+        "rtl_port": "ck_boot_test",
+        "bit": 40,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test41": {
+        "rtl_port": "ck_boot_test",
+        "bit": 41,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test42": {
+        "rtl_port": "ck_boot_test",
+        "bit": 42,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test43": {
+        "rtl_port": "ck_boot_test",
+        "bit": 43,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test44": {
+        "rtl_port": "ck_boot_test",
+        "bit": 44,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test45": {
+        "rtl_port": "ck_boot_test",
+        "bit": 45,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test46": {
+        "rtl_port": "ck_boot_test",
+        "bit": 46,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test47": {
+        "rtl_port": "ck_boot_test",
+        "bit": 47,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test48": {
+        "rtl_port": "ck_boot_test",
+        "bit": 48,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test49": {
+        "rtl_port": "ck_boot_test",
+        "bit": 49,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test50": {
+        "rtl_port": "ck_boot_test",
+        "bit": 50,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test51": {
+        "rtl_port": "ck_boot_test",
+        "bit": 51,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test52": {
+        "rtl_port": "ck_boot_test",
+        "bit": 52,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test53": {
+        "rtl_port": "ck_boot_test",
+        "bit": 53,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test54": {
+        "rtl_port": "ck_boot_test",
+        "bit": 54,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test55": {
+        "rtl_port": "ck_boot_test",
+        "bit": 55,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test56": {
+        "rtl_port": "ck_boot_test",
+        "bit": 56,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test57": {
+        "rtl_port": "ck_boot_test",
+        "bit": 57,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test58": {
+        "rtl_port": "ck_boot_test",
+        "bit": 58,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test59": {
+        "rtl_port": "ck_boot_test",
+        "bit": 59,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test60": {
+        "rtl_port": "ck_boot_test",
+        "bit": 60,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test61": {
+        "rtl_port": "ck_boot_test",
+        "bit": 61,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test62": {
+        "rtl_port": "ck_boot_test",
+        "bit": 62,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test63": {
+        "rtl_port": "ck_boot_test",
+        "bit": 63,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test64": {
+        "rtl_port": "ck_boot_test",
+        "bit": 64,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test65": {
+        "rtl_port": "ck_boot_test",
+        "bit": 65,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test66": {
+        "rtl_port": "ck_boot_test",
+        "bit": 66,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test67": {
+        "rtl_port": "ck_boot_test",
+        "bit": 67,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test68": {
+        "rtl_port": "ck_boot_test",
+        "bit": 68,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test69": {
+        "rtl_port": "ck_boot_test",
+        "bit": 69,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test70": {
+        "rtl_port": "ck_boot_test",
+        "bit": 70,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test71": {
+        "rtl_port": "ck_boot_test",
+        "bit": 71,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test72": {
+        "rtl_port": "ck_boot_test",
+        "bit": 72,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test73": {
+        "rtl_port": "ck_boot_test",
+        "bit": 73,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test74": {
+        "rtl_port": "ck_boot_test",
+        "bit": 74,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test75": {
+        "rtl_port": "ck_boot_test",
+        "bit": 75,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test76": {
+        "rtl_port": "ck_boot_test",
+        "bit": 76,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test77": {
+        "rtl_port": "ck_boot_test",
+        "bit": 77,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test78": {
+        "rtl_port": "ck_boot_test",
+        "bit": 78,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test79": {
+        "rtl_port": "ck_boot_test",
+        "bit": 79,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test80": {
+        "rtl_port": "ck_boot_test",
+        "bit": 80,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test81": {
+        "rtl_port": "ck_boot_test",
+        "bit": 81,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test82": {
+        "rtl_port": "ck_boot_test",
+        "bit": 82,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test83": {
+        "rtl_port": "ck_boot_test",
+        "bit": 83,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test84": {
+        "rtl_port": "ck_boot_test",
+        "bit": 84,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test85": {
+        "rtl_port": "ck_boot_test",
+        "bit": 85,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test86": {
+        "rtl_port": "ck_boot_test",
+        "bit": 86,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test87": {
+        "rtl_port": "ck_boot_test",
+        "bit": 87,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test88": {
+        "rtl_port": "ck_boot_test",
+        "bit": 88,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test89": {
+        "rtl_port": "ck_boot_test",
+        "bit": 89,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test90": {
+        "rtl_port": "ck_boot_test",
+        "bit": 90,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test91": {
+        "rtl_port": "ck_boot_test",
+        "bit": 91,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test92": {
+        "rtl_port": "ck_boot_test",
+        "bit": 92,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test93": {
+        "rtl_port": "ck_boot_test",
+        "bit": 93,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test94": {
+        "rtl_port": "ck_boot_test",
+        "bit": 94,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test95": {
+        "rtl_port": "ck_boot_test",
+        "bit": 95,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test96": {
+        "rtl_port": "ck_boot_test",
+        "bit": 96,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test97": {
+        "rtl_port": "ck_boot_test",
+        "bit": 97,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test98": {
+        "rtl_port": "ck_boot_test",
+        "bit": 98,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test99": {
+        "rtl_port": "ck_boot_test",
+        "bit": 99,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test100": {
+        "rtl_port": "ck_boot_test",
+        "bit": 100,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test101": {
+        "rtl_port": "ck_boot_test",
+        "bit": 101,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test102": {
+        "rtl_port": "ck_boot_test",
+        "bit": 102,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test103": {
+        "rtl_port": "ck_boot_test",
+        "bit": 103,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test104": {
+        "rtl_port": "ck_boot_test",
+        "bit": 104,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test105": {
+        "rtl_port": "ck_boot_test",
+        "bit": 105,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test106": {
+        "rtl_port": "ck_boot_test",
+        "bit": 106,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test107": {
+        "rtl_port": "ck_boot_test",
+        "bit": 107,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test108": {
+        "rtl_port": "ck_boot_test",
+        "bit": 108,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test109": {
+        "rtl_port": "ck_boot_test",
+        "bit": 109,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test110": {
+        "rtl_port": "ck_boot_test",
+        "bit": 110,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test111": {
+        "rtl_port": "ck_boot_test",
+        "bit": 111,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test112": {
+        "rtl_port": "ck_boot_test",
+        "bit": 112,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test113": {
+        "rtl_port": "ck_boot_test",
+        "bit": 113,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test114": {
+        "rtl_port": "ck_boot_test",
+        "bit": 114,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test115": {
+        "rtl_port": "ck_boot_test",
+        "bit": 115,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test116": {
+        "rtl_port": "ck_boot_test",
+        "bit": 116,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test117": {
+        "rtl_port": "ck_boot_test",
+        "bit": 117,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test118": {
+        "rtl_port": "ck_boot_test",
+        "bit": 118,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test119": {
+        "rtl_port": "ck_boot_test",
+        "bit": 119,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test120": {
+        "rtl_port": "ck_boot_test",
+        "bit": 120,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test121": {
+        "rtl_port": "ck_boot_test",
+        "bit": 121,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test122": {
+        "rtl_port": "ck_boot_test",
+        "bit": 122,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test123": {
+        "rtl_port": "ck_boot_test",
+        "bit": 123,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test124": {
+        "rtl_port": "ck_boot_test",
+        "bit": 124,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test125": {
+        "rtl_port": "ck_boot_test",
+        "bit": 125,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test126": {
+        "rtl_port": "ck_boot_test",
+        "bit": 126,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_boot_test127": {
+        "rtl_port": "ck_boot_test",
+        "bit": 127,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_host": {
+        "rtl_port": "ck_host",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_csr": {
+        "rtl_port": "ck_csr",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_rst": {
+        "rtl_port": "ck_rst",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_ctl": {
+        "rtl_port": "ck_ctl",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_prompt": {
+        "rtl_port": "ck_prompt",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_rx": {
+        "rtl_port": "ck_rx",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_tx": {
+        "rtl_port": "ck_tx",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_axi": {
+        "rtl_port": "ck_axi",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_ctrl": {
+        "rtl_port": "ck_ctrl",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_hc": {
+        "rtl_port": "ck_hc",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_qm_queue": {
+        "rtl_port": "ck_qm_queue",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_qm_ing_w": {
+        "rtl_port": "ck_qm_ing_w",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_qm_ing_r": {
+        "rtl_port": "ck_qm_ing_r",
+        "bit": 0,
+        "family": "host",
+        "period_ps": 1000.0
+      },
+      "ck_qm_credit": {
+        "rtl_port": "ck_qm_credit",
+        "bit": 0,
+        "family": "host",
+        "period_ps": 1000.0
+      },
+      "ck_qm_done_w": {
+        "rtl_port": "ck_qm_done_w",
+        "bit": 0,
+        "family": "host",
+        "period_ps": 1000.0
+      },
+      "ck_qm_done_r": {
+        "rtl_port": "ck_qm_done_r",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_qm_core": {
+        "rtl_port": "ck_qm_core",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_qm_host": {
+        "rtl_port": "ck_qm_host",
+        "bit": 0,
+        "family": "host",
+        "period_ps": 1000.0
+      },
+      "ck_qm_ingest": {
+        "rtl_port": "ck_qm_ingest",
+        "bit": 0,
+        "family": "ingest",
+        "period_ps": 1666.668
+      },
+      "ck_qm_bank0": {
+        "rtl_port": "ck_qm_bank",
+        "bit": 0,
+        "family": "ingest",
+        "period_ps": 1666.668
+      },
+      "ck_qm_bank1": {
+        "rtl_port": "ck_qm_bank",
+        "bit": 1,
+        "family": "ingest",
+        "period_ps": 1666.668
+      },
+      "ck_qm_out": {
+        "rtl_port": "ck_qm_out",
+        "bit": 0,
+        "family": "ingest",
+        "period_ps": 1666.668
+      },
+      "ck_map": {
+        "rtl_port": "ck_map",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_sum": {
+        "rtl_port": "ck_sum",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_order": {
+        "rtl_port": "ck_order",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_dispatch": {
+        "rtl_port": "ck_dispatch",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_retire": {
+        "rtl_port": "ck_retire",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_bootbarrier": {
+        "rtl_port": "ck_bootbarrier",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station0": {
+        "rtl_port": "ck_station",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station1": {
+        "rtl_port": "ck_station",
+        "bit": 1,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station2": {
+        "rtl_port": "ck_station",
+        "bit": 2,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station3": {
+        "rtl_port": "ck_station",
+        "bit": 3,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station4": {
+        "rtl_port": "ck_station",
+        "bit": 4,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station5": {
+        "rtl_port": "ck_station",
+        "bit": 5,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station6": {
+        "rtl_port": "ck_station",
+        "bit": 6,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station7": {
+        "rtl_port": "ck_station",
+        "bit": 7,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station8": {
+        "rtl_port": "ck_station",
+        "bit": 8,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station9": {
+        "rtl_port": "ck_station",
+        "bit": 9,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station10": {
+        "rtl_port": "ck_station",
+        "bit": 10,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station11": {
+        "rtl_port": "ck_station",
+        "bit": 11,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station12": {
+        "rtl_port": "ck_station",
+        "bit": 12,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station13": {
+        "rtl_port": "ck_station",
+        "bit": 13,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station14": {
+        "rtl_port": "ck_station",
+        "bit": 14,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station15": {
+        "rtl_port": "ck_station",
+        "bit": 15,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station16": {
+        "rtl_port": "ck_station",
+        "bit": 16,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station17": {
+        "rtl_port": "ck_station",
+        "bit": 17,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station18": {
+        "rtl_port": "ck_station",
+        "bit": 18,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station19": {
+        "rtl_port": "ck_station",
+        "bit": 19,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station20": {
+        "rtl_port": "ck_station",
+        "bit": 20,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station21": {
+        "rtl_port": "ck_station",
+        "bit": 21,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station22": {
+        "rtl_port": "ck_station",
+        "bit": 22,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station23": {
+        "rtl_port": "ck_station",
+        "bit": 23,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station24": {
+        "rtl_port": "ck_station",
+        "bit": 24,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station25": {
+        "rtl_port": "ck_station",
+        "bit": 25,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station26": {
+        "rtl_port": "ck_station",
+        "bit": 26,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station27": {
+        "rtl_port": "ck_station",
+        "bit": 27,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station28": {
+        "rtl_port": "ck_station",
+        "bit": 28,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station29": {
+        "rtl_port": "ck_station",
+        "bit": 29,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station30": {
+        "rtl_port": "ck_station",
+        "bit": 30,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station31": {
+        "rtl_port": "ck_station",
+        "bit": 31,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station32": {
+        "rtl_port": "ck_station",
+        "bit": 32,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station33": {
+        "rtl_port": "ck_station",
+        "bit": 33,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station34": {
+        "rtl_port": "ck_station",
+        "bit": 34,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station35": {
+        "rtl_port": "ck_station",
+        "bit": 35,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station36": {
+        "rtl_port": "ck_station",
+        "bit": 36,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station37": {
+        "rtl_port": "ck_station",
+        "bit": 37,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station38": {
+        "rtl_port": "ck_station",
+        "bit": 38,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station39": {
+        "rtl_port": "ck_station",
+        "bit": 39,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station40": {
+        "rtl_port": "ck_station",
+        "bit": 40,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station41": {
+        "rtl_port": "ck_station",
+        "bit": 41,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station42": {
+        "rtl_port": "ck_station",
+        "bit": 42,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station43": {
+        "rtl_port": "ck_station",
+        "bit": 43,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station44": {
+        "rtl_port": "ck_station",
+        "bit": 44,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station45": {
+        "rtl_port": "ck_station",
+        "bit": 45,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station46": {
+        "rtl_port": "ck_station",
+        "bit": 46,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station47": {
+        "rtl_port": "ck_station",
+        "bit": 47,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station48": {
+        "rtl_port": "ck_station",
+        "bit": 48,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station49": {
+        "rtl_port": "ck_station",
+        "bit": 49,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station50": {
+        "rtl_port": "ck_station",
+        "bit": 50,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station51": {
+        "rtl_port": "ck_station",
+        "bit": 51,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station52": {
+        "rtl_port": "ck_station",
+        "bit": 52,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station53": {
+        "rtl_port": "ck_station",
+        "bit": 53,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station54": {
+        "rtl_port": "ck_station",
+        "bit": 54,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station55": {
+        "rtl_port": "ck_station",
+        "bit": 55,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station56": {
+        "rtl_port": "ck_station",
+        "bit": 56,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station57": {
+        "rtl_port": "ck_station",
+        "bit": 57,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station58": {
+        "rtl_port": "ck_station",
+        "bit": 58,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station59": {
+        "rtl_port": "ck_station",
+        "bit": 59,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station60": {
+        "rtl_port": "ck_station",
+        "bit": 60,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station61": {
+        "rtl_port": "ck_station",
+        "bit": 61,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station62": {
+        "rtl_port": "ck_station",
+        "bit": 62,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station63": {
+        "rtl_port": "ck_station",
+        "bit": 63,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station64": {
+        "rtl_port": "ck_station",
+        "bit": 64,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station65": {
+        "rtl_port": "ck_station",
+        "bit": 65,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station66": {
+        "rtl_port": "ck_station",
+        "bit": 66,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station67": {
+        "rtl_port": "ck_station",
+        "bit": 67,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station68": {
+        "rtl_port": "ck_station",
+        "bit": 68,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station69": {
+        "rtl_port": "ck_station",
+        "bit": 69,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station70": {
+        "rtl_port": "ck_station",
+        "bit": 70,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station71": {
+        "rtl_port": "ck_station",
+        "bit": 71,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station72": {
+        "rtl_port": "ck_station",
+        "bit": 72,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station73": {
+        "rtl_port": "ck_station",
+        "bit": 73,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station74": {
+        "rtl_port": "ck_station",
+        "bit": 74,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station75": {
+        "rtl_port": "ck_station",
+        "bit": 75,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station76": {
+        "rtl_port": "ck_station",
+        "bit": 76,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station77": {
+        "rtl_port": "ck_station",
+        "bit": 77,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station78": {
+        "rtl_port": "ck_station",
+        "bit": 78,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station79": {
+        "rtl_port": "ck_station",
+        "bit": 79,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station80": {
+        "rtl_port": "ck_station",
+        "bit": 80,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station81": {
+        "rtl_port": "ck_station",
+        "bit": 81,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station82": {
+        "rtl_port": "ck_station",
+        "bit": 82,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station83": {
+        "rtl_port": "ck_station",
+        "bit": 83,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station84": {
+        "rtl_port": "ck_station",
+        "bit": 84,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station85": {
+        "rtl_port": "ck_station",
+        "bit": 85,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station86": {
+        "rtl_port": "ck_station",
+        "bit": 86,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station87": {
+        "rtl_port": "ck_station",
+        "bit": 87,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station88": {
+        "rtl_port": "ck_station",
+        "bit": 88,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station89": {
+        "rtl_port": "ck_station",
+        "bit": 89,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station90": {
+        "rtl_port": "ck_station",
+        "bit": 90,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station91": {
+        "rtl_port": "ck_station",
+        "bit": 91,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station92": {
+        "rtl_port": "ck_station",
+        "bit": 92,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station93": {
+        "rtl_port": "ck_station",
+        "bit": 93,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station94": {
+        "rtl_port": "ck_station",
+        "bit": 94,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station95": {
+        "rtl_port": "ck_station",
+        "bit": 95,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station96": {
+        "rtl_port": "ck_station",
+        "bit": 96,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station97": {
+        "rtl_port": "ck_station",
+        "bit": 97,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station98": {
+        "rtl_port": "ck_station",
+        "bit": 98,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station99": {
+        "rtl_port": "ck_station",
+        "bit": 99,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station100": {
+        "rtl_port": "ck_station",
+        "bit": 100,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station101": {
+        "rtl_port": "ck_station",
+        "bit": 101,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station102": {
+        "rtl_port": "ck_station",
+        "bit": 102,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station103": {
+        "rtl_port": "ck_station",
+        "bit": 103,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station104": {
+        "rtl_port": "ck_station",
+        "bit": 104,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station105": {
+        "rtl_port": "ck_station",
+        "bit": 105,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station106": {
+        "rtl_port": "ck_station",
+        "bit": 106,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station107": {
+        "rtl_port": "ck_station",
+        "bit": 107,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station108": {
+        "rtl_port": "ck_station",
+        "bit": 108,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station109": {
+        "rtl_port": "ck_station",
+        "bit": 109,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station110": {
+        "rtl_port": "ck_station",
+        "bit": 110,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station111": {
+        "rtl_port": "ck_station",
+        "bit": 111,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station112": {
+        "rtl_port": "ck_station",
+        "bit": 112,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station113": {
+        "rtl_port": "ck_station",
+        "bit": 113,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station114": {
+        "rtl_port": "ck_station",
+        "bit": 114,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station115": {
+        "rtl_port": "ck_station",
+        "bit": 115,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station116": {
+        "rtl_port": "ck_station",
+        "bit": 116,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station117": {
+        "rtl_port": "ck_station",
+        "bit": 117,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station118": {
+        "rtl_port": "ck_station",
+        "bit": 118,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station119": {
+        "rtl_port": "ck_station",
+        "bit": 119,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station120": {
+        "rtl_port": "ck_station",
+        "bit": 120,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station121": {
+        "rtl_port": "ck_station",
+        "bit": 121,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station122": {
+        "rtl_port": "ck_station",
+        "bit": 122,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station123": {
+        "rtl_port": "ck_station",
+        "bit": 123,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station124": {
+        "rtl_port": "ck_station",
+        "bit": 124,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station125": {
+        "rtl_port": "ck_station",
+        "bit": 125,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station126": {
+        "rtl_port": "ck_station",
+        "bit": 126,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_station127": {
+        "rtl_port": "ck_station",
+        "bit": 127,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static0": {
+        "rtl_port": "ck_static",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static1": {
+        "rtl_port": "ck_static",
+        "bit": 1,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static2": {
+        "rtl_port": "ck_static",
+        "bit": 2,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static3": {
+        "rtl_port": "ck_static",
+        "bit": 3,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static4": {
+        "rtl_port": "ck_static",
+        "bit": 4,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static5": {
+        "rtl_port": "ck_static",
+        "bit": 5,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static6": {
+        "rtl_port": "ck_static",
+        "bit": 6,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static7": {
+        "rtl_port": "ck_static",
+        "bit": 7,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static8": {
+        "rtl_port": "ck_static",
+        "bit": 8,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static9": {
+        "rtl_port": "ck_static",
+        "bit": 9,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static10": {
+        "rtl_port": "ck_static",
+        "bit": 10,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static11": {
+        "rtl_port": "ck_static",
+        "bit": 11,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static12": {
+        "rtl_port": "ck_static",
+        "bit": 12,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static13": {
+        "rtl_port": "ck_static",
+        "bit": 13,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static14": {
+        "rtl_port": "ck_static",
+        "bit": 14,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static15": {
+        "rtl_port": "ck_static",
+        "bit": 15,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static16": {
+        "rtl_port": "ck_static",
+        "bit": 16,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static17": {
+        "rtl_port": "ck_static",
+        "bit": 17,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static18": {
+        "rtl_port": "ck_static",
+        "bit": 18,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static19": {
+        "rtl_port": "ck_static",
+        "bit": 19,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static20": {
+        "rtl_port": "ck_static",
+        "bit": 20,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static21": {
+        "rtl_port": "ck_static",
+        "bit": 21,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static22": {
+        "rtl_port": "ck_static",
+        "bit": 22,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static23": {
+        "rtl_port": "ck_static",
+        "bit": 23,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static24": {
+        "rtl_port": "ck_static",
+        "bit": 24,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static25": {
+        "rtl_port": "ck_static",
+        "bit": 25,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static26": {
+        "rtl_port": "ck_static",
+        "bit": 26,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static27": {
+        "rtl_port": "ck_static",
+        "bit": 27,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static28": {
+        "rtl_port": "ck_static",
+        "bit": 28,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static29": {
+        "rtl_port": "ck_static",
+        "bit": 29,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static30": {
+        "rtl_port": "ck_static",
+        "bit": 30,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static31": {
+        "rtl_port": "ck_static",
+        "bit": 31,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static32": {
+        "rtl_port": "ck_static",
+        "bit": 32,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static33": {
+        "rtl_port": "ck_static",
+        "bit": 33,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static34": {
+        "rtl_port": "ck_static",
+        "bit": 34,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static35": {
+        "rtl_port": "ck_static",
+        "bit": 35,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static36": {
+        "rtl_port": "ck_static",
+        "bit": 36,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static37": {
+        "rtl_port": "ck_static",
+        "bit": 37,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static38": {
+        "rtl_port": "ck_static",
+        "bit": 38,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static39": {
+        "rtl_port": "ck_static",
+        "bit": 39,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static40": {
+        "rtl_port": "ck_static",
+        "bit": 40,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static41": {
+        "rtl_port": "ck_static",
+        "bit": 41,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static42": {
+        "rtl_port": "ck_static",
+        "bit": 42,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static43": {
+        "rtl_port": "ck_static",
+        "bit": 43,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static44": {
+        "rtl_port": "ck_static",
+        "bit": 44,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static45": {
+        "rtl_port": "ck_static",
+        "bit": 45,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static46": {
+        "rtl_port": "ck_static",
+        "bit": 46,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static47": {
+        "rtl_port": "ck_static",
+        "bit": 47,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static48": {
+        "rtl_port": "ck_static",
+        "bit": 48,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static49": {
+        "rtl_port": "ck_static",
+        "bit": 49,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static50": {
+        "rtl_port": "ck_static",
+        "bit": 50,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static51": {
+        "rtl_port": "ck_static",
+        "bit": 51,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static52": {
+        "rtl_port": "ck_static",
+        "bit": 52,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static53": {
+        "rtl_port": "ck_static",
+        "bit": 53,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static54": {
+        "rtl_port": "ck_static",
+        "bit": 54,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static55": {
+        "rtl_port": "ck_static",
+        "bit": 55,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static56": {
+        "rtl_port": "ck_static",
+        "bit": 56,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static57": {
+        "rtl_port": "ck_static",
+        "bit": 57,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static58": {
+        "rtl_port": "ck_static",
+        "bit": 58,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static59": {
+        "rtl_port": "ck_static",
+        "bit": 59,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static60": {
+        "rtl_port": "ck_static",
+        "bit": 60,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static61": {
+        "rtl_port": "ck_static",
+        "bit": 61,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static62": {
+        "rtl_port": "ck_static",
+        "bit": 62,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static63": {
+        "rtl_port": "ck_static",
+        "bit": 63,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static64": {
+        "rtl_port": "ck_static",
+        "bit": 64,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static65": {
+        "rtl_port": "ck_static",
+        "bit": 65,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static66": {
+        "rtl_port": "ck_static",
+        "bit": 66,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static67": {
+        "rtl_port": "ck_static",
+        "bit": 67,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static68": {
+        "rtl_port": "ck_static",
+        "bit": 68,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static69": {
+        "rtl_port": "ck_static",
+        "bit": 69,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static70": {
+        "rtl_port": "ck_static",
+        "bit": 70,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static71": {
+        "rtl_port": "ck_static",
+        "bit": 71,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static72": {
+        "rtl_port": "ck_static",
+        "bit": 72,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static73": {
+        "rtl_port": "ck_static",
+        "bit": 73,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static74": {
+        "rtl_port": "ck_static",
+        "bit": 74,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static75": {
+        "rtl_port": "ck_static",
+        "bit": 75,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static76": {
+        "rtl_port": "ck_static",
+        "bit": 76,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static77": {
+        "rtl_port": "ck_static",
+        "bit": 77,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static78": {
+        "rtl_port": "ck_static",
+        "bit": 78,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static79": {
+        "rtl_port": "ck_static",
+        "bit": 79,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static80": {
+        "rtl_port": "ck_static",
+        "bit": 80,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static81": {
+        "rtl_port": "ck_static",
+        "bit": 81,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static82": {
+        "rtl_port": "ck_static",
+        "bit": 82,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static83": {
+        "rtl_port": "ck_static",
+        "bit": 83,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static84": {
+        "rtl_port": "ck_static",
+        "bit": 84,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static85": {
+        "rtl_port": "ck_static",
+        "bit": 85,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static86": {
+        "rtl_port": "ck_static",
+        "bit": 86,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static87": {
+        "rtl_port": "ck_static",
+        "bit": 87,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static88": {
+        "rtl_port": "ck_static",
+        "bit": 88,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static89": {
+        "rtl_port": "ck_static",
+        "bit": 89,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static90": {
+        "rtl_port": "ck_static",
+        "bit": 90,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static91": {
+        "rtl_port": "ck_static",
+        "bit": 91,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static92": {
+        "rtl_port": "ck_static",
+        "bit": 92,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static93": {
+        "rtl_port": "ck_static",
+        "bit": 93,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static94": {
+        "rtl_port": "ck_static",
+        "bit": 94,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static95": {
+        "rtl_port": "ck_static",
+        "bit": 95,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static96": {
+        "rtl_port": "ck_static",
+        "bit": 96,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static97": {
+        "rtl_port": "ck_static",
+        "bit": 97,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static98": {
+        "rtl_port": "ck_static",
+        "bit": 98,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static99": {
+        "rtl_port": "ck_static",
+        "bit": 99,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static100": {
+        "rtl_port": "ck_static",
+        "bit": 100,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static101": {
+        "rtl_port": "ck_static",
+        "bit": 101,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static102": {
+        "rtl_port": "ck_static",
+        "bit": 102,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static103": {
+        "rtl_port": "ck_static",
+        "bit": 103,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static104": {
+        "rtl_port": "ck_static",
+        "bit": 104,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static105": {
+        "rtl_port": "ck_static",
+        "bit": 105,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static106": {
+        "rtl_port": "ck_static",
+        "bit": 106,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static107": {
+        "rtl_port": "ck_static",
+        "bit": 107,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static108": {
+        "rtl_port": "ck_static",
+        "bit": 108,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static109": {
+        "rtl_port": "ck_static",
+        "bit": 109,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static110": {
+        "rtl_port": "ck_static",
+        "bit": 110,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static111": {
+        "rtl_port": "ck_static",
+        "bit": 111,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static112": {
+        "rtl_port": "ck_static",
+        "bit": 112,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static113": {
+        "rtl_port": "ck_static",
+        "bit": 113,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static114": {
+        "rtl_port": "ck_static",
+        "bit": 114,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static115": {
+        "rtl_port": "ck_static",
+        "bit": 115,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static116": {
+        "rtl_port": "ck_static",
+        "bit": 116,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static117": {
+        "rtl_port": "ck_static",
+        "bit": 117,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static118": {
+        "rtl_port": "ck_static",
+        "bit": 118,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static119": {
+        "rtl_port": "ck_static",
+        "bit": 119,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static120": {
+        "rtl_port": "ck_static",
+        "bit": 120,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static121": {
+        "rtl_port": "ck_static",
+        "bit": 121,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static122": {
+        "rtl_port": "ck_static",
+        "bit": 122,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static123": {
+        "rtl_port": "ck_static",
+        "bit": 123,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static124": {
+        "rtl_port": "ck_static",
+        "bit": 124,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static125": {
+        "rtl_port": "ck_static",
+        "bit": 125,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static126": {
+        "rtl_port": "ck_static",
+        "bit": 126,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_static127": {
+        "rtl_port": "ck_static",
+        "bit": 127,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_fence_core": {
+        "rtl_port": "ck_fence_core",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_fence_host": {
+        "rtl_port": "ck_fence_host",
+        "bit": 0,
+        "family": "host",
+        "period_ps": 1000.0
+      },
+      "ck_guard": {
+        "rtl_port": "ck_guard",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      },
+      "ck_native": {
+        "rtl_port": "ck_native",
+        "bit": 0,
+        "family": "stream",
+        "period_ps": 833.334
+      }
+    },
+    "integration_status": "ACTUAL_DRAFT_RANK_SOURCE; full coordinator/peer transport and physical placement still required"
+  },
+  "actual_source_clock_entries": {
+    "phy": 11,
+    "stream": 539,
+    "host": 5,
+    "ingest": 4
+  },
+  "unqualified": "Draft does not close coordinator/peer physical transport or global die bind. No actual input tied off."
+}

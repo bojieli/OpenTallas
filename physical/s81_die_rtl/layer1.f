@@ -20,6 +20,9 @@ physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
 # WFC stage kit: the hardened cluster of the PRICED kit (dsfd_wfc_stg_cl) under the die master name, with the hop
 # endpoint (engine 7)
 +define+DSFD_WFC_STG_CL_DIE
+# STATIC die form (S-VM F7 2026-10-15): no t_lir / f_lor grant pins; static RX / TX message buffers, TX on the
+# compiler's reserved edges (last RX arrival + TX_OFF); gate tools/dsrom_wfc_static_bench.py
++define+DSFD_WFC_STG_STATIC
 rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv
 +libdir+physical/s81_ph_views/mtp/macros
 # BF pair (x512): the CLOSED compact199 views under their die names (tools/s81/gen_bf_die_wrappers.py: die bit i = the
@@ -142,3 +145,16 @@ rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv
 rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv
 rtl/dsrom_sys/s81_suhc/dsfd_sp_hc_c.sv
 rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv
+
+# S-BIND 2026-10-15 --bf-x2-static: one packed static x lane word xw/xe[1100:0] {x2 536 | legacy 564 | v} from the PQ
+# lane encoder (dsfd_pq_lx), column entry ot_s81_static_column_ingress (glue dsfd_cfifo), BF xb from the lane
++define+DSFD_PQ_STATIC_X2
+rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv
+rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv
+
+# S-BIND 2026-10-15 --bf-static-prog: static BF front (compiled programme f_prog 38 + io_clk) and the BF sequencer with
+# the programme producer (descriptor in the cfg ROM spare columns); gates: tools/s81/bf_txn_bench.py --die-pair
+# --static-prog 0 (real BF bench, TXN MATCH, mutants), rtl/v41die/test/run_cfg7_bfp_gate.sh
+rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv
+rtl/v41die/ot_s81_cfg7_seq_bfp.sv
+rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv

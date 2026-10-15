@@ -1,0 +1,506 @@
+{
+  "schema": "opentallas.hbm_attention.reach_evidence.v1",
+  "source_manifest_sha256": "f86d07aa4715dfb39c0191e80dd3f03757066de34eba45881961f15fe824a443",
+  "plan_sha256": "baac0e13b43e0ca7693976ca66a2260eeb9d801ec0817087b846d4094f2ad440",
+  "before": {
+    "children": 54,
+    "checked_signal_pin_pairs": 18946,
+    "internal_groups": 99,
+    "overlaps": [],
+    "outside": [],
+    "offgrid": [],
+    "multiple_driver_nets": [],
+    "max_manhattan_um": 964.494,
+    "over_500um": [
+      {
+        "net": "n5323",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 964.494
+      },
+      {
+        "net": "n5579",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 963.342
+      },
+      {
+        "net": "n5121",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 945.294
+      },
+      {
+        "net": "n5105",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 944.526
+      },
+      {
+        "net": "n5117",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 944.526
+      },
+      {
+        "net": "n5451",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 944.142
+      },
+      {
+        "net": "n5101",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 943.758
+      },
+      {
+        "net": "n5129",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 941.358
+      },
+      {
+        "net": "n5195",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 939.15
+      },
+      {
+        "net": "n5113",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 937.518
+      },
+      {
+        "net": "n5125",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 937.518
+      },
+      {
+        "net": "n5109",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 936.75
+      },
+      {
+        "net": "n4570",
+        "driver": "u_pi.gn.g_s[6].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.chn_r",
+        "bits": 529,
+        "max_manhattan_um": 729.354
+      },
+      {
+        "net": "n5515",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 719.166
+      },
+      {
+        "net": "n5387",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 705.822
+      },
+      {
+        "net": "n5127",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 690.558
+      },
+      {
+        "net": "n5111",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 689.79
+      },
+      {
+        "net": "n5123",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 689.79
+      },
+      {
+        "net": "n5107",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 689.022
+      },
+      {
+        "net": "n9438",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b.d",
+        "bits": 531,
+        "max_manhattan_um": 687.48
+      },
+      {
+        "net": "n5259",
+        "driver": "g_y1.g_x[0].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 651.39
+      },
+      {
+        "net": "n5119",
+        "driver": "g_y1.g_x[0].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 635.358
+      },
+      {
+        "net": "n5103",
+        "driver": "g_y1.g_x[0].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 634.59
+      },
+      {
+        "net": "n5115",
+        "driver": "g_y1.g_x[0].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 634.59
+      },
+      {
+        "net": "n5099",
+        "driver": "g_y1.g_x[0].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 633.822
+      },
+      {
+        "net": "n5131",
+        "driver": "g_y1.g_x[0].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 626.046
+      }
+    ],
+    "worst_groups": [
+      {
+        "net": "n5323",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 964.494
+      },
+      {
+        "net": "n5579",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 963.342
+      },
+      {
+        "net": "n5121",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 945.294
+      },
+      {
+        "net": "n5105",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 944.526
+      },
+      {
+        "net": "n5117",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 944.526
+      },
+      {
+        "net": "n5451",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 944.142
+      },
+      {
+        "net": "n5101",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 943.758
+      },
+      {
+        "net": "n5129",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 941.358
+      },
+      {
+        "net": "n5195",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 939.15
+      },
+      {
+        "net": "n5113",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 937.518
+      },
+      {
+        "net": "n5125",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 937.518
+      },
+      {
+        "net": "n5109",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 936.75
+      },
+      {
+        "net": "n4570",
+        "driver": "u_pi.gn.g_s[6].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.chn_r",
+        "bits": 529,
+        "max_manhattan_um": 729.354
+      },
+      {
+        "net": "n5515",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 719.166
+      },
+      {
+        "net": "n5387",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 705.822
+      },
+      {
+        "net": "n5127",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 690.558
+      },
+      {
+        "net": "n5111",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 689.79
+      },
+      {
+        "net": "n5123",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oflt",
+        "bits": 2,
+        "max_manhattan_um": 689.79
+      },
+      {
+        "net": "n5107",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.gov",
+        "bits": 2,
+        "max_manhattan_um": 689.022
+      },
+      {
+        "net": "n9438",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b.d",
+        "bits": 531,
+        "max_manhattan_um": 687.48
+      }
+    ],
+    "geometry_reach_pass": false
+  },
+  "after": {
+    "children": 54,
+    "checked_signal_pin_pairs": 18946,
+    "internal_groups": 99,
+    "overlaps": [],
+    "outside": [],
+    "offgrid": [],
+    "multiple_driver_nets": [],
+    "max_manhattan_um": 383.04,
+    "over_500um": [],
+    "worst_groups": [
+      {
+        "net": "n9438",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[2].g_ew.u_b.d",
+        "bits": 531,
+        "max_manhattan_um": 383.04
+      },
+      {
+        "net": "n8894",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[1].g_ew.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 380.88
+      },
+      {
+        "net": "n8350",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[0].g_ew.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 376.56
+      },
+      {
+        "net": "n17068",
+        "driver": "u_pi.gn.g_s[0].g_c[0].g_ew.u_b.q",
+        "load": "u_pi.gn.g_s[1].g_c[0].g_sn.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 334.776
+      },
+      {
+        "net": "n8350",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[0].g_ew.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 318.792
+      },
+      {
+        "net": "n8894",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[1].g_ew.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 314.472
+      },
+      {
+        "net": "n9438",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b.d",
+        "bits": 531,
+        "max_manhattan_um": 307.32
+      },
+      {
+        "net": "n7534",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[1].g_c[0].g_ew.u_b.q",
+        "load": "g_y1.g_x[0].u_res.gn.g_s[2].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 290.856
+      },
+      {
+        "net": "n9982",
+        "driver": "g_y1.g_x[0].u_xr.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_xr.gn.g_s[1].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 282.12
+      },
+      {
+        "net": "n13790",
+        "driver": "u_xin.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "u_fc.gn.g_s[0].g_c[0].g_sn.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 269.592
+      },
+      {
+        "net": "n14334",
+        "driver": "u_xin.gn.g_s[0].g_c[1].g_sn.u_b.q",
+        "load": "u_fc.gn.g_s[0].g_c[1].g_sn.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 269.592
+      },
+      {
+        "net": "n14878",
+        "driver": "u_xin.gn.g_s[0].g_c[2].g_sn.u_b.q",
+        "load": "u_fc.gn.g_s[0].g_c[2].g_sn.u_b.d",
+        "bits": 530,
+        "max_manhattan_um": 269.592
+      },
+      {
+        "net": "n12689",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[3].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_res.gn.g_s[4].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 264.84
+      },
+      {
+        "net": "n18156",
+        "driver": "u_pi.gn.g_s[2].g_c[0].g_sn.u_b.q",
+        "load": "u_pi.gn.g_s[3].g_c[0].g_sn.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 262.248
+      },
+      {
+        "net": "n10118",
+        "driver": "g_y1.g_x[0].u_xr.gn.g_s[1].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_xr.gn.g_s[2].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 261.816
+      },
+      {
+        "net": "n12825",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_res.gn.g_s[5].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 261.816
+      },
+      {
+        "net": "n13246",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_xr.gn.g_s[1].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 260.088
+      },
+      {
+        "net": "n5323",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 253.422
+      },
+      {
+        "net": "n6747",
+        "driver": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b.q",
+        "load": "g_y1.g_x[0].u_q.ld_w",
+        "bits": 517,
+        "max_manhattan_um": 252.528
+      },
+      {
+        "net": "n11630",
+        "driver": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[2].g_ew.u_b.q",
+        "load": "g_y1.g_x[1].u_q.ld_w",
+        "bits": 517,
+        "max_manhattan_um": 252.258
+      }
+    ],
+    "geometry_reach_pass": true
+  },
+  "merge_pin_shift_mutant_detected": true,
+  "native_qualified": false,
+  "limits": [
+    "Actual obstruction-aware cut and channel capacity with PG",
+    "Native fixed-cycle producer/PS/VM source binding",
+    "Assigned die instance placement and external pins",
+    "Actual per-child clock roots/phi-R insertion and STA",
+    "Global/detailed route and DRC0",
+    "M6 clock strap track alignment and exact macro pin access"
+  ]
+}

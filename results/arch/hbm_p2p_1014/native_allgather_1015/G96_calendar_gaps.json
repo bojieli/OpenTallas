@@ -1,0 +1,80 @@
+{
+  "status": "G96 PRODUCTION CALENDAR UNQUALIFIED; immutable gaps versus full8 G2 mechanism bench",
+  "G2_vehicle": {
+    "source_commit": "cf9c38c30",
+    "dies": 2,
+    "actual_parents": 8,
+    "q3_K2048": 2,
+    "q2": 6,
+    "PF_per_die": 384,
+    "quarter_flits": 96,
+    "active_rails_per_die": 8,
+    "instantiated_rails_per_die": 9,
+    "SU_source": "declared external component-boundary stimulus with12edge ABI, no native SU producer join",
+    "link": "earlier596bit native codec,2active rails/quarter atone frame/corecycle,5wire registers",
+    "result": "initial160GiB OOM; unchanged fullshape320GiB resume live, no functional verdict yet"
+  },
+  "actual_production_endpoint": {
+    "commit": "359252cc2",
+    "source_git_blobs": {
+      "rtl/hbm_accel/io_static_20261015/ot_hbm_static_frame_transport.sv": "dbe24eeeb88baeef8c60a28228617c12d8b81801",
+      "rtl/hbm_accel/io_static_20261015/ot_hbm_static_gearbox.sv": "321745abb8cbe3dca541961d96cdcea46861a9c5"
+    },
+    "reservation_bits": 613,
+    "endpoint_frame_bits": 612,
+    "inband_valid_bits": 1,
+    "physical_word_bits_per_core_edge": 487,
+    "exact_period_core_edges": 613,
+    "reserved_frames_per_period": 487,
+    "idle_semantics": "reserved idle frames contain inband valid0; cannot become fabricated received publications",
+    "normal_policy": "compiler assigned slots, no ready or credits"
+  },
+  "helper_join_candidate_calendar": {
+    "status": "reported candidate only, helper session89490 live; not proven at artifact creation",
+    "acceptance": "A(j)=17+floor(613*j/487)",
+    "endpoint_read": "A(j)-4",
+    "endpoint_TX3_pin": "A(j)-1",
+    "wrapper_acceptance": "A(j)",
+    "word_flight_registers": 3,
+    "recovery_index": "k=ceil(613*(j+1)/487)-1",
+    "wrapper_RX_sample": "21+k",
+    "endpoint_RX_expect": "23+k",
+    "endpoint_RX_publication": "24+k",
+    "FEC": "absent, no qualification claim"
+  },
+  "required_remaining_gates": [
+    {
+      "requirement": "Exact endpoint/gearbox native join at actual613/487 cadence",
+      "missing": "finish source-pinned helper join positive+mutants, then use same actual wrapper in collective program/bench; ideal612bits/coreedge is not admissible evidence"
+    },
+    {
+      "requirement": "G96 complete per-rail compiler calendar",
+      "missing": "assign every directed rail and each hop at613/487 acceptance/recovery phases, propagate actual physical/FEC ages when implemented; full96die topology/routing and cut constraints not represented byG2"
+    },
+    {
+      "requirement": "Production shape exactness and occupancy",
+      "missing": "full target message shapes, all16bit frame identities, physical64slot recycling/reservations, sustained endpoint cadence, qslots occupancy, no overflow/underflow, exact result cycles across all phases"
+    },
+    {
+      "requirement": "Actual native producer/consumer join",
+      "missing": "native SU512producer and source-memory response ABI; current12edge declared-boundary stimulus establishes mechanism behavior only"
+    },
+    {
+      "requirement": "Normative HGI compiler lowering",
+      "missing": "derive program from production records/operations and source-bound actual operands/results; G2 generated mechanism program does not enumerate or execute full normativeHGI"
+    },
+    {
+      "requirement": "G96 n1024 immutable performance price",
+      "missing": "compose actual613/487 endpoint reservations, native producer/consumer, reduction/TKM and physical hop stages into target simulator price; measure production shape within10percent without repricing"
+    },
+    {
+      "requirement": "Physical qualification",
+      "missing": "all child slot/pin/clock contracts, TTsetup/FFhold/DRC0, actual die timing and routable cuts for changed sequence control/transport/parents"
+    },
+    {
+      "requirement": "FEC and exceptional recovery",
+      "missing": "actual FEC join and priced latency if required; CRC abort request alone is not implemented retry/recovery or PHY evidence"
+    }
+  ],
+  "prohibited_inference": "A passing G2/PF384 native collective mechanism cannot establish G96 n1024 fullproduction throughput, actual SU completeness, FEC/recovery, or die physical closure."
+}

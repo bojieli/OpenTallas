@@ -187,6 +187,13 @@ def main():
     vals[3][5] = np.float32(np.nan)
     idl = [rng.permutation(4096)[:16].astype(np.uint32) for _ in range(8)]
     cases.append(write_case(a.out, "g8_nan_fault", 8, 16, 8, 1, vals, idl, True, seed=13))
+    # write-port phase: the final partial O line lands one cell after a full line (cells % 4 == 1) and must not
+    # share the single write edge with the previous line's R write; cover every cells % 4 phase (appended last so
+    # every earlier case keeps its random stream)
+    for (Gs, n, k) in ((1, 20, 17), (1, 20, 20), (2, 9, 18), (1, 24, 21), (1, 30, 25), (1, 32, 32)):
+        vals = [rnd_vals(n, "bf16") for _ in range(Gs)]
+        idl = [rng.permutation(4096)[:n].astype(np.uint32) for _ in range(Gs)]
+        cases.append(write_case(a.out, f"port_g{Gs}_n{n}_k{k}", Gs, n, k, Gs - 1, vals, idl, True, seed=20 + n))
     (a.out / "cases.json").write_text(json.dumps(cases, indent=1) + "\n")
     print(f"{len(cases)} cases -> {a.out}")
 

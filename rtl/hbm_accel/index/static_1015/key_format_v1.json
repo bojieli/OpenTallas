@@ -1,0 +1,70 @@
+{
+  "schema": "opentallas.hbm-index-key-packed-v1",
+  "status": "source/component proved; actualSM-SUwriter/PHY-service adoption OPEN",
+  "source": "canonical cmp.ik_qdq, PREquantKR FP32; do not requantize IK",
+  "features": 128,
+  "blocks": 4,
+  "features_per_block": 32,
+  "quantization": "exactFP4 E2M1 RNE +UE8M0/32features",
+  "physical_key": {
+    "bits": 544,
+    "bytes": 68,
+    "codes": {
+      "bits": [
+        0,
+        511
+      ],
+      "feature_i": "4*i+:4"
+    },
+    "scales": {
+      "bits": [
+        512,
+        543
+      ],
+      "block_j": "512+8*j+:8"
+    }
+  },
+  "pair": {
+    "bytes": 136,
+    "bits": 1088,
+    "key0": "bits0..543",
+    "key1": "bits544..1087"
+  },
+  "extent": {
+    "base_bytes": 19864223744,
+    "fence_bytes": 20401094656,
+    "source_stride_bytes": 134217728,
+    "sources": 4,
+    "stacks": 4,
+    "reservation_note": "old128Brow capacity reservation retained; this68B payload view is versioned successor, never reinterpret legacyFP32 descriptor"
+  },
+  "placement": {
+    "owned_local_keys_per_stack": 2736,
+    "stack": "owned_local_key//2736",
+    "row": "owned_local_key%2736",
+    "byteaddr": "base+source*128MiB+row*68",
+    "owner_die": "global_key_block%96",
+    "owned_local_key": "(global_key_block//96)*8+global_key_lane",
+    "maximum_global_context": 1048576
+  },
+  "service": {
+    "pair_tag10": "((beat_index*8)+port)%1024",
+    "beat_index": [
+      0,
+      170
+    ],
+    "ports_per_stack": 8,
+    "stacks": 4,
+    "keys_per_stack_beat": 16,
+    "raw_pair_bytes_per_stack_beat": 1088,
+    "fullframe_staging_bytes_per_stack": 186048,
+    "prefetch": "wholeblockready only atHBMstackboundary; actualcapacity/multiblock staging allocation OPEN"
+  },
+  "write": {
+    "sector_bytes": 32,
+    "reserved_slots_per_key": 4,
+    "mask": "68validbytes shiftedbykeyaddr%32, slicedper32Bslot; preserve neighbours",
+    "producer": "ot_hbm_idx_keystore_static"
+  },
+  "qualification": false
+}

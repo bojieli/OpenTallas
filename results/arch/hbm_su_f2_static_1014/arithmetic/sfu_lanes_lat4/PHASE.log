@@ -1,0 +1,19 @@
+SU_ARITH ERROR op=0 cycle=93 compiled output cycle mismatch
+SU_ARITH ERROR op=0 cycle=93 compiled output cycle mismatch
+SU_ARITH ERROR op=0 cycle=93 compiled output cycle mismatch
+SU_ARITH ERROR op=0 cycle=93 compiled output cycle mismatch
+SU_ARITH ERROR op=0 cycle=93 compiled output cycle mismatch
+SU_ARITH ERROR op=0 cycle=93 compiled output cycle mismatch
+SU_ARITH ERROR op=0 cycle=93 compiled output cycle mismatch
+SU_ARITH ERROR op=0 cycle=93 compiled output cycle mismatch
+SU_ARITH_SFU OP 0 sfu_only=1 issue_to_output=84 first_output=93 last_output=156
+SU_ARITH_SFU OP 1 sfu_only=1 issue_to_output=84 first_output=93 last_output=156
+SU_ARITH_SFU OP 2 sfu_only=1 issue_to_output=106 first_output=115 last_output=178
+SU_ARITH_SFU OP 3 sfu_only=1 issue_to_output=106 first_output=115 last_output=178
+SU_ARITH_SFU OP 4 sfu_only=1 issue_to_output=106 first_output=115 last_output=178
+SU_ARITH_SFU OP 5 sfu_only=1 issue_to_output=43 first_output=52 last_output=115
+SU_ARITH_SFU OP 6 sfu_only=1 issue_to_output=43 first_output=52 last_output=115
+SU_ARITH_SFU OP 7 sfu_only=0 issue_to_output=28 first_output=37 last_output=100
+[30970000] %Fatal: tb_su_static_arithmetic_sfu.sv:107: Assertion failed in tb_su_static_arithmetic_sfu: SU_ARITH FAIL checks=352256 errors=90112 outputs=90112
+%Error: rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_arithmetic_sfu.sv:107: Verilog $stop
+Aborting...

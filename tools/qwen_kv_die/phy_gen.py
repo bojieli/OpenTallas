@@ -81,9 +81,6 @@ def generate(out: Path) -> dict:
         "tools/qwen_missing/link_phy_gen.py", "tools/qwen_kv_die/phy_gen.py")
     # Benches also exercise the legacy adapter-only word. Keep FW configurable
     # in the behavioural model; the published hard-macro ports remain exactly 583.
-    model = model.replace("parameter integer UP = 16", f"parameter integer UP = 16, parameter integer FW = {FW}")
-    model = model.replace(f"[{FW - 1}:0]", "[FW-1:0]")
-    model = model.replace(f"LAT*{FW + 1}", "LAT*(FW+1)").replace(f"-: {FW + 1}", "-: (FW+1)")
     (d / f"{NAME}_model.sv").write_text(model)
     sheet = dict(schema="opentallas.qwen-kv-die.link-phy-abstract.v1", generator="tools/qwen_kv_die/phy_gen.py",
                  name=NAME, footprint=dict(width_um=w, height_um=h, area_mm2=round(w * h / 1e6, 4), edge_um=w),
