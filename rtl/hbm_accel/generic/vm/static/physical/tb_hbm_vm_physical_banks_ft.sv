@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 `default_nettype none
-// Native group-count successors: RG7/WG3(NW/NE), RG5/WG1(SW/SE).
+// Native group-count successors: RG7/WG3, RG5/WG1 (pre-v15 ABI) and v15 RG6/WG3 (NW/NE), RG5/WG1 (SW), RG4/WG1 (SE).
 // Real eight-bank SRAM vehicle; no bank or response substitute.
 module tb_hbm_vm_physical_banks_ft;
     parameter integer RG=7,WG=3;
@@ -95,6 +95,82 @@ module tb_hbm_vm_physical_banks_ft;
                 .rr3(actual_rr[(b*RG+3)*257+:257]),
                 .rq4(rq[(b*RG+4)*17+:17]),
                 .rr4(actual_rr[(b*RG+4)*257+:257]),
+                .wq0(281'd0),
+                .wq_done0()
+            );
+        end
+        else if (RG==6 && WG==3) begin:literal_shape_6
+            hfd_vms_bank_ft_rg6wg3 memory(
+                .clk(clk),
+                .rst_n(rst_n),
+                .bid(3'(b)),
+                .sid(2'd2),
+                .rslot_v(rslot_v[b]),
+                .rslot(rslot[b*RB+:RB]),
+                .wslot_v(wslot_v[b]),
+                .wslot(wslot[b*WB+:WB]),
+                .dq(dq[b*281+:281]),
+                .dq_done(dq_done[b]),
+                .kq(281'd0),
+                .kq_done(),
+                .xq(276'd0),
+                .xq_done(),
+                .xq2(276'd0),
+                .xq2_done(),
+                .eg(),
+                .pq(pq[b*285+:285]),
+                .pr(pr[b*266+:266]),
+                .status(status[b*18+:18]),
+                .rq0(rq[(b*RG+0)*17+:17]),
+                .rr0(actual_rr[(b*RG+0)*257+:257]),
+                .rq1(rq[(b*RG+1)*17+:17]),
+                .rr1(actual_rr[(b*RG+1)*257+:257]),
+                .rq2(rq[(b*RG+2)*17+:17]),
+                .rr2(actual_rr[(b*RG+2)*257+:257]),
+                .rq3(rq[(b*RG+3)*17+:17]),
+                .rr3(actual_rr[(b*RG+3)*257+:257]),
+                .rq4(rq[(b*RG+4)*17+:17]),
+                .rr4(actual_rr[(b*RG+4)*257+:257]),
+                .rq5(rq[(b*RG+5)*17+:17]),
+                .rr5(actual_rr[(b*RG+5)*257+:257]),
+                .wq0(281'd0),
+                .wq_done0(),
+                .wq1(281'd0),
+                .wq_done1(),
+                .wq2(281'd0),
+                .wq_done2()
+            );
+        end
+        else if (RG==4 && WG==1) begin:literal_shape_4
+            hfd_vms_bank_ft_rg4wg1 memory(
+                .clk(clk),
+                .rst_n(rst_n),
+                .bid(3'(b)),
+                .sid(2'd2),
+                .rslot_v(rslot_v[b]),
+                .rslot(rslot[b*RB+:RB]),
+                .wslot_v(wslot_v[b]),
+                .wslot(wslot[b*WB+:WB]),
+                .dq(dq[b*281+:281]),
+                .dq_done(dq_done[b]),
+                .kq(281'd0),
+                .kq_done(),
+                .xq(276'd0),
+                .xq_done(),
+                .xq2(276'd0),
+                .xq2_done(),
+                .eg(),
+                .pq(pq[b*285+:285]),
+                .pr(pr[b*266+:266]),
+                .status(status[b*18+:18]),
+                .rq0(rq[(b*RG+0)*17+:17]),
+                .rr0(actual_rr[(b*RG+0)*257+:257]),
+                .rq1(rq[(b*RG+1)*17+:17]),
+                .rr1(actual_rr[(b*RG+1)*257+:257]),
+                .rq2(rq[(b*RG+2)*17+:17]),
+                .rr2(actual_rr[(b*RG+2)*257+:257]),
+                .rq3(rq[(b*RG+3)*17+:17]),
+                .rr3(actual_rr[(b*RG+3)*257+:257]),
                 .wq0(281'd0),
                 .wq_done0()
             );
