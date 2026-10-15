@@ -66,6 +66,7 @@ module qkd_host_ctrl_token_service_packet_collected #(parameter integer DIE=0,MU
   if(!por_n)begin retained_request<=0;retained_allocated_seen<=0;reset_abort_seen<=0;job_token<=0;job_position<=0;job_generation<=0;end
   else begin
    if(!rst_n&&retained_request)reset_abort_seen<=1;
+   if(ENABLE_TOKEN&&wrap_vq&&wrap_dq&&wrap_rq&&wrap_tq)reset_abort_seen<=0;
    if(token_request_valid&&request_ready_q)begin
     retained_request<=1;retained_allocated_seen<=0;job_token<=token_request_token;job_position<=token_request_position;job_generation<=token_request_generation;
    end
@@ -122,7 +123,7 @@ module qkd_host_ctrl_token_service_packet_collected #(parameter integer DIE=0,MU
    if(ENABLE_TOKEN&&wrap_vq&&!(wrap_dq&&wrap_rq&&wrap_tq))fault<=1;
    if(ENABLE_TOKEN&&wrap_vq&&wrap_dq&&wrap_rq&&wrap_tq)begin
     if(cancel_valid||retained_request||allocated_vq)fault<=1;
-    else begin fault<=0;abort_seen<=0;abort_q<=0;reset_abort_seen<=0;cancel_consumed<=0;active_epoch_valid<=0;end
+    else begin fault<=0;abort_seen<=0;abort_q<=0;cancel_consumed<=0;active_epoch_valid<=0;end
    end
    abort_q<=package_abort;drain_q<=abort_drained;request_ready_q<=token_request_ready;
    grant_valid_q<=token_grant_valid;grant_epoch_q<=token_grant_epoch;grant_token_q<=token_grant_token;
