@@ -31,7 +31,7 @@ for half in ('a','b'):
  links=[f'.{n}({n})' for _,n in inp]+[f'.{n}(ref_{n})' for _,n in outputs]
  lines += [name+' '+params+' ref_dut(.clk(clk),'+','.join(links)+');']
  links=[f'.{n}({n})' for _,n in inp]+[f'.{n}(dut_{n})' for _,n in outputs]
- lines += [name+'_columns '+params+' dut(.clk_col({4{clk}}),.clk_merge(clk),'+','.join(links)+');','initial begin']
+ lines += [name+'_columns '+params+' dut(.clk_col({4{clk}}),'+','.join(links)+');','initial begin']
  for _,n in inp:lines += [f'{n}=0;']
  lines += ['for(cycle=0;cycle<2500;cycle=cycle+1) begin','clk=0; #1;']
  for _,n in inp:
