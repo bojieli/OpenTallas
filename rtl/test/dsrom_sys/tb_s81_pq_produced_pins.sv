@@ -18,7 +18,7 @@ module tb_s81_pq_produced_pins;
  ot_rom_4096x72_m8 u_stream(.clk(clk),.ce_in(1'b1),.addr_in(ra2[11:0]),.rd_out(raw2[b]));
  end
  always @(posedge clk)bank<=ra2[13:12];
- dsfd_sp_pq_produced dut(.ck_ctl(clk),.ck_qb(clk),.ck_fault(clk),.ck_qb_aux({4{clk}}),.ck_aq({2{clk}}),
+ dsfd_sp_pq_produced dut(.ck_ctl(clk),.ck_qb(clk),.ck_qb_align(clk),.ck_fault(clk),.ck_qb_aux({4{clk}}),.ck_aq({2{clk}}),
  .ck_aq_aux({16{clk}}),.ck_ix({4{clk}}),.ck_ix_read({32{clk}}),.ck_bc({16{clk}}),.ck_lane(clk),
  .rst(rst_n),.ck_cmd(clk),.ck_calendar(clk),.c_cmd(cmd),.f_desc_pw(desc),.c_done(done),.c_st(command_status),.image_sealed(sealed),.calendar_prime(prime),.stage_start(start),.calendar_base(12'd0),.calendar_length(13'd4),.calendar_primed(primed),.calendar_fault(calendar_fault),.t_iss(status),.t_vm(vm),.f_vm(2049'd0),
  .ra0(ra0),.ra1(ra1),.ra2(ra2),.rc0(),.rc1(),.rc2(),.rq0(raw0[63:0]),.rq1(raw1[63:0]),.rq2(sq),

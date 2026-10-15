@@ -6,6 +6,9 @@
 // No historical PHW9 physical view or component proof qualifies this parent.
 module dsfd_sp_pq_produced (
     input  wire          ck_ctl, ck_qb, ck_fault,
+`ifdef OT_PQ_QB_PIPE
+    input wire ck_qb_align,
+`endif
 `ifdef OT_PQ_QB_PHYS_SPLIT
     input  wire [3:0]    ck_qb_aux,
 `endif
