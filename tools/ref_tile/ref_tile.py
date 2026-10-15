@@ -155,7 +155,7 @@ def apply_recipe(s: dict, recipe: int) -> dict:
 
 
 def hold_pad_vars(s: dict) -> list:
-    """spec "hold_pad" {"cell", "strong_ports", "strong_cell", "basis"} -> --orfs-var items for leaf_inhold / leaf_iohold"""
+    """spec "hold_pad" {"cell", "out_cell", "strong_ports", "strong_cell", "basis"} -> --orfs-var items for leaf_inhold / leaf_iohold"""
     hp = s.get("hold_pad")
     if not hp or not (s.get("inhold") or s.get("outhold")):
         return []
@@ -169,6 +169,16 @@ def hold_pad_vars(s: dict) -> list:
     if "OT_INHOLD_MASTER" in ov:
         raise SpecError("spec: hold_pad and orfs_vars OT_INHOLD_MASTER both set the pin pad; keep hold_pad only")
     out.append(f"--orfs-var OT_INHOLD_MASTER={cell}")
+    # "out_cell" (S81 VM F6 2026-10-15): the OUTPUT pad (leaf_iohold BUF -> pad -> BUF) may differ from the input pad: a
+    # light HB1 gives the flop -> pin path a fixed sender-min hold delay (~38 ps FF) at a launch cost (~55 ps TT) that a
+    # 220 ps native launch budget can carry, where the input pad stays HB2.  Default: the input pad (kits unchanged).
+    oc = hp.get("out_cell")
+    if oc is not None:
+        if not s.get("outhold"):
+            raise SpecError("spec: hold_pad.out_cell needs outhold")
+        if not re.fullmatch(r"HB[1-4]xp67_ASAP7_75t_[RLS]L?", str(oc)):
+            raise SpecError(f"spec: hold_pad.out_cell {oc!r} is not an ASAP7 HB hold cell")
+        out.append(f"--orfs-var OT_OUTHOLD_MASTER={oc}")
     sp = hp.get("strong_ports")
     if sp:
         try:
@@ -270,7 +280,7 @@ def load_spec(path: str) -> dict:
     # boundary insertion).  "clock_port" stays the first entry (kit CLKPORT, legacy readers).
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         cps = s.get("clock_ports")
-        if s["kind"] != ("tile" if s.get("clock") == "multiple_cts_roots" else "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
+        if (s.get("clock") == "multiple_cts_roots" and s["kind"] != "tile" or s.get("clock") == "entries" and s["kind"] != "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
             raise SpecError('spec: clock entries/hybrid_entries require kind cluster; multiple_cts_roots requires kind tile; '
                             'each requires clock_ports and clock_port == clock_ports[0]')
         if len(set(cps)) != len(cps) or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*(?:\[\d+\])?", c) for c in cps):
@@ -285,6 +295,13 @@ def load_spec(path: str) -> dict:
             roots = s.get("clock_cts_roots")
             if not isinstance(roots, list) or not roots or not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not set(roots) < set(cps):
                 raise SpecError("hybrid_entries needs distinct clock_cts_roots, a nonempty proper subset of clock_ports")
+            if s["kind"] == "tile":
+                if any(s.get(k) for k in ("sdc_extra", "boundary_tcl", "pre_cts_extra", "forwarded_clock")):
+                    raise SpecError("hybrid_entries leaf owns clock relationships and boundaries; custom timing hooks are unsupported")
+                direct = clock_entry_constraints.direct_macro_clock_entries.load(s, ROOT)
+                if {e["port"] for e in direct["entries"]} != set(cps) - set(roots):
+                    raise SpecError("hybrid_entries leaf requires explicit raw macro clock entries for every non-CTS port")
+                clock_entry_constraints.domains(s)
         elif s.get("clock_cts_roots") is not None:
             raise SpecError("clock_cts_roots requires hybrid_entries")
         if s.get("clock_entry_domains") is not None:
@@ -1415,13 +1432,13 @@ ROUTE_PREFIX = ("export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/
 def clock_fix_hooks(s: dict) -> str:
     """Explicit multi-root boundaries own IO timing; retain physical clock fixes."""
     hooks = ["physical/common_flow/cg_pushdown.tcl", "physical/common_flow/clk_net_protect.tcl"]
-    if s.get("clock") != "multiple_cts_roots":
+    if not clock_entry_constraints.native_leaf(s):
         hooks.append("physical/common_flow/link_budget_hook.tcl")
     return " ".join(hooks)
 
 
 def route_prefix(s: dict) -> str:
-    if s.get("clock") != "multiple_cts_roots":
+    if not clock_entry_constraints.native_leaf(s):
         return ROUTE_PREFIX  # existing job command bytes stay unchanged
     return ROUTE_PREFIX.replace("physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl",
                                 "physical/common_flow/clk_net_protect.tcl")
@@ -1447,9 +1464,17 @@ def lint_cmd(s: dict) -> str:
                      *defs, *inc, "--top-module", "ot_lint_top", "{RUN}/ot_lint_top.sv", *s["sources"]]) + " && echo lint-ok"
 
 
+def route_hold_context(s: dict, kd: str) -> dict:
+    """Execution settings shared by route generation and the pre-route CTS gate."""
+    return {"HM": str(float(s["route"].get("hold_margin_ns", 0.010))),
+            "OT_ROUTE_HOLD_CORNERS": "mm",
+            "OT_MM_FF_SDC": f"{kd}/{'signoff_ffrepair.sdc' if io_hold_relief_ps(s) else 'signoff.sdc'}"}
+
+
 def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     r, j = s["route"], s.get("job", {})
-    hm = float(r.get("hold_margin_ns", 0.010))
+    hold = route_hold_context(s, kd)
+    hm = float(hold["HM"])
     tag = j.get("tag", "ref")
     name = f"{s['name']}-{tag}-{(commit or 'COMMIT')[:9]}"
     lint = lint_cmd(s)
@@ -1477,7 +1502,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
             "calibrate": {"enabled": False, "reason": "ref_tile: boundary referenced in-run to the propagated tree "
                                                       "(io_ref_skew.sdc), as the Qwen die masters"},
             "route": {
-                "cmd": route_prefix(s) + f"HM={hm} OT_MM_FF_SDC='{kd}/{'signoff_ffrepair.sdc' if io_hold_relief_ps(s) else 'signoff.sdc'}' SRC={{SRC}} OT_PIN_GROUP_MAX={pin_group_max(s)} "
+                "cmd": route_prefix(s) + f"HM={hm} OT_MM_FF_SDC='{hold['OT_MM_FF_SDC']}' SRC={{SRC}} OT_PIN_GROUP_MAX={pin_group_max(s)} "
                        f"bash tools/ref_tile/ref_route.sh {kd}/kit.env {{LABEL}} {{RUN}}/routes",
                 "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
                 "logs": ["{RUN}/routes/{LABEL}/flow.log"],

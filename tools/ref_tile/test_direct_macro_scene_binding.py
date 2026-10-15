@@ -33,12 +33,16 @@ class SourceBinding(unittest.TestCase):
         self.assertIn('accessor ABI/load failed', result['bindings_tcl'])
 
 
-def probe(out):
+def probe(out, escaped=False):
     out = Path(out).resolve(); out.mkdir(parents=True, exist_ok=True)
-    s = spec(); generated = D.load(s, ROOT)
+    s = spec()
+    if escaped:
+        for i, macro in enumerate(s['macros']):
+            macro['inst'] = f'u_coll.g_sring*{i}*.u_m'
+    generated = D.load(s, ROOT)
     (out/'source_manifest.json').write_text(json.dumps(generated['entries'], indent=2)+'\n')
     (out/'probe.v').write_text('module probe(input ca, cb, en, output [545:0] qa,qb);\n' +
-        '\n'.join(f'{MASTER} u_{i}(.clk({p}),.r_ce_in(en),.rd_out(q{p[-1]}));'
+        '\n'.join(f'{MASTER} '+(f'\\u_coll.g_sring[{i}].u_m ' if escaped else f'u_{i}')+f'(.clk({p}),.r_ce_in(en),.rd_out(q{p[-1]}));'
                   for i,p in enumerate(('ca','cb'))) + '\nendmodule\n')
     original = ROOT/VIEW
     variants = {'missing_arc': ('timing_type : hold_rising', 'timing_type : recovery_rising'),
@@ -118,5 +122,7 @@ def probe(out):
 
 
 if __name__=='__main__':
-    if len(sys.argv)>1 and sys.argv[1]=='--openroad-probe':probe(sys.argv[2])
+    if len(sys.argv)>1 and sys.argv[1]=='--openroad-probe':
+        probe(sys.argv[2])
+        probe(Path(sys.argv[2])/'escaped', escaped=True)
     else:unittest.main()

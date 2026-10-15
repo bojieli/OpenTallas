@@ -1,0 +1,90 @@
+{
+  "name": "hv15_vm_status4_margin1",
+  "top": "ot_vms_status4_static",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "pins": {
+    "W": [
+      "clk",
+      "rst_n",
+      "quadrant_status"
+    ],
+    "E": [
+      "vmstat"
+    ]
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "macros": [],
+  "route": {
+    "pd": 0.5,
+    "period_ps": 833.333,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "job": {
+    "owner": "Codex:HBM-V15-HARDEN",
+    "branch": "codex/hbm-v15-harden-takeover-0757",
+    "tag": "margin1",
+    "purpose": "Same134FF status aggregator: grow one2.16um row after measured104um2 occupied61.9% of168um2 core; newcore195.9552um2 predicts53.1%, exactsameRTLandcycles. Actualdiehomefit pending.",
+    "extra_paths": [
+      "tools/hbm_v15_harden",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+    ],
+    "record_to": "results/rtl/ref_tile/hv15_vm_status4_margin1",
+    "benches": [
+      {
+        "name": "exact",
+        "cmd": "bash tools/hbm_v15_harden/bench_status4.sh {RUN}/bench/exact 0",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "VMS_STATIC_STATUS4 PASS"
+      },
+      {
+        "name": "mutant1",
+        "cmd": "bash tools/hbm_v15_harden/bench_status4.sh {RUN}/bench/mut1 1",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ]
+  },
+  "std_area_um2": 83,
+  "params": {},
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "outline": {
+    "w": 17.28,
+    "h": 19.44
+  },
+  "slot_change_request": "HBM v15 status4:17.28x17.28 ->17.28x19.44um for actual61.9% standardcell utilization; request source-bound home update before die adoption."
+}

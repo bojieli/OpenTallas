@@ -1,0 +1,5019 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die.v",
+ "top": null,
+ "verdict": "FAIL",
+ "failing": [
+  "width_mismatch",
+  "input_unconnected"
+ ],
+ "summary": {
+  "masters": 209,
+  "instances": 78628,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 5,
+  "input_unconnected": 9,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 0
+ },
+ "masters": {
+  "dsfd_bf_col": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1038,
+   "rtl": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "e0w",
+    "e0e",
+    "e4w"
+   ],
+   "param_sets": {
+    "{}": 1038
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_bf_front_static": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 519,
+   "rtl": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "e0",
+    "e4",
+    "e9"
+   ],
+   "param_sets": {
+    "{}": 519
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "xb"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_bk_collector_c1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_bk_collector_c1.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "bk_collector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_bk_selector_c1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_bk_selector_c1.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "bk_selector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_cfifo": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 128,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "cf0",
+    "cf1",
+    "cf2"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_ctrl": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_ph/dsfd_ctrl.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ctrl_SW"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_host_c": {
+   "verdict": "FAIL",
+   "fails": [
+    "WIDTH_MISMATCH"
+   ],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_host"
+   ],
+   "param_sets": {
+    "{\"NS\": 1}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {
+    "f_collective": [
+     [
+      515,
+      516
+     ]
+    ],
+    "t_collective": [
+     [
+      77,
+      81
+     ]
+    ]
+   },
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_collective_hc_s_1",
+    "f_hb_collective_hc_s_2",
+    "f_hb_collective_hc_s_3"
+   ],
+   "param_sets": {
+    "{}": 9
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_1024": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 81,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_vm_t_hc_rs_hc_s_1",
+    "f_hb_vm_t_hc_rs_hc_s_2",
+    "f_hb_vm_t_hc_rs_hc_s_3"
+   ],
+   "param_sets": {
+    "{}": 81
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_1029": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_vm_wfc_1",
+    "f_hb_vm_wfc_7"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_11": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_gather_vm_1",
+    "f_hb_gather_vm_2",
+    "f_hb_gather_vm_3"
+   ],
+   "param_sets": {
+    "{}": 8
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_112": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_hc_s_wq_row_vm_1",
+    "f_hb_hc_s_wq_row_vm_2",
+    "f_hb_hc_s_wq_row_vm_3"
+   ],
+   "param_sets": {
+    "{}": 9
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_128": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_hc_s_wq_mask_vm_1",
+    "f_hb_hc_s_wq_mask_vm_2",
+    "f_hb_hc_s_wq_mask_vm_3"
+   ],
+   "param_sets": {
+    "{}": 9
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_15": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_collective_t_crq_vm_1",
+    "f_hb_collective_t_crq_vm_2",
+    "f_hb_collective_t_crq_vm_3"
+   ],
+   "param_sets": {
+    "{}": 9
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_2": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 81,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hr_E1_o_st_1",
+    "f_hr_E1_o_st_2",
+    "f_hr_E1_o_st_3"
+   ],
+   "param_sets": {
+    "{}": 81
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_20": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_pq_vm_1",
+    "f_hb_pq_vm_9",
+    "f_hb_pq_vm_10"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_2049": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_vm_pq_1",
+    "f_hb_vm_pq_10",
+    "f_hb_vm_pq_11"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_2204": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_collective_vm_16"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_28": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_hc_s_rq_row_vm_1",
+    "f_hb_hc_s_rq_row_vm_2",
+    "f_hb_hc_s_rq_row_vm_3"
+   ],
+   "param_sets": {
+    "{}": 9
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_36": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 7,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_host_sseq_1",
+    "f_hb_host_sseq_2",
+    "f_hb_host_sseq_3"
+   ],
+   "param_sets": {
+    "{}": 7
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_4": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 5,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_wfc_host_1",
+    "f_hb_wfc_host_2",
+    "f_hb_wfc_host_19"
+   ],
+   "param_sets": {
+    "{}": 5
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_4096": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_hc_s_wq_d_vm_1",
+    "f_hb_hc_s_wq_d_vm_2",
+    "f_hb_hc_s_wq_d_vm_3"
+   ],
+   "param_sets": {
+    "{}": 9
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_513": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_vm_collective_1",
+    "f_hb_vm_collective_2",
+    "f_hb_vm_collective_3"
+   ],
+   "param_sets": {
+    "{}": 9
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_514": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 7,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_collective_wfc_1",
+    "f_hb_collective_wfc_4",
+    "f_hb_collective_wfc_5"
+   ],
+   "param_sets": {
+    "{}": 7
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_515": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 10,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_collective_host_1",
+    "f_hb_collective_host_2",
+    "f_hb_collective_host_3"
+   ],
+   "param_sets": {
+    "{}": 10
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_53": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 6,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_wfc_sseq_1",
+    "f_hb_wfc_sseq_2",
+    "f_hb_wfc_sseq_3"
+   ],
+   "param_sets": {
+    "{}": 6
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_54": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 7,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_sseq_wfc_1",
+    "f_hb_sseq_wfc_2",
+    "f_hb_sseq_wfc_3"
+   ],
+   "param_sets": {
+    "{}": 7
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_560": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_wfc_vm_1",
+    "f_hb_wfc_vm_7"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_6": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_sseq_host_1",
+    "f_hb_sseq_host_2",
+    "f_hb_sseq_host_3"
+   ],
+   "param_sets": {
+    "{}": 9
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_690": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hr_E5_o_1",
+    "f_hr_E5_o_2",
+    "f_hr_E5_o_3"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_692": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 5,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hr_W0_o_1",
+    "f_hr_E0_o_1",
+    "f_hr_E0_o_2"
+   ],
+   "param_sets": {
+    "{}": 5
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_759": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 15,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hr_W1_o_1",
+    "f_hr_W2_o_1",
+    "f_hr_E1_o_1"
+   ],
+   "param_sets": {
+    "{}": 15
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_761": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hr_E3_o_1",
+    "f_hr_E3_o_2",
+    "f_hr_E3_o_3"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_77": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 10,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_host_collective_1",
+    "f_hb_host_collective_2",
+    "f_hb_host_collective_3"
+   ],
+   "param_sets": {
+    "{}": 10
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_8": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 18,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_host_t_sseq_plen_sseq_1",
+    "f_hb_host_t_sseq_plen_sseq_2",
+    "f_hb_host_t_sseq_plen_sseq_3"
+   ],
+   "param_sets": {
+    "{}": 18
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_85": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 42,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_sseq_gather_1",
+    "f_hb_sseq_gather_2",
+    "f_hb_sseq_gather_3"
+   ],
+   "param_sets": {
+    "{}": 42
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnh_9": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 47,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_gather_sseq_1",
+    "f_hb_gather_sseq_2",
+    "f_hb_gather_sseq_3"
+   ],
+   "param_sets": {
+    "{}": 47
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_1029": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 5,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_vm_wfc_2",
+    "f_hb_vm_wfc_3",
+    "f_hb_vm_wfc_4"
+   ],
+   "param_sets": {
+    "{}": 5
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_11": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_gather_vm_4",
+    "f_hb_gather_vm_5",
+    "f_hb_gather_vm_6"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_15": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 14,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_collective_t_crq_vm_5",
+    "f_hb_collective_t_crq_vm_6",
+    "f_hb_collective_t_crq_vm_7"
+   ],
+   "param_sets": {
+    "{}": 14
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_2": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 76,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hr_W1_o_st_1",
+    "f_hr_W1_o_st_2",
+    "f_hr_W2_o_st_1"
+   ],
+   "param_sets": {
+    "{}": 76
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_20": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 7,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_pq_vm_2",
+    "f_hb_pq_vm_3",
+    "f_hb_pq_vm_4"
+   ],
+   "param_sets": {
+    "{}": 7
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_2049": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_vm_pq_2",
+    "f_hb_vm_pq_3",
+    "f_hb_vm_pq_4"
+   ],
+   "param_sets": {
+    "{}": 8
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_2164": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 21,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_hc_t_hc_s_1",
+    "f_hb_hc_t_hc_s_2",
+    "f_hb_hc_t_hc_s_3"
+   ],
+   "param_sets": {
+    "{}": 21
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_2204": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 15,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_collective_vm_1",
+    "f_hb_collective_vm_2",
+    "f_hb_collective_vm_3"
+   ],
+   "param_sets": {
+    "{}": 15
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_3056": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 21,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_hc_s_hc_t_1",
+    "f_hb_hc_s_hc_t_2",
+    "f_hb_hc_s_hc_t_3"
+   ],
+   "param_sets": {
+    "{}": 21
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_36": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 15,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_host_sseq_4",
+    "f_hb_host_sseq_5",
+    "f_hb_host_sseq_6"
+   ],
+   "param_sets": {
+    "{}": 15
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_4": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_wfc_host_3",
+    "f_hb_wfc_host_4",
+    "f_hb_wfc_host_5"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_512": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_vm_gather_1",
+    "f_hb_vm_gather_2",
+    "f_hb_vm_gather_3"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_513": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 15,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_vm_collective_5",
+    "f_hb_vm_collective_6",
+    "f_hb_vm_collective_7"
+   ],
+   "param_sets": {
+    "{}": 15
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_514": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_collective_wfc_2",
+    "f_hb_collective_wfc_3",
+    "f_hb_wfc_collective_2"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_515": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_collective_host_5"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_53": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_wfc_sseq_4"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_54": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_sseq_wfc_4"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_560": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 5,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_wfc_vm_2",
+    "f_hb_wfc_vm_3",
+    "f_hb_wfc_vm_4"
+   ],
+   "param_sets": {
+    "{}": 5
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_6": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 15,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_sseq_host_5",
+    "f_hb_sseq_host_6",
+    "f_hb_sseq_host_7"
+   ],
+   "param_sets": {
+    "{}": 15
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_690": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hr_W5_o_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_759": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hr_W4_o_1",
+    "f_hr_W4_o_2",
+    "f_hr_W4_o_3"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_761": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hr_W3_o_1",
+    "f_hr_W3_o_2"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_77": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_host_collective_6"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_8": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 14,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_host_t_sseq_plen_sseq_5",
+    "f_hb_host_t_sseq_plen_sseq_6",
+    "f_hb_host_t_sseq_plen_sseq_7"
+   ],
+   "param_sets": {
+    "{}": 14
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_85": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 53,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_sseq_gather_6",
+    "f_hb_sseq_gather_7",
+    "f_hb_sseq_gather_8"
+   ],
+   "param_sets": {
+    "{}": 53
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_hstnv_9": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 51,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hb_gather_sseq_6",
+    "f_hb_gather_sseq_7",
+    "f_hb_gather_sseq_8"
+   ],
+   "param_sets": {
+    "{}": 51
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_1x1__hs_s4_svcj": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hs_s4_svcj"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_1x1__hs_s5_bk_selector": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hs_s5_bk_selector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_1x1__hs_s6_bk_collector": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hs_s6_bk_collector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_291x1__hs_hwSW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hs_hwSW"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_512x1__hq_SW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hq_SW"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_564x1__hx_E": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hx_E"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_564x1__hx_W": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hx_W"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_84x1__hs_c4_svcj": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hs_c4_svcj"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_84x1__hs_c5_bk_selector": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hs_c5_bk_selector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_84x1__hs_c6_bk_collector": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hs_c6_bk_collector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_8x1__hs_d4_svcj": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hs_d4_svcj"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_8x1__hs_d5_bk_selector": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hs_d5_bk_selector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_8x1__hs_d6_bk_collector": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hs_d6_bk_collector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_l2r_vr_8x1__hs_hcSW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hs_hcSW"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_lkck_NE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "kc_KE0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_lkck_NW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "kc_KW0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_lkck_SE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "kc_KW1",
+    "kc_KW2",
+    "kc_KW3"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_lkck_SW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "kc_KE1",
+    "kc_KE2",
+    "kc_KE3"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_raw_512x1__hl_E0": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hl_E0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_raw_512x1__hl_E1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hl_E1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_raw_512x1__hl_E2": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hl_E2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_raw_512x1__hl_E3": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hl_E3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_raw_512x1__hl_W0": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hl_W0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_raw_512x1__hl_W1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hl_W1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_raw_512x1__hl_W2": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hl_W2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_raw_512x1__hl_W3": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hl_W3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_1x1__he_s4_svcj": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "he_s4_svcj"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_1x1__he_s5_bk_selector": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "he_s5_bk_selector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_1x1__he_s6_bk_collector": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "he_s6_bk_collector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_291x1__he_hwSW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "he_hwSW"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_512x1__hco_SW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hco_SW"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_512x1__hix_SW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hix_SW"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_512x1__hqe_SW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hqe_SW"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_68x10__hr_E0": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hr_E0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_68x10__hr_E5": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hr_E5"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_68x10__hr_W0": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hr_W0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_68x10__hr_W5": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hr_W5"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_68x11__hr_E1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hr_E1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_68x11__hr_E2": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hr_E2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_68x11__hr_E3": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hr_E3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_68x11__hr_E4": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hr_E4"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_68x11__hr_W1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hr_W1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_68x11__hr_W2": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hr_W2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_68x11__hr_W3": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hr_W3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_68x11__hr_W4": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hr_W4"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_84x1__he_c4_svcj": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "he_c4_svcj"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_84x1__he_c5_bk_selector": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "he_c5_bk_selector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_84x1__he_c6_bk_collector": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "he_c6_bk_collector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_8x1__he_d4_svcj": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "he_d4_svcj"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_8x1__he_d5_bk_selector": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "he_d5_bk_selector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_8x1__he_d6_bk_collector": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "he_d6_bk_collector"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_m2l_vr_8x1__he_hcSW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "he_hcSW"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_node_LLd": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 128,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "n0_34",
+    "n1_36",
+    "n2_36"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_node_LLfd": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1265,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "n0_2",
+    "n0_4",
+    "n0_8"
+   ],
+   "param_sets": {
+    "{}": 1265
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_node_LLfu": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1024,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "n0_0",
+    "n0_6",
+    "n0_10"
+   ],
+   "param_sets": {
+    "{}": 1024
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_node_NNfd": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1024,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "n0_7",
+    "n0_13",
+    "n0_15"
+   ],
+   "param_sets": {
+    "{}": 1024
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_node_NNfu": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1265,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "n0_1",
+    "n0_3",
+    "n0_5"
+   ],
+   "param_sets": {
+    "{}": 1265
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_qbank_N": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1898,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "bn1",
+    "bn2",
+    "bn3"
+   ],
+   "param_sets": {
+    "{}": 1898
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_qbank_S": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1898,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "bs1",
+    "bs2",
+    "bs3"
+   ],
+   "param_sets": {
+    "{}": 1898
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_r2l_vr_1024x1__ha_SW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ha_SW"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_r2l_vr_512x1__hcol": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hcol"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_r2l_vr_512x1__hsel": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hsel"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_15_NS": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 36,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_cc_1_9_0",
+    "y_cc_14_9_0",
+    "y_cc_17_9_0"
+   ],
+   "param_sets": {
+    "{}": 36
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_15_SN": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1346,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_cc_0_1_0",
+    "y_cc_0_2_0",
+    "y_cc_0_3_0"
+   ],
+   "param_sets": {
+    "{}": 1346
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_15_SW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 11,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_cc_2_9_0",
+    "y_cc_15_9_0",
+    "y_cc_16_9_0"
+   ],
+   "param_sets": {
+    "{}": 11
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_1_EW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 384,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_nf_0_0_0",
+    "y_nf_0_0_1",
+    "y_nf_0_0_2"
+   ],
+   "param_sets": {
+    "{}": 384
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_1_WN": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 519,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_go_0_0",
+    "y_go_4_0",
+    "y_go_9_0"
+   ],
+   "param_sets": {
+    "{}": 519
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_266_EW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1491,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_xb_0_1_0",
+    "y_xb_0_2_0",
+    "y_xb_0_3_0"
+   ],
+   "param_sets": {
+    "{}": 1491
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_283_EW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1491,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_xa_0_1_0",
+    "y_xa_0_2_0",
+    "y_xa_0_3_0"
+   ],
+   "param_sets": {
+    "{}": 1491
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_2_ES": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 849,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_es_2_0",
+    "y_es_5_0",
+    "y_es_7_0"
+   ],
+   "param_sets": {
+    "{}": 849
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_2_NE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1176,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_so_0_3_0",
+    "y_so_0_4_0",
+    "y_so_0_6_0"
+   ],
+   "param_sets": {
+    "{}": 1176
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_2_NS": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1266,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_es_2_1",
+    "y_so_0_1_0",
+    "y_es_5_1"
+   ],
+   "param_sets": {
+    "{}": 1266
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_2_NW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 182,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_es_15_0",
+    "y_es_17_0",
+    "y_es_35_0"
+   ],
+   "param_sets": {
+    "{}": 182
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_2_WE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 714,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_es_1_0",
+    "y_es_3_0",
+    "y_es_6_0"
+   ],
+   "param_sets": {
+    "{}": 714
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_2_WS": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1002,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_es_1_1",
+    "y_es_3_1",
+    "y_es_6_1"
+   ],
+   "param_sets": {
+    "{}": 1002
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_38_WN": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 519,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_fp_0_0",
+    "y_fp_4_0",
+    "y_fp_9_0"
+   ],
+   "param_sets": {
+    "{}": 519
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_54_WN": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 519,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_cfg_0_0",
+    "y_cfg_4_0",
+    "y_cfg_9_0"
+   ],
+   "param_sets": {
+    "{}": 519
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_63_ES": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 173,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rt_0_32b_5",
+    "y_rt_6_26a_5",
+    "y_rt_6_26b_5"
+   ],
+   "param_sets": {
+    "{}": 173
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_63_NE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1374,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rt_0_0a_0",
+    "y_rt_0_2b_0",
+    "y_rt_0_8a_1"
+   ],
+   "param_sets": {
+    "{}": 1374
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_63_NS": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 5060,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rt_0_2a_5",
+    "y_rt_0_2b_5",
+    "y_rt_0_6a_5"
+   ],
+   "param_sets": {
+    "{}": 5060
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_63_NW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 29,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rt_1_30b_2",
+    "y_rt_2_30b_2",
+    "y_rt_16_30b_2"
+   ],
+   "param_sets": {
+    "{}": 29
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_63_SE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 217,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rt_0_4a_1",
+    "y_rt_1_4a_1",
+    "y_rt_1_18a_0"
+   ],
+   "param_sets": {
+    "{}": 217
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_63_SN": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 31,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rt_8_4b_1",
+    "y_rt_8_30a_4",
+    "y_rt_10_4b_1"
+   ],
+   "param_sets": {
+    "{}": 31
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_63_WE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9540,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rt_0_0a_1",
+    "y_rt_0_0a_2",
+    "y_rt_0_0a_3"
+   ],
+   "param_sets": {
+    "{}": 9540
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_63_WN": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 297,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rt_0_4a_0",
+    "y_rt_1_4a_0",
+    "y_rt_2_4a_0"
+   ],
+   "param_sets": {
+    "{}": 297
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_63_WS": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 5137,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rt_0_0b_1",
+    "y_rt_0_2a_4",
+    "y_rt_0_2b_4"
+   ],
+   "param_sets": {
+    "{}": 5137
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_66_ES": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 90,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rr_0_3_0",
+    "y_rr_0_3_2",
+    "y_rr_1_4_0"
+   ],
+   "param_sets": {
+    "{}": 90
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_66_EW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 232,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rr_1_4_2",
+    "y_rr_2_4_2",
+    "y_rr_3_4_3"
+   ],
+   "param_sets": {
+    "{}": 232
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_66_NE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 5,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rr_25_3_3",
+    "y_rr_42_3_3",
+    "y_rr_59_3_3"
+   ],
+   "param_sets": {
+    "{}": 5
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_66_NS": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1299,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rt_0_9b_0",
+    "y_rt_0_17b_0",
+    "y_rt_0_17b_1"
+   ],
+   "param_sets": {
+    "{}": 1299
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_66_NW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 69,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rr_0_3_1",
+    "y_rr_1_4_1",
+    "y_rr_2_4_1"
+   ],
+   "param_sets": {
+    "{}": 69
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_66_SN": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 625,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rt_0_9a_0",
+    "y_rt_0_17a_0",
+    "y_rt_0_17a_1"
+   ],
+   "param_sets": {
+    "{}": 625
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rly_66_WE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 67,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "y_rr_1_4_3",
+    "y_rr_2_4_3",
+    "y_rr_8_3_3"
+   ],
+   "param_sets": {
+    "{}": 67
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_rstg": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 497,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rg0_0",
+    "rg0_1",
+    "rg0_2"
+   ],
+   "param_sets": {
+    "{}": 497
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sp_capture_c": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_capture"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sp_collective_static_c": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_collective"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "t_hc_tag",
+    "tvE0",
+    "tvE1",
+    "tvE2",
+    "tvE3",
+    "tvW0",
+    "tvW1",
+    "tvW2",
+    "tvW3"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sp_gather_c": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_gather_c_cl.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_gather"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sp_hc_c": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc_c.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_hc_s"
+   ],
+   "param_sets": {
+    "{\"CSPLIT\": 1, \"HALF\": 1, \"HIER\": 1, \"TAIL_SPLIT\": 1}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "y_rdy"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sp_hc_t": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_hc_t"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sp_pq_n": {
+   "verdict": "FAIL",
+   "fails": [
+    "WIDTH_MISMATCH",
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_pq"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "f_cnt",
+    "f_iss"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "t_cnt",
+    "t_iss"
+   ],
+   "width_mismatch": {
+    "ra2": [
+     [
+      12,
+      14
+     ]
+    ],
+    "xe": [
+     [
+      565,
+      1101
+     ]
+    ],
+    "xw": [
+     [
+      565,
+      1101
+     ]
+    ]
+   },
+   "unparsed_conn": []
+  },
+  "dsfd_sp_su_c": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_su_s"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sp_vm": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_vm"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "f_mx_rq",
+    "f_mx_rqv",
+    "f_mx_wq",
+    "f_mx_wqd",
+    "f_mx_wqm",
+    "f_mx_wqv"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "t_inp_hc",
+    "t_inp_su",
+    "t_mx_rs",
+    "t_mx_rsv"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sstn_e0c0": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 30,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "t2_11",
+    "t3_11",
+    "t4_11"
+   ],
+   "param_sets": {
+    "{}": 30
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sstn_e0c0_cp1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 90,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "t1_11",
+    "t5_11",
+    "t6_11"
+   ],
+   "param_sets": {
+    "{}": 90
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sstn_e0c0si": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 476,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "t0_3",
+    "t0_6",
+    "t0_8"
+   ],
+   "param_sets": {
+    "{}": 476
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sstn_e0c0sinf": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 29,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "t0_0",
+    "t1_0",
+    "t2_0"
+   ],
+   "param_sets": {
+    "{}": 29
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sstn_e0e1c0c1_cp1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "t0_10",
+    "t17_10",
+    "t34_10"
+   ],
+   "param_sets": {
+    "{}": 8
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sstn_e0e1c0c1si": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 789,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "t0_1",
+    "t0_2",
+    "t0_4"
+   ],
+   "param_sets": {
+    "{}": 789
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_sstn_e0e1c0c1sinf": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 99,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "t3_0",
+    "t4_0",
+    "t5_0"
+   ],
+   "param_sets": {
+    "{}": 99
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stage_seq_static_c8": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_sseq"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnh_1026x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 7,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_aSW_1",
+    "f_aSW_2",
+    "f_aSW_3"
+   ],
+   "param_sets": {
+    "{}": 7
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnh_10x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 41,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_d5_bk_selector_1",
+    "f_d5_bk_selector_2",
+    "f_d5_bk_selector_3"
+   ],
+   "param_sets": {
+    "{}": 41
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnh_293x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 10,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hwSW_46",
+    "f_hwSW_47",
+    "f_hwSW_48"
+   ],
+   "param_sets": {
+    "{}": 10
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnh_3x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 30,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_s5_bk_selector_1",
+    "f_s5_bk_selector_2",
+    "f_s5_bk_selector_3"
+   ],
+   "param_sets": {
+    "{}": 30
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnh_512x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 597,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_KW0t_27",
+    "f_KW0t_32",
+    "f_KW0t_33"
+   ],
+   "param_sets": {
+    "{}": 597
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnh_514x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 33,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_qSW_26",
+    "f_qSW_27",
+    "f_qSW_28"
+   ],
+   "param_sets": {
+    "{}": 33
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnh_566x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 560,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_cxW_edge1_1",
+    "f_cxW_edge2_1",
+    "f_cxW_edge3_1"
+   ],
+   "param_sets": {
+    "{}": 560
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnh_70x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2493,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_crW0_W0_tap9_1",
+    "f_crW0_W0_tap9_2",
+    "f_crW0_W0_tap9_3"
+   ],
+   "param_sets": {
+    "{}": 2493
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnh_70x2": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 208,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_crW0_W0_edge29_1",
+    "f_crW0_W0_edge29_2",
+    "f_crW0_W0_edge29_3"
+   ],
+   "param_sets": {
+    "{}": 208
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnh_70x3": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 11,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_crW4_W2_hub_4",
+    "f_crE2_W0_hub_8",
+    "f_crE2_W0_hub_9"
+   ],
+   "param_sets": {
+    "{}": 11
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnh_70x4": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 131,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_crW0_W0_hub_4",
+    "f_crW0_W0_hub_5",
+    "f_crW0_W1_hub_4"
+   ],
+   "param_sets": {
+    "{}": 131
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnh_86x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 23,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_c5_bk_selector_1",
+    "f_c5_bk_selector_2",
+    "f_c5_bk_selector_3"
+   ],
+   "param_sets": {
+    "{}": 23
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_1026x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 26,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_aSW_4",
+    "f_aSW_5",
+    "f_aSW_9"
+   ],
+   "param_sets": {
+    "{}": 26
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_10x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 138,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_d5_bk_selector_8",
+    "f_d5_bk_selector_9",
+    "f_d5_bk_selector_10"
+   ],
+   "param_sets": {
+    "{}": 138
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_256x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 24,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_KW1txs_0",
+    "f_KW1txs_1",
+    "f_KW1rxs_0"
+   ],
+   "param_sets": {
+    "{}": 24
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "fo0"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_293x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 47,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_hwSW_1",
+    "f_hwSW_2",
+    "f_hwSW_3"
+   ],
+   "param_sets": {
+    "{}": 47
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_3x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 90,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_s5_bk_selector_7",
+    "f_s5_bk_selector_8",
+    "f_s5_bk_selector_9"
+   ],
+   "param_sets": {
+    "{}": 90
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_512x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 543,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_KW0t_1",
+    "f_KW0t_2",
+    "f_KW0t_3"
+   ],
+   "param_sets": {
+    "{}": 543
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_514x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 128,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_qSW_1",
+    "f_qSW_2",
+    "f_qSW_3"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_566x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 814,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_cxW_spine_1",
+    "f_cxW_spine_2",
+    "f_cxW_spine_3"
+   ],
+   "param_sets": {
+    "{}": 814
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "fn0",
+    "fo0"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_70x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1340,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_crW0_W0_edge5_1",
+    "f_crW0_W0_edge6_1",
+    "f_crW0_W0_edge7_1"
+   ],
+   "param_sets": {
+    "{}": 1340
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_70x2": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 578,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_crW0_W0_edge35_1",
+    "f_crW0_W0_edge36_1",
+    "f_crW0_W0_edge36_2"
+   ],
+   "param_sets": {
+    "{}": 578
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_70x3": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 243,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_crW2_W0_edge20_1",
+    "f_crW2_W0_edge21_1",
+    "f_crW2_W0_edge21_2"
+   ],
+   "param_sets": {
+    "{}": 243
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_70x4": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 329,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_crW0_W0_hub_1",
+    "f_crW0_W0_hub_2",
+    "f_crW0_W0_hub_3"
+   ],
+   "param_sets": {
+    "{}": 329
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_stnv_86x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 95,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "f_c5_bk_selector_4",
+    "f_c5_bk_selector_5",
+    "f_c5_bk_selector_6"
+   ],
+   "param_sets": {
+    "{}": 95
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_svc_c": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_ph/svc/dsfd_svc_c.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "svc_SW"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "fault"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_svc_join": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "svcj"
+   ],
+   "param_sets": {
+    "{\"NS\": 1}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_wfc_stg": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sp_wfc"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "t_hep"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "dsfd_xstg_515": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "xsix_SW",
+    "xsco_SW"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_hbm3e_phy_v41x_aw30_e8p5": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_link/ot_hbm3e_phy_v41x_aw30_e8p5.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "phy_SW"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_pdie_serdes": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 6,
+   "rtl": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "lk_W1",
+    "lk_W2",
+    "lk_W3"
+   ],
+   "param_sets": {
+    "{}": 6
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "st"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_pdie_ucie": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "lk_W0",
+    "lk_E0"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "st"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_rom_4096x72_m8": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16922,
+   "rtl": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "c0_0",
+    "c0_1",
+    "c0_2"
+   ],
+   "param_sets": {
+    "{}": 16922
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_s81_cfg7_seq": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1898,
+   "rtl": "rtl/v41die/ot_s81_cfg7_seq.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "s1",
+    "s2",
+    "s3"
+   ],
+   "param_sets": {
+    "{\"PQ\": 1}": 1898
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_s81_cfg7_seq_bfp": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 519,
+   "rtl": "rtl/v41die/ot_s81_cfg7_seq_bfp.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "s0",
+    "s4",
+    "s9"
+   ],
+   "param_sets": {
+    "{}": 519
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_v41_rom_elem_q_qxpq_w10": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1898,
+   "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "e1",
+    "e2",
+    "e3"
+   ],
+   "param_sets": {
+    "{\"EARLY\": 1, \"FAST\": 1, \"MTP\": 1, \"NB\": 2, \"PP\": 1, \"PQ\": 1, \"QM\": 5, \"QPIPE\": 1, \"QP_CAP\": 0, \"QP_CSAM\": 10, \"QP_P1\": 1, \"QP_XS\": 1, \"QS\": 5, \"QTIMING_FIX\": 1, \"QW\": 0, \"QX\": 10, \"QY\": 1, \"QZ\": 1, \"QZ_NE\": 4, \"QZ_NS\": 8}": 1898
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "output_open": [
+    "walking"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  }
+ },
+ "undriven_nets": {},
+ "undriven_classes": {},
+ "multi_driven_classes": {},
+ "multi_driven_nets": {},
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "die_sha256": "ddc7964a0e65c043a4ccd45fccbd1b7385d3411cce079c0174c373e676bb27e6",
+ "straps_declared": [],
+ "params_file": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die.v.params.json",
+ "rtl_roots": [
+  "rtl",
+  "physical/hbm_accel_die_views/att_su_relay/rtl",
+  "physical/hbm_accel_die_views/attn_tile/rtl",
+  "physical/hbm_accel_die_views/barrier/rtl",
+  "physical/hbm_accel_die_views/cmdproc/rtl",
+  "physical/hbm_accel_die_views/cmdproc_hgi/rtl",
+  "physical/hbm_accel_die_views/cmdproc_hgi_am/rtl",
+  "physical/hbm_accel_die_views/coll/rtl",
+  "physical/hbm_accel_die_views/coll_hgi/rtl",
+  "physical/hbm_accel_die_views/coll_r25gq/rtl",
+  "physical/hbm_accel_die_views/hc/rtl",
+  "physical/hbm_accel_die_views/hc_eng_hgi/rtl",
+  "physical/hbm_accel_die_views/hc_hgi/rtl",
+  "physical/hbm_accel_die_views/hcp/rtl",
+  "physical/hbm_accel_die_views/hgi_idx/rtl",
+  "physical/hbm_accel_die_views/hgi_idx_native/rtl",
+  "physical/hbm_accel_die_views/hgi_vm/rtl",
+  "physical/hbm_accel_die_views/hgi_vm2/rtl",
+  "physical/hbm_accel_die_views/hgi_vm3/rtl",
+  "physical/hbm_accel_die_views/hgi_vm4/rtl",
+  "physical/hbm_accel_die_views/hgi_vm5/rtl",
+  "physical/hbm_accel_die_views/index/rtl",
+  "physical/hbm_accel_die_views/index_q/rtl",
+  "physical/hbm_accel_die_views/loader/rtl",
+  "physical/hbm_accel_die_views/loader_hgi/rtl",
+  "physical/hbm_accel_die_views/loader_hgi_dma/rtl",
+  "physical/hbm_accel_die_views/quant/rtl",
+  "physical/hbm_accel_die_views/quant_hgi/rtl",
+  "physical/hbm_accel_die_views/router/rtl",
+  "physical/hbm_accel_die_views/router_hgi/rtl",
+  "physical/hbm_accel_die_views/sfu/rtl",
+  "physical/hbm_accel_die_views/sfu_hgi/rtl",
+  "physical/hbm_accel_die_views/stations/rtl",
+  "physical/hbm_accel_die_views/su/rtl",
+  "physical/hbm_accel_die_views/su_hgi/rtl",
+  "physical/hbm_accel_die_views/svc/rtl",
+  "physical/hbm_accel_die_views/svc/v15/rtl",
+  "physical/hbm_accel_die_views/vm/cp/rtl",
+  "physical/hbm_accel_die_views/vm/rtl",
+  "physical/hbm_cp_mtp_native/rtl",
+  "physical/hbm_generic/argmax18/rtl",
+  "physical/hbm_mtp/rtl",
+  "physical/hfd_hc_gather_cx_20261009/rtl",
+  "physical/ref_tile/dscoll_lane_w_rt/src/rtl",
+  "physical/ref_tile/dsfd_coll_cbq0_m5/src/rtl",
+  "physical/ref_tile/dsfd_coll_cbq_m5/src/rtl",
+  "physical/ref_tile/dsfd_coll_cbr_m5/src/rtl",
+  "physical/ref_tile/dsfd_coll_ct_rt/src/rtl",
+  "physical/ref_tile/hfd_gath_r25_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_gath_r25_m5/src/rtl",
+  "physical/ref_tile/hfd_gath_r9_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_gath_r9_m5/src/rtl",
+  "physical/ref_tile/hfd_index_q_b2_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_mcast_r6a_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_mcast_r6a_m5/src/rtl",
+  "physical/ref_tile/hfd_mcast_r6b_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_mcast_r6b_m5/src/rtl",
+  "physical/ref_tile/hfd_stn_r36_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_stn_r36_m5/src/rtl",
+  "physical/ref_tile/hfd_svc_se_s1_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_se_s3_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_se_s4_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_se_s7_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_se_s8_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s0_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s1_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s2_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s3_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s4_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/ot_coll_fold_slice_m5/src/rtl",
+  "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl",
+  "physical/ref_tile/ot_hgi_qw_dec_m5/src/physical/hbm_accel_die_views/quant/rtl",
+  "physical/ref_tile/ot_hgi_qw_dec_m5/src/rtl",
+  "physical/ref_tile/ot_hgi_topk_heap_tile_m5/src/rtl",
+  "physical/ref_tile/ot_nhb_pbst_m5/src/rtl",
+  "physical/ref_tile/ot_nhb_zh_m5/src/rtl",
+  "physical/ref_tile/ot_pqc_t_qb_m5/src/physical/s81_pq_hier/pinned/rtl",
+  "physical/ref_tile/ot_pqc_t_ret_m5/src/physical/s81_pq_hier/pinned/rtl",
+  "physical/ref_tile/ot_qkh_ktree_m5/src/rtl",
+  "physical/ref_tile/ot_qkh_lane8_m5/src/rtl",
+  "physical/ref_tile/pqc_ix_rt/src/physical/s81_pq_hier/pinned/rtl",
+  "physical/ref_tile/qfd_chead_m5/src/rtl",
+  "physical/ref_tile/qfd_cst_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_00_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_06_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_11_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_14_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_16_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_17_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_19_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_20_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_31_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_ready_00_m5/src/rtl",
+  "physical/ref_tile/qfd_emb_pcport_m5/src/rtl",
+  "physical/ref_tile/qfd_io_emb_tap_m5/src/rtl",
+  "physical/ref_tile/qfd_kvc_decode_pc_m5/src/rtl",
+  "physical/ref_tile/qfd_lst_v_m5/src/rtl",
+  "physical/ref_tile/qfd_res_slot_m5/src/rtl",
+  "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl",
+  "physical/ref_tile/val_bad_ctile5db/src/rtl",
+  "physical/ref_tile/val_bad_kvw/src/rtl",
+  "physical/ref_tile/val_bad_su9eff/src/rtl",
+  "physical/ref_tile/val_good_cbq0/src/rtl",
+  "physical/ref_tile/val_good_clt6/src/rtl",
+  "physical/rom_host_ingest/rtl",
+  "physical/s81_bf_root_phase/oracle_pinned/rtl",
+  "physical/s81_bf_root_phase/pinned/rtl",
+  "physical/s81_ctrl/rtl",
+  "physical/s81_fe_fcc_pipe/rtl",
+  "physical/s81_fe_fcn_cmdpipe/rtl",
+  "physical/s81_fe_fcn_onehot/rtl",
+  "physical/s81_fe_fcn_sumpipe/rtl",
+  "physical/s81_fe_fcn_xgos/rtl",
+  "physical/s81_fe_fld_parallel/rtl",
+  "physical/s81_fe_fld_ranks/rtl",
+  "physical/s81_fe_fsr_m5_port_major/rtl",
+  "physical/s81_pq_hier/pinned/rtl",
+  "physical/s81_pq_r128_expanded/pinned/rtl",
+  "physical/s81_pq_tiles/rtl",
+  "physical/s81_pq_xrv/pinned/rtl",
+  "physical/asap7_memory_macros_v2",
+  "physical/s81_ph_views/mtp/macros"
+ ],
+ "rtl_files": [
+  "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_gather_c_cl.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv",
+  "rtl/v41die/ot_s81_cfg7_seq.sv",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+  "rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front.sv",
+  "rtl/s81/ot_s81_bf_front.sv",
+  "rtl/v41rom/ot_v41_bf_col.sv",
+  "rtl/v41rom/ot_v41_bf_front_core.sv",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+  "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv",
+  "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv",
+  "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv",
+  "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_native.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_fixed_native.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_sram.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_pin_variants.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_split_native.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_aq_split_native.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_split_native.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_one_native.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_rwbc.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/v41x/ot_dsrom_aq12t.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/v41x/ot_dsrom_aq12m.sv",
+  "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv",
+  "physical/s81_pq_hier/pinned/physical/dsrom_field_spine/ot_v41_pqc_tile_tops.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv",
+  "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_core.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wsched.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wstage128.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_return_map.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_slice128_suhc.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_fsr.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv",
+  "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_bank8.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_quartets.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_router.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_write_capture128.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_lane.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b8.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b4.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_w0.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wcontrol.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl_pipe.sv",
+  "rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane_dynamic.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint_dynamic.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_raw_vm_rows.sv",
+  "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv",
+  "rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv",
+  "rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/link/ot_link_crc32.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+  "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv",
+  "rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc_c.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv",
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv",
+  "rtl/v41die/ot_s81_cfg7_seq_bfp.sv",
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv"
+ ],
+ "defines": [
+  "OT_S81PH_COLL_JOB",
+  "S81PH_GTH_DIE_CLOCKS",
+  "S81PH_GTH_CONTROL_STRIP",
+  "DSFD_WFC_STG_CL_DIE",
+  "DSFD_WFC_STG_STATIC",
+  "OT_PQ_ROM_PORTS",
+  "DSFD_SP_VM_MIX4",
+  "DSFD_SUHC_STATIC_ISSUE",
+  "DSFD_PQ_STATIC_X2"
+ ]
+}

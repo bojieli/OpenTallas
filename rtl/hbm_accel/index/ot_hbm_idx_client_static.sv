@@ -27,7 +27,9 @@ module ot_hbm_idx_client_static(
  input wire topk_a_mirror,input wire[17:0]topk_a_base,topk_a_str,input wire topk_o_mirror,input wire[17:0]topk_o_base,topk_o_str,
  input wire topk_has_r,input wire[17:0]topk_r_base,topk_r_str,
  output wire[337:0]cq,output wire[1:0]cq_seq,input wire[273:0]cr,
- output wire topk_busy,topk_done,topk_fault,output wire share_fault
+ output wire topk_busy,topk_done,topk_fault,output wire share_fault,
+ // third owner of the SW IDX read group: the static ARGMAX.LOCAL VM reader (ot_hbm_argmax_static, separate unit)
+ input wire[135:0]argmax_rq,output wire[2055:0]argmax_rr
 );
  wire[135:0]index_rq,topk_rq;wire[2055:0]index_rr,topk_rr;
  ot_hbm_idx_scheduled_static index(.clk_program(clk_program),.clk_program_mem(clk_program_mem),.program_we(program_we),
@@ -43,7 +45,7 @@ module ot_hbm_idx_client_static(
   .n(topk_n),.m(topk_m),.a_mirror(topk_a_mirror),.a_base(topk_a_base),.a_str(topk_a_str),.o_mirror(topk_o_mirror),
   .o_base(topk_o_base),.o_str(topk_o_str),.has_r(topk_has_r),.r_base(topk_r_base),.r_str(topk_r_str),
   .vm_rq(topk_rq),.vm_rr(topk_rr),.cq(cq),.cq_seq(cq_seq),.cr(cr),.busy(topk_busy),.done(topk_done),.fault(topk_fault));
- ot_hbm_idx_vm_share_static share(.clk_pair(clk_pair),.rst_n(rst_n),.index_rq(index_rq),.topk_rq(topk_rq),
-  .vm_rq(vm_rq),.vm_rr(vm_rr),.index_rr(index_rr),.topk_rr(topk_rr),.fault(share_fault));
+ ot_hbm_idx_vm_share_static share(.clk_pair(clk_pair),.rst_n(rst_n),.index_rq(index_rq),.topk_rq(topk_rq),.argmax_rq(argmax_rq),
+  .vm_rq(vm_rq),.vm_rr(vm_rr),.index_rr(index_rr),.topk_rr(topk_rr),.argmax_rr(argmax_rr),.fault(share_fault));
 endmodule
 `default_nettype wire

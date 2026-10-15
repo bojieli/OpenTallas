@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.hbm-argmax.production-shape-gate.v1",
+  "source_commit": "26e93ffc3",
+  "unit": "oth-ubuntu-4192676-1792077732",
+  "host": "ot-epyc4",
+  "actual_rtl": true,
+  "golden_internal_compute": false,
+  "records": 30,
+  "schedule_edges": 2198,
+  "positive_errors": 0,
+  "mutants_errors": [
+    6,
+    2268,
+    28
+  ],
+  "production_G_to_done_edges": {
+    "VM2048": 298,
+    "STREAM1347": 202,
+    "STREAM1024": 161
+  },
+  "scope": "Exact component with actual SW slice and mapped SRAM functional models. Not full die/native token or physical qualification; throughput acceptance remains OPEN."
+}

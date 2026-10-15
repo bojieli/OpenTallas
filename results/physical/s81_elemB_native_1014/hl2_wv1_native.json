@@ -1,0 +1,167 @@
+[
+  {
+    "cell": "ot_engc_rr256",
+    "view": "physical/ref_tile/s81engc_rr256/views/ot_engc_rr256",
+    "lib_cell": "ot_engc_rr256",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 100.1,
+    "spread_ps": 20.7,
+    "outputs": 256,
+    "inputs": 257,
+    "launch_ps": 192.5,
+    "launch_pin": "q[5]",
+    "capture_ps": 141.6,
+    "capture_pin": "d[5]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  {
+    "cell": "ot_engc_rr256w",
+    "view": "physical/ref_tile/s81engc_rr256w/views/ot_engc_rr256w",
+    "lib_cell": "ot_engc_rr256w",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 80.8,
+    "spread_ps": 5.2,
+    "outputs": 256,
+    "inputs": 257,
+    "launch_ps": 203.9,
+    "launch_pin": "q[24]",
+    "capture_ps": 148.4,
+    "capture_pin": "rst_n",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  {
+    "cell": "ot_engc_rr64",
+    "view": "physical/ref_tile/s81engc_rr64/views/ot_engc_rr64",
+    "lib_cell": "ot_engc_rr64",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 61.7,
+    "spread_ps": 3.0,
+    "outputs": 64,
+    "inputs": 65,
+    "launch_ps": 171.7,
+    "launch_pin": "q[28]",
+    "capture_ps": 123.8,
+    "capture_pin": "d[3]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  {
+    "cell": "ot_engc_ctl_x",
+    "view": "physical/ref_tile/s81engc_ctl_x/views/ot_engc_ctl_x",
+    "lib_cell": "ot_engc_ctl_x",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 83.4,
+    "spread_ps": 9.6,
+    "outputs": 343,
+    "inputs": 339,
+    "launch_ps": 193.3,
+    "launch_pin": "x_d_q[314]",
+    "capture_ps": 178.0,
+    "capture_pin": "child_rso_x[1]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  {
+    "cell": "ot_engc_ctl_s",
+    "view": "physical/ref_tile/s81engc_ctl_s/views/ot_engc_ctl_s",
+    "lib_cell": "ot_engc_ctl_s",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 49.1,
+    "spread_ps": 2.2,
+    "outputs": 29,
+    "inputs": 24,
+    "launch_ps": 211.9,
+    "launch_pin": "s_rdy_q[2]",
+    "capture_ps": 138.9,
+    "capture_pin": "ack_x_i",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  {
+    "cell": "ot_s81_pq_ix_rb_native",
+    "view": "physical/ref_tile/s81pq_ix_rb_native/views/ot_s81_pq_ix_rb_native",
+    "lib_cell": "ot_s81_pq_ix_rb_native",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 142.4,
+    "spread_ps": 17.1,
+    "outputs": 33,
+    "inputs": 295,
+    "launch_ps": 177.4,
+    "launch_pin": "bt_d[22]",
+    "capture_ps": 240.9,
+    "capture_pin": "ba_inc[1]",
+    "launch_over": 0,
+    "capture_over": 224,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "capture 240.9 > 190 (224 pins)"
+  },
+  {
+    "cell": "ot_s81_pq_ctl_fixed_native",
+    "view": "physical/ref_tile/s81pq_ctl_native/views/ot_s81_pq_ctl_fixed_native",
+    "lib_cell": "ot_s81_pq_ctl_fixed_native",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 181.0,
+    "spread_ps": 30.3,
+    "outputs": 754,
+    "inputs": 421,
+    "launch_ps": 363.0,
+    "launch_pin": "q_consume",
+    "capture_ps": 341.2,
+    "capture_pin": "x_rv",
+    "launch_over": 77,
+    "capture_over": 209,
+    "comb_pins": 18,
+    "comb_first": [
+      "rom_pa0[1]",
+      "rom_pa0[2]",
+      "rom_pa0[3]"
+    ],
+    "pass": false,
+    "fail_why": "launch 363.0 > 220 (77 pins); capture 341.2 > 190 (209 pins); 18 combinational pins"
+  }
+]

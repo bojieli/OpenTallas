@@ -1,0 +1,39 @@
+{
+  "qualified": false,
+  "cases": {
+    "unknown": {
+      "exit": 2,
+      "stderr": "usage: d2d_link_calendar.py [-h] --out OUT --txl TXL [--phy PHY] [--ofs OFS]\n                            [--txd-c TXD_C] [--txd-k TXD_K] [--spec SPEC]\n                            [--profile {bench,dies,dies_token,program}]\n                            [--token-path TOKEN_PATH]\n                            [--host-stages HOST_STAGES]\n                            [--allow-unmeasured-host]\nd2d_link_calendar.py: error: program calendar requires --host-stages from the measured KV die plan; use --allow-unmeasured-host only for diagnostics\n"
+    },
+    "diagnostic": {
+      "exit": 0,
+      "stderr": "",
+      "host_stages": {
+        "value": null,
+        "status": "PENDING: KV die lead re-measure after the HOST core moves next to the D2D end (coordinator: the 54-57-stage HOST<->D2D relay figure is a floorplan defect, not a calendar input); compiled with 0"
+      },
+      "budget": {
+        "result_at_kv_host": 17,
+        "first_emb_send": 196,
+        "note": "the KV-die embedding provider must hold the staged row (one ready per buffer block at the HBM boundary) by first_emb_send; a late row is a schedule fault, never a stretched timeline"
+      }
+    },
+    "measured3": {
+      "exit": 0,
+      "stderr": "",
+      "host_stages": {
+        "value": 3,
+        "status": "measured (KV die lead)"
+      },
+      "budget": {
+        "result_at_kv_host": 20,
+        "first_emb_send": 196,
+        "note": "the KV-die embedding provider must hold the staged row (one ready per buffer block at the HBM boundary) by first_emb_send; a late row is a schedule fault, never a stretched timeline"
+      }
+    },
+    "negative": {
+      "exit": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/home/ubuntu/wt/takeover-qwen-native-0757/tools/qwen_split/d2d_link_calendar.py\", line 263, in <module>\n    sys.exit(main())\n  File \"/home/ubuntu/wt/takeover-qwen-native-0757/tools/qwen_split/d2d_link_calendar.py\", line 219, in main\n    msgs, layout = program_profile(a.txl, a.phy, a.token_path, host_stages=a.host_stages)\n  File \"/home/ubuntu/wt/takeover-qwen-native-0757/tools/qwen_split/d2d_link_calendar.py\", line 117, in program_profile\n    raise ValueError(\"host_stages must be a measured nonnegative integer or None (pending)\")\nValueError: host_stages must be a measured nonnegative integer or None (pending)\n"
+    }
+  }
+}

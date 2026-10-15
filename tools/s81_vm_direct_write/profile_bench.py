@@ -25,7 +25,7 @@ wire[N-1:0] ov,owe;wire[4*N-1:0] om;wire[128*N-1:0] od;wire[8*N-1:0] ot;
 integer cy,k,w,hi,bank,row,checks=0,bad=0,seed=32'h7ace1593;reg good;reg[N-1:0] xv,xwe;reg[4*N-1:0] xm;reg[128*N-1:0] xd;reg[8*N-1:0] xt;
 '''
  if capture:defs+='wire[13:0] oq;reg[13:0] xq;\n'+top+' d(.ck(ck),.rst_n(rst_n),.i_v(iv),.i_we(iwe),.i_row(ir),.i_mask(im),.i_data(id),.i_tag(it),.o_v(ov),.o_we(owe),.o_row(oq),.o_mask(om),.o_data(od),.o_tag(ot));\n'
- else:defs+='wire[71:0] oq;reg[71:0] xq;wire fault;reg expect_fault=0;\n'+top+' d(.ck(ck),.rst_n(rst_n),.i_v(iv),.i_we(iwe),.i_row(ir),.i_mask(im),.i_data(id),.i_tag(it),.o_v(ov),.o_we(owe),.o_addr(oq),.o_mask(om),.o_data(od),.o_tag(ot),.fault(fault));\n'
+ else:defs+='wire[71:0] oq;reg[71:0] xq;wire fault;reg expect_fault=0,fault_due=0;\n'+top+' d(.ck(ck),.rst_n(rst_n),.i_v(iv),.i_we(iwe),.i_row(ir),.i_mask(im),.i_data(id),.i_tag(it),.o_v(ov),.o_we(owe),.o_addr(oq),.o_mask(om),.o_data(od),.o_tag(ot),.fault(fault));\n'
  defs+='''initial begin
  repeat(4)@(negedge ck);rst_n=1;repeat(4)@(negedge ck);
  for(cy=0;cy<8000/N;cy=cy+1)begin
@@ -47,9 +47,17 @@ integer cy,k,w,hi,bank,row,checks=0,bad=0,seed=32'h7ace1593;reg good;reg[N-1:0] 
   end
 '''
  defs+='''  @(posedge ck);#1;checks=checks+N;
-  if({ov,owe,oq,om,od,ot}!=={xv,xwe,xq,xm,xd,xt})begin bad=bad+1;if(bad<4)$display("PROFILE_DATA_MISMATCH cycle%0d",cy);end
 '''
- if not capture:defs+='  if(fault!==expect_fault)bad=bad+1;\n'
+ if capture:defs+='''  if({ov,owe,oq,om,od,ot}!=={xv,xwe,xq,xm,xd,xt})begin bad=bad+1;if(bad<4)$display("PROFILE_DATA_MISMATCH cycle%0d",cy);end
+'''
+ else:defs+='''  // Scatter contract (S81 VM F6 2026-10-15): o_v exact every edge; we/address/mask/data/tag exact for every VALID
+  // record (payload is registered straight from the pins and meaningful only with o_v); sticky fault at FAULT_AGE 3,
+  // i.e. exactly one edge after the record that raised it.
+  if(ov!==xv)begin bad=bad+1;if(bad<4)$display("PROFILE_VALID_MISMATCH cycle%0d",cy);end
+  for(k=0;k<N;k=k+1)if(xv[k]&&{owe[k],oq[9*k+:9],om[4*k+:4],od[128*k+:128],ot[8*k+:8]}!=={xwe[k],xq[9*k+:9],xm[4*k+:4],xd[128*k+:128],xt[8*k+:8]})begin bad=bad+1;if(bad<4)$display("PROFILE_DATA_MISMATCH cycle%0d record%0d",cy,k);end
+  if(fault!==fault_due)bad=bad+1;
+  fault_due=expect_fault;
+'''
  defs+=''' end
  if(bad)begin $display("PROFILE_WRITE_FAIL records %0d bad %0d",checks,bad);$fatal;end
  $display("PROFILE_WRITE_PASS records %0d bad0",checks);$finish;
