@@ -58,7 +58,9 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  reg [11:0] request_sequence[0:ISSUE_WIDTH-1],request_ordinal[0:ISSUE_WIDTH-1];
  reg [29:0] request_sector[0:ISSUE_WIDTH-1];reg [4:0] request_pc[0:ISSUE_WIDTH-1];
  reg [16:0] request_tag[0:ISSUE_WIDTH-1];
- reg [543:0] request_tags;integer issue_count;reg issue_prefix;
+ reg [543:0] request_tags;integer issue_count,bundle_count;
+ reg [ISSUE_WIDTH-1:0] accepted_q,accepted_now,request_valid;
+ reg bundle_complete,distinct_prefix;
  integer response_slot[0:31];
  assign desc_rd_ready=!h_active&&!hbm_fault&&hrst&&desc_rd_valid;
  // Reorder requests only within the variable-latency PHY boundary. A tile of
@@ -88,15 +90,24 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  reg [31:0] response_accepted;integer h_take;
  integer p,l;
  always @*begin
-  k_v=0;k_addr=0;request_tags=0;issue_count=0;issue_prefix=1;
-  // Only a contiguous accepted prefix advances h_next. All candidates have
-  //distinctPCs, including partial-prefix tile crossings. Variable k_rdy is PHY-local only.
+  k_v=0;k_addr=0;request_tags=0;bundle_count=0;
+  request_valid=0;distinct_prefix=1;
+  // A persistent accepted mask permits independent PHY ready stalls without
+  //any combinational ready->valid/address path. A bundle ends before a repeated
+  //PC and advances only once all its distinct requests have been accepted.
   for(integer rq=0;rq<ISSUE_WIDTH;rq=rq+1)begin
-   if(h_active&&request_sequence[rq]<h_total&&request_slot[rq]>=0&&!tag_collision[rq]&&!request_duplicate[rq]&&!hbm_fault&&issue_prefix)begin
-    k_v[request_pc[rq]]=1;k_addr[30*request_pc[rq]+:30]=request_sector[rq];
+   if(request_sequence[rq]<h_total&&!request_duplicate[rq]&&distinct_prefix)bundle_count=bundle_count+1;
+   else distinct_prefix=0;
+  end
+  for(integer rq=0;rq<ISSUE_WIDTH;rq=rq+1)begin
+   if(h_active&&rq<bundle_count&&!hbm_fault)begin
+    k_addr[30*request_pc[rq]+:30]=request_sector[rq];
     request_tags[17*request_pc[rq]+:17]=request_tag[rq];
-    if(k_rdy[request_pc[rq]])issue_count=issue_count+1;else issue_prefix=0;
-   end else issue_prefix=0;
+    if(!accepted_q[rq]&&request_slot[rq]>=0&&!tag_collision[rq])begin
+     k_v[request_pc[rq]]=1;
+     request_valid[rq]=1;
+    end
+   end
   end
   kr_rdy=0;fifo_wr_valid=0;response_accepted=0;h_take=0;
   for(p=0;p<32;p=p+1)begin
@@ -119,11 +130,21 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
    end
   end
  end
+ // Keep acceptance bookkeeping separate from request construction. Addresses
+ //and valid depend only on registered ownership, never on combinational ready.
+ always @*begin
+  accepted_now=0;bundle_complete=1;issue_count=0;
+  for(integer rq=0;rq<ISSUE_WIDTH;rq=rq+1)begin
+   if(request_valid[rq]&&k_rdy[request_pc[rq]])accepted_now[rq]=1;
+   if(rq<bundle_count&&!accepted_q[rq]&&!accepted_now[rq])bundle_complete=0;
+  end
+  if(h_active&&bundle_count>0&&bundle_complete&&!hbm_fault)issue_count=bundle_count;
+ end
  integer hp;
  always @(posedge hbm_clk or negedge hrst)begin
   if(!hrst)begin
-   h_active<=0;h_bank<=0;h_epoch<=0;h_base<=0;h_total<=0;h_next<=0;h_received<=0;
-   next_tag<=0;hbm_fault<=0;stf1<=0;stf2<=0;
+   h_active<=0;h_bank<=0;h_epoch<=0;h_base<=0;h_total<=0;h_next<=0;h_received<=0;accepted_q<=0;
+   next_tag<=0;accepted_q<=0;hbm_fault<=0;stf1<=0;stf2<=0;
    for(hp=0;hp<32;hp=hp+1)begin
     outstanding[hp]<=0;
     for(integer os=0;os<MAX_OUTSTANDING;os=os+1)begin
@@ -138,19 +159,21 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
        {3'b0,desc_data[58:29]}+desc_data[28:17]>33'h040000000)hbm_fault<=1;
     else begin
      h_active<=1;h_base<=desc_data[58:29];h_total<=desc_data[28:17];h_bank<=desc_data[16];h_epoch<=desc_data[15:0];
-     h_next<=0;h_received<=0;
+     h_next<=0;h_received<=0;accepted_q<=0;
      for(hp=0;hp<32;hp=hp+1)outstanding[hp]<=0;
     end
    end
    if(h_active)begin
+    accepted_q<=accepted_q|accepted_now;
     if(issue_count>0)begin
+     accepted_q<=0;
      h_next<=h_next+12'(issue_count);next_tag<=next_tag+17'(issue_count);
-     for(integer rq=0;rq<ISSUE_WIDTH;rq=rq+1)if(rq<issue_count)begin
+     end
+    for(integer rq=0;rq<ISSUE_WIDTH;rq=rq+1)if(accepted_now[rq])begin
       outstanding[request_pc[rq]][request_slot[rq]]<=1;
       owner_ordinal[request_pc[rq]][request_slot[rq]]<=request_ordinal[rq][10:0];
       owner_tag[request_pc[rq]][request_slot[rq]]<=request_tag[rq];
       owner_epoch[request_pc[rq]][request_slot[rq]]<=h_epoch;owner_bank[request_pc[rq]][request_slot[rq]]<=h_bank;
-     end
     end
     for(hp=0;hp<32;hp=hp+1)begin
      if(kr_v[hp]&&(response_slot[hp]<0||owner_epoch[hp][response_slot[hp]]!=h_epoch||owner_bank[hp][response_slot[hp]]!=h_bank||kr_beat[4*hp+:4]!=0))hbm_fault<=1;

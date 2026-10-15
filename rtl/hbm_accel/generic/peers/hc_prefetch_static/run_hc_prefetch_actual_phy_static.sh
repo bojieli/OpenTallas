@@ -13,6 +13,12 @@ for mode in actual payload stress legacy default;do
  if [[ $mode == legacy ]];then top=tb_hgi_hc_prefetch_direct_static;args=(-GMAX_OUTSTANDING=1 -GROWS=2);fi
  if [[ $mode == default ]];then top=tb_hbm_svc_prefetch_block_cdc;fi
  verilator --binary --timing -j 4 -Wno-fatal --top-module "$top" --Mdir out/$mode-obj -o sim "${args[@]}" *.sv *.v >out/$mode.compile.log 2>&1
+ python3 - "out/$mode.compile.log" <<'CHECK'
+import pathlib,sys
+s=pathlib.Path(sys.argv[1]).read_text()
+for w in ['UNOPTFLAT','LATCH','MULTIDRIVEN']:
+ assert '%Warning-'+w not in s, f'{w} source defect'
+CHECK
  if [[ $mode == default ]];then
   for phase in 137 773;do
    out/$mode-obj/sim +PHASE=$phase >out/default-$phase.log 2>&1
