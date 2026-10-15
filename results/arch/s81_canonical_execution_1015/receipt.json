@@ -9,12 +9,12 @@
   "literal_MTP_operations": 0,
   "sources": {
     "tools/s81_compile_schedule/canonical_execution_gate.py": "e636576ac9a66804a69f60611e44bc1ea775b11f4792c7437d278b62b058fdcb",
-    "tools/s81_compile_schedule/canonical_execution_join.py": "ac89c97fcfe57c0dd5fda4b5238c4d25ce6e1e2ef066998c31bc2e64ebd4e074",
+    "tools/s81_compile_schedule/canonical_execution_join.py": "2338cba924cd3d3df122936bd4f54017819d79981b1d427416a0e2228e9622ba",
     "tools/s81_compile_schedule/compile_calendar.py": "9f2ebc41ebb9a0df09961bc4b48d7ddd7adff43f75d991d4fda25323750810b2",
     "tools/s81_compile_schedule/lower_native_graph.py": "1e428009a72faca44959e931e66fa5504ee9d3bdce94d8ef4f3e66d0db1f733d",
     "tools/s81_compile_schedule/operand_layout.py": "60737f60f478023179d154e55c13d5c553122552965e26d7edfee5a551719974",
     "tools/s81_compile_schedule/read_packets.py": "397ff87a8bc632563a29460f3f37ec876c9157560d5eab4cca38bb27ae7c42ed",
-    "tools/s81_compile_schedule/test_canonical_execution_join.py": "de158ae1a878cf54e78cad4d36e653fd812762418cb08d4d30c96acd19910a61",
+    "tools/s81_compile_schedule/test_canonical_execution_join.py": "7c35c7d0a78a14f2091a95b0399f0e834f94711961d4e43bf95976f51c31f445",
     "tools/s81_compile_schedule/test_compile_calendar.py": "a0a66c0b575e70ad46b80d610c7a24c3a9defe600461fe07de27c6f76408ab8c",
     "tools/s81_compile_schedule/test_lower_native_graph.py": "1a7faea3e952fcba37f2af6ea490a2b5fec275badb5d312c7991314d7c42fb39",
     "tools/s81_compile_schedule/test_operand_layout.py": "a4fa956adb7aeaec5ad2843b8a2dc0576acbf4d2a80e402b7f3deb6995890c5f",
@@ -26,9 +26,10 @@
     "inputs/canonical_source_export.json.gz": "b60f19005d91dec3cd61aa8be4f1b04f735436ca24a71d58db848065baff5866",
     "inputs/full_su_spatial.json.gz": "a13f93495127ec79177c221b08ceea2aebb7c7e2d177870263f2b24034af84ca"
   },
+  "mechanism_test_count": 13,
   "admission": {
-    "host": "ot-agidock128",
-    "unit": "oth-ubuntu-3984063-1792063069",
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-2044810-1792063211",
     "exit_code": 0,
     "memory_gb": 2,
     "threads": 1
