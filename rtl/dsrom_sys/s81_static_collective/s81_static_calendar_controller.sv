@@ -70,7 +70,7 @@ module s81_static_calendar_controller #(
  // Macro q is synchronous, one enabled edge; row0 is fetched during idle,
  // overlapping the existing command pin register. Every active edge consumes
  // the previous macro read while fetching the next statically named row.
- localparam integer CONFIGURED=(ROM_FILE!="") && CYCLES>=1 && CYCLES<=4096;
+ localparam bit CONFIGURED=(ROM_FILE!="") && CYCLES>=1 && CYCLES<=4096;
  wire [797:0] macro_data;
  wire [11:0] macro_addr;
  wire macro_enable=rst_n && CONFIGURED;
