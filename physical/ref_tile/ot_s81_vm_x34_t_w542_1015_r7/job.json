@@ -1,14 +1,14 @@
 {
- "name": "ot_s81_vm_x34_t_w542_1015_r7-pinmargin7-COMMIT",
+ "name": "ot_s81_vm_x34_t_w542_1015_r7-pinmargin7-7c061d55a",
  "block": "ot_s81_vm_x34_t",
  "ref_tile": true,
- "owner": "claude:S-ELEM-A S81 VM owner",
+ "owner": "Codex:S81 VM native takeover1103",
  "purpose": "Native ck_cap_x34_t master (W542): exact production cap16 bench + side mutant, TT/FF/DRC0 + measured R",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/s81-vm-elema-1015",
-  "commit": "COMMIT"
+  "branch": "codex/s81-vm-takeover-1103",
+  "commit": "7c061d55a"
  },
  "stages": {
   "bench": [
