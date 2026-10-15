@@ -59,6 +59,7 @@ module ot_coll_cmd_issue #(
         else tg[ri] <= pw_data[TAGW-1:0];
     end
     wire run;
+    integer ck_row;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin header_loaded <= 0; tag_loaded <= 0; sealed <= 1'b0; stop_q <= 0; count_q <= 0; cfg_fault <= 1'b0; end
         else begin
@@ -72,6 +73,13 @@ module ot_coll_cmd_issue #(
                     pw_data[37:32] > DEPTH) cfg_fault <= 1'b1;
             end
             if (start && !sealed) cfg_fault <= 1'b1;
+            // Check completeness without consulting uninitialized row contents.
+            // A missing header cannot be diagnosed by reaching its issue cycle.
+            if (seal_w || start) begin
+                for (ck_row = 0; ck_row < DEPTH; ck_row = ck_row + 1)
+                    if (ck_row < (seal_w ? pw_data[37:32] : count_q) &&
+                        loaded[ck_row] !== 1'b1) cfg_fault <= 1'b1;
+            end
         end
     // one-edge synchronous calendar store -> fixed-issue core
     wire slot_re; wire [11:0] slot_addr; reg [46:0] slot_q;
