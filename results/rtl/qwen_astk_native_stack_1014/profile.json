@@ -110,7 +110,8 @@
       "legacy_credit": 633
     },
     "er_addr11": "{k4,gam4,j3}; selected engine=gam[2:0]; g0 only",
-    "er_response": "rsp_v/rsp_addr/data64 exactly3 memory edges from request under normalized clocks; final phi-R transport must preserve measured contract"
+    "er_response": "rsp_v/rsp_addr/data64 exactly3 memory edges from request under normalized clocks; final phi-R transport must preserve measured contract",
+    "LT21": "{layer6,T14,start1}"
   },
   "fault_paths": [
     "EX arithmetic xe[1] -> EP e_f -> XO[0] return chain -> CTL af",
@@ -142,7 +143,8 @@
     "admitted_jobs": [
       "oth-ubuntu-3460001-1792036390",
       "oth-ubuntu-3463901-1792036501"
-    ]
+    ],
+    "binary_sha256": "c46e849702063fa2219e6ef0675ec6ad5a375075b287d7b550f5be8f953f3432"
   },
   "unchanged_module_bodies_vs_1dfea0ac7": {
     "qkd_astk_ex": "9fe87ab491d9afdfcc0a08eb29ae66adcaf88093c011e9821198c496c036128a",
