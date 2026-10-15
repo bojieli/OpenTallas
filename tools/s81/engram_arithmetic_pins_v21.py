@@ -11,8 +11,11 @@ import v19_pins_1014 as V
 R = Path(__file__).resolve().parents[2]
 INVENTORY = R / 'results/rtl/s81_engram_mix_1014/leaf_inventory.json'
 SIZING = R / 'results/arch/s81_mix4_sizing_1015/summary.json'
-OUTLINE = {'mul4': [181.44, 97.2], 'add8': [181.44, 77.76], 'norm': [181.44, 77.76], 'sigmoid': [181.44, 86.4],
-           'chunk8': [90.72, 77.76], 'sum': [90.72, 77.76], 'signed_sqrt': [64.8, 43.2]}
+# r2 (05:15 gates): ORFS synthesis area is 1.26-1.38x the mapped-root area (util 67-72 % on r1 outlines, 3 gate
+# FAILs > 70 %); outlines re-sized to util ~0.51 of the ORFS-synthesised area (heights whole 2.16 um)
+OUTLINE = {'mul4': [181.44, 120.96], 'add8': [181.44, 99.36], 'norm': [181.44, 95.04], 'sigmoid': [181.44, 110.16],
+           'chunk8': [90.72, 90.72], 'sum': [90.72, 99.36], 'signed_sqrt': [64.8, 43.2]}
+SYNTH = {'mul4': 11242, 'add8': 9276, 'norm': 8833, 'sigmoid': 10186, 'chunk8': 4265, 'sum': 4585, 'signed_sqrt': 1155}
 
 
 def main():
@@ -35,7 +38,8 @@ def main():
                                           'adoption': 'actual source native CTS/TT/FF/DRC required; no parent/reach/calendar qualification implied'})
         assert {p: len(v) for p, v in pp.items()} == {p: v['bits'] for p, v in ip['ports'].items()}
         a = area[name]
-        receipt.append({'master': name, 'outline_um': ol, 'mapped_area_um2': a, 'util': round(a / (ol[0] * ol[1]), 3),
+        receipt.append({'master': name, 'outline_um': ol, 'mapped_area_um2': a, 'orfs_synth_area_um2': SYNTH[suffix],
+                        'util': round(SYNTH[suffix] / (ol[0] * ol[1]), 3),
                         'port_bits': sum(v['bits'] for v in ip['ports'].values()), 'params': ip['parameters']})
     (out / 'receipt.json').write_text(json.dumps({'source_inventory': str(INVENTORY.relative_to(R)),
         'inventory_sha256': hashlib.sha256(INVENTORY.read_bytes()).hexdigest(), 'sizing_sha256': hashlib.sha256(SIZING.read_bytes()).hexdigest(),
