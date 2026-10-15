@@ -1,0 +1,16 @@
+{
+ "name": "sp_engram_dispatch",
+ "master": "ot_s81_engram_dispatch",
+ "at_um": [
+  15120.0,
+  23007.6
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 86.4
+ },
+ "clock": "stream_1p2",
+ "geometry": "full xsp7 instance rectangle0overlaps;21.6um above embedding,25.2um east of MIX face; no collision with reserved HCP/controller/gatherpack",
+ "pin_file": "physical/s81_die_pins/v20_functional/ot_s81_engram_dispatch.tcl",
+ "qualification": "real static engine10arg23 dispatch; lookup home/long sequencer relays and completion phase still OPEN"
+}

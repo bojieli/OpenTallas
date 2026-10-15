@@ -28,8 +28,9 @@ hook() {
 }
 S=(); for f in $SRCS; do S+=(--source $f); done
 M=(); for m in "${MACROS[@]}"; do M+=(--macro $m); done
-# An explicit stricter signal contract supplies its own clock range (cap-1 .. cap: OpenROAD rejects an equal range,
-# ODB-0137); legacy kits leave both platform defaults alone.
+# ASAP7 fastroute.tcl routes clocks on MIN_CLK_ROUTING_LAYER (M4)..MAX_ROUTING_LAYER, and OpenROAD needs
+# min < max (ODB-0137 at floorplan otherwise). A kit with a signal cap below M5 carries its own two-layer
+# CLOCK_RLAYERS (ref_tile.clock_rlayers); kits capped at M5+ leave the platform default alone.
 CR=()
 if [ -n "${CLOCK_RLAYERS:-}" ]; then
   read -r OT_CLK_LO OT_CLK_HI <<< "$CLOCK_RLAYERS"

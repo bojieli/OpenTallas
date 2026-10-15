@@ -6,7 +6,10 @@
 //   * the delivery formatter's table holds {end, start} per rank (sliced gathers: lanes = min(16, end - w), the rank's
 //     sub-slice end instead of the next rank's start) or a gi offset (whole-row gathers: gi' = gi + table[src - gbase],
 //     the global flit index), in the classic and the pipelined (per-epoch) formatter alike;
-//   * NPT is the quadrant's rail (3 SW / 2 SE, NW, NE), the SU inject is the local SU quarter only.
+//   * NPT is the quadrant's rail (3 SW / 2 SE, NW, NE), the SU inject is the local SU quarter only, answered INJLAT
+//     edges after the request (ot_hbm_accel_tu_endpoint_qpsg: the data joins the HUBW line at stage INJLAT, 0 cycles);
+//   * ROW_GATHER drained also waits for rg_w_idle, the TOPK done for tk_w_idle (both write streams cross to
+//     ot_hgi_coll_vmport by credit flow).
 // Everything else (endpoint, PIPE epochs, parking, RGX, TKM, ARGMAX) is the central block's logic, unchanged.
 // HGI-1 collective block body (hgi-takeover 2026-10-09): the TU endpoint (ot_hbm_accel_tu_endpoint_psg, group sizes,
 // GROUP_REDUCE_MCAST, done / fault handshake) driven either by the legacy config word {go, pf, rank} or by a normative
@@ -16,7 +19,10 @@
 // module for the spec-generated wrapper (coll_hgi/rtl/spec.json).
 module ot_hgi_coll_qep #(
     parameter integer QSOLO = 0,       // quadrant running ARGMAX / TOPK / ROW_GATHER whole
+    parameter integer SOLO_CAP = 1,    // 0: never the QSOLO quadrant (ot_hgi_coll_qrec)
     parameter integer MUT_Q = 0,       // bench mutant: wrong quadrant quarter
+    parameter integer TKM_NATIVE = 0,
+    parameter integer INJLAT = 0,      // SU inject data latency (edges after inj_rd), ot_hbm_accel_tu_endpoint_qpsg
     parameter integer NOG = 12,       // 12 x 8 = the 96-rank TU fabric (DS TP96: rank = die mod 96)
     parameter integer PFMAX = 512,    // F4 (hgi-e2e): flits per contributor (Qwen all-reduce 256, DS gathers 80 / 144 / 320); was the PSG default 64
     parameter integer RXAW = 8,
@@ -44,6 +50,9 @@ module ot_hgi_coll_qep #(
 ) (
     input  wire               clk,
     input  wire               rst_n,
+    input  wire tkm_clk_core, tkm_clk_buffer, tkm_clk_packer,
+    input  wire [3:0] tkm_clk_lane,
+    input  wire [31:0] tkm_clk_tile,
     input  wire               pclk,
     input  wire               prst_n,
     input  wire [1:0]         qid,         // die strap: quadrant 0 SW, 1 SE, 2 NW, 3 NE
@@ -89,6 +98,7 @@ module ot_hgi_coll_qep #(
     output wire               rg_w_vm,       // the run's O space (0 HBM bytes, 1 VM words)
     output wire [DEL*FW-1:0]  rg_w_data,
     input  wire [DEL-1:0]     rg_w_rdy,
+    input  wire               rg_w_idle,     // P2P: every ROW_GATHER write reached the slice-side sink (credits home)
     // hardware TOPK_MERGE (TKM = 1; unused otherwise): the record's B / R descriptors {n_R, n_B, desc_R, desc_B}
     // (ot_hgi_cp_die coll_recx), the inject addresses of every inject lane {hi half (8 words), lo half (8 words)} as VM
     // word addresses (TKM run: lo = A + 8 f values, hi = B + 8 f ids; any other run: lo = A + 16 f, hi = lo + 8), and
@@ -99,7 +109,8 @@ module ot_hgi_coll_qep #(
     output wire [39:0]        tk_w_addr,
     output wire [15:0]        tk_w_mask,
     output wire [FW-1:0]      tk_w_data,
-    input  wire               tk_w_rdy
+    input  wire               tk_w_rdy,
+    input  wire               tk_w_idle      // P2P: every TOPK line write reached the VM port (credits home)
 );
     wire [7:0] r_rank, r_mg; wire r_mall, r_byp, r_amx, r_bf16; wire [3:0] r_gsz; wire [15:0] r_pf; wire r_go, r_done_ready;
     wire [39:0] r_abase, r_obase; wire rec_rdy, rec_done, rec_fault;
@@ -127,12 +138,21 @@ module ot_hgi_coll_qep #(
     // stream padded to the group's pf) is sent as the PAD pair {FFFFFFFF, FFFFFFFF}, and every NaN value as the canonical
     // 7FC00000 (it still faults at every sink), so the sinks tell a pad slot from data without knowing the sender's n
     reg  [INJ*FW-1:0] inj_tk;
+    // P2P: the SU's data arrives INJLAT edges after its request: the TOPK pad check uses that request's index
+    wire [INJ*16-1:0] inj_idx_l;
+    generate if (INJLAT == 0) begin : g_il0
+        assign inj_idx_l = inj_idx;
+    end else begin : g_il
+        reg [INJ*16-1:0] il [0:INJLAT-1];
+        always @(posedge clk) begin il[0] <= inj_idx; for (integer j = 1; j < INJLAT; j = j + 1) il[j] <= il[j-1]; end
+        assign inj_idx_l = il[INJLAT-1];
+    end endgenerate
     wire [11:0] tk_n_w = tk_n;
     always @* begin : tkpad
         reg [15:0] f_; reg [31:0] v_;
         inj_tk = inj_data;
         for (integer h = 0; h < INJ; h = h + 1) begin
-            f_ = inj_idx[16*h +: 16];
+            f_ = inj_idx_l[16*h +: 16];                  // the index of the flit whose data arrives now
             for (integer s_ = 0; s_ < 8; s_ = s_ + 1) begin
                 v_ = inj_data[h*FW + 32*s_ +: 32];
                 if ({f_, 3'(s_)} >= 19'(tk_n_w)) begin
@@ -155,7 +175,7 @@ module ot_hgi_coll_qep #(
     wire ep_fault;
     wire [31:0] cfg_w46;
     ot_hgi_cfg_rx #(.W0(46), .NW(1), .RST(32'd96)) u_cfg (.clk(clk), .rst_n(rst_n), .bus(hgi_cfg), .act(cfg_w46));
-    ot_hgi_coll_qrec #(.QSOLO(QSOLO), .MUT_Q(MUT_Q), .PIPE(PIPE), .RGXHW(RGXHW), .RFMT(RFMT), .TKM(TKM), .TKM_KMAX(TKM_KMAX)) u_rec (.clk(clk), .rst_n(rst_n), .cfg_coll_group_size(cfg_w46[7:0]), .cfg_die_id(hgi_rec[967:960]), .qid(qid),
+    ot_hgi_coll_qrec #(.QSOLO(QSOLO), .SOLO_CAP(SOLO_CAP), .MUT_Q(MUT_Q), .PIPE(PIPE), .RGXHW(RGXHW), .RFMT(RFMT), .TKM(TKM), .TKM_KMAX(TKM_KMAX)) u_rec (.clk(clk), .rst_n(rst_n), .cfg_coll_group_size(cfg_w46[7:0]), .cfg_die_id(hgi_rec[967:960]), .qid(qid),
         .rec_v(hgi_rec[0]), .rec_rdy(rec_rdy), .rec_hdr(hgi_rec[128:1]), .rec_a(hgi_rec[384:129]),
         .rec_o(hgi_rec[640:385]), .rec_i(hgi_rec[896:641]), .rec_n_a(hgi_rec[917:897]), .rec_n_o(hgi_rec[938:918]),
         .rec_n_i(hgi_rec[959:939]), .rec_done(rec_done), .rec_fault(rec_fault),
@@ -183,7 +203,7 @@ module ot_hgi_coll_qep #(
     always @(posedge clk or negedge rst_n) if (!rst_n) tkm_run <= 1'b0;
         else if (r_go) tkm_run <= (TKM != 0) && r_tkm; else if (go) tkm_run <= 1'b0;
     wire tkm_now = tkm_run | (r_go & r_tkm & (TKM != 0));
-    ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1), .REARM(1), .RGX(RGXHW), .DELCRED((RGXHW != 0 || TKM != 0) ? 1 : 0), .PFMAX(PFMAX), .BF16RT(1), .NOG(NOG), .RXAW(RXAW), .QAW(QAW), .TXAW(TXAW), .NPT(NPT), .INJ(INJ),
+    ot_hbm_accel_tu_endpoint_qpsg #(.INJLAT(INJLAT), .ENABLE(1), .REARM(1), .RGX(RGXHW), .DELCRED((RGXHW != 0 || TKM != 0) ? 1 : 0), .PFMAX(PFMAX), .BF16RT(1), .NOG(NOG), .RXAW(RXAW), .QAW(QAW), .TXAW(TXAW), .NPT(NPT), .INJ(INJ),
         .DEL(DEL), .LANES(LANES), .PIPE(PIPE), .SWCRED(SWCRED)) u_ep (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n),
         .rank(sel ? r_rank : rank), .mcast_group_size(sel ? r_mg : 8'd96), .mcast_all(sel & r_mall),
         .gsz(sel ? r_gsz : 4'hF), .byp(sel & r_byp), .res_bf16(sel ? r_bf16 : 1'b1), .pf(sel ? r_pf : pf), .go(r_go | go), .start_ready(start_ready),
@@ -206,7 +226,8 @@ module ot_hgi_coll_qep #(
             .cfg_nflit(rg_nflit), .cfg_k(rg_k), .cfg_discard(rg_rrel >= rg_dests), .cfg_obase(rg_obase), .cfg_ostride(rg_ostride),
             .cfg_ovm(rg_ovm), .del_reserve(rgx_now ? rg_reserve : {DEL{1'b0}}), .del_permit(rg_permit),
             .del_valid(rgx_run ? e_dv : {DEL{1'b0}}), .del_flit(e_df), .w_v(rg_w_v), .w_x(), .w_f(), .w_addr(rg_w_addr),
-            .w_data(rg_w_data), .w_rdy(rg_w_rdy), .drained(rg_drained), .fault(rg_sink_fault));
+            .w_data(rg_w_data), .w_rdy(rg_w_rdy), .drained(rg_drained_s), .fault(rg_sink_fault));
+        wire rg_drained_s; assign rg_drained = rg_drained_s & rg_w_idle;
         reg ovm_q; always @(posedge clk) if (rg_start) ovm_q <= rg_ovm;
         assign rg_w_vm = ovm_q;
     end else begin : g_norgx
@@ -220,17 +241,40 @@ module ot_hgi_coll_qep #(
     always @(posedge clk) if (r_go || go) b_run <= r_bbase;
     always @(posedge clk or negedge rst_n) if (!rst_n) tkm_inj <= 1'b0; else if (r_go) tkm_inj <= (TKM != 0) && r_tkm; else if (go) tkm_inj <= 1'b0;
     generate if (TKM != 0) begin : g_tkm
-`ifdef OT_TKM_CLUSTER_BENCH
-        ot_hgi_coll_tkm_cluster #(.KMAX(TKM_KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .MUT(MUT_TKM)) u_tkm (.tile_ck0(clk),.tile_ck1(clk),.tile_ck2(clk),.tile_ck3(clk),.tile_ck4(clk),.tile_ck5(clk),.tile_ck6(clk),.tile_ck7(clk),.tile_ck8(clk),.tile_ck9(clk),.tile_ck10(clk),.tile_ck11(clk),.tile_ck12(clk),.tile_ck13(clk),.tile_ck14(clk),.tile_ck15(clk),.tile_ck16(clk),.tile_ck17(clk),.tile_ck18(clk),.tile_ck19(clk),.tile_ck20(clk),.tile_ck21(clk),.tile_ck22(clk),.tile_ck23(clk),.tile_ck24(clk),.tile_ck25(clk),.tile_ck26(clk),.tile_ck27(clk),.tile_ck28(clk),.tile_ck29(clk),.tile_ck30(clk),.tile_ck31(clk),.lane_ck0(clk),.lane_ck1(clk),.lane_ck2(clk),.lane_ck3(clk), .clk(clk), .rst_n(rst_n),
-`else
-        ot_hgi_coll_tkm #(.KMAX(TKM_KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .MUT(MUT_TKM)) u_tkm (.clk(clk), .rst_n(rst_n),
+        wire tk_done_s;
+        wire [31:0] stat_cycles, stat_ins, stat_surv;
+`ifndef SYNTHESIS
+        wire [3:0] phase_trace;
 `endif
+        if (TKM_NATIVE != 0) begin : g_native
+            ot_hgi_coll_tkm_native #(.KMAX(TKM_KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.MUT(MUT_TKM)) u_tkm (
+                .tile_clk(tkm_clk_tile), .lane_clk(tkm_clk_lane), .buffer_clk(tkm_clk_buffer), .packer_clk(tkm_clk_packer), .clk(tkm_clk_core), .rst_n(rst_n),
             .start(tk_start), .cfg_n(tk_n), .cfg_k(tk_ko), .cfg_g(tk_g), .cfg_gbase(tk_gb), .cfg_pf(tk_pf), .cfg_nout(tk_no),
             .cfg_obase(tk_ob), .cfg_rbase(tk_rb), .cfg_has_r(tk_hr),
             .del_reserve(tkm_now ? rg_reserve : {DEL{1'b0}}), .del_permit(tk_permit),
             .del_valid(tkm_run ? e_dv : {DEL{1'b0}}), .del_flit(e_df),
             .w_v(tk_w_v), .w_addr(tk_w_addr), .w_mask(tk_w_mask), .w_data(tk_w_data), .w_rdy(tk_w_rdy),
-            .busy(), .done(tk_done), .fault(tk_fault), .stat_cycles(), .stat_ins(), .stat_surv());
+            .busy(), .done(tk_done_s), .fault(tk_fault), .stat_cycles(stat_cycles), .stat_ins(stat_ins), .stat_surv(stat_surv));
+`ifndef SYNTHESIS
+            assign phase_trace = u_tkm.ph;
+`endif
+        end else begin : g_legacy
+            ot_hgi_coll_tkm #(.KMAX(TKM_KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.MUT(MUT_TKM)) u_tkm (
+                .clk(clk), .rst_n(rst_n),
+            .start(tk_start), .cfg_n(tk_n), .cfg_k(tk_ko), .cfg_g(tk_g), .cfg_gbase(tk_gb), .cfg_pf(tk_pf), .cfg_nout(tk_no),
+            .cfg_obase(tk_ob), .cfg_rbase(tk_rb), .cfg_has_r(tk_hr),
+            .del_reserve(tkm_now ? rg_reserve : {DEL{1'b0}}), .del_permit(tk_permit),
+            .del_valid(tkm_run ? e_dv : {DEL{1'b0}}), .del_flit(e_df),
+            .w_v(tk_w_v), .w_addr(tk_w_addr), .w_mask(tk_w_mask), .w_data(tk_w_data), .w_rdy(tk_w_rdy),
+            .busy(), .done(tk_done_s), .fault(tk_fault), .stat_cycles(stat_cycles), .stat_ins(stat_ins), .stat_surv(stat_surv));
+`ifndef SYNTHESIS
+            assign phase_trace = u_tkm.ph;
+`endif
+        end
+        // P2P: the record sees the sink's done once its last line write also reached the VM port (credits home)
+        reg tk_dp;
+        always @(posedge clk or negedge rst_n) if (!rst_n) tk_dp <= 1'b0; else if (tk_done_s && !tk_w_idle) tk_dp <= 1'b1; else if (tk_w_idle) tk_dp <= 1'b0;
+        assign tk_done = (tk_done_s || tk_dp) && tk_w_idle;
     end else begin : g_notkm
         assign tk_permit = {DEL{1'b1}}; assign tk_done = 1'b0; assign tk_fault = 1'b0;
         assign tk_w_v = 1'b0; assign tk_w_addr = 40'd0; assign tk_w_mask = 16'd0; assign tk_w_data = {FW{1'b0}};

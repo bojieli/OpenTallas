@@ -473,6 +473,20 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
     return out
 
 
+def clock_rlayers(lc: dict) -> tuple[str, str] | None:
+    """Explicit clock routing range for a signal cap below M5, else None (platform default kept).
+    ASAP7 fastroute.tcl routes clocks on MIN_CLK_ROUTING_LAYER (M4)..MAX_ROUTING_LAYER, and OpenROAD
+    set_routing_layers rejects a clock range whose min is not strictly below its max (ODB-0137, measured
+    2026-10-14: M4-M4 and M5-M4 fail, M3-M4 passes). A cap of M4/M3 therefore routes clocks on the top
+    two allowed layers (one per direction); a cap below M3 cannot route a clock."""
+    cap = metal(lc["rlayers"][1])
+    if cap is None or cap >= 5:
+        return None
+    if cap < 3:
+        raise SpecError(f"signal cap {lc['rlayers'][1]} leaves no two-layer clock routing range (needs >= M3)")
+    return (f"M{cap - 1}", f"M{cap}")
+
+
 def pin_layers(s: dict, lc: dict) -> tuple[str, str]:
     """(IO_PLACER_H, IO_PLACER_V) for the kit; every pin layer must be <= the tile's cap (no pin on the parent strap)."""
     r = s["route"]
@@ -1220,10 +1234,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PINEX={0 if (s['pins'].get('ANY') or s.get('io_tcl')) else 1}", f"INTER={shq(inter)}", f"REFGLOB={shq(refglob)}", f"CLKPORT={s['clock_port']}",
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(ph)}", f"PIN_V={shq(pv)}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
-        # OpenROAD set_routing_layers rejects an equal clock range (M4-M4 -> ODB-0137, measured 2026-10-14 in
-        # openroad/orfs:asap7lock): the clock range under a strict cap is the cap and the layer below it.
-        *([f"CLOCK_RLAYERS={shq('M%d' % (metal(lc['rlayers'][1]) - 1) + ' ' + lc['rlayers'][1])}"]
-          if lc.get("signal_max_layer") and metal(lc["rlayers"][1]) < 5 else []),
+        *([f"CLOCK_RLAYERS={shq(' '.join(clock_rlayers(lc)))}"] if clock_rlayers(lc) else []),
         f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r, lc),
         *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])

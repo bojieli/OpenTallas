@@ -83,9 +83,9 @@ class SignalCap(unittest.TestCase):
                                env=env, check=True, capture_output=True)
                 args = json.loads(capture.read_text())
                 self.assertIn("floorplan", args)
-                for name, want in (("MIN_CLK_ROUTING_LAYER", "M3"), ("MAX_CLK_ROUTING_LAYER", "M4")):
+                for name in ("MIN_CLK_ROUTING_LAYER", "MAX_CLK_ROUTING_LAYER"):
                     self.assertEqual([a for a in args if a.startswith(name + "=")],
-                                     [name + "=" + want] if cap == "M4" else [])
+                                     [{"MIN_CLK_ROUTING_LAYER": "MIN_CLK_ROUTING_LAYER=M3", "MAX_CLK_ROUTING_LAYER": "MAX_CLK_ROUTING_LAYER=M4"}[name]] if cap == "M4" else [])
 
     def test_no_looser_cap_or_high_signal_pin(self):
         for cap in ("M6", "M7", "M1", "invalid"):
