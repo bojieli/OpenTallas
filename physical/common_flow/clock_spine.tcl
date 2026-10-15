@@ -669,6 +669,7 @@ proc ot_clock_spine {} {
   foreach b $::ot_sp_insts { $b setDoNotTouch 1 }
   foreach n [concat [list $net0] [lmap b $::ot_sp_insts {[$b findITerm $::ot_sp_out] getNet}]] { $n setDoNotTouch 1 }
   ot_sp_check_legal
+  set ::ot_sp_port $port
   puts "OT_SPINE done port $port buffers $::ot_sp_nbuf"
   return 1
 }
@@ -679,6 +680,51 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_spine_cts_orig] eq
     if {[ot_sp_env OT_SPINE 1] eq "0"} { return [ot_spine_cts_orig {*}$args] }
     if {![ot_clock_spine]} { return [ot_spine_cts_orig {*}$args] }
     # the spine owns this port's whole clock network; TritonCTS runs only on request (other clock ports: OT_SPINE_CTS_REST=1)
-    if {[ot_sp_env OT_SPINE_CTS_REST 0] eq "1"} { return [ot_spine_cts_orig {*}$args] }
+    if {[ot_sp_env OT_SPINE_CTS_REST 0] eq "1"} {
+      # el1014-root-macro-edge 2026-10-14 (qfd_coll_xfifo_native n13 gate): called without -clk_nets, TritonCTS finds
+      # EVERY SDC clock again -- including the spine clock, whose 436 multi-sink spine nets it re-clusters and rebuffers
+      # ('Clock net clkbuf_sp_N430_net has 2 sinks' ... ODB-0370 disconnect term A of dont_touch clkbuf_sp_N430).  The
+      # rest pass must see only the OTHER clocks: -clk_nets = the source nets of every clock not rooted at the spine port.
+      set rest [ot_sp_rest_nets]
+      set i [lsearch -exact $args -clk_nets]
+      if {$i >= 0} {
+        set rest [lmap n [lindex $args [expr {$i + 1}]] { if {[lsearch -exact $::ot_sp_spine_nets $n] >= 0} continue; set n }]
+        set args [lreplace $args $i [expr {$i + 1}]]
+      }
+      if {![llength $rest]} { puts "OT_SPINE rest: no other clock net, TritonCTS not run"; return }
+      puts "OT_SPINE rest: TritonCTS on -clk_nets {$rest} (spine clock nets excluded)"
+      return [ot_spine_cts_orig {*}$args -clk_nets $rest]
+    }
   }
+}
+
+# source nets of every SDC clock that is not the spine's (port / pin sources; the spine port's net and every net the
+# spine drives are excluded).  Generated clocks are left to TritonCTS's own discovery through their master's net.
+proc ot_sp_rest_nets {} {
+  set blk [ord::get_db_block]
+  set ::ot_sp_spine_nets [list]
+  set bt [$blk findBTerm $::ot_sp_port]
+  if {$bt ne "NULL" && $bt ne ""} { lappend ::ot_sp_spine_nets [[$bt getNet] getName] }
+  foreach b $::ot_sp_insts { set n [[$b findITerm $::ot_sp_out] getNet]; if {$n ne "NULL"} { lappend ::ot_sp_spine_nets [$n getName] } }
+  set out {}
+  foreach c [all_clocks] {
+    if {[get_property $c is_generated]} continue
+    foreach s [get_property $c sources] {
+      set nm [get_full_name $s]
+      set p [get_ports -quiet $nm]
+      if {[llength $p]} {
+        set b [$blk findBTerm [get_full_name $p]]
+        if {$b eq "NULL" || $b eq ""} continue
+        set n [$b getNet]
+      } else {
+        set it [$blk findITerm $nm]
+        if {$it eq "NULL" || $it eq ""} continue
+        set n [$it getNet]
+      }
+      if {$n eq "NULL" || $n eq ""} continue
+      set nn [$n getName]
+      if {[lsearch -exact $::ot_sp_spine_nets $nn] < 0 && [lsearch -exact $out $nn] < 0} { lappend out $nn }
+    }
+  }
+  return $out
 }
