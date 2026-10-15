@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1fs
 // Full population mechanism gate. 128 independent persistent actual controllers,
 // each HOST native WR/readback then K256/V256 without resetting. Discovery is
 // a separate executable whose frozen fixture is replayed by PROFILE0. Return
@@ -26,6 +26,19 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, H
   host_wr_core=$rtoi($ceil(((16+100+PROGRAM_SHIFT)*1.024-core_phase_ps/1000.0)/0.833334));
   host_rd_core=$rtoi($ceil(((16+160+PROGRAM_SHIFT)*1.024-core_phase_ps/1000.0)/0.833334));
   #(core_phase_ps/1000.0);forever #0.416667 core=~core;end
+ real previous_core=-1,previous_hbm=-1;
+ integer measured_core=0,measured_hbm=0;
+ always @(posedge core)begin
+  if(previous_core>=0 && (($realtime-previous_core)>0.833335 || ($realtime-previous_core)<0.833333))$fatal(1,"actual CORE period");
+  if(measured_core==0 && ($realtime-CORE_FIRST>0.000001 || CORE_FIRST-$realtime>0.000001))$fatal(1,"actual CORE first phase");
+  if(PC==0&&STACK==0&&measured_core==1)$display("CLOCK core period_ns%0.9f first_ns%0.9f",$realtime-previous_core,CORE_FIRST);
+  measured_core++;previous_core=$realtime;
+ end
+ always @(posedge ck)begin
+  if(previous_hbm>=0 && (($realtime-previous_hbm)>1.024001 || ($realtime-previous_hbm)<1.023999))$fatal(1,"actual HBM period");
+  if(PC==0&&STACK==0&&measured_hbm==1)$display("CLOCK hbm period_ns%0.9f",$realtime-previous_hbm);
+  measured_hbm++;previous_hbm=$realtime;
+ end
  reg late_calendar;always @(posedge ck)late_calendar<=predicted_corrected;
  wire[293:0] observed_co={co[293:1],co[0]&&!(mode==7&&publish_ordinal==80)};
  reg expected_core_put=0;reg[9:0] expected_core_sector=0;
