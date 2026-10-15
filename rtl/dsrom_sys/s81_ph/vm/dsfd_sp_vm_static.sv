@@ -1,34 +1,31 @@
 `timescale 1ns/1ps
 `default_nettype none
 // ---------------------------------------------------------------------------------------------------------------
-// dsfd_sp_vm (STATIC revision s1, claude S81 VM owner r8, 2026-10-14): the S81 layer-die VM master under its die name,
-// a cluster over real RTL (plus one registered producer-status check): dsfd_vm_static_core (stream 1.2 GHz: 128 real SRAM banks, fixed-rule read /
-// write service, engine 12, static LARM landing) + three fixed-phase 3:4 serial -> stream transfers ot_s81_vm_x34
-// for the serial-domain row producers (selector, collector, HBM scan service SW).
+// dsfd_sp_vm (STATIC revision s2, claude S81 VM owner r9, 2026-10-14): the S81 layer-die VM master under its die
+// name, a cluster over real RTL only.  s2 binds ALL 40 die ports of the S-BIND v20 list (s1 bound 31):
+//   dsfd_vm_static_core  stream 1.2 GHz: 128 real SRAM banks, fixed-rule read / write service, engine 12, static LARM
+//   dsfd_vm_static_cap   capture face: 16 static row-assembly lanes (serial) + 16 fixed-phase 3:4 transfers
+//   dsfd_vm_static_wfc   WFC kit VM channels: one write + one read pair a serial cycle, constant grants, fixed return
+//   dsfd_vm_static_xio   outbound row streams (collective records, scan queries, gather phase words), collective
+//                        landing + fixed source-row service / phase-stage assertions
+//   ot_s81_vm_x34 x 3    serial landing producers (selector, collector, HBM scan service SW)
 // Owner rules 2026-10-14T18:59 / 19:12: static cycle schedule, no credits / backpressure / ready-driven issue; all
-// on-chip execution real hardware.  Every port below lands on real RTL; there is no tied functional port.
+// on-chip execution real hardware.  Every port lands on real RTL; no functional port is tied.
 //
-// PORTS (directions are the VM's; widths are the die nets):
-//   ck / rst          serial 0.9 GHz clock / async low reset (the x34 serial halves)
-//   cks / rss         stream 1.2 GHz clock / async low reset (core + x34 stream halves); STARTUP CONTRACT: both resets
-//                     released on the common epoch (x34 header); a misalignment raises the VM fault (c_st[0])
-//   c_cmd 85 / c_done 9 / c_st 2       sequencer engine 12 (dsfd_vm_seq_static: done = command pin + 6)
-//   t_inp_su / t_inp_hc                verified-operand levels (assertion feeds, never an issue gate)
-//   f_su_rqv 16, f_su_rq 224 -> t_su_rsv 16, t_su_rs 8192          L 12 stream edges (pin -> output register)
-//   f_su_wqv 16, f_su_wq 224, f_su_wqm 256, f_su_wqd 8192           write sources 0..15
-//   f_hc_rqv 2, f_hc_rq 28 -> t_hc_rsv 2, t_hc_rs 1024              L 12
-//   f_hc_wqv 8, f_hc_wq 112, f_hc_wqm 128, f_hc_wqd 4096            write sources 16..23
-//   f_pqx 20 {x_addr 19, x_re} -> t_pqx 2049 {x_q 2048, x_rv}         L 12 (fixed: the PQ's 'credit window' is void)
-//   sel 515 / col 515 {fault, live, row 512, v}   serial; landing lanes 2 / 3 (LARM groups 5 / 6)
-//   aSW 1027 {fault, live, rows 1024, v}          serial; landing lanes 0 / 1 (LARM group 0)
-//   f_collective 2204   NEW static collective -> VM rows: 4 x {tag 8, data 512, mask 16, row 14, v} (write sources
-//                       44..47, compiler rows; REPLACES the legacy 2,100-b cfifo record + tcs room bits)
-//   f_crq 15 {row 14, v} -> t_crs 513 {row 512, v}   NEW static collective source-row read, L 12 (REPLACES the
-//                       legacy VM -> collective t_collective 592 push)
-// NOT IN THIS REVISION (no static RTL yet; the die must not wire them to this master, port-bind stays FAIL on their
-// producers until they exist): f_capture 13376 (static capture row assembly), f_wfc 560 / t_wfc 1029 (WFC kit:
-// grant handshake = dynamic), t_gather 512 / f_xgo 11 (no defined VM function), qSW 513 / qSWs 3 (VM -> scan request
-// lane), tcs 3 (room = backpressure, void).
+// PORTS (directions the VM's; widths = the die nets; domain: S serial ck/rst 0.9 GHz, T stream cks/rss 1.2 GHz):
+//   ck rst (S) / cks rss (T)   STARTUP CONTRACT: both resets released on the common 3:4 epoch (x34 / x43 headers)
+//   c_cmd 85 / c_done 9 / c_st 2 (T)    sequencer engine 12 (done = command pin + 6); t_inp_su / t_inp_hc (T)
+//   SU 16 rd + 16 wr / HC 2 rd + 8 wr row slots (T), f_pqx 20 -> t_pqx 2049 (T)              L 12 reads
+//   sel 515 / col 515 / aSW 1027 (S)      landing producers (static LARM groups 5 / 6 / 0)
+//   f_capture 13376 (S)                   dsfd_sp_capture_c t_vm: static capture rows (write sources 32..43, 48..51)
+//   f_wfc 560 (S) -> t_wfc 1029 (S)       dsfd_wfc_stg VM channels (write source 52, aux reads 8..11)
+//   f_collective 2204 (T)                 four compiler-addressed static row writes (sources 44..47)
+//   f_crq 15 / t_crs 513 (T)              collective fixed-latency source-row service; no credits or room
+//   t_gather 512 (S) / f_xgo 11 (T)       -> dsfd_sp_gather_c f_vm phase words (STREAM dest 1); xgo = assertion feed
+//   qSW 513 (S) / qSWs 3 (S)              -> scan service query lane end block (STREAM dest 0); qSWs = assertion feed
+// Engram MIX4 (20R/4W, dsfd_engram_mix4_c) is built in the core; its die ports appear under
+// +define+DSFD_SP_VM_MIX4 once the die wires the MIX4 slot (no die net today: without the define the core's MIX
+// inputs are held idle and its outputs unread, the MIX function is absent from this die revision, not stubbed).
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_sp_vm (
     input  wire [0:0]    ck, rst, cks, rss,
@@ -41,10 +38,21 @@ module dsfd_sp_vm (
     input  wire [19:0]   f_pqx, output wire [2048:0] t_pqx,
     input  wire [514:0]  sel, col,
     input  wire [1026:0] aSW,
-    input  wire [2203:0] f_collective,
-    input  wire [14:0]   f_crq, output wire [512:0] t_crs
+    input  wire [13375:0] f_capture,
+    input  wire [559:0]  f_wfc, output wire [1028:0] t_wfc,
+    input  wire [2203:0] f_collective, input wire [14:0] f_crq, output wire [512:0] t_crs,
+    output wire [511:0]  t_gather, input wire [10:0] f_xgo,
+    output wire [512:0]  qSW, input wire [2:0] qSWs
+`ifdef DSFD_SP_VM_MIX4
+    , input  wire [19:0] f_mx_rqv, input wire [279:0] f_mx_rq, output wire [19:0] t_mx_rsv, output wire [10239:0] t_mx_rs
+    , input  wire [3:0]  f_mx_wqv, input wire [55:0] f_mx_wq, input wire [63:0] f_mx_wqm, input wire [2047:0] f_mx_wqd
+`endif
 );
-    // ---------------------------------------------------------------- serial -> stream fixed-phase transfers
+`ifndef DSFD_SP_VM_MIX4
+    wire [19:0] f_mx_rqv = 20'd0; wire [279:0] f_mx_rq = 280'd0; wire [19:0] t_mx_rsv; wire [10239:0] t_mx_rs;
+    wire [3:0] f_mx_wqv = 4'd0; wire [55:0] f_mx_wq = 56'd0; wire [63:0] f_mx_wqm = 64'd0; wire [2047:0] f_mx_wqd = 2048'd0;
+`endif
+    // ---------------------------------------------------------------- serial -> stream landing transfers
     wire xs_v, xc_v, xw_v; wire [513:0] xs_d, xc_d; wire [1025:0] xw_d; wire [2:0] x_al;
     ot_s81_vm_x34 #(.W(514)) u_xsel (.s_ck(ck[0]), .s_rst_n(rst[0]), .s_v(sel[0]), .s_d(sel[514:1]),
         .t_ck(cks[0]), .t_rst_n(rss[0]), .o_v(xs_v), .o_d(xs_d), .fault(x_al[0]));
@@ -52,21 +60,43 @@ module dsfd_sp_vm (
         .t_ck(cks[0]), .t_rst_n(rss[0]), .o_v(xc_v), .o_d(xc_d), .fault(x_al[1]));
     ot_s81_vm_x34 #(.W(1026)) u_xsw (.s_ck(ck[0]), .s_rst_n(rst[0]), .s_v(aSW[0]), .s_d(aSW[1026:1]),
         .t_ck(cks[0]), .t_rst_n(rss[0]), .o_v(xw_v), .o_d(xw_d), .fault(x_al[2]));
-    // producer status, stream side (registered): a row from a producer that is not live, or a producer fault, is a VM fault
     reg p_bad;
     always @(posedge cks[0] or negedge rss[0])
         if (!rss[0]) p_bad <= 1'b0;
         else if ((xs_v && !xs_d[512]) || (xc_v && !xc_d[512]) || (xw_v && !xw_d[1024]) ||
                  (xs_v && xs_d[513]) || (xc_v && xc_d[513]) || (xw_v && xw_d[1025])) p_bad <= 1'b1;
-    wire vm_fault;
+    // ---------------------------------------------------------------- edge services
+    wire [15:0] cp_v; wire [223:0] cp_row; wire [255:0] cp_m; wire [8191:0] cp_d; wire cap_f;
+    dsfd_vm_static_cap u_cap (.ck(ck[0]), .rst(rst[0]), .cks(cks[0]), .rss(rss[0]), .f_capture(f_capture),
+        .w_v(cp_v), .w_row(cp_row), .w_m(cp_m), .w_d(cp_d), .fault(cap_f));
+    wire wf_v; wire [13:0] wf_row; wire [511:0] wf_d; wire [3:0] wa_v; wire [55:0] wa_row; wire wfc_f;
+    wire [7:0] x_rv; wire [4095:0] x_rd; wire [3:0] xa_v; wire [55:0] xa_row; wire xio_f; wire vm_fault;
+    wire n_v; wire [83:0] n_d;
+    wire [3:0] cl_v; wire [55:0] cl_row; wire [2047:0] cl_d; wire [63:0] cl_m; wire [31:0] cl_t;
+    dsfd_vm_static_wfc u_wfc (.ck(ck[0]), .rst(rst[0]), .cks(cks[0]), .rss(rss[0]), .f_wfc(f_wfc), .t_wfc(t_wfc),
+        .w_v(wf_v), .w_row(wf_row), .w_d(wf_d), .a_v(wa_v), .a_row(wa_row), .e_v(x_rv[7:4]), .e_d(x_rd[4095:2048]),
+        .vm_fault(vm_fault), .fault(wfc_f));
+    dsfd_vm_static_xio u_xio (.cks(cks[0]), .rss(rss[0]), .ck(ck[0]), .rst(rst[0]), .n_v(n_v), .n_d(n_d),
+        .a_v(xa_v), .a_row(xa_row), .e_v(x_rv[3:0]), .e_d(x_rd[2047:0]),
+        .f_collective(f_collective), .f_crq(f_crq), .t_crs(t_crs),
+        .w_v(cl_v), .w_row(cl_row), .w_d(cl_d), .w_m(cl_m), .w_t(cl_t),
+        .t_gather(t_gather), .f_xgo(f_xgo), .qSW(qSW), .qSWs(qSWs), .fault(xio_f));
+    // edge faults -> engine 12 legacy-fault input (c_st[0]); serial levels registered once in the stream domain
+    reg e_flt;
+    always @(posedge cks[0] or negedge rss[0]) if (!rss[0]) e_flt <= 1'b0; else if (cap_f | wfc_f | xio_f) e_flt <= 1'b1;
     dsfd_vm_static_core u_core (.cks(cks[0]), .rss(rss[0]), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
         .t_inp_su(t_inp_su[0]), .t_inp_hc(t_inp_hc[0]),
         .f_su_rqv(f_su_rqv), .f_su_rq(f_su_rq), .t_su_rsv(t_su_rsv), .t_su_rs(t_su_rs),
         .f_su_wqv(f_su_wqv), .f_su_wq(f_su_wq), .f_su_wqm(f_su_wqm), .f_su_wqd(f_su_wqd),
         .f_hc_rqv(f_hc_rqv), .f_hc_rq(f_hc_rq), .t_hc_rsv(t_hc_rsv), .t_hc_rs(t_hc_rs),
         .f_hc_wqv(f_hc_wqv), .f_hc_wq(f_hc_wq), .f_hc_wqm(f_hc_wqm), .f_hc_wqd(f_hc_wqd),
-        .f_pqx(f_pqx), .t_pqx(t_pqx), .f_crq(f_crq), .t_crs(t_crs),
+        .f_pqx(f_pqx), .t_pqx(t_pqx),
+        .x_av({wa_v, xa_v}), .x_ar({wa_row, xa_row}), .x_rv(x_rv), .x_rd(x_rd), .nf_v(n_v), .nf_d(n_d),
+        .f_mx_rqv(f_mx_rqv), .f_mx_rq(f_mx_rq), .t_mx_rsv(t_mx_rsv), .t_mx_rs(t_mx_rs),
+        .f_mx_wqv(f_mx_wqv), .f_mx_wq(f_mx_wq), .f_mx_wqm(f_mx_wqm), .f_mx_wqd(f_mx_wqd),
         .l_v({xc_v, xs_v, xw_v, xw_v}), .l_d({xc_d[511:0], xs_d[511:0], xw_d[1023:512], xw_d[511:0]}),
-        .f_cvm(f_collective), .x_flt(|x_al | p_bad), .vm_fault(vm_fault));
+        .cp_v(cp_v), .cp_row(cp_row), .cp_m(cp_m), .cp_d(cp_d), .cl_v(cl_v), .cl_row(cl_row), .cl_m(cl_m), .cl_d(cl_d), .cl_t(cl_t),
+        .wf_v(wf_v), .wf_row(wf_row), .wf_d(wf_d),
+        .x_flt(|x_al | p_bad | e_flt), .vm_fault(vm_fault));
 endmodule
 `default_nettype wire
