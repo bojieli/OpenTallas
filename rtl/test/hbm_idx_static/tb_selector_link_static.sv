@@ -12,7 +12,7 @@ module tb_selector_link_static;
  reg clear=0,flush=0,emit_v=0;reg[3:0]emit_group=0;
  wire[3:0]tx_v;wire[2179:0]tx;wire link_fault;wire[9:0]selected_count;
  ot_hbm_idx_topk_link_static #(.MUT(MUT))link(.clk(clk),.clk_mem({8{clk}}),.rst_n(rst_n),.clear(clear),
-  .ingest_v(&selected_v),.selected_line(selected_line),.flush(flush),.emit_v(emit_v),.emit_group(emit_group),.rank(8'd3),
+  .ingest_v(&selected_v),.selected_line(selected_line),.flush(flush),.emit_v(emit_v),.emit_group(emit_group),.rank(8'd3),.gbase(8'd1),
   .tx_v(tx_v),.tx(tx),.fault(link_fault),.selected_count(selected_count));
  integer flits=0,records=0,lasttx=-1,firsttx=-1;
  reg linkseen[0:10943];
@@ -28,7 +28,7 @@ module tb_selector_link_static;
    for(integer lane=0;lane<4;lane=lane+1)begin
     if(!tx_v[lane])errors++;
     if(tx[lane*545+544]!==1'b1||tx[lane*545+536+:8]!==8'hff||tx[lane*545+528+:8]!==8'd3||
-     tx[lane*545+512+:16]!==16'(flits))errors++;
+     tx[lane*545+512+:16]!==16'(128+flits))errors++;
     flits++;
     for(integer r=0;r<8;r=r+1)begin
      integer id;reg[31:0]val;
