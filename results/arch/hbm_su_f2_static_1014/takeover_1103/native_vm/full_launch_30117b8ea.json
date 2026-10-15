@@ -1,0 +1,49 @@
+{
+  "created": "2026-10-15T18:21:10.953514+00:00",
+  "source_commit": "30117b8ea485e99952861a767b3779e4bc0b7401",
+  "lease": {
+    "owner": "codex",
+    "since": "2026-10-15T11:03:01-07:00",
+    "until": "2026-10-15T14:01:00-07:00"
+  },
+  "request_mem_gb": 160,
+  "threads": 4,
+  "mlat": 4,
+  "alat": 3,
+  "leaf": 1,
+  "edges": 7116,
+  "whole_su_lanes": 512,
+  "vm_banks": 32,
+  "macro_count": 3478,
+  "macro_breakdown": {
+    "local_store": 3072,
+    "rf": 8,
+    "native_vm": 96,
+    "programme": 302
+  },
+  "source_hashes": {
+    "tools/hbm_static/su_native_vm_top_run.sh": "ba98b2d366c1729ade8f60eb240c8efff5993f4bbb152351424233b550c2792b",
+    "tools/hbm_static/su_native_vm_launch.sh": "e98b57b83ed8f9558e4c8c570888d54e33b7ee6bd3bfc40580775acab15893f4",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/tb_hbm_su_native_composed_top.sv": "ba9677e6e760fe4697e5d6643ce1a52a2d6816d8d59333429aa53d128a2be762",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "f8c2762960eb0c90ba2c8466cdb42341ead8d4071a22cc535478ef7c05e2d0ef",
+    "rtl/hbm_accel/generic/adapters/static_su/native_vm/ot_hbm_su_native_vm.sv": "8254e7f0194c13e0398b01c2a448d5e97c1a8484275127b2d5457646bd9136fd"
+  },
+  "verilator_sha256": "f980ec3509df4d73370eb3fa37b46a9a0f2a52b00755650855cf00016f4b1637",
+  "qualification": "Whole512lane/32nativeVMbank/302programmeSRAM composed proof launched; build queue pending; subsequent physical provider clock-only fix is outside this source pin",
+  "observed": "2026-10-15T18:23:21.878578+00:00",
+  "state": "QUEUED; not admitted and no full-composition PASS claimed",
+  "local_launch_pid": 1213480,
+  "local_otrun_pid": 1215296,
+  "exec_session": 89905,
+  "remote_host": "ot-epyc4",
+  "remote_waiter_tag": "otrun-ubuntu-1215296-88497597",
+  "remote_dir": "/home/ubuntu/hbm-su-native-composed-1103-30117b8ea485e99952861a767b3779e4bc0b7401",
+  "source_archive_sha256": "63fbc257e4f1a7af300051f208c455de1cb54cb59780b4393d1b435c6f33974a",
+  "staged_host_archive_receipts": {
+    "ot-epyc1tb": "63fbc257e4f1a7af300051f208c455de1cb54cb59780b4393d1b435c6f33974a  source.tar.gz",
+    "ot-epyc4": "63fbc257e4f1a7af300051f208c455de1cb54cb59780b4393d1b435c6f33974a  source.tar.gz"
+  },
+  "admission_log": "ot-run: ot-epyc1tb     admits  -502 GB (avail 108, growth 225, headroom 64, waiters 5/321 GB) load 53/128 running 17 disk 686 GB \not-run: ot-epyc4       admits  -382 GB (avail 239, growth 219, headroom 48, waiters 21/354 GB) load 113/128 running 34 disk 756 GB \not-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores\not-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores\not-run: -> ot-epyc4 (will queue: admits -382 GB < 160 GB)\not-heavy: waiting for memory on regular-crane: need 160 GB, admissible -28 GB: available 239 GB, growth charged 219 GB, young 0 GB, headroom 48 GB, real floor 227 GB\n",
+  "remote_tool_sha256": "f980ec3509df4d73370eb3fa37b46a9a0f2a52b00755650855cf00016f4b1637",
+  "remote_numpy": "2.3.5"
+}

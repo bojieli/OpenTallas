@@ -1,0 +1,17 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: N face 20.4 pins/um (wo_d): recipe-2 hold stages take 6.84 um behind the face, the pin flops need gap 8.8 um and 40 columns (derived in the flow)
+GATE INFO oflop: S face 20.4 pins/um (w_d): recipe-2 hold stages take 4.46 um behind the face, the pin flops need gap 5.7 um and 40 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc1tb for 8 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_xs_leaf_banked_20261015-020126.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_xs_leaf_banked_20261015-020126.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/qfd_xs_leaf_banked-20261015-020126
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 41 s (gate total 198 s)
+GATE WARN util: synthesized std area 3786 um2 + macros 0 in core 8753: util 43%  -> FIX: set "std_area_um2": 3786 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_qfd_xs_leaf cells 29,276 flops 5,962 depth 290.1 ps util 0.4324 reach 75.1 um (0.5 s)
+GATE WARN textbook.util_channel: utilisation 43.2% outside 45%-65% (std 3785 + macro 0 um2 in 8753 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR DPL-0033] detailed placement checks failed during check placement.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.600 vs spec PD 0.60
+GATE INFO clock_rule: root port:clk: 5,962 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+PRE_ROUTE_GATE: FAIL (1 fail, 3 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/qwen-dvm-1014/physical/ref_tile/qfd_xs_leaf_banked/source_binding_history/d72c251a2ae6244ce292a411123529a1dac7a97da901d9a9f190dba7373c614a.json
+GATE: qfd_xs_leaf_banked/gate_result.json written (exact staged source binding; commit it with the kit)

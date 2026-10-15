@@ -3190,6 +3190,11 @@ def launch_stage(j, st, cmd):
         # calibrate runs in parallel: the IO SDC the calibrate stage would have generated is made here from the
         # assumed (or, on a re-route, measured) insertion in calib.env
         cmd = f"( {j['ctrack']['sdc_cmd']} ) || exit 5\n" + cmd
+    if j.get("export_lint_recovery") and st["key"] == "collect":
+        from export_lint_recovery import stage_script
+        before, after = stage_script(j["export_lint_recovery"], j.get("stage_source", j["run"] + "/src"))
+        env += before
+        cmd = f"( {cmd} )\n_ot_export_rc=$?\n{after}exit $_ot_export_rc\n"
     cmd = tt_overlay_fallback(cmd)
     body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
     run = j["run"]
@@ -3700,6 +3705,8 @@ def publish(j, metrics):
                        checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
+        if j.get("export_lint_recovery"):
+            verdict["export_lint_recovery"] = j["export_lint_recovery"]
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
         git("add", "--sparse", "--", *tos, cwd=cwt)
         staged = sh(["git", "-C", str(cwt), "diff", "--cached", "--name-only"], timeout=120).stdout.split()
@@ -6838,6 +6845,17 @@ def closure_on_main(j, ev):
     return j["name"] in ev["files"] or j["name"] in ev["recs"]
 
 
+def collect_crash_after_closed_verdict(j):
+    """ROOT 2026-10-15 (peer review 11:00): a route that finished and was judged CLOSED, then stopped NEEDS_HUMAN in
+    collect / export / record (30 S81 fill routes, collect crashed twice on a child_lint bug; 17 run dirs were released
+    or deleted before the lint fix), is evidence awaiting re-collection (retry --at collect): never deep-released while
+    it stays there.  Cancelling the job or a successful re-collect ends the retention."""
+    if j.get("status") != "NEEDS_HUMAN" or j.get("stage_key") not in ("collect", "export", "record"):
+        return False
+    ev = " ".join(j.get("events") or [])
+    return "route done (rc=0)" in ev and "-> CLOSED" in ev
+
+
 def deep_release_mode(j, closed, ev, now=None):
     """closed | fail | nearmiss | None (keep) for one job (DEEP RELEASE)"""
     if j.get("deep_released") or not j.get("host") or not j.get("run") or j["status"] not in TERMINAL:
@@ -6853,6 +6871,8 @@ def deep_release_mode(j, closed, ev, now=None):
             return "closed" if closure_on_main(j, ev) else None
         return "fail"                                   # revoked closure: a failure on its element
     if j["status"] not in DEEP_RELEASE_FAIL:
+        return None
+    if collect_crash_after_closed_verdict(j):
         return None
     if near_miss(j, closed) or (j.get("near_miss_retained") and j["spec"].get("block") not in closed):
         return "nearmiss"
@@ -8490,6 +8510,28 @@ def cmd_recover_eco_overlays(a):
 
 
 @locked_job_command
+def cmd_recover_export_lint(a):
+    """Attach an explicit main-pinned lint-only recovery, leaving retry to the operator."""
+    import base64
+    from export_lint_recovery import eligible
+    j = load_job(a.name)
+    eligible(j)
+    head = _ovl_head()
+    rel = "tools/hier_contract/child_lint.py"
+    data = subprocess.run(["git", "-C", str(REPO), "show", f"{head}:{rel}"],
+                          capture_output=True, check=True).stdout
+    request = dict(job=j, helper_commit=head, helper_b64=base64.b64encode(data).decode(),
+                   helper_sha256=hashlib.sha256(data).hexdigest(),
+                   guard_b64=base64.b64encode((HERE / "export_lint_recovery.py").read_bytes()).decode())
+    r = ssh(j["host"], "python3 - prepare " + shlex.quote(json.dumps(request)),
+            input=(HERE / "export_lint_recovery.py").read_text(), timeout=120, check=True)
+    j["export_lint_recovery"] = dict(json.loads(r.stdout), requested=now_iso())
+    event(j, f"explicit collect-only lint recovery pinned to main {head}; frozen helpers and route retained")
+    save_job(j)
+    print(json.dumps(j["export_lint_recovery"]))
+
+
+@locked_job_command
 def cmd_restore_cancelled(a):
     """Recover pre-lock cancellation lost to a stale save. Never stop remote work."""
     j = load_job(a.name)
@@ -8546,6 +8588,7 @@ def main():
     ks.add_argument("--orfs")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
+    el = sub.add_parser("recover-export-lint"); el.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
     a = ap.parse_args()
     if a.cmd == "daemon":
@@ -8579,6 +8622,8 @@ def main():
         cmd_hold_stop(a)
     elif a.cmd == "recover-eco-overlays":
         cmd_recover_eco_overlays(a)
+    elif a.cmd == "recover-export-lint":
+        cmd_recover_export_lint(a)
     elif a.cmd == "restore-cancelled":
         cmd_restore_cancelled(a)
     elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)

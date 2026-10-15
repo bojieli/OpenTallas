@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.hbm.su_programme.component_receipt.v1",
+  "component_functional_pass": true,
+  "native_whole_su_qualified": false,
+  "physical_qualified": false,
+  "rtl_commit": "f7a2fbd98",
+  "rtl_sha256": "fa269228013599c8e813fe360c5ade78c98807d99de4bc243b00d3b0dd4adf7e",
+  "clock_revision_tested": false,
+  "clock_revision": "a9bb5d562",
+  "command_bits": 9688,
+  "edges": 7111,
+  "restart_pass": true,
+  "mutants": [
+    "DATA",
+    "ADDR",
+    "PHASE"
+  ],
+  "total_macros": 301,
+  "allocated_bits": 9863168,
+  "unit": "oth-ubuntu-911892-1792088047",
+  "host": "ot-agidock128",
+  "ot_run_exit": 0,
+  "requested_gb": 16,
+  "threads": 4,
+  "limitations": "Standalone source before per-macro clock ports; later composed native proof must test current clock revision and actual VM service. No physical closure."
+}

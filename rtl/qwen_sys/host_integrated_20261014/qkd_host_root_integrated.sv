@@ -143,7 +143,10 @@ module qkd_host_root_integrated #(
  output wire program_consensus,output wire coordinator_fault,output wire recovery_complete,
  // kvsys v1.4 (2026-10-15, HOST owner = KV die lead; Q-LINK request): the peer protocol's exceptional link-recovery
  // controls leave the root for the static D2D end qkd_d2d_static (host_link_reset_req / host_recovery_clear)
- output wire host_link_reset_req,output wire host_recovery_clear
+ output wire host_link_reset_req,output wire host_recovery_clear,
+ // kvsys v1.4.1 (HOST owner = KV die lead, Q-LINK request): the local HOST interface drained level for the D2D end's
+ // native_host_drained (= the observed host interface idle: no inflight request, both FSMs idle, no events, AXI quiet)
+ output wire host_drained_local
 );
  localparam[2:0]RANK=0;
  wire token_allocator_fault;
@@ -244,6 +247,7 @@ module qkd_host_root_integrated #(
  wire[17:0] step_retire_pos;
  wire[17:0] step_retire_token;
  wire host_idle;
+ assign host_drained_local=host_idle;
  wire host_observer_fault;
  wire peer_retrain_request,request_aborted;
  wire codec_allocated_valid,codec_allocated_delivered;wire[15:0]codec_allocated_epoch;wire[17:0]codec_allocated_token,codec_allocated_position;wire[1:0]codec_allocated_gen;

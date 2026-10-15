@@ -2,11 +2,11 @@
  "schema": "opentallas.qwen_kv_hbm_elastic_boundary_0az.v1",
  "date": "2026-10-15",
  "owner": "Q-KVSYS-DIE (kvsys lead r8)",
- "source_rev": "fc673d2770944202209c27e4ae099ae65d95ab94",
+ "source_rev": "abaf829566ae35dee670e3079899acddda21d1a6",
  "rule": "HANDOFF 0az / 0an: flow control kept ONLY at the HBM stack/PHY boundary; HBM reads land in on-chip staging buffers; compiler prefetches and checks ONE ready per buffer block; everything after block-ready is compiler fixed-slot",
  "hierarchy": [
   "qkd_ctrl_pc_host_static ELASTIC=1 (raw PHY return window: nominal calendar = minimum, early -> fault, late absorbed, RAW_WD=256 watchdog; in-order tag/class queues TQD=64)",
-  "qkd_kv_hbm_elastic_front NBLK=4 x BLK=8 x 297 b (landing at ACTUAL arrival, block READY after 8 sectors, release on compiled blk_go: first put +2 edges, back-to-back blocks; blk_freed = block-granular RD credit; hold/stall_edges = explicit exceptional block pause; overflow/go faults)",
+  "qkd_kv_hbm_elastic_front NBLK=4 x BLK=8 x 297 b (landing at ACTUAL arrival, block READY after 8 sectors, release on compiled blk_go: blk_go pin flop, first put +3 edges; read address replicated x16 (keep_hierarchy) per 19-b slice; registered occupancy, back-to-back blocks; blk_freed = block-granular RD credit; hold/stall_edges = explicit exceptional block pause; overflow/go faults)",
   "qkd_static_kv_return_slots (UNCHANGED ABI: the held return r2 master) fed by the front co/epoch/compiled_hbm_put"
  ],
  "bench": "rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv via tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh (ot-run EPYC4)",
@@ -47,9 +47,10 @@
    "dff": 5371,
    "mux": 9538
   },
-  "latency_edges_hbm": "first sector of a KV stream: + (BLK-1) RD spacing + GO_DLY (= window + 1) + 2 -> +10 edges at window 0, +26 at window 16 (hbm 1.024 ns)",
+  "latency_edges_hbm": "first sector of a KV stream: + (BLK-1) RD spacing + GO_DLY (= PHY window) + 3 -> +10 edges at window 0, +26 at window 16 (hbm 1.024 ns)",
   "token_cost": "hidden when the compiler issues each layer's KV RD reservations GO_DLY + 9 edges earlier (KV of earlier tokens is address-known ahead of the layer); otherwise <= 26 hbm edges x 36 layers per token exposed: to be priced in the token model before adoption",
-  "controller": "tag queue 32 -> 64 entries (+32 x 34 b) + pcport class FIFO 32 -> 64 (+32 b) + 16 b counters"
+  "controller": "tag queue 32 -> 64 entries (+32 x 34 b) + pcport class FIFO 32 -> 64 (+32 b) + 16 b counters",
+  "gate_r1": "pre-route gate WARN 0 FAIL (r1 structure): 53,990 cells / 10,169 flops, util 0.53, TT setup +98.9 ps placement, CTS 223 ps / spread 22 ps; WARNs (rp 7.7k-load fanout, blk_go/occupancy boundary depth) fixed in r2 (this source)"
  },
  "write_side": "writer -> controller es crosses ot_qkd_static_emb_cdc (async FIFO depth 8, credit-bounded, faults on overflow): the existing elastic ingress at the controller; HBM writes have fixed CWL from the controller column (no PHY-return dependence), one KV write per PC per (token, layer): occupancy <= 1-2 of 8",
  "holds": "release item 1 (elastic return + write ingress with block-ready start) satisfied by this proof; item 2 (current die parent/pins/clock/boot integration + native timing audits) still OPEN: neither the writer nor return_slots+front+ELASTIC controller is in the v1.4.1 die netlist yet -> holds KEPT, annotated",

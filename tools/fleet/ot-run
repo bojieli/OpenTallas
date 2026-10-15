@@ -16,6 +16,12 @@ than 8 threads (--threads, default 16) while a larger host that can admit it sti
 ssh <host> "cd DIR && ot-heavy --mem GB -- <command>".
 It syncs nothing: the inputs must already be on the host (name them with --dir so only hosts that have them qualify).
 --pick prints the chosen host and the table and runs nothing.  stdin/stdout/exit status are the remote command's.
+Load hold (v5, owner 2026-10-14 ~18:40 "1.5 times cores is fine ... there needs to be a queue of tasks"): a hand-run
+job is held on THIS side (re-probing every 60 s) while every host that qualifies has load1 > 1.5 x cores, then goes to
+a host under that line.  Memory remains the only admission limit on the hosts; closure-loop routes (which call
+ot-heavy directly) are not held.  OT_RUN_NO_LOAD_HOLD=1 disables the hold.  --max-wait also bounds the hold.
+The CPU hold considers memory-admissible hosts first; if none admits the request, it considers the hosts eligible
+for a memory queue. An underloaded host without enough memory cannot release a hold on memory-admissible hosts.
 --max-wait SEC: give up (exit 75, NOT RUN) when the host has not admitted the command after SEC seconds.
 
 Exit status (v2, 2026-10-13, after a bench was reported "EXIT 0" although nothing had run): ot-run returns the command's
@@ -43,6 +49,7 @@ def probe(host, d):
 
 
 THREADS, SMALL_CORES, SMALL_THREADS = 16, 48, 8
+LOAD_HOLD, HOLD_POLL = 1.5, 60
 
 
 def ratio(r, threads):
@@ -197,8 +204,33 @@ def main():
     cmd = a[1:]
     if mem is None or not (cmd or pick):
         sys.exit(__doc__)
-    with cf.ThreadPoolExecutor(len(hosts)) as ex:
-        res = dict(ex.map(lambda h: probe(h, d), hosts))
+    t0, held = time.time(), False
+    while True:
+        with cf.ThreadPoolExecutor(len(hosts)) as ex:
+            res = dict(ex.map(lambda h: probe(h, d), hosts))
+        live = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and r["disk_gb"] >= disk}
+        # A host that cannot admit this request cannot release the CPU hold:
+        # otherwise an idle, memory-full EPYC filters out a loaded PVE that
+        # actually has memory, then choose() queues on the full EPYC forever.
+        fits = {h: r for h, r in live.items() if r["free_gb"] >= mem}
+        qualifying = fits or live
+        under = {h: r for h, r in qualifying.items() if r.get("load1", 0) <= LOAD_HOLD * r["ncpu"]}
+        bypass = pick or os.environ.get("OT_RUN_NO_LOAD_HOLD") == "1"
+        if bypass or not live or under:
+            if held:
+                print(f"ot-run: load hold released after {time.time() - t0:.0f} s", file=sys.stderr)
+            if not bypass:
+                res = {h: (r if h in under or h not in qualifying else {"error": "load hold: load1 > %.1f x cores" % LOAD_HOLD})
+                       for h, r in res.items()}
+            break
+        if max_wait is not None and time.time() - t0 > max_wait:
+            sys.exit(print("ot-run: NOT RUN: load hold: every qualifying host above %.1f x cores for %d s" %
+                           (LOAD_HOLD, time.time() - t0), file=sys.stderr) or 75)
+        if not held:
+            print("ot-run: load hold: every qualifying host has load1 > %.1f x cores (%s); waiting" % (LOAD_HOLD, ", ".join(
+                f"{h} {r.get('load1', 0):.0f}/{r['ncpu']}" for h, r in qualifying.items())), file=sys.stderr)
+        held = True
+        time.sleep(HOLD_POLL)
     ok = {}
     for h, r in res.items():
         note = "no " + str(d) if r is None else r.get("error") or ("disk %d GB < %d" % (r["disk_gb"], disk) if r["disk_gb"] < disk else "")

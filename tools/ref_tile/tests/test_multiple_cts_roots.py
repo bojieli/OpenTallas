@@ -81,6 +81,26 @@ class Schema(unittest.TestCase):
         m=copy.deepcopy(s);m['clock']='cts'
         with self.assertRaises(ValueError):CE.signoff_period(m)
 
+    def test_hybrid_raw_macro_leaf_preserves_serial_signoff_and_budget(self):
+        s=spec();s.update(clock='hybrid_entries',clock_cts_roots=['ck_req'],macros=[dict(
+            view='physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2',count=1,inst='u_m',
+            clock_entry=dict(port='ck_rsp',pin='clk',reference='raw_liberty_clock_pin'))])
+        self.assertEqual(CE.signoff_period(s),833.333)  # existing profiles unchanged
+        s['route']={'period_ps':1111.111,'signoff_period_ps':1111.111}
+        self.assertIn('io_budget_ps 222.222',CE.generate(s,ROOT))
+        for text in (RT.gen_sdc(s,1111.111),RT.gen_signoff(s,'*','none_*')):
+            periods=re.findall(r'create_clock -name \S+ -period ([\d.]+)',text)
+            self.assertEqual(len(periods),4)
+            self.assertTrue(all(abs(float(p)-1111.111)<1e-6 for p in periods))
+            self.assertIn('set_clock_uncertainty -setup 60',text)
+            self.assertIn('set_clock_uncertainty -hold 25',text)
+            self.assertNotIn('set_false_path',text)
+            self.assertNotIn('set_clock_groups',text)
+        for mutate in [lambda x:x.update(kind='cluster'),lambda x:x.update(clock='entries'),
+                       lambda x:x['route'].update(period_ps=1200),lambda x:x['route'].update(signoff_period_ps=True)]:
+            m=copy.deepcopy(s);mutate(m)
+            with self.assertRaises(ValueError):CE.signoff_period(m)
+
     def test_load_spec_and_generated_stage_coverage(self):
         s=spec()
         with tempfile.NamedTemporaryFile(mode='w',suffix='.json') as f:

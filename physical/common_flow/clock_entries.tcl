@@ -71,7 +71,18 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
       if {[lsearch -exact $args -clk_nets] >= 0} { error "OT_HYBRID: caller cannot override declared CTS nets" }
       # TritonCTS splits -clk_nets on whitespace (TritonCTS::setClockNets); a Tcl list braces bus-bit names
       # ({clk_outputs[0]}), which findNet never matches -> CTS-0056 (s81coll_calendar7 gate 10-15). Pass plain words.
-      ot_ce_cts_orig {*}$args -clk_nets [join $cts_nets " "]
+      # TritonCTS -repair_clock_nets repairs ALL clock nets, including
+      # excluded hard entries (observed clk_macro0 -> wire3581 -> SRAM).
+      # Keep those entries as the required one-port/one-pin wire. CTS still
+      # builds and balances the explicitly selected standard-cell roots;
+      # ordinary timing and post-CTS ownership/insertion checks remain.
+      set cts_args $args
+      if {$n > 0 && [lsearch -exact $cts_args -repair_clock_nets] >= 0} {
+        set cts_args {}
+        foreach arg $args {if {$arg ne "-repair_clock_nets"} {lappend cts_args $arg}}
+        puts "OT_HYBRID excluded hard entries: global -repair_clock_nets disabled; selected-root CTS retained"
+      }
+      ot_ce_cts_orig {*}$cts_args -clk_nets [join $cts_nets " "]
       puts "OT_HYBRID CTS roots [join $roots " "]; hard-child entries excluded"
     }
     if {[llength $cts_nets]} {

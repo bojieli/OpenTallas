@@ -1,12 +1,19 @@
 `timescale 1ns/1ps
 module tb_dsfd_vm_static_direct_scatter;
+ parameter integer PIPE=0; // PIPE=1: b8_out pin stage, every output/fault one edge later than the baseline
  reg ck=0;always #5 ck=~ck;
  reg rn=0;reg [31:0] v=0,we=0;reg [447:0] row=0;reg [127:0] mask=0;
  reg [4095:0] data=0;reg [255:0] tag=0;
  wire [31:0] av,ae,bv,be;wire [287:0] aa,ba;wire [127:0] am,bm;
  wire [4095:0] ad,bd;wire [255:0] at,bt;wire af;wire [3:0] bf;
+ wire [31:0] av0,ae0;wire [287:0] aa0;wire [127:0] am0;wire [4095:0] ad0;wire [255:0] at0;wire af0;
  dsfd_vm_static_scatter baseline(.ck(ck),.rst_n(rn),.i_v(v),.i_we(we),.i_row(row),.i_mask(mask),.i_data(data),.i_tag(tag),
- .o_v(av),.o_we(ae),.o_addr(aa),.o_mask(am),.o_data(ad),.o_tag(at),.fault(af));
+ .o_v(av0),.o_we(ae0),.o_addr(aa0),.o_mask(am0),.o_data(ad0),.o_tag(at0),.fault(af0));
+ // baseline aligned to the b8_out output edge (PIPE extra edges)
+ reg [31:0] av1,ae1;reg [287:0] aa1;reg [127:0] am1;reg [4095:0] ad1;reg [255:0] at1;reg af1=0;
+ always @(posedge ck)begin av1<=av0;ae1<=ae0;aa1<=aa0;am1<=am0;ad1<=ad0;at1<=at0;af1<=af0;end
+ assign av=PIPE?av1:av0;assign ae=PIPE?ae1:ae0;assign aa=PIPE?aa1:aa0;assign am=PIPE?am1:am0;
+ assign ad=PIPE?ad1:ad0;assign at=PIPE?at1:at0;assign af=PIPE?af1:af0;
  genvar g,k;generate for(g=0;g<4;g=g+1)begin:group
  wire [7:0] cv,cwe;wire [111:0] cr;wire [31:0] cm;wire [1023:0] cd;wire [63:0] ct;
  for(k=0;k<8;k=k+1)begin:record_capture
@@ -15,7 +22,7 @@ module tb_dsfd_vm_static_direct_scatter;
  .i_mask(mask[4*J+:4]),.i_data(data[128*J+:128]),.i_tag(tag[8*J+:8]),
  .o_v(cv[k]),.o_we(cwe[k]),.o_row(cr[14*k+:14]),.o_mask(cm[4*k+:4]),.o_data(cd[128*k+:128]),.o_tag(ct[8*k+:8]));
  end
- dsfd_vm_static_scatter_b8_out #(.BANK_BASE(8*g)) actual_output(.ck(ck),.rst_n(rn),.i_v(cv),.i_we(cwe),
+ dsfd_vm_static_scatter_b8_out #(.BANK_BASE(8*g),.PIPE(PIPE)) actual_output(.ck(ck),.rst_n(rn),.i_v(cv),.i_we(cwe),
  .i_row(cr),.i_mask(cm),.i_data(cd),.i_tag(ct),.o_v(bv[8*g+:8]),.o_we(be[8*g+:8]),.o_addr(ba[72*g+:72]),
  .o_mask(bm[32*g+:32]),.o_data(bd[1024*g+:1024]),.o_tag(bt[64*g+:64]),.fault(bf[g]));
  end endgenerate

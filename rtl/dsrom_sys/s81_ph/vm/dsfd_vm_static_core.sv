@@ -23,7 +23,7 @@
 // 6 LARM (groups 0 / 5 / 6 here); legacy collective ops 5/7/group7 fault. Done = the seq's fixed DLAT.
 // Every service fault is ORed onto the engine's legacy-fault input (seq flt[10] -> c_st[0]).
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (  // READ_PIPE 0 legacy L12 | 1 router L13 | 2 pin-registered router L14 | 4 + pin-registered rsched / return lanes L16
+module dsfd_vm_static_core #(parameter integer READ_PIPE=0, parameter integer WSCATTER_PIPE=0) (  // READ_PIPE 0 legacy L12 | 1 router L13 | 2 pin-registered router L14 | 4 + pin-registered rsched / return lanes L16
     // cks owns ONLY the legacy READ_PIPE=0 die output registers (native read production: no sink; the VM control
     // glue lives in the hardened engine-12 tile dsfd_vm_seq_tile on ck_seq). Every child root is an explicit
     // independently deliverable clock pin; tying these pins is a TESTBENCH decision only.
@@ -159,7 +159,7 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (  // READ_PIPE 0 le
     // ---------------------------------------------------------------- native memory
     wire [71:0] nat_v; wire [9215:0] nat_d; wire [127:0] grp_v; wire [16383:0] grp_d; wire [11:0] grp_id;
     wire [127:0] cm_v; wire [1151:0] cm_a; wire [511:0] cm_m; wire [1023:0] cm_t; wire [39:0] m_flt;
-    dsfd_vm_static512_suhc #(.RET_PINREG(READ_PIPE >= 4)) u_mem (.ck_rscatter(ck_mem_fsr), .ck_wcapture(ck_mem_wcapture),.ck_wscatter(ck_mem_wscatter), .ck_return(ck_mem_return), .ck_bank(ck_mem_bank),
+    dsfd_vm_static512_suhc #(.RET_PINREG(READ_PIPE >= 4), .WSCATTER_PIPE(WSCATTER_PIPE)) u_mem (.ck_rscatter(ck_mem_fsr), .ck_wcapture(ck_mem_wcapture),.ck_wscatter(ck_mem_wscatter), .ck_return(ck_mem_return), .ck_bank(ck_mem_bank),
         .ck_relay_req(ck_mem_relay_req), .ck_relay_rsp(ck_mem_relay_rsp),
         .rst_rscatter_n(rst_mem_fsr_n), .rst_return_n(rst_mem_return_n), .rst_bank_n(rst_mem_bank_n),
         .rst_wcapture_n(rst_mem_wcapture_n), .rst_wscatter_n(rst_mem_wscatter_n), .rst_relay_n(rst_mem_relay_n),
