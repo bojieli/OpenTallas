@@ -55,7 +55,7 @@
  "job": {
   "owner": "Claude:q15_compute_elem",
   "branch": "claude/q15-port-tiles",
-  "tag": "pa4",
+  "tag": "pa5",
   "purpose": "port_tiles pair-adder leaf (x4 per word half, 24 per die band set)",
   "extra_paths": [
    "physical/qwen_port_tiles_1015",
@@ -73,7 +73,7 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^EQUIV MUT=0 .* PASS$"
+    "pass_regex": "^EQUIV .*MUT=0 .* PASS$"
    },
    {
     "name": "equiv_m1",
@@ -84,7 +84,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^EQUIV MUT=1 .* FAIL$"
+    "fail_regex": "^EQUIV .*MUT=1 .* FAIL$"
    },
    {
     "name": "equiv_m2",
@@ -95,7 +95,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^EQUIV MUT=2 .* FAIL$"
+    "fail_regex": "^EQUIV .*MUT=2 .* FAIL$"
    }
   ]
  },

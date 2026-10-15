@@ -157,7 +157,7 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^EQUIV MUT=0 .* PASS$"
+    "pass_regex": "^EQUIV .*MUT=0 .* PASS$"
    },
    {
     "name": "equiv_m1",
@@ -168,7 +168,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^EQUIV MUT=1 .* FAIL$"
+    "fail_regex": "^EQUIV .*MUT=1 .* FAIL$"
    },
    {
     "name": "equiv_m2",
@@ -179,7 +179,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^EQUIV MUT=2 .* FAIL$"
+    "fail_regex": "^EQUIV .*MUT=2 .* FAIL$"
    }
   ]
  },

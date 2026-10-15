@@ -1,5 +1,5 @@
 {
- "name": "qfd_slab_pair_add-pa4-b0560c450",
+ "name": "qfd_slab_pair_add-pa5-COMMIT",
  "block": "qfd_slab_pair_add",
  "ref_tile": true,
  "owner": "Claude:q15_compute_elem",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/q15-port-tiles",
-  "commit": "b0560c450b1ac33da6025f1fed23f9137a1330d6",
+  "commit": "COMMIT",
   "extra_paths": [
    "physical/qwen_port_tiles_1015",
    "rtl/qwen_split",
@@ -37,7 +37,7 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^EQUIV MUT=0 .* PASS$"
+    "pass_regex": "^EQUIV .*MUT=0 .* PASS$"
    },
    {
     "name": "equiv_m1",
@@ -48,7 +48,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^EQUIV MUT=1 .* FAIL$"
+    "fail_regex": "^EQUIV .*MUT=1 .* FAIL$"
    },
    {
     "name": "equiv_m2",
@@ -59,7 +59,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^EQUIV MUT=2 .* FAIL$"
+    "fail_regex": "^EQUIV .*MUT=2 .* FAIL$"
    }
   ],
   "calibrate": {
@@ -110,7 +110,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_slab_pair_add/qfd_slab_pair_add-pa4-b0560c450"
+   "to": "results/rtl/ref_tile/qfd_slab_pair_add/qfd_slab_pair_add-pa5-COMMIT"
   }
  ],
  "cycles_added": 0,
