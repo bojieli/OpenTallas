@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "s81engm_sum",
  "verdict": "WARN",
- "generated": "2026-10-15T06:14:28-0700",
- "host": "ot-epyc1tb",
+ "generated": "2026-10-15T07:43:30-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "da8a586c6a1d8800641bc65db68675ae88364276",
+  "start_commit": "a6c4a8a609a5ddae9b6722fe39008ded1dbf6247",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "36f2362b130972cc1fa562d4c0387330217a29b9a41ea6aeab99e004c8bf5885",
-  "manifest_sha256": "9cfb07855fbeaf5b5cde2a678a0ee8a00de04110ef59b00af429ca66870265e8",
+  "archive_sha256": "5291b92bf6168c187b3ac08fa9c7e909ae99ae198c1e3fa0f96e032e74cf8aa5",
+  "manifest_sha256": "d691c930d3fde8818249842ddb5f2fbaa3c281f803d81cf26793683bbc0c2161",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -1315,8 +1315,112 @@
    {
     "path": "physical/ref_tile/s81engm_sum/spec.json",
     "kind": "file",
-    "sha256": "faef812cd029da85329abdcae25d132d9705c622fb11f3f25ab801f60d223de1",
-    "git_blob": "50196dd24ad11bf224023b2e6aa3d8b4cb619096",
+    "sha256": "d02f939f4ed57efce20bc46fe6f49e8ce81c5fb623adab992c9022d00f4fe536",
+    "git_blob": "ed22f915f2a4358276c5efb84332332816eec8fe",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/abstract.json",
+    "kind": "file",
+    "sha256": "752fe409ecb4584a63ba8dbec5a37efa36e8913dfa8333d5cf24bda8d7bcf290",
+    "git_blob": "325e62257a4e108eecc88ba038e49aeab958936b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/child_lint.json",
+    "kind": "file",
+    "sha256": "7956a73206a1e138d2897e3976c50e2ac4235af01e11167c46589ae35df97a66",
+    "git_blob": "4f6362607ca5bfbb1a66035cf3f239274333866e",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_ff.log",
+    "kind": "file",
+    "sha256": "bd9f4f8b4bc550a1bfdf504273fae1ab231f7e6b5278f8d65e4849f5c772d3ce",
+    "git_blob": "0dd8b35d7eba8e5f99d6032925b1cacf929c2d5c",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_ff.tcl",
+    "kind": "file",
+    "sha256": "70d1f83387e5ed40933d42df428d7282da969be66663fd80a899f5abc645478a",
+    "git_blob": "a2201ffa18b057ecc527de824d1ca1c76b881833",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_ss.log",
+    "kind": "file",
+    "sha256": "9249ec7bb4cd34cd3bfa406064d2c45647572fc54904cfc4deae933b953b9203",
+    "git_blob": "96adf476b91e0af9705c64c98273329d4503cabb",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_ss.tcl",
+    "kind": "file",
+    "sha256": "c517f27bd41ad0b646a26730ed2cf35282d9e70fdd48617df84490af8cc7a4a6",
+    "git_blob": "f585198dff6048ed13439eed79c20333efff6f25",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_tt.log",
+    "kind": "file",
+    "sha256": "629097268a08a82ec8585ae03654e7938cb708f3576a8722392dc1d64906caa1",
+    "git_blob": "5daeed973128090319ce56a20c25b0d0bdab13e7",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_tt.tcl",
+    "kind": "file",
+    "sha256": "141ea2d9a09a8e16386bb644de2f4144596c897a4c2685eaf1ef3db0f00d893e",
+    "git_blob": "8b06b1963f5ef2de3d6e61f642af553030c3326f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/insertion.json",
+    "kind": "file",
+    "sha256": "0aae65c5c6e218f1ce5ac495c6719eb19d60b5f7bf24e2c5af6881086d7ebbf3",
+    "git_blob": "1cd13aff4eb8294eb8c6f8d046d7bb12a9ed4e09",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum.lef",
+    "kind": "file",
+    "sha256": "a0a39a75471c81df7d19fdbeaa230876629517bca49c208334c522305b1e0524",
+    "git_blob": "cc5e867ea36722eb66f5868e3f2e92bc9d7daaf5",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum_ff.lib",
+    "kind": "file",
+    "sha256": "3b7954dbd27459eead1e30e74c5ee5c6ec7d5f4f14cf963a6cd3c719631a9f94",
+    "git_blob": "6a8210c4456238d6884f1b4ec3b38a51e821e8ba",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum_ss.lib",
+    "kind": "file",
+    "sha256": "72c6e4feceedcd23ba4625a383fddca931b6785cd47a5d831b2703525fd6e2eb",
+    "git_blob": "f13521396c8e2de28a4f17be29c31f8ac4a35210",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum_tt.lib",
+    "kind": "file",
+    "sha256": "7d458ba45f7bd5e32445bbe990f2f9f0863b7b5c44c3700b0def7c9f29ac28fa",
+    "git_blob": "e987ada37912ed3ad62384aca9793937dd6b45b3",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -1353,6 +1457,38 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mix_control.json",
+    "kind": "file",
+    "sha256": "fc938c10400c223819878b921ce5bc28455b1a424d4305e9824651ae136148f2",
+    "git_blob": "912aa4e7dbe1aa6b544c3b3921db34d4d9db063a",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mix_control.tcl",
+    "kind": "file",
+    "sha256": "b33b3aa3cd8361ea3dcb5672711142ba0507fb0f241e074c3723087eaeb677be",
+    "git_blob": "a572a1608f10b6259d3eb424468ab03ff607e957",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shell.json",
+    "kind": "file",
+    "sha256": "ead4c3eebae754e611562bfe87c79169fd265e12bf26001f33a5b9666df1d8b5",
+    "git_blob": "3f7e3d908e522e56e8d0b54bb97bc4711a044682",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shell.tcl",
+    "kind": "file",
+    "sha256": "ca5eb0357305531c92ea9f839c8ce7ac256f9b75e36b23a2f08f7db39c27ad3d",
+    "git_blob": "41ee21a5b9e45b3ef11e0e1c7457de6887cdb72a",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mul4.json",
     "kind": "file",
     "sha256": "fee59b24bb27e043e2c35c82adb3455c7edb5c977039759f2abd6dabcada064b",
@@ -1381,6 +1517,22 @@
     "kind": "file",
     "sha256": "21f33193c55930c2da7c7866b602619d4748f459c20c7b1eea480f8fdb6d81a6",
     "git_blob": "6abbd04eb829f57632bb3b25377d395f8890bcf3",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_rly.json",
+    "kind": "file",
+    "sha256": "21e62b1be4a0dd0c4610c75a1c506b62fade1bdb5a364d98628b5a1e05a2856f",
+    "git_blob": "b2b2627034fe17176c2a8d37cdd20b20c0717c00",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_rly.tcl",
+    "kind": "file",
+    "sha256": "756a61f45b8afa6fdfa2cee9ea1fd7825348344eac86e9ba2606ca3699593e48",
+    "git_blob": "f7b6344ee2622afdf039c8e1ed81b8573ba06311",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -3963,8 +4115,8 @@
    {
     "path": "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv",
     "kind": "file",
-    "sha256": "e4162077cee522b4b0bfc41f8c795e1ed132f8c4d2cd08343b1bdaffd7fe61d4",
-    "git_blob": "f9c17c7b99857a1187973cb1b7ef0cc1c9d77ce8",
+    "sha256": "2c8b4054a690c00a6a10fce228d6fe588ac7e7d4ee5d8cd144192b70e4cac93b",
+    "git_blob": "185aec704a643fb92163f0a716044bab3ed7b3f0",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -3987,8 +4139,8 @@
    {
     "path": "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
     "kind": "file",
-    "sha256": "dadedb9fa42887790a57287426780ff887fb29275f57aec2e6bff77d48e16b27",
-    "git_blob": "9220add61f6a9c9280860e5addf11bdbc877719f",
+    "sha256": "4e0c12b2a949be3dd5ecd4335be08e561e2863e547bbcfba0c0c1ca06af6f9f7",
+    "git_blob": "a64761d03ac786cff1f45b5526d45a43555b99f9",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -91795,64 +91947,88 @@
    {
     "path": "tools/ref_tile/specs_s81engm/make_specs.py",
     "kind": "file",
-    "sha256": "a55d4cebd7af5e62121c8062e506a737d126c10295adbcccb250a011d55d3097",
-    "git_blob": "10b30cb5e1fc090376c611c5cd72bc8ac3cd36dc",
+    "sha256": "c6f20a280272f99672dd91ebcfbc38786baed1adfc44a846ebeabe1d2f6adc04",
+    "git_blob": "0a084da997fc40823843cc157c077a4b567bc56d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_s81engm/s81engm_add8.json",
     "kind": "file",
-    "sha256": "03f0b20a9898eafc25cc5bc232fcb2a52a3e87af9f7001b3d7c1c0c76659394e",
-    "git_blob": "20154ad0df418083a30c1a1619c5e2fedfdfde3b",
+    "sha256": "6e24922817ec26cb7c8cc8088bc5aac4b12846d4a0f0485e64c6bf4eba1af80a",
+    "git_blob": "f0de18133001db9f733ac367aebc54e838a62fbb",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_s81engm/s81engm_chunk8.json",
     "kind": "file",
-    "sha256": "d525a5e99c68509166446079c174b3c14d3c552875ba2dd00cd891372a916de4",
-    "git_blob": "8fd423a344a92174f0f7311a14cbf4ff10248a8a",
+    "sha256": "06a6420a1c1328f7fd942b5512b2f29a495231341cb3ba83b9d268253f9af0ee",
+    "git_blob": "9b5ad098fa11ecfd4e832624a272f339917c304a",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/ref_tile/specs_s81engm/s81engm_control.json",
+    "kind": "file",
+    "sha256": "e14dbe361e5363577c1cd3aac63cf0510ec42be7a4d536ebbfee99980724457f",
+    "git_blob": "fdd38fa8fd695eacde878ff20f94a0b7762c2ef1",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_s81engm/s81engm_mul4.json",
     "kind": "file",
-    "sha256": "db95412b0acca1316601082cacf694ba76e6d898b720e01770bc9ea486789f16",
-    "git_blob": "b84487f791f9c96470474bbae14cc7abe2c86d82",
+    "sha256": "ec785b887383d9c82f889717d817bc9af9c6c8b27a3e6cf6afc8266b615c9f12",
+    "git_blob": "b789567a8692f7180dee14d2b812e7026707ef5c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_s81engm/s81engm_norm.json",
     "kind": "file",
-    "sha256": "c1605f644a6e526aff9e966243757547705ba931a72aa4fcb8b5d4f7a0a5269e",
-    "git_blob": "ca9e6e6debeb261af19c1a7180c82f709acfcf9c",
+    "sha256": "573da54068881047ccef6f9a82b6e91e89d283aca691d48f67c535a437f5ec5a",
+    "git_blob": "7f2021922bacea9604b6a9eac7df14e48076ea98",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/ref_tile/specs_s81engm/s81engm_rly.json",
+    "kind": "file",
+    "sha256": "9bc2068ae283e2f6f41dcca6aacf0f2b28743417ac7a85199f7da7293f4e5b30",
+    "git_blob": "7a268681a6538c3db9851178da5c2222aa8786dc",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/ref_tile/specs_s81engm/s81engm_shell.json",
+    "kind": "file",
+    "sha256": "bde20726ae14b50442991ab7877c23568b46360087615550b2deb2bf20ea54dc",
+    "git_blob": "240b5348e87e834402d99afc898db4882cae3e97",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_s81engm/s81engm_sigmoid.json",
     "kind": "file",
-    "sha256": "e04758beb075f367a170fd3ab049861351fb2f236a65f74aebc616ae2890b260",
-    "git_blob": "4b3af885631b0262d5fc7513990254a378ab2268",
+    "sha256": "1fac7fd55ec941673254b727562ce1d635a85b08919ff8b5eca2255a1a366f1b",
+    "git_blob": "c4e921e9eeb7a7f94b354046e0c98ea4cb09b216",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_s81engm/s81engm_signed_sqrt.json",
     "kind": "file",
-    "sha256": "331c5dd0fd87b578e942cc42c590a0f3294abb01bd43dde372133b15ae78e6fd",
-    "git_blob": "483a10796c2037208f797286280bcf9a4244c95d",
+    "sha256": "8c98557d70e47998f93eb61857b7f19dd5d2c8d1ba38e1fceb34b5f34796fd9c",
+    "git_blob": "84390387015f2afb4159aa8737ac57125a3f13ab",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_s81engm/s81engm_sum.json",
     "kind": "file",
-    "sha256": "faef812cd029da85329abdcae25d132d9705c622fb11f3f25ab801f60d223de1",
-    "git_blob": "50196dd24ad11bf224023b2e6aa3d8b4cb619096",
+    "sha256": "d02f939f4ed57efce20bc46fe6f49e8ce81c5fb623adab992c9022d00f4fe536",
+    "git_blob": "ed22f915f2a4358276c5efb84332332816eec8fe",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -99385,6 +99561,14 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "tools/s81/engram_mix4_leaf_pins_v21.py",
+    "kind": "file",
+    "sha256": "773458e5c9ee505dfd27c7e7fcba35f281080cbf9646c5a89f88d85126a83524",
+    "git_blob": "25468579af8680ade825e969b1e47b3b12326f4b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "tools/s81/field_alignment.py",
     "kind": "file",
     "sha256": "757a8b209b3472e877f18bceee8481bdb80ac008e1e020d3196959a8d7628120",
@@ -100965,6 +101149,14 @@
     "kind": "file",
     "sha256": "bc1e072b52be9378b9d3d8a91a36ae2ecc0334a5be8d595775037bb62e961938",
     "git_blob": "d620f9ba615299464b0d1d165bda4b1282167932",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/s81_engram_mix/phys_plan_slot.py",
+    "kind": "file",
+    "sha256": "8946fc3561356546e5a8f74227a7f88b32c27c2bca30bc8ab3beaf8600dd6fe0",
+    "git_blob": "113158ccc04f164d183ba9959098dc4a49a5bfaf",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -115315,14 +115507,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 41929706,
-   "unpacked_bytes": 308248576,
+   "archive_bytes": 42147011,
+   "unpacked_bytes": 310456320,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "03487c6a181aa388b20604521b085bb059ce1fb8",
+   "origin_main": "c40ad0cdaf66bf2c42b727684feb672bd1ec1afe",
    "content_sha256": "567a16331b2484008d9edf879c76eca8fdca169e287379c494e5d703bde9192e",
    "files": [
     {
@@ -115698,11 +115890,12 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "staged archive closure at gate time",
-   "count": 1471,
+   "count": 1492,
    "paths": [
     "physical/common_flow/anchor_row_packing.tcl",
     "physical/common_flow/edge_sliver_block.tcl",
     "physical/common_flow/grt_macro_top_layer.tcl",
+    "physical/common_flow/io_ref_routed.sdc",
     "physical/common_flow/macro_cts_cluster.tcl",
     "physical/common_flow/macro_sliver_block.tcl",
     "physical/common_flow/ot_keep_regs.tcl",
@@ -115735,14 +115928,33 @@
     "physical/ref_tile/s81engm_sum/pre_grt.tcl",
     "physical/ref_tile/s81engm_sum/signoff.sdc",
     "physical/ref_tile/s81engm_sum/spec.json",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/abstract.json",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/child_lint.json",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_ff.log",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_ff.tcl",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_ss.log",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_ss.tcl",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_tt.log",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_tt.tcl",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/insertion.json",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum.lef",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum_ff.lib",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum_ss.lib",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum_tt.lib",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_add8.json",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_add8.tcl",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_chunk8.json",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_chunk8.tcl",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mix_control.json",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mix_control.tcl",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shell.json",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shell.tcl",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mul4.json",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mul4.tcl",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_norm.json",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_norm.tcl",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_rly.json",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_rly.tcl",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_sigmoid.json",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_sigmoid.tcl",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_signed_sqrt.json",
@@ -117109,6 +117321,7 @@
     "tools/s81_engram_mix/gate.py",
     "tools/s81_engram_mix/layout.py",
     "tools/s81_engram_mix/phys_plan.py",
+    "tools/s81_engram_mix/phys_plan_slot.py",
     "tools/s81_engram_mix/root_graph.py",
     "tools/s81_engram_mix/sizing.py",
     "tools/s81_ftok/su_footprints.py",
@@ -117176,6 +117389,7 @@
     "physical/common_flow/anchor_row_packing.tcl": "bb65beb33a4caf5e7c562e080147aa7d267f7840b8ac52cb363ad806661e5058",
     "physical/common_flow/edge_sliver_block.tcl": "714d28eeea112f820044e3c11a32ece53a76e44fc3fb54b1ce8fa87cb1619a74",
     "physical/common_flow/grt_macro_top_layer.tcl": "dfd76e540035bce859d8f2f303996390abe276f20bc1057c28d5781a87982389",
+    "physical/common_flow/io_ref_routed.sdc": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e",
     "physical/common_flow/macro_cts_cluster.tcl": "a7af2ec6314ea96d71c966704e0ecae1f9dc3715a6519063fe151c0d1ebac798",
     "physical/common_flow/macro_sliver_block.tcl": "837dd48a48603ea95ddaa12ba5e6a66e80d9fe2976908c8734889540231c10a2",
     "physical/common_flow/ot_keep_regs.tcl": "8f7eeac51016d80235e13be461339c7ce4b5028e6873d231ab0aab9e6563deca",
@@ -117207,15 +117421,34 @@
     "physical/ref_tile/s81engm_sum/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
     "physical/ref_tile/s81engm_sum/pre_grt.tcl": "7a4a8cb6aef83160c9b8e910ab2c5b5d2d00ccdbd315290c0b54bc0723fdd169",
     "physical/ref_tile/s81engm_sum/signoff.sdc": "514652ce19294a808025564c6b3169af0d8776b9a1ae56da27237fd6dc23abd4",
-    "physical/ref_tile/s81engm_sum/spec.json": "faef812cd029da85329abdcae25d132d9705c622fb11f3f25ab801f60d223de1",
+    "physical/ref_tile/s81engm_sum/spec.json": "d02f939f4ed57efce20bc46fe6f49e8ce81c5fb623adab992c9022d00f4fe536",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/abstract.json": "752fe409ecb4584a63ba8dbec5a37efa36e8913dfa8333d5cf24bda8d7bcf290",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/child_lint.json": "7956a73206a1e138d2897e3976c50e2ac4235af01e11167c46589ae35df97a66",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_ff.log": "bd9f4f8b4bc550a1bfdf504273fae1ab231f7e6b5278f8d65e4849f5c772d3ce",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_ff.tcl": "70d1f83387e5ed40933d42df428d7282da969be66663fd80a899f5abc645478a",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_ss.log": "9249ec7bb4cd34cd3bfa406064d2c45647572fc54904cfc4deae933b953b9203",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_ss.tcl": "c517f27bd41ad0b646a26730ed2cf35282d9e70fdd48617df84490af8cc7a4a6",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_tt.log": "629097268a08a82ec8585ae03654e7938cb708f3576a8722392dc1d64906caa1",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/export_tt.tcl": "141ea2d9a09a8e16386bb644de2f4144596c897a4c2685eaf1ef3db0f00d893e",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/insertion.json": "0aae65c5c6e218f1ce5ac495c6719eb19d60b5f7bf24e2c5af6881086d7ebbf3",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum.lef": "a0a39a75471c81df7d19fdbeaa230876629517bca49c208334c522305b1e0524",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum_ff.lib": "3b7954dbd27459eead1e30e74c5ee5c6ec7d5f4f14cf963a6cd3c719631a9f94",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum_ss.lib": "72c6e4feceedcd23ba4625a383fddca931b6785cd47a5d831b2703525fd6e2eb",
+    "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum_tt.lib": "7d458ba45f7bd5e32445bbe990f2f9f0863b7b5c44c3700b0def7c9f29ac28fa",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_add8.json": "581a45494e11689c373f4f823c37c1ed47fbe1c25bfb6f02dcedc49e067a68a5",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_add8.tcl": "da21d303cda5603272844eed07f004e890fba80e5299cff60454000eee11ca0d",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_chunk8.json": "b9637f5a83c53ab0b21d330c09169ae6576239682a8733f64994cbb734783748",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_chunk8.tcl": "33f26c47676e3d00d875f5d44ce2d984b084085f76682382af0a7f4177695780",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mix_control.json": "fc938c10400c223819878b921ce5bc28455b1a424d4305e9824651ae136148f2",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mix_control.tcl": "b33b3aa3cd8361ea3dcb5672711142ba0507fb0f241e074c3723087eaeb677be",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shell.json": "ead4c3eebae754e611562bfe87c79169fd265e12bf26001f33a5b9666df1d8b5",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shell.tcl": "ca5eb0357305531c92ea9f839c8ce7ac256f9b75e36b23a2f08f7db39c27ad3d",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mul4.json": "fee59b24bb27e043e2c35c82adb3455c7edb5c977039759f2abd6dabcada064b",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mul4.tcl": "da7ffe56dc54aad0b760473720f1eaf2bfb94de49be939a14a84889b23a95d8d",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_norm.json": "066588fac2b77aabbcab07198d0d3fbf9681f6ccf7a79f57cd7eb200676c1ad3",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_norm.tcl": "21f33193c55930c2da7c7866b602619d4748f459c20c7b1eea480f8fdb6d81a6",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_rly.json": "21e62b1be4a0dd0c4610c75a1c506b62fade1bdb5a364d98628b5a1e05a2856f",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_rly.tcl": "756a61f45b8afa6fdfa2cee9ea1fd7825348344eac86e9ba2606ca3699593e48",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_sigmoid.json": "c3449b6d79a86e377de65a4885c1711527fec944573b85dbe62ad4bfb3bd8994",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_sigmoid.tcl": "5aa8f8d9f9fcf9e7d83ae8ab40d3459e74cc16441ccac1e0687d9660232a66b6",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_signed_sqrt.json": "11a98e1f8586c5f7366338dd1926bb39e1649b98da91ffaf8d4beafa44a9834c",
@@ -117280,10 +117513,10 @@
     "rtl/dsrom_sys/engram/dsfd_engram_c_cfg.sv": "86a869d5f12bab9758b8de9cb4a14d89e4fc076e3b6a39294051635fd72677f0",
     "rtl/dsrom_sys/engram/dsfd_engram_lkp.sv": "0a7390bfae1e161def62f335e8ebdda9812a8bc572394fdbe5c619edd72969be",
     "rtl/dsrom_sys/engram/dsfd_engram_sink.sv": "d16851d7fd67fe0baba783a50774ba7f296f2d84f6b1b64ee6226155a181d1dd",
-    "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv": "e4162077cee522b4b0bfc41f8c795e1ed132f8c4d2cd08343b1bdaffd7fe61d4",
+    "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv": "2c8b4054a690c00a6a10fce228d6fe588ac7e7d4ee5d8cd144192b70e4cac93b",
     "rtl/dsrom_sys/engram/mix/dsfd_engram_mix_c.sv": "866a6e65d64c9fd25c0f1f9b4d6a431a586d05c65a6f9409983769d7beb75672",
     "rtl/dsrom_sys/engram/mix/ot_s81_engram_dispatch.sv": "3391c891d61fc770edf865f4e66b4d0354b6709630c1b8d400fce57c1b5e8ed1",
-    "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv": "dadedb9fa42887790a57287426780ff887fb29275f57aec2e6bff77d48e16b27",
+    "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv": "4e0c12b2a949be3dd5ecd4335be08e561e2863e547bbcfba0c0c1ca06af6f9f7",
     "rtl/dsrom_sys/engram/mix/tb_s81_engram_dispatch.sv": "3f9f39c1f3408dfe2c9369225f6bb2cd9597705ba0598051a9bd152edb80207b",
     "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix.sv": "6513945db91be0971c4da1e6b8c3d08a7ffa558584ab004047274cb2ff285d96",
     "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_c.sv": "f707f23512bda90a4c1f1e6860a2202b57cf2b0e34f885b82310245076dbfe08",
@@ -118582,6 +118815,7 @@
     "tools/s81_engram_mix/gate.py": "9ba491d3b5e5749ab34cb5803025bb890c4ef9c67090d2936f3fc05558421dcb",
     "tools/s81_engram_mix/layout.py": "9ed63000c9ff384257111b12e8fdbb3ae6e2452ec8397d9520dc86178d25340a",
     "tools/s81_engram_mix/phys_plan.py": "bc1e072b52be9378b9d3d8a91a36ae2ecc0334a5be8d595775037bb62e961938",
+    "tools/s81_engram_mix/phys_plan_slot.py": "8946fc3561356546e5a8f74227a7f88b32c27c2bca30bc8ab3beaf8600dd6fe0",
     "tools/s81_engram_mix/root_graph.py": "b821a656e86fc10e3c1dbe3b252d3973afdb87265a6af7f299c83137f6187efe",
     "tools/s81_engram_mix/sizing.py": "05fef4ca2ffb3c3d6f982869a49f13ac20f5a427300b80937d44e085f7d11f15",
     "tools/s81_ftok/su_footprints.py": "97d18c95d2a6ee4e7d127ca67707f07bd23a514e6e9ade451d22cdca48ece319",
@@ -118645,13 +118879,13 @@
     "tools/w18/corner_sta.py": "7801f467617d68c7e8a3f906e5415c8913de77188a6af30dbfe835fc28b05fd1",
     "tools/w18/corner_sta_ref.py": "bd70080bbbd23db830914e4b52682c086b4de5cc9adc6873a026c260099419fa"
    },
-   "digest": "c0ddf80799c11f260aa1d65d8741095149ae20278d9a9b74510f75923b26f84a"
+   "digest": "81cdc26c71f9eaeaa4ac8107452afe74f4a80ab4c4c4975edcf0669bb5d85d10"
   },
-  "captured": "2026-10-15T06:10:11-0700",
-  "remote_script_sha256": "2f0146f210b1879365b978df41e104454ca5f16e4cd91a240be369f0810ca482",
+  "captured": "2026-10-15T07:38:06-0700",
+  "remote_script_sha256": "c6abb5444cc1a6e9f62755ae4aa096aae49fd728cd0b3a9070fd755ae30dd995",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81engm_sum-20261015-060954",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81engm_sum-20261015-073743",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -118659,11 +118893,11 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 4164,
+  "max_root_sinks": 4302,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 164.9,
-  "tt_spread_ps": 10.4,
+  "tt_insertion_ps": 166.7,
+  "tt_spread_ps": 13.1,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -118676,16 +118910,16 @@
     "clock": "core_clk",
     "tt": {
      "boundary": {
-      "n": 286,
-      "mean": 159.6,
-      "min": 155.5,
-      "max": 164.9
+      "n": 174,
+      "mean": 161.2,
+      "min": 159.2,
+      "max": 165.6
      },
      "all": {
-      "n": 4197,
-      "mean": 158.9,
-      "min": 154.5,
-      "max": 164.9
+      "n": 4335,
+      "mean": 159.7,
+      "min": 153.6,
+      "max": 166.7
      },
      "errors": [],
      "macros": null,
@@ -118695,20 +118929,14 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "4,164 sinks on the largest root <= 15,000; measured TT insertion 164.9 ps, leaf spread 10.4 ps"
+  "text": "4,302 sinks on the largest root <= 15,000; measured TT insertion 166.7 ps, leaf spread 13.1 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "textbook.high_fanout",
-   "message": "reset root_reset.sync[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 475 loads (475 flops, e.g. fault$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "message": "reset root_reset.sync[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 485 loads (485 flops, e.g. cf[0]$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
    "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.boundary",
-   "message": "190 input->register endpoint(s) > 3 levels (worst chunks[89]->tree[1].genblk1.node[1].genblk1.ad.gq.u.genblk1.genblk1.g_keep4.u.u.u_k1.g_r.r[0]$_DFF_P_/D 15 lv, chunks[89]->tree[1].genblk1.node[1].genblk1.ad.gq.u.genblk1.genblk1.g_keep4.u.u.u_k1.g_r.r[9]$_DFF_P_/D 14 lv, chunks[89]->tree[1].genblk1.node[1].genblk1.ad.gq.u.genblk1.genblk1.g_keep4.u.u.u_k1.g_r.r[8]$_DFF_P_/D 14 lv): register the boundary (pin flops / registered outputs)",
-   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
   }
  ]
 }
