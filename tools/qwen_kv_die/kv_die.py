@@ -2408,6 +2408,11 @@ def case(m, work):
     # in superseded_elements.json); the other leaf candidates stay plan-only
     if m['geo'].get('kv_wq_leaves') and not m['geo'].get('kv_wq_mirror'):
         raise ValueError('per-PC leaf candidate is plan-only until encoder/pin/context gates pass')
+    if m['geo'].get('split'):
+        assigned = stack_local_reach(m, masters(m, 1))
+        if assigned['violations'] or assigned['unmeasured']:
+            raise ValueError(f"stack-local exact pin-bit reach failed: {assigned['violations']} overreach, "
+                             f"{assigned['unmeasured']} unmeasured: {assigned['worst'][:3]}")
     saved = F.masters, F.port_widths
     F.masters, F.port_widths = masters, port_widths
     try:
