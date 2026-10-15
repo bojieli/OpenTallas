@@ -14,8 +14,10 @@ module ot_s81_pq_qb_headp_native (
  output reg[255:0] hq0,hq1,output reg[9:0] he0,he1,output wire fault
 );
     reg [1:0] gates; reg consume_1;
-    wire [0:0] rst_l;
-    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr
+    // Reset: region 0 = index/enable/pipe control, regions 1..4 = the written[] bits of bank 0..3 (96 each).
+    // The 6,144 metadata flops carry no reset (gate p1: one relay drove 8,103 loads through the meta enables).
+    wire [4:0] rst_l;
+    ot_rst_relay #(.REGIONS(5), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr
         (.clk(clk), .rst_n_in(rst_n), .rst_n(rst_l));
     reg [9:0] aqi;
     wire [8:0] w0n = (aqi[0] ? 9'd192 : 9'd0) + {1'b0, aqi[8:1]};
@@ -53,22 +55,43 @@ module ot_s81_pq_qb_headp_native (
     // Mutable metadata belongs beside the head read-index registers. Each bank
     // still has exactly 96 rows, with exponent/parity/written = 16 bits/row.
     reg [15:0] meta [0:3][0:95];
-    reg [95:0] written [0:3];
+    wire [95:0] written [0:3];
     reg [1:0] selected0[0:2], selected1[0:2], valid[0:2];
     reg [15:0] m0[0:2],m1[0:2];
     reg sticky,check0,check1;
     reg [4:0] expected0,expected1;
     integer k,j;
+    // Metadata write stage (gate p1: aq_e/aq_p ports fanned out to 391-418 enable-mux loads): the AQ metadata
+    // word and the registered write enables/rows are captured once more, one copy per bank, and the head-local
+    // metadata commits one edge after the bank data (bank wq/wr outputs unchanged). Rows are written by the loader
+    // before any read of the same row (loader contract: the +2 read pipeline already orders reads after writes).
+    reg [29:0] aqm_q [0:3];
+    reg [6:0] wr0_d [0:3], wr1_d [0:3];
+    reg wq0_d [0:3], wq1_d [0:3];
+    genvar gb;
+    generate for (gb = 0; gb < 4; gb = gb + 1) begin : g_meta
+        always @(posedge clk) begin
+            aqm_q[gb] <= {aq_p, aq_e};
+            wr0_d[gb] <= wr0; wr1_d[gb] <= wr1;
+            wq0_d[gb] <= wq0[gb]; wq1_d[gb] <= wq1[gb];
+            if (wq0_d[gb]) meta[gb][wr0_d[gb]] <= {1'b1, aqm_q[gb][24:20], aqm_q[gb][9:0]};
+            if (wq1_d[gb]) meta[gb][wr1_d[gb]] <= {1'b1, aqm_q[gb][29:25], aqm_q[gb][19:10]};
+        end
+        reg [95:0] wbits;
+        always @(posedge clk or negedge rst_l[gb+1]) begin
+            if (!rst_l[gb+1]) wbits <= 96'd0;
+            else begin
+                if (wq0_d[gb]) wbits[wr0_d[gb]] <= 1'b1;
+                if (wq1_d[gb]) wbits[wr1_d[gb]] <= 1'b1;
+            end
+        end
+        assign written[gb] = wbits;
+    end endgenerate
     always @(posedge clk or negedge rst_l[0]) begin
       if(!rst_l[0]) begin
         sticky<=0;check0<=0;check1<=0;
-        for(k=0;k<4;k=k+1) written[k]<=0;
         for(j=0;j<3;j=j+1) begin valid[j]<=0;selected0[j]<=0;selected1[j]<=0; end
       end else begin
-        for(k=0;k<4;k=k+1) begin
-          if(wq0[k]) begin meta[k][wr0]<={1'b1,aq_p[4:0],aq_e[9:0]}; written[k][wr0]<=1; end
-          if(wq1[k]) begin meta[k][wr1]<={1'b1,aq_p[9:5],aq_e[19:10]}; written[k][wr1]<=1; end
-        end
         selected0[0]<=bank0; selected1[0]<=bank1;
         valid[0]<=gates & {2{consume_1}};
         if(consume_1&&gates[0]) m0[0]<={written[bank0][row0],meta[bank0][row0][14:0]};
