@@ -1,0 +1,284 @@
+{
+ "name": "qkd_d2d_static_r1",
+ "top": "qkd_d2d_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+  "rtl/qwen_split/qfd_kvn_static_transport.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_bank"
+ ],
+ "clock": "multiple_cts_roots",
+ "reset_ports": [
+  "por_n",
+  "rst_n"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "por_n",
+    "rst_n",
+    "cfg_tx_we",
+    "cfg_rx_we",
+    "cfg_addr",
+    "cfg_data",
+    "cal_start",
+    "cal_seg",
+    "host_link_reset_req",
+    "host_recovery_clear",
+    "host_boot_begin",
+    "att_tx_v",
+    "att_tx_payload",
+    "emb_tx_v",
+    "emb_tx_payload",
+    "record_tx_observed_v",
+    "record_tx",
+    "kvn_compiled_identity",
+    "kvn_compiled_generation",
+    "status_epoch16",
+    "serdes_up",
+    "kv_drained_local",
+    "kv_flush_local",
+    "host_drained_local",
+    "kv_active_local",
+    "fdi_tx_up",
+    "fdi_rx_v",
+    "fdi_rx_flit"
+   ],
+   "outputs": [
+    "fwd_epoch",
+    "fwd_link_rst_n",
+    "att_tx_slot",
+    "att_tx_kind",
+    "att_tx_beat",
+    "att_rx_v",
+    "att_rx_slot",
+    "att_rx_kind",
+    "att_rx_beat",
+    "rx_payload",
+    "emb_tx_slot",
+    "record_send_kind",
+    "record_witness_slot",
+    "record_rx_v",
+    "record_rx",
+    "kvn_word_valid",
+    "kvn_word_tag",
+    "kvn_word_data",
+    "kvn_word_identity",
+    "kvn_word_generation",
+    "kvn_word_slot",
+    "kvn_word_index",
+    "link_up",
+    "transport_fault",
+    "native_links_drained",
+    "native_link_reset_seen",
+    "native_retrained",
+    "abort_drained",
+    "native_kv_drained",
+    "native_vm_drained",
+    "native_collective_drained",
+    "native_host_drained",
+    "native_collective_busy",
+    "native_kv_flush",
+    "native_admit_ready",
+    "crom_fault",
+    "execution_active",
+    "engine_result_v",
+    "engine_result_done",
+    "engine_result_fault",
+    "engine_result_cause",
+    "engine_result_tag",
+    "engine_result_gen",
+    "engine_result_token",
+    "engine_result_value",
+    "engine_result_cycles",
+    "fdi_tx_v",
+    "fdi_tx_flit",
+    "phy_rst_n",
+    "epoch_abort",
+    "recovery_cycles",
+    "fault"
+   ]
+  },
+  "bank": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "outline": {
+  "w": 475.2,
+  "h": 280.8
+ },
+ "recipe": 2,
+ "io_flop_at_pins": false,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 4
+  }
+ ],
+ "pins": {
+  "N": [
+   "fdi_tx_up",
+   "fdi_tx_v",
+   "fdi_tx_flit",
+   "fdi_rx_v",
+   "fdi_rx_flit",
+   "phy_rst_n"
+  ],
+  "S": [
+   "att_tx_slot",
+   "att_tx_kind",
+   "att_tx_beat",
+   "att_tx_v",
+   "att_tx_payload",
+   "att_rx_v",
+   "att_rx_slot",
+   "att_rx_kind",
+   "att_rx_beat",
+   "rx_payload",
+   "record_tx_observed_v",
+   "record_tx",
+   "record_send_kind",
+   "record_witness_slot",
+   "record_rx_v",
+   "record_rx"
+  ],
+  "W": [
+   "emb_tx_slot",
+   "emb_tx_v",
+   "emb_tx_payload",
+   "kvn_compiled_identity",
+   "kvn_compiled_generation",
+   "kvn_word_valid",
+   "kvn_word_tag",
+   "kvn_word_data",
+   "kvn_word_identity",
+   "kvn_word_generation",
+   "kvn_word_slot",
+   "kvn_word_index"
+  ],
+  "E": [
+   "ck",
+   "ck_bank",
+   "por_n",
+   "rst_n",
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "host_link_reset_req",
+   "host_recovery_clear",
+   "host_boot_begin",
+   "fwd_epoch",
+   "fwd_link_rst_n",
+   "status_epoch16",
+   "serdes_up",
+   "kv_drained_local",
+   "kv_flush_local",
+   "host_drained_local",
+   "kv_active_local",
+   "link_up",
+   "transport_fault",
+   "native_links_drained",
+   "native_link_reset_seen",
+   "native_retrained",
+   "abort_drained",
+   "native_kv_drained",
+   "native_vm_drained",
+   "native_collective_drained",
+   "native_host_drained",
+   "native_collective_busy",
+   "native_kv_flush",
+   "native_admit_ready",
+   "crom_fault",
+   "execution_active",
+   "engine_result_v",
+   "engine_result_done",
+   "engine_result_fault",
+   "engine_result_cause",
+   "engine_result_tag",
+   "engine_result_gen",
+   "engine_result_token",
+   "engine_result_value",
+   "engine_result_cycles",
+   "epoch_abort",
+   "recovery_cycles",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "route": {
+  "threads": 16,
+  "peak_ram_gb": 48
+ },
+ "job": {
+  "owner": "Claude:q-link",
+  "branch": "claude/qwen-link-1015",
+  "tag": "r1",
+  "purpose": "Q-LINK static D2D link end qkd_d2d_static (compiler calendars, 583-bit PHY word slot link with 4x137 SRAM store, explicit recovery mode; no credits/backpressure). PHY on face N.",
+  "extra_paths": [
+   "rtl/qwen_sys",
+   "rtl/qwen_split",
+   "rtl/test/qwen_split",
+   "tools/qwen_split",
+   "physical/qwen_kv_die_phy",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "d2d_dies_exact",
+    "cmd": "bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/d0 0",
+    "expect": "pass",
+    "pass_regex": "D2D_DIES_PASS",
+    "threads": 1,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "d2d_dies_mut_slot",
+    "cmd": "bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_d2d_static_r1/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_static_r1"
+ }
+}
