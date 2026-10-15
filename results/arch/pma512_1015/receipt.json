@@ -52,5 +52,15 @@
     "rx_pins": 512,
     "analog_line_rate_bound": false,
     "package_rank_map_bound": false
+  },
+  "clock_boundary_scope": {
+    "wrapper_clk": "FEC family; also tx input and static487 window read clock",
+    "compute_endpoint_clock_connected": false,
+    "required_unbound_crossings": [
+      "core1.2GHz to FEC487 TX",
+      "FEC487 RX to core1.2GHz"
+    ],
+    "age_units": "FEC edges; not core edges",
+    "endpoint_calendar_owner": "h_collective/root"
   }
 }
