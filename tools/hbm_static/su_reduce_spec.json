@@ -60,10 +60,10 @@
  },
  "recipe": 2,
  "job": {
-  "owner": "Claude:H-ELEM-B",
-  "branch": "claude/hbm-elemb-su-1015",
-  "tag": "r2",
-  "purpose": "Static SU reducer (one per quarter core of ot_hbm_su_static_top): fixed compiler commands LOAD/ADD_EXT/ADD_TREE/MAX_EXT/MAX_TREE/EXPORT, two coherent 128x256 scratch SRAMs, LAT6 FP32 adder. r2 = STRUCTURAL fix of r0 (TT -90.79 / FF +24.35 at 833 ps: SRAM clk->Q -> word select -> adder/compare): one registered SRAM-operand stage + registered scalar_bf16; commit/scalar issue+8 (was +7), dependent distance 9 (was 8), same arithmetic/order; suite PASS 80 scalars, identity/phase/wrongtree mutants FAIL; su_reduce_compile + su_top_compile updated (LAT 8). Signed off at 833 ps (stricter than the serial 1111 ps domain).",
+  "owner": "Codex:HBM-SU-structural",
+  "branch": "codex/hbm-su-reducer-r3-1320",
+  "tag": "r3",
+  "purpose": "r3 structural repair of measured r2 TT -148.84/FF +11.93/DRC0: external reset and cmd_op previously traversed 13-14 levels to enables/fault. Register all commands at boundary and reset distribution locally; exactly +1 reducer edge (LAT9, RAW10), 99 FF upper-bound addition, II1, unchanged ordered arithmetic and two real coherent scratch SRAMs. Compiler schedules rebuilt; component exactness/mutants required. No native full-layer claim.",
   "views_to": "physical/ref_tile/hbm_su_static_reduce_1015/views",
   "record_to": "results/arch/hbm_su_f2_static_1014/reduction/physical",
   "benches": [
@@ -95,5 +95,6 @@
  "outline": {
   "w": 216.0,
   "h": 151.2
- }
+ },
+ "structural_change": "r3 structural repair of measured r2 TT -148.84/FF +11.93/DRC0: external reset and cmd_op previously traversed 13-14 levels to enables/fault. Register all commands at boundary and reset distribution locally; exactly +1 reducer edge (LAT9, RAW10), 99 FF upper-bound addition, II1, unchanged ordered arithmetic and two real coherent scratch SRAMs. Compiler schedules rebuilt; component exactness/mutants required. No native full-layer claim."
 }

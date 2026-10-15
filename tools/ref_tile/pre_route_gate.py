@@ -813,13 +813,25 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]})
     budget = gate_disk_budget(spec, data, disk)
     auto = host == "auto"
+    threads = int(spec.get("route", {}).get("threads", 8))
     # Probe the actual scratch filesystem, not / (the two can be different).
     # This parent already exists before the per-run directory is uploaded.
-    pick_cmd = ["ot-run", "--mem", str(mem), "--disk", str(budget["pick_gb"]),
+    pick_cmd = ["ot-run", "--mem", str(mem), "--threads", str(threads), "--disk", str(budget["pick_gb"]),
                 "--dir", "/srv/opentallas-scratch", "--pick"]
     if not auto:
         pick_cmd += ["--hosts", host]
-    picked = subprocess.run(pick_cmd, capture_output=True, text=True)
+    admission_wait = False
+    while True:
+        picked = subprocess.run(pick_cmd, capture_output=True, text=True)
+        if picked.returncode != 75:
+            break
+        # The read-only picker cannot start or reserve anything. A CPU load
+        # hold is capacity waiting, not a hardware/source gate failure; retain
+        # this exact archive and retry before uploading to any chosen host.
+        if not admission_wait:
+            g.add("INFO", "admission_wait", "fleet load hold; preserving the exact source archive and waiting for an eligible host")
+        admission_wait = True
+        time.sleep(60)
     if picked.returncode or not picked.stdout.strip():
         g.add("FAIL", "remote", "fleet admission could not choose a host: " + picked.stderr[-500:], "read ot-run --status")
         return
@@ -860,7 +872,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         return
     # Exactly one ot-heavy reservation, inside ot-run; never nest guards.
     # Recheck after upload, reserving enough for extraction as well as outputs.
-    p = subprocess.run(["ot-run", "--mem", str(mem), "--disk", str(budget["runtime_gb"]), "--hosts", host,
+    p = subprocess.run(["ot-run", "--mem", str(mem), "--threads", str(threads), "--disk", str(budget["runtime_gb"]), "--hosts", host,
                         "--dir", str(Path(R).parent), "--", "bash", script],
                        stdin=subprocess.DEVNULL, capture_output=True)
     out = p.stdout.decode(errors="replace")

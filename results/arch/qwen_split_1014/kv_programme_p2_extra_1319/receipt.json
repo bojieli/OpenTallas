@@ -1,0 +1,95 @@
+{
+ "schema": "opentallas.qwen.programme_p2_extra_proof.v1",
+ "source_commit": "03c7c9158ac2c20da09da5c68308a4b2bac1d846",
+ "frozen_package": "results/rtl/qwen_native_kv_programme_1103/leaf_package_v2",
+ "scope": "Actual programme plus actual native static writer component; no integrated controller/HBM/return-ring or die physical qualification. No hardware source edits by this proof.",
+ "positive_profiles": {
+  "production_boot": {
+   "cases": 1152,
+   "slots": 4608,
+   "sectors": 9216
+  },
+  "min_t0_dense": {
+   "row": [
+    4,
+    5,
+    6,
+    7,
+    10
+   ],
+   "all_36_rows": true,
+   "cases": 1152,
+   "slots": 4608,
+   "sectors": 9216
+  },
+  "alternating_rows": {
+   "even_row": [
+    4,
+    5,
+    6,
+    7,
+    10
+   ],
+   "odd_row": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1006
+   ],
+   "cases": 1152,
+   "slots": 4608,
+   "sectors": 9216
+  }
+ },
+ "mutants": {
+  "2": {
+   "errors": 5,
+   "writer_fault": 1
+  },
+  "3": {
+   "errors": 12,
+   "writer_fault": 1
+  },
+  "4": {
+   "errors": 2,
+   "writer_fault": 0
+  },
+  "5": {
+   "errors": 12,
+   "writer_fault": 1
+  },
+  "6": {
+   "errors": 16,
+   "writer_fault": 1
+  }
+ },
+ "malformed_boot": [
+  "skipped_address",
+  "early_t0",
+  "nonascending_t1",
+  "nonascending_t2",
+  "nonascending_t3",
+  "short_stop",
+  "high_payload",
+  "seal"
+ ],
+ "boot_value_detection": "Each actual unmodified production bench exits1 specifically configuration failed; skipped address uses packaged BAD1 observed refusal.",
+ "real_hardware": "Frozen manifest verifies exact candidate producer/native writer sources. Only boot.hex and declared external inputs are changed for positive boundary timelines and invalid boot values.",
+ "latency": "All nominal compiled word slots exact in every profile, including minimum legal t0=4, consecutive slots and back-to-back rows with very different stop times. p2 reset assertion is synchronously captured one edge later; reset lifecycle remains explicit integration obligation.",
+ "physical": "Claude p2 CTS gate still live; no p2 CLOSED or native boundary pass claimed.",
+ "admission_units": [
+  "oth-ubuntu-1352194-1792096034",
+  "oth-ubuntu-1355711-1792096065",
+  "oth-ubuntu-1359387-1792096109"
+ ],
+ "source_sha256": {
+  "mutants.log": "993bbe99d9f88e37d25153c1d94205f1473dd42ca185f64f4f9bff89498f31a0",
+  "run_extra.sh": "641fd04e85f4b5f48e02f71396941c31bf842f4c1ebe9ca90b49fa62c7f38c42",
+  "run_boundary_extra.py": "2c2b608f2ea3df5f0cfae282ffb7e8d12ea9d0d8d8d703b8b32b13dbd50e2f7c",
+  "boot_values.log": "007cf22c58e69d09d8030bf3f733a19b055cfe6a0e09a44e86eee9ac9c35c795",
+  "boundary_timing.log": "850b528a238996a6c32d2a561008abed762172877d6a9a9140666fb9a1621251",
+  "manifest.json": "312b2c3b983ca9462bb00e478b3d26788ab82423523f5598d481354d2e4f7710",
+  "run_boot_extra.sh": "188367643ba967fda6d974476c6745a10c16191a208d1fdccb9b92326affa55c"
+ }
+}

@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VM_SOURCE = 'rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv'
 DELIVERY = 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv'
 LG_SOURCE = 'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv'
+LG_TERMINAL_SOURCE = 'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv'
 # Real static VM clients (fixed compiler cycles, no credit/ready). Each binds only
 # where its source documents the exact VM face it was built and benched against.
 SFU_SOURCE = 'rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv'      # LG mid tap 14/11
@@ -126,7 +127,10 @@ def generate(out):
             for stage in range(3):
                 # Adopted physical successor (23d5fd409/7da6141d7): eight independently
                 # clocked bank leaves, same edge/phase and latency as the logical tap.
-                module(f'lg_{q}_{stage}',LG_SOURCE,'ot_hbm_vm_lg_static_split',
+                # The final tap has no fourth producer. Bind the genuine terminal
+                # RTL, rather than invent far request zeros at a physical input.
+                module(f'lg_{q}_{stage}',LG_TERMINAL_SOURCE if stage == 2 else LG_SOURCE,
+                       'ot_hbm_vm_lg_static_split_term' if stage == 2 else 'ot_hbm_vm_lg_static_split',
                        dict(READ_RETURN=10+4*stage,WRITE_RETURN=7+4*stage))
     status_source='rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv'
     if (ROOT/status_source).exists():module('vm_status4',status_source,'ot_vms_status4_static')
@@ -184,11 +188,8 @@ def generate(out):
                     edge(tap+'_rr',(near,'far_rr'),(tap,'near_rr'))
                     edge(tap+'_wdone',(near,'far_w_done'),(tap,'near_w_done'))
                 if stage==2:
-                    for port in ('far_rq','far_wq'):
-                        logical_constants.append(dict(sink=[tap,port],bits=modules[tap]['ports'][port]['bits'],
-                            value=0,reason='actual three-tap topology termination; no fourth producer',
-                            physical_tie_cells_qualified=False))
-                        connected.add((tap,port))
+                    assert not set(('far_rq','far_wq','far_rr','far_w_done')).intersection(modules[tap]['ports']), \
+                        (tap,'terminal RTL must not retain phantom fourth-station ports')
         if 'vm_status4' in modules:
             # Source ABI sid order SW,SE,NW,NE; do not confuse with ring order.
             index=('SW','SE','NW','NE').index(q)
