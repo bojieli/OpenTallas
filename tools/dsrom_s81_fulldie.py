@@ -1784,12 +1784,16 @@ def trunk_stages(m):
 
 
 def top_pins(m, k=1):
-    """r8: die top input ports (refclk, por_n) on the W die edge at the collective's (PLL) height"""
-    tops = [b[0] for b in m['buses'] if b[1] == 'top_in']
+    """Place every scalar die pad, including vector PHY ports, on the W edge."""
+    tops = [pin for bid, cls, bits, _ in m['buses'] if cls in ('top_in', 'top_out')
+            for pin in ([bid] if bits == 1 else [f'{bid}[{b}]' for b in range(bits)])]
     if not tops:
         return ''
-    y0 = dn(m['hub']['collective'].y + m['hub']['collective'].h / 2, GY)
-    return '\n'.join(f'place_pin -pin_name {p} -layer M4 -location {{0.5 {y0 + 4.32 * i:.3f}}} '
+    pitch = 4.32
+    span = pitch * (len(tops) - 1)
+    assert span + 2.0 <= DIE[1], ('die pad capacity', len(tops), DIE[1])
+    y0 = dn(min(m['hub']['collective'].y + m['hub']['collective'].h / 2, DIE[1] - span - 1.0), GY)
+    return '\n'.join(f'place_pin -pin_name {{{p}}} -layer M4 -location {{0.5 {y0 + pitch * i:.3f}}} '
                      f'-pin_size {{{1.0 * k:.3f} {max(0.072, 0.024 * k):.3f}}} '
                      f'-force_to_die_boundary' for i, p in enumerate(tops))
 
@@ -7479,6 +7483,7 @@ def align_station_jogs(m, rounds=2):
     if hc not in sys.path:
         sys.path.insert(0, hc)
     import pin_align as PA
+    import die_hop_gate as HG
     rp = real_ports()
 
     def names(it, port, bits):
@@ -7488,6 +7493,42 @@ def align_station_jogs(m, rounds=2):
         return t[lo:lo + bits] if t is not None else [f'{base}[{lo + i}]' for i in range(bits)]
     by = {it.name: it for it in m['insts']}
     moved = {}
+    # Aligning one face must preserve every other data hop of that station.
+    # xsp7 moved a VM->PQ bridge 1028 um and broke its already staged input.
+    pins = HG.read_pins(die_lef_texts(m))
+    incident = {}
+    for bid, cls, bits, eps in m['buses']:
+        if cls in HOP_SKIP:
+            continue
+        if not eps or eps[0][0] not in by:
+            continue
+        for load in eps[1:]:
+            if load[0] not in by:
+                continue
+            hop = (eps[0], load, bits)
+            for nm in {eps[0][0], load[0]}:
+                incident.setdefault(nm, []).append(hop)
+
+    def worsens_hop(it, nx, ny):
+        for (an, ap), (bn, bp), bits in incident.get(it.name, []):
+            aa, al, _ = pslice(ap)
+            bb, bl, _ = pslice(bp)
+            for bit in range(bits):
+                pa = HG._loc(by[an], pins, f'{aa}[{(al or 0) + bit}]')
+                pb = HG._loc(by[bn], pins, f'{bb}[{(bl or 0) + bit}]')
+                # Scalar pin names have no subscript in LEF.
+                pa = pa or (HG._loc(by[an], pins, aa) if bits == 1 else None)
+                pb = pb or (HG._loc(by[bn], pins, bb) if bits == 1 else None)
+                if pa is None or pb is None:
+                    return True  # no evidence that moving this hop is safe
+                old = abs(pa[0] - pb[0]) + abs(pa[1] - pb[1])
+                sign = 1 if an == it.name else -1
+                new = abs(pa[0] - pb[0] + sign * (nx - it.x)) + abs(pa[1] - pb[1] + sign * (ny - it.y))
+                # Never lengthen a connected hop; pair limits may be below 500.
+                if new > old + 1e-6:
+                    return True
+        return False
+
     for _ in range(rounds):
         rec = PA.analyze(m['insts'], m['buses'], die_lef_texts(m), names)
         todo = [r for r in rec['flagged'] if r['verdict'] == 'FAIL' and r.get('kind') == 'straight']
@@ -7504,6 +7545,8 @@ def align_station_jogs(m, rounds=2):
                     continue
                 dx, dy = (sg * d, 0.0) if ax == 0 else (0.0, sg * d)
                 nx, ny = up(it.x + dx, GX), up(it.y + dy, GY)
+                if worsens_hop(it, nx, ny):
+                    continue
                 bx = (nx, ny, nx + it.w, ny + it.h)
                 if bx[0] < 0 or bx[1] < 0 or bx[2] > DIE[0] or bx[3] > DIE[1]:
                     continue
