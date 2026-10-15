@@ -1,0 +1,25 @@
+{
+ "cell": "qfd_rstseq",
+ "view": "physical/ref_tile/qfd_rstseq/views/qfd_rstseq",
+ "lib_cell": "qfd_rstseq",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 50.5,
+ "spread_ps": 0.9,
+ "outputs": 5,
+ "inputs": 1,
+ "launch_ps": 173.9,
+ "launch_pin": "rso_f",
+ "capture_ps": 107.5,
+ "capture_pin": "rsi",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "record_branch": "codex/closure-record-qfd_rstseq-r1-feceba3b2",
+ "job": "qfd_rstseq-r1-feceba3b2"
+}

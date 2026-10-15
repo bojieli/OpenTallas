@@ -1,0 +1,25 @@
+{
+ "cell": "qfd_rstsync",
+ "view": "physical/ref_tile/qfd_rstsync/views/qfd_rstsync",
+ "lib_cell": "qfd_rstsync",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 43.9,
+ "spread_ps": 0.2,
+ "outputs": 2,
+ "inputs": 1,
+ "launch_ps": 169.0,
+ "launch_pin": "rso_f",
+ "capture_ps": 103.1,
+ "capture_pin": "arst_n",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "record_branch": "codex/closure-record-qfd_rstsync-r1-feceba3b2",
+ "job": "qfd_rstsync-r1-feceba3b2"
+}
