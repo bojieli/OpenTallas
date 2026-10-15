@@ -22,5 +22,25 @@
   "physical_fit": "pending actual static endpoint slot and native clock family; no physical job eligibility",
   "die_cut_capacity": null,
   "latency_total_edges": null,
-  "native_qualified": false
+  "native_qualified": false,
+  "consumer_row_sram": "one actual ot_sram_1r1w_64x512_m1_r2c2; same mapped row buffer as selected RSRAM1 successor",
+  "consumer_decode": "existing exact ot_hdc_qwen_int8_embed_decode replicated64",
+  "consumer_no_credit": true,
+  "preload_face_fixed_latency_edges": 1,
+  "observed_pc_read_return_edges": [
+    87,
+    73,
+    73,
+    73,
+    74,
+    72,
+    92,
+    73
+  ],
+  "pc_calendar_clock": {
+    "core_period_ps": 833.334,
+    "core_phase_ps": 137,
+    "hbm_period_ps": 1024
+  },
+  "pc_calendar_scope": "PC0 8 released 256bit code-half reads; not full128PC production embedding calendar"
 }
