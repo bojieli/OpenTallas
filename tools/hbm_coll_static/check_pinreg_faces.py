@@ -2,7 +2,7 @@
 """Mapped direct launch/capture faces and real macro-address audit."""
 import argparse,json,pathlib
 p=argparse.ArgumentParser();p.add_argument('netlist',type=pathlib.Path);p.add_argument('out',type=pathlib.Path);a=p.parse_args()
-m=json.loads(a.netlist.read_text())['modules']['ot_hgi_coll_static_link_pinreg']
+modules=json.loads(a.netlist.read_text())['modules'];top='ot_hgi_coll_static_link_capture' if 'ot_hgi_coll_static_link_capture' in modules else 'ot_hgi_coll_static_link_pinreg';m=modules[top]
 q={};ds={};clockbits=m['ports']['ck']['bits'];counts=[0]*5
 for name,c in m['cells'].items():
  if 'dff' in c['type'].lower():
@@ -48,6 +48,25 @@ for n,c in macros:
  # Macro read port must specifically use the pin capture Q, not another root.
  assert c['connections']['r_addr_in']==m['netnames'][f'g_bank[{i-1}].u_store.ra_pin']['bits']
 assert all(n<15000 for n in counts),counts
-result=dict(status='PASS',top='ot_hgi_coll_static_link_pinreg',checks=checks,register_bits_per_root=counts,
+input_checks={}
+if top=='ot_hgi_coll_static_link_capture':
+ consumers={}
+ for cname,c in m['cells'].items():
+  for pin,direction in c.get('port_directions',{}).items():
+   if direction=='input':
+    for b in c['connections'].get(pin,[]):consumers.setdefault(b,[]).append((cname,c,pin))
+ for name,port in m['ports'].items():
+  if port['direction']!='input' or name in ('ck','rst_n'):continue
+  used=0
+  for b in port['bits']:
+   for cname,c,pin in consumers.get(b,[]):
+    assert 'dff' in c['type'].lower() and pin=='D',(name,cname,c['type'],pin,'raw input fork before capture')
+    used+=1
+  input_checks[name]=dict(port_bits=len(port['bits']),first_capture_D_loads=used)
+ # SRAM returns also have exactly one captured first sink before CRC.
+ for b in m['netnames']['stored']['bits'][:561]:
+  for cname,c,pin in consumers.get(b,[]):
+   assert 'dff' in c['type'].lower() and pin=='D',('stored',cname,pin,'raw SRAM return fork')
+result=dict(status='PASS',top=top,all_controller_inputs_first_capture=input_checks,checks=checks,register_bits_per_root=counts,
  actual_macro_count=4,scope='mapped generic gate FF-Q launch/capture and all macro input faces; no route or TT/FF timing claim')
 a.out.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))

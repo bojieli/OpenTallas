@@ -1,12 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
-root=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
+root=${HCOLL_ROOT:-$(git -C "$(dirname "$0")" rev-parse --show-toplevel)}
 out=$(realpath -m "$1");mkdir -p "$out"
 build=$(mktemp -d /tmp/hcoll-native-transport.XXXXXX)
 trap 'rm -rf "$build"' EXIT
 cd "$root"
 for p in rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v;do
- git show "4c66b6a95:$p" > "$build/$(basename "$p")"
+ if git cat-file -e "4c66b6a95:$p" 2>/dev/null;then
+  git show "4c66b6a95:$p" > "$build/$(basename "$p")"
+ else
+  cp "$p" "$build/$(basename "$p")"
+ fi
+ python3 - "$p" "$build/$(basename "$p")" <<'PYVERIFY'
+import json,subprocess,sys
+path,copy=sys.argv[1:]
+want=json.load(open('rtl/hbm_accel/generic/collective/p2p/static_link_sources.json'))['git_blobs'][path]
+have=subprocess.check_output(['git','hash-object',copy],text=True).strip()
+assert have==want,(path,have,want)
+PYVERIFY
 done
 p=rtl/hbm_accel/generic/collective/p2p
 io=rtl/hbm_accel/io_static_20261015
