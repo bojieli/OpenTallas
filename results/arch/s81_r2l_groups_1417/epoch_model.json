@@ -1,0 +1,78 @@
+{
+ "schema": "opentallas.s81.r2l-epoch-model.v1",
+ "owner_decision": "Root1417 approved300MHz /12VCO epochbank structuralprimary; no maxdelay/falsepath/nativebudget waiver",
+ "old_failure": {
+  "source": "f8139a4c7",
+  "TT_ps": -46.69,
+  "violating_marker_enable_pins": 4031
+ },
+ "group64_result": {
+  "source": "954641bad",
+  "actualFF": 779,
+  "source_root_sinks": 635,
+  "serial_root_sinks": 144,
+  "strict_related_setup_ps": -147.2,
+  "input_fall_setup_ps": -13.8,
+  "placement_hold_ps": -32.7,
+  "route_submitted": false,
+  "classification": "direct3:4 bankmux nearest-edge crossing; fixed1190psoldmaxdelay notused"
+ },
+ "new_microarchitecture": {
+  "payload_bits": 512,
+  "groups": 8,
+  "bits_per_group": 64,
+  "source_clock_ratio_VCO": 3,
+  "epoch_clock_ratio_VCO": 12,
+  "serial_clock_ratio_VCO": 4,
+  "source_words_per_frame": 4,
+  "source_data_words_per_frame": 3,
+  "source_bubble_phase": 3,
+  "destination_words_per_frame": 3,
+  "bank_source_bits_per_group": 195,
+  "bank_epoch_bits_per_group": 195,
+  "memory_macros": 0,
+  "source_pin_stage": "positive rising source clock, +1sourceedge versus oldfallcapture",
+  "source_to_epoch": "three parallel65-bit direct FF-to-FF bundles; no read mux",
+  "epoch_to_serial": "local3:1 mux into serialFF, thenfinalegressFF matchesregisteredstatusjoin",
+  "production_schedule": "everyframefixed; late/missing/misframed data setsfault andneverretimes",
+  "startup": "one fixedepoch afterfirstmarkercapture; frame0tags mustallmatch0, no waitforcomplete",
+  "flush": "markerremainshigh, compilerfillsinvalidbubbles; all3lastframewordsretireatfixedcalendar"
+ },
+ "clock_reset_ports": {
+  "source_clocks": 8,
+  "epoch_clocks": 8,
+  "serial_clocks": 9,
+  "total": 25,
+  "source_reset_pins": 8,
+  "epoch_reset_pins": 8,
+  "serial_reset_pins": 8,
+  "shared_blanket_ties": false,
+  "rule": "independent measuredR andphase_i-R delivery; actual25-entryroutesandresetdomainsrequired"
+ },
+ "analytical_primary_phase0": {
+  "source_bank_first_tick": 120,
+  "external_first_word_launch_tick": 114,
+  "first_full_epoch_capture_tick": 132,
+  "first_serial_word_capture_tick": 136,
+  "first_output_tick": 140,
+  "old_first_output_tick": 128,
+  "added_ticks": 12,
+  "VCO_tick_ps": 277.7777778,
+  "added_ns": 3.3333333336,
+  "evidence": "hypothesis untilactualcontinuousphasebench"
+ },
+ "resources": {
+  "bankFF_per_group": 390,
+  "register_total_estimate": "~740/group beforeoptimizer; actualmappedcensuspending",
+  "max_sink_root_estimate": "<350/group",
+  "internal_data_cut_bits_per_group": 195,
+  "boundary_useful_bits_per_frame": 1536,
+  "throughput_GBps_at_serial900MHz": 57.6,
+  "provisional_leaf_outline": [
+   43.2,
+   38.88
+  ],
+  "physical_channel_cut": "195signals / approx648 M4tracks =0.301 beforePGdeduction; actualpin/PG/cutproofrequired",
+  "die_parent_fit": "OPEN; new25clockABI/grantsrequired"
+ }
+}
