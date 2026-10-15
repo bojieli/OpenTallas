@@ -95,16 +95,9 @@
   },
   "measured_scope": "component and actual operand/selector-toTX compositions only; no fullnative/physical qualification",
   "live": {
-    "host": "ot-epyc1tb",
-    "unit": "oth-ubuntu-951416-1792061512",
-    "local_service": "codex-idx-parent-static-corrected-1015.service",
-    "source": "5c4eb5b3a",
-    "dir": "/srv/opentallas-scratch/codex/idx-parent-static-1015",
-    "preserve": "original530439TERMINALFAIL preserved. Correctedbench+program live runs GAP100/GAP4 plus3realmutants usingpreservedhiercache; do notduplicate/restart"
+    "status": "none; EPYC1 idx-parent-static-1015 run terminal and collected"
   },
   "open": [
-    "fullparent positive10928+512 result; scoremetadata cycle/IDjoin",
-    "fullparent actual negativecases using operand/cycle/data faults",
     "realmappedprogram issuer\u2192parent execution; tune conservative100edgequeryguard using fullshape measurements",
     "realstaged HBM keyservice\u2192all32lineports samecompiledslots",
     "candidateL20actualparentbinding and exactglobalK2048COLLconsumer",
@@ -123,6 +116,6 @@
     "cause": "tag10 overflow atline1024 contaminatedkeybit0; remainingfaultactualflushissued1edgebeforefinalselected\u2192compactor capture",
     "fix_source": "5c4eb5b3a",
     "fix_scope": "compilerbench/program addactualfixedcaptureedge, notRTLfaultmask",
-    "current": "correctedfullpositive/negatives/gap4allpending"
+    "current": "TERMINAL PASS (collected by Claude H-IDX): GAP100/GAP4 10928 scores/512 records/64 flits errors0 fault0; MUT1/2/3 FAIL. receipt rtl/test/hbm_idx_static/evidence/parent_corrected/receipt.json. Serial frame 1282 edges vs L20 price 1212 = 1.058x."
   }
 }
