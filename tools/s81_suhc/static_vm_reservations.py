@@ -15,6 +15,15 @@ import json
 from pathlib import Path
 
 
+def bank_of(row: int, contract: dict) -> int:
+    mapping = contract.get('bank_mapping', 'rowmod')
+    if mapping == 'rowmod':
+        return row % contract['banks']
+    if mapping == 'xor_row7_5_shift2' and contract['banks'] == 32:
+        return (row & 31) ^ (((row >> 5) & 7) << 2)
+    raise ValueError('Unsupported bank mapping or incompatible bank count')
+
+
 def check(schedule: dict, contract: dict) -> dict:
     errors = []
     def error(kind, **witness):
@@ -40,6 +49,10 @@ def check(schedule: dict, contract: dict) -> dict:
             invalid.append('integer_resource_capacity')
     except (ValueError, TypeError, ZeroDivisionError):
         invalid = ['invalid_numeric_contract']
+    try:
+        bank_of(0, contract)
+    except ValueError:
+        invalid.append('bank_mapping')
     if invalid:
         return dict(status='fail', violations=[dict(kind='invalid_contract', fields=invalid)], qualified=False, events=0)
     def when(cycle, domain):
@@ -85,7 +98,7 @@ def check(schedule: dict, contract: dict) -> dict:
             error('retire_before_issue', event=eid)
         if retire > deadline:
             error('missed_fixed_deadline', event=eid, actual=retire_cycle, deadline=event['deadline_cycle'])
-        bank_use[(event['service_cycle'], event['row'] % contract['banks'])].append(eid)
+        bank_use[(event['service_cycle'], bank_of(event['row'], contract))].append(eid)
         ingress_use[(event['ingress_cycle'], kind)].append(eid)
         slot = (event['client'], kind, event['slot'])
         queues[slot].append((issue, retire, eid))
@@ -165,7 +178,7 @@ def check(schedule: dict, contract: dict) -> dict:
     coverage = all(schedule.get(x) for x in ('events', 'jobs')) and schedule.get('trace_complete') is True
     status = 'fail' if errors else 'pass' if measured and coverage else 'incomplete'
     return dict(status=status, qualified=False, events=len(schedule.get('events', [])), violations=errors,
-                slot_peaks=peaks, measured_native_bounds=measured, trace_complete=coverage,
+                slot_peaks=peaks, bank_mapping=contract.get('bank_mapping', 'rowmod'), measured_native_bounds=measured, trace_complete=coverage,
                 note='Static reservation check only; native RTL, die timing and performance gates remain required.')
 
 

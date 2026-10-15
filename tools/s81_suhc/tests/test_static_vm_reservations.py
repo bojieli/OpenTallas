@@ -56,6 +56,18 @@ class FixedScheduleTests(unittest.TestCase):
     def test_provisional_latencies_are_incomplete(self):
         self.contract['measured_native_bounds']=False
         self.assertEqual(m.check(self.schedule,self.contract)['status'],'incomplete')
+    def test_qr_candidate_hash_is_explicit_and_bijective(self):
+        contract=dict(self.contract,bank_mapping='xor_row7_5_shift2')
+        mapped={(m.bank_of(row,contract),row>>5) for row in range(16384)}
+        self.assertEqual(len(mapped),16384)
+        qr=[32*(i//4)+28+i%4 for i in range(16)]
+        self.assertEqual(len({m.bank_of(row,self.contract) for row in qr}),4)
+        self.assertEqual(len({m.bank_of(row,contract) for row in qr}),16)
+        for base in range(0,16384,16):
+            self.assertEqual(len({m.bank_of(base+i,contract) for i in range(16)}),16)
+    def test_unknown_bank_hash_rejected(self):
+        self.contract['bank_mapping']='unimplemented'
+        self.assertIn('invalid_contract',self.kinds())
     def test_missing_producer_done_is_not_qualified(self):
         self.schedule["jobs"] = self.schedule["jobs"][1:]
         self.assertIn("missing_producer_done",self.kinds())
