@@ -525,6 +525,7 @@ def main():
         for n in nodes.values():                        # consumers read the coefficient rows (VM presence), not a port-9 done
             n['preds'] = [p for p in n['preds'] if p not in gone]
         assert set(hcx_members) == {'attn', 'ffn'}, hcx_members
+        assert a.vm_coeff_align, '--hcx-real needs --vm-coeff-align (the post VM transport faults on a coefficient base not 16-row aligned)'
         hi = a.hcx_issue
         if '=' in hi:                                   # per-layer calendar: 'L1=A,F/L14=A,F' (one bench build, many layers)
             hi = dict(e.split('=', 1) for e in hi.split('/')).get(L, '')

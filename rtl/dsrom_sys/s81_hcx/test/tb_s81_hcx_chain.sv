@@ -127,8 +127,8 @@ module tb_s81_hcx_chain #(parameter integer HLAYOUT=1,MUT_POST=0,CAL=0,FAST=0,
   $display("HCX_CHAIN commands=%0d cmd_phase=%0d proj_done_age=%0d raw_age=%0d,%0d,%0d,%0d gp_done_age=%0d post_start_age(ck)=%0d post_seen_age=%0d chain_done_age=%0d first_cmd=%0d first_done=%0d cmd_to_done=%0d",
    ncmd,cphase,pd_age,raw_age[0],raw_age[1],raw_age[2],raw_age[3],gd_age,ss_age,sd_age,cd_age,ccmd,cdone,cdone-ccmd);
   if(CAL)begin $display("HCX_CHAIN CAL (no verdict)");$finish;end
-  for(integer b=0;b<4;b=b+1)for(integer w=0;w<16;w=w+1)if(vm[2560+b][32*w+:32]!==want[b][32*w+:32])begin
-   errs++;if(errs<12)$display("ERR coef row %0d word %0d got %08h want %08h",2560+b,w,vm[2560+b][32*w+:32],want[b][32*w+:32]);end
+  for(integer b=0;b<4;b=b+1)for(integer w=0;w<16;w=w+1)if(vm[2560+16*(b/2)+b%2][32*w+:32]!==want[b][32*w+:32])begin
+   errs++;if(errs<12)$display("ERR coef row %0d word %0d got %08h want %08h",2560+16*(b/2)+b%2,w,vm[2560+16*(b/2)+b%2][32*w+:32],want[b][32*w+:32]);end
   $display("HCX_CHAIN coef_words_bad=%0d issuer_fault=%0d code=%0d chain_fault=%0d ncmd=%0d",errs,is_fault,is_code,x_st[0],ncmd);
   if(errs||is_fault||x_st[0]||ncmd!=2)$fatal(1,"HCX_CHAIN FAIL");
   $display("HCX_CHAIN PASS layer%0d attn+ffn 4 coefficient rows exact, fixed issuer, compiled done",LAYER);$finish;

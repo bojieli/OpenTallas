@@ -94,6 +94,7 @@ module tb_s81_die_layer;
     localparam integer SUR = 0;
 `endif
     localparam integer S_RD = 2, S_WR = 8, H_BASE = 0, G_BASE = 1280, GROWS = 320, C_BASE = 2560, S_BASE = 6144;
+    parameter integer C_STRIDE = 2;   // coefficient row stride (16 with --vm-coeff-align; the real HCX post requires 16)
     string dir;
 `ifdef TB_SEQC
     localparam integer JOBS = 3;         // kit starts (sequential jobs of the same layer): the drop-start mutant loses the 3rd
@@ -487,7 +488,7 @@ module tb_s81_die_layer;
     wire [84:0] hcx_pcmd; wire [8:0] hcx_pd [0:3]; wire [1:0] hcx_pst [0:3];
     wire hcx_gs, hcx_gd, hcx_gf, hcx_ss, hcx_sffn, hcx_sd, hcx_sf; wire [13:0] hcx_graw, hcx_sraw, hcx_scoef; wire [5:0] hcx_slayer;
     ot_s81_hcx_chain_seq #(.PROJ_DONE(HX_PROJ_DONE),.G_OFF(HX_G_OFF),.GP_DONE(HX_GP_DONE),.POST_TOG(HX_POST_TOG),.POST_SEEN(HX_POST_SEEN),
-        .DONE_OFF(HX_DONE_OFF),.RAW_BASE(14'd2624),.COEF_BASE(C_BASE),.COEF_STRIDE(14'd2)) u_hcx (
+        .DONE_OFF(HX_DONE_OFF),.RAW_BASE(14'd2624),.COEF_BASE(C_BASE),.COEF_STRIDE(14'(C_STRIDE))) u_hcx (
         .ck(ck),.rst_n(mx_rst_n),.skv(ckv),.srst_n(hcx_srst_n),.c_cmd(hcx_c),.c_done(hcx_d),.c_st(hcx_st),
         .p_cmd(hcx_pcmd),.p_done(hcx_pd[0]),.p_st(hcx_pst[0]),.g_start(hcx_gs),.g_raw_base(hcx_graw),.g_done(hcx_gd),.g_fault(hcx_gf),
         .s_start(hcx_ss),.s_ffn(hcx_sffn),.s_layer(hcx_slayer),.s_raw_base(hcx_sraw),.s_coef_base(hcx_scoef),.s_done(hcx_sd),.s_fault(hcx_sf));
@@ -583,7 +584,7 @@ module tb_s81_die_layer;
     always @(posedge ck) begin
         if (clr_req) begin
             for (i2 = H_BASE; i2 < H_BASE + XW; i2 = i2 + 1) vm_ok[i2] = 1'b0;
-            for (i2 = C_BASE; i2 < C_BASE + 4; i2 = i2 + 1) vm_ok[i2] = 1'b0;
+            for (i2 = 0; i2 < 4; i2 = i2 + 1) vm_ok[C_BASE + C_STRIDE * (i2 / 2) + i2 % 2] = 1'b0;   // the 2 x 2 coefficient rows
             hcnt = 0; clr_req = 0; eng_done = 0;
         end
         if (vwe) begin vm[vwa] = vwd; mark(vwa); nwr = nwr + 1; end
