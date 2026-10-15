@@ -1,9 +1,9 @@
 {
- "name": "qfd_tile_nk_banked_v1-bp58a-COMMIT",
+ "name": "qfd_tile_nk_banked_v1-bp58b-COMMIT",
  "block": "qfd_tile_nk_banked_v1",
  "ref_tile": true,
  "owner": "Codex:q_compute_elem",
- "purpose": "Actual58bank/84root successor nativeCTS: real fullRNE+2278residualFFs, exact83CLOSED masters/pins; no oldparent qualification",
+ "purpose": "Actual58bank/84root successor nativeCTS: real fullRNE+954mapped residual FFs(2278preABC), exact83CLOSED masters/pins; no oldparent qualification",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tile_nk_banked_v1/qfd_tile_nk_banked_v1-bp58a-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tile_nk_banked_v1/qfd_tile_nk_banked_v1-bp58b-COMMIT"
   }
  ],
  "cycles_added": 2,

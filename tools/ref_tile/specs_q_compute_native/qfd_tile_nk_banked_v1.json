@@ -1183,12 +1183,12 @@
   },
   "refglob": "*",
   "inter": [],
-  "structural_change": "Actual oldNK15037sink longdata/reset/setup failures replaced by58 independent existing-edge data banks,11 actual three-edge reset tree roots,14unchangedCLOSED children. TX390\u2192198 AFTER RNE, fulls2_x128 separate, tag167\u21924usedsplitbits. Balanced return+1/xdelay9, nodein+1/out+1. Original residual2278realFFs retained as actual stdcells in freearea; freshCTS measures actual clock/RNE/fanout, no invented residual macro. Complete3499word oldparent reference+3mutants PASS; source31507pin dependencies checked. Compiler candidate unselected until physical gates.",
+  "structural_change": "Actual oldNK15037sink longdata/reset/setup failures replaced by58 independent existing-edge data banks,11 actual three-edge reset tree roots,14unchangedCLOSED children. TX390\u2192198 AFTER RNE, fulls2_x128 separate, tag167\u21924usedsplitbits. Balanced return+1/xdelay9, nodein+1/out+1. Original residual source2278FFs maps to954actual DFFs retained as stdcells in freearea; freshCTS measures actual clock/RNE/fanout, no invented residual macro. Complete3499word oldparent reference+3mutants PASS; source31507pin dependencies checked. Compiler candidate unselected until physical gates.",
   "job": {
     "owner": "Codex:q_compute_elem",
     "branch": "codex/q-compute-native-parents-1014",
-    "tag": "bp58a",
-    "purpose": "Actual58bank/84root successor nativeCTS: real fullRNE+2278residualFFs, exact83CLOSED masters/pins; no oldparent qualification",
+    "tag": "bp58b",
+    "purpose": "Actual58bank/84root successor nativeCTS: real fullRNE+954mapped residual FFs(2278preABC), exact83CLOSED masters/pins; no oldparent qualification",
     "extra_paths": [
       "physical/qwen_tile_glue_banks_1015",
       "rtl/qwen_sys/tile_parent_banked_20261015",
@@ -1223,5 +1223,8 @@
     "channel_um": 5.184,
     "edge_um": 2.0,
     "why": "HELD diagnostic only: measure actual dense closed-bank pin/PG/channel access; no20um production-rule exception or merge credit"
+  },
+  "orfs_vars": {
+    "OT_OFLOP_HARD_FACE_AUDIT": "/src/physical/qwen_tile_glue_banks_1015/hard_face_binding.tcl"
   }
 }
