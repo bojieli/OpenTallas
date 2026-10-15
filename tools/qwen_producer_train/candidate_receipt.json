@@ -11,7 +11,7 @@
     "invalid_config_fixedmaxwindow"
   ],
   "dut_mutant": "bank emit stride24 ->23; independent fixed-calendar scoreboard rejects",
-  "real_producer_join": "Actual fullshape ctl->softspport->oldserializer POSITIVE PASS eightOV cycles296..303 min_gap1 stickyfault1; original producer missingOV mutant still live AGI955822 in unit923480. Independent actual candidate marker-cone integration pending.",
+  "real_producer_join": "PASS actual fullshape controller/port marker-cone -> candidate fixedstart c296: eight captures1edge apart; candidate outputs24edges apart with exact rows/masks and no fault. Actual bank23vs24 mutant rejects21 observer errors. Fullsoftport original positive passes oldfault; separate missingOV mutant still live.",
   "root_partition": {
     "data_bank_roots_per_band": 24,
     "control_output_roots_per_band": 1,
@@ -95,7 +95,7 @@
     "decoder36_plus_head_per_rank": 2504
   },
   "limits": [
-    "Actual controller/port probe still running; no integrated new-candidate DUT proof",
+    "Actual mixed-profile/head candidate tests use synthetic rq at declared boundary; actual controller/port integration proves PC1 marker cone, not all actual arithmetic or head argmax.",
     "No scaleROM/slab physical qualification",
     "No native programme/issuer binding",
     "No measured throughput/adoption",
