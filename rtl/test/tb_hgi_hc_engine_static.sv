@@ -13,6 +13,7 @@ module tb_hgi_hc_engine_static(input wire clk,sink_clk);
     wire [31:0] rd[0:1];
     wire [4:0] ri[0:1];
     wire mutate=$test$plusargs("MUTANT");
+    wire overlap=$test$plusargs("OVERLAP");
     initial begin
         $readmemh("hc_static_w.mem",wm);$readmemh("hc_static_x.mem",xm);$readmemh("hc_static_exp.mem",expm);
         $readmemh("engine_tail_exp.mem",tail_exp);$readmemh("engine_base.mem",bm);$readmemh("engine_scale.mem",sm);
@@ -25,6 +26,11 @@ module tb_hgi_hc_engine_static(input wire clk,sink_clk);
             ap[b*278+277]=1;ap[b*278+273+:3]=3'(b);ap[b*278+264+:9]=9'(fill);ap[b*278+:8]=8'hff;
             for(integer q=0;q<8;q=q+1)ap[b*278+8+32*q+:32]=wm[((row*8+b)*R+fill/4)*W+(fill%4)*8+q];
         end
+        if(overlap&&state==3&&age<320&&row<23)for(integer b=0;b<8;b=b+1)begin
+            ap[b*278+277]=1;ap[b*278+276]=1'((row+1)%2);
+            ap[b*278+273+:3]=3'(b);ap[b*278+264+:9]=9'(age);ap[b*278+:8]=8'hff;
+            for(integer q=0;q<8;q=q+1)ap[b*278+8+32*q+:32]=wm[(((row+1)*8+b)*R+age/4)*W+(age%4)*8+q];
+        end
         if(state==1)for(integer l=0;l<32;l=l+1)for(integer b=0;b<8;b=b+1)
             xwave[l*256+b*32+:32]={xm[(b*R+fill)*W+l],16'd0};
     end
@@ -32,7 +38,7 @@ module tb_hgi_hc_engine_static(input wire clk,sink_clk);
         ot_hgi_hc_engine_static #(.MUT_PRE(m)) dut(.clk(clk),.sink_clk(sink_clk),.rst_n(rst_n),
             .clear(cycle==4),.weight_ap(ap),.x_wave_v(state==1),.x_wave_row(7'(fill)),.x_wave(xwave),
             .row_launch(state==3&&age==0),.row_raw_read(state==3&&(age==180||age==340)),
-            .row_weight_slot(1'b0),.row_id(5'(row)),.norm_eps(32'h358637bd),
+            .row_weight_slot(overlap?1'(row%2):1'b0),.row_id(5'(row)),.norm_eps(32'h358637bd),
             .gathered_mix_v(1'b0),.gathered_mix_row(5'd0),.gathered_mix_data(32'd0),
             .tail_launch(state==5&&age==0),.sink_launch(state==5&&cycle==sinkslot),
             .sink_capture(state==5&&cycle==sinkslot+289),.bases(bases),.scales(scales),
@@ -55,7 +61,7 @@ module tb_hgi_hc_engine_static(input wire clk,sink_clk);
             if(age==355)begin
                 if(seen!=row+1)$fatal(1,"missing result");
                 if(row==23)begin state<=5;age<=0;sinkslot<=((cycle+1+217+6)/7)*7;end
-                else begin row<=row+1;state<=2;fill<=0;end
+                else begin row<=row+1;state<=overlap?3:2;fill<=0;age<=0;end
             end
         end
         if(state==5)begin

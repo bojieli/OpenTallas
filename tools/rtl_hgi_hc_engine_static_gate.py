@@ -57,12 +57,12 @@ def main():
             '--output-split','10000','--top-module','tb_hgi_hc_engine_static','-Mdir',str(run/'obj'),*[str(ROOT/f) for f in files]],
             cwd=run,stdout=log,stderr=subprocess.STDOUT,check=True)
     exe=run/'obj/Vtb_hgi_hc_engine_static'
-    for name,args in [('exact',[]),('mutant',['+MUTANT'])]:
+    for name,args in [('exact_serial',[]),('exact_overlap',['+OVERLAP']),('mutant_overlap',['+OVERLAP','+MUTANT'])]:
         p=subprocess.run([str(exe),*args],cwd=run,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
         (run/f'{name}.log').write_text(p.stdout)
         print(name,p.returncode,p.stdout[-1200:],flush=True)
         receipt[name]={'exit_code':p.returncode,'log_sha256':hashlib.sha256(p.stdout.encode()).hexdigest()}
         (run/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
-        if name=='exact' and p.returncode:raise SystemExit('positive failed; mutant unqualified')
-        if name=='mutant' and not p.returncode:raise SystemExit('mutant escaped')
+        if name.startswith('exact') and p.returncode:raise SystemExit('positive failed; mutant unqualified')
+        if name.startswith('mutant') and not p.returncode:raise SystemExit('mutant escaped')
 if __name__=='__main__':main()
