@@ -16488,3 +16488,8 @@ def s81_static_hc_source_model():
                     'production throughput and whole-layer price composition',
                     'die slot outline, faces, tracks, area and registered pin placement',
                     'TT setup/FF hold, SS sensitivity, DRC, insertion and phi-R bindings'])
+
+
+def s81_static_raw_vm_rows_model():
+    from uarch_model_s81_static_channels import s81_static_raw_vm_rows_model as model
+    return model()

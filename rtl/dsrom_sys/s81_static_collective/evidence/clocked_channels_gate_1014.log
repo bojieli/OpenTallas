@@ -1,0 +1,17 @@
+PASS raw codec CRC/sequence/last faults, sticky status, exact two-edge latency
+PASS full552 five-lane static FMT1 composition:15 exact client transfers,3 legacy frame+CRC checks, registered calendar exact
+PASS full552 five-lane static FMT1 composition:15 exact client transfers,3 legacy frame+CRC checks, registered calendar exact
+PASS delivered separate adapter/lane clocks with declared same-phase component calendar; physical phases unqualified
+FATAL: /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/tb_s81_static_fmt1_channels.sv:63: legacy full552/last/sequence/CRC interoperability
+       Time: 447000 Scope: tb_s81_static_fmt1_channels
+PASS actual DUT CRC output mutant rejected
+23ae49f680e76d317179eb387e3df4769bbb375441e1efded261462abb310dca  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv
+feb23026c65ca9c83825a5363d79d3d07503231d656c9f30c78cd7cf88ae1deb  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv
+c6a7c7e50b5001a858675a991c5598516699f112c4b982b52fee4489bc983c34  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv
+42d3c37f9db7a4ae1a6fcb03d42313ced946fcc9760e4d96538308e0f592b5e2  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv
+c58460b6549408a6773cfd9d4c3e3960f871d67f1cd9a701b2a0194107d19dd4  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels.sv
+12c2bcf55caca4c1a909ebf37f1d551f902ede41b2b27ef24df3a689b7e4c131  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv
+2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97  /home/ubuntu/wt/s-static-channels-1014/rtl/link/ot_link_crc32.sv
+1826102edf211742df583b4aa6a229c6ce410b30508a76e4f061fc2efcdadb9c  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv
+3aa4247f80c811c9fcb6fa4a480d78b0e7ac17a6fe6723c814378aeede1a6cac  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/tb_s81_static_fmt1_channels.sv
+3590d207ec3043bd10997a82421a5afa7d4104365bb0343726fef1a51df21376  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/tb_s81_static_raw_fmt1_codec.sv
