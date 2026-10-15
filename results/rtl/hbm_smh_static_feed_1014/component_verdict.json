@@ -1,0 +1,21 @@
+{
+  "scope": "production-width static feed component only; no arithmetic/die qualification",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv": "fb0ed7163cf1a0adadaea5dd0820523f01d1dbed48dd8aeaf3e6640ccd2b7d84",
+    "rtl/test/tb_smh_static_feed.sv": "9f48daeb89bd99a56871519749a44e5d091ff6e1c66ece57bd0e6ecc0555f5ff",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "c3d574486f1c55032a11f1e3415e1c81d72526db012347bae87243be3137c233"
+  },
+  "cases": [
+    {
+      "mutant": 0,
+      "returncode": 0,
+      "expected_pass": true
+    },
+    {
+      "mutant": 1,
+      "returncode": 1,
+      "expected_pass": false
+    }
+  ],
+  "verdict": "PASS"
+}

@@ -1,0 +1,26 @@
+{
+  "scope": "real1024x256 SRAM programme calendar83 component; no fullSM arithmetic or throughput qualification",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv": "4ecc595f2a0eb3fbc3c433f807013626abbafaba4aa0629b81b7e5faf582ba85",
+    "rtl/test/tb_smh_calendar_static.sv": "4202ff1aa21fd2a3ea79ef70391f077cdd61a7655c6bb39f3391897abfc45e60",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  },
+  "cases": [
+    {
+      "mutant": 0,
+      "returncode": 0,
+      "expected_pass": true
+    },
+    {
+      "mutant": 1,
+      "returncode": 1,
+      "expected_pass": false
+    },
+    {
+      "mutant": 2,
+      "returncode": 1,
+      "expected_pass": false
+    }
+  ],
+  "verdict": "PASS"
+}
