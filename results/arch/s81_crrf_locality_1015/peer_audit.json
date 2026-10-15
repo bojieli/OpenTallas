@@ -1,0 +1,112 @@
+{
+ "scope": "V20_ASSIGNED_PEER_GEOMETRY_NOT_CANONICAL_NATIVE_CLOSURE",
+ "source_sha256": {
+  "results/arch/hier_contract_1011/s81_v20_hc.json": "4d5356afb23eeabf74a1206520dc1f1e7f8515480e8279038011302152842cfb",
+  "physical/s81_die_pins/v20_hc_inherited/ot_s81_hc_ctfn.json": "ee3cf90a78119cc30945d300ac7021a394bc86521588d0f2716a14efac4aa44c",
+  "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_cap.json": "5a10e68b7bf3254e08b62196045b4bfc646e9f5a4f07e4bbd14e72e928861af9",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv": "1754393106e3207fad0718df49d708b2a9ca5619d407d040547051d6f0ffde53",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "59dca066e0795298aba65ab0330c9110df7e24f0164117914f9471a2ab8ed9c9",
+  "tools/s81/crrf_peer_audit.py": "bf167217d1a382ab6b91a569ccce309aa21ab406917ac2a761c4bf16d31a3eac"
+ },
+ "connection": "crootr_c0/f.ch_fd[2919:0] -> first p0 C0 cth.fd_in -> u_fn.fd_in; additionally low1128bits fan out to u_fx.fd_in",
+ "source_local_to_sp_hc_s": [
+  0.0,
+  7623.280000000001
+ ],
+ "target_N_local_to_sp_hc_s": [
+  0.0,
+  7194.959999999999
+ ],
+ "gap_um": 428.3200000000015,
+ "before": {
+  "bits": 2920,
+  "sum_bit_um": 1812827.0680000035,
+  "max_um": 876.9760000000015,
+  "bits_over_500um": 2162,
+  "pin_alignment": {
+   "bits": 2920,
+   "face": [
+    "S",
+    "N"
+   ],
+   "layer": [
+    "M3",
+    "M5"
+   ],
+   "len_max": 876.976,
+   "len_mean": 620.831,
+   "kind": "straight",
+   "axis": "y",
+   "gap": 428.32,
+   "jog_max": 448.656,
+   "jog_mean": 192.511,
+   "jog_min": 0.048,
+   "order": "interleaved",
+   "cross_share": 0.948,
+   "jog_cross": 2837,
+   "jog_cut": 0.2102,
+   "cap_tracks": 13496.5,
+   "window_share": 0.5173,
+   "verdict": "WARN",
+   "why": [
+    "jog 448.7 um > 20",
+    "bit order interleaved (95% of pairs cross)"
+   ]
+  }
+ },
+ "after": {
+  "bits": 2920,
+  "sum_bit_um": 1764880.8880000098,
+  "max_um": 683.5870000000016,
+  "bits_over_500um": 2920,
+  "pin_alignment": {
+   "bits": 2920,
+   "face": [
+    "S",
+    "N"
+   ],
+   "layer": [
+    "M3",
+    "M5"
+   ],
+   "len_max": 683.587,
+   "len_mean": 604.411,
+   "kind": "straight",
+   "axis": "y",
+   "gap": 428.32,
+   "jog_max": 255.267,
+   "jog_mean": 176.091,
+   "jog_min": 86.592,
+   "order": "interleaved",
+   "cross_share": 0.145,
+   "jog_cross": 1924,
+   "jog_cut": 0.1426,
+   "cap_tracks": 13496.5,
+   "window_share": 0.3508,
+   "verdict": "WARN",
+   "why": [
+    "jog 255.3 um > 20",
+    "bit order interleaved (14% of pairs cross)"
+   ]
+  }
+ },
+ "ctfx_cap": {
+  "actual_fd_in_bits": 1128,
+  "assigned_outline_um": [
+   576.72,
+   25.92
+  ],
+  "existing_ctfx_row_um": [
+   576.72,
+   12.96
+  ],
+  "status": "HOME_UNRESOLVED:25.92um capture leaf does not fit inherited12.96um row; no coordinate invented"
+ },
+ "conclusion": "Output-order change reduces external wire sum and pair crossing share too; direct source-to-peer still needs staged physical integration. No native route or timing pass claimed.",
+ "open": [
+  "Regenerate actual canonical HC parent and all source/peer relay homes",
+  "Resolve ctfx_cap grown home and exact native leaf pin versions",
+  "Rebind each bit using y_peer_rebind.csv and prove full parent fixed cycles",
+  "Use measured native pin launch/capture reach and delivered phi-R;500um is only geometric reference"
+ ]
+}

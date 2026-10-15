@@ -1,0 +1,23 @@
+{
+ "scope": "PARTIAL_CANONICAL_GENERATOR_NOT_RELEASE",
+ "remote_host": "ot-agidock128",
+ "remote_root": "/srv/opentallas-scratch/codex-geometry-s81-partial-alias-1015",
+ "unit": "oth-ubuntu-3756951-1792053063",
+ "ot_run_exit": 0,
+ "input_screen5": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen5",
+ "source_model_commit": "9150a7bfe",
+ "tool_sha256": {
+  "tools/s81/group_placement_opt.py": "80215cfbaae1005956c1c4afb93c4d8489e99cf72738b089bd4d064366411274",
+  "tools/hier_contract/pin_align.py": "9f4688e696aad71a01516dec308e88612cf6c810eb8e2f28b5ea467442b2bc01"
+ },
+ "findings": {
+  "actual_instances": 71559,
+  "source_added_hcp_obstacles": 6,
+  "resolved_point_to_point_edges": 145908,
+  "unresolved_pin_edges": 0,
+  "cross_half_frames": 20,
+  "data_incident_hubs_absent": true
+ },
+ "interpretation": "Zero unresolved pins is only for generated partial buses; it does not prove missing hub/return edges exist. No complete-hub placement optimization result can be inferred.",
+ "reproduce": "Copy pinned screen5 inputs, source-derived port_aliases and capacity into one remote package with tools/s81/group_placement_opt.py and tools/hier_contract/pin_align.py; save audit_driver.py as audit.py at package root; submit python3 audit.py through ot-run --mem16 --threads1."
+}
