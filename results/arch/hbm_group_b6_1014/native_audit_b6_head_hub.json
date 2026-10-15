@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.native_pin_audit.single.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (main)",
+ "results": [
+  {
+   "cell": "ot_hgi_sv_head",
+   "job": "hgi_sv_head_slot-r4-pre-04c986630",
+   "R_ps": 274.2,
+   "spread_ps": 51.2,
+   "launch_ps": 272.8,
+   "launch_over": {
+    "rec_rdy": [
+     1,
+     272.8
+    ],
+    "wl[*]": [
+     3,
+     236.2
+    ]
+   },
+   "capture_ps": 229.9,
+   "capture_over": {
+    "vmr[*]": [
+     2,
+     229.9
+    ],
+    "rst_n": [
+     1,
+     224.4
+    ]
+   },
+   "pass": false
+  },
+  {
+   "cell": "ot_hgi_topk_hub_tile",
+   "job": "hgi_topk_hub_rt_j-j2-23df7ae67",
+   "R_ps": 333.1,
+   "spread_ps": 41.5,
+   "launch_ps": 182.8,
+   "capture_ps": 208.6,
+   "capture_over": {
+    "rst_n": [
+     1,
+     208.6
+    ]
+   },
+   "pass": false
+  }
+ ]
+}
