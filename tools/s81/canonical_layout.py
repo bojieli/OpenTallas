@@ -56,11 +56,11 @@ def corridors(G,m,cor):
  return cor
 
 class Roadmap:
- def __init__(self,G,m,cor):
+ def __init__(self,G,m,cor,return_lanes=False):
   self.G,self.m,self.cor=G,m,cor;self.graph={};self.rootnode={};self.entry={}
   cols=sorted(m['canonical_layout']['columns'],key=lambda c:c['x_um'])
   self.cols=cols;levels={i:set() for i in range(22)};streets={i:[] for i in range(22)}
-  self.sx={i:c['x_um']+G.COL_W8-G.RSC_W/2 for i,c in enumerate(cols)}
+  self.sx={i:c['x_um']+G.COL_W8-(15.12 if return_lanes else G.RSC_W/2) for i,c in enumerate(cols)}
   for r,f in m['frames'].items():
    a=f['street'][1];b=f['street'][3]
    # Broadcast and returns use separate rows inside the actual local street.
@@ -107,11 +107,38 @@ class Roadmap:
   while n is not None:ns.append(n);n=prev[n]
   ns.reverse();return self.G._dedup(stem+[(ns[0][0],base[1])]+ns)
 
+def compact_return_relays(G,m,CH):
+ """Pack existing RSC return relays west; retain IDs, ports and all stages.
+ Four70-bit forwarded lanes need28.056um, versus41.016 for six. A17.256um
+ existing relay plus the four-lane station and .432um gaps fits47.52um.
+ This only moves actual wholly-contained RSC relays; every candidate is
+ tested against all real occupied boxes before its position changes.
+ """
+ candidates=[];regions={f'frame_{r}' for r in m['frames']}
+ for obj in m['insts']:
+  if not obj.name.startswith('y_rt_') or obj.region not in regions:continue
+  r=int(obj.region[6:]);f=m['frames'][r];left=f['x']+G.LANES_W+G.NS_W;right=f['x']+G.COL_W8
+  if obj.x>=left-.001 and obj.x+obj.w<=right+.001:
+   nx=G.up(left+.432,G.GX)
+   if nx<obj.x-.001:candidates.append((obj,nx))
+ moving={obj.name for obj,_ in candidates};occ=G.Occ()
+ for obj in m['insts']:
+  if obj.name not in moving:occ.add(obj.box())
+ receipt=[]
+ for obj,nx in candidates:
+  old=obj.x;box=(nx,obj.y,nx+obj.w,obj.y+obj.h)
+  if occ.free(box,.432):obj.x=nx
+  else:assert occ.free(obj.box(),.432),('canonical relay repack collision',obj.name)
+  occ.add(obj.box());receipt.append(dict(inst=obj.name,old_x=old,new_x=obj.x,y=obj.y,w=obj.w,h=obj.h,moved=obj.x!=old))
+ CH.P.occ=occ
+ m['canonical_rsc_repack']=dict(return_bundle_lanes=4,station_width_um=G.stn_dims([G.CRET+2]*4,False)[0],moves=receipt,physical_qualified=False)
+
 def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
  """Actual per-root chains, preserving immutable logical gather lane ordering.
  Geometry-independent equal-delay assertions are deliberately absent: actual
  x_stages/r_stages become compiler inputs, never an ideal tier flight estimate.
  """
+ compact_return_relays(G,m,CH)
  road=Roadmap(G,m,cor);allowed=[v for k,v in cor.items() if k.startswith(('cfstreet','rsclane','s14','vch','hcc'))]
  m['chain_paths']=[];calendar={}
  # One real broadcast tree per physical half. Shared road prefixes are
@@ -160,6 +187,8 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
    else:G._add_tap(m,last,0,(cf.name,'xf','xd'))
    count=flight[n]+len(sts);m.setdefault('x_stages',{})[r]=count
    calendar[r]={'root':r,'x_stations':count,'x_path_um':G._poly_len(prefix)+dist[n]+G._poly_len(path),'physical_half':side,'logical_gather':[f['logical_half'],f['logical_tier'],f['logical_col']]}
+ # Return stations occupy the eastern RSC lane beside existing packed relays.
+ road=Roadmap(G,m,cor,return_lanes=True)
  for logical in 'WE':
   for t in range(G.TIERS):
    roots=sorted((r for r,f in m['frames'].items() if f['logical_half']==logical and f['logical_tier']==t),key=lambda r:m['frames'][r]['logical_col'],reverse=True)
@@ -167,10 +196,9 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
    endb=hub_block(f'hr_{logical}{t}',nm,'hend',w,h,ga.x if logical=='W' else ga.x+ga.w,gy,logical,[cor['s14W'] if logical=='W' else cor['vch']])
    for side in 'WE':
     members=[(lane,r) for lane,r in enumerate(roots) if m['frames'][r]['half']==side]
-    # Actual bundled pin-grid sizing: six70-bit vertical lanes are41.016um;
-    # seven47.496um leave no legal clearance in the47.52um RSC lane.
-    for batch in range(0,len(members),6):
-     group=members[batch:batch+6];prefix=f'cr{logical}{t}_{side}{batch//6}'
+    # Four lanes leave space beside17.256um existing field-return relays.
+    for batch in range(0,len(members),4):
+     group=members[batch:batch+4];prefix=f'cr{logical}{t}_{side}{batch//4}'
      entry=min(road.entry[side],key=lambda n:abs(n[1]-gy))
      dist={entry:0};parent={entry:None};q=[(0,entry)]
      while q:
