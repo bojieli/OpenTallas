@@ -1,0 +1,6 @@
+TB_VMCORE RESULT mode 0 cycles 3210 commits 69696 K 11 reads 19745 pq 514 mix_reads 4010 mix_writes 1000 rows_checked 25811 dones 4 cmds 4 bad 0
+TB_VMCORE PASS mode 0
+- /srv/opentallas-scratch/codex/s81-vm-scatter-pipe-1103/out/baseline/src/tb_dsfd_vm_static_core.sv:338: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 15.512 s; speed 172.747 ns/s
+- Verilator: cpu 15.511 s on 1 threads; allocated 54 MB
