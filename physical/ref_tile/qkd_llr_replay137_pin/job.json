@@ -1,5 +1,5 @@
 {
- "name": "qkd_llr_replay137_pin-r2-COMMIT",
+ "name": "qkd_llr_replay137_pin-r2-501cc8b6b",
  "block": "ot_qkvd_llr_replay_leaf",
  "ref_tile": true,
  "owner": "Codex:q-link-replay",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex/q-link-replay-1014",
-  "commit": "COMMIT",
+  "commit": "501cc8b6b",
   "extra_paths": [
    "rtl/qwen_split",
    "rtl/test/qwen_split",
@@ -102,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_llr_replay137_pin/qkd_llr_replay137_pin-r2-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_llr_replay137_pin/qkd_llr_replay137_pin-r2-501cc8b6b"
   }
  ],
  "cycles_added": 0,
