@@ -21,7 +21,8 @@ module host_su_axi_install #(
  reg[31:0] wdata;reg[3:0] wstrb;
  reg[22:0] selector;reg selector_valid;reg[2:0] chunk;
  reg[255:0] payload;reg[15:0] length;
- wire cfg_ready,cfg_accept;
+ wire cfg_ready,cfg_accept,target_ready;
+ assign block_ready=target_ready&&!selector_valid;
  wire execute=aw_pending&&w_pending&&!s_bvalid;
  wire full_write=wstrb==4'hf;
  wire config_word=execute&&full_write&&awaddr==12'hf38&&selector_valid;
@@ -35,7 +36,7 @@ module host_su_axi_install #(
  host_su_target #(.LINE_BITS(LINE_BITS),.EDGES(EDGES),.COLS(COLS),.DICT_ENTRIES(DICT_ENTRIES),.DICT_BANKS(DICT_BANKS),.MACROS(MACROS),.MUT_READY(MUT_READY)) target(
   .clk(clk),.rst_n(rst_n),.clk_macro(clk_macro),.cfg_v(cfg_v),.cfg_bank(selector[15:0]),.cfg_row(selector[22:16]),.cfg_data(cfg_data),
   .cfg_ready(cfg_ready),.cfg_accept(cfg_accept),.validate_v(validate_v),.launch_v(launch_v),.length(length),
-  .block_ready(block_ready),.busy(busy),.valid(valid),.done(done),.fault(fault),.edge_index(edge_index),.command(command));
+  .block_ready(target_ready),.busy(busy),.valid(valid),.done(done),.fault(fault),.edge_index(edge_index),.command(command));
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n)begin
    aw_pending<=0;w_pending<=0;awaddr<=0;wdata<=0;wstrb<=0;
