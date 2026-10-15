@@ -14,12 +14,15 @@ module tb_dsfd_vm_static_capl_equiv;
       if ({va,fa} !== {vb,fb} || (va && {ra,ma,da} !== {rb,mb,db})) begin
         $display("FAIL outputs cycle=%0d fault=%h/%h",cyc,fa,fb); $fatal(1);
       end
-      if ({a.nV,a.full,a.f_alias,a.f_dup} !== {b.nV,b.full,b.f_alias,b.f_dup}) begin
+      if (rn && {a.nV,a.full,a.f_alias,a.f_dup} !== {b.nV,b.full,b.f_alias,b.f_dup}) begin
         $display("FAIL next controls cycle=%0d",cyc); $fatal(1);
       end
       for(e=0;e<8;e=e+1) begin
-        if ({a.nK[e],a.nM[e],a.nD[e]} !== {b.nK[e],b.nM[e],b.nD[e]}) begin
+        if (rn && {a.nK[e],a.nM[e],a.nD[e]} !== {b.nK[e],b.nM[e],b.nD[e]}) begin
           $display("FAIL next entry cycle=%0d entry=%0d",cyc,e); $fatal(1);
+        end
+        if ({a.KEY[e],a.MSK[e],a.DAT[e],a.V[e]} !== {b.KEY[e],b.MSK[e],b.DAT[e],b.V[e]}) begin
+          $display("FAIL registered entry/reset cycle=%0d entry=%0d",cyc,e); $fatal(1);
         end
       end
     end

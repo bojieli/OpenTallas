@@ -71,23 +71,27 @@ module dsfd_vm_static_capl #(parameter integer E = 8) (
     // This avoids a blocking 16-input merge chain on every 512-bit entry.
     always @* begin : p_merge
         integer e, k, w;
-        reg found, hit, a, b;
+        reg hit, a, b;
         reg [9:0] kk;
-        reg [15:0] accepted;
+        reg [15:0] targeted, first, accepted;
         f_alias = 1'b0; f_dup = 1'b0;
         for (e = 0; e < E; e = e + 1) begin
-            kk = KEY[e]; found = V[e];
-            // The first (lowest k) aligned element owns an empty entry.
-            for (k = 0; k < 16; k = k + 1) begin
-                if (eok[k] && ek[k][EB-1:0] == e[EB-1:0] && !found) begin
-                    kk = ek[k]; found = 1'b1;
-                end
-            end
+            for (k = 0; k < 16; k = k + 1)
+                targeted[k] = eok[k] && ek[k][EB-1:0] == e[EB-1:0];
+            // Parallel prefix priority: each candidate tests a CONSTANT prefix
+            // mask. The key is an OR reduction of one-hot candidates, avoiding
+            // sixteen cascaded 10-bit priority muxes on the data path.
+            for (k = 0; k < 16; k = k + 1)
+                first[k] = targeted[k] && !(|(targeted & ((16'h1 << k) - 16'd1)));
+            kk = 10'd0;
+            for (k = 0; k < 16; k = k + 1)
+                kk = kk | (ek[k] & {10{first[k]}});
+            if (V[e]) kk = KEY[e];
             accepted = 16'd0;
             for (k = 0; k < 16; k = k + 1) begin
                 if (eok[k] && ek[k][EB-1:0] == e[EB-1:0]) begin
                     if (ek[k] != kk) f_alias = 1'b1;
-                    else accepted[k] = 1'b1;
+                    else accepted[k] = rn;
                 end
             end
             hit = |accepted;
@@ -107,6 +111,13 @@ module dsfd_vm_static_capl #(parameter integer E = 8) (
     end
     // ------------------------------------------------------------------ write selection (registered output)
     always @(posedge ck) begin : p_out integer e; reg [EB:0] nf; reg sel; reg two; integer fe;
+        // DAT/KEY are control-valid state: rn must gate the small per-word
+        // acceptance signals, not become a separate enable on all 4176 bits.
+        // accepted==0 while reset holds makes nD/nK equal their old values, so
+        // even the otherwise invalid data bits retain the historical behavior.
+        for (e = 0; e < E; e = e + 1) begin
+            DAT[e] <= nD[e]; KEY[e] <= nK[e];
+        end
         if (!rn) begin
             V <= {E{1'b0}}; o_v <= 1'b0; flt <= 5'd0; fl_on <= 1'b0; fl_c <= '0;
             for (e = 0; e < E; e = e + 1) MSK[e] <= 16'd0;
@@ -118,7 +129,7 @@ module dsfd_vm_static_capl #(parameter integer E = 8) (
             else if (fl_on && sel && nV[fl_c - 1] && nM[fl_c - 1] != 16'd0 && fe != fl_c - 1) two = 1'b1;
             for (e = 0; e < E; e = e + 1) begin
                 V[e] <= nV[e] && !(sel && fe == e);
-                KEY[e] <= nK[e]; MSK[e] <= (sel && fe == e) ? 16'd0 : nM[e]; DAT[e] <= nD[e];
+                MSK[e] <= (sel && fe == e) ? 16'd0 : nM[e];
             end
             o_v <= sel;
             if (sel) begin o_row <= {nK[fe], gid}; o_m <= nM[fe]; o_d <= nD[fe]; end
