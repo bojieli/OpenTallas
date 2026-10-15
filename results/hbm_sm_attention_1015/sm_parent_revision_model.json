@@ -1,0 +1,80 @@
+{
+  "schema": "opentallas.hbm.sm_attention_parent_revision_model.v1",
+  "status": "SOURCE_FIRST_IMPLEMENTATION_MODEL; no physical slot or native adoption",
+  "source_base": "f6a5d83414a64c6c9eb1a3a3a160140dfc64f4bc",
+  "static_parent_source": "a5838a5ff:rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
+  "shape": {
+    "sms": 32,
+    "columns": 8,
+    "leaf_rows_per_column": 4,
+    "closed_tcl_halves_per_leaf": 2,
+    "macs_per_cycle_per_sm": 512,
+    "new_merge_fp32_adders_per_sm": 512
+  },
+  "real_macros_per_sm": {
+    "converter_64x512": 8,
+    "merge_64x512": 32,
+    "compact_probability_128x256": 1,
+    "additional_publish_macro": 0
+  },
+  "new_memory_bits_per_sm": 1343488,
+  "macro_outline_area_um2_per_sm": 536665.77216,
+  "macro_outline_area_mm2_32sm": 17.17330470912,
+  "area_excludes": [
+    "merge adders",
+    "mode/control flops",
+    "read/publish capture registers",
+    "routing/PG/clock margin"
+  ],
+  "ports": {
+    "KV_line_bits": 1088,
+    "xwrite_bits": 2048,
+    "result_bits": 256,
+    "existing_row_bundle_bits": 818,
+    "probability_payload_bits_in_unused_blockdot_weights": 128,
+    "attention_metadata_budget_bits_in_unused_blockdot_weights": 404,
+    "merge_stack_bits_per_leaf": 32768,
+    "merge_active_levels": 4,
+    "publish_reserved_level": 7,
+    "publish_slots_per_leaf": 8
+  },
+  "static_latency_cycles": {
+    "compact_p_load_128rows": 128,
+    "compact_p_read_macro_and_capture": 2,
+    "merge_adder_feedback_turn": 8,
+    "merge_flush_lv4": 40,
+    "publish_initial_read_and_capture": 2,
+    "ds_output_words_per_column": 64,
+    "ds_publish_serial_cycles": 64,
+    "qwen_output_words_per_column_per_op": 256,
+    "qwen_publish_serial_cycles_per_op": 256
+  },
+  "execution_requirements": [
+    "all8columns active for attention; DS samep in8columns with onebeat/slot assigned percolumn",
+    "Qwen4queryheads duplicated across2columns/head;2streams/replica",
+    "probability loads use reservedxw_grp127; legacy13beat image expansion is not used",
+    "run/publish slots supplied by static programme; overflow,missing beat,wrongslot only fault and never reschedule",
+    "reuse closed XS,tcl, transport masters; new merge, leaf control and BE variant get distinct names and unassigned physical views",
+    "sum alignment copied from closed tct: ML7,ALAT7,LL16 and existing pin/control stages; measure exact composed event edge before native adoption",
+    "reuse level7 only with LV<=7; productionLV4; never overlap merge writes with publication reads unless explicitly scheduled and port-safe"
+  ],
+  "qualification_blockers": [
+    "new static command ABI and parser/compiler",
+    "new scalar probability load/read path and hard leaf source",
+    "exact tcl->merge alignment and baseline/PV/h128 gates",
+    "publication selection/tag/BE serialization and downstream addresses",
+    "full source-shaped static SM component proof with failing semantic mutants",
+    "COLL128blockcyclic placement and actual memory service schedule",
+    "assigned physical pins/child outlines/cut capacity/TT/FF/DRC0"
+  ],
+  "transport_encoding_candidate": {
+    "row_width_unchanged": 818,
+    "attention_marker": "reserved bf_op=1,fp4_op=1; legal legacy formats never produce both",
+    "unused_blockdot_weight_payload_bits": 532,
+    "probability_field_bits": 128,
+    "metadata_field_bits": 404,
+    "scalar_load_group": 127,
+    "backend_mode": "revisioned static control; explicit physical pin/relay schedule required",
+    "status": "encoding modeled; full front/XS/BE integration not implemented"
+  }
+}
