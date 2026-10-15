@@ -2,7 +2,7 @@
  "schema": "opentallas.qwen-tp8.assigned-pins.v1",
  "master": "qfd_static_ch546",
  "outline": {
-  "w": 216,
+  "w": 233.28,
   "h": 151.2
  },
  "instances": 12,
@@ -1416,12 +1416,12 @@
    81
   ],
   "at_request_um": [
-   19.44,
+   27.216,
    34.56
   ]
  },
  "orientation": "R0",
  "placement_status": "LOCAL_PINS_ASSIGNED; absolute sites and role endpoint mapping pending; no physical qualification",
- "note": "Compute die assigns fixed M4/M5 track centers (offset0.012/pitch0.048). Local kit geometry accepted; no change to frozen C14. Native boundary/clock/reset qualification and distributed die fit remain required.",
+ "note": "Compute die assigns fixed M4/M5 track centers (offset0.012/pitch0.048). Local kit geometry accepted; no change to frozen C14. Native boundary/clock/reset qualification and distributed die fit remain required. Revised width233.28 and SRAMx27.216 satisfy20um macro-edge clearance; along-face tracks unchanged.",
  "pin_density_contract": "Data faces use every second native0.048um track (0.096um centers),10.417bits/um <12bits/um gate; no relaxed pin-density limit."
 }

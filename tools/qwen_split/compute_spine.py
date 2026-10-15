@@ -26,7 +26,7 @@ CHE = 108.0                     # C7: spine EDGE channels (beside the tile field
                                 # ~80-um frame) must stand within 490 um of xcol_24's W face across tile column 24
 PORT_WH = (float(os.environ.get('OT_SPLIT_PORT_W', '1036.8')), 2462.4)      # qfd_port_tiles_* slot: 2.553 mm2 >= the measured 2.536 mm2 need (blockers G7)
 RES_WH = (777.6, 518.4)
-LANES_WH = (803.52, 1131.84)
+LANES_WH = (881.28, 1131.84)
 SU_WH = (3240.0, 3672.0)        # qfd_sp_su64_sfu: 64-lane component 4.84 mm2 children + reducer + glue (Codex 3434 x 2570 bbox)
 VM_WH = (4708.8, 2203.2)        # TRIMMED central VM (owner 08:20 PT 10-14: distributed x slices adopted; banks / SU ports / row reads only, M7 cap, no wall)
 CTLM_WH = (777.6, 1814.4)
@@ -47,9 +47,10 @@ HROW = 216.0                    # head-row channel half height kept free of slab
 DVM = os.environ.get('OT_SPLIT_DVM', '1') != '0'
 XCOL_WH = (64.8, 1313.28)       # qfd_xcol_e/w: xhead + 8 x qfd_xs_leaf (two write chains N / S), in the column corridor,
                                 # centred on the head row; 604.8 N + 103.68 head + 604.8 S (contract v1 slice slots)
-TAP_WH = (345.6, 345.6)         # qfd_xs_tap at the VM N face, E of the constant group (SU write tap + attention write tap)
+TAP_SLOT_WH = (345.6, 345.6)    # reserved control-stack envelope remains fixed
+TAP_WH = (216.0, 216.0)         # qfd_xs_tap at the VM N face, E of the constant group (SU write tap + attention write tap)
 XCOR_D = 516                    # corridor word {go 1, ib 379, xl 128, tag 8} (qfd_xcst / qfd_xcol n_d / s_d)
-XHEAD_D = 1568                  # head-row word {go 1, ib 379, desc 73, fill 1114} (qfd_xcol w_d / e_d)
+XHEAD_D = 1 + 379 + 73 + 1114                  # head-row word {go 1, ib 379, desc 73, fill 1114} (qfd_xcol w_d / e_d)
 TAP_SW, TAP_AW, TAP_PF, TAP_GI = 1 + 24 + 64 + 2048, 1 + 24 + 16 + 512, 72, 380
 
 
@@ -420,7 +421,7 @@ def place(v, m, G):
     if STACK == 'seam':
         # The tap sits beside the SU, above the VM's abutted face. The controls form
         # one column above it rather than sending every ME command around the VM.
-        ct = put('tt_ctlm', xf - CH - CTLM_WH[0], su.y + TAP_WH[1] + CH, CTLM_WH)
+        ct = put('tt_ctlm', xf - CH - CTLM_WH[0], su.y + TAP_SLOT_WH[1] + CH, CTLM_WH)
         put('tt_up4_0', ct.x, ct.y + CTLM_WH[1] + CH, UP4_WH)
     else:
         ct = put('tt_ctlm', cx - CTLM_WH[0] - 2.16, vm.y - CH - CTLM_WH[1], CTLM_WH)
@@ -446,5 +447,8 @@ def place(v, m, G):
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         json.dump(dict(die=m['die'], rec=rec, insts=ins), open(os.environ['OT_SPLIT_DUMP'], 'w'), default=str)
+    from qwen_split.static_io_contract import build as static_io_build
+    m['native_static_io_contract'] = static_io_build(next(i for i in m['insts'] if i.name == 'io_xfifo'))
+    rec['native_static_io_contract'] = dict(children=12, roots=24, native_endpoint_binding='OPEN; legacy IO graph remains diagnostic')
     m['split_compute'] = rec
     return rec

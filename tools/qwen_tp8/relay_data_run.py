@@ -47,6 +47,9 @@ rst.sort(reverse=True)
 rec['reset'] = dict(reset_tree=m.get('tp8_reset_tree'), reset_named_nets=len(rst),
                     reset_named_over_500=[q for q in rst if q[0] > 500.0], reset_named_worst=rst[:12])
 rec['instances'] = len(m['insts'])
+if m.get('native_static_io_contract'):
+    (out / 'native_static_io_contract.json').write_text(json.dumps(m['native_static_io_contract'], indent=1) + '\n')
+    rec['native_static_io_contract'] = m['native_static_io_contract']
 rec['tree_host_manifest'] = m.get('tree_host_manifest')
 if m.get('tree_host_manifest'):
     (out / 'tree_host_manifest.json').write_text(json.dumps(m['tree_host_manifest'], indent=1) + '\n')
