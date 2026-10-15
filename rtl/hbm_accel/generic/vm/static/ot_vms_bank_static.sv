@@ -142,21 +142,31 @@ module ot_vms_bank_static #(
         w_active[WG+2] = pq_r[284] && pq_r[283];
         w_active[WG+3] = x2_r[275]; w_active[WG+4] = dq_r[280];
         selected_read = 1'b0; selected_write = 1'b0;
-        if (rslot_v_d && int'(read_owner) <= RG) begin
-            selected_read = r_active[read_owner];
-            if (int'(read_owner) == RG) rd_decode = {1'b0,pq_r[282:272]};
-            else rd_decode = dsec(rq_r[int'(read_owner)*17 +: 16],bid_r,sid_r);
+        // Decode compiler slots against constant lane indices. This is a
+        // bounded mux, not arbitration: no other active source can be chosen.
+        // Constant slices also avoid a runtime cast/shift unsupported by the
+        // synthesis frontend and the wide variable-part-select SHARE hazard.
+        if (rslot_v_d) begin
+            for (integer g = 0; g < RG; g = g + 1) if (read_owner == RB'(g)) begin
+                selected_read = r_active[g];
+                rd_decode = dsec(rq_r[g*17 +: 16],bid_r,sid_r);
+            end
+            if (read_owner == RB'(RG)) begin
+                selected_read = r_active[RG]; rd_decode = {1'b0,pq_r[282:272]};
+            end
         end
-        if (wslot_v_d && int'(wslot_d) <= WG+4) begin
-            selected_write = w_active[wslot_d];
-            if (int'(wslot_d) < WG) wr_decode = {dsec(wq_r[int'(wslot_d)*281+264 +: 16],bid_r,sid_r),wq_r[int'(wslot_d)*281 +: 264]};
-            else case (int'(wslot_d))
-                WG:   wr_decode = {dsec(kq_r[279:264],bid_r,sid_r),kq_r[263:0]};
-                WG+1: wr_decode = {1'b0,xq_r[274:0]};
-                WG+2: wr_decode = {1'b0,pq_r[282:8]};
-                WG+3: wr_decode = {1'b0,x2_r[274:0]};
-                WG+4: wr_decode = {dsec(dq_r[279:264],bid_r,sid_r),dq_r[263:0]};
-                default: wr_decode = '0;
+        if (wslot_v_d) begin
+            for (integer g = 0; g < WG; g = g + 1) if (wslot_d == WB'(g)) begin
+                selected_write = w_active[g];
+                wr_decode = {dsec(wq_r[g*281+264 +: 16],bid_r,sid_r),wq_r[g*281 +: 264]};
+            end
+            case (wslot_d)
+                WG:   begin selected_write = w_active[WG]; wr_decode = {dsec(kq_r[279:264],bid_r,sid_r),kq_r[263:0]}; end
+                WG+1: begin selected_write = w_active[WG+1]; wr_decode = {1'b0,xq_r[274:0]}; end
+                WG+2: begin selected_write = w_active[WG+2]; wr_decode = {1'b0,pq_r[282:8]}; end
+                WG+3: begin selected_write = w_active[WG+3]; wr_decode = {1'b0,x2_r[274:0]}; end
+                WG+4: begin selected_write = w_active[WG+4]; wr_decode = {dsec(dq_r[279:264],bid_r,sid_r),dq_r[263:0]}; end
+                default: begin end
             endcase
         end
         schedule_bad = (rslot_v_d && int'(rslot_d)>RG) || (wslot_v_d && int'(wslot_d)>WG+4);

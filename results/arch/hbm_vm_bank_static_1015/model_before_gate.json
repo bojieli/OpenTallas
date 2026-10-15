@@ -1,0 +1,376 @@
+{
+  "hfd_vms_bank_static_rg7wg3": {
+    "outline_um": [
+      410.4,
+      410.4
+    ],
+    "scalar_pins": 4742,
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "width": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "width": 1
+      },
+      "bid": {
+        "direction": "input",
+        "width": 3
+      },
+      "sid": {
+        "direction": "input",
+        "width": 2
+      },
+      "rslot_v": {
+        "direction": "input",
+        "width": 1
+      },
+      "rslot": {
+        "direction": "input",
+        "width": 3
+      },
+      "wslot_v": {
+        "direction": "input",
+        "width": 1
+      },
+      "wslot": {
+        "direction": "input",
+        "width": 3
+      },
+      "rq0": {
+        "direction": "input",
+        "width": 17
+      },
+      "rr0": {
+        "direction": "output",
+        "width": 257
+      },
+      "rq1": {
+        "direction": "input",
+        "width": 17
+      },
+      "rr1": {
+        "direction": "output",
+        "width": 257
+      },
+      "rq2": {
+        "direction": "input",
+        "width": 17
+      },
+      "rr2": {
+        "direction": "output",
+        "width": 257
+      },
+      "rq3": {
+        "direction": "input",
+        "width": 17
+      },
+      "rr3": {
+        "direction": "output",
+        "width": 257
+      },
+      "rq4": {
+        "direction": "input",
+        "width": 17
+      },
+      "rr4": {
+        "direction": "output",
+        "width": 257
+      },
+      "rq5": {
+        "direction": "input",
+        "width": 17
+      },
+      "rr5": {
+        "direction": "output",
+        "width": 257
+      },
+      "rq6": {
+        "direction": "input",
+        "width": 17
+      },
+      "rr6": {
+        "direction": "output",
+        "width": 257
+      },
+      "wq0": {
+        "direction": "input",
+        "width": 281
+      },
+      "wq_done0": {
+        "direction": "output",
+        "width": 1
+      },
+      "wq1": {
+        "direction": "input",
+        "width": 281
+      },
+      "wq_done1": {
+        "direction": "output",
+        "width": 1
+      },
+      "wq2": {
+        "direction": "input",
+        "width": 281
+      },
+      "wq_done2": {
+        "direction": "output",
+        "width": 1
+      },
+      "dq": {
+        "direction": "input",
+        "width": 281
+      },
+      "dq_done": {
+        "direction": "output",
+        "width": 1
+      },
+      "kq": {
+        "direction": "input",
+        "width": 281
+      },
+      "kq_done": {
+        "direction": "output",
+        "width": 1
+      },
+      "xq": {
+        "direction": "input",
+        "width": 276
+      },
+      "xq_done": {
+        "direction": "output",
+        "width": 1
+      },
+      "xq2": {
+        "direction": "input",
+        "width": 276
+      },
+      "xq2_done": {
+        "direction": "output",
+        "width": 1
+      },
+      "eg": {
+        "direction": "output",
+        "width": 276
+      },
+      "pq": {
+        "direction": "input",
+        "width": 285
+      },
+      "pr": {
+        "direction": "output",
+        "width": 266
+      },
+      "status": {
+        "direction": "output",
+        "width": 18
+      }
+    },
+    "face_scalar_pins": {
+      "N": 1115,
+      "S": 1383,
+      "E": 1114,
+      "W": 1130
+    },
+    "macro_count": 3,
+    "macro_size_um": [
+      174.744,
+      70.488
+    ],
+    "macro_envelope_area_um2": 36952.065215999995,
+    "slot_area_um2": 168428.15999999997,
+    "logic_area": "unmeasured; synthesis gate next",
+    "clock_rule": "measure exact sink count; if >15000 require measured insertion<=300ps and spread<=80ps",
+    "PG_escape": "real V2 SRAM M4 supply to leafM5 grid; parentM6 strap; no signal/PG aboveM5"
+  },
+  "hfd_vms_bank_static_rg5wg1": {
+    "outline_um": [
+      356.4,
+      365.04
+    ],
+    "scalar_pins": 3630,
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "width": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "width": 1
+      },
+      "bid": {
+        "direction": "input",
+        "width": 3
+      },
+      "sid": {
+        "direction": "input",
+        "width": 2
+      },
+      "rslot_v": {
+        "direction": "input",
+        "width": 1
+      },
+      "rslot": {
+        "direction": "input",
+        "width": 3
+      },
+      "wslot_v": {
+        "direction": "input",
+        "width": 1
+      },
+      "wslot": {
+        "direction": "input",
+        "width": 3
+      },
+      "rq0": {
+        "direction": "input",
+        "width": 17
+      },
+      "rr0": {
+        "direction": "output",
+        "width": 257
+      },
+      "rq1": {
+        "direction": "input",
+        "width": 17
+      },
+      "rr1": {
+        "direction": "output",
+        "width": 257
+      },
+      "rq2": {
+        "direction": "input",
+        "width": 17
+      },
+      "rr2": {
+        "direction": "output",
+        "width": 257
+      },
+      "rq3": {
+        "direction": "input",
+        "width": 17
+      },
+      "rr3": {
+        "direction": "output",
+        "width": 257
+      },
+      "rq4": {
+        "direction": "input",
+        "width": 17
+      },
+      "rr4": {
+        "direction": "output",
+        "width": 257
+      },
+      "wq0": {
+        "direction": "input",
+        "width": 281
+      },
+      "wq_done0": {
+        "direction": "output",
+        "width": 1
+      },
+      "dq": {
+        "direction": "input",
+        "width": 281
+      },
+      "dq_done": {
+        "direction": "output",
+        "width": 1
+      },
+      "kq": {
+        "direction": "input",
+        "width": 281
+      },
+      "kq_done": {
+        "direction": "output",
+        "width": 1
+      },
+      "xq": {
+        "direction": "input",
+        "width": 276
+      },
+      "xq_done": {
+        "direction": "output",
+        "width": 1
+      },
+      "xq2": {
+        "direction": "input",
+        "width": 276
+      },
+      "xq2_done": {
+        "direction": "output",
+        "width": 1
+      },
+      "eg": {
+        "direction": "output",
+        "width": 276
+      },
+      "pq": {
+        "direction": "input",
+        "width": 285
+      },
+      "pr": {
+        "direction": "output",
+        "width": 266
+      },
+      "status": {
+        "direction": "output",
+        "width": 18
+      }
+    },
+    "face_scalar_pins": {
+      "N": 854,
+      "S": 1101,
+      "E": 838,
+      "W": 837
+    },
+    "macro_count": 3,
+    "macro_size_um": [
+      174.744,
+      70.488
+    ],
+    "macro_envelope_area_um2": 36952.065215999995,
+    "slot_area_um2": 130100.256,
+    "logic_area": "unmeasured; synthesis gate next",
+    "clock_rule": "measure exact sink count; if >15000 require measured insertion<=300ps and spread<=80ps",
+    "PG_escape": "real V2 SRAM M4 supply to leafM5 grid; parentM6 strap; no signal/PG aboveM5"
+  },
+  "structural_mux_fix": {
+    "trigger": "Actual ORFS Yosys rejected runtime int cast in variable wq payload slice at source0334452c line153",
+    "change": "Read/write compiler selection now decodes constant lane indices, retaining every ABI/pipeline and no arbitration",
+    "expected_physical_effect": "No barrel shift/SHARE hazard; fixed-width onehot equality muxes",
+    "functional_gate": "Full literal-wrapper all-group gates and all-write-owner component bench before CTS resubmission"
+  },
+  "historical_preservation": {
+    "physical/ref_tile/vms_bank/kit.env": "f2819ba760054858359bbae58382d52b028106fc5b07a33e3dbc75e46dd056b0",
+    "physical/ref_tile/vms_bank/pre_cts.tcl": "103a4e4c541f0d2e10f10224fb13a2b6a1fbb5977cab7921420f9ceaaefb50fe",
+    "physical/ref_tile/vms_bank/floorplan.json": "50f48eb806c59ea0e6ab218bd52f92acaf676c87d0e15bbd8ea4ace0967342f6",
+    "physical/ref_tile/vms_bank/spec.json": "34b5059eb18086b648ccfd07c827e80f3f1f3a53aadd2d28989fbb9b706922e9",
+    "physical/ref_tile/vms_bank/job.json": "d5ac9a93db2098063588ae75bf2a27245c1bd53d90f873e413096c2e129607de",
+    "physical/ref_tile/vms_bank/clock.sdc": "c2be03e275f90fc88f60c12803fdc00722b537826937bb8deea704983846d370",
+    "physical/ref_tile/vms_bank/place.tcl": "27c6fb5a53290756d811e89cd182ba68b662bc177d02cce3183aa5bf92117114",
+    "physical/ref_tile/vms_bank/pdn.tcl": "9864d7661065da75994dec0893aaf677f9f0bef52d5f9850dc7ee04274970858",
+    "physical/ref_tile/vms_bank/pre_grt.tcl": "a6943fa6a07bcb07c998d847f52b62eed07b2ced9193773b5d999329721c1631",
+    "physical/ref_tile/vms_bank/post_drt.tcl": "29c5f064e6199f12cc166bbfc41ffd0f95d9f9c8e604d8788b707bddc06e1a49",
+    "physical/ref_tile/vms_bank/signoff.sdc": "d04eb1102d0d03fee3446cc41095a11fea111428b23d107dcd1497f6f37d4d0a",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/export_tt.tcl": "fd2672248b0a3d2b5a70dbe215a6424991e3ffb5e201f6769191f682632690e3",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/ot_vms_bank_tt.lib": "1dd6d7af69c6003ca2957d6a749c9c1c6016e9097821273e209c8dd664dd78f3",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/abstract.json": "0fc49ef0049e5a04963c1c8f4dfdeeb458afeb0242d7b7ab8cb0f4e06505e15b",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/export_ff.tcl": "b03e0f307b30f8db3e26c5b68731d51c315c71209dec141d9e09dd34e31c59f6",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/insertion.json": "b95071ff8de0ac2194a3c95692795c4ffbe82c53a4aaa0cd307166986a78224a",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/export_tt.log": "22c3d24cb913b8ce8db5c5b87debe7dbb2687cdaf6a8bfb5fad92a6abcdee454",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/export_ss.log": "6f86e2503adf5cfa0999606c88a10b0a2dd3e78781dec69d2af75ac1ffe4b0d3",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/ot_vms_bank_ss.lib": "647f9e49829805a882c778cc18b88c0d09fc767227ff47508ee03e2dda284e1f",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/export_ff.log": "cd79deea83277ed3b339255cb5e0c08356dd02b78606eadbc622c961eb56e1f3",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/ot_vms_bank_ff.lib": "b054893b028b9c7318b68d740eaab8057aac45ba78deebe204504938854a096c",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/export_ss.tcl": "e12327cd07573b6fed75b12e6519a1da27627e13074f1f9aa5b2db7130ac549d",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/child_lint.json": "6119e49ccec5fc1e333fb72da01b0fb0225ad1d23d2370eaf34898566adc3840",
+    "physical/ref_tile/vms_bank/views/ot_vms_bank/ot_vms_bank.lef": "7688007a17c93b5f1a36d7faa8543a107f086ab0644c0c5f99b1fb1bf649d14b"
+  },
+  "functional_V2_identity": {
+    "difference": "only second-line generated-version comment differs; all other source lines byte-identical",
+    "normalized_sha256": "fb2b59c210be22690dfaddd406ceacb2229663e47b7319b9a361c7de202fcb45"
+  }
+}
