@@ -1,0 +1,110 @@
+{
+ "name": "s81su_rxc_ref",
+ "top": "dsfd_su_t_rxc",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "pins": {
+  "N": [
+   "ck",
+   "rst",
+   "dn_st",
+   "dn_kind",
+   "dn_jid",
+   "dn_v",
+   "dn_d"
+  ],
+  "S": [
+   "o_v",
+   "o_a",
+   "o_m",
+   "o_d",
+   "o_v2",
+   "o_a2",
+   "o_d2",
+   "o_fu",
+   "o_fo",
+   "o_alive",
+   "o_den",
+   "o_rdy",
+   "o_rjid"
+  ],
+  "W": [
+   "xa_v",
+   "xa_x",
+   "xa_vi",
+   "xa_r",
+   "xa_f"
+  ],
+  "E": [
+   "xq_v",
+   "xq_x",
+   "xq_c",
+   "xq_s",
+   "xq_vi",
+   "xq_y",
+   "xq_f",
+   "xb_v",
+   "xb_vi",
+   "xb_y",
+   "xb_f"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "aspect": 1.0,
+ "recipe": 2,
+ "job": {
+  "benched_by": "s81su_full",
+  "owner": "Claude:s81-elemB6-1014",
+  "branch": "claude/s81-elemB6-su",
+  "tag": "g2",
+  "purpose": "S81 SU rx cluster control leaf (rxt control; RA / QR / RB lanes in leaves)",
+  "views_to": "physical/ref_tile/s81su_rxc_ref/views",
+  "record_to": "results/rtl/ref_tile/s81su_rxc_ref"
+ },
+ "std_area_um2": 30000,
+ "outline": {
+  "w": 388.8,
+  "h": 388.8
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": " | g2 (B6 10-14): RB adders moved to the leaf ot_s81_su_rxrb (g1 gate: 17,301 sinks, CTS 491.5 ps, spread 73.2, TT -367 refused)"
+}
