@@ -2067,34 +2067,44 @@ def _strip_face_pins(mst, mm):
 
 
 def _slice_pins(m, mm, down=False):
-    """v1.4: HOST slice pins.  es / er words level with the strips' es<k> / er<k> (local 378 k + 60 / + 240): controller
-    side on the W face (R0 W stacks; MY puts it on the E side toward the E controller strip), landing side on the E face;
-    the stack chains run N-S through the 32.4-um slot gaps (S face: toward slot k-1 = the root end); clocks / resets /
-    straps are area pins."""
-    by = {i.name: i for i in m['insts']}
-    off = by['hsl_WS_0'].y - by['land_WS'].y
+    """HOST slice v1.4.2: preserve every port, spread buses below 0.60 face cut.
+
+    Clock roots stay separate physical entries, all on the actual per-stack
+    core833.334 trunk.  No area pins above the M5 leaf cap.  The N view reverses
+    only the two chain faces; control/landing faces keep the same coordinates.
+    """
     w = {p: sp[1] for p, sp in mm.ports.items()}
     mm.ports.clear()
     mm.order.clear()
-    lvl = dict(ctrl_es=('W', STRIP_ES_Y), land_es=('E', STRIP_ES_Y), ctrl_er=('W', STRIP_ER_Y), land_er=('E', STRIP_ER_Y))
+    for p, face, centre in (('ctrl_es', 'W', mm.h / 4), ('ctrl_er', 'W', 3 * mm.h / 4),
+                            ('land_es', 'E', mm.h / 4), ('land_er', 'E', 3 * mm.h / 4)):
+        if p in w:
+            mm.face(p, w[p], face, 'M4', round(centre, 3), 10)
     south = ['fi', 'co', 'ao', 'fault_o', 'sko', 'sdo', 'soo', 'sfo', 'bgi']
     north = ['fo', 'ci', 'ai', 'fault_i', 'ski', 'sdi', 'soi', 'sfi', 'bgo']
-    for p, (face, y) in lvl.items():
-        if p in w:
-            mm.face(p, w[p], face, 'M4', round(y - off, 3), 2)
-    for face, lst in ((('N', south), ('S', north)) if down else (('S', south), ('N', north))):    # down: root end = N
+    for face, lst in ((('N', south), ('S', north)) if down else (('S', south), ('N', north))):
         lst = [p for p in lst if p in w]
-        span = [w[p] * 0.048 * 2 for p in lst]
+        # Four M5 tracks per bit = 0.50 local two-track demand, old two-track
+        # packed bands were 1.00.  Keep a two-micron channel between buses.
+        span = [w[p] * F.TRK['M5'][1] * 4 for p in lst]
         pos = (mm.w - sum(span) - 2.0 * (len(lst) - 1)) / 2
-        for p, s_ in zip(lst, span):
-            mm.face(p, w[p], face, 'M5', round(pos + s_ / 2, 3), 2)
-            pos += s_ + 2.0
-    rest = [p for p in w if p not in mm.ports]
-    for j, p in enumerate(sorted(rest)):
-        if w[p] == 1:
-            mm.area(p, 1, round(mm.w / 2 + ((j % 8) - 4) * 3.2, 3), round(mm.h / 2 + (j // 8 - 1) * 3.2, 3), 1)
-        else:
-            mm.face(p, w[p], 'W', 'M4', round(mm.h / 2, 3), 2)          # lpc strap (5 b), mid W face between es / er
+        if pos < 4.0:
+            raise ValueError(f'{mm.name}: slice chain face needs a larger slot')
+        for p, size in zip(lst, span):
+            mm.face(p, w[p], face, 'M5', round(pos + size / 2, 3), 4)
+            pos += size + 2.0
+    centres = dict(ck_station=('W', -5), ck_static=('W', 5),
+                   host_rst_n=('W', -15), hbm_rst_n=('W', 15),
+                   ck_boot=('E', -5), ck_boot_test=('E', 5),
+                   ctrl_completion_v=('E', -15), ctrl_completion_we=('E', 15),
+                   lpc=('W', 21))
+    rest = sorted(p for p in w if p not in mm.ports)
+    unknown = set(rest) - centres.keys()
+    if unknown:
+        raise ValueError(f'{mm.name}: no face grant for slice ports {sorted(unknown)}')
+    for p in rest:
+        face, offset = centres[p]
+        mm.face(p, w[p], face, 'M4', round(mm.h / 2 + offset, 3), 4)
 
 
 def _land_level_pins(m, mm, inst0, face_load, by):
