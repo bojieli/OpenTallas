@@ -1,0 +1,78 @@
+{
+  "schema": "opentallas.hbm_attn.qk_score_serializer_model.v1",
+  "qualification": false,
+  "RTL_implemented": false,
+  "source": {
+    "module": "ot_hdc_v41x_attn_physical_calendar",
+    "ports": "sc_v, sc_row[15:0], sc_m[1:0], sc_y[1023:0], sc_f[31:0]",
+    "payload": "sc_y[(lane*16+head)*32+:32], row=sc_row+lane; unchanged FP32"
+  },
+  "storage": {
+    "macro": "ot_sram_1r1w_32x128_m1",
+    "banks": 256,
+    "epochs": 2,
+    "allocated_bytes": 131072,
+    "maximum_useful_bytes_per_record": 40960,
+    "bank": "head*16+(row//4)%16",
+    "address": "epoch*16+row//64",
+    "word_lane": "row%4",
+    "write_ports": 16,
+    "write_bits_per_selected_bank": 64,
+    "read_ports": 16,
+    "read_bits_per_selected_bank": 128,
+    "flag_FF_capacity": 32768,
+    "data_macro_area_um2": 273605.71392,
+    "flag_read_pipeline_FF": 1024,
+    "flag_clock_roots_at_8192_sinks": 5
+  },
+  "VM": {
+    "proposed_layout": "head-major FP32[16][T]",
+    "sector": "base+head*(T//8)+block*8+bank",
+    "payload_bits_per_request": 2048,
+    "write_group": null,
+    "residency": null,
+    "consumer_SFU_binding": null,
+    "request_to_commit_edges": 3
+  },
+  "audit": [
+    {
+      "T": 128,
+      "score_words": 2048,
+      "capture_edges": 64,
+      "vm_requests": 32,
+      "final_read_edge": 79,
+      "epochs_and_reuse_checked": [
+        0,
+        1,
+        0
+      ],
+      "port_conflicts": 0,
+      "initialized_payload_checks": 6144,
+      "missing_stripe_mutant_detected": true
+    },
+    {
+      "T": 640,
+      "score_words": 10240,
+      "capture_edges": 320,
+      "vm_requests": 160,
+      "final_read_edge": 335,
+      "epochs_and_reuse_checked": [
+        0,
+        1,
+        0
+      ],
+      "port_conflicts": 0,
+      "initialized_payload_checks": 30720,
+      "missing_stripe_mutant_detected": true
+    }
+  ],
+  "timing_scope": "Edges relative to first actual sc_v; assumes actual consecutive two-row producer beats. SRAM read/output pipeline, physical stations, fixed VM ownership and real score-producer trace must be joined before price.",
+  "remaining": [
+    "Actual RTL with 256 mapped macros and exact flags",
+    "Source score trace and masks/row continuity fault checks",
+    "Native score aperture, SID and write-group allocation",
+    "Real SFU REDMAX/EXP/REDSUM chain and compiler schedule",
+    "Complete H16/D512 producer + mutants and immutable price",
+    "Physical macro homes, clocks, pin cuts and routing"
+  ]
+}

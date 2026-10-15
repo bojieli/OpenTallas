@@ -1,0 +1,113 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "rtl",
+   "message": "runtime_partselect: 3 runtime-indexed part-select(s), 2,216 bits (3 >= 64 b; e.g. ot_hgi_qdq_static_transport: rq_next[rb*17+:17] (68 b write), ot_hgi_qdq_static_transport: wq_next[wb*281+:281] (1124 b write), ot_hgi_qdq_static_transport: wq_next[wb*281+8+t*32+:32] (1024 b write)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory",
+   "fix": "decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc1tb for 24 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hgi_qdq_static_transport_sw125_20261015-044512.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hgi_qdq_static_transport_sw125_20261015-044512.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/hgi_qdq_static_transport_sw125-20261015-044512",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc1tb in 410 s (gate total 1641 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 3089 um2 + macros 0 in core 136721: util 2%",
+   "fix": "set \"std_area_um2\": 3089 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hgi_qdq_static_transport cells 26,980 flops 4,181 depth 245.0 ps util 0.023 reach 369.9 um (0.5 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "net sp[7][1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 4,783 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "net sp[7][0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 4,358 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "1572 input->register endpoint(s) > 3 levels (worst y[94]->wq[2159]$_DFF_P_/D 6 lv, y[94]->wq[1039]$_DFF_P_/D 6 lv, y[88]->wq[756]$_DFF_P_/D 6 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 2.3% outside 45%-65% (std 3144 + macro 0 um2 in 136721 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 561.4..692.3 ps (spread 130.9), boundary mean 593.0; tt insertion all 438.8..559.9 ps (spread 121.1), boundary mean 467.9; ff insertion all 362.1..475.4 ps (spread 113.3), boundary mean 389.4; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hgi_qdq_static_transport_sw125/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg       397 paths, worst slack -541.5 ps (e.g. ot_prs_00001_ff/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -5.414562131988987e-10 hold WNS 2.5557778116080954e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 4,181 sinks on the largest root <= 15,000; measured TT insertion 559.9 ps, leaf spread 121.1 ps",
+   "fix": ""
+  }
+ ]
+}
