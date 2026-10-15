@@ -16,6 +16,8 @@ module tb_static_embed_controller;
     integer calibrate=0,mode=0;
     string folder,vectors;
     wire replay=calibrate==0;
+    // Negative control corrupts an actual controller input bank bit.
+    wire [287:0] controller_es=(replay&&mode==4)?(es^(288'd1<<281)):es;
     wire beat_v,pcfault;
     wire [255:0] beat_data;
     wire [17:0] beat_token;wire [5:0] beat_word;
@@ -30,7 +32,7 @@ module tb_static_embed_controller;
     generate for(g=0;g<2;g=g+1) begin:controllers
         qkd_ctrl_pc_host_static #(.PROFILE(g==0?1:0)) dut(
             .pll_hbm(hclk),.hrst(reset&&(replay?(g==1):(g==0))),.ck(ck),.rsi(reset&&(replay?(g==1):(g==0))),
-            .pc(5'd0),.ci(319'd0),.co(),.es(es),.er(er[g]),.po(po[g]),.pi(pi),.ki(33'd0),.ko(),.fi(1'b0),.fo(cf[g]),
+            .pc(5'd0),.ci(319'd0),.co(),.es(controller_es),.er(er[g]),.po(po[g]),.pi(pi),.ki(33'd0),.ko(),.fi(1'b0),.fo(cf[g]),
             .static_cmd_owner(1'b0),.static_cmd(43'd0),.reserved_rd(1'b0),.reserved_static_col(sr_reserved),.reserved_write_col(1'b0),
             .static_epoch(16'd43),.expected_raw_valid(raw_reserved),.corrected_epoch(),.completion_v(),.completion_we(),.completion_fault(completion_fault[g]));
     end endgenerate

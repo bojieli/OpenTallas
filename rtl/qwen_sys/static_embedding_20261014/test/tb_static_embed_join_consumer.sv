@@ -22,7 +22,13 @@ module tb_static_embed_join_consumer;
         .preload_slot(slot),.preload_v(pv),.preload_scale(ps),.preload_word(pw),.preload_token(pt),.preload_data(pd),
         .su_va_re(re),.su_va_addr(addr),.su_va_q(q),.va_re(vre),.va_addr(),.va_q(2048'd0),.fault(fault));
     reg [511:0] codes[0:63];reg [31:0] expected[0:4095];reg [15:0] sc[0:0];
-    string dir;integer mut=0,tokarg=0,w,l,count=0;
+    string dir;integer mut=0,tokarg=0,w,l,count=0,beat_count=0;
+    // Compiler-side fixed one-edge transfer-to-word calendar. This depends on
+    // reserved beat slots, never on actual beat availability or producer valid.
+    always @(posedge ck) begin
+        expect_slot<=bs&&(bscale||bh);expect_word<=bw;expect_scale<=bscale;
+        if(bs)beat_count=beat_count+1;
+    end
     initial begin
         if(!$value$plusargs("VECTORS=%s",dir))$fatal(1,"VECTORS required");
         void'($value$plusargs("MUT=%d",mut));void'($value$plusargs("TOKEN=%d",tokarg));token=tokarg;
@@ -33,12 +39,9 @@ module tb_static_embed_join_consumer;
             @(negedge ck);bs=1;bv=1;bh=0;bw=w;bd=codes[w][255:0];epoch=43;
             @(negedge ck);bh=1;bd=codes[w][511:256];if(mut==1&&w==63)epoch=44;
             if(mut==2&&w==63)bv=0;
-            @(negedge ck);bs=0;bv=0;expect_slot=1;expect_word=w;expect_scale=0;
-            @(negedge ck);expect_slot=0;
         end
         @(negedge ck);bs=1;bv=1;bh=0;bscale=1;bw=0;bd=0;bd[token[3:0]*16+:16]=sc[0];epoch=43;
-        @(negedge ck);bs=0;bv=0;expect_slot=1;expect_word=0;expect_scale=1;
-        @(negedge ck);expect_slot=0;
+        @(negedge ck);bs=0;bv=0;
         repeat(2)@(negedge ck);go=1;
         #0.01;if(!goout||pend||!fo)$fatal(1,"GO rescheduled");
         @(negedge ck);go=0;
@@ -53,7 +56,7 @@ module tb_static_embed_join_consumer;
         end
         re=0;repeat(2)@(negedge ck);
         if(fault||jfault||ffault)$fatal(1,"schedule or producer identity fault");
-        if(count!=4096)$fatal(1,"full row incomplete");
-        $display("PASS actualwordjoin+epochguard+mappedSRAMconsumer token=%0d exact4096",token);$finish;
+        if(count!=4096||beat_count!=129)$fatal(1,"full row/throughput incomplete");
+        $display("PASS actualwordjoin+epochguard+mappedSRAMconsumer token=%0d exact4096 reserved129beats129consecutiveEdges no-unplanned-gaps",token);$finish;
     end
 endmodule

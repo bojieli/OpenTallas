@@ -18,9 +18,9 @@ verilator --binary --timing -Wno-fatal --top-module tb_static_embed_controller -
 "$build/obj/Vtb_static_embed_controller" +CALIBRATE=1 +CALENDAR="$build/calendar" +VECTORS="$vectors" >"$build/compiler.log" 2>&1
 # Separate process, PROFILE0 controller enabled, frozen files only.
 "$build/obj/Vtb_static_embed_controller" +CALIBRATE=0 +CALENDAR="$build/calendar" +VECTORS="$vectors" >"$build/replay.log" 2>&1
-for mutant in 1 2 3;do
+for mutant in 1 2 3 4;do
  if "$build/obj/Vtb_static_embed_controller" +CALIBRATE=0 +CALENDAR="$build/calendar" +VECTORS="$vectors" +MUT="$mutant" >"$build/mutant_$mutant.log" 2>&1;then
   echo "FAIL controller timing mutant $mutant escaped";exit 1
  fi
 done
-echo 'PASS dual-clock actual controller embedding compiler/fresh static replay and three failing timing mutants'
+echo 'PASS dual-clock actual controller embedding compiler/fresh static replay and four failing timing/address mutants'
