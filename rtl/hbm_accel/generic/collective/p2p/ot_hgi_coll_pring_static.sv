@@ -19,6 +19,10 @@ module ot_hgi_coll_pring_static #(
     input wire lp_we,
     input wire [2:0] lp_tag,
     input wire [255:0] lp_data,
+    input wire state_read_add, state_read_tx, state_read_rr,
+    input wire [2:0] state_add_tag, state_tx_tag, state_rr_tag,
+    input wire [1:0] state_add_src,
+    input wire state_add_rhs_acc, state_tx_acc,
     input wire add_v,
     input wire [2:0] add_tag,
     input wire [1:0] add_src,
@@ -40,7 +44,7 @@ module ot_hgi_coll_pring_static #(
     // 280b historical pin encoding retained: v,kind,src,dst,ttl,tag,
     // mode(reserved),aux(reserved),data. Only CARRY=1 and RESULT=2 allowed.
     reg [279:0] pin [0:1];
-    wire [255:0] local_add, acc_add, carry_add, local_tx, acc_tx, acc_rr;
+    wire [255:0] rhs_add, carry_add, state_tx, acc_rr;
     wire [1:0] carry_write;
     for(genvar d=0;d<2;d=d+1)begin:g_carry_write
         assign carry_write[d]=rx_slot[d] && pin[d][278:277]==1 && pin[d][274:273]==qid;
@@ -48,9 +52,13 @@ module ot_hgi_coll_pring_static #(
     reg [NT-1:0] local_v, acc_v, pending, active;
     reg [3:0] carry_v[0:NT-1];
     wire [255:0] aa = MUT_CARRY ? 256'b0 : carry_add;
-    wire [255:0] ab = add_rhs_acc ? acc_add : local_add;
+    wire [255:0] ab = rhs_add;
     wire [255:0] ay;
     wire [7:0] av;
+    reg read_add_v,read_tx_v,read_rr_v;
+    reg [2:0] read_add_tag,read_tx_tag,read_rr_tag;
+    reg [1:0] read_add_src;
+    reg read_add_rhs,read_tx_acc;
     reg [LAT-1:0] pv;
     reg [2:0] pt[0:LAT-1];
     generate if (NT!=8 || LAT<4 || LAT>8) begin:g_bad
@@ -59,7 +67,8 @@ module ot_hgi_coll_pring_static #(
     // Payload and arithmetic are actual leaf modules, with one clock entry per
     // 32b lane. All roots have synchronous edge/phase semantics; SPLIT_CLOCKS
     // changes physical clock delivery only, never the compiler cycle price.
-    // State leaf: 8 tags * (local+acc+4carry) * 32 = 1,536 payload flops.
+    // State leaf: 1,536 payload flops + 128 registered read face bits.
+    // Each read is explicitly reserved one edge before add/TX/publication.
     for(genvar l=0;l<8;l=l+1)begin:g_lane
         ot_hgi_coll_pring_static_state_lane u_state(
             .clk(SPLIT_CLOCKS?clk_state[l]:clk),
@@ -68,9 +77,11 @@ module ot_hgi_coll_pring_static #(
             .carry_we(carry_write),.carry0_tag(pin[0][270:268]),.carry0_src(pin[0][276:275]),
             .carry1_tag(pin[1][270:268]),.carry1_src(pin[1][276:275]),
             .carry0_data(pin[0][l*32+:32]),.carry1_data(pin[1][l*32+:32]),
-            .add_tag(add_tag),.add_src(add_src),.tx_tag(tx_tag),.rr_tag(rr_local_tag),
-            .local_add(local_add[l*32+:32]),.acc_add(acc_add[l*32+:32]),.carry_add(carry_add[l*32+:32]),
-            .local_tx(local_tx[l*32+:32]),.acc_tx(acc_tx[l*32+:32]),.acc_rr(acc_rr[l*32+:32]));
+            .read_add(state_read_add),.read_tx(state_read_tx),.read_rr(state_read_rr),
+            .read_rhs_acc(state_add_rhs_acc),.read_tx_acc(state_tx_acc),
+            .add_tag(state_add_tag),.add_src(state_add_src),.tx_tag(state_tx_tag),.rr_tag(state_rr_tag),
+            .rhs_add(rhs_add[l*32+:32]),.carry_add(carry_add[l*32+:32]),
+            .tx_data(state_tx[l*32+:32]),.acc_rr(acc_rr[l*32+:32]));
         ot_hgi_coll_pring_static_add_lane #(.LAT(LAT)) u_add(
             .clk(SPLIT_CLOCKS?clk_add[l]:clk),.rst_n(rst_n),.valid_in(add_v),
             .a(aa[l*32+:32]),.b(ab[l*32+:32]),.y(ay[l*32+:32]),.valid_out(av[l]));
@@ -88,9 +99,25 @@ module ot_hgi_coll_pring_static #(
             pin[0]<=0;pin[1]<=0;cw_o<=0;ccw_o<=0;
             local_v<=0;acc_v<=0;pending<=0;active<=0;pv<=0;
             rr_v<=0;rr_tag<=0;rr_d<=0;fault<=0;
+            read_add_v<=0;read_tx_v<=0;read_rr_v<=0;
             for(integer t=0;t<NT;t=t+1)carry_v[t]<=0;
         end else begin
             pin[0]<=cw_i;pin[1]<=ccw_i;
+            // Read reservations precede their consuming operation by exactly
+            // one edge. These checks report faults, never gate issue or wait.
+            read_add_v<=state_read_add;read_tx_v<=state_read_tx;read_rr_v<=state_read_rr;
+            read_add_tag<=state_add_tag;read_add_src<=state_add_src;read_add_rhs<=state_add_rhs_acc;
+            read_tx_tag<=state_tx_tag;read_tx_acc<=state_tx_acc;read_rr_tag<=state_rr_tag;
+            if(add_v!=read_add_v || (|tx_inject)!=read_tx_v || rr_local!=read_rr_v)fault<=1;
+            if(add_v && (add_tag!=read_add_tag || add_src!=read_add_src || add_rhs_acc!=read_add_rhs))fault<=1;
+            if((|tx_inject) && (tx_tag!=read_tx_tag || tx_acc!=read_tx_acc))fault<=1;
+            if(rr_local && rr_local_tag!=read_rr_tag)fault<=1;
+            if(state_read_add && (!carry_v[state_add_tag][state_add_src] || pending[state_add_tag] ||
+               (state_add_rhs_acc ? !acc_v[state_add_tag] : !local_v[state_add_tag])))fault<=1;
+            if(state_read_tx && (state_tx_acc ? (!acc_v[state_tx_tag] || pending[state_tx_tag]) : !local_v[state_tx_tag]))fault<=1;
+            if(state_read_rr && (!acc_v[state_rr_tag] || pending[state_rr_tag]))fault<=1;
+            if(state_read_add && !state_add_rhs_acc && lp_we && lp_tag==state_add_tag)fault<=1;
+            if(state_read_tx && !state_tx_acc && lp_we && lp_tag==state_tx_tag)fault<=1;
             pv<={pv[LAT-2:0],add_v};pt[0]<=add_tag;
             for(integer i=1;i<LAT;i=i+1)pt[i]<=pt[i-1];
             rr_v<=rr_local;
@@ -158,7 +185,7 @@ module ot_hgi_coll_pring_static #(
                     if(tx_forward[d])fault<=1;
                     if(tx_acc ? (!acc_v[tx_tag] || pending[tx_tag]) : !local_v[tx_tag])fault<=1;
                     if(tx_result && (!tx_acc || tx_dst!=qid))fault<=1;
-                    outx=flit(tx_tag,tx_acc?acc_tx:local_tx);
+                    outx=flit(tx_tag,state_tx);
                 end
                 if(d==0)cw_o<=outx;else ccw_o<=outx;
             end
@@ -188,9 +215,10 @@ module ot_hgi_coll_pring_static_state_lane(
     input wire [2:0] carry0_tag,carry1_tag,
     input wire [1:0] carry0_src,carry1_src,
     input wire [31:0] carry0_data,carry1_data,
+    input wire read_add,read_tx,read_rr,read_rhs_acc,read_tx_acc,
     input wire [2:0] add_tag,tx_tag,rr_tag,
     input wire [1:0] add_src,
-    output wire [31:0] local_add,acc_add,carry_add,local_tx,acc_tx,acc_rr
+    output reg [31:0] rhs_add,carry_add,tx_data,acc_rr
 );
     reg [31:0] lp[0:7],acc[0:7],carry[0:7][0:3];
     always @(posedge clk)begin
@@ -198,9 +226,12 @@ module ot_hgi_coll_pring_static_state_lane(
         if(acc_we)acc[acc_tag]<=acc_data;
         if(carry_we[0])carry[carry0_tag][carry0_src]<=carry0_data;
         if(carry_we[1])carry[carry1_tag][carry1_src]<=carry1_data;
+        // All data outputs are flop Qs at the hardened face. The tag muxes
+        // remain inside this leaf, before the reserved read capture edge.
+        if(read_add)begin rhs_add<=read_rhs_acc?acc[add_tag]:lp[add_tag];carry_add<=carry[add_tag][add_src];end
+        if(read_tx)tx_data<=read_tx_acc?acc[tx_tag]:lp[tx_tag];
+        if(read_rr)acc_rr<=acc[rr_tag];
     end
-    assign local_add=lp[add_tag];assign acc_add=acc[add_tag];assign carry_add=carry[add_tag][add_src];
-    assign local_tx=lp[tx_tag];assign acc_tx=acc[tx_tag];assign acc_rr=acc[rr_tag];
 endmodule
 
 // Independent native arithmetic root: pin capture + LAT-1 arithmetic cuts.

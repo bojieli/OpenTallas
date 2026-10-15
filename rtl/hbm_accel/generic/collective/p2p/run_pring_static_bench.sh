@@ -9,7 +9,7 @@ P=rtl/hbm_accel/generic/collective/p2p
 "$OUT/obj/Vtb_hgi_coll_pring_static" > "$OUT/run.log" 2>&1
 cat "$OUT/run.log"
 grep -q '^STATIC_RING PASS ' "$OUT/run.log"
-for scenario in 1 2 3 4 5 6 7 8; do
+for scenario in 1 2 3 4 5 6 7 8 10 11 12; do
  "$OUT/obj/Vtb_hgi_coll_pring_static" +fault="$scenario" > "$OUT/fault-$scenario.log" 2>&1
  grep -q '^STATIC_RING FAULT PASS ' "$OUT/fault-$scenario.log"
  cat "$OUT/fault-$scenario.log"
