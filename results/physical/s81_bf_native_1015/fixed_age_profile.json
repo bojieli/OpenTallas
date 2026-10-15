@@ -85,6 +85,15 @@
     "source_commit": "8598faf90",
     "log": "/tmp/bf-front-cpin1-cts.log",
     "remote": "ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/s81_bf_front_cpin1-20261015-013620",
-    "target": "actual M5 recipe2 front100.224x198.72 exact original pin plan; no route submitted"
-  }
+    "target": "actual M5 recipe2 front100.224x198.72 exact original pin plan; no route submitted",
+    "status": "FAILED_CLOCK_RULE_TERMINAL",
+    "tt_insertion_all_max_ps": 329.0,
+    "tt_spread_all_ps": 46.1,
+    "max_root_sinks": 16824,
+    "placement_setup_tt_ps": 118.8,
+    "placement_hold_ff_ps": 20.8,
+    "archive": "results/physical/s81_bf_native_1015/front_cpin1_cts_8598",
+    "remote_failed_run_removed": true
+  },
+  "next_action": "Parent static programme successor with io_clk boundary+CPIN root and core clk; new named staticmaster gate after sourcefreeze. Preserve exact slot unless assigned new pins require revision."
 }
