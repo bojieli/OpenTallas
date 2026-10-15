@@ -100,6 +100,10 @@ if '--case' in sys.argv:
                 rev = nb == 1 and sub.endswith(('_cr', '_r'))
                 dirs[mst].setdefault(sub, ('input' if d == 'output' else 'output') if rev else d)
     (out / 'case' / 'port_dirs.json').write_text(json.dumps(dirs, indent=0, sort_keys=True) + '\n')
+    if m.get('native_static_io_bind'):
+        from qwen_split.clock_contract import build as source_clock_contract
+        (out / 'case' / 'clock_contract.json').write_text(
+            json.dumps(source_clock_contract(m, Path.cwd()), indent=1) + '\n')
     # r10 (OWNER 2026-10-13 18:22, top-down pin assignment): one ASSIGNED pin file per die master that is not a relay /
     # reset repeater, in the form the tile kits consume (ref_tile spec "pins" = ports per face in order along the face,
     # "pin_ranges" = {port: [lo_um, hi_um]} from the face's W / S end, + layer, bits, bit 0 end, direction, die peer).

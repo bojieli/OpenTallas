@@ -3496,7 +3496,14 @@ def relay_dims(bits, horiz):
     """
     if RLY_REAL_DIMS and bits in (266, 283):
         return 34.56, 30.24
-    return stn_dims([bits], horiz)
+    # Faces are selected from the actual neighbours AFTER the site is reserved.
+    # A path's initial direction does not constrain that choice: BF x2's 536-bit
+    # relay can enter a horizontal search and finish as SN or a corner master.
+    # Reserve the enclosing outlines for both pin orientations now, including
+    # the full-width and bundled-view pin capacity in stn_dims/face_need.
+    horizontal = stn_dims([bits], True)
+    vertical = stn_dims([bits], False)
+    return tuple(max(a, b) for a, b in zip(horizontal, vertical))
 
 
 def _split_multi_lane_stations(m):
