@@ -54,7 +54,7 @@
   "owner": "Codex:coll_physical",
   "branch": "codex/hcoll-physical-1103",
   "tag": "v1",
-  "purpose": "Current V1 u_writer, exact sourceec2cc4de,5085actualports, no addedcycles; canonical typed subslot pending",
+  "purpose": "Current V1 u_writer, exact source ec2cc4de, 5085 actual ports, no added cycles; canonical coll_SW_writer0 typed grant",
   "extra_paths": [
    "tools/hbm_coll_static",
    "rtl/hbm_accel/generic/collective/p2p"
@@ -86,6 +86,10 @@
   "record_to": "results/arch/hcoll_physical_1103/vmwrite"
  },
  "std_area_um2": 6730.9299,
+ "contract": {
+  "file": "results/arch/hier_contract_1015/hbm_v15.json",
+  "slot": "coll_SW_writer0"
+ },
  "params": {},
  "macros": [],
  "children": [],
