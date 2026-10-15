@@ -1,0 +1,29 @@
+{
+  "RB": 9,
+  "words": 512,
+  "word_bits": 32,
+  "logical_bytes": 2048,
+  "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+  "macro_rows": 128,
+  "used_rows": 64,
+  "unused_rows": 64,
+  "physical_storage_bytes": 4096,
+  "read_ports": 1,
+  "write_ports": 1,
+  "read_bytes_per_cycle": 4,
+  "write_bytes_per_cycle": 4,
+  "internal_read_bits_per_cycle": 256,
+  "write_mask_bits": 256,
+  "replicas": 1,
+  "read_latency_edges": 1,
+  "implementation": "zeroextended sixbit row, low3bits select readword and32bit write mask",
+  "production_shape": {
+    "N": 512,
+    "M": 128,
+    "LWB": 18,
+    "banks_per_replica": 512,
+    "logical_MiB_per_replica": 1,
+    "physical_MiB_per_replica": 2
+  },
+  "physical_qualification": false
+}

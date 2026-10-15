@@ -1,0 +1,47 @@
+{
+  "status": "functional actual SRAM backend; whole SU/physical/native programme unqualified",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv": "518a27a172633663682a758f469660faa83853515caeb8f09fa39ed52f12ed15",
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/tb_hbm_su_static_data_store.sv": "9a57d92c1955e1598e86802764d99be578fe15cbc2b1283c81b38679ed4593cf",
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv": "229d8a8b344ae0db15a77705794cffd00f46bdacbd71d1e22ed9650bf60bce62",
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/tb_hbm_su_static_pinned_bank.sv": "dd92fda1f8481e172d34f26dcacd9e1277ed7623e7cede9a84c6e15e25f3be64",
+    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "exact": {
+    "log": "exact.log",
+    "host": "ot-epyc1tb",
+    "session": 36255,
+    "checks": 1579008,
+    "quarters": 4,
+    "banks": 512,
+    "SRAMs": 3072
+  },
+  "mutant": {
+    "log": "coherence_mutant.log",
+    "host": "ot-epyc1tb",
+    "session": 93809,
+    "checks": 1579008,
+    "expected": "FAIL",
+    "errors": 263168
+  },
+  "pinned_leaf": {
+    "unit": "oth-ubuntu-415618-1792049433",
+    "host": "ot-epyc1tb",
+    "checks": 3598,
+    "read_latency_edges": 2,
+    "write_commit_latency_edges": 1,
+    "coherence_mutant": "FAIL514",
+    "phase_mutant": "FAIL1",
+    "logs": "pinned"
+  },
+  "qualification_gaps": [
+    "producer read-owner and return network",
+    "RF path",
+    "actual programme lifetime/mask events",
+    "complete canonical operations",
+    "F2 arithmetic/reducer",
+    "die slot/pins/TT-FF-DRC",
+    "immutable pricing"
+  ]
+}

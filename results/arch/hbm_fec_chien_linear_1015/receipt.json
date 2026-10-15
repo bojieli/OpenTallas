@@ -1,0 +1,116 @@
+{
+  "status": "PASS_COMPONENT_NUMERICAL_AND_MAP_SYNTHESIS",
+  "provenance": {
+    "polynomial": "x^10+x^3+1",
+    "generator_sha256": "300bfbb4b33e2413e6d2286a064bf6145d81a4aa436210bb9281f8bc5a15f867",
+    "original_decoder_sha256": "15923b429259c028375c48d617189468528b3089047ecab648208c5c0cbd4d10",
+    "gf_helper_sha256": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855",
+    "original_wrapper_sha256": "98749b360c86041a02ff88c42e048bbee34ea1f4bede7f37a61198f864d601aa",
+    "new_pipeline_edges": 0,
+    "input_bits": 470,
+    "evaluation_bits": 2200,
+    "step_bits": 470,
+    "outputs": {
+      "ot_hbm_kp4_chien55_map.sv": "c044186d314182704e3dcfdd0d7c3018cdf0df5c695103495b22c962e5c170ee",
+      "ot_hbm_kp4_dec_chien_linear.sv": "aacfd559c3cbbd690d7feba90837b623560b20b8dfe425d9051ba87e6bef8ba6",
+      "hfd_serdes487_chien_linear_window.sv": "83d68a75b1e283f7c0dfe9170517ddc7d0e73819d45f25fdf5824df2f5bfc763"
+    }
+  },
+  "host": "ot-epyc4",
+  "remote": "/srv/opentallas-scratch/codex/fec-chien-linear-1015",
+  "units": {
+    "basis": "oth-ubuntu-1571305-1792056719",
+    "map_mutant": "oth-ubuntu-1572346-1792056731",
+    "fec_positive": "oth-ubuntu-1572085-1792056728",
+    "fec_forney_mutant": "oth-ubuntu-1572221-1792056730",
+    "map_yosys_abc": "oth-ubuntu-1574298-1792056750"
+  },
+  "map_synthesis": {
+    "status": "PASS",
+    "tool": "Yosys 0.68",
+    "peak_memory_MB": 720.96,
+    "elapsed_seconds": 37.38,
+    "cells": {
+      "XOR": 49211,
+      "NOT": 692
+    },
+    "area_qualified": false,
+    "timing_qualified": false
+  },
+  "full_fec": {
+    "positive_status": "PASS",
+    "words": 2048,
+    "decoded_checked": 2376,
+    "age_cycles": 102,
+    "forney_mutant_rejected_cycle": 302
+  },
+  "original_census_last_observed": {
+    "pid": 1083099,
+    "elapsed": "02:29:09",
+    "cpu_pct": 99.9,
+    "rss_kb": 723240,
+    "state": "LIVE_UNTOUCHED"
+  },
+  "whole_decoder_synthesis_qualified": false,
+  "physical_qualified": false,
+  "direct_map_simulation": {
+    "status": "PASS",
+    "vectors": 535,
+    "basis_vectors": 470,
+    "zero_vectors": 1,
+    "random_vectors": 64,
+    "checked_output_bits_per_vector": 2670,
+    "mutant_status": "REJECTED",
+    "mutant_failure": "Chien map mismatch vector=0 k=0"
+  },
+  "independent_linear_form_audit": {
+    "status": "PASS",
+    "parsed_assignments": 26587,
+    "exact_output_linear_forms": 2670,
+    "input_basis_bits": 470,
+    "implied_basis_output_checks": 1254900,
+    "wire_substitution_mutant": "REJECTED"
+  },
+  "generator_reproducibility": "PASS_BYTE_IDENTICAL",
+  "gate_structure": {
+    "generic_gate_depth_by_output": {
+      "y": 12,
+      "step": 7
+    },
+    "max_input_internal_fanout": 75,
+    "physical_timing_qualified": false
+  },
+  "terminal_runner_exit_codes": {
+    "basis": 0,
+    "map_mutant": 0,
+    "fec_positive": 0,
+    "fec_forney_mutant": 0,
+    "map_yosys_abc": 0
+  },
+  "proof_inputs_sha256": {
+    "tools/hbm_io/run_chien_linear.sh": "c2ef415cfa7f82c139afbd26a33317518d69cbd79f87b49af49b687083bce810",
+    "tools/hbm_io/audit_chien_linear.py": "6f4a5bba47f942d8ed82b84ac4afeac1c15164e330140752828b66414147a40d",
+    "tools/hbm_io/chien_linear_map.ys": "aefef69cbe4fe4669a62eb8df3ebb1a88ab56637b0e0ba1cfd940dc880596636",
+    "rtl/hbm_accel/io_native_20261014/tb_chien_linear.sv": "6ea1c6a90895930a687fdc959adbd399b7dd2f75deadf9c209b09538b7eb80e9",
+    "rtl/hbm_accel/io_static_20261015/tb_fec_static_window.sv": "807c4191428b39972aad796bf196c9d47f4e9e39b190f33c4aa39f3ea844530d"
+  },
+  "proof_logs_sha256": {
+    "proof/basis/run.log": "c72fb46d5ea40fbcddcaca8a9aba01d40ebf4ab0b1ace88ad3aa49576170bb02",
+    "proof/fec_forney_mutant/run.log": "7d34bae954325fce33de2dab2c2457949880c229943fa8cd8ab86edbbebf6042",
+    "proof/fec_positive/run.log": "27b4e59124090ea9dd3d795bf7894977d1ed2437c55a8455313031a679602af9",
+    "proof/map_mutant/run.log": "54e1b9a0c614ecee8dee311101b2c842099a14d48eccfcbd5149b902ffedbd48"
+  },
+  "whole_decoder_synthesis_scope": "GENERIC_FLATTENED_STATE_AND_CHECK_ONLY_NO_LIBRARY_MAP_OR_TIMING",
+  "full_census_receipt": "full_census/receipt.json",
+  "full_census_runner_unit": "oth-ubuntu-1591169-1792057312",
+  "full_census_runner_exit": 0,
+  "full_census_summary": {
+    "total_flop_bits": 86152,
+    "maximum_root_bits": 13790,
+    "all_12_roots_within_15000": true,
+    "yosys_seconds": 683.82,
+    "yosys_peak_MB": 5229.71
+  },
+  "full_candidate_generic_synthesis_check_pass": true,
+  "qualification_boundary": "full_census/qualification_boundary.json"
+}
