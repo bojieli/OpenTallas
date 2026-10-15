@@ -55,7 +55,7 @@
  "job": {
   "owner": "Claude:q15_compute_elem",
   "branch": "claude/q15-port-tiles",
-  "tag": "pa5",
+  "tag": "pa6",
   "purpose": "port_tiles pair-adder leaf (x4 per word half, 24 per die band set)",
   "extra_paths": [
    "physical/qwen_port_tiles_1015",
