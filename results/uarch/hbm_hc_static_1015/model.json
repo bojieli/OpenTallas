@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "component_calendar_measured_not_physical_or_rate_qualified",
+  "source_branch": "codex/hc-static-engine-1014",
+  "production_shape": {
+    "K": 20480,
+    "rows": 24,
+    "W": 32,
+    "MACs_per_active_issue_cycle": 256,
+    "runs_per_accumulation": 80,
+    "accumulations_per_row": 2,
+    "issue_cycles_per_row": 160
+  },
+  "memory_ports": {
+    "weight_read_bytes_per_cycle": 1024,
+    "residual_read_bytes_per_cycle": 512,
+    "weight_aperture_fill_bytes_per_cycle": 256,
+    "residual_landing_bytes_per_wave": 1024,
+    "weight_macros": 64,
+    "residual_macros": 16,
+    "macro_depth_words": 128,
+    "macro_word_bits": 256,
+    "mapped_capacity_bytes": 327680,
+    "weight_window_payload_bytes": 81920,
+    "weight_window_slots": 2,
+    "weight_window_fill_cycles": 320,
+    "residual_payload_bytes": 40960,
+    "residual_fill_cycles": 80
+  },
+  "boundary_bits_per_cycle": {
+    "weight_aperture": 2224,
+    "residual_landing": 8192,
+    "weight_memory_to_projection": 8192,
+    "residual_memory_to_projection": 4096,
+    "tail_mix_capture": 768,
+    "tail_result": 768
+  },
+  "measured_fixed_calendar": {
+    "raw_reads_after_row_launch": [
+      180,
+      340
+    ],
+    "result_after_row_launch": 345,
+    "row_period_with_legacy_serial_refill": 681,
+    "residual_and_24rows_test_cycles": 16508,
+    "tail_core_ready_cycle": 197,
+    "tail_sink_edges_after_accept": 41,
+    "tail_bench_core_to_sink_divisor": 7,
+    "tail_bench_result_cycle": 507
+  },
+  "possible_overlap_not_yet_measured": {
+    "next_weight_slot_refill_cycles": 320,
+    "current_row_reserved_active_cycles": 356,
+    "proposed_steady_state_row_period": 356
+  },
+  "physical": {
+    "clock_roots": "UNMEASURED for static composition",
+    "outline_um": "UNMEASURED",
+    "routing_tracks_required": "bank-local physical partition and assigned pins required; central flat bus not accepted",
+    "routing_channel_capacity": "UNMEASURED; no physical submission permitted by this model",
+    "slot_fit": "UNMEASURED",
+    "area_um2": "UNMEASURED",
+    "replication": "must compose against current96-HC-row budget; this bench serializes24 rows in one engine and makes no token-rate claim"
+  },
+  "qualification": {
+    "actual_RTL_projection_exact": true,
+    "actual_RTL_tail_exact": true,
+    "mutants_detected": true,
+    "full_actual_composition": "RUNNING source60fc5fa94",
+    "throughput_against_immutable_price": "UNMEASURED",
+    "physical_closure": false,
+    "full_native_qualified": false
+  }
+}
