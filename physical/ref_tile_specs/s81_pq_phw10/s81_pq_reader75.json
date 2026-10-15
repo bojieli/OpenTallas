@@ -1,0 +1,125 @@
+{
+  "name": "s81_pq_reader75",
+  "top": "ot_s81_pq_calendar_reader",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv"
+  ],
+  "params": {
+    "ACTION_BITS": 75,
+    "PINREG": 1
+  },
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 108,
+    "h": 108
+  },
+  "pins": {
+    "N": [],
+    "S": [
+      "ck",
+      "rst_n"
+    ],
+    "E": [
+      "rom_addr",
+      "rom_action",
+      "rom_time"
+    ],
+    "W": [
+      "prime",
+      "stage_start",
+      "base",
+      "length",
+      "action",
+      "active",
+      "primed",
+      "fault"
+    ]
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 16
+  },
+  "structural_change": "Actual explicit producer/reader inputcapture, fixed +1 calendar and +1 command capture, external command completion35 versus33 baseline. Controllerstate leaf removes35 purecombin ROMaddress bypasses; direct realregisteredproducer wires ownphase/stream ROMaddresses. No timingchecks weakened. Larger slots are independent nativeCTS grants only, not adopted fullparent geometry.",
+  "slot_change_request": {
+    "name": "s81-expanded-native-PQ-row-1015",
+    "owner": "/root/s_die/mix4_sizing",
+    "outline": [
+      108,
+      108
+    ],
+    "pin_faces": {
+      "N": [],
+      "S": [
+        "ck",
+        "rst_n"
+      ],
+      "E": [
+        "rom_addr",
+        "rom_action",
+        "rom_time"
+      ],
+      "W": [
+        "prime",
+        "stage_start",
+        "base",
+        "length",
+        "action",
+        "active",
+        "primed",
+        "fault"
+      ]
+    },
+    "basis": "Independent native CTS dimensions and producer/consumer facing pins granted in live coordinator stream; full parent/hub placement remains unadopted."
+  },
+  "job": {
+    "peak_ram_gb": 16,
+    "views_to": "physical/ref_tile/s81_pq_reader75/views",
+    "record_to": "results/rtl/ref_tile/s81_pq_reader75",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_static_control",
+      "rtl/dsrom_sys/s81_die_bind",
+      "rtl/dsrom_sys/s81_ph/pq",
+      "rtl/test/dsrom_sys",
+      "physical/s81_pq_hier/pinned",
+      "tools/s81",
+      "tools/s81_static_control",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8"
+    ],
+    "benches": [
+      {
+        "name": "actual_produced_component",
+        "cmd": "python3 tools/s81/pq_canonical_pins_gate.py --produced --work {RUN}/produced_exact",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "PRODUCED PASS"
+      },
+      {
+        "name": "actual_phase_source_mutant",
+        "cmd": "python3 tools/s81/pq_canonical_pins_gate.py --produced --mut PHW --work {RUN}/produced_mutant && {RUN}/produced_mutant/obj/Vtb_s81_pq_produced_pins +OT_ROM_DIR={RUN}/produced_mutant",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "PRODUCED FAIL"
+      }
+    ]
+  },
+  "defines": [
+    "OT_PQ_ROM_PORTS"
+  ],
+  "macros": []
+}

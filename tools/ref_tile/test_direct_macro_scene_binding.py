@@ -50,7 +50,12 @@ def probe(out):
         text = text+'\n/* source digest mutant */\n' if name=='wrong_source' else text.replace(a,b)
         (out/f'{name}.lib').write_text(text)
     receipts=[]
-    cases=['pass','wrong_scene','wrong_cell','missing_arc','wrong_clock','wrong_source','mixed_minmax']
+    # holdmm_*: tools/orfs_hold_mm.tcl's FF sign-off SDC context. Scenes TC (mode ss) and
+    # BC (mode ff) exist, set_mode ff is active and the shim sets ::ot_ioref_scene BC,
+    # and ot_mm_sync never calls set_scene: set_mode ff alone must select scene BC.
+    # holdmm_bc_tt_library: same context, BC wrongly bound to the TT Liberty.
+    holdmm=['holdmm_bc','holdmm_bc_tt_library']
+    cases=['pass','wrong_scene','wrong_cell','missing_arc','wrong_clock','wrong_source','mixed_minmax']+holdmm
     for case in cases:
         libs={c:str(original/f'{MASTER}_{c}.lib') for c in D.CORNERS}
         if case in variants:libs['ff']=str(out/f'{case}.lib')
@@ -62,7 +67,10 @@ def probe(out):
             script+=f'set_mode {mode}\n'+C.clocks(s,833.333)
             script+='set_propagated_clock [all_clocks]\n'
             script+='set_input_delay 0 -clock core_clk [get_ports en]\nset_output_delay 0 -clock core_clk [all_outputs]\n'
-        for c in D.CORNERS:
+        if case in holdmm:
+            script+=f'define_scene TC -mode ss -liberty {{{libs["tt"]}}}\n'
+            script+=f'define_scene BC -mode ff -liberty {{{libs["tt" if case=="holdmm_bc_tt_library" else "ff"]}}}\n'
+        for c in (() if case in holdmm else D.CORNERS):
             if c=='ff' and case=='mixed_minmax':
                 script+=f'define_scene FF -mode ff -liberty_min {{{libs["tt"]}}} -liberty_max {{{libs["ff"]}}}\n'
             else:script+=f'define_scene {c.upper()} -mode {c} -liberty {{{libs[c]}}}\n'
@@ -73,6 +81,15 @@ def probe(out):
         if case=='wrong_cell':
             script+='set e [lindex $::ot_ce_direct_entries 0];lset e 0 wrong_master;lset ::ot_ce_direct_entries 0 $e\n'
         corners=D.CORNERS if case=='pass' else ('ff',)
+        if case in holdmm:
+            script+='set_scene TC\nsta::worst_slack_cmd max\nset_mode ff\n'
+            script+='set ::ot_ioref_scene BC\n'
+            script+='if {[get_property [sta::cmd_scene] name] ne "BC"} {error "OT_DIRECT_MACRO: set_mode ff did not select scene BC"}\n'
+            script+='puts "HOLDMM_CMD_SCENE [get_property [sta::cmd_scene] name]"\n'
+            script+='set rows [ot_ce_direct_rows ff]\n'
+            script+='if {[llength $rows]!=2} {error "missing raw SRAM rows"}\n'
+            script+='puts SCENE_BINDING_PASS_ff\nexit\n'
+            corners=()
         for c in corners:
             scene='TT' if case=='wrong_scene' else c.upper()
             script+=f'set_scene {scene}\nsta::worst_slack_cmd max\n'
@@ -83,12 +100,13 @@ def probe(out):
         path=out/f'{case}.tcl';path.write_text(script)
         run=subprocess.run([os.environ.get('OPENROAD','openroad'),'-no_init','-exit',str(path)],text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=120)
         (out/f'{case}.log').write_text(run.stdout)
-        ok=run.returncode==0 and all(f'SCENE_BINDING_PASS_{c}' in run.stdout for c in corners)
-        if ok != (case=='pass'):raise RuntimeError(f'{case}: unexpected admission\n{run.stdout[-3000:]}')
-        if case!='pass' and 'OT_DIRECT_MACRO:' not in run.stdout:raise RuntimeError(f'{case}: unrelated failure\n{run.stdout[-3000:]}')
-        receipts.append(dict(case=case,returncode=run.returncode,expected_admitted=case=='pass'))
+        expect=case in ('pass','holdmm_bc')
+        ok=run.returncode==0 and all(f'SCENE_BINDING_PASS_{c}' in run.stdout for c in (corners or ('ff',)))
+        if ok != expect:raise RuntimeError(f'{case}: unexpected admission\n{run.stdout[-3000:]}')
+        if not expect and 'OT_DIRECT_MACRO:' not in run.stdout and 'OT_ENTRIES:' not in run.stdout:raise RuntimeError(f'{case}: unrelated failure\n{run.stdout[-3000:]}')
+        receipts.append(dict(case=case,returncode=run.returncode,expected_admitted=expect))
     (out/'receipt.json').write_text(json.dumps(receipts,indent=2)+'\n')
-    print('ACTUAL_SCENE_BINDING_SUITE_PASS TT/FF/SS and six mutants')
+    print('ACTUAL_SCENE_BINDING_SUITE_PASS TT/FF/SS, hold-mm BC context and seven mutants')
 
 
 if __name__=='__main__':

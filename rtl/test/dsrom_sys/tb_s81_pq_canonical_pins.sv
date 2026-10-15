@@ -16,7 +16,7 @@ module tb_s81_pq_canonical_pins;
  ot_rom_4096x72_m8 u_stream(.clk(clk),.ce_in(1'b1),.addr_in(ra2[11:0]),.rd_out(raw2[b]));
  end
  always @(posedge clk)bank<=ra2[13:12];
- dsfd_sp_pq_n dut(.ck_ctl(clk),.ck_qb(clk),.ck_fault(clk),.ck_qb_aux({4{clk}}),.ck_aq({2{clk}}),
+ dsfd_sp_pq_n dut(.ck_ctl(clk),.ck_qb(clk),.ck_qb_align(clk),.ck_fault(clk),.ck_qb_aux({4{clk}}),.ck_aq({2{clk}}),
  .ck_aq_aux({16{clk}}),.ck_ix({4{clk}}),.ck_ix_read({32{clk}}),.ck_bc({16{clk}}),.ck_lane(clk),
  .rst(rst_n),.calendar_v(calendar_v),.calendar_action(action),.f_iss(shape),.t_iss(status),.t_vm(vm),.f_vm(2049'd0),
  .ra0(ra0),.ra1(ra1),.ra2(ra2),.rc0(),.rc1(),.rc2(),.rq0(raw0[63:0]),.rq1(raw1[63:0]),.rq2(sq),
@@ -44,6 +44,6 @@ module tb_s81_pq_canonical_pins;
     @(negedge clk);
    end
   end
-  $display("CANONICAL_PINS PASS phases=511..642 checks=%0d PHW=10 SAW=14 action=75 shape=93 native_ROMs=6 native_SRAMs=36 BCslice0=410",checks);$finish;
+  $display("CANONICAL_PINS PASS phases=511..642 checks=%0d PHW=10 SAW=14 action=75 shape=93 native_ROMs=6 native_SRAMs=44 BCslice0=410",checks);$finish;
  end
 endmodule
