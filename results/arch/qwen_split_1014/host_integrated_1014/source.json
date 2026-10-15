@@ -3,7 +3,7 @@
     "sha256": "3caf346a75854ff683f518cafa2c1300af464efd604d99bad68bfccb5bb758b9"
   },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv": {
-    "sha256": "e95863eda1cf58ced8accab248766d16a4e054a32c93b137272caf050249a6d9"
+    "sha256": "705ad5a15bf138d5f62effd958fc5e15371178d8062da154cfa649dc64b1f0df"
   },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_capture_localprogram.sv": {
     "sha256": "e6b3bca5359cf5ba0060201bb8f79b372ee8e8736c8714f5d05d1589e871a379"
@@ -11,8 +11,11 @@
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_marker_consumer.sv": {
     "sha256": "2336f8a9b31d7727f39ed87a12400491215d56c1b5fdee588263c4600488cd3a"
   },
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_root_integrated.sv": {
+    "sha256": "ee5e942a011069009fd0c77a7e2171780436c91e4e92c1b10fab24ed86ee6239"
+  },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv": {
-    "sha256": "1591710250ce4006b0124c920495b266233a81fc7aa4c9049003be89cd034a76"
+    "sha256": "a11922a003e5302b39ba4fbc1089dd92b02194c44d071a7ead253983acb5b16f"
   },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_link.sv": {
     "sha256": "352130dee49ad3afcb138f563872fe97b731ee411e5a72268c34ca5f042acb86"
@@ -21,28 +24,34 @@
     "sha256": "ee48d9e4bbf8fc206f27f7a2be18339f6fb69c66e706122807895c0b503853d3"
   },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_integrated.sv": {
-    "sha256": "354be2cec7b6a14f597b7876fad9a12ae0328d22bf420db124afd3ab5bf15a7f"
+    "sha256": "aa3482ee71f98d5d6bcb373a4871a84ff1a7c9a148e3ee884a150b6702919d9d"
   },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_coordinator_services.sv": {
     "sha256": "d78ce4aef649daff717e765dabd3b8f191a16f60122851a21d676a871faa1040"
   },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv": {
-    "sha256": "ffd769e77f294f2a1613082e4103bbba41b2237b28977f3dd355a77794b34f94"
+    "sha256": "e9922374f05ae9a492b831e2032ecf2ef995a293e73002fe414800061e0796b0"
   },
   "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv": {
     "sha256": "f2d98d8e3cdef955e0049bff5d0323b76df6c07c5de62dd4fa1dd64134d2a32d"
+  },
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_root_mux.sv": {
+    "sha256": "244d1343057d33c5c08b3d9fa7d6f0734508480e3b7e4ef8eb53874cb00a58be"
   },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_prompt_observed.sv": {
     "sha256": "3db17ad76f8dfaee1f6531fdfe6439f4d9a789f046a36c0e1ccdbc50e6b3ebfd"
   },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv": {
-    "sha256": "ede8c2f603cbde3ecad9eadc36d809b821e261a96a033fa98a491accba15189e"
+    "sha256": "b831aba88e9c142863a22568f7881c2da1f4d5c19264b8d57f1cc63d2c025dff"
   },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv": {
-    "sha256": "1b3dcfe403e594fbe272d1401a89fa735485a6885405a31872e3bcdd7c60f70e"
+    "sha256": "f31113a6d8c1f39794a602b76215a478e77d00eea48881e4d31c1b52f43ae13f"
   },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_rank_codec.sv": {
-    "sha256": "6d3e14e669e910fac3bda29907a3f70faf311ce924659ee2ee08af3e9b8105c5"
+    "sha256": "e66a6dabed4e5a9e19ddabe6e0179df58053834697127118cadde9d891cbdae7"
+  },
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv": {
+    "sha256": "2cd3f0fe200346cd75f2feb30695bb6f0cdc701046e0180a757dbdfd662c8320"
   },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv": {
     "sha256": "8933aa0acd8aee6f578879512c95bba9b5f511bafd5eb6b35338c7d82c3fa3eb"
@@ -50,7 +59,13 @@
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv": {
     "sha256": "6d8988ff5d3bd14d9771902782bcc7ba73d6e43550e9e717ba15e26131f1112d"
   },
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_collected.sv": {
+    "sha256": "9afda679234eb61aa470000fa8bc97c67b1ebb7d2e11fc5de754c0628672cc84"
+  },
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv": {
-    "sha256": "bff2aec9aaa11b1d690f0a68020bc7f42f0cabaeee7db0f0aaea21f60c0654b0"
+    "sha256": "3ef013ca6db4c5358c7eff2a1f6a9c41d6c16995af1386889368197149dab657"
+  },
+  "rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv": {
+    "sha256": "1ac703c98330797cdbced7a5cc959b462c65b44285b3a64b09ea82891da888f4"
   }
 }

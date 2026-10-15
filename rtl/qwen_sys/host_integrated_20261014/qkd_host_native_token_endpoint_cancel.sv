@@ -9,7 +9,7 @@
 // Trace32 is diagnostic only. Service-prefill epoch is a separate prerequisite.
 module qkd_host_native_token_endpoint_cancel #(parameter integer ENABLE_NATIVE=0,MUT=0)(
  input wire ck,por_n,rst_n,input wire[181:0]hc,input wire[92:0]legacy_tk,
- input wire shared_epoch_valid,input wire[15:0]shared_epoch,
+ input wire image_ready,input wire shared_epoch_valid,input wire[15:0]shared_epoch,
  output reg request_v,output reg[58:0]request_tag,output reg[31:0]request_trace,output reg[1:0]request_gen,
  output reg[17:0]request_token,request_pos,input wire request_cr,
  output reg[142:0]native_pr,
@@ -22,13 +22,14 @@ module qkd_host_native_token_endpoint_cancel #(parameter integer ENABLE_NATIVE=0
  output wire context_owned,output reg cancel_released,output reg[92:0]local_tk,output reg protocol_fault
 );
  reg[181:0]hc_q;reg[92:0]legacy_q;
+ reg image_ready_q;
  reg cr_q,rv,rdone,rfault,kq,cq,cbq,kfq,vq,hq,epoch_valid_q;reg[15:0]epoch_q;reg[58:0]rtag;
  reg[31:0]rvv,rcy;reg[1:0]rg;reg[3:0]rcause;reg[17:0]rt;
  always @(posedge ck or negedge rst_n)if(!rst_n)begin
- hc_q<=0;legacy_q<=0;cr_q<=0;rv<=0;rdone<=0;rfault<=0;kq<=0;cq<=0;cbq<=0;kfq<=0;vq<=0;hq<=0;
+ image_ready_q<=0;hc_q<=0;legacy_q<=0;cr_q<=0;rv<=0;rdone<=0;rfault<=0;kq<=0;cq<=0;cbq<=0;kfq<=0;vq<=0;hq<=0;
  epoch_valid_q<=0;epoch_q<=0;rtag<=0;rvv<=0;rcy<=0;rg<=0;rcause<=0;rt<=0;
  end else begin
- hc_q<=hc;legacy_q<=legacy_tk;cr_q<=request_cr;
+ image_ready_q<=image_ready;hc_q<=hc;legacy_q<=legacy_tk;cr_q<=request_cr;
  epoch_valid_q<=shared_epoch_valid;epoch_q<=shared_epoch;
  rv<=result_v;rtag<=result_tag;rg<=result_gen;rdone<=result_done;rfault<=result_fault;
  rcause<=result_cause;rt<=result_token;rvv<=result_value;rcy<=result_cycles;
@@ -42,7 +43,7 @@ module qkd_host_native_token_endpoint_cancel #(parameter integer ENABLE_NATIVE=0
  reg[31:0]trace_counter,job_trace,cycles_q,value_q;reg[15:0]job_epoch;
  reg[1:0]gen_q;reg[17:0]token_q,pos_q,next_q;reg[3:0]cause_q;
  wire start=ENABLE_NATIVE&&hc_q[38]&&!protocol_fault&&!fault_q;
- wire accept=start&&!active&&!pending&&epoch_valid_q&&hc_q[17:13]==0;
+ wire accept=start&&image_ready_q&&!active&&!pending&&epoch_valid_q&&hc_q[17:13]==0;
  wire issue=ENABLE_NATIVE&&pending&&(credit||MUT==3)&&!protocol_fault&&!fault_q&&!release_pending&&!cancel_release_v;
  wire[58:0]terminal_tag={job_epoch,6'd37,token_q,pos_q[12:0],6'd0};
  wire result_ok=rv&&active&&issued&&!seen&&(MUT==2||(rtag==terminal_tag&&rg==gen_q));

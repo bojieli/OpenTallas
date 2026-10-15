@@ -13,7 +13,7 @@ module qkd_host_peer_rank_codec #(parameter[2:0]RANK=0)(
  output reg cancel_accepted,cancel_release_v,output reg[58:0]cancel_release_tag,output reg[1:0]cancel_release_gen,input wire cancel_released,
  output reg result_v,output reg[58:0]result_tag,output reg[1:0]result_gen,output reg result_done,result_fault,
  output reg[3:0]result_cause,output reg[17:0]result_token,output reg[31:0]result_value,result_cycles,input wire result_cr,
- input wire service_ready,native_ready,input wire[3:0]drained,input wire context_owned,links_drained,link_reset_seen,retrained,
+ input wire service_ready,native_ready,input wire[15:0]service_epoch,input wire[3:0]drained,input wire context_owned,links_drained,link_reset_seen,retrained,
  input wire program_ready,input wire[15:0]program_epoch,input wire[63:0]program_digest,
  input wire step_issue_v,input wire[15:0]step_client_tag,input wire[7:0]step_slot,input wire[17:0]step_pos,
  input wire step_retire_v,step_retire_cq,input wire[15:0]step_retire_client_tag,input wire[7:0]step_retire_slot,input wire[17:0]step_retire_pos,step_retire_token,
@@ -26,8 +26,8 @@ module qkd_host_peer_rank_codec #(parameter[2:0]RANK=0)(
  reg[511:0]req_word,cancel_word,step_word,retire_word,cq_word,cert_word;
  reg step_pending,retire_pending,cq_pending,cert_pending,credit_pending,release_pending;
  reg[58:0]last_result_tag,last_cancel_tag;reg[1:0]last_result_gen,last_cancel_gen;
- wire[90:0]status={program_digest,program_epoch,program_ready,links_drained,retrained,link_reset_seen,context_owned,drained,native_ready,service_ready};
- reg[90:0]last_status;reg status_sent;
+ wire[106:0]status={service_epoch,program_digest,program_epoch,program_ready,links_drained,retrained,link_reset_seen,context_owned,drained,native_ready,service_ready};
+ reg[106:0]last_status;reg status_sent;
  reg[3:0]choice;
  assign rx_ready=!fault;
  assign tx_valid=choice!=0&&!fault;
@@ -41,7 +41,7 @@ module qkd_host_peer_rank_codec #(parameter[2:0]RANK=0)(
   else if(retire_pending)begin choice=6;tx_data=retire_word;end
   else if(cq_pending)begin choice=7;tx_data=cq_word;end
   else if(cert_pending)begin choice=9;tx_data=cert_word;end
-  else if(!status_sent||status!=last_status)begin choice=3;tx_data[120:30]=status;end
+  else if(!status_sent||status!=last_status)begin choice=3;tx_data[136:30]=status;end
   tx_data[7:0]={4'd0,choice};tx_data[10:8]=RANK;tx_data[13:11]=0;tx_data[29:14]=tx_seq;
  end
  always @(posedge ck or negedge por_n)begin
@@ -78,7 +78,7 @@ module qkd_host_peer_rank_codec #(parameter[2:0]RANK=0)(
     if(RANK!=0||cq_pending)fault<=1;else begin cq_pending<=1;cq_word<=0;cq_word[45:30]<=cq_client_tag;cq_word[53:46]<=cq_slot;cq_word[71:54]<=cq_pos;cq_word[89:72]<=cq_token;end
    end
    if(certificate_v)begin
-    if(cert_pending)fault<=1;else begin cert_pending<=1;cert_word<=0;cert_word[95:30]<=certificate;cert_word[127:96]<=certificate_prefix;end
+    if(cert_pending)fault<=1;else begin cert_pending<=1;cert_word<=0;cert_word[95:30]<=certificate;cert_word[127:96]<=certificate_prefix;cert_word[143:128]<=service_epoch;end
    end
    if(tx_valid&&tx_ready)begin
     tx_seq<=tx_seq+1'b1;

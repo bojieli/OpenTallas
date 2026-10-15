@@ -59,6 +59,7 @@ module qkd_host_rank_services #(
  input wire[92:0]local_tk,input wire[9:0]local_kst,
  input wire execution_active,program_commit_v,input wire[15:0]program_commit_epoch,input wire[63:0]program_commit_digest,
  output wire program_ready,output wire[15:0]program_epoch,output wire[63:0]program_digest,
+ output wire program_authorized_footer_v,output wire[63:0]program_authorized_footer64,
  output wire program_begin_v,program_auth_v,output wire[10:0]program_expected_pw,output wire[3:0]program_expected_dw,output wire[15:0]program_auth_epoch,output wire[63:0]program_auth_digest,
  output wire[181:0]hc,output wire[7:0]seen,output wire irq,
  output wire host_rst_n,link_rst_n,hbm_rst_n,boot_go,die_rst_n,sys_ready,
@@ -97,16 +98,16 @@ module qkd_host_rank_services #(
   if(!host_rst_n)begin committed<=0;commit_fault<=0;end
   else begin
    if(begin_image)committed<=0;
-   if(program_commit_v)begin
+   else if(program_commit_v)begin
     if(!replay_done||program_commit_epoch!=program_epoch||program_commit_digest!=program_digest)commit_fault<=1;
     else committed<=1;
    end
   end
  end
- assign program_ready=replay_done&&committed&&!program_fault&&!commit_fault;
+ assign program_ready=replay_done&&committed&&!program_fault&&!commit_fault&&!begin_image;
  qkd_host_program_loader u_program(.ck(ck_program_loader),.rst_n(host_rst_n),.begin_image(begin_image),.image_epoch(image_epoch),.pw_count(pw_count),.dw_count(dw_count),
  .word_v(word_v),.word_desc(word_desc),.word_addr(word_addr),.word_data(word_data),.seal(seal),.auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),
- .execution_active(execution_active),.pr(pr),.program_ready(replay_done),.fault(program_fault),.digest(program_digest),.program_epoch(program_epoch));
+ .execution_active(execution_active),.pr(pr),.program_ready(replay_done),.fault(program_fault),.digest(program_digest),.program_epoch(program_epoch),.authorized_footer_valid(program_authorized_footer_v),.authorized_footer(program_authorized_footer64));
  wire[7:0]observed_physical_faults=physical_fault|((8'((|boot_fault_pc)||(|ctrl_completion_fault)||ingress_fault||program_fault||commit_fault||host_observer_fault||peer_link_fault))<<die_id);
  wire d_rv,d_rcr,d_cv,d_ccr;wire[1023:0]d_rd,d_cd;wire adapter_fault;
  wire raw_rx_v,raw_rx_cr,program_rx_v,program_rx_cr;wire[527:0]raw_rx_d,program_rx_d;
@@ -177,7 +178,7 @@ module qkd_host_rank_services #(
  qkd_host_native_token_endpoint_cancel #(.ENABLE_NATIVE(ENABLE_NATIVE))u_native(
  .ck(ck_native),.por_n(por_n&&pll_locked),.rst_n(host_rst_n),.hc(hc),.legacy_tk(local_tk),
  .recovery_clear(native_recovery_clear),.cancel_release_v(cancel_release_v),.cancel_release_tag(cancel_release_tag),.cancel_release_gen(cancel_release_gen),.cancel_released(cancel_released),.context_owned(native_context_owned),
- .shared_epoch_valid(token_epoch_valid),.shared_epoch(token_epoch),
+ .image_ready(program_ready),.shared_epoch_valid(token_epoch_valid),.shared_epoch(token_epoch),
  .request_v(native_request_v),.request_tag(native_request_tag),.request_trace(native_request_trace),.request_gen(native_request_gen),
  .request_token(native_request_token),.request_pos(native_request_pos),.request_cr(native_request_cr),.native_pr(native_pr),
  .result_v(native_result_v),.result_tag(native_result_tag),.result_gen(native_result_gen),
@@ -188,7 +189,7 @@ module qkd_host_rank_services #(
  qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),
  .die_id(die_id),.physical_faults(observed_physical_faults),.transport_faults(transport_fault),
  .accepted_ing_v(ing_v),.accepted_ing_cls(ing_cls),.accepted_ing_header(ing_d[15:0]),
- .done_v(done_v),.done_d(done_d),.boot_barrier_v(marker_v),.boot_barrier_target(landed),
+ .done_v(done_v),.done_d(done_d),.boot_barrier_v(certificate_v),.boot_barrier_target(certificate_prefix),
  .begin_v(service_begin_v),.begin_epoch(service_begin_epoch),.pending_advertised(pending_advertised),.pending_epoch(pending_epoch),
  .local_tk(ENABLE_NATIVE?native_tk:local_tk),.guarded_tk(guarded_tk),.abort(service_abort),.service_ready(service_ready),
  .service_epoch(local_service_epoch),.diag_raw(service_diag_raw),.status(service_status),

@@ -1,0 +1,10 @@
+{
+  "positive": {
+    "returncode": 0,
+    "stdout": "PASS HOST_PEER_LIFECYCLE protocol_boundary=1 real_cohort=8 real_result_returns=16 empty_context_certificates=16 prefill_and_generated_POST=2\n/srv/opentallas-scratch/codex/q-host-final-components/tmpumy0o_4h/tb_qkd_host_peer_lifecycle.sv:172: $finish called at 1296000 (1ps)\n"
+  },
+  "skip_cq_mutant": {
+    "returncode": 1,
+    "stdout": "FATAL: /srv/opentallas-scratch/codex/q-host-final-components/tmp7jr7avaw/tb_qkd_host_peer_lifecycle.sv:169: generated step skipped genuine CQ commit requirement\n       Time: 1196000  Scope: tb_qkd_host_peer_lifecycle\n"
+  }
+}

@@ -13,3 +13,11 @@ Observed gates
 
 Still required
 The distributed composition/POST/recovery gate, actual real-controller128PC/native integration, installed PW/DW macro receipt, native command-context producer, physical class9 router home, new child slot assignments and TT/FF/native binding qualification remain required. Current wrappers are a reviewable source successor, not a CLOSED physical view. No fake result, synthetic chip ACK, timer boot acknowledgment or internal-state test probe is used as evidence.
+
+Successor checkpoint
+- Corrected actual root/peer parent ANSI pin names and added qkd_host_root_integrated: the physical HOST0 class9 root mux and singleton coordinator now live within the parent RTL. Root has149 actual ports/564 clock entries; peer rank has146 ports/560 clock entries. abi.json is generated from current real source. These replace the old147-port draft; no old physical view alias.
+- Actual8-rank protocol-component gate passes two token contexts (prefill and generated),16 genuine native result-slot returns and16 real empty-context/drain certificates. CQ-omission mutant fails. HC and engine-result ports are explicit boundary fixtures in this test: this is not a native numerical/boot/HBM completion proof.
+- Late identity-matching cancellation during POST acknowledges exactly once; disabling that actual retained ACK fails.
+- Program1032-cycle exact replay/actual HOST HC gate now additionally proves the authorized footer matches the actual accepted PW1023, with no footer validity before external authorization and revocation on new BEGIN. Source accepts no literal fused cap.
+- Actual receiving program commit and image-ready gating remain mandatory. Image-ready falls immediately on decoded BEGIN; native START with no installed image faults instead of creating an execution request. Native recovery uses the actual completed global reset/retraining certificate; identity allocator remains POR-only.
+- Pending participant requests retain real queue ownership while emitting a single cohort request pulse. Their reservations return only after actual cohort acceptance or explicit identity-qualified terminal discard; those two paths have distinct abort status.

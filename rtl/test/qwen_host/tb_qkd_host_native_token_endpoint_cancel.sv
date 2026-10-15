@@ -11,7 +11,7 @@ module tb_qkd_host_native_token_endpoint_cancel;
  reg[17:0]result_token=0;reg[31:0]result_value=0,result_cycles=0;
  wire result_cr;reg vm_drained=0,host_drained=0,kv_drained=0,collective_drained=0,collective_busy=0,kv_flush=0;
  wire[92:0]local_tk;wire protocol_fault;
- reg recovery_clear=0,cancel_release_v=0;reg[58:0]cancel_release_tag=0;reg[1:0]cancel_release_gen=0;wire context_owned,cancel_released;integer releases=0;
+ reg image_ready=1,recovery_clear=0,cancel_release_v=0;reg[58:0]cancel_release_tag=0;reg[1:0]cancel_release_gen=0;wire context_owned,cancel_released;integer releases=0;
  always @(negedge ck)if(cancel_released)releases=releases+1;
  qkd_host_native_token_endpoint_cancel #(.ENABLE_NATIVE(1),.MUT(MUT))d(.*);
  wire[92:0]off_tk;

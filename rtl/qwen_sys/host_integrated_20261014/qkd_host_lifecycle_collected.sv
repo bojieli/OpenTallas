@@ -86,7 +86,7 @@ module qkd_host_lifecycle_collected #(parameter [15:0] INITIAL_EPOCH = 16'd0) (
  ot_qwen_tp8_token_cohort cohort (
   .clk(clk), .por_n(por_n), .warm_ready(admission_ready),
   .begin_valid(begin_valid), .begin_ready(cohort_begin_ready), .begin_tag(grant_tag), .begin_generation(grant_generation),
-  .request_valid(participant_valid), .request_tag(participant_tag), .request_generation(participant_generation),
+  .request_valid(participant_valid & {8{!terminal_pending&&!post_pending&&!rearm&&!terminal_accepted}}), .request_tag(participant_tag), .request_generation(participant_generation),
   .request_credit(participant_accepted), .dispatch_valid(dispatch_valid),
   .dispatch_ready(engine_admit_ready && (&participant_ready)),
   .cohort_tag(cohort_tag), .cohort_generation(cohort_generation), .accepted_ranks(accepted_ranks),
