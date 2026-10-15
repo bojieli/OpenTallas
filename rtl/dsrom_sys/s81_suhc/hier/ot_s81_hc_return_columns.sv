@@ -1,7 +1,7 @@
 // Four actual local return engines, each with a distinct clock entry and registered payload pins.
 // Return data/valid gain exactly one fixed cycle. Bank requests retain the original epoch.
 // BF16 y dependencies remain real and cross columns; this is not claimed as a free transpose.
-// All five clock roots require the same phase. Canonical compiler/slot adoption is separate.
+// All four clock roots require the same phase; COLUMN0 owns the merged-valid register. Canonical compiler/slot adoption is separate.
 
 module ot_s81_hc_ctra_column #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0
@@ -16,6 +16,7 @@ module ot_s81_hc_ctra_column #(
     input  wire [P_D-1:0]         rdh_in,
     input  wire [256*SH-1:0]      rdp_in,
     output wire [S_RT+3:0]        rvm,
+    input  wire [2:0]             peer_fault, peer_hnz,
     output wire [128*SH-1:0]      rdm,
     output wire [16*S_RT-1:0]     rq_q,
     output wire                   hs_run,
@@ -36,6 +37,24 @@ module ot_s81_hc_ctra_column #(
     localparam integer SH = S_RT / 2, P_D = S_RT + 8 * S_RT + 16 * S_RT + 8, RDW = P_D + 512 * S_RT, WA = P_D + 512 * SH;
 
     initial if(S_RT!=4 || COLUMN<0 || COLUMN>3) $fatal(1,"return column requires S_RT4 and column0..3");
+    wire [S_RT+3:0] rv_base;
+    wire [3:0] fault_flags = {peer_fault,flag_fault};
+    wire [3:0] hnz_flags = {peer_hnz,flag_hnz};
+    generate if(COLUMN==0) begin : g_merge
+        reg rr_merge;
+        reg [S_RT+3:0] rv_delay;
+        always @(posedge clk) rr_merge<=rst_in;
+        always @(posedge clk or negedge rr_merge)
+            if(!rr_merge) rv_delay<='0;
+            else begin
+                rv_delay<=rv_base;
+                rv_delay[S_RT+2]<=rv_base[S_RT+2] | (|fault_flags);
+                rv_delay[S_RT+3]<=rv_base[S_RT+3] | (|hnz_flags);
+            end
+        assign rvm=rv_delay;
+    end else begin : g_unmerged
+        assign rvm=rv_base;
+    end endgenerate
     wire [WA-1:0] rd_full;
     wire [8*64*SH-1:0] hr_n, hr_s;
     wire [WA-1:0] rd_same, rd_shift, rd_bound;
@@ -74,7 +93,7 @@ module ot_s81_hc_ctra_column #(
         .fdx(fdx),
         .rv_in(rv_in),
         .rd_in(rd_bound),
-        .rvm(rvm),
+        .rvm(rv_base),
         .rdm(rd_full),
         .rq_q(rq_q),
         .hs_run(hs_run),
@@ -113,7 +132,6 @@ module ot_s81_hc_ctra_columns #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0
 ) (
     input  wire [3:0]             clk_col,
-    input  wire                   clk_merge,
     input  wire                   rst_in,
     input  wire [7:0]             tid,
     input  wire                   last,
@@ -195,6 +213,8 @@ module ot_s81_hc_ctra_columns #(
             .rdh_in(rd_in[P_D-1:0]),
             .rdp_in(local_rdp),
             .rvm(rv_base),
+            .peer_fault(c==0 ? {g_column[3].flag_fault,g_column[2].flag_fault,g_column[1].flag_fault} : 3'b0),
+            .peer_hnz(c==0 ? {g_column[3].flag_hnz,g_column[2].flag_hnz,g_column[1].flag_hnz} : 3'b0),
             .rdm(col_data),
             .rq_q(local_rq_q),
             .hs_run(local_hs_run),
@@ -230,17 +250,7 @@ module ot_s81_hc_ctra_columns #(
         end
     end endgenerate
     assign rdm[P_D-1:0]=g_column[0].header_delay;
-    reg rr_merge;
-    always @(posedge clk_merge) rr_merge<=rst_in;
-    reg [S_RT+3:0] rv_delay;
-    always @(posedge clk_merge or negedge rr_merge)
-        if(!rr_merge) rv_delay<='0;
-        else begin
-            rv_delay<=g_column[0].rv_base;
-            rv_delay[S_RT+2]<=g_column[0].rv_base[S_RT+2] | g_column[0].flag_fault | g_column[1].flag_fault | g_column[2].flag_fault | g_column[3].flag_fault;
-            rv_delay[S_RT+3]<=g_column[0].rv_base[S_RT+3] | g_column[0].flag_hnz | g_column[1].flag_hnz | g_column[2].flag_hnz | g_column[3].flag_hnz;
-        end
-    assign rvm=rv_delay;
+    assign rvm=g_column[0].rv_base;
 endmodule
 
 module ot_s81_hc_ctrb_column #(
@@ -310,7 +320,6 @@ module ot_s81_hc_ctrb_columns #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0
 ) (
     input  wire [3:0]             clk_col,
-    input  wire                   clk_merge,
     input  wire                   rst_in,
     input  wire [7:0]             tid,
     input  wire                   last,
