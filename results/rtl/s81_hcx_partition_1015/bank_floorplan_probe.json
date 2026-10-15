@@ -385,6 +385,133 @@
           "offtrack": 0
         }
       ]
+    },
+    {
+      "outline_um": [
+        324,
+        324
+      ],
+      "macro_policy": {
+        "channel_um": 20.0,
+        "pin_edge_um": 20.0,
+        "core_margin_um": 2.16,
+        "abutted_ROM_stack": true
+      },
+      "PASS": false,
+      "findings": [
+        [
+          "FAIL",
+          "macro_outside",
+          "ot_sram_1r1w_128x256_m1_r2c2#0 at (25.92,300.24) leaves the core",
+          "enlarge the outline"
+        ],
+        [
+          "FAIL",
+          "macro_edge",
+          "ot_sram_1r1w_128x256_m1_r2c2#0 -19.4 um from the N core edge (< 20 um)",
+          "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+        ],
+        [
+          "FAIL",
+          "macro_outside",
+          "ot_sram_1r1w_128x256_m1_r2c2#0 at (145.152,300.24) leaves the core",
+          "enlarge the outline"
+        ],
+        [
+          "FAIL",
+          "macro_edge",
+          "ot_sram_1r1w_128x256_m1_r2c2#0 -19.4 um from the N core edge (< 20 um)",
+          "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+        ],
+        [
+          "WARN",
+          "util",
+          "utilisation 69% outside 45%-60% (std 1382 + macro 69095 in core 102195 um2)",
+          "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+        ]
+      ],
+      "blocks": [
+        {
+          "inst": "g_rom[0].g_page[0].rom",
+          "x": 25.92,
+          "y": 25.92,
+          "w": 121.824,
+          "h": 62.91,
+          "offtrack": 0
+        },
+        {
+          "inst": "g_rom[0].g_page[1].rom",
+          "x": 25.92,
+          "y": 88.848,
+          "w": 121.824,
+          "h": 62.91,
+          "offtrack": 0
+        },
+        {
+          "inst": "g_rom[1].g_page[0].rom",
+          "x": 25.92,
+          "y": 151.776,
+          "w": 121.824,
+          "h": 62.91,
+          "offtrack": 0
+        },
+        {
+          "inst": "g_rom[1].g_page[1].rom",
+          "x": 25.92,
+          "y": 214.704,
+          "w": 121.824,
+          "h": 62.91,
+          "offtrack": 0
+        },
+        {
+          "inst": "g_rom[2].g_page[0].rom",
+          "x": 172.8,
+          "y": 25.92,
+          "w": 121.824,
+          "h": 62.91,
+          "offtrack": 0
+        },
+        {
+          "inst": "g_rom[2].g_page[1].rom",
+          "x": 172.8,
+          "y": 88.848,
+          "w": 121.824,
+          "h": 62.91,
+          "offtrack": 0
+        },
+        {
+          "inst": "g_rom[3].g_page[0].rom",
+          "x": 172.8,
+          "y": 151.776,
+          "w": 121.824,
+          "h": 62.91,
+          "offtrack": 0
+        },
+        {
+          "inst": "g_rom[3].g_page[1].rom",
+          "x": 172.8,
+          "y": 214.704,
+          "w": 121.824,
+          "h": 62.91,
+          "offtrack": 0
+        },
+        {
+          "inst": "g_x[0].ram",
+          "x": 25.92,
+          "y": 300.24,
+          "w": 94.824,
+          "h": 41.04,
+          "offtrack": 0
+        },
+        {
+          "inst": "g_x[1].ram",
+          "x": 145.152,
+          "y": 300.24,
+          "w": 94.824,
+          "h": 41.04,
+          "offtrack": 0
+        }
+      ]
     }
   ]
 }
