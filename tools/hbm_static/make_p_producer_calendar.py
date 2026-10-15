@@ -23,12 +23,12 @@ def packed(fields,layout):
     return word
 
 
-def compile_head(rows,head,sfu_tools,out,normalize=False):
+def compile_head(rows,head,sfu_tools,out,normalize=False,scaled_in_e=False,wrong_lease_sc=False):
     sys.path.insert(0,str(sfu_tools))
     from sfu_control_image import encode
     from sfu_vector_calendar import compile_vector
     beats=rows//16;bursts=rows//64
-    sc=head*(rows//8);scaled=2048;eraw=4096;eb=6000+head*(rows//8)
+    sc=head*(rows//8);eraw=4096;scaled=sc if wrong_lease_sc else (eraw if scaled_in_e else 2048);eb=6000+head*(rows//8)
     mb=7800+head//8;se=7808+head//8;scalar_word=head%8;mb_local=12672
     io={};aux={};events={}
     def put(table,t,**fields):
@@ -157,6 +157,7 @@ def compile_head(rows,head,sfu_tools,out,normalize=False):
            'diagnostic_VM_sectors':{'SC':sc,'scaled_SC':scaled,'E':eraw,'EB':eb,'MB':mb,'SE':se,'scalar_word':scalar_word,**({'PV':2304,'SINK':7840,'DEN':7904,'OUT':4608} if normalize else {})},
            'macro_inventory':{'operand':80,'arithmetic_programme':32,'io_programme':12,'aux_programme':4,'source_scratch':10,'VM':24},
            'extra_scalar_configuration_bits':4*(24+32+1),'head_reconfiguration_setup_not_priced':True,
+           'scaled_SC_lease':('invalid_live_SC' if wrong_lease_sc else ('future_E_until_MAX_source_captured' if scaled_in_e else 'private_diagnostic')),
            'production_qualified':False,'physical_qualified':False,'native_whole_kernel_qualified':False}
     (out/'calendar.json').write_text(json.dumps(model,indent=2)+'\n')
     (out/'config.txt').write_text(' '.join(map(str,[rows,head,len(image),end,sc,scaled,eraw,eb,mb,se,scalar_word]))+'\n')

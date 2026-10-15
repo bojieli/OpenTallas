@@ -40,7 +40,7 @@ module tb_hbm_p_norm_h1_static;
  .local_read(readback?pf_v:8'd0),.local_write(8'd0),.near_rq(nrq0),.near_wq(nwq0),.near_rr(brr),.near_w_done(bdone),
  .local_rr(observer_rr),.far_rr(frr0),.far_w_done(fdone0),.fault(t0f));
  for(genvar b=0;b<8;b++)begin:bank
-  wire[280:0]iw={!(init&&init_mode==2&&b>1),init?16'(init_sector+b):16'(guard_sector+b),
+  wire[280:0]iw={!(init&&init_mode==2&&b>0),init?16'(init_sector+b):16'(guard_sector+b),
     init?(init_mode==0?init_image[int'(init_sector)-scbase+b]:(init_mode==1?pv_image[int'(init_sector)-2304+b]:sink_image[b%2])):{8{32'h5a123456}},8'hff};
   wire[770:0]br;assign brr[b*257+:257]=br[256:0];
   ot_vms_bank_static #(.RG(3),.WG(1)) memory(.clk(clk),.rst_n(rst_n),.bid(3'(b)),.sid(2'd0),
@@ -60,7 +60,7 @@ module tb_hbm_p_norm_h1_static;
  always @(negedge clk)if(readback)for(integer b=0;b<8;b++)if(observer_rr[257*b+256])
   for(integer w=0;w<8;w++)begin
    reg[31:0]want;
-   if(phase<3)want=phase==0?scaled[observed]:(phase==1?es[observed]:ebs[observed]);
+   if(phase<3)want=phase==0?(scaledbase==ebase?es[observed]:scaled[observed]):(phase==1?es[observed]:ebs[observed]);
    else if(phase<5)want=observed<HEADS?(phase==3?mbs[observed]:ses[observed]):32'h5a123456;
    else if(phase==5)want=norms[observed];
    else want=dens[observed/8];
