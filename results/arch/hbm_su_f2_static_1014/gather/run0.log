@@ -1,0 +1,5 @@
+GATHER_NATIVE PASS checks=304 canonical_routes=6 structural_routes=32 banks=32 SRAMs=96 fixed_cycles=36
+- rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar.sv:83: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 45us; walltime 0.050 s; speed 903.420 us/s
+- Verilator: cpu 0.050 s on 1 threads; alloced 1023 MB

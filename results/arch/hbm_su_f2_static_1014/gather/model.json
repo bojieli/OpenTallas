@@ -1,0 +1,47 @@
+{
+  "scope": "indexed scalar MDESC component; canonical programme cost unqualified",
+  "shape": {
+    "requests": 6,
+    "index_words_per_request": 1,
+    "score_words_per_request": 1,
+    "destination_words_per_request": 1
+  },
+  "fixed_schedule": {
+    "index_issue": 0,
+    "index_sample": 11,
+    "score_issue": 13,
+    "score_sample": 24,
+    "write_issue": 26,
+    "SRAM_commit": 34,
+    "note": "phase0 issued first busy edge after start; done at phase34; test start-to-observation36edges"
+  },
+  "native_memory": {
+    "banks": 32,
+    "SRAMs": 96,
+    "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "bank_response_registered_edges": 6,
+    "client_read_sample_edges": 11,
+    "write_commit_edges": 8,
+    "return_relay_registers": 3,
+    "write_relay_registers": 4
+  },
+  "bandwidth": {
+    "read_payload_bytes_per_transaction": 64,
+    "written_sector_mask_bits": 8,
+    "written_payload_bytes": 4
+  },
+  "ownership": "compiler reserves RG0/WG0 for every bank; index chooses data address only",
+  "replicas": 1,
+  "address_mux": "32:1 sector return,8:1 word return",
+  "MACs_per_cycle": 0,
+  "physical_qualification": false,
+  "production_prices": {
+    "DeepSeek": 2912,
+    "Qwen": 1548,
+    "qualified": false
+  },
+  "observed_fixed_transaction_cycles": 36,
+  "routing_tracks_needed": "17*32 request +281*32 write +257*32 return boundary bits; physical placement not measured",
+  "state": "one outstanding fixed35phase transaction; noqueues/credits/ready; all32RG0/WG0 reserved",
+  "area_fit": "96 bankSRAMs unchanged; client registers and32wayreturn/addressmux not physically qualified"
+}
