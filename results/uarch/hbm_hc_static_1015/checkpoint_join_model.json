@@ -2,9 +2,10 @@
   "scope": "RTL component composition of released L0 attention HC weights with declared native VM input and result apertures; not whole-token allocation or physical qualification",
   "sources": {
     "engine": "16b885432",
-    "prefetch": "b3cd9493a",
+    "prefetch": "f6090ae7a",
     "book": "4b9a13572",
-    "join": "de0ca7df8"
+    "join": "de0ca7df8",
+    "PHY_window": "942124cb2"
   },
   "K": 20480,
   "rows": 24,
@@ -66,17 +67,16 @@
     "VM_request_bits": 136,
     "VM_return_bits": 2056,
     "VM_write_bits": 2248,
-    "assembled_residual_bits": 8192
+    "assembled_residual_bits": 8192,
+    "PHY_issue_width_per_stack": 4,
+    "PHY_max_aggregate_issue_B_per_HBM_cycle": 512
   },
   "clocks": {
     "stream_ps": 833.332,
     "HBM_ps": 1024,
-    "test_PHY_latency_HBM_edges": [
-      80,
-      92
-    ],
     "test_sink_divisor": 7,
-    "sink_clock_physical_qualified": false
+    "sink_clock_physical_qualified": false,
+    "test_PHY_model": "published refresh-aware ot_chip_v41x_hbm3e_phy; K_BASE671088640 no native address remap"
   },
   "open_gates": [
     "canonical whole-token VM input/output allocation and absolute issue timestamps",
@@ -85,5 +85,7 @@
     "actual static SYS1 measured latency (analytical +58 edges cannot inherit SYS0 calendar)",
     "separate Sinkhorn measured clock/phase and revised production tail image",
     "immutable full-dataflow throughput price and SS/FF timing closure"
-  ]
+  ],
+  "historical_PHY_issue_width1_failure": "Published refresh-aware model failed fixed1080 row4half1; bounded80..92edge predecessor passed. Failure retained by child.",
+  "successor_scope": "WIDTH4 same-macro/same-identity-state PHY issue; actual publishedPHY component24rows gate passes1080/1400; final native wrapper composition pending."
 }

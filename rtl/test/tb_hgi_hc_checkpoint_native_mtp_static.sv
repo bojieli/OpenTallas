@@ -12,10 +12,10 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
     wire cfgwe=(state==6);
     wire vm_launch=(state==8&&age==10);
     wire [135:0] vm_rq,bridge_rq;wire [7:0] vm_read;
-    wire [2247:0] result_wq;wire [7:0] result_write;wire result_fault;
+    wire [2247:0] result_wq;wire [7:0] result_write;
     integer result_sectors=0;
     for(genvar rb=0;rb<8;rb=rb+1)assign vm_rq[rb*17+:17]=(state==9)?{age>=24&&age<27,16'(28672+(age-24)*8+rb)}:bridge_rq[rb*17+:17];wire [2055:0] vm_rr;
-    wire native_wave_v,native_done,native_fault;wire [9:0] native_word;wire [8191:0] native_wave;
+    wire native_done;
     reg [4*8*281-1:0] fill_q;
     wire [4*2056-1:0] responses;wire [4*8*18-1:0] bank_status;wire [11:0] tapfault;
     wire startv=(state==7&&cycle==startedge);
@@ -29,9 +29,8 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
             $readmemh(imagefile,image,0,imagewords-1);
         end
     endtask
-    reg [31:0] wm[0:ROWS*8*R*W-1],expm[0:8*24-1],tail_exp[0:8*24-1],bm[0:23],sm[0:2];
+    reg [31:0] expm[0:8*24-1],tail_exp[0:8*24-1],bm[0:23],sm[0:2];
     reg [15:0] xm[0:8*8*R*W-1];
-    wire [2223:0] ap;
     reg [8191:0] xwave;
     reg raw_read;
     wire [767:0] bases,result;
@@ -49,7 +48,7 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
     initial begin
         if($value$plusargs("NPOS=%d",npos))begin end
         if(npos!=6&&npos!=8)$fatal(1,"production NPOS6/8 only");
-        $readmemh("hc_static_w.mem",wm);$readmemh("hc_static_x.mem",xm);$readmemh("hc_static_exp.mem",expm);
+        $readmemh("hc_static_x.mem",xm);$readmemh("hc_static_exp.mem",expm);
         $readmemh("engine_tail_exp.mem",tail_exp);$readmemh("engine_base.mem",bm);$readmemh("engine_scale.mem",sm);
     end
     for(genvar j=0;j<24;j=j+1)assign bases[j*32+:32]=bm[j];
@@ -126,53 +125,43 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
         assign vm_rr[b*257+:257]=sid_response[0]|sid_response[1]|sid_response[2]|sid_response[3];
     end
 
- wire [127:0] k_v,k_we,kr_rdy;reg [127:0] k_rdy='1,k_wr_done=0,kr_v=0;
+ wire [127:0] k_v,k_we,kr_rdy,k_rdy,k_wr_done,kr_v;
  wire [3839:0] k_addr;wire [511:0] k_len;wire [2175:0] k_tag;
  wire [32767:0] k_wdata;wire [4095:0] k_wstrb;
- reg [2175:0] kr_tag=0;reg [511:0] kr_beat=0;reg [32767:0] kr_data=0;
- reg [255:0] checkpoint_image[0:61439];reg pending[0:127][0:7];integer delay_q[0:127][0:7];
- reg [16:0] tag_q[0:127][0:7];reg [255:0] data_q[0:127][0:7];
- reg injected=0;reg [16:0] oldest_tag[0:127];reg have_oldest[0:127];
- integer fault_mode=0;
+ wire [2175:0] kr_tag;wire [511:0] kr_beat;wire [32767:0] kr_data;
+ reg [255:0] checkpoint_image[0:61439];
  integer requests=0,phyresponses=0;
- localparam PHY_LATENCY=80;
  function automatic [4:0] pc_of(input [29:0] s);pc_of=s[6:2]^s[11:7]^s[16:12];endfunction
- always @(posedge hbm_clk)begin:phy
-  integer s,pc,i,bank,offset,row,free_slot,reply_slot;reg [29:0] sector;reg [34:0] byte_address;
-  if(rst_n)begin
-   for(i=0;i<128;i=i+1)begin
-    if(kr_v[i]&&kr_rdy[i])begin kr_v[i]<=0;phyresponses=phyresponses+1;end
-    reply_slot=-1;
-    for(integer os=0;os<8;os=os+1)if(pending[i][os])begin
-     if(delay_q[i][os]==0&&reply_slot<0)reply_slot=os;
-     else if(delay_q[i][os]>0)delay_q[i][os]=delay_q[i][os]-1;
-    end
-    if(reply_slot>=0&&!kr_v[i])begin
-     kr_v[i]<=1;kr_tag[i*17+:17]<=tag_q[i][reply_slot];
-     if(fault_mode==1&&!injected)begin kr_tag[i*17+:17]<=tag_q[i][reply_slot]^17'h10000;injected<=1;end
-     if(fault_mode==2&&!injected&&requests>=2800)begin kr_tag[i*17+:17]<=oldest_tag[i];injected<=1;end
-     kr_data[i*256+:256]<=data_q[i][reply_slot];pending[i][reply_slot]=0;
-    end
-    if(i==0&&fault_mode==3&&!injected&&phyresponses>=2560&&!kr_v[0])begin
-     kr_v[0]<=1;kr_tag[0+:17]<=oldest_tag[0];injected<=1;
-    end
-    if(k_v[i]&&k_rdy[i])begin
-     s=i/32;pc=i%32;sector=k_addr[i*30+:30];byte_address={sector,5'b0};
-     if(pc_of(sector)!=pc)$fatal(1,"actual XOR PC mismatch");
-     free_slot=-1;
-     for(integer os=0;os<8;os=os+1)if(!pending[i][os]&&free_slot<0)free_slot=os;
-     if(k_we[i]||k_len[i*4+:4]!=1||free_slot<0)$fatal(1,"PHY command ownership");
-     if(byte_address<35'd21474836480||byte_address>=35'd21474836480+24*81920)$fatal(1,"not actual20GiB row address %h",byte_address);
-     row=(byte_address-35'd21474836480)/81920;bank=((byte_address-35'd21474836480)%81920)/10240;offset=((byte_address-35'd21474836480)%10240)/32;
-     if(bank%4!=s||offset>=320)$fatal(1,"stripe bank stack/segment mismatch");
-     data_q[i][free_slot]=checkpoint_image[row*2560+bank*320+offset] ^ (($test$plusargs("WEIGHT_MUTANT")&&row==0&&bank==5&&offset==319)?256'h10000000:256'd0);tag_q[i][free_slot]=k_tag[i*17+:17];pending[i][free_slot]=1;delay_q[i][free_slot]=PHY_LATENCY+(requests*7+i)%13;
-     if(!have_oldest[i])begin oldest_tag[i]=k_tag[i*17+:17];have_oldest[i]=1;end
-     requests=requests+1;
-    end
+ for(genvar st=0;st<4;st=st+1)begin:physical_stack
+  wire k_oor,w_oor;wire [63:0] refreshes;
+  ot_chip_v41x_hbm3e_phy #(.K_AW(30),.KTAGW(17),.K_MEM(61440),.K_BASE(64'd671088640),.CLK_PS(1024)) u_phy(
+   .clk(hbm_clk),.rst_n(rst_n),.k_v(k_v[st*32+:32]),.k_rdy(k_rdy[st*32+:32]),.k_addr(k_addr[st*960+:960]),.k_len(k_len[st*128+:128]),
+   .k_tag(k_tag[st*544+:544]),.k_we(k_we[st*32+:32]),.k_wdata(k_wdata[st*8192+:8192]),.k_wstrb(k_wstrb[st*1024+:1024]),.k_wr_done(k_wr_done[st*32+:32]),
+   .kr_v(kr_v[st*32+:32]),.kr_rdy(kr_rdy[st*32+:32]),.kr_tag(kr_tag[st*544+:544]),.kr_beat(kr_beat[st*128+:128]),.kr_data(kr_data[st*8192+:8192]),
+   .w_v(1'b0),.w_rdy(),.w_addr(24'b0),.w_len(6'b0),.w_tag(10'b0),.w_room(),.wr_v(),.wr_rdy(8'b0),.wr_tag(),.wr_beat(),.wr_data(),
+   .k_oor(k_oor),.w_oor(w_oor),.refreshes(refreshes),.w_reads());
+  reg image_copied=0;
+  always @(negedge hbm_clk)if(!image_copied)begin
+   for(integer a=0;a<61440;a=a+1)u_phy.u_k.mem[(64'd671088640+a)%61440]=checkpoint_image[a];
+   if($test$plusargs("WEIGHT_MUTANT"))u_phy.u_k.mem[(64'd671088640+5*320+319)%61440] ^= 256'h10000000;
+   image_copied=1;
+  end
+  always @(posedge hbm_clk)if(rst_n&&(k_oor||w_oor))$fatal(1,"actual PHY address aperture error");
+ end
+ always @(posedge hbm_clk)begin:check_actual_phy
+  integer pc,st,bank,row,offset;reg [29:0]sector;reg [34:0]byte_address;
+  if(rst_n)for(integer i=0;i<128;i=i+1)begin
+   if(k_v[i]&&k_rdy[i])begin
+    st=i/32;pc=i%32;sector=k_addr[i*30+:30];byte_address={sector,5'b0};
+    if(pc_of(sector)!=pc||k_we[i]||k_len[i*4+:4]!=1)$fatal(1,"actual PHY command/PC error");
+    if(byte_address<35'd21474836480||byte_address>=35'd21474836480+24*81920)$fatal(1,"actual20GiB image bounds");
+    bank=((byte_address-35'd21474836480)%81920)/10240;
+    if(bank%4!=st)$fatal(1,"actual stripe stack mismatch");
+    requests=requests+1;
    end
+   if(kr_v[i]&&kr_rdy[i])phyresponses=phyresponses+1;
   end
  end
-
  wire [3:0] reserve_ready;wire [7:0] fetched_ready;
  wire reserve_v=(state==4&&(age==0||age==1))||
   (state==2&&(age==330||age==660))||
@@ -186,7 +175,7 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
  wire drain_half=age==330;
  wire [4:0] drain_row=(state==2)?5'd0:5'(row+1);
  wire drain_slot=drain_row[0];wire [15:0] drain_epoch=16'h6001+drain_row;
- wire half_done,done_half,weight_fault;
+ wire half_done,done_half;
  ot_hgi_hc_native_mtp_static dut(
   .clk(clk),.sink_clk(sink_clk),.rst_n(rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(rst_n),
   .cfg_we(cfgwe),.cfg_addr(11'(cfgi)),.cfg_data(cfgdata),
@@ -206,18 +195,14 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
   .k_v(k_v),.k_rdy(k_rdy),.k_addr(k_addr),.k_len(k_len),.k_tag(k_tag),.k_we(k_we),
   .k_wdata(k_wdata),.k_wstrb(k_wstrb),.k_wr_done(k_wr_done),
   .kr_v(kr_v),.kr_rdy(kr_rdy),.kr_tag(kr_tag),.kr_beat(kr_beat),.kr_data(kr_data));
- assign weight_fault=1'b0;assign native_fault=1'b0;assign result_fault=1'b0;
  always @(posedge clk)if(rst_n)begin
-  if(weight_fault)$fatal(1,"actual checkpoint weight prefetch fault row%0d age%0d",row,age);
   if(reserve_v&&reserve_ready!=15)$fatal(1,"checkpoint reserve deadline");
   if(drain_v&&(fetched_ready&(drain_half?8'haa:8'h55))!=(drain_half?8'haa:8'h55))
    $fatal(1,"checkpoint drain deadline row%0d age%0d ready%h",drain_row,age,fetched_ready);
  end
  initial begin
   $readmemh("all24rows.hex",checkpoint_image);
-  for(integer i=0;i<128;i=i+1)begin have_oldest[i]=0;oldest_tag[i]=0;
-   for(integer os=0;os<8;os=os+1)begin pending[i][os]=0;delay_q[i][os]=0;end
-  end
+
  end
 
     always @(posedge clk)begin
@@ -235,7 +220,7 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
             end else cfgi<=cfgi+1;
         end
         if(state==7&&cycle==startedge)begin state<=(row<24)?3:5;age<=-4;end
-        if(rst_n&&(fault||result_fault||native_fault||(|tapfault)||(|bank_status)))$fatal(1,"PROGRAMMED_MTP fault state%0d row%0d age%0d",state,row,age);
+        if(rst_n&&(fault||(|tapfault)||(|bank_status)))$fatal(1,"PROGRAMMED_MTP fault state%0d row%0d age%0d",state,row,age);
         if(state==3||state==5)age<=age+1;
         if(state==3)begin
             if(rv)begin
