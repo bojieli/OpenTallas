@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Independent emitted-word/lifetime audit; never accepts scheduler PASS alone."""
-import argparse,json,pathlib,collections
+import argparse,json,pathlib,collections,re
 p=argparse.ArgumentParser();p.add_argument('directory',type=pathlib.Path);p.add_argument('layout',type=pathlib.Path);a=p.parse_args()
 v=json.loads((a.directory/'calendar.json').read_text());layout=json.loads(a.layout.read_text());f=layout['fields'];af=layout['ar_fields']
 words={}
@@ -23,6 +23,9 @@ for x in v['qroutes']:
  qseen[key]=x['identity']
 for x in v['loads']:
  o,c,t=x['owner'],x['cycle'],x['tag'];assert ar(o,c,'load_v')==1 and ar(o,c,'load_tag')==t
+ q=int(o.split('q')[1]);rank=x['rank'];req=c-15
+ assert field(o,req,'inj_rd')&1 and field(o,req,'inj_idx')&65535==q*16+t
+ assert field(o,req,'inj_meta')&((1<<33)-1)==(1<<32)|(255<<24)|(rank<<16)|(q*16+t)
  loads[o].append((c,0,t,0));checks['native_loads']+=1
 for x in v['arithmetic']:
  o=f'd{x["rank"]}q{x["q"]}';c=x['read'];t=x['tag']
@@ -33,7 +36,13 @@ for x in v['publications']:
  o,c=x['owner'],x['read'];tags=x['tags']
  assert ar(o,c,'pub_read')==1 and ar(o,c,'pub_tag_a')==tags[0]
  assert ar(o,c,'pub_bf16')==int(x['bf16']) and ar(o,c,'pub_tag_b')==tags[-1]
- assert ar(o,c+1,'pub_issue')==1
+ assert ar(o,c+1,'pub_issue')==1 and ar(o,c,'pub_release')==int(x['release'])
+ match=re.search(r'g(\d+).*q(\d+).*pair(\d+)',x['identity'])
+ if x['bf16']:
+  assert match
+  g,q,pair=map(int,match.groups());src=g;index=g*32+q*8+pair
+ else:src=int(o.split('q')[0][1:]);index=tags[0]
+ assert ar(o,c,'pub_src')==src and ar(o,c,'pub_index')==index
  for t in tags:
   loads[o].append((c,2,t,0))
   if x['release']:loads[o].append((c+1,3,t,0))
@@ -47,6 +56,18 @@ for o,events in loads.items():
   else:assert t in tags;del tags[t]
  assert not tags
  checks['quarter_lifetime_audits']+=1
+deliveries={}
+for x in v['qroutes']:
+ o=x['owner'];q=int(o.split('q')[1]);npt=3 if q==0 else 2
+ if x['sink']!=npt:continue
+ match=re.search(r'bf16.g(\d+).q(\d+).pair(\d+)',x['identity'])
+ assert match
+ g,lq,pair=map(int,match.groups());assert q==lq
+ k=(o,g,q,pair)
+ if k in deliveries:assert deliveries[k]==x['capture']
+ deliveries[k]=x['capture']
+assert len(deliveries)==96*4*12*8
+checks['unique_indexed_BF16_deliveries']=len(deliveries)
 for x in v['transport_hops']:
  o=f'd{x["src"]}q{x["q"]}';d=f'd{x["dst"]}q{x["q"]}';r=x['rail'];dr=x['dst_rail'];s=x['seq']
  for key,c in [('wr',x['write']),('rd',x['read'])]:
