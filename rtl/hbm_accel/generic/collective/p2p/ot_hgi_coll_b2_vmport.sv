@@ -3,6 +3,8 @@
 // Native B2 writer: local main sectors use one dedicated eight-bank credit group; every other
 // slice and every mirror write uses the real B2 packet hub/ring. Credits return to COLL only
 // after both sectors have committed (packet responses include remote/mirror acknowledgements).
+// Glue only (hardening): five receive leaves (ot_hgi_coll_rx_native_w552 x4 / _w568) + the writer core leaf
+// ot_hgi_coll_b2_vmcore; no logic of its own.
 module ot_hgi_coll_b2_vmport #(
     parameter integer CRD = 16, TCRD = 8, WCRD = 10, MUT = 0
 ) (
@@ -25,10 +27,8 @@ module ot_hgi_coll_b2_vmport #(
     output wire [651:0] xw,
     input wire [1:0] xwa
 );
-    wire [4:0] hv, pop, qfault; reg [4:0] pop_cmd;
-    wire [199:0] ha; wire [2559:0] hd; wire [79:0] hm;
-    wire [4:0] epoch; reg [4:0] issued_epoch;
-    wire [4:0] blocked = ~(epoch ^ issued_epoch);
+    wire [4:0] hv, qfault, epoch; wire [4:0] pop_cmd;
+    wire [4*552-1:0] hrx; wire [567:0] th;
     for (genvar l = 0; l < 4; l = l + 1) begin : g_rx
         wire [551:0] h;
         // CRD 16 = the closed hard master _w552; any other depth is a bench-only generic instance.
@@ -41,10 +41,8 @@ module ot_hgi_coll_b2_vmport #(
                 .t_v(rgx_t_v[l]), .t_d({rgx_t_addr[l*40 +: 40],rgx_t_data[l*512 +: 512]}),
                 .out_v(hv[l]), .out_d(h), .out_rdy(pop_cmd[l]), .epoch(epoch[l]), .fault(qfault[l]));
         end
-        assign ha[l*40 +: 40] = h[551:512]; assign hd[l*512 +: 512] = h[511:0];
-        assign hm[l*16 +: 16] = 16'hffff;
+        assign hrx[l*552 +: 552] = h;
     end
-    wire [567:0] th;
     // TCRD 8 = the closed hard master _w568.
     if (TCRD == 8) begin : g_thard
         ot_hgi_coll_rx_native_w568 u_trx (.clk(clk_rx[4]), .rst_n(rst_n), .t_v(tkw_t_v), .t_d(tkw_t_d),
@@ -52,6 +50,44 @@ module ot_hgi_coll_b2_vmport #(
     end else begin : g_tgen
         ot_hgi_coll_rx_native #(.W(568), .CRD(TCRD)) u_trx (.clk(clk_rx[4]), .rst_n(rst_n), .t_v(tkw_t_v), .t_d(tkw_t_d),
             .out_v(hv[4]), .out_d(th), .out_rdy(pop_cmd[4]), .epoch(epoch[4]), .fault(qfault[4]));
+    end
+    ot_hgi_coll_b2_vmcore #(.CRD(CRD), .WCRD(WCRD), .MUT(MUT)) u_core (.clk(clk), .rst_n(rst_n), .sid(sid),
+        .rgx_t_v(rgx_t_v), .rgx_t_vm(rgx_t_vm), .hv(hv), .hrx(hrx), .th(th), .epoch(epoch), .qfault(qfault), .pop_cmd(pop_cmd),
+        .rgx_f_cr(rgx_f_cr), .tkw_f_cr(tkw_f_cr), .fault(fault), .wq(wq), .wq_cr(wq_cr), .wq_done(wq_done), .cq(cq), .cr(cr),
+        .xw(xw), .xwa(xwa));
+endmodule
+
+// Writer core leaf of the SW VM slice's COLL port: decodes the five receive-leaf heads, issues local wide writes and
+// B2 packets, retires per-lane returns.  Every input is a registered leaf output; pop_cmd is a register.
+module ot_hgi_coll_b2_vmcore #(
+    parameter integer CRD = 16, WCRD = 10, MUT = 0
+) (
+    input wire clk, rst_n,
+    input wire [1:0] sid,
+    input wire [3:0] rgx_t_v,
+    input wire rgx_t_vm,
+    input wire [4:0] hv,
+    input wire [4*552-1:0] hrx,
+    input wire [567:0] th,
+    input wire [4:0] epoch, qfault,
+    output reg [4:0] pop_cmd,
+    output reg [3:0] rgx_f_cr,
+    output reg tkw_f_cr,
+    output reg fault,
+    output reg [8*281-1:0] wq,
+    input wire [7:0] wq_cr, wq_done,
+    output reg [5*338-1:0] cq,
+    input wire [5*274-1:0] cr,
+    output wire [651:0] xw,
+    input wire [1:0] xwa
+);
+    wire [4:0] pop;
+    wire [199:0] ha; wire [2559:0] hd; wire [79:0] hm;
+    reg [4:0] issued_epoch;
+    wire [4:0] blocked = ~(epoch ^ issued_epoch);
+    for (genvar l = 0; l < 4; l = l + 1) begin : g_h
+        assign ha[l*40 +: 40] = hrx[l*552 + 512 +: 40]; assign hd[l*512 +: 512] = hrx[l*552 +: 512];
+        assign hm[l*16 +: 16] = 16'hffff;
     end
     assign ha[160 +: 40] = th[567:528]; assign hm[64 +: 16] = th[527:512]; assign hd[2048 +: 512] = th[511:0];
     reg vm_q, vm_run; reg [3:0] rv_q;

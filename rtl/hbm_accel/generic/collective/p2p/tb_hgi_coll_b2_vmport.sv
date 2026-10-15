@@ -128,8 +128,8 @@ module tb_hgi_coll_b2_vmport;
             if(ks<KLINES)begin kv=1;kd={addr(4,ks),16'(ks%3==0?16'h5555:16'hffff),dataword(4,ks,1),dataword(4,ks,0)};end
             if(sent[0]==N&&sent[1]==N&&sent[2]==N&&sent[3]==N&&ks==KLINES&&ridle&&kidle)begin
                 // End-to-end drained means no packet write remains outstanding at the receiver.
-                for(integer l=0;l<5;l=l+1)if(g_slice[0].g_sw.u.u_coll.pc[l]!=4)$fatal(1,"premature credit drain lane%0d",l);
-                for(integer b=0;b<8;b=b+1)if(g_slice[0].g_sw.u.u_coll.on[b]!=0)$fatal(1,"premature wide write drain bank%0d",b);
+                for(integer l=0;l<5;l=l+1)if(g_slice[0].g_sw.u.u_coll.u_core.pc[l]!=4)$fatal(1,"premature credit drain lane%0d",l);
+                for(integer b=0;b<8;b=b+1)if(g_slice[0].g_sw.u.u_coll.u_core.on[b]!=0)$fatal(1,"premature wide write drain bank%0d",b);
                 $display("B2_WRITE cycles=%0d rgx=%0d topk=%0d",cycles-write_start,4*N,KLINES);phase=2;
             end
         end else if(phase==2&&!checking)begin
