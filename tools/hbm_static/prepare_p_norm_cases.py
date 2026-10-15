@@ -20,8 +20,15 @@ def unpack(word):
     return f
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('out',type=Path);ap.add_argument('--sfu-tools',type=Path,required=True)
+    ap=argparse.ArgumentParser();ap.add_argument('out',type=Path);ap.add_argument('--sfu-tools',type=Path,required=True);ap.add_argument('--canonical-p',type=Path);ap.add_argument('--canonical-pv',type=Path);ap.add_argument('--canonical-per-head',type=Path)
     a=ap.parse_args();oracle=a.out/'oracle';generate(oracle,0x3d3504f3)
+    if a.canonical_p:
+        for rows in (128,640):
+            for h in range(16):
+                o=oracle/f't{rows}_h{h:02d}'
+                for src,dst,n in [('SC','raw_sc',rows),('MB','expected_mb',1),('SE','expected_se',1),('E','expected_e',rows),('EB','expected_eb',rows)]:
+                    values=words(a.canonical_p/f'{src}{rows}.hex');write_words(o/f'{dst}.hex',values[h*n:(h+1)*n])
+                shutil.copyfile(a.canonical_per_head/f't{rows}_h{h:02d}'/'expected_scaled.hex',o/'expected_scaled_sc.hex')
     rng=np.random.default_rng(15101572)
     for rows in (128,640):
         case=a.out/f't{rows}_h16';compile_head(rows,0,a.sfu_tools,case,normalize=True)
@@ -32,6 +39,9 @@ def main():
             values=(rng.integers(-65536,65536,512).astype(np.float32)/np.float32(1024)).astype(np.float32)
             values[:2]=[0.,-0.]
             sn=np.float32([-100,-4,-1,0,1,2,3,5,6,7,8,9,10,.5,4,20][h])
+            if a.canonical_pv:
+                values=words(a.canonical_pv/f'PV{rows}.hex')[h*512:(h+1)*512].view(np.float32)
+                sn=words(a.canonical_pv/f'SINK{rows}.hex')[h:h+1].view(np.float32)[0]
             d.vm[0]=sn.view(np.uint32);d.vm[1]=mb[-1];d.vm[2]=se[-1];d.vm[512:1024]=values.view(np.uint32)
             def run(tag,desc,**fields):
                 sut=sut_decode(0);sut.update(fields);u_su_vop(m,Rec('SU','VOP',sut=sut,desc=desc,tag=tag),0)
