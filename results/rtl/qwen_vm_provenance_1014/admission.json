@@ -1,0 +1,47 @@
+{
+  "enabled_by_default": false,
+  "qualified": false,
+  "native_cost_measured": false,
+  "runs": [
+    {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-2033651-1791974399",
+      "mem_GB": 1,
+      "threads": 1,
+      "exit": 0,
+      "scope": "component1positive14observedmutants"
+    },
+    {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-2411674-1791974516",
+      "mem_GB": 1,
+      "threads": 1,
+      "exit": 0,
+      "scope": "defaultoff"
+    },
+    {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-2411675-1791974516",
+      "mem_GB": 16,
+      "threads": 4,
+      "exit": 0,
+      "scope": "actualnativeROW64reads512data/full247metadata +wrongcapturemutant"
+    },
+    {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-2113447-1791975934",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "scope": "freshgenericprovenance1241Q census"
+    },
+    {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-2113445-1791975934",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "scope": "freshgenericROW597Q census"
+    }
+  ]
+}

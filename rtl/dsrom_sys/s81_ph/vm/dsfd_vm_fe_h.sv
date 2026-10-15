@@ -23,8 +23,10 @@
 // relayed: the parent ties them at the dsfd_vm_fsr pins.  Word of slice s at [SW*s +: SW], MSB first:
 //   {v, we (WEV), row 14, mask 4 (MV), d 128 (DF)}      SW = 15 + WEV + 4 MV + 128 DF
 // DX > 0 (read ports whose data field carries a short tag: only slice 0 has it): x_o = d[DX-1:0], one kept out-pin copy.
+// SLC 1 (FE (a) capture-slice locality, OT_SPVM_SLOC, claude s81-grpA r5): copy s carries segment s of the lane's virtual
+// row with the ACTUAL row {row[13:4], row[1:0], s} (row[3:0] = the lane id); its destination is slice row[3:2]'s fsr.
 module dsfd_vm_fob #(parameter integer STALE = 0, parameter integer WEV = 1, parameter integer MV = 0,
-                     parameter integer DF = 1, parameter integer DX = 0) (
+                     parameter integer DF = 1, parameter integer DX = 0, parameter integer SLC = 0) (
     input  wire clk, input wire rn,
     input  wire i_v, input wire i_we, input wire [13:0] i_row, input wire [15:0] i_m, input wire [511:0] i_d,
     output wire [4*(15 + WEV + 4*MV + 128*DF)-1:0] s_o, output wire [((DX > 0) ? DX : 1)-1:0] x_o, output wire [31:0] k_o
@@ -51,7 +53,9 @@ module dsfd_vm_fob #(parameter integer STALE = 0, parameter integer WEV = 1, par
         wire [SW-1:0] w;
         assign w[SW-1] = rn ? c_v : 1'b0;
         if (WEV != 0) begin : g_we assign w[SW-2] = c_we; end
-        assign w[4*MV + 128*DF +: 14] = c_row;
+        localparam [1:0] G2 = gs;
+        if (SLC != 0) begin : g_rs assign w[4*MV + 128*DF +: 14] = {c_row[13:4], c_row[1:0], G2}; end
+        else begin : g_rn assign w[4*MV + 128*DF +: 14] = c_row; end
         if (MV != 0) begin : g_m assign w[128*DF +: 4] = c_m[4*gs +: 4]; end
         if (DF != 0) begin : g_d assign w[127:0] = c_d[128*gs +: 128]; end
         dsfd_vm_be_kreg #(.W(SW), .ID(600 + gs)) u_s0 (.clk(clk), .d(w), .q(s_o[SW*gs +: SW]));
@@ -99,7 +103,11 @@ module dsfd_vm_fxs (
     genvar gj, gs;
     generate for (gj = 0; gj < 4; gj = gj + 1) begin : g_p
         // i_* come straight from the clt pins: the b register of dsfd_vm_fob IS the in-pin flop
+`ifdef OT_SPVM_SLOC
+        dsfd_vm_fob #(.WEV(0), .MV(1), .SLC(1)) u_b (.clk(clk), .rn(rn), .i_v(w_v[gj]), .i_we(1'b1), .i_row(w_row[14*gj +: 14]),
+`else
         dsfd_vm_fob #(.WEV(0), .MV(1)) u_b (.clk(clk), .rn(rn), .i_v(w_v[gj]), .i_we(1'b1), .i_row(w_row[14*gj +: 14]),
+`endif
             .i_m(w_m[16*gj +: 16]), .i_d(w_d[512*gj +: 512]), .s_o(s_o[588*gj +: 588]), .x_o(), .k_o(k_o[32*gj +: 32]));
     end endgenerate
 `ifdef OT_SPVM_RESET_ACK
@@ -421,6 +429,10 @@ module dsfd_vm_fcc (
 `endif
 );
     localparam integer CCA = `VMFE_CCA;
+    // This CLOSED ctrl leaf retains its legacy full-row interface. True commit
+    // metadata uses a separately qualified native variant, never these constants.
+    localparam integer WCOMMIT=0;
+    wire [15:0] vwm=16'hffff; wire [7:0] vwt=8'd0; wire vready;
     wire clk = ck[0];
     reg rn; wire rns;
     (* keep = 1 *) reg [1:0] rn_k;
@@ -429,26 +441,28 @@ module dsfd_vm_fcc (
     ot_dsrom_mtp_rstsync u_rss (.clk(cks[0]), .rst_n_async(rss[0]), .rst_n(rns));
     // ---- verbatim from the flat dsfd_vm_fe
     // ---------------------------------------------------------------- ctrl VM port: stream pins -> 2 ratio CDC FIFOs
+    reg [15:0] s_wm; reg [7:0] s_wt;
     reg s_we, s_re, s_tg; reg [13:0] s_wa, s_ra; reg [511:0] s_wd;
     always @(posedge cks[0]) begin
         if (!rns) begin s_we <= 1'b0; s_re <= 1'b0; end else begin s_we <= vwe[0]; s_re <= vre[0]; end
+        s_wm <= WCOMMIT ? vwm : 16'hffff; s_wt <= WCOMMIT ? vwt : 8'd0;
         s_wa <= vwa; s_ra <= vra; s_wd <= vwd;
     end
     // up to two ops a stream cycle (a write and a read: the write is ordered first).  Ops alternate between the two
     // FIFOs (s_tg = the FIFO of the next op); the serial side drains <= 2 a cycle, so the controller's VM op rate must
     // stay <= 1.5 a stream cycle on average (8-entry FIFOs); beyond -> sticky overflow fault (fail closed).
-    wire [526:0] s_wo = {1'b1, s_wa, s_wd}, s_ro = {1'b0, s_ra, 512'd0};   // {we, row, data}
+    wire [550:0] s_wo = {s_wt,s_wm,1'b1, s_wa, s_wd}, s_ro = {24'd0,1'b0, s_ra, 512'd0};   // {we, row, data}
     wire s_f = s_we | s_re;                       // first op of the cycle
     wire s_s = s_we & s_re;                       // second op (the read)
-    wire [526:0] s_fd = s_we ? s_wo : s_ro;
+    wire [550:0] s_fd = s_we ? s_wo : s_ro;
     wire [1:0] sw_v = {(s_f && s_tg) || (s_s && !s_tg), (s_f && !s_tg) || (s_s && s_tg)};
-    wire [526:0] sw_d0 = (s_f && !s_tg) ? s_fd : s_ro;
-    wire [526:0] sw_d1 = (s_f && s_tg) ? s_fd : s_ro;
+    wire [550:0] sw_d0 = (s_f && !s_tg) ? s_fd : s_ro;
+    wire [550:0] sw_d1 = (s_f && s_tg) ? s_fd : s_ro;
     always @(posedge cks[0]) if (!rns) s_tg <= 1'b0; else if (s_f && !s_s) s_tg <= ~s_tg;
     `ifdef OT_SPVM_RESET_ACK
     wire [1:0] fifo_live_w, fifo_live_r;
 `endif
-    wire [1:0] cw_rdy, cr_v, cw_live; wire [526:0] cr_d0, cr_d1; reg [1:0] cr_take; reg s_ovf;
+    wire [1:0] cw_rdy, cr_v, cw_live; wire [550:0] cr_d0, cr_d1; reg [1:0] cr_take; reg s_ovf;
     generate if (CCA != 0) begin : g_cca
         // el1013-s81-vmfe/B8 (coordinator decision 10-13 (b)): with ot_ratio_cdc_fifo every storage bit crossed EVERY read
         // cycle (mem[i] (cks tree) -> sh[i] (ck tree), 2 x 8 x 527 flop -> flop arcs) and had to meet the 277.8-ps window AND
@@ -466,7 +480,7 @@ module dsfd_vm_fcc (
         (* keep = 1 *) reg [1:0] xw_t; (* keep = 1 *) reg [1:0] xr_t;
         always @(posedge cks[0] or negedge xw0) if (!xw0) xw_t <= 2'b00; else xw_t <= 2'b11;
         always @(posedge clk or negedge xr0) if (!xr0) xr_t <= 2'b00; else xr_t <= 2'b11;
-        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)
+        ot_async_fifo #(.WIDTH(551), .DEPTH(16), .EXT_RST(1)
 `ifdef OT_VMFE_FCC_PIPE
             , .FIFO_PIPE(1)
 `endif
@@ -477,7 +491,7 @@ module dsfd_vm_fcc (
             , .wr_reset_live(fifo_live_w[0]), .rd_reset_live(fifo_live_r[0])
 `endif
             );
-        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)
+        ot_async_fifo #(.WIDTH(551), .DEPTH(16), .EXT_RST(1)
 `ifdef OT_VMFE_FCC_PIPE
             , .FIFO_PIPE(1)
 `endif
@@ -500,24 +514,27 @@ module dsfd_vm_fcc (
     dsfd_vm_reset_ack #(.N(1)) u_cross_ack_r (.clk(clk), .request_n(rst[0]), .local_release(rn), .consumer_live(&fifo_live_r), .ack(rst_ack[1]));
     dsfd_vm_reset_ack #(.N(1)) u_cross_ack_w (.clk(cks[0]), .request_n(rss[0]), .local_release(rns), .consumer_live(&fifo_live_w), .ack(rst_ack_s[1]));
 `endif
-        ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc0 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[0]), .w_rdy(cw_rdy[0]), .w_d(sw_d0),
+        ot_ratio_cdc_fifo #(.W(551), .DEPTH(8)) u_cc0 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[0]), .w_rdy(cw_rdy[0]), .w_d(sw_d0),
             .rclk(clk), .rrst_n(rn), .r_v(cr_v[0]), .r_rdy(cr_take[0]), .r_d(cr_d0), .w_live(cw_live[0]), .r_live(
 `ifdef OT_SPVM_RESET_ACK
             fifo_live_r[0]
 `endif
             ));
-        ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc1 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[1]), .w_rdy(cw_rdy[1]), .w_d(sw_d1),
+        ot_ratio_cdc_fifo #(.W(551), .DEPTH(8)) u_cc1 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[1]), .w_rdy(cw_rdy[1]), .w_d(sw_d1),
             .rclk(clk), .rrst_n(rn), .r_v(cr_v[1]), .r_rdy(cr_take[1]), .r_d(cr_d1), .w_live(cw_live[1]), .r_live(
 `ifdef OT_SPVM_RESET_ACK
             fifo_live_r[1]
 `endif
             ));
     end endgenerate
+    // One request can enter only with both pin stages empty. No intervening
+    // writer can consume the selected FIFO slot before this request reaches it.
+    assign vready = rns && !vwe[0] && !vre[0] && !s_we && !s_re && cw_rdy[s_tg];
     always @(posedge cks[0]) if (!rns) s_ovf <= 1'b0;
         else if ((sw_v[0] && !cw_rdy[0]) || (sw_v[1] && !cw_rdy[1])) s_ovf <= 1'b1;   // incl. ops before the crossing is up
     // serial side: pop in alternation order, <= 2 a cycle: first -> lane A (p3), second -> lane B (p4)
     reg c_nx;                           // FIFO holding the next op
-    reg ca_v, cb_v; reg [526:0] ca_d, cb_d;
+    reg ca_v, cb_v; reg [550:0] ca_d, cb_d;
     always @* begin
         cr_take = 2'b00;
         if (cr_v[c_nx]) begin
@@ -1086,7 +1103,7 @@ endmodule
 // carrying its non-constant bits (table at the relay masters); the constants are TIED at the dsfd_vm_fsr pins here.
 // Reset tree (parent wiring only, re-routable without touching a leaf): fcn.rn_o -> fld, fcc, fcw, fxs 0..3;
 // fld -> flt 0 -> .. -> flt 9; bundle source -> relay(b, slice 0, 0) -> stage chain / slice chain; relay -> fsr.
-module dsfd_vm_fe_h (
+module dsfd_vm_fe_h #(parameter integer BANK_XOR=0) (
     input  wire [0:0]    ck,
     input  wire [0:0]    rst,
     input  wire [0:0]    cks,
@@ -1245,13 +1262,18 @@ module dsfd_vm_fe_h (
         for (gb = 0; gb < 4; gb = gb + 1) begin : g_c          // capture bundles: 4 lanes of fxs gb -> dsfd_vm_fxr x R
             wire [3:0] xv [0:R]; wire [583:0] xp [0:R];
             for (gj = 0; gj < 4; gj = gj + 1) begin : g_j
-                localparam integer P = 12 + 4*gb + gj;
+`ifdef OT_SPVM_SLOC
+                // FE (a): bundle (gb, gs) = segment gs of fxs gb's 4 lanes -> slice gb, ports 12 + 4 gj + gs (no crossbar)
+                localparam integer P = 12 + 4*gj + gs, D = gb;
+`else
+                localparam integer P = 12 + 4*gb + gj, D = gs;
+`endif
                 assign xv[0][gj] = cap_so[2352*gb + (4*gj + gs)*147 + 146];
                 assign xp[0][146*gj +: 146] = cap_so[2352*gb + (4*gj + gs)*147 +: 146];
-                assign fi_v[28*gs + P] = xv[R][gj]; assign fi_we[28*gs + P] = 1'b1;
-                assign fi_row[14*(28*gs + P) +: 14] = xp[R][146*gj + 132 +: 14];
-                assign fi_m[4*(28*gs + P) +: 4] = xp[R][146*gj + 128 +: 4];
-                assign fi_d[128*(28*gs + P) +: 128] = xp[R][146*gj +: 128];
+                assign fi_v[28*D + P] = xv[R][gj]; assign fi_we[28*D + P] = 1'b1;
+                assign fi_row[14*(28*D + P) +: 14] = xp[R][146*gj + 132 +: 14];
+                assign fi_m[4*(28*D + P) +: 4] = xp[R][146*gj + 128 +: 4];
+                assign fi_d[128*(28*D + P) +: 128] = xp[R][146*gj +: 128];
             end
             for (gr = 0; gr < R; gr = gr + 1) begin : g_r
                 wire rni_x;
@@ -1416,7 +1438,7 @@ module dsfd_vm_fe_h (
             end
         end
         // hard child, unchanged: pin flop + out flop; the constant fields and i_rf[2:0] are ties
-        dsfd_vm_fsr u_fr (.ck(ck[0]), .rn(xr0[(4*0 + gs)*R + R - 1]),
+        dsfd_vm_fsr_bank #(.BANK_XOR(BANK_XOR)) u_fr (.ck(ck[0]), .rn(xr0[(4*0 + gs)*R + R - 1]),
             .i_v(fi_v[28*gs +: 28]), .i_we(fi_we[28*gs +: 28]), .i_row(fi_row[392*gs +: 392]), .i_mask(fi_m[112*gs +: 112]),
             .i_d(fi_d[3584*gs +: 3584]), .i_rf({fi_rf[gs], 3'b000}),
             .o_v(m_v[28*gs +: 28]), .o_we(m_we[28*gs +: 28]), .o_row(m_row[392*gs +: 392]),

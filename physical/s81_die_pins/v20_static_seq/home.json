@@ -1,0 +1,17 @@
+{
+ "name": "sp_sseq",
+ "cell": "dsfd_stage_seq_static_c",
+ "outline": {
+  "w": 1727.976,
+  "h": 88.536
+ },
+ "origin": {
+  "x": 13942.8,
+  "y": 19461.6,
+  "orient": "R0"
+ },
+ "kind": "native_successor_reservation",
+ "parent": "s81_layer1",
+ "pin_file": "physical/s81_die_pins/v20_static_seq/dsfd_stage_seq_static_c.tcl",
+ "qualification": "static source all13engines, native gate/phase/transport required; no predecessor functional/timing equivalence"
+}

@@ -454,6 +454,14 @@ module qfd_sp_vector_memory #(
     input wire ck_r7_53,
     input wire ck_r7_54,
     input wire ck_r7_55,
+    input wire ck_r7_56,
+    input wire ck_r7_57,
+    input wire ck_r7_58,
+    input wire ck_r7_59,
+    input wire ck_r7_60,
+    input wire ck_r7_61,
+    input wire ck_r7_62,
+
     input wire ck_r3_56,
     input wire ck_r3_57,
     input wire ck_r3_58,
@@ -495,6 +503,9 @@ module qfd_sp_vector_memory #(
     input wire [519:0] ar, output reg [552:0] xaw,
     input wire q_epoch, q_start, output wire q_committed,
     output wire [523:0] q, output wire q_done,
+    output wire [38:0] write_commit_v,
+    output wire [311:0] write_commit_line,
+    output wire [623:0] write_commit_mask,
     output wire fault
 );
     wire [447:0] lc;
@@ -1003,13 +1014,13 @@ module qfd_sp_vector_memory #(
     assign oc[53]=ck_r6_61;
     assign oc[54]=ck_r6_62;
     assign oc[55]=ck_r6_63;
-    assign oc[56]=1'b0; // No Q observer in this bank group.
-    assign oc[57]=1'b0; // No Q observer in this bank group.
-    assign oc[58]=1'b0; // No Q observer in this bank group.
-    assign oc[59]=1'b0; // No Q observer in this bank group.
-    assign oc[60]=1'b0; // No Q observer in this bank group.
-    assign oc[61]=1'b0; // No Q observer in this bank group.
-    assign oc[62]=1'b0; // No Q observer in this bank group.
+    assign oc[56]=ck_r7_56;
+    assign oc[57]=ck_r7_57;
+    assign oc[58]=ck_r7_58;
+    assign oc[59]=ck_r7_59;
+    assign oc[60]=ck_r7_60;
+    assign oc[61]=ck_r7_61;
+    assign oc[62]=ck_r7_62;
     assign oc[63]=1'b0; // No Q observer in this bank group.
     wire [2:0] sre0,sre1;
     wire [71:0] sa0,sa1;
@@ -1025,6 +1036,10 @@ module qfd_sp_vector_memory #(
     wire qr_v,qr_rsp,qvm_v,qvm_ready,q_window;
     wire [19:0] qr_row;
     wire [511:0] vmq,commit_mask;
+    wire [63:0] raw_commit_v; wire [511:0] raw_commit_line; wire [1023:0] raw_commit_mask;
+    assign write_commit_v=raw_commit_v[24+:39];
+    assign write_commit_line=raw_commit_line[24*8+:39*8];
+    assign write_commit_mask=raw_commit_mask[24*16+:39*16];
     wire qfault,w_fault,w_hazard;
     // Q owns its compiler-reserved window. Sequencer requests in that window are faults,never demand-arbitrated.
     assign qvm_v=q_window ? qr_v : svr[20];
@@ -1064,7 +1079,8 @@ module qfd_sp_vector_memory #(
         .rb_v({rb2[550],rb1[550],rb0[550]}),.rb_end({rb2[549],rb1[549],rb0[549]}),.rb_nul({rb2[548],rb1[548],rb0[548]}),
         .rb_row({rb2[528+:20],rb1[528+:20],rb0[528+:20]}),.rb_mask({rb2[512+:16],rb1[512+:16],rb0[512+:16]}),
         .rb_data({rb2[0+:512],rb1[0+:512],rb0[0+:512]}),.rb_cr(),.rb_ok(3'b0),
-        .me_ok(),.land_cnt(ld),.w_fault(w_fault),.w_hazard(w_hazard),.qr_commit_mask(commit_mask));
+        .me_ok(),.land_cnt(ld),.w_fault(w_fault),.w_hazard(w_hazard),.qr_commit_mask(commit_mask),
+        .write_commit_v(raw_commit_v),.write_commit_line(raw_commit_line),.write_commit_mask(raw_commit_mask));
     assign fault=qfault | w_fault | w_hazard | ar_bad | slot_fault;
     assign mo=~fault;
 endmodule

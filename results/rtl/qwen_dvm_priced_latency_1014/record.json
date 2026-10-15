@@ -1,0 +1,59 @@
+{
+  "status": "HISTORICAL_LATENCY_VEHICLE_EXACT_PASS_NOT_FINAL_NATIVE_COST_QUALIFICATION",
+  "remote": "ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-dvm-1014/vehicle/out/qD_dvm_r3x12",
+  "preserved_job": "oth-ubuntu-2683029-1792023267",
+  "candidate_source": "67683b2ea",
+  "configuration": {
+    "XVM": 13,
+    "BD": 89,
+    "QROM_ORD": 10,
+    "LAT": 365,
+    "TWS": 93,
+    "SU_ML": 15,
+    "mode": "L3",
+    "position": 8191,
+    "token": 24,
+    "native_static_profile": false
+  },
+  "result": {
+    "schema": "opentallas.exactness.qwen-rom-fulltoken.v1",
+    "mode": "L3",
+    "exact": true,
+    "returncode": 0,
+    "cycles": 20969,
+    "stage_cycles": {
+      "L0": 7224,
+      "L1": 6868,
+      "L2": 6868
+    },
+    "next_token": null,
+    "winning_logit_bits": null,
+    "head_results": {},
+    "head_xnorm_mismatches": {},
+    "layer_x_mismatches": 0,
+    "layer_x_checks": 12,
+    "kv_mismatches": 0,
+    "kv_checks": 12,
+    "bad_layer_x": [],
+    "bad_kv": [],
+    "kv_unverified": [],
+    "faults_nonzero": [],
+    "writeback_drained": true,
+    "wall_seconds": 10771.5,
+    "executable_sha256": "664e16b58035f4ab570161c4d1b8f0fb61c345c3045ebff98884a9683159629a"
+  },
+  "immutable_price": {
+    "name": "qD_all_ml15",
+    "steady_layer_cycles": 6796,
+    "source": "el1014-qwen-dvm-build.log recorded2026-10-14 16:47 PDT; original raw price artifact not recovered here"
+  },
+  "measured_steady_layer_cycles": 6868,
+  "delta_cycles": 72,
+  "loss_percent": 1.059446733372571,
+  "limits": "Measured older vehicle latency cost only; current source991/native affine/static VM/macros/physical relays differ and remain unpriced end-to-end. No fulltoken/LMhead claim for L3-only run.",
+  "sha256": {
+    "runtime.log": "8b08aeb1e39df5ecfa1b20a0d876d6ace408f7396d1a21fdba0f7163b29d475c",
+    "stages.txt": "e41dc35c5a981be53cc9419b95c6d0baccd12ae029bd555bda21ff0abfd3c803",
+    "result.json": "e3e5080c51bad05e17d0d4e25edfe64c0b082e5b06a4113f474826d9d38af8b3"
+  }
+}
