@@ -7,6 +7,32 @@
     "spsqrt": 162,
     "egate": 104
   },
+  "native_head_binding": {
+    "actual_capacity": "one KIND2 scalar head slot in N512",
+    "lane_clocks": 8,
+    "metadata_clocks": 4,
+    "broadcast_clocks": 1,
+    "SIDE_clocks": 6,
+    "bank_clocks": 1,
+    "clock_relation": "all20related1:1phase0",
+    "source_lane_commit": "f1ce8bc88",
+    "parent_fn_pin_commit": "6c58a8068",
+    "SRAM_read_replicas": 6,
+    "SRAM_macro": "128x256 physical, lower64rows",
+    "SRAM_macro_area_um2": 23349.46176,
+    "SRAM_total_bytes": 24576,
+    "extra_fetch_edges": 2,
+    "write_commit_extra_edges": 1,
+    "expected_emit_to_OUT_preNBA": {
+      "rsqrt": 60,
+      "sqrt": 54,
+      "spsqrt": 185,
+      "egate": 127,
+      "divimm_rsqrt": 76
+    },
+    "source_only_before_actual_gate": true,
+    "full_grid_qualification": false
+  },
   "primitive_mul_latency": 3,
   "primitive_add_latency": 3,
   "primitive_div_latency": 19,
