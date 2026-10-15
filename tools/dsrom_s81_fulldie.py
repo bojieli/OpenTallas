@@ -3500,6 +3500,11 @@ def relay_dims(bits, horiz):
     """
     if RLY_REAL_DIMS and bits in (266, 283):
         return 34.56, 30.24
+    if bits > 300:
+        # S-BIND r6 (bind16: dsfd_rly_536_SN.i 536 pins x 0.048 um on a 17.256-um S face): a wide relay (the x2 column
+        # fragment) may take either orientation's pin faces, so both face lengths fit its pins (square)
+        side_ = max(stn_dims([bits], True) + stn_dims([bits], False) + (face_need([1, bits]),))
+        return up(side_, GX) - SHAVE, up(side_, GY) - SHAVE
     return stn_dims([bits], horiz)
 
 
