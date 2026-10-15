@@ -1,0 +1,10 @@
+tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh: line 23: 692931 Aborted                    (core dumped) "$out/obj_$tag/Vtb_kv_hbm_elastic_boundary" "$@" > "$out/$name.log" 2>&1
+tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh: line 23: 693541 Aborted                    (core dumped) "$out/obj_$tag/Vtb_kv_hbm_elastic_boundary" "$@" > "$out/$name.log" 2>&1
+tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh: line 23: 693825 Aborted                    (core dumped) "$out/obj_$tag/Vtb_kv_hbm_elastic_boundary" "$@" > "$out/$name.log" 2>&1
+tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh: line 23: 694098 Aborted                    (core dumped) "$out/obj_$tag/Vtb_kv_hbm_elastic_boundary" "$@" > "$out/$name.log" 2>&1
+tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh: line 23: 694322 Aborted                    (core dumped) "$out/obj_$tag/Vtb_kv_hbm_elastic_boundary" "$@" > "$out/$name.log" 2>&1
+tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh: line 23: 694653 Aborted                    (core dumped) "$out/obj_$tag/Vtb_kv_hbm_elastic_boundary" "$@" > "$out/$name.log" 2>&1
+tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh: line 23: 694929 Aborted                    (core dumped) "$out/obj_$tag/Vtb_kv_hbm_elastic_boundary" "$@" > "$out/$name.log" 2>&1
+tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh: line 23: 695120 Aborted                    (core dumped) "$out/obj_$tag/Vtb_kv_hbm_elastic_boundary" "$@" > "$out/$name.log" 2>&1
+PASS 0az elastic boundary: 18 production runs, 8 failing cases observed (1 hold + 7 fail)
+rc=0

@@ -1,0 +1,7 @@
+{"schema":"opentallas.hbm-idx.client-elab.v1","top":"ot_hbm_idx_client_static","tool":"Verilator 5.050 --lint-only -Wall (full hierarchy, 2048 hslices, every real child, no blackbox)",
+ "source_commit":"16613564c","host":"ot-epyc4","unit":"oth-ubuntu-289376-1792080657","exit":0,"errors":0,"pin_missing_or_notfound":0,
+ "wall":"24:53","max_rss_kB":115943612,
+ "warnings":{"SYNCASYNCNET":133,"BLKSEQ":24,"LATCH":8,"MULTIDRIVEN":6,"UNUSEDGENVAR":1},
+ "warning_review":"LATCH: 8 on ot_hbm_idx_topk_link_static always@* (every flagged var is assigned unconditionally at block top before the loops: loop-conservative detection). MULTIDRIVEN: per-quarter elements of selector hist/selected/qfault and parent selected_v/selected_line/unused_ol written from per-quarter clock blocks (disjoint elements). Neither is an elaboration error; owner to clean if synthesis flags them.",
+ "first_attempt":"oth-ubuntu-264647 at --mem 64 was cgroup-killed (exit 143) above 64 GB; rerun at 256 GB",
+ "iverilog_reference":"old Icarus PID 2755834 (EPYC1) still running, preserved"}

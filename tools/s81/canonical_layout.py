@@ -225,23 +225,43 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
    n=road.rootnode[(r,'x')]
    while n is not None:required.add(n);n=parent[n]
   m['canonical_broadcast_trees'][side]=dict(injector=st.name,prefix=prefix,entry=entry,root_targets={r:road.rootnode[(r,'x')] for r,f in m['frames'].items() if f['half']==side},edges=[dict(node=n,parent=parent[n],chain=f'cx{side}_edge{k}')for k,n in enumerate(sorted(required-{entry},key=lambda n:dist[n]))])
-  rootsource=(st.name,'fo','od');tail={};flight={};loc={}
-  pre=CH.run(f'cx{side}_spine',[G.LSW+2],prefix,allowed,source,forced=[G._poly_len(prefix)])
-  G.chain_nets(CH,f'cx{side}_spine',rootsource,[i for i,_,_ in pre],[G.LSW+2]);tail[entry]=(pre[-1][0].name,'fo0','do0') if pre else rootsource
+  pair=bool(getattr(G,'BF_X2_PAIR',False))
+  # --bf-x2-pair (S-BIND r6): the packed static word as two forwarded lanes of one epoch -- A = {legacy 564, v, rst_n}
+  # (the historical 566-b lane, its street spots) and B = {x2 536, v, rst_n} -- B's stations are FORCED at A's station
+  # positions on every chain, so both lanes have identical station counts (asserted) and reach the column ingress pair
+  # on the same edge; one 1,102-b station (58.3 x 17.3 um) found no street spot (bind6/bind10 cxW_edge27)
+  LA=[G.X0B+G.X1B+G.CCB+2] if pair else [G.LSW+2];LB=[G.X2B+2]
+  def run_pair(name,path,src,forced,srcA,srcB):
+   sa=CH.run(name,LA,path,allowed,src,forced=forced)
+   G.chain_nets(CH,name,srcA,[i for i,_,_ in sa],LA)
+   tA=(sa[-1][0].name,'fo0','do0') if sa else srcA
+   if not pair:return sa,tA,None
+   sb=CH.run(name+'_x2',LB,path,allowed,src,forced=sorted(set([round(s_,3) for _,s_,_ in sa]+list(forced))))
+   assert len(sb)==len(sa),('--bf-x2-pair: unequal station counts',name,len(sa),len(sb))
+   G.chain_nets(CH,name+'_x2',srcB,[i for i,_,_ in sb],LB)
+   return sa,tA,(sb[-1][0].name,'fo0','do0') if sb else srcB
+  rootsource=(st.name,'fo','oa' if pair else 'od');rootB=(st.name,'fo2','ob');tail={};tailB={};flight={};loc={}
+  pre,tail[entry],tailB[entry]=run_pair(f'cx{side}_spine',prefix,source,[G._poly_len(prefix)],rootsource,rootB)
   loc[entry]=(pre[-1][0].x+pre[-1][0].w/2,pre[-1][0].y+pre[-1][0].h/2) if pre else source;flight[entry]=len(pre)
   for k,n in enumerate(sorted(required-{entry},key=lambda n:dist[n])):
    par=parent[n];src=loc[par];path=G._dedup([src,(par[0],src[1]),par,n]);name=f'cx{side}_edge{k}'
-   sts=CH.run(name,[G.LSW+2],path,allowed,src,forced=[G._poly_len(path)])
-   G.chain_nets(CH,name,tail[par],[i for i,_,_ in sts],[G.LSW+2]);tail[n]=(sts[-1][0].name,'fo0','do0') if sts else tail[par]
+   sts,tail[n],tailB[n]=run_pair(name,path,src,[G._poly_len(path)],tail[par],tailB[par])
    loc[n]=(sts[-1][0].x+sts[-1][0].w/2,sts[-1][0].y+sts[-1][0].h/2) if sts else src;flight[n]=flight[par]+len(sts)
   for r,f in sorted(m['frames'].items()):
    if f['half']!=side:continue
    n=road.rootnode[(r,'x')];cf=next(i for i in m['insts'] if i.name==f'cf{r}');src=loc[n];end=(cf.x+cf.w/2,f['street'][1]+79.8)
-   path=G._dedup([src,(end[0],src[1]),end]);sts=CH.run(f'cx{r}',[G.LSW+2],path,allowed,src,forced=[G._poly_len(path)])
-   G.chain_nets(CH,f'cx{r}',tail[n],[i for i,_,_ in sts],[G.LSW+2]);last=sts[-1][0] if sts else next(i for i in m['insts'] if i.name==tail[n][0])
+   path=G._dedup([src,(end[0],src[1]),end])
+   sts,tA,tB=run_pair(f'cx{r}',path,src,[G._poly_len(path)],tail[n],tailB[n])
+   last=next(i for i in m['insts'] if i.name==tA[0])
    if G.CFIFO_FALL:
     G._add_tap(m,last,0,(cf.name,None,'xd'));bus(f'cx{r}_fn','fclk',1,[(last.name,'fn0'),(cf.name,'xf')])
    else:G._add_tap(m,last,0,(cf.name,'xf','xd'))
+   if pair:
+    lb=next(i for i in m['insts'] if i.name==tB[0])
+    assert lb.kind=='stn' or lb.name==st.name,('--bf-x2-pair: x2 lane tail',r,lb.name)
+    if G.CFIFO_FALL:
+     G._add_tap(m,lb,0,(cf.name,None,'xd2'));bus(f'cx{r}_fn2','fclk',1,[(lb.name,'fn0'),(cf.name,'xf2')])
+    else:G._add_tap(m,lb,0,(cf.name,'xf2','xd2'))
    count=flight[n]+len(sts);m.setdefault('x_stages',{})[r]=count
    calendar[r]={'root':r,'x_stations':count,'x_path_um':G._poly_len(prefix)+dist[n]+G._poly_len(path),'physical_half':side,'logical_gather':[f['logical_half'],f['logical_tier'],f['logical_col']]}
  # Return stations occupy the eastern RSC lane beside existing packed relays.

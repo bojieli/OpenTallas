@@ -21,14 +21,34 @@
 // returned when it leaves (pop toggle synchronised to ck), the length word's at once; plen is a static register
 // (2-flop synchronised on ckv).
 // MUT 1: program words dropped (bench negative); MUT 2: intercepted CSR credits not returned.
+//
+// +define+DSFD_HOST_C_STATIC (S-BIND r6 2026-10-15, owner static-cycle rule 10-14 18:59: no credits / backpressure): the
+// static layer-die host behind dsfd_sp_collective_static_c's host face (f_host 77 / t_host 515):
+//   f_collective[514:0] = {h_cls 2, h_d 512, h_v}   -- no t_cr: the far end sends on the compiler's host slots only
+//   t_collective[76:0]  = {alive, st 11, t_v, t_d 64} -- no h_crn: alive (reset released) is a level, st as above, a
+//                         completion is a SINGLE-EDGE PULSE {t_v, t_d}; the collective queues it (s81_static_host_queue)
+//                         and sends it on its next compiled host tx slot, so the host needs neither a credit nor a slot
+//   f_lf[4*NS-1:0]      -- {fault, live} pairs of the forwarded host-lane blocks beside the host (hc end, hw start per
+//                         stack), folded into the status fault (fault = any lane fault)
+// The ingest's internal completion-credit input t_cr is returned locally one edge after each completion leaves (the
+// pulse needs no far-end space: the collective queue is sized by the compiler and faults on overflow); its receive
+// credits h_crn are not sent (the compiler's host slots never exceed the receive FIFO, whose overflow faults inside the
+// ingest).  CSR program words: no credit return; the crossing FIFO overflow / a word refused is the sticky fault xf.
+// MUT 3 (static negative): completion pulses not emitted; MUT 4: lane faults (f_lf) not folded into the status fault.
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD = 16) (
     input  wire [0:0]          ck,
     input  wire [0:0]          rst,
     input  wire [0:0]          ckv,
     input  wire [0:0]          rsv,
+`ifdef DSFD_HOST_C_STATIC
+    input  wire [514:0]        f_collective,
+    output wire [76:0]         t_collective,
+    input  wire [4*NS-1:0]     f_lf,
+`else
     input  wire [515:0]        f_collective,
     output wire [80:0]         t_collective,
+`endif
     output reg  [35:0]         t_sseq_pw,
     output reg  [7:0]          t_sseq_plen,
     input  wire [5:0]          f_sseq_st,
@@ -42,8 +62,14 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     wire rn = rq[1], rvn = rvq[1];
     // ---------------- input pin flops
     reg [515:0] fi;
+`ifdef DSFD_HOST_C_STATIC
+    always @(posedge ck[0]) fi <= rn ? {1'b0, f_collective} : 516'd0;
+    reg tcr_l;                           // local completion-credit return: one edge after each completion leaves
+    wire        hv = fi[0], tcr = tcr_l;
+`else
     always @(posedge ck[0]) fi <= rn ? f_collective : 516'd0;
     wire        hv = fi[0], tcr = fi[515];
+`endif
     wire [511:0] hd = fi[512:1];
     wire [1:0]  hcl = fi[514:513];
     wire csr_p = hv && hcl == 2'd0 && hd[7:0] == 8'h10;
@@ -90,7 +116,23 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     always @(posedge ck[0]) begin ss1 <= f_sseq_st; ss2 <= ss1; wf <= f_wfc_ft; end
     reg xf;
     always @(posedge ck[0] or negedge rn) if (!rn) xf <= 1'b0; else if (pw_ovf || (csr_p && !pw_wr) || crn_x == 7'd127) xf <= 1'b1;
+`ifdef DSFD_HOST_C_STATIC
+    // lane faults (odd bits of f_lf), pin-registered
+    reg lf_q; integer li;
+    always @(posedge ck[0] or negedge rn)
+        if (!rn) lf_q <= 1'b0;
+        else begin : lfo
+            reg a; a = 1'b0;
+            for (li = 0; li < 2 * NS; li = li + 1) a = a | f_lf[2 * li + 1];
+            lf_q <= a && (MUT != 4);
+        end
+    always @(posedge ck[0] or negedge rn) if (!rn) tcr_l <= 1'b0; else tcr_l <= t_v;
+    reg [76:0] to;
+    always @(posedge ck[0]) to <= rn ? {1'b1, hf | sf | xf | lf_q | ss2[5] | (|wf), wf, ss2, t_v && (MUT != 3), t_d} : 77'd0;
+    assign t_collective = to;
+`else
     reg [80:0] to;
     always @(posedge ck[0]) to <= rn ? {hf | sf | xf | ss2[5] | (|wf), wf, ss2, crn_sum[4:0], t_v, t_d} : 81'd0;
     assign t_collective = to;
+`endif
 endmodule

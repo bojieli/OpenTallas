@@ -1,0 +1,64 @@
+{
+ "name": "s81_rly_66_ne",
+ "top": "dsfd_rly_66_NE",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 17.256,
+  "h": 17.256
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "i"
+  ],
+  "S": [
+   "ck",
+   "rs"
+  ],
+  "E": [
+   "o"
+  ]
+ },
+ "outhold": true,
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7
+ },
+ "job": {
+  "owner": "Claude:fill-s81",
+  "branch": "claude/el1015-fill-1015",
+  "tag": "g18",
+  "purpose": "S81 die relay master dsfd_rly_66_NE (5 instances in the GEN18r placement, generated outline + interim timing there): real hard tile, 66 b in N / out E, ck+rs S, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget",
+  "benches": [
+   {
+    "name": "exact_words",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_rly_66_NE 66 {RUN}/bench_p",
+    "expect": "pass",
+    "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_bit0_mutant",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_rly_66_NE 66 {RUN}/bench_m",
+    "expect": "fail",
+    "fail_regex": "RLY_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   }
+  ],
+  "views_to": "physical/ref_tile/s81_rly_66_ne/views",
+  "record_to": "results/rtl/ref_tile/s81_rly_66_ne"
+ }
+}

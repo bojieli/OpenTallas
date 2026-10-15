@@ -3,7 +3,8 @@
 module qkd_host_root_integrated #(
  parameter T_LINK=200000,T_HBM=200000,WDOG=1<<22,
  parameter ENABLE_SERVICE=0,ENABLE_NATIVE=0,ENABLE_TOKEN=0,
- parameter PHY_MUT=0,QM_MUT=0,ORDER_MUT=0,BRIDGE_MUT=0,HC_MUT=0,PROMPT_MUT=0
+ parameter PHY_MUT=0,QM_MUT=0,ORDER_MUT=0,BRIDGE_MUT=0,HC_MUT=0,PROMPT_MUT=0,
+ parameter NL=6
 )(
  input wire[7:0] ck_phy,
  input wire ck_pad,
@@ -74,7 +75,7 @@ module qkd_host_root_integrated #(
  input wire[1042:0] phy_rx_flit,
  output wire phy_tx_v,
  output wire[1042:0] phy_tx_flit,
- input wire[5:0] link_up,
+ input wire[NL-1:0] link_up,
  input wire[7:0] transport_fault,
  input wire[7:0] physical_fault,
  input wire crom_fault,
@@ -246,7 +247,7 @@ module qkd_host_root_integrated #(
  wire host_observer_fault;
  wire peer_retrain_request,request_aborted;
  wire codec_allocated_valid,codec_allocated_delivered;wire[15:0]codec_allocated_epoch;wire[17:0]codec_allocated_token,codec_allocated_position;wire[1:0]codec_allocated_gen;
- qkd_host_rank_services #(.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_NATIVE(ENABLE_NATIVE),.ENABLE_TOKEN(ENABLE_TOKEN),.PHY_MUT(PHY_MUT),.QM_MUT(QM_MUT),.ORDER_MUT(ORDER_MUT),.BRIDGE_MUT(BRIDGE_MUT),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_rank(
+ qkd_host_rank_services #(.NL(NL),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_NATIVE(ENABLE_NATIVE),.ENABLE_TOKEN(ENABLE_TOKEN),.PHY_MUT(PHY_MUT),.QM_MUT(QM_MUT),.ORDER_MUT(ORDER_MUT),.BRIDGE_MUT(BRIDGE_MUT),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_rank(
  .ck_phy(ck_phy),
  .ck_pad(ck_pad),
  .ck_phy_rx_w(ck_phy_rx_w),
