@@ -8,7 +8,7 @@ module tb_hgi_coll_argmax_static;
  reg [2179:0] data=0;
  wire ov,fault;
  wire [544:0] oflit;
- reg bad=0;integer round=0,checked=0;
+ reg bad=0,bad_src=0;integer round=0,checked=0;
  ot_hgi_coll_argmax_static #(.MUT_TIE(MUT_TIE),.MUT_SLOT_CHECK(MUT_SLOT_CHECK)) u(
   .clk(clk),.rst_n(rst_n),.start(start),.cfg_g(8'd96),.cfg_gbase(8'd0),.cfg_rank(8'd3),
   .in_slot(slot),.in_v(iv),.in_flit(data),.flush_slot(flush),.publish_slot(publish),
@@ -44,7 +44,7 @@ module tb_hgi_coll_argmax_static;
   end
  end
  initial begin
-  bad=$test$plusargs("BAD_SLOT");
+  bad=$test$plusargs("BAD_SLOT"); bad_src=$test$plusargs("BAD_SRC");
   repeat(4)@(negedge clk);rst_n=1;
   for(round=0;round<5;round=round+1)begin
    @(negedge clk);start=1;
@@ -53,17 +53,18 @@ module tb_hgi_coll_argmax_static;
     @(negedge clk);iv=4'hf;slot=4'hf;
     for(integer l=0;l<4;l=l+1)data[l*545+:545]={1'b1,8'hff,8'(base+l),16'd0,448'd0,ident(round,base+l),value(round,base+l)};
     if(bad && base==4)slot[0]=0;
+    if(bad_src && base==4)data[528+:8]=0;
    end
    @(negedge clk);iv=0;slot=0;flush=1;
    @(negedge clk);flush=0;
    repeat(5)@(negedge clk);publish=1;
    @(negedge clk);publish=0;
    repeat(3)@(negedge clk);
-   if(!bad && fault)$fatal(1,"ARGMAX unexpected protocol fault");
-   if(bad && !fault)$fatal(1,"ARGMAX reservation mismatch escaped checker");
+   if(!bad && !bad_src && fault)$fatal(1,"ARGMAX unexpected protocol fault");
+   if((bad || bad_src) && !fault)$fatal(1,"ARGMAX reservation mismatch escaped checker");
   end
   if(checked!=5)$fatal(1,"ARGMAX missing publication %0d",checked);
-  $display("ARGMAX_STATIC PASS G96 rounds5 exact5 flush6 BAD_SLOT=%0d",bad);$finish;
+  $display("ARGMAX_STATIC PASS G96 rounds5 exact5 flush6 BAD_SLOT=%0d BAD_SRC=%0d",bad,bad_src);$finish;
  end
 endmodule
 `default_nettype wire
