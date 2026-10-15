@@ -1,17 +1,19 @@
 {
- "name": "hcoll_ring_state_static_v1-v1-COMMIT",
+ "name": "hcoll_ring_state_static_v1-diepins1-COMMIT",
  "block": "ot_hgi_coll_pring_static_state_lane",
  "ref_tile": true,
- "owner": "Codex:coll_physical",
- "purpose": "Actual current V1 ring state lane,1664FF,293pins, native264checks plus hardware-wiring mutant; typedslotpending",
+ "owner": "Codex:hbm_collective_1339",
+ "purpose": "Independent actual V1 state leaf using source-exact bf2982bec die-assigned 293bit pin windows; no wholeparent qualification",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "codex/hcoll-physical-1103",
+  "branch": "codex/hcoll-1339",
   "commit": "COMMIT",
   "extra_paths": [
    "tools/hbm_coll_static",
-   "rtl/hbm_accel/generic/collective/p2p"
+   "rtl/hbm_accel/generic/collective/p2p",
+   "results/arch/hcoll_physical_1339",
+   "results/arch/hbm_die_v15/collective_state_pins_1319.json"
   ]
  },
  "stages": {
@@ -96,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/hcoll_physical_1103/state/hcoll_ring_state_static_v1-v1-COMMIT"
+   "to": "results/arch/hcoll_physical_1103/state/hcoll_ring_state_static_v1-diepins1-COMMIT"
   }
  ],
  "cycles_added": 0,
