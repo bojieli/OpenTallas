@@ -1,0 +1,189 @@
+{
+  "schema": "opentallas.s81.required-element-successors.v1",
+  "generated": "2026-10-15T08:24:19.224058+00:00",
+  "source_ref": "262d5e14ad5d89265d00d86ad0c6c11b04155403",
+  "scope": "Explicit S81 entries from66ROM open-element audit; canonical2417pairs/BF519/PHW10/full81stages remains unchanged",
+  "global_qualification": "OPEN; mapping ownership does not imply bit-exact production, physical closure, throughput or native full-token qualification",
+  "rows": [
+    {
+      "historical": [
+        "dsfd_coll_cesn_pc"
+      ],
+      "classification": "HISTORICAL_PARENT_REPLACEMENT_REQUIRED",
+      "owner": "/root/s_static_collective",
+      "reason": "D6 dissolves wires-only parent; legacy credit protocol prohibited. Actual static collective required, neither parent CLOSED nor child arithmetic proves new protocol closure.",
+      "successors": [
+        "dsfd_sp_collective_static_c",
+        "s81_static_calendar_controller"
+      ],
+      "evidence": {
+        "commit": "1dd86dcd9",
+        "path": "physical/s81_static_collective_proposal_1014/required_successor_registry_map.json",
+        "sha256": "12378a9cd45b1cdee8cda069fa2696113f45a480be04b6bc532877036e00e68f",
+        "git_blob": "45dce4fddfcef57f646a16cfc1c5e0a7c5c29251"
+      },
+      "physical_status": "Actual successor physical pins/slots/TT+FF+DRC incomplete; see source-bound delegated map"
+    },
+    {
+      "historical": [
+        "ot_dsrom_markov_row_K256",
+        "ot_dsrom_markov_row_K256_PINREG2"
+      ],
+      "classification": "STATIC_SUCCESSOR_REQUIRED_PHYSICAL_JOIN_OPEN",
+      "source_owner": "/root/s_mtp",
+      "physical_leaf_owner": "/root/s_elements",
+      "successors": [
+        "ot_s81_markov_k256_static"
+      ],
+      "evidence": {
+        "commit": "95713cbca",
+        "path": "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_static.sv",
+        "sha256": "7e5d1e0fd2fecf97fcb568e0ed39c70c1eb336793f2113a0171360100601c3b5",
+        "git_blob": "f957848c36e7ff03a0f148c4efb6698f7d0f305c"
+      },
+      "arithmetic_source": {
+        "commit": "95713cbca",
+        "path": "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_native.sv",
+        "sha256": "b6e93a3e4792bee734434984c00e7bb6c2655a5a650b6fc9c59663019c3762d0",
+        "git_blob": "6c4c5cf32dbc5c76e771deffbabd22576f75f7bb"
+      },
+      "qualification": "Twelve pc2 arithmetic views pass native per-pin audit5d74adc89; fixed ctl route s81_markov_ctl_static-st1-b314866a0 submitted exactidentity. Full real rowcache/MTP joins remain open. Historical flat PINREG2 not selected by static cluster."
+    },
+    {
+      "historical": [
+        "dsfd_su_t_kv",
+        "dsfd_su_t_kv0",
+        "dsfd_su_t_kv1"
+      ],
+      "classification": "GRANULAR_ARITHMETIC_EXISTS_STATIC_PRODUCTION_JOIN_REQUIRED",
+      "owner": "/root/s_elements/su_static_scheduler",
+      "successor_arithmetic_masters": [
+        "dsfd_su_t_kvt",
+        "dsfd_su_t_kve",
+        "dsfd_su_t_kvp",
+        "dsfd_su_t_kvr",
+        "dsfd_su_t_kvq"
+      ],
+      "evidence": {
+        "commit": "262d5e14ad5d89265d00d86ad0c6c11b04155403",
+        "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv",
+        "sha256": "42525bda6a091a32d042c592128ca68fdbb2a706a09613849b56884aa47c8c5d",
+        "git_blob": "4b2bb25b322bd2f24a4266729e2bbb1e7109077e"
+      },
+      "consumer_evidence": {
+        "commit": "262d5e14ad5d89265d00d86ad0c6c11b04155403",
+        "path": "tools/s81_suhc/su_tile_tops.py",
+        "sha256": "5b306ccad9b30aa6f387766ae7b79bab22bfd769b2051c6d2fbe222889d91e38",
+        "git_blob": "725c65562e9640f91e2525de4fdc95f8b4431655"
+      },
+      "production_status": "OPEN: legacy dsfd_sp_su_h/hctl dynamic scheduler is not current static production proof. Required fixed-cycle scheduler source underway; no supersession claim until connected to real VM48ports and fullshape operations.",
+      "next_gate": "Source-pinned op inventory -> actual fixed-calendar granular arithmetic/native memory composition exact+mutant -> actual pins/root counts/slot/physical gates"
+    },
+    {
+      "historical": [
+        "dsfd_su_t_qn"
+      ],
+      "classification": "GRANULAR_ARITHMETIC_EXISTS_STATIC_PRODUCTION_JOIN_REQUIRED",
+      "owner": "/root/s_elements/su_static_scheduler",
+      "successor_arithmetic_masters": [
+        "dsfd_su_t_qnt",
+        "dsfd_su_t_qne",
+        "dsfd_su_t_qnr",
+        "dsfd_su_t_qnh",
+        "dsfd_su_t_qnq"
+      ],
+      "evidence": {
+        "commit": "262d5e14ad5d89265d00d86ad0c6c11b04155403",
+        "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv",
+        "sha256": "58752b6b0760b3bc672f08e71ccff9e3e3a80597f61986807a2a8df200262e14",
+        "git_blob": "14a01afce233278504f51a6de4c03a042e7d3348"
+      },
+      "consumer_evidence": {
+        "commit": "262d5e14ad5d89265d00d86ad0c6c11b04155403",
+        "path": "tools/s81_suhc/su_tile_tops.py",
+        "sha256": "5b306ccad9b30aa6f387766ae7b79bab22bfd769b2051c6d2fbe222889d91e38",
+        "git_blob": "725c65562e9640f91e2525de4fdc95f8b4431655"
+      },
+      "production_status": "OPEN: legacy dsfd_sp_su_h/hctl dynamic scheduler is not current static production proof. Required fixed-cycle scheduler source underway; no supersession claim until connected to real VM48ports and fullshape operations.",
+      "next_gate": "Source-pinned op inventory -> actual fixed-calendar granular arithmetic/native memory composition exact+mutant -> actual pins/root counts/slot/physical gates"
+    },
+    {
+      "historical": [
+        "dsfd_su_t_sm"
+      ],
+      "classification": "GRANULAR_ARITHMETIC_EXISTS_STATIC_PRODUCTION_JOIN_REQUIRED",
+      "owner": "/root/s_elements/su_static_scheduler",
+      "successor_arithmetic_masters": [
+        "dsfd_su_t_smt",
+        "dsfd_su_t_sml",
+        "dsfd_su_t_smc",
+        "dsfd_su_t_smr",
+        "dsfd_su_t_smd"
+      ],
+      "evidence": {
+        "commit": "262d5e14ad5d89265d00d86ad0c6c11b04155403",
+        "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+        "sha256": "47cdb311c1bf9e896c3c19478dcf1ca05b0c668c2dbf201c500ada4a4b9d4ec0",
+        "git_blob": "020395eda1f8faae53cb6bfa721a5b9eb26fbf63"
+      },
+      "consumer_evidence": {
+        "commit": "262d5e14ad5d89265d00d86ad0c6c11b04155403",
+        "path": "tools/s81_suhc/su_tile_tops.py",
+        "sha256": "5b306ccad9b30aa6f387766ae7b79bab22bfd769b2051c6d2fbe222889d91e38",
+        "git_blob": "725c65562e9640f91e2525de4fdc95f8b4431655"
+      },
+      "production_status": "OPEN: legacy dsfd_sp_su_h/hctl dynamic scheduler is not current static production proof. Required fixed-cycle scheduler source underway; no supersession claim until connected to real VM48ports and fullshape operations.",
+      "next_gate": "Source-pinned op inventory -> actual fixed-calendar granular arithmetic/native memory composition exact+mutant -> actual pins/root counts/slot/physical gates"
+    },
+    {
+      "historical": [
+        "dsfd_su_t_sw"
+      ],
+      "classification": "GRANULAR_ARITHMETIC_EXISTS_STATIC_PRODUCTION_JOIN_REQUIRED",
+      "owner": "/root/s_elements/su_static_scheduler",
+      "successor_arithmetic_masters": [
+        "dsfd_su_t_swtl",
+        "dsfd_su_t_swth",
+        "dsfd_su_t_swe"
+      ],
+      "evidence": {
+        "commit": "262d5e14ad5d89265d00d86ad0c6c11b04155403",
+        "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sw.sv",
+        "sha256": "b285b427590b1e95fe59712fb40356abf79caae8a4a97f1b772ae6f5339ac6a4",
+        "git_blob": "c8c7abe060306074a40ce19615fce74042baaae6"
+      },
+      "consumer_evidence": {
+        "commit": "262d5e14ad5d89265d00d86ad0c6c11b04155403",
+        "path": "tools/s81_suhc/su_tile_tops.py",
+        "sha256": "5b306ccad9b30aa6f387766ae7b79bab22bfd769b2051c6d2fbe222889d91e38",
+        "git_blob": "725c65562e9640f91e2525de4fdc95f8b4431655"
+      },
+      "production_status": "OPEN: legacy dsfd_sp_su_h/hctl dynamic scheduler is not current static production proof. Required fixed-cycle scheduler source underway; no supersession claim until connected to real VM48ports and fullshape operations.",
+      "next_gate": "Source-pinned op inventory -> actual fixed-calendar granular arithmetic/native memory composition exact+mutant -> actual pins/root counts/slot/physical gates"
+    },
+    {
+      "historical": [
+        "ot_hdc_v41x_idx_ksub_el"
+      ],
+      "classification": "REQUIRED_MEMBERSHIP_UNRESOLVED_NOT_RETIRED",
+      "owner": "/root/s_elements",
+      "consulted_owner": "/root/h_idx",
+      "legacy_source_commit": "9e9a8a8a7d9a4ef9f1fb9fffd1502a600b803773",
+      "legacy_job": "el1011-idx-ksub-a-9e9a8a8a7-tc-cl",
+      "evidence": {
+        "commit": "9e9a8a8a7",
+        "path": "tools/hgi_idx_chunk_el_bench.sh",
+        "sha256": "d1a83b44efca0aff451ebc8832afc961457afd1314fb791a041b4d6a3d765c5e",
+        "git_blob": "3aa097e5b641cb260f3a4127064367c189d34e78"
+      },
+      "reason": "Historical registry maps HBM key-subtile into S81; exact released native S81 occurrence and actual required successor must be proved, not inferred from name or cancellation. No blind reroute and no false supersession.",
+      "consulted_owner_response": "H_IDX: native HBM engine_static same actualready_hslice arithmetic is not instantiated by S81; no proof that it supersedes this S81 legacyentry. Actual S81 hierarchy selection and numerical/provider ownership remain required.",
+      "next_action": "S-elements retain exact membership gate against canonical S81 emitted stage op/source inventory; preserve requirement until actual IDX producer/storage/consumer source is connected."
+    }
+  ],
+  "preserved_jobs": {
+    "s81hc_crrfe_ref-v6-056c994dd": "CLOSED TT223.07 FF13.14 DRC0; mainb4d657bcf; no reroute",
+    "s81hc_crrfw_ref-v6-056c994dd": "NEEDS_HUMAN GPL0305 twice; no running handle, no blind retry",
+    "s81_markov_ctl_static-st1-b314866a0": "Exact oldjob validated/currentlockcodex; actual closure_jobs drop now populated; do not duplicate"
+  }
+}

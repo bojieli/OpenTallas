@@ -1,0 +1,26 @@
+{
+  "cell": "ot_s81_bf_front",
+  "view": "physical/s81_die_views/bf_compact199/ot_s81_bf_front",
+  "lib_cell": "ot_s81_bf_front",
+  "insertion": false,
+  "ref_src": [
+    "lib midrange"
+  ],
+  "R_ps": 271.9,
+  "spread_ps": 70.5,
+  "outputs": 1554,
+  "inputs": 1654,
+  "launch_ps": 327.4,
+  "launch_pin": "c1_issue",
+  "capture_ps": 188.2,
+  "capture_pin": "xb_d[880]",
+  "launch_over": 309,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 327.4 > 220 (309 pins)",
+  "qualification": "UNPROVEN: insertion.json missing, lib-midrange fallback is diagnostic only. Recover actual routed boundary before deciding repair.",
+  "child_lint_evidence": "Committed view from2638168b3 reports367 face pins covered by metal above; real physical access repair required before nativequalification.",
+  "owner": "/root/s_elements/bf_physical"
+}
