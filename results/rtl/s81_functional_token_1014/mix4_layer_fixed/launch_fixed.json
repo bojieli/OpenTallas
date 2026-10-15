@@ -1,0 +1,24 @@
+{
+  "gate": "RUNNING",
+  "native_qualified": false,
+  "scope": "Actual MIX4 + actual fixed issuer in the numerical full-layer vehicle; idealVM/fixturefield/collective/coefficients and physicalphase remain unqualified",
+  "host": "ot-epyc1tb",
+  "directory": "/srv/opentallas-scratch/codex/s81-mix-layer-fixed-1015",
+  "user_systemd_unit": "s81-mix4-layer-fixed-1015.service",
+  "local_driver_pid": 3391446,
+  "remote_unit": "oth-ubuntu-419852-1792049558",
+  "clock_profile": {
+    "reset": 1000,
+    "job": 1250,
+    "start_phase": 3,
+    "command_pin": 1908,
+    "landing_write_pin": 1892,
+    "actualVM_commit_bound": 1903
+  },
+  "published_shared_tool": "main d538fea77 (e05dcaf0f OP_BASE source)",
+  "predecessor": {
+    "base_L1": "FAIL before arithmetic: endpoint10fault/read0/write0",
+    "MUT2_L1": "FAIL before arithmetic; NOT a detected numerical mutant",
+    "base_L14": "still live PID379837; preserve until terminal"
+  }
+}

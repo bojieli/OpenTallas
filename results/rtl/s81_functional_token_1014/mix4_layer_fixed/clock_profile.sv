@@ -14,7 +14,7 @@ module profile;
  end
  always @(negedge clk)begin
  if(fault)$fatal(1,"clock/boot profile fault code%0d at%0d phase%0d",code,cyc,phase);
- if(cv[10])begin if(cd[840+:7]!=2)$fatal(1,"opidentity");$display("MIX_FIXED_CLOCK PASS cmd_negedge_cycle=%0d phase=%0d op2=1 landing_write_pin=1892 commit_bound=1903",cyc,phase);$finish;end
+ if(cv[10])begin if(cd[840+:84]!={1'b0,10'd0,21'd0,21'd1000,24'd11880,7'd2})$fatal(1,"actual packet context/op identity");$display("MIX_FIXED_CLOCK PASS cmd_negedge_cycle=%0d phase=%0d op2=1 landing_write_pin=1892 commit_bound=1903",cyc,phase);$finish;end
  if(cyc>2000)$fatal(1,"no launch");
  end
 endmodule
