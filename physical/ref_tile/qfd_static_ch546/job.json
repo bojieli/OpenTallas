@@ -1,5 +1,5 @@
 {
- "name": "qfd_static_ch546-s2-HEAD",
+ "name": "qfd_static_ch546-s2-c78e3f802",
  "block": "qfd_static_ch546",
  "ref_tile": true,
  "owner": "Codex:q_compute_elem",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/q14-r6-compute",
-  "commit": "HEAD",
+  "commit": "c78e3f802",
   "extra_paths": [
    "physical/qwen_romio_slots",
    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
@@ -103,7 +103,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_static_ch546/qfd_static_ch546-s2-HEAD"
+   "to": "results/rtl/ref_tile/qfd_static_ch546/qfd_static_ch546-s2-c78e3f802"
   }
  ],
  "cycles_added": 0,
