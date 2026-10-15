@@ -1676,6 +1676,9 @@ def _wrap(v, m, G, peers):
                     xm.ports['rst_n'] = ('pins', 1, 'N', 'M5', [V4.snap(50.0)], 1)
                     xm.order += ['ck', 'rst_n']
                     M['ot_qfd_x3_mux_native'] = xm
+            if SPLIT_COMPUTE:
+                from qwen_split.source_pin_plan import apply as source_pin_plan
+                source_pin_plan(M)
             for mst_ in M.values():
                 mst_.order[:] = list(dict.fromkeys(mst_.order))
 
