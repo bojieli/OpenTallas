@@ -9,7 +9,7 @@
   "clock_roots_per_bank": 9,
   "data_leaf_bits": 256,
   "data_leaf_copies_per_bank": 6,
-  "control_leaf_bits": 37,
+  "control_leaf_bits": 39,
   "data_leaf_outline_um": [
     25.92,
     51.84
@@ -25,12 +25,12 @@
   "fixed_edges": 4,
   "added_fixed_edges": 0,
   "parent_own_flops": 0,
-  "total_register_bits_per_bank": 1573,
+  "total_register_bits_per_bank": 1575,
   "mux_demux_cost": "same16word mask expansion; wires-only low/high256-bit partition",
   "actual_parent_homes": null,
   "actual_parent_area_um2": null,
   "prior_failure": "full512/547-bit strips: GPL artificial inflation900pct and Inf/NaN; immutable failures preserved",
-  "qualification": "exact9root operandbank actualSRAM miter+mutants and native37FF control in progress; reused data256 actualroute pending qualification",
+  "qualification": "exact9root operandbank actualSRAM miter+mutants and native39FF control in progress; reused data256 actualroute pending qualification",
   "physical_depth": 1024,
   "logical_depth": 695,
   "address_bits": 10,

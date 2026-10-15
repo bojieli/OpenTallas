@@ -76,11 +76,11 @@ def qwen_central_vm_operand_bank_model():
     """Actual NSB1 DEPTH695 LAWS10 operand SRAM counterpart of row-bank split."""
     x=qwen_central_vm_banked_native_model()
     x.update(schema='opentallas.qwen-central-vm-operand-bank.v1',replicas=48,
-        physical_depth=1024,logical_depth=695,address_bits=10,control_leaf_bits=37,
-        total_register_bits_per_bank=1573,
+        physical_depth=1024,logical_depth=695,address_bits=10,control_leaf_bits=39,
+        total_register_bits_per_bank=1575,
         memory_macro='ot_sram_1r1w_1024x256_m2_r2c2',
         original_native_failure='launch293.5ps/capture260.9ps/boundaryspread95.9ps',
-        qualification='exact9root operandbank actualSRAM miter+mutants and native37FF control in progress; reused data256 actualroute pending qualification')
+        qualification='exact9root operandbank actualSRAM miter+mutants and native39FF control in progress; reused data256 actualroute pending qualification')
     return x
 
 
