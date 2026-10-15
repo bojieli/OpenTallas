@@ -12,6 +12,11 @@ def main():
             words,meta=lower('row',first_consumer_cycle=2053,sink_divisor=7,sink_phase=0,row=23,slot=1,clear=True,npos=npos,early=early)
             (run/f'{name}.mem').write_text(''.join(f'{w:064x}\n' for w in words))
             images[name]={'words':len(words),'metadata':meta}
+    for position in (0,7):
+        name=f'tail_position{position}'
+        words,meta=lower('tail',first_consumer_cycle=2053,sink_divisor=7,sink_phase=0,tail_position=position)
+        (run/f'{name}.mem').write_text(''.join(f'{w:064x}\n' for w in words))
+        images[name]={'words':len(words),'metadata':meta}
     files=['rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_programme_mtp_static.sv',
         'rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv',
         'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v',
