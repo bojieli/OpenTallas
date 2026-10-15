@@ -94,7 +94,7 @@ class Roadmap:
      # A coherent field-column move may consume part of the old S14.
      # Keep the actual global spine outside the moved child strip, with
      # enough half-width for a real1026-bit vertical service station.
-     if side=='W':sx=max(sx,c['x_um']+G.COL_W8+G.stn_dims([1026],False)[0]/2+.864)
+     if side=='W':sx=max(sx,cols[i]['x_um']+G.COL_W8+G.stn_dims([1026],False)[0]/2+.864)
      entry=(sx,y);self.add(entry,(self.sx[i],y));self.entry.setdefault(side,[]).append(entry)
   # Optional coherent column moves may open a real broad service gap.
   # Connect it only through the adjacent actual frame streets, never
