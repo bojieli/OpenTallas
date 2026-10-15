@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.hcoll.store.slot.v2",
+  "cell": "ot_hgi_coll_static_pinreg_store",
+  "owner": "H-COLL",
+  "endorsed_by": [
+    "/root/h_collective",
+    "/root/h_die"
+  ],
+  "geometry_owner": "/root/geometry_hbm_system",
+  "slot_change": "Actual return face dout N\u2192S; controller below2\u00d72 stores receives returns on its N-bank face",
+  "baseline_source": "44720c8ad6ad",
+  "baseline_failure": "Native routed M6 netdout[100] at y129.552 crosses3NfaceM5returnpins128..130; current view has adoptionHOLD",
+  "outline_um": [
+    207.36,
+    129.6
+  ],
+  "pin_faces": {
+    "S": [
+      "we",
+      "wa[5:0]",
+      "ra[5:0]",
+      "din[140:0]",
+      "dout[140:0]"
+    ],
+    "W": [
+      "clk"
+    ]
+  },
+  "pin_regions_um": {
+    "S": [
+      4,
+      203.36
+    ],
+    "W": [
+      8,
+      121.6
+    ]
+  },
+  "S_signal_bits": 295,
+  "clock_bits": 1,
+  "above_pin_access": "PINKO=1 through GRT/DRT and hold ECO; strict child_lint required",
+  "layer_contract": {
+    "signal_ceiling": "M7",
+    "actual_PG_ceiling_baseline": "M6",
+    "parent_strap_candidate": "M8",
+    "native_pitch_and_clear_tracks": "Must use actualtech and source-bound pin placement; no assumed .192um pitch"
+  },
+  "candidate_group": {
+    "reservation_status": "REQUEST only, no cavitygrant",
+    "outline_um": [
+      434.72,
+      515.2
+    ],
+    "controller_bbox_um": [
+      55.36,
+      0,
+      379.36,
+      216
+    ],
+    "stores_bbox_um": {
+      "b0BL": [
+        0,
+        236,
+        207.36,
+        365.6
+      ],
+      "b1TL": [
+        0,
+        385.6,
+        207.36,
+        515.2
+      ],
+      "b2BR": [
+        227.36,
+        236,
+        434.72,
+        365.6
+      ],
+      "b3TR": [
+        227.36,
+        385.6,
+        434.72,
+        515.2
+      ]
+    },
+    "channels_um": 20,
+    "endpoint_groups_requested": 9,
+    "hop_and_face_cut_status": "Unqualified until exact pin segments, actualtrack/PGcapacity and clock delivery reviewed bygeometry owner"
+  },
+  "latency": {
+    "store_extra_edges_vs_baseline_pinreg": 0,
+    "composed_current_controller": "TX6/RX2",
+    "no_hidden_PHY_rate_claim": true
+  }
+}

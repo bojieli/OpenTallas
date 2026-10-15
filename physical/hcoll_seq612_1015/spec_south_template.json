@@ -1,0 +1,106 @@
+{
+  "name": "REPLACE_WITH_PINNED_KIT_NAME",
+  "block": "ot_hgi_coll_static_pinreg_store",
+  "owner": "Codex:H-COLL-static-endpoint-physical",
+  "purpose": "Actual south-return hardleaf slot change N\u2192S toward controller N face; PINKO above-pin keepout; explicit native SRAM timing libs and checked export/strict child access gate. No RTL/cycle/clock/outline change. Candidate group434.72\u00d7515.20 is reservationrequest, no cavitygrant.",
+  "threads": 4,
+  "peak_ram_gb": 12,
+  "source": {
+    "branch": "codex/hcoll-seq612-physical-1015",
+    "commit": "REPLACE_WITH_PINNED_KIT_COMMIT",
+    "paths": [
+      "tools",
+      "rtl/qwen_sys/split_20261014",
+      "physical/hcoll_seq612_1015",
+      "physical/qwen_die_masters",
+      "physical/qwen_slab_m5",
+      "physical/common_flow",
+      "physical/hbm_accel_die_views/stations/bench",
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+      "Makefile",
+      "rtl/hbm_accel/generic/collective/p2p"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "native_three_laps",
+        "cmd": "bash physical/hcoll_seq612_1015/bench_pinreg.sh {RUN}/bench/pos 0",
+        "expect": "pass",
+        "pass_regex": "PINREG_STORE141 PASS exact=192",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "min_count_regex": "exact=(\\d+)"
+      },
+      {
+        "name": "native_output_bit_mutant",
+        "cmd": "bash physical/hcoll_seq612_1015/bench_pinreg.sh {RUN}/bench/mut 1",
+        "expect": "fail",
+        "fail_regex": "PINREG_STORE141 FAIL",
+        "threads": 1,
+        "peak_ram_gb": 2
+      }
+    ],
+    "calibrate": {
+      "cmd": "SRC={SRC} CORNER=WC OT_ORFS_CORNER_OVERRIDE=TC ROUTE_PERIOD_NS=0.833333 bash physical/qwen_die_masters/jobs/route_master.sh hcoll_pinreg_store141_south {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes cts",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "true",
+      "threads": 4,
+      "peak_ram_gb": 12
+    },
+    "route": {
+      "cmd": "SRC={SRC} CORNER=WC OT_ORFS_CORNER_OVERRIDE=TC ROUTE_PERIOD_NS=0.833333 bash physical/qwen_die_masters/jobs/route_master.sh hcoll_pinreg_store141_south {LABEL} {RUN}/routes",
+      "ok": "grep -q \"^flow_rc=0\" {RUN}/routes/{LABEL}/status && grep -q \"^corner_rc=0\" {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record; cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/signoff.sdc {RUN}/routes/{LABEL}/status {RUN}/record/; cp {CL}/calib.json {RUN}/record/calib.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/hcoll_pinreg_store141_south.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+    ],
+    "checks": [
+      {
+        "name": "checked_native_timing_and_strict_child_access",
+        "cmd": "ot-heavy --mem 12 -- python3 physical/hcoll_seq612_1015/qualify_native_view.py --run {RUN} --src {SRC} --label {LABEL}"
+      }
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/hcoll_seq612_1015/physical_pinreg_dec64f320"
+    },
+    {
+      "from": "{RUN}/native_views",
+      "to": "physical/hcoll_seq612_1015/south_qualified/native_views"
+    }
+  ],
+  "cycles_added": 2,
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "auto_react": false,
+  "budget": {
+    "enabled": false,
+    "reason": "New isolated baseline native leaf; die-context833ps boundary and measured leaf insertion. Whole controller/hierarchy unqualified."
+  },
+  "resource_evidence": "tools/closure_loop/measured_peaks.json qkd_sbuf8.5GB/ot_qkvd_sbuf_m5 8.2GB actual native SRAM prior candidates;12GB request covers native singlemacro 443FF shape; no arbitrary time limit.",
+  "bench_first": false,
+  "reroute_reason": {
+    "kind": "slot_change",
+    "contract": "physical/hcoll_seq612_1015/slot_contract_south_v2.json version2",
+    "slot_change_request": "H-COLL and H-DIE endorse actual dout N\u2192S return-face change for controller-below-2x2 source contract; preserve old view adoptionHOLD."
+  }
+}
