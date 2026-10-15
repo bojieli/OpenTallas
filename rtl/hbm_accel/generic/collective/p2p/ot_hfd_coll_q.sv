@@ -22,6 +22,7 @@ module ot_hfd_coll_q #(
     parameter integer NPT = 3,              // links of this quadrant's rail (3 SW, 2 SE / NW / NE)
     parameter integer SWCRED = 32,
     parameter integer RGX_CRD = 16,         // ROW_GATHER write credits a delivery lane (= the slice-side FIFO depth)
+    parameter integer TKW_CRD = 8,          // TOPK line write credits (ot_hgi_coll_vmport)
     parameter integer SESSION_W0 = 47,
     parameter integer INJ = 2,
     parameter integer DEL = 4,
@@ -83,12 +84,10 @@ module ot_hfd_coll_q #(
     output wire                 rr_v,
     output wire [2:0]           rr_tag,
     output wire [255:0]         rr_d,
-    // TOPK_MERGE sink writes (TKM = 1)
-    output wire                 tk_w_v,
-    output wire [39:0]          tk_w_addr,
-    output wire [15:0]          tk_w_mask,
-    output wire [FW-1:0]        tk_w_data,
-    input  wire                 tk_w_rdy,
+    // TOPK_MERGE sink line writes (TKM = 1) -> ot_hgi_coll_vmport beside the SW slice, credit flow
+    output wire                 tkw_t_v,
+    output wire [FW+55:0]       tkw_t_d,        // {addr 40, mask 16, data FW}
+    input  wire                 tkw_f_cr,
     // RGX memory lanes
     output wire [75:0]          rgx_xq,
     input  wire [513:0]         rgx_xr,
@@ -125,6 +124,7 @@ module ot_hfd_coll_q #(
     wire [RQW-1:0] hd = rq[rq_h];
     // ---- body ---------------------------------------------------------------------------------------------------------
     wire ep_fault, snk_fault;
+    wire tk_w_v, tk_w_rdy, tk_w_idle, tkw_fault; wire [39:0] tk_w_addr; wire [15:0] tk_w_mask; wire [FW-1:0] tk_w_data;
     wire rg_lq_v, rg_lq_rdy, rg_lr_v, rg_w_vm, rg_w_idle;
     wire [31:0] rg_lq_addr; wire [511:0] rg_lr_data, rg_hr_data;
     wire [1:0] rg_hq_v, rg_hq_rdy, rg_hr_v; wire [69:0] rg_hq_addr; wire [15:0] rg_hq_tag, rg_hr_tag;
@@ -143,7 +143,16 @@ module ot_hfd_coll_q #(
         .rg_hr_v(rg_hr_v), .rg_hr_tag(rg_hr_tag), .rg_hr_data(rg_hr_data),
         .rg_w_v(rg_w_v), .rg_w_addr(rg_w_addr), .rg_w_vm(rg_w_vm), .rg_w_data(rg_w_data), .rg_w_rdy(rg_w_rdy), .rg_w_idle(rg_w_idle),
         .hgi_recx(hd[RQW-1 -: 554]), .hgi_inj_addr(hgi_inj_addr),
-        .tk_w_v(tk_w_v), .tk_w_addr(tk_w_addr), .tk_w_mask(tk_w_mask), .tk_w_data(tk_w_data), .tk_w_rdy(tk_w_rdy));
+        .tk_w_v(tk_w_v), .tk_w_addr(tk_w_addr), .tk_w_mask(tk_w_mask), .tk_w_data(tk_w_data), .tk_w_rdy(tk_w_rdy),
+        .tk_w_idle(tk_w_idle));
+    // TOPK line writes: credit flow to the VM port (a valid / ready pair can not cross relays)
+    generate if (TKM != 0) begin : g_tkw
+        ot_hgi_coll_crl_tx #(.W(FW + 56), .CRD(TKW_CRD)) u_tkw (.clk(clk), .rst_n(rst_n), .in_v(tk_w_v),
+            .in_d({tk_w_addr, tk_w_mask, tk_w_data}), .in_rdy(tk_w_rdy), .idle(tk_w_idle), .t_v(tkw_t_v), .t_d(tkw_t_d),
+            .f_cr(tkw_f_cr), .fault(tkw_fault));
+    end else begin : g_notkw
+        assign tk_w_rdy = 1'b0; assign tk_w_idle = 1'b1; assign tkw_fault = 1'b0; assign tkw_t_v = 1'b0; assign tkw_t_d = '0;
+    end endgenerate
     generate if (SOLO_CAP != 0) begin : g_rgx
         ot_hgi_coll_rgx_hbm u_rh (.clk(clk), .rst_n(rst_n),
             .rg_hq_v(rg_hq_v), .rg_hq_rdy(rg_hq_rdy), .rg_hq_addr(rg_hq_addr), .rg_hq_tag(rg_hq_tag),
@@ -182,7 +191,7 @@ module ot_hfd_coll_q #(
             for (integer q = 0; q < 4; q = q + 1) begin cr[q] <= RQD[$clog2(RQD+1)-1:0]; dn[q] <= 8'd0; end
             hgi_ret <= 3'b000; fault <= 1'b0; lk_status <= '0; e_fault <= 1'b0;
         end else begin
-            e_fault <= e_fault | ep_fault | snk_fault | (|lk_fault) | rq_ovf | ring_fault | e_ret[2];   // sticky until rst_n
+            e_fault <= e_fault | ep_fault | snk_fault | tkw_fault | (|lk_fault) | rq_ovf | ring_fault | e_ret[2];   // sticky until rst_n
             fault <= e_fault | ((qid_q == 2'(HOME)) ? (|h_fault) : 1'b0);
             lk_status <= {lk_locked, lk_fault};
             for (integer q = 0; q < 4; q = q + 1) begin

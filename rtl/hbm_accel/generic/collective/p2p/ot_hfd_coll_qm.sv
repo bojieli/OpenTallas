@@ -53,11 +53,9 @@ module ot_hfd_coll_q3 #(
     output wire              rr_v,
     output wire [2:0]        rr_tag,
     output wire [255:0]      rr_d,
-    output wire              tk_w_v,
-    output wire [39:0]       tk_w_addr,
-    output wire [15:0]       tk_w_mask,
-    output wire [511:0]      tk_w_data,
-    input  wire              tk_w_rdy,
+    output wire              tkw_t_v,       // TOPK line writes -> ot_hgi_coll_vmport (credit flow)
+    output wire [567:0]      tkw_t_d,
+    input  wire              tkw_f_cr,
     output wire [75:0]       rgx_xq,
     input  wire [513:0]      rgx_xr,
     output wire [337:0]      rgx_vmq,
@@ -79,7 +77,7 @@ module ot_hfd_coll_q3 #(
         .lk_sw_cr(lk_sw_cr), .lk_session(lk_session), .lk_fault(lk_fault), .lk_locked(lk_locked), .lk_status(lk_status),
         .pr_cw_i(pr_cw_i), .pr_cw_o(pr_cw_o), .pr_ccw_i(pr_ccw_i), .pr_ccw_o(pr_ccw_o),
         .rc_v(rc_v), .rc_rdy(rc_rdy), .rc_tag(rc_tag), .rc_mode(rc_mode), .rc_d(rc_d), .rr_v(rr_v), .rr_tag(rr_tag), .rr_d(rr_d),
-        .tk_w_v(tk_w_v), .tk_w_addr(tk_w_addr), .tk_w_mask(tk_w_mask), .tk_w_data(tk_w_data), .tk_w_rdy(tk_w_rdy),
+        .tkw_t_v(tkw_t_v), .tkw_t_d(tkw_t_d), .tkw_f_cr(tkw_f_cr),
         .rgx_xq(rgx_xq), .rgx_xr(rgx_xr), .rgx_vmq(rgx_vmq), .rgx_vmr(rgx_vmr), .rgx_t_v(rgx_t_v), .rgx_t_addr(rgx_t_addr),
         .rgx_t_data(rgx_t_data), .rgx_t_vm(rgx_t_vm), .rgx_f_cr(rgx_f_cr), .rgx_f_fault(rgx_f_fault));
 endmodule
@@ -138,7 +136,7 @@ module ot_hfd_coll_q2 #(
         .lk_sw_cr(lk_sw_cr), .lk_session(lk_session), .lk_fault(lk_fault), .lk_locked(lk_locked), .lk_status(lk_status),
         .pr_cw_i(pr_cw_i), .pr_cw_o(pr_cw_o), .pr_ccw_i(pr_ccw_i), .pr_ccw_o(pr_ccw_o),
         .rc_v(rc_v), .rc_rdy(rc_rdy), .rc_tag(rc_tag), .rc_mode(rc_mode), .rc_d(rc_d), .rr_v(rr_v), .rr_tag(rr_tag), .rr_d(rr_d),
-        .tk_w_v(), .tk_w_addr(), .tk_w_mask(), .tk_w_data(), .tk_w_rdy(1'b0),
+        .tkw_t_v(), .tkw_t_d(), .tkw_f_cr(1'b0),
         .rgx_xq(), .rgx_xr(514'd0), .rgx_vmq(), .rgx_vmr(274'd0), .rgx_t_v(), .rgx_t_addr(), .rgx_t_data(), .rgx_t_vm(),
         .rgx_f_cr(4'd0), .rgx_f_fault(1'b0));
 endmodule

@@ -7,7 +7,8 @@
 //     sub-slice end instead of the next rank's start) or a gi offset (whole-row gathers: gi' = gi + table[src - gbase],
 //     the global flit index), in the classic and the pipelined (per-epoch) formatter alike;
 //   * NPT is the quadrant's rail (3 SW / 2 SE, NW, NE), the SU inject is the local SU quarter only;
-//   * ROW_GATHER drained also waits for rg_w_idle (the write sink is a separate master behind credit flow).
+//   * ROW_GATHER drained also waits for rg_w_idle, the TOPK done for tk_w_idle (both write streams cross to
+//     ot_hgi_coll_vmport by credit flow).
 // Everything else (endpoint, PIPE epochs, parking, RGX, TKM, ARGMAX) is the central block's logic, unchanged.
 // HGI-1 collective block body (hgi-takeover 2026-10-09): the TU endpoint (ot_hbm_accel_tu_endpoint_psg, group sizes,
 // GROUP_REDUCE_MCAST, done / fault handshake) driven either by the legacy config word {go, pf, rank} or by a normative
@@ -102,7 +103,8 @@ module ot_hgi_coll_qep #(
     output wire [39:0]        tk_w_addr,
     output wire [15:0]        tk_w_mask,
     output wire [FW-1:0]      tk_w_data,
-    input  wire               tk_w_rdy
+    input  wire               tk_w_rdy,
+    input  wire               tk_w_idle      // P2P: every TOPK line write reached the VM port (credits home)
 );
     wire [7:0] r_rank, r_mg; wire r_mall, r_byp, r_amx, r_bf16; wire [3:0] r_gsz; wire [15:0] r_pf; wire r_go, r_done_ready;
     wire [39:0] r_abase, r_obase; wire rec_rdy, rec_done, rec_fault;
@@ -224,6 +226,7 @@ module ot_hgi_coll_qep #(
     always @(posedge clk) if (r_go || go) b_run <= r_bbase;
     always @(posedge clk or negedge rst_n) if (!rst_n) tkm_inj <= 1'b0; else if (r_go) tkm_inj <= (TKM != 0) && r_tkm; else if (go) tkm_inj <= 1'b0;
     generate if (TKM != 0) begin : g_tkm
+        wire tk_done_s;
 `ifdef OT_TKM_CLUSTER_BENCH
         ot_hgi_coll_tkm_cluster #(.KMAX(TKM_KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .MUT(MUT_TKM)) u_tkm (.tile_ck0(clk),.tile_ck1(clk),.tile_ck2(clk),.tile_ck3(clk),.tile_ck4(clk),.tile_ck5(clk),.tile_ck6(clk),.tile_ck7(clk),.tile_ck8(clk),.tile_ck9(clk),.tile_ck10(clk),.tile_ck11(clk),.tile_ck12(clk),.tile_ck13(clk),.tile_ck14(clk),.tile_ck15(clk),.tile_ck16(clk),.tile_ck17(clk),.tile_ck18(clk),.tile_ck19(clk),.tile_ck20(clk),.tile_ck21(clk),.tile_ck22(clk),.tile_ck23(clk),.tile_ck24(clk),.tile_ck25(clk),.tile_ck26(clk),.tile_ck27(clk),.tile_ck28(clk),.tile_ck29(clk),.tile_ck30(clk),.tile_ck31(clk),.lane_ck0(clk),.lane_ck1(clk),.lane_ck2(clk),.lane_ck3(clk), .clk(clk), .rst_n(rst_n),
 `else
@@ -234,7 +237,11 @@ module ot_hgi_coll_qep #(
             .del_reserve(tkm_now ? rg_reserve : {DEL{1'b0}}), .del_permit(tk_permit),
             .del_valid(tkm_run ? e_dv : {DEL{1'b0}}), .del_flit(e_df),
             .w_v(tk_w_v), .w_addr(tk_w_addr), .w_mask(tk_w_mask), .w_data(tk_w_data), .w_rdy(tk_w_rdy),
-            .busy(), .done(tk_done), .fault(tk_fault), .stat_cycles(), .stat_ins(), .stat_surv());
+            .busy(), .done(tk_done_s), .fault(tk_fault), .stat_cycles(), .stat_ins(), .stat_surv());
+        // P2P: the record sees the sink's done once its last line write also reached the VM port (credits home)
+        reg tk_dp;
+        always @(posedge clk or negedge rst_n) if (!rst_n) tk_dp <= 1'b0; else if (tk_done_s && !tk_w_idle) tk_dp <= 1'b1; else if (tk_w_idle) tk_dp <= 1'b0;
+        assign tk_done = (tk_done_s || tk_dp) && tk_w_idle;
     end else begin : g_notkm
         assign tk_permit = {DEL{1'b1}}; assign tk_done = 1'b0; assign tk_fault = 1'b0;
         assign tk_w_v = 1'b0; assign tk_w_addr = 40'd0; assign tk_w_mask = 16'd0; assign tk_w_data = {FW{1'b0}};
