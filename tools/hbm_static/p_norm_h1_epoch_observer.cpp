@@ -41,7 +41,7 @@ extern "C" int __wrap_main(int argc,char**argv) {
     std::map<std::string,Stat> stats; unsigned head=0;
     auto record=[&](std::string name,long epoch,long words=0){for(auto key:{name,name+"_h"+std::to_string(head)}){auto&s=stats[key];if(s.first<0)s.first=epoch;s.last=epoch;s.count++;s.words+=words;}};
     std::deque<Pending> pending[8];
-    bool previous_clk=false,started=false,fill_next=false,max_next=false,max_operand_next=false,max_complete=false;unsigned fills=0;long cycle=0,base=0,ack_errors=0;
+    bool previous_clk=false,started=false,fill_next=false,max_next=false,max_operand_next=false,max_complete=false,sum_complete=false,prev_pv=false;unsigned fills=0,prev_a_we=0,prev_a_re=0;long cycle=0,base=0,ack_errors=0;
     while(!context->gotFinish()) {
         top->eval();bool clk=R(clk);
         if(clk&&!previous_clk) {
@@ -50,6 +50,12 @@ extern "C" int __wrap_main(int argc,char**argv) {
                 long epoch=cycle-base;head=R(active_head);
                 const auto&io=R(dut__DOT__u_core__DOT__u_sfu__DOT__io);
                 const auto&aux=R(dut__DOT__u_core__DOT__aux);
+                if(prev_a_we)record(prev_pv?"PV_A_SRAM_write_capture":"raw_SC_A_SRAM_write_capture",epoch,__builtin_popcount(prev_a_we));
+                if(prev_a_re)record(prev_pv?"PV_A_SRAM_read_capture":"raw_SC_A_SRAM_read_capture",epoch,__builtin_popcount(prev_a_re));
+                if(R(sv)&&(R(st)&1))sum_complete=true;
+                prev_pv=sum_complete;
+                prev_a_we=R(dut__DOT__u_core__DOT__u_sfu__DOT__u_engine__DOT__u_engine__DOT__u_memory__DOT__g_operand__BRA__0__KET____DOT__u_group__DOT__b_we);
+                prev_a_re=R(dut__DOT__u_core__DOT__u_sfu__DOT__u_engine__DOT__u_engine__DOT__u_memory__DOT__g_operand__BRA__0__KET____DOT__u_group__DOT__b_re);
                 if(fill_next)record(fills++<unsigned(R(rows)/64)?"scaled_SC_capture_into_source_SRAM":"raw_E_capture_into_source_SRAM",epoch,64);
                 fill_next=(R(dut__DOT__u_core__DOT__read_owner)>>14)&1;
                 if(max_operand_next)record("MAX_reducer_operand_capture",epoch,1);
@@ -93,6 +99,7 @@ extern "C" int __wrap_main(int argc,char**argv) {
     for(auto&q:pending)if(!q.empty())ack_errors++;
     if(stats["scaled_SC_capture_into_source_SRAM"].last>=stats["raw_E_VM_WQ_pin"].first)ack_errors++;
     if(stats["MAX_reducer_operand_capture"].last>=stats["raw_E_VM_WQ_pin"].first)ack_errors++;
+    if(stats["raw_SC_A_SRAM_read_capture"].last>=stats["PV_A_SRAM_write_capture"].first)ack_errors++;
     std::ofstream f(output);
     f<<"{\n  \"scope\": \"Actual after-edge pin epochs from preserved source-identical model archive; epoch0 is sampled io_start_v\",\n  \"local_VM_WQ_to_DONE_edges\": 12,\n  \"ack_errors\": "<<ack_errors<<",\n  \"events\": {\n";
     bool first=true;
