@@ -46,7 +46,7 @@ def relay_children():
 
 
 def kit_of(master):
-    return {"dsfd_gth_rw": "dsfd_gth_rw_v19", "dsfd_gth_re": "dsfd_gth_re_v19", "dsfd_gth_ctl": "dsfd_gth_ctl"}.get(
+    return {"dsfd_gth_rw": "dsfd_gth_rw", "dsfd_gth_re": "dsfd_gth_re", "dsfd_gth_ctl": "dsfd_gth_ctl"}.get(
         master, "s81_rly_" + master[len("dsfd_rly_"):].lower())
 
 
@@ -81,6 +81,17 @@ def main():
         for name in ("insertion.json", view.name + ".lef", view.name + "_tt.lib", view.name + "_ss.lib", view.name + "_ff.lib"):
             if not (view / name).is_file():
                 missing.append(str((view / name).relative_to(ROOT)))
+    # The exporter publishes under the RTL top, even when the routed kit is
+    # suffixed _v19. Require its source receipt, not a guessed output directory:
+    # an older face-region g5 view has the same top but different assigned pins.
+    for master in ("dsfd_gth_rw", "dsfd_gth_re"):
+        receipt = ROOT / f"physical/ref_tile/{master}/views/{master}/abstract.json"
+        if receipt.is_file():
+            recorded = json.loads(receipt.read_text())
+            if f"{master}_v19_" not in recorded.get("orfs_dir", ""):
+                missing.append(str(receipt.relative_to(ROOT)) + ": assigned-pin v19 route required")
+        else:
+            missing.append(str(receipt.relative_to(ROOT)))
     if not (ROOT / args.io_tcl).exists():
         missing.append(args.io_tcl)
     bench = "SSA2=1 LOCAL_BANKS=1 CONTROL_STRIP=1 DIE_CLOCKS=1 SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/%s rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'"
