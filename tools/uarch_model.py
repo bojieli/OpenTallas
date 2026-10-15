@@ -16401,3 +16401,19 @@ def hbm_idx_static_vm_query_model():
         reservation='two weight sectors first; compiler leaves fixed8+1edge weight visibility then128query slots',
         roots='VM face + query assembly + four querybanks + quant and delay + control',
         qualification='OPEN actual512querysector SRAM provenance, exactquant/negative proof, native parent and physical slot')
+
+
+def hbm_idx_static_topk_link_model():
+    """Fuse exact512 selection into actual native545b collective flits."""
+    return dict(schema='opentallas.hbm-idx-static-topk-link.v1',
+        input=dict(records_per_edge=64,record_bits=37,fixed_edges=171),
+        output=dict(records=512,flits=64,flit_bits=545,lanes=4,II=8,beats=16),
+        staging=dict(real_macros=8,shape='64x512 1R1W',flits_per_bank=64,used_flits_per_bank=8),
+        bytes_per_ingress_edge=64*8,bytes_per_egress_reserved_beat=4*64,
+        encoding='native values8xFP32 low256, IDs8xU32 high256, header{1,dstFF,srcRank8,globalFlit16}',
+        compaction='data-dependent prefix addresses, fixed171ingest slots; no ready,waiting or credit',
+        storage_bits=dict(carry=7*64,input_prefix_max=72*64),
+        ordering='chosen set unchanged; beatmajor/quartermajor/lane order, TKM uses explicit score/ID',
+        latency='finalselector scan fused; fixed flush then16fourflit beats each8edges; physical pipeline OPEN',
+        slot='UNASSIGNED successor SRAM and root footprint; no historical view alias',
+        qualification='OPEN real selector-to-staging-to-TKM source proof, physical timing, composed price')
