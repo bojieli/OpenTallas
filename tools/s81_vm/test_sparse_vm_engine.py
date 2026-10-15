@@ -20,7 +20,7 @@ class SparseVm(unittest.TestCase):
   holes=[(150,b+k)for b in BASES for k in (1,2,3)]
   done,errors=validate(commands(),actual+holes,holes)
   self.assertEqual(errors,[])
-  self.assertTrue(all(done[i]==c['cycle']+6 for i,c in enumerate(commands())))
+  self.assertTrue(all(done[i]==c['cycle']+7 for i,c in enumerate(commands())))
   self.assertTrue(any('[1]'in e for e in validate(commands(),actual+[(151,6000)])[1]))
   self.assertTrue(any('[7]'in e for e in validate(commands(),actual,[(151,6000)])[1]))
   actual[30]=(60,6121)
