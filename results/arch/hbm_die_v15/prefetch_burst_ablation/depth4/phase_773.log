@@ -1,0 +1,10 @@
+PREFETCH_BURST_CDC_CASE epoch=1 base=4099 total=640 bursts=161 responses=640 reserve_to_ready_HBM_cycles=113.932383 reset_release_to_reserve_HBM_cycles=20.762720 reserve_assert_to_accept_HBM_cycles=0.405925 reserve_to_first_request_HBM_cycles=4.737280 last_response_to_ready_HBM_cycles=3.195103 stream_delivery_cycles=80
+PREFETCH_BURST_CDC_PERFORMANCE FAIL epoch=1 baseline_HBM_cycles=77.000000 limit_HBM_cycles=84.700000 measured_HBM_cycles=113.932383 overhead_HBM_cycles=36.932383 ratio=1.479641 baseline_edge_convention=previous_posedge_to_response DUT_edge_convention=accepted_reserve_to_ready
+PREFETCH_BURST_CDC_CASE epoch=2 base=12295 total=2048 bursts=513 responses=2048 reserve_to_ready_HBM_cycles=203.450684 reset_release_to_reserve_HBM_cycles=20.792839 reserve_assert_to_accept_HBM_cycles=0.405925 reserve_to_first_request_HBM_cycles=4.707161 last_response_to_ready_HBM_cycles=2.743522 stream_delivery_cycles=256
+PREFETCH_BURST_CDC_PERFORMANCE FAIL epoch=2 baseline_HBM_cycles=122.000000 limit_HBM_cycles=134.200000 measured_HBM_cycles=203.450684 overhead_HBM_cycles=81.450684 ratio=1.667629 baseline_edge_convention=previous_posedge_to_response DUT_edge_convention=accepted_reserve_to_ready
+PREFETCH_BURST_CDC_CASE epoch=3 base=3001 total=5 bursts=2 responses=5 reserve_to_ready_HBM_cycles=64.290416 reset_release_to_reserve_HBM_cycles=21.384343 reserve_assert_to_accept_HBM_cycles=0.405925 reserve_to_first_request_HBM_cycles=4.115657 last_response_to_ready_HBM_cycles=3.174759 stream_delivery_cycles=1
+PASS PREFETCH_BURST_CDC actualPHY real32SRAM stream_period_ps=833.333334 hbm_period_ps=1024 PHY_CLK_PS=1024 phase=773.000000 exact_vectors=2693 requested_sectors=2693 fixed_cycles=337 request_stalls=37 response_stalls=1938 performance_failures=2
+- rtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_burst_cdc.sv:194: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 782ns; walltime 0.027 s; speed 26.429 us/s
+- Verilator: cpu 0.030 s on 1 threads; alloced 507 MB

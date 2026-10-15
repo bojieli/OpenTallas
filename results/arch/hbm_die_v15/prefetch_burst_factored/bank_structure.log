@@ -1,0 +1,465 @@
+
+-- Executing script file `ot_hbm_svc_prefetch_burst_bank.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/lib/ot_reset_sync.sv
+Parsing SystemVerilog input from `rtl/lib/ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_svc_async_fifo'.
+Warning: Replacing memory \mem with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:37
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+Parsing SystemVerilog input from `physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_svc_prefetch_burst_owner'.
+Warning: Replacing memory \seen_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:73
+Warning: Replacing memory \length_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:73
+Warning: Replacing memory \ordinal_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:73
+Warning: Replacing memory \bank_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:73
+Warning: Replacing memory \epoch_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:73
+Warning: Replacing memory \generation_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:73
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_svc_prefetch_burst_bank'.
+Warning: Replacing memory \seen_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:35
+Warning: Replacing memory \received_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:35
+Warning: Replacing memory \count_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:35
+Warning: Replacing memory \epoch_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:35
+Successfully finished Verilog frontend.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \ot_hbm_svc_prefetch_burst_bank
+Used module:     \ot_hbm_svc_async_fifo
+Used module:         \ot_reset_sync
+Parameter \WIDTH = 284
+Parameter \DEPTH = 8
+
+6.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_svc_async_fifo'.
+Parameter \WIDTH = 284
+Parameter \DEPTH = 8
+Generating RTLIL representation for module `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo'.
+Warning: Replacing memory \mem with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:37
+
+6.3. Analyzing design hierarchy..
+Top module:  \ot_hbm_svc_prefetch_burst_bank
+Used module:     $paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo
+Used module:         \ot_reset_sync
+
+6.4. Analyzing design hierarchy..
+Top module:  \ot_hbm_svc_prefetch_burst_bank
+Used module:     $paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo
+Used module:         \ot_reset_sync
+Removing unused module `\ot_hbm_svc_prefetch_burst_owner'.
+Removing unused module `\ot_hbm_svc_async_fifo'.
+Removed 2 unused modules.
+
+7. Executing PROC pass (convert processes to netlists).
+
+7.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:0$456'.
+Removing empty process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:0$456'.
+Cleaned up 1 empty switch.
+
+7.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed 1 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:0$453 in module $paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:0$453 in module $paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447 in module $paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.
+Marked 3 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435 in module $paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.
+Removed 1 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$416 in module ot_hbm_svc_prefetch_burst_bank.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$416 in module ot_hbm_svc_prefetch_burst_bank.
+Removed 1 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$413 in module ot_hbm_svc_prefetch_burst_bank.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$413 in module ot_hbm_svc_prefetch_burst_bank.
+Removed 1 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$410 in module ot_hbm_svc_prefetch_burst_bank.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$410 in module ot_hbm_svc_prefetch_burst_bank.
+Removed 1 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$407 in module ot_hbm_svc_prefetch_burst_bank.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$407 in module ot_hbm_svc_prefetch_burst_bank.
+Removed 1 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$404 in module ot_hbm_svc_prefetch_burst_bank.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$404 in module ot_hbm_svc_prefetch_burst_bank.
+Removed 3 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291 in module ot_hbm_svc_prefetch_burst_bank.
+Marked 11 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291 in module ot_hbm_svc_prefetch_burst_bank.
+Marked 1 switch rules as full_case in process $proc$rtl/lib/ot_reset_sync.sv:13$1 in module ot_reset_sync.
+Removed a total of 9 dead cases.
+
+7.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 11 redundant assignments.
+Promoted 32 assignments to connections.
+
+7.4. Executing PROC_INIT pass (extract init attributes).
+
+7.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rd_reset in `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447'.
+Found async reset \wr_reset in `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+Found async reset \stream_rst_n in `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+Found async reset \async_rst_n in `\ot_reset_sync.$proc$rtl/lib/ot_reset_sync.sv:13$1'.
+
+7.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~21 debug messages>
+
+7.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:0$453'.
+     1/1: $1$mem2reg_rd$\mem$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:26$419_DATA[283:0]$455
+Creating decoders for process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447'.
+     1/8: $0\wr_gray_r2[3:0]
+     2/8: $0\wr_gray_r1[3:0]
+     3/8: $0\wr_online_r2[0:0]
+     4/8: $0\wr_online_r1[0:0]
+     5/8: $0\rd_online[0:0]
+     6/8: $0\rd_gray[3:0]
+     7/8: $0\rd_bin[3:0]
+     8/8: $0\rd_underflow[0:0]
+Creating decoders for process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+     1/20: $2$mem2reg_wr$\mem$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:37$420_ADDR[2:0]$443
+     2/20: $2$mem2reg_wr$\mem$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:37$420_DATA[283:0]$444
+     3/20: $1$mem2reg_wr$\mem$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:37$420_DATA[283:0]$440
+     4/20: $1$mem2reg_wr$\mem$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:37$420_ADDR[2:0]$439
+     5/20: $0\rd_gray_w2[3:0]
+     6/20: $0\rd_gray_w1[3:0]
+     7/20: $0\rd_online_w2[0:0]
+     8/20: $0\rd_online_w1[0:0]
+     9/20: $0\wr_online[0:0]
+    10/20: $0\mem[7][283:0]
+    11/20: $0\mem[6][283:0]
+    12/20: $0\mem[5][283:0]
+    13/20: $0\mem[4][283:0]
+    14/20: $0\mem[3][283:0]
+    15/20: $0\mem[2][283:0]
+    16/20: $0\mem[1][283:0]
+    17/20: $0\mem[0][283:0]
+    18/20: $0\wr_gray[3:0]
+    19/20: $0\wr_bin[3:0]
+    20/20: $0\wr_overflow[0:0]
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$416'.
+     1/1: $1$mem2reg_rd$\count_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:29$255_DATA[6:0]$418
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$413'.
+     1/1: $1$mem2reg_rd$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:29$254_DATA[6:0]$415
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$410'.
+     1/1: $1$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:26$253_DATA[63:0]$412
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$407'.
+     1/1: $1$mem2reg_rd$\count_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:26$252_DATA[6:0]$409
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$404'.
+     1/1: $1$mem2reg_rd$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:25$251_DATA[15:0]$406
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+     1/67: $4$mem2reg_rd$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$262_DATA[6:0]$398
+     2/67: $6$lookahead\seen_q[0]$289[63:0]$382
+     3/67: $4$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$263[5:0]$380
+     4/67: $6$lookahead\seen_q[1]$290[63:0]$383
+     5/67: $4$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$264[5:0]$381
+     6/67: $5$lookahead\seen_q[1]$290[63:0]$379
+     7/67: $5$lookahead\seen_q[0]$289[63:0]$378
+     8/67: $3$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$264[5:0]$377
+     9/67: $3$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$263[5:0]$376
+    10/67: $3$mem2reg_rd$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$262_DATA[6:0]$375
+    11/67: $3$mem2reg_rd$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$262_ADDR[0:0]$374
+    12/67: $3$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$261_DATA[6:0]$373
+    13/67: $3$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$261_ADDR[0:0]$372
+    14/67: $3$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$260_DATA[63:0]$371
+    15/67: $3$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$260_ADDR[0:0]$370
+    16/67: $4$lookahead\seen_q[1]$290[63:0]$368
+    17/67: $4$lookahead\seen_q[0]$289[63:0]$367
+    18/67: $2$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$264[5:0]$366
+    19/67: $2$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$263[5:0]$365
+    20/67: $2$mem2reg_rd$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$262_DATA[6:0]$364
+    21/67: $2$mem2reg_rd$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$262_ADDR[0:0]$363
+    22/67: $2$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$261_DATA[6:0]$362
+    23/67: $2$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$261_ADDR[0:0]$361
+    24/67: $2$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$260_DATA[63:0]$360
+    25/67: $2$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$260_ADDR[0:0]$359
+    26/67: $3$lookahead\seen_q[0]$289[63:0]$357
+    27/67: $3$lookahead\seen_q[1]$290[63:0]$358
+    28/67: $2$lookahead\seen_q[1]$290[63:0]$344
+    29/67: $2$lookahead\seen_q[0]$289[63:0]$343
+    30/67: $2$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:40$259_ADDR[0:0]$340
+    31/67: $2$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:40$259_DATA[63:0]$341
+    32/67: $2$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:40$258_ADDR[0:0]$338
+    33/67: $2$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:40$258_DATA[6:0]$339
+    34/67: $2$mem2reg_wr$\count_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:39$257_ADDR[0:0]$336
+    35/67: $2$mem2reg_wr$\count_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:39$257_DATA[6:0]$337
+    36/67: $2$mem2reg_wr$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:38$256_ADDR[0:0]$334
+    37/67: $2$mem2reg_wr$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:38$256_DATA[15:0]$335
+    38/67: $2$lookahead\valid_q$288[1:0]$342
+    39/67: $2$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:38$250[0:0]$333
+    40/67: $1$lookahead\seen_q[1]$290[63:0]$332
+    41/67: $1$lookahead\seen_q[0]$289[63:0]$331
+    42/67: $1$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$264[5:0]$329
+    43/67: $1$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$263[5:0]$328
+    44/67: $1$mem2reg_rd$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$262_DATA[6:0]$327
+    45/67: $1$mem2reg_rd$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$262_ADDR[0:0]$326
+    46/67: $1$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$261_DATA[6:0]$325
+    47/67: $1$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$261_ADDR[0:0]$324
+    48/67: $1$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$260_DATA[63:0]$323
+    49/67: $1$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$260_ADDR[0:0]$322
+    50/67: $1$lookahead\valid_q$288[1:0]$330
+    51/67: $1$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:40$259_DATA[63:0]$321
+    52/67: $1$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:40$259_ADDR[0:0]$320
+    53/67: $1$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:40$258_DATA[6:0]$319
+    54/67: $1$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:40$258_ADDR[0:0]$318
+    55/67: $1$mem2reg_wr$\count_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:39$257_DATA[6:0]$317
+    56/67: $1$mem2reg_wr$\count_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:39$257_ADDR[0:0]$316
+    57/67: $1$mem2reg_wr$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:38$256_DATA[15:0]$315
+    58/67: $1$mem2reg_wr$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:38$256_ADDR[0:0]$314
+    59/67: $1$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:38$250[0:0]$313
+    60/67: $1\b[31:0]
+    61/67: $0\received_q[1][6:0]
+    62/67: $0\received_q[0][6:0]
+    63/67: $0\count_q[1][6:0]
+    64/67: $0\count_q[0][6:0]
+    65/67: $0\epoch_q[1][15:0]
+    66/67: $0\epoch_q[0][15:0]
+    67/67: $0\sticky[0:0]
+Creating decoders for process `\ot_reset_sync.$proc$rtl/lib/ot_reset_sync.sv:13$1'.
+     1/1: $0\reset_pipe[1:0]
+
+7.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$mem2reg_rd$\mem$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:26$419_DATA' from process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:0$453'.
+No latch inferred for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_rd$\count_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:29$255_DATA' from process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$416'.
+No latch inferred for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_rd$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:29$254_DATA' from process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$413'.
+No latch inferred for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:26$253_DATA' from process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$410'.
+No latch inferred for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_rd$\count_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:26$252_DATA' from process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$407'.
+No latch inferred for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_rd$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:25$251_DATA' from process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$404'.
+
+7.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\rd_underflow' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447'.
+  created $adff cell `$procdff$812' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\rd_bin' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447'.
+  created $adff cell `$procdff$817' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\rd_gray' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447'.
+  created $adff cell `$procdff$822' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\wr_gray_r1' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447'.
+  created $adff cell `$procdff$827' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\wr_gray_r2' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447'.
+  created $adff cell `$procdff$832' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\rd_online' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447'.
+  created $adff cell `$procdff$837' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\wr_online_r1' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447'.
+  created $adff cell `$procdff$842' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\wr_online_r2' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447'.
+  created $adff cell `$procdff$847' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\wr_overflow' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $adff cell `$procdff$852' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\wr_bin' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $adff cell `$procdff$857' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\wr_gray' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $adff cell `$procdff$862' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\rd_gray_w1' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $adff cell `$procdff$867' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\rd_gray_w2' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $adff cell `$procdff$872' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\wr_online' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $adff cell `$procdff$877' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\rd_online_w1' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $adff cell `$procdff$882' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\rd_online_w2' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $adff cell `$procdff$887' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\mem[0]' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $dff cell `$procdff$894' with positive edge clock.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\mem[1]' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $dff cell `$procdff$901' with positive edge clock.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\mem[2]' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $dff cell `$procdff$908' with positive edge clock.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\mem[3]' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $dff cell `$procdff$915' with positive edge clock.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\mem[4]' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $dff cell `$procdff$922' with positive edge clock.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\mem[5]' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $dff cell `$procdff$929' with positive edge clock.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\mem[6]' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $dff cell `$procdff$936' with positive edge clock.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.\mem[7]' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $dff cell `$procdff$943' with positive edge clock.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$mem2reg_wr$\mem$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:37$420_ADDR' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $adff cell `$procdff$948' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$mem2reg_wr$\mem$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:37$420_DATA' using process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+  created $adff cell `$procdff$953' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.\valid_q' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$958' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.\sticky' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$963' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.\epoch_q[0]' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$968' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.\epoch_q[1]' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$973' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.\seen_q[0]' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$978' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.\seen_q[1]' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$983' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.\b' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$988' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:38$250' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$993' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.\count_q[0]' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$998' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.\count_q[1]' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1003' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.\received_q[0]' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1008' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.\received_q[1]' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1013' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_wr$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:38$256_ADDR' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1018' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_wr$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:38$256_DATA' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1023' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_wr$\count_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:39$257_ADDR' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1028' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_wr$\count_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:39$257_DATA' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1033' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:40$258_ADDR' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1038' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:40$258_DATA' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1043' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:40$259_ADDR' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1048' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:40$259_DATA' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1053' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$260_ADDR' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1058' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$260_DATA' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1063' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$261_ADDR' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1068' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_wr$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$261_DATA' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1073' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_rd$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$262_ADDR' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1078' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$mem2reg_rd$\received_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:44$262_DATA' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1083' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$263' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1088' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$264' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1093' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$lookahead\valid_q$288' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1098' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$lookahead\seen_q[0]$289' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1103' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_bank.$lookahead\seen_q[1]$290' using process `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+  created $adff cell `$procdff$1108' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reset_sync.\reset_pipe' using process `\ot_reset_sync.$proc$rtl/lib/ot_reset_sync.sv:13$1'.
+  created $adff cell `$procdff$1113' with positive edge clock and positive level reset.
+
+7.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:0$453'.
+Removing empty process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:0$453'.
+Found and cleaned up 2 empty switches in `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447'.
+Removing empty process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:40$447'.
+Found and cleaned up 3 empty switches in `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+Removing empty process `$paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:29$435'.
+Found and cleaned up 1 empty switch in `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$416'.
+Removing empty process `ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$416'.
+Found and cleaned up 1 empty switch in `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$413'.
+Removing empty process `ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$413'.
+Found and cleaned up 1 empty switch in `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$410'.
+Removing empty process `ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$410'.
+Found and cleaned up 1 empty switch in `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$407'.
+Removing empty process `ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$407'.
+Found and cleaned up 1 empty switch in `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$404'.
+Removing empty process `ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:0$404'.
+Found and cleaned up 10 empty switches in `\ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+Removing empty process `ot_hbm_svc_prefetch_burst_bank.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:32$291'.
+Removing empty process `ot_reset_sync.$proc$rtl/lib/ot_reset_sync.sv:13$1'.
+Cleaned up 21 empty switches.
+
+7.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.
+<suppressed ~56 debug messages>
+Optimizing module ot_hbm_svc_prefetch_burst_bank.
+<suppressed ~101 debug messages>
+Optimizing module ot_reset_sync.
+<suppressed ~2 debug messages>
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo..
+Finding unused cells or wires in module \ot_hbm_svc_prefetch_burst_bank..
+Finding unused cells or wires in module \ot_reset_sync..
+Removed 133 unused cells and 452 unused wires.
+<suppressed ~137 debug messages>
+
+9. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+10. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$94fca832ce52393d7a99b4a3fffd58680f18b0fc\ot_hbm_svc_async_fifo.
+Deleting now unused module ot_reset_sync.
+<suppressed ~3 debug messages>
+
+11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_svc_prefetch_burst_bank..
+
+12. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hbm_svc_prefetch_burst_bank...
+Found and reported 0 problems.
+
+13. Executing JSON backend.
+
+14. Printing statistics.
+
+=== ot_hbm_svc_prefetch_burst_bank ===
+
+   Number of wires:                254
+   Number of wire bits:          13330
+   Number of public wires:          91
+   Number of public wire bits:    4016
+   Number of ports:                 20
+   Number of port bits:            589
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                218
+     $add                            5
+     $adff                          28
+     $and                            3
+     $dff                            8
+     $div                            1
+     $eq                            18
+     $gt                             1
+     $logic_and                     21
+     $logic_not                     14
+     $logic_or                       1
+     $lt                             1
+     $mux                           68
+     $neg                            6
+     $not                           14
+     $or                             3
+     $pmux                          11
+     $scopeinfo                      3
+     $shift                          6
+     $shiftx                         2
+     $sub                            1
+     $xor                            2
+     ot_sram_1r1w_128x256_m1_r2c2      1
+
+	Command being timed: "yosys -Q -T -s ot_hbm_svc_prefetch_burst_bank.ys"
+	User time (seconds): 0.15
+	System time (seconds): 0.01
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.17
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 22812
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 3672
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 1152
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

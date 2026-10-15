@@ -1,0 +1,909 @@
+
+-- Executing script file `ot_hbm_svc_prefetch_burst_owner.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/lib/ot_reset_sync.sv
+Parsing SystemVerilog input from `rtl/lib/ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_svc_async_fifo'.
+Warning: Replacing memory \mem with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv:37
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+Parsing SystemVerilog input from `physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_svc_prefetch_burst_owner'.
+Warning: Replacing memory \seen_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:73
+Warning: Replacing memory \length_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:73
+Warning: Replacing memory \ordinal_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:73
+Warning: Replacing memory \bank_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:73
+Warning: Replacing memory \epoch_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:73
+Warning: Replacing memory \generation_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:73
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_svc_prefetch_burst_bank'.
+Warning: Replacing memory \seen_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:35
+Warning: Replacing memory \received_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:35
+Warning: Replacing memory \count_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:35
+Warning: Replacing memory \epoch_q with list of registers. See rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv:35
+Successfully finished Verilog frontend.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \ot_hbm_svc_prefetch_burst_owner
+
+6.2. Analyzing design hierarchy..
+Top module:  \ot_hbm_svc_prefetch_burst_owner
+Removing unused module `\ot_hbm_svc_prefetch_burst_bank'.
+Removing unused module `\ot_hbm_svc_async_fifo'.
+Removing unused module `\ot_reset_sync'.
+Removed 3 unused modules.
+
+7. Executing PROC pass (convert processes to netlists).
+
+7.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed 1 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$246 in module ot_hbm_svc_prefetch_burst_owner.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$246 in module ot_hbm_svc_prefetch_burst_owner.
+Removed 1 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$243 in module ot_hbm_svc_prefetch_burst_owner.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$243 in module ot_hbm_svc_prefetch_burst_owner.
+Removed 1 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$240 in module ot_hbm_svc_prefetch_burst_owner.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$240 in module ot_hbm_svc_prefetch_burst_owner.
+Removed 1 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$237 in module ot_hbm_svc_prefetch_burst_owner.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$237 in module ot_hbm_svc_prefetch_burst_owner.
+Removed 1 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$234 in module ot_hbm_svc_prefetch_burst_owner.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$234 in module ot_hbm_svc_prefetch_burst_owner.
+Removed 1 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$231 in module ot_hbm_svc_prefetch_burst_owner.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$231 in module ot_hbm_svc_prefetch_burst_owner.
+Removed 3 dead cases from process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114 in module ot_hbm_svc_prefetch_burst_owner.
+Marked 15 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114 in module ot_hbm_svc_prefetch_burst_owner.
+Removed a total of 9 dead cases.
+
+7.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 33 assignments to connections.
+
+7.4. Executing PROC_INIT pass (extract init attributes).
+
+7.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+
+7.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~24 debug messages>
+
+7.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$246'.
+     1/1: $1$mem2reg_rd$\bank_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:66$50_DATA[0:0]$248
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$243'.
+     1/1: $1$mem2reg_rd$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:65$49_DATA[15:0]$245
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$240'.
+     1/1: $1$mem2reg_rd$\ordinal_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:64$48_DATA[10:0]$242
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$237'.
+     1/1: $1$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:63$47_DATA[3:0]$239
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$234'.
+     1/1: $1$mem2reg_rd$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:62$46_DATA[2:0]$236
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$231'.
+     1/1: $1$mem2reg_rd$\generation_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:62$45_DATA[11:0]$233
+Creating decoders for process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+     1/253: $4$lookahead\valid_q$113[31:0]$223
+     2/253: $3$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$44[4:0]$222
+     3/253: $3$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$60_DATA[3:0]$218
+     4/253: $3\mask_for$func$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$43.$result[3:0]$217
+     5/253: $3$mem2reg_rd$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$59_DATA[2:0]$216
+     6/253: $3$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$58_DATA[3:0]$213
+     7/253: $3$lookahead\valid_q$113[31:0]$212
+     8/253: $2$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$44[4:0]$203
+     9/253: $2$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$60_DATA[3:0]$211
+    10/253: $2$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$60_ADDR[4:0]$210
+    11/253: $2\mask_for$func$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$43.$result[3:0]$201
+    12/253: $2\mask_for$func$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$43.n[2:0]$202
+    13/253: $2$mem2reg_rd$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$59_DATA[2:0]$209
+    14/253: $2$mem2reg_rd$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$59_ADDR[4:0]$208
+    15/253: $2$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$57_ADDR[4:0]$204
+    16/253: $2$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$57_DATA[3:0]$205
+    17/253: $2$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$58_DATA[3:0]$207
+    18/253: $2$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$58_ADDR[4:0]$206
+    19/253: $2$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$56_ADDR[4:0]$183
+    20/253: $2$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$56_DATA[3:0]$184
+    21/253: $2$mem2reg_wr$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$55_ADDR[4:0]$181
+    22/253: $2$mem2reg_wr$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$55_DATA[2:0]$182
+    23/253: $2$mem2reg_wr$\ordinal_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$54_ADDR[4:0]$179
+    24/253: $2$mem2reg_wr$\ordinal_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$54_DATA[10:0]$180
+    25/253: $2$mem2reg_wr$\bank_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:83$53_ADDR[4:0]$177
+    26/253: $2$mem2reg_wr$\bank_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:83$53_DATA[0:0]$178
+    27/253: $2$mem2reg_wr$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:83$52_ADDR[4:0]$175
+    28/253: $2$mem2reg_wr$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:83$52_DATA[15:0]$176
+    29/253: $2$mem2reg_wr$\generation_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:82$51_ADDR[4:0]$173
+    30/253: $2$mem2reg_wr$\generation_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:82$51_DATA[11:0]$174
+    31/253: $2$lookahead\valid_q$113[31:0]$185
+    32/253: $2$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:82$42[4:0]$172
+    33/253: $1$lookahead\valid_q$113[31:0]$165
+    34/253: $1$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$60_DATA[3:0]$164
+    35/253: $1$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$60_ADDR[4:0]$163
+    36/253: $1$mem2reg_rd$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$59_DATA[2:0]$162
+    37/253: $1$mem2reg_rd$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$59_ADDR[4:0]$161
+    38/253: $1$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$58_DATA[3:0]$160
+    39/253: $1$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$58_ADDR[4:0]$159
+    40/253: $1$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$57_DATA[3:0]$158
+    41/253: $1$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$57_ADDR[4:0]$157
+    42/253: $1$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$44[4:0]$144
+    43/253: $1\mask_for$func$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$43.n[2:0]$143
+    44/253: $1\mask_for$func$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$43.$result[3:0]$142
+    45/253: $1$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$56_DATA[3:0]$156
+    46/253: $1$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$56_ADDR[4:0]$155
+    47/253: $1$mem2reg_wr$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$55_DATA[2:0]$154
+    48/253: $1$mem2reg_wr$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$55_ADDR[4:0]$153
+    49/253: $1$mem2reg_wr$\ordinal_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$54_DATA[10:0]$152
+    50/253: $1$mem2reg_wr$\ordinal_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$54_ADDR[4:0]$151
+    51/253: $1$mem2reg_wr$\bank_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:83$53_DATA[0:0]$150
+    52/253: $1$mem2reg_wr$\bank_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:83$53_ADDR[4:0]$149
+    53/253: $1$mem2reg_wr$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:83$52_DATA[15:0]$148
+    54/253: $1$mem2reg_wr$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:83$52_ADDR[4:0]$147
+    55/253: $1$mem2reg_wr$\generation_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:82$51_DATA[11:0]$146
+    56/253: $1$mem2reg_wr$\generation_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:82$51_ADDR[4:0]$145
+    57/253: $1$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:82$42[4:0]$141
+    58/253: $1\e[31:0]
+    59/253: $0\seen_q[31][3:0]
+    60/253: $0\seen_q[30][3:0]
+    61/253: $0\seen_q[29][3:0]
+    62/253: $0\seen_q[28][3:0]
+    63/253: $0\seen_q[27][3:0]
+    64/253: $0\seen_q[26][3:0]
+    65/253: $0\seen_q[25][3:0]
+    66/253: $0\seen_q[24][3:0]
+    67/253: $0\seen_q[23][3:0]
+    68/253: $0\seen_q[22][3:0]
+    69/253: $0\seen_q[21][3:0]
+    70/253: $0\seen_q[20][3:0]
+    71/253: $0\seen_q[19][3:0]
+    72/253: $0\seen_q[18][3:0]
+    73/253: $0\seen_q[17][3:0]
+    74/253: $0\seen_q[16][3:0]
+    75/253: $0\seen_q[15][3:0]
+    76/253: $0\seen_q[14][3:0]
+    77/253: $0\seen_q[13][3:0]
+    78/253: $0\seen_q[12][3:0]
+    79/253: $0\seen_q[11][3:0]
+    80/253: $0\seen_q[10][3:0]
+    81/253: $0\seen_q[9][3:0]
+    82/253: $0\seen_q[8][3:0]
+    83/253: $0\seen_q[7][3:0]
+    84/253: $0\seen_q[6][3:0]
+    85/253: $0\seen_q[5][3:0]
+    86/253: $0\seen_q[4][3:0]
+    87/253: $0\seen_q[3][3:0]
+    88/253: $0\seen_q[2][3:0]
+    89/253: $0\seen_q[1][3:0]
+    90/253: $0\seen_q[0][3:0]
+    91/253: $0\length_q[31][2:0]
+    92/253: $0\length_q[30][2:0]
+    93/253: $0\length_q[29][2:0]
+    94/253: $0\length_q[28][2:0]
+    95/253: $0\length_q[27][2:0]
+    96/253: $0\length_q[26][2:0]
+    97/253: $0\length_q[25][2:0]
+    98/253: $0\length_q[24][2:0]
+    99/253: $0\length_q[23][2:0]
+   100/253: $0\length_q[22][2:0]
+   101/253: $0\length_q[21][2:0]
+   102/253: $0\length_q[20][2:0]
+   103/253: $0\length_q[19][2:0]
+   104/253: $0\length_q[18][2:0]
+   105/253: $0\length_q[17][2:0]
+   106/253: $0\length_q[16][2:0]
+   107/253: $0\length_q[15][2:0]
+   108/253: $0\length_q[14][2:0]
+   109/253: $0\length_q[13][2:0]
+   110/253: $0\length_q[12][2:0]
+   111/253: $0\length_q[11][2:0]
+   112/253: $0\length_q[10][2:0]
+   113/253: $0\length_q[9][2:0]
+   114/253: $0\length_q[8][2:0]
+   115/253: $0\length_q[7][2:0]
+   116/253: $0\length_q[6][2:0]
+   117/253: $0\length_q[5][2:0]
+   118/253: $0\length_q[4][2:0]
+   119/253: $0\length_q[3][2:0]
+   120/253: $0\length_q[2][2:0]
+   121/253: $0\length_q[1][2:0]
+   122/253: $0\length_q[0][2:0]
+   123/253: $0\ordinal_q[31][10:0]
+   124/253: $0\ordinal_q[30][10:0]
+   125/253: $0\ordinal_q[29][10:0]
+   126/253: $0\ordinal_q[28][10:0]
+   127/253: $0\ordinal_q[27][10:0]
+   128/253: $0\ordinal_q[26][10:0]
+   129/253: $0\ordinal_q[25][10:0]
+   130/253: $0\ordinal_q[24][10:0]
+   131/253: $0\ordinal_q[23][10:0]
+   132/253: $0\ordinal_q[22][10:0]
+   133/253: $0\ordinal_q[21][10:0]
+   134/253: $0\ordinal_q[20][10:0]
+   135/253: $0\ordinal_q[19][10:0]
+   136/253: $0\ordinal_q[18][10:0]
+   137/253: $0\ordinal_q[17][10:0]
+   138/253: $0\ordinal_q[16][10:0]
+   139/253: $0\ordinal_q[15][10:0]
+   140/253: $0\ordinal_q[14][10:0]
+   141/253: $0\ordinal_q[13][10:0]
+   142/253: $0\ordinal_q[12][10:0]
+   143/253: $0\ordinal_q[11][10:0]
+   144/253: $0\ordinal_q[10][10:0]
+   145/253: $0\ordinal_q[9][10:0]
+   146/253: $0\ordinal_q[8][10:0]
+   147/253: $0\ordinal_q[7][10:0]
+   148/253: $0\ordinal_q[6][10:0]
+   149/253: $0\ordinal_q[5][10:0]
+   150/253: $0\ordinal_q[4][10:0]
+   151/253: $0\ordinal_q[3][10:0]
+   152/253: $0\ordinal_q[2][10:0]
+   153/253: $0\ordinal_q[1][10:0]
+   154/253: $0\ordinal_q[0][10:0]
+   155/253: $0\bank_q[31][0:0]
+   156/253: $0\bank_q[30][0:0]
+   157/253: $0\bank_q[29][0:0]
+   158/253: $0\bank_q[28][0:0]
+   159/253: $0\bank_q[27][0:0]
+   160/253: $0\bank_q[26][0:0]
+   161/253: $0\bank_q[25][0:0]
+   162/253: $0\bank_q[24][0:0]
+   163/253: $0\bank_q[23][0:0]
+   164/253: $0\bank_q[22][0:0]
+   165/253: $0\bank_q[21][0:0]
+   166/253: $0\bank_q[20][0:0]
+   167/253: $0\bank_q[19][0:0]
+   168/253: $0\bank_q[18][0:0]
+   169/253: $0\bank_q[17][0:0]
+   170/253: $0\bank_q[16][0:0]
+   171/253: $0\bank_q[15][0:0]
+   172/253: $0\bank_q[14][0:0]
+   173/253: $0\bank_q[13][0:0]
+   174/253: $0\bank_q[12][0:0]
+   175/253: $0\bank_q[11][0:0]
+   176/253: $0\bank_q[10][0:0]
+   177/253: $0\bank_q[9][0:0]
+   178/253: $0\bank_q[8][0:0]
+   179/253: $0\bank_q[7][0:0]
+   180/253: $0\bank_q[6][0:0]
+   181/253: $0\bank_q[5][0:0]
+   182/253: $0\bank_q[4][0:0]
+   183/253: $0\bank_q[3][0:0]
+   184/253: $0\bank_q[2][0:0]
+   185/253: $0\bank_q[1][0:0]
+   186/253: $0\bank_q[0][0:0]
+   187/253: $0\epoch_q[31][15:0]
+   188/253: $0\epoch_q[30][15:0]
+   189/253: $0\epoch_q[29][15:0]
+   190/253: $0\epoch_q[28][15:0]
+   191/253: $0\epoch_q[27][15:0]
+   192/253: $0\epoch_q[26][15:0]
+   193/253: $0\epoch_q[25][15:0]
+   194/253: $0\epoch_q[24][15:0]
+   195/253: $0\epoch_q[23][15:0]
+   196/253: $0\epoch_q[22][15:0]
+   197/253: $0\epoch_q[21][15:0]
+   198/253: $0\epoch_q[20][15:0]
+   199/253: $0\epoch_q[19][15:0]
+   200/253: $0\epoch_q[18][15:0]
+   201/253: $0\epoch_q[17][15:0]
+   202/253: $0\epoch_q[16][15:0]
+   203/253: $0\epoch_q[15][15:0]
+   204/253: $0\epoch_q[14][15:0]
+   205/253: $0\epoch_q[13][15:0]
+   206/253: $0\epoch_q[12][15:0]
+   207/253: $0\epoch_q[11][15:0]
+   208/253: $0\epoch_q[10][15:0]
+   209/253: $0\epoch_q[9][15:0]
+   210/253: $0\epoch_q[8][15:0]
+   211/253: $0\epoch_q[7][15:0]
+   212/253: $0\epoch_q[6][15:0]
+   213/253: $0\epoch_q[5][15:0]
+   214/253: $0\epoch_q[4][15:0]
+   215/253: $0\epoch_q[3][15:0]
+   216/253: $0\epoch_q[2][15:0]
+   217/253: $0\epoch_q[1][15:0]
+   218/253: $0\epoch_q[0][15:0]
+   219/253: $0\generation_q[31][11:0]
+   220/253: $0\generation_q[30][11:0]
+   221/253: $0\generation_q[29][11:0]
+   222/253: $0\generation_q[28][11:0]
+   223/253: $0\generation_q[27][11:0]
+   224/253: $0\generation_q[26][11:0]
+   225/253: $0\generation_q[25][11:0]
+   226/253: $0\generation_q[24][11:0]
+   227/253: $0\generation_q[23][11:0]
+   228/253: $0\generation_q[22][11:0]
+   229/253: $0\generation_q[21][11:0]
+   230/253: $0\generation_q[20][11:0]
+   231/253: $0\generation_q[19][11:0]
+   232/253: $0\generation_q[18][11:0]
+   233/253: $0\generation_q[17][11:0]
+   234/253: $0\generation_q[16][11:0]
+   235/253: $0\generation_q[15][11:0]
+   236/253: $0\generation_q[14][11:0]
+   237/253: $0\generation_q[13][11:0]
+   238/253: $0\generation_q[12][11:0]
+   239/253: $0\generation_q[11][11:0]
+   240/253: $0\generation_q[10][11:0]
+   241/253: $0\generation_q[9][11:0]
+   242/253: $0\generation_q[8][11:0]
+   243/253: $0\generation_q[7][11:0]
+   244/253: $0\generation_q[6][11:0]
+   245/253: $0\generation_q[5][11:0]
+   246/253: $0\generation_q[4][11:0]
+   247/253: $0\generation_q[3][11:0]
+   248/253: $0\generation_q[2][11:0]
+   249/253: $0\generation_q[1][11:0]
+   250/253: $0\generation_q[0][11:0]
+   251/253: $0\sticky[0:0]
+   252/253: $0\group_q[22:0]
+   253/253: $0\next_ticket[16:0]
+
+7.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_rd$\bank_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:66$50_DATA' from process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$246'.
+No latch inferred for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_rd$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:65$49_DATA' from process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$243'.
+No latch inferred for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_rd$\ordinal_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:64$48_DATA' from process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$240'.
+No latch inferred for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:63$47_DATA' from process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$237'.
+No latch inferred for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_rd$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:62$46_DATA' from process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$234'.
+No latch inferred for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_rd$\generation_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:62$45_DATA' from process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$231'.
+
+7.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\next_ticket' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5439' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\group_q' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5444' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\valid_q' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5449' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\sticky' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5454' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\e' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5459' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:82$42' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5464' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\mask_for$func$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$43.$result' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5469' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\mask_for$func$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$43.n' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5474' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$bitselwrite$pos$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$44' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5479' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[0]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5484' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[1]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5489' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[2]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5494' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[3]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5499' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[4]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5504' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[5]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5509' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[6]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5514' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[7]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5519' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[8]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5524' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[9]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5529' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[10]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5534' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[11]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5539' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[12]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5544' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[13]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5549' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[14]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5554' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[15]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5559' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[16]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5564' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[17]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5569' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[18]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5574' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[19]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5579' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[20]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5584' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[21]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5589' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[22]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5594' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[23]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5599' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[24]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5604' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[25]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5609' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[26]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5614' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[27]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5619' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[28]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5624' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[29]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5629' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[30]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5634' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\generation_q[31]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5639' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[0]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5644' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[1]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5649' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[2]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5654' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[3]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5659' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[4]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5664' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[5]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5669' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[6]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5674' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[7]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5679' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[8]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5684' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[9]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5689' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[10]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5694' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[11]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5699' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[12]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5704' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[13]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5709' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[14]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5714' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[15]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5719' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[16]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5724' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[17]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5729' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[18]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5734' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[19]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5739' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[20]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5744' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[21]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5749' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[22]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5754' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[23]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5759' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[24]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5764' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[25]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5769' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[26]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5774' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[27]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5779' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[28]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5784' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[29]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5789' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[30]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5794' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\epoch_q[31]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5799' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[0]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5804' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[1]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5809' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[2]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5814' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[3]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5819' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[4]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5824' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[5]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5829' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[6]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5834' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[7]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5839' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[8]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5844' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[9]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5849' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[10]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5854' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[11]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5859' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[12]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5864' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[13]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5869' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[14]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5874' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[15]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5879' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[16]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5884' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[17]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5889' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[18]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5894' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[19]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5899' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[20]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5904' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[21]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5909' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[22]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5914' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[23]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5919' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[24]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5924' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[25]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5929' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[26]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5934' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[27]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5939' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[28]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5944' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[29]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5949' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[30]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5954' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\bank_q[31]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5959' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[0]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5964' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[1]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5969' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[2]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5974' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[3]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5979' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[4]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5984' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[5]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5989' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[6]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5994' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[7]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$5999' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[8]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6004' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[9]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6009' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[10]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6014' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[11]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6019' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[12]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6024' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[13]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6029' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[14]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6034' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[15]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6039' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[16]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6044' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[17]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6049' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[18]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6054' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[19]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6059' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[20]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6064' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[21]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6069' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[22]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6074' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[23]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6079' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[24]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6084' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[25]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6089' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[26]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6094' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[27]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6099' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[28]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6104' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[29]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6109' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[30]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6114' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\ordinal_q[31]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6119' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[0]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6124' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[1]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6129' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[2]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6134' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[3]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6139' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[4]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6144' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[5]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6149' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[6]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6154' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[7]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6159' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[8]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6164' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[9]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6169' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[10]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6174' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[11]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6179' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[12]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6184' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[13]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6189' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[14]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6194' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[15]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6199' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[16]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6204' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[17]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6209' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[18]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6214' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[19]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6219' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[20]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6224' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[21]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6229' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[22]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6234' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[23]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6239' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[24]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6244' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[25]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6249' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[26]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6254' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[27]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6259' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[28]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6264' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[29]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6269' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[30]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6274' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\length_q[31]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6279' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[0]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6284' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[1]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6289' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[2]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6294' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[3]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6299' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[4]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6304' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[5]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6309' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[6]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6314' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[7]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6319' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[8]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6324' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[9]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6329' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[10]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6334' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[11]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6339' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[12]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6344' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[13]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6349' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[14]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6354' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[15]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6359' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[16]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6364' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[17]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6369' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[18]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6374' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[19]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6379' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[20]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6384' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[21]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6389' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[22]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6394' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[23]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6399' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[24]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6404' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[25]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6409' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[26]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6414' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[27]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6419' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[28]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6424' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[29]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6429' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[30]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6434' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.\seen_q[31]' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6439' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\generation_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:82$51_ADDR' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6444' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\generation_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:82$51_DATA' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6449' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:83$52_ADDR' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6454' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\epoch_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:83$52_DATA' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6459' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\bank_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:83$53_ADDR' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6464' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\bank_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:83$53_DATA' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6469' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\ordinal_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$54_ADDR' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6474' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\ordinal_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$54_DATA' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6479' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$55_ADDR' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6484' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$55_DATA' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6489' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$56_ADDR' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6494' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:84$56_DATA' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6499' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$57_ADDR' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6504' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_wr$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$57_DATA' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6509' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$58_ADDR' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6514' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:89$58_DATA' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6519' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_rd$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$59_ADDR' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6524' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_rd$\length_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$59_DATA' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6529' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$60_ADDR' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6534' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$mem2reg_rd$\seen_q$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:90$60_DATA' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6539' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_prefetch_burst_owner.$lookahead\valid_q$113' using process `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+  created $adff cell `$procdff$6544' with positive edge clock and positive level reset.
+
+7.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$246'.
+Removing empty process `ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$246'.
+Found and cleaned up 1 empty switch in `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$243'.
+Removing empty process `ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$243'.
+Found and cleaned up 1 empty switch in `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$240'.
+Removing empty process `ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$240'.
+Found and cleaned up 1 empty switch in `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$237'.
+Removing empty process `ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$237'.
+Found and cleaned up 1 empty switch in `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$234'.
+Removing empty process `ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$234'.
+Found and cleaned up 1 empty switch in `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$231'.
+Removing empty process `ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:0$231'.
+Found and cleaned up 18 empty switches in `\ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+Removing empty process `ot_hbm_svc_prefetch_burst_owner.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv:69$114'.
+Cleaned up 24 empty switches.
+
+7.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_svc_prefetch_burst_owner.
+<suppressed ~464 debug messages>
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_svc_prefetch_burst_owner..
+Removed 275 unused cells and 1085 unused wires.
+<suppressed ~278 debug messages>
+
+9. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+10. Executing FLATTEN pass (flatten design).
+
+11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_svc_prefetch_burst_owner..
+
+12. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hbm_svc_prefetch_burst_owner...
+Found and reported 0 problems.
+
+13. Executing JSON backend.
+
+14. Printing statistics.
+
+=== ot_hbm_svc_prefetch_burst_owner ===
+
+   Number of wires:               1300
+   Number of wire bits:           6816
+   Number of public wires:         243
+   Number of public wire bits:    2157
+   Number of ports:                 27
+   Number of port bits:            229
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1269
+     $add                            9
+     $adff                         196
+     $and                            2
+     $eq                           502
+     $gt                             3
+     $le                             4
+     $logic_and                     16
+     $logic_not                     24
+     $logic_or                       2
+     $lt                             3
+     $mux                          473
+     $neg                            4
+     $not                            2
+     $or                             4
+     $pmux                          10
+     $reduce_bool                    1
+     $reduce_or                      1
+     $shift                          4
+     $shiftx                         3
+     $shl                            2
+     $sub                            2
+     $xor                            2
+
+	Command being timed: "yosys -Q -T -s ot_hbm_svc_prefetch_burst_owner.ys"
+	User time (seconds): 0.18
+	System time (seconds): 0.01
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.19
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 22392
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 2993
+	Voluntary context switches: 2
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 24
+	File system outputs: 2936
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
