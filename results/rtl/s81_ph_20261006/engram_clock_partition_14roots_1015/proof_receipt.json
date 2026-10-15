@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.s81.engram_14root_proof.v1",
+  "source": "efa6c52de",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-2320233-1792065842",
+  "exit": 0,
+  "actual_old_new_equivalence": {
+    "windows": 24,
+    "HBM_requests": 144,
+    "full264bit_beats": 1152,
+    "statuses": 144,
+    "all_layer_rank_straps": 8,
+    "deliberate_invalidCRC_rows": 144,
+    "new_cycles": 0
+  },
+  "mutants": {
+    "missing_hash_clock": "request mismatch cycle62",
+    "missing_row_clock": "beat mismatch cycle215",
+    "missing_seed_clock": "control mismatch cycle62"
+  },
+  "mapped_13root_actual": {
+    "method": "Immutable1_2_yosys.v DFF actual CLK port census; split by real u_e.u_hash prefix",
+    "source": "ee750364b",
+    "core": 15250,
+    "core_actual_hash_seed": 10767,
+    "core_actual_engine": 3668,
+    "core_actual_wrapper": 815,
+    "hash": [
+      2832,
+      2838,
+      2838,
+      2834,
+      2854,
+      2841
+    ],
+    "rows": [
+      2304,
+      2304,
+      2304,
+      2304,
+      2304,
+      2304
+    ],
+    "qualification": "Actual mapped13-root source is over15000. Its generic source8696 estimate did not qualify mapped root. New14-root separation counts are source-inferred until real new14-root synthesis/CTS."
+  },
+  "new_clock_contract": "Separate ck_seed clocks only u_hash primary clk, same phase1:1 as all13 existing roots; exact arithmetic/stages/sourcehash/row leaves unchanged. No timing exception or clock-rule waiver.",
+  "remaining": [
+    "Actual new14-root mapped/native CTS budget",
+    "Exact675pin grant and actual rectangle/PG audit",
+    "Cross-root real min/max, TT/FF/DRC",
+    "Static programme/actual external HBM return bound, dedicated owner s81_engram_static"
+  ]
+}
