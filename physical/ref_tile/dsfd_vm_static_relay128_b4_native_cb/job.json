@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_static_relay128_b4_native_cb-cb1-COMMIT",
+ "name": "dsfd_vm_static_relay128_b4_native_cb-cb1-a36ab9f28",
  "block": "dsfd_vm_static_relay128_b4",
  "ref_tile": true,
  "owner": "Claude:S81 VM owner",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/s81-vm-r10-relay-1015",
-  "commit": "COMMIT",
+  "commit": "a36ab9f28",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph/vm",
    "tools/s81_vm",
@@ -100,7 +100,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_static_relay128_b4_native_cb/dsfd_vm_static_relay128_b4_native_cb-cb1-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_static_relay128_b4_native_cb/dsfd_vm_static_relay128_b4_native_cb-cb1-a36ab9f28"
   }
  ],
  "cycles_added": 0,
