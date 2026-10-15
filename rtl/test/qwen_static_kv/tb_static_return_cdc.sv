@@ -3,7 +3,7 @@
 // depth result is a routed die contract. Fixed slots derive from clock edges,
 // not rd_valid/ready. Missing, wrong tag and late slots must fail.
 module tb_static_return_cdc;
- parameter integer DEPTH=16;
+ parameter integer DEPTH=8;
  parameter real CORE_PHASE=0.137;
  localparam real CORE_T=0.833334,HBM_T=1.024;
  reg hclk=0,ck=0;

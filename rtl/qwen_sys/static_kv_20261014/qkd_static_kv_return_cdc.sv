@@ -3,7 +3,7 @@
 // status never changes a slot. Missing/late/tag mismatches latch fault; the
 // consumer timeline continues. Clocks/resets need the actual die phase receipt.
 module qkd_static_kv_return_cdc #(
- parameter integer DEPTH=16
+ parameter integer DEPTH=8
 )(
  input wire pll_hbm,hrst,ck,rsi,
  input wire [293:0] controller_co,input wire [15:0] controller_epoch,
