@@ -5,7 +5,7 @@ module tb_dsfd_vm_static_read_router;
  reg[16383:0] data=0;reg[127:0] valid=0;
  reg[17:0] ne=0;reg[89:0] ns=0;reg[11:0] ae=0;reg[19:0] me=0;reg[99:0] ms=0;
  wire[9215:0] nd;wire[17:0] nv;wire[2047:0]pd;wire pv;wire[4095:0]xd;wire[7:0]xv;wire[10239:0]md;wire[19:0]mv;wire[7:0]fault;
- dsfd_vm_static_read_router dut(.ck_data(cds),.ck_valid(cvs),.rst_n(rst),.slot_data(data),.slot_valid(valid),.n_expected(ne),.n_slot(ns),.aux_expected(ae),.mx_expected(me),.mx_slot(ms),.n_data(nd),.n_valid(nv),.pq_data(pd),.pq_valid(pv),.x_data(xd),.x_valid(xv),.mx_data(md),.mx_valid(mv),.fault(fault));
+ dsfd_vm_static_read_router dut(.ck_data(cds),.ck_valid(cvs),.rst_data_n({64{rst}}),.rst_valid_n({8{rst}}),.slot_data(data),.slot_valid(valid),.n_expected(ne),.n_slot(ns),.aux_expected(ae),.mx_expected(me),.mx_slot(ms),.n_data(nd),.n_valid(nv),.pq_data(pd),.pq_valid(pv),.x_data(xd),.x_valid(xv),.mx_data(md),.mx_valid(mv),.fault(fault));
  integer mode=0,seed=1,bad=0,cy=0,checks=0,native30=0,mix30=0,su1cross=0;
  reg[17:0]en[0:1000];reg[11:0]ea[0:1000];reg[19:0]em[0:1000];reg[9215:0]edn[0:1000];reg[2047:0]edp[0:1000];reg[4095:0]edx[0:1000];reg[10239:0]edm[0:1000];integer i,j,p,s,l,g,b;
  function[511:0]row(input integer cycle,input integer slot);integer w;begin for(w=0;w<16;w=w+1)row[32*w+:32]=32'(cycle*100003+slot*1709+w*131+seed*7919+19);end endfunction
