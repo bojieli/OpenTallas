@@ -8,6 +8,11 @@
 module tb_hgi_sfu_qswiglu_scheduled;
  localparam LWB=15,WORDS=3072,NINST=368,CHUNK=222,PCLO=223,IO_ROWS=`SFU_IO_ROWS;
  reg clk=0;always #0.416667 clk=~clk;
+ wire [3:0] clk_lg;
+ for(genvar g=0;g<4;g++)begin:lg_root
+  // Separate clock nets permit a real missing-group-root negative control.
+  assign clk_lg[g]=clk && !($test$plusargs("MUT_LG_CLOCK") && g==1 && rst_n);
+ end
  reg rst_n=0;
  reg [1741:0] controls[0:NINST-1];
 reg [31:0] gates[0:WORDS-1],ups[0:WORDS-1],golds[0:WORDS-1],route[0:0];
@@ -48,7 +53,7 @@ reg io_cfg_we=0,io_start_v=0;
  wire fault;
  integer checks=0;
  function automatic [31:0] value(input integer g,a);value=32'h3e000000+32'(100000*g+a*7);endfunction
- ot_hgi_sfu_scheduled_engine dut(.clk(clk),.rst_n(rst_n),.clk_lane({16{clk}}),.clk_map({16{clk}}),
+ ot_hgi_sfu_scheduled_engine dut(.clk(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),.clk_lane({16{clk}}),.clk_map({16{clk}}),
  .rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),
  .cfg_we(cfg_we),.cfg_stripe(cfg_stripe),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
  .start_base(11'd0),.start_limit(12'(NINST)),.start_loops(16'd1),
