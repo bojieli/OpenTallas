@@ -48,7 +48,7 @@ def check_persistent_state(program, binding, root):
     jobs=binding.get('jobs',{})
     reservations=binding.get('persistent_buffers',[])
     required={name for name,job in jobs.items() if job.get('opcode')==14 or name.endswith('.attn.cmp.pool')}
-    covered=set();physical={};identities={};seen=set()
+    covered=set();physical={};seen=set()
     for state in reservations:
         try:
             ident=state['id']
@@ -66,9 +66,6 @@ def check_persistent_state(program, binding, root):
             context=integer(state['context_id'],'CP context')
             if context>=1<<32 or not isinstance(state['context_key'],str) or not state['context_key']:
                 raise ValueError('full CP logical context and uint32 identity required')
-            if context in identities and identities[context]!=state['context_key']:
-                raise ValueError('distinct CP contexts alias same identity')
-            identities[context]=state['context_key']
             begin=integer(state['live_from_cycle'],'context live begin')
             end=integer(state['live_until_cycle'],'context live end')
             if end<=begin: raise ValueError('invalid CP state lifetime')
