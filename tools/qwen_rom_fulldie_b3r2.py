@@ -6201,6 +6201,24 @@ def summarize(work):
                 peak_rss_gb=round(int(rss.group(1)) / 2**20, 1) if rss else None, layers=layers, windows=win)
 
 
+def native_stdcell_pg_lines(grid='core'):
+    """Literal row rails and a connected sparse ladder for die-top cells.
+
+    Hardened macro obstructions clip this stdcell grid; macro PG remains on
+    its own qualified interfaces. Literal M1 contact and all upper connects
+    are checked after pdngen, not inferred from global_connect.
+    """
+    lines=[f'add_pdn_stripe -grid {grid} -layer M1 -width .018 -followpins',
+           f'add_pdn_stripe -grid {grid} -layer M2 -width .018 -followpins']
+    for layer,width,pitch,spacing,offset in (
+            ('M3',.09,4.32,2.07,1.08),('M4',.12,4.32,2.04,1.08),
+            ('M5',.12,8.64,4.20,2.16),('M6',.160,8.64,4.160,2.16),
+            ('M7',.160,8.64,4.160,2.16)):
+        lines.append(f'add_pdn_stripe -grid {grid} -layer {layer} -width {width} -pitch {pitch} -spacing {spacing} -offset {offset} -extend_to_boundary')
+    lines += [f'add_pdn_connect -grid {grid} -layers {{M{i} M{i+1}}}' for i in range(1,8)]
+    return lines
+
+
 def write_pdn_r4(v, m, path, bump_um):
     """Connected full-die PDN (r4).  r2 (one M8+M9 macro grid per instance) passed pdngen but failed
     check_power_grid: each macro grid stops inside its instance, the frames abut with a 24 nm gap, so every
@@ -6224,6 +6242,7 @@ def write_pdn_r4(v, m, path, bump_um):
          f'add_pdn_stripe -grid core -layer M8 -width .48 -pitch {cp:.3f} -offset 0',
          f'add_pdn_stripe -grid core -layer M9 -width .48 -pitch {cp:.3f} -offset 0',
          'add_pdn_connect -grid core -layers {M8 M9}']
+    L += native_stdcell_pg_lines('core')
     meta = []
     insts = sorted(m['insts'], key=lambda it: -len(it.name))      # -instances is a pattern: longest name first
     for i, it in enumerate(insts):
@@ -6259,7 +6278,11 @@ def write_pdn_r5(v, m, path, bump_um):
     by two grids."""
     r4 = write_pdn_r4(v, m, path, bump_um)
     cp = r4['core_pitch_um']
-    head = Path(path).read_text().split('\n')[:9]
+    raw_lines = Path(path).read_text().splitlines()
+    # Keep all core commands, including literal stdcell rails/upconnects.
+    # A fixed nine-line prefix silently dropped any new core-PG commands.
+    first_macro = next((j for j,line in enumerate(raw_lines) if line.startswith('define_pdn_grid -macro')), len(raw_lines))
+    head = raw_lines[:first_macro]
     head[0] = '# r5 full-die PDN: r4 grids, anchored instance patterns, one macro grid per stripe phase'
     byname = {it.name: it for it in m['insts']}
     groups = {}

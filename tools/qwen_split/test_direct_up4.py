@@ -2,6 +2,8 @@ import sys
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
+import os
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from qwen_split import direct_up4 as U
 
@@ -61,6 +63,29 @@ class DirectUpperWires(unittest.TestCase):
                 returned[globalbit]=(l,local)
         self.assertEqual(set(returned),set(range(1536)))
         self.assertEqual(B['tt_uv'][1],[1536,1537])
+
+    def test_actual_vertical_repack_and_selector_tree_are_legal(self):
+        from test_placement_repack import GeometryGuards
+        from qwen_split.placement_repack import validate
+        d=GeometryGuards.fixture()
+        m=model()
+        m['die']=d['die']
+        m['insts']=[SimpleNamespace(name=i['n'],master=i['m'],x=i['x'],y=i['y'],w=i['w'],h=i['h'],orient=i['o']) for i in d['insts']]
+        with patch.dict(os.environ,{'OT_SPLIT_REPACK':'1'}):
+            r=U.apply(None,m)
+        self.assertEqual(r['control_fanout_edges'],2)
+        self.assertEqual(len(r['control_stations']),3)
+        rects=[dict(n=i.name,x=i.x,y=i.y,w=i.w,h=i.h) for i in m['insts']]
+        self.assertEqual(validate(rects,m['die']),[])
+        by={i.name:i for i in m['insts']}
+        for bid,cl,n,es in m['buses']:
+            if not bid.startswith('up4_sel_'):continue
+            pts=[]
+            for inst,p in es:
+                i=by[inst]
+                dx,dy={'a':(4.32,8.64),'b':(8.64,4.32),'sel':(.042,95.0)}[p]
+                pts.append((i.x+dx,i.y+dy))
+            self.assertLessEqual(max(x for x,y in pts)-min(x for x,y in pts)+max(y for x,y in pts)-min(y for x,y in pts),490)
 
     def test_fragment_ages_get_real_padding_and_missing_fragment_is_refused(self):
         pads=U.equal_age_pads({'a':3,'b':7,'c':4},{'group':['a','b','c']})
