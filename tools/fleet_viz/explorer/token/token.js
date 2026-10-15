@@ -42,6 +42,13 @@ const T_CSS = `
 .tp-x .scopebar span{font:12px ui-monospace,Menlo,monospace;color:#8a97b8}
 .tp-x .inspector{border-color:#2a3a63!important;scroll-margin-top:14px}
 .tp-x .inspector .two{margin-top:12px}
+.tp-x .loading-state{display:flex;align-items:center;justify-content:center;gap:12px;min-height:150px;color:#c3cbe0;font:13px Inter,system-ui,sans-serif}
+.tp-x .loading-state .spinner{width:24px;height:24px;border:2px solid #253454;border-top-color:#5ee7ff;border-radius:50%;animation:tp-loading-spin .8s linear infinite;flex:none}
+.tp-x .loading-state small{display:block;margin-top:5px;color:#8a97b8;font-size:12px}
+.tp-x .load-error{color:#e8a0a0}
+.tp-x .load-error button{margin-left:12px;background:#16244a;color:#e8eefc;border:1px solid #2a3a63;border-radius:6px;padding:6px 12px;cursor:pointer}
+@keyframes tp-loading-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.tp-x .loading-state .spinner{animation:none;border-top-color:#5ee7ff;border-right-color:#5ee7ff}}
 .tp-x .native-audit>summary{cursor:pointer;color:#e8eefc;font:600 12.5px Inter,system-ui,sans-serif;line-height:1.7}
 .tp-x .native-audit>summary span{color:#8a97b8;font:11px ui-monospace,Menlo,monospace;margin-left:12px}
 .tp-x input:not([type=range]){background:#05070d;color:#e8eefc;border:1px solid #2a3a63;border-radius:6px;padding:8px;box-sizing:border-box}
@@ -130,22 +137,52 @@ export async function mountTokenExplorer(el, opts = {}) {
   let views = [];
 
   let covV = null, covErr = null, covPending = false;
+  let renderRevision = 0;
+  const loading = (label, hint = 'Fetching the flow graph and hardware details…') => h('div', { class: 'loading-state', role: 'status', 'aria-live': 'polite' },
+    h('span', { class: 'spinner', 'aria-hidden': 'true' }), h('div', {}, label, h('small', {}, hint)));
   async function render(keepT = null) {
-    views.forEach((v) => v && v.destroy && v.destroy()); views = [];
+    const revision = ++renderRevision;
+    root.setAttribute('aria-busy', 'true');
+    const current = cache[state.design];
+    const group = current?.groups?.find(x => x.id === state.group);
+    const label = state.group ? `Loading ${group?.label || 'layer'}…` : 'Loading token explorer…';
+    let target = root.querySelector('.inspector');
+    if (!target) {
+      target = h('div', { class: 'panel loading-panel' });
+      root.replaceChildren(target);
+    }
+    target.replaceChildren(loading(label));
+    try {
+      await renderContent(keepT, revision);
+    } catch (e) {
+      if (revision !== renderRevision) return;
+      const destination = root.querySelector('.inspector') || target;
+      destination.replaceChildren(h('div', { class: 'loading-state load-error', role: 'alert' },
+        h('div', {}, 'Unable to load this view.', h('small', {}, e.message)),
+        h('button', { onclick: () => render(keepT) }, 'Retry')));
+    } finally {
+      if (revision === renderRevision) root.setAttribute('aria-busy', 'false');
+    }
+  }
+  async function renderContent(keepT, revision) {
     clock.pause();
     const arData = cache[state.design] ||= await loadRecord(o.base + state.design + '.json');
+    if (revision !== renderRevision) return;
     const mtpInfo = arData.mtp || { available: false, reason: 'no MTP record' };
     if (state.mode === 'mtp' && !mtpInfo.available) state.mode = 'ar';
     const data = state.mode === 'mtp' ? (cache[state.design + '_mtp'] ||= await loadRecord(o.base + mtpInfo.file)) : arData;
+    if (revision !== renderRevision) return;
     const mtp = state.mode === 'mtp';
     // coverage: map every operator onto the coverage rows of its target (live from the ledgers; /api/coverage/token)
     const covKey = state.design + (mtp ? '_mtp' : '');
     if (!data._cov || data._cov.v !== covV) {
       try { const c = await attachCoverage(data, covKey); covV = c.v; covErr = null; } catch (e) { covErr = e.message; }
     }
+    if (revision !== renderRevision) return;
     let native;
     try { native = await loadRecord('/api/native/coverage?design=' + encodeURIComponent(covKey)); }
     catch (e) { native = { native_qualified: false, nodes: {}, operations: [], defects: [{ edge: 'live_source', reason: e.message }] }; }
+    if (revision !== renderRevision) return;
     for (const n of data.nodes) n.native = native.nodes?.[n.id] || { native_qualified: false, operations: [], defects: [{ edge: 'token_node->operation', reason: 'CURRENT_PROGRAM_MAPPING_UNAVAILABLE' }] };
     const nativePanel = nativeProvenancePanel(native);
     const p = P(data);
@@ -225,7 +262,7 @@ export async function mountTokenExplorer(el, opts = {}) {
     const stageP = g ? h('div', { class: 'panel stage-flow' }, h('div', { class: 'pt' }, h('b', {}, `Operators of ${g.label}`), h('span', {}, `${fmtCyc(g.cycles)} · ${fmtPct(g.share)} of token`)), h('div', { class: 'fl' })) : null;
     const ganttP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Timeline by element class'), h('span', {}, 'critical chain = cyan line · dbl-click to seek')), h('div', { class: 'gn' }));
     const sel = h('div', { class: 'kv' }, 'Click an operator for its detail and element cards.');
-    const dieBox = h('div', {});
+    const dieBox = h('div', {}, loading('Loading floorplan…', 'Fetching the die geometry…'));
     const dieP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Floorplan replay'), h('span', {}, 'lit = instances of the running operators · line = data moving')), dieBox);
     const selP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Selected operator')), sel);
     const shareP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, mtp ? 'Share of the MTP step' : 'Share of the token latency'), h('span', {}, 'by stage and by element class')), shareTables(data, p, (gid) => { state.group = gid; render(); }));
@@ -237,6 +274,7 @@ export async function mountTokenExplorer(el, opts = {}) {
     const content = h('div', { class: 'content' }, flowP, inspector, ganttP);
     if (mtp) content.append(hwPanel(data, (n) => openStage(n.group)));
     content.append(shareP, evidence, notes, nativePanel);
+    views.forEach((v) => v && v.destroy && v.destroy()); views = [];
     root.replaceChildren(tabs, h('div', { class: 'workspace' }, stageNav, content));
     const onSelect = (n) => {
       sel.replaceChildren(detail(data, n));
@@ -260,7 +298,9 @@ export async function mountTokenExplorer(el, opts = {}) {
     let geo = null, gsrc = null, gerr = [];
     for (const u of gurls) {
       try { geo = gcache[u] ||= await loadRecord(u); gsrc = u; break; } catch (e) { gerr.push(e.message); }
+      if (revision !== renderRevision) return;
     }
+    if (revision !== renderRevision) return;
     if (geo) {
       const rp = new DieReplay(dieBox, geo, data, { clock, group: state.group });
       views.push(rp);
