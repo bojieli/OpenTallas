@@ -1,5 +1,5 @@
 {
- "name": "s81engm_shctl-bankv1-1215-COMMIT",
+ "name": "s81engm_shctl-bankv1benchfix-1421-dfd1e697a",
  "block": "ot_s81_engram_mixq_shctl",
  "ref_tile": true,
  "owner": "Claude:s81-surx-engram-1015",
@@ -7,8 +7,8 @@
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "codex/s81-engram-takeover-1103",
-  "commit": "COMMIT",
+  "branch": "codex/s81-elements-shell-1417",
+  "commit": "dfd1e697a",
   "extra_paths": [
    "physical/s81_die_pins/v21_engram_arithmetic",
    "rtl/dsrom_sys",
@@ -124,7 +124,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81engm_shctl/s81engm_shctl-bankv1-1215-COMMIT"
+   "to": "results/rtl/ref_tile/s81engm_shctl/s81engm_shctl-bankv1benchfix-1421-dfd1e697a"
   }
  ],
  "cycles_added": 0,
