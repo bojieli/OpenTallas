@@ -1,0 +1,17 @@
+{
+  "generated": "2026-10-14T21:27:54.102671-07:00",
+  "change": "ctfx_cap fv_local and ctfx_nt g_local_capture v: async rst_in->RESETN replaced by synchronous reset on the same rst_in (removal arc FF -41.4 ps, 7 endpoints, unrepairable: s81hc_ctfxcap_ref-v3 EARLY_FAIL_HOLD)",
+  "cycles": 10000,
+  "reset_cycles": 119,
+  "exact_errors": 0,
+  "serial_capture_mutant_errors": 9690,
+  "nt_capture_mutant_errors": 9691,
+  "scope": "RTL cycle/reset lockstep vs immutable async-reset ownership reference; physical gates separate",
+  "sha256": {
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "f86c65bda47c062f7d730829623c3ffa32406cfa340fcf6ca98bcf520244d4ff",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv": "ddb4b6b136bdb678e6f48f59ae3b5929a777a130ce0808ef96f37e0308c785b3",
+    "tools/s81_suhc/ownership_reset_reference.sv": "e4ea3d3bd3d98cf96dacee75d1fc639c83da9e4e1ac5424f3dfbc05f513481a5",
+    "tools/s81_suhc/owned_capture_reset_bench.sh": "85067cd435501d39fc080f14e271782698952110dab3a8fc549aa6809a98819c",
+    "rtl/dsrom_sys/s81_suhc/test/tb_s81_owned_capture.sv": "65026d48ec062b647ecff73518cbaa06443f77730bcfc8cee44ca71921f67ebe"
+  }
+}

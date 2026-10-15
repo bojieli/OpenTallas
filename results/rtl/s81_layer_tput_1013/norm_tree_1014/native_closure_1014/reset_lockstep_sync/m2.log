@@ -1,0 +1,4 @@
+OWNED_CAPTURE cycles=10000 reset_cycles=119 errors=9691
+[8340000] %Fatal: tb_s81_owned_capture.sv:28: Assertion failed in tb_s81_owned_capture: owned capture lockstep FAIL
+%Error: rtl/dsrom_sys/s81_suhc/test/tb_s81_owned_capture.sv:28: Verilog $stop
+Aborting...

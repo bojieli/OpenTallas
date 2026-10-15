@@ -313,8 +313,11 @@ module ot_s81_hc_ctfx_cap #(parameter integer S_RD = 2) (
     always @(posedge clk) rr <= rst_in;
     always @(posedge clk or negedge rr) if (!rr) fv <= 0; else fv <= fv_in;
     always @(posedge clk) fdx <= fd_in;
-    // Match the former region register's reset epoch exactly: incoming rst_c, not rr.
-    always @(posedge clk or negedge rst_in) if (!rst_in) fv_local <= 0; else fv_local <= fv;
+    // Match the former region register's reset epoch exactly: incoming rst_c, not rr.  SYNCHRONOUS on the pin
+    // (S-NORM 10-14 22:00): the async form put rst_in straight on 7 RESETN pins, a removal check (FF -41.4 ps) that
+    // hold repair cannot buffer (s81hc_ctfxcap v3 EARLY_FAIL_HOLD).  rst_in is a flop-launched relay, so the
+    // sampled-edge state is identical (reset lockstep bench) and the D-side path is an ordinary hold-repairable path.
+    always @(posedge clk) if (!rst_in) fv_local <= 0; else fv_local <= fv;
     always @(posedge clk) fdx_local <= fdx;
 endmodule
 
