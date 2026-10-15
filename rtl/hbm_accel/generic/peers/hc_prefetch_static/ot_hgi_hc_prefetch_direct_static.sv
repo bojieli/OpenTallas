@@ -6,7 +6,7 @@
 // Four banks are written/cycle for320 cycles per half,640 cycles per row.
 // Reserve and drain descriptors are separate so next-row prefetch can overlap
 // the prior row's fixed on-chip drain, in each bank's two-region lifetime.
-module ot_hgi_hc_prefetch_direct_static #(parameter integer MUT=0)(
+module ot_hgi_hc_prefetch_direct_static #(parameter integer MUT=0, parameter integer MAX_OUTSTANDING=8)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire reserve_v,reserve_half,input wire [34:0] reserve_row_local_byte,
  input wire [15:0] reserve_epoch,output wire [3:0] reserve_ready,output wire [7:0] fetched_ready,
@@ -64,7 +64,7 @@ module ot_hgi_hc_prefetch_direct_static #(parameter integer MUT=0)(
   ot_hbm_loader_kport_address #(.ENABLE(1)) u_address(.byte_address(byte_address),.stack_bytes(36'd25769803776),
    .stack(mapped_stack),.pc(pc),.sector_address(sector),.valid(valid));
   always @(posedge stream_clk)if(stream_rst_n&&reserve_v&&(!valid||mapped_stack!=2'(s)))$fatal(1,"HC address facade rejected descriptor");
-  ot_hbm_svc_prefetch_block_cdc #(.STACK(2'(s)),.DELIVERY_II(8),.ISSUE_INTERLEAVE(1)) u_prefetch(
+  ot_hbm_svc_prefetch_block_cdc #(.STACK(2'(s)),.DELIVERY_II(8),.ISSUE_INTERLEAVE(1),.MAX_OUTSTANDING(MAX_OUTSTANDING)) u_prefetch(
    .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),
    .reserve_v(reserve_v),.reserve_ready(reserve_ready[s]),.reserve_base({mapped_stack,sector}),.reserve_total(12'd320),
    .reserve_bank(reserve_half),.reserve_epoch(reserve_epoch),.block_ready(fetched_ready[s*2+:2]),

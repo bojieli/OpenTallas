@@ -3,7 +3,7 @@
 // Variable waits are entirely on the HBM side. Delivery begins only after a
 // whole block is resident and then emits ceil(total/8) fixed stream cycles.
 // Performance, routing, and physical CDC timing remain unqualified.
-module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter integer DELIVERY_II=1, parameter integer ISSUE_INTERLEAVE=0)(
+module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter integer DELIVERY_II=1, parameter integer ISSUE_INTERLEAVE=0, parameter integer MAX_OUTSTANDING=1)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire reserve_v,output wire reserve_ready,input wire [31:0] reserve_base,
  input wire [11:0] reserve_total,input wire reserve_bank,input wire [15:0] reserve_epoch,
@@ -19,6 +19,7 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  input wire [31:0] kr_v,output reg [31:0] kr_rdy,input wire [543:0] kr_tag,
  input wire [127:0] kr_beat,input wire [8191:0] kr_data
 );
+ initial if(MAX_OUTSTANDING<1||MAX_OUTSTANDING>16)$fatal(1,"MAX_OUTSTANDING must be1..16");
  initial if(DELIVERY_II<1)$fatal(1,"DELIVERY_II must be positive");
  wire reset_both=stream_rst_n&&hbm_rst_n;
  wire srst,hrst;
@@ -46,7 +47,14 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  assign block_ready=ready_q;
  reg h_active,h_bank;reg [15:0] h_epoch;reg [29:0] h_base;
  reg [11:0] h_total,h_next,h_received;
- reg [31:0] outstanding;reg [10:0] owner_ordinal[0:31];
+ reg [MAX_OUTSTANDING-1:0] outstanding[0:31];
+ reg [10:0] owner_ordinal[0:31][0:MAX_OUTSTANDING-1];
+ reg [16:0] owner_tag[0:31][0:MAX_OUTSTANDING-1];
+ reg [15:0] owner_epoch[0:31][0:MAX_OUTSTANDING-1];
+ reg owner_bank[0:31][0:MAX_OUTSTANDING-1];
+ reg [16:0] next_tag;
+ integer request_slot;reg tag_collision;
+ integer response_slot[0:31];
  assign desc_rd_ready=!h_active&&!hbm_fault&&hrst&&desc_rd_valid;
  // Reorder requests only within the variable-latency PHY boundary. A tile of
  //64 sectors visits16 distinct PCs before revisiting any PC, rather than
@@ -54,7 +62,15 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  wire [11:0] issue_ordinal=ISSUE_INTERLEAVE?{h_next[11:6],h_next[3:0],h_next[5:4]}:h_next;
  wire [29:0] issue_sector=h_base+issue_ordinal;
  wire [4:0] issue_pc=pc_of(issue_sector);
- assign k_len={32{4'd1}};assign k_tag={32{{h_bank,h_epoch}}};
+ wire [16:0] request_tag=MAX_OUTSTANDING==1?{h_bank,h_epoch}:next_tag;
+ always @*begin
+  request_slot=-1;tag_collision=0;
+  for(integer os=0;os<MAX_OUTSTANDING;os=os+1)begin
+   if(!outstanding[issue_pc][os]&&request_slot<0)request_slot=os;
+   if(outstanding[issue_pc][os]&&owner_tag[issue_pc][os]==request_tag)tag_collision=1;
+  end
+ end
+ assign k_len={32{4'd1}};assign k_tag={32{request_tag}};
  assign k_we=0;assign k_wdata=0;assign k_wstrb=0;
  wire [7:0] fifo_wr_ready,fifo_rd_valid,fifo_rd_ready,fifo_ov,fifo_un;
  reg [7:0] fifo_wr_valid;reg [283:0] fifo_wr_data[0:7];
@@ -63,20 +79,25 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  integer p,l;
  always @*begin
   k_v=0;k_addr=0;
-  if(h_active&&h_next<h_total&&!outstanding[issue_pc]&&!hbm_fault)begin
+  if(h_active&&h_next<h_total&&request_slot>=0&&!tag_collision&&!hbm_fault)begin
    k_v[issue_pc]=1;k_addr[30*issue_pc+:30]=issue_sector;
   end
   kr_rdy=0;fifo_wr_valid=0;response_accepted=0;h_take=0;
+  for(p=0;p<32;p=p+1)begin
+   response_slot[p]=-1;
+   for(integer os=0;os<MAX_OUTSTANDING;os=os+1)
+    if(outstanding[p][os]&&kr_tag[17*p+:17]==owner_tag[p][os])response_slot[p]=os;
+  end
   for(l=0;l<8;l=l+1)begin
    fifo_wr_data[l]=0;
    for(p=0;p<32;p=p+1)begin
-    if(kr_v[p]&&outstanding[p]&&owner_ordinal[p][2:0]==l&&
-       kr_tag[17*p+:17]=={h_bank,h_epoch}&&kr_beat[4*p+:4]==0&&
+    if(kr_v[p]&&response_slot[p]>=0&&owner_ordinal[p][response_slot[p]][2:0]==l&&
+       owner_epoch[p][response_slot[p]]==h_epoch&&owner_bank[p][response_slot[p]]==h_bank&&kr_beat[4*p+:4]==0&&
        !fifo_wr_valid[l]&&!hbm_fault)begin
      // wr_valid is a transfer pulse, never a speculative FIFO overflow.
      if(fifo_wr_ready[l])begin
       kr_rdy[p]=1;fifo_wr_valid[l]=1;response_accepted[p]=1;h_take=h_take+1;
-      fifo_wr_data[l]={owner_ordinal[p],h_bank,h_epoch,kr_data[256*p+:256]};
+      fifo_wr_data[l]={owner_ordinal[p][response_slot[p]],owner_bank[p][response_slot[p]],owner_epoch[p][response_slot[p]],kr_data[256*p+:256]};
      end
     end
    end
@@ -86,8 +107,13 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  always @(posedge hbm_clk or negedge hrst)begin
   if(!hrst)begin
    h_active<=0;h_bank<=0;h_epoch<=0;h_base<=0;h_total<=0;h_next<=0;h_received<=0;
-   outstanding<=0;hbm_fault<=0;stf1<=0;stf2<=0;
-   for(hp=0;hp<32;hp=hp+1)owner_ordinal[hp]<=0;
+   next_tag<=0;hbm_fault<=0;stf1<=0;stf2<=0;
+   for(hp=0;hp<32;hp=hp+1)begin
+    outstanding[hp]<=0;
+    for(integer os=0;os<MAX_OUTSTANDING;os=os+1)begin
+     owner_ordinal[hp][os]<=0;owner_tag[hp][os]<=0;owner_epoch[hp][os]<=0;owner_bank[hp][os]<=0;
+    end
+   end
   end else begin
    stf1<=stream_fault;stf2<=stf1;
    if(stf2||desc_un||(|fifo_ov)||(|k_wr_done))hbm_fault<=1;
@@ -96,16 +122,19 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
        {3'b0,desc_data[58:29]}+desc_data[28:17]>33'h040000000)hbm_fault<=1;
     else begin
      h_active<=1;h_base<=desc_data[58:29];h_total<=desc_data[28:17];h_bank<=desc_data[16];h_epoch<=desc_data[15:0];
-     h_next<=0;h_received<=0;outstanding<=0;
+     h_next<=0;h_received<=0;
+     for(hp=0;hp<32;hp=hp+1)outstanding[hp]<=0;
     end
    end
    if(h_active)begin
     if(k_v[issue_pc]&&k_rdy[issue_pc])begin
-     outstanding[issue_pc]<=1;owner_ordinal[issue_pc]<=issue_ordinal[10:0];h_next<=h_next+1'b1;
+     outstanding[issue_pc][request_slot]<=1;owner_ordinal[issue_pc][request_slot]<=issue_ordinal[10:0];
+     owner_tag[issue_pc][request_slot]<=request_tag;owner_epoch[issue_pc][request_slot]<=h_epoch;owner_bank[issue_pc][request_slot]<=h_bank;
+     next_tag<=next_tag+1'b1;h_next<=h_next+1'b1;
     end
     for(hp=0;hp<32;hp=hp+1)begin
-     if(kr_v[hp]&&(!outstanding[hp]||kr_tag[17*hp+:17]!={h_bank,h_epoch}||kr_beat[4*hp+:4]!=0))hbm_fault<=1;
-     if(response_accepted[hp])outstanding[hp]<=0;
+     if(kr_v[hp]&&(response_slot[hp]<0||owner_epoch[hp][response_slot[hp]]!=h_epoch||owner_bank[hp][response_slot[hp]]!=h_bank||kr_beat[4*hp+:4]!=0))hbm_fault<=1;
+     if(response_accepted[hp])outstanding[hp][response_slot[hp]]<=0;
     end
     h_received<=h_received+h_take;
     if(h_received+h_take==h_total)h_active<=0;
