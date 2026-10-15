@@ -32,7 +32,7 @@ L.append('  end endtask')
 # tree command: rom_cmd toggled 0 times in 60,000 cycles, so tree-command mutants could not be observed).  Same
 # production PW program load + calendar + GO as rtl/.../tb_qfd_static_head_face.sv (program head_program_rank7.hex),
 # explicit idle/ok engine status, then RUNS programme starts with different token/pos.
-L.append('  reg [1023:0] prom[0:7]; string ppath; integer pj,pk,pr;')
+L.append('  reg [1023:0] prom[0:7]; string ppath; integer pj,pk,prun;')
 L.append('  localparam [55:0] COPY={7\'d64,24\'d8192,24\'d8192,1\'b1};')
 L.append('  task quiet; begin cp_active=0; native_ret=95\'d3; h_start=0; prog_base=0; pw_v=0; pw_addr=0; pw_data=0;')
 L.append('    x_oacc=24\'d3; x_oidle=1; x_oprog=16\'hffff; x_orows=16\'hffff; kv_ok=1; kv_write_drained=1; me_mem_ok=0;')
@@ -56,7 +56,7 @@ L.append('  end endtask')
 L.append('  initial begin')
 L.append('    if(!$value$plusargs("PROGRAM=%s",ppath)) $fatal(1,"PROGRAM plusarg required (actual source programme)"); $readmemh(ppath,prom);')
 L.append('    rst_n=0; quiet; token=1; pos=7; repeat(20) @(negedge clk); rst_n=1;')
-L.append('    prog_load; for(pr=0;pr<`RUNS;pr=pr+1) prog_run(18\'d1+pr, 18\'d7+3*pr);')
+L.append('    prog_load; for(prun=0;prun<`RUNS;prun=prun+1) prog_run(18\'d1+prun, 18\'d7+3*prun);')
 L.append('    $display("PROGRAMME_PHASE_DONE runs=%0d cycles=%0d errs=%0d",`RUNS,cyc,errs);')
 L.append('    rst_n=0; rnd; repeat(20) @(negedge clk) rnd; rst_n=1;')
 L.append('    repeat(`NCYC) begin @(negedge clk); rnd; cyc=cyc+1; if(cyc%20000==10000) begin rst_n=0; @(negedge clk); rnd; rst_n=1; end end')
