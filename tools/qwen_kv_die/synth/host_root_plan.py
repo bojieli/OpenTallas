@@ -43,8 +43,9 @@ def main():
     ap.add_argument("--verilator", default="verilator")
     ap.add_argument("--lint", action="store_true", help="run Verilator frontend only; no synth")
     a = ap.parse_args()
+    owner0 = json.loads(a.coordinator_lock.read_text())["owner"]   # stop if the coordinator changes mid-run
     def guard():
-        if json.loads(a.coordinator_lock.read_text())["owner"] != "codex":
+        if json.loads(a.coordinator_lock.read_text())["owner"] != owner0:
             raise RuntimeError("COORD owner changed; stop")
     def call(argv):
         guard()
