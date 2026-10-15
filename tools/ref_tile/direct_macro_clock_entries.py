@@ -128,6 +128,65 @@ def load(spec, root):
 
 
 BODY = r'''
+# get_lib_cells -of_objects returns the network's first-linked Liberty cell,
+# even when the active delay scene uses another library. Audit the successful
+# native scene definition instead. This trace observes arguments without
+# changing the command, its result, the scene, or any timing arcs.
+proc ot_ce_direct_scene_defined {command code result operation} {
+  if {$code != 0} { return }
+  if {[llength $command] != 7} { error "OT_DIRECT_MACRO: unknown native scene definition API" }
+  lassign $command ignored scene mode libs_min libs_max spef_min spef_max
+  if {[llength [get_scenes $scene]] != 1} { error "OT_DIRECT_MACRO: defined scene not present $scene" }
+  dict set ::ot_ce_direct_scene_libraries $scene [list $libs_min $libs_max]
+}
+if {[llength $::ot_ce_direct_entries] && ![info exists ::ot_ce_direct_scene_trace_installed]} {
+  set ::ot_ce_direct_scene_libraries {}
+  if {![llength [info commands ::sta::define_scene_cmd]]} {
+    error "OT_DIRECT_MACRO: native scene definition API unavailable"
+  }
+  trace add execution ::sta::define_scene_cmd leave ot_ce_direct_scene_defined
+  set ::ot_ce_direct_scene_trace_installed 1
+}
+proc ot_ce_direct_actual_libcell {cell master libraries corner} {
+  set expected "[dict get $libraries $corner]/$master"
+  if {![sta::multi_scene]} {
+    set actual {}
+    foreach lib [get_lib_cells -quiet -of_objects $cell] { lappend actual [get_full_name $lib] }
+    if {$actual ne [list $expected]} { error "OT_DIRECT_MACRO: actual corner mismatch: $actual expected $expected" }
+    return $expected
+  }
+  # A requested hold scene must be explicit; never infer it from the desired
+  # corner or from the presence of an expected library elsewhere in memory.
+  if {[info exists ::ot_ioref_scene]} {
+    set scene $::ot_ioref_scene
+  } else {
+    set scene [get_property [sta::cmd_scene] name]
+  }
+  if {[llength [get_scenes $scene]] != 1 || ![dict exists $::ot_ce_direct_scene_libraries $scene]} {
+    error "OT_DIRECT_MACRO: unobserved actual scene definition $scene"
+  }
+  foreach bindings [dict get $::ot_ce_direct_scene_libraries $scene] {
+    set actual {}; set files {}
+    foreach binding $bindings {
+      set matched {}
+      foreach lib [get_libs -quiet *] {
+        set name [get_property $lib name]; set filename [get_property $lib filename]
+        if {$binding eq $name || $binding eq $filename} { lappend matched $lib }
+      }
+      if {[llength $matched] != 1} { error "OT_DIRECT_MACRO: stale/missing/ambiguous scene library $scene $binding" }
+      set lib [lindex $matched 0]; set name [get_property $lib name]
+      foreach lc [get_lib_cells -quiet "$name/$master"] {
+        lappend actual [get_full_name $lc]
+        lappend files [get_property $lib filename]
+      }
+    }
+    if {$actual ne [list $expected]} {
+      error "OT_DIRECT_MACRO: actual scene corner mismatch: $scene $actual expected $expected"
+    }
+    puts "OT_DIRECT_MACRO SCENE_LIBRARY $scene $actual files=$files"
+  }
+  return $expected
+}
 # Return existing CE row shape. Zero internal OFFSET means Liberty-pin reference;
 # it is not a measured zero SRAM insertion and does not modify any macro arcs.
 proc ot_ce_direct_rows {corner} {
@@ -141,11 +200,7 @@ proc ot_ce_direct_rows {corner} {
       error "OT_DIRECT_MACRO: duplicate/wrong actual macro $cellname"
     }
     dict set cells_seen $cellname 1
-    set libs [get_lib_cells -quiet -of_objects $cell]
-    set actual {}
-    foreach lib $libs { lappend actual [get_full_name $lib] }
-    set expected "[dict get $libraries $corner]/$master"
-    if {$expected ni $actual} { error "OT_DIRECT_MACRO: actual corner mismatch: $actual expected $expected" }
+    set expected [ot_ce_direct_actual_libcell $cell $master $libraries $corner]
     set pins {}
     foreach p [get_pins -of_objects $cell] {
       if {[get_property $p lib_pin_name] eq $libpin} { lappend pins $p }
