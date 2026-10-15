@@ -11,7 +11,7 @@
       "payload_bits": 546,
       "phy_frame_bits": 597,
       "collective_face": "E",
-      "relay_cycles": null,
+      "relay_cycles": 5,
       "PHY_latency_cycles": 14,
       "minimum_composed_age_formula": "37+local_R+peer_R",
       "roots": {
@@ -37,7 +37,7 @@
       "payload_bits": 514,
       "phy_frame_bits": 565,
       "collective_face": "E",
-      "relay_cycles": null,
+      "relay_cycles": 5,
       "PHY_latency_cycles": 14,
       "minimum_composed_age_formula": "37+local_R+peer_R",
       "roots": {
@@ -63,7 +63,7 @@
       "payload_bits": 546,
       "phy_frame_bits": 597,
       "collective_face": "E",
-      "relay_cycles": null,
+      "relay_cycles": 0,
       "PHY_latency_cycles": 339,
       "minimum_composed_age_formula": "362+local_R+peer_R",
       "roots": {
@@ -89,7 +89,7 @@
       "payload_bits": 546,
       "phy_frame_bits": 597,
       "collective_face": "W",
-      "relay_cycles": null,
+      "relay_cycles": 0,
       "PHY_latency_cycles": 339,
       "minimum_composed_age_formula": "362+local_R+peer_R",
       "roots": {
@@ -115,7 +115,7 @@
       "payload_bits": 546,
       "phy_frame_bits": 597,
       "collective_face": "W",
-      "relay_cycles": null,
+      "relay_cycles": 5,
       "PHY_latency_cycles": 339,
       "minimum_composed_age_formula": "362+local_R+peer_R",
       "roots": {
@@ -172,18 +172,18 @@
   "external_boundary": "actuallicensedPHY597/P597/R565frames only; paddedRlane32bits outsideframe ignored",
   "normal_schedule": "compiled slots only; fault/abort never reschedules",
   "source_sha256": {
-    "rtl/physical/ot_qfd_collective_static_io.sv": "691a606ca53e36481c72cd2ed3f74be69e5a0e908bf4e7aae491c1ff59fc6be9",
+    "rtl/physical/ot_qfd_collective_static_io.sv": "573ef50bb76d8eaf0dbcbe87cd3eb18714061119f0d4e6b55d372f1c8aeff0ca",
     "rtl/physical/ot_qfd_coll_static_face.sv": "514584ea3103da9a516372e8c25b2e4316eda0b1c904d2432d36114fe3dd1be5",
     "rtl/rom/ot_coll_tp8_static.sv": "8b32e6a42e3e68d8ba46ca1f9df8163da197faac898027c12548b5f618a0bcba",
-    "rtl/physical/ot_qfd_io_collective_static.sv": "cb7e630802b54e9b089f4cf9a962793fe1aaf59ffe8a003bbe09a5016d6019df"
+    "rtl/physical/ot_qfd_io_collective_static.sv": "32e51fe1aa7ba1120e7cefc33d3345095350e9c9c1e0b24a570e8cb89d604447"
   },
-  "bench_status": "BUILD_PENDING",
+  "bench_status": "PASS: current source8d92; 4 production cases each PHI0/PHI1 +6unit cases; peer-age mutant rejected with2048 mismatches and transport faults",
   "physical_qualified": false,
   "native_system_qualified": false,
   "relay_clock_ports": "2*(2*RU+RS0+RS1+RS2) individual core-phase roots (oneunusedplaceholderport for allzeroR)",
   "relay_rows": "actual kept fixed-cycle tx(payload+observed-valid+txslot+peerslot), rx(payload+valid) flop rows",
   "fault_output": "fault is collective fault only; caller must aggregate20CDCfault and5codecabort explicit outputs for native acceptance; none gates normal issue",
-  "initial_actual_parent_proof": "unit1378071:4/4zero-relayproduction exact; finalpaidrelayprofilebuildpending",
+  "initial_actual_parent_proof": "Historical R0 proof retained; superseded for production by exact-source LU47 proof",
   "peer_face_mapping": {
     "P": "P",
     "R": "R",
@@ -192,7 +192,7 @@
     "SerDes2": "SerDes0"
   },
   "RX_PHY_expect_offset": "KC+4+KW+4+PHY+peer_R-local_R after peer slot reaches local face; source-visible static shift, no observation chooses event",
-  "relay_profile_status": "R0production4/4PASS; unequalR5/0/0/5 missingpeer-age correction counterexample retained, corrected frozen f4a4dfef3 build pending",
+  "relay_profile_status": "R5/0/0/5 exact-source PASS both phases; LU47/LS376 measured; old peer-age mutant fails",
   "per_face_room_proposal": {
     "outline_um": [
       720,
@@ -224,7 +224,7 @@
         "closed_source": "885fe056c",
         "TT_setup_ps": 46.88,
         "FF_hold_ps": 9.11,
-        "native_pin_audit": "UNVERIFIED"
+        "native_pin_audit": "results/arch/qwen_coll_io_1014/s3/cdc_native_pin_audit.json; auditor0violating q_lb176.7ps/p_lb134.7ps, conservative launch220.3ps/capture156.2ps/selfreach403.7um"
       },
       {
         "master": "ot_qkvd_llr_replay_sram_leaf",
@@ -284,5 +284,23 @@
       }
     ]
   },
-  "calendar_legality": "L >= KC+KW+17+PHY+local_R+peer_R; RX local read offset L-4-2local_R; per-peer RXexpect offset PEER_R-local_R"
+  "calendar_legality": "L >= KC+KW+17+PHY+local_R+peer_R; RX local read offset L-4-2local_R; per-peer RXexpect offset PEER_R-local_R",
+  "default_profile": {
+    "LU": 47,
+    "LS": 376,
+    "R_U": 5,
+    "R_S0": 0,
+    "R_S1": 0,
+    "R_S2": 5,
+    "relay_clock_roots": 30,
+    "total_clock_roots": 103
+  },
+  "evidence": "results/rtl/qwen_coll_io_1014/production_parent_lu47_1015",
+  "production_cycles": {
+    "AR256": 783,
+    "two_AR256": 1039,
+    "argmax": 438,
+    "two_AR256_argmax": 1047
+  },
+  "shared_PHY_capacity_status": "OPEN: P597/R565 overlap144 cycles for twoAR; licensed simultaneous capacity not established; no shared-PHY serialization implemented"
 }
