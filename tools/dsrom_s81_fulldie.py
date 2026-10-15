@@ -8435,7 +8435,7 @@ def _abut_cfifo_fix(m, it, ports):
     return out or {}
 
 
-def _lay_fixed(Mx, face, ports, layer, pitch, fixed, gap=0.96):
+def _lay_fixed(Mx, face, ports, layer, pitch, fixed, gap=0.96, pitch_of=None):
     """_lay with some ports pinned: `fixed` {port: (centre, pitch)} first, the others in order at `pitch` in the free
     stretches of the face (left to right, stepping over the pinned groups)"""
     p = TRK[layer][1]
@@ -8450,16 +8450,17 @@ def _lay_fixed(Mx, face, ports, layer, pitch, fixed, gap=0.96):
             assert all(c_ + w_ / 2 + gap <= r0 or c_ - w_ / 2 - gap >= r1 for r0, r1 in resv), (Mx.name, name, 'pinned groups overlap')
             resv.append((c_ - w_ / 2, c_ + w_ / 2))
     rest = [(n_, b) for n_, b in ports if n_ not in fixed]
-    tot = sum(sp(b, pitch) for _, b in rest) + gap * max(0, len(rest) - 1)
+    pof = pitch_of or {}
+    tot = sum(sp(b, pof.get(n_, pitch)) for n_, b in rest) + gap * max(0, len(rest) - 1)
     pos = max(2 * p + 0.2, (L - tot - sum(r1 - r0 + gap for r0, r1 in resv)) / 2)
     placed = {}
     for name, b in rest:
-        w_ = sp(b, pitch)
+        w_ = sp(b, pof.get(name, pitch))
         for r0, r1 in sorted(resv):
             if pos < r1 + gap and pos + w_ > r0 - gap:
                 pos = r1 + gap
         assert pos + w_ <= L - 2 * p, (Mx.name, face, name, 'no room beside the pinned groups')
-        placed[name] = (pos + w_ / 2, pitch)
+        placed[name] = (pos + w_ / 2, pof.get(name, pitch))
         pos += w_ + gap
     for name, b in ports:           # port order kept (pin_rects / LEF order)
         c_, pt_ = fixed[name] if name in fixed else placed[name]
@@ -8743,7 +8744,9 @@ def _faces_r8(m, Mx, it, ports):
             # 8.95 um under the slot-0 station (was 250 um), so the station's pitch-3 xai / xbi group (44-85 um) against
             # the cfifo's 1-track xa / xb (71-99 um in the station frame) jogged 27 um in a 9-um channel (cut 0.67).
             # The station is die-generated (top-down pins): xai / xbi take the cfifo's pin x and pitch exactly.
-            _lay_fixed(Mx, 'S', sl5_, 'M5', 3, fs_)
+            # S-BIND r6 --bf-x2-static: the 536-b x2 fragment at 2 tracks (51.5 um) fits beside the pinned xai / xbi groups
+            # (cfifo pin x, 71-99 um of the 172.8-um station); at 3 tracks (77 um) it fitted on neither side (bind12)
+            _lay_fixed(Mx, 'S', sl5_, 'M5', 3, fs_, pitch_of={'x2i': 2} if BF_X2_STATIC else None)
         elif XB_RGAP_FIRST and _LAY_K[0] == 1 and 'nf' not in ports:
             # --xb-rgap-first: xai / xbi come from the previous slot's x relays, which stand beside that slot's station
             # E edge: the two groups take the E end of the S face (xai outermost), cci / qt / so W of them
