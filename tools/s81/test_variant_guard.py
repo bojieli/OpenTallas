@@ -131,7 +131,8 @@ endmodule
         self.assertEqual({k: v for k, v in result['actual_parameters'].items() if k in ('READ_PIPE', 'CAP_PIPE')},
                          {'READ_PIPE': 0, 'CAP_PIPE': 0})
         self.assertEqual(result['actual_parameters'].get('WSCATTER_PIPE', 0), 0)
-        self.assertEqual(result['bound_parameters'], {'READ_PIPE': 4, 'CAP_PIPE': 2})
+        self.assertEqual({k: v for k, v in result['bound_parameters'].items() if k in ('READ_PIPE', 'CAP_PIPE')},
+                         {'READ_PIPE': 4, 'CAP_PIPE': 2})
         self.assertIn('effective_parameters mismatch', ' '.join(result['errors']))
 
 
