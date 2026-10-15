@@ -25,7 +25,7 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
     task loadimage(input integer kind,input integer idx);
         begin
             if(kind==0)begin imagefile=$sformatf("row_n%0d_r%0d.mem",npos,idx);imagewords=period;end
-            else begin imagefile=$sformatf("tail_p%0d.mem",idx);imagewords=500;end
+            else begin imagefile=$sformatf("tail_p%0d.mem",idx);imagewords=497;end
             $readmemh(imagefile,image,0,imagewords-1);
         end
     endtask
@@ -176,17 +176,17 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
  wire [4:0] drain_row=(state==2)?5'd0:5'(row+1);
  wire drain_slot=drain_row[0];wire [15:0] drain_epoch=16'h6001+drain_row;
  wire half_done,done_half;
- ot_hgi_hc_native_mtp_static dut(
+ ot_hgi_hc_native_mtp_static #(.TAIL_LOOP(1)) dut(
   .clk(clk),.sink_clk(sink_clk),.rst_n(rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(rst_n),
   .cfg_we(cfgwe),.cfg_addr(11'(cfgi)),.cfg_data(cfgdata),
-  .start_v(startv),.start_base(11'd0),.start_limit(12'(imagewords)),.start_loops((row<24)?16'd24:16'd1),
+  .start_v(startv),.start_base(11'd0),.start_limit(12'(imagewords)),.start_loops((row<24)?16'd24:16'(npos)),
   .reserve_v(reserve_v),.reserve_half(reserve_half),.reserve_row_local_byte(reserve_row_local_byte),
   .reserve_epoch(reserve_epoch),.reserve_ready(reserve_ready),.fetched_ready(fetched_ready),
   .drain_v(drain_v),.drain_half(drain_half),.drain_slot(drain_slot),.drain_epoch(drain_epoch),
   .half_done(half_done),.done_half(done_half),
   .residual_launch(vm_launch),.residual_npos(4'(npos)),.residual_base_sector(16'd0),
   .local_rq(bridge_rq),.local_read(vm_read),.local_rr(state==9?2056'd0:vm_rr),.residual_done(native_done),
-  .store_slot(state==5&&age==493),.result_base_sector(16'd28672),.store_position(3'(pc)),
+  .store_slot(state==5&&age%497==493),.result_base_sector(16'd28672),.store_position(3'(pc)),
   .local_wq(result_wq),.local_write(result_write),
   .gathered_mix_v(1'b0),.gathered_mix_row(5'd0),.gathered_mix_pos(3'd0),.gathered_mix_data(32'd0),
   .bases(bases),.scales(scales),.row_result_v(rv),.row_result_id(ri),.row_result_pos(rp),.row_result(rd),
@@ -244,12 +244,14 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
                 if(tp!=pc)$fatal(1,"programmed tail identity");
                 for(integer j=0;j<24;j=j+1)if(result[j*32+:32]!==tail_exp[pc*24+j])$fatal(1,"programmed tail arithmetic pos%0d word%0d",pc,j);
             end
-            if(program_done)begin
+            if(age%497==496)begin
                 if(tailseen!=pc+1)$fatal(1,"programmed tail missing");
                 if(pc==npos-1)begin
+                    if(!program_done)$fatal(1,"tail programme failed final loop");
                     state<=9;age<=0;
                 end else begin
-                    pc<=pc+1;loadimage(1,pc+1);state<=6;cfgi<=0;
+                    if(program_done)$fatal(1,"tail programme ended early");
+                    pc<=pc+1;
                 end
             end
         end

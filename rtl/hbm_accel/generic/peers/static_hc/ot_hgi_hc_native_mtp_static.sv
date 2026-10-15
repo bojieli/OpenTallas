@@ -7,6 +7,7 @@
 // boundary. All operand/programme/prefetch memories inside are real macros.
 module ot_hgi_hc_native_mtp_static #(
     parameter integer ROW_LOOP=1,
+    parameter integer TAIL_LOOP=0,
     parameter integer MAX_OUTSTANDING=8
 )(
     input wire clk,sink_clk,rst_n,hbm_clk,hbm_rst_n,
@@ -48,7 +49,7 @@ module ot_hgi_hc_native_mtp_static #(
         .clk(clk),.rst_n(rst_n),.launch(residual_launch),.npos(residual_npos),.base_sector(residual_base_sector),
         .local_rq(local_rq),.local_read(local_read),.local_rr(local_rr),
         .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.done(residual_done),.fault(xf));
-    ot_hgi_hc_programmed_mtp_static #(.ROW_LOOP(ROW_LOOP)) arithmetic(
+    ot_hgi_hc_programmed_mtp_static #(.ROW_LOOP(ROW_LOOP),.TAIL_LOOP(TAIL_LOOP)) arithmetic(
         .clk(clk),.sink_clk(sink_clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
         .weight_ap(weight_ap),.x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),

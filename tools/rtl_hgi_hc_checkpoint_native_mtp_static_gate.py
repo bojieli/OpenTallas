@@ -8,6 +8,7 @@ sys.path.insert(0,str(ROOT/'tools'))
 import hdc_golden_v41 as G
 import rtl_hdc_v41x_hcp_campaign as hc
 from lower_hbm_hc_mtp_static_calendar import lower
+from lower_hbm_hc_tail_loop_calendar import lower_tail_loop
 
 def main():
     run=ROOT/'run_hc_checkpoint_native_mtp';run.mkdir(exist_ok=True)
@@ -49,10 +50,9 @@ def main():
         for row in range(24):
             words,_=lower('row',first_consumer_cycle=7,sink_divisor=7,sink_phase=0,row=row,slot=row%2,npos=n,early=True,clear=(row==0))
             (run/f'row_n{n}_r{row}.mem').write_text(''.join(f'{w:064x}\n' for w in words))
-    for position in range(8):
-        words,_=lower('tail',first_consumer_cycle=7,sink_divisor=7,sink_phase=0,tail_position=position)
-        words.extend((0xc7a1<<240)|(pc<<223) for pc in range(len(words),500))
-        (run/f'tail_p{position}.mem').write_text(''.join(f'{w:064x}\n' for w in words))
+    words,tail_meta=lower_tail_loop(first_consumer_cycle=7,sink_divisor=7,sink_phase=0,npos=8)
+    assert len(words)==497
+    (run/'tail_p0.mem').write_text(''.join(f'{w:064x}\n' for w in words))
     files=['rtl/chip/ot_chip_v41x_hbm3e_phy.sv','rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv','rtl/hdc/kv/ot_hdc_hbm_model.sv',
         'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_native_mtp_static.sv',
         'rtl/hbm_accel/generic/peers/hc_prefetch_static/ot_hgi_hc_prefetch_direct_static.sv',
@@ -78,11 +78,11 @@ def main():
         'rtl/hdc/v41/ot_hdc_sinkhorn.sv','rtl/hdc/v41/ot_hdc_sk_arith.sv',
         'rtl/hdc/v41/ot_hdc_sk_recip_rom.sv','rtl/test/tb_hgi_hc_checkpoint_native_mtp_static.sv',
         'rtl/test/hgi_hc_checkpoint_native_mtp_static_harness.cpp']
-    pins=files+['tools/hdc_golden.py','tools/hdc_golden_v41.py','tools/rtl_hgi_hc_checkpoint_native_mtp_static_gate.py','tools/rtl_hdc_v41x_hcp_campaign.py','tools/lower_hbm_hc_mtp_static_calendar.py']
+    pins=files+['tools/hdc_golden.py','tools/hdc_golden_v41.py','tools/rtl_hgi_hc_checkpoint_native_mtp_static_gate.py','tools/rtl_hdc_v41x_hcp_campaign.py','tools/lower_hbm_hc_mtp_static_calendar.py','tools/lower_hbm_hc_tail_loop_calendar.py']
     receipt={'scope':'actual paged programme SRAM to PMAX8 operandSRAM projection/tail; actual4SID32bankVM96SRAM and12LGtaps joined plus realresultVMwrites/readback; actual20GiB checkpoint PHY CDC staging128SRAM joined; only offchip PHY data model; no wholechip/physical qualification',
         'source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in pins},
         'fixture_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [*run.glob('*.mem'),run/'all24rows.hex']},
-        'K':20480,'positions':[6,8],'projection_rows':24,'tail_words_per_position':24,'sink_clock_divisor':7,'checkpoint_fn_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'actual_SRAMs':306,'PHY_model':'published refresh-aware ot_chip_v41x_hbm3e_phy' ,'nominal_row_result_ages':[289+160*p for p in range(8)],'nominal_row_periods':{'6':1100,'8':1420},'early_row_result_ages':[269+160*p for p in range(8)],'early_row_periods':{'6':1080,'8':1400}}
+        'K':20480,'positions':[6,8],'projection_rows':24,'tail_words_per_position':24,'sink_clock_divisor':7,'checkpoint_fn_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'actual_SRAMs':306,'tail_configuration_words':497,'tail_programme_reconfigure_between_positions':False,'tail_body_period':497,'PHY_model':'published refresh-aware ot_chip_v41x_hbm3e_phy' ,'nominal_row_result_ages':[289+160*p for p in range(8)],'nominal_row_periods':{'6':1100,'8':1420},'early_row_result_ages':[269+160*p for p in range(8)],'early_row_periods':{'6':1080,'8':1400}}
     (run/'source.json').write_text(json.dumps(receipt,indent=2)+'\n')
     with (run/'build.log').open('w') as log:
         subprocess.run(['verilator','--cc','--exe','--build','-j','4','-O1','-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD',
