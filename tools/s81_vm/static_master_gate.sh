@@ -17,6 +17,7 @@ run_target() {
   [ "${VM_WSCATTER_PIPE:-0}" = 0 ] || defs+=(+define+OT_VM_NATIVE_WSCATTER)
   [ "${VM_CAP_PIPE:-0}" = 0 ] || defs+=(+define+OT_VM_NATIVE_CAP)
   [ "${VM_CAP_PIPE:-0}" != 2 ] || defs+=(+define+OT_VM_NATIVE_CAP_PINREG)
+  [ "${VM_WSCATTER_PIPE:-0}" = 0 ] || defs+=(+define+OT_VM_NATIVE_WSCATTER)
   "$V" --binary --timing -O1 -Wno-fatal -j 8 -MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0" --top-module tb_dsfd_sp_vm_static --Mdir "$O/obj_$name" -o tb "${defs[@]}" "${F[@]}" > "$O/build_$name.log" 2>&1 || { tail -30 "$O/build_$name.log"; return 2; }
   if [ "$name" = base ]; then
     local pids=()
