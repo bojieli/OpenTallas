@@ -1,0 +1,16 @@
+{
+  "status": "NATIVE_WRAPPER_MACRO_FUNCTIONAL_PASS_PHYSICAL_UNQUALIFIED",
+  "source_commit": "3eb7744c5",
+  "positive": "PASS actual NOXVM array backend+SUcopy+nativeqfd_xs_tap+nativeqfd_xcol_e/8actualleaves,4headchunks8/8/8/1 at512edges apart,initialfill+3overlappedHreplays,16384rawwords+12800BF16operands",
+  "fixed_schedule": "Initialcopy start4,GO104. Subsequent XPF136+512*r,copy140+512*r,GO616+512*r. No observed status changes calendar.",
+  "limits": [
+    "All10nativeXSclockentries normalized; phi-R/hops unqualified.",
+    "No FP MAC or full48column arithmetic in this component.",
+    "Initial H live-in via actualSVW initialization fixture."
+  ],
+  "macro_positive": "PASS actual native SRAM backend,4headchunks/3overlappedreplays,16384raw+12800BF16checks",
+  "observed_mutants": {
+    "data": "EXPECTED FAIL128errors",
+    "latency": "EXPECTED FAIL15324errors"
+  }
+}

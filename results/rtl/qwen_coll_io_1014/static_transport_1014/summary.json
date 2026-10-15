@@ -1,0 +1,55 @@
+{
+  "schema": "ot.qwen.static_transport.unit.v1",
+  "source": "598804110",
+  "master": "qfd_static_ch546",
+  "production_schedule_qualified": false,
+  "scope": "Unit implementation proof only; actual fullshape compiler calendar and nativephysical gates remain required",
+  "static_timeline": {
+    "words": 4096,
+    "writer_period_ns": 2,
+    "reader_period_ns": 4,
+    "writer_word_cadence": 2,
+    "reader_word_cadence": 1,
+    "write_visibility_wck": 1,
+    "read_to_output_rck": 3,
+    "asserted_output_edges": 4119,
+    "depth_words": 64,
+    "conservative_peak_live_words": 11
+  },
+  "exact": {
+    "verdict": "PASS",
+    "faults": [
+      0,
+      0
+    ]
+  },
+  "fault_cases": [
+    {
+      "case": "late_producer",
+      "verdict": "FAIL_EXPECTED",
+      "data_mismatch": 0,
+      "timeline_mismatch": 0,
+      "faults": [
+        1,
+        0
+      ]
+    },
+    {
+      "case": "wrong_version",
+      "verdict": "FAIL_EXPECTED",
+      "data_mismatch": 0,
+      "timeline_mismatch": 0,
+      "faults": [
+        0,
+        1
+      ]
+    }
+  ],
+  "rtl_latency_mutant": {
+    "verdict": "FAIL_EXPECTED",
+    "data_mismatch": 1,
+    "timeline_mismatch": 2,
+    "words": 4096,
+    "evidence": "latency_mutant.log"
+  }
+}

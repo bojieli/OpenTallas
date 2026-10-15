@@ -1,0 +1,468 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Running command `read_verilog -sv /srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv /srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv; hierarchy -top ot_qfd_vm_producer_lease_provenance -chparam ENABLE 1 -chparam MUT 0; proc; opt; flatten; opt; memory_map; opt; stat; write_json provenance.json' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_vm_producer_lease_seq40'.
+Generating RTLIL representation for module `\ot_qfd_vm_producer_row_binding_seq40'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_vm_producer_lease_provenance'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \ENABLE = 1
+Parameter \MUT = 0
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qfd_vm_producer_lease_provenance'.
+Parameter \ENABLE = 1
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$770fa60dcdbd00cd1a35229de740c27c79cf4935\ot_qfd_vm_producer_lease_provenance'.
+
+4.1. Analyzing design hierarchy..
+Top module:  \ot_qfd_vm_producer_lease_provenance
+Used module:     \ot_qfd_vm_producer_lease_seq40
+Parameter \ENABLE = 1
+Parameter \MUT = 0
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qfd_vm_producer_lease_seq40'.
+Parameter \ENABLE = 1
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40'.
+
+4.3. Analyzing design hierarchy..
+Top module:  \ot_qfd_vm_producer_lease_provenance
+Used module:     $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40
+
+4.4. Analyzing design hierarchy..
+Top module:  \ot_qfd_vm_producer_lease_provenance
+Used module:     $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40
+Removing unused module `$paramod$770fa60dcdbd00cd1a35229de740c27c79cf4935\ot_qfd_vm_producer_lease_provenance'.
+Removing unused module `\ot_qfd_vm_producer_row_binding_seq40'.
+Removing unused module `\ot_qfd_vm_producer_lease_seq40'.
+Removed 3 unused modules.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_qfd_vm_producer_lease_provenance.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv:60$168'.
+Cleaned up 1 empty switch.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv:60$168 in module ot_qfd_vm_producer_lease_provenance.
+Marked 3 switch rules as full_case in process $proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245 in module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~24 debug messages>
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_qfd_vm_producer_lease_provenance.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv:60$168'.
+     1/4: $0\provenance_fault[0:0]
+     2/4: $0\active[0:0]
+     3/4: $0\epoch_q[20:0]
+     4/4: $0\token_q[15:0]
+Creating decoders for process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+     1/17: $0\payload[511:0]
+     2/17: $0\seen_query[0:0]
+     3/17: $0\seq[39:0]
+     4/17: $0\recipient[15:0]
+     5/17: $0\root[4:0]
+     6/17: $0\address[95:0]
+     7/17: $0\phase[3:0]
+     8/17: $0\context_id[15:0]
+     9/17: $0\mode[0:0]
+    10/17: $0\descriptor[378:0]
+    11/17: $0\snapshot_version[31:0]
+    12/17: $0\version[31:0]
+    13/17: $0\armed[0:0]
+    14/17: $0\state[2:0]
+    15/17: $0\leased_cycles[31:0]
+    16/17: $0\blocked_write_cycles[31:0]
+    17/17: $0\fault[0:0]
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_qfd_vm_producer_lease_provenance.\token_q' using process `\ot_qfd_vm_producer_lease_provenance.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv:60$168'.
+  created $dff cell `$procdff$484' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_lease_provenance.\epoch_q' using process `\ot_qfd_vm_producer_lease_provenance.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv:60$168'.
+  created $dff cell `$procdff$485' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_lease_provenance.\active' using process `\ot_qfd_vm_producer_lease_provenance.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv:60$168'.
+  created $dff cell `$procdff$486' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_lease_provenance.\provenance_fault' using process `\ot_qfd_vm_producer_lease_provenance.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv:60$168'.
+  created $dff cell `$procdff$487' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\fault' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$488' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\blocked_write_cycles' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$489' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\leased_cycles' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$490' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\state' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$491' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\armed' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$492' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\version' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$493' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\snapshot_version' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$494' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\descriptor' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$495' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\mode' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$496' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\context_id' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$497' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\phase' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$498' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\address' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$499' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\root' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$500' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\recipient' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$501' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\seq' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$502' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\seen_query' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$503' with positive edge clock.
+Creating register for signal `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.\payload' using process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+  created $dff cell `$procdff$504' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 6 empty switches in `\ot_qfd_vm_producer_lease_provenance.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv:60$168'.
+Removing empty process `ot_qfd_vm_producer_lease_provenance.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv:60$168'.
+Found and cleaned up 18 empty switches in `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+Removing empty process `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:80$245'.
+Cleaned up 24 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_lease_provenance.
+<suppressed ~6 debug messages>
+Optimizing module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.
+<suppressed ~42 debug messages>
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_lease_provenance.
+Optimizing module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_lease_provenance'.
+<suppressed ~18 debug messages>
+Finding identical cells in module `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40'.
+<suppressed ~93 debug messages>
+Removed a total of 37 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qfd_vm_producer_lease_provenance..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~21 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qfd_vm_producer_lease_provenance.
+  Optimizing cells in module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.
+    New ctrl vector for $pmux cell $procmux$303: $procmux$455_CMP
+  Optimizing cells in module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.
+Performed a total of 1 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_lease_provenance'.
+Finding identical cells in module `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $procdff$484 ($dff) from module ot_qfd_vm_producer_lease_provenance (D = $procmux$295_Y, Q = \token_q, rval = 16'0000000000000000).
+Adding EN signal on $auto$ff.cc:266:slice$505 ($sdff) from module ot_qfd_vm_producer_lease_provenance (D = \held_token, Q = \token_q).
+Adding SRST signal on $procdff$485 ($dff) from module ot_qfd_vm_producer_lease_provenance (D = $procmux$290_Y, Q = \epoch_q, rval = 21'000000000000000000000).
+Adding EN signal on $auto$ff.cc:266:slice$507 ($sdff) from module ot_qfd_vm_producer_lease_provenance (D = \query_epoch, Q = \epoch_q).
+Adding SRST signal on $procdff$486 ($dff) from module ot_qfd_vm_producer_lease_provenance (D = $procmux$283_Y, Q = \active, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$509 ($sdff) from module ot_qfd_vm_producer_lease_provenance (D = $procmux$283_Y, Q = \active).
+Adding SRST signal on $procdff$487 ($dff) from module ot_qfd_vm_producer_lease_provenance (D = $procmux$276_Y, Q = \provenance_fault, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$517 ($sdff) from module ot_qfd_vm_producer_lease_provenance (D = $procmux$276_Y, Q = \provenance_fault).
+Adding SRST signal on $procdff$502 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$333_Y, Q = \seq, rval = 40'0000000000000000000000000000000000000000).
+Adding EN signal on $auto$ff.cc:266:slice$521 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$326_Y, Q = \seq).
+Adding SRST signal on $procdff$501 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$344_Y, Q = \recipient, rval = 16'0000000000000000).
+Adding EN signal on $auto$ff.cc:266:slice$527 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = \request_recipient, Q = \recipient).
+Adding SRST signal on $procdff$495 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$413_Y, Q = \descriptor, rval = 379'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).
+Adding EN signal on $auto$ff.cc:266:slice$533 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = \held_ib, Q = \descriptor).
+Adding SRST signal on $procdff$494 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$425_Y, Q = \snapshot_version, rval = 0).
+Adding EN signal on $auto$ff.cc:266:slice$537 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = \version, Q = \snapshot_version).
+Adding SRST signal on $procdff$493 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$430_Y, Q = \version, rval = 0).
+Adding EN signal on $auto$ff.cc:266:slice$541 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $add$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:87$247_Y, Q = \version).
+Adding SRST signal on $procdff$504 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$303_Y, Q = \payload, rval = 512'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).
+Adding EN signal on $auto$ff.cc:266:slice$543 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = \response_data, Q = \payload).
+Adding SRST signal on $procdff$492 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$437_Y, Q = \armed, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$547 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$437_Y, Q = \armed).
+Adding SRST signal on $procdff$503 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$317_Y, Q = \seen_query, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$551 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$317_Y, Q = \seen_query).
+Adding SRST signal on $procdff$497 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$389_Y, Q = \context_id, rval = 16'0000000000000000).
+Adding EN signal on $auto$ff.cc:266:slice$563 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = \held_context, Q = \context_id).
+Adding SRST signal on $procdff$500 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$355_Y, Q = \root, rval = 5'00000).
+Adding EN signal on $auto$ff.cc:266:slice$567 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = \request_root, Q = \root).
+Adding SRST signal on $procdff$499 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$366_Y, Q = \address, rval = 96'000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).
+Adding EN signal on $auto$ff.cc:266:slice$573 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = \request_address, Q = \address).
+Adding SRST signal on $procdff$496 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$401_Y, Q = \mode, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$579 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $eq$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:53$183_Y, Q = \mode).
+Adding SRST signal on $procdff$498 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$377_Y, Q = \phase, rval = 4'0000).
+Adding EN signal on $auto$ff.cc:266:slice$583 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = \request_phase, Q = \phase).
+Adding SRST signal on $procdff$488 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$479_Y, Q = \fault, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$589 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$479_Y, Q = \fault).
+Adding SRST signal on $procdff$489 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$470_Y, Q = \blocked_write_cycles, rval = 0).
+Adding EN signal on $auto$ff.cc:266:slice$593 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $add$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:90$250_Y, Q = \blocked_write_cycles).
+Adding SRST signal on $procdff$490 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$465_Y, Q = \leased_cycles, rval = 0).
+Adding EN signal on $auto$ff.cc:266:slice$595 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $add$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:91$253_Y, Q = \leased_cycles).
+Adding SRST signal on $procdff$491 ($dff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$448_Y, Q = \state, rval = 3'000).
+Adding EN signal on $auto$ff.cc:266:slice$597 ($sdff) from module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40 (D = $procmux$448_Y, Q = \state).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_vm_producer_lease_provenance..
+Finding unused cells or wires in module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40..
+Removed 64 unused cells and 216 unused wires.
+<suppressed ~67 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.
+<suppressed ~2 debug messages>
+Optimizing module ot_qfd_vm_producer_lease_provenance.
+<suppressed ~2 debug messages>
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qfd_vm_producer_lease_provenance..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~5 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.
+  Optimizing cells in module \ot_qfd_vm_producer_lease_provenance.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40'.
+<suppressed ~33 debug messages>
+Finding identical cells in module `\ot_qfd_vm_producer_lease_provenance'.
+<suppressed ~3 debug messages>
+Removed a total of 12 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40..
+Finding unused cells or wires in module \ot_qfd_vm_producer_lease_provenance..
+Removed 0 unused cells and 12 unused wires.
+<suppressed ~2 debug messages>
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.
+Optimizing module ot_qfd_vm_producer_lease_provenance.
+
+6.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qfd_vm_producer_lease_provenance..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+6.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.
+  Optimizing cells in module \ot_qfd_vm_producer_lease_provenance.
+Performed a total of 0 changes.
+
+6.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40'.
+Finding identical cells in module `\ot_qfd_vm_producer_lease_provenance'.
+Removed a total of 0 cells.
+
+6.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40..
+Finding unused cells or wires in module \ot_qfd_vm_producer_lease_provenance..
+
+6.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.
+Optimizing module ot_qfd_vm_producer_lease_provenance.
+
+6.23. Finished OPT passes. (There is nothing left to do.)
+
+7. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$7c3f859275aa2c0fc920373709be2318c93b0dee\ot_qfd_vm_producer_lease_seq40.
+<suppressed ~1 debug messages>
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_lease_provenance.
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_lease_provenance'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qfd_vm_producer_lease_provenance..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qfd_vm_producer_lease_provenance.
+Performed a total of 0 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_lease_provenance'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_vm_producer_lease_provenance..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_lease_provenance.
+
+8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qfd_vm_producer_lease_provenance..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qfd_vm_producer_lease_provenance.
+Performed a total of 0 changes.
+
+8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_lease_provenance'.
+Removed a total of 0 cells.
+
+8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_vm_producer_lease_provenance..
+
+8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_lease_provenance.
+
+8.16. Finished OPT passes. (There is nothing left to do.)
+
+9. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+10. Executing OPT pass (performing simple optimizations).
+
+10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_lease_provenance.
+
+10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_lease_provenance'.
+Removed a total of 0 cells.
+
+10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qfd_vm_producer_lease_provenance..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qfd_vm_producer_lease_provenance.
+Performed a total of 0 changes.
+
+10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_lease_provenance'.
+Removed a total of 0 cells.
+
+10.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_vm_producer_lease_provenance..
+
+10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_lease_provenance.
+
+10.9. Finished OPT passes. (There is nothing left to do.)
+
+11. Printing statistics.
+
+=== ot_qfd_vm_producer_lease_provenance ===
+
+   Number of wires:                243
+   Number of wire bits:           6628
+   Number of public wires:         143
+   Number of public wire bits:    6421
+   Number of ports:                 63
+   Number of port bits:           2690
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                140
+     $add                            3
+     $eq                            12
+     $logic_and                     57
+     $logic_not                     13
+     $logic_or                       1
+     $mux                           14
+     $ne                             6
+     $not                            2
+     $pmux                           1
+     $reduce_and                     4
+     $reduce_bool                    5
+     $reduce_or                      1
+     $scopeinfo                      1
+     $sdffe                         20
+
+12. Executing JSON backend.
+
+End of script. Logfile hash: 38cc306f0a, CPU: user 0.07s system 0.00s, MEM: 19.38 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 32% 6x opt_clean (0 sec), 16% 10x opt_expr (0 sec), ...

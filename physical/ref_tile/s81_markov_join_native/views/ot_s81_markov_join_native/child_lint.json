@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_join_native-g1-443f55354/record/views/ot_s81_markov_join_native/ot_s81_markov_join_native.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_join_native-pc2-fd21a1202/record/views/ot_s81_markov_join_native/ot_s81_markov_join_native.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
   "(f) face-pin access: 102 of 102 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M4 (0.156,14.880), rst_n M4 (0.156,14.880), vin M4 (0.156,14.880))"
  ],
- "summary": "ot_s81_markov_join_native 43.2 x 34.56: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 102 blocked-above 0 blocked-same 0; clock clk insertion 118 ps; pockets M5 0 (closed)",
+ "summary": "ot_s81_markov_join_native 43.2 x 34.56: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 102 blocked-above 0 blocked-same 0; clock clk insertion 117 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_s81_markov_join_native",
   "W": 43.2,
@@ -40,7 +40,7 @@
   "face": {
    "face_pins": 102,
    "blocked_above": 0,
-   "covered_below": 2,
+   "covered_below": 0,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -49,15 +49,15 @@
     "clk M4 (0.156,14.880)",
     "rst_n M4 (0.156,14.880)",
     "vin M4 (0.156,14.880)",
-    "err[0] M3 (9.000,33.719)",
-    "vout M3 (9.000,33.719)",
-    "y[0] M3 (9.000,33.719)"
+    "err[0] M3 (9.000,33.725)",
+    "vout M3 (9.000,33.725)",
+    "y[0] M3 (9.000,33.725)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 117.55,
-    "min_ps": 91.3
+    "max_ps": 117.11,
+    "min_ps": 90.22
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 142
+    "added": 80
    },
    "count": 0,
    "area_um2": 0,

@@ -1,0 +1,99 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qkd_slot_ctl548",
+ "top": "ot_qwen_static_slot_ctl",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  216.0,
+  172.8
+ ],
+ "core": [
+  2.16,
+  2.16,
+  213.84,
+  170.64000000000001
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "p_tx_up",
+   "p_tx_v",
+   "p_tx_flit",
+   "p_rx_v",
+   "p_rx_flit"
+  ],
+  "S": [
+   "epoch_begin",
+   "epoch",
+   "wr_v",
+   "wr_slot",
+   "rd_v",
+   "rd_slot",
+   "rx_expect_v",
+   "rx_expect_slot",
+   "rx_v",
+   "rx_flit",
+   "epoch_abort",
+   "fault_cause",
+   "clk",
+   "rst_n",
+   "wr_observed_v"
+  ],
+  "W": [
+   "q_data"
+  ],
+  "E": []
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "physical/ref_tile/qkd_slot_ctl548/kit.env",
+  "physical/ref_tile/qkd_slot_ctl548/clock.sdc",
+  "physical/ref_tile/qkd_slot_ctl548/signoff.sdc",
+  "physical/ref_tile/qkd_slot_ctl548/pdn.tcl",
+  "physical/ref_tile/qkd_slot_ctl548/pre_cts.tcl",
+  "physical/ref_tile/qkd_slot_ctl548/post_cts.tcl",
+  "physical/ref_tile/qkd_slot_ctl548/post_grt.tcl",
+  "physical/ref_tile/qkd_slot_ctl548/pre_drt.tcl",
+  "physical/ref_tile/qkd_slot_ctl548/pre_fill.tcl",
+  "physical/ref_tile/qkd_slot_ctl548/post_fill.tcl",
+  "physical/ref_tile/qkd_slot_ctl548/pre_grt.tcl",
+  "physical/ref_tile/qkd_slot_ctl548/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile/qkd_slot_ctl548/assigned_pins.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qkd_slot_ctl548/pre_gpl.tcl",
+  "physical/ref_tile/qkd_slot_ctl548/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}
