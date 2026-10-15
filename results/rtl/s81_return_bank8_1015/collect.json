@@ -1,0 +1,146 @@
+{
+  "schema": "opentallas.s81.return-store-collect.v1",
+  "utc": "2026-10-15T12:05:29.911846+00:00",
+  "worktree": "/home/ubuntu/wt/s81-return-lanes-1015",
+  "branch": "codex/s81-return-lanes-1015",
+  "published_head": "7830e9597",
+  "local_head": "ee9c0f5e5",
+  "source": "0cf1bf906",
+  "profile_proof": "results/rtl/s81_return_bank8_1015/rowflags_receipt.json",
+  "physical_gate_source": "ee9c0f5e5",
+  "leaf_count": 16,
+  "per_leaf": {
+    "ff": 3178,
+    "pins": 2218,
+    "outline_um": [
+      129.6,
+      129.6
+    ],
+    "clock": "ck",
+    "reset": "rst_n"
+  },
+  "wrapper_clock": "ck[3:0]",
+  "wrapper_reset": "rst_n[3:0]",
+  "source_age": {
+    "store": "E9",
+    "release": "E10",
+    "extra_edges": 0,
+    "prepare": "rschedstage9 suppliedoneedgeearly"
+  },
+  "peer": {
+    "token_bits": 12,
+    "bus_bits": 48,
+    "contents": "valid/group3/complete8",
+    "global_reduction": "inside eachhardleaf only",
+    "local192pin_hop_max_um": 307.728
+  },
+  "native3": [
+    {
+      "lane": 0,
+      "terminal": true,
+      "gate": "WARN no refusingchecks",
+      "setup_tt_placement_ps": 5.109135337022508,
+      "hold_tt_placement_ps": 28.442734278932846,
+      "FF_signoff": false,
+      "clock": "PASS",
+      "gate_result": "physical/ref_tile/dsfd_vm_static_return_bank8_l0_1015/gate_result.json",
+      "scope": "PRE_ROUTE_NATIVE_CTS_ONLY; source/token5 superseded by retimedcandidate"
+    },
+    {
+      "lane": 1,
+      "terminal": true,
+      "gate": "WARN no refusingchecks",
+      "setup_tt_placement_ps": 5.328515406688439,
+      "hold_tt_placement_ps": 28.636468196729936,
+      "FF_signoff": false,
+      "clock": "PASS",
+      "gate_result": "physical/ref_tile/dsfd_vm_static_return_bank8_l1_1015/gate_result.json",
+      "scope": "PRE_ROUTE_NATIVE_CTS_ONLY; source/token5 superseded by retimedcandidate"
+    },
+    {
+      "lane": 2,
+      "terminal": true,
+      "gate": "WARN no refusingchecks",
+      "setup_tt_placement_ps": 21.873614031164834,
+      "hold_tt_placement_ps": 29.289889957873072,
+      "FF_signoff": false,
+      "clock": "PASS",
+      "gate_result": "physical/ref_tile/dsfd_vm_static_return_bank8_l2_1015/gate_result.json",
+      "scope": "PRE_ROUTE_NATIVE_CTS_ONLY; source/token5 superseded by retimedcandidate"
+    },
+    {
+      "lane": 3,
+      "terminal": true,
+      "gate": "WARN no refusingchecks",
+      "setup_tt_placement_ps": 10.517475779181495,
+      "hold_tt_placement_ps": 29.336033602334055,
+      "FF_signoff": false,
+      "clock": "PASS",
+      "gate_result": "physical/ref_tile/dsfd_vm_static_return_bank8_l3_1015/gate_result.json",
+      "scope": "PRE_ROUTE_NATIVE_CTS_ONLY; source/token5 superseded by retimedcandidate"
+    }
+  ],
+  "native4": [
+    {
+      "lane": 0,
+      "status": "LIVE",
+      "host": "ot-epyc1tb",
+      "bash_pid": 1632013,
+      "session": 37005,
+      "mem_gb": 16,
+      "threads": 8,
+      "remote": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_static_return_bank8_l0_1015_r4-20261015-050335",
+      "log": "/home/ubuntu/claude-takeover-20261007/s81-return-bank8-native4-l0-1015.log",
+      "kit": "physical/ref_tile/dsfd_vm_static_return_bank8_l0_1015_r4"
+    },
+    {
+      "lane": 1,
+      "status": "LIVE",
+      "host": "ot-epyc1tb",
+      "bash_pid": 1632764,
+      "session": 88601,
+      "mem_gb": 16,
+      "threads": 8,
+      "remote": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_static_return_bank8_l1_1015_r4-20261015-050335",
+      "log": "/home/ubuntu/claude-takeover-20261007/s81-return-bank8-native4-l1-1015.log",
+      "kit": "physical/ref_tile/dsfd_vm_static_return_bank8_l1_1015_r4"
+    },
+    {
+      "lane": 2,
+      "status": "LIVE",
+      "host": "ot-epyc1tb",
+      "bash_pid": 1632920,
+      "session": 94850,
+      "mem_gb": 16,
+      "threads": 8,
+      "remote": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_static_return_bank8_l2_1015_r4-20261015-050335",
+      "log": "/home/ubuntu/claude-takeover-20261007/s81-return-bank8-native4-l2-1015.log",
+      "kit": "physical/ref_tile/dsfd_vm_static_return_bank8_l2_1015_r4"
+    },
+    {
+      "lane": 3,
+      "status": "LIVE",
+      "host": "ot-epyc1tb",
+      "bash_pid": 1632917,
+      "session": 45994,
+      "mem_gb": 16,
+      "threads": 8,
+      "remote": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_static_return_bank8_l3_1015_r4-20261015-050335",
+      "log": "/home/ubuntu/claude-takeover-20261007/s81-return-bank8-native4-l3-1015.log",
+      "kit": "physical/ref_tile/dsfd_vm_static_return_bank8_l3_1015_r4"
+    }
+  ],
+  "coordinator": {
+    "owner": "claude",
+    "since": "2026-10-15T05:02:05-07:00",
+    "instruction": "NO NEW SUBMISSION/MERGE/PUSH; collectread-only+local sourceproof/evidence prep only",
+    "late_submission_disclosure": "native4script timestamps05:03:35PT afterlockswitched05:02:05PT, before parentnotice; missedprelaunchlockcheck acknowledged; allalreadyadmittedjobs preserved"
+  },
+  "qualification": false,
+  "open": [
+    "all4actualnative TT/FF/DRC views",
+    "actual694clock/630reset parentintegration+rsched stage9 controls",
+    "global32bank data->lane/outputrouter exact geometry",
+    "canonical2417/BF519/PHW10 runtime/price composition"
+  ]
+}
