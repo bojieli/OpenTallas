@@ -1,0 +1,28 @@
+{
+  "profile": "m5c_diagnostic",
+  "qualified": false,
+  "native_status": "FAIL: south launch224.724>220; north launch235.545>220/capture206.754>190",
+  "source": "rtl/qwen_sys/dvm_20261014/qfd_xcst_m5.sv",
+  "source_sha256": "a0158e8343f89fa9d8d7111a630963920bb01ae8e2bc1bdbcd2260462e6898f9",
+  "views": {
+    "qfd_xcst_s_m5": {
+      "outline_um": [
+        52.68,
+        103.656
+      ],
+      "lef_sha256": "8b5128e31945bf72b1fab92aafb9ca482c9c6c3eb1e275263d12cd6ea362f101",
+      "view": "physical/ref_tile/qfd_xcst_s_m5/views/qfd_xcst_s_m5"
+    },
+    "qfd_xcst_n_m5": {
+      "outline_um": [
+        52.68,
+        103.656
+      ],
+      "lef_sha256": "a8d0166e85e0e82a4ef565d6f7555035864fb01ed703703f12d5a7adccb4c42b",
+      "view": "physical/ref_tile/qfd_xcst_n_m5/views/qfd_xcst_n_m5"
+    }
+  },
+  "my_station_shift_nm": 0,
+  "actual_pair_reach": "OPEN",
+  "pg_connectivity": "OPEN"
+}

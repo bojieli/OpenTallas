@@ -73,6 +73,7 @@ IO_CLUSTERS = ('qfd_io_serdes', 'qfd_io_ucie')
 # on the real pins and tools/qwen_tp8/bind_real.py can drop the view's LEF in unchanged
 ROOT = HERE.parents[1]
 VIEWS = {
+    **{m: f'physical/ref_tile/{m}/views/{m}' for m in ('qfd_xcst_n_m5', 'qfd_xcst_s_m5')},
     'qfd_cst_s': 'physical/ref_tile/qfd_cst_s/views/qfd_cst_s',
     'qfd_cst_n': 'physical/ref_tile/qfd_cst_n/views/qfd_cst_n',
     'qfd_chead_e': 'physical/ref_tile/qfd_chead_e/views/qfd_chead_e',
@@ -1737,6 +1738,9 @@ def _wrap(v, m, G, peers):
                 from qwen_split.static_link_bind import install_masters as install_static_link
                 from qwen_split.direct_up4 import partition_master as _pm
                 install_static_link(M, model, Master, _pm)
+            if model.get('station_profile'):
+                from qwen_split.station_profile import install_masters as install_station_profile
+                install_station_profile(M, model, Master)
             for mst_ in M.values():
                 mst_.order[:] = list(dict.fromkeys(mst_.order))
 

@@ -49,15 +49,18 @@ HROW = 216.0                    # head-row channel half height kept free of slab
 # TIELO inside (owner hierarchy rule: glue into tiles); the die wires every strap bit of the instance to its OWN tie_hi /
 # tie_lo, pins beside the strap input on the same face.  OT_SPLIT_TIE_SELF = comma list of masters ('all' = every strap
 # master); a master whose RTL lacks the ports must stay out (port-bind reports the literal straps until it lands).
-TIE_STRAP_MASTERS = ('qfd_tile_nk', 'qfd_tile_nl', 'qfd_xcst_n', 'qfd_xcst_s', 'qfd_xcol_e', 'qfd_xcol_w',
+TIE_STRAP_MASTERS = ('qfd_tile_nk', 'qfd_tile_nl', 'qfd_xcst_n', 'qfd_xcst_s', 'qfd_xcst_n_m5', 'qfd_xcst_s_m5', 'qfd_xcol_e', 'qfd_xcol_w',
                      'qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_sp_band_lanes')
 # the contract straps (results/arch/qwen_split_compute_1014/straps.json): ONLY these are tie-driven; chain-terminus ties
 # (tap_r, a_r, b_r, w_r, e_r, fault_i) stay literals so the port-bind keeps reporting them as INPUT_TIED defects
-STRAP_PORTS = frozenset([('qfd_tile_nk', 'tile_id'), ('qfd_tile_nl', 'tile_id'), ('qfd_xcst_n', 'sidx'), ('qfd_xcst_s', 'sidx'),
+STRAP_PORTS = frozenset([('qfd_tile_nk', 'tile_id'), ('qfd_tile_nl', 'tile_id'), ('qfd_xcst_n', 'sidx'), ('qfd_xcst_s', 'sidx'), ('qfd_xcst_n_m5', 'sidx'), ('qfd_xcst_s_m5', 'sidx'),
                          ('qfd_xcol_e', 'tids'), ('qfd_xcol_w', 'tids'), ('qfd_xcol_e', 'fault_i'), ('qfd_xcol_w', 'fault_i'), ('qfd_su_cbuf_g', 'grp'), ('qfd_su_cbuf_g', 'f_lat'),
                          ('qfd_crom_g', 'crom_lb'), ('qfd_sp_band_lanes', 'b0'), ('qfd_sp_band_lanes', 'lnk'),
                          ('qfd_sp_band_lanes', 'tt')])
 _ts = os.environ.get('OT_SPLIT_TIE_SELF', 'qfd_tile_nk,qfd_tile_nl,qfd_xcst_n,qfd_xcst_s,qfd_xcol_e,qfd_xcol_w').strip()   # tile RTL has tie_hi / tie_lo (q-tile r10)
+from qwen_split.station_profile import selected as _station_m5
+if _station_m5():
+    _ts = ','.join(x + '_m5' if x in ('qfd_xcst_n', 'qfd_xcst_s') else x for x in _ts.split(','))
 TIE_SELF = frozenset(TIE_STRAP_MASTERS if _ts == 'all' else [s for s in _ts.split(',') if s])
 assert TIE_SELF <= set(TIE_STRAP_MASTERS), f'OT_SPLIT_TIE_SELF: unknown masters {sorted(TIE_SELF - set(TIE_STRAP_MASTERS))}'
 
@@ -187,12 +190,13 @@ def _pair_mirror_hs(m, keep_rows=(7, 8)):
         moved_t += 1
     colmap = {round(x + TW, 4): x for x in xs}
     for i in m['insts']:
-        if i.master not in ('qfd_xcst_s', 'qfd_xcst_n') or row(i.name) in keep_rows:
+        if i.master not in ('qfd_xcst_s', 'qfd_xcst_n', 'qfd_xcst_s_m5', 'qfd_xcst_n_m5') or row(i.name) in keep_rows:
             continue
         tx = colmap[round(i.x, 4)]
         nx, o, side = newx[tx]
         if side == 'L':
-            i.x, i.orient = round(nx - i.w - 0.030, 4), 'MY'
+            shift = 0 if i.master.endswith('_m5') else 0.030
+            i.x, i.orient = round(nx - i.w - shift, 4), 'MY'
         else:
             i.x = round(nx + TW, 4)
         moved_s += 1
@@ -204,7 +208,7 @@ def _pair_mirror_hs(m, keep_rows=(7, 8)):
         lanes.append((round(nx - GAPL, 4), GAPL) if side == 'L' else (round(nx + TW, 4), 64.8))
     m['corridor_lanes'] = lanes
     return dict(scheme='PM-H-S', kept_rows=list(keep_rows), corridor_lanes_um=[64.776, 64.8], inner_um=INNER, gapL_um=GAPL, gapR_um=64.8,
-                my_station_shift_nm=-30, mirrored_tiles=sum(1 for i in tiles if i.orient == 'MY'),
+                my_station_shift_nm=0 if m.get('station_profile') else -30, mirrored_tiles=sum(1 for i in tiles if i.orient == 'MY'),
                 moved_tiles=moved_t, moved_stations=moved_s, source='GEO-Q pmh_legality.py (main 48fab3baf)')
 
 
@@ -601,6 +605,8 @@ def place(v, m, G):
             parent.w, parent.h = PORT_WH
         elif parent.master=='qfd_sp_band_lanes':
             parent.w,parent.h=LANES_WH
+    from qwen_split.station_profile import apply as station_profile_apply
+    rec['station_profile'] = station_profile_apply(m)
     if os.environ.get('OT_SPLIT_PMHS', '1') != '0':
         rec['pair_mirror'] = _pair_mirror_hs(m)
     _slab_links(m, rec)
@@ -630,7 +636,7 @@ def place(v, m, G):
     # clock input, so its per-child clock entries wait for the Q-link-replay successor that actually has them.
     byi_ = {i.name: i.master for i in m['insts']}
     ties_ = m.setdefault('ties', [])
-    ties_[:] = [t for t in ties_ if not (t[1] == 'tap_r' and byi_.get(t[0]) in ('qfd_xcst_n', 'qfd_xcst_s'))]
+    ties_[:] = [t for t in ties_ if not (t[1] == 'tap_r' and byi_.get(t[0]) in ('qfd_xcst_n', 'qfd_xcst_s', 'qfd_xcst_n_m5', 'qfd_xcst_s_m5'))]
     nb_ = []
     for b, c, n, e in m['buses']:
         if c == 'clock_trunk':

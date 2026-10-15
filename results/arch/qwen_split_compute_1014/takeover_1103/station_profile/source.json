@@ -1,0 +1,30 @@
+{
+  "profile": "m5c_diagnostic",
+  "PMHS": 1,
+  "tree_interleave": 1,
+  "relay_skip": true,
+  "qualified": false,
+  "source_sha256": {
+    "tools/qwen_split/station_profile.py": "392186d527e703d1a83c65986120e3f52a60a31e288f95c6998f91d4c93ce033",
+    "tools/qwen_split/compute_spine.py": "0e0b68918208ffeb0e5d5ca4647ab6ce0b7dc92f394090e5371d3d23cf70b8b4",
+    "tools/qwen_kv_die/tp8b_v5.py": "c5c61cca841e5983764360318382505314a87a858d7179fc2b85447565c52861",
+    "results/arch/qwen_split_compute_1014/straps.json": "5fdaf719d1a5d42d1e10e4681de62889a54d0fc0def3bc769a2cf2246d657752"
+  },
+  "build_summary": {
+    "relays": null,
+    "max_pin_to_pin_um": null,
+    "over_reach": 0,
+    "unrepaired": 0,
+    "worst_cut": 1.085,
+    "build_s": 10,
+    "reset_over_500": 7,
+    "instances": 1639,
+    "pin_align": {
+      "OK": 1143,
+      "WARN": 766,
+      "FAIL": 1086
+    },
+    "cycles_per_ar_token": null,
+    "stages": null
+  }
+}
