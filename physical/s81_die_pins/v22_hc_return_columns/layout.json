@@ -1,0 +1,102 @@
+{
+ "schema": "opentallas.s81.return_column_pin_plan.v1",
+ "scope": "PROVISIONAL_TOP_DOWN_PINS_NOT_CLOSURE",
+ "source_rtl_sha256": "ffa7e02e5b14e2a6bd61bfe7c98afd1bed04a0ea1b14f2a08e8183112743b9d3",
+ "source_port_widths_all8": "PASS",
+ "leaves": [
+  {
+   "master": "ot_s81_hc_ctra_column",
+   "column": 0,
+   "file": "c0/ot_s81_hc_ctra_column.json",
+   "outline_um": [
+    144.18,
+    30.24
+   ],
+   "pins": 2359,
+   "clock": "independent serial root delivered at phi-wire-R; actual native R unresolved"
+  },
+  {
+   "master": "ot_s81_hc_ctra_column",
+   "column": 1,
+   "file": "c1/ot_s81_hc_ctra_column.json",
+   "outline_um": [
+    144.18,
+    30.24
+   ],
+   "pins": 2359,
+   "clock": "independent serial root delivered at phi-wire-R; actual native R unresolved"
+  },
+  {
+   "master": "ot_s81_hc_ctra_column",
+   "column": 2,
+   "file": "c2/ot_s81_hc_ctra_column.json",
+   "outline_um": [
+    144.18,
+    30.24
+   ],
+   "pins": 2359,
+   "clock": "independent serial root delivered at phi-wire-R; actual native R unresolved"
+  },
+  {
+   "master": "ot_s81_hc_ctra_column",
+   "column": 3,
+   "file": "c3/ot_s81_hc_ctra_column.json",
+   "outline_um": [
+    144.18,
+    30.24
+   ],
+   "pins": 2359,
+   "clock": "independent serial root delivered at phi-wire-R; actual native R unresolved"
+  },
+  {
+   "master": "ot_s81_hc_ctrb_column",
+   "column": 0,
+   "file": "c0/ot_s81_hc_ctrb_column.json",
+   "outline_um": [
+    144.18,
+    25.92
+   ],
+   "pins": 1774,
+   "clock": "independent serial root delivered at phi-wire-R; actual native R unresolved"
+  },
+  {
+   "master": "ot_s81_hc_ctrb_column",
+   "column": 1,
+   "file": "c1/ot_s81_hc_ctrb_column.json",
+   "outline_um": [
+    144.18,
+    25.92
+   ],
+   "pins": 1774,
+   "clock": "independent serial root delivered at phi-wire-R; actual native R unresolved"
+  },
+  {
+   "master": "ot_s81_hc_ctrb_column",
+   "column": 2,
+   "file": "c2/ot_s81_hc_ctrb_column.json",
+   "outline_um": [
+    144.18,
+    25.92
+   ],
+   "pins": 1774,
+   "clock": "independent serial root delivered at phi-wire-R; actual native R unresolved"
+  },
+  {
+   "master": "ot_s81_hc_ctrb_column",
+   "column": 3,
+   "file": "c3/ot_s81_hc_ctrb_column.json",
+   "outline_um": [
+    144.18,
+    25.92
+   ],
+   "pins": 1774,
+   "clock": "independent serial root delivered at phi-wire-R; actual native R unresolved"
+  }
+ ],
+ "remaining": [
+  "Exact source ABI comparison after COLUMN0 merge integration",
+  "All peer/neighbor pin-to-pin distances and native pair timing",
+  "GEN18r legality and pin_align0; cth contains no own registers",
+  "All root CTS insertion/spread and native boundary audits"
+ ]
+}
