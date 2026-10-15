@@ -34,7 +34,8 @@ def census(netlist, top, clocks):
             if len(clock) != 1 or clock[0] not in clock_bits:
                 raise ValueError('flop clock is not a declared delivered input: ' + name)
             counts[clock_bits[clock[0]]] += len(cell['connections']['Q'])
-        elif any(x in kind.lower() for x in ('latch', 'mem', 'dff', 'ffsr')):
+        elif kind in {'$ff', '$sr', '$fsm', '$anyseq', '$anyconst'} or any(
+                x in kind.lower() for x in ('latch', 'mem', 'dff', 'ffsr')):
             raise ValueError('unsupported state cell: ' + name + ' ' + kind)
         elif not kind.startswith('$'):
             raise ValueError('unflattened or black-box module: ' + name + ' ' + kind)
