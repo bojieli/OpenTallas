@@ -1,9 +1,10 @@
 `timescale 1ns/1ps
 // Real head/IS/program write path/calendar/GO stations; explicit engine status
-// stimuli. PSRAM0 exercises the source FF program-store profile; SRAM physical
-// mode and actual endpoint/VM composition require separate admitted gates.
+// stimuli. PSRAM0 tests the source FF store; PSRAM1 uses the source-pinned
+// production SRAM functional model. Physical clocks and actual endpoint/VM
+// composition require separate admitted gates.
 module tb_qfd_static_head_face;
- parameter MUT_CONTEXT=0,CP_BUSY=0,ACTIVE_WRITE=0;
+ parameter MUT_CONTEXT=0,CP_BUSY=0,ACTIVE_WRITE=0,PSRAM=0;
  reg clk=0;always #0.5 clk=~clk;
  reg rst_n=0,start=0,pv=0;reg[9:0]pa=0;reg[63:0]pd=0;
  reg[17:0]token=1,pos=7;
@@ -13,7 +14,7 @@ module tb_qfd_static_head_face;
  integer j,k,c,me_seen=0,cp_seen=0,ctx_seen=0;
  reg before_me,before_cp;reg[11:0]before_pc;
  localparam[55:0]COPY={7'd64,24'd8192,24'd8192,1'b1};
- qfd_tt_ctlm_head_static #(.PSRAM(0))d(
+ qfd_tt_ctlm_head_static #(.PSRAM(PSRAM))d(
  .clk(clk),.ck_sched(clk),.cp_active(CP_BUSY?1'b1:1'b0),.cp(cp),.layer_context_v(ctx),.native_tok(nt),.native_pos(np),
  .rst_n(rst_n),.h_start(start),.token(token),.pos(pos),.prog_base(12'd0),
  .pw_v(pv),.pw_addr(pa),.pw_data(pd),.x_oacc(24'd3),.x_oidle(1'b1),.x_oprog(16'hffff),.x_orows(16'hffff),
