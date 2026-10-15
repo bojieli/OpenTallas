@@ -1,0 +1,194 @@
+{
+  "schema": "opentallas.s81.nt_rows.candidate.v1",
+  "native_qualified": false,
+  "source_serial_contract": "results/arch/hier_contract_1011/s81_v22_hc_ret.json",
+  "source_sha256": "9da908f4207f733623d836c76bf861cb9a0bd9fba6a044478aea67c2fc8b64d9",
+  "pin_source_commit": "7a483898c1737dbd1216c23aef56f8cdfb970f0a",
+  "outline_um": [
+    576.72,
+    810.0
+  ],
+  "rows": [
+    {
+      "tile": "ctrn",
+      "cell": "ot_s81_hc_ctrn",
+      "w": 576.72,
+      "h": 12.96,
+      "y": 0.0
+    },
+    {
+      "tile": "ctnl[j=0][l]",
+      "cell": "ot_s81_hc_ctnl",
+      "w": 142.56,
+      "h": 99.36,
+      "y": 12.96,
+      "per_col": true,
+      "per_column_leaf_heights_um": [
+        95.04,
+        95.04,
+        99.36,
+        99.36
+      ]
+    },
+    {
+      "tile": "ctnl[j=1][l]",
+      "cell": "ot_s81_hc_ctnl",
+      "w": 142.56,
+      "h": 99.36,
+      "y": 112.32,
+      "per_col": true,
+      "per_column_leaf_heights_um": [
+        95.04,
+        95.04,
+        99.36,
+        99.36
+      ]
+    },
+    {
+      "tile": "ctpl[g][half0]",
+      "cell": "ot_s81_hc_ctpl",
+      "w": 142.56,
+      "h": 118.8,
+      "y": 211.68,
+      "per_col": true
+    },
+    {
+      "tile": "ctra_column[c]",
+      "cell": "ot_s81_hc_ctra_column",
+      "w": 144.18,
+      "h": 30.24,
+      "y": 330.48,
+      "per_col": true,
+      "x_cols": [
+        0.0,
+        144.18,
+        288.36,
+        432.54
+      ],
+      "params": "COLUMN = column index",
+      "replaces": "ctra 576.72 x 21.60 strip"
+    },
+    {
+      "tile": "ctrb_column[c]",
+      "cell": "ot_s81_hc_ctrb_column",
+      "w": 144.18,
+      "h": 25.92,
+      "y": 360.72,
+      "per_col": true,
+      "x_cols": [
+        0.0,
+        144.18,
+        288.36,
+        432.54
+      ],
+      "params": "COLUMN = column index",
+      "replaces": "ctrb 576.72 x 21.60 strip"
+    },
+    {
+      "tile": "ctfxs_nt",
+      "cell": "ot_s81_hc_ctfxs_nt",
+      "w": 576.72,
+      "h": 25.92,
+      "y": 386.64
+    },
+    {
+      "tile": "ctfl_nt",
+      "cell": "ot_s81_hc_ctfl_nt",
+      "w": 576.72,
+      "h": 25.92,
+      "y": 412.56
+    },
+    {
+      "tile": "ctfn",
+      "cell": "ot_s81_hc_ctfn",
+      "w": 576.72,
+      "h": 25.92,
+      "y": 438.48
+    },
+    {
+      "tile": "ctpl[g][half1]",
+      "cell": "ot_s81_hc_ctpl",
+      "w": 142.56,
+      "h": 118.8,
+      "y": 464.4,
+      "per_col": true
+    },
+    {
+      "tile": "ctnl[j=2][l]",
+      "cell": "ot_s81_hc_ctnl",
+      "w": 142.56,
+      "h": 99.36,
+      "y": 583.2,
+      "per_col": true,
+      "per_column_leaf_heights_um": [
+        95.04,
+        95.04,
+        99.36,
+        99.36
+      ]
+    },
+    {
+      "tile": "ctnl[j=3][l]",
+      "cell": "ot_s81_hc_ctnl",
+      "w": 142.56,
+      "h": 99.36,
+      "y": 682.56,
+      "per_col": true,
+      "per_column_leaf_heights_um": [
+        95.04,
+        95.04,
+        99.36,
+        99.36
+      ]
+    },
+    {
+      "tile": "ctfs_nt",
+      "cell": "ot_s81_hc_ctfs_nt",
+      "w": 576.72,
+      "h": 25.92,
+      "y": 781.92
+    }
+  ],
+  "spare_um": 2.16,
+  "growth_per_row_um": 38.88,
+  "supersedes_incorrect_790_56_budget": true,
+  "seams": {
+    "fd_out_to_ctfn": {
+      "bits": 2920,
+      "max_manhattan_um": 440.724,
+      "over500": 0
+    },
+    "fd_out_to_ctfxs_nt": {
+      "bits": 1128,
+      "max_manhattan_um": 434.196,
+      "over500": 0
+    },
+    "fv_out_to_ctfn": {
+      "bits": 7,
+      "max_manhattan_um": 440.724,
+      "over500": 0
+    },
+    "fv_out_to_ctfxs_nt": {
+      "bits": 7,
+      "max_manhattan_um": 390.612,
+      "over500": 0
+    },
+    "fdm_ctfn_to_ctfs_nt": {
+      "bits": 2920,
+      "max_manhattan_um": 317.604,
+      "over500": 0
+    }
+  },
+  "seam_coordinates": "Actual exact v24 Tcl pin centres, including0.042um face insets and2.16um row spare",
+  "parent_maximum_row_counts": {
+    "head": 10,
+    "tail": 12
+  },
+  "legacy_hc_corridor_um": 371.52,
+  "open": [
+    "CTfl to all eight CLOSED CTPL current810 origins requires139bit repin; oldv24 has139/9080 over500 max512.694",
+    "First crootr and last chain anchor pins",
+    "Actual 64 row/source chain fold and controls",
+    "Native reset/clock delivery/TT setup/FF hold/DRC0/static calendar"
+  ]
+}

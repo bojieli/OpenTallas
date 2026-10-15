@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.qwen.dvm.bank_fence_capacity.v1",
+ "source": "actual gate3 cone classification+GPL-0301, before gate4",
+ "core_um2": 8752.666,
+ "bank_cell_area_max_um2": 263.62098,
+ "bank_box_um": [
+  38.88,
+  12.42
+ ],
+ "bank_fence_um2": 482.88960000000003,
+ "bank_util_max": 0.5459239130434782,
+ "all8bank_fence_um2": 3863.1168000000002,
+ "prior_fence_um2": 6382.540800000001,
+ "actual_prior_top_fixed_um2": 7814.384,
+ "actual_top_movable_um2": 1698.153,
+ "projected_new_top_fixed_um2": 5294.959999999999,
+ "projected_new_top_util": 0.49112128098803076,
+ "global_placement_target": 0.6,
+ "side_channel_um": 12.96,
+ "route_admitted": false,
+ "physical_margin_qualified": false
+}

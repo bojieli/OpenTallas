@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  414.72,
-  172.8
+  241.92,
+  216.0
  ],
  "core": [
   2.16,
   2.16,
-  412.56,
-  170.64000000000001
+  239.76,
+  213.84
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -48,10 +48,12 @@
   "S": [
    "ck_mul0",
    "ck_mul1",
-   "ck_mul2",
-   "ck_mul3",
    "ck",
    "rst_n"
+  ],
+  "N": [
+   "ck_mul2",
+   "ck_mul3"
   ]
  },
  "clock_port": "ck",
@@ -85,7 +87,7 @@
    "master": "ot_qwen_slab_pg_lanes",
    "inst": "u_port.g_hard_mul.g_mul[1].u_ln",
    "idx": 0,
-   "x": 125.28,
+   "x": 138.24,
    "y": 22.68,
    "w": 71.28,
    "h": 71.28,
@@ -98,11 +100,11 @@
    "master": "ot_qwen_slab_pg_lanes",
    "inst": "u_port.g_hard_mul.g_mul[2].u_ln",
    "idx": 0,
-   "x": 218.16,
-   "y": 22.68,
+   "x": 32.424,
+   "y": 115.56,
    "w": 71.28,
    "h": 71.28,
-   "orient": "R0",
+   "orient": "R180",
    "offtrack": 0
   },
   {
@@ -111,11 +113,11 @@
    "master": "ot_qwen_slab_pg_lanes",
    "inst": "u_port.g_hard_mul.g_mul[3].u_ln",
    "idx": 0,
-   "x": 311.04,
-   "y": 22.68,
+   "x": 138.264,
+   "y": 115.56,
    "w": 71.28,
    "h": 71.28,
-   "orient": "R0",
+   "orient": "R180",
    "offtrack": 0
   }
  ],
@@ -129,19 +131,19 @@
   [
    "WARN",
    "macro_grid",
-   "ot_qwen_slab_pg_lanes#0: origin (125.28, 22.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "ot_qwen_slab_pg_lanes#0: origin (138.24, 22.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
    "WARN",
    "macro_grid",
-   "ot_qwen_slab_pg_lanes#0: origin (218.16, 22.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "ot_qwen_slab_pg_lanes#0: origin (32.424, 115.56) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
    "WARN",
    "macro_grid",
-   "ot_qwen_slab_pg_lanes#0: origin (311.04, 22.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "ot_qwen_slab_pg_lanes#0: origin (138.264, 115.56) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ]
  ],

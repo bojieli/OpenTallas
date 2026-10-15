@@ -1,0 +1,35 @@
+{
+ "status": "REJECTED_PARENT_CANDIDATE",
+ "pin_geometry": "1,587,264 actual matched signal bits have zero reach violations and zero unmeasured bits; this does not qualify the parent calendar.",
+ "actual": {
+  "bits_checked": 1587264,
+  "pin_hops": 7122,
+  "worst_um": 498.696,
+  "fault_stages": 631,
+  "fault_stage_depths": [
+   1,
+   4,
+   7,
+   8,
+   11,
+   27,
+   37,
+   40,
+   44,
+   45,
+   48,
+   53,
+   56
+  ],
+  "unrelated_normal_stage_changes": {
+   "krs_WS_2": {
+    "before": 1,
+    "after": 2
+   }
+  }
+ },
+ "reason": "Generic maze allocator detours one-bit fault wires up to56stages and changes an unrelated normal attention return. No parent source/calendar/native proof or acceptance exists for that candidate.",
+ "next": "Use actual connected controller/front/return/landing physical source graph and homes; do not shorten a generated parent frame pin independently of its actual child.",
+ "leaf_scope": "Source-real tiny fault stage + exactbench/mutants/CTS preflight stands as unadopted component candidate; no closure job submitted.",
+ "production_unchanged": true
+}

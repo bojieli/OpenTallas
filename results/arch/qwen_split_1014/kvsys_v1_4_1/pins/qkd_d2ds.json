@@ -1,0 +1,202 @@
+{
+ "master": "qkd_d2ds",
+ "status": "UNCLOSED",
+ "port_bind": "MISMATCH",
+ "rtl": "qkd_d2d_static",
+ "port_bind_detail": {
+  "width_or_missing": [],
+  "die_ports_not_bound": [],
+  "rtl_inputs_unconnected": [
+   "att_tx_payload",
+   "att_tx_v",
+   "cal_seg",
+   "cal_start",
+   "cfg_addr",
+   "cfg_data",
+   "cfg_rx_we",
+   "cfg_tx_we",
+   "emb_tx_payload",
+   "emb_tx_v",
+   "host_boot_begin",
+   "host_drained_local",
+   "kv_active_local",
+   "kv_drained_local",
+   "kv_flush_local",
+   "kvn_compiled_generation",
+   "kvn_compiled_identity",
+   "status_epoch16"
+  ],
+  "rtl_outputs_unread": [
+   "att_rx_beat",
+   "att_rx_kind",
+   "att_rx_slot",
+   "att_rx_v",
+   "att_tx_beat",
+   "att_tx_kind",
+   "att_tx_slot",
+   "emb_tx_slot",
+   "epoch_abort",
+   "fault",
+   "kvn_word_data",
+   "kvn_word_generation",
+   "kvn_word_identity",
+   "kvn_word_index",
+   "kvn_word_slot",
+   "kvn_word_tag",
+   "kvn_word_valid",
+   "recovery_cycles",
+   "rx_payload"
+  ],
+  "note": null
+ },
+ "outline_um": [
+  777.576,
+  518.376
+ ],
+ "count": 1,
+ "instances": [
+  {
+   "name": "d2d_kv",
+   "xy": [
+    5010.336,
+    23267.52
+   ],
+   "orient": "R0"
+  }
+ ],
+ "clock_entry": [],
+ "pins": {
+  "ck0": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    130.572,
+    130.572
+   ]
+  },
+  "fdi": {
+   "bits": 1169,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    360.444,
+    416.508
+   ]
+  },
+  "fwd_epoch": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    387.804,
+    387.804
+   ]
+  },
+  "fwd_link_rst_n": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    2.316,
+    2.316
+   ]
+  },
+  "lrc": {
+   "bits": 2,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    3.18,
+    3.228
+   ]
+  },
+  "lup": {
+   "bits": 2,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    4.38,
+    4.428
+   ]
+  },
+  "phy_rst_n": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    775.26,
+    775.26
+   ]
+  },
+  "rec_rx": {
+   "bits": 552,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    158.604,
+    185.052
+   ]
+  },
+  "rec_tx": {
+   "bits": 549,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    491.388,
+    517.692
+   ]
+  },
+  "rst_n": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "svc": {
+   "bits": 174,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    718.86,
+    727.164
+   ]
+  }
+ },
+ "contract_version": "1.4.1",
+ "source": "e16db7e7b",
+ "rule": "die-assigned (top-down, owner 10-13): the tile kit consumes these faces / layers / offsets; a pin the tile cannot build is a request in el1014-qwen-split-kvsys.log (next revision)"
+}

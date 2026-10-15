@@ -1,0 +1,58 @@
+{
+  "prebuild_model": "results/arch/qwen_dvm_banked_leaf_1015/registered_fill_model_before_build.json",
+  "functional_proof": "proof.json",
+  "source_default": "BANK_PIPE=0/FILL_PIPE=0",
+  "candidate_master": "qfd_xs_leaf_banked (NCH4/BANK_PIPE1/FILL_PIPE1 fixed)",
+  "changes": [
+    "eight independent32entry banks keep write mask and read mux synthesis local",
+    "1024 positive data restoration inverters fenced next to S captured write data",
+    "full storage/read/unique-write cones fenced; resized new buffers seeded into own bank then detailed-placement checked"
+  ],
+  "measured_synth": {
+    "area_um2": 4302.8496,
+    "flops": 7114,
+    "cells": 33408,
+    "depth_ps": 290.1
+  },
+  "actual_bank_binding_check": {
+    "flops_per_bank": 567,
+    "storage_per_bank": 544,
+    "result_per_bank": 17,
+    "cell_area_um2_range": [
+      416.20068,
+      419.20416
+    ],
+    "fence_um": [
+      51.84,
+      12.96
+    ],
+    "occupancy_range": [
+      0.61948785,
+      0.62395834
+    ],
+    "captured_data_restore_cells": 1024,
+    "capture_restore_area_um2": 44.78976
+  },
+  "cycle_price": {
+    "added_operation_edges_vs_original": 4,
+    "head_fill_lead": 5,
+    "head_QD": 8,
+    "head_DX": 14,
+    "native_XVM": 17,
+    "production_calendar_measured": false
+  },
+  "physical": {
+    "leaf_um": [
+      64.8,
+      162
+    ],
+    "column_um": [
+      64.8,
+      1641.6
+    ],
+    "system_slot_fit": false,
+    "route_admitted": false,
+    "qualified": false
+  },
+  "note": "Prebuild model maximum bank util0.60 was projection; actual0.624 remains below hard0.70 fence limit. Source area is synthesis, not routed area. Existing spec structural_change prose contains older intermediate PD/fence figures; actual fields/kit/tcl determine run PD0.65/fence51.84x12.96."
+}

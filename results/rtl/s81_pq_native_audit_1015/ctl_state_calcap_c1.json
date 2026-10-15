@@ -1,0 +1,31 @@
+{
+ "cell": "ot_s81_pq_ctl_state_phw10",
+ "view": "physical/ref_tile/s81_pq_ctl_state_calcap/views/ot_s81_pq_ctl_state_phw10",
+ "lib_cell": "ot_s81_pq_ctl_state_phw10",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 207.7,
+ "spread_ps": 56.8,
+ "outputs": 729,
+ "inputs": 400,
+ "launch_ps": 235.7,
+ "launch_pin": "mdr_o[322]",
+ "capture_ps": 198.8,
+ "capture_pin": "rom_pq1[13]",
+ "launch_over": 5,
+ "capture_over": 1,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 235.7 > 220 (5 pins); capture 198.8 > 190 (1 pins)",
+ "failing": {
+  "mdr_o[322]": 235.7,
+  "mdr_o[259]": 221.4,
+  "mdr_o[249]": 223.0,
+  "mdr_o[163]": 222.1,
+  "mdr_o[39]": 223.0,
+  "rom_pq1[13]": 198.8
+ }
+}

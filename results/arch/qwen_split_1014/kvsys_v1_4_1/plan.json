@@ -1,0 +1,767 @@
+{
+ "schema": "opentallas.qwen-kv-die.plan.v1",
+ "generator": "tools/qwen_kv_die/kv_die.py",
+ "generator_sha256": "d62bf9b0c0ac1fdc356fe0896b03eb7d9149ceb5b4235d7372c669e9c4f2752d",
+ "template": {
+  "path": "tools/qwen_kv_die/r21c_band.json",
+  "sha256": "3525a39792b7313b1f5cfaa01cae69a88dce7f1ef3febbda43e192650fcf2135"
+ },
+ "die_um": [
+  10798.272,
+  24587.28
+ ],
+ "die_mm2": 265.5,
+ "instances": 3413,
+ "buses": 6743,
+ "instance_mm2": 163.301,
+ "fill": 0.6151,
+ "static_memory_reservation": {
+  "enabled": false,
+  "land_width_um": 172.8,
+  "status": "LEGACY_LANDING_PROFILE"
+ },
+ "native_astk_reservation": {
+  "enabled": false,
+  "parent_width_um": 220.32,
+  "status": "LEGACY_FRAME"
+ },
+ "masters": {
+  "ot_qfd_serdes_112g_x12_phy": {
+   "n": 1,
+   "mm2": 3.6275
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "n": 1,
+   "mm2": 0.6046
+  },
+  "qkd_ahub": {
+   "n": 1,
+   "mm2": 0.8934
+  },
+  "qkd_astk": {
+   "n": 2,
+   "mm2": 3.7182
+  },
+  "qkd_astk_n": {
+   "n": 2,
+   "mm2": 3.7182
+  },
+  "qkd_cdc_wleaf": {
+   "n": 128,
+   "mm2": 4.3204
+  },
+  "qkd_ckbump": {
+   "n": 1,
+   "mm2": 0.0019
+  },
+  "qkd_ctrl": {
+   "n": 2,
+   "mm2": 6.0103
+  },
+  "qkd_ctrl_n": {
+   "n": 2,
+   "mm2": 6.0103
+  },
+  "qkd_d2ds": {
+   "n": 1,
+   "mm2": 0.4031
+  },
+  "qkd_ectl": {
+   "n": 32,
+   "mm2": 2.6868
+  },
+  "qkd_embgw": {
+   "n": 1,
+   "mm2": 0.0373
+  },
+  "qkd_fwdbump": {
+   "n": 2,
+   "mm2": 0.0037
+  },
+  "qkd_hbm3e_phy_pc": {
+   "n": 4,
+   "mm2": 40.0082
+  },
+  "qkd_host_rt": {
+   "n": 1,
+   "mm2": 0.4031
+  },
+  "qkd_hslice": {
+   "n": 64,
+   "mm2": 2.8658
+  },
+  "qkd_hslice_dn": {
+   "n": 64,
+   "mm2": 2.8658
+  },
+  "qkd_kvwq_ctl_bin": {
+   "n": 4,
+   "mm2": 0.0896
+  },
+  "qkd_kvwq_leaf_s_w129_m": {
+   "n": 128,
+   "mm2": 3.0457
+  },
+  "qkd_land": {
+   "n": 2,
+   "mm2": 4.1955
+  },
+  "qkd_land_n": {
+   "n": 2,
+   "mm2": 4.1955
+  },
+  "qkd_pllm": {
+   "n": 1,
+   "mm2": 0.105
+  },
+  "qkd_rhead": {
+   "n": 128,
+   "mm2": 68.0756
+  },
+  "qkd_rly_1": {
+   "n": 437,
+   "mm2": 0.6953
+  },
+  "qkd_rly_1025": {
+   "n": 221,
+   "mm2": 0.6281
+  },
+  "qkd_rly_1048": {
+   "n": 81,
+   "mm2": 0.2394
+  },
+  "qkd_rly_13": {
+   "n": 2,
+   "mm2": 0.0032
+  },
+  "qkd_rly_17": {
+   "n": 214,
+   "mm2": 0.3405
+  },
+  "qkd_rly_2": {
+   "n": 118,
+   "mm2": 0.1877
+  },
+  "qkd_rly_2089": {
+   "n": 56,
+   "mm2": 0.312
+  },
+  "qkd_rly_21": {
+   "n": 12,
+   "mm2": 0.0191
+  },
+  "qkd_rly_284": {
+   "n": 2,
+   "mm2": 0.0032
+  },
+  "qkd_rly_289": {
+   "n": 85,
+   "mm2": 0.1352
+  },
+  "qkd_rly_291": {
+   "n": 155,
+   "mm2": 0.2466
+  },
+  "qkd_rly_293": {
+   "n": 124,
+   "mm2": 0.1973
+  },
+  "qkd_rly_32": {
+   "n": 935,
+   "mm2": 1.4876
+  },
+  "qkd_rly_33": {
+   "n": 161,
+   "mm2": 0.2562
+  },
+  "qkd_rly_36": {
+   "n": 26,
+   "mm2": 0.0414
+  },
+  "qkd_rly_520": {
+   "n": 24,
+   "mm2": 0.0382
+  },
+  "qkd_rly_521": {
+   "n": 85,
+   "mm2": 0.1352
+  },
+  "qkd_rly_540": {
+   "n": 73,
+   "mm2": 0.1161
+  },
+  "qkd_rly_563": {
+   "n": 26,
+   "mm2": 0.0443
+  },
+  "qkd_rly_93": {
+   "n": 1,
+   "mm2": 0.0016
+  },
+  "qkd_seq": {
+   "n": 1,
+   "mm2": 0.2874
+  }
+ },
+ "ucie": {
+  "macro": "ot_qkvd_ucie_x64_phy",
+  "mm2": 0.6047,
+  "edge_um": 777.6,
+  "edge": "N (abuts the ROM die S edge under spine column M)"
+ },
+ "relay_stages": {
+  "af_EN": 5,
+  "af_ES": 34,
+  "af_WN": 5,
+  "af_WS": 32,
+  "am_EN": 6,
+  "am_ES": 6,
+  "am_WN": 7,
+  "am_WS": 7,
+  "ap_EN": 7,
+  "ap_ES": 7,
+  "ap_WN": 6,
+  "ap_WS": 6,
+  "aq_EN": 4,
+  "aq_ES": 32,
+  "aq_WN": 4,
+  "aq_WS": 33,
+  "ares": 24,
+  "emf_EN": 11,
+  "emf_ES": 30,
+  "emf_WN": 11,
+  "emf_WS": 33,
+  "emr_EN": 12,
+  "emr_ES": 33,
+  "emr_WN": 9,
+  "emr_WS": 31,
+  "est": 2,
+  "hb": 2,
+  "hcha_EN": 13,
+  "hcha_ES": 66,
+  "hcha_WN": 11,
+  "hcha_WS": 64,
+  "hchc_EN": 15,
+  "hchc_ES": 66,
+  "hchc_WN": 11,
+  "hchc_WS": 64,
+  "hchf_EN": 10,
+  "hchf_ES": 65,
+  "hchf_WN": 13,
+  "hchf_WS": 67,
+  "hchx_EN": 12,
+  "hchx_ES": 67,
+  "hchx_WN": 11,
+  "hchx_WS": 65,
+  "hf": 23,
+  "hfwd_epoch": 3,
+  "hfwd_link_rst_n": 7,
+  "host_fdi": 56,
+  "hs": 23,
+  "hsak_EN": 12,
+  "hsak_ES": 68,
+  "hsak_WN": 10,
+  "hsak_WS": 65,
+  "hsbd_EN": 12,
+  "hsbd_ES": 67,
+  "hsbd_WN": 10,
+  "hsbd_WS": 65,
+  "hsbf_EN": 12,
+  "hsbf_ES": 68,
+  "hsbf_WN": 12,
+  "hsbf_WS": 67,
+  "hsbo_EN": 12,
+  "hsbo_ES": 68,
+  "hsbo_WN": 11,
+  "hsbo_WS": 66,
+  "kc_EN": 13,
+  "kc_ES": 65,
+  "kc_WN": 16,
+  "kc_WS": 67,
+  "krq_EN_0": 1,
+  "krq_EN_1": 1,
+  "krq_EN_2": 1,
+  "krq_EN_3": 1,
+  "krq_EN_4": 9,
+  "krq_EN_5": 16,
+  "krq_EN_6": 14,
+  "krq_EN_7": 9,
+  "krq_ES_0": 1,
+  "krq_ES_1": 1,
+  "krq_ES_2": 1,
+  "krq_ES_3": 1,
+  "krq_ES_4": 8,
+  "krq_ES_5": 15,
+  "krq_ES_6": 14,
+  "krq_ES_7": 9,
+  "krq_WN_0": 1,
+  "krq_WN_1": 1,
+  "krq_WN_2": 1,
+  "krq_WN_3": 1,
+  "krq_WN_4": 11,
+  "krq_WN_5": 15,
+  "krq_WN_6": 16,
+  "krq_WN_7": 11,
+  "krq_WS_0": 1,
+  "krq_WS_1": 1,
+  "krq_WS_2": 1,
+  "krq_WS_3": 1,
+  "krq_WS_4": 10,
+  "krq_WS_5": 15,
+  "krq_WS_6": 16,
+  "krq_WS_7": 10,
+  "krs_EN_0": 1,
+  "krs_EN_1": 1,
+  "krs_EN_2": 1,
+  "krs_EN_3": 1,
+  "krs_EN_4": 11,
+  "krs_EN_5": 17,
+  "krs_EN_6": 16,
+  "krs_EN_7": 10,
+  "krs_ES_0": 1,
+  "krs_ES_1": 1,
+  "krs_ES_2": 1,
+  "krs_ES_3": 1,
+  "krs_ES_4": 10,
+  "krs_ES_5": 16,
+  "krs_ES_6": 16,
+  "krs_ES_7": 10,
+  "krs_WN_0": 1,
+  "krs_WN_1": 1,
+  "krs_WN_2": 1,
+  "krs_WN_3": 1,
+  "krs_WN_4": 10,
+  "krs_WN_5": 15,
+  "krs_WN_6": 15,
+  "krs_WN_7": 10,
+  "krs_WS_0": 1,
+  "krs_WS_1": 1,
+  "krs_WS_2": 1,
+  "krs_WS_3": 1,
+  "krs_WS_4": 10,
+  "krs_WS_5": 15,
+  "krs_WS_6": 15,
+  "krs_WS_7": 9,
+  "kvn_EN": 8,
+  "kvn_ES": 30,
+  "kvn_WN": 10,
+  "kvn_WS": 33,
+  "lkf_EN": 32,
+  "lkf_ES": 1,
+  "lkf_WN": 32,
+  "lkf_WS": 1,
+  "lt_EN": 3,
+  "lt_ES": 3,
+  "lt_WN": 3,
+  "lt_WS": 3,
+  "mf_EN": 9,
+  "mf_ES": 33,
+  "mf_WN": 7,
+  "mf_WS": 31,
+  "pll_lock": 4,
+  "tk": 1,
+  "wencoded_EN_0": 15,
+  "wencoded_EN_1": 8,
+  "wencoded_EN_3": 7,
+  "wencoded_ES_0": 15,
+  "wencoded_ES_1": 8,
+  "wencoded_ES_3": 7,
+  "wencoded_WN_0": 16,
+  "wencoded_WN_1": 8,
+  "wencoded_WN_3": 8,
+  "wencoded_WS_0": 16,
+  "wencoded_WS_1": 8,
+  "wencoded_WS_3": 8,
+  "wret_EN_0": 15,
+  "wret_EN_1": 8,
+  "wret_EN_3": 7,
+  "wret_ES_0": 15,
+  "wret_ES_1": 8,
+  "wret_ES_3": 7,
+  "wret_WN_0": 15,
+  "wret_WN_1": 7,
+  "wret_WN_3": 7,
+  "wret_WS_0": 15,
+  "wret_WS_1": 7,
+  "wret_WS_3": 7
+ },
+ "critical_stages": {
+  "d2d_to_seq": 0,
+  "seq_to_astk": {
+   "WS": 33,
+   "WN": 4,
+   "ES": 32,
+   "EN": 4
+  },
+  "astk_to_hub": {
+   "WS": 6,
+   "WN": 6,
+   "ES": 7,
+   "EN": 7
+  },
+  "hub_to_astk": {
+   "WS": 7,
+   "WN": 7,
+   "ES": 6,
+   "EN": 6
+  },
+  "hub_to_seq": 24,
+  "seq_to_d2d": 0,
+  "seq_to_land": {
+   "WS": 33,
+   "WN": 10,
+   "ES": 30,
+   "EN": 8
+  },
+  "gw_to_land": {
+   "WS": 33,
+   "WN": 11,
+   "ES": 30,
+   "EN": 11
+  },
+  "land_to_gw": {
+   "WS": 31,
+   "WN": 9,
+   "ES": 33,
+   "EN": 12
+  },
+  "seq_to_gw": 0,
+  "gw_to_seq": 0
+ },
+ "assumed": {
+  "row_engine_frame": "re-cut H: 4 x qkd_rhead 1080.0 x 492.48 + qkd_ectl 648.0 x 129.6 (measured cells: head 152,960 um2 placed, control 24,507 um2 synthesized; routes qkd_rhead_c / qkd_ectl_c)",
+  "astk_w": 220.32,
+  "land_w": 172.8,
+  "frames": {
+   "qkd_ckbump": [
+    43.2,
+    43.2
+   ],
+   "qkd_d2d": [
+    777.6,
+    518.4
+   ],
+   "qkd_seq": [
+    604.8,
+    475.2
+   ],
+   "qkd_embgw": [
+    172.8,
+    216.0
+   ],
+   "qkd_pll": [
+    324.0,
+    324.0
+   ],
+   "qkd_ahub": [
+    1175.04,
+    760.32
+   ],
+   "qkd_host": [
+    777.6,
+    518.4
+   ],
+   "qkd_lnk": [
+    777.6,
+    129.6
+   ]
+  },
+  "note": "frames without a routed element are sized from synthesis or stated as ASSUMED"
+ },
+ "legality": {
+  "overlaps": 0,
+  "overlap_examples": [],
+  "outside": 0,
+  "outside_examples": []
+ },
+ "strict_ports": {
+  "ok": false,
+  "failures": [
+   "qkd_seq: bound die port lr absent from the abstract (no die net)",
+   "qkd_seq: bound die port lx absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port accepted_ranks absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port available absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port cohort_gen absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port cohort_tag absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port coordinator_fault absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port ctrl_completion_fault absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port die_id absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port dispatch_valid absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port dispatched absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port engine_admit_ready absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port engine_result_cr absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port fault_src absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port ingest_permission absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port irq absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port issued absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port landed absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port local_service_epoch absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port marker absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port marker_v absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port native_pr absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port package_abort absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port participant_pos absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port participant_token absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port participant_trace absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port peer_protocol_fault absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port physical_ack_n absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port physical_fault absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port por_n absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port program_auth_digest absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port program_auth_epoch absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port program_auth_v absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port program_authorized_footer64 absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port program_authorized_footer_v absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port program_begin_v absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port program_consensus absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port program_digest absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port program_epoch absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port program_expected_dw absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port program_expected_pw absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port program_ready absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port record_fault absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port record_tx_v absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port recovery_complete absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port seen absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port service_abort absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port service_diag_raw absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port service_faults absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port service_ready absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port service_status absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port source_cr absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port sys_ready absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port token_epoch absent from the abstract (no die net)",
+   "qkd_host_rt: bound die port token_epoch_valid absent from the abstract (no die net)",
+   "qkd_hslice: bound die port ctrl_completion_v absent from the abstract (no die net)",
+   "qkd_hslice: bound die port ctrl_completion_we absent from the abstract (no die net)",
+   "qkd_pllm: bound die port por_n absent from the abstract (no die net)",
+   "qkd_pllm: bound die port refclk absent from the abstract (no die net)",
+   "qkd_d2ds: RTL port att_rx_beat has no die port",
+   "qkd_d2ds: RTL port att_rx_kind has no die port",
+   "qkd_d2ds: RTL port att_rx_slot has no die port",
+   "qkd_d2ds: RTL port att_rx_v has no die port",
+   "qkd_d2ds: RTL port att_tx_beat has no die port",
+   "qkd_d2ds: RTL port att_tx_kind has no die port",
+   "qkd_d2ds: RTL port att_tx_payload has no die port",
+   "qkd_d2ds: RTL port att_tx_slot has no die port",
+   "qkd_d2ds: RTL port att_tx_v has no die port",
+   "qkd_d2ds: RTL port cal_seg has no die port",
+   "qkd_d2ds: RTL port cal_start has no die port",
+   "qkd_d2ds: RTL port cfg_addr has no die port",
+   "qkd_d2ds: RTL port cfg_data has no die port",
+   "qkd_d2ds: RTL port cfg_rx_we has no die port",
+   "qkd_d2ds: RTL port cfg_tx_we has no die port",
+   "qkd_d2ds: RTL port emb_tx_payload has no die port",
+   "qkd_d2ds: RTL port emb_tx_slot has no die port",
+   "qkd_d2ds: RTL port emb_tx_v has no die port",
+   "qkd_d2ds: RTL port epoch_abort has no die port",
+   "qkd_d2ds: RTL port fault has no die port",
+   "qkd_d2ds: RTL port host_boot_begin has no die port",
+   "qkd_d2ds: RTL port host_drained_local has no die port",
+   "qkd_d2ds: RTL port kv_active_local has no die port",
+   "qkd_d2ds: RTL port kv_drained_local has no die port",
+   "qkd_d2ds: RTL port kv_flush_local has no die port",
+   "qkd_d2ds: RTL port kvn_compiled_generation has no die port",
+   "qkd_d2ds: RTL port kvn_compiled_identity has no die port",
+   "qkd_d2ds: RTL port kvn_word_data has no die port",
+   "qkd_d2ds: RTL port kvn_word_generation has no die port",
+   "qkd_d2ds: RTL port kvn_word_identity has no die port",
+   "qkd_d2ds: RTL port kvn_word_index has no die port",
+   "qkd_d2ds: RTL port kvn_word_slot has no die port",
+   "qkd_d2ds: RTL port kvn_word_tag has no die port",
+   "qkd_d2ds: RTL port kvn_word_valid has no die port",
+   "qkd_d2ds: RTL port recovery_cycles has no die port",
+   "qkd_d2ds: RTL port rx_payload has no die port",
+   "qkd_d2ds: RTL port status_epoch16 has no die port",
+   "qkd_hslice_dn: bound die port ctrl_completion_v absent from the abstract (no die net)",
+   "qkd_hslice_dn: bound die port ctrl_completion_we absent from the abstract (no die net)",
+   "qkd_embgw: bound die port gq absent from the abstract (no die net)",
+   "qkd_embgw: bound die port gr absent from the abstract (no die net)"
+  ],
+  "rows": [
+   {
+    "master": "qkd_ectl",
+    "module": "qkd_ectl3_epoch_direct_s",
+    "rtl_ports": 17,
+    "die_ports": 18,
+    "classed": {
+     "cfg": "by_design: die-top strap {engine 3, stack 2} (tie cells) per slot"
+    }
+   },
+   {
+    "master": "qkd_rhead",
+    "module": "ot_qkh_head_native_r4",
+    "rtl_ports": 21,
+    "die_ports": 91,
+    "classed": {
+     "hid": "by_design: die-top strap (tie cells), the head index of this tile"
+    }
+   },
+   {
+    "master": "qkd_ahub",
+    "module": "ot_qkd_ahub_die",
+    "rtl_ports": 25,
+    "die_ports": 26,
+    "classed": {
+     "ev": "debug: hub event word (unread on the die)"
+    }
+   },
+   {
+    "master": "qkd_seq",
+    "module": "qkd_seq",
+    "rtl_ports": 40,
+    "die_ports": 28,
+    "classed": {}
+   },
+   {
+    "master": "qkd_host_rt",
+    "module": "qkd_host_root_pt",
+    "rtl_ports": 155,
+    "die_ports": 102,
+    "classed": {
+     "die_id": "by_design: package strap (tie cells), role = 2 PKG + DIE, set at package assembly",
+     "por_n": "by_design: package POR pad (off-chip signal)"
+    }
+   },
+   {
+    "master": "qkd_hslice",
+    "module": "qkd_host_pc_slice_die",
+    "rtl_ports": 31,
+    "die_ports": 29,
+    "classed": {}
+   },
+   {
+    "master": "qkd_pllm",
+    "module": "qkd_pll_analog_model",
+    "rtl_ports": 16,
+    "die_ports": 14,
+    "classed": {
+     "refclk": "by_design: package reference-clock pad (off-chip signal)",
+     "por_n": "by_design: package POR pad (off-chip signal)"
+    }
+   },
+   {
+    "master": "qkd_d2ds",
+    "module": "qkd_d2d_static",
+    "rtl_ports": 81,
+    "die_ports": 12,
+    "classed": {
+     "por_n": "by_design: package POR pad (off-chip signal)"
+    }
+   },
+   {
+    "master": "qkd_hslice_dn",
+    "module": "qkd_host_pc_slice_die",
+    "rtl_ports": 31,
+    "die_ports": 29,
+    "classed": {}
+   },
+   {
+    "master": "qkd_cdc_wleaf",
+    "module": "ot_qwen_stream4_cdc_pc",
+    "rtl_ports": 33,
+    "die_ports": 10,
+    "classed": {}
+   },
+   {
+    "master": "qkd_kvwq_ctl_bin",
+    "module": "qkd_kvwq_ctl_bin",
+    "rtl_ports": 14,
+    "die_ports": 12,
+    "classed": {
+     "durable": "by_design (v1.2): the write-retire word {rw_v, rw_id}, unread on the KV/system die (flow control = the kvn credit; no consumer RTL)"
+    }
+   },
+   {
+    "master": "qkd_kvwq_leaf_s_w129_m",
+    "module": "qkd_kvwq_leaf_s_w129_m",
+    "rtl_ports": 9,
+    "die_ports": 9,
+    "classed": {}
+   },
+   {
+    "master": "qkd_ctrl",
+    "module": "qkd_ctrl_strip_sr",
+    "rtl_ports": 200,
+    "die_ports": 262,
+    "classed": {}
+   },
+   {
+    "master": "qkd_ctrl_n",
+    "module": "qkd_ctrl_strip_s",
+    "rtl_ports": 200,
+    "die_ports": 262,
+    "classed": {}
+   },
+   {
+    "master": "qkd_land",
+    "module": "qkd_land_strip_s",
+    "rtl_ports": 194,
+    "die_ports": 195,
+    "classed": {
+     "st": "by_design: die-top strap, the stack index (tie cells)"
+    }
+   },
+   {
+    "master": "qkd_land_n",
+    "module": "qkd_land_strip_s",
+    "rtl_ports": 194,
+    "die_ports": 195,
+    "classed": {
+     "st": "by_design: die-top strap, the stack index (tie cells)"
+    }
+   },
+   {
+    "master": "qkd_astk",
+    "module": "qkd_astk_strip_s",
+    "rtl_ports": 62,
+    "die_ports": 164,
+    "classed": {
+     "st": "by_design: die-top strap, the stack index (tie cells)",
+     "pv_done": "by_design: the aggregator P.V done pair, not a hub input (the die ap word is 563 b)"
+    }
+   },
+   {
+    "master": "qkd_astk_n",
+    "module": "qkd_astk_strip_s",
+    "rtl_ports": 62,
+    "die_ports": 164,
+    "classed": {
+     "st": "by_design: die-top strap, the stack index (tie cells)",
+     "pv_done": "by_design: the aggregator P.V done pair, not a hub input (the die ap word is 563 b)"
+    }
+   },
+   {
+    "master": "qkd_embgw",
+    "module": "qkd_embgw",
+    "rtl_ports": 24,
+    "die_ports": 12,
+    "classed": {}
+   }
+  ],
+  "frame_only": {
+   "qkd_astk": "ot_qwen_nearhbm_attn_stack_d minus its engines (re-cut D: q beat broadcast, node staging, P.V levels 4-7; recut.json)",
+   "qkd_astk_n": "as qkd_astk, N-stack pin plan (hub words on the S face)",
+   "qkd_land": "qfd_kvc crossbar successor + ot_qkvd_kv_merge (rtl/qwen_sys/kv_die_20261009) + ot_qfd_emb_strip",
+   "qkd_embgw": "ot_qfd_emb_gw + the gateway link side (r21c hub link FIFOs)",
+   "qkd_host": "qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter",
+   "qkd_pll": "vendor PLL + ot_qwen_sys_rst_seq",
+   "qkd_ctrl": "qfd_ctrl (r21c element; pcport KVW 2: KV write side-band from the CDC completion; kc: the stream-command word from qkd_seq -> async FIFO -> hclk ot_qkvd_kcmd_tap chain -> the 32 per-PC heads)",
+   "qkd_ctrl_n": "as qkd_ctrl, N-stack pin plan (kc on the N face)",
+   "qkd_ckbump": "clock / reset bump pair to the ROM die (pad cell, no logic: by design)"
+  }
+ },
+ "pin_reach": {
+  "hops": 3259,
+  "reach_um": 500.0,
+  "violations": 0,
+  "worst": []
+ },
+ "stack_local_reach": {
+  "hops": 2204,
+  "reach_um": 500.0,
+  "violations": 0,
+  "max_um": 498.5,
+  "worst": []
+ }
+}

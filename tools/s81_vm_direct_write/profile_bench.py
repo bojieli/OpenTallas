@@ -7,7 +7,7 @@ from pathlib import Path
 R=Path(__file__).resolve().parents[2]
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--profile',required=True);ap.add_argument('--mutant',action='store_true');ap.add_argument('--out',type=Path,required=True);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False)
+ ap=argparse.ArgumentParser();ap.add_argument('--profile',required=True);ap.add_argument('--mutant',action='store_true');ap.add_argument('--out',type=Path,required=True);ap.add_argument('--pipe',type=int,choices=[0,1],default=0);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False)
  manifest=json.loads((R/'physical/s81_vm_direct_write_native_1015/remaining_profiles.json').read_text());p=next(p for p in manifest['profiles'] if p['tag']==a.profile)
  source=R/manifest['wrapper_source'];wrapper=source.read_text();assert hashlib.sha256(source.read_bytes()).hexdigest()==manifest['wrapper_sha256']
  if a.mutant:
@@ -18,14 +18,14 @@ def main():
  capture=p['bank_base'] is None;n=1 if capture else 8;b=0 if capture else p['bank_base'];top=p['top']
  defs=f'''`timescale 1ns/1ps
 module tb;
-localparam integer N={n},BASE={b};
+localparam integer N={n},BASE={b},PIPE={a.pipe};
 reg ck=0,rst_n=0;always #5 ck=~ck;
 reg [N-1:0] iv=0,iwe=0;reg[14*N-1:0] ir=0;reg[4*N-1:0] im=0;reg[128*N-1:0] id=0;reg[8*N-1:0] it=0;
 wire[N-1:0] ov,owe;wire[4*N-1:0] om;wire[128*N-1:0] od;wire[8*N-1:0] ot;
 integer cy,k,w,hi,bank,row,checks=0,bad=0,seed=32'h7ace1593;reg good;reg[N-1:0] xv,xwe;reg[4*N-1:0] xm;reg[128*N-1:0] xd;reg[8*N-1:0] xt;
 '''
  if capture:defs+='wire[13:0] oq;reg[13:0] xq;\n'+top+' d(.ck(ck),.rst_n(rst_n),.i_v(iv),.i_we(iwe),.i_row(ir),.i_mask(im),.i_data(id),.i_tag(it),.o_v(ov),.o_we(owe),.o_row(oq),.o_mask(om),.o_data(od),.o_tag(ot));\n'
- else:defs+='wire[71:0] oq;reg[71:0] xq;wire fault;reg expect_fault=0,fault_due=0;\n'+top+' d(.ck(ck),.rst_n(rst_n),.i_v(iv),.i_we(iwe),.i_row(ir),.i_mask(im),.i_data(id),.i_tag(it),.o_v(ov),.o_we(owe),.o_addr(oq),.o_mask(om),.o_data(od),.o_tag(ot),.fault(fault));\n'
+ else:defs+='wire[71:0] oq;reg[71:0] xq;wire fault;reg expect_fault=0,fault_due=0,fault_due1=0;reg[N-1:0] pv=0,pwe=0;reg[71:0] pq=0;reg[4*N-1:0] pm=0;reg[128*N-1:0] pd=0;reg[8*N-1:0] pt=0;\n'+top+(' #(.PIPE(%d))'%a.pipe if a.pipe else '')+' d(.ck(ck),.rst_n(rst_n),.i_v(iv),.i_we(iwe),.i_row(ir),.i_mask(im),.i_data(id),.i_tag(it),.o_v(ov),.o_we(owe),.o_addr(oq),.o_mask(om),.o_data(od),.o_tag(ot),.fault(fault));\n'
  defs+='''initial begin
  repeat(4)@(negedge ck);rst_n=1;repeat(4)@(negedge ck);
  for(cy=0;cy<8000/N;cy=cy+1)begin
@@ -53,10 +53,11 @@ integer cy,k,w,hi,bank,row,checks=0,bad=0,seed=32'h7ace1593;reg good;reg[N-1:0] 
  else:defs+='''  // Scatter contract (S81 VM F6 2026-10-15): o_v exact every edge; we/address/mask/data/tag exact for every VALID
   // record (payload is registered straight from the pins and meaningful only with o_v); sticky fault at FAULT_AGE 3,
   // i.e. exactly one edge after the record that raised it.
+  if(PIPE)begin {xv,xwe,xq,xm,xd,xt,pv,pwe,pq,pm,pd,pt}={pv,pwe,pq,pm,pd,pt,xv,xwe,xq,xm,xd,xt};end
   if(ov!==xv)begin bad=bad+1;if(bad<4)$display("PROFILE_VALID_MISMATCH cycle%0d",cy);end
   for(k=0;k<N;k=k+1)if(xv[k]&&{owe[k],oq[9*k+:9],om[4*k+:4],od[128*k+:128],ot[8*k+:8]}!=={xwe[k],xq[9*k+:9],xm[4*k+:4],xd[128*k+:128],xt[8*k+:8]})begin bad=bad+1;if(bad<4)$display("PROFILE_DATA_MISMATCH cycle%0d record%0d",cy,k);end
-  if(fault!==fault_due)bad=bad+1;
-  fault_due=expect_fault;
+  if(fault!==(PIPE?fault_due1:fault_due))bad=bad+1;
+  fault_due1=fault_due;fault_due=expect_fault;
 '''
  defs+=''' end
  if(bad)begin $display("PROFILE_WRITE_FAIL records %0d bad %0d",checks,bad);$fatal;end
