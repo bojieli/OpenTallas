@@ -1,0 +1,41 @@
+{
+  "scope": "Full production-shape landing component with physical balanced relays; not integrated controller/CDC/attention or native timing qualification",
+  "host": "ot-agidock128",
+  "remote": "/srv/opentallas-scratch/codex/kvs-landing7-1014",
+  "tool": "Verilator5.032 --binary --timing -Wno-fatal -j4 --top-module tb_static_landing_physical",
+  "sources": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv": "d296cd7517d602033da253e158827035506e7b9abf4fd103bbb83586553127d9",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv": "bb42751da94485054b71d5d29db3107294a9c86055da6be2211b1e78328ae755",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_physical.sv": "e0e8882707c05e5d0661461073d12ac043101891abcdd2cff31612768fc51b0e",
+    "rtl/test/qwen_static_kv/tb_static_landing_physical.sv": "ea0148643c90e5e138528e25163e4c5f5664ba922c780059b1a2c4d23a74774a",
+    "tools/qwen_kv_die/static_landing_pins.py": "719e0dc60747e53142ad3709d10e9d65aa65acaa44945766a2134ed20618298b"
+  },
+  "macro": {
+    "path": "/home/ubuntu/OpenTallas/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "cases": [
+    {
+      "hop_mut": 0,
+      "observed": "PASS",
+      "log": "run_base.log"
+    },
+    {
+      "hop_mut": 1,
+      "observed": "FAIL",
+      "log": "run_m1.log"
+    },
+    {
+      "hop_mut": 2,
+      "observed": "FAIL",
+      "log": "run_m2.log"
+    }
+  ],
+  "groups": 32,
+  "pseudo_channels": 128,
+  "rows": 16384,
+  "quarters": 65536,
+  "latency_core_edges": 7,
+  "cycles": 4521,
+  "phase_scope": "common core clock baseline only; every physical child retains separate actual clock entry and requires phi-R/TT/FF check"
+}
