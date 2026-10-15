@@ -16,6 +16,6 @@ def main():
   subprocess.run(cmd+[SOURCES[0],str(mutant)]+SOURCES[2:],cwd=ROOT,check=True)
   r=subprocess.run(['vvp',str(exe)],cwd=ROOT,capture_output=True,text=True);(out/'wrong_actual_PW_face_mutant.log').write_text(r.stdout+r.stderr)
   if not r.returncode or 'FATAL:'not in r.stdout:raise RuntimeError('actual PW face mutation escaped')
- out.joinpath('status.json').write_text(json.dumps(dict(scope='actual sequencer dh PW/start leaf, actual issuer and fixed issue core; full sequencer body not simulated by this mechanism test; production layer calendar/physical D_seq remain open',sources={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest()for p in SOURCES+['rtl/qwen_split/qfd_seq_su.sv','tools/qwen_static_schedule/collective.py']},command_issue_cycle=8,stop_cycle=12,PW_window=[944,960],native=False),indent=2)+'\n')
+ out.joinpath('status.json').write_text(json.dumps(dict(scope='actual sequencer dh PW/start leaf, actual issuer and fixed issue core; full sequencer body not simulated by this mechanism test; production layer calendar/physical D_seq remain open',sources={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest()for p in SOURCES+['rtl/qwen_split/qfd_seq_su_static.sv','tools/qwen_static_schedule/collective.py']},command_issue_cycle=8,stop_cycle=12,PW_window=[944,960],native=False),indent=2)+'\n')
  print('PASS actual seq PW/start calendar, fault-only free, missing halves and rejected wrong-face mutant')
 if __name__=='__main__':main()
