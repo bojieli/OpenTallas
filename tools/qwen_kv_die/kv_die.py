@@ -1419,6 +1419,14 @@ def _relays(m):
             except ValueError:
                 path = None
 
+        if path is None and bid == 'host_fdi' and HOST_V14.get('north'):
+            # v1.4.1 HOST-north (kvs7 window: coarse H 1.11 -> 1.27 / V 0.94 -> 1.15 where the 2,089-b FDI left the root
+            # westward into the kvn_WN / krs_WN corridor): the FDI goes down the EAST centre channel
+            try:
+                hb_ = by['host']
+                path = route_via(a, b, pa, pb, hb_.y - 2 * CHAN, lane_x=hb_.x + hb_.w + CHAN)
+            except ValueError:
+                path = None
         if path is None:
             path = route(a, b, pa, pb)
         L = (len(path) + 1) * G            # + the cell from each frame edge to the ring
