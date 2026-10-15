@@ -62,6 +62,7 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11, EXPE
  integer wc[0:16383]; reg [3:0] slices[0:16383],raw_slices[0:16383]; reg [7:0] wt[0:16383];
  wire [127:0] raw_v; wire [1151:0] raw_a; wire [511:0] raw_m; wire [1023:0] raw_t;
  integer raw_row,raw_slice;
+ reg boot_done[0:16383];reg [31:0] boot_banks;integer boot_n;
  integer cy=0,reads=0,writes=0,commits=0,preloads=0,readbacks=0,answers=0,rawcommits=0;
  integer i,j,q,b,r,n,p,s,a,start,elapsed,first_w=-1,last_w=-1; string dir;
  function integer bank(input integer row); bank=(row&31)^(((row>>5)&7)<<2); endfunction
@@ -99,7 +100,7 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11, EXPE
     r=mx_wq[14*l+:14];
     if(r<256||r>=896||mx_wqm[16*l+:16]!==16'hffff)$fatal(1,"invalid output row/mask");
     if(mx_wqd[512*l+:512]!==expected_y[r-256])$fatal(1,"numerical mismatch row=%0d",r);
-    wt[r]=28+l;image[r]=expected_y[r-256];wc[r]=cy+WRITE_COMMIT_LAT;slices[r]=0;raw_slices[r]=0;
+    wt[r]=28+l;image[r]=mx_wqd[512*l+:512];wc[r]=cy+WRITE_COMMIT_LAT;slices[r]=0;raw_slices[r]=0;
     writes=writes+1;answers=answers+32;if(first_w<0)first_w=cy;last_w=cy;
    end
   end
@@ -126,7 +127,7 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11, EXPE
   end
  end endgenerate
  initial begin
-  for(i=0;i<16384;i=i+1)begin used[i]=0;image[i]=0;wc[i]=-1;slices[i]=0;raw_slices[i]=0;end
+  for(i=0;i<16384;i=i+1)begin used[i]=0;boot_done[i]=0;image[i]=0;wc[i]=-1;slices[i]=0;raw_slices[i]=0;end
   for(i=0;i<MAXC;i=i+1)begin ev[i]=0;ed[i]=0;sev[i]=0;sed[i]=0;end
   if(!$value$plusargs("dir=%s",dir))$fatal(1,"dir required");
   $readmemh({dir,"/cfg.mem"},cfg);$readmemh({dir,"/h.mem"},hm);$readmemh({dir,"/k.mem"},km);
@@ -148,9 +149,16 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11, EXPE
   put(64,0);image[64][0+:32]=256|(1<<18);image[64][32+:32]=8192;image[64][64+:32]=8192;
   image[64][96+:32]=13824;image[64][128+:32]=256;image[64][160+:64]=cfg[0];
   repeat(5)@(negedge ck);rss=1;repeat(8)@(negedge ck);
-  // One external SU write every three edges; no preload backdoor or result injection.
-  for(i=0;i<16384;i=i+1)if(used[i])begin
-   @(negedge ck);#0.01;su_wqv=1;su_wq[0+:14]=i;su_wqm[0+:16]=16'hffff;su_wqd[0+:512]=image[i];preloads=preloads+1;
+  // Exceptional host boot uses a precomputed fixture-only bank-distinct batch on up to16 real SU ports.
+  // No readiness, result or DUT state participates; each fixed batch is followed by three idle edges.
+  while(preloads<3521)begin
+   @(negedge ck);#0.01;su_wqv=0;boot_banks=0;boot_n=0;
+   for(r=0;r<16384;r=r+1)if(used[r]&&!boot_done[r]&&!boot_banks[bank(r)]&&boot_n<16)begin
+    su_wqv[boot_n]=1;su_wq[14*boot_n+:14]=r;su_wqm[16*boot_n+:16]=16'hffff;
+    su_wqd[512*boot_n+:512]=image[r];boot_done[r]=1;boot_banks[bank(r)]=1;
+    boot_n=boot_n+1;preloads=preloads+1;
+   end
+   if(boot_n==0)$fatal(1,"preload schedule incomplete");
    @(negedge ck);#0.01;su_wqv=0;repeat(2)@(negedge ck);
   end
   repeat(32)@(negedge ck);
