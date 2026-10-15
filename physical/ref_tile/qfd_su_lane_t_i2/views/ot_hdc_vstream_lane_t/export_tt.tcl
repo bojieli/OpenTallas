@@ -13,10 +13,10 @@ read_liberty /mv0/ot_hdc_vstream_lane_h_tt.lib
 read_liberty /mv1/ot_hdc_sfu_exp_t_tt.lib
 read_liberty /mv2/ot_hdc_sfu_rcp_t_tt.lib
 read_liberty /mv3/ot_hdc_sfu_rsq_t_tt.lib
-read_db /work/results/asap7/opentallas_ot_hdc_vstream_lane_t_asap7_ref_qfd_su_lane_t_i2_i2_e3269fa2b/base/6_final.odb
+read_db /work/results/asap7/opentallas_ot_hdc_vstream_lane_t_asap7_ref_qfd_su_lane_t_i2_i3_f2c5ac85b/base/6_final.odb
 set ::ot_ce_corner ss
-read_sdc /work/results/asap7/opentallas_ot_hdc_vstream_lane_t_asap7_ref_qfd_su_lane_t_i2_i2_e3269fa2b/base/6_final.sdc
-read_spef /work/results/asap7/opentallas_ot_hdc_vstream_lane_t_asap7_ref_qfd_su_lane_t_i2_i2_e3269fa2b/base/6_final.spef
+read_sdc /work/results/asap7/opentallas_ot_hdc_vstream_lane_t_asap7_ref_qfd_su_lane_t_i2_i3_f2c5ac85b/base/6_final.sdc
+read_spef /work/results/asap7/opentallas_ot_hdc_vstream_lane_t_asap7_ref_qfd_su_lane_t_i2_i3_f2c5ac85b/base/6_final.spef
 set_propagated_clock [all_clocks]
 read_sdc /src/physical/ref_tile/qfd_su_lane_t_i2/signoff.sdc
 read_sdc /src/physical/common_flow/io_ref_routed.sdc

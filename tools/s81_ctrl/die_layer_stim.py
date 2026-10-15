@@ -221,6 +221,33 @@ def topo_order(nodes):
     return prog
 
 
+def native_operation_audit(prog):
+    """Inventory arithmetic provenance; no fixture-backed op qualifies native."""
+    targets = {'su': 'dsfd_sp_su_h', 'hc': 'dsfd_sp_hc_c',
+               'coll': 'dsfd_sp_collective_c', 'fld': 'dsfd_sp_gather_c'}
+    provenance = {
+        'su': 'golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge',
+        'hc': 'behavioural VM; golden hcx coefficients and golden-partitioned collective y',
+        'coll': 'golden y partitioned into four fixture contributions; actual field/SVC partials absent',
+        'fld': 'fixture root words; real gather/capture transport only, no field matvec engines',
+        'sux': 'numerical operation absent; duration-only substitute',
+        'hcx': 'golden coefficient rows written at behavioural done',
+        'eng': 'golden post-Engram hidden rows written at behavioural done',
+    }
+    rows = []
+    for index, op in enumerate(prog):
+        eng = op['eng']
+        rows.append(dict(op_id=op['id'], index=index, engine=eng, port=op['port'],
+                         target_module=targets.get(eng),
+                         engine_implementation='RTL_TRANSPORT_ONLY' if eng == 'fld' else 'RTL' if eng in targets else 'BEHAVIOURAL_DURATION',
+                         operand_provenance=provenance.get(eng, 'behavioural endpoint; no actual native numerical producer'),
+                         output_override=eng not in targets,
+                         native_memory_bound=False, native_qualified=False,
+                         blocking_reasons=['no elaborated whole-die execution binding', 'behavioural VM',
+                                           'numerical fixture operands or missing arithmetic engine']))
+    return rows
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('out', type=Path)
@@ -256,6 +283,8 @@ def main():
                     'for --layer (its op ids renamed): a DSpark stage row (M<st>R<i>, tools/s81_ftok/mtp_golden.py) runs '
                     'on the sliding layer\'s program (window attention + MoE, the same op graph), its own chain and SU '
                     'snapshot')
+    ap.add_argument('--vm-coeff-align', action='store_true',
+                    help='place each HC coefficient pair in a separate 16-row-aligned VM region for compact native arms')
     ap.add_argument('--seed', type=int, default=11)
     ap.add_argument('--programs', type=Path, default=ROOT / 'results/rtl/s81_ctrl_20261008/programs')
     a = ap.parse_args()
@@ -263,6 +292,7 @@ def main():
     npr = np.random.default_rng(a.seed)
     a.out.mkdir(parents=True, exist_ok=True)
 
+    COEF_STRIDE = 16 if a.vm_coeff_align else 2
     # ------------------------------------------------------------------ golden chain (hc_gate.chains_golden)
     if a.program_layer:                                # a DSpark stage row on a backbone layer's program (s81-ftok r3)
         P_ = a.program_layer
@@ -307,25 +337,25 @@ def main():
     coef = {}
     for b, blk in enumerate(('attn', 'ffn')):
         g = gold[blk]
-        coef[C_BASE + 2 * b] = HG.pack(HG.u32(np.asarray(g['comb'], np.float32).reshape(-1)), 32)
-        coef[C_BASE + 2 * b + 1] = HG.pack(list(HG.u32(g['pre'])) + list(HG.u32(g['post'])) + [int(HG.u32([g['eps']])[0])], 32)
+        coef[C_BASE + COEF_STRIDE * b] = HG.pack(HG.u32(np.asarray(g['comb'], np.float32).reshape(-1)), 32)
+        coef[C_BASE + COEF_STRIDE * b + 1] = HG.pack(list(HG.u32(g['pre'])) + list(HG.u32(g['post'])) + [int(HG.u32([g['eps']])[0])], 32)
 
     # --coef-split: the early row pair of block b at E_BASE + 2b: row 0 = don't-care combine (zeros, present at job
     # start), row 1 = {pre, zero post, eps}.  attn: present at job start (the previous layer's ffn.hc.pre_post wrote
     # it); ffn: written by <L>.attn.hc.pre_fwd, a 1-cycle hcx op that follows <L>.attn.hc.pre_post.
-    E_BASE = C_BASE + 4
+    E_BASE = C_BASE + 2 * COEF_STRIDE
     boot_ok = []
     if a.coef_split:
         for b, blk in enumerate(('attn', 'ffn')):
             g = gold[blk]
             e1 = HG.pack(list(HG.u32(g['pre'])) + [0] * len(HG.u32(g['post'])) + [int(HG.u32([g['eps']])[0])], 32)
-            vm_boot[E_BASE + 2 * b] = 0
-            boot_ok.append(E_BASE + 2 * b)
+            vm_boot[E_BASE + COEF_STRIDE * b] = 0
+            boot_ok.append(E_BASE + COEF_STRIDE * b)
             if b == 0:
                 vm_boot[E_BASE + 1] = e1
                 boot_ok.append(E_BASE + 1)
             else:
-                coef[E_BASE + 2 * b + 1] = e1
+                coef[E_BASE + COEF_STRIDE * b + 1] = e1
     # ------------------------------------------------------------------ program rewrite (by name, then topological)
     eng_ops = [o['id'] for o in src if o['id'].startswith(f'{a.layer}.eng.')]
     assert bool(eng_ops) == (eng_rows is not None), (a.layer, eng_ops, 'Engram ops need an Engram chain fixture')
@@ -345,8 +375,9 @@ def main():
         import su_layer
         sub = su_layer.build(a.su_snap, L, check_layer=not a.program_layer)
         su_alias = sub['alias']
-        add(f'{L}.su.gain_q', 1, 0, [], sub['arg'][f'{L}.su.gain_q'], eng='su', order=-2.8)
-        add(f'{L}.su.gain_k', 1, 0, [], sub['arg'][f'{L}.su.gain_k'], eng='su', order=-2.7)
+        for gain_index, (gain_name, gain_arg) in enumerate((name, arg) for name, arg in sub['arg'].items()
+                                                         if '.su.gain_' in name):
+            add(gain_name, 1, 0, [], gain_arg, eng='su', order=-2.8 + 0.01 * gain_index)
         su_members = {}
         for k_, v_ in su_alias.items():
             su_members.setdefault(v_, []).append(k_)
@@ -387,25 +418,25 @@ def main():
                 if a.coef_split:
                     cpre = [f'{L}.attn.hc.pre_fwd'] if b else []
                     if b:
-                        add(f'{L}.attn.hc.pre_fwd', HX_PORT, 1, [f'{L}.attn.hc.pre_post'], wrow=E_BASE + 2 * b + 1,
+                        add(f'{L}.attn.hc.pre_fwd', HX_PORT, 1, [f'{L}.attn.hc.pre_post'], wrow=E_BASE + COEF_STRIDE * b + 1,
                             eng='hcx', order=[x['id'] for x in src].index(f'{L}.attn.hc.pre_post') + 0.25)
                     early = a.h_stream and not b and not eng_ops      # attn COEF-a ahead of the H_LOAD
                     add(f'{L}.{blk}.hc.coef_a', HC_PORT, 0, cpre + ([f'{L}.hc.h_load'] if not b and not early else []),
-                        hc_arg(2, E_BASE + 2 * b), eng='hc', order=(-1.5 if early else i - 0.5))
+                        hc_arg(2, E_BASE + COEF_STRIDE * b), eng='hc', order=(-1.5 if early else i - 0.5))
                     add(nm, HC_PORT, o['dur'], preds + [f'{L}.{blk}.hc.coef_a'] + ([f'{L}.hc.h_load'] if early else []),
                         hc_arg(4, O_BASE + 512 * b, gsel=b, quant=1, yout=b), eng='hc', order=i)
                     add(f'{L}.{blk}.hc.coef', HC_PORT, 0, [f'{L}.{blk}.hc.pre_post', f'{L}.{blk}.hc.sinkhorn', nm],
-                        hc_arg(2, C_BASE + 2 * b), eng='hc', order=i + 0.25)
+                        hc_arg(2, C_BASE + COEF_STRIDE * b), eng='hc', order=i + 0.25)
                 else:
                     add(f'{L}.{blk}.hc.coef', HC_PORT, 0, [f'{L}.{blk}.hc.pre_post', f'{L}.{blk}.hc.sinkhorn'],
-                        hc_arg(2, C_BASE + 2 * b), eng='hc', order=i - 0.5)
+                        hc_arg(2, C_BASE + COEF_STRIDE * b), eng='hc', order=i - 0.5)
                     add(nm, HC_PORT, o['dur'], preds + [f'{L}.{blk}.hc.coef'],
                         hc_arg(4, O_BASE + 512 * b, gsel=b, quant=1, yout=b), eng='hc', order=i)
             elif tail == 'hc_post':
                 add(nm, HC_PORT, o['dur'], preds + ([f'{L}.{blk}.hc.coef'] if a.coef_split else []), hc_arg(3, 0),
                     eng='hc', order=i)
             else:      # coefficient producers: behavioural on hcx
-                wrow = {'hc.pre_post': C_BASE + 2 * b + 1, 'hc.sinkhorn': C_BASE + 2 * b}.get(tail, -1)
+                wrow = {'hc.pre_post': C_BASE + COEF_STRIDE * b + 1, 'hc.sinkhorn': C_BASE + COEF_STRIDE * b}.get(tail, -1)
                 add(nm, HX_PORT, o['dur'], preds, wrow=wrow, eng='hcx', order=i)
         elif o['eng'] == 'coll':
             mode = 0 if 'allreduce' in tail else 1
@@ -490,7 +521,8 @@ def main():
                        aliased=su_alias, behavioural_sux=sux, exp_rows=len(sub['exp']), vm_rows=len(sub['vm']),
                        T=sub['T'], softmax_fits=sub['softmax_fits'], qb_fits=sub['qb_fits'],
                        router_fits=sub['router_fits'], checks=sub['checks'],
-                       sw_fit=sub['sw_fit'], jexp={k: list(v) for k, v in sub['jexp'].items()})
+                       sw_fit=sub['sw_fit'], footprints=sub['footprints'], compressor_outputs=sub['compressor_outputs'],
+                       native_allocation=False, jexp={k: list(v) for k, v in sub['jexp'].items()})
         print(f"{L}: REAL SU {len(real)} jobs ({len(sub['exp'])} expected rows), behavioural su.x {sux}")
     (a.out / 'boot_ok.txt').write_text(''.join(f'{r}\n' for r in boot_ok))
     (a.out / 'payload.mem').write_text(''.join(f'{v:0128x}\n' for v in payload))
@@ -500,9 +532,14 @@ def main():
             fd.write(f'{run.exp[r]:0128x}\n')
     nst = sum(1 for r in run.exp if r >= S_BASE)
     (a.out / 'n.mem').write_text(f'{len(run.exp):08x}\n{len(own):08x}\n{len(msgs):08x}\n{len(ygold):08x}\n{nst:08x}\n')
-    meta = dict(layer=a.layer, ng=a.ng, ops=len(prog), field_phases=nph, coll_messages=msgs, coll_records=len(own),
+    meta = dict(layer=a.layer, native_qualified=False, native_operation_audit=native_operation_audit(prog),
+                vm_coefficient_stride=COEF_STRIDE,
+                vm_coefficient_bases=[C_BASE, C_BASE + COEF_STRIDE], ng=a.ng, ops=len(prog), field_phases=nph, coll_messages=msgs, coll_records=len(own),
                 y_words=len(ygold), exp_rows=len(run.exp), hstore_rows=nst, golden_checks_vs_pickle=4,
-                program=[dict(k=k, id=o['id'], port=o['port'], eng=o['eng'], preds=o['preds']) for k, o in enumerate(prog)],
+                program=[dict(k=k, id=o['id'], port=o['port'], eng=o['eng'],
+                              arg=o['arg'] if o['arg'] is not None else k,
+                              argument_provenance='native endpoint descriptor' if o['eng'] in ('su', 'hc') else 'fixture program argument; native binding unproven',
+                              preds=o['preds']) for k, o in enumerate(prog)],
                 cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split), h_stream=bool(a.h_stream), su_sched=sched,
                 dur_override=dur_ov or None, su_real=su_meta)
     if fx is not None:

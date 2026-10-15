@@ -72,6 +72,9 @@ def main():
     emb = a.embedding.resolve()
     tok = emb / 'vectors' / f'token{a.token}'
     spec = {'position': 0, 'epoch': 0, 'layers': layers,
+            'evidence_scope': 'HISTORICAL_FUNCTIONAL_HARNESS_ON_CHIP_MODELS_PRESENT',
+            'native_qualified': False,
+            'required_native_coverage_gate': 'tools/qwen_composed_harness/audit_native_plan.py',
             'actual_stage0': {'program': str(emb / 'embedding_program.hex'), 'program_sha256': sha(emb / 'embedding_program.hex'),
                               'bank': str(emb / 'vectors'), 'bank_sha256': {n: sha(tok / n) for n in ('codes.hex', 'scale.hex')}}}
     stage.mkdir(parents=True, exist_ok=True)

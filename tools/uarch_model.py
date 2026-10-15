@@ -34,6 +34,82 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+
+def qwen_xpf_static_control_model(entries=4, program_words=64):
+    """Static compiler arm transport under the real TT parent; no rate claim."""
+    record_bits = entries * 188
+    monitor_bits = record_bits + 3*entries + 117
+    loader_bits = 377
+    boundary_bits = 75 + 49 + 16 + 2
+    ordinal_map_bits = program_words*6 + 7 + 7 + 1
+    return dict(schema='opentallas.qwen-xpf-static-control.v1',
+                opt_in_default=False, replicas=1, macs_per_cycle=0,
+                SRAM_macros_added=0, declared_register_bits=monitor_bits+loader_bits+boundary_bits+ordinal_map_bits,
+                control_record_bits=188, table_entries=entries,
+                control_write_bits_per_cycle=64, arm_bits_per_cycle=72,
+                SU_observer_bits_per_cycle=16, additional_die_data_tracks=88,
+                memory_bytes_per_cycle_added=0,
+                mux_demux_cost='four-way descriptor/cycle selection;64x6 ordinal-PC map read',
+                fanout='single local consumer per observer; table comparators share local cycle32',
+                roots='ck_head/ck_tree preserve closed child phi-R; new ck_xpf local root at its own phi-R',
+                outline_um=[777.6,1814.4],
+                slot_fit='parent slot assigned by compute lead; added logic area/pins await synthesis and route',
+                price_policy='immutable price unchanged; no issue delay, ready, credit or production gating',
+                latency='compiled arm phase includes actual assigned transport+three tap edges; configuration uses existing pw75 before start',
+                fixed_config_edges_max=3*entries+3,
+                qualification='mechanism bench only; actual producer trace/calendar, native pin/reset/clock, area and measured layer cost remain unqualified')
+
+
+def qwen_static_native_parent_model():
+    """Prephysical census for the actual fixed ME controller successor."""
+    xpf = qwen_xpf_static_control_model()
+    # Replace image-derived ordinal map by two real 16b observer stations.
+    xpf_bits = xpf['declared_register_bits'] - (64*6+7+7+1) + 32
+    return dict(schema='opentallas.qwen-static-native-parent.v1',
+        opt_in_default=False, replicas=1, SRAM_macros_added=0,
+        additional_declared_register_bits=xpf_bits+643+6+9+173+56+37+1+1,
+        issue_store='actual ME8x47 FF rows plus consumer/control; published Yosys census643FF',
+        parent_state='6bit CALS stage plus sticky relocation1/native select1/native fault1',
+        removed_logic='entire private tree shadow head; area/FF savings unmeasured',
+        clocks='head,tree,xpf,me_sched independent scalar entries at own phi-R; sched phase matched to head decoder',
+        engine_enable='normal1; no memory/status gate; stage cycles fixed by compiler calendar',
+        command_latency='existing actual head GO station1; classify/relocate0; existing tree station latency retained',
+        observer_latency='actual head identity station1 aligned with cmdGO, xpf capture1',
+        added_data_tracks=380+95+6-53-1+56+1+37,
+        track_contract='nativecmd380/native_ret95/stage6/CP56/copy_active1/accepted_context37; obsolete VMxd53/xr1 removed',
+        outline_um=[777.6,1814.4],
+        slot_fit='assigned parent envelope; actual area/pins/CTS and placement remain open',
+        CP56='three56b rows+valid3+index2=173 state bits; head CP56/context37/programfault1/copyactive observer1 included; actual mapping open',
+        price_policy='immutable prices unchanged; no physical or layer-rate qualification')
+
+
+def s81_cn_ik_shared_kv_model(s_rd=16, s_wr=16):
+    """F11 functional successor: share the existing512-lane KV norm bank.
+
+    Incremental operators are FP4 quantisers and the128-dim mean/reduction;
+    allocation/route qualification remains blocked until S-DIE assigns outlines
+    and pins. Existing immutable stage prices are retained, never overwritten.
+    """
+    return dict(schema="opentallas.s81.cn-ik.shared-kv.v1", macs_per_cycle=0,
+        existing_norm_chunks_reused=64, norm_lanes_per_chunk=8,
+        static_epochs=dict(KV=dict(gain_set=2,dim=512),
+            CN=dict(gain_set=3,dim=512),IK=dict(gain_set=0,dim=128,physical_first_lane=384)),
+        new_replicas=dict(cn_quant_e4m3=16,ik_quant_ue8m0=4,
+            ik_half_reduce=2,ik_root_reduce=1,cn_norm_write=16),
+        memory_bytes_per_cycle=dict(read=64*s_rd,write=64*s_wr),
+        jobs=dict(CN=dict(parameter_rows=5,operand_rows=32,qdq_rows=16,raw_rows=16,norm_rows=16,
+                result_writes=48,immutable_priced_cycles=186.7+197.3+74.7+156.0),
+            IK=dict(parameter_rows=5,operand_rows=32,zero_prefix_rows=24,qdq_rows=4,raw_rows=4,
+                result_writes=8,immutable_priced_cycles=185.6+197.3+74.7+146.7)),
+        quant_boundary_bits_per_cycle=dict(input=1024,qdq_output=512,original_codes_and_scales=144),
+        norm_export_bits_per_chunk=128,
+        physical=dict(area="derive from assigned KV/QN children and new quant routes",
+            outlines="S-DIE assignment pending",routing_tracks="derive from assigned pins/channel capacity",
+            route_admissible=False),
+        latency="measure source-pinned full-shape descriptor gate; compose producer visibility and static epoch contention",
+        finite_buffers="existing KV gain sets plus fixed pipeline registers; no demand arbitration or backpressure")
+
+
 def qwen_seq_su_boundary_model(nw=18, is_stages=1, os_stages=1, relay_stages=15):
     """Option-4 boundary successor, sized before RTL; no new rate claim."""
     start_bits = 1 + 2 * nw + 12
@@ -581,6 +657,12 @@ def qwen_stream4_mutable_interface_model():
     """Selected protected STREAM4 rings/owner/control, sized before RTL."""
     from qwen_stream4_protected_model import model
     return model()
+
+
+def s81_probability_ingress_model(rows=640, **kwargs):
+    """Native SVC candidate transport/storage and fixed pipeline cost, no adoption."""
+    from s81_probability_ingress_model import model
+    return model(rows, **kwargs)
 
 
 def hbm_write_merge_contract_model():
