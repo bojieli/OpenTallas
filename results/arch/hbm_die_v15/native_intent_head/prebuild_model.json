@@ -1,0 +1,30 @@
+{
+  "status": "PREBUILD_OPT_IN_NOT_QUALIFIED",
+  "baseline": "a7b86347d / 340cfd747",
+  "reason": "640 target still needs6.45HBM edges; accepted bursts become visible one queued beat per edge, registered ACT candidate delays first bank; empty response head waits SRAM write then read.",
+  "parameters_default_off": [
+    "INTENT_PREVIEW",
+    "REGISTERED_HEAD_BYPASS"
+  ],
+  "intent": "192FF debt +1 sticky debt-fault FF per PC; real accepted-minus-column six-bit bank debt, one active physical row.",
+  "head": "256FF payload+1flag/PC registered arrival bypass only for empty head or last-head-consumed with same-edge new response. Every response still writes real SRAM; queued heads use registered SRAM read. Native32reservation unchanged.",
+  "FF_delta_per_PC": 450,
+  "measured_baseline_clockpins_per_PC": 13650,
+  "projected_clockpins_per_PC": 14100,
+  "SRAM_delta": 0,
+  "external_port_delta": 0,
+  "internal_port_bits_per_PC": 32,
+  "logic_cost": "32bank debt increment/decrement/zero detect,32bank current-state eligibility/priority,256bit registered-head select; exact mapped cost and SS/FF pending.",
+  "latency": "Save real ownership/ACT startup and one head edge; no pass prediction, no RCD/RP/REF/23-edge fixture changes.",
+  "unchanged_gates_HBM_cycles": {
+    "640": 84.7,
+    "2048": 134.2
+  },
+  "tests_required": [
+    "Exact bank debt under concurrent accept/column/row change",
+    "Preview cannot ACT absent accepted debt, or during DESC/DRAIN",
+    "All ACT timing/REF eligibility preserved",
+    "Empty-head/collision/queued SRAM/held response tests and actual-data mutant",
+    "All4 canonical nativePF cases; current STORE remains separately pinned5e0c96"
+  ]
+}
