@@ -58,7 +58,7 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
  (* keep=1 *) reg [PW-1:0] rb,rb_n,rfp,rfp_n,enc_addr,enc_addr_n,read_addr,read_addr_n,rx_seq,dec_xseq;
  (* keep=1 *) reg [31:0] w_epoch,w_epoch_n,r_epoch,r_epoch_n;
  (* keep=1 *) reg enc_v,enc_v_n,read_v,read_v_n,rx_v,rx_v_n,dec_v,dec_v_n,out_v,out_v_n,wf,wf_n,rf,rf_n;
- (* keep=1 *) reg [1:0] sk_v,sk_v_n;
+ (* keep=1 *) reg [1:0] sk_wp,sk_wp_n,sk_rp,sk_rp_n;     // 2-entry write skid pointers (mod 4)
  (* async_reg="true" *) reg [PW-1:0] ack1,ack2,ackn1,ackn2,pub1,pub2,pubn1,pubn2;
  (* async_reg="true" *) reg [31:0] re1,re2,ren1,ren2,we1,we2,wen1,wen2;
  reg [CW-1:0] enc_code,slots[0:7],rx_code;
@@ -73,7 +73,7 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
  ot_rst_relay #(.REGIONS(2)) u_rrst(.clk(rclk),.rst_n_in(rrst_n),.rst_n(rr));
  // pin flops (data: no reset; valid: reset)
  reg we_p;reg [W-1:0] wdata_p;reg [31:0] wepoch_p,repoch_p;
- reg [W-1:0] sk_d0,sk_d1;
+ reg [W-1:0] sk_d [0:1];
  (* keep=1 *) reg [W-1:0] dec_data,dec_data_n,out_data,out_data_n;
  reg [31:0] dec_epoch;reg dec_ue;reg [PW-1:0] dec_seq;
  reg full_q,w_fault_q,empty_q,r_fault_q;reg [2:0] rd_freed_q;
@@ -89,29 +89,30 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
  wire source_epoch_ok=(re2==~ren2)&&(re2==w_epoch)&&(wepoch_p==w_epoch);
  wire wbad=(wb!=~wb_n)||(commit_seq!=~commit_n)||(fetch_seq!=~fetch_n)||(publish_seq!=~publish_n)||
   (freed!=~freed_n)||(enc_addr!=~enc_addr_n)||(read_addr!=~read_addr_n)||(w_epoch!=~w_epoch_n)||
-  (enc_v!=~enc_v_n)||(read_v!=~read_v_n)||(wf!=~wf_n)||(sk_v!=~sk_v_n)||(sk_v==2'b10);
+  (enc_v!=~enc_v_n)||(read_v!=~read_v_n)||(wf!=~wf_n)||(sk_wp!=~sk_wp_n)||(sk_rp!=~sk_rp_n)||(sk_cnt>2'd2);
  wire [PW-1:0] full_release=(MUT==4)?fetch_seq:released;
  wire [PW-1:0] occupancy=wb-full_release;
  wire [PW-1:0] free_delta=released-freed;
  wire source_safe=source_epoch_ok&&ack_ok&&!wbad&&!wf;
  wire [PW-1:0] slot_used=fetch_seq-released;
  wire issue=source_safe&&(fetch_seq!=commit_seq)&&((MUT==1)||(slot_used<8));
- wire [W-1:0] cdata=sk_v[0]?sk_d0:wdata_p;                    // oldest write: skid head, else the pin flop
+ wire [1:0] sk_cnt=sk_wp-sk_rp;
+ wire [W-1:0] cdata=(sk_cnt==2'd0)?wdata_p:sk_d[sk_rp[0]];      // oldest write: skid head, else the pin flop
  wire [N*32-1:0] encode_raw={{(N*32-RAW){1'b0}},wb,w_epoch,cdata};
  wire [CW-1:0] coded_in;
  for(genvar g=0;g<N;g=g+1)begin:g_codec
   assign coded_in[g*39+:39]=encode32(encode_raw[g*32+:32]);
  end
  reg [PW-1:0] wb_x,commit_x,fetch_x,publish_x,freed_x,enc_addr_x,read_addr_x;
- reg [31:0] w_epoch_x;reg enc_v_x,read_v_x,wf_x,commit_now,slot_we;reg [1:0] sk_v_x;reg [W-1:0] sk_d0_x,sk_d1_x;
- reg [2:0] fd_x;reg [CW-1:0] enc_code_x;
+ reg [31:0] w_epoch_x;reg enc_v_x,read_v_x,wf_x,commit_now,slot_we;reg [1:0] sk_wp_x,sk_rp_x;
+ reg [2:0] fd_x;
  always @* begin
   wb_x=wb;commit_x=commit_seq;fetch_x=fetch_seq;publish_x=publish_seq;freed_x=freed;enc_addr_x=enc_addr;
-  read_addr_x=read_addr;w_epoch_x=w_epoch;enc_v_x=enc_v;read_v_x=read_v;wf_x=wf;enc_code_x=enc_code;
+  read_addr_x=read_addr;w_epoch_x=w_epoch;enc_v_x=enc_v;read_v_x=read_v;wf_x=wf;
   fd_x=3'd0;commit_now=1'b0;slot_we=1'b0;
   if(wbad&&MUT!=6)wf_x=1'b1;
   else if(wepoch_p!=w_epoch)begin
-   if((wb!=released)||enc_v||read_v||(sk_v!=2'b00)||we_p)wf_x=1'b1;
+   if((wb!=released)||enc_v||read_v||(sk_cnt!=2'd0)||we_p)wf_x=1'b1;
    else begin
     w_epoch_x=wepoch_p;wb_x=0;commit_x=0;fetch_x=0;publish_x=0;freed_x=0;enc_addr_x=0;read_addr_x=0;
     enc_v_x=1'b0;read_v_x=1'b0;wf_x=1'b0;
@@ -119,23 +120,17 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
   end else if(wbad)wf_x=1'b1;
   else if(source_safe)begin
    fd_x=(free_delta>7)?3'd7:free_delta[2:0];freed_x=freed+fd_x;
-   commit_now=(sk_v[0]||we_p)&&(occupancy<D);
+   commit_now=((sk_cnt!=2'd0)||we_p)&&(occupancy<D);
    enc_v_x=commit_now;
-   if(commit_now)begin wb_x=wb+1'b1;enc_addr_x=wb;enc_code_x=coded_in;end
+   if(commit_now)begin wb_x=wb+1'b1;enc_addr_x=wb;end
    if(enc_v)commit_x=enc_addr+1'b1;
    read_v_x=issue;if(issue)begin read_addr_x=fetch_seq;fetch_x=fetch_seq+1'b1;end
    if(read_v)begin slot_we=1'b1;publish_x=read_addr+1'b1;end
   end
   // write skid: oldest first; an accepted write is never dropped (a third pending write is a protocol fault)
-  sk_v_x=sk_v;sk_d0_x=sk_d0;sk_d1_x=sk_d1;
-  case({sk_v,we_p})
-   3'b001:if(!commit_now)begin sk_v_x=2'b01;sk_d0_x=wdata_p;end
-   3'b010:if(commit_now)sk_v_x=2'b00;
-   3'b011:if(commit_now)sk_d0_x=wdata_p;else begin sk_v_x=2'b11;sk_d1_x=wdata_p;end
-   3'b110:if(commit_now)begin sk_v_x=2'b01;sk_d0_x=sk_d1;end
-   3'b111:if(commit_now)begin sk_d0_x=sk_d1;sk_d1_x=wdata_p;end else wf_x=1'b1;
-   default:;
-  endcase
+  // write skid: data slots load on we_p alone (no dependence on the commit decision); pointers carry the order
+  sk_wp_x=sk_wp+(we_p?2'd1:2'd0);sk_rp_x=sk_rp+(commit_now?2'd1:2'd0);
+  if((sk_cnt==2'd2)&&we_p&&!commit_now)wf_x=1'b1;          // a third pending write: protocol fault
  end
  // registered source outputs, from the next state
  wire [PW-1:0] released_x=graybin(ack1);
@@ -144,13 +139,13 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
  wire ack_ok_x=(ack1==~ackn1);
  wire src_ep_ok_x=(re1==~ren1)&&(re1==w_epoch_x)&&(wepoch_p==w_epoch_x);
  wire w_fault_x=wf_x||wbad;
- wire full_x=w_fault_x||!ack_ok_x||!src_ep_ok_x||(sk_v_x!=2'b00)||(occ_x>=D-1);
+ wire full_x=w_fault_x||!ack_ok_x||!src_ep_ok_x||(sk_wp_x!=sk_rp_x)||(occ_x>=D-1);
  wire [CW-1:0] store_rd;
  always @(posedge wclk or negedge wr[0])begin
   if(!wr[0])begin
    wb<=0;wb_n<='1;commit_seq<=0;commit_n<='1;fetch_seq<=0;fetch_n<='1;publish_seq<=0;publish_n<='1;freed<=0;freed_n<='1;
    enc_addr<=0;enc_addr_n<='1;read_addr<=0;read_addr_n<='1;enc_v<=0;enc_v_n<=1;read_v<=0;read_v_n<=1;wf<=0;wf_n<=1;
-   w_epoch<=0;w_epoch_n<='1;ack1<=0;ack2<=0;ackn1<='1;ackn2<='1;re1<=0;re2<=0;ren1<=0;ren2<=0;sk_v<=2'b00;sk_v_n<=2'b11;
+   w_epoch<=0;w_epoch_n<='1;ack1<=0;ack2<=0;ackn1<='1;ackn2<='1;re1<=0;re2<=0;ren1<=0;ren2<=0;sk_wp<=2'd0;sk_wp_n<=2'b11;sk_rp<=2'd0;sk_rp_n<=2'b11;
    full_q<=1'b1;w_fault_q<=1'b0;rd_freed_q<=3'd0;
   end else begin
    ack1<=ack_gray;ack2<=ack1;ackn1<=~ack_gray;ackn2<=ackn1;
@@ -159,12 +154,13 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
    if(publish_x!=publish_seq)begin publish_seq<=publish_x;publish_n<=~publish_x;end if(freed_x!=freed)begin freed<=freed_x;freed_n<=~freed_x;end 
    if(enc_addr_x!=enc_addr)begin enc_addr<=enc_addr_x;enc_addr_n<=~enc_addr_x;end if(read_addr_x!=read_addr)begin read_addr<=read_addr_x;read_addr_n<=~read_addr_x;end 
    if(enc_v_x!=enc_v)begin enc_v<=enc_v_x;enc_v_n<=~enc_v_x;end if(read_v_x!=read_v)begin read_v<=read_v_x;read_v_n<=~read_v_x;end if(wf_x!=wf)begin wf<=wf_x;wf_n<=~wf_x;end 
-   if(w_epoch_x!=w_epoch)begin w_epoch<=w_epoch_x;w_epoch_n<=~w_epoch_x;end if(sk_v_x!=sk_v)begin sk_v<=sk_v_x;sk_v_n<=~sk_v_x;end 
+   if(w_epoch_x!=w_epoch)begin w_epoch<=w_epoch_x;w_epoch_n<=~w_epoch_x;end if(sk_wp_x!=sk_wp)begin sk_wp<=sk_wp_x;sk_wp_n<=~sk_wp_x;end if(sk_rp_x!=sk_rp)begin sk_rp<=sk_rp_x;sk_rp_n<=~sk_rp_x;end 
    full_q<=full_x;w_fault_q<=w_fault_x;rd_freed_q<=fd_x;
   end
  end
  always @(posedge wclk)begin
-  sk_d0<=sk_d0_x;sk_d1<=sk_d1_x;enc_code<=enc_code_x;
+  if(we_p)sk_d[sk_wp[0]]<=wdata_p;
+  enc_code<=coded_in;                                         // unconditional: the SRAM writes it the edge after a commit
   if(slot_we)slots[read_addr[2:0]]<=store_rd;
  end
  // ---------------- consumer (read) domain ----------------
