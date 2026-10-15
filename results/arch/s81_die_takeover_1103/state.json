@@ -1,0 +1,235 @@
+{
+  "schema": "opentallas.s81.die.takeover.v1",
+  "updated_utc": "2026-10-15T18:10:24.708444+00:00",
+  "source_commit": "eb9cfa044920f23a9565d6c5fda43d2d5f217d06",
+  "native_qualified": false,
+  "clock_source_join": {
+    "master": "dsfd_sp_vm",
+    "clock_counts": {
+      "stream": 651,
+      "serial": 42
+    },
+    "reset_counts": {
+      "stream": 591,
+      "serial": 26
+    },
+    "return_roots": [
+      "ck_mem_return_t[0:0]",
+      "ck_mem_return_t[1:1]",
+      "ck_mem_return_t[2:2]",
+      "ck_mem_return_t[3:3]",
+      "ck_mem_return_t[4:4]",
+      "ck_mem_return_t[5:5]",
+      "ck_mem_return_t[6:6]",
+      "ck_mem_return_t[7:7]",
+      "ck_mem_return_t[8:8]",
+      "ck_mem_return_t[9:9]",
+      "ck_mem_return_t[10:10]",
+      "ck_mem_return_t[11:11]",
+      "ck_mem_return_t[12:12]",
+      "ck_mem_return_t[13:13]",
+      "ck_mem_return_t[14:14]",
+      "ck_mem_return_t[15:15]"
+    ],
+    "actual_routed_ff_per_return_root": 5380,
+    "superseded_tied_root_ff": 21520,
+    "source_fix": "34eba5ffe",
+    "proof": "results/rtl/s81_vm_return_clock16_1015/receipt.json",
+    "qualification_scope": "Source ABI join only; physical delivery and individual routed views still required"
+  },
+  "norm_v24_candidate_leaf_grant": {
+    "source_commit": "7a483898c1737dbd1216c23aef56f8cdfb970f0a",
+    "decision": "Authorize exact candidate leaf pins/outlines for structural closure; final parent/die adoption pending actual composition and every incident anchor",
+    "pins": {
+      "ot_s81_hc_ctfn": {
+        "path": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfn.json",
+        "sha256": "6c2e32ad69acb7d6f9409f450eda7975f865b738c627b759280bb426ec3356b6",
+        "outline_um": [
+          576.72,
+          25.92
+        ],
+        "clock_entries": {
+          "stream": [
+            "clk"
+          ]
+        },
+        "clock_pins": {
+          "clk": {
+            "bits": 1,
+            "uniform": false,
+            "per_bit": [
+              [
+                "N",
+                "M3",
+                286.044,
+                0.084
+              ]
+            ]
+          }
+        }
+      },
+      "ot_s81_hc_ctfs_nt": {
+        "path": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfs_nt.json",
+        "sha256": "164f231e7dccfb66dba5c455aab8e1f8b8f02d12a922e03e0ab12a77f2e537ef",
+        "outline_um": [
+          576.72,
+          25.92
+        ],
+        "clock_entries": {
+          "stream": [
+            "clk"
+          ]
+        },
+        "clock_pins": {
+          "clk": {
+            "bits": 1,
+            "uniform": false,
+            "per_bit": [
+              [
+                "N",
+                "M3",
+                286.044,
+                0.084
+              ]
+            ]
+          }
+        }
+      },
+      "ot_s81_hc_ctfl_nt": {
+        "path": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfl_nt.json",
+        "sha256": "c979a42559583e2e8848997fc13730b62053305fb8878fd2d121c528572b5c57",
+        "outline_um": [
+          576.72,
+          25.92
+        ],
+        "clock_entries": {
+          "stream": [
+            "clk"
+          ]
+        },
+        "clock_pins": {
+          "clk": {
+            "bits": 1,
+            "uniform": false,
+            "per_bit": [
+              [
+                "N",
+                "M3",
+                286.044,
+                0.084
+              ]
+            ]
+          }
+        }
+      },
+      "ot_s81_hc_ctfxs_nt": {
+        "path": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfxs_nt.json",
+        "sha256": "51bbf7b7c441a7daca523edc63e5205d353cb50e8ceb0dbde6104cfd9a92f414",
+        "outline_um": [
+          576.72,
+          25.92
+        ],
+        "clock_entries": {
+          "stream": [
+            "clk",
+            "clk_l"
+          ]
+        },
+        "clock_pins": {
+          "clk": {
+            "bits": 1,
+            "uniform": false,
+            "per_bit": [
+              [
+                "N",
+                "M3",
+                286.044,
+                0.084
+              ]
+            ]
+          },
+          "clk_l": {
+            "bits": 1,
+            "uniform": false,
+            "per_bit": [
+              [
+                "N",
+                "M3",
+                68.22,
+                0.084
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "clock_rule": "Deliver each actual root at phi - wire - R from source-matched insertion.json; no inherited/default R",
+    "parent_geometry_open": "v23 cth outline790.56 but sub_layout row list still serial; v24 report uses777.60. Actual NT+return-column child origins and first/last chain anchors must be reconciled"
+  },
+  "blockers": [
+    {
+      "category": "geometry",
+      "item": "SA_2x2_RP GEN20sa",
+      "evidence": "el1011-s81die.log 2026-10-15 09:56:13",
+      "status": "GEN_FAIL hx_E no station spot",
+      "cause": "Hub layout occupies S14W/S14E vertical transport and VCH",
+      "next": "Actual road-load constrained system placement, source-complete VM dimensions"
+    },
+    {
+      "category": "geometry_source",
+      "item": "SA VM abstract",
+      "status": "Historical4168.8x3715.2 not actual complete currentVM",
+      "evidence": "s81_vm_1103/vm_geometry source census6a5e706dd+34eba5ffe",
+      "actual_current": "352 memory leaves/400roots +150writeedge=502known/550roots BEFORE72read/capCDC/globals",
+      "next": "VM owner current complete packing and actual clock/pin ABI"
+    },
+    {
+      "category": "endpoint_geometry",
+      "item": "BFx2 bind16",
+      "status": "GEN_FAIL no emitted die.v",
+      "evidence": "/srv/opentallas-scratch/claude/s81-bind-1015/bind16_x2pair/gen/status.json on ot-epyc4",
+      "cause": "dsfd_rly_536_SN.i:536pins*.048um cannot fit17.256um S face",
+      "next": "bind_recovery owns preplacement orientation-safe envelope and exact LEF regression"
+    },
+    {
+      "category": "fixed_source",
+      "item": "Forwarded control lane fault/live",
+      "source_fix": "2c132ea61",
+      "scope": "ValidMSB/statuslane/endwidth/faultfold/streamclock fixed; oldhe_c4/c5/c6 layouts obsolete and not exact aliases"
+    },
+    {
+      "category": "views_phase",
+      "item": "Native die timing",
+      "status": "No current SA canonical GRT/TT/FF result; SS sensitivity only",
+      "next": "Complete real source/view/phase joins before native claim"
+    }
+  ],
+  "preserved_jobs": [
+    {
+      "host": "ot-epyc4",
+      "pids": [
+        3183471,
+        3183477,
+        3309184,
+        3719372,
+        3888876
+      ],
+      "scope": "Old GEN18 family/c18 CPU live; pass0 path search; preserve"
+    },
+    {
+      "host": "ot-epyc4",
+      "pids": [
+        942232,
+        942247
+      ],
+      "scope": "GEN19b/v23 and19rb/v22 alternatives; construction_pass0 snapshots exist, generating later stages"
+    },
+    {
+      "host": "ot-epyc4",
+      "pids": [
+        1020722
+      ],
+      "scope": "GEN20 old-topology/v23+stationgrants alternative; NOT SA; source20 andexactfinalmasterfootprintfix20ebb0973"
+    }
+  ]
+}
