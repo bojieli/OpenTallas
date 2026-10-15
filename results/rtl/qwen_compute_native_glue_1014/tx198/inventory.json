@@ -1,0 +1,54 @@
+{
+  "schema": "qwen.compute.tx198.candidate.v1",
+  "status": "SOURCE_COMPONENT_UNQUALIFIED_PARENT",
+  "source_sha256": "4343a340b874225e6ae6b6ca1816b66a917c0a04b4f2edaa52f810da723798df",
+  "source": "rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv",
+  "data_banks": 58,
+  "native_roots_including_residual": 84,
+  "closed_child_roots": 14,
+  "reset_roots": 11,
+  "residual_roots": 1,
+  "tx_roots": 16,
+  "net_banks_removed": 15,
+  "data_edges_added": 0,
+  "tx_existing_edges": 2,
+  "layout": {
+    "x_group_upper16": "packed[16*g +:16],g0..3",
+    "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+    "split": "packed[195:192]",
+    "first": 196,
+    "valid": 197,
+    "unused": "physical[255:198]=0"
+  },
+  "alias_map": {
+    "xl_q": {
+      "bank": "xdelay_0",
+      "offset": 128,
+      "width": 128
+    },
+    "mq_x": {
+      "bank": "xdelay_6",
+      "offset": 128,
+      "width": 128
+    },
+    "s2_x": {
+      "bank": "s2_x_full",
+      "master": "qkh_packet_v256",
+      "offset": 0,
+      "width": 128,
+      "additional_bank": true
+    }
+  },
+  "proof_boundary": "TX input is original s3x_d AFTER FP32 round/mask. s2_x full128 retained before RNE. CLOSED LSL uses LAT8 bmul decode only [31:16]; all FP32 accumulator/tree bits and flags remain unchanged.",
+  "pending": [
+    "geometry per-bit screen including new alias and rounding dependencies",
+    "full parent source/residual metadata",
+    "new parent clock/reset/pin ABI and physical gate"
+  ],
+  "component_validation": {
+    "positive": "PASS2086 full64-bit t_out+8 lane faults+treefault comparisons,522fault edges,4608rounded inputs",
+    "lower_half_mutant": "rejected c101",
+    "slice_order_mutant": "rejected c101",
+    "reset_reference": "Reference initializes all8 IL8 feedback phases before comparing arbitrary invalid output slots; no additional operational TX edge. Initial unsanitized invalid-phase replay failure preserved."
+  }
+}
