@@ -1,0 +1,26 @@
+{
+ "cell": "ot_s81_pq_ctl_state_phw10",
+ "view": "physical/ref_tile/s81_pq_ctl_state_calcap/views/ot_s81_pq_ctl_state_phw10",
+ "lib_cell": "ot_s81_pq_ctl_state_phw10",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 234.0,
+ "spread_ps": 36.6,
+ "outputs": 729,
+ "inputs": 400,
+ "launch_ps": 191.4,
+ "launch_pin": "mdr_o[166]",
+ "capture_ps": 297.1,
+ "capture_pin": "rom_sq[39]",
+ "launch_over": 0,
+ "capture_over": 25,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 297.1 > 190 (25 pins)",
+ "over_pins": "25 pins over 190 capture: rom_sq[39] 297.1 ... rom_pq1[7] 190.1 (rom_sq 23 pins, rom_pq0[0], rst_n 219.4)",
+ "source": "main 9f76aae57 (job s81_pq_ctl_state_calcap-c3k-340f17556 CLOSED TT +205.53/FF +16.56/DRC0)",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (origin/main), launch<=220 capture<=190 at phi-R"
+}
