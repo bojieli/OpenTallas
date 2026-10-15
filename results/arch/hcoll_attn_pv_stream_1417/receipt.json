@@ -32,8 +32,9 @@
   "scope": "canonical128-row SM-subtree boundary into four real ring stops and real static reducer + two actual SRAM functional models",
   "open": [
     "actual native SM producer binding",
-    "physical slot/pin/clock/SS+FF closure",
+    "physical slot/pin/clock, TT setup, FF hold and DRC0; SS sensitivity only",
     "full v15/HOST production ISA integration",
     "end-to-end attention/G96 throughput price"
-  ]
+  ],
+  "binding_signoff": "TT setup>=0, FF hold>=0, DRC0; SS sensitivity only"
 }

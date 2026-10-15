@@ -40,7 +40,7 @@
     "inherited 4bf62695d fullSM elem1 probe and nativecolumn smoke2 still active at final snapshot; never restarted",
     "fullSM RV/rrow/rdata publication timing is not established by this one-leaf vehicle",
     "converter/HBM data-to-SM integration is not tested by externally seeded BF16 row inputs",
-    "new control/metadata physical cost, SS/FF timing and fullSM sustained throughput remain open"
+    "new control/metadata physical cost, TT setup/FF hold/DRC0 (SS sensitivity only) and fullSM sustained throughput remain open"
   ],
   "output_mapping": "output_mapping.json separates measured leaf GVtag from actual BE/frontend wire-derived mapping and the required landing-to-contiguous-dimension transpose"
 }
