@@ -23,7 +23,7 @@ module ot_hbm_p_h16_loop_static #(parameter integer PAGE_AW=2,AW=10+PAGE_AW)(
  wire[31:0]core_tag,ordinal;wire cv,core_fault;
  reg[AW:0]frame_row,frame_length;reg[9:0]rows_q;
  reg map_fault;
- wire[15:0]head_offset=rows_q==10'd128?(16'(active_head)<<4):((16'(active_head)<<6)+(16'(active_head)<<4));
+ wire[15:0]head_offset=rows_q==10'd128 ? (16'(active_head)<<4):((16'(active_head)<<6)+(16'(active_head)<<4));
  wire mb_read=core_rq[16]&&core_rq[15:0]==16'd7800;
  wire scalar_write=core_wq[280]&&(core_wq[279:264]==16'd7800||core_wq[279:264]==16'd7808);
  reg[14:0]mb_v,mb_bank;
