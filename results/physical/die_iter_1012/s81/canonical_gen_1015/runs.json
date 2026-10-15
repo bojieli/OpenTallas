@@ -1,38 +1,59 @@
 {
- "status": "SCREEN2_TERMINAL_FAIL_SCREEN3_LIVE",
- "source_commit": "c1005b4e1",
- "host": "ot-epyc4",
- "pid": null,
- "unit": "oth-ubuntu-1265934-1792051399",
- "local_systemd_unit": "canonical-gen-1015-screen3.service",
- "local_log": "/home/ubuntu/canonical-gen-1015-screen3.log",
- "remote_source": "/srv/opentallas-scratch/codex-canonical-gen-1015/src",
- "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen3",
- "scope": "Actual full2417 typed generator. No native timing or placement success claim while active. All sourcepairIDs2417/BF519 andPHW10 metadata preserved.",
- "first_failure": "Historical slot_geometry required uniform BF_PER_REGION; canonical exactperframe slot inventory now replaces only canonical restriction. Failed screen1 remains immutable.",
- "artifacts_expected": {
-  "field_before_trunks.json.gz": "Actual fully populated canonical child boxes before transport; incomplete nets",
-  "canonical_partial.json.gz": "Exact current instances+buses on failure; explicitly partial",
-  "canonical_plan.json.gz": "Complete actual generator instances,buses,frames and calendar on success",
-  "exact_pins.lef.gz": "Generated and actual native abstract LEFs, only after success"
- },
- "open": [
-  "actual RSC occupancy and <=500um per-bit flights/cuts",
-  "all realnative abstracts/TTsetup/FFhold/DRC0",
-  "actual PHW10 source bindings from compute stream",
-  "static schedule through actual physical clock phases"
- ],
- "screen2": {
-  "status": "GEN_FAIL",
-  "error": "cx2 no station at2075um: direct eastsource exit crossed realHC slab",
-  "field_legality": {
-   "instances": 32969,
-   "overlaps": 0,
-   "outside": 0
+  "status": "SCREEN7_TERMINAL_FAIL_PARTIAL_GRAPH_ONLY",
+  "source_commit": "f44b10366",
+  "host": "ot-epyc4",
+  "pid": null,
+  "unit": "oth-ubuntu-1329812-1792052876",
+  "local_systemd_unit": "canonical-gen-1015-screen7.service",
+  "local_log": "/home/ubuntu/canonical-gen-1015-screen7.log",
+  "remote_source": "/srv/opentallas-scratch/codex-canonical-gen-1015/src",
+  "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen7",
+  "scope": "Actual full2417 typed generator. No native timing or placement success claim while active. All sourcepairIDs2417/BF519 andPHW10 metadata preserved.",
+  "first_failure": "Historical slot_geometry required uniform BF_PER_REGION; canonical exactperframe slot inventory now replaces only canonical restriction. Failed screen1 remains immutable.",
+  "artifacts_expected": {
+    "field_before_trunks.json.gz": "Actual fully populated canonical child boxes before transport; incomplete nets",
+    "canonical_partial.json.gz": "Exact current instances+buses on failure; explicitly partial",
+    "canonical_plan.json.gz": "Complete actual generator instances,buses,frames and calendar on success",
+    "exact_pins.lef.gz": "Generated and actual native abstract LEFs, only after success"
   },
-  "original_pid": 1259604,
-  "original_unit": "oth-ubuntu-1259588-1792051134",
-  "partial_output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen2"
- },
- "fix": "East start reaches physical S14 through actual HC crossing corridor; samehopgates/occupancy. Failed partial now also exports actual pins when finalize succeeds."
+  "open": [
+    "actual RSC occupancy and <=500um per-bit flights/cuts",
+    "all realnative abstracts/TTsetup/FFhold/DRC0",
+    "actual PHW10 source bindings from compute stream",
+    "static schedule through actual physical clock phases"
+  ],
+  "screen2": {
+    "status": "GEN_FAIL",
+    "error": "cx2 no station at2075um: direct eastsource exit crossed realHC slab",
+    "field_legality": {
+      "instances": 32969,
+      "overlaps": 0,
+      "outside": 0
+    },
+    "original_pid": 1259604,
+    "original_unit": "oth-ubuntu-1259588-1792051134",
+    "partial_output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen2"
+  },
+  "fix": "East start reaches physical S14 through actual HC crossing corridor; samehopgates/occupancy. Failed partial now also exports actual pins when finalize succeeds.",
+  "prior_screen3_checkpoint": {
+    "status": "SCREEN2_TERMINAL_FAIL_SCREEN3_LIVE",
+    "source_commit": "c1005b4e1",
+    "unit": "oth-ubuntu-1265934-1792051399",
+    "local_systemd_unit": "canonical-gen-1015-screen3.service",
+    "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen3"
+  },
+  "updated_utc": "2026-10-15T08:35:58.094900+00:00",
+  "screen7": {
+    "status": "GEN_FAIL",
+    "exit_code": 1,
+    "former_pid": 1329839,
+    "error": "chain crW5_W0_edge39: no station spot near s=2650 of3973 (11018,13437)",
+    "structural_change_measured": "Shared return trees with up to six independent forwarded-clock 70-bit lanes per physical station. Actual occupied RSC now blocks this edge.",
+    "partial_artifacts": [
+      "canonical_partial_finalized.json.gz",
+      "partial_exact_pins.lef.gz",
+      "partial_pin_exclusions.json"
+    ],
+    "next": "Measure existing RSC occupancy and implement structural lane packing or alternate legal street route before next full screen."
+  }
 }
