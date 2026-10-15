@@ -1,0 +1,11 @@
+{
+ "schema": "opentallas.s81.engine_pipeline_abi.v1",
+ "rule": "A native job's duration_cycles is a measured command-pin -> done-pin latency (done = issue + 1 + latency). Every fixed pipeline stage added to an engine after a duration was measured invalidates that duration: the binding must carry the engine's current pipeline record (exact match) or the compiler refuses it.",
+ "engines": {
+  "hc": {
+   "return_columns_extra_edges": 1,
+   "change": "HC four-column return successor replacing ctra/ctrb: +1 fixed cycle on HC return data",
+   "source": "origin/claude/s81-return-columns-1015 @20c63c643 (IDLE-S)"
+  }
+ }
+}
