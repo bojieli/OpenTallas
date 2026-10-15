@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.engram.grouped_frontend_roots.v1",
+  "logical_ff_bits_by_clock": {
+    "hbm_clk": 3246,
+    "core_clk": 3426
+  },
+  "blackboxes": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_stack.sv",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_row_store_decode.sv"
+  ],
+  "scope": "Frontend only: actual grouped request buffer/arbiters and real CDC flops. Common controller, response SRAMs and staging store are excluded and require separate inventories. Logical root count is not CTS/physical qualification.",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_stack.sv": "e64cfb071eb16aca278f75bb0a5bdba6793b8fb74e4928c1a5d217f87697e65d",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_row_store_decode.sv": "e450c13fee2e85d1c5099f225875af1914075ba7154894c5b50659e46505df2d",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_fetch_grouped.sv": "7489252bf3122cdce08fc4b6f59a50a66d6898ac4c3064512ec3f4c43df101c4"
+  }
+}

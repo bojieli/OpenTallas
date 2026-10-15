@@ -16,14 +16,15 @@ CONTRACT='a9d1fad2835d96e4c0585a150b6a9d484b9791cc'
 def blob(commit,path):return subprocess.check_output(['git','show',f'{commit}:{path}'],cwd=ROOT)
 def sha(raw):return hashlib.sha256(raw).hexdigest()
 
-def prepare(out):
+def prepare(out,history=None):
     out=Path(out);out.mkdir(parents=True,exist_ok=False)
     catraw=blob(CATALOGUE,'results/quality/w16_w17_checkpoint_header_catalogue_20261001/catalogue.json')
     conraw=blob(CONTRACT,'results/quality/w16_dsrom_engram_contract_20261001/contract.json')
     cat=json.loads(catraw);con=json.loads(conraw);snapshot=Path(cat['snapshot'])
     # Valid compressed-token sequence. The actual hash is driven with all four
     # tokens, preserving its real history; only the final token is gathered.
-    history=[17,999,5543,99091]
+    history=[17,999,5543,99091] if history is None else list(history)
+    if len(history)!=4 or any(not 0<=v<131072 for v in history):raise ValueError("four17bit producer CIDs required")
     t=S.shipped_tables();ids=S.hashes(t,history);rows=[];sectors=[];gold=[]
     for li,L in enumerate(E.LAYERS):
         codes=[];scales=[]
@@ -61,5 +62,5 @@ def prepare(out):
     (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');return receipt
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);args=ap.parse_args();r=prepare(args.out)
+    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--history',default='17,999,5543,99091');args=ap.parse_args();r=prepare(args.out,[int(v) for v in args.history.split(',')])
     print(json.dumps({k:v for k,v in r.items() if k!='rows'},indent=2))

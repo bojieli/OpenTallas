@@ -131,7 +131,7 @@ endmodule
 '''
     return t
 
-def run(out,inputs,li,compact=False,return_edges=6,local_reads=False,mutant_return_row=False,programme=False):
+def run(out,inputs,li,compact=False,return_edges=6,local_reads=False,mutant_return_row=False,programme=False,grouped=False,phase_delay=0,mutant_head_block=False):
     out=Path(out);out.mkdir(parents=True,exist_ok=True);inputs=Path(inputs)
     binding=json.loads((inputs/'receipt.json').read_text());raw=(inputs/'external_hbm_sectors.hex').read_bytes()
     assert hashlib.sha256(raw).hexdigest()==binding['data_sha256']['external_hbm_sectors.hex']
@@ -195,6 +195,29 @@ end
         testbench=testbench[:begin]+''.join(body)+testbench[end:]
         testbench=testbench.replace('repeat(4)tick;@(negedge core_clk);rst_n=1;', '\n'.join(initial)+'\nrepeat(4)tick;@(negedge core_clk);rst_n=1;')
         testbench=testbench.replace('task tick;', ''.join(meta)+'\ntask tick;')
+    if phase_delay:
+        assert not programme and phase_delay>=0
+        testbench=testbench.replace('@(negedge core_clk);fetch_start=1;',f'repeat({phase_delay})tick;@(negedge core_clk);fetch_start=1;')
+    if grouped:
+        assert local_reads and not programme
+        testbench=testbench.replace('ot_hbm_engram_home_fetch_compact_slots #','ot_hbm_engram_home_fetch_grouped #').replace('36*16+2048','36+8192').replace('fixedfetch2624coreedges','fixedfetch8228coreedges')
+        # Normative physical service rule: a stalled PC never masks another PC's
+        # pending row group. Independent service is required for a finite bound.
+        monitors=[]
+        for h in range(8):
+            monitors.append(f'''always @(posedge hbm_clk)begin
+ if(rst_n && home{h}.collected)begin
+  for(integer p=0;p<32;p=p+1)begin
+   for(integer q=0;q<36;q=q+1)begin
+    if(home{h}.request_present[q] && home{h}.request_pc[q]==p &&
+       (!home{h}.row_locked[p] || home{h}.request_address[q][29:15]==home{h}.selected_row[p]) && !home{h}.kv[p])
+      $fatal(1,"independentPCserviceblocked h{h} p%0d",p);
+   end
+  end
+ end
+end
+''')
+        testbench=testbench.replace('task tick;',''.join(monitors)+'task tick;')
     if programme:
         assert local_reads
         image=json.loads((ROOT/'results/arch/hbm_engram_partition_1015/fetch_program_image.json').read_text())
@@ -233,6 +256,7 @@ ot_hbm_engram_fetch_program #(.FETCH_EDGES(2624)) fetch_program(
         'rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_row_store_decode.sv','rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_fetch.sv']
     if compact:paths[-1]=paths[-1].replace('home_fetch.sv','home_fetch_compact_slots.sv' if local_reads else 'home_fetch_compact.sv')
     if local_reads:paths[5]='rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_stack.sv'
+    if grouped:paths[-1]=paths[-1].replace('home_fetch_compact_slots.sv','home_fetch_grouped.sv')
     if programme:paths.insert(-1,'rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_fetch_program.sv')
     compiled_paths=[str(ROOT/p) for p in paths]
     mutation=None
@@ -241,16 +265,22 @@ ot_hbm_engram_fetch_program #(.FETCH_EDGES(2624)) fetch_program(
         assert original.count(old)==1
         variant=(out/'return_row_mutant.sv').resolve();variant.write_text(original.replace(old,new));compiled_paths[-1]=str(variant)
         mutation=dict(name='actual_DUT_return_row_bit4',source_sha256=hashlib.sha256(variant.read_bytes()).hexdigest())
+    if mutant_head_block:
+        assert grouped and not mutant_return_row
+        original=Path(compiled_paths[-1]).read_text();old='kv[p]=1;ka[p*30+:30]';new='kv[p]=!(|kv);ka[p*30+:30]'
+        assert original.count(old)==1
+        variant=(out/'head_block_mutant.sv').resolve();variant.write_text(original.replace(old,new));compiled_paths[-1]=str(variant)
+        mutation=dict(name='actual_DUT_global_request_head_block',source_sha256=hashlib.sha256(variant.read_bytes()).hexdigest())
     start=time.monotonic();cp=subprocess.run(['iverilog' ,'-g2012','-s','tb','-o',str((out/'sim').resolve()),*compiled_paths,str(tb)],capture_output=True,text=True)
     (out/'build.log').write_text(cp.stdout+cp.stderr);assert cp.returncode==0,cp.stdout+cp.stderr
     print('BUILD_PASS seconds',round(time.monotonic()-start,2),flush=True)
     rp=subprocess.run(['vvp',str((out/'sim').resolve())],cwd=out,capture_output=True,text=True)
-    (out/'run.log').write_text(rp.stdout+rp.stderr);assert (rp.returncode==0)==(not mutant_return_row),rp.stdout+rp.stderr
-    receipt=dict(schema='opentallas.hbm.engram.native_home_fetch.v1',status='detected_mutant' if mutant_return_row else 'pass',mutation=mutation,layer=[1,14][li],homes=list(range(li*8,li*8+8)),
+    (out/'run.log').write_text(rp.stdout+rp.stderr);assert (rp.returncode==0)==(not (mutant_return_row or mutant_head_block)),rp.stdout+rp.stderr
+    receipt=dict(schema='opentallas.hbm.engram.native_home_fetch.v1',status='detected_mutant' if (mutant_return_row or mutant_head_block) else 'pass',mutation=mutation,layer=[1,14][li],homes=list(range(li*8,li*8+8)),
         rows=24,sectors=216,core_clock_ps=833.334,hbm_clock_ps=1024,external_HBM='physical DRAM row/column command/data only; original releasedtable bytes',
-        fixed_fetch_core_edges=(2624 if local_reads else 18944) if compact else 111104,compact_home_calendar=compact,output=rp.stdout.strip(),wall_seconds=time.monotonic()-start,
-        external_return_latency_edges=return_edges,local_slot_read_metadata=local_reads,source_binding=binding['data_sha256'],actual_programme_join=programme,collective_decode_join=False,full_layer_qualified=False,physical_qualified=False,
+        fixed_fetch_core_edges=(8228 if grouped else 2624 if local_reads else 18944) if compact else 111104,compact_home_calendar=compact,output=rp.stdout.strip(),wall_seconds=time.monotonic()-start,
+        external_return_latency_edges=return_edges,local_slot_read_metadata=local_reads,source_binding=binding['data_sha256'],refresh_phase_setup_core_edges=phase_delay,row_grouped_per_PC=grouped,actual_programme_join=programme,collective_decode_join=False,full_layer_qualified=False,physical_qualified=False,
         source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in paths})
     (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');return receipt
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--inputs',required=True);ap.add_argument('--layer-index',type=int,choices=[0,1],required=True);ap.add_argument('--compact',action='store_true');ap.add_argument('--return-edges',type=int,default=6);ap.add_argument('--local-reads',action='store_true');ap.add_argument('--mutant-return-row',action='store_true');ap.add_argument('--programme',action='store_true');a=ap.parse_args();print(json.dumps(run(a.out,a.inputs,a.layer_index,a.compact,a.return_edges,a.local_reads,a.mutant_return_row,a.programme),indent=2))
+    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--inputs',required=True);ap.add_argument('--layer-index',type=int,choices=[0,1],required=True);ap.add_argument('--compact',action='store_true');ap.add_argument('--return-edges',type=int,default=6);ap.add_argument('--local-reads',action='store_true');ap.add_argument('--mutant-return-row',action='store_true');ap.add_argument('--programme',action='store_true');ap.add_argument('--grouped',action='store_true');ap.add_argument('--phase-delay',type=int,default=0);ap.add_argument('--mutant-head-block',action='store_true');a=ap.parse_args();print(json.dumps(run(a.out,a.inputs,a.layer_index,a.compact,a.return_edges,a.local_reads,a.mutant_return_row,a.programme,a.grouped,a.phase_delay,a.mutant_head_block),indent=2))
