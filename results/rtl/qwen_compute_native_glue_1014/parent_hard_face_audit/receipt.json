@@ -1,0 +1,150 @@
+{
+  "schema": "qwen.actual_hard_face_contract_test.v1",
+  "source_parent_commit": "85b373696b071d4441a2c77b8c05e0439e340f96",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-2020161-1792062885",
+  "run_dir": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_banked_v1-20261015-035551",
+  "actual_odb_sha256": "e3082225523e3389dfc81748de8c3483e936895fc603a70bd4c3661f92f89e17",
+  "tool_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "nonpower_boundary_ports": 2667,
+  "verified_hard_endpoint_ports": 2664,
+  "soft_clock_ports": 1,
+  "constant_output_ports": 2,
+  "actual_total_mapped_dff": 954,
+  "actual_dff_clock_net_census": {
+    "ck": 954
+  },
+  "pre_abc_source_bit_ff": 2278,
+  "textbook_flop_estimate": 2308,
+  "count_scope": "Actual ODB954 is authoritative for this physical snapshot; source bit count and textbook estimate are separate metrics. No claim of routed closure.",
+  "test_results": [
+    {
+      "case": "legacy_failure",
+      "exit": 1,
+      "expected_pass": false,
+      "actual_pass": false,
+      "test_pass": true,
+      "evidence": [
+        "Error: legacy_failure.tcl, 4 OT_IOFLOP: no pin flop found (netlist changed?)"
+      ]
+    },
+    {
+      "case": "ordinary_std_ff_positive",
+      "exit": 0,
+      "expected_pass": true,
+      "actual_pass": true,
+      "test_pass": true,
+      "evidence": []
+    },
+    {
+      "case": "verified_hard_faces",
+      "exit": 0,
+      "expected_pass": true,
+      "actual_pass": true,
+      "test_pass": true,
+      "evidence": [
+        "OT_HARD_FACE verified 2664 exact hardmacro boundary ports; 954 own residual FF clock sinks remain soft"
+      ]
+    },
+    {
+      "case": "missing_endpoint",
+      "exit": 1,
+      "expected_pass": false,
+      "actual_pass": false,
+      "test_pass": true,
+      "evidence": [
+        "Error: missing_endpoint.tcl, 5 OT_HARD_FACE: wrong/missing/extra endpoint at n_a[0]: expected {face_n_a qwen_glue_v514 {d[0]}} got "
+      ]
+    },
+    {
+      "case": "extra_residual_sink",
+      "exit": 1,
+      "expected_pass": false,
+      "actual_pass": false,
+      "test_pass": true,
+      "evidence": [
+        "Error: extra_residual_sink.tcl, 5 OT_HARD_FACE: own residual/comb endpoint at n_a[0]: fy$_DFF_PN0_/D"
+      ]
+    },
+    {
+      "case": "wrong_bit",
+      "exit": 1,
+      "expected_pass": false,
+      "actual_pass": false,
+      "test_pass": true,
+      "evidence": [
+        "Error: wrong_bit.tcl, 5 OT_HARD_FACE: wrong/missing/extra endpoint at n_a[0]: expected {face_n_a qwen_glue_v514 {d[0]}} got "
+      ]
+    },
+    {
+      "case": "extra_boundary_port",
+      "exit": 1,
+      "expected_pass": false,
+      "actual_pass": false,
+      "test_pass": true,
+      "evidence": [
+        "Error: extra_boundary_port.tcl, 5 OT_HARD_FACE: unclassified boundary port injected_unregistered"
+      ]
+    },
+    {
+      "case": "changed_source_binding",
+      "exit": 1,
+      "expected_pass": false,
+      "actual_pass": false,
+      "test_pass": true,
+      "evidence": [
+        "Error: changed_source_binding.tcl, 5 OT_HARD_FACE: changed bound file rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv"
+      ]
+    },
+    {
+      "case": "changed_view_binding",
+      "exit": 1,
+      "expected_pass": false,
+      "actual_pass": false,
+      "test_pass": true,
+      "evidence": [
+        "Error: changed_view_binding.tcl, 5 OT_HARD_FACE: changed bound file physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514/qwen_glue_v514.lef"
+      ]
+    },
+    {
+      "case": "changed_view_bytes",
+      "exit": 1,
+      "expected_pass": false,
+      "actual_pass": false,
+      "test_pass": true,
+      "evidence": [
+        "Error: changed_view_bytes.tcl, 5 OT_HARD_FACE: changed bound file physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514/qwen_glue_v514.lef"
+      ]
+    },
+    {
+      "case": "own_clock_comb_sink",
+      "exit": 1,
+      "expected_pass": false,
+      "actual_pass": false,
+      "test_pass": true,
+      "evidence": [
+        "Error: own_clock_comb_sink.tcl, 5 OT_HARD_FACE: own residual clock has non-FF endpoint ck/_11457_/A"
+      ]
+    }
+  ],
+  "files": {
+    "physical/qwen_die_masters/io_flop_at_pins.tcl": "564586b7320dbd5e0b89b191762de9abbe90b366fbf1de2996ffec905e860595",
+    "physical/qwen_tile_glue_banks_1015/hard_face_audit.tcl": "86d9c55d7f79d6b57524ffb2bbb87bf9a2af282338aca382343a559e67574f7c",
+    "physical/qwen_tile_glue_banks_1015/hard_face_binding.tcl": "48edd628d8a23f5d9405c5c92b6bf6d67e63a09b1860a2a52789d6d6e03a386b",
+    "physical/qwen_tile_glue_banks_1015/test_hard_face_contract_remote.py": "8c7245a622e6311df2f46b4d028baf4f160f77f1cb8eb000acc6f0cb2fded4b5"
+  },
+  "logs": {
+    "changed_source_binding.log": "3221806d8e26081600ced64e5411aa9aadf1dea2d6243599e85deef2204794ec",
+    "changed_view_binding.log": "e0bd69bbe5e2fcd76af16c6106a4bdfdeeb11fcdde039fbccc6b034c6cac7b28",
+    "changed_view_bytes.log": "58086b5417061af947aa96f7ba0f2e8a2c7a9cc2c4a13bbd656d0d8e7b102249",
+    "extra_boundary_port.log": "6f29c790e116ba0b17df11447f4c304dea1d539b5b2d245a98b3f1f29ee59d25",
+    "extra_residual_sink.log": "53a520bf8fd58db5a0071f649325de5caf8383eae71ea4eeea7acebb56228583",
+    "legacy_failure.log": "a42b6b4cc32e9153c1b11a51c0247eb0309a67345752a65e72a542f5b3955f7d",
+    "missing_endpoint.log": "e6c073c8cd6093851c1a4692a9fb447d17f00e0f63c4331f0e687d48032a3d65",
+    "ordinary_std_ff_positive.log": "66188ec309190021c43a1aed49c8cf6296983f8c7c1dc683663f0bda0d6991fe",
+    "own_clock_comb_sink.log": "4280cea1f05bc5b076e59e92adcd6757f4ae16dfaba487f4bf61d36639d28426",
+    "verified_hard_faces.log": "8341c5f3154bab417dfbd7248a26425c240a952b104907c3a0837503e8fea667",
+    "wrong_bit.log": "8905370e8db89ad31f9a6575340655f4e2b2bff9e772bcce658cc3981ea618c5"
+  },
+  "qualification": "CONTRACT_CLASSIFICATION_ONLY_NOT_TIMING_PG_CHANNEL_OR_ROUTE_QUALIFICATION"
+}

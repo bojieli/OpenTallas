@@ -1,0 +1,110 @@
+[
+  {
+    "case": "legacy_failure",
+    "exit": 1,
+    "expected_pass": false,
+    "actual_pass": false,
+    "test_pass": true,
+    "evidence": [
+      "Error: legacy_failure.tcl, 4 OT_IOFLOP: no pin flop found (netlist changed?)"
+    ]
+  },
+  {
+    "case": "ordinary_std_ff_positive",
+    "exit": 0,
+    "expected_pass": true,
+    "actual_pass": true,
+    "test_pass": true,
+    "evidence": []
+  },
+  {
+    "case": "verified_hard_faces",
+    "exit": 0,
+    "expected_pass": true,
+    "actual_pass": true,
+    "test_pass": true,
+    "evidence": [
+      "OT_HARD_FACE verified 2664 exact hardmacro boundary ports; 954 own residual FF clock sinks remain soft"
+    ]
+  },
+  {
+    "case": "missing_endpoint",
+    "exit": 1,
+    "expected_pass": false,
+    "actual_pass": false,
+    "test_pass": true,
+    "evidence": [
+      "Error: missing_endpoint.tcl, 5 OT_HARD_FACE: wrong/missing/extra endpoint at n_a[0]: expected {face_n_a qwen_glue_v514 {d[0]}} got "
+    ]
+  },
+  {
+    "case": "extra_residual_sink",
+    "exit": 1,
+    "expected_pass": false,
+    "actual_pass": false,
+    "test_pass": true,
+    "evidence": [
+      "Error: extra_residual_sink.tcl, 5 OT_HARD_FACE: own residual/comb endpoint at n_a[0]: fy$_DFF_PN0_/D"
+    ]
+  },
+  {
+    "case": "wrong_bit",
+    "exit": 1,
+    "expected_pass": false,
+    "actual_pass": false,
+    "test_pass": true,
+    "evidence": [
+      "Error: wrong_bit.tcl, 5 OT_HARD_FACE: wrong/missing/extra endpoint at n_a[0]: expected {face_n_a qwen_glue_v514 {d[0]}} got "
+    ]
+  },
+  {
+    "case": "extra_boundary_port",
+    "exit": 1,
+    "expected_pass": false,
+    "actual_pass": false,
+    "test_pass": true,
+    "evidence": [
+      "Error: extra_boundary_port.tcl, 5 OT_HARD_FACE: unclassified boundary port injected_unregistered"
+    ]
+  },
+  {
+    "case": "changed_source_binding",
+    "exit": 1,
+    "expected_pass": false,
+    "actual_pass": false,
+    "test_pass": true,
+    "evidence": [
+      "Error: changed_source_binding.tcl, 5 OT_HARD_FACE: changed bound file rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv"
+    ]
+  },
+  {
+    "case": "changed_view_binding",
+    "exit": 1,
+    "expected_pass": false,
+    "actual_pass": false,
+    "test_pass": true,
+    "evidence": [
+      "Error: changed_view_binding.tcl, 5 OT_HARD_FACE: changed bound file physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514/qwen_glue_v514.lef"
+    ]
+  },
+  {
+    "case": "changed_view_bytes",
+    "exit": 1,
+    "expected_pass": false,
+    "actual_pass": false,
+    "test_pass": true,
+    "evidence": [
+      "Error: changed_view_bytes.tcl, 5 OT_HARD_FACE: changed bound file physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514/qwen_glue_v514.lef"
+    ]
+  },
+  {
+    "case": "own_clock_comb_sink",
+    "exit": 1,
+    "expected_pass": false,
+    "actual_pass": false,
+    "test_pass": true,
+    "evidence": [
+      "Error: own_clock_comb_sink.tcl, 5 OT_HARD_FACE: own residual clock has non-FF endpoint ck/_11457_/A"
+    ]
+  }
+]
