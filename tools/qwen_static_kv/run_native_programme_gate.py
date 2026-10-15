@@ -7,7 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from qwen_static_kv.native_programme import ROOT, PRODUCER, WRITER, compile_programme
+from qwen_static_kv.native_programme import ROOT, PRODUCER, WRITER, compile_programme, compile_stage
 from qwen_static_schedule.calendar import sha, ScheduleError
 from qwen_static_schedule.segments import MissingPhysicalProfile
 
@@ -24,17 +24,22 @@ def main():
     paths=[PRODUCER,WRITER,'rtl/qwen_split/qfd_kvn_static_transport.sv',
            'rtl/qwen_split/qfd_native59_compute_service.sv','rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv',
            'rtl/physical/ot_qkd_kv_static_writer_native.sv','rtl/lib/ot_rst_relay.sv']
-    profile=dict(period_fs=833334,phase_fs=137000,segment_start_cycle=4,
-                 word_producer_age_fs=4*833334,word_stride_fs=833334,stop_cycle=16,
+    profile=dict(period_fs=833334,phase_fs=137000,start_origin="SEGMENT0_CORE_START",
+                 word_producer_age_fs=8*833334,word_stride_fs=833334,stop_cycle=16,
                  source_sha256={p:sha(ROOT/p) for p in paths},
                  component_path_ages_fs=dict(formatter_to_writer=0,expectation_to_writer=100000,reset_release=4*833334))
-    image=compile_programme(program,descriptors,plan,profile,1,component_test=True)
-    (a.out/'component_profile.json').write_text(json.dumps(profile,indent=2)+'\n')
+    profiles=[]
+    for stage in range(1,37):
+        p=copy.deepcopy(profile);p['stage']=stage;p['word_producer_age_fs']+=(stage%3)*833334;p['stop_cycle']+=stage%3
+        profiles.append(p)
+    all_profile=dict(stages=profiles)
+    image=compile_programme(program,descriptors,plan,all_profile,component_test=True)
+    (a.out/'component_profile.json').write_text(json.dumps(all_profile,indent=2)+'\n')
     (a.out/'component_image.json').write_text(json.dumps(image,indent=2)+'\n')
     (a.out/'boot.hex').write_text(''.join(w['data_hex']+'\n' for w in image['writes']))
     negative=[]
     def refuse(name,pbytes=program,dbytes=descriptors,contract=None,stage=1,component=True):
-        try:compile_programme(pbytes,dbytes,plan,profile if contract is None else contract,stage,component_test=component)
+        try:compile_stage(pbytes,dbytes,plan,profile if contract is None else contract,stage,component_test=component)
         except (ScheduleError,MissingPhysicalProfile) as e:
             negative.append(dict(name=name,refused=True,error=str(e)));return
         raise AssertionError(name+' escaped')
@@ -48,11 +53,19 @@ def main():
     p=copy.deepcopy(profile);p['scope']='controller';refuse('unsupported_controller_front_ring',contract=p)
     p=copy.deepcopy(profile);p['stop_cycle']=12;refuse('missing_writer_drain',contract=p)
     p=copy.deepcopy(profile);p['component_path_ages_fs']['reset_release']=10*833334;refuse('word_before_reset_release',contract=p)
+    p=copy.deepcopy(profile);p['start_origin']='STAGE_START';refuse('ambiguous_stage_start_origin',contract=p)
+    try:compile_programme(program,descriptors,plan,dict(stages=profiles[:-1]),component_test=True)
+    except MissingPhysicalProfile as e:negative.append(dict(name='missing_stage36',refused=True,error=str(e)))
+    else:raise AssertionError('partial stage table escaped')
+    # An absolute outer core-start timestamp must never be added to relative
+    # module cycles. Parent asserts start on that edge; emitted roots stay put.
+    p=copy.deepcopy(profile);p['absolute_core_start_cycle']=1000000
+    assert compile_stage(program,descriptors,plan,p,1,component_test=True)['word_cycles']==[8,9,10,11]
     sources=[ROOT/'rtl/lib/ot_rst_relay.sv',ROOT/PRODUCER,ROOT/WRITER,
              ROOT/'rtl/physical/ot_qkd_kv_static_writer_native.sv',
              ROOT/'rtl/test/qwen_static_kv/tb_qkd_kv_native_programme.sv']
     runs=[];top='tb_qkd_kv_native_programme'
-    for mut,bad in [(0,0),(1,0),(2,0),(3,0),(4,0),(0,1),(0,2),(0,3)]:
+    for mut,bad in [(0,0),(1,0),(2,0),(3,0),(4,0),(5,0),(6,0),(0,1),(0,2),(0,3)]:
         name=f'm{mut}_b{bad}'
         binary=a.out/(name+'.sim')
         cmd=['iverilog','-g2012','-s',top,f'-P{top}.MUT={mut}',f'-P{top}.BAD={bad}','-o',str(binary.resolve())]+[str(p) for p in sources]

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile the native K/V writer's four fixed slots from actual layer bytes.
+"""Compile the native K/V writer's all36 native writer tables from actual layer bytes.
 
 This is a writer-only candidate. Explicit path ages, never observation traces,
 set its timeline. Controller/front/ring calendars are unsupported and refused.
@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PRODUCER = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv'
 WRITER = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv'
 PATHS = ('formatter_to_writer', 'expectation_to_writer', 'reset_release')
-FOOTER = 0x514b565052473031  # QKVPRG01
+FOOTER = 0x514b565052473336  # QKVPRG36
 
 
 def source_contract(program, descriptors, plan, stage):
@@ -42,7 +42,7 @@ def source_contract(program, descriptors, plan, stage):
 
 
 def ages(profile, program, component_test):
-    required = ('period_fs', 'phase_fs', 'segment_start_cycle', 'word_producer_age_fs',
+    required = ('period_fs', 'phase_fs', 'start_origin', 'word_producer_age_fs',
                 'word_stride_fs', 'stop_cycle', 'source_sha256')
     missing = [k for k in required if profile.get(k) is None]
     if not component_test:
@@ -86,7 +86,7 @@ def ages(profile, program, component_test):
     return measured
 
 
-def compile_programme(program, descriptors, plan, profile, stage, *, component_test=False):
+def compile_stage(program, descriptors, plan, profile, stage, *, component_test=False):
     source_contract(program, descriptors, plan, stage)
     if profile.get('scope', 'writer') != 'writer':
         raise MissingPhysicalProfile(['unsupported_controller_front_ring_profiles'])
@@ -95,17 +95,18 @@ def compile_programme(program, descriptors, plan, profile, stage, *, component_t
         physical_profile(profile.get('segment_profile', {}), program)
         if any(profile['segment_profile'][k] != profile[k] for k in ('period_fs','phase_fs')):
             raise MissingPhysicalProfile(['implemented_segment_to_writer_clock_conversion'])
-        if profile['segment_profile']['segments'][0]['core_start_cycle'] != profile['segment_start_cycle']:
-            raise ScheduleError('writer origin differs from actual segment0 core start')
-    for key in ('period_fs', 'phase_fs', 'segment_start_cycle', 'word_producer_age_fs', 'word_stride_fs', 'stop_cycle'):
+
+    for key in ('period_fs', 'phase_fs', 'word_producer_age_fs', 'word_stride_fs', 'stop_cycle'):
         if type(profile[key]) is not int:
             raise ScheduleError('integer femtosecond/cycle profile required: ' + key)
     period = profile['period_fs']; phase = profile['phase_fs']
-    if period <= 0 or not 0 <= phase < period or profile['segment_start_cycle'] < 0 or profile['word_producer_age_fs'] < 0 or profile['word_stride_fs'] <= 0:
+    if period <= 0 or not 0 <= phase < period or profile['word_producer_age_fs'] < 0 or profile['word_stride_fs'] <= 0:
         raise ScheduleError('invalid source writer clock/timeline')
+    if profile['start_origin'] != 'SEGMENT0_CORE_START':
+        raise ScheduleError('module start must bind actual segment0 core start')
     # Source producer emits K low/high then V low/high. No payload/ready/credit
     # input participates in either the compile-time or runtime slot equations.
-    first_fs = phase + profile['segment_start_cycle'] * period + profile['word_producer_age_fs'] + path_ages['formatter_to_writer']
+    first_fs = phase + profile['word_producer_age_fs'] + path_ages['formatter_to_writer']
     times = [first_fs + n * profile['word_stride_fs'] for n in range(4)]
     if any(t < phase or (t-phase) % period for t in times):
         raise ScheduleError('actual formatter words do not land on assigned writer edges')
@@ -120,10 +121,10 @@ def compile_programme(program, descriptors, plan, profile, stage, *, component_t
     if not reset_edges <= cycles[0] or not cycles[-1]+2 < stop < 1<<32:
         raise ScheduleError('writer slots violate reset release, drain, or stop32')
     writes = [dict(address=n, data_hex=f'{cycle:016x}') for n,cycle in enumerate(cycles)]
-    writes += [dict(address=4, data_hex=f'{((stage<<32)|stop):016x}'), dict(address=5, data_hex=f'{FOOTER:016x}')]
+    writes += [dict(address=4, data_hex=f'{stop:016x}')]
     return dict(schema='opentallas.qwen-native-kv-programme.v1',
                 status='COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE' if component_test else 'SOURCE_AND_PHYSICAL_PROFILE_BOUND_RECEIVER_WITNESS_REQUIRED',
-                stage=stage, segment=0, native_pc=11, word_order=['K_low','K_high','V_low','V_high'],
+                qualified_stage_count=1, stage=stage, segment=0, native_pc=11, word_order=['K_low','K_high','V_low','V_high'],
                 source_kv_pcs=[3,8,10],
                 source_program_sha256=hashlib.sha256(program).hexdigest(), profile_sha256=hashlib.sha256(json.dumps(profile,sort_keys=True).encode()).hexdigest(),
                 word_cycles=cycles, stop_cycle=stop, writes=writes,
@@ -136,15 +137,33 @@ def compile_programme(program, descriptors, plan, profile, stage, *, component_t
                 production_qualified=False)
 
 
+def compile_programme(program, descriptors, plan, profile, *, component_test=False):
+    stages = profile.get('stages', [])
+    if len(stages) != 36 or [p.get('stage') for p in stages] != list(range(1,37)):
+        raise MissingPhysicalProfile(['all36_ordered_stage_profiles'])
+    if len({(p.get('period_fs'),p.get('phase_fs')) for p in stages}) != 1:
+        raise MissingPhysicalProfile(['implemented_interstage_clock_mode_change'])
+    images = [compile_stage(program, descriptors, plan, p, p['stage'], component_test=component_test) for p in stages]
+    writes = [dict(address=5*n+w['address'],data_hex=w['data_hex']) for n,image in enumerate(images) for w in image['writes']]
+    writes.append(dict(address=180,data_hex=f'{FOOTER:016x}'))
+    return dict(schema='opentallas.qwen-native-kv-programme-all36.v2',
+        status='COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE' if component_test else 'SOURCE_AND_PHYSICAL_PROFILE_BOUND_RECEIVER_WITNESS_REQUIRED',
+        qualified_stage_count=36,source_program_sha256=images[0]['source_program_sha256'],
+        start_origin='SEGMENT0_CORE_START',
+        cycle_origin='cycle0 interval immediately after accepted module start; start binds segment0 core-start, not stage-start. Absolute segment core_start_cycle is not added to relative word ages.',
+        stages=images,writes=writes,boot_writes=181,boot_bytes=1448,
+        production_qualified=False,full_token_qualified=False,
+        unsupported=['controller command/refresh/reservations','HBM front blk_go','ring return slots','full-token execution and performance'])
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ('program','descriptors','plan','profile','out'):
         parser.add_argument('--'+name,type=Path,required=True)
-    parser.add_argument('--stage',type=int,required=True)
     parser.add_argument('--component-test',action='store_true')
     a=parser.parse_args()
     try:
-        result=compile_programme(a.program.read_bytes(),a.descriptors.read_bytes(),json.loads(a.plan.read_text()),json.loads(a.profile.read_text()),a.stage,component_test=a.component_test)
+        result=compile_programme(a.program.read_bytes(),a.descriptors.read_bytes(),json.loads(a.plan.read_text()),json.loads(a.profile.read_text()),component_test=a.component_test)
         code=0
     except MissingPhysicalProfile as e:
         result=dict(status='REFUSED_MISSING_PHYSICAL_PROFILE',missing_fields=e.missing_fields);code=2
