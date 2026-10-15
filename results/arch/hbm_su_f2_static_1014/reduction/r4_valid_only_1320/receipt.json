@@ -1,0 +1,23 @@
+{
+  "source_commit": "568478a2a",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1362125-1792096163",
+  "run": "/srv/opentallas-scratch/codex/hbm-su-reducer-r3-1320/proof_r4",
+  "status": "component_exact_pass_physical_pending",
+  "scalars": 80,
+  "cycles": 70776,
+  "latency": 9,
+  "raw_distance": 10,
+  "mutants": [
+    "identity",
+    "phase",
+    "wrongtree"
+  ],
+  "finite_fault": "nonfinite LOAD and persistent poisoned SRAM MAX both detected across reset",
+  "structural_change": "existing adder DRST0 resets valid only; unconditional tag/address/data pipelines; route AND signoff833.333ps",
+  "limits": [
+    "no native full-programme phase qualification",
+    "no die peer-pin qualification",
+    "production e2e cost unmeasured"
+  ]
+}
