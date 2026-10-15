@@ -130,8 +130,9 @@ module tb_kv_hbm_elastic_boundary;
  initial begin
   void'($value$plusargs("faultmode=%d",mode));void'($value$plusargs("jit=%d",JIT));void'($value$plusargs("seed=%d",seed));
   void'($value$plusargs("late=%d",late_sector));void'($value$plusargs("lateby=%d",lateby));
-  // blk_go pin flop: start edge = go + 2 >= block-ready edge (last nominal landing + window + 2)
-  GO_DLY=JIT;void'($value$plusargs("godly=%d",GO_DLY));
+  // blk_go pin flop: start edge = go + 2 >= block-ready edge (last nominal landing + window + 2); the bench
+  // schedules blk_go at least one edge after the nominal landing it is compiled from
+  GO_DLY=JIT>0?JIT:1;void'($value$plusargs("godly=%d",GO_DLY));
   void'($urandom(seed));for(integer i=0;i<64;i++)jit_hist[i]=0;
   for(integer phase=0;phase<2;phase++)begin
    rst=0;owner=0;cmd=0;reserved=0;es=0;pi=0;
