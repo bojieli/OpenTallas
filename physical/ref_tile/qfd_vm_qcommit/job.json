@@ -1,5 +1,5 @@
 {
- "name": "qfd_vm_qcommit-raw1-bd49e8a81",
+ "name": "qfd_vm_qcommit-raw1-762353d7f",
  "block": "qfd_vm_qcommit",
  "ref_tile": true,
  "owner": "Codex:q_compute_die",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/qwen-split-compute-1014",
-  "commit": "bd49e8a81",
+  "commit": "762353d7f",
   "extra_paths": [
    "rtl/qwen_sys/vm_nox_20261014",
    "rtl/qwen_sys/vm_me_20261008",
@@ -106,7 +106,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_qcommit/qfd_vm_qcommit-raw1-bd49e8a81"
+   "to": "results/rtl/ref_tile/qfd_vm_qcommit/qfd_vm_qcommit-raw1-762353d7f"
   }
  ],
  "cycles_added": 0,
