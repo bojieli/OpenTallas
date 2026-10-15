@@ -21,7 +21,7 @@
 // multiple_cts_roots leaf admits only same-frequency roots, and the 3:4 related arcs (bank / parity / marker flops ->
 // stream capture, >= 1.111 ns by construction) are parent-level related-clock paths.  ot_s81_vm_x34 is the wrapper
 // of the two: the same flops, the same logic, bit-identical behaviour (tb_ot_s81_vm_x34 unchanged).
-module ot_s81_vm_x34 #(parameter integer W = 512, parameter integer NAT = 0) (
+module ot_s81_vm_x34 #(parameter integer W = 512, parameter integer NAT = 0, parameter integer BAL = 0) (
     input  wire         s_ck, s_rst_n,
     input  wire         s_v, input wire [W-1:0] s_d,
     input  wire         t_ck, t_rst_n,
@@ -31,7 +31,7 @@ module ot_s81_vm_x34 #(parameter integer W = 512, parameter integer NAT = 0) (
     wire [W:0] b0, b1, b2; wire [2:0] bp; wire mark;
     ot_s81_vm_x34_s #(.W(W), .NAT(NAT)) u_s (.s_ck(s_ck), .s_rst_n(s_rst_n), .s_v(s_v), .s_d(s_d), .b0(b0), .b1(b1), .b2(b2),
         .bpar(bp), .s_mark(mark));
-    ot_s81_vm_x34_t #(.W(W), .NAT(NAT)) u_t (.t_ck(t_ck), .t_rst_n(t_rst_n), .b0(b0), .b1(b1), .b2(b2), .bpar(bp), .s_mark(mark),
+    ot_s81_vm_x34_t #(.W(W), .NAT(NAT), .BAL(BAL)) u_t (.t_ck(t_ck), .t_rst_n(t_rst_n), .b0(b0), .b1(b1), .b2(b2), .bpar(bp), .s_mark(mark),
         .o_v(o_v), .o_d(o_d), .fault(fault));
 endmodule
 
@@ -146,7 +146,13 @@ endmodule
 // unmuxed into c_k on an ICG-gated clock enabled only at its own fixed read edge (tp == 1 / 2 / 3), bpar[k] with it, the
 // phase marker in a pin flop every edge (as the core always sampled it), and the core runs ONE stream edge later on the
 // captured words (its reset release one edge later).  Every o_v / o_d / fault is NAT=0's one stream edge later.
-module ot_s81_vm_x34_t #(parameter integer W = 512, parameter integer NAT = 0) (
+// BAL=1 (S81 VM S-ELEM-A 2026-10-15, NAT=1 only): every non-capture register (phase tp, reset release r1, mark pin flop,
+// the whole core incl. the o_v/o_d/fault output flops) is clocked through a fourth, always-enabled ICG of the same cell,
+// so all four clock subtrees have the same structure (root -> ICGx2 -> subtree).  r5 (BAL=0) routed FF -9.69 on the
+// output ports: the output flops sat on the bare root while the input pin flops (the IO reference) sat behind the
+// capture ICGs, so the outputs launched early against the reference.  Behaviour is identical (gate always enabled);
+// zero cycles, zero ports.  BAL=0 keeps the closed views' netlist.
+module ot_s81_vm_x34_t #(parameter integer W = 512, parameter integer NAT = 0, parameter integer BAL = 0) (
     input  wire         t_ck, t_rst_n,
     input  wire [W:0]   b0, b1, b2,
     input  wire [2:0]   bpar,
@@ -158,12 +164,22 @@ module ot_s81_vm_x34_t #(parameter integer W = 512, parameter integer NAT = 0) (
         ot_s81_vm_x34_tc #(.W(W)) u_c (.t_ck(t_ck), .t_rst_n(t_rst_n), .b0(b0), .b1(b1), .b2(b2), .bpar(bpar),
             .s_mark(s_mark), .o_v(o_v), .o_d(o_d), .fault(fault));
     end else begin : captured
+        wire ck_b;                       // clock of every non-capture register (BAL=1: behind an always-on ICG)
+`ifdef SYNTHESIS
+        if (BAL != 0) begin : bal
+            ICGx2_ASAP7_75t_R u_g3 (.CLK(t_ck), .ENA(1'b1), .SE(1'b0), .GCLK(ck_b));
+        end else begin : nobal
+            assign ck_b = t_ck;
+        end
+`else
+        assign ck_b = t_ck;
+`endif
         reg [1:0] tp;
-        always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) tp <= 2'd3; else tp <= tp + 2'd1;
+        always @(posedge ck_b or negedge t_rst_n) if (!t_rst_n) tp <= 2'd3; else tp <= tp + 2'd1;
         reg r1;
-        always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) r1 <= 1'b0; else r1 <= 1'b1;
+        always @(posedge ck_b or negedge t_rst_n) if (!t_rst_n) r1 <= 1'b0; else r1 <= 1'b1;
         reg mk_q;
-        always @(posedge t_ck) mk_q <= s_mark;
+        always @(posedge ck_b) mk_q <= s_mark;
         reg [W+1:0] c0, c1, c2;          // {bpar[k], b_k}
         wire e0 = tp == 2'd1, e1 = tp == 2'd2, e2 = tp == 2'd3;
 `ifdef SYNTHESIS
@@ -182,7 +198,7 @@ module ot_s81_vm_x34_t #(parameter integer W = 512, parameter integer NAT = 0) (
         end
 `endif
         // the core's reset releases one stream edge after t_rst_n (assertion stays immediate)
-        ot_s81_vm_x34_tc #(.W(W)) u_c (.t_ck(t_ck), .t_rst_n(r1), .b0(c0[W:0]), .b1(c1[W:0]), .b2(c2[W:0]),
+        ot_s81_vm_x34_tc #(.W(W)) u_c (.t_ck(ck_b), .t_rst_n(r1), .b0(c0[W:0]), .b1(c1[W:0]), .b2(c2[W:0]),
             .bpar({c2[W+1], c1[W+1], c0[W+1]}), .s_mark(mk_q), .o_v(o_v), .o_d(o_d), .fault(fault));
     end endgenerate
 endmodule
