@@ -373,7 +373,7 @@ module ot_hgi_coll_q_static_ctl #(
  input wire [ND-1:0] dest_v,
  input wire rc_v,input wire [2:0] rc_tag,
  input wire [2055:0] vm_rr,
- output reg [135:0] vm_req_pin,
+ output wire [135:0] vm_req_pin,
  output reg [1:0] inj_req_pin,
  output reg [31:0] inj_idx_pin,
  output reg [159:0] inj_addr_pin,
@@ -467,6 +467,9 @@ module ot_hgi_coll_q_static_ctl #(
  reg [2047:0] vm_raw_data;
  reg [7:0] vm_raw_valid;
  reg [7:0] vm_valid_pipe[0:7];
+ reg [127:0] vm_req_sector;
+ reg [7:0] vm_req_valid;
+ for(genvar bank=0;bank<8;bank=bank+1)assign vm_req_pin[bank*17+:17]={vm_req_valid[bank],vm_req_sector[bank*16+:16]};
  reg [7:0] link_epoch[0:NPT-1];
  // Registered requests and metadata have one real, explicit protocol root.
  // Request launch P ->SU source capture P+INJLAT; VM capture P+10.
@@ -492,14 +495,14 @@ module ot_hgi_coll_q_static_ctl #(
    vm_assembled[j*512+:512]<={vm_raw[257*int'(vm_select_pipe[8][j*6+3+:3])+:256],
      vm_raw[257*int'(vm_select_pipe[8][j*6+:3])+:256]};
   for(integer b=0;b<8;b=b+1)
-   vm_req_pin[b*17+:16]<=p_vm_rq[b*17+:16]+16'(iteration*p_iter_vm_step);
+   vm_req_sector[b*16+:16]<=p_vm_rq[b*17+:16]+16'(iteration*p_iter_vm_step);
  end
  always @(posedge clk_control or negedge rst_n)begin
   if(!rst_n)begin
    protocol_fault<=0;cycles<=0;inj_req_pin<=0;vm_assembled_v<=0;vm_raw_valid<=0;
    for(integer j=0;j<INJLAT;j=j+1)inj_valid_pipe[j]<=0;
    for(integer j=0;j<8;j=j+1)vm_valid_pipe[j]<=0;
-   for(integer b=0;b<8;b=b+1)vm_req_pin[b*17+16]<=0;
+   for(integer b=0;b<8;b=b+1)vm_req_valid[b]<=0;
    for(integer k=0;k<NPT;k=k+1)link_epoch[k]<=0;
   end else begin
    if(hgi_start)cycles<=0;else if(hgi_busy)cycles<=cycles+1;
@@ -508,7 +511,7 @@ module ot_hgi_coll_q_static_ctl #(
    inj_valid_pipe[0]<=p_inj_rd;
    for(integer j=1;j<INJLAT;j=j+1)inj_valid_pipe[j]<=inj_valid_pipe[j-1];
    for(integer b=0;b<8;b=b+1)begin
-    vm_req_pin[b*17+16]<=p_vm_rq[b*17+16];
+    vm_req_valid[b]<=p_vm_rq[b*17+16];
     vm_valid_pipe[0][b]<=p_vm_rq[b*17+16];
     if(vm_rr[b*257+256]!=vm_valid_pipe[7][b])protocol_fault<=1;
    end
