@@ -16196,7 +16196,7 @@ def s81_hcx_resident_native_model():
                 parameter_addresses=[0,343],gain_addresses=[512,1151],
                 words_per_vector=320,rom_read_bits_per_cycle=256,
                 vm_write_bits_per_cycle=512,vm_write_mask_bits=16,
-                measured_gain_serial_cycles=326,vm_commit_latency=4,
+                measured_gain_serial_cycles=326,public_start_to_done_serial_cycles=327,vm_commit_latency=4,
                 ownership='fixed compiler mode; post/gain conflicts fault, never arbitrate/wait',
                 qualification='source+component only; actual shared-port native bench pending'),
             memory='native FP32 rawmix reads, comb/pre/post/eps/reserved output layout',

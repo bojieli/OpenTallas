@@ -37,7 +37,7 @@ module tb_s81_hcx_post_gain_native;
    end
    if(!done)$fatal(1,"fixed completion absent");
    if(job==2||job==3)begin
-    if(cyc-t0!=326)$fatal(1,"gain calendar shifted %0d",cyc-t0);
+    if(cyc-t0!=327)$fatal(1,"gain calendar shifted %0d",cyc-t0);
     for(integer q=0;q<320;q=q+1)for(integer lane=0;lane<16;lane=lane+1)
      if(mem[4096+q][32*lane+:32] !== (draft?g1[16*q+lane]:g0[16*q+lane]))errs=errs+1;
     gain_rows=gain_rows+320;
