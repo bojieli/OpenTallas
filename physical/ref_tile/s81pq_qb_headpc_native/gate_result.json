@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "s81pq_qb_headpc_native",
  "verdict": "WARN",
- "generated": "2026-10-15T08:54:54-0700",
- "host": "ot-agidock128",
- "cts": false,
+ "generated": "2026-10-15T09:03:10-0700",
+ "host": "ot-epyc4",
+ "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "66929ed463fbd29a31d9e4a5e591ad7601915e3c",
+  "start_commit": "5b939cbc4654cf8ce6ea145e1a1ded109f2d6435",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,7 +21,7 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "2eae77d3c1295bc7cb74989c358a656bf9c11330d665f01b378b411d9e3bce7f",
+  "archive_sha256": "e7ad84410ece3d9eb29cd0fc2901d56418fa4f0dbf55dd5a1830b0844b06e8e7",
   "manifest_sha256": "8821cf39e35b407e81245280aa3e9a8f5977cceea2ffd7db285b5a33db11da63",
   "files": [
    {
@@ -130155,7 +130155,7 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 103644741,
+   "archive_bytes": 103644750,
    "unpacked_bytes": 742522880,
    "pick_gb": 22,
    "runtime_gb": 22
@@ -130522,8 +130522,8 @@
      "sha256": "0afa30db35fd1cd94bfe6a4b27c297e136a6f7cd5973703a75af9cd2dc195e4a",
      "git_blob": "51c8c503117e8b07024d44d8f0366ace2102bda9",
      "mode": 509,
-     "resolution": "stale",
-     "literal_git_blob": "f800759a7f7a19dd3c74b2ee10009b37b944839a"
+     "resolution": "same",
+     "literal_git_blob": "51c8c503117e8b07024d44d8f0366ace2102bda9"
     },
     {
      "path": "tools/w18/corner_sta.py",
@@ -133715,11 +133715,11 @@
    },
    "digest": "7a53dcb6fa677065e7eba0ce574cfee62d7035e9f5c77d21e46b698b39857c1f"
   },
-  "captured": "2026-10-15T08:52:37-0700",
-  "remote_script_sha256": "b4b713739d4b2daa5c93cedd155131e4af9798c864cd32c34302a3ad2d233f18",
+  "captured": "2026-10-15T08:55:55-0700",
+  "remote_script_sha256": "abbafd50271a82ee65778dc196fb4fbba924d202026795669663360ee13c2ba5",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81pq_qb_headpc_native-20261015-085206",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81pq_qb_headpc_native-20261015-085527",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -133729,17 +133729,41 @@
  "clock": {
   "max_root_sinks": 8013,
   "root": "port:clk",
-  "cts": false,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
+  "cts": true,
+  "tt_insertion_ps": 207.6,
+  "tt_spread_ps": 16.6,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
+  "clock_measurements": [
+   {
+    "source": "clk",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 1684,
+      "mean": 200.7,
+      "min": 194.1,
+      "max": 207.5
+     },
+     "all": {
+      "n": 8569,
+      "mean": 198.0,
+      "min": 191.0,
+      "max": 207.6
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "8,013 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+  "text": "8,013 sinks on the largest root <= 15,000; measured TT insertion 207.6 ps, leaf spread 16.6 ps"
  },
  "items": [
   {
