@@ -152,6 +152,8 @@ module qkd_land_grp #(
     parameter integer DQ  = 32,            // the engine's outstanding-row credit (qkd_ectl DQ)
     parameter integer GC  = 4,
     parameter integer NL  = 36,            // layers a token (the layer after NL - 1 is 0)
+    parameter integer EPOCH = 0,          // requests carry layer parity; legacy frozen masters remain 16-bit
+    parameter integer RH  = 0,            // 1: merge request / pending-tag queues read from a head register (cycle-identical)
     parameter integer MUT = 0
 ) (
     input  wire          ck,
@@ -166,7 +168,7 @@ module qkd_land_grp #(
     output wire          gc1,
     output wire          gc2,
     output wire          gc3,
-    input  wire [15:0]   rq,
+    input  wire [15+EPOCH:0] rq,
     output wire [1024:0] rs,
     input  wire [20:0]   lt,
     input  wire [1046:0] kn,
@@ -255,18 +257,39 @@ module qkd_land_grp #(
             if (deliver) rr <= rr + 1'b1;
             rn <= rn + {{RA{1'b0}}, h_req_valid} - {{RA{1'b0}}, deliver};
             gc <= {4{take}};
-            if ((all && !agree) || (all && agree && cur && !beyond && late) || (|qovf) || (h_req_valid && rn == (RA+1)'(DQ)))
+            if ((all && !agree) || (all && agree && cur && !beyond && late) || (|qovf) || (h_req_valid && rn == (RA+1)'(DQ)) || epoch_fault)
                 f_grp <= 1'b1;
             fo <= fi_q | f_grp | m_fault;
         end
+    // STATIC layer context (owner rule 2026-10-14 18:59: compiler-scheduled cycles, no runtime hold / readiness wait).
+    // The compiler issues lt so that it reaches the lt pin no later than the edge the layer's first request reaches the
+    // rq pin (and after the previous layer's last request has been answered). The request is pin-registered and goes straight to the
+    // merge; bit 16 (layer parity) is CHECKED against the registered current context: a request that arrives before its
+    // layer's lt (or a previous-layer request after it) latches the sticky group fault. It never waits, so a schedule
+    // error cannot silently stretch the timeline or be attributed to the wrong layer. (f2cf210f4's 128-entry hold queue,
+    // a readiness wait, is withdrawn.)
+    wire [15:0] rq_release;
+    wire epoch_fault;
+    generate if (EPOCH != 0) begin : g_epoch_check
+        (* keep *) reg v_pin;
+        (* keep *) reg [15:0] d_pin;
+        always @(posedge ck) d_pin <= rq[16:1];
+        always @(posedge ck or negedge rn_q)
+            if (!rn_q) v_pin <= 1'b0; else v_pin <= rq[0];
+        assign rq_release = {d_pin[14:0], v_pin};
+        assign epoch_fault = v_pin && (!cur_v || ls_q || d_pin[15] != L_cur[0]) && MUT != 4;
+    end else begin : g_legacy_request
+        assign rq_release = rq[15:0];
+        assign epoch_fault = 1'b0;
+    end endgenerate
     // ---- the KV merge slice (requests, fence, kept rows, merged response): unchanged module ---------------------------
     wire [1023:0] h_row = {hw[3][271:16], hw[2][271:16], hw[1][271:16], hw[0][271:16]};
     wire          e_rsp_valid;
     wire [1023:0] e_rsp_data;
-    ot_qkvd_kv_merge #(.HD(128), .E(1), .DQ(DQ), .MUT(MUT == 1 ? 1 : 0)) u_m (
+    ot_qkvd_kv_merge #(.HD(128), .E(1), .DQ(DQ), .RH(RH), .MUT(MUT == 1 ? 1 : 0)) u_m (
         .clk(ck), .rst_n(rn_q), .lay_start(lt[0]), .lay_T(lt[14:1]), .lay_idx(lt[20:15]),
         .kvw_v(kn[0]), .kvw_vg(kn[2:1]), .kvw_t(kn[16:3]), .kvw_layer(kn[22:17]), .kvw_d(kn[1046:23]),
-        .e_req_valid(rq[0]), .e_req_v(rq[1]), .e_req_g(rq[2]), .e_req_t(rq[15:3]),
+        .e_req_valid(rq_release[0]), .e_req_v(rq_release[1]), .e_req_g(rq_release[2]), .e_req_t(rq_release[15:3]),
         .h_req_valid(h_req_valid), .h_req_v(h_req_v), .h_req_g(h_req_g), .h_req_t(h_req_t),
         .h_rsp_valid(deliver), .h_rsp_data(h_row), .e_rsp_valid(e_rsp_valid), .e_rsp_data(e_rsp_data), .fault(m_fault));
     assign rs = {e_rsp_data, e_rsp_valid};

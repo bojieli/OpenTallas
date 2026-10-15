@@ -15,7 +15,7 @@
 // pin flop (h_cv / h_c* one HCLK edge later: h_cv = two edges after h_wcon), per-group kept selects; h_hand is a
 // final 2:1 select.  See ot_qwen_stream4_cdc_pc WPIPE.
 // ---------------------------------------------------------------------------
-module qkd_cdc_wleaf (
+module qkd_cdc_wleaf #(parameter integer HANDPIPE = 0, parameter integer WCPIN = 0) (
     input  wire         clk,
     input  wire         c_arst_n,
     output wire         l_v,
@@ -50,10 +50,15 @@ module qkd_cdc_wleaf (
     input  wire [8:0]   h_atag,
     output wire         h_fault
 );
-    ot_qwen_stream4_cdc_pc #(.TAGW(9), .LD(32), .WB(16), .AD(64), .SYNC(2), .RSEL(1), .RNG(10), .MARGIN(1), .LCRED(6), .WPIPE(1)) u_cdc (
+    // Optional native input capture: the controller's HOFF guard spans the added hand-off edge.
+    (* keep *) reg hand_pin;
+    always @(posedge hclk or negedge h_arst_n)
+        if (!h_arst_n) hand_pin <= 1'b0; else hand_pin <= h_hand;
+    wire hand_local = HANDPIPE != 0 ? hand_pin : h_hand;
+    ot_qwen_stream4_cdc_pc #(.TAGW(9), .LD(32), .WB(16), .AD(64), .SYNC(2), .RSEL(1), .RNG(10), .MARGIN(1), .LCRED(6), .WPIPE(1), .WCE(WCPIN)) u_cdc (
         .clk(clk), .c_arst_n(c_arst_n), .l_v(l_v), .l_sec(l_sec), .l_row(l_row), .l_data(l_data), .l_pop(l_pop),
         .w_v(w_v), .w_sec(w_sec), .w_data(w_data), .w_tag(w_tag), .w_room(w_room), .wd_v(wd_v), .wd_tag(wd_tag),
         .c_fault(c_fault), .hclk(hclk), .h_arst_n(h_arst_n), .h_lv(h_lv), .h_lsec(h_lsec), .h_lrow(h_lrow),
-        .h_ldata(h_ldata), .h_cred(h_cred), .h_wv(h_wv), .h_wsec(h_wsec), .h_hand(h_hand), .h_wcon(h_wcon),
+        .h_ldata(h_ldata), .h_cred(h_cred), .h_wv(h_wv), .h_wsec(h_wsec), .h_hand(hand_local), .h_wcon(h_wcon),
         .h_cv(h_cv), .h_csec(h_csec), .h_cdata(h_cdata), .h_ctag(h_ctag), .h_av(h_av), .h_atag(h_atag), .h_fault(h_fault));
 endmodule

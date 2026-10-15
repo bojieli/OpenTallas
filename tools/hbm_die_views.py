@@ -75,6 +75,8 @@ def model():
 def port_dirs():
     """master -> port -> per-bit direction ('in' / 'out' / 'x' conflicting / '?'), exactly as die_top_lint's stubs."""
     m, pw, M, real = model()
+    if 'port_dirs' in _MODEL:
+        return _MODEL['port_dirs']
     by = {it.name: it for it in m['insts']}
     pdir = defaultdict(dict)
     narrow = set()
@@ -104,6 +106,9 @@ def port_dirs():
             for a, b, d in seg:
                 for i in range(a, b):
                     cur[i] = d if cur[i] in ('?', d) else 'x'
+    # Model lifetime is the cache lifetime: callers already clear _MODEL before
+    # selecting another preset. Avoid rescanning every die bus for every master.
+    _MODEL['port_dirs'] = pdir, narrow
     return pdir, narrow
 
 
@@ -232,11 +237,15 @@ def cmd_ports(a):
         m, pw, M, real = model()
     names = a.master or sorted(n for n in M if n.startswith('hfd_') and n != 'hfd_sm' or n == 'hfd_sm')
     out = Path(a.out)
-    summary = {}
+    summary, skipped = {}, {}
     for n in names:
         if n not in M and derived_record(n) is None:
             raise SystemExit(f'no generator master {n}')
-        rec = master_record(n)
+        try:
+            rec = master_record(n)
+        except ValueError as e_:    # hbmdie 10-14: a master whose pins come from its closed view (exact rectangles of a
+            skipped[n] = str(e_)   # real LEF, not a generator plan) gets no assigned file: closed tiles stand
+            continue
         d = out / n
         d.mkdir(parents=True, exist_ok=True)
         (d / 'ports.json').write_text(json.dumps(rec, indent=0) + '\n')
@@ -245,6 +254,7 @@ def cmd_ports(a):
         summary[n] = dict(kind=rec['kind'], w=rec['w_um'], h=rec['h_um'], instances=rec['instances'],
                           ports={p: (v['bits'], v['face'], v['direction']) for p, v in rec['ports'].items()})
     (out / 'summary.json').write_text(json.dumps(summary, indent=1) + '\n')
+    (out / 'skipped.json').write_text(json.dumps(skipped, indent=1) + '\n')
     print(json.dumps({k: (v['kind'], v['w'], v['h'], v['instances']) for k, v in summary.items()}))
 
 

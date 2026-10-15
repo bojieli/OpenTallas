@@ -93,21 +93,26 @@ def astk_binding():
                          'pv_done': 'by_design: the aggregator P.V done pair, not a hub input (the die ap word is 563 b)'})
 
 
-def ctrl_binding():
+def ctrl_binding(rev=False):
     ports = {}
     for k in range(NPC):
         ports.update({f'c{k}i': [f'ci{k}'], f'c{k}o': [f'co{k}'], f'es{k}': [f'es{k}'], f'er{k}': [f'er{k}'],
                       f'po{k}': [f'po{k}'], f'pi{k}': [f'pi{k}']})
     ports.update(kc=['kc'], kf=['kf'], hrst=['hrst'], rsi=['rsi'], ck_p0=['ck_p'], ck_k=['ck_k'], hk_p0=['hk_p'],
                  hk_k=['hk_k'])
-    return dict(module='qkd_ctrl_strip_s', file='rtl/qwen_sys/split_20261014/qkd_strips_s.sv', ports=ports,
+    return dict(module='qkd_ctrl_strip_sr' if rev else 'qkd_ctrl_strip_s', file='rtl/qwen_sys/split_20261014/qkd_strips_s.sv', ports=ports,
                 sliced={**{f'ck_p{k}': 'ck_p0' for k in range(1, NPC)}, **{f'hk_p{k}': 'hk_p0' for k in range(1, NPC)}},
                 classed={})
 
 
-def emit_ctrl():
+def emit_ctrl(rev=False):
+    """rev=False: qkd_ctrl_strip_s (N stacks, qkd_ctrl_n): kc enters the strip's OUTER = N end, kc leaf at the N end,
+    command chain kc -> pc31 .. pc0 (N -> S), fault chain pc0 .. pc31 -> kc.
+    rev=True (v1.3): qkd_ctrl_strip_sr (S stacks, qkd_ctrl): kc enters the OUTER = S end (kc_<S stack> die pin on the S
+    face), kc leaf at the S end, command chain kc -> pc0 .. pc31 (S -> N), fault chain pc31 .. pc0 -> kc; the die places
+    these leaves MX (ki / fo face S), so every chain hop stays an abutted 378-um pitch hop."""
     L = ['// ---- HBM controller strip: wires only (every block a CLOSED leaf) ----------------------------------------------',
-         'module qkd_ctrl_strip_s (', '    input  wire [31:0]   ck_p,', '    input  wire          ck_k,',
+         f'module {"qkd_ctrl_strip_sr" if rev else "qkd_ctrl_strip_s"} (', '    input  wire [31:0]   ck_p,', '    input  wire          ck_k,',
          '    input  wire [31:0]   hk_p,', '    input  wire          hk_k,', '    input  wire          hrst,',
          '    input  wire          rsi,', '    input  wire [32:0]   kc,', '    output wire          kf,']
     for k in range(NPC):
@@ -115,14 +120,24 @@ def emit_ctrl():
               f'    input  wire [{W_ES - 1}:0]  es{k},', f'    output wire [{W_ER - 1}:0]  er{k},',
               f'    output wire [{W_PO - 1}:0]  po{k},', f'    input  wire [{W_PI - 1}:0]  pi{k},']
     L[-1] = L[-1].rstrip(',')
-    L += [');', f'    wire [32:0] kw [0:{NPC}];    // kw[k + 1]: into pc k from the N (kw[NPC] = the kc leaf)',
-          f'    wire        fw [0:{NPC}];    // fw[k]: into pc k from the S', "    assign fw[0] = 1'b0;",
-          f'    qkd_ctrl_kc u_kc (.ck(ck_k), .rsi(rsi), .pll_hbm(hk_k), .hrst(hrst), .kc(kc), .ko(kw[{NPC}]), .fi(fw[{NPC}]), '
-          '.kf(kf));']
-    for k in range(NPC):
-        L.append(f'    qkd_ctrl_pc u_pc{k} (.pll_hbm(hk_p[{k}]), .hrst(hrst), .ck(ck_p[{k}]), .rsi(rsi), .pc(5\'d{k}), '
-                 f'.ci(ci{k}), .co(co{k}), .es(es{k}), .er(er{k}), .po(po{k}), .pi(pi{k}), .ki(kw[{k + 1}]), .ko(kw[{k}]), '
-                 f'.fi(fw[{k}]), .fo(fw[{k + 1}]));')
+    if not rev:
+        L += [');', f'    wire [32:0] kw [0:{NPC}];    // kw[k + 1]: into pc k from the N (kw[NPC] = the kc leaf)',
+              f'    wire        fw [0:{NPC}];    // fw[k]: into pc k from the S', "    assign fw[0] = 1'b0;",
+              f'    qkd_ctrl_kc u_kc (.ck(ck_k), .rsi(rsi), .pll_hbm(hk_k), .hrst(hrst), .kc(kc), .ko(kw[{NPC}]), .fi(fw[{NPC}]), '
+              '.kf(kf));']
+        for k in range(NPC):
+            L.append(f'    qkd_ctrl_pc u_pc{k} (.pll_hbm(hk_p[{k}]), .hrst(hrst), .ck(ck_p[{k}]), .rsi(rsi), .pc(5\'d{k}), '
+                     f'.ci(ci{k}), .co(co{k}), .es(es{k}), .er(er{k}), .po(po{k}), .pi(pi{k}), .ki(kw[{k + 1}]), .ko(kw[{k}]), '
+                     f'.fi(fw[{k}]), .fo(fw[{k + 1}]));')
+    else:
+        L += [');', f'    wire [32:0] kw [0:{NPC}];    // kw[k]: into pc k from the S (kw[0] = the kc leaf)',
+              f'    wire        fw [0:{NPC}];    // fw[k + 1]: into pc k from the N (fw[0] = into the kc leaf)',
+              f"    assign fw[{NPC}] = 1'b0;",
+              '    qkd_ctrl_kc u_kc (.ck(ck_k), .rsi(rsi), .pll_hbm(hk_k), .hrst(hrst), .kc(kc), .ko(kw[0]), .fi(fw[0]), .kf(kf));']
+        for k in range(NPC):
+            L.append(f'    qkd_ctrl_pc u_pc{k} (.pll_hbm(hk_p[{k}]), .hrst(hrst), .ck(ck_p[{k}]), .rsi(rsi), .pc(5\'d{k}), '
+                     f'.ci(ci{k}), .co(co{k}), .es(es{k}), .er(er{k}), .po(po{k}), .pi(pi{k}), .ki(kw[{k}]), .ko(kw[{k + 1}]), '
+                     f'.fi(fw[{k + 1}]), .fo(fw[{k}]));')
     L.append('endmodule')
     return '\n'.join(L)
 
@@ -261,7 +276,7 @@ def main():
             '// KV/system die strip frames = wires-only compositions of CLOSED leaves (see the generator docstring).\n'
             '// Leaf RTL: rtl/qwen_sys/kv_die_20261009/{qkd_land_strip.sv, qkd_astk_leaves.sv, qkd_ctrl_strip.sv}; rtl/hdc/ot_hdc_delay.sv.\n')
     Path(a.out).write_text(head + '\n' + SRLY + '\n\n' + emit_land() + '\n\n' + emit_astk(a.astk_src) + '\n\n' +
-                           emit_ctrl() + '\n')
+                           emit_ctrl() + '\n\n' + emit_ctrl(rev=True) + '\n')
     print('land depths', land_depths())
 
 

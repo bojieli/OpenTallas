@@ -10,7 +10,7 @@
 // NEG = 2: the reference sees h_wcon undelayed (the cell's pin stage is not transparent) -> must FAIL.
 // NEG = 3: the stimulus ignores the credit rule with a slow reader (LD 32 overflows where LD 64 does not) -> must FAIL.
 module tb_qkd_cdc_wleaf_equiv;
-    parameter integer NEG = 0, N = 20000;
+    parameter integer NEG = 0, N = 20000, HANDPIPE = 0;
     reg clk = 0, hclk = 0, rst_n = 0;
     always #1.0 clk = ~clk;
     always #1.17 hclk = ~hclk;
@@ -23,16 +23,28 @@ module tb_qkd_cdc_wleaf_equiv;
         .clk(clk), .c_arst_n(rst_n), .l_v(OC[0]), .l_sec(OC[17:1]), .l_row(OC[25:18]), .l_data(OC[281:26]), .l_pop(l_pop), \
         .w_v(w_v), .w_sec(w_sec), .w_data(w_data), .w_tag(w_tag), .w_room(OC[282]), .wd_v(OC[283]), .wd_tag(OC[292:284]), \
         .c_fault(OC[293]), .hclk(hclk), .h_arst_n(rst_n), .h_lv(h_lv), .h_lsec(h_lsec), .h_lrow(h_lrow), .h_ldata(h_ldata), \
-        .h_cred(OH[2:0]), .h_wv(OH[3]), .h_wsec(OH[27:4]), .h_hand(h_hand), .h_wcon(NEG == 2 ? h_wcon : h_wcon_d), .h_cv(OH[28]), \
+        .h_cred(OH[2:0]), .h_wv(OH[3]), .h_wsec(OH[27:4]), .h_hand(HANDPIPE != 0 && NEG != 4 ? h_hand_d : h_hand), .h_wcon(NEG == 2 ? h_wcon : h_wcon_d), .h_cv(OH[28]), \
         .h_csec(OH[52:29]), .h_cdata(OH[308:53]), .h_ctag(OH[317:309]), .h_av(h_av), .h_atag(h_atag), .h_fault(OH[318]));
     reg h_wcon_d = 0; always @(posedge hclk) h_wcon_d <= h_wcon;
     integer cred = 32, maxout = 0; reg lvn;
+    reg h_hand_d = 0;
+    always @(posedge hclk or negedge rst_n)
+        if (!rst_n) h_hand_d <= 1'b0; else h_hand_d <= h_hand;
+    generate if (HANDPIPE != 0) begin : native
+    qkd_cdc_wleaf_hpin u_a (
+        .clk(clk), .c_arst_n(rst_n), .l_v(oc_a[0]), .l_sec(oc_a[17:1]), .l_row(oc_a[25:18]), .l_data(oc_a[281:26]), .l_pop(l_pop),
+        .w_v(w_v), .w_sec(w_sec), .w_data(w_data), .w_tag(w_tag), .w_room(oc_a[282]), .wd_v(oc_a[283]), .wd_tag(oc_a[292:284]),
+        .c_fault(oc_a[293]), .hclk(hclk), .h_arst_n(rst_n), .h_lv(h_lv), .h_lsec(h_lsec), .h_lrow(h_lrow), .h_ldata(h_ldata),
+        .h_cred(oh_a[2:0]), .h_wv(oh_a[3]), .h_wsec(oh_a[27:4]), .h_hand(h_hand), .h_wcon(h_wcon), .h_cv(oh_a[28]),
+        .h_csec(oh_a[52:29]), .h_cdata(oh_a[308:53]), .h_ctag(oh_a[317:309]), .h_av(h_av), .h_atag(h_atag), .h_fault(oh_a[318]));
+    end else begin : legacy
     qkd_cdc_wleaf u_a (
         .clk(clk), .c_arst_n(rst_n), .l_v(oc_a[0]), .l_sec(oc_a[17:1]), .l_row(oc_a[25:18]), .l_data(oc_a[281:26]), .l_pop(l_pop),
         .w_v(w_v), .w_sec(w_sec), .w_data(w_data), .w_tag(w_tag), .w_room(oc_a[282]), .wd_v(oc_a[283]), .wd_tag(oc_a[292:284]),
         .c_fault(oc_a[293]), .hclk(hclk), .h_arst_n(rst_n), .h_lv(h_lv), .h_lsec(h_lsec), .h_lrow(h_lrow), .h_ldata(h_ldata),
         .h_cred(oh_a[2:0]), .h_wv(oh_a[3]), .h_wsec(oh_a[27:4]), .h_hand(h_hand), .h_wcon(h_wcon), .h_cv(oh_a[28]),
         .h_csec(oh_a[52:29]), .h_cdata(oh_a[308:53]), .h_ctag(oh_a[317:309]), .h_av(h_av), .h_atag(h_atag), .h_fault(oh_a[318]));
+    end endgenerate
     `CDC_INST(u_b, 2, (NEG ? 3 : 2), oc_b, oh_b)
     assign oc_a[600:294] = 0; assign oc_b[600:294] = 0; assign oh_a[600:319] = 0; assign oh_b[600:319] = 0;
     integer seed = 11, bad = 0, nc = 0, nh = 0, lv_seen = 0, wd_seen = 0, cv_seen = 0, k;

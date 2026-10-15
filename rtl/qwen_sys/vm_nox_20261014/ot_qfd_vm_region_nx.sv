@@ -36,9 +36,15 @@ module ot_qfd_vm_region_nx #(
     parameter integer NRI = 2,
     parameter integer NRX = 2,
     parameter integer NRS = 1,
+    parameter integer USE_OBSERVER_CLOCKS = 0,
+    parameter integer BANK_BASE = 0,
+    parameter integer TOTAL_BANKS = 64,
+    parameter integer USE_LEAF_CLOCKS = 0,
     parameter integer LEAF_MUT = 0
 ) (
     input  wire                      clk,
+    input  wire [55:0]               leaf_ck,
+    input  wire [7:0]                observer_ck,
     input  wire                      rst_n,
     input  wire [NBK-1:0]            re,
     input  wire [NBK*LAW-1:0]        ra,
@@ -55,6 +61,10 @@ module ot_qfd_vm_region_nx #(
     input  wire [NSB*LAWS-1:0]       swl,
     input  wire [NSB*16-1:0]         swm,
     input  wire [NSB*512-1:0]        swd,
+    output wire [511:0]              qr_commit_mask,
+    output wire [NBK-1:0]            write_commit_v,
+    output wire [NBK*LAW-1:0]        write_commit_line,
+    output wire [NBK*16-1:0]         write_commit_mask,
     output wire [511:0]              ro,
     output wire [NSU*NSB*512-1:0]    so
 );
@@ -62,6 +72,9 @@ module ot_qfd_vm_region_nx #(
     initial if (NBK != 8 || NSB != 2 || NSU != 3 || NRI != 2 || NRX != 2 || NRS != 1)
         $fatal(1, "ot_qfd_vm_region_nx: unsupported leaf shape");
 `endif
+    wire [55:0] lc = USE_LEAF_CLOCKS ? leaf_ck : {56{clk}};
+    // Clock index: banks g: bctl, wd, bank, bx = 4*g..4*g+3; SU copies: 32+3*(2*c+j) = sctl, sd, bank;
+    // su1024 = 50+c; rr4 = 53+h; rr2 = 55. Every entry reaches exactly one real leaf.
     genvar g, c, j, h;
     // ---- copy-0 banks: control leaf + write-data relay -> bank -> bx relay (row read) ----
     wire [NBK-1:0]     rtg;
@@ -76,26 +89,56 @@ module ot_qfd_vm_region_nx #(
 `else   // hardened leaf: built with its defaults (the production TP8 shape); no parameters on a hard child
         ot_qfd_vm_bctl_nx u_bc (
 `endif
-            .clk(clk), .rst_n(rst_n), .re(re[g]), .ra(ra[g*LAW +: LAW]), .we(we[g]),
+            .clk(lc[4*g]), .rst_n(rst_n), .re(re[g]), .ra(ra[g*LAW +: LAW]), .we(we[g]),
             .wl(wl[g*LAW +: LAW]), .wm(wm[g*16 +: 16]),
             .rtg(rtg[g]), .m_re(m_re), .m_ra(m_ra), .m_we(m_we), .m_wl(m_wl), .m_wm(m_wm));
         if (LEAF_MUT == 4 && g == 5) begin : g_wdm
-            `OT_QFD_VM_DELAY1_MOD u_wd (.clk(clk), .d(wd[g*512 +: 512]), .q(m_wd[g*512 +: 512]));
+            `OT_QFD_VM_DELAY1_MOD u_wd (.clk(lc[4*g+1]), .d(wd[g*512 +: 512]), .q(m_wd[g*512 +: 512]));
         end else begin : g_wd
-            `OT_QFD_VM_DELAY2_MOD u_wd (.clk(clk), .d(wd[g*512 +: 512]), .q(m_wd[g*512 +: 512]));
+            `OT_QFD_VM_DELAY2_MOD u_wd (.clk(lc[4*g+1]), .d(wd[g*512 +: 512]), .q(m_wd[g*512 +: 512]));
         end
 `ifndef OT_QFD_VM_HARD
-        ot_qfd_vm_bank_t #(.DEPTH(DEPTH), .LAW(LAW), .USE_MACRO(USE_MACRO)) u_bt (.clk(clk), .rst_n(rtg[g]),
+        ot_qfd_vm_bank_t #(.DEPTH(DEPTH), .LAW(LAW), .USE_MACRO(USE_MACRO)) u_bt (.clk(lc[4*g+2]), .rst_n(rtg[g]),
 `else
-        ot_qfd_vm_bank_t u_bt (.clk(clk), .rst_n(rtg[g]),
+        ot_qfd_vm_bank_t u_bt (.clk(lc[4*g+2]), .rst_n(rtg[g]),
 `endif
             .re(m_re), .ra(m_ra), .q(bq[g*512 +: 512]), .we(m_we), .wl(m_wl), .wm(m_wm), .wd(m_wd[g*512 +: 512]));
         if (LEAF_MUT == 5 && g == 2) begin : g_bxm
             assign bx[g*512 +: 512] = bq[g*512 +: 512];
         end else begin : g_bx
-            `OT_QFD_VM_DELAY1_MOD u_bx (.clk(clk), .d(bq[g*512 +: 512]), .q(bx[g*512 +: 512]));
+            `OT_QFD_VM_DELAY1_MOD u_bx (.clk(lc[4*g+3]), .d(bq[g*512 +: 512]), .q(bx[g*512 +: 512]));
         end
     end endgenerate
+    // Observe the ACTUAL copy-0 bank write edge. The observer mirrors only its input registers and reset-release
+    // flop, at the bank's own clock; the pulse is registered on the edge when rowbank consumes those registers.
+    // A presented write at the region face never marks coverage. Q occupies element 13696..14207, rows856..887.
+    wire [511:0] qcm [0:NBK-1];
+    generate for (g = 0; g < NBK; g = g + 1) begin : g_qcommit
+      if(BANK_BASE+g>=24 && BANK_BASE+g<63 && TOTAL_BANKS==64)begin : g_qbank
+        // Union of Q banks24..55,line13 and ATTN banks31..62,line49:39 roots.
+        wire obs_clk=USE_OBSERVER_CLOCKS ? observer_ck[g] : lc[4*g+2];
+        wire cv; wire [LAW-1:0] cl; wire [15:0] cm;
+        qfd_vm_qcommit #(.LAW(LAW)) u_obs (
+            .ck(obs_clk),.rst_n(rst_n),.bank_rst_n(rtg[g]),
+            .we(g_b[g].m_we),.wl(g_b[g].m_wl),.wm(g_b[g].m_wm),
+            .cv(cv),.cl(cl),.cm(cm));
+        assign write_commit_v[g]=cv;
+        assign write_commit_line[g*LAW+:LAW]=cl;
+        assign write_commit_mask[g*16+:16]=cm;
+        if(BANK_BASE+g<56)begin : g_qmask
+            assign qcm[g]=512'((cv && cl==13) ? cm : 16'd0) << (16*(BANK_BASE+g-24));
+        end else assign qcm[g]=512'd0;
+      end else begin : g_not_q
+        assign qcm[g]=512'd0;
+        assign write_commit_v[g]=1'b0;
+        assign write_commit_line[g*LAW+:LAW]=0;
+        assign write_commit_mask[g*16+:16]=0;
+      end
+    end endgenerate
+    reg [511:0] qc;
+    integer qi;
+    always @* begin qc = 512'd0; for (qi = 0; qi < NBK; qi = qi + 1) qc = qc | qcm[qi]; end
+    assign qr_commit_mask = qc;
     // ---- SU copy banks (unchanged from ot_qfd_vm_region_leaf) ----
     wire [NSU*NSB*512-1:0] sq;
     wire [NSU*NSB-1:0]     rts, svc;
@@ -111,26 +154,26 @@ module ot_qfd_vm_region_nx #(
 `else
         ot_qfd_vm_sctl_t u_sc (
 `endif
-            .clk(clk), .rst_n(rst_n), .sre(sre[c*NSB + j]), .sra(sra[(c*NSB + j)*LAWS +: LAWS]), .swe(swe[j]),
+            .clk(lc[32+3*(c*NSB+j)]), .rst_n(rst_n), .sre(sre[c*NSB + j]), .sra(sra[(c*NSB + j)*LAWS +: LAWS]), .swe(swe[j]),
             .swl(swl[j*LAWS +: LAWS]), .swm(swm[j*16 +: 16]), .sv(sv[c]),
             .rtg(rts[c*NSB + j]), .m_sre(m_sre), .m_sra(m_sra), .m_swe(m_swe), .m_swl(m_swl), .m_swm(m_swm),
             .svc(svc[c*NSB + j]));
         if (LEAF_MUT == 6 && c == 1 && j == 0) begin : g_sdm
-            `OT_QFD_VM_DELAY1_MOD u_sd (.clk(clk), .d(swd[j*512 +: 512]), .q(m_swd));
+            `OT_QFD_VM_DELAY1_MOD u_sd (.clk(lc[33+3*(c*NSB+j)]), .d(swd[j*512 +: 512]), .q(m_swd));
         end else begin : g_sd
-            `OT_QFD_VM_DELAY2_MOD u_sd (.clk(clk), .d(swd[j*512 +: 512]), .q(m_swd));
+            `OT_QFD_VM_DELAY2_MOD u_sd (.clk(lc[33+3*(c*NSB+j)]), .d(swd[j*512 +: 512]), .q(m_swd));
         end
 `ifndef OT_QFD_VM_HARD
-        ot_qfd_vm_su_t #(.NSB(1), .DEPTHS(DEPTHS), .LAWS(LAWS), .USE_MACRO(USE_MACRO)) u_st (.clk(clk),
+        ot_qfd_vm_su_t #(.NSB(1), .DEPTHS(DEPTHS), .LAWS(LAWS), .USE_MACRO(USE_MACRO)) u_st (.clk(lc[34+3*(c*NSB+j)]),
 `else
-        ot_qfd_vm_su_t u_st (.clk(clk),
+        ot_qfd_vm_su_t u_st (.clk(lc[34+3*(c*NSB+j)]),
 `endif
             .rst_n(rts[c*NSB + j]), .sre(m_sre), .sra(m_sra), .swe(m_swe), .swl(m_swl), .swm(m_swm), .swd(m_swd),
             .q(sq[(c*NSB + j)*512 +: 512]));
       end
     end endgenerate
     generate for (c = 0; c < NSU; c = c + 1) begin : g_su_leaf
-        ot_qfd_vm_su1024_t u_su (.clk(clk), .rtg(rts[c*NSB]), .svc(svc[c*NSB]),
+        ot_qfd_vm_su1024_t u_su (.clk(lc[50+c]), .rtg(rts[c*NSB]), .svc(svc[c*NSB]),
             .sx(sq[c*1024 +: 1024]), .so(so[c*1024 +: 1024]));
     end endgenerate
     // ---- row read: two 4:1 rungs (banks 0..3, 4..7), one 2:1 rung ----
@@ -142,7 +185,7 @@ module ot_qfd_vm_region_nx #(
 `else
         ot_qfd_vm_rr4_t u_r4 (
 `endif
-            .clk(clk), .rst_n(rst_n), .rqb(rqb[1:0]),
+            .clk(lc[53+h]), .rst_n(rst_n), .rqb(rqb[1:0]),
             .bx(bx[h*2048 +: 2048]), .t1(t1[h*512 +: 512]));
     end endgenerate
     localparam integer R2MUT = (LEAF_MUT == 13) ? 1 : (LEAF_MUT == 12) ? 2 : 0;
@@ -151,7 +194,7 @@ module ot_qfd_vm_region_nx #(
 `else
     ot_qfd_vm_rr2_nx u_r2 (
 `endif
-        .clk(clk), .rst_n(rst_n), .rq(rq), .rqb(rqb), .t1a(t1[0 +: 512]), .t1b(t1[512 +: 512]), .ro(ro));
+        .clk(lc[55]), .rst_n(rst_n), .rq(rq), .rqb(rqb), .t1a(t1[0 +: 512]), .t1b(t1[512 +: 512]), .ro(ro));
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -237,4 +280,32 @@ module ot_qfd_vm_rr2_nx #(
             else begin rs1x <= rdc; rs2 <= rs1x; end
         always @(posedge clk) if (rs2[1]) ro[s*32 +: 32] <= (rs2[0] ^ (MUT == 1)) ? t1b[s*32 +: 32] : t1a[s*32 +: 32];
     end endgenerate
+endmodule
+
+// A separate physical leaf for each Q bank. This clones the closed bank's
+// input/reset registers and observes the edge on which its SRAM consumes them.
+// ck is an independent native clock entry compensated by this leaf's measured
+// insertion; it must never be connected to the uncompensated bank clock pin.
+module qfd_vm_qcommit #(
+    parameter integer LAW=8
+) (
+    input wire ck, rst_n, bank_rst_n,
+    input wire we,
+    input wire [LAW-1:0] wl,
+    input wire [15:0] wm,
+    output reg cv,
+    output reg [LAW-1:0] cl,
+    output reg [15:0] cm
+);
+    reg rr,ow;
+    reg [LAW-1:0] ol;
+    reg [15:0] om;
+    always @(posedge ck or negedge bank_rst_n)
+        if(!bank_rst_n)rr<=0;else rr<=1;
+    always @(posedge ck or negedge rr)
+        if(!rr)ow<=0;else ow<=we;
+    always @(posedge ck)begin ol<=wl;om<=wm;end
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n)begin cv<=0;cl<=0;cm<=0;end
+        else begin cv<=ow;cl<=ol;cm<=ow?om:16'd0;end
 endmodule

@@ -93,7 +93,7 @@ for m in $MODES; do
   ( $ADMIT $VL --binary --timing -j $J -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING \
       -DOT_S81PH_PLL_MODEL +define+OT_S81PH_COLL_JOB $SPL $SUD -I$S/s81_ctrl --unroll-count 4 -fno-dfg -CFLAGS -O1 \
       --top-module tb_s81_die_layer -GNG=$NG $HX $XGM $X --Mdir $OUT/obj_$m -o sim $FILES > $OUT/build_$m.log 2>&1 \
-    && for L in $RUNL; do /usr/bin/time -v $OUT/obj_$m/sim +DIR=$OUT/stim_$L > $OUT/run_${m}_$L.log 2>&1; done ) &
+    && for L in $RUNL; do TX=""; [ -n "${VM_TRACE:-}" ] && TX="+VM_TRACE=${VM_TRACE}_${m}_${L}.csv"; /usr/bin/time -v $OUT/obj_$m/sim +DIR=$OUT/stim_$L $TX > $OUT/run_${m}_$L.log 2>&1; done ) &
 done
 wait
 for m in $MODES; do

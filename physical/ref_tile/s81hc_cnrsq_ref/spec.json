@@ -59,7 +59,8 @@
    "ss_v",
    "ss",
    "tflt",
-   "cflt"
+   "cflt",
+   "ngo"
   ]
  },
  "refglob": "*",
@@ -72,10 +73,10 @@
  },
  "job": {
   "benches_from": "tools/s81_suhc/hc_ntree_benches.json",
-  "owner": "Claude:el1014-s81-norm-tree",
+  "owner": "Codex:S-NORM",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "v1",
-  "structural_change": "NORM tree variant",
+  "tag": "v2-owned-ngo",
+  "structural_change": "Wires-only cnbot loses hidden state; cnrsq owns ngo pin register driven by same f_fv and reset epoch. Die-assigned ngo pin pending.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_cnrsq: the norm's scalar end at the far end of the chains",
   "views_to": "physical/ref_tile/s81hc_cnrsq_ref/views",
@@ -92,7 +93,11 @@
      "verilator"
     ]
    }
-  ]
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "fix": "Move the unplaced cnbot ngo/reset registers into the scalar physical leaf, sharing its identical reset chain; preserve cycle semantics."
+  }
  },
  "params": {},
  "children": [],

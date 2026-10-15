@@ -1,0 +1,11 @@
+{
+  "name": "qkd_astk_ep-ks4-1dfea0ac7",
+  "status": "EARLY_FAIL_CONGESTION",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/claude/closure-loop/qkd_astk_ep-ks4-1dfea0ac7",
+  "finished_at": "2026-10-14T19:12:23-07:00",
+  "commit_full": "1dfea0ac7f120039e5152534f0e57ae161223811",
+  "reason": "global route finished with congestion (GRT-0116): qkd_astk_ep_ks4_1dfea0ac7/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+  "metrics": null,
+  "failed_checks": null
+}

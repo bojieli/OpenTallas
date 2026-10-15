@@ -1,4 +1,4 @@
-# clock_entries.tcl -- PRE_CTS hook of a ref_tile cluster with "clock": "entries" (2026-10-13, die clock delivery rule).
+# clock_entries.tcl -- strict hard-entry checks; hybrid_entries additionally builds declared glue roots.
 #
 # A WIRES-ONLY cluster has no register of its own, so it has no tree to build: every hard child takes its clock from
 # its OWN port on the cluster face (RTL: port -> child clock pin, one net, one sink).  The die delivers phi - R_i at
@@ -15,13 +15,33 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
     set block [ord::get_db_block]
     set lim [expr {[info exists ::env(OT_ENTRY_WIRE_MAX_UM)] ? $::env(OT_ENTRY_WIRE_MAX_UM) : 60.0}]
     set dbu [expr {double([$block getDbUnitsPerMicron])}]
-    set n 0; set bad 0; set far 0
+    set n 0; set bad 0; set far 0; set cts_nets {}; set cts_seen {}
+    set roots [expr {[info exists ::ot_ce_cts_roots] ? $::ot_ce_cts_roots : {}}]
     foreach clk [all_clocks] {
       foreach src [get_property $clk sources] {
         set pname [get_full_name $src]
         set bt [$block findBTerm $pname]
         if {$bt eq "NULL"} { puts "OT_ENTRIES ERROR: clock source $pname is not a top port"; incr bad; continue }
         set net [$bt getNet]
+        if {$pname in $roots} {
+          if {$pname in $cts_seen} { error "OT_HYBRID: duplicate CTS source $pname" }
+          lappend cts_seen $pname
+          set endpoints [get_fanout -flat -endpoints_only -from $src]
+          set registers [all_registers -clock [get_full_name $clk] -clock_pins]
+          if {![llength $registers]} { error "OT_HYBRID: CTS source $pname has no registers" }
+          set regnames {}
+          foreach pin $registers { lappend regnames [get_full_name $pin] }
+          foreach pin $endpoints {
+            set cell [get_cells -quiet -of_objects $pin]
+            if {[llength $cell] != 1} { error "OT_HYBRID: CTS source $pname reaches a non-register endpoint" }
+            set inst [$block findInst [get_full_name $cell]]
+            if {$inst eq "NULL" || [[$inst getMaster] isBlock] || [get_full_name $pin] ni $regnames} {
+              error "OT_HYBRID: CTS source $pname must reach only standard-cell clock pins"
+            }
+          }
+          lappend cts_nets [$net getName]
+          continue
+        }
         set sinks {}
         foreach it [$net getITerms] { if {[$it isInputSignal]} { lappend sinks $it } }
         if {[llength $sinks] != 1} {
@@ -44,6 +64,16 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
       }
     }
     if {$bad} { error "OT_ENTRIES: $bad clock entries are not port -> one hard-child clock pin" }
-    puts "OT_ENTRIES done: $n clock entries, no tree built, $far entry wires over $lim um"
+    if {[lsort $cts_seen] ne [lsort $roots]} { error "OT_HYBRID: declared CTS root coverage mismatch" }
+    if {[llength $cts_nets]} {
+      if {[lsearch -exact $args -clk_nets] >= 0} { error "OT_HYBRID: caller cannot override declared CTS nets" }
+      ot_ce_cts_orig {*}$args -clk_nets $cts_nets
+      puts "OT_HYBRID CTS roots $roots; hard-child entries excluded"
+    }
+    if {[llength $cts_nets]} {
+      puts "OT_ENTRIES done: $n independent hard entries, [llength $cts_nets] glue CTS roots, $far entry wires over $lim um"
+    } else {
+      puts "OT_ENTRIES done: $n clock entries, no tree built, $far entry wires over $lim um"
+    }
   }
 }
