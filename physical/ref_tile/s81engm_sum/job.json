@@ -1,14 +1,14 @@
 {
- "name": "s81engm_sum-v21-COMMIT",
+ "name": "s81engm_sum-native2-0810-0ab015a5a",
  "block": "ot_s81_engram_sum",
  "ref_tile": true,
- "owner": "Claude:s81-surx-engram-1015",
+ "owner": "Codex:s81-engram-0810",
  "purpose": "S81 Engram MIX4 arithmetic leaf ot_s81_engram_sum on v21 die-tool pins",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/s81-mix4-phys-1015",
-  "commit": "COMMIT",
+  "branch": "codex/s81-engram-0810",
+  "commit": "0ab015a5ac271f4e847197649f4247cd80e797fe",
   "extra_paths": [
    "physical/s81_die_pins/v21_engram_arithmetic",
    "rtl/dsrom_sys",
@@ -102,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81engm_sum/s81engm_sum-v21-COMMIT"
+   "to": "results/rtl/ref_tile/s81engm_sum/s81engm_sum-native2-0810-0ab015a5a"
   }
  ],
  "cycles_added": 0,

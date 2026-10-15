@@ -72,9 +72,9 @@
  "why_floorplan": "v21 die-tool outline right-sized from the ORFS-synthesised area 4585 um2 (util 0.509); one clock root per leaf (<=11,519 sinks); 3 per cluster x 4 clusters",
  "structural_change": "Engram MIX4 physical hierarchy (S-ELEM-C 2026-10-15): every arithmetic root of ot_s81_engram_mix is a hardened leaf master, hardened once and replicated; inputs registered at the S pins, outputs launched from registers at the N pins (no added cycle: the leaves are the unchanged exact arithmetic RTL).",
  "job": {
-  "owner": "Claude:s81-surx-engram-1015",
-  "branch": "claude/s81-mix4-phys-1015",
-  "tag": "v21",
+  "owner": "Codex:s81-engram-0810",
+  "branch": "codex/s81-engram-0810",
+  "tag": "native2-0810",
   "purpose": "S81 Engram MIX4 arithmetic leaf ot_s81_engram_sum on v21 die-tool pins",
   "benches": [
    {
@@ -125,5 +125,6 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "reroute_reason": "RTL change 1525dae7f: real sum input pin registers (+1 mix cycle, exact L01 773; RS5 804) after native capture504ps FAIL; fresh source-bound CTS gate 07:43."
 }
