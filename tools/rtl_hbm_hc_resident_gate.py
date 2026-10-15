@@ -4,12 +4,16 @@ import hashlib
 import json
 import pathlib
 import resource
+import shutil
 import subprocess
 import sys
 
 root = pathlib.Path(sys.argv[1]).resolve()
-out = root / 'out'
+owner_only = '--owner-only' in sys.argv[2:]
+out = root / ('out-ownerfix' if owner_only else 'out')
 out.mkdir(exist_ok=False)
+if owner_only:
+    shutil.copytree(root / "out/obj", out / "obj", copy_function=shutil.copy2)
 resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
 sources = sorted([*root.glob('*.sv'), *root.glob('*.v')])
 sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
@@ -29,6 +33,8 @@ for warning in ['UNOPTFLAT', 'LATCH', 'MULTIDRIVEN']:
 cases = []
 positive = [(period, phase, 3871) for phase in [0, 137, 773] for period in [1080, 1400]]
 positive += [(period, 0, 12) for period in [1080, 1400]]
+if owner_only:
+    positive = [(1080, 27, 3871)]
 for period, phase, idle in positive:
     name = f'period{period}-phase{phase}-idle{idle}'
     cmd = [str(out / 'obj/sim'), '+IMAGE=../inputs/all24rows.hex',
@@ -39,6 +45,8 @@ for period, phase, idle in positive:
     if result.returncode or 'HC_PREFETCH_RESIDENT_ACTUAL_CONTROLLER PASS' not in text:
         print(text, flush=True)
         raise SystemExit(f'positive failed: {name}, exit {result.returncode}')
+    if owner_only and ('row=1 fixed_start=7469 ' not in text or 'row=2 fixed_start=8549 ' not in text):
+        raise SystemExit('critical absolute phase did not match failed full join')
     cases.append({'name': name, 'exit': result.returncode, 'log_sha256': sha(out / f'{name}.log')})
     print(f'HC_RESIDENT_POSITIVE PASS {name}', flush=True)
 for flag, expected, success_exit in [
@@ -60,10 +68,10 @@ after = {p.name: sha(p) for p in sources}
 if before != after:
     raise SystemExit('source changed during gate')
 receipt = {'status': 'PASS_NATIVE_CONTROLLER_COMPONENT_ONLY', 'source_sha256': after,
-           'source_hashes_match': True, 'cases': cases, 'build_command': command,
+           'source_hashes_match': True, 'owner_only_followup': owner_only, 'cases': cases, 'build_command': command,
            'structural_warnings': {'UNOPTFLAT': 0, 'LATCH': 0, 'MULTIDRIVEN': 0},
            'actual_SRAMs': 320, 'source_SRAMs': 128, 'regions_per_stack': 8,
            'released_rows_per_case': 24, 'readbacks_per_case': 61440,
            'periods': [1080, 1400], 'full_native_chip_qualified': False}
 (out / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
-print('HC_RESIDENT_GATE PASS source_hashes_match=1 positive_cases=8 mutants=3', flush=True)
+print(f'HC_RESIDENT_GATE PASS source_hashes_match=1 positive_cases={len(positive)} mutants=3', flush=True)

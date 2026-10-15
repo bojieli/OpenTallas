@@ -65,7 +65,7 @@ module tb_hgi_hc_prefetch_direct_controller_static;
  always @(posedge stream_clk)begin
   stream_cycles=stream_cycles+1;
   if(stream_rst_n&&(stale_epoch||wrong_tag)&&fault)begin $display("HC_REGION_OWNER_MUTANT PASS full_epoch_or_wrong_tag_rejected stale=%0d wrongtag=%0d",stale_epoch,wrong_tag);$finish;end
-  if(stream_rst_n&&fault_mode!=0&&injected&&fault)begin $display("HC_DIRECT_BADTAG PASS actualPHYunknownownerrefused mode%0d",fault_mode);$finish;end
+  else if(stream_rst_n&&fault_mode!=0&&injected&&fault)begin $display("HC_DIRECT_BADTAG PASS actualPHYunknownownerrefused mode%0d",fault_mode);$finish;end
   else if(stream_rst_n&&(fault||afault))$fatal(1,"actual direct prefetch/aperture fault cycle%0d",stream_cycles);
  end
  task tick;begin @(posedge stream_clk);#2;end endtask
