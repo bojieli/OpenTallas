@@ -1,0 +1,342 @@
+{
+ "schema": "opentallas.hbm.su_f2_spread_receipt.v1",
+ "date": "2026-10-15",
+ "owner": "H-ELEM-B",
+ "qualification": false,
+ "status": "PASS compiler per-quarter VM spread + operand reuse; static VM transport calendar executed exactly on RTL (Qwen + DS); NOT whole-SU qualification",
+ "sources_sha256": {
+  "tools/hbm_static/su_f2_spread.py": "9f68a2ce48c14bb7257dfcdf5cb49c820385689d711bb722506e1cd2fc383493",
+  "tools/hbm_static/su_spread_vehicle_run.sh": "bcf1781628164d185ecaf6c3bbde9bd1c1fd8118caa53951acfe7cf2b80bf79d",
+  "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "977e12fdd31a080540285ad9807f4987de61742207ede098ca510dbff5d4a701",
+  "rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_static_spread_vehicle.sv": "9e20e105f7a9542492969372d91d658535c3e0cc217c31822bc8b7a7c4e43072",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "31acf6679c2fcd95c2abd3897daae041710f7c7a5f318d9d2e1f8541c8b377a4",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+  "tools/hgi_unitrate/su_prod_vec.py": "769410069f3fa4c62227930b968bbc6f9c59c7573606307b5468e6e13d9e68f5"
+ },
+ "command": "tools/hbm_static/su_spread_vehicle_run.sh <scratch>",
+ "vehicle": "4 quarters x ot_hbm_su_static_vm_ports (4 bank-pair port groups, GEO-H f5d89a0a8) -> ot_hbm_vm_lg_static_split SU station (RD 10 / WR 7) -> 32 ot_vms_bank_static -> 96 ot_sram_1r1w_1024x256 models; zero faults, every read +10 exact data, every write done +7, per-record transport windows == compiler, final image readback exact",
+ "mutants": {
+  "MUT_PG (port groups drop the per-quarter spread SID)": "FAIL both designs",
+  "MUT_LG (LG write payload mux)": "FAIL both designs"
+ },
+ "results": {
+  "qwen": {
+   "total": {
+    "priced": 1668.0,
+    "edges": 1240,
+    "ratio": 0.743
+   },
+   "chains": [
+    {
+     "tags": [
+      "embedding.dequant"
+     ],
+     "edges": 60,
+     "priced": 67.0,
+     "ratio": 0.896
+    },
+    {
+     "tags": [
+      "row_scale_qkv"
+     ],
+     "edges": 55,
+     "priced": 62.0,
+     "ratio": 0.887
+    },
+    {
+     "tags": [
+      "rope",
+      "round_q"
+     ],
+     "edges": 55,
+     "priced": 123.0,
+     "ratio": 0.447
+    },
+    {
+     "tags": [
+      "softmax.max",
+      "softmax.exp_sum",
+      "softmax.bf16_p"
+     ],
+     "edges": 770,
+     "priced": 1013.0,
+     "ratio": 0.76
+    },
+    {
+     "tags": [
+      "pv_normalize"
+     ],
+     "edges": 47,
+     "priced": 78.0,
+     "ratio": 0.603
+    },
+    {
+     "tags": [
+      "row_scale_o+residual"
+     ],
+     "edges": 75,
+     "priced": 67.0,
+     "ratio": 1.119
+    },
+    {
+     "tags": [
+      "row_scale_gu",
+      "swiglu"
+     ],
+     "edges": 103,
+     "priced": 191.0,
+     "ratio": 0.539
+    },
+    {
+     "tags": [
+      "row_scale_down+residual"
+     ],
+     "edges": 75,
+     "priced": 67.0,
+     "ratio": 1.119
+    }
+   ],
+   "slice_words_used": [
+    43681,
+    43681,
+    43425,
+    43425
+   ],
+   "replicated_words": 138,
+   "cross_quarter_conflict_words": 0,
+   "broadcast_written_words": 0,
+   "affine_base_failures": 0
+  },
+  "deepseek": {
+   "total": {
+    "priced": 3272.0,
+    "edges": 1182,
+    "ratio": 0.361
+   },
+   "chains": [
+    {
+     "tags": [
+      "q_norm.ss"
+     ],
+     "edges": 98,
+     "priced": 165.0,
+     "ratio": 0.594
+    },
+    {
+     "tags": [
+      "q_norm.rs"
+     ],
+     "edges": 33,
+     "priced": 152.0,
+     "ratio": 0.217
+    },
+    {
+     "tags": [
+      "q_norm.y"
+     ],
+     "edges": 55,
+     "priced": 62.0,
+     "ratio": 0.887
+    },
+    {
+     "tags": [
+      "kv_norm.ss",
+      "kv_norm.rs",
+      "kv_norm.y",
+      "kv_rope.tail"
+     ],
+     "edges": 78,
+     "priced": 423.0,
+     "ratio": 0.184
+    },
+    {
+     "tags": [
+      "q_rope.tail"
+     ],
+     "edges": 44,
+     "priced": 60.0,
+     "ratio": 0.733
+    },
+    {
+     "tags": [
+      "attend.max",
+      "attend.exp_sum"
+     ],
+     "edges": 86,
+     "priced": 372.0,
+     "ratio": 0.231
+    },
+    {
+     "tags": [
+      "attend.bf16_p"
+     ],
+     "edges": 33,
+     "priced": 60.0,
+     "ratio": 0.55
+    },
+    {
+     "tags": [
+      "attend.den",
+      "attend.norm",
+      "attend.inv_rope.tail"
+     ],
+     "edges": 46,
+     "priced": 290.0,
+     "ratio": 0.159
+    },
+    {
+     "tags": [
+      "attn.res_copy"
+     ],
+     "edges": 123,
+     "priced": 99.0,
+     "ratio": 1.242
+    },
+    {
+     "tags": [
+      "router_act"
+     ],
+     "edges": 43,
+     "priced": 339.0,
+     "ratio": 0.127
+    },
+    {
+     "tags": [
+      "route.scores_bias"
+     ],
+     "edges": 47,
+     "priced": 60.0,
+     "ratio": 0.783
+    },
+    {
+     "tags": [
+      "route.gather0",
+      "route.gather1",
+      "route.gather2",
+      "route.gather3"
+     ],
+     "edges": 35,
+     "priced": 240.0,
+     "ratio": 0.146
+    },
+    {
+     "tags": [
+      "route.gather4",
+      "route.gather5",
+      "route.total"
+     ],
+     "edges": 50,
+     "priced": 235.0,
+     "ratio": 0.213
+    },
+    {
+     "tags": [
+      "route.den"
+     ],
+     "edges": 32,
+     "priced": 60.0,
+     "ratio": 0.533
+    },
+    {
+     "tags": [
+      "route.weights"
+     ],
+     "edges": 33,
+     "priced": 75.0,
+     "ratio": 0.44
+    },
+    {
+     "tags": [
+      "swiglu"
+     ],
+     "edges": 47,
+     "priced": 181.0,
+     "ratio": 0.26
+    },
+    {
+     "tags": [
+      "moe_sum.0"
+     ],
+     "edges": 44,
+     "priced": 60.0,
+     "ratio": 0.733
+    },
+    {
+     "tags": [
+      "moe_sum.2"
+     ],
+     "edges": 44,
+     "priced": 60.0,
+     "ratio": 0.733
+    },
+    {
+     "tags": [
+      "moe_sum.4",
+      "moe_sum.6"
+     ],
+     "edges": 45,
+     "priced": 120.0,
+     "ratio": 0.375
+    },
+    {
+     "tags": [
+      "ffn.res_copy"
+     ],
+     "edges": 123,
+     "priced": 99.0,
+     "ratio": 1.242
+    },
+    {
+     "tags": [
+      "pre <- ffn mix pre"
+     ],
+     "edges": 43,
+     "priced": 60.0,
+     "ratio": 0.717
+    }
+   ],
+   "slice_words_used": [
+    14077,
+    12752,
+    12432,
+    11824
+   ],
+   "replicated_words": 964,
+   "cross_quarter_conflict_words": 0,
+   "broadcast_written_words": 4,
+   "affine_base_failures": 0
+  }
+ },
+ "measured_vs_model": {
+  "measured_on_RTL": "VM read/write slots, latencies (10/7), bank/slice placement, data identity, transport windows",
+  "measured_component_constants": "ARITH 23 (static arithmetic baseline), LS_WR 1 / LS_RD 2 (pinned local store)",
+  "model_terms": [
+   "reduction tail = (ceil(log2(ceil(n/8)))+1) x 8 edges (softmax.max 88 of its edges; DS norm.ss/max/den/route.total)",
+   "ARITH 23 also applied to op classes the static lowering does not yet support: Qwen softmax.exp_sum, pv_normalize; DS attend.den/exp_sum/norm, kv_norm.rs, q_norm.rs, route.weights, router_act, swiglu (SIDE/SFU/M128 divider calendars open)"
+  ]
+ },
+ "over_price": {
+  "qwen": [
+   "row_scale_o+residual 75/67 = 1.119",
+   "row_scale_down+residual 75/67 = 1.119 (VM transport: A+B 1024 sectors / 32 banks = 32 edges + 43 fill; C = residual x stays SU-local)"
+  ],
+  "deepseek": [
+   "attn.res_copy 123/99 = 1.242",
+   "ffn.res_copy 123/99 = 1.242 (20480 words in + out at 32 sectors/edge = 80 edges + fill; priced as nv 40)"
+  ]
+ },
+ "compiler_preconditions_for_H_VM": [
+  "every SU-touched VM tensor is laid out per quarter (quarter q share packed in slice q, logical order, sector-aligned runs); non-SU producers/consumers (SM qkv/o/gu/down, ATT qk/pv, COLL all_reduce, DMA scale/rope loads, FUSED prenorm/qknorm) must write/read that layout",
+  "broadcast-read words replicated per reading quarter (Qwen 138, DS 964 words); DMA/producer writes the copies",
+  "canonical whole-kernel VM allocator (h_vm) owns final addresses; this pass supplies the SU map"
+ ],
+ "open": [
+  "whole-SU arithmetic/reduction join at full512 (needs >=160 GB)",
+  "SIDE/SFU/divider calendars",
+  "producer-side layout adoption by h_vm allocator",
+  "5th port group on SW/SE per die lead",
+  "physical: static bank route at 833 (rg7wg3 gate -71 ps, H-VM)"
+ ]
+}
