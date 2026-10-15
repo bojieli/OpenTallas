@@ -1,0 +1,722 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_tt_ctlm_static_s",
+ "outline": {
+  "w": 777.6,
+  "h": 1814.4
+ },
+ "instances": 1,
+ "pins": {
+  "E": [
+   "cp_active",
+   "cp",
+   "su_image_ready",
+   "layer_context_v",
+   "native_tok",
+   "native_pos",
+   "native_cmd",
+   "native_ret",
+   "command_stage",
+   "su_observe",
+   "mee",
+   "meok",
+   "st",
+   "xm",
+   "xs"
+  ],
+  "N": [
+   "ck_xpf",
+   "ck_me_sched",
+   "ck_head",
+   "ck_tree",
+   "rsi"
+  ],
+  "S": [
+   "ib",
+   "xpf",
+   "xflt",
+   "ld",
+   "mx"
+  ],
+  "W": [
+   "mer0",
+   "mer1",
+   "mer2",
+   "rf0",
+   "rf1",
+   "rf2",
+   "c0",
+   "f0",
+   "lc0",
+   "c1",
+   "f1",
+   "lc1",
+   "c2",
+   "f2",
+   "lc2",
+   "sel"
+  ]
+ },
+ "pin_ranges": {
+  "mer0": [
+   819.9,
+   819.9
+  ],
+  "mer1": [
+   822.06,
+   822.06
+  ],
+  "mer2": [
+   824.268,
+   824.268
+  ],
+  "rf0": [
+   826.476,
+   826.476
+  ],
+  "rf1": [
+   828.684,
+   828.684
+  ],
+  "rf2": [
+   830.892,
+   830.892
+  ],
+  "c0": [
+   833.1,
+   865.74
+  ],
+  "f0": [
+   867.948,
+   877.836
+  ],
+  "lc0": [
+   880.044,
+   882.444
+  ],
+  "c1": [
+   884.652,
+   917.292
+  ],
+  "f1": [
+   919.5,
+   929.388
+  ],
+  "lc1": [
+   931.596,
+   933.996
+  ],
+  "c2": [
+   936.204,
+   968.844
+  ],
+  "f2": [
+   971.052,
+   980.94
+  ],
+  "lc2": [
+   983.148,
+   985.548
+  ],
+  "sel": [
+   987.756,
+   990.156
+  ],
+  "cp_active": [
+   837.324,
+   837.324
+  ],
+  "cp": [
+   839.532,
+   844.812
+  ],
+  "su_image_ready": [
+   847.02,
+   847.02
+  ],
+  "layer_context_v": [
+   860.844,
+   860.844
+  ],
+  "native_tok": [
+   863.052,
+   864.684
+  ],
+  "native_pos": [
+   866.892,
+   868.524
+  ],
+  "native_cmd": [
+   870.732,
+   907.116
+  ],
+  "native_ret": [
+   909.324,
+   918.348
+  ],
+  "command_stage": [
+   920.556,
+   921.036
+  ],
+  "su_observe": [
+   923.244,
+   924.684
+  ],
+  "meok": [
+   929.772,
+   929.772
+  ],
+  "st": [
+   941.292,
+   945.852
+  ],
+  "xm": [
+   948.012,
+   956.748
+  ],
+  "xs": [
+   958.956,
+   964.332
+  ],
+  "ck_xpf": [
+   383.34,
+   383.34
+  ],
+  "ck_me_sched": [
+   385.548,
+   385.548
+  ],
+  "ck_head": [
+   387.756,
+   387.756
+  ],
+  "ck_tree": [
+   389.964,
+   389.964
+  ],
+  "rsi": [
+   392.172,
+   392.172
+  ],
+  "ib": [
+   334.524,
+   370.908
+  ],
+  "xpf": [
+   373.116,
+   379.884
+  ],
+  "xflt": [
+   382.092,
+   382.092
+  ],
+  "ld": [
+   384.3,
+   385.74
+  ],
+  "mx": [
+   387.948,
+   440.94
+  ],
+  "mee": [
+   926.892,
+   927.564
+  ]
+ },
+ "ports": {
+  "mer0": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    819.9,
+    819.9
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_sp_res_ser.me_en"
+  },
+  "mer1": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    822.06,
+    822.06
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_sp_res_ser.me_en"
+  },
+  "mer2": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    824.268,
+    824.268
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_sp_res_ser.me_en"
+  },
+  "rf0": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    826.476,
+    826.476
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_sp_res_ser.fault"
+  },
+  "rf1": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    828.684,
+    828.684
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_sp_res_ser.fault"
+  },
+  "rf2": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    830.892,
+    830.892
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_sp_res_ser.fault"
+  },
+  "c0": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 341,
+   "range_um": [
+    833.1,
+    865.74
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_port_tiles_0.tc"
+  },
+  "f0": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 104,
+   "range_um": [
+    867.948,
+    877.836
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_port_tiles_0.tf"
+  },
+  "lc0": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 26,
+   "range_um": [
+    880.044,
+    882.444
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_sp_band_lanes.c"
+  },
+  "c1": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 341,
+   "range_um": [
+    884.652,
+    917.292
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_port_tiles_1.tc"
+  },
+  "f1": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 104,
+   "range_um": [
+    919.5,
+    929.388
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_port_tiles_1.tf"
+  },
+  "lc1": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 26,
+   "range_um": [
+    931.596,
+    933.996
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_sp_band_lanes.c"
+  },
+  "c2": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 341,
+   "range_um": [
+    936.204,
+    968.844
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_port_tiles_2.tc"
+  },
+  "f2": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 104,
+   "range_um": [
+    971.052,
+    980.94
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_port_tiles_2.tf"
+  },
+  "lc2": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 26,
+   "range_um": [
+    983.148,
+    985.548
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_sp_band_lanes.c"
+  },
+  "sel": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 26,
+   "range_um": [
+    987.756,
+    990.156
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_rly_26_NE_9x9.a"
+  },
+  "cp_active": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    837.324,
+    837.324
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_sp_su64_sfu.cp_active"
+  },
+  "cp": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 56,
+   "range_um": [
+    839.532,
+    844.812
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_sp_su64_sfu.cp"
+  },
+  "su_image_ready": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    847.02,
+    847.02
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.cfg_image_ready"
+  },
+  "layer_context_v": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    860.844,
+    860.844
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.layer_context_v"
+  },
+  "native_tok": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 18,
+   "range_um": [
+    863.052,
+    864.684
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.native_token"
+  },
+  "native_pos": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 18,
+   "range_um": [
+    866.892,
+    868.524
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.native_position"
+  },
+  "native_cmd": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 380,
+   "range_um": [
+    870.732,
+    907.116
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.native_cmd"
+  },
+  "native_ret": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 95,
+   "range_um": [
+    909.324,
+    918.348
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_native59_compute_service.native_ret"
+  },
+  "command_stage": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 6,
+   "range_um": [
+    920.556,
+    921.036
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.command_stage"
+  },
+  "su_observe": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 16,
+   "range_um": [
+    923.244,
+    924.684
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.su_observe"
+  },
+  "meok": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    929.772,
+    929.772
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_sp_vector_memory.mo"
+  },
+  "st": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 49,
+   "range_um": [
+    941.292,
+    945.852
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.st"
+  },
+  "xm": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 92,
+   "range_um": [
+    948.012,
+    956.748
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.xm"
+  },
+  "xs": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 57,
+   "range_um": [
+    958.956,
+    964.332
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.xs"
+  },
+  "ck_xpf": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    383.34,
+    383.34
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_me_sched": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    385.548,
+    385.548
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    387.756,
+    387.756
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_tree": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    389.964,
+    389.964
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "rsi": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    392.172,
+    392.172
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ib": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 380,
+   "range_um": [
+    334.524,
+    370.908
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_xs_tap.gi"
+  },
+  "xpf": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 72,
+   "range_um": [
+    373.116,
+    379.884
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_xs_tap.xpf"
+  },
+  "xflt": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    382.092,
+    382.092
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_xs_tap.fault"
+  },
+  "ld": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 16,
+   "range_um": [
+    384.3,
+    385.74
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_sp_vector_memory.ld"
+  },
+  "mx": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 553,
+   "range_um": [
+    387.948,
+    440.94
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_sp_vector_memory.mx"
+  },
+  "mee": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 8,
+   "range_um": [
+    926.892,
+    927.564
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_sp_vector_memory.mee"
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}

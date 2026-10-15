@@ -1,0 +1,7 @@
+{
+  "observed_utc": "2026-10-15T18:57:09.251937+00:00",
+  "host": "ot-epyc1tb",
+  "path": "/srv/opentallas-scratch/claude/qwen-split-compute/c21/out",
+  "command": "ls -la c21/out;cat c21/src/SOURCE_COMMIT",
+  "stdout": "total 8\ndrwxrwxr-x 2 ubuntu ubuntu 4096 Oct 15 09:40 .\ndrwxrwxr-x 4 ubuntu ubuntu 4096 Oct 15 09:40 ..\n59fb67ed5\n"
+}

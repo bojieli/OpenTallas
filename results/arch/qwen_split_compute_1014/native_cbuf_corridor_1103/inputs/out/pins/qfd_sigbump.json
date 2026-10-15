@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_sigbump",
+ "outline": {
+  "w": 43.176,
+  "h": 43.176
+ },
+ "instances": 2,
+ "pins": {
+  "N": [
+   "o"
+  ]
+ },
+ "pin_ranges": {
+  "o": [
+   21.612,
+   21.612
+  ]
+ },
+ "ports": {
+  "o": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    21.612,
+    21.612
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_d2d_static.fwd_epoch;qfd_d2d_static.fwd_link_rst_n"
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}

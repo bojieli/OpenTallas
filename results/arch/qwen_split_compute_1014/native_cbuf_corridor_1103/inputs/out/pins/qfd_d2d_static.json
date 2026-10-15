@@ -1,0 +1,448 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_d2d_static",
+ "outline": {
+  "w": 777.576,
+  "h": 518.376
+ },
+ "instances": 1,
+ "pins": {
+  "N": [
+   "fwd_epoch",
+   "fwd_link_rst_n",
+   "ck",
+   "rst_n",
+   "fdi_rx_flit",
+   "fdi_rx_v",
+   "fdi_tx_flit",
+   "fdi_tx_up",
+   "fdi_tx_v",
+   "phy_rst_n"
+  ],
+  "S": [
+   "kv_x3_slot",
+   "native_rx_slot",
+   "native_rx_slot_beat",
+   "native_rx_slot_kind",
+   "native_rx_v",
+   "native_tx_payload",
+   "native_tx_slot",
+   "native_tx_slot_beat",
+   "native_tx_slot_kind",
+   "native_tx_v",
+   "rx_payload",
+   "x3",
+   "x3_generation",
+   "x3_identity"
+  ],
+  "W": [
+   "por_n"
+  ]
+ },
+ "pin_ranges": {
+  "ck": [
+   399.852,
+   399.852
+  ],
+  "por_n": [
+   514.284,
+   514.284
+  ],
+  "rst_n": [
+   492.204,
+   492.204
+  ],
+  "fwd_epoch": [
+   4.044,
+   4.044
+  ],
+  "fwd_link_rst_n": [
+   5.1,
+   5.1
+  ],
+  "native_tx_slot": [
+   656.748,
+   656.748
+  ],
+  "native_tx_slot_kind": [
+   659.34,
+   659.628
+  ],
+  "native_tx_slot_beat": [
+   657.804,
+   658.188
+  ],
+  "native_tx_v": [
+   660.684,
+   660.684
+  ],
+  "native_tx_payload": [
+   603.18,
+   655.692
+  ],
+  "rx_payload": [
+   661.836,
+   714.348
+  ],
+  "native_rx_v": [
+   602.028,
+   602.028
+  ],
+  "native_rx_slot": [
+   598.092,
+   598.092
+  ],
+  "native_rx_slot_kind": [
+   600.684,
+   600.972
+  ],
+  "native_rx_slot_beat": [
+   599.148,
+   599.532
+  ],
+  "kv_x3_slot": [
+   597.036,
+   597.036
+  ],
+  "x3": [
+   715.404,
+   765.612
+  ],
+  "x3_identity": [
+   767.916,
+   773.484
+  ],
+  "x3_generation": [
+   766.764,
+   766.86
+  ],
+  "fdi_tx_up": [
+   613.74,
+   613.74
+  ],
+  "fdi_tx_v": [
+   614.892,
+   614.892
+  ],
+  "fdi_tx_flit": [
+   556.812,
+   612.684
+  ],
+  "fdi_rx_v": [
+   555.66,
+   555.66
+  ],
+  "fdi_rx_flit": [
+   498.732,
+   554.604
+  ],
+  "phy_rst_n": [
+   615.948,
+   615.948
+  ]
+ },
+ "ports": {
+  "ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    399.852,
+    399.852
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "por_n": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    514.284,
+    514.284
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "rst_n": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    492.204,
+    492.204
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "fwd_epoch": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    4.044,
+    4.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_sigbump.o"
+  },
+  "fwd_link_rst_n": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    5.1,
+    5.1
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_sigbump.o"
+  },
+  "native_tx_slot": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    656.748,
+    656.748
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.tx_slot"
+  },
+  "native_tx_slot_kind": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 4,
+   "range_um": [
+    659.34,
+    659.628
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.tx_slot_kind"
+  },
+  "native_tx_slot_beat": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 5,
+   "range_um": [
+    657.804,
+    658.188
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.tx_slot_beat"
+  },
+  "native_tx_v": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    660.684,
+    660.684
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_native59_compute_service.native_tx_v"
+  },
+  "native_tx_payload": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 548,
+   "range_um": [
+    603.18,
+    655.692
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_native59_compute_service.native_tx_payload"
+  },
+  "rx_payload": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 548,
+   "range_um": [
+    661.836,
+    714.348
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.native_rx_payload"
+  },
+  "native_rx_v": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    602.028,
+    602.028
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.native_rx_v"
+  },
+  "native_rx_slot": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    598.092,
+    598.092
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.rx_slot"
+  },
+  "native_rx_slot_kind": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 4,
+   "range_um": [
+    600.684,
+    600.972
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.rx_slot_kind"
+  },
+  "native_rx_slot_beat": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 5,
+   "range_um": [
+    599.148,
+    599.532
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.rx_slot_beat"
+  },
+  "kv_x3_slot": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    597.036,
+    597.036
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.kv_x3_slot"
+  },
+  "x3": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 524,
+   "range_um": [
+    715.404,
+    765.612
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_native59_compute_service.x3"
+  },
+  "x3_identity": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 59,
+   "range_um": [
+    767.916,
+    773.484
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_native59_compute_service.x3_identity"
+  },
+  "x3_generation": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 2,
+   "range_um": [
+    766.764,
+    766.86
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_native59_compute_service.x3_generation"
+  },
+  "fdi_tx_up": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    613.74,
+    613.74
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "ot_qkvd_ucie_x64_phy.tx_up"
+  },
+  "fdi_tx_v": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    614.892,
+    614.892
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "ot_qkvd_ucie_x64_phy.tx_v"
+  },
+  "fdi_tx_flit": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 583,
+   "range_um": [
+    556.812,
+    612.684
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "ot_qkvd_ucie_x64_phy.tx_flit"
+  },
+  "fdi_rx_v": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    555.66,
+    555.66
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "ot_qkvd_ucie_x64_phy.rx_v"
+  },
+  "fdi_rx_flit": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 583,
+   "range_um": [
+    498.732,
+    554.604
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "ot_qkvd_ucie_x64_phy.rx_flit"
+  },
+  "phy_rst_n": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    615.948,
+    615.948
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "ot_qkvd_ucie_x64_phy.rst_n"
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}

@@ -1,0 +1,871 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_collective_static_io_production",
+ "outline": {
+  "w": 4157.976,
+  "h": 1563.816
+ },
+ "instances": 1,
+ "pins": {
+  "E": [
+   "serdes_up",
+   "serdes_tx_valid",
+   "serdes_tx",
+   "serdes_rx_valid",
+   "serdes_rx",
+   "ucie_up",
+   "shared_tx_valid",
+   "shared_tx",
+   "shared_rx_valid",
+   "shared_rx"
+  ],
+  "N": [
+   "clk",
+   "clk_pfold0",
+   "clk_pfold1",
+   "clk_pfold2",
+   "clk_pfold3",
+   "clk_xfold0",
+   "clk_xfold1",
+   "clk_xfold2",
+   "clk_xfold3",
+   "clk_pring0",
+   "clk_pring1",
+   "clk_sring0",
+   "clk_sring1",
+   "clk_sring2",
+   "clk_sring3",
+   "clk_sring4",
+   "clk_rring0",
+   "clk_rring1",
+   "rst_n",
+   "cmd_v",
+   "cmd_mode",
+   "cmd_words",
+   "cmd_tag",
+   "in_valid",
+   "in_data",
+   "in_last",
+   "in_mode",
+   "in_tag",
+   "out_valid",
+   "out_data",
+   "out_last",
+   "out_rank",
+   "out_err",
+   "cmd_free",
+   "face_ck",
+   "relay_ck",
+   "gearbox_core_ck",
+   "fdi_ck",
+   "fdi_rx_ck",
+   "blk_ck"
+  ]
+ },
+ "pin_ranges": {
+  "clk": [
+   1968.588,
+   1968.588
+  ],
+  "clk_pfold0": [
+   1970.7,
+   1970.7
+  ],
+  "clk_pfold1": [
+   1972.764,
+   1972.764
+  ],
+  "clk_pfold2": [
+   1974.876,
+   1974.876
+  ],
+  "clk_pfold3": [
+   1976.988,
+   1976.988
+  ],
+  "clk_xfold0": [
+   1979.052,
+   1979.052
+  ],
+  "clk_xfold1": [
+   1981.164,
+   1981.164
+  ],
+  "clk_xfold2": [
+   1983.276,
+   1983.276
+  ],
+  "clk_xfold3": [
+   1985.34,
+   1985.34
+  ],
+  "clk_pring0": [
+   1987.452,
+   1987.452
+  ],
+  "clk_pring1": [
+   1989.564,
+   1989.564
+  ],
+  "clk_sring0": [
+   1991.628,
+   1991.628
+  ],
+  "clk_sring1": [
+   1993.74,
+   1993.74
+  ],
+  "clk_sring2": [
+   1995.852,
+   1995.852
+  ],
+  "clk_sring3": [
+   1997.916,
+   1997.916
+  ],
+  "clk_sring4": [
+   2000.028,
+   2000.028
+  ],
+  "clk_rring0": [
+   2002.14,
+   2002.14
+  ],
+  "clk_rring1": [
+   2004.204,
+   2004.204
+  ],
+  "rst_n": [
+   2006.316,
+   2006.316
+  ],
+  "cmd_v": [
+   2012.7,
+   2012.7
+  ],
+  "cmd_mode": [
+   2014.812,
+   2014.812
+  ],
+  "cmd_words": [
+   2016.876,
+   2018.316
+  ],
+  "cmd_tag": [
+   2020.428,
+   2023.404
+  ],
+  "in_valid": [
+   2025.516,
+   2025.516
+  ],
+  "in_data": [
+   2027.58,
+   2076.636
+  ],
+  "in_last": [
+   2078.748,
+   2078.748
+  ],
+  "in_mode": [
+   2080.86,
+   2080.86
+  ],
+  "in_tag": [
+   2082.924,
+   2085.9
+  ],
+  "out_valid": [
+   2088.012,
+   2088.012
+  ],
+  "out_data": [
+   2090.124,
+   2139.18
+  ],
+  "out_last": [
+   2141.244,
+   2141.244
+  ],
+  "out_rank": [
+   2143.356,
+   2143.548
+  ],
+  "out_err": [
+   2145.66,
+   2145.66
+  ],
+  "cmd_free": [
+   2152.332,
+   2152.332
+  ],
+  "ucie_up": [
+   668.076,
+   668.076
+  ],
+  "gearbox_core_ck": [
+   2172.972,
+   2172.972
+  ],
+  "fdi_ck": [
+   2175.084,
+   2175.084
+  ],
+  "shared_rx_valid": [
+   718.236,
+   718.236
+  ],
+  "shared_rx": [
+   718.284,
+   768.3
+  ],
+  "shared_tx_valid": [
+   668.124,
+   668.124
+  ],
+  "shared_tx": [
+   668.172,
+   718.188
+  ],
+  "face_ck": [
+   2154.396,
+   2159.58
+  ],
+  "relay_ck": [
+   2161.692,
+   2164.476
+  ],
+  "fdi_rx_ck": [
+   2177.148,
+   2177.148
+  ],
+  "blk_ck": [
+   2179.26,
+   2179.356
+  ],
+  "serdes_tx": [
+   600.204,
+   694.332
+  ],
+  "serdes_rx": [
+   628.908,
+   723.036
+  ],
+  "serdes_tx_valid": [
+   600.156,
+   665.676
+  ],
+  "serdes_rx_valid": [
+   628.86,
+   694.38
+  ],
+  "serdes_up": [
+   600.108,
+   665.628
+  ]
+ },
+ "ports": {
+  "clk": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1968.588,
+    1968.588
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_pfold0": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1970.7,
+    1970.7
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_pfold1": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1972.764,
+    1972.764
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_pfold2": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1974.876,
+    1974.876
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_pfold3": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1976.988,
+    1976.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_xfold0": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1979.052,
+    1979.052
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_xfold1": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1981.164,
+    1981.164
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_xfold2": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1983.276,
+    1983.276
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_xfold3": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1985.34,
+    1985.34
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_pring0": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1987.452,
+    1987.452
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_pring1": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1989.564,
+    1989.564
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_sring0": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1991.628,
+    1991.628
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_sring1": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1993.74,
+    1993.74
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_sring2": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1995.852,
+    1995.852
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_sring3": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1997.916,
+    1997.916
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_sring4": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2000.028,
+    2000.028
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_rring0": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2002.14,
+    2002.14
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "clk_rring1": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2004.204,
+    2004.204
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "rst_n": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2006.316,
+    2006.316
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "cmd_v": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2012.7,
+    2012.7
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.coll_cmd"
+  },
+  "cmd_mode": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2014.812,
+    2014.812
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.coll_cmd"
+  },
+  "cmd_words": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 16,
+   "range_um": [
+    2016.876,
+    2018.316
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.coll_cmd"
+  },
+  "cmd_tag": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 32,
+   "range_um": [
+    2020.428,
+    2023.404
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.coll_cmd"
+  },
+  "in_valid": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2025.516,
+    2025.516
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.cd_d"
+  },
+  "in_data": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 512,
+   "range_um": [
+    2027.58,
+    2076.636
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.cd_d"
+  },
+  "in_last": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2078.748,
+    2078.748
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.cd_d"
+  },
+  "in_mode": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2080.86,
+    2080.86
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.cd_d"
+  },
+  "in_tag": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 32,
+   "range_um": [
+    2082.924,
+    2085.9
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.cd_d"
+  },
+  "out_valid": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2088.012,
+    2088.012
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.cc"
+  },
+  "out_data": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 512,
+   "range_um": [
+    2090.124,
+    2139.18
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.cc"
+  },
+  "out_last": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2141.244,
+    2141.244
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.cc"
+  },
+  "out_rank": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 3,
+   "range_um": [
+    2143.356,
+    2143.548
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.cc"
+  },
+  "out_err": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2145.66,
+    2145.66
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.cc"
+  },
+  "cmd_free": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2152.332,
+    2152.332
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.coll_cmd_free"
+  },
+  "ucie_up": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    668.076,
+    668.076
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "ot_qfd_ucie_x64_phy.tx_up"
+  },
+  "gearbox_core_ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2172.972,
+    2172.972
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "fdi_ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2175.084,
+    2175.084
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "shared_rx_valid": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    718.236,
+    718.236
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "ot_qfd_ucie_x64_phy.rx_v"
+  },
+  "shared_rx": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1043,
+   "range_um": [
+    718.284,
+    768.3
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "ot_qfd_ucie_x64_phy.rx_flit"
+  },
+  "shared_tx_valid": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    668.124,
+    668.124
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "ot_qfd_ucie_x64_phy.tx_v"
+  },
+  "shared_tx": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1043,
+   "range_um": [
+    668.172,
+    718.188
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "ot_qfd_ucie_x64_phy.tx_flit"
+  },
+  "face_ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 55,
+   "range_um": [
+    2154.396,
+    2159.58
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "relay_ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 30,
+   "range_um": [
+    2161.692,
+    2164.476
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "fdi_rx_ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2177.148,
+    2177.148
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "blk_ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 2,
+   "range_um": [
+    2179.26,
+    2179.356
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "serdes_tx": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1791,
+   "range_um": [
+    600.204,
+    694.332
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "ot_qfd_serdes_112g_x12_phy_s597.tx_flit"
+  },
+  "serdes_rx": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1791,
+   "range_um": [
+    628.908,
+    723.036
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "ot_qfd_serdes_112g_x12_phy_s597.rx_flit"
+  },
+  "serdes_tx_valid": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 3,
+   "range_um": [
+    600.156,
+    665.676
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "ot_qfd_serdes_112g_x12_phy_s597.tx_v"
+  },
+  "serdes_rx_valid": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 3,
+   "range_um": [
+    628.86,
+    694.38
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "ot_qfd_serdes_112g_x12_phy_s597.rx_v"
+  },
+  "serdes_up": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 3,
+   "range_um": [
+    600.108,
+    665.628
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "ot_qfd_serdes_112g_x12_phy_s597.tx_up"
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}

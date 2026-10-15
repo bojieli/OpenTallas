@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_ckbump",
+ "outline": {
+  "w": 43.176,
+  "h": 43.176
+ },
+ "instances": 1,
+ "pins": {},
+ "pin_ranges": {},
+ "ports": {
+  "pll_ck": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    21.2,
+    21.2
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     21.2,
+     20.996
+    ]
+   ]
+  },
+  "rs": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    21.2,
+    21.2
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     21.2,
+     17.956
+    ]
+   ]
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}

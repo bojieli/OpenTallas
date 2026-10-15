@@ -1,0 +1,144 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_rstseq",
+ "outline": {
+  "w": 53.976,
+  "h": 53.976
+ },
+ "instances": 1,
+ "pins": {
+  "E": [
+   "rso_ctlm",
+   "rso_s"
+  ],
+  "N": [
+   "ck"
+  ],
+  "S": [
+   "rso_seq",
+   "rso_f",
+   "rso_io"
+  ],
+  "W": [
+   "rsi"
+  ]
+ },
+ "pin_ranges": {
+  "ck": [
+   26.988,
+   26.988
+  ],
+  "rsi": [
+   26.988,
+   26.988
+  ],
+  "rso_seq": [
+   12.012,
+   12.012
+  ],
+  "rso_ctlm": [
+   19.98,
+   19.98
+  ],
+  "rso_f": [
+   27.996,
+   27.996
+  ],
+  "rso_s": [
+   36.012,
+   36.012
+  ],
+  "rso_io": [
+   43.98,
+   43.98
+  ]
+ },
+ "ports": {
+  "ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    26.988,
+    26.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "rsi": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    26.988,
+    26.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "rso_seq": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    12.012,
+    12.012
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null
+  },
+  "rso_ctlm": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    19.98,
+    19.98
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null
+  },
+  "rso_f": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    27.996,
+    27.996
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null
+  },
+  "rso_s": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    36.012,
+    36.012
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null
+  },
+  "rso_io": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    43.98,
+    43.98
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}

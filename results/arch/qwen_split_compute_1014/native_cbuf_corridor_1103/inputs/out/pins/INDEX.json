@@ -1,0 +1,206 @@
+{
+ "ot_qfd_band_upper": {
+  "instances": 4,
+  "ports": 10,
+  "bits": 804,
+  "overlapping_pin_pairs": 0
+ },
+ "ot_qfd_serdes_112g_x12_phy_s597": {
+  "instances": 3,
+  "ports": 7,
+  "bits": 1199,
+  "overlapping_pin_pairs": 0
+ },
+ "ot_qfd_ucie_x64_phy": {
+  "instances": 1,
+  "ports": 7,
+  "bits": 2091,
+  "overlapping_pin_pairs": 0
+ },
+ "ot_qkvd_ucie_x64_phy": {
+  "instances": 1,
+  "ports": 7,
+  "bits": 1171,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_ckbump": {
+  "instances": 1,
+  "ports": 2,
+  "bits": 2,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_clkrx": {
+  "instances": 1,
+  "ports": 66,
+  "bits": 66,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_collective_static_io_production": {
+  "instances": 1,
+  "ports": 50,
+  "bits": 6905,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_crom_g": {
+  "instances": 8,
+  "ports": 8,
+  "bits": 727,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_d2d_static": {
+  "instances": 1,
+  "ports": 25,
+  "bits": 2879,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_native59_compute_service": {
+  "instances": 1,
+  "ports": 40,
+  "bits": 7963,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_port_tiles_0": {
+  "instances": 1,
+  "ports": 68,
+  "bits": 23928,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_port_tiles_0_f1": {
+  "instances": 1,
+  "ports": 63,
+  "bits": 10866,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_port_tiles_1": {
+  "instances": 1,
+  "ports": 68,
+  "bits": 23928,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_port_tiles_1_f1": {
+  "instances": 1,
+  "ports": 63,
+  "bits": 10866,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_port_tiles_2": {
+  "instances": 1,
+  "ports": 68,
+  "bits": 23928,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_port_tiles_2_f1": {
+  "instances": 1,
+  "ports": 63,
+  "bits": 10866,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_rstseq": {
+  "instances": 1,
+  "ports": 7,
+  "bits": 7,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_rstsync": {
+  "instances": 1,
+  "ports": 4,
+  "bits": 4,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_seq_su_static": {
+  "instances": 1,
+  "ports": 47,
+  "bits": 11163,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_sigbump": {
+  "instances": 2,
+  "ports": 1,
+  "bits": 1,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_sp_band_lanes": {
+  "instances": 3,
+  "ports": 29,
+  "bits": 10301,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_sp_res_ser": {
+  "instances": 3,
+  "ports": 6,
+  "bits": 4980,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_sp_su64_sfu": {
+  "instances": 1,
+  "ports": 381,
+  "bits": 32514,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_sp_vector_memory": {
+  "instances": 1,
+  "ports": 512,
+  "bits": 21011,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_su_cbuf_g": {
+  "instances": 8,
+  "ports": 20,
+  "bits": 1482,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_tile_nk": {
+  "instances": 720,
+  "ports": 24,
+  "bits": 2598,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_tile_nl": {
+  "instances": 48,
+  "ports": 20,
+  "bits": 1055,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_tt_ctlm_static_s": {
+  "instances": 1,
+  "ports": 41,
+  "bits": 3271,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_xcol_e": {
+  "instances": 24,
+  "ports": 19,
+  "bits": 4436,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_xcol_w": {
+  "instances": 24,
+  "ports": 19,
+  "bits": 4436,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_xcst_n": {
+  "instances": 384,
+  "ports": 8,
+  "bits": 1547,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_xcst_s": {
+  "instances": 384,
+  "ports": 8,
+  "bits": 1547,
+  "overlapping_pin_pairs": 0
+ },
+ "qfd_xs_tap": {
+  "instances": 1,
+  "ports": 11,
+  "bits": 6281,
+  "overlapping_pin_pairs": 0
+ },
+ "qkd_embedding_static_core_provider": {
+  "instances": 1,
+  "ports": 11,
+  "bits": 594,
+  "overlapping_pin_pairs": 0
+ }
+}

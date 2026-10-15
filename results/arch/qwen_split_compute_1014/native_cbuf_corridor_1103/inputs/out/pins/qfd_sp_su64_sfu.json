@@ -1,0 +1,6502 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_sp_su64_sfu",
+ "outline": {
+  "w": 3239.976,
+  "h": 3671.976
+ },
+ "instances": 1,
+ "pins": {
+  "E": [
+   "acc",
+   "external_a_addr",
+   "external_a_q",
+   "external_a_re",
+   "external_vm_a_addr",
+   "external_vm_a_re",
+   "sd",
+   "si",
+   "ca6",
+   "ca7",
+   "cq6",
+   "cq7",
+   "ca4",
+   "ca5",
+   "cq4",
+   "cq5",
+   "ca2",
+   "ca3",
+   "cq2",
+   "cq3",
+   "ca0",
+   "ca1",
+   "cq0",
+   "cq1"
+  ],
+  "N": [
+   "ck",
+   "ck_align0",
+   "ck_align1",
+   "ck_align10",
+   "ck_align11",
+   "ck_align12",
+   "ck_align13",
+   "ck_align14",
+   "ck_align15",
+   "ck_align2",
+   "ck_align3",
+   "ck_align4",
+   "ck_align5",
+   "ck_align6",
+   "ck_align7",
+   "ck_align8",
+   "ck_align9",
+   "ck_exp0",
+   "ck_exp1",
+   "ck_exp10",
+   "ck_exp11",
+   "ck_exp12",
+   "ck_exp13",
+   "ck_exp14",
+   "ck_exp15",
+   "ck_exp16",
+   "ck_exp17",
+   "ck_exp18",
+   "ck_exp19",
+   "ck_exp2",
+   "ck_exp20",
+   "ck_exp21",
+   "ck_exp22",
+   "ck_exp23",
+   "ck_exp24",
+   "ck_exp25",
+   "ck_exp26",
+   "ck_exp27",
+   "ck_exp28",
+   "ck_exp29",
+   "ck_exp3",
+   "ck_exp30",
+   "ck_exp31",
+   "ck_exp32",
+   "ck_exp33",
+   "ck_exp34",
+   "ck_exp35",
+   "ck_exp36",
+   "ck_exp37",
+   "ck_exp38",
+   "ck_exp39",
+   "ck_exp4",
+   "ck_exp40",
+   "ck_exp41",
+   "ck_exp42",
+   "ck_exp43",
+   "ck_exp44",
+   "ck_exp45",
+   "ck_exp46",
+   "ck_exp47",
+   "ck_exp48",
+   "ck_exp49",
+   "ck_exp5",
+   "ck_exp50",
+   "ck_exp51",
+   "ck_exp52",
+   "ck_exp53",
+   "ck_exp54",
+   "ck_exp55",
+   "ck_exp56",
+   "ck_exp57",
+   "ck_exp58",
+   "ck_exp59",
+   "ck_exp6",
+   "ck_exp60",
+   "ck_exp61",
+   "ck_exp62",
+   "ck_exp63",
+   "ck_exp7",
+   "ck_exp8",
+   "ck_exp9",
+   "ck_head0",
+   "ck_head1",
+   "ck_head10",
+   "ck_head11",
+   "ck_head12",
+   "ck_head13",
+   "ck_head14",
+   "ck_head15",
+   "ck_head16",
+   "ck_head17",
+   "ck_head18",
+   "ck_head19",
+   "ck_head2",
+   "ck_head20",
+   "ck_head21",
+   "ck_head22",
+   "ck_head23",
+   "ck_head24",
+   "ck_head25",
+   "ck_head26",
+   "ck_head27",
+   "ck_head28",
+   "ck_head29",
+   "ck_head3",
+   "ck_head30",
+   "ck_head31",
+   "ck_head32",
+   "ck_head33",
+   "ck_head34",
+   "ck_head35",
+   "ck_head36",
+   "ck_head37",
+   "ck_head38",
+   "ck_head39",
+   "ck_head4",
+   "ck_head40",
+   "ck_head41",
+   "ck_head42",
+   "ck_head43",
+   "ck_head44",
+   "ck_head45",
+   "ck_head46",
+   "ck_head47",
+   "ck_head48",
+   "ck_head49",
+   "ck_head5",
+   "ck_head50",
+   "ck_head51",
+   "ck_head52",
+   "ck_head53",
+   "ck_head54",
+   "ck_head55",
+   "ck_head56",
+   "ck_head57",
+   "ck_head58",
+   "ck_head59",
+   "ck_head6",
+   "ck_head60",
+   "ck_head61",
+   "ck_head62",
+   "ck_head63",
+   "ck_head7",
+   "ck_head8",
+   "ck_head9",
+   "ck_lane0",
+   "ck_lane1",
+   "ck_lane10",
+   "ck_lane11",
+   "ck_lane12",
+   "ck_lane13",
+   "ck_lane14",
+   "ck_lane15",
+   "ck_lane16",
+   "ck_lane17",
+   "ck_lane18",
+   "ck_lane19",
+   "ck_lane2",
+   "ck_lane20",
+   "ck_lane21",
+   "ck_lane22",
+   "ck_lane23",
+   "ck_lane24",
+   "ck_lane25",
+   "ck_lane26",
+   "ck_lane27",
+   "ck_lane28",
+   "ck_lane29",
+   "ck_lane3",
+   "ck_lane30",
+   "ck_lane31",
+   "ck_lane32",
+   "ck_lane33",
+   "ck_lane34",
+   "ck_lane35",
+   "ck_lane36",
+   "ck_lane37",
+   "ck_lane38",
+   "ck_lane39",
+   "ck_lane4",
+   "ck_lane40",
+   "ck_lane41",
+   "ck_lane42",
+   "ck_lane43",
+   "ck_lane44",
+   "ck_lane45",
+   "ck_lane46",
+   "ck_lane47",
+   "ck_lane48",
+   "ck_lane49",
+   "ck_lane5",
+   "ck_lane50",
+   "ck_lane51",
+   "ck_lane52",
+   "ck_lane53",
+   "ck_lane54",
+   "ck_lane55",
+   "ck_lane56",
+   "ck_lane57",
+   "ck_lane58",
+   "ck_lane59",
+   "ck_lane6",
+   "ck_lane60",
+   "ck_lane61",
+   "ck_lane62",
+   "ck_lane63",
+   "ck_lane7",
+   "ck_lane8",
+   "ck_lane9",
+   "ck_rcp0",
+   "ck_rcp1",
+   "ck_rcp10",
+   "ck_rcp11",
+   "ck_rcp12",
+   "ck_rcp13",
+   "ck_rcp14",
+   "ck_rcp15",
+   "ck_rcp16",
+   "ck_rcp17",
+   "ck_rcp18",
+   "ck_rcp19",
+   "ck_rcp2",
+   "ck_rcp20",
+   "ck_rcp21",
+   "ck_rcp22",
+   "ck_rcp23",
+   "ck_rcp24",
+   "ck_rcp25",
+   "ck_rcp26",
+   "ck_rcp27",
+   "ck_rcp28",
+   "ck_rcp29",
+   "ck_rcp3",
+   "ck_rcp30",
+   "ck_rcp31",
+   "ck_rcp32",
+   "ck_rcp33",
+   "ck_rcp34",
+   "ck_rcp35",
+   "ck_rcp36",
+   "ck_rcp37",
+   "ck_rcp38",
+   "ck_rcp39",
+   "ck_rcp4",
+   "ck_rcp40",
+   "ck_rcp41",
+   "ck_rcp42",
+   "ck_rcp43",
+   "ck_rcp44",
+   "ck_rcp45",
+   "ck_rcp46",
+   "ck_rcp47",
+   "ck_rcp48",
+   "ck_rcp49",
+   "ck_rcp5",
+   "ck_rcp50",
+   "ck_rcp51",
+   "ck_rcp52",
+   "ck_rcp53",
+   "ck_rcp54",
+   "ck_rcp55",
+   "ck_rcp56",
+   "ck_rcp57",
+   "ck_rcp58",
+   "ck_rcp59",
+   "ck_rcp6",
+   "ck_rcp60",
+   "ck_rcp61",
+   "ck_rcp62",
+   "ck_rcp63",
+   "ck_rcp7",
+   "ck_rcp8",
+   "ck_rcp9",
+   "ck_red0",
+   "ck_red1",
+   "ck_red2",
+   "ck_red3",
+   "ck_red4",
+   "ck_red5",
+   "ck_red6",
+   "ck_red7",
+   "ck_red8",
+   "ck_rsq0",
+   "ck_rsq1",
+   "ck_rsq10",
+   "ck_rsq11",
+   "ck_rsq12",
+   "ck_rsq13",
+   "ck_rsq14",
+   "ck_rsq15",
+   "ck_rsq16",
+   "ck_rsq17",
+   "ck_rsq18",
+   "ck_rsq19",
+   "ck_rsq2",
+   "ck_rsq20",
+   "ck_rsq21",
+   "ck_rsq22",
+   "ck_rsq23",
+   "ck_rsq24",
+   "ck_rsq25",
+   "ck_rsq26",
+   "ck_rsq27",
+   "ck_rsq28",
+   "ck_rsq29",
+   "ck_rsq3",
+   "ck_rsq30",
+   "ck_rsq31",
+   "ck_rsq32",
+   "ck_rsq33",
+   "ck_rsq34",
+   "ck_rsq35",
+   "ck_rsq36",
+   "ck_rsq37",
+   "ck_rsq38",
+   "ck_rsq39",
+   "ck_rsq4",
+   "ck_rsq40",
+   "ck_rsq41",
+   "ck_rsq42",
+   "ck_rsq43",
+   "ck_rsq44",
+   "ck_rsq45",
+   "ck_rsq46",
+   "ck_rsq47",
+   "ck_rsq48",
+   "ck_rsq49",
+   "ck_rsq5",
+   "ck_rsq50",
+   "ck_rsq51",
+   "ck_rsq52",
+   "ck_rsq53",
+   "ck_rsq54",
+   "ck_rsq55",
+   "ck_rsq56",
+   "ck_rsq57",
+   "ck_rsq58",
+   "ck_rsq59",
+   "ck_rsq6",
+   "ck_rsq60",
+   "ck_rsq61",
+   "ck_rsq62",
+   "ck_rsq63",
+   "ck_rsq7",
+   "ck_rsq8",
+   "ck_rsq9",
+   "rst_n"
+  ],
+  "S": [
+   "va",
+   "vq",
+   "external_embed_fault",
+   "kv_waddr",
+   "kv_wdata",
+   "kv_we",
+   "native_issue"
+  ],
+  "W": [
+   "xsw",
+   "cp",
+   "cp_active"
+  ]
+ },
+ "pin_ranges": {
+  "va": [
+   2.028,
+   115.596
+  ],
+  "vq": [
+   117.66,
+   2636.172
+  ],
+  "ck": [
+   1619.916,
+   1619.916
+  ],
+  "rst_n": [
+   2066.892,
+   2066.892
+  ],
+  "external_a_re": [
+   616.044,
+   622.092
+  ],
+  "external_a_addr": [
+   269.964,
+   417.324
+  ],
+  "external_a_q": [
+   418.476,
+   614.988
+  ],
+  "external_vm_a_re": [
+   771.66,
+   777.708
+  ],
+  "external_vm_a_addr": [
+   623.148,
+   770.508
+  ],
+  "external_embed_fault": [
+   2875.596,
+   2875.596
+  ],
+  "si": [
+   790.188,
+   836.364
+  ],
+  "sd": [
+   778.764,
+   789.036
+  ],
+  "acc": [
+   266.7,
+   268.908
+  ],
+  "native_issue": [
+   3229.932,
+   3235.884
+  ],
+  "cp": [
+   1811.724,
+   1817.004
+  ],
+  "cp_active": [
+   1818.06,
+   1818.06
+  ],
+  "xsw": [
+   5.388,
+   210.444
+  ],
+  "kv_we": [
+   3222.828,
+   3228.876
+  ],
+  "kv_waddr": [
+   2876.748,
+   3024.108
+  ],
+  "kv_wdata": [
+   3025.164,
+   3221.676
+  ],
+  "ck_head0": [
+   1708.716,
+   1708.716
+  ],
+  "ck_head1": [
+   1709.772,
+   1709.772
+  ],
+  "ck_head2": [
+   1721.868,
+   1721.868
+  ],
+  "ck_head3": [
+   1733.964,
+   1733.964
+  ],
+  "ck_head4": [
+   1745.964,
+   1745.964
+  ],
+  "ck_head5": [
+   1758.06,
+   1758.06
+  ],
+  "ck_head6": [
+   1770.06,
+   1770.06
+  ],
+  "ck_head7": [
+   1775.532,
+   1775.532
+  ],
+  "ck_head8": [
+   1776.684,
+   1776.684
+  ],
+  "ck_head9": [
+   1777.74,
+   1777.74
+  ],
+  "ck_head10": [
+   1710.924,
+   1710.924
+  ],
+  "ck_head11": [
+   1711.98,
+   1711.98
+  ],
+  "ck_head12": [
+   1713.132,
+   1713.132
+  ],
+  "ck_head13": [
+   1714.188,
+   1714.188
+  ],
+  "ck_head14": [
+   1715.34,
+   1715.34
+  ],
+  "ck_head15": [
+   1716.396,
+   1716.396
+  ],
+  "ck_head16": [
+   1717.452,
+   1717.452
+  ],
+  "ck_head17": [
+   1718.604,
+   1718.604
+  ],
+  "ck_head18": [
+   1719.66,
+   1719.66
+  ],
+  "ck_head19": [
+   1720.812,
+   1720.812
+  ],
+  "ck_head20": [
+   1722.924,
+   1722.924
+  ],
+  "ck_head21": [
+   1724.076,
+   1724.076
+  ],
+  "ck_head22": [
+   1725.132,
+   1725.132
+  ],
+  "ck_head23": [
+   1726.284,
+   1726.284
+  ],
+  "ck_head24": [
+   1727.34,
+   1727.34
+  ],
+  "ck_head25": [
+   1728.492,
+   1728.492
+  ],
+  "ck_head26": [
+   1729.548,
+   1729.548
+  ],
+  "ck_head27": [
+   1730.604,
+   1730.604
+  ],
+  "ck_head28": [
+   1731.756,
+   1731.756
+  ],
+  "ck_head29": [
+   1732.812,
+   1732.812
+  ],
+  "ck_head30": [
+   1735.02,
+   1735.02
+  ],
+  "ck_head31": [
+   1736.076,
+   1736.076
+  ],
+  "ck_head32": [
+   1737.228,
+   1737.228
+  ],
+  "ck_head33": [
+   1738.284,
+   1738.284
+  ],
+  "ck_head34": [
+   1739.436,
+   1739.436
+  ],
+  "ck_head35": [
+   1740.492,
+   1740.492
+  ],
+  "ck_head36": [
+   1741.644,
+   1741.644
+  ],
+  "ck_head37": [
+   1742.7,
+   1742.7
+  ],
+  "ck_head38": [
+   1743.756,
+   1743.756
+  ],
+  "ck_head39": [
+   1744.908,
+   1744.908
+  ],
+  "ck_head40": [
+   1747.116,
+   1747.116
+  ],
+  "ck_head41": [
+   1748.172,
+   1748.172
+  ],
+  "ck_head42": [
+   1749.228,
+   1749.228
+  ],
+  "ck_head43": [
+   1750.38,
+   1750.38
+  ],
+  "ck_head44": [
+   1751.436,
+   1751.436
+  ],
+  "ck_head45": [
+   1752.588,
+   1752.588
+  ],
+  "ck_head46": [
+   1753.644,
+   1753.644
+  ],
+  "ck_head47": [
+   1754.796,
+   1754.796
+  ],
+  "ck_head48": [
+   1755.852,
+   1755.852
+  ],
+  "ck_head49": [
+   1756.908,
+   1756.908
+  ],
+  "ck_head50": [
+   1759.116,
+   1759.116
+  ],
+  "ck_head51": [
+   1760.268,
+   1760.268
+  ],
+  "ck_head52": [
+   1761.324,
+   1761.324
+  ],
+  "ck_head53": [
+   1762.38,
+   1762.38
+  ],
+  "ck_head54": [
+   1763.532,
+   1763.532
+  ],
+  "ck_head55": [
+   1764.588,
+   1764.588
+  ],
+  "ck_head56": [
+   1765.74,
+   1765.74
+  ],
+  "ck_head57": [
+   1766.796,
+   1766.796
+  ],
+  "ck_head58": [
+   1767.948,
+   1767.948
+  ],
+  "ck_head59": [
+   1769.004,
+   1769.004
+  ],
+  "ck_head60": [
+   1771.212,
+   1771.212
+  ],
+  "ck_head61": [
+   1772.268,
+   1772.268
+  ],
+  "ck_head62": [
+   1773.42,
+   1773.42
+  ],
+  "ck_head63": [
+   1774.476,
+   1774.476
+  ],
+  "ck_exp0": [
+   1638.54,
+   1638.54
+  ],
+  "ck_exp1": [
+   1639.692,
+   1639.692
+  ],
+  "ck_exp2": [
+   1651.692,
+   1651.692
+  ],
+  "ck_exp3": [
+   1663.788,
+   1663.788
+  ],
+  "ck_exp4": [
+   1675.884,
+   1675.884
+  ],
+  "ck_exp5": [
+   1687.884,
+   1687.884
+  ],
+  "ck_exp6": [
+   1699.98,
+   1699.98
+  ],
+  "ck_exp7": [
+   1705.452,
+   1705.452
+  ],
+  "ck_exp8": [
+   1706.508,
+   1706.508
+  ],
+  "ck_exp9": [
+   1707.66,
+   1707.66
+  ],
+  "ck_exp10": [
+   1640.748,
+   1640.748
+  ],
+  "ck_exp11": [
+   1641.9,
+   1641.9
+  ],
+  "ck_exp12": [
+   1642.956,
+   1642.956
+  ],
+  "ck_exp13": [
+   1644.012,
+   1644.012
+  ],
+  "ck_exp14": [
+   1645.164,
+   1645.164
+  ],
+  "ck_exp15": [
+   1646.22,
+   1646.22
+  ],
+  "ck_exp16": [
+   1647.372,
+   1647.372
+  ],
+  "ck_exp17": [
+   1648.428,
+   1648.428
+  ],
+  "ck_exp18": [
+   1649.58,
+   1649.58
+  ],
+  "ck_exp19": [
+   1650.636,
+   1650.636
+  ],
+  "ck_exp20": [
+   1652.844,
+   1652.844
+  ],
+  "ck_exp21": [
+   1653.9,
+   1653.9
+  ],
+  "ck_exp22": [
+   1655.052,
+   1655.052
+  ],
+  "ck_exp23": [
+   1656.108,
+   1656.108
+  ],
+  "ck_exp24": [
+   1657.164,
+   1657.164
+  ],
+  "ck_exp25": [
+   1658.316,
+   1658.316
+  ],
+  "ck_exp26": [
+   1659.372,
+   1659.372
+  ],
+  "ck_exp27": [
+   1660.524,
+   1660.524
+  ],
+  "ck_exp28": [
+   1661.58,
+   1661.58
+  ],
+  "ck_exp29": [
+   1662.732,
+   1662.732
+  ],
+  "ck_exp30": [
+   1664.844,
+   1664.844
+  ],
+  "ck_exp31": [
+   1665.996,
+   1665.996
+  ],
+  "ck_exp32": [
+   1667.052,
+   1667.052
+  ],
+  "ck_exp33": [
+   1668.204,
+   1668.204
+  ],
+  "ck_exp34": [
+   1669.26,
+   1669.26
+  ],
+  "ck_exp35": [
+   1670.316,
+   1670.316
+  ],
+  "ck_exp36": [
+   1671.468,
+   1671.468
+  ],
+  "ck_exp37": [
+   1672.524,
+   1672.524
+  ],
+  "ck_exp38": [
+   1673.676,
+   1673.676
+  ],
+  "ck_exp39": [
+   1674.732,
+   1674.732
+  ],
+  "ck_exp40": [
+   1676.94,
+   1676.94
+  ],
+  "ck_exp41": [
+   1677.996,
+   1677.996
+  ],
+  "ck_exp42": [
+   1679.148,
+   1679.148
+  ],
+  "ck_exp43": [
+   1680.204,
+   1680.204
+  ],
+  "ck_exp44": [
+   1681.356,
+   1681.356
+  ],
+  "ck_exp45": [
+   1682.412,
+   1682.412
+  ],
+  "ck_exp46": [
+   1683.468,
+   1683.468
+  ],
+  "ck_exp47": [
+   1684.62,
+   1684.62
+  ],
+  "ck_exp48": [
+   1685.676,
+   1685.676
+  ],
+  "ck_exp49": [
+   1686.828,
+   1686.828
+  ],
+  "ck_exp50": [
+   1689.036,
+   1689.036
+  ],
+  "ck_exp51": [
+   1690.092,
+   1690.092
+  ],
+  "ck_exp52": [
+   1691.148,
+   1691.148
+  ],
+  "ck_exp53": [
+   1692.3,
+   1692.3
+  ],
+  "ck_exp54": [
+   1693.356,
+   1693.356
+  ],
+  "ck_exp55": [
+   1694.508,
+   1694.508
+  ],
+  "ck_exp56": [
+   1695.564,
+   1695.564
+  ],
+  "ck_exp57": [
+   1696.62,
+   1696.62
+  ],
+  "ck_exp58": [
+   1697.772,
+   1697.772
+  ],
+  "ck_exp59": [
+   1698.828,
+   1698.828
+  ],
+  "ck_exp60": [
+   1701.036,
+   1701.036
+  ],
+  "ck_exp61": [
+   1702.188,
+   1702.188
+  ],
+  "ck_exp62": [
+   1703.244,
+   1703.244
+  ],
+  "ck_exp63": [
+   1704.3,
+   1704.3
+  ],
+  "ck_rcp0": [
+   1848.972,
+   1848.972
+  ],
+  "ck_rcp1": [
+   1850.124,
+   1850.124
+  ],
+  "ck_rcp2": [
+   1862.124,
+   1862.124
+  ],
+  "ck_rcp3": [
+   1874.22,
+   1874.22
+  ],
+  "ck_rcp4": [
+   1886.316,
+   1886.316
+  ],
+  "ck_rcp5": [
+   1898.316,
+   1898.316
+  ],
+  "ck_rcp6": [
+   1910.412,
+   1910.412
+  ],
+  "ck_rcp7": [
+   1915.884,
+   1915.884
+  ],
+  "ck_rcp8": [
+   1916.94,
+   1916.94
+  ],
+  "ck_rcp9": [
+   1918.092,
+   1918.092
+  ],
+  "ck_rcp10": [
+   1851.18,
+   1851.18
+  ],
+  "ck_rcp11": [
+   1852.332,
+   1852.332
+  ],
+  "ck_rcp12": [
+   1853.388,
+   1853.388
+  ],
+  "ck_rcp13": [
+   1854.444,
+   1854.444
+  ],
+  "ck_rcp14": [
+   1855.596,
+   1855.596
+  ],
+  "ck_rcp15": [
+   1856.652,
+   1856.652
+  ],
+  "ck_rcp16": [
+   1857.804,
+   1857.804
+  ],
+  "ck_rcp17": [
+   1858.86,
+   1858.86
+  ],
+  "ck_rcp18": [
+   1860.012,
+   1860.012
+  ],
+  "ck_rcp19": [
+   1861.068,
+   1861.068
+  ],
+  "ck_rcp20": [
+   1863.276,
+   1863.276
+  ],
+  "ck_rcp21": [
+   1864.332,
+   1864.332
+  ],
+  "ck_rcp22": [
+   1865.484,
+   1865.484
+  ],
+  "ck_rcp23": [
+   1866.54,
+   1866.54
+  ],
+  "ck_rcp24": [
+   1867.596,
+   1867.596
+  ],
+  "ck_rcp25": [
+   1868.748,
+   1868.748
+  ],
+  "ck_rcp26": [
+   1869.804,
+   1869.804
+  ],
+  "ck_rcp27": [
+   1870.956,
+   1870.956
+  ],
+  "ck_rcp28": [
+   1872.012,
+   1872.012
+  ],
+  "ck_rcp29": [
+   1873.164,
+   1873.164
+  ],
+  "ck_rcp30": [
+   1875.276,
+   1875.276
+  ],
+  "ck_rcp31": [
+   1876.428,
+   1876.428
+  ],
+  "ck_rcp32": [
+   1877.484,
+   1877.484
+  ],
+  "ck_rcp33": [
+   1878.636,
+   1878.636
+  ],
+  "ck_rcp34": [
+   1879.692,
+   1879.692
+  ],
+  "ck_rcp35": [
+   1880.748,
+   1880.748
+  ],
+  "ck_rcp36": [
+   1881.9,
+   1881.9
+  ],
+  "ck_rcp37": [
+   1882.956,
+   1882.956
+  ],
+  "ck_rcp38": [
+   1884.108,
+   1884.108
+  ],
+  "ck_rcp39": [
+   1885.164,
+   1885.164
+  ],
+  "ck_rcp40": [
+   1887.372,
+   1887.372
+  ],
+  "ck_rcp41": [
+   1888.428,
+   1888.428
+  ],
+  "ck_rcp42": [
+   1889.58,
+   1889.58
+  ],
+  "ck_rcp43": [
+   1890.636,
+   1890.636
+  ],
+  "ck_rcp44": [
+   1891.788,
+   1891.788
+  ],
+  "ck_rcp45": [
+   1892.844,
+   1892.844
+  ],
+  "ck_rcp46": [
+   1893.9,
+   1893.9
+  ],
+  "ck_rcp47": [
+   1895.052,
+   1895.052
+  ],
+  "ck_rcp48": [
+   1896.108,
+   1896.108
+  ],
+  "ck_rcp49": [
+   1897.26,
+   1897.26
+  ],
+  "ck_rcp50": [
+   1899.468,
+   1899.468
+  ],
+  "ck_rcp51": [
+   1900.524,
+   1900.524
+  ],
+  "ck_rcp52": [
+   1901.58,
+   1901.58
+  ],
+  "ck_rcp53": [
+   1902.732,
+   1902.732
+  ],
+  "ck_rcp54": [
+   1903.788,
+   1903.788
+  ],
+  "ck_rcp55": [
+   1904.94,
+   1904.94
+  ],
+  "ck_rcp56": [
+   1905.996,
+   1905.996
+  ],
+  "ck_rcp57": [
+   1907.052,
+   1907.052
+  ],
+  "ck_rcp58": [
+   1908.204,
+   1908.204
+  ],
+  "ck_rcp59": [
+   1909.26,
+   1909.26
+  ],
+  "ck_rcp60": [
+   1911.468,
+   1911.468
+  ],
+  "ck_rcp61": [
+   1912.62,
+   1912.62
+  ],
+  "ck_rcp62": [
+   1913.676,
+   1913.676
+  ],
+  "ck_rcp63": [
+   1914.732,
+   1914.732
+  ],
+  "ck_rsq0": [
+   1929.036,
+   1929.036
+  ],
+  "ck_rsq1": [
+   1930.092,
+   1930.092
+  ],
+  "ck_rsq2": [
+   1942.188,
+   1942.188
+  ],
+  "ck_rsq3": [
+   1954.188,
+   1954.188
+  ],
+  "ck_rsq4": [
+   1966.284,
+   1966.284
+  ],
+  "ck_rsq5": [
+   1978.38,
+   1978.38
+  ],
+  "ck_rsq6": [
+   1990.38,
+   1990.38
+  ],
+  "ck_rsq7": [
+   1995.852,
+   1995.852
+  ],
+  "ck_rsq8": [
+   1997.004,
+   1997.004
+  ],
+  "ck_rsq9": [
+   1998.06,
+   1998.06
+  ],
+  "ck_rsq10": [
+   1931.244,
+   1931.244
+  ],
+  "ck_rsq11": [
+   1932.3,
+   1932.3
+  ],
+  "ck_rsq12": [
+   1933.356,
+   1933.356
+  ],
+  "ck_rsq13": [
+   1934.508,
+   1934.508
+  ],
+  "ck_rsq14": [
+   1935.564,
+   1935.564
+  ],
+  "ck_rsq15": [
+   1936.716,
+   1936.716
+  ],
+  "ck_rsq16": [
+   1937.772,
+   1937.772
+  ],
+  "ck_rsq17": [
+   1938.924,
+   1938.924
+  ],
+  "ck_rsq18": [
+   1939.98,
+   1939.98
+  ],
+  "ck_rsq19": [
+   1941.036,
+   1941.036
+  ],
+  "ck_rsq20": [
+   1943.244,
+   1943.244
+  ],
+  "ck_rsq21": [
+   1944.396,
+   1944.396
+  ],
+  "ck_rsq22": [
+   1945.452,
+   1945.452
+  ],
+  "ck_rsq23": [
+   1946.508,
+   1946.508
+  ],
+  "ck_rsq24": [
+   1947.66,
+   1947.66
+  ],
+  "ck_rsq25": [
+   1948.716,
+   1948.716
+  ],
+  "ck_rsq26": [
+   1949.868,
+   1949.868
+  ],
+  "ck_rsq27": [
+   1950.924,
+   1950.924
+  ],
+  "ck_rsq28": [
+   1952.076,
+   1952.076
+  ],
+  "ck_rsq29": [
+   1953.132,
+   1953.132
+  ],
+  "ck_rsq30": [
+   1955.34,
+   1955.34
+  ],
+  "ck_rsq31": [
+   1956.396,
+   1956.396
+  ],
+  "ck_rsq32": [
+   1957.548,
+   1957.548
+  ],
+  "ck_rsq33": [
+   1958.604,
+   1958.604
+  ],
+  "ck_rsq34": [
+   1959.66,
+   1959.66
+  ],
+  "ck_rsq35": [
+   1960.812,
+   1960.812
+  ],
+  "ck_rsq36": [
+   1961.868,
+   1961.868
+  ],
+  "ck_rsq37": [
+   1963.02,
+   1963.02
+  ],
+  "ck_rsq38": [
+   1964.076,
+   1964.076
+  ],
+  "ck_rsq39": [
+   1965.228,
+   1965.228
+  ],
+  "ck_rsq40": [
+   1967.34,
+   1967.34
+  ],
+  "ck_rsq41": [
+   1968.492,
+   1968.492
+  ],
+  "ck_rsq42": [
+   1969.548,
+   1969.548
+  ],
+  "ck_rsq43": [
+   1970.7,
+   1970.7
+  ],
+  "ck_rsq44": [
+   1971.756,
+   1971.756
+  ],
+  "ck_rsq45": [
+   1972.812,
+   1972.812
+  ],
+  "ck_rsq46": [
+   1973.964,
+   1973.964
+  ],
+  "ck_rsq47": [
+   1975.02,
+   1975.02
+  ],
+  "ck_rsq48": [
+   1976.172,
+   1976.172
+  ],
+  "ck_rsq49": [
+   1977.228,
+   1977.228
+  ],
+  "ck_rsq50": [
+   1979.436,
+   1979.436
+  ],
+  "ck_rsq51": [
+   1980.492,
+   1980.492
+  ],
+  "ck_rsq52": [
+   1981.644,
+   1981.644
+  ],
+  "ck_rsq53": [
+   1982.7,
+   1982.7
+  ],
+  "ck_rsq54": [
+   1983.852,
+   1983.852
+  ],
+  "ck_rsq55": [
+   1984.908,
+   1984.908
+  ],
+  "ck_rsq56": [
+   1985.964,
+   1985.964
+  ],
+  "ck_rsq57": [
+   1987.116,
+   1987.116
+  ],
+  "ck_rsq58": [
+   1988.172,
+   1988.172
+  ],
+  "ck_rsq59": [
+   1989.324,
+   1989.324
+  ],
+  "ck_rsq60": [
+   1991.532,
+   1991.532
+  ],
+  "ck_rsq61": [
+   1992.588,
+   1992.588
+  ],
+  "ck_rsq62": [
+   1993.644,
+   1993.644
+  ],
+  "ck_rsq63": [
+   1994.796,
+   1994.796
+  ],
+  "ck_align0": [
+   1621.068,
+   1621.068
+  ],
+  "ck_align1": [
+   1622.124,
+   1622.124
+  ],
+  "ck_align2": [
+   1629.804,
+   1629.804
+  ],
+  "ck_align3": [
+   1630.86,
+   1630.86
+  ],
+  "ck_align4": [
+   1632.012,
+   1632.012
+  ],
+  "ck_align5": [
+   1633.068,
+   1633.068
+  ],
+  "ck_align6": [
+   1634.22,
+   1634.22
+  ],
+  "ck_align7": [
+   1635.276,
+   1635.276
+  ],
+  "ck_align8": [
+   1636.428,
+   1636.428
+  ],
+  "ck_align9": [
+   1637.484,
+   1637.484
+  ],
+  "ck_align10": [
+   1623.18,
+   1623.18
+  ],
+  "ck_align11": [
+   1624.332,
+   1624.332
+  ],
+  "ck_align12": [
+   1625.388,
+   1625.388
+  ],
+  "ck_align13": [
+   1626.54,
+   1626.54
+  ],
+  "ck_align14": [
+   1627.596,
+   1627.596
+  ],
+  "ck_align15": [
+   1628.748,
+   1628.748
+  ],
+  "ck_lane0": [
+   1778.892,
+   1778.892
+  ],
+  "ck_lane1": [
+   1779.948,
+   1779.948
+  ],
+  "ck_lane2": [
+   1792.044,
+   1792.044
+  ],
+  "ck_lane3": [
+   1804.044,
+   1804.044
+  ],
+  "ck_lane4": [
+   1816.14,
+   1816.14
+  ],
+  "ck_lane5": [
+   1828.14,
+   1828.14
+  ],
+  "ck_lane6": [
+   1840.236,
+   1840.236
+  ],
+  "ck_lane7": [
+   1845.708,
+   1845.708
+  ],
+  "ck_lane8": [
+   1846.86,
+   1846.86
+  ],
+  "ck_lane9": [
+   1847.916,
+   1847.916
+  ],
+  "ck_lane10": [
+   1781.1,
+   1781.1
+  ],
+  "ck_lane11": [
+   1782.156,
+   1782.156
+  ],
+  "ck_lane12": [
+   1783.212,
+   1783.212
+  ],
+  "ck_lane13": [
+   1784.364,
+   1784.364
+  ],
+  "ck_lane14": [
+   1785.42,
+   1785.42
+  ],
+  "ck_lane15": [
+   1786.572,
+   1786.572
+  ],
+  "ck_lane16": [
+   1787.628,
+   1787.628
+  ],
+  "ck_lane17": [
+   1788.684,
+   1788.684
+  ],
+  "ck_lane18": [
+   1789.836,
+   1789.836
+  ],
+  "ck_lane19": [
+   1790.892,
+   1790.892
+  ],
+  "ck_lane20": [
+   1793.1,
+   1793.1
+  ],
+  "ck_lane21": [
+   1794.252,
+   1794.252
+  ],
+  "ck_lane22": [
+   1795.308,
+   1795.308
+  ],
+  "ck_lane23": [
+   1796.364,
+   1796.364
+  ],
+  "ck_lane24": [
+   1797.516,
+   1797.516
+  ],
+  "ck_lane25": [
+   1798.572,
+   1798.572
+  ],
+  "ck_lane26": [
+   1799.724,
+   1799.724
+  ],
+  "ck_lane27": [
+   1800.78,
+   1800.78
+  ],
+  "ck_lane28": [
+   1801.836,
+   1801.836
+  ],
+  "ck_lane29": [
+   1802.988,
+   1802.988
+  ],
+  "ck_lane30": [
+   1805.196,
+   1805.196
+  ],
+  "ck_lane31": [
+   1806.252,
+   1806.252
+  ],
+  "ck_lane32": [
+   1807.404,
+   1807.404
+  ],
+  "ck_lane33": [
+   1808.46,
+   1808.46
+  ],
+  "ck_lane34": [
+   1809.516,
+   1809.516
+  ],
+  "ck_lane35": [
+   1810.668,
+   1810.668
+  ],
+  "ck_lane36": [
+   1811.724,
+   1811.724
+  ],
+  "ck_lane37": [
+   1812.876,
+   1812.876
+  ],
+  "ck_lane38": [
+   1813.932,
+   1813.932
+  ],
+  "ck_lane39": [
+   1814.988,
+   1814.988
+  ],
+  "ck_lane40": [
+   1817.196,
+   1817.196
+  ],
+  "ck_lane41": [
+   1818.348,
+   1818.348
+  ],
+  "ck_lane42": [
+   1819.404,
+   1819.404
+  ],
+  "ck_lane43": [
+   1820.556,
+   1820.556
+  ],
+  "ck_lane44": [
+   1821.612,
+   1821.612
+  ],
+  "ck_lane45": [
+   1822.668,
+   1822.668
+  ],
+  "ck_lane46": [
+   1823.82,
+   1823.82
+  ],
+  "ck_lane47": [
+   1824.876,
+   1824.876
+  ],
+  "ck_lane48": [
+   1826.028,
+   1826.028
+  ],
+  "ck_lane49": [
+   1827.084,
+   1827.084
+  ],
+  "ck_lane50": [
+   1829.292,
+   1829.292
+  ],
+  "ck_lane51": [
+   1830.348,
+   1830.348
+  ],
+  "ck_lane52": [
+   1831.5,
+   1831.5
+  ],
+  "ck_lane53": [
+   1832.556,
+   1832.556
+  ],
+  "ck_lane54": [
+   1833.708,
+   1833.708
+  ],
+  "ck_lane55": [
+   1834.764,
+   1834.764
+  ],
+  "ck_lane56": [
+   1835.82,
+   1835.82
+  ],
+  "ck_lane57": [
+   1836.972,
+   1836.972
+  ],
+  "ck_lane58": [
+   1838.028,
+   1838.028
+  ],
+  "ck_lane59": [
+   1839.18,
+   1839.18
+  ],
+  "ck_lane60": [
+   1841.292,
+   1841.292
+  ],
+  "ck_lane61": [
+   1842.444,
+   1842.444
+  ],
+  "ck_lane62": [
+   1843.5,
+   1843.5
+  ],
+  "ck_lane63": [
+   1844.652,
+   1844.652
+  ],
+  "ck_red0": [
+   1919.148,
+   1919.148
+  ],
+  "ck_red1": [
+   1920.204,
+   1920.204
+  ],
+  "ck_red2": [
+   1921.356,
+   1921.356
+  ],
+  "ck_red3": [
+   1922.412,
+   1922.412
+  ],
+  "ck_red4": [
+   1923.564,
+   1923.564
+  ],
+  "ck_red5": [
+   1924.62,
+   1924.62
+  ],
+  "ck_red6": [
+   1925.772,
+   1925.772
+  ],
+  "ck_red7": [
+   1926.828,
+   1926.828
+  ],
+  "ck_red8": [
+   1927.884,
+   1927.884
+  ],
+  "ca0": [
+   1307.724,
+   1327.404
+  ],
+  "cq0": [
+   1349.292,
+   1398.348
+  ],
+  "ca1": [
+   1328.46,
+   1348.14
+  ],
+  "cq1": [
+   1399.404,
+   1448.46
+  ],
+  "ca2": [
+   1121.1,
+   1140.78
+  ],
+  "cq2": [
+   1162.668,
+   1211.724
+  ],
+  "ca3": [
+   1141.932,
+   1161.612
+  ],
+  "cq3": [
+   1212.876,
+   1261.932
+  ],
+  "ca4": [
+   979.308,
+   998.988
+  ],
+  "cq4": [
+   1020.876,
+   1069.932
+  ],
+  "ca5": [
+   1000.044,
+   1019.724
+  ],
+  "cq5": [
+   1070.988,
+   1120.044
+  ],
+  "ca6": [
+   837.42,
+   857.1
+  ],
+  "cq6": [
+   878.988,
+   928.044
+  ],
+  "ca7": [
+   858.156,
+   877.836
+  ],
+  "cq7": [
+   929.1,
+   978.156
+  ]
+ },
+ "ports": {
+  "va": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 2367,
+   "range_um": [
+    2.028,
+    115.596
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_sp_vector_memory.sa"
+  },
+  "vq": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 12288,
+   "range_um": [
+    117.66,
+    2636.172
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_sp_vector_memory.sq"
+  },
+  "ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1619.916,
+    1619.916
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "rst_n": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2066.892,
+    2066.892
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "external_a_re": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 64,
+   "range_um": [
+    616.044,
+    622.092
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.su_va_re"
+  },
+  "external_a_addr": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1536,
+   "range_um": [
+    269.964,
+    417.324
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.su_va_addr"
+  },
+  "external_a_q": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 2048,
+   "range_um": [
+    418.476,
+    614.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.su_va_q"
+  },
+  "external_vm_a_re": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 64,
+   "range_um": [
+    771.66,
+    777.708
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.su_vm_va_re"
+  },
+  "external_vm_a_addr": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1536,
+   "range_um": [
+    623.148,
+    770.508
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.su_vm_va_addr"
+  },
+  "external_embed_fault": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    2875.596,
+    2875.596
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qkd_embedding_static_core_provider.fault"
+  },
+  "si": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 482,
+   "range_um": [
+    790.188,
+    836.364
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.su"
+  },
+  "sd": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 108,
+   "range_um": [
+    778.764,
+    789.036
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.sd"
+  },
+  "acc": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 24,
+   "range_um": [
+    266.7,
+    268.908
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.acc"
+  },
+  "native_issue": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 63,
+   "range_um": [
+    3229.932,
+    3235.884
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.native_issue"
+  },
+  "cp": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 56,
+   "range_um": [
+    1811.724,
+    1817.004
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_tt_ctlm_static_s.cp"
+  },
+  "cp_active": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    1818.06,
+    1818.06
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_tt_ctlm_static_s.cp_active"
+  },
+  "xsw": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 2137,
+   "range_um": [
+    5.388,
+    210.444
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_xs_tap.sw"
+  },
+  "kv_we": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 64,
+   "range_um": [
+    3222.828,
+    3228.876
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.kv_we"
+  },
+  "kv_waddr": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1536,
+   "range_um": [
+    2876.748,
+    3024.108
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.kv_waddr"
+  },
+  "kv_wdata": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 2048,
+   "range_um": [
+    3025.164,
+    3221.676
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_native59_compute_service.kv_wdata"
+  },
+  "ck_head0": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1708.716,
+    1708.716
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head1": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1709.772,
+    1709.772
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head2": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1721.868,
+    1721.868
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head3": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1733.964,
+    1733.964
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head4": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1745.964,
+    1745.964
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head5": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1758.06,
+    1758.06
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head6": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1770.06,
+    1770.06
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head7": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1775.532,
+    1775.532
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head8": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1776.684,
+    1776.684
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head9": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1777.74,
+    1777.74
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head10": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1710.924,
+    1710.924
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head11": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1711.98,
+    1711.98
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head12": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1713.132,
+    1713.132
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head13": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1714.188,
+    1714.188
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head14": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1715.34,
+    1715.34
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head15": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1716.396,
+    1716.396
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head16": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1717.452,
+    1717.452
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head17": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1718.604,
+    1718.604
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head18": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1719.66,
+    1719.66
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head19": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1720.812,
+    1720.812
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head20": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1722.924,
+    1722.924
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head21": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1724.076,
+    1724.076
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head22": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1725.132,
+    1725.132
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head23": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1726.284,
+    1726.284
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head24": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1727.34,
+    1727.34
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head25": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1728.492,
+    1728.492
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head26": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1729.548,
+    1729.548
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head27": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1730.604,
+    1730.604
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head28": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1731.756,
+    1731.756
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head29": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1732.812,
+    1732.812
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head30": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1735.02,
+    1735.02
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head31": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1736.076,
+    1736.076
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head32": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1737.228,
+    1737.228
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head33": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1738.284,
+    1738.284
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head34": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1739.436,
+    1739.436
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head35": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1740.492,
+    1740.492
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head36": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1741.644,
+    1741.644
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head37": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1742.7,
+    1742.7
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head38": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1743.756,
+    1743.756
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head39": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1744.908,
+    1744.908
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head40": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1747.116,
+    1747.116
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head41": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1748.172,
+    1748.172
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head42": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1749.228,
+    1749.228
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head43": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1750.38,
+    1750.38
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head44": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1751.436,
+    1751.436
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head45": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1752.588,
+    1752.588
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head46": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1753.644,
+    1753.644
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head47": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1754.796,
+    1754.796
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head48": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1755.852,
+    1755.852
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head49": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1756.908,
+    1756.908
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head50": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1759.116,
+    1759.116
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head51": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1760.268,
+    1760.268
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head52": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1761.324,
+    1761.324
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head53": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1762.38,
+    1762.38
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head54": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1763.532,
+    1763.532
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head55": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1764.588,
+    1764.588
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head56": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1765.74,
+    1765.74
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head57": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1766.796,
+    1766.796
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head58": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1767.948,
+    1767.948
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head59": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1769.004,
+    1769.004
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head60": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1771.212,
+    1771.212
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head61": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1772.268,
+    1772.268
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head62": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1773.42,
+    1773.42
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_head63": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1774.476,
+    1774.476
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp0": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1638.54,
+    1638.54
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp1": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1639.692,
+    1639.692
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp2": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1651.692,
+    1651.692
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp3": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1663.788,
+    1663.788
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp4": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1675.884,
+    1675.884
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp5": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1687.884,
+    1687.884
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp6": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1699.98,
+    1699.98
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp7": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1705.452,
+    1705.452
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp8": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1706.508,
+    1706.508
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp9": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1707.66,
+    1707.66
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp10": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1640.748,
+    1640.748
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp11": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1641.9,
+    1641.9
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp12": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1642.956,
+    1642.956
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp13": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1644.012,
+    1644.012
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp14": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1645.164,
+    1645.164
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp15": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1646.22,
+    1646.22
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp16": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1647.372,
+    1647.372
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp17": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1648.428,
+    1648.428
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp18": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1649.58,
+    1649.58
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp19": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1650.636,
+    1650.636
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp20": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1652.844,
+    1652.844
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp21": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1653.9,
+    1653.9
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp22": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1655.052,
+    1655.052
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp23": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1656.108,
+    1656.108
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp24": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1657.164,
+    1657.164
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp25": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1658.316,
+    1658.316
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp26": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1659.372,
+    1659.372
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp27": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1660.524,
+    1660.524
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp28": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1661.58,
+    1661.58
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp29": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1662.732,
+    1662.732
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp30": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1664.844,
+    1664.844
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp31": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1665.996,
+    1665.996
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp32": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1667.052,
+    1667.052
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp33": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1668.204,
+    1668.204
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp34": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1669.26,
+    1669.26
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp35": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1670.316,
+    1670.316
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp36": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1671.468,
+    1671.468
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp37": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1672.524,
+    1672.524
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp38": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1673.676,
+    1673.676
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp39": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1674.732,
+    1674.732
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp40": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1676.94,
+    1676.94
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp41": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1677.996,
+    1677.996
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp42": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1679.148,
+    1679.148
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp43": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1680.204,
+    1680.204
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp44": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1681.356,
+    1681.356
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp45": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1682.412,
+    1682.412
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp46": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1683.468,
+    1683.468
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp47": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1684.62,
+    1684.62
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp48": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1685.676,
+    1685.676
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp49": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1686.828,
+    1686.828
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp50": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1689.036,
+    1689.036
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp51": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1690.092,
+    1690.092
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp52": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1691.148,
+    1691.148
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp53": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1692.3,
+    1692.3
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp54": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1693.356,
+    1693.356
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp55": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1694.508,
+    1694.508
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp56": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1695.564,
+    1695.564
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp57": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1696.62,
+    1696.62
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp58": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1697.772,
+    1697.772
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp59": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1698.828,
+    1698.828
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp60": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1701.036,
+    1701.036
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp61": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1702.188,
+    1702.188
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp62": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1703.244,
+    1703.244
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_exp63": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1704.3,
+    1704.3
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp0": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1848.972,
+    1848.972
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp1": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1850.124,
+    1850.124
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp2": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1862.124,
+    1862.124
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp3": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1874.22,
+    1874.22
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp4": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1886.316,
+    1886.316
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp5": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1898.316,
+    1898.316
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp6": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1910.412,
+    1910.412
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp7": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1915.884,
+    1915.884
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp8": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1916.94,
+    1916.94
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp9": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1918.092,
+    1918.092
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp10": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1851.18,
+    1851.18
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp11": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1852.332,
+    1852.332
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp12": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1853.388,
+    1853.388
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp13": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1854.444,
+    1854.444
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp14": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1855.596,
+    1855.596
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp15": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1856.652,
+    1856.652
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp16": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1857.804,
+    1857.804
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp17": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1858.86,
+    1858.86
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp18": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1860.012,
+    1860.012
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp19": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1861.068,
+    1861.068
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp20": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1863.276,
+    1863.276
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp21": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1864.332,
+    1864.332
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp22": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1865.484,
+    1865.484
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp23": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1866.54,
+    1866.54
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp24": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1867.596,
+    1867.596
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp25": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1868.748,
+    1868.748
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp26": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1869.804,
+    1869.804
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp27": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1870.956,
+    1870.956
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp28": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1872.012,
+    1872.012
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp29": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1873.164,
+    1873.164
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp30": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1875.276,
+    1875.276
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp31": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1876.428,
+    1876.428
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp32": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1877.484,
+    1877.484
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp33": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1878.636,
+    1878.636
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp34": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1879.692,
+    1879.692
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp35": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1880.748,
+    1880.748
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp36": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1881.9,
+    1881.9
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp37": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1882.956,
+    1882.956
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp38": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1884.108,
+    1884.108
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp39": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1885.164,
+    1885.164
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp40": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1887.372,
+    1887.372
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp41": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1888.428,
+    1888.428
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp42": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1889.58,
+    1889.58
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp43": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1890.636,
+    1890.636
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp44": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1891.788,
+    1891.788
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp45": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1892.844,
+    1892.844
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp46": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1893.9,
+    1893.9
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp47": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1895.052,
+    1895.052
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp48": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1896.108,
+    1896.108
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp49": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1897.26,
+    1897.26
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp50": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1899.468,
+    1899.468
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp51": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1900.524,
+    1900.524
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp52": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1901.58,
+    1901.58
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp53": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1902.732,
+    1902.732
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp54": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1903.788,
+    1903.788
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp55": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1904.94,
+    1904.94
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp56": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1905.996,
+    1905.996
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp57": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1907.052,
+    1907.052
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp58": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1908.204,
+    1908.204
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp59": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1909.26,
+    1909.26
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp60": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1911.468,
+    1911.468
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp61": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1912.62,
+    1912.62
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp62": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1913.676,
+    1913.676
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rcp63": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1914.732,
+    1914.732
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq0": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1929.036,
+    1929.036
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq1": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1930.092,
+    1930.092
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq2": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1942.188,
+    1942.188
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq3": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1954.188,
+    1954.188
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq4": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1966.284,
+    1966.284
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq5": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1978.38,
+    1978.38
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq6": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1990.38,
+    1990.38
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq7": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1995.852,
+    1995.852
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq8": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1997.004,
+    1997.004
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq9": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1998.06,
+    1998.06
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq10": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1931.244,
+    1931.244
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq11": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1932.3,
+    1932.3
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq12": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1933.356,
+    1933.356
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq13": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1934.508,
+    1934.508
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq14": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1935.564,
+    1935.564
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq15": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1936.716,
+    1936.716
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq16": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1937.772,
+    1937.772
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq17": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1938.924,
+    1938.924
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq18": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1939.98,
+    1939.98
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq19": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1941.036,
+    1941.036
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq20": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1943.244,
+    1943.244
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq21": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1944.396,
+    1944.396
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq22": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1945.452,
+    1945.452
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq23": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1946.508,
+    1946.508
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq24": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1947.66,
+    1947.66
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq25": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1948.716,
+    1948.716
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq26": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1949.868,
+    1949.868
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq27": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1950.924,
+    1950.924
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq28": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1952.076,
+    1952.076
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq29": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1953.132,
+    1953.132
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq30": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1955.34,
+    1955.34
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq31": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1956.396,
+    1956.396
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq32": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1957.548,
+    1957.548
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq33": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1958.604,
+    1958.604
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq34": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1959.66,
+    1959.66
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq35": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1960.812,
+    1960.812
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq36": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1961.868,
+    1961.868
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq37": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1963.02,
+    1963.02
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq38": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1964.076,
+    1964.076
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq39": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1965.228,
+    1965.228
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq40": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1967.34,
+    1967.34
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq41": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1968.492,
+    1968.492
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq42": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1969.548,
+    1969.548
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq43": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1970.7,
+    1970.7
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq44": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1971.756,
+    1971.756
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq45": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1972.812,
+    1972.812
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq46": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1973.964,
+    1973.964
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq47": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1975.02,
+    1975.02
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq48": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1976.172,
+    1976.172
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq49": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1977.228,
+    1977.228
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq50": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1979.436,
+    1979.436
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq51": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1980.492,
+    1980.492
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq52": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1981.644,
+    1981.644
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq53": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1982.7,
+    1982.7
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq54": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1983.852,
+    1983.852
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq55": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1984.908,
+    1984.908
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq56": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1985.964,
+    1985.964
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq57": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1987.116,
+    1987.116
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq58": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1988.172,
+    1988.172
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq59": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1989.324,
+    1989.324
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq60": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1991.532,
+    1991.532
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq61": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1992.588,
+    1992.588
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq62": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1993.644,
+    1993.644
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rsq63": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1994.796,
+    1994.796
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align0": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1621.068,
+    1621.068
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align1": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1622.124,
+    1622.124
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align2": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1629.804,
+    1629.804
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align3": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1630.86,
+    1630.86
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align4": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1632.012,
+    1632.012
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align5": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1633.068,
+    1633.068
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align6": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1634.22,
+    1634.22
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align7": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1635.276,
+    1635.276
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align8": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1636.428,
+    1636.428
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align9": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1637.484,
+    1637.484
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align10": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1623.18,
+    1623.18
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align11": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1624.332,
+    1624.332
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align12": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1625.388,
+    1625.388
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align13": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1626.54,
+    1626.54
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align14": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1627.596,
+    1627.596
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_align15": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1628.748,
+    1628.748
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane0": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1778.892,
+    1778.892
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane1": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1779.948,
+    1779.948
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane2": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1792.044,
+    1792.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane3": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1804.044,
+    1804.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane4": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1816.14,
+    1816.14
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane5": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1828.14,
+    1828.14
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane6": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1840.236,
+    1840.236
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane7": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1845.708,
+    1845.708
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane8": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1846.86,
+    1846.86
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane9": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1847.916,
+    1847.916
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane10": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1781.1,
+    1781.1
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane11": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1782.156,
+    1782.156
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane12": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1783.212,
+    1783.212
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane13": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1784.364,
+    1784.364
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane14": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1785.42,
+    1785.42
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane15": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1786.572,
+    1786.572
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane16": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1787.628,
+    1787.628
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane17": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1788.684,
+    1788.684
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane18": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1789.836,
+    1789.836
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane19": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1790.892,
+    1790.892
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane20": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1793.1,
+    1793.1
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane21": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1794.252,
+    1794.252
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane22": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1795.308,
+    1795.308
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane23": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1796.364,
+    1796.364
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane24": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1797.516,
+    1797.516
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane25": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1798.572,
+    1798.572
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane26": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1799.724,
+    1799.724
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane27": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1800.78,
+    1800.78
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane28": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1801.836,
+    1801.836
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane29": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1802.988,
+    1802.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane30": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1805.196,
+    1805.196
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane31": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1806.252,
+    1806.252
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane32": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1807.404,
+    1807.404
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane33": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1808.46,
+    1808.46
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane34": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1809.516,
+    1809.516
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane35": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1810.668,
+    1810.668
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane36": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1811.724,
+    1811.724
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane37": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1812.876,
+    1812.876
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane38": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1813.932,
+    1813.932
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane39": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1814.988,
+    1814.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane40": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1817.196,
+    1817.196
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane41": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1818.348,
+    1818.348
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane42": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1819.404,
+    1819.404
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane43": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1820.556,
+    1820.556
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane44": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1821.612,
+    1821.612
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane45": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1822.668,
+    1822.668
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane46": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1823.82,
+    1823.82
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane47": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1824.876,
+    1824.876
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane48": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1826.028,
+    1826.028
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane49": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1827.084,
+    1827.084
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane50": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1829.292,
+    1829.292
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane51": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1830.348,
+    1830.348
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane52": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1831.5,
+    1831.5
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane53": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1832.556,
+    1832.556
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane54": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1833.708,
+    1833.708
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane55": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1834.764,
+    1834.764
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane56": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1835.82,
+    1835.82
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane57": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1836.972,
+    1836.972
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane58": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1838.028,
+    1838.028
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane59": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1839.18,
+    1839.18
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane60": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1841.292,
+    1841.292
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane61": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1842.444,
+    1842.444
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane62": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1843.5,
+    1843.5
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_lane63": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1844.652,
+    1844.652
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_red0": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1919.148,
+    1919.148
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_red1": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1920.204,
+    1920.204
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_red2": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1921.356,
+    1921.356
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_red3": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1922.412,
+    1922.412
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_red4": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1923.564,
+    1923.564
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_red5": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1924.62,
+    1924.62
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_red6": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1925.772,
+    1925.772
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_red7": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1926.828,
+    1926.828
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_red8": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1927.884,
+    1927.884
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ca0": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 206,
+   "range_um": [
+    1307.724,
+    1327.404
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_su_cbuf_g.crom_re|qfd_su_cbuf_g.crom_addr|qfd_su_cbuf_g.crom_stage"
+  },
+  "cq0": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 512,
+   "range_um": [
+    1349.292,
+    1398.348
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_su_cbuf_g.crom_q"
+  },
+  "ca1": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 206,
+   "range_um": [
+    1328.46,
+    1348.14
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_su_cbuf_g.crom_re|qfd_su_cbuf_g.crom_addr|qfd_su_cbuf_g.crom_stage"
+  },
+  "cq1": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 512,
+   "range_um": [
+    1399.404,
+    1448.46
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_su_cbuf_g.crom_q"
+  },
+  "ca2": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 206,
+   "range_um": [
+    1121.1,
+    1140.78
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_su_cbuf_g.crom_re|qfd_su_cbuf_g.crom_addr|qfd_su_cbuf_g.crom_stage"
+  },
+  "cq2": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 512,
+   "range_um": [
+    1162.668,
+    1211.724
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_su_cbuf_g.crom_q"
+  },
+  "ca3": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 206,
+   "range_um": [
+    1141.932,
+    1161.612
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_su_cbuf_g.crom_re|qfd_su_cbuf_g.crom_addr|qfd_su_cbuf_g.crom_stage"
+  },
+  "cq3": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 512,
+   "range_um": [
+    1212.876,
+    1261.932
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_su_cbuf_g.crom_q"
+  },
+  "ca4": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 206,
+   "range_um": [
+    979.308,
+    998.988
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_su_cbuf_g.crom_re|qfd_su_cbuf_g.crom_addr|qfd_su_cbuf_g.crom_stage"
+  },
+  "cq4": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 512,
+   "range_um": [
+    1020.876,
+    1069.932
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_su_cbuf_g.crom_q"
+  },
+  "ca5": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 206,
+   "range_um": [
+    1000.044,
+    1019.724
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_su_cbuf_g.crom_re|qfd_su_cbuf_g.crom_addr|qfd_su_cbuf_g.crom_stage"
+  },
+  "cq5": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 512,
+   "range_um": [
+    1070.988,
+    1120.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_su_cbuf_g.crom_q"
+  },
+  "ca6": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 206,
+   "range_um": [
+    837.42,
+    857.1
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_su_cbuf_g.crom_re|qfd_su_cbuf_g.crom_addr|qfd_su_cbuf_g.crom_stage"
+  },
+  "cq6": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 512,
+   "range_um": [
+    878.988,
+    928.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_su_cbuf_g.crom_q"
+  },
+  "ca7": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 206,
+   "range_um": [
+    858.156,
+    877.836
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_su_cbuf_g.crom_re|qfd_su_cbuf_g.crom_addr|qfd_su_cbuf_g.crom_stage"
+  },
+  "cq7": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 512,
+   "range_um": [
+    929.1,
+    978.156
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_su_cbuf_g.crom_q"
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}

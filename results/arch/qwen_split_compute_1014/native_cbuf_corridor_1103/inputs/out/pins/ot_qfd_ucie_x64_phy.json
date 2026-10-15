@@ -1,0 +1,138 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "ot_qfd_ucie_x64_phy",
+ "outline": {
+  "w": 777.6,
+  "h": 777.6
+ },
+ "instances": 1,
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "tx_up",
+   "tx_v",
+   "tx_flit",
+   "rx_v",
+   "rx_flit"
+  ]
+ },
+ "pin_ranges": {
+  "clk": [
+   600.012,
+   600.012
+  ],
+  "rst_n": [
+   600.06,
+   600.06
+  ],
+  "tx_up": [
+   600.108,
+   600.108
+  ],
+  "tx_v": [
+   600.156,
+   600.156
+  ],
+  "tx_flit": [
+   600.204,
+   650.22
+  ],
+  "rx_v": [
+   650.268,
+   650.268
+  ],
+  "rx_flit": [
+   650.316,
+   700.332
+  ]
+ },
+ "ports": {
+  "clk": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    600.012,
+    600.012
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "rst_n": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    600.06,
+    600.06
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "tx_up": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    600.108,
+    600.108
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_collective_static_io_production.ucie_up"
+  },
+  "tx_v": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    600.156,
+    600.156
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_collective_static_io_production.shared_tx_valid"
+  },
+  "tx_flit": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1043,
+   "range_um": [
+    600.204,
+    650.22
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_collective_static_io_production.shared_tx"
+  },
+  "rx_v": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    650.268,
+    650.268
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_collective_static_io_production.shared_rx_valid"
+  },
+  "rx_flit": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1043,
+   "range_um": [
+    650.316,
+    700.332
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_collective_static_io_production.shared_rx"
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}

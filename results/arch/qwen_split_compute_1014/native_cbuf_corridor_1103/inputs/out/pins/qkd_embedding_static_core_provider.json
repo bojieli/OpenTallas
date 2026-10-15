@@ -1,0 +1,206 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qkd_embedding_static_core_provider",
+ "outline": {
+  "w": 259.2,
+  "h": 216.0
+ },
+ "instances": 1,
+ "pins": {
+  "N": [
+   "fault",
+   "ck",
+   "rst_n",
+   "core_start",
+   "core_token",
+   "embed_code_addr",
+   "embed_code_q",
+   "embed_code_re",
+   "embed_scale_addr",
+   "embed_scale_q",
+   "embed_scale_re"
+  ]
+ },
+ "pin_ranges": {
+  "ck": [
+   154.092,
+   154.092
+  ],
+  "rst_n": [
+   173.1,
+   173.1
+  ],
+  "core_start": [
+   174.252,
+   174.252
+  ],
+  "core_token": [
+   175.308,
+   176.94
+  ],
+  "embed_code_re": [
+   231.468,
+   231.468
+  ],
+  "embed_code_addr": [
+   178.092,
+   180.3
+  ],
+  "embed_code_q": [
+   181.356,
+   230.412
+  ],
+  "embed_scale_re": [
+   237.9,
+   237.9
+  ],
+  "embed_scale_addr": [
+   232.62,
+   234.252
+  ],
+  "embed_scale_q": [
+   235.308,
+   236.748
+  ],
+  "fault": [
+   4.044,
+   4.044
+  ]
+ },
+ "ports": {
+  "ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    154.092,
+    154.092
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "rst_n": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    173.1,
+    173.1
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "core_start": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    174.252,
+    174.252
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "core_token": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 18,
+   "range_um": [
+    175.308,
+    176.94
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "embed_code_re": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    231.468,
+    231.468
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.embed_code_re"
+  },
+  "embed_code_addr": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 24,
+   "range_um": [
+    178.092,
+    180.3
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_seq_su_static.embed_code_addr"
+  },
+  "embed_code_q": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 512,
+   "range_um": [
+    181.356,
+    230.412
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.embed_code_q"
+  },
+  "embed_scale_re": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    237.9,
+    237.9
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "embed_scale_addr": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 18,
+   "range_um": [
+    232.62,
+    234.252
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "embed_scale_q": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 16,
+   "range_um": [
+    235.308,
+    236.748
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_seq_su_static.embed_scale_q"
+  },
+  "fault": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    4.044,
+    4.044
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_sp_su64_sfu.external_embed_fault"
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}

@@ -1,0 +1,335 @@
+{
+  "schema": "qwen.cbuf.corridor.screen.v1",
+  "region": [
+    19744.968,
+    14713.92,
+    19856.88,
+    17832.96
+  ],
+  "width_um": 111.912,
+  "source": "C21s SOURCE59fb67ed5, OT_RELAY_SKIP; immutable copied graph and assigned pins",
+  "full_C21": "OPEN: EPYC1TB c21/out empty when collected; full allocator still has no emitted graph/relay occupancy",
+  "verdict": "NO_WIDENING_PROPOSAL_SUPPORTED",
+  "hard_occupants": [],
+  "boundary_occupants": [
+    {
+      "n": "t_24_8",
+      "m": "qfd_tile_nk",
+      "x": 19856.88,
+      "y": 13973.04,
+      "w": 449.28,
+      "h": 1442.88
+    },
+    {
+      "n": "t_24_9",
+      "m": "qfd_tile_nk",
+      "x": 19856.88,
+      "y": 15459.12,
+      "w": 449.28,
+      "h": 1442.88
+    },
+    {
+      "n": "t_24_10",
+      "m": "qfd_tile_nk",
+      "x": 19856.88,
+      "y": 16945.2,
+      "w": 449.28,
+      "h": 1442.88
+    }
+  ],
+  "endpoint_span_incident_buses": 32,
+  "family": {
+    "tree_block": {
+      "buses": 9,
+      "bits_per_bus_sum": 4626,
+      "endpoint_pin_bits": 9252
+    },
+    "tree_spine": {
+      "buses": 6,
+      "bits_per_bus_sum": 3084,
+      "endpoint_pin_bits": 6168
+    },
+    "reset": {
+      "buses": 1,
+      "bits_per_bus_sum": 1,
+      "endpoint_pin_bits": 1585
+    },
+    "clock_trunk": {
+      "buses": 16,
+      "bits_per_bus_sum": 16,
+      "endpoint_pin_bits": 3471
+    }
+  },
+  "buses_with_endpoint_inside": [
+    "tree_26_0_0a",
+    "tree_26_0_8a",
+    "tree_26_0_10a",
+    "tree_26_1_4a",
+    "tree_26_2_0a",
+    "tree_26_2_0b",
+    "tree_26_3_0a",
+    "tree_26_3_0b",
+    "bword_26"
+  ],
+  "cuts": [
+    {
+      "x": 19744.968,
+      "peak_possible_bits": 2073,
+      "y": 14713.92,
+      "scope": "Endpoint bbox overlap bound; not actual routed usage"
+    },
+    {
+      "x": 19800.924,
+      "peak_possible_bits": 2073,
+      "y": 14713.92,
+      "scope": "Endpoint bbox overlap bound; not actual routed usage"
+    },
+    {
+      "x": 19856.88,
+      "peak_possible_bits": 3615,
+      "y": 14713.92,
+      "scope": "Endpoint bbox overlap bound; not actual routed usage"
+    }
+  ],
+  "existing_fine_top_in_window": [],
+  "unknowns": [
+    {
+      "instance": "up4_sel_station",
+      "master": "qfd_rly_26_NE_9x9",
+      "why": "No assigned pin pack"
+    },
+    {
+      "instance": "up4_sel_branch0",
+      "master": "qfd_rly_26_NE_9x9",
+      "why": "No assigned pin pack"
+    },
+    {
+      "instance": "up4_sel_branch1",
+      "master": "qfd_rly_26_NE_9x9",
+      "why": "No assigned pin pack"
+    },
+    {
+      "bus": "up4_sel_split",
+      "bits": 26,
+      "why": "No mapped endpoint"
+    }
+  ],
+  "open": [
+    "Full C21 allocated relay population/homes, cut usage and clock/reset branches absent",
+    "All incident actual routed wire/PG/via shapes absent; empty macro boxes do not imply free corridor",
+    "C21s older CROM/CBUF graph differs from proposed native R3/D3 cohort",
+    "Endpoint-span burden cannot be subtracted as measured usage or credited as guaranteed free tracks"
+  ],
+  "inputs": [
+    {
+      "path": "inputs/full_C21_observation.json",
+      "bytes": 342,
+      "sha256": "d70734032da02de48c2c3de5851eeafa1577a991f37bffe502f3ac71db3ac92f"
+    },
+    {
+      "path": "inputs/out/case/die.v",
+      "bytes": 1147059,
+      "sha256": "aacb231b75cb33cf3b0f4cd6e4bc127d52c75f1212724aaeb20a5b333f82bab2"
+    },
+    {
+      "path": "inputs/out/case/place.tcl",
+      "bytes": 99140,
+      "sha256": "ee934c1fd01774c8c41bab796d1d68e5ab30a95df5734b4a902dc1676ae01f4c"
+    },
+    {
+      "path": "inputs/out/case/port_dirs.json",
+      "bytes": 40091,
+      "sha256": "652d1f8d3a8c7bad42709259c8cc247026f0fd72640878d9b3348ac3d959e999"
+    },
+    {
+      "path": "inputs/out/pins/INDEX.json",
+      "bytes": 3574,
+      "sha256": "9cc9465795cd08be4454cb7793391ade0aecdc810452421d9dd78fa0d50b3434"
+    },
+    {
+      "path": "inputs/out/pins/ot_qfd_band_upper.json",
+      "bytes": 2865,
+      "sha256": "c5f9e962eb04f358128c34282f24110c2c6c53f27e695b60b9134b1c809274d9"
+    },
+    {
+      "path": "inputs/out/pins/ot_qfd_serdes_112g_x12_phy_s597.json",
+      "bytes": 2204,
+      "sha256": "2f1e18aba747ccca5996cc15588697e10b6ed200ae250a6be29b14c728ea2423"
+    },
+    {
+      "path": "inputs/out/pins/ot_qfd_ucie_x64_phy.json",
+      "bytes": 2189,
+      "sha256": "6fe29e974a3c24deb4caae173e0cb5f416bfd573e56b477cac5586c6b8e0d1bb"
+    },
+    {
+      "path": "inputs/out/pins/ot_qkvd_ucie_x64_phy.json",
+      "bytes": 2091,
+      "sha256": "30270fa44c5c1a2381c4470a4991ee28f323863686f40064ced4af9a504ec799"
+    },
+    {
+      "path": "inputs/out/pins/qfd_ckbump.json",
+      "bytes": 853,
+      "sha256": "9ccf1eed32a45fd78d54d104496be8b417aa24b5848de1d8be2fc6751f81a8e7"
+    },
+    {
+      "path": "inputs/out/pins/qfd_clkrx.json",
+      "bytes": 18023,
+      "sha256": "43dc1526455f5152a422f288cb6c496f5fa226cdd9286ebe5c2c0dfc8f85f063"
+    },
+    {
+      "path": "inputs/out/pins/qfd_collective_static_io_production.json",
+      "bytes": 13153,
+      "sha256": "e31a00c97fa04b919030e16899589940df581e11e55e3e1798b247b02074d906"
+    },
+    {
+      "path": "inputs/out/pins/qfd_crom_g.json",
+      "bytes": 2439,
+      "sha256": "daf9886a5cb888402c10e2a42ac2aa5babfa91c27dc4df8009caf0df350430ad"
+    },
+    {
+      "path": "inputs/out/pins/qfd_d2d_static.json",
+      "bytes": 7240,
+      "sha256": "d52d77787e617b7f280b32869cd051b62193ccfadc4edadf8d6124bd4ef1d5eb"
+    },
+    {
+      "path": "inputs/out/pins/qfd_native59_compute_service.json",
+      "bytes": 11012,
+      "sha256": "8d3c7c570aac48b83f77bc0ed2d485821057bd528a589b0cdb0aebba348ad3bc"
+    },
+    {
+      "path": "inputs/out/pins/qfd_port_tiles_0.json",
+      "bytes": 16449,
+      "sha256": "1173b460c86b3ca853bbda38b0351dcc5749dbffb5f59a0ae1ece61a6f4eca69"
+    },
+    {
+      "path": "inputs/out/pins/qfd_port_tiles_0_f1.json",
+      "bytes": 15232,
+      "sha256": "c36a092cb514bff48b6755b4a587ba9165ae86b0a9b04a34d245abfd30a4fd3e"
+    },
+    {
+      "path": "inputs/out/pins/qfd_port_tiles_1.json",
+      "bytes": 16449,
+      "sha256": "2faee6c05bdb691a682d5730841a88f257e34b491abd381745783380b4860247"
+    },
+    {
+      "path": "inputs/out/pins/qfd_port_tiles_1_f1.json",
+      "bytes": 15232,
+      "sha256": "89241532e3b293d438b4f16ceca299ac8b90a6466323f1c2d3f0b0f767facd04"
+    },
+    {
+      "path": "inputs/out/pins/qfd_port_tiles_2.json",
+      "bytes": 16449,
+      "sha256": "8a1555692387c3a2d4b712c7d4aa6789471a41f9d6f607fa38399380b172ab96"
+    },
+    {
+      "path": "inputs/out/pins/qfd_port_tiles_2_f1.json",
+      "bytes": 15232,
+      "sha256": "f2ecee29dc738007007315a688a30f10eccd42c471b5894df000a78d4709b243"
+    },
+    {
+      "path": "inputs/out/pins/qfd_rstseq.json",
+      "bytes": 1965,
+      "sha256": "46abe4a2d3369283c443cfbc24bf5fb27d8b5e014f8c016aa2e81a9a32714264"
+    },
+    {
+      "path": "inputs/out/pins/qfd_rstsync.json",
+      "bytes": 1320,
+      "sha256": "8c701af57407a4ad84bde632b083d436795845b5db4a3ea386cb30bb7b32d4aa"
+    },
+    {
+      "path": "inputs/out/pins/qfd_seq_su_static.json",
+      "bytes": 13754,
+      "sha256": "13fe3cdf6fcb6bed6a3fa0a7fa33927cb351f210ae092678bf4f24a294e3a909"
+    },
+    {
+      "path": "inputs/out/pins/qfd_sigbump.json",
+      "bytes": 624,
+      "sha256": "0f046064a2bd13b9e4842c256cceb47bc696fc1222cf0d40e738864a17f7f715"
+    },
+    {
+      "path": "inputs/out/pins/qfd_sp_band_lanes.json",
+      "bytes": 7938,
+      "sha256": "fbf8b2a3c9d747ccefc4e9e96d20bce943dda13e591f7c74e430e0da3cbcb43f"
+    },
+    {
+      "path": "inputs/out/pins/qfd_sp_res_ser.json",
+      "bytes": 1990,
+      "sha256": "cffa3546ea338042f05a555454ccc3e82f1c42c55d028647e777c12429d2c1c0"
+    },
+    {
+      "path": "inputs/out/pins/qfd_sp_su64_sfu.json",
+      "bytes": 93052,
+      "sha256": "6027011ca109eb68f1e9a582fb493b5be6162f863fea2d7a13dc0ee7730d8bfe"
+    },
+    {
+      "path": "inputs/out/pins/qfd_sp_vector_memory.json",
+      "bytes": 136326,
+      "sha256": "8c7aaa73758a9f8941ae7fd75946e4504d0e2fa71bd127a230bfc2b4ed819d58"
+    },
+    {
+      "path": "inputs/out/pins/qfd_su_cbuf_g.json",
+      "bytes": 7113,
+      "sha256": "f373af9a8b9187c2c40fafb490b0c9ef8a9d34ae85ae1eaf72e6b8a0e0e2252a"
+    },
+    {
+      "path": "inputs/out/pins/qfd_tile_nk.json",
+      "bytes": 7662,
+      "sha256": "ea8fd0dfa07846f4186bc15cfe4756e7ee378c551a87b8dd1269fd272d9c7df5"
+    },
+    {
+      "path": "inputs/out/pins/qfd_tile_nl.json",
+      "bytes": 5501,
+      "sha256": "1632640c5ed587f83aafb5797c7d98ac4f3e651cdb602ef1fbbe894c46c162cb"
+    },
+    {
+      "path": "inputs/out/pins/qfd_tt_ctlm_static_s.json",
+      "bytes": 10563,
+      "sha256": "9ccf6fb9625ee9b4e1fa4a1108544bcb9721d3329e7a8922933b0bf11bed3d11"
+    },
+    {
+      "path": "inputs/out/pins/qfd_xcol_e.json",
+      "bytes": 4775,
+      "sha256": "f30337cef5e5c31ce7e48f1d70ac7c05a12d714f1488fdd5d568385790ab672c"
+    },
+    {
+      "path": "inputs/out/pins/qfd_xcol_w.json",
+      "bytes": 4775,
+      "sha256": "5e2a0c30247f7bfab26a4d118d05cb480dc12b607dabec93177109377cd3036b"
+    },
+    {
+      "path": "inputs/out/pins/qfd_xcst_n.json",
+      "bytes": 2258,
+      "sha256": "cce25b218b737372e77cb8d245512ed9d502a8440c5262ff775a524c2cf90a63"
+    },
+    {
+      "path": "inputs/out/pins/qfd_xcst_s.json",
+      "bytes": 2258,
+      "sha256": "472fe6d1e9d501df4c147513684f2203a035f1bb1bdb19a7db28710d74d6f380"
+    },
+    {
+      "path": "inputs/out/pins/qfd_xs_tap.json",
+      "bytes": 2973,
+      "sha256": "9dcdc311a419e1c6765bc5a3647d55cf5b4b9e29a6255ac2c7b6b48f0bd8d10b"
+    },
+    {
+      "path": "inputs/out/pins/qkd_embedding_static_core_provider.json",
+      "bytes": 3196,
+      "sha256": "2c9c2c5b86e6f3bdc42dc4fd0f2941b9da9b70881ea79f2aed530904733641d9"
+    },
+    {
+      "path": "inputs/out/relay_run.json",
+      "bytes": 276948,
+      "sha256": "6758cd435b655872f9caf6109b38c435c6f341b13ded09cea1f1cf290364d13d"
+    },
+    {
+      "path": "inputs/out/rom_tp8b.json",
+      "bytes": 513730,
+      "sha256": "693a16a2616e85ba24b251c108578056ab84d67c0186ebea34eee9ac67e453f9"
+    },
+    {
+      "path": "inputs/src/SOURCE_COMMIT",
+      "bytes": 10,
+      "sha256": "0cfe20b4f5b08b38edfaf9f11276b0deb39cfbf4eef09c8fdc7575ac899d02b4"
+    }
+  ]
+}

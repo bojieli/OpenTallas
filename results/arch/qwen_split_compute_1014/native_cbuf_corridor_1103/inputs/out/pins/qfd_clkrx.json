@@ -1,0 +1,1269 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_clkrx",
+ "outline": {
+  "w": 412.536,
+  "h": 412.536
+ },
+ "instances": 1,
+ "pins": {},
+ "pin_ranges": {},
+ "ports": {
+  "pll_coll": {
+   "face": "N",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    206.468,
+    206.468
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     206.468,
+     218.996
+    ]
+   ]
+  },
+  "pll_d2d": {
+   "face": "N",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    209.668,
+    209.668
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     209.668,
+     218.996
+    ]
+   ]
+  },
+  "pll_fwd": {
+   "face": "N",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    212.868,
+    212.868
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     212.868,
+     218.996
+    ]
+   ]
+  },
+  "pll_r0": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    180.868,
+    180.868
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     180.868,
+     180.596
+    ]
+   ]
+  },
+  "pll_r1": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    184.068,
+    184.068
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     184.068,
+     180.596
+    ]
+   ]
+  },
+  "pll_r10": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    212.868,
+    212.868
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     212.868,
+     180.596
+    ]
+   ]
+  },
+  "pll_r11": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    216.068,
+    216.068
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     216.068,
+     180.596
+    ]
+   ]
+  },
+  "pll_r12": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    219.268,
+    219.268
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     219.268,
+     180.596
+    ]
+   ]
+  },
+  "pll_r13": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    222.468,
+    222.468
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     222.468,
+     180.596
+    ]
+   ]
+  },
+  "pll_r14": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    225.668,
+    225.668
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     225.668,
+     180.596
+    ]
+   ]
+  },
+  "pll_r15": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    228.868,
+    228.868
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     228.868,
+     180.596
+    ]
+   ]
+  },
+  "pll_r16": {
+   "face": "W",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    183.796,
+    183.796
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     180.868,
+     183.796
+    ]
+   ]
+  },
+  "pll_r17": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    184.068,
+    184.068
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     184.068,
+     183.796
+    ]
+   ]
+  },
+  "pll_r18": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    187.268,
+    187.268
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     187.268,
+     183.796
+    ]
+   ]
+  },
+  "pll_r19": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    190.468,
+    190.468
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     190.468,
+     183.796
+    ]
+   ]
+  },
+  "pll_r2": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    187.268,
+    187.268
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     187.268,
+     180.596
+    ]
+   ]
+  },
+  "pll_r20": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    193.668,
+    193.668
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     193.668,
+     183.796
+    ]
+   ]
+  },
+  "pll_r21": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    196.868,
+    196.868
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     196.868,
+     183.796
+    ]
+   ]
+  },
+  "pll_r22": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    200.068,
+    200.068
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     200.068,
+     183.796
+    ]
+   ]
+  },
+  "pll_r23": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    203.268,
+    203.268
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     203.268,
+     183.796
+    ]
+   ]
+  },
+  "pll_r24": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    206.468,
+    206.468
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     206.468,
+     183.796
+    ]
+   ]
+  },
+  "pll_r25": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    209.668,
+    209.668
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     209.668,
+     183.796
+    ]
+   ]
+  },
+  "pll_r26": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    212.868,
+    212.868
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     212.868,
+     183.796
+    ]
+   ]
+  },
+  "pll_r27": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    216.068,
+    216.068
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     216.068,
+     183.796
+    ]
+   ]
+  },
+  "pll_r28": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    219.268,
+    219.268
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     219.268,
+     183.796
+    ]
+   ]
+  },
+  "pll_r29": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    222.468,
+    222.468
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     222.468,
+     183.796
+    ]
+   ]
+  },
+  "pll_r3": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    190.468,
+    190.468
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     190.468,
+     180.596
+    ]
+   ]
+  },
+  "pll_r30": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    225.668,
+    225.668
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     225.668,
+     183.796
+    ]
+   ]
+  },
+  "pll_r31": {
+   "face": "E",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    183.796,
+    183.796
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     228.868,
+     183.796
+    ]
+   ]
+  },
+  "pll_r32": {
+   "face": "W",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    186.996,
+    186.996
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     180.868,
+     186.996
+    ]
+   ]
+  },
+  "pll_r33": {
+   "face": "W",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    186.996,
+    186.996
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     184.068,
+     186.996
+    ]
+   ]
+  },
+  "pll_r34": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    187.268,
+    187.268
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     187.268,
+     186.996
+    ]
+   ]
+  },
+  "pll_r35": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    190.468,
+    190.468
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     190.468,
+     186.996
+    ]
+   ]
+  },
+  "pll_r36": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    193.668,
+    193.668
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     193.668,
+     186.996
+    ]
+   ]
+  },
+  "pll_r37": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    196.868,
+    196.868
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     196.868,
+     186.996
+    ]
+   ]
+  },
+  "pll_r38": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    200.068,
+    200.068
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     200.068,
+     186.996
+    ]
+   ]
+  },
+  "pll_r39": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    203.268,
+    203.268
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     203.268,
+     186.996
+    ]
+   ]
+  },
+  "pll_r4": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    193.668,
+    193.668
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     193.668,
+     180.596
+    ]
+   ]
+  },
+  "pll_r40": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    206.468,
+    206.468
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     206.468,
+     186.996
+    ]
+   ]
+  },
+  "pll_r41": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    209.668,
+    209.668
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     209.668,
+     186.996
+    ]
+   ]
+  },
+  "pll_r42": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    212.868,
+    212.868
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     212.868,
+     186.996
+    ]
+   ]
+  },
+  "pll_r43": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    216.068,
+    216.068
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     216.068,
+     186.996
+    ]
+   ]
+  },
+  "pll_r44": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    219.268,
+    219.268
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     219.268,
+     186.996
+    ]
+   ]
+  },
+  "pll_r45": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    222.468,
+    222.468
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     222.468,
+     186.996
+    ]
+   ]
+  },
+  "pll_r46": {
+   "face": "E",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    186.996,
+    186.996
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     225.668,
+     186.996
+    ]
+   ]
+  },
+  "pll_r47": {
+   "face": "E",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    186.996,
+    186.996
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     228.868,
+     186.996
+    ]
+   ]
+  },
+  "pll_r48": {
+   "face": "W",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    190.196,
+    190.196
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     180.868,
+     190.196
+    ]
+   ]
+  },
+  "pll_r49": {
+   "face": "W",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    190.196,
+    190.196
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     184.068,
+     190.196
+    ]
+   ]
+  },
+  "pll_r5": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    196.868,
+    196.868
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     196.868,
+     180.596
+    ]
+   ]
+  },
+  "pll_r50": {
+   "face": "W",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    190.196,
+    190.196
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     187.268,
+     190.196
+    ]
+   ]
+  },
+  "pll_r52": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    193.668,
+    193.668
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     193.668,
+     190.196
+    ]
+   ]
+  },
+  "pll_r53": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    196.868,
+    196.868
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     196.868,
+     190.196
+    ]
+   ]
+  },
+  "pll_r54": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    200.068,
+    200.068
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     200.068,
+     190.196
+    ]
+   ]
+  },
+  "pll_r55": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    203.268,
+    203.268
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     203.268,
+     190.196
+    ]
+   ]
+  },
+  "pll_r6": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    200.068,
+    200.068
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     200.068,
+     180.596
+    ]
+   ]
+  },
+  "pll_r7": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    203.268,
+    203.268
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     203.268,
+     180.596
+    ]
+   ]
+  },
+  "pll_r77": {
+   "face": "E",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    193.396,
+    193.396
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     222.468,
+     193.396
+    ]
+   ]
+  },
+  "pll_r78": {
+   "face": "E",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    193.396,
+    193.396
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     225.668,
+     193.396
+    ]
+   ]
+  },
+  "pll_r79": {
+   "face": "E",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    193.396,
+    193.396
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     228.868,
+     193.396
+    ]
+   ]
+  },
+  "pll_r8": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    206.468,
+    206.468
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     206.468,
+     180.596
+    ]
+   ]
+  },
+  "pll_r80": {
+   "face": "W",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    196.596,
+    196.596
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     180.868,
+     196.596
+    ]
+   ]
+  },
+  "pll_r81": {
+   "face": "W",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    196.596,
+    196.596
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     184.068,
+     196.596
+    ]
+   ]
+  },
+  "pll_r82": {
+   "face": "W",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    196.596,
+    196.596
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     187.268,
+     196.596
+    ]
+   ]
+  },
+  "pll_r83": {
+   "face": "W",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    196.596,
+    196.596
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     190.468,
+     196.596
+    ]
+   ]
+  },
+  "pll_r9": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    209.668,
+    209.668
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     209.668,
+     180.596
+    ]
+   ]
+  },
+  "pll_ucie": {
+   "face": "N",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    216.068,
+    216.068
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     216.068,
+     218.996
+    ]
+   ]
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}

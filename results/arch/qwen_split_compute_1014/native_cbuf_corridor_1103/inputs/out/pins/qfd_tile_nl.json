@@ -1,0 +1,389 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_tile_nl",
+ "outline": {
+  "w": 449.28,
+  "h": 1442.88
+ },
+ "instances": 48,
+ "pins": {
+  "E": [
+   "tie_lo",
+   "tie_hi",
+   "tile_id",
+   "rst_n",
+   "tap"
+  ],
+  "N": [
+   "ck"
+  ],
+  "W": [
+   "t_out"
+  ]
+ },
+ "pin_ranges": {
+  "t_out": [
+   780.78,
+   830.028
+  ],
+  "tap": [
+   697.068,
+   745.74
+  ],
+  "rst_n": [
+   689.436,
+   689.436
+  ],
+  "tile_id": [
+   684.684,
+   686.124
+  ],
+  "tie_hi": [
+   683.436,
+   683.436
+  ],
+  "tie_lo": [
+   681.42,
+   681.42
+  ],
+  "ck": [
+   224.652,
+   224.652
+  ]
+ },
+ "ports": {
+  "t_out": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 514,
+   "range_um": [
+    780.78,
+    830.028
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_tile_nk.n_a;qfd_tile_nk.n_b"
+  },
+  "tap": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 508,
+   "range_um": [
+    697.068,
+    745.74
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_xcst_s.tap_d;qfd_xcst_n.tap_d"
+  },
+  "rst_n": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    689.436,
+    689.436
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "tile_id": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 16,
+   "range_um": [
+    684.684,
+    686.124
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "tie_hi": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    683.436,
+    683.436
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "tie_lo": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    681.42,
+    681.42
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    224.652,
+    224.652
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck_rp0": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1082.796,
+    1082.796
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     22.524,
+     1082.796
+    ]
+   ]
+  },
+  "ck_rp1": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1233.996,
+    1233.996
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     22.524,
+     1233.996
+    ]
+   ]
+  },
+  "ck_rp2": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    1385.196,
+    1385.196
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     22.524,
+     1385.196
+    ]
+   ]
+  },
+  "ck_rp3": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    53.388,
+    53.388
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     22.524,
+     53.388
+    ]
+   ]
+  },
+  "ck_rp4": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    204.588,
+    204.588
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     22.524,
+     204.588
+    ]
+   ]
+  },
+  "ck_lsl0": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    391.308,
+    391.308
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     103.74,
+     391.308
+    ]
+   ]
+  },
+  "ck_lsl1": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    555.468,
+    555.468
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     103.74,
+     555.468
+    ]
+   ]
+  },
+  "ck_lsl2": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    719.628,
+    719.628
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     103.74,
+     719.628
+    ]
+   ]
+  },
+  "ck_lsl3": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    883.788,
+    883.788
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     103.74,
+     883.788
+    ]
+   ]
+  },
+  "ck_lsl4": {
+   "face": "E",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    391.308,
+    391.308
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     333.036,
+     391.308
+    ]
+   ]
+  },
+  "ck_lsl5": {
+   "face": "E",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    555.468,
+    555.468
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     333.036,
+     555.468
+    ]
+   ]
+  },
+  "ck_lsl6": {
+   "face": "E",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    719.628,
+    719.628
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     333.036,
+     719.628
+    ]
+   ]
+  },
+  "ck_lsl7": {
+   "face": "E",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    883.788,
+    883.788
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     333.036,
+     883.788
+    ]
+   ]
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}

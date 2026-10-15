@@ -1,0 +1,138 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "ot_qfd_serdes_112g_x12_phy_s597",
+ "outline": {
+  "w": 2320.056,
+  "h": 1563.57
+ },
+ "instances": 3,
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "tx_up",
+   "tx_v",
+   "tx_flit",
+   "rx_v",
+   "rx_flit"
+  ]
+ },
+ "pin_ranges": {
+  "clk": [
+   600.012,
+   600.012
+  ],
+  "rst_n": [
+   600.06,
+   600.06
+  ],
+  "tx_up": [
+   600.108,
+   600.108
+  ],
+  "tx_v": [
+   600.156,
+   600.156
+  ],
+  "tx_flit": [
+   600.204,
+   628.812
+  ],
+  "rx_v": [
+   628.86,
+   628.86
+  ],
+  "rx_flit": [
+   628.908,
+   657.516
+  ]
+ },
+ "ports": {
+  "clk": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    600.012,
+    600.012
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "rst_n": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    600.06,
+    600.06
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "tx_up": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    600.108,
+    600.108
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_collective_static_io_production.serdes_up"
+  },
+  "tx_v": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    600.156,
+    600.156
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_collective_static_io_production.serdes_tx_valid"
+  },
+  "tx_flit": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 597,
+   "range_um": [
+    600.204,
+    628.812
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_collective_static_io_production.serdes_tx"
+  },
+  "rx_v": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    628.86,
+    628.86
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_collective_static_io_production.serdes_rx_valid"
+  },
+  "rx_flit": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 597,
+   "range_um": [
+    628.908,
+    657.516
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_collective_static_io_production.serdes_rx"
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}

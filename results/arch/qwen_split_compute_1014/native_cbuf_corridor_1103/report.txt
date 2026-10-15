@@ -1,0 +1,47 @@
+Bounded right-corridor occupancy follow-up, 2026-10-15
+
+VERDICT: NO WIDENING PROPOSAL SUPPORTED.
+
+Window x19744.968..19856.880,y14713.920..17832.960 is111.912um wide.
+FullC21 out/ was still empty at collection onot-epyc1tb; exact observation and
+SOURCE59fb67ed5 recorded ininputs/full_C21_observation.json. The fullallocator's
+relay homes, clock/reset branches and route cut usage have not been emitted.
+No absence of placed relay frames can be treated as free corridor.
+
+Meaningful lower-bound inventory uses the ACTUAL immutable C21s SOURCE59fb67ed5
+rom_tp8b graph, die.v net/port connections, place.tcl orientations andassigned
+pin packs. Complete copied inputs andSHA256s are inreceipt.json. C21s explicitly
+hasOT_RELAY_SKIP, no placed relay stages and no relay performance evidence.
+Its old CROM/CBUF profiles also differ from the newR3/D3 candidate.
+
+No C21s hard-box interior intersects this window. Its eastern boundary is
+occupied by t_24_8,t_24_9,t_24_10. Nine514-bit buses have assigned port ranges
+on this boundary (ten individual port endpoints): tree_26_0_0a,_0_8a,_0_10a,
+_1_4a,_2_0a,_2_0b,_3_0a,_3_0b andbword_26. These are real incident consumers/
+producers. Absence of hard boxes is not absence of signal routing.
+
+Across the fullwindow,32 bus endpoint spans intersect:9tree_block buses4626bits,
+6tree_spine buses3084bits,16clock trunks andrst_field. Clock endpoint pin-bit
+sum3471; reset endpoint pin-bit sum1585. These are load counts, not distinct
+wires on a routed cut. Complete named endpoints andboundingranges are retained
+inincident_buses.json; peers were not pruned to improve corridor utilization.
+
+Endpoint-span overlap sweep gives2073possible bits atleft/midcuts and3615at
+tileboundary. This is neither actual routed usage nor a mandatory local route:
+routes can detour and spans overestimate some intersections. It MUST NOT be
+subtracted as a measured occupancy to manufacture remaining track capacity.
+No published C21s fine_top cut entry covers thewindow; that limited top-list
+absence cannot establish a zero cut.
+
+Three up4_sel standardrelay instances lack assignedpinpacks, andtheir26-bit
+up4_sel_split net has no mapped endpoints. Theirboxes x14884.992 andy13248.36/
+13473/13697.64 lie outside thewindow. They remain explicitlyreported unknowns.
+Full C21 missingrelaypopulation remains the material blocking evidence.
+
+CurrentC19s r7PG geometry from the earliercohortscreen remains an oldprofile
+bound, not a newregiongrant. Before using any of111.912um, obtain actualfullC21
+relay/clock/reset homes andlayercutusage, all incident route footprints and
+newmacro PG/viaadapter occupancy. No widthproposal is made fromC21s data.
+
+Reproduce: python3 tools/qwen_split/cbuf_corridor_screen.py
+Read-only snapshots only; no parentmutation, heavyjob, reroute or allocation.

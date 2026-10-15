@@ -1,0 +1,161 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_xcst_s",
+ "outline": {
+  "w": 52.68,
+  "h": 103.656
+ },
+ "instances": 384,
+ "pins": {
+  "E": [
+   "tie_lo",
+   "tie_hi",
+   "sidx"
+  ],
+  "N": [
+   "a_d",
+   "ck",
+   "rst_n"
+  ],
+  "S": [
+   "b_d"
+  ],
+  "W": [
+   "tap_d"
+  ]
+ },
+ "pin_ranges": {
+  "sidx": [
+   50.556,
+   50.748
+  ],
+  "tie_hi": [
+   49.452,
+   49.452
+  ],
+  "tie_lo": [
+   48.348,
+   48.348
+  ],
+  "a_d": [
+   1.596,
+   51.036
+  ],
+  "b_d": [
+   1.596,
+   51.036
+  ],
+  "tap_d": [
+   27.468,
+   76.14
+  ],
+  "rst_n": [
+   52.353,
+   52.353
+  ],
+  "ck": [
+   52.065,
+   52.065
+  ]
+ },
+ "ports": {
+  "sidx": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 3,
+   "range_um": [
+    50.556,
+    50.748
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "tie_hi": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    49.452,
+    49.452
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "tie_lo": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    48.348,
+    48.348
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "a_d": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 516,
+   "range_um": [
+    1.596,
+    51.036
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": "qfd_xcol_w.s_d;qfd_xcst_s.b_d;qfd_xcol_e.s_d"
+  },
+  "b_d": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 516,
+   "range_um": [
+    1.596,
+    51.036
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_xcst_s.a_d"
+  },
+  "tap_d": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 508,
+   "range_um": [
+    27.468,
+    76.14
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": "qfd_tile_nl.tap;qfd_tile_nk.tap"
+  },
+  "rst_n": {
+   "face": "N",
+   "layer": "M3",
+   "bits": 1,
+   "range_um": [
+    52.353,
+    52.353
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ck": {
+   "face": "N",
+   "layer": "M3",
+   "bits": 1,
+   "range_um": [
+    52.065,
+    52.065
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+}
