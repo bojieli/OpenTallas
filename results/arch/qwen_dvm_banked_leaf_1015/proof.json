@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.qwen.dvm.banked_leaf.proof.v1",
+ "adopted": false,
+ "source_sha256": {
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": "81eb5bbe862665a804b58a7bf0c0f4c29099a48203aff6885d544c43705505fc",
+  "rtl/qwen_sys/dvm_20261014/ot_qwen_me_array_dvm_w12.sv": "75baab967f86775fda039172173599f648e43dc266127e7742a28d273ba8fe61",
+  "rtl/qwen_sys/dvm_20261014/tb_qfd_xdvm_prod.sv": "98701bbacecfb28079f8133e110a31e9dafe9f463bfdd4f99ff219fc56f0f188",
+  "rtl/qwen_sys/dvm_20261014/tb_qfd_xs_leaf_banked.sv": "3b6317b39b4e3cd672552478bbb200fdbf073362562902ac28ab4b387ae5e477",
+  "tools/uarch_model.py": "188ba5f3f9028317e35fb5eb9458f965c51691c136ca8a79cdf6d779d809d008"
+ },
+ "component": {
+  "checks": 129,
+  "good": 128,
+  "invalid": 1,
+  "same_tile_II": 8,
+  "added_response_edges": 1,
+  "mutant": "MUT2 swapped tile actual payload failure"
+ },
+ "actual_fabric": {
+  "tiles": 64,
+  "ops": 10,
+  "checks": 159744,
+  "cycles": 1712,
+  "baseline_cycles": 1710,
+  "DX": 11,
+  "XVMR": 13,
+  "dvm_minus_ref_edges": 1,
+  "source_scope": "Real tap/head/leaves/8stations percolumn against reference x network; no fullstatic stage producer/math claim"
+ },
+ "physical_admission": false,
+ "reason": "No bank locality/cut/OBS/pinaccess/clock/area measurement yet; no physical route submitted",
+ "token_projection_adopted": false,
+ "coordinator_target_unchanged": true
+}

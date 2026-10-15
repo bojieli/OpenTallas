@@ -289,6 +289,7 @@ endmodule
 //   line is the OR of the two tiles' answers).  q_bad: an enabled element was not written in this epoch.
 // --------------------------------------------------------------------------------------------------------------------
 module ot_qfd_xs_leaf #(
+    parameter integer BANK_PIPE = 0,     // opt-in: four local32-entry banks, registered before final4:1 (+1 read edge)
     parameter integer NCH = 4,           // leaves in a chain
     parameter integer MUT = 0            // 2: tile 1's reads return tile 0's data (swapped tile) -- must FAIL
 ) (
@@ -410,34 +411,77 @@ module ot_qfd_xs_leaf #(
             else if (req) begin sv <= 1'b1; el <= 2'd0; end
             else if (sv) begin el <= el + 1'b1; if (el == 2'd3) sv <= 1'b0; end
         assign coll[gt] = req && sv && (el != 2'd3);
-        assign done[gt] = sv && (el == 2'd3);
+        wire asv;
+        wire [1:0] ael;
+        wire aen;
+        assign done[gt] = asv && (ael == 2'd3);
         // next element's select: from the pins (new request) or the held request
         wire [1:0] nel   = req ? 2'd0 : el + 1'b1;
         wire [6:0] nsel  = req ? {r_ep, r_p[5:0]} : {hep, hp[7*nel +: 6]};
-        wire [RSW-1:0] sr;
-        for (lv = 0; lv < 7; lv = lv + 1) begin : g_lv
-            localparam integer NR = ot_qfd_xs_nrep(17, 7, lv);
-            localparam integer OF = ot_qfd_xs_soff(17, 7, lv);
-            for (c = 0; c < NR; c = c + 1) begin : g_c
-                (* keep *) reg f;
-                always @(posedge clk) f <= nsel[lv];
-                assign sr[OF + c] = f;
-            end
-        end
         localparam integer SRC = (MUT == 2 && gt == 1) ? 0 : gt;
-        ot_qfd_xs_mux_rep #(.W(17), .LN(7), .SW(RSW)) u_m (.d(mem_all[2176*SRC +: 2176]), .s(sr), .q(tr[gt]));
+        if (BANK_PIPE == 0) begin : g_flat
+            wire [RSW-1:0] sr;
+            for (lv = 0; lv < 7; lv = lv + 1) begin : g_lv
+                localparam integer NR = ot_qfd_xs_nrep(17, 7, lv);
+                localparam integer OF = ot_qfd_xs_soff(17, 7, lv);
+                for (c = 0; c < NR; c = c + 1) begin : g_c
+                    (* keep *) reg f;
+                    always @(posedge clk) f <= nsel[lv];
+                    assign sr[OF + c] = f;
+                end
+            end
+            ot_qfd_xs_mux_rep #(.W(17), .LN(7), .SW(RSW)) u_m (.d(mem_all[2176*SRC +: 2176]), .s(sr), .q(tr[gt]));
+            assign asv=sv; assign ael=el; assign aen=hp[7*el+6];
+        end else begin : g_banked
+            // Each bank's32 storage entries, replicated low selects, mux and17b
+            // result register form one physical locality group. Admission needs
+            // actual placement/cut proof; hierarchy alone does not guarantee it.
+            localparam integer BSW=ot_qfd_xs_mux_rep_sw(17,5);
+            wire [67:0] bank_q;
+            genvar bk, bl, bc;
+            for(bk=0;bk<4;bk=bk+1)begin : g_bank
+                wire [BSW-1:0] bs;
+                wire [16:0] comb_q;
+                for(bl=0;bl<5;bl=bl+1)begin : g_lv
+                    localparam integer NR=ot_qfd_xs_nrep(17,5,bl);
+                    localparam integer OF=ot_qfd_xs_soff(17,5,bl);
+                    for(bc=0;bc<NR;bc=bc+1)begin : g_c
+                        (* keep *) reg f;
+                        always @(posedge clk) f<=nsel[bl];
+                        assign bs[OF+bc]=f;
+                    end
+                end
+                ot_qfd_xs_mux_rep #(.W(17),.LN(5),.SW(BSW)) u_local
+                    (.d(mem_all[2176*SRC+544*bk+:544]),.s(bs),.q(comb_q));
+                (* keep *) reg [16:0] result_q;
+                always @(posedge clk)result_q<=comb_q;
+                assign bank_q[17*bk+:17]=result_q;
+            end
+            reg [1:0] bank_sel, bank_sel_q;
+            reg vq, enq;
+            reg [1:0] elq;
+            always @(posedge clk)begin
+                bank_sel<=nsel[6:5];bank_sel_q<=bank_sel;
+                elq<=el;enq<=hp[7*el+6];
+            end
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n)vq<=0;else vq<=sv;
+            ot_qfd_xs_mux_rep #(.W(17),.LN(2),.SW(2)) u_final
+                (.d(bank_q),.s(bank_sel_q),.q(tr[gt]));
+            assign asv=vq;assign ael=elq;assign aen=enq;
+        end
         // assembly of elements 0 .. 2 (element 3 goes straight to the answer register)
         reg [47:0] ad;
         reg [2:0]  av, ae;
-        wire       een = hp[7*el + 6];                    // enable of the element in the select registers (held)
+        wire       een = aen;                    // enable of the element in the select registers (held)
         always @(posedge clk)
-            if (sv && el != 2'd3) begin
-                ad[16*el +: 16] <= een ? tr[gt][15:0] : 16'd0;
-                av[el] <= een && tr[gt][16];
-                ae[el] <= een;
+            if (asv && ael != 2'd3) begin
+                ad[16*ael +: 16] <= een ? tr[gt][15:0] : 16'd0;
+                av[ael] <= een && tr[gt][16];
+                ae[ael] <= een;
             end
         assign asm_d[gt] = ad; assign asm_v[gt] = av; assign asm_e[gt] = ae;
-        assign l_en[gt] = hp[27];
+        assign l_en[gt] = BANK_PIPE!=0 ? aen : hp[27];
     end endgenerate
     // A tile is requested once per tuple (the head's TDM): a request while its previous read is in flight is a
     // collision and answers bad (fail-loud).  The two tiles' requests come on different edges, so they finish on
@@ -448,10 +492,13 @@ module ot_qfd_xs_leaf #(
     wire       bad3 = l_en[ft] && !tr[ft][16];
     wire       badx = |(asm_e[ft] & ~asm_v[ft]);
     reg        coll_q;
+    reg        coll_pipe;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)coll_pipe<=0;else coll_pipe<=|coll;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin q_v <= 1'b0; q_bad <= 1'b0; coll_q <= 1'b0; end
         else begin
-            coll_q <= |coll;
+            coll_q <= BANK_PIPE!=0 ? coll_pipe : |coll;
             q_v <= fin;
             q_bad <= fin && (bad3 || badx || (done[0] && done[1]) || coll_q);
         end
@@ -490,7 +537,8 @@ module ot_qfd_xhead #(
     parameter integer SMIN = 7,
     parameter integer SMAX = 11,
     parameter integer NATIVE_AFFINE = 0,
-    parameter integer DX   = 10,         // FILL_LEAD + 8 (lr register 1, leaf 5, answer pin register 1, launch 1)
+    parameter integer LEAF_BANK_PIPE = 0, // candidate real leaf pipeline, one extra read edge
+    parameter integer DX   = 10 + LEAF_BANK_PIPE,         // FILL_LEAD + 8 (lr register 1, leaf 5, answer pin register 1, launch 1)
     parameter integer FILL_LEAD = 2,     // the tap's two-entry attention-write queue (a queued beat can trail a go by 2)
     parameter integer MUT  = 0           // 3: the TDM sends each line to the wrong station (wrong line);
                                          // 4: reads the other epoch (stale buffer); 6: pooled line without its B half
@@ -534,7 +582,7 @@ module ot_qfd_xhead #(
     localparam integer CW   = 1 + IBW + 128 + 8;
     localparam integer NR   = 2 * NH;            // rows (tiles) of the column
     localparam integer NE   = NH / 2;            // TDM edges a tuple
-    localparam integer QD   = 7;                 // read issue -> answer usable: lr 1, leaf 5, answer pin register 1
+    localparam integer QD   = 7 + LEAF_BANK_PIPE;                 // read issue -> answer usable: lr 1, leaf 5, answer pin register 1
     // leaf / tile of row r: N station s in N leaf s / 2 (tile s mod 2), S station s in S leaf (NH-1-s) / 2 (tile
     // (NH-1-s) mod 2): a pooled pair (N s, S NH-1-s) sits at the SAME chain depth, and every read at TDM edge e is of
     // a leaf at depth <= e + 2 (the far leaves are read last: a fill reaches depth d d edges after depth 0)
