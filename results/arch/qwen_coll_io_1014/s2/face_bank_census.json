@@ -1,0 +1,20 @@
+{
+  "netlist_sha256": "5023b3c07670c7209f583b9386f02df0d94c244422e95eec0f9fa3732beae61e",
+  "source_commit": "f83804c23",
+  "banks": [
+    {
+      "module": "module \\$paramod$348ec8c7bfd3eb71095833fff8333b7320866beb\\ot_coll_static_sx_reg (clk, rst_n, dv, data, qv, qdata);",
+      "flops": 547
+    },
+    {
+      "module": "module \\$paramod$7b335e7e90112e3c069ef09d65ce527a3d8117b8\\ot_coll_static_sx_reg (clk, rst_n, dv, data, qv, qdata);",
+      "flops": 547
+    },
+    {
+      "module": "module \\$paramod$e00aa651722d9d7634a9ebfb5ea04fb9186e3ef4\\ot_coll_static_sx_reg (clk, rst_n, dv, data, qv, qdata);",
+      "flops": 547
+    }
+  ],
+  "distinct_face_banks": 3,
+  "physical_qualified": false
+}

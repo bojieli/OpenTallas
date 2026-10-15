@@ -4,7 +4,7 @@
 // counter slot, ARM pin cycle, every operand element's commit on its ACTUAL native observation port (slice g, bank =
 // row[4:0] ^ {row[7:5],00}, address row[13:5]; at most one commit per port per cycle; partial masks split a row's
 // words over several commits), a CHECK pin at/after the last commit, legal reads after the CHECK, native codes 4..7.
-// Checks, every cycle: c_done == exactly the expected {v, tag} (DLAT 6 after each command pin, nothing else);
+// Checks, every cycle: c_done == exactly the expected {v, tag} (DLAT 6 after each command pin; the stimulus is driven after the previous edge, nothing else);
 // t_inp_su / t_inp_hc == the contract window [CHECK + 6, next ARM of that slot + 3); final sticky fault vector == the
 // mode's expected set (0 in the base mode).  +mode: 0 base, 1 dropped commit, 2 duplicated commit, 3 early read,
 // 4 re-ARM before CHECK, 5 CHECK client mismatch, 6 CHECK of an unarmed slot.  +seed, +jobs.
@@ -49,8 +49,8 @@ module tb_dsfd_vm_seq_static;
         integer c; begin
             c = at; while (cmd_at[c][84]) c = c + 1;
             cmd_at[c] = {1'b1, ncmd[0], 10'(urand(1024)), 21'(urand(2097152)), 21'(ncmd), arg, 7'(ncmd % 128)};
-            dn_at[c + DLAT] = {1'b1, ncmd[0], 7'(ncmd % 128)};
-            ncmd = ncmd + 1; pin = c; if (c + DLAT > last_cycle) last_cycle = c + DLAT;
+            dn_at[c + DLAT + 1] = {1'b1, ncmd[0], 7'(ncmd % 128)};
+            ncmd = ncmd + 1; pin = c; if (c + DLAT + 1 > last_cycle) last_cycle = c + DLAT + 1;
         end
     endtask
     task automatic put_commit(input integer from, input integer port, input [8:0] a, input [3:0] m, output integer at);
@@ -152,12 +152,12 @@ module tb_dsfd_vm_seq_static;
             4: begin allow[0] = 1'b1; k = j_arm[jb] + 1; while (cmd_at[k][84]) k = k + 1;                    // re-ARM before the CHECK
                      if (k >= j_chk[jb]) $fatal(1, "no room for the re-ARM");
                      cmd_at[k] = {1'b1, 1'b0, 52'd0, 3'(j_s[jb]), 1'(j_cl[jb]), 10'(j_base[jb] / 16), 10'(j_nr[jb] - 1), 7'd127};
-                     dn_at[k + DLAT] = {1'b1, 1'b0, 7'd127}; exp_flt[4] = 1'b1; end
+                     dn_at[k + DLAT + 1] = {1'b1, 1'b0, 7'd127}; exp_flt[4] = 1'b1; end
             5: begin cmd_at[j_chk[jb]][27] = ~cmd_at[j_chk[jb]][27]; exp_flt[3] = 1'b1; end   // CHECK client mismatch
             6: begin k = 5; while (cmd_at[k][84]) k = k + 1;                                 // CHECK of an unarmed slot
                      if (k >= j_arm[0]) $fatal(1, "no room for the unarmed CHECK");
                      cmd_at[k] = {1'b1, 1'b0, 52'd0, 3'd0, 1'b0, 10'h3FF, 10'h3FF, 7'd126};
-                     dn_at[k + DLAT] = {1'b1, 1'b0, 7'd126}; exp_flt[2] = 1'b1; end
+                     dn_at[k + DLAT + 1] = {1'b1, 1'b0, 7'd126}; exp_flt[2] = 1'b1; end
             default: ;
         endcase
         $display("TB_VMSS schedule: mode %0d seed %0d jobs %0d commands %0d commits %0d cycles %0d", mode, seed0, njobs, ncmd, ne, last_cycle);

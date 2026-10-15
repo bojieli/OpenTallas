@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/s81-native-head-field-1014/tools/s81_ftok/finish_native_head.py", line 68, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/codex/s81-native-head-field-1014/tools/s81_ftok/finish_native_head.py", line 38, in main
+    raise ValueError(f'rank {rank} lacks actual RTL HC output provenance')
+ValueError: rank 0 lacks actual RTL HC output provenance

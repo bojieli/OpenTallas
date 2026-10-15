@@ -1,0 +1,46 @@
+{
+  "scope": "Shared existing four HC parameter ROMs for compiler-reserved post/gain; actual native component bench pending",
+  "full_native_token": false,
+  "build": {
+    "host": "ot-epyc1tb",
+    "scope": "oth-ubuntu-226222-1792046040",
+    "actual_python_pid": 226257,
+    "session": 76379,
+    "path": "/srv/opentallas-scratch/codex/s81-hcx-shared-gain-1014",
+    "state": "terminal exit0/305.714s"
+  },
+  "collector": {
+    "initial_scope": "oth-ubuntu-263582-1792046360",
+    "initial_exit": 1,
+    "failure": "benchmark counter expected326, public start-edge-inclusive observation327; producer unchanged",
+    "corrected_build_and_run_scope": "oth-ubuntu-264876-1792046396",
+    "session": 45540,
+    "state": "terminal positive+same-binary ROM data mutant proven",
+    "successful_scope": "oth-ubuntu-277560-1792046821",
+    "successful_exit": 0,
+    "image_fix": "Original gain fixture preserved a different case parameter page. Rebuilt from actual43-layer resident image before gain extension; all4post jobs then passed."
+  },
+  "expected_component_timing": {
+    "post_public_serial": 541,
+    "gain_serial": 326,
+    "gain_public_start_to_done_serial": 327,
+    "gain_legacy_counter_after_start_edge": 326
+  },
+  "memory": {
+    "existing_ROMs": 4,
+    "extra_ROMs": 0,
+    "parameter_addresses": [
+      0,
+      343
+    ],
+    "gain_addresses": [
+      512,
+      1151
+    ]
+  },
+  "open": [
+    "actual VM native bank delivery",
+    "shared home actual synthesis/CTS/pins",
+    "full native token"
+  ]
+}

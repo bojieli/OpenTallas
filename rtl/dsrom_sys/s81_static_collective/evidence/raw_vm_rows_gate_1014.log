@@ -1,0 +1,10 @@
+PASS rawVMrows20 actual SRAM553bit roundtrips,2reads/2writes perrecord,readcontrol+14 capture,exact masks and tags,faults
+PASS rawVMrows20 actual SRAM553bit roundtrips,2reads/2writes perrecord,readcontrol+14 capture,exact masks and tags,faults
+PASS combinational bridge tuples plus parent final pin flop preserve exact write edge
+FATAL: /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/tb_s81_static_raw_vm_rows.sv:76: actual SRAM553bit roundtrip record0
+       Time: 281000 Scope: tb_s81_static_raw_vm_rows
+PASS actual DUT raw stored-payload bit mutant rejected
+87de1b455f52f379a39db71b10d2f6a1923f6017d2c2d3806d029527727a8a58  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_raw_vm_rows.sv
+28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv
+44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59  /home/ubuntu/wt/s-static-channels-1014/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
+cdab7f42b3721af2728aac7861803fe67be7e7f3dcfa61bce48745b984a56800  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/tb_s81_static_raw_vm_rows.sv

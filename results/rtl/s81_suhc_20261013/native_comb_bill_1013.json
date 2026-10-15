@@ -1,0 +1,210 @@
+{
+ "schema": "opentallas.s81.hc.native_comb_bill.v1",
+ "source_commit": "ea2f783a1a9ce3267285f72fd0d447c1ca53dcc2",
+ "parent": "sp_hc_s/comb",
+ "contract_version": 17,
+ "slot_outline": {
+  "w": 575.992,
+  "h": 640
+ },
+ "production_params": {
+  "NG": 256,
+  "HALF": 1,
+  "RLY": 2,
+  "RF": 5,
+  "RT": 1,
+  "RW": 1,
+  "DW": 6,
+  "RET_EXTRA": 1
+ },
+ "instances": [
+  {
+   "instance": "u_seq",
+   "cell": "ot_s81_hc_cseq",
+   "count": 1,
+   "kit": "s81hc_cseqh2_ref",
+   "params": {
+    "HALF": 1,
+    "RLY": 2,
+    "RF": 4,
+    "DW": 6
+   },
+   "outline_um": [
+    155.52,
+    155.52
+   ],
+   "area_um2": 24186.470400000002,
+   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+   "view": "physical/ref_tile/s81hc_cseqh2_ref/views"
+  },
+  {
+   "instance": "u_rx",
+   "cell": "ot_s81_hc_crx",
+   "count": 1,
+   "kit": "s81hc_crxh2_ref",
+   "params": {
+    "HALF": 1,
+    "RLY": 2,
+    "RF": 4,
+    "DW": 6
+   },
+   "outline_um": [
+    110.16,
+    69.12
+   ],
+   "area_um2": 7614.2592,
+   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+   "view": "physical/ref_tile/s81hc_crxh2_ref/views"
+  },
+  {
+   "instance": "u_nt",
+   "cell": "ot_s81_hc_cntree",
+   "count": 1,
+   "kit": "s81hc_cntreeh2_ref",
+   "params": {
+    "HALF": 1,
+    "RLY": 2,
+    "RF": 4,
+    "DW": 6
+   },
+   "outline_um": [
+    181.44,
+    181.44
+   ],
+   "area_um2": 32920.4736,
+   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+   "view": "physical/ref_tile/s81hc_cntreeh2_ref/views"
+  },
+  {
+   "instance": "g_aq[*].u_caq",
+   "cell": "ot_s81_hc_caq",
+   "count": 4,
+   "kit": "s81hc_caq_ref",
+   "params": {},
+   "outline_um": [
+    110.16,
+    110.16
+   ],
+   "area_um2": 48540.9024,
+   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+   "view": "physical/ref_tile/s81hc_caq_ref/views"
+  },
+  {
+   "instance": "u_cr.u_core",
+   "cell": "ot_s81_hc_ccr",
+   "count": 1,
+   "kit": "s81hc_ccrh2_ref",
+   "params": {
+    "HALF": 1,
+    "RLY": 2,
+    "RF": 4,
+    "DW": 6
+   },
+   "outline_um": [
+    151.2,
+    151.2
+   ],
+   "area_um2": 22861.439999999995,
+   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+   "view": "physical/ref_tile/s81hc_ccrh2_ref/views"
+  },
+  {
+   "instance": "u_cr.g_meta.u_m",
+   "cell": "ot_s81_hc_pad_meta2",
+   "count": 1,
+   "kit": "s81hc_pad_meta2_ref",
+   "params": {},
+   "outline_um": [
+    138.24,
+    15.12
+   ],
+   "area_um2": 2090.1888,
+   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+   "view": "physical/ref_tile/s81hc_pad_meta2_ref/views"
+  },
+  {
+   "instance": "u_pd.u_f8",
+   "cell": "ot_s81_hc_pad_f8",
+   "count": 1,
+   "kit": "s81hc_pad_f8_ref",
+   "params": {},
+   "outline_um": [
+    138.24,
+    49.68
+   ],
+   "area_um2": 6867.7632,
+   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+   "view": "physical/ref_tile/s81hc_pad_f8_ref/views"
+  },
+  {
+   "instance": "u_pd.u_f5r1",
+   "cell": "ot_s81_hc_pad_f5r1",
+   "count": 1,
+   "kit": "s81hc_pad_f5r1_ref",
+   "params": {},
+   "outline_um": [
+    138.24,
+    99.36
+   ],
+   "area_um2": 13735.5264,
+   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+   "view": "physical/ref_tile/s81hc_pad_f5r1_ref/views"
+  },
+  {
+   "instance": "u_pd.u_r6",
+   "cell": "ot_s81_hc_pad_r6",
+   "count": 1,
+   "kit": "s81hc_pad_r6_ref",
+   "params": {},
+   "outline_um": [
+    138.24,
+    114.48
+   ],
+   "area_um2": 15825.715200000002,
+   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+   "view": "physical/ref_tile/s81hc_pad_r6_ref/views"
+  },
+  {
+   "instance": "u_pd.u_r5",
+   "cell": "ot_s81_hc_pad_r5",
+   "count": 1,
+   "kit": "s81hc_pad_r5_ref",
+   "params": {},
+   "outline_um": [
+    138.24,
+    99.36
+   ],
+   "area_um2": 13735.5264,
+   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+   "view": "physical/ref_tile/s81hc_pad_r5_ref/views"
+  },
+  {
+   "instance": "u_cf",
+   "cell": "ot_s81_hc_ccf",
+   "count": 1,
+   "kit": "s81hc_ccfh2_ref",
+   "params": {
+    "HALF": 1,
+    "RLY": 2,
+    "RF": 5,
+    "DW": 6,
+    "FIFO_SLICE": 512,
+    "KEEP_POP": 1,
+    "Y_RELAY": 1
+   },
+   "outline_um": [
+    410.4,
+    542.16
+   ],
+   "area_um2": 222502.46399999998,
+   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+   "view": "physical/ref_tile/s81hc_ccfh2_ref/views"
+  }
+ ],
+ "routed_tile_area_um2": 410880.72959999996,
+ "slot_area_um2": 368634.88,
+ "fill": 1.1146007930665702,
+ "minimum_height_at_same_width_um": 713.344507562605,
+ "fits_area": false,
+ "status": "NO_FIT: exact child bill already exceeds parent area before any gaps or pair-reach/pin-align allowances. Current contract lists only ccf; no standalone cseq invented. Requires die native HC child allocation before authoritative child pinfiles. CTR+1/RET_EXTRA2 future design adds more leaves and is not included."
+}

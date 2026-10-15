@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "golden_vectors": 216,
+  "quarter_total_mutant_failures": 64,
+  "first_witness": {
+    "n": 7,
+    "trial": 3,
+    "golden": 1257094593,
+    "naive": 1257094592
+  },
+  "quarter_total_failures_by_length": {
+    "7": 2,
+    "8": 5,
+    "9": 5,
+    "31": 5,
+    "33": 6,
+    "127": 5,
+    "129": 4,
+    "640": 5,
+    "1280": 8,
+    "4100": 10,
+    "5120": 9
+  },
+  "max_observed_transfer_bits": 195,
+  "qualification": "model arithmetic-order proof only; no RTL/throughput claim",
+  "sha256": {
+    "tools/hbm_static/f2_csum_frontier.py": "9dda8aa25bde73d32c90ccea97d794ff3dc3fb0c0c481b996a10977fac0bf2ee",
+    "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  }
+}

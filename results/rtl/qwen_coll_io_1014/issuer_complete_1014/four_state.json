@@ -1,0 +1,26 @@
+{
+  "four_state": true,
+  "mutant": false,
+  "cases": [
+    {
+      "omit": 0,
+      "rc": 0,
+      "output": "ISSUER PASS omit=0 fault=0 issued=8\n/srv/opentallas-scratch/codex/qcoll-issuer-1014/rtl/test/tb_coll_cmd_issue.sv:32: $finish called at 280000 (1ps)\n"
+    },
+    {
+      "omit": 1,
+      "rc": 0,
+      "output": "ISSUER PASS omit=1 fault=1 issued=-1\n/srv/opentallas-scratch/codex/qcoll-issuer-1014/rtl/test/tb_coll_cmd_issue.sv:32: $finish called at 260000 (1ps)\n"
+    },
+    {
+      "omit": 2,
+      "rc": 0,
+      "output": "ISSUER PASS omit=2 fault=1 issued=8\n/srv/opentallas-scratch/codex/qcoll-issuer-1014/rtl/test/tb_coll_cmd_issue.sv:32: $finish called at 260000 (1ps)\n"
+    }
+  ],
+  "sources": {
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+    "rtl/rom/ot_coll_cmd_issue.sv": "eb7f363e2019f84903826e7aec7fb8e35f13f59b93c222447bbc093142796944",
+    "rtl/test/tb_coll_cmd_issue.sv": "207142f8d9515f58704bac8379ac8945b2d5a919c5c0718977a7a9d35a01cf6a"
+  }
+}

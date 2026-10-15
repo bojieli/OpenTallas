@@ -1,0 +1,61 @@
+{
+  "qfd_tile_lsl_fp1r-r1-953045312": {
+    "status": "CLOSED",
+    "native_boundary_tt": "PASS",
+    "published_main": "2efa9f805",
+    "physical_view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+    "cell": "ot_qwen_tile_lsl_fp1",
+    "tt_setup_ps": 211.05,
+    "ff_hold_ps": 22.56,
+    "drc": 0,
+    "R_ps": {
+      "tt": 165.7,
+      "ff": 133.9,
+      "ss": 221.0
+    },
+    "tt_launch_ps": 187.47404,
+    "tt_capture_ps": 139.80471,
+    "boundary_spread_tt_ps": 11.9,
+    "sha256": {
+      "ot_qwen_tile_lsl_fp1.lef": "6f2000fc2402d34c6f452eca8872e93d29123d9add583b79782b66bf6875f8b3",
+      "ot_qwen_tile_lsl_fp1_tt.lib": "9eb668b625423dca8a9e1178db7751436f573467336bb4b7fa74796f99993dc9",
+      "insertion.json": "e127110c1e29181145b66fa80ed21bad1c2b9e677c75250c6b077e7ac7e48cc5"
+    },
+    "native_audit": "results/rtl/qwen_compute_native_glue_1014/native_tile_prep/lsl_fp1r_boundary.json",
+    "compiler_obligations": {
+      "reset_release_edges_added": 1,
+      "fault_visibility_edges_added": 1,
+      "data_edges_added": 0
+    },
+    "qualification_limit": "Native boundary and TT/FF/DRC only. Production layer throughput remains a composition gate."
+  },
+  "qfd_tt_up4_leafr-r1-2f82af99b": {
+    "status": "CLOSED",
+    "native_boundary_tt": "PASS",
+    "published_main": "91bbcb9fa",
+    "physical_view": "physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper",
+    "cell": "ot_qfd_band_upper",
+    "tt_setup_ps": 236.01,
+    "ff_hold_ps": 18.69,
+    "drc": 0,
+    "R_ps": {
+      "tt": 196.2,
+      "ff": 163.6,
+      "ss": 250.1
+    },
+    "tt_launch_ps": 176.66066,
+    "tt_capture_ps": 138.66851,
+    "boundary_spread_tt_ps": 17.0,
+    "sha256": {
+      "ot_qfd_band_upper.lef": "4b23ce3b3977a48457ece6017fe0008d32391df75ea2a9001c65b943e952efa2",
+      "ot_qfd_band_upper_tt.lib": "e8257f6e2cb1909a08bc7d3a13a5b5ddd73c473c554b828453a2a4c73b150683",
+      "insertion.json": "0d6ddd7cb78579c14279a6db0bf8b4d305947e287723442723c45d7ca2d7ac36"
+    },
+    "native_audit": "results/rtl/qwen_compute_native_glue_1014/native_tile_prep/up4_leafr_boundary.json",
+    "compiler_obligations": {
+      "reset_release_edges_added": 1,
+      "data_edges_added": 0
+    },
+    "qualification_limit": "Native boundary and TT/FF/DRC only. Production layer throughput remains a composition gate."
+  }
+}

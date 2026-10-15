@@ -1,0 +1,5 @@
+PASS actual-SRAM-collective-component-only N=28 MUT=0 checked_fp32=1792 fault=0 cycles=312
+- tb_s81_static_fmt1_vm_sram.sv:150: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 402ns; walltime 1.663 s; speed 241.750 ns/s
+- Verilator: cpu 1.662 s on 1 threads; allocated 65 MB
