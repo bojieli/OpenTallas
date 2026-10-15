@@ -31,3 +31,21 @@ for bit in range(2069):
 assert max(t['um']for t in trans)<500
 out={'status':'PARTIAL_FULL18_ACTUAL_PIN_GATE_NEW_BANKS_UNHARDENED','frame':[g['W'],g['H']],'area_um2':g['area'],'children':list(B.values()),'compute_gate_source':'split18_east_gate.json','existing_XREL_3152_pairs':rels,'fork2069_pairs':forks,'transit2069_pairs':trans,'maximum_XREL_leg_um':max(max(r['first_um'],r['second_um'])for r in rels),'maximum_fork_um':max(t['max_um']for t in forks),'maximum_transit_um':max(t['um']for t in trans),'parent_station_grid':{'pitch_um':2,'maximum_bits_per_gridpoint':8,'note':'Each2x2umparentpatch<=8FF isanalyticalplacementdensity, notphysicalCTSroute.'},'parent_source_ownership':{'receiverQ':'ExistingOT_SMH_PINREGbin_l/u_pinb2069FF, threeforkloadsperQ,noaddededge','XREL':'ExistingOT_SMH_XREL3152operandFF+xvcontrol, samegoldenedges','qualification':'Parentpointplacementonly, notactualhardmacrooutlines. Existingclockrootsmustbesplitphysicallywithoutmask. Fixedhold/CTSareaandactualFFplacementunmeasured.'},'open':['Distinct3705W/Eboundarypintracks/receiverpairs andallrowactualpinsjointly','Allclock/reset/control/G1/gatherportnets','M6M8cutsoveractualOBS+PG','Newlanding1edgefullshapephysicalnativegate','RetainedactualWBsplitreferenceexactproof']}
 json.dump(out,open('/home/ubuntu/wt/sm-dense-pack-1015/results/hbm_sm_dense_pack/split18_full_pin_progress.json','w'),indent=2);print({k:out[k]for k in ['maximum_XREL_leg_um','maximum_fork_um','maximum_transit_um']})
+# Canonicaldistinct boundaryslots; analytic parentregistered pointsonly.
+row_receiver=[];outdrivers=[]
+for lf in range(2):
+ b=B[f'{lf}_rowW'];o=b['orient']
+ for bit in range(818):
+  d=xy(f'{lf}_rowW',f'd[{bit}]',o,'row_w');q=[d[0]+(8 if lf==0 else-8),d[1]];row_receiver.append(dict(bus='rin',row=lf,bit=bit,Q=q,D=d))
+  s=xy(f'{lf}_rowE',f'last[{bit}]','MX','row_e');outdrivers.append(dict(bus='rout',row=lf,bit=bit,source=s))
+for bit in range(2069):outdrivers.append(dict(bus='bout',bit=bit,source=xy('beatE',f'last[{bit}]','R0','beat_e')))
+slots=[(20+.128*i,'M6')for i in range(int((g['H']-40)/.128))]+[(20+.16*i,'M8')for i in range(int((g['H']-40)/.16))]
+def assign(points,key,face):
+ available=set(range(len(slots)));result=[]
+ for x in sorted(points,key=lambda t:t[key][1]):
+  q=x[key];j=min(available,key=lambda j:abs(slots[j][0]-q[1]));available.remove(j);y,layer=slots[j];b=[0 if face=='W'else g['W'],y];result.append(dict(**x,boundary=b,layer=layer,distance_um=dist(q,b)))
+ return result
+inp=[dict(bus='bin',bit=f['bit'],Q=f['existing_receiver_Q'])for f in forks]+row_receiver
+out['boundary_inputs']=assign(inp,'Q','W');out['boundary_outputs']=assign(outdrivers,'source','E');out['boundary_input_max_um']=max(x['distance_um']for x in out['boundary_inputs']);out['boundary_output_max_um']=max(x['distance_um']for x in out['boundary_outputs']);assert out['boundary_input_max_um']<500 and out['boundary_output_max_um']<500
+out['open'].append('BoundaryM6PORT/M8slots needPG-obstruction/viaescape check; atX0/W tileedgegrosscapacityonly, notfullroutecutcertificate.')
+json.dump(out,open('/home/ubuntu/wt/sm-dense-pack-1015/results/hbm_sm_dense_pack/split18_full_pin_progress.json','w'),indent=2);print('boundary',out['boundary_input_max_um'],out['boundary_output_max_um'])
