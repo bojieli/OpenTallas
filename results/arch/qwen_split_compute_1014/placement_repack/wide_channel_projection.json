@@ -1,0 +1,361 @@
+{
+  "schema": "opentallas.qwen.placement-repack-projection.v1",
+  "evidence_scope": "legal source rectangle proposal; geometric lower bounds only",
+  "die": {
+    "w": 32413.392,
+    "h": 25937.28,
+    "mm2": 840.715,
+    "budget_mm2": 858,
+    "margin_mm2": 17.285
+  },
+  "baseline": {
+    "input_relays": [
+      20,
+      10,
+      11
+    ],
+    "return_relays": 20,
+    "critical_roundtrip_relays": 40
+  },
+  "band0_flip_only": {
+    "input_relays": [
+      15,
+      10,
+      11
+    ],
+    "return_relays": 15,
+    "critical_roundtrip_relays": 30
+  },
+  "central_translation_um": 207.36,
+  "routing_gap_before_um": 86.424,
+  "routing_gap_after_um": 293.784,
+  "candidate": {
+    "input_relays": [
+      13,
+      8,
+      14
+    ],
+    "return_relays": 13,
+    "critical_roundtrip_relays": 27
+  },
+  "candidate_leaves": [
+    {
+      "n": "tt_up4_leaf0",
+      "m": "ot_qfd_band_upper",
+      "x": 14856.696,
+      "y": 13037.76,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf1",
+      "m": "ot_qfd_band_upper",
+      "x": 14856.696,
+      "y": 13262.4,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf2",
+      "m": "ot_qfd_band_upper",
+      "x": 14856.696,
+      "y": 13487.04,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf3",
+      "m": "ot_qfd_band_upper",
+      "x": 14856.696,
+      "y": 13711.68,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    }
+  ],
+  "placements": [
+    {
+      "n": "sp_vector_memory",
+      "m": "qfd_sp_vector_memory",
+      "x": 15036.192,
+      "y": 11962.08,
+      "w": 4708.776,
+      "h": 2203.176,
+      "o": "R0"
+    },
+    {
+      "n": "sp_su64_sfu",
+      "m": "qfd_sp_su64_sfu",
+      "x": 15900.192,
+      "y": 14165.28,
+      "w": 3239.976,
+      "h": 3671.976,
+      "o": "R0"
+    },
+    {
+      "n": "sp_res_ser_0",
+      "m": "qfd_sp_res_ser",
+      "x": 12794.112,
+      "y": 4423.68,
+      "w": 777.576,
+      "h": 518.376,
+      "o": "MX"
+    },
+    {
+      "n": "sp_band_lanes_0",
+      "m": "qfd_sp_band_lanes",
+      "x": 12742.272,
+      "y": 7413.12,
+      "w": 881.28,
+      "h": 1131.84,
+      "o": "MX"
+    },
+    {
+      "n": "sp_port_tiles_0",
+      "m": "qfd_port_tiles_0",
+      "x": 12664.512,
+      "y": 4946.4,
+      "w": 1036.776,
+      "h": 2462.376,
+      "o": "MX"
+    },
+    {
+      "n": "sp_port_tiles_0_f1",
+      "m": "qfd_port_tiles_0_f1",
+      "x": 13705.632,
+      "y": 4946.4,
+      "w": 1036.776,
+      "h": 2462.376,
+      "o": "R0"
+    },
+    {
+      "n": "tt_ctlm",
+      "m": "qfd_tt_ctlm",
+      "x": 15036.192,
+      "y": 15072.48,
+      "w": 777.576,
+      "h": 1814.3760000000002,
+      "o": "R0"
+    },
+    {
+      "n": "seq_su",
+      "m": "qfd_seq_su",
+      "x": 19226.592,
+      "y": 14173.92,
+      "w": 518.376,
+      "h": 518.376,
+      "o": "R0"
+    },
+    {
+      "n": "cbuf_g_0",
+      "m": "qfd_su_cbuf_g",
+      "x": 19226.592,
+      "y": 15374.88,
+      "w": 194.376,
+      "h": 215.976,
+      "o": "MX"
+    },
+    {
+      "n": "cbuf_g_1",
+      "m": "qfd_su_cbuf_g",
+      "x": 19424.88,
+      "y": 15374.88,
+      "w": 194.376,
+      "h": 215.976,
+      "o": "MX"
+    },
+    {
+      "n": "cbuf_g_2",
+      "m": "qfd_su_cbuf_g",
+      "x": 19226.592,
+      "y": 15154.56,
+      "w": 194.376,
+      "h": 215.976,
+      "o": "MX"
+    },
+    {
+      "n": "cbuf_g_3",
+      "m": "qfd_su_cbuf_g",
+      "x": 19424.88,
+      "y": 15154.56,
+      "w": 194.376,
+      "h": 215.976,
+      "o": "MX"
+    },
+    {
+      "n": "cbuf_g_4",
+      "m": "qfd_su_cbuf_g",
+      "x": 19226.592,
+      "y": 14934.24,
+      "w": 194.376,
+      "h": 215.976,
+      "o": "MX"
+    },
+    {
+      "n": "cbuf_g_5",
+      "m": "qfd_su_cbuf_g",
+      "x": 19424.88,
+      "y": 14934.24,
+      "w": 194.376,
+      "h": 215.976,
+      "o": "MX"
+    },
+    {
+      "n": "cbuf_g_6",
+      "m": "qfd_su_cbuf_g",
+      "x": 19226.592,
+      "y": 14713.92,
+      "w": 194.376,
+      "h": 215.976,
+      "o": "MX"
+    },
+    {
+      "n": "cbuf_g_7",
+      "m": "qfd_su_cbuf_g",
+      "x": 19424.88,
+      "y": 14713.92,
+      "w": 194.376,
+      "h": 215.976,
+      "o": "MX"
+    },
+    {
+      "n": "crom_g_0",
+      "m": "qfd_crom_g",
+      "x": 19226.592,
+      "y": 17282.16,
+      "w": 194.376,
+      "h": 550.776,
+      "o": "MX"
+    },
+    {
+      "n": "crom_g_1",
+      "m": "qfd_crom_g",
+      "x": 19424.88,
+      "y": 17282.16,
+      "w": 194.376,
+      "h": 550.776,
+      "o": "MX"
+    },
+    {
+      "n": "crom_g_2",
+      "m": "qfd_crom_g",
+      "x": 19226.592,
+      "y": 16727.04,
+      "w": 194.376,
+      "h": 550.776,
+      "o": "MX"
+    },
+    {
+      "n": "crom_g_3",
+      "m": "qfd_crom_g",
+      "x": 19424.88,
+      "y": 16727.04,
+      "w": 194.376,
+      "h": 550.776,
+      "o": "MX"
+    },
+    {
+      "n": "crom_g_4",
+      "m": "qfd_crom_g",
+      "x": 19226.592,
+      "y": 16171.92,
+      "w": 194.376,
+      "h": 550.776,
+      "o": "MX"
+    },
+    {
+      "n": "crom_g_5",
+      "m": "qfd_crom_g",
+      "x": 19424.88,
+      "y": 16171.92,
+      "w": 194.376,
+      "h": 550.776,
+      "o": "MX"
+    },
+    {
+      "n": "crom_g_6",
+      "m": "qfd_crom_g",
+      "x": 19226.592,
+      "y": 15616.8,
+      "w": 194.376,
+      "h": 550.776,
+      "o": "MX"
+    },
+    {
+      "n": "crom_g_7",
+      "m": "qfd_crom_g",
+      "x": 19424.88,
+      "y": 15616.8,
+      "w": 194.376,
+      "h": 550.776,
+      "o": "MX"
+    },
+    {
+      "n": "xs_tap",
+      "m": "qfd_xs_tap",
+      "x": 15597.792,
+      "y": 14165.28,
+      "w": 216.0,
+      "h": 216.0,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf0",
+      "m": "ot_qfd_band_upper",
+      "x": 14856.696,
+      "y": 13037.76,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf1",
+      "m": "ot_qfd_band_upper",
+      "x": 14856.696,
+      "y": 13262.4,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf2",
+      "m": "ot_qfd_band_upper",
+      "x": 14856.696,
+      "y": 13487.04,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    },
+    {
+      "n": "tt_up4_leaf3",
+      "m": "ot_qfd_band_upper",
+      "x": 14856.696,
+      "y": 13711.68,
+      "w": 64.8,
+      "h": 205.2,
+      "o": "R0"
+    }
+  ],
+  "retired": [
+    "tt_up4_0"
+  ],
+  "baseline_geometry_errors": [],
+  "candidate_geometry_errors": [],
+  "saved_critical_stages": 13,
+  "cuts": {
+    "qualified": false,
+    "reason": "exact per-bit paths and relay sites absent; cannot infer <=0.60 from rectangles"
+  },
+  "production_relay_cost": {
+    "qualified": false,
+    "reason": "full relay planner and actual layer measurement required"
+  },
+  "warnings": [
+    "MX band-0 pins/clocks must be regenerated from actual child orientations.",
+    "Vertical direct-leaf stack requires exact per-leaf pin/clock joins and equal fixed ages.",
+    "Global rectangle validity does not prove pin access or relay-frame fit."
+  ]
+}

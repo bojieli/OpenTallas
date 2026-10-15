@@ -605,6 +605,10 @@ module ot_qfd_xhead #(
     reg               e_pool [0:1];
     // tile windows: beat W and start position of the tile's slot, per epoch and row
     reg  [BW-1:0]     wb  [0:1][0:NR-1];
+    // {1'b0, W} + 1 and {1'b0, W} - 1 (BW + 1 bits, modulo 2^(BW+1)), precomputed with W in the descriptor's stage C:
+    // the data beat's write enable/d then needs three BW-bit equality compares instead of an 19-bit subtraction
+    reg  [BW:0]       wbp [0:1][0:NR-1];
+    reg  [BW:0]       wbm [0:1][0:NR-1];
     reg  [5:0]        wo  [0:1][0:NR-1];      // write window start (pooled: 0, the slot is one whole beat)
     reg  [5:0]        ro  [0:1][0:NR-1];      // read offset = the footprint's start position (emin mod 64)
     // descriptor pipeline: masked quads + factors (stage A), products + footprint (stage B), windows + pool checks
@@ -659,11 +663,39 @@ module ot_qfd_xhead #(
             for (r = 0; r < NR; r = r + 1) begin
                 // pooled: the S tile of a pair holds beat W + 1
                 wb[dp_ep][r] <= emin[r][AW-1:6] + ((pool_n && r >= NH) ? 1'b1 : 1'b0);
+                // exact {1'b0, W} +/- 1 of the truncated W above, incl. the W wrap (emin beat all ones, pooled S tile)
+                if (pool_n && r >= NH && (&emin[r][AW-1:6])) begin
+                    wbp[dp_ep][r] <= {{BW{1'b0}}, 1'b1};
+                    wbm[dp_ep][r] <= {(BW+1){1'b1}};
+                end else begin
+                    wbp[dp_ep][r] <= {1'b0, emin[r][AW-1:6]} + ((pool_n && r >= NH) ? 2'd2 : 2'd1);
+                    wbm[dp_ep][r] <= (pool_n && r >= NH) ? {1'b0, emin[r][AW-1:6]} : ({1'b0, emin[r][AW-1:6]} - 1'b1);
+                end
                 wo[dp_ep][r] <= pool_n ? 6'd0 : emin[r][5:0];
                 ro[dp_ep][r] <= emin[r][5:0];
                 for(i=0;i<4;i=i+1) first_abs[dp_ep][r][i]<={2'b0,emin[r][5:0]}+i*dp_k;
             end
         end
+
+    // ---- stage D (integrity only, one edge after stage C): a pooled read position first_abs + k (k = 0 .. K-1, 8-bit
+    //      as the read path forms it) with bit 7 set is a fault.  Every row / element / k of the op is read, so the
+    //      check is a static property of the descriptor: flag the epoch here, raise the fault when its go is consumed
+    //      (the read path keeps no per-operand overflow adder) ----
+    reg          dq_v, dq_ep, dq_pool;
+    reg  [5:0]   dq_k;
+    reg          e_pbad [0:1];
+    reg          pbad_n;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) dq_v <= 1'b0; else dq_v <= dp_v;
+    always @(posedge ck) begin dq_ep <= dp_ep; dq_pool <= pool_n; dq_k <= dp_k; end
+    always @* begin
+        pbad_n = 1'b0;
+        for (r = 0; r < NR; r = r + 1)
+            for (i = 0; i < 4; i = i + 1)
+                if (first_abs[dq_ep][r][i][7] ||
+                    ((dq_k != 6'd0) && ({1'b0, first_abs[dq_ep][r][i]} + {3'b000, dq_k} - 9'd1 >= 9'd128))) pbad_n = 1'b1;
+    end
+    always @(posedge ck) if (dq_v) e_pbad[dq_ep] <= dq_pool && pbad_n;
 
     // ---- the beat arrives unrotated (lane l = element 64*fb + foff + l): rotate lanes to positions (foff + l) mod 64
     //      in front of the leaf-write registers (f_q is a register; 6 levels of 2:1 per bit) ----
@@ -681,15 +713,19 @@ module ot_qfd_xhead #(
     wire [63:0]   fm_r = rm_s[6];
 
     // ---- data beat -> leaf write control (one edge), to the leaf pins: per tile {en, d, wo} ----
-    reg  [BW:0] dd;
+    // d = fb - W in {0, +1, -1} as equality compares against the precomputed W, W + 1, W - 1 (no carry chain between
+    // the beat register and the leaf-write control register; HEAD_MUT 7 / 8 / 9 drop the W + 1 / W - 1 / W match)
+    reg  d0, dp1, dm1;
     reg  [NH*18-1:0] ctl;
     always @* begin
         ctl = {(NH*18){1'b0}};
         for (r = 0; r < NR; r = r + 1) begin
-            dd = {1'b0, fb} - {1'b0, wb[fep][r]};
+            d0  = (fb == wb[fep][r]) && (MUT != 9);
+            dp1 = ({1'b0, fb} == wbp[fep][r]) && (MUT != 7);
+            dm1 = ({1'b0, fb} == wbm[fep][r]) && (MUT != 8);
             ctl[18*lf(r) + 9*tb(r) +: 9] = {
-                (dd == 0) || (dd == 1) || (dd == {(BW+1){1'b1}}),                       // en
-                (dd == {(BW+1){1'b1}}) ? 2'b10 : (dd == 1) ? 2'b01 : 2'b00,            // d = fb - W
+                d0 || dp1 || dm1,                                                       // en
+                dm1 ? 2'b10 : dp1 ? 2'b01 : 2'b00,                                      // d = fb - W
                 wo[fep][r]};
         end
     end
@@ -763,7 +799,6 @@ module ot_qfd_xhead #(
                     if(NATIVE_AFFINE!=0)begin
                         ab=first_abs[rep_now][r][i]+(g_q ? 6'd0 : k_i[5:0]);
                         if(pool_now)begin
-                            if(ab[7])f_pos=1'b1;
                             rp[28*lf(r)+7*i+:7]={(r<NH)?!ab[6]:ab[6],ab[5:0]};
                         end else rp[28*lf(r)+7*i+:7]={1'b1,ab[5:0]};
                     end else begin
@@ -854,7 +889,7 @@ module ot_qfd_xhead #(
                 if (d_sp < SMIN || d_sp > SMAX) flt <= 1'b1;
             end
             if (dp_v && pfault_n) flt <= 1'b1;
-            if (f_pos || (NATIVE_AFFINE!=0 && |go_bad_bits)) flt <= 1'b1;
+            if ((NATIVE_AFFINE!=0 ? (g_q && e_pbad[rep_now]) : f_pos) || (NATIVE_AFFINE!=0 && |go_bad_bits)) flt <= 1'b1;
             if (|lqbp) flt <= 1'b1;
             if (miss) flt <= 1'b1;                                          // a leaf did not answer its read
             // the go: consume the oldest filled epoch
@@ -922,8 +957,11 @@ module ot_qfd_xcst #(
     always @(posedge ck) t_q <= a_d[IBW:0];
     reg [2:0]  sx;
     always @(posedge ck) sx <= sidx;
-    wire [127:0] xl  = a_d[1 + IBW +: 128];
-    wire [7:0]   tag = a_d[1 + IBW + 128 +: 8];
+    // The corridor face is captured by b_q before tag decoding and the
+    // station-select mux.  cap therefore has only register-to-register logic;
+    // the fixed hold deadline is unchanged (the TDM line leads it).
+    wire [127:0] xl  = b_q[1 + IBW +: 128];
+    wire [7:0]   tag = b_q[1 + IBW + 128 +: 8];
     reg  [63:0]  cap;
     (* keep *) reg [63:0] hold;
     reg  [3:0]   cnt;
@@ -934,9 +972,18 @@ module ot_qfd_xcst #(
     end
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin cnt <= 4'd0; run <= 1'b0; end
-        else if (a_d[0]) begin cnt <= XOFF - 1; run <= 1'b1; end
+        // GO is captured by the existing corridor boundary b_q before it
+        // fans into the run/count logic. Compensate that edge in the initial
+        // countdown; the tuple's fixed hold deadline remains unchanged.
+        else if (b_q[0]) begin cnt <= XOFF - 2; run <= 1'b1; end
         else if (run) cnt <= (cnt == 0) ? IL - 1 : cnt - 1'b1;
-    always @(posedge ck) if (run && cnt == 0) hold <= cap;
+    // Original cap captured the raw face one edge before the hold deadline.
+    // b_q now captures that face; forward its selected line at the same fixed
+    // deadline, or retain cap when this edge belongs to another station.
+    wire tag_a = tag[3] && tag[2:0] == sx;
+    wire tag_b = tag[7] && tag[6:4] == sx;
+    always @(posedge ck) if (run && cnt == 0)
+        hold <= tag_a ? xl[63:0] : tag_b ? xl[127:64] : cap;
     genvar i;
     wire [127:0] xo;
     generate for (i = 0; i < 4; i = i + 1) begin : g_x

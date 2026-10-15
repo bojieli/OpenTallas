@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.qwen.static_embedding_consecutive_slots.v1",
+  "scope": "component production-shape transfer and decode bandwidth; full128PC production transport not bound",
+  "tokens": [
+    0,
+    63,
+    64,
+    511,
+    512,
+    65535,
+    65536,
+    151935
+  ],
+  "actual_reserved_beats_per_row": 129,
+  "consecutive_beat_edges": 129,
+  "producer_bytes_per_cycle": 32,
+  "code_words": 64,
+  "scale_words": 1,
+  "exact_fp32_results": 32768,
+  "decode_width": 64,
+  "decode_read_edges": 64,
+  "additional_address_mutant": "actual controller input bank bit corrupted; PHY chose token1 instead of token0; observed FAIL",
+  "negative_controls_total": 9,
+  "source_sha256": {
+    "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_join_consumer.sv": "5bc3e83099042888950ea7e8ee45a31965ca3e1a29f348ee3d5f67507ee4bf39",
+    "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_controller.sv": "31e86915663753e06a25f07f6d8fc75405b0139629ec89b32ff2f8300da6e2d2",
+    "rtl/qwen_sys/static_embedding_20261014/test/run_controller_gate.sh": "2f3a6026a3be2e11743b634d2b827e8d0d3d487fd2a9600dbdc0c4186b56b3a1"
+  },
+  "native_full_token_qualified": false
+}

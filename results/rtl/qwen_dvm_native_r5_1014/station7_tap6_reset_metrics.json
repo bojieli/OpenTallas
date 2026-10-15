@@ -1,0 +1,54 @@
+[
+ {
+  "cell": "qfd_xcst_n",
+  "reset": {
+   "dir": "input",
+   "out": null,
+   "lmin": null,
+   "inp": 126.52105,
+   "hold": -102.02275,
+   "comb": [],
+   "clk": [
+    "ck"
+   ]
+  },
+  "capture_over": {
+   "b_d[0]": 210.38862
+  }
+ },
+ {
+  "cell": "qfd_xcst_s",
+  "reset": {
+   "dir": "input",
+   "out": null,
+   "lmin": null,
+   "inp": 116.61478,
+   "hold": -95.6653,
+   "comb": [],
+   "clk": [
+    "ck"
+   ]
+  },
+  "capture_over": {}
+ },
+ {
+  "cell": "qfd_xs_tap",
+  "reset": {
+   "dir": "input",
+   "out": null,
+   "lmin": null,
+   "inp": 502.71927,
+   "hold": -130.57144,
+   "comb": [],
+   "clk": [
+    "ck"
+   ]
+  },
+  "capture_over": {
+   "rst_n": 502.71927,
+   "aw[393]": 194.33919,
+   "aw[369]": 192.24622,
+   "aw[336]": 190.31295
+  }
+ }
+]

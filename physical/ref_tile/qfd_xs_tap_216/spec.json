@@ -1,0 +1,164 @@
+{
+ "name": "qfd_xs_tap_216",
+ "top": "qfd_xs_tap",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 216.0,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "sw"
+  ],
+  "S": [
+   "aw",
+   "xpf",
+   "gi",
+   "fault",
+   "ck",
+   "rst_n"
+  ],
+  "W": [
+   "hw_d",
+   "hw_r",
+   "hw_f"
+  ],
+  "E": [
+   "he_d",
+   "he_r",
+   "he_f"
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "Diagnostic native affine216 square candidate within reserved345.6 envelope; exact pin reassignment required before qualification.",
+ "job": {
+  "owner": "Claude:el1014-qwen-dvm-build",
+  "branch": "claude/qwen-dvm-1014",
+  "tag": "xt3",
+  "purpose": "Qwen TP8 distributed x slice FILL TAP r3: taps the VM write stream (SU 64 + attention-return 16 lanes) inside the armed x range, rounds to the consumer's BF16 operand, and emits the head-row word {fill, ib, go} to BOTH roots from two kept register copies: go / ib (gi from the tree top) ride the fill's own pipeline (fill-before-go); root fault chains in.",
+  "benches": [
+   {
+    "name": "dvm_array_exact",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/pos tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=40 -GSEED=3 -GGAP=0",
+    "expect": "pass",
+    "pass_regex": "^PASS dvm",
+    "threads": 12,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "dvm_array_no_rounding",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=12 -GSEED=3 -GGAP=0 -GTAP_MUT=1",
+    "expect": "fail",
+    "pass_regex": "^PASS dvm",
+    "threads": 12,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/qwen_sys/dvm_20261014"
+  ],
+  "views_to": "physical/ref_tile/qfd_xs_tap_216/views",
+  "record_to": "results/rtl/ref_tile/qfd_xs_tap_216"
+ },
+ "pin_ranges": {
+  "sw": [
+   6.667,
+   209.167
+  ],
+  "aw": [
+   6.667,
+   83.333
+  ],
+  "xpf": [
+   85.0,
+   96.667
+  ],
+  "gi": [
+   98.333,
+   166.667
+  ],
+  "fault": [
+   168.333,
+   169.167
+  ],
+  "ck": [
+   170.833,
+   171.667
+  ],
+  "rst_n": [
+   172.5,
+   173.333
+  ],
+  "hw_d": [
+   6.667,
+   204.167
+  ],
+  "hw_r": [
+   205.0,
+   205.417
+  ],
+  "hw_f": [
+   205.833,
+   206.25
+  ],
+  "he_d": [
+   6.667,
+   204.167
+  ],
+  "he_r": [
+   205.0,
+   205.417
+  ],
+  "he_f": [
+   205.833,
+   206.25
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

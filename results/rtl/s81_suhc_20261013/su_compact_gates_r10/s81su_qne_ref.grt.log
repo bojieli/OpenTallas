@@ -1,0 +1,44 @@
+GRT_RC=0
+Design area 23874 um^2 50% utilization.
+M1                   0             0            0.00%             0 /  0 /  0
+M1         Vertical            0             0          0.00%
+M2             1046053        279876           26.76%             0 /  0 /  0
+M2         Horizontal    1471598       1046053          28.92%
+M3             1259964        305792           24.27%             0 /  0 /  0
+M3         Vertical      1695602       1259964          25.69%
+M4              967103        127857           13.22%             0 /  0 /  0
+M4         Horizontal    1297611        967103          25.47%
+M5             1072899        126000           11.74%             0 /  0 /  0
+M5         Vertical      1468809       1072899          26.95%
+M6                   0             0            0.00%             0 /  0 /  0
+M6         Horizontal    1352113             0          100.00%
+Number of DEF vias:       0
+Number of components:     83455
+Number of layers:     21
+Number of macros:     213
+Number of nets:           79494
+Number of snets:          2
+Number of terminals:      614
+Number of track patterns: 32
+Number of viarulegen: 11
+Number of vias:       15
+OT_HOLD_GUARD chunk 1: hold ws 10.04 (+59.14) tns 0.0 (+100.0%) viol 0, 545 s
+OT_HOLD_GUARD start: hold ws -49.10 tns -10913.9 viol 292 (margin 10, chunk 1000 it)
+QDM reference pin u_e.x_q[217]$_DFF_P_/CLK clock arrival max 301.819977 min 236.001526 skew 90 hold 50
+Repair setup and hold violations...
+Took 545 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+Took 599 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+Took 7 seconds: repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+Total          4346019        839525           19.32%             0 /  0 /  0
+[INFO DRT-0164] Number of unique instances = 321.
+[INFO GRT-0096] Final congestion report:
+[INFO RSZ-0032] Inserted 1048 hold buffers.
+[INFO RSZ-0046] Found 374 endpoints with hold violations.
+[INFO RSZ-0094] Found 179 endpoints with setup violations.
+[INFO RSZ-0094] Found 303 endpoints with setup violations.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+2_floorplan_final.rpt 3_detailed_place.rpt 3_global_place.rpt 3_resizer.rpt 4_cts_final.rpt 5_global_route.rpt congestion-5.rpt grt_antennas.log synth_check.txt synth_stat.txt 0
+GRT_DONE

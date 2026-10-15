@@ -1,0 +1,3248 @@
+{
+  "qkd_host_root_integrated": {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_root_integrated.sv",
+    "sha256": "7cb792883c9961bf71a764e375aebef8fa6a8213b86d6cc93f7eba459ec6e44f",
+    "ports": [
+      {
+        "name": "ck_phy",
+        "direction": "input",
+        "width": 8,
+        "period_fs": 1043000,
+        "clock_entries": [
+          "ck_phy[0]",
+          "ck_phy[1]",
+          "ck_phy[2]",
+          "ck_phy[3]",
+          "ck_phy[4]",
+          "ck_phy[5]",
+          "ck_phy[6]",
+          "ck_phy[7]"
+        ]
+      },
+      {
+        "name": "ck_pad",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1043000,
+        "clock_entries": [
+          "ck_pad"
+        ]
+      },
+      {
+        "name": "ck_phy_rx_w",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1043000,
+        "clock_entries": [
+          "ck_phy_rx_w"
+        ]
+      },
+      {
+        "name": "ck_phy_rx_r",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_phy_rx_r"
+        ]
+      },
+      {
+        "name": "ck_phy_tx_w",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_phy_tx_w"
+        ]
+      },
+      {
+        "name": "ck_phy_tx_r",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1043000,
+        "clock_entries": [
+          "ck_phy_tx_r"
+        ]
+      },
+      {
+        "name": "ck_peer",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_peer"
+        ]
+      },
+      {
+        "name": "ck_program_rx",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_program_rx"
+        ]
+      },
+      {
+        "name": "ck_program_loader",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_program_loader"
+        ]
+      },
+      {
+        "name": "ck_boot",
+        "direction": "input",
+        "width": 128,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_boot[0]",
+          "ck_boot[1]",
+          "ck_boot[2]",
+          "ck_boot[3]",
+          "ck_boot[4]",
+          "ck_boot[5]",
+          "ck_boot[6]",
+          "ck_boot[7]",
+          "ck_boot[8]",
+          "ck_boot[9]",
+          "ck_boot[10]",
+          "ck_boot[11]",
+          "ck_boot[12]",
+          "ck_boot[13]",
+          "ck_boot[14]",
+          "ck_boot[15]",
+          "ck_boot[16]",
+          "ck_boot[17]",
+          "ck_boot[18]",
+          "ck_boot[19]",
+          "ck_boot[20]",
+          "ck_boot[21]",
+          "ck_boot[22]",
+          "ck_boot[23]",
+          "ck_boot[24]",
+          "ck_boot[25]",
+          "ck_boot[26]",
+          "ck_boot[27]",
+          "ck_boot[28]",
+          "ck_boot[29]",
+          "ck_boot[30]",
+          "ck_boot[31]",
+          "ck_boot[32]",
+          "ck_boot[33]",
+          "ck_boot[34]",
+          "ck_boot[35]",
+          "ck_boot[36]",
+          "ck_boot[37]",
+          "ck_boot[38]",
+          "ck_boot[39]",
+          "ck_boot[40]",
+          "ck_boot[41]",
+          "ck_boot[42]",
+          "ck_boot[43]",
+          "ck_boot[44]",
+          "ck_boot[45]",
+          "ck_boot[46]",
+          "ck_boot[47]",
+          "ck_boot[48]",
+          "ck_boot[49]",
+          "ck_boot[50]",
+          "ck_boot[51]",
+          "ck_boot[52]",
+          "ck_boot[53]",
+          "ck_boot[54]",
+          "ck_boot[55]",
+          "ck_boot[56]",
+          "ck_boot[57]",
+          "ck_boot[58]",
+          "ck_boot[59]",
+          "ck_boot[60]",
+          "ck_boot[61]",
+          "ck_boot[62]",
+          "ck_boot[63]",
+          "ck_boot[64]",
+          "ck_boot[65]",
+          "ck_boot[66]",
+          "ck_boot[67]",
+          "ck_boot[68]",
+          "ck_boot[69]",
+          "ck_boot[70]",
+          "ck_boot[71]",
+          "ck_boot[72]",
+          "ck_boot[73]",
+          "ck_boot[74]",
+          "ck_boot[75]",
+          "ck_boot[76]",
+          "ck_boot[77]",
+          "ck_boot[78]",
+          "ck_boot[79]",
+          "ck_boot[80]",
+          "ck_boot[81]",
+          "ck_boot[82]",
+          "ck_boot[83]",
+          "ck_boot[84]",
+          "ck_boot[85]",
+          "ck_boot[86]",
+          "ck_boot[87]",
+          "ck_boot[88]",
+          "ck_boot[89]",
+          "ck_boot[90]",
+          "ck_boot[91]",
+          "ck_boot[92]",
+          "ck_boot[93]",
+          "ck_boot[94]",
+          "ck_boot[95]",
+          "ck_boot[96]",
+          "ck_boot[97]",
+          "ck_boot[98]",
+          "ck_boot[99]",
+          "ck_boot[100]",
+          "ck_boot[101]",
+          "ck_boot[102]",
+          "ck_boot[103]",
+          "ck_boot[104]",
+          "ck_boot[105]",
+          "ck_boot[106]",
+          "ck_boot[107]",
+          "ck_boot[108]",
+          "ck_boot[109]",
+          "ck_boot[110]",
+          "ck_boot[111]",
+          "ck_boot[112]",
+          "ck_boot[113]",
+          "ck_boot[114]",
+          "ck_boot[115]",
+          "ck_boot[116]",
+          "ck_boot[117]",
+          "ck_boot[118]",
+          "ck_boot[119]",
+          "ck_boot[120]",
+          "ck_boot[121]",
+          "ck_boot[122]",
+          "ck_boot[123]",
+          "ck_boot[124]",
+          "ck_boot[125]",
+          "ck_boot[126]",
+          "ck_boot[127]"
+        ]
+      },
+      {
+        "name": "ck_boot_test",
+        "direction": "input",
+        "width": 128,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_boot_test[0]",
+          "ck_boot_test[1]",
+          "ck_boot_test[2]",
+          "ck_boot_test[3]",
+          "ck_boot_test[4]",
+          "ck_boot_test[5]",
+          "ck_boot_test[6]",
+          "ck_boot_test[7]",
+          "ck_boot_test[8]",
+          "ck_boot_test[9]",
+          "ck_boot_test[10]",
+          "ck_boot_test[11]",
+          "ck_boot_test[12]",
+          "ck_boot_test[13]",
+          "ck_boot_test[14]",
+          "ck_boot_test[15]",
+          "ck_boot_test[16]",
+          "ck_boot_test[17]",
+          "ck_boot_test[18]",
+          "ck_boot_test[19]",
+          "ck_boot_test[20]",
+          "ck_boot_test[21]",
+          "ck_boot_test[22]",
+          "ck_boot_test[23]",
+          "ck_boot_test[24]",
+          "ck_boot_test[25]",
+          "ck_boot_test[26]",
+          "ck_boot_test[27]",
+          "ck_boot_test[28]",
+          "ck_boot_test[29]",
+          "ck_boot_test[30]",
+          "ck_boot_test[31]",
+          "ck_boot_test[32]",
+          "ck_boot_test[33]",
+          "ck_boot_test[34]",
+          "ck_boot_test[35]",
+          "ck_boot_test[36]",
+          "ck_boot_test[37]",
+          "ck_boot_test[38]",
+          "ck_boot_test[39]",
+          "ck_boot_test[40]",
+          "ck_boot_test[41]",
+          "ck_boot_test[42]",
+          "ck_boot_test[43]",
+          "ck_boot_test[44]",
+          "ck_boot_test[45]",
+          "ck_boot_test[46]",
+          "ck_boot_test[47]",
+          "ck_boot_test[48]",
+          "ck_boot_test[49]",
+          "ck_boot_test[50]",
+          "ck_boot_test[51]",
+          "ck_boot_test[52]",
+          "ck_boot_test[53]",
+          "ck_boot_test[54]",
+          "ck_boot_test[55]",
+          "ck_boot_test[56]",
+          "ck_boot_test[57]",
+          "ck_boot_test[58]",
+          "ck_boot_test[59]",
+          "ck_boot_test[60]",
+          "ck_boot_test[61]",
+          "ck_boot_test[62]",
+          "ck_boot_test[63]",
+          "ck_boot_test[64]",
+          "ck_boot_test[65]",
+          "ck_boot_test[66]",
+          "ck_boot_test[67]",
+          "ck_boot_test[68]",
+          "ck_boot_test[69]",
+          "ck_boot_test[70]",
+          "ck_boot_test[71]",
+          "ck_boot_test[72]",
+          "ck_boot_test[73]",
+          "ck_boot_test[74]",
+          "ck_boot_test[75]",
+          "ck_boot_test[76]",
+          "ck_boot_test[77]",
+          "ck_boot_test[78]",
+          "ck_boot_test[79]",
+          "ck_boot_test[80]",
+          "ck_boot_test[81]",
+          "ck_boot_test[82]",
+          "ck_boot_test[83]",
+          "ck_boot_test[84]",
+          "ck_boot_test[85]",
+          "ck_boot_test[86]",
+          "ck_boot_test[87]",
+          "ck_boot_test[88]",
+          "ck_boot_test[89]",
+          "ck_boot_test[90]",
+          "ck_boot_test[91]",
+          "ck_boot_test[92]",
+          "ck_boot_test[93]",
+          "ck_boot_test[94]",
+          "ck_boot_test[95]",
+          "ck_boot_test[96]",
+          "ck_boot_test[97]",
+          "ck_boot_test[98]",
+          "ck_boot_test[99]",
+          "ck_boot_test[100]",
+          "ck_boot_test[101]",
+          "ck_boot_test[102]",
+          "ck_boot_test[103]",
+          "ck_boot_test[104]",
+          "ck_boot_test[105]",
+          "ck_boot_test[106]",
+          "ck_boot_test[107]",
+          "ck_boot_test[108]",
+          "ck_boot_test[109]",
+          "ck_boot_test[110]",
+          "ck_boot_test[111]",
+          "ck_boot_test[112]",
+          "ck_boot_test[113]",
+          "ck_boot_test[114]",
+          "ck_boot_test[115]",
+          "ck_boot_test[116]",
+          "ck_boot_test[117]",
+          "ck_boot_test[118]",
+          "ck_boot_test[119]",
+          "ck_boot_test[120]",
+          "ck_boot_test[121]",
+          "ck_boot_test[122]",
+          "ck_boot_test[123]",
+          "ck_boot_test[124]",
+          "ck_boot_test[125]",
+          "ck_boot_test[126]",
+          "ck_boot_test[127]"
+        ]
+      },
+      {
+        "name": "ck_host",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_host"
+        ]
+      },
+      {
+        "name": "ck_csr",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_csr"
+        ]
+      },
+      {
+        "name": "ck_rst",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_rst"
+        ]
+      },
+      {
+        "name": "ck_ctl",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_ctl"
+        ]
+      },
+      {
+        "name": "ck_prompt",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_prompt"
+        ]
+      },
+      {
+        "name": "ck_rx",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_rx"
+        ]
+      },
+      {
+        "name": "ck_tx",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_tx"
+        ]
+      },
+      {
+        "name": "ck_axi",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_axi"
+        ]
+      },
+      {
+        "name": "ck_ctrl",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_ctrl"
+        ]
+      },
+      {
+        "name": "ck_hc",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_hc"
+        ]
+      },
+      {
+        "name": "ck_qm_queue",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_qm_queue"
+        ]
+      },
+      {
+        "name": "ck_qm_ing_w",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_qm_ing_w"
+        ]
+      },
+      {
+        "name": "ck_qm_ing_r",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1000000,
+        "clock_entries": [
+          "ck_qm_ing_r"
+        ]
+      },
+      {
+        "name": "ck_qm_credit",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1000000,
+        "clock_entries": [
+          "ck_qm_credit"
+        ]
+      },
+      {
+        "name": "ck_qm_done_w",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1000000,
+        "clock_entries": [
+          "ck_qm_done_w"
+        ]
+      },
+      {
+        "name": "ck_qm_done_r",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_qm_done_r"
+        ]
+      },
+      {
+        "name": "ck_qm_core",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_qm_core"
+        ]
+      },
+      {
+        "name": "ck_qm_host",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1000000,
+        "clock_entries": [
+          "ck_qm_host"
+        ]
+      },
+      {
+        "name": "ck_qm_ingest",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1666668,
+        "clock_entries": [
+          "ck_qm_ingest"
+        ]
+      },
+      {
+        "name": "ck_qm_bank",
+        "direction": "input",
+        "width": 2,
+        "period_fs": 1666668,
+        "clock_entries": [
+          "ck_qm_bank[0]",
+          "ck_qm_bank[1]"
+        ]
+      },
+      {
+        "name": "ck_qm_out",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1666668,
+        "clock_entries": [
+          "ck_qm_out"
+        ]
+      },
+      {
+        "name": "ck_map",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_map"
+        ]
+      },
+      {
+        "name": "ck_sum",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_sum"
+        ]
+      },
+      {
+        "name": "ck_order",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_order"
+        ]
+      },
+      {
+        "name": "ck_dispatch",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_dispatch"
+        ]
+      },
+      {
+        "name": "ck_retire",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_retire"
+        ]
+      },
+      {
+        "name": "ck_bootbarrier",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_bootbarrier"
+        ]
+      },
+      {
+        "name": "ck_station",
+        "direction": "input",
+        "width": 128,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_station[0]",
+          "ck_station[1]",
+          "ck_station[2]",
+          "ck_station[3]",
+          "ck_station[4]",
+          "ck_station[5]",
+          "ck_station[6]",
+          "ck_station[7]",
+          "ck_station[8]",
+          "ck_station[9]",
+          "ck_station[10]",
+          "ck_station[11]",
+          "ck_station[12]",
+          "ck_station[13]",
+          "ck_station[14]",
+          "ck_station[15]",
+          "ck_station[16]",
+          "ck_station[17]",
+          "ck_station[18]",
+          "ck_station[19]",
+          "ck_station[20]",
+          "ck_station[21]",
+          "ck_station[22]",
+          "ck_station[23]",
+          "ck_station[24]",
+          "ck_station[25]",
+          "ck_station[26]",
+          "ck_station[27]",
+          "ck_station[28]",
+          "ck_station[29]",
+          "ck_station[30]",
+          "ck_station[31]",
+          "ck_station[32]",
+          "ck_station[33]",
+          "ck_station[34]",
+          "ck_station[35]",
+          "ck_station[36]",
+          "ck_station[37]",
+          "ck_station[38]",
+          "ck_station[39]",
+          "ck_station[40]",
+          "ck_station[41]",
+          "ck_station[42]",
+          "ck_station[43]",
+          "ck_station[44]",
+          "ck_station[45]",
+          "ck_station[46]",
+          "ck_station[47]",
+          "ck_station[48]",
+          "ck_station[49]",
+          "ck_station[50]",
+          "ck_station[51]",
+          "ck_station[52]",
+          "ck_station[53]",
+          "ck_station[54]",
+          "ck_station[55]",
+          "ck_station[56]",
+          "ck_station[57]",
+          "ck_station[58]",
+          "ck_station[59]",
+          "ck_station[60]",
+          "ck_station[61]",
+          "ck_station[62]",
+          "ck_station[63]",
+          "ck_station[64]",
+          "ck_station[65]",
+          "ck_station[66]",
+          "ck_station[67]",
+          "ck_station[68]",
+          "ck_station[69]",
+          "ck_station[70]",
+          "ck_station[71]",
+          "ck_station[72]",
+          "ck_station[73]",
+          "ck_station[74]",
+          "ck_station[75]",
+          "ck_station[76]",
+          "ck_station[77]",
+          "ck_station[78]",
+          "ck_station[79]",
+          "ck_station[80]",
+          "ck_station[81]",
+          "ck_station[82]",
+          "ck_station[83]",
+          "ck_station[84]",
+          "ck_station[85]",
+          "ck_station[86]",
+          "ck_station[87]",
+          "ck_station[88]",
+          "ck_station[89]",
+          "ck_station[90]",
+          "ck_station[91]",
+          "ck_station[92]",
+          "ck_station[93]",
+          "ck_station[94]",
+          "ck_station[95]",
+          "ck_station[96]",
+          "ck_station[97]",
+          "ck_station[98]",
+          "ck_station[99]",
+          "ck_station[100]",
+          "ck_station[101]",
+          "ck_station[102]",
+          "ck_station[103]",
+          "ck_station[104]",
+          "ck_station[105]",
+          "ck_station[106]",
+          "ck_station[107]",
+          "ck_station[108]",
+          "ck_station[109]",
+          "ck_station[110]",
+          "ck_station[111]",
+          "ck_station[112]",
+          "ck_station[113]",
+          "ck_station[114]",
+          "ck_station[115]",
+          "ck_station[116]",
+          "ck_station[117]",
+          "ck_station[118]",
+          "ck_station[119]",
+          "ck_station[120]",
+          "ck_station[121]",
+          "ck_station[122]",
+          "ck_station[123]",
+          "ck_station[124]",
+          "ck_station[125]",
+          "ck_station[126]",
+          "ck_station[127]"
+        ]
+      },
+      {
+        "name": "ck_static",
+        "direction": "input",
+        "width": 128,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_static[0]",
+          "ck_static[1]",
+          "ck_static[2]",
+          "ck_static[3]",
+          "ck_static[4]",
+          "ck_static[5]",
+          "ck_static[6]",
+          "ck_static[7]",
+          "ck_static[8]",
+          "ck_static[9]",
+          "ck_static[10]",
+          "ck_static[11]",
+          "ck_static[12]",
+          "ck_static[13]",
+          "ck_static[14]",
+          "ck_static[15]",
+          "ck_static[16]",
+          "ck_static[17]",
+          "ck_static[18]",
+          "ck_static[19]",
+          "ck_static[20]",
+          "ck_static[21]",
+          "ck_static[22]",
+          "ck_static[23]",
+          "ck_static[24]",
+          "ck_static[25]",
+          "ck_static[26]",
+          "ck_static[27]",
+          "ck_static[28]",
+          "ck_static[29]",
+          "ck_static[30]",
+          "ck_static[31]",
+          "ck_static[32]",
+          "ck_static[33]",
+          "ck_static[34]",
+          "ck_static[35]",
+          "ck_static[36]",
+          "ck_static[37]",
+          "ck_static[38]",
+          "ck_static[39]",
+          "ck_static[40]",
+          "ck_static[41]",
+          "ck_static[42]",
+          "ck_static[43]",
+          "ck_static[44]",
+          "ck_static[45]",
+          "ck_static[46]",
+          "ck_static[47]",
+          "ck_static[48]",
+          "ck_static[49]",
+          "ck_static[50]",
+          "ck_static[51]",
+          "ck_static[52]",
+          "ck_static[53]",
+          "ck_static[54]",
+          "ck_static[55]",
+          "ck_static[56]",
+          "ck_static[57]",
+          "ck_static[58]",
+          "ck_static[59]",
+          "ck_static[60]",
+          "ck_static[61]",
+          "ck_static[62]",
+          "ck_static[63]",
+          "ck_static[64]",
+          "ck_static[65]",
+          "ck_static[66]",
+          "ck_static[67]",
+          "ck_static[68]",
+          "ck_static[69]",
+          "ck_static[70]",
+          "ck_static[71]",
+          "ck_static[72]",
+          "ck_static[73]",
+          "ck_static[74]",
+          "ck_static[75]",
+          "ck_static[76]",
+          "ck_static[77]",
+          "ck_static[78]",
+          "ck_static[79]",
+          "ck_static[80]",
+          "ck_static[81]",
+          "ck_static[82]",
+          "ck_static[83]",
+          "ck_static[84]",
+          "ck_static[85]",
+          "ck_static[86]",
+          "ck_static[87]",
+          "ck_static[88]",
+          "ck_static[89]",
+          "ck_static[90]",
+          "ck_static[91]",
+          "ck_static[92]",
+          "ck_static[93]",
+          "ck_static[94]",
+          "ck_static[95]",
+          "ck_static[96]",
+          "ck_static[97]",
+          "ck_static[98]",
+          "ck_static[99]",
+          "ck_static[100]",
+          "ck_static[101]",
+          "ck_static[102]",
+          "ck_static[103]",
+          "ck_static[104]",
+          "ck_static[105]",
+          "ck_static[106]",
+          "ck_static[107]",
+          "ck_static[108]",
+          "ck_static[109]",
+          "ck_static[110]",
+          "ck_static[111]",
+          "ck_static[112]",
+          "ck_static[113]",
+          "ck_static[114]",
+          "ck_static[115]",
+          "ck_static[116]",
+          "ck_static[117]",
+          "ck_static[118]",
+          "ck_static[119]",
+          "ck_static[120]",
+          "ck_static[121]",
+          "ck_static[122]",
+          "ck_static[123]",
+          "ck_static[124]",
+          "ck_static[125]",
+          "ck_static[126]",
+          "ck_static[127]"
+        ]
+      },
+      {
+        "name": "ck_fence_core",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_fence_core"
+        ]
+      },
+      {
+        "name": "ck_fence_host",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1000000,
+        "clock_entries": [
+          "ck_fence_host"
+        ]
+      },
+      {
+        "name": "ck_guard",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_guard"
+        ]
+      },
+      {
+        "name": "ck_native",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_native"
+        ]
+      },
+      {
+        "name": "package_abort",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "abort_drained",
+        "direction": "input",
+        "width": 4
+      },
+      {
+        "name": "token_epoch_valid",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "token_epoch",
+        "direction": "output",
+        "width": 16
+      },
+      {
+        "name": "native_pr",
+        "direction": "output",
+        "width": 143
+      },
+      {
+        "name": "native_kv_drained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_vm_drained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_collective_drained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_host_drained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_collective_busy",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_kv_flush",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "service_ready",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "service_abort",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "ingest_permission",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "local_service_epoch",
+        "direction": "output",
+        "width": 16
+      },
+      {
+        "name": "service_diag_raw",
+        "direction": "output",
+        "width": 26
+      },
+      {
+        "name": "service_status",
+        "direction": "output",
+        "width": 32
+      },
+      {
+        "name": "die_id",
+        "direction": "input",
+        "width": 3
+      },
+      {
+        "name": "por_n",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "pll_locked",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "phy_up",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "phy_rx_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "phy_rx_flit",
+        "direction": "input",
+        "width": 1043
+      },
+      {
+        "name": "phy_tx_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "phy_tx_flit",
+        "direction": "output",
+        "width": 1043
+      },
+      {
+        "name": "link_up",
+        "direction": "input",
+        "width": 6
+      },
+      {
+        "name": "transport_fault",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "physical_fault",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "crom_fault",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "local_tk",
+        "direction": "input",
+        "width": 93
+      },
+      {
+        "name": "local_kst",
+        "direction": "input",
+        "width": 10
+      },
+      {
+        "name": "ck_records",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_records"
+        ]
+      },
+      {
+        "name": "record_send_kind",
+        "direction": "input",
+        "width": 2
+      },
+      {
+        "name": "record_witness_slot",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "record_rx_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "record_rx",
+        "direction": "input",
+        "width": 548
+      },
+      {
+        "name": "record_tx_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "record_tx_observed_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "record_tx",
+        "direction": "output",
+        "width": 548
+      },
+      {
+        "name": "record_fault",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "execution_active",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "program_ready",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "program_epoch",
+        "direction": "output",
+        "width": 16
+      },
+      {
+        "name": "program_digest",
+        "direction": "output",
+        "width": 64
+      },
+      {
+        "name": "program_authorized_footer_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "program_authorized_footer64",
+        "direction": "output",
+        "width": 64
+      },
+      {
+        "name": "program_begin_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "program_auth_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "program_expected_pw",
+        "direction": "output",
+        "width": 11
+      },
+      {
+        "name": "program_expected_dw",
+        "direction": "output",
+        "width": 4
+      },
+      {
+        "name": "program_auth_epoch",
+        "direction": "output",
+        "width": 16
+      },
+      {
+        "name": "program_auth_digest",
+        "direction": "output",
+        "width": 64
+      },
+      {
+        "name": "hc",
+        "direction": "output",
+        "width": 182
+      },
+      {
+        "name": "seen",
+        "direction": "output",
+        "width": 8
+      },
+      {
+        "name": "irq",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "host_rst_n",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "link_rst_n",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "hbm_rst_n",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "boot_go",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "die_rst_n",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "sys_ready",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "fault_src",
+        "direction": "output",
+        "width": 32
+      },
+      {
+        "name": "source_cr",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "available",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "hb",
+        "direction": "output",
+        "width": 283
+      },
+      {
+        "name": "hb_cr",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "est",
+        "direction": "input",
+        "width": 13
+      },
+      {
+        "name": "land_es",
+        "direction": "input",
+        "width": 36864
+      },
+      {
+        "name": "land_er",
+        "direction": "output",
+        "width": 33408
+      },
+      {
+        "name": "ctrl_es",
+        "direction": "output",
+        "width": 36864
+      },
+      {
+        "name": "ctrl_er",
+        "direction": "input",
+        "width": 33408
+      },
+      {
+        "name": "ctrl_completion_v",
+        "direction": "input",
+        "width": 128
+      },
+      {
+        "name": "ctrl_completion_we",
+        "direction": "input",
+        "width": 128
+      },
+      {
+        "name": "ctrl_completion_fault",
+        "direction": "input",
+        "width": 128
+      },
+      {
+        "name": "marker_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "marker",
+        "direction": "output",
+        "width": 66
+      },
+      {
+        "name": "issued",
+        "direction": "output",
+        "width": 32
+      },
+      {
+        "name": "landed",
+        "direction": "output",
+        "width": 32
+      },
+      {
+        "name": "physical_ack_n",
+        "direction": "output",
+        "width": 8
+      },
+      {
+        "name": "service_faults",
+        "direction": "output",
+        "width": 25
+      },
+      {
+        "name": "native_admit_ready",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_links_drained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_link_reset_seen",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_retrained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "peer_protocol_fault",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "ck_root_mux",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_root_mux"
+        ]
+      },
+      {
+        "name": "ck_coordinator_codec",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_coordinator_codec"
+        ]
+      },
+      {
+        "name": "ck_coordinator_lifecycle",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_coordinator_lifecycle"
+        ]
+      },
+      {
+        "name": "ck_coordinator_post",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_coordinator_post"
+        ]
+      },
+      {
+        "name": "engine_admit_ready",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "dispatch_valid",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "dispatched",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "cohort_tag",
+        "direction": "output",
+        "width": 59
+      },
+      {
+        "name": "cohort_gen",
+        "direction": "output",
+        "width": 2
+      },
+      {
+        "name": "accepted_ranks",
+        "direction": "output",
+        "width": 8
+      },
+      {
+        "name": "participant_trace",
+        "direction": "output",
+        "width": 256
+      },
+      {
+        "name": "participant_token",
+        "direction": "output",
+        "width": 144
+      },
+      {
+        "name": "participant_pos",
+        "direction": "output",
+        "width": 144
+      },
+      {
+        "name": "engine_result_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "engine_result_tag",
+        "direction": "input",
+        "width": 59
+      },
+      {
+        "name": "engine_result_gen",
+        "direction": "input",
+        "width": 2
+      },
+      {
+        "name": "engine_result_done",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "engine_result_fault",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "engine_result_cause",
+        "direction": "input",
+        "width": 4
+      },
+      {
+        "name": "engine_result_token",
+        "direction": "input",
+        "width": 18
+      },
+      {
+        "name": "engine_result_value",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "engine_result_cycles",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "engine_result_cr",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "program_consensus",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "coordinator_fault",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "recovery_complete",
+        "direction": "output",
+        "width": 1
+      }
+    ],
+    "clock_entry_count": 565
+  },
+  "qkd_host_rank_integrated": {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_integrated.sv",
+    "sha256": "ee2e001bfc87891effbea8ab48d1625601f6c10d45bf7b12b787c4c4fbf63738",
+    "ports": [
+      {
+        "name": "ck_phy",
+        "direction": "input",
+        "width": 8,
+        "period_fs": 1043000,
+        "clock_entries": [
+          "ck_phy[0]",
+          "ck_phy[1]",
+          "ck_phy[2]",
+          "ck_phy[3]",
+          "ck_phy[4]",
+          "ck_phy[5]",
+          "ck_phy[6]",
+          "ck_phy[7]"
+        ]
+      },
+      {
+        "name": "ck_pad",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1043000,
+        "clock_entries": [
+          "ck_pad"
+        ]
+      },
+      {
+        "name": "ck_phy_rx_w",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1043000,
+        "clock_entries": [
+          "ck_phy_rx_w"
+        ]
+      },
+      {
+        "name": "ck_phy_rx_r",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_phy_rx_r"
+        ]
+      },
+      {
+        "name": "ck_phy_tx_w",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_phy_tx_w"
+        ]
+      },
+      {
+        "name": "ck_phy_tx_r",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1043000,
+        "clock_entries": [
+          "ck_phy_tx_r"
+        ]
+      },
+      {
+        "name": "ck_peer",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_peer"
+        ]
+      },
+      {
+        "name": "ck_program_rx",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_program_rx"
+        ]
+      },
+      {
+        "name": "ck_program_loader",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_program_loader"
+        ]
+      },
+      {
+        "name": "ck_boot",
+        "direction": "input",
+        "width": 128,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_boot[0]",
+          "ck_boot[1]",
+          "ck_boot[2]",
+          "ck_boot[3]",
+          "ck_boot[4]",
+          "ck_boot[5]",
+          "ck_boot[6]",
+          "ck_boot[7]",
+          "ck_boot[8]",
+          "ck_boot[9]",
+          "ck_boot[10]",
+          "ck_boot[11]",
+          "ck_boot[12]",
+          "ck_boot[13]",
+          "ck_boot[14]",
+          "ck_boot[15]",
+          "ck_boot[16]",
+          "ck_boot[17]",
+          "ck_boot[18]",
+          "ck_boot[19]",
+          "ck_boot[20]",
+          "ck_boot[21]",
+          "ck_boot[22]",
+          "ck_boot[23]",
+          "ck_boot[24]",
+          "ck_boot[25]",
+          "ck_boot[26]",
+          "ck_boot[27]",
+          "ck_boot[28]",
+          "ck_boot[29]",
+          "ck_boot[30]",
+          "ck_boot[31]",
+          "ck_boot[32]",
+          "ck_boot[33]",
+          "ck_boot[34]",
+          "ck_boot[35]",
+          "ck_boot[36]",
+          "ck_boot[37]",
+          "ck_boot[38]",
+          "ck_boot[39]",
+          "ck_boot[40]",
+          "ck_boot[41]",
+          "ck_boot[42]",
+          "ck_boot[43]",
+          "ck_boot[44]",
+          "ck_boot[45]",
+          "ck_boot[46]",
+          "ck_boot[47]",
+          "ck_boot[48]",
+          "ck_boot[49]",
+          "ck_boot[50]",
+          "ck_boot[51]",
+          "ck_boot[52]",
+          "ck_boot[53]",
+          "ck_boot[54]",
+          "ck_boot[55]",
+          "ck_boot[56]",
+          "ck_boot[57]",
+          "ck_boot[58]",
+          "ck_boot[59]",
+          "ck_boot[60]",
+          "ck_boot[61]",
+          "ck_boot[62]",
+          "ck_boot[63]",
+          "ck_boot[64]",
+          "ck_boot[65]",
+          "ck_boot[66]",
+          "ck_boot[67]",
+          "ck_boot[68]",
+          "ck_boot[69]",
+          "ck_boot[70]",
+          "ck_boot[71]",
+          "ck_boot[72]",
+          "ck_boot[73]",
+          "ck_boot[74]",
+          "ck_boot[75]",
+          "ck_boot[76]",
+          "ck_boot[77]",
+          "ck_boot[78]",
+          "ck_boot[79]",
+          "ck_boot[80]",
+          "ck_boot[81]",
+          "ck_boot[82]",
+          "ck_boot[83]",
+          "ck_boot[84]",
+          "ck_boot[85]",
+          "ck_boot[86]",
+          "ck_boot[87]",
+          "ck_boot[88]",
+          "ck_boot[89]",
+          "ck_boot[90]",
+          "ck_boot[91]",
+          "ck_boot[92]",
+          "ck_boot[93]",
+          "ck_boot[94]",
+          "ck_boot[95]",
+          "ck_boot[96]",
+          "ck_boot[97]",
+          "ck_boot[98]",
+          "ck_boot[99]",
+          "ck_boot[100]",
+          "ck_boot[101]",
+          "ck_boot[102]",
+          "ck_boot[103]",
+          "ck_boot[104]",
+          "ck_boot[105]",
+          "ck_boot[106]",
+          "ck_boot[107]",
+          "ck_boot[108]",
+          "ck_boot[109]",
+          "ck_boot[110]",
+          "ck_boot[111]",
+          "ck_boot[112]",
+          "ck_boot[113]",
+          "ck_boot[114]",
+          "ck_boot[115]",
+          "ck_boot[116]",
+          "ck_boot[117]",
+          "ck_boot[118]",
+          "ck_boot[119]",
+          "ck_boot[120]",
+          "ck_boot[121]",
+          "ck_boot[122]",
+          "ck_boot[123]",
+          "ck_boot[124]",
+          "ck_boot[125]",
+          "ck_boot[126]",
+          "ck_boot[127]"
+        ]
+      },
+      {
+        "name": "ck_boot_test",
+        "direction": "input",
+        "width": 128,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_boot_test[0]",
+          "ck_boot_test[1]",
+          "ck_boot_test[2]",
+          "ck_boot_test[3]",
+          "ck_boot_test[4]",
+          "ck_boot_test[5]",
+          "ck_boot_test[6]",
+          "ck_boot_test[7]",
+          "ck_boot_test[8]",
+          "ck_boot_test[9]",
+          "ck_boot_test[10]",
+          "ck_boot_test[11]",
+          "ck_boot_test[12]",
+          "ck_boot_test[13]",
+          "ck_boot_test[14]",
+          "ck_boot_test[15]",
+          "ck_boot_test[16]",
+          "ck_boot_test[17]",
+          "ck_boot_test[18]",
+          "ck_boot_test[19]",
+          "ck_boot_test[20]",
+          "ck_boot_test[21]",
+          "ck_boot_test[22]",
+          "ck_boot_test[23]",
+          "ck_boot_test[24]",
+          "ck_boot_test[25]",
+          "ck_boot_test[26]",
+          "ck_boot_test[27]",
+          "ck_boot_test[28]",
+          "ck_boot_test[29]",
+          "ck_boot_test[30]",
+          "ck_boot_test[31]",
+          "ck_boot_test[32]",
+          "ck_boot_test[33]",
+          "ck_boot_test[34]",
+          "ck_boot_test[35]",
+          "ck_boot_test[36]",
+          "ck_boot_test[37]",
+          "ck_boot_test[38]",
+          "ck_boot_test[39]",
+          "ck_boot_test[40]",
+          "ck_boot_test[41]",
+          "ck_boot_test[42]",
+          "ck_boot_test[43]",
+          "ck_boot_test[44]",
+          "ck_boot_test[45]",
+          "ck_boot_test[46]",
+          "ck_boot_test[47]",
+          "ck_boot_test[48]",
+          "ck_boot_test[49]",
+          "ck_boot_test[50]",
+          "ck_boot_test[51]",
+          "ck_boot_test[52]",
+          "ck_boot_test[53]",
+          "ck_boot_test[54]",
+          "ck_boot_test[55]",
+          "ck_boot_test[56]",
+          "ck_boot_test[57]",
+          "ck_boot_test[58]",
+          "ck_boot_test[59]",
+          "ck_boot_test[60]",
+          "ck_boot_test[61]",
+          "ck_boot_test[62]",
+          "ck_boot_test[63]",
+          "ck_boot_test[64]",
+          "ck_boot_test[65]",
+          "ck_boot_test[66]",
+          "ck_boot_test[67]",
+          "ck_boot_test[68]",
+          "ck_boot_test[69]",
+          "ck_boot_test[70]",
+          "ck_boot_test[71]",
+          "ck_boot_test[72]",
+          "ck_boot_test[73]",
+          "ck_boot_test[74]",
+          "ck_boot_test[75]",
+          "ck_boot_test[76]",
+          "ck_boot_test[77]",
+          "ck_boot_test[78]",
+          "ck_boot_test[79]",
+          "ck_boot_test[80]",
+          "ck_boot_test[81]",
+          "ck_boot_test[82]",
+          "ck_boot_test[83]",
+          "ck_boot_test[84]",
+          "ck_boot_test[85]",
+          "ck_boot_test[86]",
+          "ck_boot_test[87]",
+          "ck_boot_test[88]",
+          "ck_boot_test[89]",
+          "ck_boot_test[90]",
+          "ck_boot_test[91]",
+          "ck_boot_test[92]",
+          "ck_boot_test[93]",
+          "ck_boot_test[94]",
+          "ck_boot_test[95]",
+          "ck_boot_test[96]",
+          "ck_boot_test[97]",
+          "ck_boot_test[98]",
+          "ck_boot_test[99]",
+          "ck_boot_test[100]",
+          "ck_boot_test[101]",
+          "ck_boot_test[102]",
+          "ck_boot_test[103]",
+          "ck_boot_test[104]",
+          "ck_boot_test[105]",
+          "ck_boot_test[106]",
+          "ck_boot_test[107]",
+          "ck_boot_test[108]",
+          "ck_boot_test[109]",
+          "ck_boot_test[110]",
+          "ck_boot_test[111]",
+          "ck_boot_test[112]",
+          "ck_boot_test[113]",
+          "ck_boot_test[114]",
+          "ck_boot_test[115]",
+          "ck_boot_test[116]",
+          "ck_boot_test[117]",
+          "ck_boot_test[118]",
+          "ck_boot_test[119]",
+          "ck_boot_test[120]",
+          "ck_boot_test[121]",
+          "ck_boot_test[122]",
+          "ck_boot_test[123]",
+          "ck_boot_test[124]",
+          "ck_boot_test[125]",
+          "ck_boot_test[126]",
+          "ck_boot_test[127]"
+        ]
+      },
+      {
+        "name": "ck_host",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_host"
+        ]
+      },
+      {
+        "name": "ck_csr",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_csr"
+        ]
+      },
+      {
+        "name": "ck_rst",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_rst"
+        ]
+      },
+      {
+        "name": "ck_ctl",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_ctl"
+        ]
+      },
+      {
+        "name": "ck_prompt",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_prompt"
+        ]
+      },
+      {
+        "name": "ck_rx",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_rx"
+        ]
+      },
+      {
+        "name": "ck_tx",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_tx"
+        ]
+      },
+      {
+        "name": "ck_axi",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_axi"
+        ]
+      },
+      {
+        "name": "ck_ctrl",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_ctrl"
+        ]
+      },
+      {
+        "name": "ck_hc",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_hc"
+        ]
+      },
+      {
+        "name": "ck_qm_queue",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_qm_queue"
+        ]
+      },
+      {
+        "name": "ck_qm_ing_w",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_qm_ing_w"
+        ]
+      },
+      {
+        "name": "ck_qm_ing_r",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1000000,
+        "clock_entries": [
+          "ck_qm_ing_r"
+        ]
+      },
+      {
+        "name": "ck_qm_credit",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1000000,
+        "clock_entries": [
+          "ck_qm_credit"
+        ]
+      },
+      {
+        "name": "ck_qm_done_w",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1000000,
+        "clock_entries": [
+          "ck_qm_done_w"
+        ]
+      },
+      {
+        "name": "ck_qm_done_r",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_qm_done_r"
+        ]
+      },
+      {
+        "name": "ck_qm_core",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_qm_core"
+        ]
+      },
+      {
+        "name": "ck_qm_host",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1000000,
+        "clock_entries": [
+          "ck_qm_host"
+        ]
+      },
+      {
+        "name": "ck_qm_ingest",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1666668,
+        "clock_entries": [
+          "ck_qm_ingest"
+        ]
+      },
+      {
+        "name": "ck_qm_bank",
+        "direction": "input",
+        "width": 2,
+        "period_fs": 1666668,
+        "clock_entries": [
+          "ck_qm_bank[0]",
+          "ck_qm_bank[1]"
+        ]
+      },
+      {
+        "name": "ck_qm_out",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1666668,
+        "clock_entries": [
+          "ck_qm_out"
+        ]
+      },
+      {
+        "name": "ck_map",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_map"
+        ]
+      },
+      {
+        "name": "ck_sum",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_sum"
+        ]
+      },
+      {
+        "name": "ck_order",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_order"
+        ]
+      },
+      {
+        "name": "ck_dispatch",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_dispatch"
+        ]
+      },
+      {
+        "name": "ck_retire",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_retire"
+        ]
+      },
+      {
+        "name": "ck_bootbarrier",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_bootbarrier"
+        ]
+      },
+      {
+        "name": "ck_station",
+        "direction": "input",
+        "width": 128,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_station[0]",
+          "ck_station[1]",
+          "ck_station[2]",
+          "ck_station[3]",
+          "ck_station[4]",
+          "ck_station[5]",
+          "ck_station[6]",
+          "ck_station[7]",
+          "ck_station[8]",
+          "ck_station[9]",
+          "ck_station[10]",
+          "ck_station[11]",
+          "ck_station[12]",
+          "ck_station[13]",
+          "ck_station[14]",
+          "ck_station[15]",
+          "ck_station[16]",
+          "ck_station[17]",
+          "ck_station[18]",
+          "ck_station[19]",
+          "ck_station[20]",
+          "ck_station[21]",
+          "ck_station[22]",
+          "ck_station[23]",
+          "ck_station[24]",
+          "ck_station[25]",
+          "ck_station[26]",
+          "ck_station[27]",
+          "ck_station[28]",
+          "ck_station[29]",
+          "ck_station[30]",
+          "ck_station[31]",
+          "ck_station[32]",
+          "ck_station[33]",
+          "ck_station[34]",
+          "ck_station[35]",
+          "ck_station[36]",
+          "ck_station[37]",
+          "ck_station[38]",
+          "ck_station[39]",
+          "ck_station[40]",
+          "ck_station[41]",
+          "ck_station[42]",
+          "ck_station[43]",
+          "ck_station[44]",
+          "ck_station[45]",
+          "ck_station[46]",
+          "ck_station[47]",
+          "ck_station[48]",
+          "ck_station[49]",
+          "ck_station[50]",
+          "ck_station[51]",
+          "ck_station[52]",
+          "ck_station[53]",
+          "ck_station[54]",
+          "ck_station[55]",
+          "ck_station[56]",
+          "ck_station[57]",
+          "ck_station[58]",
+          "ck_station[59]",
+          "ck_station[60]",
+          "ck_station[61]",
+          "ck_station[62]",
+          "ck_station[63]",
+          "ck_station[64]",
+          "ck_station[65]",
+          "ck_station[66]",
+          "ck_station[67]",
+          "ck_station[68]",
+          "ck_station[69]",
+          "ck_station[70]",
+          "ck_station[71]",
+          "ck_station[72]",
+          "ck_station[73]",
+          "ck_station[74]",
+          "ck_station[75]",
+          "ck_station[76]",
+          "ck_station[77]",
+          "ck_station[78]",
+          "ck_station[79]",
+          "ck_station[80]",
+          "ck_station[81]",
+          "ck_station[82]",
+          "ck_station[83]",
+          "ck_station[84]",
+          "ck_station[85]",
+          "ck_station[86]",
+          "ck_station[87]",
+          "ck_station[88]",
+          "ck_station[89]",
+          "ck_station[90]",
+          "ck_station[91]",
+          "ck_station[92]",
+          "ck_station[93]",
+          "ck_station[94]",
+          "ck_station[95]",
+          "ck_station[96]",
+          "ck_station[97]",
+          "ck_station[98]",
+          "ck_station[99]",
+          "ck_station[100]",
+          "ck_station[101]",
+          "ck_station[102]",
+          "ck_station[103]",
+          "ck_station[104]",
+          "ck_station[105]",
+          "ck_station[106]",
+          "ck_station[107]",
+          "ck_station[108]",
+          "ck_station[109]",
+          "ck_station[110]",
+          "ck_station[111]",
+          "ck_station[112]",
+          "ck_station[113]",
+          "ck_station[114]",
+          "ck_station[115]",
+          "ck_station[116]",
+          "ck_station[117]",
+          "ck_station[118]",
+          "ck_station[119]",
+          "ck_station[120]",
+          "ck_station[121]",
+          "ck_station[122]",
+          "ck_station[123]",
+          "ck_station[124]",
+          "ck_station[125]",
+          "ck_station[126]",
+          "ck_station[127]"
+        ]
+      },
+      {
+        "name": "ck_static",
+        "direction": "input",
+        "width": 128,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_static[0]",
+          "ck_static[1]",
+          "ck_static[2]",
+          "ck_static[3]",
+          "ck_static[4]",
+          "ck_static[5]",
+          "ck_static[6]",
+          "ck_static[7]",
+          "ck_static[8]",
+          "ck_static[9]",
+          "ck_static[10]",
+          "ck_static[11]",
+          "ck_static[12]",
+          "ck_static[13]",
+          "ck_static[14]",
+          "ck_static[15]",
+          "ck_static[16]",
+          "ck_static[17]",
+          "ck_static[18]",
+          "ck_static[19]",
+          "ck_static[20]",
+          "ck_static[21]",
+          "ck_static[22]",
+          "ck_static[23]",
+          "ck_static[24]",
+          "ck_static[25]",
+          "ck_static[26]",
+          "ck_static[27]",
+          "ck_static[28]",
+          "ck_static[29]",
+          "ck_static[30]",
+          "ck_static[31]",
+          "ck_static[32]",
+          "ck_static[33]",
+          "ck_static[34]",
+          "ck_static[35]",
+          "ck_static[36]",
+          "ck_static[37]",
+          "ck_static[38]",
+          "ck_static[39]",
+          "ck_static[40]",
+          "ck_static[41]",
+          "ck_static[42]",
+          "ck_static[43]",
+          "ck_static[44]",
+          "ck_static[45]",
+          "ck_static[46]",
+          "ck_static[47]",
+          "ck_static[48]",
+          "ck_static[49]",
+          "ck_static[50]",
+          "ck_static[51]",
+          "ck_static[52]",
+          "ck_static[53]",
+          "ck_static[54]",
+          "ck_static[55]",
+          "ck_static[56]",
+          "ck_static[57]",
+          "ck_static[58]",
+          "ck_static[59]",
+          "ck_static[60]",
+          "ck_static[61]",
+          "ck_static[62]",
+          "ck_static[63]",
+          "ck_static[64]",
+          "ck_static[65]",
+          "ck_static[66]",
+          "ck_static[67]",
+          "ck_static[68]",
+          "ck_static[69]",
+          "ck_static[70]",
+          "ck_static[71]",
+          "ck_static[72]",
+          "ck_static[73]",
+          "ck_static[74]",
+          "ck_static[75]",
+          "ck_static[76]",
+          "ck_static[77]",
+          "ck_static[78]",
+          "ck_static[79]",
+          "ck_static[80]",
+          "ck_static[81]",
+          "ck_static[82]",
+          "ck_static[83]",
+          "ck_static[84]",
+          "ck_static[85]",
+          "ck_static[86]",
+          "ck_static[87]",
+          "ck_static[88]",
+          "ck_static[89]",
+          "ck_static[90]",
+          "ck_static[91]",
+          "ck_static[92]",
+          "ck_static[93]",
+          "ck_static[94]",
+          "ck_static[95]",
+          "ck_static[96]",
+          "ck_static[97]",
+          "ck_static[98]",
+          "ck_static[99]",
+          "ck_static[100]",
+          "ck_static[101]",
+          "ck_static[102]",
+          "ck_static[103]",
+          "ck_static[104]",
+          "ck_static[105]",
+          "ck_static[106]",
+          "ck_static[107]",
+          "ck_static[108]",
+          "ck_static[109]",
+          "ck_static[110]",
+          "ck_static[111]",
+          "ck_static[112]",
+          "ck_static[113]",
+          "ck_static[114]",
+          "ck_static[115]",
+          "ck_static[116]",
+          "ck_static[117]",
+          "ck_static[118]",
+          "ck_static[119]",
+          "ck_static[120]",
+          "ck_static[121]",
+          "ck_static[122]",
+          "ck_static[123]",
+          "ck_static[124]",
+          "ck_static[125]",
+          "ck_static[126]",
+          "ck_static[127]"
+        ]
+      },
+      {
+        "name": "ck_fence_core",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_fence_core"
+        ]
+      },
+      {
+        "name": "ck_fence_host",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 1000000,
+        "clock_entries": [
+          "ck_fence_host"
+        ]
+      },
+      {
+        "name": "ck_guard",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_guard"
+        ]
+      },
+      {
+        "name": "ck_native",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_native"
+        ]
+      },
+      {
+        "name": "token_allocator_fault",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "token_wrap_fence_valid",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "token_wrap_drained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "token_wrap_link_reset_seen",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "token_wrap_retraining_done",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "package_abort",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "abort_drained",
+        "direction": "input",
+        "width": 4
+      },
+      {
+        "name": "token_request_valid",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "token_request_ready",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "token_request_token",
+        "direction": "output",
+        "width": 18
+      },
+      {
+        "name": "token_request_position",
+        "direction": "output",
+        "width": 18
+      },
+      {
+        "name": "token_request_generation",
+        "direction": "output",
+        "width": 2
+      },
+      {
+        "name": "token_grant_valid",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "token_grant_ready",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "token_grant_epoch",
+        "direction": "input",
+        "width": 16
+      },
+      {
+        "name": "token_grant_token",
+        "direction": "input",
+        "width": 18
+      },
+      {
+        "name": "token_grant_position",
+        "direction": "input",
+        "width": 18
+      },
+      {
+        "name": "token_grant_generation",
+        "direction": "input",
+        "width": 2
+      },
+      {
+        "name": "token_grant_tag",
+        "direction": "input",
+        "width": 59
+      },
+      {
+        "name": "allocated_valid",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "allocated_delivered",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "allocated_epoch",
+        "direction": "input",
+        "width": 16
+      },
+      {
+        "name": "allocated_token",
+        "direction": "input",
+        "width": 18
+      },
+      {
+        "name": "allocated_position",
+        "direction": "input",
+        "width": 18
+      },
+      {
+        "name": "allocated_generation",
+        "direction": "input",
+        "width": 2
+      },
+      {
+        "name": "token_epoch_valid",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "token_epoch",
+        "direction": "output",
+        "width": 16
+      },
+      {
+        "name": "native_pr",
+        "direction": "output",
+        "width": 143
+      },
+      {
+        "name": "native_kv_drained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_vm_drained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_collective_drained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_host_drained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_collective_busy",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_kv_flush",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "service_ready",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "service_abort",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "ingest_permission",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "local_service_epoch",
+        "direction": "output",
+        "width": 16
+      },
+      {
+        "name": "service_diag_raw",
+        "direction": "output",
+        "width": 26
+      },
+      {
+        "name": "service_status",
+        "direction": "output",
+        "width": 32
+      },
+      {
+        "name": "die_id",
+        "direction": "input",
+        "width": 3
+      },
+      {
+        "name": "por_n",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "pll_locked",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "phy_up",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "phy_rx_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "phy_rx_flit",
+        "direction": "input",
+        "width": 1043
+      },
+      {
+        "name": "phy_tx_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "phy_tx_flit",
+        "direction": "output",
+        "width": 1043
+      },
+      {
+        "name": "link_up",
+        "direction": "input",
+        "width": 6
+      },
+      {
+        "name": "transport_fault",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "physical_fault",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "crom_fault",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "local_tk",
+        "direction": "input",
+        "width": 93
+      },
+      {
+        "name": "local_kst",
+        "direction": "input",
+        "width": 10
+      },
+      {
+        "name": "ck_records",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_records"
+        ]
+      },
+      {
+        "name": "record_send_kind",
+        "direction": "input",
+        "width": 2
+      },
+      {
+        "name": "record_witness_slot",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "record_rx_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "record_rx",
+        "direction": "input",
+        "width": 548
+      },
+      {
+        "name": "record_tx_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "record_tx_observed_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "record_tx",
+        "direction": "output",
+        "width": 548
+      },
+      {
+        "name": "record_fault",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "execution_active",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "program_ready",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "program_epoch",
+        "direction": "output",
+        "width": 16
+      },
+      {
+        "name": "program_digest",
+        "direction": "output",
+        "width": 64
+      },
+      {
+        "name": "program_authorized_footer_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "program_authorized_footer64",
+        "direction": "output",
+        "width": 64
+      },
+      {
+        "name": "program_begin_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "program_auth_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "program_expected_pw",
+        "direction": "output",
+        "width": 11
+      },
+      {
+        "name": "program_expected_dw",
+        "direction": "output",
+        "width": 4
+      },
+      {
+        "name": "program_auth_epoch",
+        "direction": "output",
+        "width": 16
+      },
+      {
+        "name": "program_auth_digest",
+        "direction": "output",
+        "width": 64
+      },
+      {
+        "name": "hc",
+        "direction": "output",
+        "width": 182
+      },
+      {
+        "name": "seen",
+        "direction": "output",
+        "width": 8
+      },
+      {
+        "name": "irq",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "host_rst_n",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "link_rst_n",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "hbm_rst_n",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "boot_go",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "die_rst_n",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "sys_ready",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "fault_src",
+        "direction": "output",
+        "width": 32
+      },
+      {
+        "name": "source_cr",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "available",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "hb",
+        "direction": "output",
+        "width": 283
+      },
+      {
+        "name": "hb_cr",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "est",
+        "direction": "input",
+        "width": 13
+      },
+      {
+        "name": "land_es",
+        "direction": "input",
+        "width": 36864
+      },
+      {
+        "name": "land_er",
+        "direction": "output",
+        "width": 33408
+      },
+      {
+        "name": "ctrl_es",
+        "direction": "output",
+        "width": 36864
+      },
+      {
+        "name": "ctrl_er",
+        "direction": "input",
+        "width": 33408
+      },
+      {
+        "name": "ctrl_completion_v",
+        "direction": "input",
+        "width": 128
+      },
+      {
+        "name": "ctrl_completion_we",
+        "direction": "input",
+        "width": 128
+      },
+      {
+        "name": "ctrl_completion_fault",
+        "direction": "input",
+        "width": 128
+      },
+      {
+        "name": "marker_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "marker",
+        "direction": "output",
+        "width": 66
+      },
+      {
+        "name": "issued",
+        "direction": "output",
+        "width": 32
+      },
+      {
+        "name": "landed",
+        "direction": "output",
+        "width": 32
+      },
+      {
+        "name": "physical_ack_n",
+        "direction": "output",
+        "width": 8
+      },
+      {
+        "name": "service_faults",
+        "direction": "output",
+        "width": 25
+      },
+      {
+        "name": "native_admit_ready",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_links_drained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_link_reset_seen",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "native_retrained",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "peer_protocol_fault",
+        "direction": "output",
+        "width": 1
+      }
+    ],
+    "clock_entry_count": 561
+  },
+  "qkd_host_tp8_coordinator": {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv",
+    "sha256": "3ef013ca6db4c5358c7eff2a1f6a9c41d6c16995af1386889368197149dab657",
+    "ports": [
+      {
+        "name": "ck_codec",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_codec"
+        ]
+      },
+      {
+        "name": "ck_lifecycle",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_lifecycle"
+        ]
+      },
+      {
+        "name": "ck_post",
+        "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_post"
+        ]
+      },
+      {
+        "name": "por_n",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "peer_rx_valid",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "peer_rx_data",
+        "direction": "input",
+        "width": 4096
+      },
+      {
+        "name": "peer_rx_ready",
+        "direction": "output",
+        "width": 8
+      },
+      {
+        "name": "peer_tx_valid",
+        "direction": "output",
+        "width": 8
+      },
+      {
+        "name": "peer_tx_data",
+        "direction": "output",
+        "width": 4096
+      },
+      {
+        "name": "peer_tx_ready",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "token_request_valid",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "token_request_token",
+        "direction": "input",
+        "width": 18
+      },
+      {
+        "name": "token_request_position",
+        "direction": "input",
+        "width": 18
+      },
+      {
+        "name": "token_request_gen",
+        "direction": "input",
+        "width": 2
+      },
+      {
+        "name": "token_request_ready",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "token_grant_valid",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "token_grant_ready",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "token_grant_epoch",
+        "direction": "output",
+        "width": 16
+      },
+      {
+        "name": "token_grant_token",
+        "direction": "output",
+        "width": 18
+      },
+      {
+        "name": "token_grant_position",
+        "direction": "output",
+        "width": 18
+      },
+      {
+        "name": "token_grant_gen",
+        "direction": "output",
+        "width": 2
+      },
+      {
+        "name": "token_grant_tag",
+        "direction": "output",
+        "width": 59
+      },
+      {
+        "name": "allocated_valid",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "allocated_delivered",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "engine_admit_ready",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "dispatch_valid",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "dispatched",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "cohort_tag",
+        "direction": "output",
+        "width": 59
+      },
+      {
+        "name": "cohort_gen",
+        "direction": "output",
+        "width": 2
+      },
+      {
+        "name": "accepted_ranks",
+        "direction": "output",
+        "width": 8
+      },
+      {
+        "name": "participant_trace",
+        "direction": "output",
+        "width": 256
+      },
+      {
+        "name": "participant_token",
+        "direction": "output",
+        "width": 144
+      },
+      {
+        "name": "participant_pos",
+        "direction": "output",
+        "width": 144
+      },
+      {
+        "name": "engine_result_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "engine_result_tag",
+        "direction": "input",
+        "width": 59
+      },
+      {
+        "name": "engine_result_gen",
+        "direction": "input",
+        "width": 2
+      },
+      {
+        "name": "engine_result_done",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "engine_result_fault",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "engine_result_cause",
+        "direction": "input",
+        "width": 4
+      },
+      {
+        "name": "engine_result_token",
+        "direction": "input",
+        "width": 18
+      },
+      {
+        "name": "engine_result_value",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "engine_result_cycles",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "engine_result_cr",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "program_consensus",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "program_epoch",
+        "direction": "output",
+        "width": 16
+      },
+      {
+        "name": "program_digest",
+        "direction": "output",
+        "width": 64
+      },
+      {
+        "name": "certificate_valid",
+        "direction": "output",
+        "width": 8
+      },
+      {
+        "name": "certificate",
+        "direction": "output",
+        "width": 528
+      },
+      {
+        "name": "certificate_prefix",
+        "direction": "output",
+        "width": 256
+      },
+      {
+        "name": "wrap_locked",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "identity_fault",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "recovery_complete",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "post_pending",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "fault",
+        "direction": "output",
+        "width": 1
+      }
+    ],
+    "clock_entry_count": 3
+  }
+}
