@@ -1,0 +1,35 @@
+{
+  "source_commit": "2f70b32ca",
+  "scope": "source candidate, standalone real mapped memory component exactness and physical clock-entry ownership only",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1684595-1792100715",
+  "run": "/home/ubuntu/hbm-su-stream6-pin-1445",
+  "status": "component_pass",
+  "edges": 9489,
+  "restarts": 2,
+  "SRAMs": 6,
+  "clock_ownership_checks": 36,
+  "semantic_mutants": [
+    "DATA",
+    "ADDR",
+    "PHASE",
+    "CLOCK"
+  ],
+  "clock_mutants": [
+    "COLLAPSE",
+    "SWAP"
+  ],
+  "input_pipeline_added_edges": 1,
+  "start_to_command_present_edges": 4,
+  "start_to_consumer_edges": 5,
+  "II": 1,
+  "reset_bootstrap_min_edges": 2,
+  "physical_qualified": false,
+  "parent_adopted": false,
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "404a70ae56d80df5f3bf2eb655ecc4b5cb4babe8c73be95db42c53306bb552ab",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_stream_calendar6_pin.sv": "9936d5e70dc6f9ef5e0e14a37f6fa40abfd549439aa82c4b049b35c4bb037a1e",
+    "tools/hbm_static/su_stream6_pin_bench.py": "9f03e3568268afd33a300162848391ff09bb2b439f25ec754c0b7ad7862a6ea8",
+    "tools/hbm_static/su_programme_compile.py": "39773fd242f8d9f12af872cee5638523bff99df8daf8d33245cf52c42f9feb1b"
+  }
+}

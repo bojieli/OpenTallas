@@ -1,0 +1,310 @@
+{
+  "name": "hbm_su_stream6_pin_1015",
+  "top": "ot_hbm_su_stream_calendar6_pin",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_stream_calendar6_pin.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "pins": {
+    "N": [
+      "clk",
+      "clk_macro3",
+      "clk_macro4",
+      "clk_macro5",
+      "rst_n"
+    ],
+    "W": [
+      "cfg_we",
+      "cfg_bank",
+      "cfg_row",
+      "cfg_data",
+      "start",
+      "length"
+    ],
+    "E": [
+      "busy",
+      "valid",
+      "done",
+      "fault",
+      "edge_index",
+      "command"
+    ],
+    "S": [
+      "clk_macro0",
+      "clk_macro1",
+      "clk_macro2"
+    ]
+  },
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*ix?0?.mem.g?0?.mem",
+      "clock_entry": {
+        "port": "clk_macro0",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      }
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*ix?0?.mem.g?1?.mem",
+      "clock_entry": {
+        "port": "clk_macro1",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      }
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*ix?0?.mem.g?2?.mem",
+      "clock_entry": {
+        "port": "clk_macro2",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      }
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*ix?0?.mem.g?3?.mem",
+      "clock_entry": {
+        "port": "clk_macro3",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      }
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*ix?0?.mem.g?4?.mem",
+      "clock_entry": {
+        "port": "clk_macro4",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      }
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*dt?0?.mem.g?0?.mem",
+      "clock_entry": {
+        "port": "clk_macro5",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      }
+    }
+  ],
+  "outline": {
+    "w": 369.36,
+    "h": 151.2
+  },
+  "layer_cap": "M5",
+  "signal_max_layer": "M5",
+  "pg_layer": "M5",
+  "route": {
+    "pd": 0.5,
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "period_ps": 833.333,
+    "pin_h": "M4",
+    "pin_v": "M5",
+    "signoff_period_ps": 833.333,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "job": {
+    "owner": "Codex:HBM-SU-stream-calendar",
+    "branch": "codex/hbm-su-multirate-1417",
+    "tag": "pin6",
+    "purpose": "New actual six-SRAM fixed stream-calendar physical boundary: registered config/start/reset inputs, registered core outputs, six raw macro clock entries plus a CTS control root. Actual9489-edge/restart/data/address/phase/clock-halt and36clockownership/2clockmutants PASS. Extra1config/start/reset edge; sameII1. Not fullSU/native clock qualification before actual gate/route and currentdie slot.",
+    "auto_merge": false,
+    "hold_merge": "Current die slot/pins/clock epoch and parent production joins remain OPEN.",
+    "views_to": "physical/ref_tile/hbm_su_stream6_pin_1015/views",
+    "record_to": "results/arch/hbm_su_f2_static_1014/programme/stream6_pin_physical",
+    "benches": [
+      {
+        "name": "stream6_exact_and_mutants",
+        "cmd": "python3 tools/hbm_static/su_stream6_pin_bench.py results/arch/hbm_su_f2_static_1014/programme/stream_packed16_1436/stream_cal.mem {RUN}/bench/stream6",
+        "expect": "pass",
+        "pass_regex": "SU_STREAM6_PIN_GATE PASS",
+        "min_count_regex": "edges=(\\d+)",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ]
+  },
+  "recipe": 2,
+  "orfs_vars": {
+    "OT_MEG_DEPTH_UM": "2.4"
+  },
+  "clock": "hybrid_entries",
+  "clock_ports": [
+    "clk",
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2",
+    "clk_macro3",
+    "clk_macro4",
+    "clk_macro5"
+  ],
+  "clock_data_paths": "related_same_frequency",
+  "clock_relationship": {
+    "kind": "same_pll_fixed_phase",
+    "ratio": [
+      1,
+      1
+    ],
+    "phase_ps": 0
+  },
+  "clock_entry_domains": {
+    "macro0": {
+      "ports": [
+        "clk_macro0"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro1": {
+      "ports": [
+        "clk_macro1"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro2": {
+      "ports": [
+        "clk_macro2"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro3": {
+      "ports": [
+        "clk_macro3"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro4": {
+      "ports": [
+        "clk_macro4"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro5": {
+      "ports": [
+        "clk_macro5"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "core": {
+      "ports": [
+        "clk"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [
+        "rst_n",
+        "cfg_we",
+        "cfg_bank",
+        "cfg_row",
+        "cfg_data",
+        "start",
+        "length"
+      ],
+      "outputs": [
+        "busy",
+        "valid",
+        "done",
+        "fault",
+        "edge_index",
+        "command"
+      ]
+    }
+  },
+  "clock_cts_roots": [
+    "clk"
+  ],
+  "pin_ranges": {
+    "clk_macro0": [
+      59.86,
+      79.86
+    ],
+    "clk_macro1": [
+      174.78,
+      194.78
+    ],
+    "clk_macro2": [
+      289.69,
+      309.69
+    ],
+    "clk_macro3": [
+      59.86,
+      79.86
+    ],
+    "clk_macro4": [
+      174.78,
+      194.78
+    ],
+    "clk_macro5": [
+      289.69,
+      309.69
+    ]
+  },
+  "params": {},
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "structural_change": "New actual six-SRAM fixed stream-calendar physical boundary: registered config/start/reset inputs, registered core outputs, six raw macro clock entries plus a CTS control root. Actual9489-edge/restart/data/address/phase/clock-halt and36clockownership/2clockmutants PASS. Extra1config/start/reset edge; sameII1. Not fullSU/native clock qualification before actual gate/route and currentdie slot.",
+  "slot_change_request": "NEW diagnostic stream6 SRAM calendar leaf369.36x151.2um; six raw clock pins beside own macro rows; H-DIE must assign actual functional windows before CTS/route. No parenthome inherited."
+}

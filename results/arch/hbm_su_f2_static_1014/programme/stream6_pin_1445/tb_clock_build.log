@@ -1,0 +1,34 @@
+%Warning-WIDTHEXPAND: /home/ubuntu/hbm-su-stream6-pin-1445/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv:14:47: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'select_q' generates 9 bits.
+                                                                                                                                          : ... note: In instance 'tb_clock.dut.u_programme.dt[0].mem'
+   14 |     for(integer k=0;k<BANKS;k=k+1) if(select_q==k) data=q[k];
+      |                                               ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /home/ubuntu/hbm-su-stream6-pin-1445/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv:19:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_bank' generates 16 bits.
+                                                                                                                                          : ... note: In instance 'tb_clock.dut.u_programme.dt[0].mem'
+   19 |       .w_ce_in(cfg_we && cfg_bank==BASE+k), .w_addr_in(cfg_row),
+      |                                  ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/hbm-su-stream6-pin-1445/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv:65:48: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cfg_bank' generates 16 bits.
+                                                                                                                                          : ... note: In instance 'tb_clock.dut.u_programme'
+   65 |   wire write_enable=cfg_we && !busy && cfg_bank<TOTAL_BANKS;
+      |                                                ^
+%Warning-WIDTHEXPAND: /home/ubuntu/hbm-su-stream6-pin-1445/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv:84:37: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'cfg_bank' generates 16 bits.
+                                                                                                                                          : ... note: In instance 'tb_clock.dut.u_programme'
+   84 |       if(cfg_we && (busy || cfg_bank>=TOTAL_BANKS)) fault<=1;
+      |                                     ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/hbm-su-stream6-pin-1445/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv:86:39: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'length' generates 16 bits.
+                                                                                                                                          : ... note: In instance 'tb_clock.dut.u_programme'
+   86 |         if(busy || length==0 || length>EDGES) fault<=1;
+      |                                       ^
+make: Entering directory '/home/ubuntu/hbm-su-stream6-pin-1445/out/tb_clock'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vtb_clock.cpp Vtb_clock___024root__0.cpp Vtb_clock__main.cpp Vtb_clock__ConstPool__0__Slow.cpp Vtb_clock___024root__Slow.cpp Vtb_clock___024root__0__Slow.cpp Vtb_clock_vm_classes_Slow_0.cpp Vtb_clock__Syms__Slow.cpp > Vtb_clock__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o Vtb_clock__ALL.o Vtb_clock__ALL.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_clock__ALL.a    -pthread -lpthread -latomic   -o Vtb_clock
+rm Vtb_clock__ALL.verilator_deplist.tmp
+make: Leaving directory '/home/ubuntu/hbm-su-stream6-pin-1445/out/tb_clock'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.120 MB sources in 6 modules, into 0.059 MB in 9 C++ files needing 0.000 MB
+- Verilator: Walltime 7.998 s (elab=0.004, cvt=0.044, bld=7.943); cpu 0.056 s on 1 threads; allocated 40.172 MB
