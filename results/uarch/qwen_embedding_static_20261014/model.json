@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.qwen.static_embedding.v1",
+  "status": "sized_unrouted_no_native_claim",
+  "rows": 151936,
+  "elements_per_row": 4096,
+  "payload_bytes": 622633728,
+  "code_banks": 2374,
+  "scale_banks": 3,
+  "macro_count": 4751,
+  "raw_rom_bits": 5176385536,
+  "macro_area_mm2": 36.41141618784,
+  "min_region_mm2_at_60pct": 60.6856936464,
+  "clock": "streaming 1.2GHz; die-family phase pending lead",
+  "MACs_per_cycle": 0,
+  "port_bytes_per_macro_enabled_edge": 33.25,
+  "selected_code_bytes_per_cycle": 32,
+  "root_request_bits": 26,
+  "root_response_bits": 538,
+  "tree": {
+    "radix": 2,
+    "padded_leaves": 4096,
+    "levels": 12,
+    "max_fanout": 2,
+    "response_muxes": 4095,
+    "response_bits": 538,
+    "conservative_pipeline_flops": 2506140
+  },
+  "latency": {
+    "request_tree_edges": 12,
+    "bank_edges": 4,
+    "response_tree_edges": 12,
+    "total_edges": 28,
+    "code_row_issue_edges": 127,
+    "code_row_completion_last_edge": 154
+  },
+  "cadence": "compiler reserves an idle edge between reads; violation faults without rescheduling",
+  "partition": "full resident provider on embedding home; TP8 distribution through existing gateway remains separate",
+  "routing": {
+    "leaf_request_bits": 25,
+    "leaf_response_bits": 537,
+    "required_tracks_per_binary_parent": 1148,
+    "die_cut_capacity": null,
+    "status": "pending official home region/pins/clock; no physical job eligible"
+  },
+  "physical_qualification": false
+}
