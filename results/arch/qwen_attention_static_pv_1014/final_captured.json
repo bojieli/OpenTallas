@@ -1,0 +1,107 @@
+{
+  "cases": {
+    "data": {
+      "mode": "data",
+      "cycles": 121,
+      "first_output_age": 64,
+      "output_batches": 1,
+      "output_words": 512,
+      "mismatches": 1,
+      "acks": [
+        1,
+        1,
+        1
+      ],
+      "stable": true,
+      "pass": true
+    },
+    "early1": {
+      "mode": "early1",
+      "observed_fault": true,
+      "cycles": 23
+    },
+    "epoch": {
+      "mode": "epoch",
+      "observed_fault": true,
+      "cycles": 12
+    },
+    "late0": {
+      "mode": "late0",
+      "observed_fault": true,
+      "cycles": 12
+    },
+    "missing0": {
+      "mode": "missing0",
+      "observed_fault": true,
+      "cycles": 12
+    },
+    "missing1": {
+      "mode": "missing1",
+      "observed_fault": true,
+      "cycles": 24
+    },
+    "missing_r": {
+      "mode": "missing_r",
+      "observed_fault": true,
+      "cycles": 52
+    },
+    "output_late": {
+      "mode": "output_late",
+      "observed_fault": true,
+      "cycles": 68
+    },
+    "reciprocal_data": {
+      "mode": "reciprocal_data",
+      "cycles": 121,
+      "first_output_age": 64,
+      "output_batches": 1,
+      "output_words": 512,
+      "mismatches": 128,
+      "acks": [
+        1,
+        1,
+        1
+      ],
+      "stable": true,
+      "pass": true
+    },
+    "reciprocal_epoch": {
+      "mode": "reciprocal_epoch",
+      "observed_fault": true,
+      "cycles": 52
+    },
+    "restart": {
+      "mode": "restart",
+      "observed_fault": true,
+      "cycles": 23
+    },
+    "steady": {
+      "mode": "steady",
+      "cycles": 121,
+      "first_output_age": 64,
+      "output_batches": 1,
+      "output_words": 512,
+      "mismatches": 0,
+      "acks": [
+        1,
+        1,
+        1
+      ],
+      "stable": true,
+      "pass": true
+    }
+  },
+  "source_and_binary_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643  ot_hdc_fastfp.sv\nf5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30  ot_hdc_fp32_add_lat.sv\nddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3  ot_hdc_fp32_mul_lat.sv\n98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587  ot_hdc_prefix.sv\ne848a81f88d4d77e30777d46245240566f8d2d3f3421c67eb916a17af511bade  ot_qwen_tp8_pv256_finalize.sv\n3cf86ea8f9b2848cd609e2f4c0f155ed2b7ee0803b68c383d2cd7368cb22d7b8  ot_qwen_tp8_pv256_finalize_static.sv\n74dfc2ea838f22685005a57ad87ca41a67e7c12be6c353d387324a516692da99  ot_qwen_tp8_pv256_finalize_tb.sv\n1b34122533de701d1ba40fa973f8a7bf7b80955483994e967ee4a6b90e46f4b5  tb_qwen_tp8_pv256_finalize.cpp\n6a549121bb61a641c84f67a96fe3d861b426cc1a6388d0f0ef5f3714a990b603  make_vectors.py\n3cadc65444698576b98cd17bde0508f6dc600ed229e2b8d1edd2b55c93231327  native.vlt\nf471170bb3ff8a078b1737dbb91102b924828457336fc6417054b57a6efa360d  check\nf900f43571a2f923ca17bfa659a5685dec7b5781f5b461b0298b268e9779ba15  vectors/gold.bin\n4dc7e3829fafed2c4fa6845692edc807e7c289be553e3da8ed41cacdb206a0cc  vectors/pair0.bin\n4ed03ede410bc1c1172cb5fe815d71a0c20788273a852f15e8ceeca89e2476fd  vectors/pair1.bin\n00c18b30742688bd57e24bd156f5492b857c3f596cffac2fc3548dd1b11df8b1  vectors/reciprocal.bin\n",
+  "declared_inputs": {
+    "scope": "STATIC_JOIN_COMPONENT_DECLARED_PAIR_AND_RECIPROCAL_INPUTS_ONLY",
+    "pair_inputs": "actual source-pinned real-RTL staticPV pair outputs",
+    "reciprocal": "declared dyadic 2^-13 component input, not integrated Z proof",
+    "files": {
+      "pair1.bin": "4ed03ede410bc1c1172cb5fe815d71a0c20788273a852f15e8ceeca89e2476fd",
+      "gold.bin": "f900f43571a2f923ca17bfa659a5685dec7b5781f5b461b0298b268e9779ba15",
+      "pair0.bin": "4dc7e3829fafed2c4fa6845692edc807e7c289be553e3da8ed41cacdb206a0cc",
+      "reciprocal.bin": "00c18b30742688bd57e24bd156f5492b857c3f596cffac2fc3548dd1b11df8b1"
+    }
+  },
+  "golden_vector_script": "import pathlib,struct,json,hashlib\np=pathlib.Path('vectors');p.mkdir(exist_ok=True)\nbase=pathlib.Path('/srv/opentallas-scratch/codex/q-static-pv-1014')\na=(base/'actual-tree-p0-steady-8192.bin').read_bytes();b=(base/'actual-tree-p1-steady-8192.bin').read_bytes()\n(p/'pair0.bin').write_bytes(a);(p/'pair1.bin').write_bytes(b)\nf=lambda z:struct.unpack('<f',struct.pack('<f',z))[0]\nrz=[2.0**-13]*4\n(p/'reciprocal.bin').write_bytes(struct.pack('<4f',*rz))\nx=struct.unpack('<512f',a);y=struct.unpack('<512f',b)\ngold=[f(f(u+v)*rz[i//128]) for i,(u,v) in enumerate(zip(x,y))]\n(p/'gold.bin').write_bytes(struct.pack('<512f',*gold))\n(p/'receipt.json').write_text(json.dumps({'scope':'STATIC_JOIN_COMPONENT_DECLARED_PAIR_AND_RECIPROCAL_INPUTS_ONLY','pair_inputs':'actual source-pinned real-RTL staticPV pair outputs','reciprocal':'declared dyadic 2^-13 component input, not integrated Z proof','files':{q.name:hashlib.sha256(q.read_bytes()).hexdigest() for q in p.glob('*.bin')}},indent=2)+'\\n')\n"
+}

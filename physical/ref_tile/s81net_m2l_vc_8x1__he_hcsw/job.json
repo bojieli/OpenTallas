@@ -1,5 +1,5 @@
 {
- "name": "s81net_m2l_vc_8x1__he_hcsw-n2-COMMIT",
+ "name": "s81net_m2l_vc_8x1__he_hcsw-n2-926be9f0b",
  "block": "dsfd_m2l_vc_8x1__he_hcSW",
  "ref_tile": true,
  "owner": "Claude:s81-net",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/el1015-s81-net-static",
-  "commit": "COMMIT",
+  "commit": "926be9f0b",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_net/gen",
    "physical/s81_die_pins/snet_gen19b",
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81net_m2l_vc_8x1__he_hcsw/s81net_m2l_vc_8x1__he_hcsw-n2-COMMIT"
+   "to": "results/rtl/ref_tile/s81net_m2l_vc_8x1__he_hcsw/s81net_m2l_vc_8x1__he_hcsw-n2-926be9f0b"
   }
  ],
  "cycles_added": 0,

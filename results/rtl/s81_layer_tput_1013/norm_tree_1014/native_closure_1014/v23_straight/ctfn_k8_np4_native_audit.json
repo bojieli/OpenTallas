@@ -1,0 +1,23 @@
+{
+  "cell": "ot_s81_hc_ctfn",
+  "view": "record/views/ot_s81_hc_ctfn",
+  "lib_cell": "ot_s81_hc_ctfn",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 462.9,
+  "spread_ps": 67.6,
+  "outputs": 2928,
+  "inputs": 2928,
+  "launch_ps": 249.7,
+  "launch_pin": "fdm[2902]",
+  "capture_ps": 236.0,
+  "capture_pin": "fv_in[2]",
+  "launch_over": 718,
+  "capture_over": 1798,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 249.7 > 220 (718 pins); capture 236.0 > 190 (1798 pins)"
+}

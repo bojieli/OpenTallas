@@ -6,6 +6,7 @@ import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from hdc_golden_v41 import csum
 
+LAT=8  # command issue -> commit / scalar (r1: one registered SRAM-operand stage; was 7)
 def bits(x): return int(np.float32(x).view(np.uint32))
 def bf(x): return ((x+0x7fff+((x>>16)&1))>>16)&65535
 class Program:
@@ -14,10 +15,10 @@ class Program:
   reads=([a,b] if op in (2,5) else [a] if op in (1,3,4) else [])
   self.c=max([self.c]+[self.ready.get(v,0) for v in reads])
   self.commands.append((self.c,op,a,b,d,x,tag))
-  if op!=4:self.ready[d]=self.c+8
+  if op!=4:self.ready[d]=self.c+LAT+1
   self.c+=1
  def export(self,a,tag,want):
-  self.emit(4,a=a,tag=tag);self.outputs.append((self.commands[-1][0]+7,tag,want,bf(want)))
+  self.emit(4,a=a,tag=tag);self.outputs.append((self.commands[-1][0]+LAT,tag,want,bf(want)))
  def row(self,x,tag,wrong=False,sum_values=None):
   sum_values=x if sum_values is None else np.asarray(sum_values,dtype=np.float32)
   if not 1<=len(x)<=8192 or len(sum_values)!=len(x):raise ValueError("row requires1..8192 correspondingSCandE values")
@@ -63,7 +64,7 @@ class Program:
   (path/'commands.txt').write_text(''.join(' '.join(map(str,r))+'\n' for r in self.commands))
   (path/'expected.txt').write_text(''.join(' '.join(map(str,r))+'\n' for r in self.outputs))
   (path/'source_schedule.txt').write_text(''.join(' '.join(map(str,r))+'\n' for r in self.sources))
-  (path/'calendar.json').write_text(json.dumps(dict(cycles=self.c,command_count=len(self.commands),rows=self.rows,operand_rate='oneFP32/cycle with compiler-visibleRAWspacing8; operand producer must supportsample-majorSRAMreads; no fullSFU throughputqualification',latency=7),indent=2)+'\n')
+  (path/'calendar.json').write_text(json.dumps(dict(cycles=self.c,command_count=len(self.commands),rows=self.rows,operand_rate='oneFP32/cycle with compiler-visibleRAWspacing9; operand producer must supportsample-majorSRAMreads; no fullSFU throughputqualification',latency=LAT),indent=2)+'\n')
 def main():
  a=argparse.ArgumentParser();a.add_argument('out');a.add_argument('--wrong-tree',action='store_true');args=a.parse_args();rng=np.random.default_rng(151015);p=Program();tag=0
  for n,heads in [(128,16),(640,16),(5120,1),(8192,1)]:
