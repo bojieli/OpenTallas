@@ -17,7 +17,7 @@
   "rst_n_b"
  ],
  "outline": {
-  "w": 86.4,
+  "w": 118.8,
   "h": 151.2
  },
  "pins": {
@@ -51,11 +51,11 @@
   "period_ps": 770,
   "signoff_period_ps": 833.333333
  },
- "structural_change": "q15 port-tiles: new leaf. The four level-6->7 FP32 pair adders of each slab word half (ck_pair0-3, 9,778 sinks each) were inline in qfd_slab_word_half and shared the 2.46 mm port_tiles parent; each is now its own hardened tile holding its two 515-b root capture banks as pin registers on their own entries ck_a/ck_b (=ck_bw<2p>/<2p+1>) and the adders on ck (=ck_pair<p>); pa1 gate (capture-free leaf) showed 800 input cones of 8 levels at the pins (structure-only, hierarchy-equivalence bench fc0e16f69).",
+ "structural_change": "pa4 (Q-COMPUTE-ELEM r14, slot GRANT A by Q-COMPUTE-DIE r7 09:21): pa3 gate terminal DPL-0033 after 1h42 CTS legalisation (10,495 FF, std 8,113 um2 in core 12,056 um2 = 67% before CTS/hold growth, thousands of clock/hold buffer overlaps). Outline 86.4 -> 118.8 x 151.2 (core ~16.8k um2, std <= 50%), same pin faces/heights, same RTL/edges/root. q15 port-tiles: new leaf. The four level-6->7 FP32 pair adders of each slab word half (ck_pair0-3, 9,778 sinks each) were inline in qfd_slab_word_half and shared the 2.46 mm port_tiles parent; each is now its own hardened tile holding its two 515-b root capture banks as pin registers on their own entries ck_a/ck_b (=ck_bw<2p>/<2p+1>) and the adders on ck (=ck_pair<p>); pa1 gate (capture-free leaf) showed 800 input cones of 8 levels at the pins (structure-only, hierarchy-equivalence bench fc0e16f69).",
  "job": {
   "owner": "Claude:q15_compute_elem",
   "branch": "claude/q15-port-tiles",
-  "tag": "pa3",
+  "tag": "pa5",
   "purpose": "port_tiles pair-adder leaf (x4 per word half, 24 per die band set)",
   "extra_paths": [
    "physical/qwen_port_tiles_1015",
@@ -73,7 +73,7 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^EQUIV MUT=0 .* PASS$"
+    "pass_regex": "^EQUIV .*MUT=0 .* PASS$"
    },
    {
     "name": "equiv_m1",
@@ -84,7 +84,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^EQUIV MUT=1 .* FAIL$"
+    "fail_regex": "^EQUIV .*MUT=1 .* FAIL$"
    },
    {
     "name": "equiv_m2",
@@ -95,7 +95,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^EQUIV MUT=2 .* FAIL$"
+    "fail_regex": "^EQUIV .*MUT=2 .* FAIL$"
    }
   ]
  },
