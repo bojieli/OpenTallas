@@ -22,8 +22,16 @@ def grouped(pins):
     out = collections.defaultdict(list)
     for p in pins:
         r = p['rect']
-        out[p['name'].split('[')[0]].append(((r[0]+r[2])/2, (r[1]+r[3])/2))
-    return out
+        base, _, tail = p['name'].partition('[')
+        index = int(tail.rstrip(']')) if tail else 0
+        out[base].append((index, ((r[0]+r[2])/2, (r[1]+r[3])/2)))
+    result = {}
+    for base, values in out.items():
+        values.sort()
+        if [k for k, _ in values] != list(range(len(values))):
+            raise ValueError(f'{base}: duplicated or missing bit index')
+        result[base] = [xy for _, xy in values]
+    return result
 
 
 def audit(path):
