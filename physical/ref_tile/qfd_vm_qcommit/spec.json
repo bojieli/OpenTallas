@@ -1,0 +1,87 @@
+{
+ "name": "qfd_vm_qcommit",
+ "top": "qfd_vm_qcommit",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {
+  "LAW": 8,
+  "QLINE": 13
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n",
+  "bank_rst_n"
+ ],
+ "outline": {
+  "w": 12.96,
+  "h": 30.24,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "we",
+   "wl",
+   "wm",
+   "bank_rst_n"
+  ],
+  "E": [
+   "cm"
+  ],
+  "S": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "job": {
+  "owner": "Codex:el1014-qwen-dvm-build",
+  "branch": "claude/qwen-dvm-1014",
+  "tag": "obs1",
+  "purpose": "Actual copy0 Q-row write commit observer.32 separate native roots mirror closed bank input flops at its SRAM consume edge; no bank RTL change.",
+  "views_to": "physical/ref_tile/qfd_vm_qcommit/views",
+  "record_to": "results/rtl/ref_tile/qfd_vm_qcommit",
+  "extra_paths": [
+   "rtl/qwen_sys/vm_nox_20261014",
+   "rtl/hdc"
+  ],
+  "benches": [
+   {
+    "name": "static_macro",
+    "cmd": "bash tools/qwen_tp8/vm_die_static_bench.sh {RUN}/bench/obs -GMEM=1",
+    "expect": "pass",
+    "pass_regex": "^PASS vm_die_static",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "slot_change_request": "NEW32 observer leaves next to copy0 banks24..55. Region3..6 roots56..63;12.96x30.24 proposed outline; die-assigned exact pins and local placements pending.",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
