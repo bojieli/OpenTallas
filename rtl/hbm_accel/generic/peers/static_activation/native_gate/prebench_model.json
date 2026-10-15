@@ -1,0 +1,29 @@
+{
+  "stage": "BEFORE_NATIVE_BENCH",
+  "core_commit": "79d1f839d",
+  "shape": "P8K5120 rawSeedX40960words viaactualSW8RG6WG2banks",
+  "actual_resources": {
+    "VM_SRAM1024x256": 24,
+    "programme_SRAM1024x256": 2,
+    "code_SRAM32x128": 16,
+    "AQ_instances": 2,
+    "activation_roots": 12
+  },
+  "programmes": {
+    "activation_payload_bits": 44,
+    "VM_payload_bits": 202,
+    "words_each": 703,
+    "start": "VM_N engine_N+2",
+    "rslot_source": "actualVMprogrammeonly, group2 owneratrequestprogrammeordinal+3"
+  },
+  "expected": {
+    "read_waves": 640,
+    "source_FP32_words": 40960,
+    "xwrite_beats": 520,
+    "predicted_first_XWRITE_after_engine_start": 71,
+    "predicted_last_XWRITE_after_engine_start": 704
+  },
+  "scoreboard": "40x13 exact2048bitsegments fromactualstatic_sm_feedxw.hex; realRAWinputonly intoactualDQ",
+  "mutants": "actualcore MUT1 codewrite_lane^1 /MUT2 physicalcodewritebuffer^1; no arithmeticorSRAMsubstitutes",
+  "limitations": "decodedcfg/start boundary component, nofake4VMboot, nofullSMconsumer orphysicalclosure"
+}
