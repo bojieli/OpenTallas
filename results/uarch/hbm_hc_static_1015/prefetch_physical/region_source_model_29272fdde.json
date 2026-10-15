@@ -162,7 +162,7 @@
     "policy": "Keep responseFIFO in separate actualroot/hardened leaf; old1136estimate superseded by literalnew286x4=1144. NativePC frozen slot grant does not grant combinedHCsource. Need exact interfaces/registerpins/fanout/clockphase/geometry grant."
   },
   "physical_stream_partition": {
-    "HBM": "Prefer request candidate of384ownerFF/PC co-hardened with existing nativePC if granted; helper controls and1144bitresponseFIFO perlane remain separate actualleaves/roots. Preserve commoncontroller state owner, no duplicate controller.",
+    "HBM": "Candidate32PC owner leaves384FF each co-harden with existing nativePC if granted; eight separate responseFIFO leaves each1144payload+18pointer/sync/reset=1162sourceFF; helpercontrol separate130sourceFF (110scalar+18descriptorread+2reset). Sum21714planning estimate, not newmappedcounts. No controller duplication.",
     "stream": "Perstack32SRAM+landing/seen/metadata+existing2048capture+556APserializer proposed cohardening; no extra cycles assumed, no assignedoutline/pin/phi-R. PairAP bank(s,s+4) <=500umregisteredhops required.",
     "unclosed_master_physical_owner": "/root/h_hc_sfu/hc_static_engine/hc_weight_prefetch/prefetch_physical"
   },
@@ -176,5 +176,42 @@
     "CTS/insertion/spread andSSFFDRCsignoff",
     "immutable6/8throughputmeasurement;P1requiresdifferentbandwidthdesign"
   ],
-  "physical_qualified": false
+  "physical_qualified": false,
+  "explicit_HBM_root_partition_budget_per_stack": {
+    "classification": "Source-width planning breakdown, matched oldbaseline totals but NOT newsource synthesizedcount or assignedroots",
+    "owner_groups": {
+      "PC_count": 32,
+      "owner_FF_per_PC": 384,
+      "subtotal": 12288,
+      "physical_candidate": "Each PC owner with existing nativePC only if granted; no duplicatecontroller"
+    },
+    "response_FIFO_leaves": {
+      "count": 8,
+      "payload_FF_each": 1144,
+      "pointer_online_sync_reset_FF_each_source_model": 18,
+      "total_FF_each_source_model": 1162,
+      "subtotal": 9296,
+      "constants_excluded": "wr_overflow is reset-only0 and optimizedaway in oldbaseline; no new overflow FF declaredbehavior"
+    },
+    "helper_control_leaf": {
+      "clocked_helper_scalar_state_FF": 110,
+      "descriptor_FIFO_HBM_read_pointer_online_sync_reset_FF": 18,
+      "helper_HBM_reset_conditioner_FF": 2,
+      "subtotal": 130,
+      "scalar_breakdown": {
+        "h_active": 1,
+        "h_bank": 3,
+        "h_epoch": 16,
+        "h_base": 30,
+        "h_total_h_next_h_received": 36,
+        "accepted_q": 4,
+        "next_tag": 17,
+        "hbm_fault": 1,
+        "stream_fault_sync_stf1_stf2": 2
+      },
+      "constants_excluded": "descriptorFIFO rd_underflow reset-only0 optimizedaway in oldbaseline"
+    },
+    "total": 21714,
+    "crosscheck": "12288+8*(1144+18)+(110+18+2)=21714; newsourcecensus can change optimization/aliasing. Oldbaseline11776+8*(1136+18)+(108+18+2)=21136 exact measured baseline."
+  }
 }
