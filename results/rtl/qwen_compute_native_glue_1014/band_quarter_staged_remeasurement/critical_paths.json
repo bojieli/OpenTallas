@@ -1,0 +1,209 @@
+{
+  "schema": "qwen.band.actual_path_diagnostic.v1",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-1342108-1792062695",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/qfd_sp_band_lanes_quarter-20261015-010515",
+  "source_profile": "31ports10815bits17roots RTL568773954",
+  "actual_cts_odb_sha256": "4d73a33d71e90a6f0bcf04ded174df54ef75d39429a636dd3780efec0ee45ff4",
+  "tool_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "script_sha256": "ba83bd44ea126a78f06bdd5c1535453490317cbebaaec7c6d085ece366f24075",
+  "raw_log_sha256": "739a319774ada6bfe34ede2e7de4e1777a1b6dbf0c377e79023492e58ccdafe1",
+  "worst_max": [
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[4]$_DFF_P_",
+      "endpoint": "f$_SDFF_PN0_ (rising edge-triggered flip-flop clocked by ot_entry_0)",
+      "slack_ps": -1360.86829
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[0]$_DFF_P_",
+      "endpoint": "g_lane[14].u_lane",
+      "slack_ps": -1357.95435
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[0]$_DFF_P_",
+      "endpoint": "g_lane[14].u_lane",
+      "slack_ps": -1357.59497
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[0]$_DFF_P_",
+      "endpoint": "g_lane[14].u_lane",
+      "slack_ps": -1353.38733
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[0]$_DFF_P_",
+      "endpoint": "g_lane[14].u_lane",
+      "slack_ps": -1344.90381
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[0]$_DFF_P_",
+      "endpoint": "g_lane[14].u_lane",
+      "slack_ps": -1336.29663
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[4]$_DFF_P_",
+      "endpoint": "u_upper_faces.quarter_fault[1]$_SDFF_PN0_",
+      "slack_ps": -1283.03186
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[0]$_DFF_P_",
+      "endpoint": "g_lane[14].u_lane",
+      "slack_ps": -1270.42822
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[4]$_DFF_P_",
+      "endpoint": "u_upper_faces.quarter_fault[0]$_SDFF_PN0_",
+      "slack_ps": -1253.04663
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[4]$_DFF_P_",
+      "endpoint": "u_upper_faces.quarter_fault[3]$_SDFF_PN0_",
+      "slack_ps": -1247.07983
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[4]$_DFF_P_",
+      "endpoint": "u_upper_faces.quarter_fault[2]$_SDFF_PN0_",
+      "slack_ps": -1244.66626
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[0]$_DFF_P_",
+      "endpoint": "g_lane[11].u_lane",
+      "slack_ps": -1239.67224
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[0]$_DFF_P_",
+      "endpoint": "g_lane[11].u_lane",
+      "slack_ps": -1239.00623
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "b0_q$_DFF_P_ (rising edge-triggered flip-flop clocked by ot_entry_0)",
+      "endpoint": "g_lane[14].u_lane",
+      "slack_ps": -1238.07593
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[0]$_DFF_P_",
+      "endpoint": "g_lane[11].u_lane",
+      "slack_ps": -1234.29614
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[0]$_DFF_P_",
+      "endpoint": "g_lane[11].u_lane",
+      "slack_ps": -1230.14685
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "reset_q$_DFF_P_",
+      "endpoint": "ot_prs_00458_ff",
+      "slack_ps": -1224.11401
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[0]$_DFF_P_",
+      "endpoint": "g_lane[11].u_lane",
+      "slack_ps": -1217.7594
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "reset_q$_DFF_P_",
+      "endpoint": "g_lane[14].u_lane",
+      "slack_ps": -1203.69128
+    },
+    {
+      "delay_type": "max",
+      "startpoint": "lnk_q[0]$_DFF_P_",
+      "endpoint": "g_lane[11].u_lane",
+      "slack_ps": -1170.90564
+    }
+  ],
+  "worst_min": [
+    {
+      "delay_type": "min",
+      "startpoint": "b0 (input port clocked by core_clk)",
+      "endpoint": "b0_q$_DFF_P_ (rising edge-triggered flip-flop clocked by ot_entry_0)",
+      "slack_ps": -704.02704
+    },
+    {
+      "delay_type": "min",
+      "startpoint": "lnk[2] (input port clocked by core_clk)",
+      "endpoint": "lnk_q[2]$_DFF_P_",
+      "slack_ps": -703.85461
+    },
+    {
+      "delay_type": "min",
+      "startpoint": "lnk[1] (input port clocked by core_clk)",
+      "endpoint": "lnk_q[1]$_DFF_P_",
+      "slack_ps": -702.64337
+    },
+    {
+      "delay_type": "min",
+      "startpoint": "rst_n (input port clocked by core_clk)",
+      "endpoint": "reset_q$_DFF_P_",
+      "slack_ps": -702.42279
+    },
+    {
+      "delay_type": "min",
+      "startpoint": "lnk[5] (input port clocked by core_clk)",
+      "endpoint": "lnk_q[5]$_DFF_P_",
+      "slack_ps": -702.03485
+    },
+    {
+      "delay_type": "min",
+      "startpoint": "lnk[0] (input port clocked by core_clk)",
+      "endpoint": "lnk_q[0]$_DFF_P_",
+      "slack_ps": -701.63611
+    },
+    {
+      "delay_type": "min",
+      "startpoint": "lnk[4] (input port clocked by core_clk)",
+      "endpoint": "lnk_q[4]$_DFF_P_",
+      "slack_ps": -701.29034
+    },
+    {
+      "delay_type": "min",
+      "startpoint": "lnk[3] (input port clocked by core_clk)",
+      "endpoint": "lnk_q[3]$_DFF_P_",
+      "slack_ps": -700.67651
+    },
+    {
+      "delay_type": "min",
+      "startpoint": "tw_q[1486]$_DFF_P_",
+      "endpoint": "g_lane[14].u_lane",
+      "slack_ps": 155.70523
+    },
+    {
+      "delay_type": "min",
+      "startpoint": "tw_q[965]$_DFF_P_",
+      "endpoint": "g_lane[14].u_lane",
+      "slack_ps": 158.81586
+    },
+    {
+      "delay_type": "min",
+      "startpoint": "c_q[21]$_DFF_P_",
+      "endpoint": "g_lane[5].u_lane",
+      "slack_ps": 160.01744
+    },
+    {
+      "delay_type": "min",
+      "startpoint": "tw_q[1991]$_DFF_P_",
+      "endpoint": "g_lane[14].u_lane",
+      "slack_ps": 160.27856
+    }
+  ],
+  "qualification": "DIAGNOSTIC_TERMINAL_FAILED_ORIGINAL_ARTIFACTS_UNCHANGED_NO_ARCHIVE_VERIFICATION_CLAIM",
+  "next_structure": "Lane-local existing-edge TW256/TY256/PW34/control132 independent roots; bounded registered valid/fault reduction and explicit aligned compiler edges. Whole-source/physical proofs required; no root retune."
+}
