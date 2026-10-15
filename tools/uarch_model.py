@@ -17106,19 +17106,21 @@ def dsrom_wfc_static_link_price():
     endpoint behaviour RLAT 17 / WLAT 3, T_CORE 80 serial) and against the grant form (dsfd_wfc_stg_cl) on its own bench.
     Stage accounting (fast = stream 1.2 GHz edges, serial = 0.9 GHz edges):"""
     stages = dict(
-        rx_pin_flop=('fast', 1), rx_parse_to_first_write_slot=('fast', 2), x43_transfer=('fast->serial', '1..3 serial (fixed per phase)'),
+        rx_pin_flop=('fast', 1), rx_parse_to_first_write_slot=('fast', 2), writer_out_flop=('fast', 1),
+        x43_transfer=('fast->serial', '1..3 serial (fixed per phase)'), write_copy_pin_flop=('serial', 1),
         vm_writes=('serial', 41), doorbell=('serial', 1), start_gap=('serial', 4 + 1),
         stage_core=('serial', 'T_stage (programme)'), done_pin_flop=('serial', 1), read_launch=('serial', 1),
-        reads=('serial', 46), vm_read_latency=('serial', 'RLAT = 17 + die stations'), x34_transfer=('serial->fast', '1..3 fast (fixed per phase)'),
+        reads=('serial', 46), vm_read_latency=('serial', 'RLAT = 17 + die stations'), return_out_flop=('serial', 1),
+        x34_transfer=('serial->fast', '1..3 fast (fixed per phase)'), return_pin_flop=('fast', 1),
         tx_buffer_write=('fast', 1), tx_header_offset=('fast', 'TXD = (4 (RLAT + 1 + TXW) + 2) / 3 - (TXW - 1) + 3 = 44 at RLAT 17'),
         tx_launch=('fast', 1))
-    measured = dict(done_to_tx_header_fast=51, rx_header_to_tx_header_fast_at_tcore80=(228, 229), txd_margin_fast=3,
-                    min_period_fast=174, grant_form_period_fast=12023 / 40, grant_form_rx_last_to_tx_header_fast=(241, 244))
+    measured = dict(done_to_tx_header_fast=(53, 54), rx_header_to_tx_header_fast_at_tcore80=(232, 233), txd_margin_fast=3,
+                    min_period_fast=175, grant_form_period_fast=12023 / 40, grant_form_rx_last_to_tx_header_fast=(241, 244))
     return dict(schema='opentallas.s81.wfc_static_kit_price.v2', stages=stages, measured=measured,
                 tx_off_formula='TX header (fast edge) = RX header + 2 + 56 + 5 serial-equivalent + T_stage(L) + 51; i.e. '
-                               'TX_OFF(L) = T_stage(L) + K with K = rx_tx(T_CORE 80) - 80 serial = 229 - 107 = 122 fast edges '
+                               'TX_OFF(L) = T_stage(L) + K with K = rx_tx(T_CORE 80) - 80 serial = 233 - 107 = 126 fast edges '
                                '(T_stage from the stage programme, e.g. results/rtl/s81_functional_token_1014 layer_cycles)',
-                throughput='period >= 174 fast edges / job at T_CORE 80 (grant form 300.6): the next job\'s RX header may '
+                throughput='period >= 175 fast edges / job at T_CORE 80 (grant form 300.6): the next job\'s RX header may '
                            'arrive once its first write lands on or after the previous job\'s first outbound read',
                 area=dict(macros=['ot_sram_1r1w_64x512 x2 (RX, TX)', 'ot_sram_1r1w_128x256 (position table)',
                                   'ot_sram_1r1w_512x64 (HEP)'], removed=['tokpipe WFC', 'dsfd_wfc_lnk credits / skids',

@@ -9,7 +9,7 @@
 //            positions in order, token t = mix(u, p) % 129280, or replayed from JOBS (u p t per line, hex) to run the
 //            exact job stream of a reference run.
 //   VM       the static VM endpoint's behaviour (dsfd_vm_static_wfc): grants constant high after reset, write applied
-//            WLAT serial edges after it is sampled, doorbell 7fff not a VM op, RD2 pairs returned so that the kit's
+//            WLAT (5) serial edges after it is sampled, doorbell 7fff not a VM op, RD2 pairs returned so that the kit's
 //            pin flop holds them exactly RLAT edges after the launch, reads see the VM before same-edge writes.
 //   core     at t_ks START: the 41 received rows must be in the VM; after T_CORE serial edges it writes the 46 outbound
 //            rows word(2, ..) and pulses f_kd {done, t ^ 33, 40400000 ^ p} (as the reference bench's core).
@@ -19,7 +19,7 @@
 // PASS line: WFC_SS PASS jobs=.. period=.. rx_tx_min=.. rx_tx_max=.. done_tx_min=.. done_tx_max=..
 // ---------------------------------------------------------------------------------------------------------------
 module tb_wfc_stg_static;
-    parameter integer NJOB = 40, NUSR = 3, P = 200, H0 = 20, T_CORE = 80, RLAT = 17, START_GAP = 4, WLAT = 3;
+    parameter integer NJOB = 40, NUSR = 3, P = 200, H0 = 20, T_CORE = 80, RLAT = 17, START_GAP = 4, WLAT = 5;
     parameter integer EXPECT_FAULT = 0, BADPOS = -1;     // BADPOS j: job j's header carries a position out of window
     localparam integer FLIT = 512, NW = 21, USER_W = 10, VWA = 15, RXW = 41, TXW = 46;
     localparam integer HDR_TYPE = 16, HDR_LEN = 24, HDR_USER = 32, HDR_POS = 40, HDR_IDX = 61, HDR_VAL = 82,

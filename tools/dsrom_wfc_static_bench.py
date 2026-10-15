@@ -9,10 +9,10 @@ exact downstream checker, t_ft must stay 0).  Cases:
                   dumps its job stream and every outbound flit; the static kit replays the same jobs on a static calendar
                   and its outbound flit stream (513 b each: headers incl. idx / val, all words, last bits) must be
                   byte-identical.
-  p<P>            production shape at calendar period P (all four 3:4 phase offsets; 174 = measured minimum)
+  p<P>            production shape at calendar period P (all four 3:4 phase offsets; 175 = measured minimum)
   txd_m3_p<P>     the TX offset with 3 edges removed still passes on every phase (margin of the derived TXD)
   neg_*           must FAIL: six RTL mutants, an out-of-window position (EXPECT_FAULT), a calendar faster than the kit
-                  (P 173: a row rewritten one edge before its outbound read -> fault; P 150: written while the core
+                  (P 174: a row rewritten one edge before its outbound read -> fault; P 150: written while the core
                   runs -> fault)
 
   python3 tools/dsrom_wfc_static_bench.py --out DIR [--case NAME,..]  -> DIR/summary.json, WFC_STATIC_GATE PASS|FAIL
@@ -27,24 +27,25 @@ import dsrom_wfc_cl_bench as C
 ROOT = Path(__file__).resolve().parents[1]
 TB = 'rtl/dsrom_sys/mtp/tb/tb_wfc_stg_static.sv'
 SRCS = ['rtl/dsrom_sys/mtp/dsfd_wfc_stg_static.sv', 'rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv',
+        'rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv',
         'rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv', 'rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv',
         'rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv', 'rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv',
         'rtl/lib/ot_reset_sync.sv', 'rtl/lib/ot_async_fifo.sv',
         'physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v',
         'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v',
         'physical/s81_ph_views/mtp/macros/ot_sram_1r1w_512x64_m4_r2c2/ot_sram_1r1w_512x64_m4_r2c2.v']
-HOP_EP = SRCS[4:8]
+HOP_EP = SRCS[5:9]
 CASES = {}
 for sh in ('stg_vmnat', 'stg_r1', 'stg_r2_slowvm'):
     CASES[f'equiv_{sh}'] = dict(kind='equiv', shape=sh, expect='pass')
-for p in (174, 175, 176, 177, 201, 202, 203, 204):
+for p in (175, 176, 177, 178, 201, 202, 203, 204):
     CASES[f'p{p}'] = dict(kind='static', params=dict(P=p), expect='pass')
 for p in (201, 202, 203, 204):
     CASES[f'txd_m3_p{p}'] = dict(kind='static', params=dict(P=p), defines=['OT_WFCSS_TXD_ADJ=3'], expect='pass')
 for m in ('SWAP', 'TXEARLY', 'PH1', 'UPOS', 'GAP0', 'RLAT'):
     CASES[f'neg_{m.lower()}'] = dict(kind='static', params=dict(P=201), defines=[f'OT_WFCSS_MUT_{m}'], expect='fail')
 CASES['neg_badpos'] = dict(kind='static', params=dict(P=201, BADPOS=5, EXPECT_FAULT=1), expect='fault')
-CASES['neg_war_cal'] = dict(kind='static', params=dict(P=173, EXPECT_FAULT=1), expect='fault')      # write before its row's read
+CASES['neg_war_cal'] = dict(kind='static', params=dict(P=174, EXPECT_FAULT=1), expect='fault')      # write before its row's read
 CASES['neg_run_cal'] = dict(kind='static', params=dict(P=150, EXPECT_FAULT=1), expect='fault')      # write while the core runs
 
 REF_DUMP = '''    integer rd_fo, rd_i;

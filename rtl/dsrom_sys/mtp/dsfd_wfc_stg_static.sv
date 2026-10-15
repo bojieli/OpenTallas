@@ -30,10 +30,16 @@
 //        edge + w and must have been written before (fault: underflow).
 // Clocks: ck = stream (1.2 GHz), ckv = serial (0.9 GHz), phase-locked on the common 3:4 epoch; both resets released
 // so that the first rising edges after release are epoch edge 0 (the x34 / x43 startup contract, aa670a062 family).
-// Hard structure (ref_tile flow admits one clock root per leaf): wires-only parent over
-//   u_t  dsfd_wfc_ss_t  stream leaf: pins of the link, RX / TX buffers (2 x 64 x 512), position table (128 x 256),
-//                       writer, framing, x43 banks, x34 reader, hop endpoint
-//   u_s  dsfd_wfc_ss_s  serial leaf: x43 reader, VM write / read channels, START, DONE, x34 banks, HEP table
+// Hard structure: a wires-only parent over six hard children, one clock root each (ref_tile leaves), every leaf pin at a
+// flop (native pin rule: inputs captured by their first flop, outputs launched from flops):
+//   u_t     dsfd_wfc_ss_t     stream core: link pins, parser, RX / TX buffers (2 x 64 x 512), position table (128 x 256),
+//                             writer slots, framing, hop endpoint, the kit's fault register
+//   u_x43t  ot_s81_vm_x43_t   W 527 stream half of the fixed-phase write transfer (S81 VM per-root CDC leaf)
+//   u_x43s  ot_s81_vm_x43_s   W 527 serial half: its output flops ARE the die pins t_swv / t_swd
+//   u_s     dsfd_wfc_ss_s     serial core: write-channel copy, START, DONE, reads, return check, HEP table (512 x 64)
+//   u_x34s  ot_s81_vm_x34_s   W 514 serial half of the fixed-phase return transfer
+//   u_x34t  ot_s81_vm_x34_t   W 514 stream half
+// The x43 / x34 halves exchange their banks as related 3:4 parent arcs (the same open epoch-root decision as the VM's).
 // Mutants (each must FAIL its gate case): OT_WFCSS_MUT_SWAP (neighbouring outbound words swapped), OT_WFCSS_MUT_TXEARLY (TX
 // 8 edges early: underflow fault), OT_WFCSS_MUT_PH1 (writer uses x43 sample index 1: phase fault), OT_WFCSS_MUT_UPOS
 // (expected position outside the window: position fault), OT_WFCSS_MUT_GAP0 (START with the doorbell: the core reads
@@ -60,26 +66,49 @@ module dsfd_wfc_stg_s
     output wire [35:0]   t_hep,
     output wire [3:0]    t_ft
 );
-    wire [527:0] xb0, xb2, xb3; wire [2:0] xpar; wire xmark, xph1;
-    wire [514:0] rb0, rb1, rb2; wire [2:0] rpar; wire rmark; wire sft;
-    // hard leaves: no parameter on a hardened child (the leaf defaults are the die build: RLAT 17, START_GAP 4)
+    // six hard children, wires only (no parameter on a hardened child: the leaf defaults are the die build, RLAT 17,
+    // START_GAP 4; the CDC halves are the S81 VM per-root leaves at W 527 / 514)
+    wire xv, wv, ov, sv, sft, xph1, xmark, smark, xf, of;
+    wire [526:0] xd, wd; wire [527:0] xb0, xb2, xb3; wire [2:0] xpar, spar;
+    wire [513:0] sd, od; wire [514:0] sb0, sb1, sb2;
     dsfd_wfc_ss_t
 `ifndef DSFD_WFC_SS_HARD
         #(.RLAT(RLAT))
 `endif
-        u_t (.ck(ck), .rst(rst), .f_liv(f_liv), .f_lid(f_lid), .t_lov(t_lov), .t_lod(t_lod),
-        .t_xb0(xb0), .t_xb2(xb2), .t_xb3(xb3), .t_xpar(xpar), .t_xmark(xmark), .t_xph1(xph1),
-        .f_rb0(rb0), .f_rb1(rb1), .f_rb2(rb2), .f_rpar(rpar), .f_rmark(rmark), .f_sft(sft),
-        .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .t_ft(t_ft));
+        u_t (.ck(ck), .rst(rst), .f_liv(f_liv), .f_lid(f_lid), .t_lov(t_lov), .t_lod(t_lod), .t_xv(xv), .t_xd(xd),
+        .f_rv(ov), .f_rd(od), .f_rft(of), .f_sft(sft), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .t_ft(t_ft));
+    ot_s81_vm_x43_t
+`ifndef DSFD_WFC_SS_HARD
+        #(.W(527))
+`endif
+        u_x43t (.t_ck(ck[0]), .t_rst_n(rst[0]), .s_v(xv), .s_d(xd), .b0(xb0), .b2(xb2), .b3(xb3), .bpar(xpar),
+        .t_mark(xmark), .ph1_bad(xph1));
+    ot_s81_vm_x43_s
+`ifndef DSFD_WFC_SS_HARD
+        #(.W(527))
+`endif
+        u_x43s (.s_ck(ckv[0]), .s_rst_n(rsv[0]), .b0(xb0), .b2(xb2), .b3(xb3), .bpar(xpar), .t_mark(xmark),
+        .ph1_bad(xph1), .o_v(wv), .o_d(wd), .fault(xf));
+    assign t_swv = wv; assign t_swd = wd;                     // the VM write channel = the x43 serial output flops
     dsfd_wfc_ss_s
 `ifndef DSFD_WFC_SS_HARD
         #(.RLAT(RLAT), .START_GAP(START_GAP))
 `endif
-        u_s (.ckv(ckv), .rsv(rsv),
-        .f_xb0(xb0), .f_xb2(xb2), .f_xb3(xb3), .f_xpar(xpar), .f_xmark(xmark), .f_xph1(xph1),
-        .t_rb0(rb0), .t_rb1(rb1), .t_rb2(rb2), .t_rpar(rpar), .t_rmark(rmark),
-        .t_swv(t_swv), .t_swd(t_swd), .f_swr(f_swr), .f_swa(f_swa), .t_srv(t_srv), .t_srd(t_srd), .f_srr(f_srr),
+        u_s (.ckv(ckv), .rsv(rsv), .f_wv(wv), .f_wd(wd), .f_xft(xf), .t_xsv(sv), .t_xsd(sd),
+        .f_swr(f_swr), .f_swa(f_swa), .t_srv(t_srv), .t_srd(t_srd), .f_srr(f_srr),
         .f_srq(f_srq), .t_ks(t_ks), .f_kd(f_kd), .t_hep(t_hep), .t_sft(sft));
+    ot_s81_vm_x34_s
+`ifndef DSFD_WFC_SS_HARD
+        #(.W(514))
+`endif
+        u_x34s (.s_ck(ckv[0]), .s_rst_n(rsv[0]), .s_v(sv), .s_d(sd), .b0(sb0), .b1(sb1), .b2(sb2), .bpar(spar),
+        .s_mark(smark));
+    ot_s81_vm_x34_t
+`ifndef DSFD_WFC_SS_HARD
+        #(.W(514))
+`endif
+        u_x34t (.t_ck(ck[0]), .t_rst_n(rst[0]), .b0(sb0), .b1(sb1), .b2(sb2), .bpar(spar), .s_mark(smark),
+        .o_v(ov), .o_d(od), .fault(of));
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -94,9 +123,10 @@ module dsfd_wfc_ss_t #(
     input  wire [0:0]          ck, rst,
     input  wire [0:0]          f_liv, input wire [FLIT:0] f_lid,
     output reg  [0:0]          t_lov, output reg [FLIT:0] t_lod,
-    output wire [VWA+FLIT:0]   t_xb0, t_xb2, t_xb3, output wire [2:0] t_xpar, output wire t_xmark, t_xph1,
-    input  wire [FLIT+2:0]     f_rb0, f_rb1, f_rb2, input wire [2:0] f_rpar, input wire f_rmark,
-    input  wire                f_sft,
+    output reg                 t_xv, output reg [VWA+FLIT-1:0] t_xd,     // to the x43 stream half (from flops)
+    input  wire                f_rv, input wire [FLIT+1:0] f_rd,          // from the x34 stream half {kind, v, word}
+    input  wire                f_rft,                                     // x34 alignment fault
+    input  wire                f_sft,                                     // serial leaf fault level
     input  wire [84:0]         c_cmd, output wire [8:0] c_done, output wire [1:0] c_st,
     output reg  [3:0]          t_ft
 );
@@ -119,10 +149,12 @@ module dsfd_wfc_ss_t #(
     // epoch phase: tp = index of the last edge (3 at reset: the first edge after release is epoch edge 0)
     reg [1:0] tp;
     always @(posedge clk or negedge rn) if (!rn) tp <= 2'd3; else tp <= tp + 2'd1;
+    // a word issued at this edge (SRAM read) is registered at t_xd on the next edge and sampled by the x43 stream half
+    // one edge later, at sample index tp + 3: legal unless that index is 1
 `ifdef OT_WFCSS_MUT_PH1
-    wire nxt_ok = tp != 2'd2;                 // MUTANT: the writer presents words for sample index 1
+    wire nxt_ok = tp != 2'd1;                 // MUTANT: the writer presents words for sample index 1
 `else
-    wire nxt_ok = tp != 2'd3;                 // the next edge's x43 sample index (tp + 2) is 0, 2 or 3
+    wire nxt_ok = tp != 2'd2;
 `endif
     // ---------------------------------------------------------------- link-in pin flops and the parser
     reg liv_q; reg [FLIT:0] lid_q;
@@ -144,8 +176,7 @@ module dsfd_wfc_ss_t #(
         .w_ce_in(pay), .w_addr_in(rx_j[5:0]), .wd_in(ld), .w_mask_in({FLIT{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     wire [VWA+FLIT-1:0] x_d = {xa, xdb ? FLIT'({h_user, h_tok, h_pos}) : rx_rd};
-    dsfd_wfc_ss_x43_t #(.W(VWA+FLIT)) u_x43t (.t_ck(clk), .t_rst_n(rn), .s_v(xv), .s_d(x_d),
-        .b0(t_xb0), .b2(t_xb2), .b3(t_xb3), .bpar(t_xpar), .t_mark(t_xmark), .ph1_bad(t_xph1));
+    always @(posedge clk) t_xd <= x_d;
     // ---------------------------------------------------------------- per-user expected position (128 x 256 macro)
     reg [MAXU-1:0] uval; reg uc_v, uc_val; reg [2:0] uc_s; reg [6:0] uc_row; reg [NW-1:0] uc_pos; reg [USER_W-1:0] uc_u;
     wire [255:0] up_q;
@@ -164,9 +195,9 @@ module dsfd_wfc_ss_t #(
     reg [SP-1:0] jq [0:1]; reg [1:0] jq_w, jq_r;
     wire jq_n0 = jq_w == jq_r;
     // ---------------------------------------------------------------- return path: x34 reader, TX buffers, framing
-    wire ro_v; wire [FLIT+1:0] ro_d; wire x34f;
-    ot_s81_vm_x34_t #(.W(FLIT+2)) u_x34t (.t_ck(clk), .t_rst_n(rn), .b0(f_rb0), .b1(f_rb1), .b2(f_rb2), .bpar(f_rpar),
-        .s_mark(f_rmark), .o_v(ro_v), .o_d(ro_d), .fault(x34f));
+    reg ro_v, x34f; reg [FLIT+1:0] ro_d;                      // pin flops of the x34 stream half's outputs
+    always @(posedge clk or negedge rn) if (!rn) begin ro_v <= 1'b0; x34f <= 1'b0; end else begin ro_v <= f_rv; x34f <= f_rft; end
+    always @(posedge clk) ro_d <= f_rd;
     wire r_done = ro_v && ro_d[FLIT+1], r_dat = ro_v && !ro_d[FLIT+1];
     wire r_v0 = ro_d[FLIT];
     reg [6:0] pi; reg [63:0] got; reg tx_arm, rd_go, q_v, q_last; reg [6:0] txc, rk;
@@ -196,13 +227,13 @@ module dsfd_wfc_ss_t #(
     reg f_proto, f_lnk, f_vmx, sft_q;
     always @(posedge clk or negedge rn)
         if (!rn) begin
-            rx_in <= 1'b0; rx_j <= 0; rx_cnt <= 0; wact <= 1'b0; warm <= 1'b0; wk <= 0; xv <= 1'b0; xdb <= 1'b0;
+            rx_in <= 1'b0; rx_j <= 0; rx_cnt <= 0; wact <= 1'b0; warm <= 1'b0; wk <= 0; xv <= 1'b0; xdb <= 1'b0; t_xv <= 1'b0;
             uval <= {MAXU{1'b0}}; uc_v <= 1'b0; jq_w <= 0; jq_r <= 0;
             pi <= 0; got <= 0; tx_arm <= 1'b0; rd_go <= 1'b0; q_v <= 1'b0; txc <= 0; rk <= 0;
             t_lov <= 1'b0; f_proto <= 1'b0; f_lnk <= 1'b0; f_vmx <= 1'b0; sft_q <= 1'b0; t_ft <= 4'd0;
         end else begin
             // ---- writer: one VM write per legal slot
-            xv <= w_iss;
+            xv <= w_iss; t_xv <= xv;
             if (w_iss) begin
                 xdb <= w_db; xa <= w_db ? {VWA{1'b1}} : VWA'(RXB + wk);
                 if (!w_db && rx_cnt <= wk) f_lnk <= 1'b1;            // the word has not arrived (calendar gap)
@@ -274,9 +305,10 @@ module dsfd_wfc_ss_s #(
     parameter integer TXW = 46, parameter integer TXB = 0, parameter integer RLAT = 17, parameter integer START_GAP = 4
 ) (
     input  wire [0:0]          ckv, rsv,
-    input  wire [VWA+FLIT:0]   f_xb0, f_xb2, f_xb3, input wire [2:0] f_xpar, input wire f_xmark, f_xph1,
-    output wire [FLIT+2:0]     t_rb0, t_rb1, t_rb2, output wire [2:0] t_rpar, output wire t_rmark,
-    output wire [0:0]          t_swv, output wire [VWA+FLIT-1:0] t_swd, input wire [0:0] f_swr, f_swa,
+    input  wire                f_wv, input wire [VWA+FLIT-1:0] f_wd,     // the VM write channel (x43 serial half flops)
+    input  wire                f_xft,                                     // x43 alignment / schedule fault
+    output reg                 t_xsv, output reg [FLIT+1:0] t_xsd,       // to the x34 serial half {kind, v, word}
+    input  wire [0:0]          f_swr, f_swa,
     output reg  [0:0]          t_srv, output reg [2*VWA:0] t_srd, input wire [0:0] f_srr,
     input  wire [2*FLIT+1:0]   f_srq,
     output reg  [USER_W+2*NW:0] t_ks, input wire [NW+32:0] f_kd,
@@ -286,12 +318,12 @@ module dsfd_wfc_ss_s #(
     localparam integer SP = USER_W + 2 * NW;
     initial if (RLAT < 4 || START_GAP < 1 || TXW > 128) $fatal(1, "dsfd_wfc_ss_s: RLAT >= 4, START_GAP >= 1, TXW <= 128");
     wire clk = ckv[0], rn = rsv[0];
-    // ---------------------------------------------------------------- write channel: x43 output flops are the pins
-    wire wv; wire [VWA+FLIT-1:0] wd; wire x43f;
-    dsfd_wfc_ss_x43_s #(.W(VWA+FLIT)) u_x43s (.s_ck(clk), .s_rst_n(rn), .b0(f_xb0), .b2(f_xb2), .b3(f_xb3), .bpar(f_xpar),
-        .t_mark(f_xmark), .ph1_bad(f_xph1), .o_v(wv), .o_d(wd), .fault(x43f));
-    assign t_swv = wv; assign t_swd = wd;
-    wire db = wv && (&wd[FLIT +: VWA]), dw = wv && !(&wd[FLIT +: VWA]);
+    // ---------------------------------------------------------------- write channel copy (pin flops): the write launched
+    // in the previous cycle (address and START payload only); every check against it uses the previous-edge state
+    reg wv, x43f; reg [VWA-1:0] wa; reg [SP-1:0] wp;
+    always @(posedge clk or negedge rn) if (!rn) begin wv <= 1'b0; x43f <= 1'b0; end else begin wv <= f_wv; x43f <= f_xft; end
+    always @(posedge clk) begin wa <= f_wd[FLIT +: VWA]; wp <= f_wd[SP-1:0]; end
+    wire db = wv && (&wa), dw = wv && !(&wa);
     // ---------------------------------------------------------------- pin flops
     reg swr_q, swa_q, srr_q, rv_q, rv1_q, kd_v; reg [FLIT-1:0] srq_q; reg [NW+31:0] kd_d;   // f_srq[2*FLIT:FLIT+1]: unused RD2 slot
     always @(posedge clk or negedge rn)
@@ -302,10 +334,8 @@ module dsfd_wfc_ss_s #(
         end
     always @(posedge clk) begin srq_q <= f_srq[FLIT-1:0]; kd_d <= f_kd[NW+31:0]; end
     // ---------------------------------------------------------------- return transfer (x34 banks): DONE marker or word
-    wire xs_v = kd_v || rv_q;
-    wire [FLIT+1:0] xs_d = kd_v ? {1'b1, (FLIT+1-NW-32)'(0), kd_d} : {1'b0, rv_q, srq_q[FLIT-1:0]};
-    ot_s81_vm_x34_s #(.W(FLIT+2)) u_x34s (.s_ck(clk), .s_rst_n(rn), .s_v(xs_v), .s_d(xs_d), .b0(t_rb0), .b1(t_rb1),
-        .b2(t_rb2), .bpar(t_rpar), .s_mark(t_rmark));
+    always @(posedge clk or negedge rn) if (!rn) t_xsv <= 1'b0; else t_xsv <= kd_v || rv_q;
+    always @(posedge clk) t_xsd <= kd_v ? {1'b1, (FLIT+1-NW-32)'(0), kd_d} : {1'b0, rv_q, srq_q[FLIT-1:0]};
     // ---------------------------------------------------------------- START, run window, reads, return check
     localparam integer GAP = START_GAP;
 `ifdef OT_WFCSS_MUT_RLAT
@@ -315,32 +345,33 @@ module dsfd_wfc_ss_s #(
 `endif
     reg st_p, run, rd_act; reg [7:0] st_c; reg [SP-1:0] st_d; reg [6:0] ri;
     reg [RCHK:0] ex0;                         // launch history: ex0[k] = a read launched k edges before this edge's value
-    reg [USER_W+NW:0] hks; reg flt;
+    reg [USER_W+NW:0] hks; reg flt; reg run_d, st_p_d; reg [6:0] ri_d;   // previous-edge state (the write copy is one edge late)
     wire [VWA-1:0] a0 = VWA'(TXB) + VWA'(ri);
     always @(posedge clk or negedge rn)
         if (!rn) begin
             st_p <= 1'b0; run <= 1'b0; rd_act <= 1'b0; ri <= 7'(TXW); ex0 <= 0; t_srv <= 1'b0; t_ks <= 0;
-            hks <= 0; flt <= 1'b0; t_sft <= 1'b0; st_c <= 0;
+            hks <= 0; flt <= 1'b0; t_sft <= 1'b0; st_c <= 0; run_d <= 1'b0; st_p_d <= 1'b0; ri_d <= 7'(TXW);
         end else begin
             // doorbell -> START after GAP edges; HEP epoch on the doorbell
             t_ks[SP] <= 1'b0; hks[USER_W+NW] <= 1'b0;
             if (db) begin
                 if (st_p || run) flt <= 1'b1;
 `ifdef OT_WFCSS_MUT_GAP0
-                run <= 1'b1; t_ks <= {1'b1, wd[SP-1:0]};          // MUTANT: START with the doorbell (no gap)
+                run <= 1'b1; t_ks <= {1'b1, wp};                   // MUTANT: START with the doorbell (no gap)
 `else
-                st_p <= 1'b1; st_c <= 8'(GAP - 1); st_d <= wd[SP-1:0];
+                st_p <= 1'b1; st_c <= 8'(GAP - 1); st_d <= wp;
 `endif
-                hks <= {1'b1, wd[2*NW +: USER_W], wd[NW-1:0]};
+                hks <= {1'b1, wp[2*NW +: USER_W], wp[NW-1:0]};
             end
             if (st_p) begin
                 if (st_c == 0) begin st_p <= 1'b0; run <= 1'b1; t_ks <= {1'b1, st_d}; end
                 else st_c <= st_c - 1'b1;
             end
-            if (dw && (run || st_p)) flt <= 1'b1;                   // VM rows written while the core owns them
+            run_d <= run; st_p_d <= st_p; ri_d <= ri;
+            if (dw && (run_d || st_p_d)) flt <= 1'b1;               // VM rows written while the core owns them
             // write-after-read: a row of the outbound range may be rewritten only on or after the edge its read
             // was launched (same edge: the VM's read sees the row before the write); ri = rows launched so far
-            if (dw && wd[FLIT +: VWA] >= VWA'(TXB) + VWA'(ri) && wd[FLIT +: VWA] < VWA'(TXB + TXW)) flt <= 1'b1;
+            if (dw && wa >= VWA'(TXB) + VWA'(ri_d) && wa < VWA'(TXB + TXW)) flt <= 1'b1;
             if (wv && !swr_q) flt <= 1'b1;                          // write launched without the VM's grant level
             // DONE -> read pairs
             if (kd_v) begin
@@ -362,69 +393,4 @@ module dsfd_wfc_ss_s #(
             t_sft <= flt;
         end
     dsfd_wfc_hep_t u_hep (.ckv(ckv), .rsv(rsv), .f_hks(hks), .t_hep(t_hep));
-endmodule
-
-// ---------------------------------------------------------------------------------------------------------------
-// ot_s81_vm_x43 split into its two clock leaves (same flops, same logic; the stream half writes the banks, the serial
-// half reads them at fixed serial edges) -- see rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv for the timing contract.
-// ---------------------------------------------------------------------------------------------------------------
-module dsfd_wfc_ss_x43_t #(parameter integer W = 512) (
-    input  wire         t_ck, t_rst_n,
-    input  wire         s_v, input wire [W-1:0] s_d,
-    output reg  [W:0]   b0, b2, b3,
-    output reg  [2:0]   bpar,
-    output reg          t_mark, ph1_bad
-);
-    reg [1:0] tp; reg te;
-    wire [1:0] tn = tp + 2'd1;
-    always @(posedge t_ck or negedge t_rst_n)
-        if (!t_rst_n) begin tp <= 2'd3; te <= 1'b0; bpar <= 3'b000; t_mark <= 1'b0; ph1_bad <= 1'b0; end
-        else begin
-            tp <= tn;
-            t_mark <= tn == 2'd1;
-            case (tn)
-                2'd0: begin te <= ~te; bpar[0] <= ~te; end
-                2'd2: bpar[1] <= te;
-                2'd3: bpar[2] <= te;
-                default: if (s_v) ph1_bad <= 1'b1;
-            endcase
-        end
-    always @(posedge t_ck)
-        case (tn)
-            2'd0: b0 <= {s_v, s_d};
-            2'd2: b2 <= {s_v, s_d};
-            2'd3: b3 <= {s_v, s_d};
-            default: ;
-        endcase
-endmodule
-
-module dsfd_wfc_ss_x43_s #(parameter integer W = 512) (
-    input  wire         s_ck, s_rst_n,
-    input  wire [W:0]   b0, b2, b3,
-    input  wire [2:0]   bpar,
-    input  wire         t_mark, ph1_bad,
-    output reg          o_v, output reg [W-1:0] o_d,
-    output reg          fault
-);
-    reg [1:0] sp; reg se; reg warm; reg mk;
-    wire [1:0] sn = (sp == 2'd2) ? 2'd0 : sp + 2'd1;
-    always @(posedge s_ck or negedge s_rst_n)
-        if (!s_rst_n) begin sp <= 2'd2; se <= 1'b0; warm <= 1'b0; o_v <= 1'b0; fault <= 1'b0; mk <= 1'b0; end
-        else begin
-            sp <= sn;
-            mk <= t_mark;
-            if (warm && mk != (sn == 2'd2)) fault <= 1'b1;
-            if (ph1_bad) fault <= 1'b1;
-            case (sn)
-                2'd0: begin se <= ~se; o_v <= b2[W]; if (warm && bpar[1] != se) fault <= 1'b1; end
-                2'd1: begin warm <= 1'b1; o_v <= b3[W]; if (warm && bpar[2] != ~se) fault <= 1'b1; end
-                default: begin o_v <= b0[W]; if (warm && bpar[0] != se) fault <= 1'b1; end
-            endcase
-        end
-    always @(posedge s_ck)
-        case (sn)
-            2'd0: o_d <= b2[W-1:0];
-            2'd1: o_d <= b3[W-1:0];
-            default: o_d <= b0[W-1:0];
-        endcase
 endmodule
