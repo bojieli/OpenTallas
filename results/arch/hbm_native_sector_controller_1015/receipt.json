@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.hbm.native_sector_controller.v1",
+  "status": "pass",
+  "runs": [
+    {
+      "name": "baseline",
+      "returncode": 0,
+      "output": "PASS nativeRW32PC physicalcommands64WR64RD ACK64 responses64 REFpb534 cycles2088 maxWR192 maxRD245\nnative_controller_mutant_proof/tb.sv:279: $finish called at 2137601000 (1fs)"
+    },
+    {
+      "name": "enqueue_ack",
+      "returncode": 1,
+      "output": "FATAL: native_controller_mutant_proof/tb.sv:56: enqueueACKorWRduplicate p0\n       Time: 38400000  Scope: tb.external_dram"
+    },
+    {
+      "name": "wrong_bank",
+      "returncode": 1,
+      "output": "FATAL: native_controller_mutant_proof/tb.sv:42: actualphysicalcommandaddresswrong p0 b1 row3 col0\n       Time: 62976000  Scope: tb.external_dram"
+    }
+  ],
+  "controller_clock_ps": 1024,
+  "scope": "Actual32PC R/W/refresh bank sequencers to externalDRAM command/data; one outstanding single-sector perPC",
+  "calendar": "four fixed512-edge service windows, all32 PCs each; no dynamic extension",
+  "physical_qualified": false,
+  "full_native_qualified": false,
+  "protected_state_admitted": false,
+  "source_sha256": {
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "36ab8140f3a9f14d4098729f79f5091f1e67156409997dc2d6276387a23315c8",
+    "rtl/hbm_accel/service/native_sector_20261015/ot_hbm_native_sector_stack.sv": "6e5644b2d8e2809fcaf2e0e3a50f4e1d1248b30cadb9d7c98138328bdf538ae1",
+    "tools/hbm_native_sector_controller_gate.py": "4563e803ee17bd0bc234299f29ea563cb079e7c2ce84bd9b9226da900b1dae1f"
+  }
+}
