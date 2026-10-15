@@ -3,7 +3,7 @@
   "verdict": "FAIL",
   "release_qualified": false,
   "scope": "Full canonical layer die; source candidates do not substitute for emitted netlist connections or native views.",
-  "requirements_sha256": "3fdda54fdcacfa025ebb8bf7ee6e2272aeaae4b62b6e2de64964a6c5d987266d",
+  "requirements_sha256": "2a6a898b38483b22f23f47e7b9cb42d720b27a94c99a96dbe84e77be92cf0e23",
   "manifest_sha256": "27293f4b64a4231e641e177c47977e7d87651becac22e455a67936b1d9142eec",
   "die_sha256": null,
   "canonical_required": {
@@ -1144,6 +1144,7 @@
       "module": "dsfd_engram_lkp",
       "source": "rtl/dsrom_sys/engram/dsfd_engram_lkp.sv",
       "owner": "S-FUNC/S-ELEM",
+      "static_semantics_evidence": null,
       "source_sha256": "0a7390bfae1e161def62f335e8ebdda9812a8bc572394fdbe5c619edd72969be",
       "ports": {
         "ck": {
@@ -1256,7 +1257,8 @@
       "binding_findings": [
         "unevaluated_port_width",
         "source_not_selected_in_manifest",
-        "required_master_not_in_emitted_die"
+        "required_master_not_in_emitted_die",
+        "static_semantics_evidence_missing"
       ],
       "verdict": "FAIL"
     },

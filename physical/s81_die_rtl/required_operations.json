@@ -125,7 +125,8 @@
       "operation": "engram_lookup",
       "module": "dsfd_engram_lkp",
       "source": "rtl/dsrom_sys/engram/dsfd_engram_lkp.sv",
-      "owner": "S-FUNC/S-ELEM"
+      "owner": "S-FUNC/S-ELEM",
+      "static_semantics_evidence": null
     },
     {
       "operation": "markov_static",

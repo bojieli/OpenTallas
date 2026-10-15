@@ -24,10 +24,11 @@ class LedgerGate(unittest.TestCase):
  def test_manifest_omission_and_unknown_phase_fail(self):
   with tempfile.TemporaryDirectory() as td:
    root=Path(td);(root/'r.sv').write_text('module a(input wire ck);always @(posedge ck)begin end endmodule')
-   req=root/'req.json';req.write_text(json.dumps({'scope':'whole','canonical':{'phase_width':10},'operations':[{'operation':'a','module':'a','source':'r.sv','required_defines':['STATIC']}]}))
+   req=root/'req.json';req.write_text(json.dumps({'scope':'whole','canonical':{'phase_width':10},'operations':[{'operation':'a','module':'a','source':'r.sv','required_defines':['STATIC'],'required_ports':{'ck':2}}]}))
    fl=root/'list.f';fl.write_text('')
    with patch.object(ledger,'ROOT',root):r=ledger.audit(req,fl)
    self.assertIn('canonical_phase_width_unproven',r['failures'])
    self.assertIn('missing_build_define:STATIC',r['operations'][0]['binding_findings'])
+   self.assertIn('required_port_width:ck:1!=2',r['operations'][0]['binding_findings'])
    self.assertIn('source_not_selected_in_manifest',r['operations'][0]['binding_findings'])
 if __name__=='__main__':unittest.main()
