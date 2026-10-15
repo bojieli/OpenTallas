@@ -64,12 +64,14 @@ def execute(out):
       controller.write_text(source)
       with (out/(name+'.build.log')).open('w') as log:
        subprocess.run(['verilator','--binary','--timing','-Wno-fatal','-j','2','--top-module','tb_kv_hbm_elastic_boundary','--Mdir',str(out/('obj_'+name)),*sources],stdout=log,stderr=subprocess.STDOUT,check=True)
-      for jitter in ([0,8,16] if name=='production' else [16]):
-       namecase=name+'_j'+str(jitter)
+      cases=([(0,False),(8,False),(16,False),(16,True)] if name=='production' else [(16,name=='missing_kv_debt')])
+      for jitter,late_tail in cases:
+       namecase=name+'_j'+str(jitter)+('_late_tail' if late_tail else '')
+       extra=['+faultmode=2','+late=512','+lateby=100'] if late_tail else []
        with (out/(namecase+'.log')).open('w') as log:
-        r=subprocess.run([str(out/('obj_'+name)/'Vtb_kv_hbm_elastic_boundary'),'+jit='+str(jitter),'+seed=2'],stdout=log,stderr=subprocess.STDOUT)
+        r=subprocess.run([str(out/('obj_'+name)/'Vtb_kv_hbm_elastic_boundary'),'+jit='+str(jitter),'+seed=2',*extra],stdout=log,stderr=subprocess.STDOUT)
        text=(out/(namecase+'.log')).read_text()
-       passed=r.returncode==0 and 'DRAIN_PASS' in text and 'PASS 0az' in text
+       passed=(r.returncode!=0 and 'OBSERVED_HOLD' in text and 'DRAIN_EARLY' not in text and 'DRAIN_COUNTER_FAULT' not in text) if late_tail else (r.returncode==0 and 'DRAIN_PASS' in text and 'PASS 0az' in text)
        rejected=r.returncode!=0 and ('DRAIN_EARLY_CORE' if name=='missing_host_read_debt' else 'DRAIN_EARLY_HBM') in text
        receipt['cases'].append(dict(name=namecase,returncode=r.returncode,pass_observed=passed,mutant_rejected=rejected))
        if (not passed if name=='production' else not rejected):
