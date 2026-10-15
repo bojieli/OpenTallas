@@ -36,3 +36,10 @@ manifest=dict(canonical_program=meta['program'],canonical_case=case,
               arithmetic='G=min(G,lim);clipU;SILU(G)*U*route;BF16',
               programme_rows=len(words),standalone_component=True,native_qualified=False)
 (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+
+vm_words={}
+for i in range(3072):
+    vm_words[i]=vin[168960+i]
+    vm_words[1026*8+i]=vin[172032+i]
+vm_words[2052*8]=vin[12672]
+(out/'vm_init.hex').write_text(''.join(f'{sum(vm_words.get(sector*8+w,0)<<(32*w) for w in range(8)):064x}\n' for sector in range(2056)))
