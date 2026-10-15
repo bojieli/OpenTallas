@@ -1,0 +1,23 @@
+{
+  "cell": "ot_s81_pq_qb_headp_native",
+  "view": "physical/ref_tile/s81pq_qb_headp_native/views/ot_s81_pq_qb_headp_native",
+  "lib_cell": "ot_s81_pq_qb_headp_native",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 211.7,
+  "spread_ps": 25.3,
+  "outputs": 595,
+  "inputs": 1100,
+  "launch_ps": 309.6,
+  "launch_pin": "i0[0]",
+  "capture_ps": 308.7,
+  "capture_pin": "rd_data[252]",
+  "launch_over": 8,
+  "capture_over": 1045,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 309.6 > 220 (8 pins); capture 308.7 > 190 (1045 pins)"
+}

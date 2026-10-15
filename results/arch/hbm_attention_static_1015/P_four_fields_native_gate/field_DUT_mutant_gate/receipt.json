@@ -1,0 +1,10 @@
+{
+  "source_commit": "4408c92e6",
+  "unit": "oth-ubuntu-1723918-1792059331",
+  "exit_status": 0,
+  "qualification": false,
+  "status": "PASS actualfield2 bankpayloadassociation DUTmutation rejected",
+  "mutation": "MUT_FIELD2 writesconvertedbank XOR1 onlyinfield2",
+  "observed": "ATT_FRONT wrongactualPfieldgather field2 row0 head0",
+  "mutated_bench_sha256": "89ab5f8e24ce338aa4bff6dafd7920c835b08f14204b424f1d699c45084a9296"
+}

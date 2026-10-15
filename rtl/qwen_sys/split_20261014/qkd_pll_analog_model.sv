@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1fs
 // Allowed hard PLL analog model, not a digital reset controller. Periods match
 // the real native HOST family fixture (host_owner.hpp) and HBM controller gate.
 // Host-owned reset sequencing consumes locked and actual link/boot receipts.

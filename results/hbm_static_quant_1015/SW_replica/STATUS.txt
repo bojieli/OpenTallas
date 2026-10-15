@@ -1,0 +1,39 @@
+Root-authorized SW-local Quant candidate, distinct actual typed target125, native
+SW SID0 bank readgroup5/writegroup1 among actual RG6/WG2. Native SW v2 profile
+frozen e219c9689; current bank7b2 used. Original NW target48 source unchanged.
+One mapped programme SRAM stores94-bit timestamped source records; PCW10. Five
+clock entries expose programme,transport,DXL,DBQ,DAQ at their respective phi-R.
+
+Actual component proof terminal PASS: real AXI F-window overlay + unchanged actual
+loader CP doorbell + typed target125 + real compact programme SRAM + unchanged
+actual decoder + actual SW W202 programme drives actual RG6/WG2 bank selectors.
+8FP8 n512 records,128 issues,4096 exact words,512 actual SRAM readbacks,181 elapsed
+LCP-to-macro-commit cycles vs immutable8*24=192. Six mutants killed: sector map,
+write map,late response,wrong SW calendar owner,missing target125,unsupported
+loop count. The runner's inherited closing banner saysNW; m0 log/source hashes
+prove actual named SW v2 wrapper. No price redefinition or NW proof rerun.
+
+Declared boundary fixture: first record uses exact original canonical L0 A51776
+andO52288, bothSID0. Later independent source-shaped records use k*1024-word SID0
+regions to exercise sustained service, with original L0 numerical inputs and
+independent expected golden. These are explicit component stimuli, NOT a native
+token's invented producer epochs or allocator. Reproducer source
+ tools/hgi_static_quant_SW_candidate.py pins actual native record/layout and emits
+both instruction and SW bank-slot images; exact image hashes match tested bytes.
+
+Incremental resource model:1576programme FF+1actual174.744x70.470 SRAM,4285transport
+FF and three actual decoder replicas with own roots. Child outline area.2140204mm2
+beforechannels/bankmux. Existing real bank remains1R1W; added source groups are
+mux inputs, not free memory ports. Source service target remains32values/cycle,
+4input/output sectors per beat. Actual SW physical bank/clock/pin/PG/channel cost
+and die-level source fit remain unmeasured. No route launched without assignment.
+
+Actual production prerequisites: SU norm all512 writes then RoPE tail64 overwrites
+must commit before Quant's source read epoch; output consumer is actual DMA
+KVWB_DS append. SUowner h_elements_b explicitly has no authoritative fixed
+norm→ropecommit epoch until nativegrid/reducer/storage join. No actual producer
+or DMA arithmetic is replaced by a reference in this component boundary test;
+neither is claimed instantiated here. Full native global calendar, physical
+station ages, programme paging, currentbank sourceview qualification and actual
+SU/Quant/DMA composition remain open. This candidate removes the need for Quant
+SID0→NW staging, but does not prove the rest of the chip complete.

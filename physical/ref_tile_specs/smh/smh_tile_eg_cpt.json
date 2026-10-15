@@ -1,0 +1,254 @@
+{
+ "name": "smh_tile_eg_cpt",
+ "top": "ot_hbm_accel_smh_tile_eg",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_hdly.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv"
+ ],
+ "params": {},
+ "defines": [
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "spine_through_icg": true,
+ "outline": {
+  "w": 630.72,
+  "h": 993.6
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
+   "count": 1,
+   "at": [
+    43.2,
+    604.8
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?0?.u_lh.u_xs"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    129.6,
+    820.8
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?0?.u_lh.u_bdc"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    388.8,
+    604.8
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?0?.u_lh.u_tcc.u_tr"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    388.8,
+    734.4
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?0?.u_lh.u_tcc.u_h0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    518.4,
+    734.4
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?0?.u_lh.u_tcc.u_h1"
+  },
+  {
+   "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
+   "count": 1,
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "MX",
+   "inst": "*g_lf?1?.u_lh.u_xs"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "MX",
+   "inst": "*g_lf?1?.u_lh.u_bdc"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    388.8,
+    129.6
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?1?.u_lh.u_tcc.u_tr"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    388.8,
+    259.2
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?1?.u_lh.u_tcc.u_h0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    518.4,
+    259.2
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rin",
+   "bin"
+  ],
+  "E": [
+   "rout",
+   "bout"
+  ],
+  "S": [
+   "gout"
+  ],
+  "N": [
+   "gin",
+   "xs_a1",
+   "xs_g1",
+   "xs_a2",
+   "xs_g2",
+   "clk",
+   "rst_n",
+   "cgi",
+   "cgo"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/smh/smh_tile_eg_cpt_pins.tcl",
+ "orfs_vars": {
+  "OT_CG_EXCLUDE": "*u_cgt.u_cg.u_icg",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_IO_REF_CLASS": "1",
+  "POST_TAPCELL_TCL": "physical/ref_tile_specs/smh/smh_tile_eg_cpt_strap_regions.tcl"
+ },
+ "refglob": "*",
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_delay": true
+ },
+ "job": {
+  "owner": "Claude:H-ELEM-A",
+  "branch": "claude/hbm-smcompact-1014",
+  "tag": "cpt1",
+  "structural_change": "OWNER 18:45 PT 10-14 SM compact-first: the pt_w / pt_e pass-through band (two hard frames, 0.185 mm2 a tile at 4.9 % / 3.6 % std utilisation, height set by 3,705 M4-only face pins) is removed.  Its four transit edges, first-edge landing to both leaves, valid / x_ce reset masks and per-slice reset relays are kept as the Codex compact transport 3a1283ed5 (OT_SMH_COMPACT_PT, 96 register slices <= 128 bits; exact vs the original module bodies over 4,096 production cycles with mid-stream resets, latency mutant FAIL) synthesised as tile-parent cells in a 231.12-um channel between the leaves.  Face pins over the channel on M4 + M6 (18.2 / um, 203 um for 3,705 bits); H cut 3,705 / (38.6 x 231) = 0.42.  Ten closed leaf views and their leaf-relative placement, RTL cycles, benches unchanged; stations keep leaf-relative y (ymap).  Outline 630.72 x 993.6 (was x 1,252.8).",
+  "purpose": "[H-ELEM-A smcompact] ot_hbm_accel_smh_tile_eg WITHOUT the pass-through band (owner 18:45 pilot: one tile, measure real area per SM): 10 closed ref_tile leaves (xs p45m, bdc p50, tcl p45, tct p45) + tile glue + compact transport cells; spine through the tile ICG, rst_n pin flop + registered reset tree, tile pin registers (OT_SMH_PINREG), g-lane / G1 / xb / xf / strap stations at leaf-relative positions.  production NC8 active8 RMAX4096 TAGW16 native-default lockstep exactness plus strap-offset/late32/hold0 mutants must fail.",
+  "benches": [
+   {
+    "name": "lockstep_enreg_xlk",
+    "expect": "pass",
+    "pass_regex": "SMT_LOCKSTEP_PASS",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_lockstep_enreg_xlk.json > {RUN}/b_lockstep_enreg_xlk.log 2>&1; rc=$?; cat {RUN}/b_lockstep_enreg_xlk.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && grep -q 'CG_LOCKSTEP mismatches 0 ' $W/*/runtime.log && echo SMT_LOCKSTEP_PASS"
+   },
+   {
+    "name": "mut_late32",
+    "expect": "fail",
+    "fail_regex": "CG_LOCKSTEP mismatches [1-9]",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --cg-mut-late --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_late32.json > {RUN}/b_mut_late32.log 2>&1; rc=$?; cat {RUN}/b_mut_late32.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
+   },
+   {
+    "name": "mut_hold0",
+    "expect": "fail",
+    "fail_regex": "CG_LOCKSTEP mismatches [1-9]",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --cg-mut-hold0 --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_hold0.json > {RUN}/b_mut_hold0.log 2>&1; rc=$?; cat {RUN}/b_mut_hold0.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
+   },
+   {
+    "name": "mut_strap_region",
+    "expect": "fail",
+    "fail_regex": "SMT_STRAP_MUTANT_KILLED",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --define OT_SMH_MUT_STRAP_REGION --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_strap_region.json > {RUN}/b_mut_strap_region.log 2>&1; rc=$?; cat {RUN}/b_mut_strap_region.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); assert x[\"timeout\"] is None and x[\"mismatching_ops\"] > 0; print(\"SMT_STRAP_MUTANT_KILLED\", x[\"mismatching_ops\"])' {RUN}/b_mut_strap_region.json; test $rc -eq 0"
+   }
+  ]
+ }
+}

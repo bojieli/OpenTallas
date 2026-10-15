@@ -1,0 +1,31 @@
+{
+  "source_commit": "06207bb2f",
+  "VM_dependency": "619da76cd",
+  "VM_sha256": "ab58e6eb465390f2e67c4a82496211e69138dab0bda96a11c098d79fa0516776",
+  "unit": "oth-ubuntu-692561-1792054858",
+  "host": "ot-epyc1tb",
+  "exit_status": 0,
+  "qualification": false,
+  "status": "PASS fullH16 T128/640 actualVM RG3 probability mappedgather component",
+  "epochs": 2,
+  "values_checked": 24576,
+  "P_macros": 128,
+  "VM_macros": 24,
+  "mutants_detected": [
+    "actualsource bankswap",
+    "actualprefetch headwrong",
+    "actualresponse late",
+    "nativeFP32 low16nonzero"
+  ],
+  "source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_p_prefetch.sv": "2c5dda3c695c378a5f37fd0a48f7a092f00d8c338098a3dd563dd6411510661a",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_p_prefetch.sv": "01318d093f1ccfb29c0daaaba25b71dd7f562f5ac9c127237d85c23ace10ed9a"
+  },
+  "remaining": [
+    "Target49 outerPfetch producer/decode and realNEprogramme",
+    "ActualSU/SFU P producer/recordshape and fault propagation",
+    "ActualHG1 arithmetic Pportjoin",
+    "Fulltwoepochoverlap andimmutableprice",
+    "Physicalclock/cut/route"
+  ]
+}

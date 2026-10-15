@@ -582,6 +582,41 @@
   },
   {
    "design": "r25gq",
+   "unit": "ARGMAX.LOCAL [static ot_hbm_argmax_static, DS STREAM1347 production record]",
+   "group": "ARGMAX.LOCAL [static ot_hbm_argmax_static, DS STREAM1347 production record]",
+   "measured": 202.0,
+   "price": 142.668,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.4159,
+   "e2e_loss_pct": 0.0,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 576702.4,
+     "cycles": 576702.4,
+     "added_cycles": 0.0,
+     "program_records": 1,
+     "e2e_loss_pct": 0.0
+    },
+    "qwen_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 1269120.1,
+     "cycles": 1269120.1,
+     "added_cycles": 0.0,
+     "program_records": 1,
+     "e2e_loss_pct": 0.0
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "rtl/test/hbm_idx_static/evidence/argmax_ds1347_0821/receipt.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Measured G..done 202 edges on the exact DS G25 rank-0 ARGMAX.LOCAL record (STREAM n1347, O VM n2) with closed ot_hgi_argmax18_m LP8 + fixed-slot SW read group 4 / record client 0 (gate 26e93ffc3, unit oth-ubuntu-4192676-1792077732, 30 records errors0, MUT1/2/3 fail). S2 schedule overlaps the record in both ds_ar and qwen_ar: 0 added cycles (also 0 at the VM2048 case 298 = 2.09x). Structural alternative if ever critical: LP16 engine (2 sectors/edge, new physical build). Component scope only; not die/physical qualification."
+  },
+  {
+   "design": "r25gq",
    "unit": "FUSED.QDQ_FP8 [bench of record, WIDE]",
    "group": "FUSED.QDQ_FP8",
    "measured": 65.8,
@@ -965,6 +1000,33 @@
   },
   {
    "design": "r25gq",
+   "unit": "SU.VOP [static F2 spread LAT4, Qwen]",
+   "group": "SU.VOP",
+   "measured": 1858.0,
+   "price": 1668.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1139,
+   "e2e_loss_pct": 0.543,
+   "binding_workload": "qwen_ar",
+   "per_workload": {
+    "qwen_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 1113294.0,
+     "cycles": 1119374.8,
+     "added_cycles": 6080.8,
+     "program_records": 12,
+     "e2e_loss_pct": 0.543
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hbm_su_f2_static_1014/spread/receipt.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "static four-quarter SU (F2 per-quarter VM spread, 32 SFU lanes/quarter, LAT4): VM transport measured on RTL vehicle (24,560 events exact), SFU/divider depths measured by the full512 SFU-lane bench, whole-SU arithmetic full512 LAT4 run160 PASS; reduction tail still a model. Over price from softmax.exp_sum 65,536 exps on 128 SFU lanes (512 issues vs nv 256). Coordinator 10-15: keep 32 SFU lanes (64 lanes would give 0.919 at ~+1.65 mm2). Supersedes the credit-era SU.VOP rows for Qwen once accepted."
+  },
+  {
+   "design": "r25gq",
    "unit": "VM8 x-load service start-to-dispatch (ot_hbm_b2_xcommit XR_LEAD 6 + closed vm_cp_root, WR +4 / RD +12)",
    "group": "VM8.XLOAD_SERVICE",
    "measured": 169.0,
@@ -1030,7 +1092,7 @@
    "accepted_plus_proposed_pct": 107.972,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 14,
+   "proposed_rows": 15,
    "headroom_pct": 15.0,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false

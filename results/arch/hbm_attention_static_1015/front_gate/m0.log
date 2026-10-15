@@ -1,0 +1,9 @@
+ATT_FRONT_PROFILE PASS profile0 heads16
+ATT_FRONT_PROFILE PASS profile1 heads0
+ATT_FRONT_PROFILE PASS profile2 heads16
+ATT_FRONT_PROFILE PASS profile3 heads0
+PASS ATT_PROGRAM_QUERY_FRONT profiles=4 heads=32 words=16384 event_cycles=459 native_RG=3 native_RG_total=7 real_query_macros=64 actual_VM_macros=24 actual_programme_macros=1
+- rtl/test/hbm_accel/generic/tb_hbm_attn_program_query_front.sv:61: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.012 s; speed 276.030 us/s
+- Verilator: cpu 0.012 s on 1 threads; allocated 8 MB

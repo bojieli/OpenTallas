@@ -22,7 +22,7 @@
    "inst": "slot[0].u_weight",
    "at": [
     55.296,
-    23.76
+    59.4
    ],
    "orient": "MY"
   },
@@ -32,7 +32,7 @@
    "inst": "slot[1].u_weight",
    "at": [
     55.296,
-    100.44
+    130.68
    ],
    "orient": "MY"
   }
@@ -70,9 +70,9 @@
  "job": {
   "owner": "Codex:/root/h_hc_physical",
   "branch": "codex/hc-physical-1015",
-  "tag": "native1",
+  "tag": "native2",
   "purpose": "Primary structuralHC localweightquarter:2actualSRAM/1059sourceFF, exact553geometryassignedpins, static bank/quarterIDs, unchangedTML3; closesclockspan defect of10SRAM500umroot; full92rootparentnotqualified",
-  "structural_change": "Replace500um10SRAMmonolithclockroot with172.8x194.4twoSRAMlocalquarterroot; exactsourcepinplans andpublishedlegalFFpacking, unchangedreadpipeline",
+  "structural_change": "Replace500um10SRAMmonolithclockroot with172.8x194.4twoSRAMlocalquarterroot; exactsourcepinplans andpublishedlegalFFpacking, unchangedreadpipeline | native2 (Claude H-ELEM-A 2026-10-15, after native1-c3ca362e6 FLOORPLAN_MARGIN bank_distance: slot[0].u_weight 129.6 um from its read_row N-face pins): both weight SRAMs move north as a pair (slot0 y 23.76->59.4, slot1 100.44->130.68; inter-macro channel 35.64->30.24 >= 20 minimum; N core margin 20.52) so the read_row pins that drive r_addr directly sit 94.0 um from slot0 (was 129.6) and 22.7 um from slot1; macro pins are on the macros' W/E faces, so the narrower N-S channel carries no macro escapes. Assigned pin plan, RTL, cycles and TML3 unchanged.",
   "extra_paths": [
    "physical/hbm_hc",
    "rtl/test/tb_hgi_hc_weight_quarter_static.sv",

@@ -8,6 +8,7 @@ K=${1:?}; O=${2:?}; M=${3:-0}; BP=${4:-1}; HP=${5:-1}; mkdir -p $O
 if [ $K = reg512 ]; then
   iverilog -g2012 -P tb_reg512.MUT=$M -o $O/r.vvp rtl/qwen_split/qfd_slab_reg512.sv physical/qwen_port_tiles_1015/tb_reg512.sv
   vvp -n $O/r.vvp | grep REG512 | tee $O/verdict.txt; grep -q " PASS$" $O/verdict.txt
+  exit 0
 fi
 awk '/^module ot_qwen_slab_pg_rcopy/,/^endmodule/; /^module ot_qwen_slab_pg_lanes/,/^endmodule/' rtl/physical/ot_qwen_slab_port_group.sv > $O/lanes.sv
 SRC="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_qwen_me_spine_h_w12.sv $O/lanes.sv physical/qwen_port_tiles_1015/col_stub_sim.sv rtl/qwen_split/qfd_slab_pair_add.sv rtl/qwen_split/qfd_slab_port_leaf.sv rtl/qwen_split/qfd_slab_word_half.sv rtl/qwen_split/qfd_slab_result_half.sv physical/qwen_port_tiles_1015/reference/qfd_slab_word_half_old.sv physical/qwen_port_tiles_1015/reference/qfd_slab_result_half_old.sv physical/qwen_port_tiles_1015/tb_halves_equiv.sv"

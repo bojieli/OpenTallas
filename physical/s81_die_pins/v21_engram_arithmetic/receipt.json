@@ -1,0 +1,114 @@
+{
+ "source_inventory": "results/rtl/s81_engram_mix_1014/leaf_inventory.json",
+ "inventory_sha256": "91ca97e8ceef7af36191469406a36d4985d6ad9982e73e111f153119ff2bbae2",
+ "sizing_sha256": "1361e2494811a59dceef44aa58ad8c0fcb35628864087bfa074a545f6985e9c0",
+ "masters": [
+  {
+   "master": "ot_s81_engram_mul4",
+   "outline_um": [
+    181.44,
+    120.96
+   ],
+   "mapped_area_um2": 8825.2011,
+   "orfs_synth_area_um2": 11242,
+   "util": 0.512,
+   "port_bits": 774,
+   "params": {
+    "LM": "5",
+    "MUT": "0"
+   }
+  },
+  {
+   "master": "ot_s81_engram_add8",
+   "outline_um": [
+    181.44,
+    99.36
+   ],
+   "mapped_area_um2": 7137.959760000001,
+   "orfs_synth_area_um2": 9276,
+   "util": 0.515,
+   "port_bits": 810,
+   "params": {
+    "LM": "5",
+    "LA": "4"
+   }
+  },
+  {
+   "master": "ot_s81_engram_norm",
+   "outline_um": [
+    181.44,
+    95.04
+   ],
+   "mapped_area_um2": 6867.50076,
+   "orfs_synth_area_um2": 8833,
+   "util": 0.512,
+   "port_bits": 101,
+   "params": {
+    "LM": "5",
+    "LA": "4"
+   }
+  },
+  {
+   "master": "ot_s81_engram_sigmoid",
+   "outline_um": [
+    181.44,
+    110.16
+   ],
+   "mapped_area_um2": 7874.439300000001,
+   "orfs_synth_area_um2": 10186,
+   "util": 0.51,
+   "port_bits": 69,
+   "params": {
+    "LM": "5",
+    "LA": "4"
+   }
+  },
+  {
+   "master": "ot_s81_engram_chunk8",
+   "outline_um": [
+    90.72,
+    90.72
+   ],
+   "mapped_area_um2": 3391.10388,
+   "orfs_synth_area_um2": 4265,
+   "util": 0.518,
+   "port_bits": 293,
+   "params": {
+    "LA": "4"
+   }
+  },
+  {
+   "master": "ot_s81_engram_sum",
+   "outline_um": [
+    90.72,
+    99.36
+   ],
+   "mapped_area_um2": 3310.6077000000005,
+   "orfs_synth_area_um2": 4585,
+   "util": 0.509,
+   "port_bits": 174,
+   "params": {
+    "N": "32",
+    "D": "5120",
+    "LA": "4"
+   }
+  },
+  {
+   "master": "ot_s81_engram_signed_sqrt",
+   "outline_um": [
+    64.8,
+    43.2
+   ],
+   "mapped_area_um2": 1013.6890800000001,
+   "orfs_synth_area_um2": 1155,
+   "util": 0.413,
+   "port_bits": 69,
+   "params": {
+    "LM": "5",
+    "LA": "4"
+   }
+  }
+ ],
+ "supersedes": "v20_engram_arithmetic outlines (one 181.44x129.6 frame); same pin rule",
+ "qualification": "native leaf assignment only; parent/reach/calendar open"
+}

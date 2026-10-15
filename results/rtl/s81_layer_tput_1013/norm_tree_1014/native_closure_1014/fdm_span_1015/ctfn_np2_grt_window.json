@@ -1,0 +1,5 @@
+{"schema":"opentallas.s81.norm.grt_window.v1","job":"s81hc_ctfn_native_ref-np2-hb4-hm30-432072b5f","verdict":"EARLY_FAIL_CONGESTION GRT-0116 (coordinator 06:08 batch)",
+ "grt_overflow":2450,"by_layer":{"M2":85,"M3":1556,"M4":72,"M5":737},"congested_gcells":1038,"window_um":{"x":[174,456],"y":[0.3,4.8]},
+ "cause":"ctfn S face: 2,920 fdm pins on M5 over x 77-455 (0.13-um pitch) + pin flops/pads; the seam shared with ctfs_nt N face (fdm)",
+ "fix":"S-DIE r11 grant (3) bb1b07c55: ctfn.fdm (S) + ctfs_nt.fdm (N) one straight full-width M5 bus x 1.02-575.48, bit i at the same x on both faces",
+ "run_data":"deleted after the verdict (owner rule); numbers read from 5_1_grt.log / congestion.rpt before deletion"}

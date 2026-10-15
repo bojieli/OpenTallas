@@ -1,0 +1,12 @@
+BAD row c93 group0 t1 expected0
+BAD row c93 group1 t0 expected1
+BAD row c93 group2 t3 expected2
+BAD row c93 group3 t2 expected3
+BAD row c93 group4 t5 expected4
+BAD row c93 group5 t4 expected5
+BAD row c93 group6 t7 expected6
+BAD row c93 group7 t6 expected7
+FAIL staticlanding ctx8192 rows16384 errors16384 faultffffffff mode0
+[3768000000] %Fatal: tb_static_landing_physical.sv:101: Assertion failed in tb_static_landing_physical
+%Error: tb_static_landing_physical.sv:101: Verilog $stop
+Aborting...

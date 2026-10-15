@@ -18,7 +18,7 @@ def main():
  ap.add_argument('--v19-geometry',action='store_true',help='original 164.16 leaf rows (reproduces the v19 receipt)');a=ap.parse_args()
  import sys;sys.path.insert(0,str(Path(__file__).resolve().parent))
  import gather_parent_spec as gps
- leaf_h=None if a.v19_geometry else gps.leaf_heights();geo=gps.geometry(leaf_h);OUT_H=geo['outline_h']
+ leaf_h=None if a.v19_geometry else gps.leaf_heights();reach=not a.v19_geometry;geo=gps.geometry(leaf_h);OUT_H=geo['outline_h']
  hof={'dsfd_gth_rw':gps.V19_LEAF_H,'dsfd_gth_re':gps.V19_LEAF_H} if leaf_h is None else leaf_h
  assigned=Path(a.assigned);pins=json.loads(assigned.read_text());inst=json.loads((ROOT/'tools/s81_ph/gather_strip_instances.json').read_text())['instances'];taken=[];children=[]
  def snap(x):return round(x/.576)*.576
@@ -46,12 +46,32 @@ def main():
   if role.startswith('tst'):
    g=int(role[3:]);start=0 if g<6 else 1728;x,y=strip(start+(1640-start)*(j+1)/5)
   elif role.startswith('cs'):
-   g=int(role[2:]);start=108+216*g;x,y=strip(start+(1640-start)*(j+1)/5)
+   g=int(role[2:])
+   if reach:
+    # Stage 0 sits directly under its column, W of the leaf co escape (leaf x 48..142): the row-1 st and row-2/3
+    # result-relay status words drop straight down (<= ~330 um); stages 1..3 split the run to the ctl evenly.
+    x0=12.96+216*g+8.64;x,y=strip(x0+(1640-x0)*j/4)
+    if j==0 and abs(x-x0)>100:
+     # The strip next to the ctl is full (rc / tst / tc / f_cd): put stage 0 in the free channel space nearest the
+     # column's status sources (row 0/1 st at leaf x + 20, row 2/3 result relays in the row0|row1 channel).
+     taken.pop();ax,ay=12.96+216*g+60,geo['row_y'][0]+hof['dsfd_gth_rw' if g<4 else 'dsfd_gth_re']
+     sites=[(abs(xx-ax)+abs(yy-ay),xx,yy) for xx in (snap(ax-200+2.304*n) for n in range(174)) for yy in (snap(2.304*n) for n in range(200))
+            if 0<=xx<=1728-15.12 and clear(xx,yy)]
+     if not sites:raise SystemExit(f'STRIP_PLAN REFUSED: no free status relay site for {v["instance"]}')
+     _,x,y=min(sites);taken.append((x,y,15.12,15.12))
+   else:
+    start=108+216*g;x,y=strip(start+(1640-start)*(j+1)/5)
   elif role.startswith('rc'):
    g=int(role[2:]);target=(205.632+216*g) if g<7 else 1501.632
    if j<4:x,y=strip(1640+(target-1640)*(j+1)/4)
    else:
-    x,y=snap(target),snap(340+(j-4)*220+(20.736 if g==7 else 0))
+    if reach:
+     # Stages 4/5 climb the column channel at the actual row pitch: stage 5 ends ~250 um below the top-row leaf rs
+     # pin (N face), stage 4 halfway between the strip and stage 5 (v19 constants 340 / 560 left the rs hop > 500 um).
+     top=geo['row_y'][3]+hof['dsfd_gth_rw' if g<4 else 'dsfd_gth_re'];y5=top-250;y4=25.92+(y5-25.92)/2
+     x,y=snap(target),snap(y4 if j==4 else y5)
+    else:
+     x,y=snap(target),snap(340+(j-4)*220+(20.736 if g==7 else 0))
     if not clear(x,y):
      # Keep the reset relay in its assigned column channel; find the nearest free site.
      choices=[(abs(yy-y),yy) for yy in (snap(61.632+.576*n) for n in range(1262))

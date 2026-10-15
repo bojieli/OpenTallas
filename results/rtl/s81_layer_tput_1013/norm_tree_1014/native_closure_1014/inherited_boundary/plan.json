@@ -1,0 +1,55 @@
+{
+ "selected": true,
+ "optional_NTREE_only": false,
+ "both_variants_share_leafs": true,
+ "source_RTL_unchanged": true,
+ "added_data_valid_fault_edges": [
+  0,
+  0,
+  0
+ ],
+ "compiler_schedule_change_cycles": 0,
+ "serial_component_cycles": 5548,
+ "optional_NTREE_component_cycles": 4695,
+ "outline_unchanged": true,
+ "pin_grant": "physical/s81_die_pins/v20_hc_inherited/receipt.json",
+ "clock": "Actual phi - R per published/new insertion.json, no common-pin clock assumption",
+ "limits_ps": {
+  "launch": 220,
+  "capture": 190,
+  "spread": 80
+ },
+ "hold_margin_ns": 0.01,
+ "signoff": "TT setup, FF hold, DRC0; no SDC/clock/margin relaxation",
+ "model_before_build": {
+  "ctfn": {
+   "outline_um": [
+    576.72,
+    25.92
+   ],
+   "prior_std_um2": 2604,
+   "prior_flops": 5871,
+   "upper_clone_bound": 2928,
+   "estimated_flop_area_per_clone_um2": 0.5,
+   "upper_std_um2": 4068
+  },
+  "ctnl_each": {
+   "outline_um": [
+    142.56,
+    95.04
+   ],
+   "prior_std_um2": 7767,
+   "upper_clone_bound": 432,
+   "estimated_flop_area_per_clone_um2": 0.5,
+   "upper_std_um2": 7983
+  },
+  "note": "Conservative output-count clone upper bounds, not measured area. Actual clone/cell counts and utilization required from new mapped run. Pin-limited outlines fixed by official die grant."
+ },
+ "root_cause": {
+  "ctfn": "Source has one fv input reaching fv plus16 ysel capture replicas; original unanchored recipe1. Exact closed netlist no longer present at receipt paths, so multi-sink placement cause remains source-supported inference pending new mapped topology. No combinational arcs in published ETM.",
+  "ctnl_l3": "Actual closed mapped netlist traced: acc_out14/20 DFFASRHQN -> HB2 -> INV -> BUFx2 -> pin; fdx45 pin -> HB2 -> BUFx2 -> HB2 -> DFFHQN; acc_in31 pin -> HB2 -> BUFx2 -> DFFHQN. Physical boundary topology/hold paths, no input combinational logic.",
+  "ctnl_l2": "ETM failing sq_out and hrq output bits; pure registered source. Same boundary realization mechanism; old exact mapped netlist missing at receipt paths, no unverified detailed trace claimed."
+ },
+ "l3_closed_netlist_sha256": "164dc0b983addc317e7c5d2f5f1aa89f42aab7aaffb5a76f1ccbffc0f070f7e4",
+ "qualification": "NOT QUALIFIED: route-only candidate; new native pin/reset/clock/clone equivalence gates pending. Reused DPI numerical evidence does not establish all on-chip actual RTL."
+}

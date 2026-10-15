@@ -1,0 +1,27 @@
+{
+  "source_sha256": {
+    "tools/ref_tile/ref_tile.py": "5ccffe27cc8bcb3782f5defa78f41f26bd2229e1d793e77968e0730e8742dfb5",
+    "tools/ref_tile/clock_entry_constraints.py": "fbf9fab9833c5d138ba41ecaae1ef348527dfb46cf4d5ed66c277d7dae97fc99",
+    "tools/ref_tile/direct_macro_clock_entries.py": "7495d6181fb3cdb436f19c0d3fe09573fcc83f329dd5e5d5ff7e846bfa64bab5",
+    "tools/ref_tile/sta_scene_binding.cc": "61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777",
+    "physical/common_flow/clock_entries.tcl": "35f86538cc8f5af209fc2284de74c25a13dc359a7911acadc823aa1be99a9860",
+    "tools/ref_tile/tests/test_tile_hybrid_raw_entries.py": "c0c2b6b7780114b55919f0508d31c3d0c0a96917edaad99128ab18182e9b8509"
+  },
+  "new_actual_suite": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-162315-1792079035",
+    "rc": 0,
+    "cases": 5
+  },
+  "legacy_actual_regressions": {
+    "unit": "oth-ubuntu-162825-1792079040",
+    "rc": 0,
+    "tests": [
+      "HybridOpenroad.test_real_hybrid_roots_and_compensation",
+      "HybridOpenroad.test_multiple_glue_roots_remain_independent",
+      "Physical.test_die_strap_tie_output_is_constant_not_a_domain"
+    ]
+  },
+  "pure_tests": 13,
+  "scope": "Clock ownership, native boundary generation, actual CTS root separation and raw-memory source/corner proof. No routed timing qualification."
+}

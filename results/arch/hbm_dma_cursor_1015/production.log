@@ -1,0 +1,4 @@
+PASS production   MAIN STORE20480words+PRE8: real32VMbanks/96macros+32landingmacros;2561exactsectors,postedsourceoverwrite,fenceafter2561acks;firstcommand->fence=173cycles
+PASS production MIRROR STORE20480words+PRE8: real32VMbanks/96macros+32landingmacros;2561exactsectors,postedsourceoverwrite,fenceafter2561acks;firstcommand->fence=173cycles
+PASS DMA static actual production both main/mirror, no runtime VM credits/ready/group lease or dynamic onchip issue
+rtl/hbm_accel/generic/peers/static/tb_dma_back_static.sv:114: $finish called at 5370000 (1ps)

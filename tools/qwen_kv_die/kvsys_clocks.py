@@ -31,7 +31,24 @@ CORNERS = ('tt', 'ff', 'ss')
 def domain(net):
     n = net[2:] if net.startswith('n_') else net
     m = re.match(r'clk_hbm_(\w+?)(?:__.*)?$', n)
-    return 'hclk_' + m.group(1) if m else 'stream'
+    if m:
+        return 'hclk_' + m.group(1)
+    if n.startswith('clk_core_'):
+        return 'stream'
+    for family in ('host', 'ingest', 'phy'):
+        if n == 'clk_' + family or n.startswith('clk_' + family + '_'):
+            return family
+    raise ValueError(f'unknown actual KV clock family: {net}')
+
+
+def periods_for(doms):
+    # ns analog-model half periods -> full periods in ps. HOST PHY1043
+    # differs from native UCIe, whose FDI shares the core833.334 family.
+    text=(ROOT/'rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv').read_text()
+    halves={name:float(value) for name,value in re.findall(r'\b(CORE_HALF|HBM_HALF|HOST_HALF|ING_HALF|PHY_HALF)\s*=\s*([0-9.]+)',text)}
+    expected={'stream':'CORE_HALF','host':'HOST_HALF','ingest':'ING_HALF','phy':'PHY_HALF'}
+    return {d:round(2000.0*halves['HBM_HALF' if d.startswith('hclk_') else expected[d]], 6) for d in doms}
+
 
 
 def main(argv=None):
@@ -89,7 +106,7 @@ def main(argv=None):
             continue
         for p in re.finditer(r'\.(\S+?)\(([^(){}]*)\)', body):
             port, net = p.group(1).lstrip('\\').strip(), p.group(2).strip()
-            if not net.startswith(('n_clk_core_', 'n_clk_hbm_')) or port.startswith('pll'):
+            if not net.startswith('n_clk_') or port.startswith('pll'):
                 continue          # pll_* = the clock SOURCE pins (PLL / HBM controller PLL outputs), not sinks
             pin = port if port in lefpins.get(mst, ()) else f'{port}[0]'
             if mst in src:
@@ -106,8 +123,9 @@ def main(argv=None):
     a.out.mkdir(parents=True, exist_ok=True)
     for c in CORNERS:
         if all(c in leaves[m_] for m_ in leaves):
-            (a.out / f'clocks_{c}.tcl').write_text(clock_tcl(doms, leaves, c))
+            (a.out / f'clocks_{c}.tcl').write_text(clock_tcl(doms, leaves, c, periods=periods_for(doms)))
     rec = dict(schema='opentallas.qwen_kvsys_clocks.v1', sinks=sinks, domains={d: len(v) for d, v in doms.items()},
+               source_periods_ps=periods_for(doms), period_source='qkd_pll_analog_model real half-periods; no implicit domain fallback',
                measured=src, assumed_ideal=sorted(m_ for m_ in leaves if m_ not in src),
                per_child_entries=dict(qkd_ectl=K.ECTL_CLK, qkd_rhead=K.HEAD_CLK, qkd_ahub=K.AHUB_CLK, qkd_land=K.KS.LAND_CLK,
                                       qkd_astk=K.KS.ASTK_CLK),

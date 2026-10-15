@@ -64,7 +64,7 @@ ASTK_W = 220.32                  # stack aggregator (re-cut D) MEASURED: 8 exp q
 LAND_CHAN = 2.4 + 216.0
 LAND_W = 172.8                  # KV landing column: 8 x 32 crossbar, 8 KV merges, emb strip (ASSUMED; r21c qfd_kvc 96.7)
 UCIE = ('ot_qkvd_ucie_x64_phy', 777.6, 777.6)
-SERDES = ('ot_qfd_serdes_112g_x12_phy', 2400.0, 1512.0)
+SERDES = ('ot_qfd_serdes_112g_x12_phy', 2320.056, 1563.57)  # actual native host RXD512 / FDI1043 profile
 FRAMES = dict(qkd_ckbump=(43.2, 43.2), qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 518.4), qkd_embgw=(388.8, 388.8), qkd_pll=(324.0, 324.0),
               qkd_ahub=(648.0, 648.0), qkd_host=(777.6, 518.4))
 RELAY_PITCH = 430.56
@@ -77,7 +77,7 @@ CHAN = 129.6                    # routing / relay channel beside every column (u
 STACKS = ('WS', 'WN', 'ES', 'EN')
 W = 528
 FDI_UCIE = 1 + 1 + 548 + 1 + 548
-FDI_SERDES = 1 + 1 + 1041 + 1 + 1041
+FDI_SERDES = 1 + 1 + 1043 + 1 + 1043
 # re-cut H control tile <-> aggregator: start, T, cyc8, q beat {valid, beat, 512 b}, exp_done, er_data, node credit
 ENG_IN = 1 + 14 + 3 + 1 + 6 + 512 + 32 + 64 + 1
 # er, sc, lmax, node beat tags {valid, beat, g, gam}, k/v_done, fault (the 4,096-b node data leaves from the head tiles)
@@ -205,9 +205,15 @@ BINDINGS['qkd_lnk'] = dict(module='ot_qkvd_split_kvlink', file='rtl/qwen_sys/spl
 _BASE = dict(HEAD=HEAD, ECTL=ECTL, ENG_H=ENG_H, RENG=RENG, TILE_Y=dict(TILE_Y), FRAMES=dict(FRAMES))
 
 
-def _set_geometry(split):
+def _set_geometry(split, reserve_static_memory=False, reserve_native_astk=False):
     """module geometry for the plain KV die (split False) or the split KV/system die (split True)"""
-    global HEAD, ENG_H, RENG, TILE_Y, FRAMES
+    global HEAD, ENG_H, RENG, TILE_Y, FRAMES, LAND_W, ASTK_W
+    if reserve_static_memory and not split:
+        raise ValueError('native static memory reservation requires split KV/system die')
+    if reserve_native_astk and not split:
+        raise ValueError("native ASTK reservation requires split KV/system die")
+    ASTK_W = 328.32 if reserve_native_astk else 220.32
+    LAND_W = 237.6 if reserve_static_memory else 172.8
     HEAD = SPLIT_HEAD_V11 if split else _BASE['HEAD']
     ENG_H = 4 * HEAD[1] + ECTL[1] + 4 * GY
     RENG = (HEAD[0], ENG_H)
@@ -241,7 +247,7 @@ SPLIT_BINDINGS = dict(
     # v1.1: the three native TP8 control leaves A / B / C behind the wires-only qkd_ectl3_s, ck[0..2] = die ck_a / ck_b / ck_c
     # v1.2: the DIRECT-seam parent (Codex 5f3e5767f / 00f42ca01: no B feed-through flops; C launches straight to A over B;
     # exact 3,705 / 4,137 PASS, A/B/C mutants FAIL) = the structural fix of the tp3 views' native-audit FAIL; same ports
-    qkd_ectl=dict(module='qkd_ectl3_direct_s', file='rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv',
+    qkd_ectl=dict(module='qkd_ectl3_epoch_direct_s', file='rtl/qwen_sys/split_20261014/qkd_ectl3_epoch_direct_s.sv',
                   ports=dict(si=['si'], so=['so'], t0=['t0'], t1=['t1'], e0=['e0'], e1=['e1'], e2=['e2'], e3=['e3'],
                              s0=['s0'], s1=['s1'], s2=['s2'], s3=['s3'], rq=['rq'], rs=['rs'], ck_a=['ck'], rst_n=['rst_n']),
                   sliced=dict(ck_b='ck_a', ck_c='ck_a'),
@@ -294,6 +300,127 @@ SPLIT_BINDINGS['qkd_embgw'] = dict(
     ports=dict(gq=['r_ea', 't_ecr'], gr=['t_eq'], hb=['hb', 'hb_cr'], est=['est'], ck=['ck'], rst_n=['rst_n'],
                **{f'emf_{q}': [f'emf_{q}', f'emf_{q}_cr'] for q in STACKS},
                **{f'emr_{q}': [f'emr_{q}', f'emr_{q}_cr'] for q in STACKS}), classed={})
+
+
+# ---- kvsys v1.4 (2026-10-15, die lead r7): REAL HOST / PLL bindings and the 128 die-placed HOST PC slices ----------------
+# The HOST frame qkd_host is replaced by the generated root core qkd_host_root_pt (c460799eb, exact hierarchy move of
+# qkd_host_root_integrated) and one qkd_host_pc_slice_die level with every CDC / write-leaf pair, in a 129.6-um slice column
+# per side between the landing channel and the landing strip (+ a 21.6-um routing cell: +302.4 um die width).  The PLL frame is the allowed analog
+# model qkd_pll_analog_model (no digital reset sequencer: every reset is a root output).  Root inputs without a real die
+# producer stay UNCONNECTED (port-bind MISMATCH, never tied): host_bind_census.json, owners named there.
+HOST_V14 = dict(on=False)
+SLICE_W, SLICE_H = 129.6, 345.6
+# one 21.6-um routing cell W of the slice column: the write-queue controller (172.8 in the 216-um landing channel) otherwise
+# closes the channel at mid-stack and the N stacks' slot-0 slices have no die route to the root (first v1.4 plan)
+SLICE_GAP = 21.6
+HOST_RT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv'
+SLICE_DIE_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv'
+# root clock -> PLL family (FIXTURE = tools/qwen_native_host/host_owner.hpp clocks(); INFERRED = no fixture drives it:
+# the HOST owner must confirm, recorded in the v1.4 contract)
+HOST_CLK_FAMILY = dict(
+    **{c: 'core' for c in ('ck_host', 'ck_csr', 'ck_rst', 'ck_ctl', 'ck_prompt', 'ck_rx', 'ck_tx', 'ck_axi', 'ck_ctrl',
+                           'ck_hc', 'ck_phy_rx_r', 'ck_phy_tx_w', 'ck_qm_queue', 'ck_qm_ing_w', 'ck_qm_done_r',
+                           'ck_qm_core', 'ck_map', 'ck_sum', 'ck_order', 'ck_fence_core', 'ck_guard', 'ck_native')},
+    **{c: 'host' for c in ('ck_qm_host', 'ck_qm_ing_r', 'ck_qm_credit', 'ck_qm_done_w', 'ck_fence_host')},
+    **{c: 'ingest' for c in ('ck_qm_ingest', 'ck_qm_out', 'ck_qm_bank0', 'ck_qm_bank1')},
+    **{c: 'phy' for c in [f'ck_phy{i}' for i in range(8)] + ['ck_pad', 'ck_phy_rx_w', 'ck_phy_tx_r']})
+HOST_CLK_INFERRED = dict(
+    **{c: 'core' for c in ('ck_program_rx', 'ck_program_loader', 'ck_dispatch', 'ck_retire', 'ck_bootbarrier',
+                           'ck_records', 'ck_coordinator_codec', 'ck_coordinator_lifecycle', 'ck_coordinator_post')},
+    **{c: 'host' for c in ('ck_peer', 'ck_root_mux')})     # board-link family (1 GHz = the host period; no board PLL output)
+HOST_GROUPS = dict(chain_f='chf', chain_c='chc', chain_a='cha', chain_fault_i='chx', slice_ack='sak',
+                   slice_boot_done='sbd', slice_boot_ok='sbo', slice_boot_fault='sbf')
+
+
+def host_rt_binding():
+    import re as _re
+    txt = _re.sub(r'//[^\n]*', '', (ROOT / HOST_RT_FILE).read_text())
+    hdr = txt[txt.index('module qkd_host_root_pt'):]
+    hdr = hdr[hdr.index(')(') + 2:hdr.index(');')]
+    names = [_re.findall(r'[A-Za-z_][A-Za-z_0-9]*', part.strip())[-1] for part in hdr.split(',') if part.strip()]
+    ports, sliced = {}, {}
+    for n in names:
+        if n in ('ck_phy', 'ck_qm_bank'):
+            k_ = 8 if n == 'ck_phy' else 2
+            ports[f'{n}0'] = [n]
+            sliced.update({f'{n}{i}': f'{n}0' for i in range(1, k_)})
+        elif n in HOST_GROUPS:
+            g = HOST_GROUPS[n]
+            ports[f'{g}0'] = [n]
+            sliced.update({f'{g}{i}': f'{g}0' for i in range(1, 4)})
+        elif n in ('phy_up', 'phy_rx_v', 'phy_rx_flit', 'phy_tx_v', 'phy_tx_flit', 'hb', 'hb_cr', 'local_tk', 'local_kst'):
+            continue
+        else:
+            ports[n] = [n]
+    ports.update(fdi=['phy_up', 'phy_tx_v', 'phy_tx_flit', 'phy_rx_v', 'phy_rx_flit'], hb=['hb', 'hb_cr'],
+                 tk=['local_tk'], kst=['local_kst'])
+    return dict(module='qkd_host_root_pt', file=HOST_RT_FILE, ports=ports, sliced=sliced,
+                parameters=dict(ENABLE_SERVICE=1, ENABLE_NATIVE=1, ENABLE_TOKEN=1, NL=2),   # NL: 2 real link ends (static D2D + host SerDes)
+                classed={'die_id': 'by_design: package strap (tie cells), role = 2 PKG + DIE, set at package assembly',
+                         'por_n': 'by_design: package POR pad (off-chip signal)'})
+
+
+def slice_die_binding():
+    names = ['ck_station', 'ck_static', 'ck_boot', 'ck_boot_test', 'host_rst_n', 'hbm_rst_n', 'lpc', 'bgi', 'bgo', 'fi',
+             'fo', 'ci', 'co', 'ai', 'ao', 'fault_i', 'fault_o', 'land_es', 'land_er', 'ctrl_es', 'ctrl_er',
+             'ctrl_completion_v', 'ctrl_completion_we', 'ski', 'sdi', 'soi', 'sfi', 'sko', 'sdo', 'soo', 'sfo']
+    return dict(module='qkd_host_pc_slice_die', file=SLICE_DIE_FILE, ports={n: [n] for n in names}, classed={})
+
+
+def pll_model_binding():
+    import kv_host_bindings as KHB
+    b = KHB.pll_analog_binding()
+    b['classed'] = {'refclk': 'by_design: package reference-clock pad (off-chip signal)',
+                    'por_n': 'by_design: package POR pad (off-chip signal)'}
+    return b
+
+
+# v1.4 + Q-LINK (main c43263b31): the static compute <-> KV slot link end qkd_d2d_static (583-b PHY word = 548 payload + 19
+# frame + CRC16, compiler-assigned slots, NO credits) replaces qkd_d2d (ot_qkvd_kv_end, credit-based, historical) + qkd_lnk;
+# it produces 28 of the root's 31 previously unproduced inputs (results/arch/qwen_split_1014/link_static_1015/
+# host_input_producers.json).  Die bundles: svc (27 producer words, the root's port order), lup (link_up, NL = 2 real
+# link ends), rec_tx / rec_rx (the HOST record port), lrc (exceptional link reset / recovery clear from the root),
+# fdi (the UCIe native 583-b word), fwd_epoch / fwd_link_rst_n (two forwarded bumps to the compute die)
+D2DS_FILE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv'
+D2DS_SVC = ['transport_fault', 'native_links_drained', 'native_link_reset_seen', 'native_retrained', 'abort_drained',
+            'native_kv_drained', 'native_vm_drained', 'native_collective_drained', 'native_host_drained',
+            'native_collective_busy', 'native_kv_flush', 'native_admit_ready', 'crom_fault', 'execution_active',
+            'engine_result_v', 'engine_result_done', 'engine_result_fault', 'engine_result_cause', 'engine_result_tag',
+            'engine_result_gen', 'engine_result_token', 'engine_result_value', 'engine_result_cycles']
+D2DS_REC_TX = ['record_tx_observed_v', 'record_tx']
+D2DS_REC_RX = ['record_send_kind', 'record_witness_slot', 'record_rx_v', 'record_rx']
+
+
+def d2ds_binding():
+    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2),
+                ports=dict(ck0=['ck'], rst_n=['rst_n'], fdi=['fdi_tx_up', 'fdi_tx_v', 'fdi_tx_flit', 'fdi_rx_v', 'fdi_rx_flit'],
+                           phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
+                           rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
+                           fwd_epoch=['fwd_epoch'], fwd_link_rst_n=['fwd_link_rst_n'], serdes_up=['serdes_up']),
+                sliced={},
+                classed={'por_n': 'by_design: package POR pad (off-chip signal)'})
+
+
+def _host_rt_v14(b):
+    for g, ps in (('svc', D2DS_SVC), ('rec_tx', D2DS_REC_TX), ('rec_rx', D2DS_REC_RX)):
+        for p_ in ps:
+            b['ports'].pop(p_, None)
+        b['ports'][g] = list(ps)
+    b['ports'].pop('link_up', None)
+    b['ports']['lup'] = ['link_up']
+    for p_ in ('host_link_reset_req', 'host_recovery_clear'):
+        b['ports'].pop(p_, None)
+    b['ports']['lrc'] = ['host_link_reset_req', 'host_recovery_clear']
+    return b
+
+
+BINDINGS.update(qkd_host_rt=_host_rt_v14(host_rt_binding()), qkd_hslice=slice_die_binding(), qkd_pllm=pll_model_binding(),
+                qkd_d2ds=d2ds_binding())
+RTL.update(qkd_d2ds=D2DS_FILE)
+RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
+# v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
+BINDINGS.update(qkd_hslice_dn=slice_die_binding())
+RTL.update(qkd_hslice_dn=SLICE_DIE_FILE)
 
 
 # not exact-cut yet (frames sized, RTL partition owed): reported, not strict
@@ -657,12 +784,16 @@ def _band(T, side, Wk):
 _PIN_HINT = {}
 
 
-def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False):
+def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None):
     """qwen-1010/b 2026-10-10: two passes -- the second plans every relay chain from the pins the first pass drew (a
     shared master's pin is the one its first instance's peers set), so each hop is measured pin to pin on the die."""
     kw = dict(r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, kv_wq_head=kv_wq_head,
               kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror, split=split)
-    _set_geometry(split)
+    if host_v14 is not None:
+        HOST_V14['on'] = bool(host_v14)          # v1.4 (die_top_lint --variant ...,host_v14); None keeps the CLI setting
+    if host_north is not None:
+        HOST_V14['north'] = bool(host_north)    # v1.4.1 (die_top_lint --variant ...,host_north)
+    _set_geometry(split, reserve_static_memory=reserve_static_memory, reserve_native_astk=reserve_native_astk)
     _PIN_HINT.clear()
     m = _build(**kw)
     best = None
@@ -696,6 +827,13 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
         if nv < best[0]:
             best = (nv, m)
     _PIN_HINT.clear()
+    if split and best[0]:
+        import kv_pin_repair
+        repaired = kv_pin_repair.repair(sys.modules[__name__], best[1])
+        failures = pin_reach(repaired, masters(repaired, 1))
+        if failures['violations']:
+            raise ValueError(f"split KV die has {failures['violations']} unrepaired pin hops: {failures['worst'][:3]}")
+        return repaired
     return best[1]
 
 
@@ -727,6 +865,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     x_land = I['cdc_WS_0']['x'] + I['cdc_WS_0']['w'] + GX
     leaf_shift = ((518.4 if kv_wq_head else 432.0) + GX if kv_wq_leaf_s else 518.4 + GX) if kv_wq_leaves else 0.0
     x_grp = up(x_land + leaf_shift + LAND_W + CHAN, GX)
+    slice_w = SLICE_W + SLICE_GAP if (split and HOST_V14['on']) else 0.0     # v1.4: the HOST slice column (CDC column | landing channel)
+    x_grp += slice_w
     grp_w = 2 * RENG[0] + ASTK_W + 2 * GX
     centre_w = max(UCIE[1], FRAMES["qkd_ahub"][0]) + 4 * CHAN   # re-cut H engines are 1,953 um: the centre relay channel needs 2 x 259 (was 2 x 130)
     if split:
@@ -759,7 +899,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         if split:
             # v1.2: the landing strip abuts the CDC column (CDC co / cf and the controller strip's es / er are one hop of
             # <= 200 um; kvs2 T1 was a 450-620 um CDC -> landing hop); the write-queue controller moves beyond it
-            lx = x_land + LAND_CHAN if side == 'W' else Wk - x_land - LAND_CHAN - LAND_W
+            lx = x_land + slice_w + LAND_CHAN if side == 'W' else Wk - x_land - slice_w - LAND_CHAN - LAND_W
         add(f'land_{st}', 'qkd_land_n' if st[1] == 'N' else 'qkd_land', lx, y0, LAND_W - SHAVE, stack_h - SHAVE, 'MY' if side == 'W' else 'R0',
             'land', 'strip')
         gx = x_grp if side == 'W' else Wk - x_grp - grp_w
@@ -796,7 +936,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     uy = Hk - MARGIN - UCIE[2]
     add('ucie_rom', UCIE[0], xc - UCIE[1] / 2, uy, UCIE[1] - SHAVE, UCIE[2] - SHAVE, 'MX', 'phy_d2d', 'io')
     dw, dh = FRAMES['qkd_d2d']
-    add('d2d_kv', 'qkd_d2d', xc - dw / 2, up(uy - GY - dh, GY), dw - SHAVE, dh - SHAVE, 'R0', 'd2d', 'io')
+    add('d2d_kv', 'qkd_d2ds' if slice_w else 'qkd_d2d', xc - dw / 2, up(uy - GY - dh, GY), dw - SHAVE, dh - SHAVE, 'R0', 'd2d', 'io')
     sw, sh = FRAMES['qkd_seq']
     sy = up(uy - 2 * GY - dh - sh, GY)
     if split:
@@ -805,28 +945,48 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         ly = up(uy - GY - dh, GY) - GY - lh_
         add('lnk', 'qkd_lnk', xc - lw_ / 2, up(ly - GY, GY), lw_ - SHAVE, lh_ - SHAVE, 'R0', 'd2d', 'io')
         sy = up(ly - 2 * GY - sh - 4 * CHAN, GY)
+    hy_north = None
+    if split and HOST_V14['on'] and HOST_V14.get('north'):
+        # v1.4.1 HOST-north: the root core one relay channel below the D2D end, the sequencer / gateway one more relay
+        # channel pair below it (the root's 32 slice-chain words + SerDes FDI + D2D service words need an apron)
+        th_ = FRAMES['qkd_host'][1]
+        hy_north = up(uy - GY - dh, GY) - CHAN - th_
+        hy_north -= hy_north % GY
+        sy = min(sy, hy_north - 2 * CHAN - sh)
+        sy -= sy % GY
     add('seq', 'qkd_seq', xc - sw / 2, sy, sw - SHAVE, sh - SHAVE, 'R0', 'seq', 'ctl')
     gw_, gh_ = FRAMES['qkd_embgw']
     add('embgw', 'qkd_embgw', xc - gw_ / 2, up(sy - GY - gh_, GY), gw_ - SHAVE, gh_ - SHAVE, 'R0', 'embgw', 'ctl')
     cw_, ch_ = FRAMES['qkd_ckbump']
     add('ckb_kv', 'qkd_ckbump', xc - UCIE[1] / 2 - cw_ - 10 * GX, Hk - MARGIN - ch_, cw_ - SHAVE, ch_ - SHAVE, 'R0', 'bump', 'io')
     pw, ph = FRAMES['qkd_pll']
-    add('pll', 'qkd_pll', xc + UCIE[1] / 2 + GX * 10, Hk - MARGIN - ph, pw - SHAVE, ph - SHAVE, 'R0', 'pll', 'io')
+    add('pll', 'qkd_pllm' if slice_w else 'qkd_pll', xc + UCIE[1] / 2 + GX * 10, Hk - MARGIN - ph, pw - SHAVE, ph - SHAVE, 'R0', 'pll', 'io')
     hw, hh = FRAMES['qkd_ahub']
     add('ahub', 'qkd_ahub', xc - hw / 2, up(Hk / 2 - hh / 2, GY), hw - SHAVE, hh - SHAVE, 'R0', 'attn_hub', 'attn')
     add('serdes_host', SERDES[0], xc - SERDES[1] / 2, MARGIN, SERDES[1] - SHAVE, SERDES[2] - SHAVE, 'R0', 'phy_host',
         'io', 'link_serdes')
     tw, th = FRAMES['qkd_host']
-    add('host', 'qkd_host', xc - tw / 2, MARGIN + SERDES[2] + GY, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
+    if slice_w and HOST_V14.get('north'):
+        # v1.4.1 (owner/coordinator 10-15): the HOST root core sits directly below the static D2D end, in the slot the
+        # removed bridge qkd_lnk left above the sequencer.  The compiled token loop HOST <-> D2D (svc / lup / rec_tx /
+        # rec_rx / lrc) and HOST <-> seq (hc / tk) become local; the SerDes FDI (elastic host link, owner 0az: flow
+        # control kept at the host interface) carries the long haul to the S-edge PHY instead.
+        add('host', 'qkd_host_rt', xc - tw / 2, hy_north, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
+    else:
+        add('host', 'qkd_host_rt' if slice_w else 'qkd_host', xc - tw / 2, MARGIN + SERDES[2] + GY, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
     # v1.2 candidate lanes are OFF by default (kvs2 T2 try: window fine H 1.37 -> 1.25, coarse 1.32 -> 1.17 H but 0.80 -> 1.10 V,
     # lx 1 -> 2 stages, one re-plan reach miss): OT_KV_LANES=1 turns them on for the next revision's work
-    m['geo'] = dict(grp_y=grp_y, split=split, lanes=bool(split and __import__('os').environ.get('OT_KV_LANES', '2') in ('1', '2')), stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
-                    ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, leaf_shift=leaf_shift, edge_channel=edge_chan, kv_wq_head=kv_wq_head, kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror)
+    m['geo'] = dict(grp_y=grp_y, split=split, land_width_um=LAND_W, static_memory_reservation=LAND_W > 172.8, lanes=bool(split and __import__('os').environ.get('OT_KV_LANES', '2') in ('1', '2')), stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
+                    ystack=ystack, slice_w=slice_w, host_v14=bool(slice_w), r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, leaf_shift=leaf_shift, edge_channel=edge_chan, kv_wq_head=kv_wq_head, kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror)
     if kv_wq_leaves:
         _write_tiles(m, add)
+    if slice_w:
+        _host_slices(m, add)
     _buses(m, T, r)
     if kv_wq_leaves:
         _write_buses(m)
+    if slice_w:
+        _host_v14_buses(m)
     _relays(m)
     m['regions'] = _regions(m)
     m['die']['mm2'] = round(Wk * Hk / 1e6, 3)
@@ -894,7 +1054,7 @@ def _buses(m, T, r):
                 add((f'te_{st}_{e}_{h}', 'stack_local', T_E, [(c_, f'e{h}'), (hd_, 'e')]))
                 add((f'ts_{st}_{e}_{h}', 'stack_local', T_RET, [(hd_, 's'), (c_, f's{h}')]))
                 add((f'nb_{st}_{e}_{h}', 'stack_local', HEAD_NB, [(hd_, 'nb'), (f'astk_{st}', f'f{e}{h}')]))
-            add((f'krq_{st}_{e}', 'spine_local', 16, [(c_, 'rq'), (f'land_{st}', f'rq{e}')]))
+            add((f'krq_{st}_{e}', 'spine_local', KS.W_RQ if split else 16, [(c_, 'rq'), (f'land_{st}', f'rq{e}')]))
             add((f'krs_{st}_{e}', 'spine_local', 1 + 1024, [(f'land_{st}', f'rs{e}'), (c_, 'rs')]))
         add((f'kvn_{st}', 'kvn', 1024 + 2 + 14 + 6 + 1 + 1, [('seq', f'kvn_{st}'), (f'land_{st}', 'kvn')]))
         # qwen-1010/b 2026-10-11: stream-command net -- the descriptor issuer in qkd_seq (ot_qkvd_kv_desc, KDESC 1) posts
@@ -902,8 +1062,8 @@ def _buses(m, T, r):
         # the stack's controller element, whose W-face kc port enters the async FIFO and the hclk tap chain to the 32
         # per-PC heads (ot_qkvd_kcmd_tap).  No ready: the issuer bounds its outstanding layers.
         add((f'kc_{st}', 'kv_oneway', 1 + 32, [('seq', f'kc_{st}'), (f'ctrl_{st}', 'kc')]))
-        add((f'emf_{st}', 'kvn', W + 2, [('embgw', f'emf_{st}'), (f'land_{st}', 'emf')]))
-        add((f'emr_{st}', 'kvn', W + 2, [(f'land_{st}', 'emr'), ('embgw', f'emr_{st}')]))
+        add((f'emf_{st}', 'kvn', KS.W_EMF if split else W + 2, [('embgw', f'emf_{st}'), (f'land_{st}', 'emf')]))
+        add((f'emr_{st}', 'kvn', KS.W_EMR if split else W + 2, [(f'land_{st}', 'emr'), ('embgw', f'emr_{st}')]))
         if not m['geo'].get('split'):
             add((f'ing_{st}', 'kvn', W + 2, [('host', f'ing_{st}'), (f'land_{st}', 'ing')]))
         else:
@@ -965,7 +1125,153 @@ def _buses(m, T, r):
         add(('gr', 'kvn', W + 2, [('embgw', 'gr'), ('seq', 'gr')]))
     add(('hc', 'kv_oneway' if split else 'kvn', 182 if split else W + 2, [('host', 'hc'), ('seq', 'hc')]))
     add(('tk', 'kv_oneway' if split else 'kvn', 93 if split else W + 2, [('seq', 'tk'), ('host', 'tk')]))
-    add(('host_fdi', 'd2d_fdi', FDI_SERDES, [('host', 'fdi'), ('serdes_host', 'fdi')]))
+    # v1.4.1 HOST-north: the SerDes FDI is no longer abutted -> a relayed long-haul word (per-bit direction model)
+    add(('host_fdi', 'spine_local' if HOST_V14.get('north') and m['geo'].get('host_v14') else 'd2d_fdi', FDI_SERDES,
+         [('host', 'fdi'), ('serdes_host', 'fdi')]))
+
+
+def _host_slices(m, add):
+    """v1.4: one qkd_host_pc_slice_die per PC in the slice column, level with its CDC / write-leaf pair (W: R0, E: MY)."""
+    by = {i.name: i for i in m['insts']}
+    Wd, xl = m['die']['w'], m['geo']['x_land']
+    # the slice column sits between the landing channel and the landing strip (the channel keeps the write-leaf chain and
+    # the write-queue controller): slice -> landing abuts, slice -> controller strip crosses CDC column + channel (~402 um,
+    # the v1.3 landing -> controller es / er hop), CDC -> landing words cross 129.6 um more (cdc_core hop ~350 um)
+    xw = math.floor(round((xl + LAND_CHAN + SLICE_GAP) / GX, 6)) * GX     # snapped DOWN: never into the landing strip
+    for st in STACKS:
+        for k in range(32):
+            c_, w_ = by[f'cdc_{st}_{k}'], by[f'wleaf_{st}_{k}']
+            y0, y1 = min(c_.y, w_.y), max(c_.y + c_.h, w_.y + w_.h)
+            y = up(y0 + (y1 - y0 - SLICE_H) / 2, GY)
+            x = xw if st[0] == 'W' else Wd - xw - (SLICE_W - SHAVE)
+            # v1.4.1 HOST-north: the N stacks' chain runs slot 31 -> 0 (downward).  A y-mirrored slice would move its
+            # es / er pins off the strips' levels (first try: 128 hes hops of 675 um), so the N stacks use a second
+            # physical view qkd_hslice_dn of the SAME RTL (qkd_host_pc_slice_die) whose chain faces are swapped
+            dn = HOST_V14.get('north') and st[1] == 'N'
+            add(f'hsl_{st}_{k}', 'qkd_hslice_dn' if dn else 'qkd_hslice', x, y, SLICE_W - SHAVE, SLICE_H - SHAVE,
+                'R0' if st[0] == 'W' else 'MY', 'host_slice', 'strip')
+
+
+def host_lpc(k):
+    """logical PC of landing strip slot k (kv_strips: slot 4 i + q hosts lpc 8 q + G(i))"""
+    return 8 * (k % 4) + LAND_GROUP_ORDER[k // 4]
+
+
+def _host_v14_buses(m):
+    """v1.4: the HOST root core / slices / PLL-model / reset wiring (see HOST_V14 above).  Root resets replace the frame
+    PLL's rso_* outputs (the analog model has none); the landing <-> controller es / er words pass through the slices."""
+    B = m['buses']
+    names = {i.name for i in m['insts']}
+    die_l, hbm_l, link_l = [], [], []
+    link_inst = {'ucie_rom', 'serdes_host', 'd2d_kv', 'lnk'}
+    keep = []
+    for bid, cl, bits, eps in B:
+        if bid.startswith(('les_', 'ler_')) or bid == 'lflt':
+            continue                                  # re-made through the slices / lnk.flt -> typed transport-fault collector (owed)
+        eps = [e for e in eps if not (e[0] == 'host' and e[1] in ('ck', 'rst_n'))]
+        if eps and eps[0][0] == 'pll' and eps[0][1].startswith('rso'):
+            loads = eps[1:]
+            if eps[0][1].startswith('rso_hbm'):
+                hbm_l += loads
+            else:
+                die_l += [e for e in loads if e[0] not in link_inst]
+                link_l += [e for e in loads if e[0] in link_inst]
+            continue
+        if bid.startswith('lkf_'):
+            cl = 'kv_oneway'          # the landing moved 151.2 um away: the controller fault level kf rides relays (553 um)
+        keep.append((bid, cl, bits, eps))
+    B[:] = keep
+    add = B.append
+    _d2ds_swap(m)
+    ties = m.setdefault('host_ties', {})
+    sl = lambda st, k: f'hsl_{st}_{k}'  # noqa: E731
+    slices = [sl(st, k) for st in STACKS for k in range(32)]
+    add(('rst_die', 'reset', 1, [('host', 'die_rst_n')] + list(dict.fromkeys(die_l))))
+    add(('rst_hbm', 'reset', 1, [('host', 'hbm_rst_n')] + list(dict.fromkeys(hbm_l)) + [(s, 'hbm_rst_n') for s in slices]))
+    link_l = [e for e in link_l if e[0] != 'lnk' and e != ('ucie_rom', 'rst_n')]     # ucie rst_n = the d2d end's phy_rst_n
+    add(('rst_link', 'reset', 1, [('host', 'link_rst_n')] + list(dict.fromkeys(link_l))))
+    add(('rst_host', 'reset', 1, [('host', 'host_rst_n')] + [(s, 'host_rst_n') for s in slices]))
+    # v1.4.1 HOST-north: the N stacks' chain head is their slot 31 (their top = the HOST row) and the chain runs slot 31 ->
+    # slot 0; the S stacks keep slot 0 (die bottom: reached down the free centre column; the slice column has no free
+    # crossing at the S | N middle, and its W / E gap is the N chains' corridor).  The slice status / station words are
+    # placed by the logical PC lpc (OR-merged, position-free), so the order is a die wiring choice; the fixed per-slot chain
+    # latency is chain position p (+1) cycles, p = 31 - k on the N stacks, recorded in the contract's compiler stages.
+    orders = {st: (list(range(31, -1, -1)) if (HOST_V14.get('north') and st[1] == 'N') else list(range(32))) for st in STACKS}
+    m['geo']['slice_chain_order'] = {st: o[0] for st, o in orders.items()}
+    add(('hboot', 'reset', 1, [('host', 'boot_go')] + [(sl(st, orders[st][0]), 'bgi') for st in STACKS]))
+    add(('pll_lock', 'spine_local', 1, [('pll', 'locked'), ('host', 'pll_locked')]))
+    fam = dict(HOST_CLK_FAMILY, **HOST_CLK_INFERRED)
+    for i_, (bid, cl, bits, eps) in enumerate(B):
+        if bid == 'clk_core_c':
+            B[i_] = (bid, cl, bits, eps + [('host', c) for c, f in sorted(fam.items()) if f == 'core'])
+        for st in STACKS:
+            if bid == f'clk_core_{st}':
+                B[i_] = (bid, cl, bits, list(B[i_][3]) + [(sl(st, k), c) for k in range(32)
+                                                          for c in ('ck_station', 'ck_static', 'ck_boot', 'ck_boot_test')])
+    for f_ in ('host', 'ingest', 'phy'):
+        add((f'clk_{f_}', 'clock_trunk', 1, [('pll', f'pll_{f_}')] + [('host', c) for c, f in sorted(fam.items()) if f == f_]))
+    for si, st in enumerate(STACKS):
+        order = orders[st]
+        for k in range(32):
+            s = sl(st, k)
+            add((f'les_{st}_{k}', 'stack_local', 288, [(f'land_{st}', f'es{k}'), (s, 'land_es')]))
+            add((f'hes_{st}_{k}', 'stack_local', 288, [(s, 'ctrl_es'), (f'ctrl_{st}', f'es{k}')]))
+            add((f'ler_{st}_{k}', 'stack_local', 261, [(f'ctrl_{st}', f'er{k}'), (s, 'ctrl_er')]))
+            add((f'hler_{st}_{k}', 'stack_local', 261, [(s, 'land_er'), (f'land_{st}', f'er{k}')]))
+            add((f'hlpc_{st}_{k}', 'constant', 5, [(s, 'lpc')]))
+            ties[f'hlpc_{st}_{k}'] = (5, host_lpc(k))
+            p_ = order.index(k)
+            if p_ < 31:
+                n_ = sl(st, order[p_ + 1])
+                add((f'hf_{st}_{k}', 'stack_local', 291, [(s, 'fo'), (n_, 'fi')]))
+                add((f'hbg_{st}_{k}', 'stack_local', 1, [(s, 'bgo'), (n_, 'bgi')]))
+                for o, i in (('co', 'ci'), ('ao', 'ai'), ('fault_o', 'fault_i'), ('sko', 'ski'), ('sdo', 'sdi'),
+                             ('soo', 'soi'), ('sfo', 'sfi')):
+                    add((f'h{o}_{st}_{k}', 'stack_local', 1 if o == 'fault_o' else 32, [(n_, o), (s, i)]))
+            else:
+                for i, w_ in (('ci', 32), ('ai', 32), ('fault_i', 1), ('ski', 32), ('sdi', 32), ('soi', 32), ('sfi', 32)):
+                    add((f'ht{i}_{st}', 'constant', w_, [(s, i)]))          # chain terminator (source parent assigns 0)
+                    ties[f'ht{i}_{st}'] = (w_, 0)
+        s0 = sl(st, order[0])
+        add((f'hchf_{st}', 'kv_oneway', 291, [('host', f'chf{si}'), (s0, 'fi')]))
+        for o, rp, w_ in (('co', 'chc', 32), ('ao', 'cha', 32), ('fault_o', 'chx', 1), ('sko', 'sak', 32), ('sdo', 'sbd', 32),
+                          ('soo', 'sbo', 32), ('sfo', 'sbf', 32)):
+            add((f'h{rp}_{st}', 'kv_oneway', w_, [(s0, o), ('host', f'{rp}{si}')]))
+
+
+def _d2ds_swap(m):
+    """v1.4 + Q-LINK: qkd_d2d_static replaces the credit link end (qkd_d2d) and the bridge qkd_lnk.  The sequencer's
+    lx / lr and the gateway's gq / gr lose their bridge (their static adapters are owed: unconnected = MISMATCH, never
+    tied); the d2d end's attention record / KVN faces, cfg loader port, cal_start, status epoch and KV-local drains have
+    no producer yet (named in the v1.4 contract)."""
+    B = m['buses']
+    m['insts'][:] = [i for i in m['insts'] if i.name != 'lnk']
+    out = []
+    for bid, cl, bits, eps in B:
+        if bid in ('d2d_dn', 'd2d_up', 'lx', 'lr', 'gq', 'gr', 'd2df'):
+            continue
+        eps = [e for e in eps if e[0] != 'lnk' and e != ('d2d_kv', 'ck') and e != ('ucie_rom', 'rst_n')]
+        if bid == 'clk_core_c':
+            eps = eps + [('d2d_kv', 'ck0')]          # Q-LINK r2b 496b4daa1: one clock root ck (no ck_bank)
+        if bid == 'd2d_fdi':
+            bits = 1 + 1 + 583 + 1 + 583             # the native UCIe word (kv_native_phy splits the PHY side)
+        out.append((bid, cl, bits, eps))
+    B[:] = out
+    add = B.append
+    add(('rst_phyd2d', 'reset', 1, [('d2d_kv', 'phy_rst_n'), ('ucie_rom', 'rst_n')]))
+    add(('hsvc', 'spine_local', 8 + 3 + 4 + 9 + 1 + 1 + 1 + 4 + 59 + 2 + 18 + 32 + 32, [('d2d_kv', 'svc'), ('host', 'svc')]))
+    add(('hlup', 'spine_local', 2, [('d2d_kv', 'lup'), ('host', 'lup')]))
+    add(('hrec_tx', 'spine_local', 1 + 548, [('host', 'rec_tx'), ('d2d_kv', 'rec_tx')]))
+    add(('hrec_rx', 'spine_local', 2 + 1 + 1 + 548, [('d2d_kv', 'rec_rx'), ('host', 'rec_rx')]))
+    add(('hlrc', 'spine_local', 2, [('host', 'lrc'), ('d2d_kv', 'lrc')]))
+    by = {i.name: i for i in m['insts']}
+    ck_ = by['ckb_kv']
+    for j, (n_, p_) in enumerate((('fwb_ep', 'fwd_epoch'), ('fwb_rs', 'fwd_link_rst_n'))):
+        it = F.Inst(n_, 'qkd_fwdbump', round(ck_.x - (j + 1) * (43.2 + 4 * GX), 4), ck_.y, ck_.w, ck_.h, 'R0', kind='bump',
+                    region='io', domain='stream_1p2')
+        m['insts'].append(it)
+        add((f'h{p_}', 'kv_oneway', 1, [('d2d_kv', p_), (n_, 'a')]))
+    m.setdefault('extra_conns', {})['d2d_kv'] = ['.serdes_up(n_host_fdi[0])']     # SerDes tx_up (fdi bit 0) also feeds link_up[1]
 
 
 def _centre(it, port=None):
@@ -1034,7 +1340,7 @@ def _relays(m):
         except ValueError:
             return route_(a, b, ring(by[a]), set(ring(by[b])))      # pin cells enclosed: any free ring cell
 
-    def route_via(a, b, pa, pb, lane_y):
+    def route_via(a, b, pa, pb, lane_y, lane_x=None):
         """v1.2: an N-half KV-row chain (kvn / krs / krq / kc / emf / emr / ing) runs through its own lane row of the free
         band above the N engine groups instead of every chain hugging the group edge (kvs2 T2: one corridor at the N
         group top, GRT detours, kvn / emf / krs relay hops TT -155 / -108 / -90 ps)"""
@@ -1042,9 +1348,10 @@ def _relays(m):
         xb = by[b].x + by[b].w / 2
         wy = int(lane_y // G)
         w_ = None
+        xm = (xa + xb) / 2 if lane_x is None else lane_x
         for dx_ in range(0, 400):
             for sgn in (1, -1):
-                wx = int(((xa + xb) / 2) // G) + sgn * dx_
+                wx = int(xm // G) + sgn * dx_
                 if 0 <= wx < nx and 0 <= wy < ny and not owner.get((wx, wy)) and (wx, wy) not in rocc:
                     w_ = (wx, wy)
                     break
@@ -1104,6 +1411,7 @@ def _relays(m):
                 path = route_via(a, b, pa, pb, lane)
             except ValueError:
                 path = None
+
         if path is None:
             path = route(a, b, pa, pb)
         L = (len(path) + 1) * G            # + the cell from each frame edge to the ring
@@ -1460,13 +1768,20 @@ def masters(m, k=1, port_bits=None):
                 pos += span
         if m['geo'].get('split'):
             _strip_face_pins(mst, mm)
+        if mst in ('qkd_hslice', 'qkd_hslice_dn'):
+            _slice_pins(m, mm, down=mst == 'qkd_hslice_dn')
         if mst in LEVEL_PIN_MASTERS:
             _land_level_pins(m, mm, inst0, face_load, by)
     if m['geo'].get('split'):
         _split_pins(M, m)
+    if 'qkd_d2ds' in M and 'serdes_up' not in M['qkd_d2ds'].ports:
+        M['qkd_d2ds'].area('serdes_up', 1, round(M['qkd_d2ds'].w / 2, 3), round(M['qkd_d2ds'].h / 2 - 9.6, 3), 1)   # v1.4 extra_conns tap
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)
+    for name, ports in m.get('assigned_ports', {}).items():
+        if name in M:
+            M[name].ports.update({p: tuple(v) for p, v in ports.items() if p in M[name].ports})
     return M
 
 
@@ -1736,6 +2051,37 @@ def _strip_face_pins(mst, mm):
         mm.ports[p] = ('face', sp[1], 'E' if mst.startswith('qkd_land') else 'W', 'M4', y, 1)
 
 
+def _slice_pins(m, mm, down=False):
+    """v1.4: HOST slice pins.  es / er words level with the strips' es<k> / er<k> (local 378 k + 60 / + 240): controller
+    side on the W face (R0 W stacks; MY puts it on the E side toward the E controller strip), landing side on the E face;
+    the stack chains run N-S through the 32.4-um slot gaps (S face: toward slot k-1 = the root end); clocks / resets /
+    straps are area pins."""
+    by = {i.name: i for i in m['insts']}
+    off = by['hsl_WS_0'].y - by['land_WS'].y
+    w = {p: sp[1] for p, sp in mm.ports.items()}
+    mm.ports.clear()
+    mm.order.clear()
+    lvl = dict(ctrl_es=('W', STRIP_ES_Y), land_es=('E', STRIP_ES_Y), ctrl_er=('W', STRIP_ER_Y), land_er=('E', STRIP_ER_Y))
+    south = ['fi', 'co', 'ao', 'fault_o', 'sko', 'sdo', 'soo', 'sfo', 'bgi']
+    north = ['fo', 'ci', 'ai', 'fault_i', 'ski', 'sdi', 'soi', 'sfi', 'bgo']
+    for p, (face, y) in lvl.items():
+        if p in w:
+            mm.face(p, w[p], face, 'M4', round(y - off, 3), 2)
+    for face, lst in ((('N', south), ('S', north)) if down else (('S', south), ('N', north))):    # down: root end = N
+        lst = [p for p in lst if p in w]
+        span = [w[p] * 0.048 * 2 for p in lst]
+        pos = (mm.w - sum(span) - 2.0 * (len(lst) - 1)) / 2
+        for p, s_ in zip(lst, span):
+            mm.face(p, w[p], face, 'M5', round(pos + s_ / 2, 3), 2)
+            pos += s_ + 2.0
+    rest = [p for p in w if p not in mm.ports]
+    for j, p in enumerate(sorted(rest)):
+        if w[p] == 1:
+            mm.area(p, 1, round(mm.w / 2 + ((j % 8) - 4) * 3.2, 3), round(mm.h / 2 + (j // 8 - 1) * 3.2, 3), 1)
+        else:
+            mm.face(p, w[p], 'W', 'M4', round(mm.h / 2, 3), 2)          # lpc strap (5 b), mid W face between es / er
+
+
 def _land_level_pins(m, mm, inst0, face_load, by):
     """qwen-1010/b 2026-10-10 (KV11 die STA TT -38.6 ns: land_ES/rs4 -> ectl_ES_4/rs, a 'neighbour' hop whose landing pin
     sat ~mm away along the 12-mm landing face).  Every word of a placeholder master (LEVEL_PIN_MASTERS) that is not a
@@ -1806,7 +2152,7 @@ def pin_xy(it, mm, port):
     return it.x + x, it.y + y
 
 
-def pin_reach(m, M, reach=504.0, skip=('clock_trunk', 'reset', 'constant')):
+def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
     """qwen-1010/b 2026-10-10: the pin-to-pin register hops of every point-to-point die bus (Manhattan between the two
     drawn pins; the frame-to-frame margin lint cannot see a pin on a far face or far along a long face)."""
     by = {i.name: i for i in m['insts']}
@@ -1873,6 +2219,23 @@ def port_widths(m, k=1):
 
 def write_netlist(m, k, path, top='qkd_die'):
     F.write_netlist(m, k, path, top=top)
+    if m.get('extra_conns'):
+        # v1.4: a port tapping one bit of an existing bundle (the SerDes tx_up of the host FDI word into the D2D end)
+        p_ = Path(path)
+        tx = p_.read_text()
+        for inst_, cs in m['extra_conns'].items():
+            mt = re.search(rf'^(  \S+ {inst_} \()(.*)(\);)$', tx, re.M)
+            if not mt:
+                raise ValueError(f'extra connection: no instance {inst_}')
+            tx = tx[:mt.end(2)] + ', ' + ', '.join(cs) + tx[mt.end(2):]
+        p_.write_text(tx)
+    if m.get('host_ties'):
+        # v1.4: per-slice logical-PC straps and the stack chain terminators (the source parent's constants), as tie cells
+        p_ = Path(path)
+        tx = p_.read_text()
+        tx = tx.replace('endmodule', '\n'.join(f"  assign n_{b} = {w}'d{v};" for b, (w, v) in m['host_ties'].items()) +
+                        '\nendmodule', 1)
+        p_.write_text(tx)
     if not m['geo'].get('kv_wq_leaves'):
         return
     if k != 1:
@@ -1924,6 +2287,10 @@ def record(m):
                 template=dict(path=str(TPL_PATH.relative_to(ROOT)), sha256=hashlib.sha256(TPL_PATH.read_bytes()).hexdigest()),
                 die_um=[die['w'], die['h']], die_mm2=die['mm2'], instances=len(m['insts']), buses=len(m['buses']),
                 instance_mm2=round(inst_mm2, 3), fill=round(inst_mm2 / die['mm2'], 4),
+                static_memory_reservation=dict(enabled=m['geo'].get('static_memory_reservation',False),
+                    land_width_um=LAND_W, status='PLAN_ONLY_ACTUAL_ADAPTER_BINDING_REQUIRED' if m['geo'].get('static_memory_reservation') else 'LEGACY_LANDING_PROFILE'),
+                native_astk_reservation=dict(enabled=ASTK_W>324, parent_width_um=ASTK_W,
+                    status='PLAN_ONLY_SELECTED_PROFILE_BINDING_REQUIRED' if ASTK_W>324 else 'LEGACY_FRAME'),
                 masters={k_: dict(n=v_['n'], mm2=round(v_['mm2'], 4)) for k_, v_ in sorted(by_m.items())},
                 ucie=dict(macro=UCIE[0], mm2=round(UCIE[1] * UCIE[2] / 1e6, 4), edge_um=UCIE[1], edge='N (abuts the '
                           'ROM die S edge under spine column M)'),
@@ -1957,10 +2324,39 @@ def check(m):
     return dict(overlaps=len(bad), overlap_examples=bad[:10], outside=len(out), outside_examples=out[:10])
 
 
+def _case_ties(m, path):
+    """the case die.v (written by the base generator) gets this die's constants as assigns (mapped to tie cells by
+    die_constant_cells.tcl) and the v1.4 extra bit-tap connections.  2026-10-15 (r7): before this the case left the write
+    leaves' lane straps wlane_* / wtail_* (and would leave the HOST slice lpc straps) declared but UNDRIVEN."""
+    p_ = Path(path)
+    tx = p_.read_text()
+    for inst_, cs in m.get('extra_conns', {}).items():
+        mt = re.search(rf'^(  \S+ {inst_} \()(.*)(\);)$', tx, re.M)
+        if not mt:
+            raise ValueError(f'extra connection: no instance {inst_}')
+        tx = tx[:mt.end(2)] + ', ' + ', '.join(cs) + tx[mt.end(2):]
+    ties = {}
+    for b_, lane in (m.get('wq_straps') or {}).items():
+        ties[b_] = (3, lane)
+    if m['geo'].get('kv_wq_leaves'):
+        ties.update({f'wtail_{st}_{g}': (2, 0) for st in STACKS for g in range(4)})
+    ties.update(m.get('host_ties') or {})
+    lines = []
+    for b_, (w_, v_) in ties.items():
+        if f'wire [{w_ - 1}:0] n_{b_};' not in tx:
+            raise ValueError(f'constant net n_{b_} not in the case netlist')
+        if f'assign n_{b_}' not in tx:      # one-bit assigns, as kv_expand's tie nets (die_constant_cells.tcl maps them)
+            lines += [f"  assign n_{b_}[{i}] = 1'b{(v_ >> i) & 1};" for i in range(w_)]
+    tx = tx.replace('endmodule', '\n'.join(lines) + '\nendmodule', 1) if lines else tx
+    p_.write_text(tx)
+
+
 def case(m, work):
     """the die-level case of the r21 Qwen chain (tools/qwen_rom_fulldie.case_real: elements.lef from these masters,
     phy_ew.lef, die.v, place.tcl, run.tcl legality / on-track / pin access, run_pa.tcl PDN), written by the base
     generator's writer with this die's masters and port widths."""
+    if m['geo'].get('static_memory_reservation'):
+        raise ValueError('static memory shape reservation is plan-only until actual adapter ports/relays replace old landing binding')
     # qwen-1010/b 2026-10-11: the mirror leaf plan is the ADOPTED write queue (ctl_bin + leaf_s_w129(_m) closed, bound
     # in superseded_elements.json); the other leaf candidates stay plan-only
     if m['geo'].get('kv_wq_leaves') and not m['geo'].get('kv_wq_mirror'):
@@ -1971,6 +2367,7 @@ def case(m, work):
         man = F.case_real(m, work)
     finally:
         F.masters, F.port_widths = saved
+    _case_ties(m, work / 'die.v')
     run = (work / 'run.tcl').read_text()
     (work / 'run_pdn.tcl').write_text((work / 'run_pa.tcl').read_text())
     # the HBM PHY macros' own M4 power rails (the KV die's four PHY bands): a macro grid that straps them to M8 / M9,
@@ -2060,15 +2457,29 @@ def main(argv=None):
     ap.add_argument('--kv-wq-head', action='store_true', help='candidate 216x648 binary ctl with one head capture edge')
     ap.add_argument('--kv-wq-wide', action='store_true', help='candidate 129.6um south-face leaf')
     ap.add_argument('--kv-wq-mirror', action='store_true', help='candidate single-layer mirror-legal wide leaf; head capture remains opt-in')
+    ap.add_argument('--reserve-static-memory', action='store_true', help='plan-only native151.2umPC SRAM column plus86.4um row-control column; actual adapter binding still required')
+    ap.add_argument('--reserve-native-astk', action='store_true', help='plan-only328.32um parent for actual two162um ASTK columns; selected static/native views remain required')
     ap.add_argument('--split', action='store_true', help='qwen-split 2026-10-14: the KV/SYSTEM die of the two-die split (CONTRACT_KVSYS.md)')
+    ap.add_argument('--host-v14', action='store_true', help='kvsys v1.4: real HOST root core + 128 die-placed PC slices + PLL model')
+    ap.add_argument('--host-north', action='store_true', help='kvsys v1.4.1: HOST root core directly below the static D2D end')
     a = ap.parse_args(argv)
+    if a.host_v14:
+        if not a.split:
+            ap.error('--host-v14 needs --split')
+        HOST_V14['on'] = True
+    if a.host_north:
+        if not a.host_v14:
+            ap.error('--host-north needs --host-v14')
+        HOST_V14['north'] = True
     a.kv_wq_wide = a.kv_wq_wide or a.kv_wq_mirror
     a.kv_wq_leaf_s = a.kv_wq_leaf_s or a.kv_wq_head or a.kv_wq_wide
     a.kv_wq_binary = a.kv_wq_binary or a.kv_wq_leaf_s
     a.kv_wq_leaves = a.kv_wq_leaves or a.kv_wq_binary
+    if a.mode == 'case' and a.reserve_native_astk:
+        ap.error('native ASTK envelope reservation is plan-only until selected profile/clock/pin binding closes')
     if a.mode == 'case' and a.kv_wq_leaves and not a.kv_wq_mirror:
         ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
-    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split)
+    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split, reserve_static_memory=a.reserve_static_memory, reserve_native_astk=a.reserve_native_astk)
     if a.mode == 'case':
         m['buses'] = [(bid, cls, bits, eps) for bid, cls, bits, eps in m['buses']]
         print(json.dumps(case(m, a.out)))

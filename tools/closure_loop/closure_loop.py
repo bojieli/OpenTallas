@@ -935,9 +935,96 @@ STRUCTURE_REPEAT_MAX = 2
 HOLD_RERUN_RE = re.compile(r"-hs(-[a-z0-9]{1,4})?$")
 
 
+def _only_serial_bench_failed(j):
+    """Require retained launch evidence that no physical stage was attempted.
+
+    Missing/truncated history, retries, parallel tracks and mixed physical/bench
+    failures remain counted. A bench failure can abort a route already in flight.
+    """
+    spec = j.get("spec") or {}
+    if (spec.get("bench_first") is not True or j.get("bench_par") is not False
+            or j.get("attempt") != 1 or j.get("retries_used") != 0):
+        return False
+    events = j.get("events")
+    if (not isinstance(events, list) or not events
+            or " ingested from " not in str(events[0])):
+        return False  # event() retains only the last 60: absence is not evidence
+    if any(j.get(k) for k in ("btrack", "ctrack", "crashes", "metrics", "eco", "eco_history")):
+        return False
+    idx = j.get("stage_idx")
+    benches = (spec.get("stages") or {}).get("bench")
+    if not isinstance(benches, list) or type(idx) is not int or not 0 <= idx < len(benches):
+        return False
+    key = bench_key(benches[idx].get("name", ""))
+    receipt = (j.get("benches") or {}).get(key) or {}
+    if (j.get("stage_key") != key or j.get("stage_tag") != f"{key}.a1"
+            or receipt.get("ok") is not False or receipt.get("track") is not None
+            or "rc" not in receipt
+            or not _bench_reason_is(j.get("reason"), key, receipt)):
+        return False
+    launches = [str(e).split(" launched ", 1)[1] for e in events if " launched " in str(e)]
+    if not launches or not any(e.startswith(f"{key} (attempt 1) on ") for e in launches):
+        return False
+    allowed = {bench_key(b.get("name", "")) for b in benches[:idx + 1]}
+    return (all(e.split(" ", 1)[0] in allowed and " (attempt 1) on " in e for e in launches)
+            and not any(re.search(r"\b(?:route|calibrate|signoff|eco)[.-]a?\d|launched (?:route|calibrate|signoff)\b",
+                                  str(e)) for e in events))
+
+
+
+def _bench_reason_is(reason, key, receipt):
+    """The bench verdict reason, with or without the bench_why() cause suffix."""
+    base = f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"
+    reason = str(reason or "")
+    return reason == base or reason.startswith(base + " (")
+
+
+def _bench_cancelled_physical_track(j):
+    """Only a witnessed bench-caused cancellation, with no physical failure record.
+
+    This does not erase route attempts or release route-key accounting. In-flight
+    work stopped by a wrong bench verdict is distinct from a failed physical run.
+    """
+    if (j.get("bench_par") is not True or j.get("attempt") != 1
+            or j.get("retries_used") != 0 or j.get("stage_key") != "route"
+            or j.get("stage_tag") != "route.a1" or j.get("textbook_seen") != {}):
+        return False
+    if any(j.get(k) for k in ("metrics", "early_fail", "crashes", "eco", "eco_history", "ctrack")):
+        return False
+    events = j.get("events")
+    if (not isinstance(events, list) or not events
+            or " ingested from " not in str(events[0])):
+        return False
+    why = str(j.get("reason") or "")
+    failed = []
+    for key, receipt in (j.get("benches") or {}).items():
+        if (receipt.get("ok") is False and receipt.get("track") == "parallel" and "rc" in receipt
+                and _bench_reason_is(why, key, receipt)):
+            failed.append(key)
+    if len(failed) != 1:
+        return False
+    key = failed[0]
+    entry = (j.get("btrack") or {}).get(key) or {}
+    declared = {bench_key(b.get("name", "")) for b in (j.get("spec", {}).get("stages", {}).get("bench") or [])}
+    if key not in declared or entry.get("state") != "done" or entry.get("tag") != f"{key}.a1b1":
+        return False
+    # Full retained history must show launch -> successful orchestrator stop ->
+    # this bench verdict, without any failed/completed physical-track event.
+    launch = [i for i, e in enumerate(events) if " launched route (attempt 1) on " in str(e)]
+    stop = [i for i, e in enumerate(events) if str(e).endswith(" bench failed: stopped route (route.a1)")]
+    terminal = [i for i, e in enumerate(events) if str(e).endswith(f" NEEDS_RTL: {why}")]
+    if len(launch) != 1 or len(stop) != 1 or len(terminal) != 1 or not launch[0] < stop[0] < terminal[0]:
+        return False
+    bad = re.compile(r"EARLY_FAIL|route crashed|route failed|route done|route rc=|could not stop|HOLD-STOP|"
+                     r"launched (?:calibrate|signoff)|(?:route|calibrate) \(attempt [2-9]")
+    return not any(bad.search(str(e)) for e in events)
+
+
 def terminal_route_failure(j):
     st, why = j.get("status"), str(j.get("reason") or "")
-    if st == "NEEDS_RTL" or st in EARLY_FAIL:
+    if st == "NEEDS_RTL":
+        return not (_only_serial_bench_failed(j) or _bench_cancelled_physical_track(j))
+    if st in EARLY_FAIL:
         return True
     return st == "NEEDS_HUMAN" and why.startswith("route crashed") and "LOST:" not in why[:80]
 
@@ -3167,6 +3254,22 @@ def bench_outcome(j, st, rc, ok_extra=True):
     return expected_fail_seen(st, rc, full)
 
 
+def bench_why(j, st, rc, ok_extra=True):
+    """Why a bench with expect PASS was judged not passed, for the verdict reason.  rc=0 alone read as 'expected PASS
+    but rc=0' (5 jobs 2026-10-15: pass_regex not matching the bench's actual verdict line, or a min_count_regex the
+    bench never prints) and was triaged as a flow bug."""
+    if st.get("expect") != "pass" or rc != 0:
+        return ""
+    if not ok_extra:
+        return " (ok check failed)"
+    note = (j.get("bench_work") or {}).get(st["key"], "")
+    if note.startswith("vacuous"):
+        return f" ({note})"
+    if st.get("pass_regex"):
+        return f" (pass_regex {st['pass_regex']!r} not matched in the bench log)"
+    return ""
+
+
 def expected_fail_seen(st, rc, full):
     """expect FAIL (negative control): the log's own verdict decides, regardless of rc -- a mutant bench that prints
     FAIL but exits 0 was read as "expected FAIL but rc=0" (LOOP-GAPS 2026-10-08).  With fail_regex: it must match (a
@@ -3198,8 +3301,19 @@ def bench_work(log, min_count_regex=None):
     return True, f"work: {m[:6]}"
 
 
+# A stage cmd that sends its tool output to its own file ('... > {RUN}/record/route/export.log 2>&1', every ref_tile
+# collect) leaves cl/<tag>.log empty: 14 S81 fill collects went NEEDS_HUMAN 'collect crashed twice (rc=1)' on 2026-10-15
+# with an empty tail and no first error, while export.log held the child_lint FAIL.  Tail those redirect targets too.
+REDIRECT_LOG_RE = re.compile(r"(?<![<>&0-9])>\s*([^\s;&|<>]+)\s+2>&1")
+
+
+def stage_logs(j, st):
+    logs = list(st.get("logs", [])) + [m for m in REDIRECT_LOG_RE.findall(st.get("cmd") or "") if m not in st.get("logs", [])]
+    return [subst(x, j) for x in logs]
+
+
 def stage_tail(j, st, n=40):
-    extra = " ".join(subst(x, j) for x in st.get("logs", []))
+    extra = " ".join(stage_logs(j, st))
     r = ssh(j["host"], f"tail -n {n} {j['run']}/cl/{j['stage_tag']}.log 2>/dev/null; for f in {extra}; do "
                        f"[ -f \"$f\" ] && tail -n {n} \"$f\"; done; true", timeout=60)
     return r.stdout
@@ -4434,7 +4548,7 @@ def bench_track(j, fleet, stl):
         j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
         if not passed:
             stop_main_for_bench(j)
-            finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}",
+            finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
                    f"NEEDS_RTL: bench {k} expected {st['expect'].upper()}, got rc={rc} (parallel track; route stopped)\n" +
                    "\n".join(tail.strip().splitlines()[-5:]))
             return False
@@ -4667,7 +4781,7 @@ IOREF_SDC = "physical/common_flow/io_ref_routed.sdc"
 # FLOW-FIX-0410 2026-10-09: io_ref_routed.sdc reads the ACTIVE-edge insertion (sinks behind an odd clock inversion were
 # T/2 late).  The version is part of the routed_ioref cache key, so ioref-rejudge / a verdict re-STA under the new rule
 # instead of returning a re-STA cached under the old one.
-IOREF_VERSION = "ae0410"
+IOREF_VERSION = "ae0410-cecorner-1015"
 
 
 def routed_ioref(j, m):
@@ -5073,7 +5187,7 @@ def step(j, fleet):
             passed = bench_outcome(j, st, rc, ok_extra)
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:])
             if not passed:
-                finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}",
+                finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
                        f"NEEDS_RTL: bench {st['key']} expected {st['expect'].upper()}, got rc={rc}\n" +
                        "\n".join(tail.strip().splitlines()[-5:]))
                 return

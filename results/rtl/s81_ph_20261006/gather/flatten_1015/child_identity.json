@@ -1,0 +1,173 @@
+{
+ "head": "17d2171c8e444ecf4ef036e49f1b33e5b8b64a90",
+ "masters": [
+  {
+   "master": "dsfd_gth_ctl",
+   "instances": 1,
+   "view": "physical/ref_tile/dsfd_gth_ctl/views/dsfd_gth_ctl",
+   "job": "dsfd_gth_ctl-g4-6cb5bd842",
+   "status": "CLOSED",
+   "source_commit": "6cb5bd8424d36c067e2b50e0e86160e239444ee7",
+   "spec": "physical/ref_tile/dsfd_gth_ctl",
+   "rtl_sources": 6,
+   "rtl_changed_since_route": [
+    "rtl/common/ot_ratio_cdc_fifo.sv"
+   ],
+   "ok": true,
+   "rtl_change_equivalence": {
+    "file": "rtl/common/ot_ratio_cdc_fifo.sv",
+    "instance": "dsfd_gth_ctl.u_ctl W=159 DEPTH=4 (LOCAL_CTRL/WALL default 0)",
+    "method": "yosys equiv_make + equiv_simple -seq 5 + equiv_induct -seq 5, async2sync",
+    "result": "1794/1794 $equiv cells proven, 0 unproven",
+    "evidence": "ctl_fifo_equiv.log"
+   }
+  },
+  {
+   "master": "dsfd_gth_re",
+   "instances": 16,
+   "view": "physical/ref_tile/dsfd_gth_re/views/dsfd_gth_re",
+   "job": "dsfd_gth_re_transverse_1015-transverse1-d399415d2",
+   "status": "CLOSED",
+   "source_commit": "d399415d2a611b2ac333fd2dd0c78f4a8aac54ce",
+   "spec": "physical/ref_tile/dsfd_gth_re",
+   "rtl_sources": 6,
+   "rtl_changed_since_route": [],
+   "ok": true
+  },
+  {
+   "master": "dsfd_gth_rw",
+   "instances": 16,
+   "view": "physical/ref_tile/dsfd_gth_rw/views/dsfd_gth_rw",
+   "job": "dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c",
+   "status": "CLOSED",
+   "source_commit": "e74771a9ce60f924436f9e6feaf2343502447e34",
+   "spec": "physical/ref_tile/dsfd_gth_rw",
+   "rtl_sources": 6,
+   "rtl_changed_since_route": [],
+   "ok": true
+  },
+  {
+   "master": "dsfd_rly_12_EN",
+   "instances": 1,
+   "view": "physical/ref_tile/s81_rly_12_en/views/dsfd_rly_12_EN",
+   "job": "s81_rly_12_en-gth4-1fc725ee5",
+   "status": "CLOSED",
+   "source_commit": "1fc725ee52cec4cfb0258f992df6e67e426bca5c",
+   "spec": "physical/ref_tile/s81_rly_12_en",
+   "rtl_sources": 2,
+   "rtl_changed_since_route": [],
+   "ok": true
+  },
+  {
+   "master": "dsfd_rly_1_EW",
+   "instances": 33,
+   "view": "physical/ref_tile/s81_rly_1_ew/views/dsfd_rly_1_EW",
+   "job": "s81_rly_1_ew-v3-faf093855",
+   "status": "CLOSED",
+   "source_commit": "faf093855f526743d12efd5c902eba0beac07e4c",
+   "spec": "physical/ref_tile/s81_rly_1_ew",
+   "rtl_sources": 2,
+   "rtl_changed_since_route": [],
+   "ok": true
+  },
+  {
+   "master": "dsfd_rly_1_WE",
+   "instances": 16,
+   "view": "physical/ref_tile/s81_rly_1_we/views/dsfd_rly_1_WE",
+   "job": "s81_rly_1_we-v3-faf093855",
+   "status": "CLOSED",
+   "source_commit": "faf093855f526743d12efd5c902eba0beac07e4c",
+   "spec": "physical/ref_tile/s81_rly_1_we",
+   "rtl_sources": 2,
+   "rtl_changed_since_route": [],
+   "ok": true
+  },
+  {
+   "master": "dsfd_rly_214_NS",
+   "instances": 24,
+   "view": "physical/ref_tile/s81_rly_214_ns/views/dsfd_rly_214_NS",
+   "job": "s81_rly_214_ns-gth4-6cb5bd842",
+   "status": "CLOSED",
+   "source_commit": "6cb5bd8424d36c067e2b50e0e86160e239444ee7",
+   "spec": "physical/ref_tile/s81_rly_214_ns",
+   "rtl_sources": 2,
+   "rtl_changed_since_route": [],
+   "ok": true
+  },
+  {
+   "master": "dsfd_rly_276_EW",
+   "instances": 12,
+   "view": "physical/ref_tile/s81_rly_276_ew/views/dsfd_rly_276_EW",
+   "job": "s81_rly_276_ew-gth4-6cb5bd842",
+   "status": "CLOSED",
+   "source_commit": "6cb5bd8424d36c067e2b50e0e86160e239444ee7",
+   "spec": "physical/ref_tile/s81_rly_276_ew",
+   "rtl_sources": 2,
+   "rtl_changed_since_route": [],
+   "ok": true
+  },
+  {
+   "master": "dsfd_rly_276_WE",
+   "instances": 12,
+   "view": "physical/ref_tile/s81_rly_276_we/views/dsfd_rly_276_WE",
+   "job": "s81_rly_276_we-gth4-6cb5bd842",
+   "status": "CLOSED",
+   "source_commit": "6cb5bd8424d36c067e2b50e0e86160e239444ee7",
+   "spec": "physical/ref_tile/s81_rly_276_we",
+   "rtl_sources": 2,
+   "rtl_changed_since_route": [],
+   "ok": true
+  },
+  {
+   "master": "dsfd_rly_2_EW",
+   "instances": 24,
+   "view": "physical/ref_tile/s81_rly_2_ew/views/dsfd_rly_2_EW",
+   "job": "s81_rly_2_ew-v3-faf093855",
+   "status": "CLOSED",
+   "source_commit": "faf093855f526743d12efd5c902eba0beac07e4c",
+   "spec": "physical/ref_tile/s81_rly_2_ew",
+   "rtl_sources": 2,
+   "rtl_changed_since_route": [],
+   "ok": true
+  },
+  {
+   "master": "dsfd_rly_2_WE",
+   "instances": 24,
+   "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE",
+   "job": "s81_rly_2_we-v3-faf093855",
+   "status": "CLOSED",
+   "source_commit": "faf093855f526743d12efd5c902eba0beac07e4c",
+   "spec": "physical/ref_tile/s81_rly_2_we",
+   "rtl_sources": 2,
+   "rtl_changed_since_route": [],
+   "ok": true
+  },
+  {
+   "master": "dsfd_rly_54_EW",
+   "instances": 3,
+   "view": "physical/ref_tile/s81_rly_54_ew/views/dsfd_rly_54_EW",
+   "job": "s81_rly_54_ew-v2-88e22fcbf",
+   "status": "CLOSED",
+   "source_commit": "88e22fcbf7e62d2f17f5b60b6d73bdd38cdeb6dd",
+   "spec": "physical/ref_tile/s81_rly_54_ew",
+   "rtl_sources": 2,
+   "rtl_changed_since_route": [],
+   "ok": true
+  },
+  {
+   "master": "dsfd_rly_9_WE",
+   "instances": 32,
+   "view": "physical/ref_tile/s81_rly_9_we/views/dsfd_rly_9_WE",
+   "job": "s81_rly_9_we-gth4-1fc725ee5",
+   "status": "CLOSED",
+   "source_commit": "1fc725ee52cec4cfb0258f992df6e67e426bca5c",
+   "spec": "physical/ref_tile/s81_rly_9_we",
+   "rtl_sources": 2,
+   "rtl_changed_since_route": [],
+   "ok": true
+  }
+ ],
+ "children": 214,
+ "bad": 0,
+ "rule": "every gather child master: closed-loop verdict CLOSED and its route sources at the route commit equal HEAD, or proven equivalent"
+}

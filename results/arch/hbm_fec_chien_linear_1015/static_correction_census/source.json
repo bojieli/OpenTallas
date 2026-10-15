@@ -1,0 +1,27 @@
+{
+  "sources_sha256": {
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_enc_rooted.sv": "f6c0ab6832cadd0f5caf3de18164fdec6335cdbd513107231a8ba1d4000588fa",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_static_correction.sv": "2a5adfcefb97385e1d1fdfda75b6d1ddc75ce8cdefe8dd44f755f1efd7339125",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_chien55_map.sv": "c044186d314182704e3dcfdd0d7c3018cdf0df5c695103495b22c962e5c170ee",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_correction55_static.sv": "0dcb8cb5511abbd9d945b986f74ae7b74c287acb1a523356862391dc252f5b67",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_encode52_map.sv": "401ecc4c70ebfc04a624faee5540fc625c4c7bddc8a3f4c6bc48ba30d22b81a3",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_syndrome55_map.sv": "ade2e0bbf131d65d979f693ea4347c6431f9d7cfb420d9273c04849a57fbc27c",
+    "rtl/hbm_accel/io_native_20261014/hfd_serdes487_static_correction_window.sv": "60e3fe50d357c76655b87cea0179cffb2c53570344ab7ba7ff3a3bdc1261d5db",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_word_cdc.sv": "ad94b9faac315ceab60a97cfbc6c3242ab0872031b252132bb7f72b769182d0e",
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+    "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855",
+    "rtl/hbm_accel/io_native_20261014/static_correction_provenance.json": "cc9bf119ab6f483e84d370a815f219d32962d2726818d52390d1d8f69a2e462f"
+  },
+  "checker_sha256": {
+    "fec_clock_census.py": "8d69bee281d50f5dcdc7f90ec715bbca64ef98d40e3080403567d5ed2bb0aee7",
+    "run_static_correction_census.py": "c16bf12af28149972f2f30029ecffcef304139869ab987c5afef5cb96213fa2a"
+  },
+  "top": "hfd_serdes487_static_correction_window",
+  "parameters": {
+    "EMUT": 0,
+    "DMUT": 0,
+    "WINDOW_WORDS": 2048,
+    "CDC_AW": 4
+  },
+  "scope": "ACTUAL_FULL_STATIC_CORRECTION_FEC_WITH_STATIC_WINDOW"
+}

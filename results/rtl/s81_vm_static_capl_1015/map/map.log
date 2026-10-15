@@ -1,0 +1,2889 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Executing script file `map2.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv' to AST representation.
+Generating RTLIL representation for module `\dsfd_vm_static_capl'.
+Warning: Replacing memory \DAT with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:121
+Warning: Replacing memory \KEY with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:121
+Warning: Replacing memory \MSK with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:112
+Warning: Replacing memory \nD with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:102
+Warning: Replacing memory \nM with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:105, rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:100
+Warning: Replacing memory \nK with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:95
+Warning: Replacing memory \ew with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:52
+Warning: Replacing memory \ed with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:48
+Warning: Replacing memory \ek with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:48
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv' to AST representation.
+Generating RTLIL representation for module `\dsfd_vm_static_cap_leaf'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_cap_leaf
+Used module:     \dsfd_vm_static_capl
+Parameter \E = 8
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\dsfd_vm_static_capl'.
+Parameter \E = 8
+Generating RTLIL representation for module `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000'.
+Warning: Replacing memory \DAT with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:121
+Warning: Replacing memory \KEY with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:121
+Warning: Replacing memory \MSK with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:112
+Warning: Replacing memory \nD with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:102
+Warning: Replacing memory \nM with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:105, rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:100
+Warning: Replacing memory \nK with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:95
+Warning: Replacing memory \ew with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:52
+Warning: Replacing memory \ed with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:48
+Warning: Replacing memory \ek with list of registers. See rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:48
+
+3.3. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_cap_leaf
+Used module:     $paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000
+
+3.4. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_cap_leaf
+Used module:     $paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000
+Removing unused module `\dsfd_vm_static_capl'.
+Removed 1 unused modules.
+
+4. Executing SYNTH pass.
+
+4.1. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1.1. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_cap_leaf
+Used module:     $paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000
+
+4.1.2. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_cap_leaf
+Used module:     $paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000
+Removed 0 unused modules.
+
+4.2. Executing PROC pass (convert processes to netlists).
+
+4.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+Cleaned up 1 empty switch.
+
+4.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv:18$2617 in module dsfd_vm_static_cap_leaf.
+Removed 5 dead cases from process $proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115 in module $paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.
+Marked 26 switch rules as full_case in process $proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115 in module $paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.
+Marked 512 switch rules as full_case in process $proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642 in module $paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.
+Marked 48 switch rules as full_case in process $proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625 in module $paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.
+Removed a total of 5 dead cases.
+
+4.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 12 redundant assignments.
+Promoted 407 assignments to connections.
+
+4.2.4. Executing PROC_INIT pass (extract init attributes).
+
+4.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~588 debug messages>
+
+4.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\dsfd_vm_static_cap_leaf.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv:18$2617'.
+     1/1: $0\pin_flush[0:0]
+Creating decoders for process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+     1/118: $3$mem2reg_rd$\nD$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2624_DATA[511:0]$5224
+     2/118: $3$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2623_DATA[15:0]$5223
+     3/118: $3$mem2reg_rd$\nK$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2622_DATA[9:0]$5222
+     4/118: $2$mem2reg_rd$\nD$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2624_DATA[511:0]$5221
+     5/118: $2$mem2reg_rd$\nD$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2624_ADDR[2:0]$5220
+     6/118: $2$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2623_DATA[15:0]$5219
+     7/118: $2$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2623_ADDR[2:0]$5218
+     8/118: $2$mem2reg_rd$\nK$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2622_DATA[9:0]$5217
+     9/118: $2$mem2reg_rd$\nK$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2622_ADDR[2:0]$5216
+    10/118: $19\p_out.two[0:0]
+    11/118: $3$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:118$2621_DATA[15:0]$5150
+    12/118: $18\p_out.fe[31:0]
+    13/118: $18\p_out.sel[0:0]
+    14/118: $2$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:118$2621_DATA[15:0]$5147
+    15/118: $2$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:118$2621_ADDR[2:0]$5146
+    16/118: $18\p_out.two[0:0]
+    17/118: $2$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$2620_DATA[15:0]$5138
+    18/118: $17\p_out.two[0:0]
+    19/118: $17\p_out.fe[31:0]
+    20/118: $17\p_out.sel[0:0]
+    21/118: $16\p_out.fe[31:0]
+    22/118: $16\p_out.two[0:0]
+    23/118: $16\p_out.sel[0:0]
+    24/118: $15\p_out.two[0:0]
+    25/118: $15\p_out.fe[31:0]
+    26/118: $15\p_out.sel[0:0]
+    27/118: $14\p_out.fe[31:0]
+    28/118: $14\p_out.two[0:0]
+    29/118: $14\p_out.sel[0:0]
+    30/118: $13\p_out.two[0:0]
+    31/118: $13\p_out.fe[31:0]
+    32/118: $13\p_out.sel[0:0]
+    33/118: $12\p_out.fe[31:0]
+    34/118: $12\p_out.two[0:0]
+    35/118: $12\p_out.sel[0:0]
+    36/118: $11\p_out.two[0:0]
+    37/118: $11\p_out.fe[31:0]
+    38/118: $11\p_out.sel[0:0]
+    39/118: $10\p_out.fe[31:0]
+    40/118: $10\p_out.two[0:0]
+    41/118: $10\p_out.sel[0:0]
+    42/118: $9\p_out.two[0:0]
+    43/118: $9\p_out.fe[31:0]
+    44/118: $9\p_out.sel[0:0]
+    45/118: $8\p_out.fe[31:0]
+    46/118: $8\p_out.two[0:0]
+    47/118: $8\p_out.sel[0:0]
+    48/118: $7\p_out.two[0:0]
+    49/118: $7\p_out.fe[31:0]
+    50/118: $7\p_out.sel[0:0]
+    51/118: $6\p_out.fe[31:0]
+    52/118: $6\p_out.two[0:0]
+    53/118: $6\p_out.sel[0:0]
+    54/118: $5\p_out.two[0:0]
+    55/118: $5\p_out.fe[31:0]
+    56/118: $5\p_out.sel[0:0]
+    57/118: $4\p_out.fe[31:0]
+    58/118: $4\p_out.two[0:0]
+    59/118: $4\p_out.sel[0:0]
+    60/118: $3\p_out.fe[31:0]
+    61/118: $3\p_out.sel[0:0]
+    62/118: $3\p_out.two[0:0]
+    63/118: $2\p_out.fe[31:0]
+    64/118: $2\p_out.two[0:0]
+    65/118: $2\p_out.sel[0:0]
+    66/118: $0\V[7:0] [7]
+    67/118: $0\V[7:0] [6]
+    68/118: $0\V[7:0] [5]
+    69/118: $0\V[7:0] [4]
+    70/118: $0\V[7:0] [3]
+    71/118: $0\V[7:0] [2]
+    72/118: $0\V[7:0] [1]
+    73/118: $0\V[7:0] [0]
+    74/118: $0\MSK[7][15:0]
+    75/118: $0\MSK[6][15:0]
+    76/118: $0\MSK[5][15:0]
+    77/118: $0\MSK[4][15:0]
+    78/118: $0\MSK[3][15:0]
+    79/118: $0\MSK[2][15:0]
+    80/118: $0\MSK[1][15:0]
+    81/118: $0\MSK[0][15:0]
+    82/118: $0\flt[4:0]
+    83/118: $0\o_v[0:0]
+    84/118: $1\p_out.e[31:0]
+    85/118: $1$mem2reg_rd$\nD$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2624_DATA[511:0]$5136
+    86/118: $1$mem2reg_rd$\nD$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2624_ADDR[2:0]$5135
+    87/118: $1$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2623_DATA[15:0]$5134
+    88/118: $1$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2623_ADDR[2:0]$5133
+    89/118: $1$mem2reg_rd$\nK$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2622_DATA[9:0]$5132
+    90/118: $1$mem2reg_rd$\nK$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2622_ADDR[2:0]$5131
+    91/118: $1$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:118$2621_DATA[15:0]$5130
+    92/118: $1$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:118$2621_ADDR[2:0]$5129
+    93/118: $1$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$2620_DATA[15:0]$5128
+    94/118: $1$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$2620_ADDR[2:0]$5127
+    95/118: $1\p_out.fe[31:0]
+    96/118: $1\p_out.two[0:0]
+    97/118: $1\p_out.sel[0:0]
+    98/118: $0\DAT[7][511:0]
+    99/118: $0\DAT[6][511:0]
+   100/118: $0\DAT[5][511:0]
+   101/118: $0\DAT[4][511:0]
+   102/118: $0\DAT[3][511:0]
+   103/118: $0\DAT[2][511:0]
+   104/118: $0\DAT[1][511:0]
+   105/118: $0\DAT[0][511:0]
+   106/118: $0\KEY[7][9:0]
+   107/118: $0\KEY[6][9:0]
+   108/118: $0\KEY[5][9:0]
+   109/118: $0\KEY[4][9:0]
+   110/118: $0\KEY[3][9:0]
+   111/118: $0\KEY[2][9:0]
+   112/118: $0\KEY[1][9:0]
+   113/118: $0\KEY[0][9:0]
+   114/118: $0\fl_on[0:0]
+   115/118: $0\fl_c[3:0]
+   116/118: $0\o_d[511:0]
+   117/118: $0\o_m[15:0]
+   118/118: $0\o_row[13:0]
+Creating decoders for process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+     1/896: $128\f_dup[0:0]
+     2/896: $127\f_dup[0:0]
+     3/896: $126\f_dup[0:0]
+     4/896: $125\f_dup[0:0]
+     5/896: $124\f_dup[0:0]
+     6/896: $123\f_dup[0:0]
+     7/896: $122\f_dup[0:0]
+     8/896: $121\f_dup[0:0]
+     9/896: $120\f_dup[0:0]
+    10/896: $119\f_dup[0:0]
+    11/896: $118\f_dup[0:0]
+    12/896: $117\f_dup[0:0]
+    13/896: $116\f_dup[0:0]
+    14/896: $115\f_dup[0:0]
+    15/896: $114\f_dup[0:0]
+    16/896: $113\f_dup[0:0]
+    17/896: $256\f_alias[0:0]
+    18/896: $256\p_merge.accepted[15:15]
+    19/896: $255\p_merge.accepted[15:15]
+    20/896: $255\f_alias[0:0]
+    21/896: $254\f_alias[0:0]
+    22/896: $254\p_merge.accepted[14:14]
+    23/896: $253\p_merge.accepted[14:14]
+    24/896: $253\f_alias[0:0]
+    25/896: $252\f_alias[0:0]
+    26/896: $252\p_merge.accepted[13:13]
+    27/896: $251\p_merge.accepted[13:13]
+    28/896: $251\f_alias[0:0]
+    29/896: $250\f_alias[0:0]
+    30/896: $250\p_merge.accepted[12:12]
+    31/896: $249\p_merge.accepted[12:12]
+    32/896: $249\f_alias[0:0]
+    33/896: $248\f_alias[0:0]
+    34/896: $248\p_merge.accepted[11:11]
+    35/896: $247\p_merge.accepted[11:11]
+    36/896: $247\f_alias[0:0]
+    37/896: $246\f_alias[0:0]
+    38/896: $246\p_merge.accepted[10:10]
+    39/896: $245\p_merge.accepted[10:10]
+    40/896: $245\f_alias[0:0]
+    41/896: $244\f_alias[0:0]
+    42/896: $244\p_merge.accepted[9:9]
+    43/896: $243\p_merge.accepted[9:9]
+    44/896: $243\f_alias[0:0]
+    45/896: $242\f_alias[0:0]
+    46/896: $242\p_merge.accepted[8:8]
+    47/896: $241\p_merge.accepted[8:8]
+    48/896: $241\f_alias[0:0]
+    49/896: $240\f_alias[0:0]
+    50/896: $240\p_merge.accepted[7:7]
+    51/896: $239\p_merge.accepted[7:7]
+    52/896: $239\f_alias[0:0]
+    53/896: $238\f_alias[0:0]
+    54/896: $238\p_merge.accepted[6:6]
+    55/896: $237\p_merge.accepted[6:6]
+    56/896: $237\f_alias[0:0]
+    57/896: $236\f_alias[0:0]
+    58/896: $236\p_merge.accepted[5:5]
+    59/896: $235\p_merge.accepted[5:5]
+    60/896: $235\f_alias[0:0]
+    61/896: $234\f_alias[0:0]
+    62/896: $234\p_merge.accepted[4:4]
+    63/896: $233\p_merge.accepted[4:4]
+    64/896: $233\f_alias[0:0]
+    65/896: $232\f_alias[0:0]
+    66/896: $232\p_merge.accepted[3:3]
+    67/896: $231\p_merge.accepted[3:3]
+    68/896: $231\f_alias[0:0]
+    69/896: $230\f_alias[0:0]
+    70/896: $230\p_merge.accepted[2:2]
+    71/896: $229\p_merge.accepted[2:2]
+    72/896: $229\f_alias[0:0]
+    73/896: $228\f_alias[0:0]
+    74/896: $228\p_merge.accepted[1:1]
+    75/896: $227\p_merge.accepted[1:1]
+    76/896: $227\f_alias[0:0]
+    77/896: $226\f_alias[0:0]
+    78/896: $226\p_merge.accepted[0:0]
+    79/896: $225\p_merge.accepted[0:0]
+    80/896: $225\f_alias[0:0]
+    81/896: $128\p_merge.found[0:0]
+    82/896: $128\p_merge.kk[9:0]
+    83/896: $127\p_merge.found[0:0]
+    84/896: $127\p_merge.kk[9:0]
+    85/896: $126\p_merge.found[0:0]
+    86/896: $126\p_merge.kk[9:0]
+    87/896: $125\p_merge.found[0:0]
+    88/896: $125\p_merge.kk[9:0]
+    89/896: $124\p_merge.found[0:0]
+    90/896: $124\p_merge.kk[9:0]
+    91/896: $123\p_merge.found[0:0]
+    92/896: $123\p_merge.kk[9:0]
+    93/896: $122\p_merge.found[0:0]
+    94/896: $122\p_merge.kk[9:0]
+    95/896: $121\p_merge.found[0:0]
+    96/896: $121\p_merge.kk[9:0]
+    97/896: $120\p_merge.found[0:0]
+    98/896: $120\p_merge.kk[9:0]
+    99/896: $119\p_merge.found[0:0]
+   100/896: $119\p_merge.kk[9:0]
+   101/896: $118\p_merge.found[0:0]
+   102/896: $118\p_merge.kk[9:0]
+   103/896: $117\p_merge.found[0:0]
+   104/896: $117\p_merge.kk[9:0]
+   105/896: $116\p_merge.found[0:0]
+   106/896: $116\p_merge.kk[9:0]
+   107/896: $115\p_merge.found[0:0]
+   108/896: $115\p_merge.kk[9:0]
+   109/896: $114\p_merge.found[0:0]
+   110/896: $114\p_merge.kk[9:0]
+   111/896: $113\p_merge.found[0:0]
+   112/896: $113\p_merge.kk[9:0]
+   113/896: $112\f_dup[0:0]
+   114/896: $111\f_dup[0:0]
+   115/896: $110\f_dup[0:0]
+   116/896: $109\f_dup[0:0]
+   117/896: $108\f_dup[0:0]
+   118/896: $107\f_dup[0:0]
+   119/896: $106\f_dup[0:0]
+   120/896: $105\f_dup[0:0]
+   121/896: $104\f_dup[0:0]
+   122/896: $103\f_dup[0:0]
+   123/896: $102\f_dup[0:0]
+   124/896: $101\f_dup[0:0]
+   125/896: $100\f_dup[0:0]
+   126/896: $99\f_dup[0:0]
+   127/896: $98\f_dup[0:0]
+   128/896: $97\f_dup[0:0]
+   129/896: $224\f_alias[0:0]
+   130/896: $224\p_merge.accepted[15:15]
+   131/896: $223\p_merge.accepted[15:15]
+   132/896: $223\f_alias[0:0]
+   133/896: $222\f_alias[0:0]
+   134/896: $222\p_merge.accepted[14:14]
+   135/896: $221\p_merge.accepted[14:14]
+   136/896: $221\f_alias[0:0]
+   137/896: $220\f_alias[0:0]
+   138/896: $220\p_merge.accepted[13:13]
+   139/896: $219\p_merge.accepted[13:13]
+   140/896: $219\f_alias[0:0]
+   141/896: $218\f_alias[0:0]
+   142/896: $218\p_merge.accepted[12:12]
+   143/896: $217\p_merge.accepted[12:12]
+   144/896: $217\f_alias[0:0]
+   145/896: $216\f_alias[0:0]
+   146/896: $216\p_merge.accepted[11:11]
+   147/896: $215\p_merge.accepted[11:11]
+   148/896: $215\f_alias[0:0]
+   149/896: $214\f_alias[0:0]
+   150/896: $214\p_merge.accepted[10:10]
+   151/896: $213\p_merge.accepted[10:10]
+   152/896: $213\f_alias[0:0]
+   153/896: $212\f_alias[0:0]
+   154/896: $212\p_merge.accepted[9:9]
+   155/896: $211\p_merge.accepted[9:9]
+   156/896: $211\f_alias[0:0]
+   157/896: $210\f_alias[0:0]
+   158/896: $210\p_merge.accepted[8:8]
+   159/896: $209\p_merge.accepted[8:8]
+   160/896: $209\f_alias[0:0]
+   161/896: $208\f_alias[0:0]
+   162/896: $208\p_merge.accepted[7:7]
+   163/896: $207\p_merge.accepted[7:7]
+   164/896: $207\f_alias[0:0]
+   165/896: $206\f_alias[0:0]
+   166/896: $206\p_merge.accepted[6:6]
+   167/896: $205\p_merge.accepted[6:6]
+   168/896: $205\f_alias[0:0]
+   169/896: $204\f_alias[0:0]
+   170/896: $204\p_merge.accepted[5:5]
+   171/896: $203\p_merge.accepted[5:5]
+   172/896: $203\f_alias[0:0]
+   173/896: $202\f_alias[0:0]
+   174/896: $202\p_merge.accepted[4:4]
+   175/896: $201\p_merge.accepted[4:4]
+   176/896: $201\f_alias[0:0]
+   177/896: $200\f_alias[0:0]
+   178/896: $200\p_merge.accepted[3:3]
+   179/896: $199\p_merge.accepted[3:3]
+   180/896: $199\f_alias[0:0]
+   181/896: $198\f_alias[0:0]
+   182/896: $198\p_merge.accepted[2:2]
+   183/896: $197\p_merge.accepted[2:2]
+   184/896: $197\f_alias[0:0]
+   185/896: $196\f_alias[0:0]
+   186/896: $196\p_merge.accepted[1:1]
+   187/896: $195\p_merge.accepted[1:1]
+   188/896: $195\f_alias[0:0]
+   189/896: $194\f_alias[0:0]
+   190/896: $194\p_merge.accepted[0:0]
+   191/896: $193\p_merge.accepted[0:0]
+   192/896: $193\f_alias[0:0]
+   193/896: $112\p_merge.found[0:0]
+   194/896: $112\p_merge.kk[9:0]
+   195/896: $111\p_merge.found[0:0]
+   196/896: $111\p_merge.kk[9:0]
+   197/896: $110\p_merge.found[0:0]
+   198/896: $110\p_merge.kk[9:0]
+   199/896: $109\p_merge.found[0:0]
+   200/896: $109\p_merge.kk[9:0]
+   201/896: $108\p_merge.found[0:0]
+   202/896: $108\p_merge.kk[9:0]
+   203/896: $107\p_merge.found[0:0]
+   204/896: $107\p_merge.kk[9:0]
+   205/896: $106\p_merge.found[0:0]
+   206/896: $106\p_merge.kk[9:0]
+   207/896: $105\p_merge.found[0:0]
+   208/896: $105\p_merge.kk[9:0]
+   209/896: $104\p_merge.found[0:0]
+   210/896: $104\p_merge.kk[9:0]
+   211/896: $103\p_merge.found[0:0]
+   212/896: $103\p_merge.kk[9:0]
+   213/896: $102\p_merge.found[0:0]
+   214/896: $102\p_merge.kk[9:0]
+   215/896: $101\p_merge.found[0:0]
+   216/896: $101\p_merge.kk[9:0]
+   217/896: $100\p_merge.found[0:0]
+   218/896: $100\p_merge.kk[9:0]
+   219/896: $99\p_merge.found[0:0]
+   220/896: $99\p_merge.kk[9:0]
+   221/896: $98\p_merge.found[0:0]
+   222/896: $98\p_merge.kk[9:0]
+   223/896: $97\p_merge.found[0:0]
+   224/896: $97\p_merge.kk[9:0]
+   225/896: $96\f_dup[0:0]
+   226/896: $95\f_dup[0:0]
+   227/896: $94\f_dup[0:0]
+   228/896: $93\f_dup[0:0]
+   229/896: $92\f_dup[0:0]
+   230/896: $91\f_dup[0:0]
+   231/896: $90\f_dup[0:0]
+   232/896: $89\f_dup[0:0]
+   233/896: $88\f_dup[0:0]
+   234/896: $87\f_dup[0:0]
+   235/896: $86\f_dup[0:0]
+   236/896: $85\f_dup[0:0]
+   237/896: $84\f_dup[0:0]
+   238/896: $83\f_dup[0:0]
+   239/896: $82\f_dup[0:0]
+   240/896: $81\f_dup[0:0]
+   241/896: $192\f_alias[0:0]
+   242/896: $192\p_merge.accepted[15:15]
+   243/896: $191\p_merge.accepted[15:15]
+   244/896: $191\f_alias[0:0]
+   245/896: $190\f_alias[0:0]
+   246/896: $190\p_merge.accepted[14:14]
+   247/896: $189\p_merge.accepted[14:14]
+   248/896: $189\f_alias[0:0]
+   249/896: $188\f_alias[0:0]
+   250/896: $188\p_merge.accepted[13:13]
+   251/896: $187\p_merge.accepted[13:13]
+   252/896: $187\f_alias[0:0]
+   253/896: $186\f_alias[0:0]
+   254/896: $186\p_merge.accepted[12:12]
+   255/896: $185\p_merge.accepted[12:12]
+   256/896: $185\f_alias[0:0]
+   257/896: $184\f_alias[0:0]
+   258/896: $184\p_merge.accepted[11:11]
+   259/896: $183\p_merge.accepted[11:11]
+   260/896: $183\f_alias[0:0]
+   261/896: $182\f_alias[0:0]
+   262/896: $182\p_merge.accepted[10:10]
+   263/896: $181\p_merge.accepted[10:10]
+   264/896: $181\f_alias[0:0]
+   265/896: $180\f_alias[0:0]
+   266/896: $180\p_merge.accepted[9:9]
+   267/896: $179\p_merge.accepted[9:9]
+   268/896: $179\f_alias[0:0]
+   269/896: $178\f_alias[0:0]
+   270/896: $178\p_merge.accepted[8:8]
+   271/896: $177\p_merge.accepted[8:8]
+   272/896: $177\f_alias[0:0]
+   273/896: $176\f_alias[0:0]
+   274/896: $176\p_merge.accepted[7:7]
+   275/896: $175\p_merge.accepted[7:7]
+   276/896: $175\f_alias[0:0]
+   277/896: $174\f_alias[0:0]
+   278/896: $174\p_merge.accepted[6:6]
+   279/896: $173\p_merge.accepted[6:6]
+   280/896: $173\f_alias[0:0]
+   281/896: $172\f_alias[0:0]
+   282/896: $172\p_merge.accepted[5:5]
+   283/896: $171\p_merge.accepted[5:5]
+   284/896: $171\f_alias[0:0]
+   285/896: $170\f_alias[0:0]
+   286/896: $170\p_merge.accepted[4:4]
+   287/896: $169\p_merge.accepted[4:4]
+   288/896: $169\f_alias[0:0]
+   289/896: $168\f_alias[0:0]
+   290/896: $168\p_merge.accepted[3:3]
+   291/896: $167\p_merge.accepted[3:3]
+   292/896: $167\f_alias[0:0]
+   293/896: $166\f_alias[0:0]
+   294/896: $166\p_merge.accepted[2:2]
+   295/896: $165\p_merge.accepted[2:2]
+   296/896: $165\f_alias[0:0]
+   297/896: $164\f_alias[0:0]
+   298/896: $164\p_merge.accepted[1:1]
+   299/896: $163\p_merge.accepted[1:1]
+   300/896: $163\f_alias[0:0]
+   301/896: $162\f_alias[0:0]
+   302/896: $162\p_merge.accepted[0:0]
+   303/896: $161\p_merge.accepted[0:0]
+   304/896: $161\f_alias[0:0]
+   305/896: $96\p_merge.found[0:0]
+   306/896: $96\p_merge.kk[9:0]
+   307/896: $95\p_merge.found[0:0]
+   308/896: $95\p_merge.kk[9:0]
+   309/896: $94\p_merge.found[0:0]
+   310/896: $94\p_merge.kk[9:0]
+   311/896: $93\p_merge.found[0:0]
+   312/896: $93\p_merge.kk[9:0]
+   313/896: $92\p_merge.found[0:0]
+   314/896: $92\p_merge.kk[9:0]
+   315/896: $91\p_merge.found[0:0]
+   316/896: $91\p_merge.kk[9:0]
+   317/896: $90\p_merge.found[0:0]
+   318/896: $90\p_merge.kk[9:0]
+   319/896: $89\p_merge.found[0:0]
+   320/896: $89\p_merge.kk[9:0]
+   321/896: $88\p_merge.found[0:0]
+   322/896: $88\p_merge.kk[9:0]
+   323/896: $87\p_merge.found[0:0]
+   324/896: $87\p_merge.kk[9:0]
+   325/896: $86\p_merge.found[0:0]
+   326/896: $86\p_merge.kk[9:0]
+   327/896: $85\p_merge.found[0:0]
+   328/896: $85\p_merge.kk[9:0]
+   329/896: $84\p_merge.found[0:0]
+   330/896: $84\p_merge.kk[9:0]
+   331/896: $83\p_merge.found[0:0]
+   332/896: $83\p_merge.kk[9:0]
+   333/896: $82\p_merge.found[0:0]
+   334/896: $82\p_merge.kk[9:0]
+   335/896: $81\p_merge.found[0:0]
+   336/896: $81\p_merge.kk[9:0]
+   337/896: $80\f_dup[0:0]
+   338/896: $79\f_dup[0:0]
+   339/896: $78\f_dup[0:0]
+   340/896: $77\f_dup[0:0]
+   341/896: $76\f_dup[0:0]
+   342/896: $75\f_dup[0:0]
+   343/896: $74\f_dup[0:0]
+   344/896: $73\f_dup[0:0]
+   345/896: $72\f_dup[0:0]
+   346/896: $71\f_dup[0:0]
+   347/896: $70\f_dup[0:0]
+   348/896: $69\f_dup[0:0]
+   349/896: $68\f_dup[0:0]
+   350/896: $67\f_dup[0:0]
+   351/896: $66\f_dup[0:0]
+   352/896: $65\f_dup[0:0]
+   353/896: $160\f_alias[0:0]
+   354/896: $160\p_merge.accepted[15:15]
+   355/896: $159\p_merge.accepted[15:15]
+   356/896: $159\f_alias[0:0]
+   357/896: $158\f_alias[0:0]
+   358/896: $158\p_merge.accepted[14:14]
+   359/896: $157\p_merge.accepted[14:14]
+   360/896: $157\f_alias[0:0]
+   361/896: $156\f_alias[0:0]
+   362/896: $156\p_merge.accepted[13:13]
+   363/896: $155\p_merge.accepted[13:13]
+   364/896: $155\f_alias[0:0]
+   365/896: $154\f_alias[0:0]
+   366/896: $154\p_merge.accepted[12:12]
+   367/896: $153\p_merge.accepted[12:12]
+   368/896: $153\f_alias[0:0]
+   369/896: $152\f_alias[0:0]
+   370/896: $152\p_merge.accepted[11:11]
+   371/896: $151\p_merge.accepted[11:11]
+   372/896: $151\f_alias[0:0]
+   373/896: $150\f_alias[0:0]
+   374/896: $150\p_merge.accepted[10:10]
+   375/896: $149\p_merge.accepted[10:10]
+   376/896: $149\f_alias[0:0]
+   377/896: $148\f_alias[0:0]
+   378/896: $148\p_merge.accepted[9:9]
+   379/896: $147\p_merge.accepted[9:9]
+   380/896: $147\f_alias[0:0]
+   381/896: $146\f_alias[0:0]
+   382/896: $146\p_merge.accepted[8:8]
+   383/896: $145\p_merge.accepted[8:8]
+   384/896: $145\f_alias[0:0]
+   385/896: $144\f_alias[0:0]
+   386/896: $144\p_merge.accepted[7:7]
+   387/896: $143\p_merge.accepted[7:7]
+   388/896: $143\f_alias[0:0]
+   389/896: $142\f_alias[0:0]
+   390/896: $142\p_merge.accepted[6:6]
+   391/896: $141\p_merge.accepted[6:6]
+   392/896: $141\f_alias[0:0]
+   393/896: $140\f_alias[0:0]
+   394/896: $140\p_merge.accepted[5:5]
+   395/896: $139\p_merge.accepted[5:5]
+   396/896: $139\f_alias[0:0]
+   397/896: $138\f_alias[0:0]
+   398/896: $138\p_merge.accepted[4:4]
+   399/896: $137\p_merge.accepted[4:4]
+   400/896: $137\f_alias[0:0]
+   401/896: $136\f_alias[0:0]
+   402/896: $136\p_merge.accepted[3:3]
+   403/896: $135\p_merge.accepted[3:3]
+   404/896: $135\f_alias[0:0]
+   405/896: $134\f_alias[0:0]
+   406/896: $134\p_merge.accepted[2:2]
+   407/896: $133\p_merge.accepted[2:2]
+   408/896: $133\f_alias[0:0]
+   409/896: $132\f_alias[0:0]
+   410/896: $132\p_merge.accepted[1:1]
+   411/896: $131\p_merge.accepted[1:1]
+   412/896: $131\f_alias[0:0]
+   413/896: $130\f_alias[0:0]
+   414/896: $130\p_merge.accepted[0:0]
+   415/896: $129\p_merge.accepted[0:0]
+   416/896: $129\f_alias[0:0]
+   417/896: $80\p_merge.found[0:0]
+   418/896: $80\p_merge.kk[9:0]
+   419/896: $79\p_merge.found[0:0]
+   420/896: $79\p_merge.kk[9:0]
+   421/896: $78\p_merge.found[0:0]
+   422/896: $78\p_merge.kk[9:0]
+   423/896: $77\p_merge.found[0:0]
+   424/896: $77\p_merge.kk[9:0]
+   425/896: $76\p_merge.found[0:0]
+   426/896: $76\p_merge.kk[9:0]
+   427/896: $75\p_merge.found[0:0]
+   428/896: $75\p_merge.kk[9:0]
+   429/896: $74\p_merge.found[0:0]
+   430/896: $74\p_merge.kk[9:0]
+   431/896: $73\p_merge.found[0:0]
+   432/896: $73\p_merge.kk[9:0]
+   433/896: $72\p_merge.found[0:0]
+   434/896: $72\p_merge.kk[9:0]
+   435/896: $71\p_merge.found[0:0]
+   436/896: $71\p_merge.kk[9:0]
+   437/896: $70\p_merge.found[0:0]
+   438/896: $70\p_merge.kk[9:0]
+   439/896: $69\p_merge.found[0:0]
+   440/896: $69\p_merge.kk[9:0]
+   441/896: $68\p_merge.found[0:0]
+   442/896: $68\p_merge.kk[9:0]
+   443/896: $67\p_merge.found[0:0]
+   444/896: $67\p_merge.kk[9:0]
+   445/896: $66\p_merge.found[0:0]
+   446/896: $66\p_merge.kk[9:0]
+   447/896: $65\p_merge.found[0:0]
+   448/896: $65\p_merge.kk[9:0]
+   449/896: $64\f_dup[0:0]
+   450/896: $63\f_dup[0:0]
+   451/896: $62\f_dup[0:0]
+   452/896: $61\f_dup[0:0]
+   453/896: $60\f_dup[0:0]
+   454/896: $59\f_dup[0:0]
+   455/896: $58\f_dup[0:0]
+   456/896: $57\f_dup[0:0]
+   457/896: $56\f_dup[0:0]
+   458/896: $55\f_dup[0:0]
+   459/896: $54\f_dup[0:0]
+   460/896: $53\f_dup[0:0]
+   461/896: $52\f_dup[0:0]
+   462/896: $51\f_dup[0:0]
+   463/896: $50\f_dup[0:0]
+   464/896: $49\f_dup[0:0]
+   465/896: $128\f_alias[0:0]
+   466/896: $128\p_merge.accepted[15:15]
+   467/896: $127\p_merge.accepted[15:15]
+   468/896: $127\f_alias[0:0]
+   469/896: $126\f_alias[0:0]
+   470/896: $126\p_merge.accepted[14:14]
+   471/896: $125\p_merge.accepted[14:14]
+   472/896: $125\f_alias[0:0]
+   473/896: $124\f_alias[0:0]
+   474/896: $124\p_merge.accepted[13:13]
+   475/896: $123\p_merge.accepted[13:13]
+   476/896: $123\f_alias[0:0]
+   477/896: $122\f_alias[0:0]
+   478/896: $122\p_merge.accepted[12:12]
+   479/896: $121\p_merge.accepted[12:12]
+   480/896: $121\f_alias[0:0]
+   481/896: $120\f_alias[0:0]
+   482/896: $120\p_merge.accepted[11:11]
+   483/896: $119\p_merge.accepted[11:11]
+   484/896: $119\f_alias[0:0]
+   485/896: $118\f_alias[0:0]
+   486/896: $118\p_merge.accepted[10:10]
+   487/896: $117\p_merge.accepted[10:10]
+   488/896: $117\f_alias[0:0]
+   489/896: $116\f_alias[0:0]
+   490/896: $116\p_merge.accepted[9:9]
+   491/896: $115\p_merge.accepted[9:9]
+   492/896: $115\f_alias[0:0]
+   493/896: $114\f_alias[0:0]
+   494/896: $114\p_merge.accepted[8:8]
+   495/896: $113\p_merge.accepted[8:8]
+   496/896: $113\f_alias[0:0]
+   497/896: $112\f_alias[0:0]
+   498/896: $112\p_merge.accepted[7:7]
+   499/896: $111\p_merge.accepted[7:7]
+   500/896: $111\f_alias[0:0]
+   501/896: $110\f_alias[0:0]
+   502/896: $110\p_merge.accepted[6:6]
+   503/896: $109\p_merge.accepted[6:6]
+   504/896: $109\f_alias[0:0]
+   505/896: $108\f_alias[0:0]
+   506/896: $108\p_merge.accepted[5:5]
+   507/896: $107\p_merge.accepted[5:5]
+   508/896: $107\f_alias[0:0]
+   509/896: $106\f_alias[0:0]
+   510/896: $106\p_merge.accepted[4:4]
+   511/896: $105\p_merge.accepted[4:4]
+   512/896: $105\f_alias[0:0]
+   513/896: $104\f_alias[0:0]
+   514/896: $104\p_merge.accepted[3:3]
+   515/896: $103\p_merge.accepted[3:3]
+   516/896: $103\f_alias[0:0]
+   517/896: $102\f_alias[0:0]
+   518/896: $102\p_merge.accepted[2:2]
+   519/896: $101\p_merge.accepted[2:2]
+   520/896: $101\f_alias[0:0]
+   521/896: $100\f_alias[0:0]
+   522/896: $100\p_merge.accepted[1:1]
+   523/896: $99\p_merge.accepted[1:1]
+   524/896: $99\f_alias[0:0]
+   525/896: $98\f_alias[0:0]
+   526/896: $98\p_merge.accepted[0:0]
+   527/896: $97\p_merge.accepted[0:0]
+   528/896: $97\f_alias[0:0]
+   529/896: $64\p_merge.found[0:0]
+   530/896: $64\p_merge.kk[9:0]
+   531/896: $63\p_merge.found[0:0]
+   532/896: $63\p_merge.kk[9:0]
+   533/896: $62\p_merge.found[0:0]
+   534/896: $62\p_merge.kk[9:0]
+   535/896: $61\p_merge.found[0:0]
+   536/896: $61\p_merge.kk[9:0]
+   537/896: $60\p_merge.found[0:0]
+   538/896: $60\p_merge.kk[9:0]
+   539/896: $59\p_merge.found[0:0]
+   540/896: $59\p_merge.kk[9:0]
+   541/896: $58\p_merge.found[0:0]
+   542/896: $58\p_merge.kk[9:0]
+   543/896: $57\p_merge.found[0:0]
+   544/896: $57\p_merge.kk[9:0]
+   545/896: $56\p_merge.found[0:0]
+   546/896: $56\p_merge.kk[9:0]
+   547/896: $55\p_merge.found[0:0]
+   548/896: $55\p_merge.kk[9:0]
+   549/896: $54\p_merge.found[0:0]
+   550/896: $54\p_merge.kk[9:0]
+   551/896: $53\p_merge.found[0:0]
+   552/896: $53\p_merge.kk[9:0]
+   553/896: $52\p_merge.found[0:0]
+   554/896: $52\p_merge.kk[9:0]
+   555/896: $51\p_merge.found[0:0]
+   556/896: $51\p_merge.kk[9:0]
+   557/896: $50\p_merge.found[0:0]
+   558/896: $50\p_merge.kk[9:0]
+   559/896: $49\p_merge.found[0:0]
+   560/896: $49\p_merge.kk[9:0]
+   561/896: $48\f_dup[0:0]
+   562/896: $47\f_dup[0:0]
+   563/896: $46\f_dup[0:0]
+   564/896: $45\f_dup[0:0]
+   565/896: $44\f_dup[0:0]
+   566/896: $43\f_dup[0:0]
+   567/896: $42\f_dup[0:0]
+   568/896: $41\f_dup[0:0]
+   569/896: $40\f_dup[0:0]
+   570/896: $39\f_dup[0:0]
+   571/896: $38\f_dup[0:0]
+   572/896: $37\f_dup[0:0]
+   573/896: $36\f_dup[0:0]
+   574/896: $35\f_dup[0:0]
+   575/896: $34\f_dup[0:0]
+   576/896: $33\f_dup[0:0]
+   577/896: $96\f_alias[0:0]
+   578/896: $96\p_merge.accepted[15:15]
+   579/896: $95\p_merge.accepted[15:15]
+   580/896: $95\f_alias[0:0]
+   581/896: $94\f_alias[0:0]
+   582/896: $94\p_merge.accepted[14:14]
+   583/896: $93\p_merge.accepted[14:14]
+   584/896: $93\f_alias[0:0]
+   585/896: $92\f_alias[0:0]
+   586/896: $92\p_merge.accepted[13:13]
+   587/896: $91\p_merge.accepted[13:13]
+   588/896: $91\f_alias[0:0]
+   589/896: $90\f_alias[0:0]
+   590/896: $90\p_merge.accepted[12:12]
+   591/896: $89\p_merge.accepted[12:12]
+   592/896: $89\f_alias[0:0]
+   593/896: $88\f_alias[0:0]
+   594/896: $88\p_merge.accepted[11:11]
+   595/896: $87\p_merge.accepted[11:11]
+   596/896: $87\f_alias[0:0]
+   597/896: $86\f_alias[0:0]
+   598/896: $86\p_merge.accepted[10:10]
+   599/896: $85\p_merge.accepted[10:10]
+   600/896: $85\f_alias[0:0]
+   601/896: $84\f_alias[0:0]
+   602/896: $84\p_merge.accepted[9:9]
+   603/896: $83\p_merge.accepted[9:9]
+   604/896: $83\f_alias[0:0]
+   605/896: $82\f_alias[0:0]
+   606/896: $82\p_merge.accepted[8:8]
+   607/896: $81\p_merge.accepted[8:8]
+   608/896: $81\f_alias[0:0]
+   609/896: $80\f_alias[0:0]
+   610/896: $80\p_merge.accepted[7:7]
+   611/896: $79\p_merge.accepted[7:7]
+   612/896: $79\f_alias[0:0]
+   613/896: $78\f_alias[0:0]
+   614/896: $78\p_merge.accepted[6:6]
+   615/896: $77\p_merge.accepted[6:6]
+   616/896: $77\f_alias[0:0]
+   617/896: $76\f_alias[0:0]
+   618/896: $76\p_merge.accepted[5:5]
+   619/896: $75\p_merge.accepted[5:5]
+   620/896: $75\f_alias[0:0]
+   621/896: $74\f_alias[0:0]
+   622/896: $74\p_merge.accepted[4:4]
+   623/896: $73\p_merge.accepted[4:4]
+   624/896: $73\f_alias[0:0]
+   625/896: $72\f_alias[0:0]
+   626/896: $72\p_merge.accepted[3:3]
+   627/896: $71\p_merge.accepted[3:3]
+   628/896: $71\f_alias[0:0]
+   629/896: $70\f_alias[0:0]
+   630/896: $70\p_merge.accepted[2:2]
+   631/896: $69\p_merge.accepted[2:2]
+   632/896: $69\f_alias[0:0]
+   633/896: $68\f_alias[0:0]
+   634/896: $68\p_merge.accepted[1:1]
+   635/896: $67\p_merge.accepted[1:1]
+   636/896: $67\f_alias[0:0]
+   637/896: $66\f_alias[0:0]
+   638/896: $66\p_merge.accepted[0:0]
+   639/896: $65\p_merge.accepted[0:0]
+   640/896: $65\f_alias[0:0]
+   641/896: $48\p_merge.found[0:0]
+   642/896: $48\p_merge.kk[9:0]
+   643/896: $47\p_merge.found[0:0]
+   644/896: $47\p_merge.kk[9:0]
+   645/896: $46\p_merge.found[0:0]
+   646/896: $46\p_merge.kk[9:0]
+   647/896: $45\p_merge.found[0:0]
+   648/896: $45\p_merge.kk[9:0]
+   649/896: $44\p_merge.found[0:0]
+   650/896: $44\p_merge.kk[9:0]
+   651/896: $43\p_merge.found[0:0]
+   652/896: $43\p_merge.kk[9:0]
+   653/896: $42\p_merge.found[0:0]
+   654/896: $42\p_merge.kk[9:0]
+   655/896: $41\p_merge.found[0:0]
+   656/896: $41\p_merge.kk[9:0]
+   657/896: $40\p_merge.found[0:0]
+   658/896: $40\p_merge.kk[9:0]
+   659/896: $39\p_merge.found[0:0]
+   660/896: $39\p_merge.kk[9:0]
+   661/896: $38\p_merge.found[0:0]
+   662/896: $38\p_merge.kk[9:0]
+   663/896: $37\p_merge.found[0:0]
+   664/896: $37\p_merge.kk[9:0]
+   665/896: $36\p_merge.found[0:0]
+   666/896: $36\p_merge.kk[9:0]
+   667/896: $35\p_merge.found[0:0]
+   668/896: $35\p_merge.kk[9:0]
+   669/896: $34\p_merge.found[0:0]
+   670/896: $34\p_merge.kk[9:0]
+   671/896: $33\p_merge.found[0:0]
+   672/896: $33\p_merge.kk[9:0]
+   673/896: $32\f_dup[0:0]
+   674/896: $31\f_dup[0:0]
+   675/896: $30\f_dup[0:0]
+   676/896: $29\f_dup[0:0]
+   677/896: $28\f_dup[0:0]
+   678/896: $27\f_dup[0:0]
+   679/896: $26\f_dup[0:0]
+   680/896: $25\f_dup[0:0]
+   681/896: $24\f_dup[0:0]
+   682/896: $23\f_dup[0:0]
+   683/896: $22\f_dup[0:0]
+   684/896: $21\f_dup[0:0]
+   685/896: $20\f_dup[0:0]
+   686/896: $19\f_dup[0:0]
+   687/896: $18\f_dup[0:0]
+   688/896: $17\f_dup[0:0]
+   689/896: $64\f_alias[0:0]
+   690/896: $64\p_merge.accepted[15:15]
+   691/896: $63\p_merge.accepted[15:15]
+   692/896: $63\f_alias[0:0]
+   693/896: $62\f_alias[0:0]
+   694/896: $62\p_merge.accepted[14:14]
+   695/896: $61\p_merge.accepted[14:14]
+   696/896: $61\f_alias[0:0]
+   697/896: $60\f_alias[0:0]
+   698/896: $60\p_merge.accepted[13:13]
+   699/896: $59\p_merge.accepted[13:13]
+   700/896: $59\f_alias[0:0]
+   701/896: $58\f_alias[0:0]
+   702/896: $58\p_merge.accepted[12:12]
+   703/896: $57\p_merge.accepted[12:12]
+   704/896: $57\f_alias[0:0]
+   705/896: $56\f_alias[0:0]
+   706/896: $56\p_merge.accepted[11:11]
+   707/896: $55\p_merge.accepted[11:11]
+   708/896: $55\f_alias[0:0]
+   709/896: $54\f_alias[0:0]
+   710/896: $54\p_merge.accepted[10:10]
+   711/896: $53\p_merge.accepted[10:10]
+   712/896: $53\f_alias[0:0]
+   713/896: $52\f_alias[0:0]
+   714/896: $52\p_merge.accepted[9:9]
+   715/896: $51\p_merge.accepted[9:9]
+   716/896: $51\f_alias[0:0]
+   717/896: $50\f_alias[0:0]
+   718/896: $50\p_merge.accepted[8:8]
+   719/896: $49\p_merge.accepted[8:8]
+   720/896: $49\f_alias[0:0]
+   721/896: $48\f_alias[0:0]
+   722/896: $48\p_merge.accepted[7:7]
+   723/896: $47\p_merge.accepted[7:7]
+   724/896: $47\f_alias[0:0]
+   725/896: $46\f_alias[0:0]
+   726/896: $46\p_merge.accepted[6:6]
+   727/896: $45\p_merge.accepted[6:6]
+   728/896: $45\f_alias[0:0]
+   729/896: $44\f_alias[0:0]
+   730/896: $44\p_merge.accepted[5:5]
+   731/896: $43\p_merge.accepted[5:5]
+   732/896: $43\f_alias[0:0]
+   733/896: $42\f_alias[0:0]
+   734/896: $42\p_merge.accepted[4:4]
+   735/896: $41\p_merge.accepted[4:4]
+   736/896: $41\f_alias[0:0]
+   737/896: $40\f_alias[0:0]
+   738/896: $40\p_merge.accepted[3:3]
+   739/896: $39\p_merge.accepted[3:3]
+   740/896: $39\f_alias[0:0]
+   741/896: $38\f_alias[0:0]
+   742/896: $38\p_merge.accepted[2:2]
+   743/896: $37\p_merge.accepted[2:2]
+   744/896: $37\f_alias[0:0]
+   745/896: $36\f_alias[0:0]
+   746/896: $36\p_merge.accepted[1:1]
+   747/896: $35\p_merge.accepted[1:1]
+   748/896: $35\f_alias[0:0]
+   749/896: $34\f_alias[0:0]
+   750/896: $34\p_merge.accepted[0:0]
+   751/896: $33\p_merge.accepted[0:0]
+   752/896: $33\f_alias[0:0]
+   753/896: $32\p_merge.found[0:0]
+   754/896: $32\p_merge.kk[9:0]
+   755/896: $31\p_merge.found[0:0]
+   756/896: $31\p_merge.kk[9:0]
+   757/896: $30\p_merge.found[0:0]
+   758/896: $30\p_merge.kk[9:0]
+   759/896: $29\p_merge.found[0:0]
+   760/896: $29\p_merge.kk[9:0]
+   761/896: $28\p_merge.found[0:0]
+   762/896: $28\p_merge.kk[9:0]
+   763/896: $27\p_merge.found[0:0]
+   764/896: $27\p_merge.kk[9:0]
+   765/896: $26\p_merge.found[0:0]
+   766/896: $26\p_merge.kk[9:0]
+   767/896: $25\p_merge.found[0:0]
+   768/896: $25\p_merge.kk[9:0]
+   769/896: $24\p_merge.found[0:0]
+   770/896: $24\p_merge.kk[9:0]
+   771/896: $23\p_merge.found[0:0]
+   772/896: $23\p_merge.kk[9:0]
+   773/896: $22\p_merge.found[0:0]
+   774/896: $22\p_merge.kk[9:0]
+   775/896: $21\p_merge.found[0:0]
+   776/896: $21\p_merge.kk[9:0]
+   777/896: $20\p_merge.found[0:0]
+   778/896: $20\p_merge.kk[9:0]
+   779/896: $19\p_merge.found[0:0]
+   780/896: $19\p_merge.kk[9:0]
+   781/896: $18\p_merge.found[0:0]
+   782/896: $18\p_merge.kk[9:0]
+   783/896: $17\p_merge.found[0:0]
+   784/896: $17\p_merge.kk[9:0]
+   785/896: $16\f_dup[0:0]
+   786/896: $15\f_dup[0:0]
+   787/896: $14\f_dup[0:0]
+   788/896: $13\f_dup[0:0]
+   789/896: $12\f_dup[0:0]
+   790/896: $11\f_dup[0:0]
+   791/896: $10\f_dup[0:0]
+   792/896: $9\f_dup[0:0]
+   793/896: $8\f_dup[0:0]
+   794/896: $7\f_dup[0:0]
+   795/896: $6\f_dup[0:0]
+   796/896: $5\f_dup[0:0]
+   797/896: $4\f_dup[0:0]
+   798/896: $3\f_dup[0:0]
+   799/896: $2\f_dup[0:0]
+   800/896: $1\f_dup[0:0]
+   801/896: $32\f_alias[0:0]
+   802/896: $32\p_merge.accepted[15:15]
+   803/896: $31\p_merge.accepted[15:15]
+   804/896: $31\f_alias[0:0]
+   805/896: $30\f_alias[0:0]
+   806/896: $30\p_merge.accepted[14:14]
+   807/896: $29\p_merge.accepted[14:14]
+   808/896: $29\f_alias[0:0]
+   809/896: $28\f_alias[0:0]
+   810/896: $28\p_merge.accepted[13:13]
+   811/896: $27\p_merge.accepted[13:13]
+   812/896: $27\f_alias[0:0]
+   813/896: $26\f_alias[0:0]
+   814/896: $26\p_merge.accepted[12:12]
+   815/896: $25\p_merge.accepted[12:12]
+   816/896: $25\f_alias[0:0]
+   817/896: $24\f_alias[0:0]
+   818/896: $24\p_merge.accepted[11:11]
+   819/896: $23\p_merge.accepted[11:11]
+   820/896: $23\f_alias[0:0]
+   821/896: $22\f_alias[0:0]
+   822/896: $22\p_merge.accepted[10:10]
+   823/896: $21\p_merge.accepted[10:10]
+   824/896: $21\f_alias[0:0]
+   825/896: $20\f_alias[0:0]
+   826/896: $20\p_merge.accepted[9:9]
+   827/896: $19\p_merge.accepted[9:9]
+   828/896: $19\f_alias[0:0]
+   829/896: $18\f_alias[0:0]
+   830/896: $18\p_merge.accepted[8:8]
+   831/896: $17\p_merge.accepted[8:8]
+   832/896: $17\f_alias[0:0]
+   833/896: $16\f_alias[0:0]
+   834/896: $16\p_merge.accepted[7:7]
+   835/896: $15\p_merge.accepted[7:7]
+   836/896: $15\f_alias[0:0]
+   837/896: $14\f_alias[0:0]
+   838/896: $14\p_merge.accepted[6:6]
+   839/896: $13\p_merge.accepted[6:6]
+   840/896: $13\f_alias[0:0]
+   841/896: $12\f_alias[0:0]
+   842/896: $12\p_merge.accepted[5:5]
+   843/896: $11\p_merge.accepted[5:5]
+   844/896: $11\f_alias[0:0]
+   845/896: $10\f_alias[0:0]
+   846/896: $10\p_merge.accepted[4:4]
+   847/896: $9\p_merge.accepted[4:4]
+   848/896: $9\f_alias[0:0]
+   849/896: $8\f_alias[0:0]
+   850/896: $8\p_merge.accepted[3:3]
+   851/896: $7\p_merge.accepted[3:3]
+   852/896: $7\f_alias[0:0]
+   853/896: $6\f_alias[0:0]
+   854/896: $6\p_merge.accepted[2:2]
+   855/896: $5\p_merge.accepted[2:2]
+   856/896: $5\f_alias[0:0]
+   857/896: $4\f_alias[0:0]
+   858/896: $4\p_merge.accepted[1:1]
+   859/896: $3\p_merge.accepted[1:1]
+   860/896: $3\f_alias[0:0]
+   861/896: $2\f_alias[0:0]
+   862/896: $2\p_merge.accepted[0:0]
+   863/896: $1\p_merge.accepted[0:0]
+   864/896: $1\f_alias[0:0]
+   865/896: $16\p_merge.found[0:0]
+   866/896: $16\p_merge.kk[9:0]
+   867/896: $15\p_merge.found[0:0]
+   868/896: $15\p_merge.kk[9:0]
+   869/896: $14\p_merge.found[0:0]
+   870/896: $14\p_merge.kk[9:0]
+   871/896: $13\p_merge.found[0:0]
+   872/896: $13\p_merge.kk[9:0]
+   873/896: $12\p_merge.found[0:0]
+   874/896: $12\p_merge.kk[9:0]
+   875/896: $11\p_merge.found[0:0]
+   876/896: $11\p_merge.kk[9:0]
+   877/896: $10\p_merge.found[0:0]
+   878/896: $10\p_merge.kk[9:0]
+   879/896: $9\p_merge.found[0:0]
+   880/896: $9\p_merge.kk[9:0]
+   881/896: $8\p_merge.found[0:0]
+   882/896: $8\p_merge.kk[9:0]
+   883/896: $7\p_merge.found[0:0]
+   884/896: $7\p_merge.kk[9:0]
+   885/896: $6\p_merge.found[0:0]
+   886/896: $6\p_merge.kk[9:0]
+   887/896: $5\p_merge.found[0:0]
+   888/896: $5\p_merge.kk[9:0]
+   889/896: $4\p_merge.found[0:0]
+   890/896: $4\p_merge.kk[9:0]
+   891/896: $3\p_merge.found[0:0]
+   892/896: $3\p_merge.kk[9:0]
+   893/896: $2\p_merge.found[0:0]
+   894/896: $2\p_merge.kk[9:0]
+   895/896: $1\p_merge.found[0:0]
+   896/896: $1\p_merge.kk[9:0]
+Creating decoders for process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+     1/128: $48\f_al[0:0]
+     2/128: $48\eok[15:15]
+     3/128: $32\f_rng[0:0]
+     4/128: $47\f_al[0:0]
+     5/128: $47\eok[15:15]
+     6/128: $46\f_al[0:0]
+     7/128: $31\f_rng[0:0]
+     8/128: $46\eok[15:15]
+     9/128: $45\f_al[0:0]
+    10/128: $45\eok[14:14]
+    11/128: $30\f_rng[0:0]
+    12/128: $44\f_al[0:0]
+    13/128: $44\eok[14:14]
+    14/128: $43\f_al[0:0]
+    15/128: $29\f_rng[0:0]
+    16/128: $43\eok[14:14]
+    17/128: $42\f_al[0:0]
+    18/128: $42\eok[13:13]
+    19/128: $28\f_rng[0:0]
+    20/128: $41\f_al[0:0]
+    21/128: $41\eok[13:13]
+    22/128: $40\f_al[0:0]
+    23/128: $27\f_rng[0:0]
+    24/128: $40\eok[13:13]
+    25/128: $39\f_al[0:0]
+    26/128: $39\eok[12:12]
+    27/128: $26\f_rng[0:0]
+    28/128: $38\f_al[0:0]
+    29/128: $38\eok[12:12]
+    30/128: $37\f_al[0:0]
+    31/128: $25\f_rng[0:0]
+    32/128: $37\eok[12:12]
+    33/128: $36\f_al[0:0]
+    34/128: $36\eok[11:11]
+    35/128: $24\f_rng[0:0]
+    36/128: $35\f_al[0:0]
+    37/128: $35\eok[11:11]
+    38/128: $34\f_al[0:0]
+    39/128: $23\f_rng[0:0]
+    40/128: $34\eok[11:11]
+    41/128: $33\f_al[0:0]
+    42/128: $33\eok[10:10]
+    43/128: $22\f_rng[0:0]
+    44/128: $32\f_al[0:0]
+    45/128: $32\eok[10:10]
+    46/128: $31\f_al[0:0]
+    47/128: $21\f_rng[0:0]
+    48/128: $31\eok[10:10]
+    49/128: $30\f_al[0:0]
+    50/128: $30\eok[9:9]
+    51/128: $20\f_rng[0:0]
+    52/128: $29\f_al[0:0]
+    53/128: $29\eok[9:9]
+    54/128: $28\f_al[0:0]
+    55/128: $19\f_rng[0:0]
+    56/128: $28\eok[9:9]
+    57/128: $27\f_al[0:0]
+    58/128: $27\eok[8:8]
+    59/128: $18\f_rng[0:0]
+    60/128: $26\f_al[0:0]
+    61/128: $26\eok[8:8]
+    62/128: $25\f_al[0:0]
+    63/128: $17\f_rng[0:0]
+    64/128: $25\eok[8:8]
+    65/128: $24\f_al[0:0]
+    66/128: $24\eok[7:7]
+    67/128: $16\f_rng[0:0]
+    68/128: $23\f_al[0:0]
+    69/128: $23\eok[7:7]
+    70/128: $22\f_al[0:0]
+    71/128: $15\f_rng[0:0]
+    72/128: $22\eok[7:7]
+    73/128: $21\f_al[0:0]
+    74/128: $21\eok[6:6]
+    75/128: $14\f_rng[0:0]
+    76/128: $20\f_al[0:0]
+    77/128: $20\eok[6:6]
+    78/128: $19\f_al[0:0]
+    79/128: $13\f_rng[0:0]
+    80/128: $19\eok[6:6]
+    81/128: $18\f_al[0:0]
+    82/128: $18\eok[5:5]
+    83/128: $12\f_rng[0:0]
+    84/128: $17\f_al[0:0]
+    85/128: $17\eok[5:5]
+    86/128: $16\f_al[0:0]
+    87/128: $11\f_rng[0:0]
+    88/128: $16\eok[5:5]
+    89/128: $15\f_al[0:0]
+    90/128: $15\eok[4:4]
+    91/128: $10\f_rng[0:0]
+    92/128: $14\f_al[0:0]
+    93/128: $14\eok[4:4]
+    94/128: $13\f_al[0:0]
+    95/128: $9\f_rng[0:0]
+    96/128: $13\eok[4:4]
+    97/128: $12\f_al[0:0]
+    98/128: $12\eok[3:3]
+    99/128: $8\f_rng[0:0]
+   100/128: $11\f_al[0:0]
+   101/128: $11\eok[3:3]
+   102/128: $10\f_al[0:0]
+   103/128: $7\f_rng[0:0]
+   104/128: $10\eok[3:3]
+   105/128: $9\f_al[0:0]
+   106/128: $9\eok[2:2]
+   107/128: $6\f_rng[0:0]
+   108/128: $8\f_al[0:0]
+   109/128: $8\eok[2:2]
+   110/128: $7\f_al[0:0]
+   111/128: $5\f_rng[0:0]
+   112/128: $7\eok[2:2]
+   113/128: $6\f_al[0:0]
+   114/128: $6\eok[1:1]
+   115/128: $4\f_rng[0:0]
+   116/128: $5\f_al[0:0]
+   117/128: $5\eok[1:1]
+   118/128: $4\f_al[0:0]
+   119/128: $3\f_rng[0:0]
+   120/128: $4\eok[1:1]
+   121/128: $3\f_al[0:0]
+   122/128: $3\eok[0:0]
+   123/128: $2\f_rng[0:0]
+   124/128: $2\f_al[0:0]
+   125/128: $2\eok[0:0]
+   126/128: $1\f_al[0:0]
+   127/128: $1\f_rng[0:0]
+   128/128: $1\eok[0:0]
+
+4.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nV' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\full' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\f_alias' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\f_dup' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_merge.e' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_merge.k' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_merge.w' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_merge.found' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_merge.hit' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_merge.a' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_merge.b' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_merge.kk' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_merge.accepted' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nK[0]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nK[1]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nK[2]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nK[3]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nK[4]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nK[5]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nK[6]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nK[7]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nM[0]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nM[1]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nM[2]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nM[3]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nM[4]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nM[5]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nM[6]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nM[7]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nD[0]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nD[1]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nD[2]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nD[3]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nD[4]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nD[5]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nD[6]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\nD[7]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ev' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\eok' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\f_rng' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\f_al' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_dec.k' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_dec.el' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_dec.v' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[0]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[1]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[2]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[3]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[4]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[5]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[6]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[7]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[8]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[9]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[10]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[11]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[12]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[13]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[14]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ek[15]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[0]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[1]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[2]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[3]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[4]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[5]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[6]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[7]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[8]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[9]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[10]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[11]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[12]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[13]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[14]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ed[15]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[0]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[1]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[2]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[3]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[4]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[5]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[6]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[7]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[8]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[9]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[10]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[11]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[12]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[13]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[14]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+No latch inferred for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\ew[15]' from process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+
+4.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\dsfd_vm_static_cap_leaf.\pin_c' using process `\dsfd_vm_static_cap_leaf.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv:18$2617'.
+  created $dff cell `$procdff$10088' with positive edge clock.
+Creating register for signal `\dsfd_vm_static_cap_leaf.\pin_gid' using process `\dsfd_vm_static_cap_leaf.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv:18$2617'.
+  created $dff cell `$procdff$10089' with positive edge clock.
+Creating register for signal `\dsfd_vm_static_cap_leaf.\pin_flush' using process `\dsfd_vm_static_cap_leaf.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv:18$2617'.
+  created $dff cell `$procdff$10090' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\V' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10091' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\o_v' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10092' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\o_row' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10093' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\o_m' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10094' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\o_d' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10095' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\flt' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10096' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\fl_c' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10097' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\fl_on' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10098' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_out.e' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10099' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_out.sel' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10100' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_out.two' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10101' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\p_out.fe' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10102' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\MSK[0]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10103' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\MSK[1]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10104' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\MSK[2]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10105' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\MSK[3]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10106' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\MSK[4]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10107' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\MSK[5]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10108' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\MSK[6]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10109' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\MSK[7]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10110' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\KEY[0]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10111' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\KEY[1]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10112' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\KEY[2]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10113' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\KEY[3]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10114' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\KEY[4]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10115' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\KEY[5]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10116' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\KEY[6]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10117' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\KEY[7]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10118' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\DAT[0]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10119' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\DAT[1]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10120' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\DAT[2]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10121' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\DAT[3]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10122' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\DAT[4]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10123' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\DAT[5]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10124' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\DAT[6]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10125' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.\DAT[7]' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10126' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$2620_ADDR' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10127' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$2620_DATA' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10128' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:118$2621_ADDR' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10129' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:118$2621_DATA' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10130' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$mem2reg_rd$\nK$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2622_ADDR' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10131' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$mem2reg_rd$\nK$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2622_DATA' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10132' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2623_ADDR' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10133' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2623_DATA' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10134' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$mem2reg_rd$\nD$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2624_ADDR' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10135' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$mem2reg_rd$\nD$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2624_DATA' using process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+  created $dff cell `$procdff$10136' with positive edge clock.
+
+4.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\dsfd_vm_static_cap_leaf.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv:18$2617'.
+Removing empty process `dsfd_vm_static_cap_leaf.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv:18$2617'.
+Found and cleaned up 27 empty switches in `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+Removing empty process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:109$5115'.
+Found and cleaned up 512 empty switches in `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+Removing empty process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:72$2642'.
+Found and cleaned up 48 empty switches in `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+Removing empty process `$paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.$proc$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:41$2625'.
+Cleaned up 588 empty switches.
+
+4.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+<suppressed ~1 debug messages>
+Optimizing module $paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.
+<suppressed ~174 debug messages>
+
+4.3. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\dsfd_vm_static_capl\E=s32'00000000000000000000000000001000.
+<suppressed ~1 debug messages>
+
+4.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+
+4.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+Removed 53 unused cells and 3231 unused wires.
+<suppressed ~60 debug messages>
+
+4.6. Executing CHECK pass (checking for obvious problems).
+Checking module dsfd_vm_static_cap_leaf...
+Found and reported 0 problems.
+
+4.7. Executing OPT pass (performing simple optimizations).
+
+4.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+
+4.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+<suppressed ~1578 debug messages>
+Removed a total of 526 cells.
+
+4.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_static_cap_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port B of cell $flatten\u_l.$procmux$5398: $flatten\u_l.$14\p_out.sel[0:0] -> 1'1
+      Replacing known input bits on port B of cell $flatten\u_l.$procmux$5443: $flatten\u_l.$12\p_out.sel[0:0] -> 1'1
+      Replacing known input bits on port B of cell $flatten\u_l.$procmux$5488: $flatten\u_l.$10\p_out.sel[0:0] -> 1'1
+      Replacing known input bits on port B of cell $flatten\u_l.$procmux$5533: $flatten\u_l.$8\p_out.sel[0:0] -> 1'1
+      Replacing known input bits on port B of cell $flatten\u_l.$procmux$5578: $flatten\u_l.$6\p_out.sel[0:0] -> 1'1
+      Replacing known input bits on port B of cell $flatten\u_l.$procmux$5623: $flatten\u_l.$4\p_out.sel[0:0] -> 1'1
+      Replacing known input bits on port B of cell $flatten\u_l.$procmux$5668: $flatten\u_l.$2\p_out.sel[0:0] -> 1'1
+      Replacing known input bits on port A of cell $flatten\u_l.$procmux$5875: \u_l.fl_on -> 1'0
+      Replacing known input bits on port A of cell $flatten\u_l.$procmux$5873: \u_l.fl_on -> 1'1
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$10003.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$10005.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$10012.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$10014.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$10020.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$10026.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$10032.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$10048.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$10050.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$10057.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$10059.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$10065.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$10071.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$10077.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5241.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5244.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5256.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5259.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5271.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5274.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$5316.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5319.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5382.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5385.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5391.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5394.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5400.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5403.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5415.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5427.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5430.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5436.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5439.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5445.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5448.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5454.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5460.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5472.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5475.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5481.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5484.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5490.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5493.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5499.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5505.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5517.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5520.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5526.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5529.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5535.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5538.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5544.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5562.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5565.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5571.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5574.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5580.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5583.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5595.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5607.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5610.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5616.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5619.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5625.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5628.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5634.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5640.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5652.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5655.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5661.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5664.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5670.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5673.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5679.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5685.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5694.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5697.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5700.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5703.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5706.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5709.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5715.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5964.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5970.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5982.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$5988.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6000.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6006.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6018.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6024.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6036.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6042.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6054.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6060.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6072.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6078.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6090.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6096.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6108.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6114.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6126.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6132.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6144.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6150.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6162.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6168.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6180.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6186.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6198.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6204.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6216.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6222.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6234.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6240.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6396.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6402.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6414.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6420.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6432.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6438.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6450.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6456.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6468.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6474.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6486.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6492.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6504.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6510.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6522.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6528.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6540.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6546.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6558.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6564.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6576.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6582.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6594.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6600.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6612.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6618.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6630.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6636.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6648.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6654.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6666.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6672.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6828.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6834.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6846.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6852.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6864.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6870.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6882.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6888.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6900.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6906.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6918.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6924.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6936.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6942.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6954.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6960.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6972.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6978.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6990.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$6996.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7008.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7014.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7026.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7032.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7044.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7050.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7062.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7068.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7080.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7086.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7098.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7104.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7260.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7266.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7278.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7284.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7296.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7302.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7314.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7320.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7332.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7338.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7350.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7356.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7368.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7374.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7386.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7392.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7404.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7410.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7422.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7428.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7440.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7446.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7458.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7464.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7476.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7482.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7494.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7500.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7512.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7518.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7530.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7536.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7692.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7698.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7710.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7716.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7728.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7734.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7746.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7752.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7764.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7770.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7782.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7788.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7800.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7806.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7818.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7824.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7836.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7842.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7854.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7860.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7872.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7878.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7890.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7896.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7908.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7914.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7926.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7932.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7944.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7950.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7962.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$7968.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8124.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8130.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8142.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8148.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8160.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8166.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8178.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8184.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8196.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8202.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8214.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8220.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8232.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8238.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8250.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8256.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8268.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8274.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8286.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8292.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8304.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8310.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8322.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8328.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8340.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8346.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8358.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8364.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8376.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8382.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8394.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8400.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8556.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8562.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8574.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8580.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8592.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8598.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8610.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8616.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8628.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8634.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8646.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8652.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8664.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8670.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8682.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8688.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8700.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8706.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8718.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8724.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8736.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8742.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8754.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8760.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8772.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8778.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8790.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8796.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8808.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8814.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8826.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8832.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8988.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$8994.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9006.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9012.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9024.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9030.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9042.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9048.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9060.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9066.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9078.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9084.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9096.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9102.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9114.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9120.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9132.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9138.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9150.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9156.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9168.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9174.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9186.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9192.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9204.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9210.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9222.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9228.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9240.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9246.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9258.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9264.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9373.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9375.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9382.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9384.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9390.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9396.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9402.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9418.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9420.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9427.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9429.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9435.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9441.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9447.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9463.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9465.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9472.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9474.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9480.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9486.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9492.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9508.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9510.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9517.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9519.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9525.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9531.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9537.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9553.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9555.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9562.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9564.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9570.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9576.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9582.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9598.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9600.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9607.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9609.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9615.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9621.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9627.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9643.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9645.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9652.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9654.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9660.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9666.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9672.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9688.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9690.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9697.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9699.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9705.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9711.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9717.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9733.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9735.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9742.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9744.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9750.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9756.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9762.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9778.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9780.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9787.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9789.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9795.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9801.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9807.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9823.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9825.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9832.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9834.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9840.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9846.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9852.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9868.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9870.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9877.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9879.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9885.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9891.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9897.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9913.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9915.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9922.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9924.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9930.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9936.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9942.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9958.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9960.
+    dead port 1/2 on $mux $flatten\u_l.$procmux$9967.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9969.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9975.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9981.
+    dead port 2/2 on $mux $flatten\u_l.$procmux$9987.
+Removed 436 multiplexer ports.
+<suppressed ~679 debug messages>
+
+4.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+Performed a total of 8 changes.
+
+4.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+4.7.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+Removed 0 unused cells and 971 unused wires.
+<suppressed ~1 debug messages>
+
+4.7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+
+4.7.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_static_cap_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~680 debug messages>
+
+4.7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+Performed a total of 0 changes.
+
+4.7.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+Removed a total of 0 cells.
+
+4.7.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+
+4.7.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+
+4.7.16. Finished OPT passes. (There is nothing left to do.)
+
+4.8. Executing FSM pass (extract and optimize FSM).
+
+4.8.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+4.8.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+4.8.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+4.8.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+
+4.8.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+4.8.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+4.8.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+4.8.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+4.9. Executing OPT pass (performing simple optimizations).
+
+4.9.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+
+4.9.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+Removed a total of 0 cells.
+
+4.9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_static_cap_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~680 debug messages>
+
+4.9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+Performed a total of 0 changes.
+
+4.9.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+Removed a total of 0 cells.
+
+4.9.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $procdff$10090 ($dff) from module dsfd_vm_static_cap_leaf (D = \flush, Q = \pin_flush, rval = 1'0).
+Adding SRST signal on $procdff$10088 ($dff) from module dsfd_vm_static_cap_leaf (D = \f_c, Q = \pin_c, rval = 832'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).
+Adding EN signal on $flatten\u_l.$procdff$10126 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nD[7], Q = \u_l.DAT[7]).
+Adding EN signal on $flatten\u_l.$procdff$10125 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nD[6], Q = \u_l.DAT[6]).
+Adding EN signal on $flatten\u_l.$procdff$10124 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nD[5], Q = \u_l.DAT[5]).
+Adding EN signal on $flatten\u_l.$procdff$10123 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nD[4], Q = \u_l.DAT[4]).
+Adding EN signal on $flatten\u_l.$procdff$10122 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nD[3], Q = \u_l.DAT[3]).
+Adding EN signal on $flatten\u_l.$procdff$10121 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nD[2], Q = \u_l.DAT[2]).
+Adding EN signal on $flatten\u_l.$procdff$10120 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nD[1], Q = \u_l.DAT[1]).
+Adding EN signal on $flatten\u_l.$procdff$10119 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nD[0], Q = \u_l.DAT[0]).
+Adding EN signal on $flatten\u_l.$procdff$10118 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nK[7], Q = \u_l.KEY[7]).
+Adding EN signal on $flatten\u_l.$procdff$10117 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nK[6], Q = \u_l.KEY[6]).
+Adding EN signal on $flatten\u_l.$procdff$10116 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nK[5], Q = \u_l.KEY[5]).
+Adding EN signal on $flatten\u_l.$procdff$10115 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nK[4], Q = \u_l.KEY[4]).
+Adding EN signal on $flatten\u_l.$procdff$10114 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nK[3], Q = \u_l.KEY[3]).
+Adding EN signal on $flatten\u_l.$procdff$10113 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nK[2], Q = \u_l.KEY[2]).
+Adding EN signal on $flatten\u_l.$procdff$10112 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nK[1], Q = \u_l.KEY[1]).
+Adding EN signal on $flatten\u_l.$procdff$10111 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nK[0], Q = \u_l.KEY[0]).
+Adding SRST signal on $flatten\u_l.$procdff$10110 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nM[7], Q = \u_l.MSK[7], rval = 16'0000000000000000).
+Adding SRST signal on $flatten\u_l.$procdff$10109 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nM[6], Q = \u_l.MSK[6], rval = 16'0000000000000000).
+Adding SRST signal on $flatten\u_l.$procdff$10108 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nM[5], Q = \u_l.MSK[5], rval = 16'0000000000000000).
+Adding SRST signal on $flatten\u_l.$procdff$10107 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nM[4], Q = \u_l.MSK[4], rval = 16'0000000000000000).
+Adding SRST signal on $flatten\u_l.$procdff$10106 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nM[3], Q = \u_l.MSK[3], rval = 16'0000000000000000).
+Adding SRST signal on $flatten\u_l.$procdff$10105 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nM[2], Q = \u_l.MSK[2], rval = 16'0000000000000000).
+Adding SRST signal on $flatten\u_l.$procdff$10104 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nM[1], Q = \u_l.MSK[1], rval = 16'0000000000000000).
+Adding SRST signal on $flatten\u_l.$procdff$10103 ($dff) from module dsfd_vm_static_cap_leaf (D = \u_l.nM[0], Q = \u_l.MSK[0], rval = 16'0000000000000000).
+Adding SRST signal on $flatten\u_l.$procdff$10098 ($dff) from module dsfd_vm_static_cap_leaf (D = $flatten\u_l.$procmux$5878_Y, Q = \u_l.fl_on, rval = 1'0).
+Adding SRST signal on $flatten\u_l.$procdff$10097 ($dff) from module dsfd_vm_static_cap_leaf (D = $flatten\u_l.$procmux$5889_Y [0], Q = \u_l.fl_c [0], rval = 1'0).
+Adding SRST signal on $flatten\u_l.$procdff$10097 ($dff) from module dsfd_vm_static_cap_leaf (D = $flatten\u_l.$procmux$5886_Y [3:1], Q = \u_l.fl_c [3:1], rval = 3'000).
+Adding EN signal on $auto$ff.cc:266:slice$10198 ($sdff) from module dsfd_vm_static_cap_leaf (D = $flatten\u_l.$add$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:126$5226_Y [3:1], Q = \u_l.fl_c [3:1]).
+Adding EN signal on $auto$ff.cc:266:slice$10197 ($sdff) from module dsfd_vm_static_cap_leaf (D = $flatten\u_l.$procmux$5889_Y [0], Q = \u_l.fl_c [0]).
+Adding SRST signal on $flatten\u_l.$procdff$10096 ($dff) from module dsfd_vm_static_cap_leaf (D = $flatten\u_l.$or$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:127$5227_Y, Q = \u_l.flt, rval = 5'00000).
+Adding EN signal on $flatten\u_l.$procdff$10095 ($dff) from module dsfd_vm_static_cap_leaf (D = $flatten\u_l.$3$mem2reg_rd$\nD$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2624_DATA[511:0]$5224, Q = \u_l.o_d).
+Adding EN signal on $flatten\u_l.$procdff$10094 ($dff) from module dsfd_vm_static_cap_leaf (D = $flatten\u_l.$3$mem2reg_rd$\nM$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2623_DATA[15:0]$5223, Q = \u_l.o_m).
+Adding EN signal on $flatten\u_l.$procdff$10093 ($dff) from module dsfd_vm_static_cap_leaf (D = { $flatten\u_l.$3$mem2reg_rd$\nK$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:124$2622_DATA[9:0]$5222 \pin_gid }, Q = \u_l.o_row).
+Adding SRST signal on $flatten\u_l.$procdff$10092 ($dff) from module dsfd_vm_static_cap_leaf (D = $flatten\u_l.$18\p_out.sel[0:0], Q = \u_l.o_v, rval = 1'0).
+Adding SRST signal on $flatten\u_l.$procdff$10091 ($dff) from module dsfd_vm_static_cap_leaf (D = { $flatten\u_l.$logic_and$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5212_Y $flatten\u_l.$logic_and$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5205_Y $flatten\u_l.$logic_and$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5198_Y $flatten\u_l.$logic_and$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5191_Y $flatten\u_l.$logic_and$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5184_Y $flatten\u_l.$logic_and$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5177_Y $flatten\u_l.$logic_and$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5170_Y $flatten\u_l.$logic_and$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5163_Y }, Q = \u_l.V, rval = 8'00000000).
+
+4.9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+Removed 52 unused cells and 45 unused wires.
+<suppressed ~53 debug messages>
+
+4.9.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+<suppressed ~1 debug messages>
+
+4.9.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_static_cap_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~644 debug messages>
+
+4.9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+Performed a total of 0 changes.
+
+4.9.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+<suppressed ~30 debug messages>
+Removed a total of 10 cells.
+
+4.9.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.9.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+Removed 0 unused cells and 10 unused wires.
+<suppressed ~1 debug messages>
+
+4.9.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+
+4.9.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.9.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_static_cap_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~644 debug messages>
+
+4.9.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+Performed a total of 0 changes.
+
+4.9.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+Removed a total of 0 cells.
+
+4.9.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.9.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+
+4.9.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+
+4.9.23. Finished OPT passes. (There is nothing left to do.)
+
+4.10. Executing WREDUCE pass (reducing word size of cells).
+Removed top 3 bits (of 4) from mux cell dsfd_vm_static_cap_leaf.$flatten\u_l.$procmux$5889 ($mux).
+Removed top 3 bits (of 4) from mux cell dsfd_vm_static_cap_leaf.$flatten\u_l.$procmux$5886 ($mux).
+Removed top 3 bits (of 4) from mux cell dsfd_vm_static_cap_leaf.$flatten\u_l.$procmux$5884 ($mux).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$procmux$5328_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$procmux$5327_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$procmux$5326_CMP0 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$procmux$5239_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$procmux$5238_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$procmux$5237_CMP0 ($eq).
+Removed top 28 bits (of 32) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5209 ($eq).
+Removed top 28 bits (of 32) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5202 ($eq).
+Removed top 28 bits (of 32) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5195 ($eq).
+Removed top 28 bits (of 32) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5188 ($eq).
+Removed top 29 bits (of 32) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5181 ($eq).
+Removed top 29 bits (of 32) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5174 ($eq).
+Removed top 30 bits (of 32) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:120$5167 ($eq).
+Removed top 31 bits (of 32) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137 ($sub).
+Removed top 27 bits (of 32) from port Y of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137 ($sub).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3630 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3626 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3622 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3618 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3614 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3610 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3606 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3602 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3598 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3594 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3590 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3586 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3582 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3578 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3574 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3570 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3321 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3317 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3313 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3309 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3305 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3301 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3297 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3293 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3289 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3285 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3281 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3277 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3273 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3269 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3265 ($eq).
+Removed top 1 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3261 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3012 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3008 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3004 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$3000 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$2996 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$2992 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$2988 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$2984 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$2980 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$2976 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$2972 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$2968 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$2964 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$2960 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$2956 ($eq).
+Removed top 2 bits (of 3) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:82$2952 ($eq).
+Removed top 1 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:98$2844 ($eq).
+Removed top 1 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:97$2842 ($eq).
+Removed top 1 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:98$2832 ($eq).
+Removed top 1 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:97$2830 ($eq).
+Removed top 1 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:98$2820 ($eq).
+Removed top 1 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:97$2818 ($eq).
+Removed top 1 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:98$2808 ($eq).
+Removed top 1 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:97$2806 ($eq).
+Removed top 2 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:98$2796 ($eq).
+Removed top 2 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:97$2794 ($eq).
+Removed top 2 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:98$2784 ($eq).
+Removed top 2 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:97$2782 ($eq).
+Removed top 3 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:98$2772 ($eq).
+Removed top 3 bits (of 4) from port B of cell dsfd_vm_static_cap_leaf.$flatten\u_l.$eq$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:97$2770 ($eq).
+Removed top 3 bits (of 4) from wire dsfd_vm_static_cap_leaf.$flatten\u_l.$procmux$5884_Y.
+Removed top 3 bits (of 4) from wire dsfd_vm_static_cap_leaf.$flatten\u_l.$procmux$5886_Y.
+Removed top 3 bits (of 4) from wire dsfd_vm_static_cap_leaf.$flatten\u_l.$procmux$5889_Y.
+
+4.11. Executing PEEPOPT pass (run peephole optimizers).
+
+4.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+4.13. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module dsfd_vm_static_cap_leaf:
+  creating $macc model for $flatten\u_l.$add$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:126$5226 ($add).
+  creating $macc model for $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137 ($sub).
+  creating $alu model for $macc $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137.
+  creating $alu model for $macc $flatten\u_l.$add$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:126$5226.
+  creating $alu cell for $flatten\u_l.$add$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:126$5226: $auto$alumacc.cc:495:replace_alu$10230
+  creating $alu cell for $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137: $auto$alumacc.cc:495:replace_alu$10233
+  created 2 $alu and 0 $macc cells.
+
+4.14. Executing SHARE pass (SAT-based resource sharing).
+
+4.15. Executing OPT pass (performing simple optimizations).
+
+4.15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+
+4.15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+Removed a total of 0 cells.
+
+4.15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_static_cap_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~644 debug messages>
+
+4.15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+Performed a total of 0 changes.
+
+4.15.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+Removed a total of 0 cells.
+
+4.15.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+
+4.15.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+
+4.15.9. Finished OPT passes. (There is nothing left to do.)
+
+4.16. Executing MEMORY pass.
+
+4.16.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+4.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+4.16.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+4.16.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+4.16.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+4.16.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+
+4.16.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+4.16.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+4.16.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+
+4.16.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+4.17. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+
+4.18. Executing OPT pass (performing simple optimizations).
+
+4.18.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+<suppressed ~745 debug messages>
+
+4.18.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+4.18.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.18.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+Removed 2 unused cells and 29 unused wires.
+<suppressed ~3 debug messages>
+
+4.18.5. Finished fast OPT passes.
+
+4.19. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+4.20. Executing OPT pass (performing simple optimizations).
+
+4.20.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+<suppressed ~1 debug messages>
+
+4.20.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+Removed a total of 0 cells.
+
+4.20.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_static_cap_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~339 debug messages>
+
+4.20.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5712:
+      Old ports: A=32'11111111111111111111111111111111, B=0, Y=$flatten\u_l.$2\p_out.fe[31:0]
+      New ports: A=1'1, B=1'0, Y=$flatten\u_l.$2\p_out.fe[31:0] [0]
+      New connections: $flatten\u_l.$2\p_out.fe[31:0] [31:1] = { $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5659:
+      Old ports: A=1, B=$flatten\u_l.$2\p_out.fe[31:0], Y=$flatten\u_l.$5\p_out.fe[31:0]
+      New ports: A=2'01, B={ $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] }, Y=$flatten\u_l.$5\p_out.fe[31:0] [1:0]
+      New connections: $flatten\u_l.$5\p_out.fe[31:0] [31:2] = { $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] $flatten\u_l.$5\p_out.fe[31:0] [1] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5676:
+      Old ports: A=$flatten\u_l.$2\p_out.fe[31:0], B=$flatten\u_l.$5\p_out.fe[31:0], Y=$flatten\u_l.$4\p_out.fe[31:0]
+      New ports: A={ $flatten\u_l.$2\p_out.fe[31:0] [0] $flatten\u_l.$2\p_out.fe[31:0] [0] }, B=$flatten\u_l.$5\p_out.fe[31:0] [1:0], Y=$flatten\u_l.$4\p_out.fe[31:0] [1:0]
+      New connections: $flatten\u_l.$4\p_out.fe[31:0] [31:2] = { $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5614:
+      Old ports: A=2, B=$flatten\u_l.$4\p_out.fe[31:0], Y=$flatten\u_l.$7\p_out.fe[31:0]
+      New ports: A=3'010, B={ $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1:0] }, Y=$flatten\u_l.$7\p_out.fe[31:0] [2:0]
+      New connections: $flatten\u_l.$7\p_out.fe[31:0] [31:3] = { $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] $flatten\u_l.$7\p_out.fe[31:0] [2] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5631:
+      Old ports: A=$flatten\u_l.$4\p_out.fe[31:0], B=$flatten\u_l.$7\p_out.fe[31:0], Y=$flatten\u_l.$6\p_out.fe[31:0]
+      New ports: A={ $flatten\u_l.$4\p_out.fe[31:0] [1] $flatten\u_l.$4\p_out.fe[31:0] [1:0] }, B=$flatten\u_l.$7\p_out.fe[31:0] [2:0], Y=$flatten\u_l.$6\p_out.fe[31:0] [2:0]
+      New connections: $flatten\u_l.$6\p_out.fe[31:0] [31:3] = { $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] $flatten\u_l.$6\p_out.fe[31:0] [2] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5569:
+      Old ports: A=3, B=$flatten\u_l.$6\p_out.fe[31:0], Y=$flatten\u_l.$9\p_out.fe[31:0]
+      New ports: A=3'011, B=$flatten\u_l.$6\p_out.fe[31:0] [2:0], Y=$flatten\u_l.$9\p_out.fe[31:0] [2:0]
+      New connections: $flatten\u_l.$9\p_out.fe[31:0] [31:3] = { $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] $flatten\u_l.$9\p_out.fe[31:0] [2] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5586:
+      Old ports: A=$flatten\u_l.$6\p_out.fe[31:0], B=$flatten\u_l.$9\p_out.fe[31:0], Y=$flatten\u_l.$8\p_out.fe[31:0]
+      New ports: A=$flatten\u_l.$6\p_out.fe[31:0] [2:0], B=$flatten\u_l.$9\p_out.fe[31:0] [2:0], Y=$flatten\u_l.$8\p_out.fe[31:0] [2:0]
+      New connections: $flatten\u_l.$8\p_out.fe[31:0] [31:3] = { $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5524:
+      Old ports: A=4, B=$flatten\u_l.$8\p_out.fe[31:0], Y=$flatten\u_l.$11\p_out.fe[31:0]
+      New ports: A=4'0100, B={ $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2:0] }, Y=$flatten\u_l.$11\p_out.fe[31:0] [3:0]
+      New connections: $flatten\u_l.$11\p_out.fe[31:0] [31:4] = { $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] $flatten\u_l.$11\p_out.fe[31:0] [3] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5541:
+      Old ports: A=$flatten\u_l.$8\p_out.fe[31:0], B=$flatten\u_l.$11\p_out.fe[31:0], Y=$flatten\u_l.$10\p_out.fe[31:0]
+      New ports: A={ $flatten\u_l.$8\p_out.fe[31:0] [2] $flatten\u_l.$8\p_out.fe[31:0] [2:0] }, B=$flatten\u_l.$11\p_out.fe[31:0] [3:0], Y=$flatten\u_l.$10\p_out.fe[31:0] [3:0]
+      New connections: $flatten\u_l.$10\p_out.fe[31:0] [31:4] = { $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] $flatten\u_l.$10\p_out.fe[31:0] [3] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5479:
+      Old ports: A=5, B=$flatten\u_l.$10\p_out.fe[31:0], Y=$flatten\u_l.$13\p_out.fe[31:0]
+      New ports: A=4'0101, B=$flatten\u_l.$10\p_out.fe[31:0] [3:0], Y=$flatten\u_l.$13\p_out.fe[31:0] [3:0]
+      New connections: $flatten\u_l.$13\p_out.fe[31:0] [31:4] = { $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] $flatten\u_l.$13\p_out.fe[31:0] [3] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5496:
+      Old ports: A=$flatten\u_l.$10\p_out.fe[31:0], B=$flatten\u_l.$13\p_out.fe[31:0], Y=$flatten\u_l.$12\p_out.fe[31:0]
+      New ports: A=$flatten\u_l.$10\p_out.fe[31:0] [3:0], B=$flatten\u_l.$13\p_out.fe[31:0] [3:0], Y=$flatten\u_l.$12\p_out.fe[31:0] [3:0]
+      New connections: $flatten\u_l.$12\p_out.fe[31:0] [31:4] = { $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] $flatten\u_l.$12\p_out.fe[31:0] [3] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5434:
+      Old ports: A=6, B=$flatten\u_l.$12\p_out.fe[31:0], Y=$flatten\u_l.$15\p_out.fe[31:0]
+      New ports: A=4'0110, B=$flatten\u_l.$12\p_out.fe[31:0] [3:0], Y=$flatten\u_l.$15\p_out.fe[31:0] [3:0]
+      New connections: $flatten\u_l.$15\p_out.fe[31:0] [31:4] = { $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] $flatten\u_l.$15\p_out.fe[31:0] [3] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5451:
+      Old ports: A=$flatten\u_l.$12\p_out.fe[31:0], B=$flatten\u_l.$15\p_out.fe[31:0], Y=$flatten\u_l.$14\p_out.fe[31:0]
+      New ports: A=$flatten\u_l.$12\p_out.fe[31:0] [3:0], B=$flatten\u_l.$15\p_out.fe[31:0] [3:0], Y=$flatten\u_l.$14\p_out.fe[31:0] [3:0]
+      New connections: $flatten\u_l.$14\p_out.fe[31:0] [31:4] = { $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] $flatten\u_l.$14\p_out.fe[31:0] [3] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5389:
+      Old ports: A=7, B=$flatten\u_l.$14\p_out.fe[31:0], Y=$flatten\u_l.$17\p_out.fe[31:0]
+      New ports: A=4'0111, B=$flatten\u_l.$14\p_out.fe[31:0] [3:0], Y=$flatten\u_l.$17\p_out.fe[31:0] [3:0]
+      New connections: $flatten\u_l.$17\p_out.fe[31:0] [31:4] = { $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] $flatten\u_l.$17\p_out.fe[31:0] [3] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5406:
+      Old ports: A=$flatten\u_l.$14\p_out.fe[31:0], B=$flatten\u_l.$17\p_out.fe[31:0], Y=$flatten\u_l.$16\p_out.fe[31:0]
+      New ports: A=$flatten\u_l.$14\p_out.fe[31:0] [3:0], B=$flatten\u_l.$17\p_out.fe[31:0] [3:0], Y=$flatten\u_l.$16\p_out.fe[31:0] [3:0]
+      New connections: $flatten\u_l.$16\p_out.fe[31:0] [31:4] = { $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+    Consolidated identical input bits for $mux cell $flatten\u_l.$procmux$5337:
+      Old ports: A=$flatten\u_l.$16\p_out.fe[31:0], B={ $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [3:0] }, Y=$flatten\u_l.$18\p_out.fe[31:0]
+      New ports: A={ $flatten\u_l.$16\p_out.fe[31:0] [3] $flatten\u_l.$16\p_out.fe[31:0] [3:0] }, B={ $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [31] $flatten\u_l.$sub$rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv:117$5137_Y [3:0] }, Y=$flatten\u_l.$18\p_out.fe[31:0] [4:0]
+      New connections: $flatten\u_l.$18\p_out.fe[31:0] [31:5] = { $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] $flatten\u_l.$18\p_out.fe[31:0] [4] }
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+Performed a total of 16 changes.
+
+4.20.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+Removed a total of 0 cells.
+
+4.20.6. Executing OPT_SHARE pass.
+
+4.20.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.20.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+
+4.20.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+<suppressed ~2 debug messages>
+
+4.20.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.20.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_static_cap_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~338 debug messages>
+
+4.20.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_static_cap_leaf.
+Performed a total of 0 changes.
+
+4.20.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+Removed a total of 0 cells.
+
+4.20.14. Executing OPT_SHARE pass.
+
+4.20.15. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.20.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+
+4.20.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+
+4.20.18. Finished OPT passes. (There is nothing left to do.)
+
+4.21. Executing TECHMAP pass (map to technology primitives).
+
+4.21.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Successfully finished Verilog frontend.
+
+4.21.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $sdff.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $dffe.
+Using template $paramod$32a7b7b86c07519b7537abc18e96f0331f97914d\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $sdffe.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $eq.
+Using template $paramod$504d7726e493b7d5a8a8ac16f387eb0143f8a853\_90_pmux for cells of type $pmux.
+Using template $paramod$b6358ed4f5f3122c331026991b8656180114c1e9\_90_pmux for cells of type $pmux.
+Using template $paramod$f1b8596687335e3c8eaf4076bf68b903027ddb03\_90_pmux for cells of type $pmux.
+Using template $paramod$dde52db7035cb02b3cc5e73865788532339e3bcb\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $logic_not.
+Using template $paramod$constmap:b6b6a9909d7ceeceee982fb1e05ef58042fbe342$paramod$5a4dcc7281286797ba47757650cb512f9032815c\_90_shift_shiftx for cells of type $shiftx.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000100 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~4434 debug messages>
+
+4.22. Executing OPT pass (performing simple optimizations).
+
+4.22.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_cap_leaf.
+<suppressed ~1213 debug messages>
+
+4.22.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_cap_leaf'.
+<suppressed ~1014 debug messages>
+Removed a total of 338 cells.
+
+4.22.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.22.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_cap_leaf..
+Removed 86 unused cells and 2620 unused wires.
+<suppressed ~87 debug messages>
+
+4.22.5. Finished fast OPT passes.
+
+4.23. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `dsfd_vm_static_cap_leaf'. Setting top module to dsfd_vm_static_cap_leaf.
+
+4.23.1. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_cap_leaf
+
+4.23.2. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_cap_leaf
+Removed 0 unused modules.
+
+4.24. Printing statistics.
+
+=== dsfd_vm_static_cap_leaf ===
+
+   Number of wires:               5246
+   Number of wire bits:          32998
+   Number of public wires:         141
+   Number of public wire bits:   13229
+   Number of ports:                 10
+   Number of port bits:           1387
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              29100
+     $_AND_                       4835
+     $_DFFE_PP_                   4718
+     $_DFF_P_                        4
+     $_MUX_                      10371
+     $_NOT_                        700
+     $_OR_                        6136
+     $_SDFFE_PN0P_                   1
+     $_SDFFE_PP0P_                   3
+     $_SDFF_PN0_                   848
+     $_SDFF_PP0_                   128
+     $_XOR_                       1355
+     $scopeinfo                      1
+
+4.25. Executing CHECK pass (checking for obvious problems).
+Checking module dsfd_vm_static_cap_leaf...
+Found and reported 0 problems.
+
+5. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( S), .SETN( R));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+5.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\dsfd_vm_static_cap_leaf':
+  mapped 5702 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+6. Executing ABC pass (technology mapping using ABC).
+
+6.1. Extracting gate netlist of module `\dsfd_vm_static_cap_leaf' to `<abc-temp-dir>/input.blif'..
+Replacing 9 occurrences of constant undef bits with constant zero bits
+Extracted 34801 gates and 41340 wires to a netlist network with 6536 inputs and 6246 outputs.
+
+6.1.1. Executing ABC.
+Running ABC command: "<yosys-exe-dir>/yosys-abc" -s -f <abc-temp-dir>/abc.script 2>&1
+ABC: ABC command line: "source <abc-temp-dir>/abc.script".
+ABC: 
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_lib -w /srv/opentallas-scratch/codex/capl-f9483e59b/map/libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.15 sec
+ABC: Library "asap7sc7p5t_AO_RVT_TT_nldm_211120" from "/srv/opentallas-scratch/codex/capl-f9483e59b/map/libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib" has 42 cells (0 skipped: 0 seq; 0 tri-state; 0 no func; 0 dont_use).  Time =     0.21 sec
+ABC: Memory =   39.04 MB. Time =     0.21 sec
+ABC: Warnings: genlib library reader cannot detect the buffer gate.
+ABC: Some parts of the supergate-based technology mapper may not work correctly.
+ABC: Warnings: genlib library reader cannot detect the invertor gate.
+ABC: Some parts of the supergate-based technology mapper may not work correctly.
+ABC: Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.
+ABC: Some parts of the supergate-based technology mapper may not work correctly.
+ABC: + read_lib -m -w /srv/opentallas-scratch/codex/capl-f9483e59b/map/libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.00 sec
+ABC: Library "asap7sc7p5t_INVBUF_RVT_TT_nldm_211120" from "/srv/opentallas-scratch/codex/capl-f9483e59b/map/libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib" has 37 cells (0 skipped: 0 seq; 0 tri-state; 0 no func; 0 dont_use).  Time =     0.00 sec
+ABC: Memory =    0.59 MB. Time =     0.00 sec
+ABC: Updated library "asap7sc7p5t_AO_RVT_TT_nldm_211120" with additional 37 cells from library "asap7sc7p5t_INVBUF_RVT_TT_nldm_211120".
+ABC: Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.
+ABC: Some parts of the supergate-based technology mapper may not work correctly.
+ABC: + read_lib -m -w /srv/opentallas-scratch/codex/capl-f9483e59b/map/libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.13 sec
+ABC: Library "asap7sc7p5t_OA_RVT_TT_nldm_211120" from "/srv/opentallas-scratch/codex/capl-f9483e59b/map/libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib" has 34 cells (0 skipped: 0 seq; 0 tri-state; 0 no func; 0 dont_use).  Time =     0.19 sec
+ABC: Memory =   35.01 MB. Time =     0.19 sec
+ABC: Updated library "asap7sc7p5t_AO_RVT_TT_nldm_211120__and__asap7sc7p5t_INVBUF_RVT_TT_nldm_211120" with additional 34 cells from library "asap7sc7p5t_OA_RVT_TT_nldm_211120".
+ABC: Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.
+ABC: Some parts of the supergate-based technology mapper may not work correctly.
+ABC: + read_lib -m -w /srv/opentallas-scratch/codex/capl-f9483e59b/map/libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.01 sec
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFASRHQNx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQNx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQNx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQNx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQx4_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFLQNx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFLQNx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFLQNx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFLQx4_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DHLx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DHLx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DHLx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DLLx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DLLx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DLLx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx1_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx2_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx2p67DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx3_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx4DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx4_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx5_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx5p33DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx6p67DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx8DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFHx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFHx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFHx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFHx4_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFLx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFLx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFLx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFLx4_ASAP7_75t_R".
+ABC: Library "asap7sc7p5t_SEQ_RVT_TT_nldm_220123" from "/srv/opentallas-scratch/codex/capl-f9483e59b/map/libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib" has 0 cells (33 skipped: 23 seq; 0 tri-state; 10 no func; 0 dont_use).  Time =     0.01 sec
+ABC: Memory =    3.23 MB. Time =     0.01 sec
+ABC: Updated library "asap7sc7p5t_AO_RVT_TT_nldm_211120__and__asap7sc7p5t_INVBUF_RVT_TT_nldm_211120__and__asap7sc7p5t_OA_RVT_TT_nldm_211120" with additional 0 cells from library "asap7sc7p5t_SEQ_RVT_TT_nldm_220123".
+ABC: Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.
+ABC: Some parts of the supergate-based technology mapper may not work correctly.
+ABC: + read_lib -m -w /srv/opentallas-scratch/codex/capl-f9483e59b/map/libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.01 sec
+ABC: Library "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120" from "/srv/opentallas-scratch/codex/capl-f9483e59b/map/libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib" has 56 cells (0 skipped: 0 seq; 0 tri-state; 0 no func; 0 dont_use).  Time =     0.02 sec
+ABC: Memory =    4.50 MB. Time =     0.02 sec
+ABC: Updated library "asap7sc7p5t_AO_RVT_TT_nldm_211120__and__asap7sc7p5t_INVBUF_RVT_TT_nldm_211120__and__asap7sc7p5t_OA_RVT_TT_nldm_211120__and__asap7sc7p5t_SEQ_RVT_TT_nldm_220123" with additional 56 cells from library "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120".
+ABC: Warning: Detected 2 multi-output gates (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + retime -o -D 1111 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf -D 1111 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+
+6.1.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:     2461
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:      141
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:      961
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:      205
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:      255
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:      103
+ABC RESULTS:   AO211x2_ASAP7_75t_R cells:        3
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:      626
+ABC RESULTS:   AO221x1_ASAP7_75t_R cells:       18
+ABC RESULTS:   AO222x2_ASAP7_75t_R cells:        9
+ABC RESULTS:   AO22x1_ASAP7_75t_R cells:       56
+ABC RESULTS:   AO31x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO32x1_ASAP7_75t_R cells:        8
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:     1764
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:     2576
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:      463
+ABC RESULTS:   AOI222xp33_ASAP7_75t_R cells:       34
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:     1078
+ABC RESULTS:   AOI311xp33_ASAP7_75t_R cells:       12
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:       57
+ABC RESULTS:   AOI321xp33_ASAP7_75t_R cells:        3
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:      228
+ABC RESULTS:   AOI33xp33_ASAP7_75t_R cells:        7
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:     2094
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:        3
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:     4762
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:      302
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:      184
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:      155
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:     4772
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:      303
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:      180
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:      133
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:      305
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:      120
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:      248
+ABC RESULTS:   OA222x2_ASAP7_75t_R cells:        8
+ABC RESULTS:   OA22x2_ASAP7_75t_R cells:       31
+ABC RESULTS:   OA31x2_ASAP7_75t_R cells:        3
+ABC RESULTS:   OA33x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:      872
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:     6230
+ABC RESULTS:   OAI221xp5_ASAP7_75t_R cells:       84
+ABC RESULTS:   OAI222xp33_ASAP7_75t_R cells:       22
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:      159
+ABC RESULTS:   OAI311xp33_ASAP7_75t_R cells:       10
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:       26
+ABC RESULTS:   OAI321xp33_ASAP7_75t_R cells:        4
+ABC RESULTS:   OAI32xp33_ASAP7_75t_R cells:        7
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:      132
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:       90
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:       61
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:       45
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:      854
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:       59
+ABC RESULTS:        internal signals:    28558
+ABC RESULTS:           input signals:     6536
+ABC RESULTS:          output signals:     6246
+Removing temp directory.
+Removed 0 unused cells and 18011 unused wires.
+
+7. Executing Liberty frontend: map/libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+Imported 42 cell types from liberty file.
+
+8. Executing Liberty frontend: map/libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+Imported 37 cell types from liberty file.
+
+9. Executing Liberty frontend: map/libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+Imported 34 cell types from liberty file.
+
+10. Executing Liberty frontend: map/libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Imported 33 cell types from liberty file.
+
+11. Executing Liberty frontend: map/libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+Imported 56 cell types from liberty file.
+
+12. Executing CHECK pass (checking for obvious problems).
+Checking module dsfd_vm_static_cap_leaf...
+Found and reported 0 problems.
+
+13. Printing statistics.
+
+=== dsfd_vm_static_cap_leaf ===
+
+   Number of wires:              38505
+   Number of wire bits:          40549
+   Number of public wires:          21
+   Number of public wire bits:    2065
+   Number of ports:                 10
+   Number of port bits:           1387
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              39033
+     $scopeinfo                      1
+     A2O1A1Ixp33_ASAP7_75t_R      2461
+     A2O1A1O1Ixp25_ASAP7_75t_R     141
+     AND2x2_ASAP7_75t_R            961
+     AND3x1_ASAP7_75t_R            205
+     AND4x1_ASAP7_75t_R            255
+     AND5x1_ASAP7_75t_R            103
+     AO211x2_ASAP7_75t_R             3
+     AO21x1_ASAP7_75t_R            626
+     AO221x1_ASAP7_75t_R            18
+     AO222x2_ASAP7_75t_R             9
+     AO22x1_ASAP7_75t_R             56
+     AO31x2_ASAP7_75t_R              2
+     AO32x1_ASAP7_75t_R              8
+     AOI211xp5_ASAP7_75t_R        1764
+     AOI21xp33_ASAP7_75t_R        2576
+     AOI221xp5_ASAP7_75t_R         463
+     AOI222xp33_ASAP7_75t_R         34
+     AOI22xp33_ASAP7_75t_R        1078
+     AOI311xp33_ASAP7_75t_R         12
+     AOI31xp33_ASAP7_75t_R          57
+     AOI321xp33_ASAP7_75t_R          3
+     AOI32xp33_ASAP7_75t_R         228
+     AOI33xp33_ASAP7_75t_R           7
+     DFFHQNx1_ASAP7_75t_R         5702
+     INVx1_ASAP7_75t_R            2094
+     MAJIxp5_ASAP7_75t_R             3
+     NAND2xp33_ASAP7_75t_R        4762
+     NAND3xp33_ASAP7_75t_R         302
+     NAND4xp25_ASAP7_75t_R         184
+     NAND5xp2_ASAP7_75t_R          155
+     NOR2xp33_ASAP7_75t_R         4772
+     NOR3xp33_ASAP7_75t_R          303
+     NOR4xp25_ASAP7_75t_R          180
+     NOR5xp2_ASAP7_75t_R           133
+     O2A1O1Ixp33_ASAP7_75t_R       305
+     OA211x2_ASAP7_75t_R           120
+     OA21x2_ASAP7_75t_R            248
+     OA222x2_ASAP7_75t_R             8
+     OA22x2_ASAP7_75t_R             31
+     OA31x2_ASAP7_75t_R              3
+     OA33x2_ASAP7_75t_R              2
+     OAI211xp5_ASAP7_75t_R         872
+     OAI21xp33_ASAP7_75t_R        6230
+     OAI221xp5_ASAP7_75t_R          84
+     OAI222xp33_ASAP7_75t_R         22
+     OAI22xp33_ASAP7_75t_R         159
+     OAI311xp33_ASAP7_75t_R         10
+     OAI31xp33_ASAP7_75t_R          26
+     OAI321xp33_ASAP7_75t_R          4
+     OAI32xp33_ASAP7_75t_R           7
+     OR2x2_ASAP7_75t_R             132
+     OR3x1_ASAP7_75t_R              90
+     OR4x1_ASAP7_75t_R              61
+     OR5x1_ASAP7_75t_R              45
+     XNOR2xp5_ASAP7_75t_R          854
+     XOR2xp5_ASAP7_75t_R            59
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\dsfd_vm_static_cap_leaf': 4161.642300
+     of which used for sequential elements: 1662.703200 (39.95%)
+
+14. Executing JSON backend.
+
+Warnings: 9 unique messages, 18 total
+End of script. Logfile hash: d06e7a8841, CPU: user 7.61s system 0.15s, MEM: 149.01 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 78% 1x abc (25 sec), 3% 18x opt_clean (1 sec), ...
