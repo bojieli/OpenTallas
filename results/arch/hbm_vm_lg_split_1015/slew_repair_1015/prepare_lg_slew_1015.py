@@ -13,7 +13,7 @@ for profile,bit in [("su10",244),("sfu14",235)]:
    if p.is_file() and p.name.startswith(("5_","6_")):
     removed.append(str(p.relative_to(case)));p.unlink()
  hook=case/"hooks/pre_global_route_pre_grt.tcl"
- hook.write_text(f"set ::ot_lg_repair_net {{u_core.rr_d[{bit}]}}\n"+Path('/tmp/hvm_lg_slew_repair_1015.tcl').read_text()+"\n"+hook.read_text())
+ hook.write_text(f"set ::ot_lg_repair_net {{u_core.rr_d[{bit}]}}\nset ::ot_lg_repair_bit {bit}\n"+Path('/tmp/hvm_lg_slew_repair_1015.tcl').read_text()+"\n"+hook.read_text())
  (new/"prepared.json").write_text(json.dumps(dict(profile=profile,baseline=str(old),resume="unchanged actual4CTS",frozen=frozen,removed_in_successor_only=removed,repair_hook_sha256=hashlib.sha256(hook.read_bytes()).hexdigest()),indent=2)+"\n")
  script='''#!/bin/bash
 set -euo pipefail

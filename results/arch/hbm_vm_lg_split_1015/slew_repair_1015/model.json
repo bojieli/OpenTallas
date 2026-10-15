@@ -27,5 +27,36 @@
     "Re-route, extract and actual TT/FF/SS audit",
     "Final pin/PG/clock/view checks before closure"
   ],
-  "physical_qualified": false
+  "physical_qualified": false,
+  "measured_master_area_delta_um2_per_leaf": 0.02916,
+  "run_history": [
+    {
+      "units": [
+        "2260910",
+        "2260911"
+      ],
+      "verdict": "PRE_GRT hook failed before mutation: postroute net name escaped in CTS ODB"
+    },
+    {
+      "units": [
+        "2267835",
+        "2267834"
+      ],
+      "verdict": "PRE_GRT hook failed before mutation: literal capture name requires ODB backslash normalization"
+    },
+    {
+      "units": [
+        "2271614",
+        "2271615"
+      ],
+      "verdict": "PRE_GRT resolved correct driver and loads, resize_cell API unavailable; failed before mutation"
+    },
+    {
+      "units": [
+        "2277038",
+        "2277037"
+      ],
+      "verdict": "Actual dbInst.swapMaster INVx2 to INVx4,0.02916um2, routing/extraction live"
+    }
+  ]
 }
