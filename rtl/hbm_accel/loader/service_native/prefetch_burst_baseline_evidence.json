@@ -1,0 +1,57 @@
+{
+  "artifacts_sha256": {
+    "results/arch/hbm_die_v15/prefetch_burst_baseline/analytical_model.json": "68cd2268b61b9ccd87a916c1b783783103e8befe9325c13e22869e27c5f84a50",
+    "results/arch/hbm_die_v15/prefetch_burst_baseline/positive.log": "100fbd72fd41238d068053e70dbf814899f6682adc23da76df67f3632e09fcd7",
+    "results/arch/hbm_die_v15/prefetch_burst_baseline/run.log": "1f16f2d4c9cce00e6bebdf9fed2e3d310b7cc807eb99935626875b487a94530a",
+    "results/arch/hbm_die_v15/prefetch_burst_baseline/source.sha256": "a0db7da041e11e5cf7a1eec73f5662b0879bf9a03cd8a7401e8ac0ef8bfaac58"
+  },
+  "cases": [
+    {
+      "base": 4099,
+      "bursts": 161,
+      "complete_HBM_cycles": 77,
+      "elapsed_ps": 78848,
+      "first_response_HBM_cycles": 53,
+      "maximum_DUT_cycles_1_10": 84.7,
+      "total": 640
+    },
+    {
+      "base": 12295,
+      "bursts": 513,
+      "complete_HBM_cycles": 122,
+      "elapsed_ps": 124928,
+      "first_response_HBM_cycles": 53,
+      "maximum_DUT_cycles_1_10": 134.2,
+      "total": 2048
+    }
+  ],
+  "conditions": {
+    "PC_ports": 32,
+    "PHY_CLK_PS": 1024,
+    "backing_memory": "actualPHYmutable32768sectorarray",
+    "burst_size_max": 4,
+    "cases_independent_cold_reset": true,
+    "descriptor_and_CDC_overhead": "excluded_reference; DUT must price these within1.10 raw budget or report explicit failure",
+    "external_HBM_period_ps": 1024,
+    "queue_beats_per_PC": 64,
+    "reorder_window": 16,
+    "response_ready": "always1"
+  },
+  "fleet": {
+    "admission_gb": 2,
+    "exit_status": 0,
+    "host": "ot-agidock128",
+    "threads": 4,
+    "unit": "oth-ubuntu-3315234-1792048528"
+  },
+  "schema": "opentallas.immutable_actual_PHY_prefetch_baseline.v1",
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "257547b1b904af203a2b0d70e5414d8b49de7c5c941a1966325d7ed1172afd36",
+    "rtl/hbm_accel/loader/service_native/prefetch_burst_pipeline_model.py": "ab5ee9a8415c3d80bb59a26b97106d690a9efc9bfca644204ad789ce91acb150",
+    "rtl/hbm_accel/loader/service_native/run_prefetch_burst_baseline.sh": "e380b441f764bed4c4a7afe1d5070f14fa86945bbdaf223b75280e22fd6c3d05",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_prefetch_burst_baseline.sv": "d997ef658f267dc77ec10db1d074d5c5fe57568d3d6306c77521274c3c96c36f",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4"
+  },
+  "status": "measured_immutable_reference"
+}

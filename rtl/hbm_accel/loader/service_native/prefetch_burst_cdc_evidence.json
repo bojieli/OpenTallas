@@ -1,0 +1,100 @@
+{
+  "schema": "opentallas.hbm-prefetch-factored-source.v1",
+  "status": "SOURCE_EXACTNESS_AND_RAW_LATENCY_PASS_PHYSICAL_UNQUALIFIED",
+  "fleet": "ot-agidock128 factored run unit3695378 terminal run_factored.log Exit status0; no current process",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": "e83b7120ff9c6b00eb1a7892bdfd0d4a8e9717fdf055f975f96fa879bb6c91b8",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv": "d2f90481dbc9953481195d63630a25a19ff3e64b16dcec87382ad9e33e713b77",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv": "8e52a6d1897b678d1af735915ccc01b8d9f100922448627dadc2a9b64d71b66e",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_cdc.sv": "0d7c1a839621c7c0be2122a9a39900a1d48779e1062c71f798efdffd1168d773",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_burst_cdc.sv": "31e5d21cf6f099246bb7ff8ab8f8964af68fc24dc885c4958778025b044a5e39",
+    "rtl/hbm_accel/loader/service_native/run_prefetch_burst_cdc_bench.sh": "c497fa98326d14b9d226965d06111d0997a7be52d16d694768a5d04e1d1196bb",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_async_fifo.sv": "b825c32be6222aa1de6b1e2c3d2109c13e95b09899e39c43c01e102cdacb37d1",
+    "rtl/hbm_accel/loader/service_native/run_svc_async_fifo_bench.sh": "595135478f5bfdd26265f5a137c157ebadb32a96825e81d2c67b61b14657e840",
+    "rtl/hbm_accel/loader/service_native/prefetch_burst_pipeline_model.py": "ee598e29f0a7ddc557b811cc55ad8aea5093ce43bc7ffd87c59c450c12e9114c",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "257547b1b904af203a2b0d70e5414d8b49de7c5c941a1966325d7ed1172afd36",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "logs_sha256": {
+    "results/arch/hbm_die_v15/prefetch_burst_factored/owner_structure.log": "d919614ebe822e0c1631633d35c1e5537beb64a2e63278f2ed2959e7189ebbef",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/fifo_d4_1.log": "2c6386ac89895955d630b40be74856c1d1cb3704cff96b96fd03c0a1fbd39983",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/fifo_d8_0.log": "63ac528f5cb86d565c3f2bfcc1923880b205fd2057252d23e3de6be2f9069890",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/build.log": "fa14701b61ba115d947b9f89773940ebced3fafbbfd55aefad8bb0ba73a6e011",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/mutant_build.log": "ca379d13454453ddceaf39f6cf3a82f8a6c26be487458e832c0b401baf4c24b7",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/mutant.log": "a7054364ebcfd02f0a9a3f20fdfdfd2798a8aac44d4e47387b11cd93b9306e05",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/run_factored.log": "538349d88a7c8b955c52dcdfe1830ee87a207d9a99dc11fb6ced5b4d1e60a072",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/phase_137.log": "a6914e051a8ac41bb62ab0fdab33ff6baa96fabd7aefdadfacf01c1222b48704",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/fifo_d4_0.log": "f548669c6f025c1b3ee14af0d2733271102e9b99712fe98d1f8c4436c4656179",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/phase_773.log": "ad33a0a56e73be70937b8f3463f7907a39eec3755c0d5c2caa00f930a2739d8b",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/fifo_d8_1.log": "eac40d9f202f5fbd2d3c6d699ae867c810981518f6a100e3c0d823c226c2d0d2",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/fifo_mutant.log": "53d41d2ce58381483b154bcc47b9669b6e1f2eaec8f255264739492880caeb9c",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/duplicate_beat.log": "02256500fab3263e77218c27bf980b93cebbd27bffe415e2c645ccdaa0aa22c7",
+    "results/arch/hbm_die_v15/prefetch_burst_factored/bank_structure.log": "79ab4bf82449324eb0bcda8573d9180213e41207ef6eb8a7354f9397063ffcd3"
+  },
+  "cases": [
+    {
+      "phase_ps": 137,
+      "epoch": 1,
+      "baseline_HBM_cycles": 77.0,
+      "limit_HBM_cycles": 84.7,
+      "measured_HBM_cycles": 83.821682
+    },
+    {
+      "phase_ps": 137,
+      "epoch": 2,
+      "baseline_HBM_cycles": 122.0,
+      "limit_HBM_cycles": 134.2,
+      "measured_HBM_cycles": 132.649846
+    },
+    {
+      "phase_ps": 773,
+      "epoch": 1,
+      "baseline_HBM_cycles": 77.0,
+      "limit_HBM_cycles": 84.7,
+      "measured_HBM_cycles": 84.635484
+    },
+    {
+      "phase_ps": 773,
+      "epoch": 2,
+      "baseline_HBM_cycles": 122.0,
+      "limit_HBM_cycles": 134.2,
+      "measured_HBM_cycles": 131.836043
+    }
+  ],
+  "shape": {
+    "PCs": 32,
+    "owner_entries_per_pc": 32,
+    "real_SRAM_macros": 32,
+    "logical_SRAM_bank": "ordinal%32; independent of DRAM PC XOR hash",
+    "payload_FIFO_count": 32,
+    "payload_FIFO_width": 284,
+    "payload_FIFO_depth": 8
+  },
+  "actual_roots": {
+    "stream_control": 1,
+    "hbm_control": 1,
+    "stream_bank_inputs": 4,
+    "hbm_FIFO_inputs": 8,
+    "hbm_PC_inputs": 32
+  },
+  "clocked_state_proof": {
+    "owner_FF_per_PC": 1577,
+    "bank_hbm_FF": 2294,
+    "bank_stream_FF": 213,
+    "hbm_FIFO_root_FF_including_fairness": 9196,
+    "stream_bank_root_FF": 1704,
+    "stream_bank_root_SRAM_clock_pins": 8,
+    "latches": 0
+  },
+  "fifo_gate": "four actual clock ratio/depth runs >6500 each; either-reset flush and address mutant rejected",
+  "remaining": [
+    "Native physical34band wrappers and registered interband paths not implemented",
+    "Raw640phase773 slack66ps; any physical added stages require remeasurement vs unchanged price",
+    "No ATT544B/native83SM/loader full production joins",
+    "Native physical clock CTS/timing/reset CDC constraints unqualified",
+    "Cold raw block baseline is not full throughput or full token qualification"
+  ]
+}
