@@ -39,6 +39,7 @@ module ot_qkd_static_kv_timing #(
   input wire reserved_rd,
   input wire [9:0] desc_first,
   output wire schedule_fault,
+  output wire phase_idle,
   output wire        busy, output wire ref_fault,
   // WR_EN: write queue (push wr_v && wr_r) and the WR flag of the column command
   input  wire        wr_v, input wire [4:0] wr_bank, input wire [4:0] wr_col,
@@ -53,7 +54,7 @@ module ot_qkd_static_kv_timing #(
   generate if (!ENABLE) begin : off
     assign desc_r=0; assign row_v=0; assign row_prio=0; assign row_op=0; assign row_bank=0;
     assign row_row=0; assign col_v=0; assign col_bank=0; assign col_col=0; assign busy=0;
-    assign ref_fault=0; assign schedule_fault=0; assign wr_r=0; assign col_we=0; assign col_aq=0;
+    assign ref_fault=0; assign schedule_fault=0; assign phase_idle=1; assign wr_r=0; assign col_we=0; assign col_aq=0;
     assign s_r=0; assign col_sr=0; assign s_pop=0;
   end else begin : on
     localparam W = (WR_EN != 0);
@@ -421,6 +422,7 @@ module ot_qkd_static_kv_timing #(
     assign s_r = S && sq_n != (SQW+1)'(SQD); assign s_pop = s_go;
     assign wr_r = W && wq_n != (WQW+1)'(WQ);
     assign desc_r = !streaming && !fault_r && !wq_ne;
+    assign phase_idle = !streaming && !wq_ne && !sq_ne;
     assign busy = streaming; assign ref_fault = fault_r;
     always @(posedge clk or negedge rst_n) begin
       if (!rst_n) begin
