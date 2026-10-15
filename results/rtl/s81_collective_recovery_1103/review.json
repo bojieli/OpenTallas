@@ -1,0 +1,9 @@
+{
+  "source_recovered_from": "5def3d4801ec0349fa00d7ea3cf9ccc56e3118b4",
+  "component_tests": "7 tests PASS; actual 3 ROM468controls/60edges and6 stoppedclock mutants; 2400edgepage and lookahead mutant",
+  "calendar": "565 capture FF; registered address with compiler nextfinal lookahead; normal calendar unchanged; extra1init ROM edge; exceptional slow compare failstop+1edge; startrow permits read only",
+  "vm_boundary": "PINCAP1 writeinputs+1edge; gathered VM visibility2, HC19; resetrelease+3init; t_crq row plainFF unchanged normal read edge",
+  "historical_slab": "498actualSRAM readbacks20HCrows component on prior frozenVM; NOT current VM join",
+  "qualification": false,
+  "next": "source-bound current VM join; finalprofileCTS after sharedhook publication; diepin/grant; route TTsetupFFholdDRC0 nativeaudit"
+}
