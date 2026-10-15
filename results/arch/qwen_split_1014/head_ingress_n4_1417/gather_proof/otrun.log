@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     admits    77 GB (avail 304, growth 108, headroom 64, waiters 0/0 GB) load 60/128 running 15 disk 390 GB 
+ot-run: ot-epyc4       admits    85 GB (avail 312, growth 231, headroom 48, waiters 1/168 GB) load 143/128 running 38 disk 461 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    26 GB (avail 68, growth 48, headroom 24, waiters 0/0 GB) load 22/64 running 10 disk 29 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1709352-1792101062 after 0 s
+GATHER_PASS bits=1575 latency=1 checks=1798 mutant=0
+rtl/test/qwen_split/tb_qkh_head_gather.sv:29: $finish called at 1800100 (1ps)
+GATHER_THREE_DUT_MUTANTS_REJECTED
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1709352-1792101062): exit 0

@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.qwen-gather-component.v1",
+  "source_commit": "291d96144",
+  "qualified": false,
+  "native_complete": false,
+  "scope": "Actual1575-bit one-edge leaf transport at declared input boundary, common functional clock; not N4 placement, native phase/full8192 or die qualification",
+  "source_sha256": {
+    "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv": "ac82a332b6d239f6b2029d86cddfc08919eb78c7a905c43b443ebb24d74b33b7",
+    "rtl/qwen_sys/split_20261014/qkh_head_stages.sv": "fc99193d8427b0e5abf4c4af7fa89b4851474bb24957f24a03d5f235f551143b",
+    "rtl/test/qwen_split/tb_qkh_head_gather.sv": "2117f5b461d7b91e2d0b5854e005f05415753c5231ef184409d5bc953bb87fd1",
+    "rtl/test/qwen_split/run_qkh_head_gather.sh": "bc2d58929b3f5c63b644028c70d25735b9197876526f3a83f0bb99fcd674a950",
+    "results/arch/qwen_split_1014/head_ingress_n4_1417/gather_pins.tcl": "dafa5af64b6ca3f42f46d7f39c9b961d3fd73e18910cc5ac35d9acf42495096c"
+  },
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1709352-1792101062",
+  "positive": {
+    "bits": 1575,
+    "checks": 1798,
+    "latency_edges": 1
+  },
+  "mutants": {
+    "41": "lt bypass",
+    "42": "epoch bypass",
+    "43": "whole gather bypass"
+  },
+  "observed_mutants_failed": true,
+  "first_harness_attempts": [
+    "stdin bash body not delivered; no DUT ran; unit1708604 exit0 is not evidence",
+    "tb syntax #.5 unsupported by Icarus; fixed #0.5 in291d96144; unit1709189 exit4"
+  ]
+}
