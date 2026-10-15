@@ -28,10 +28,20 @@
       "k": [
         0,
         31
-      ]
+      ],
+      "reference": "original benchmark go assertion at preceding negedge; not sampled go edge"
     },
     "receiver_capture_edge_offset": 1,
-    "ready_or_credit": false
+    "ready_or_credit": false,
+    "pin_launch_from_sampled_go_R": {
+      "A0_A1_A2": "471 + 256*k",
+      "A3": "473 + 256*k"
+    },
+    "consumer_capture_from_sampled_go_R": {
+      "A0_A1_A2": "472 + 256*k",
+      "A3": "474 + 256*k"
+    },
+    "phase_clarification": "head owner confirmed 2026-10-15; direct fullbundle RTL gate is authoritative"
   },
   "row": {
     "request": "compiler request captured with actual head_valid/logit/row/token/identity; availability checks fault only",
