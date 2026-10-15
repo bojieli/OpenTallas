@@ -58,13 +58,23 @@ module tb_hgi_coll_b2_vmport;
     endtask
     integer sent[0:3], ks=0, cycles=0, phase=0, ri=0, copies=0, checking=0, read_sid=0, checked=0, returned=0;
     reg [255:0] expected; reg [15:0] rtag=0;
-    initial begin for(integer l=0;l<4;l=l+1)sent[l]=0;for(integer s=0;s<4;s=s+1)readq[s]=0;
-        repeat(8)@(negedge clk);rst_n=1;phase=1;end
+    integer seed_i=0,seed_pending[0:3],seed_done=0;
+    initial begin for(integer l=0;l<4;l=l+1)sent[l]=0;for(integer s=0;s<4;s=s+1)begin readq[s]=0;seed_pending[s]=0;end
+        // Seed every touched sector with nonzero data so TOPK masks must preserve real prior words.
+        for(integer l=0;l<5;l=l+1)for(integer i=0;i<(l==4?KLINES:N);i=i+1)begin
+            integer key;key=int'(addr(l,i)>>3);
+            for(integer h=0;h<2;h=h+1)if(!golden.exists(key+h))begin golden[key+h]=dataword(31,key+h,0);keys.push_back(key+h);end
+        end
+        repeat(8)@(negedge clk);rst_n=1;phase=0;end
     always @(posedge clk)if(rst_n)begin
         cycles<=cycles+1; if(xf||kfault||ff)$fatal(1,"adapter protocol fault");
         for(integer s=0;s<4;s=s+1)begin
             if(hs[s]!=0)$fatal(1,"native hub fault %0d %0h",s,hs[s]);
             for(integer b=0;b<8;b=b+1)if(bs[s][b*18+17]||bs[s][b*18+16])$fatal(1,"native bank fault slice%0d bank%0d",s,b);
+        end
+        if(phase==0)for(integer a=0;a<4;a=a+1)if(readr[a][273])begin
+            if(!readr[a][256]||seed_pending[a]==0)$fatal(1,"bad seed response");
+            seed_pending[a]=seed_pending[a]-1;seed_done=seed_done+1;
         end
         if(phase==1)begin
             for(integer l=0;l<4;l=l+1)if(iv[l]&&ir[l])begin record_write(ia[l*40+:40],id[l*512+:512],16'hffff);sent[l]=sent[l]+1;end
@@ -79,12 +89,22 @@ module tb_hgi_coll_b2_vmport;
     end
     always @(negedge clk)if(rst_n)begin
         iv=0;kv=0;for(integer s=0;s<4;s=s+1)readq[s]=0;
-        if(phase==1)begin
+        if(phase==0)begin
+            if(seed_i<keys.size())begin
+                integer dest,key;key=keys[seed_i];dest=key>=32768?0:(key>>13);
+                if(seed_pending[dest]<4)begin
+                    readq[dest]={1'b1,1'b1,11'd0,16'(key),5'd0,golden[key],32'hffffffff,16'(seed_i)};
+                    seed_pending[dest]=seed_pending[dest]+1;seed_i=seed_i+1;
+                end
+            end
+            if(seed_done==keys.size())phase=1;
+        end else if(phase==1)begin
             for(integer l=0;l<4;l=l+1)if(sent[l]<N)begin iv[l]=1;ia[l*40+:40]=addr(l,sent[l]);id[l*512+:512]={dataword(l,sent[l],1),dataword(l,sent[l],0)};end
             if(ks<KLINES)begin kv=1;kd={addr(4,ks),16'(ks%3==0?16'h5555:16'hffff),dataword(4,ks,1),dataword(4,ks,0)};end
             if(sent[0]==N&&sent[1]==N&&sent[2]==N&&sent[3]==N&&ks==KLINES&&ridle&&kidle)begin
                 // End-to-end drained means no packet write remains outstanding at the receiver.
                 for(integer l=0;l<5;l=l+1)if(g_slice[0].g_sw.u.u_coll.pc[l]!=4)$fatal(1,"premature credit drain lane%0d",l);
+                for(integer b=0;b<8;b=b+1)if(g_slice[0].g_sw.u.u_coll.on[b]!=0)$fatal(1,"premature wide write drain bank%0d",b);
                 $display("B2_WRITE cycles=%0d rgx=%0d topk=%0d",cycles,4*N,KLINES);phase=2;
             end
         end else if(phase==2&&!checking)begin
