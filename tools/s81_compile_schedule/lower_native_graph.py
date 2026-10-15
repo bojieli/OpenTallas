@@ -130,6 +130,8 @@ def lower(programs, root=ROOT):
         layer,tail=layer_tail(rep)
         if layer and tail=='attn.a_allgather':
             job['required_transport']=dict(mode=1,records_per_rank=28,total_output_rows=112,
+                                           scope='WQ_A plus WKV subtransport only',
+                                           additional_compressor_transport_unresolved=f'{layer}.attn.cmp.row_qdq' in raw,
                                            arg24=(1<<16)|28,
                                            payload='320 WQ_A FP32 and128 WKV FP32 words perrank',
                                            required_owner='S81 native collective integration',

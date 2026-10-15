@@ -90,6 +90,7 @@ def a_projection_gather_landing():
             rows.append(dict(source_rank=rank,source_record=record,destination_tensor=tensor,
                              destination_vm_row=row,word_mask=65535))
     return dict(mode=1,records_per_rank=28,total_output_rows=112,
+                scope='WQ_A plus WKV only; compressor branch transport requires separate native binding',
                 arg24=(1<<16)|28,records=rows,fixed_transport_cycles=None,
                 historical_fixture_records_per_rank=12,historical_fixture_timing_usable=False,
                 native_endpoint_bound=False)
