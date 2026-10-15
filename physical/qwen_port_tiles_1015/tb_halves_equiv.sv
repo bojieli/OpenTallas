@@ -45,7 +45,7 @@ module tb_halves_equiv;
             if (am_o[51]) rfl=rfl+1;
         end
         if (cyc==CYC) begin
-            $display("EQUIV BAND=%0d HALF=%0d MUT=%0d cycles=%0d word_active=%0d result_active=%0d result_fault=%0d mismatches=%0d %s",BANDP,HALFP,MUT,cyc,act,ract,rfl,err,(err==0)?"PASS":"FAIL");
+            $display("EQUIV MUT=%0d BAND=%0d HALF=%0d cycles=%0d word_active=%0d result_active=%0d result_fault=%0d mismatches=%0d %s",MUT,BANDP,HALFP,cyc,act,ract,rfl,err,(err==0)?"PASS":"FAIL");
             $finish;
         end
     end
