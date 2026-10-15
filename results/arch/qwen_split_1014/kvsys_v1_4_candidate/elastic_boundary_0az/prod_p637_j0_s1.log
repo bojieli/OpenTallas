@@ -1,0 +1,8 @@
+MEASURE jit0 godly1 blk8 nblk4 maxocc9 stall0 go64 freed64 put512 first_go342 ctrlfault0 corefault0 errors0
+FRONT ordinal512 bad0
+PASS 0az elastic KV-HBM boundary: actual controller ELASTIC + block front 4x8 + fixed return ring; PHY RL23+[0,0] in-order, 512 sectors exact, zero stalls, release compile-time determined, maxocc9
+JIT_HIST extra0 n513
+- /srv/opentallas-scratch/claude/qwen-kvsys/kvel-fc673d277/source/rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv:270: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 5us; walltime 0.110 s; speed 49.442 us/s
+- Verilator: cpu 0.108 s on 1 threads; alloced 1018 MB

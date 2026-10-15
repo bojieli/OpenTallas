@@ -105,3 +105,33 @@ def test_engram_bus_widths_match_rtl():
     assert F.HBM_RQ_BITS == ct['rq'] and ct['rk'] == ct['wd'] == 32
     assert 35 == lk['hq_v'] + lk['hq_atom'] + lk['hq_tag']                              # eng_sw_q
     assert 265 == lk['hq_cred'] + lk['hr_v'] + lk['hr_tag'] + lk['hr_idx'] + lk['hr_d']  # eng_sw_r
+
+
+def test_stn70_split_remaps_lanes():
+    it = F.Inst('g_cr_0', 'dsfd_stnh_70x3', 1000.08, 2000.16, 30.0, 30.0, kind='stn', region='link', domain='fwd')
+    drv = F.Inst('drv', 'dsfd_stnh_70x1', 900.0, 2000.16, 17.256, 17.256, kind='stn')
+    m = {'insts': [drv, it], 'buses': [('b0', 'lane', 70, [('drv', 'do0'), ('g_cr_0', 'di2')]),
+                                        ('b1', 'fclk', 1, [('g_cr_0', 'fo1'), ('drv', 'fi0')])],
+         'chain_tail': {'c': ('g_cr_0', 'fo2', 'do2')}}
+    F._split_multi_lane_stations(m)
+    names = {i.name: i for i in m['insts']}
+    assert 'g_cr_0' not in names and {'g_cr_0_k0', 'g_cr_0_k1', 'g_cr_0_k2'} <= set(names)
+    assert all(names[f'g_cr_0_k{k}'].master == 'dsfd_stnh_70x1' for k in range(3))
+    assert m['buses'][0][3][1] == ('g_cr_0_k2', 'di0') and m['buses'][1][3][0] == ('g_cr_0_k1', 'fo0')
+    assert m['chain_tail']['c'] == ('g_cr_0_k2', 'fo0', 'do0')
+    boxes = [names[f'g_cr_0_k{k}'].box() for k in range(3)]
+    assert all(a[3] <= b[1] or b[3] <= a[1] or a[2] <= b[0] or b[2] <= a[0] for i, a in enumerate(boxes) for b in boxes[i + 1:])
+
+
+def test_station_pin_alternation_halves_density():
+    Mx = F.Q.Master('dsfd_hstnh_1024', 36.288, 53.976, 3, 't')
+    F._lay(Mx, 'W', [('di', 1024)], 'M4', gap=0.0)
+    F._lay(Mx, 'E', [('dq', 1024)], 'M4', gap=0.0)
+    before = {r[0]: r for r in F.pin_rects(Mx, 1, {})}
+    out = F._station_pin_layers({'dsfd_hstnh_1024': Mx})
+    assert out['dsfd_hstnh_1024'] > 12.0
+    after = F.pin_rects(Mx, 1, {})
+    assert {r[0] for r in after} == set(before) and all(r[2] == before[r[0]][2] for r in after)   # same coordinates
+    for face_x in (0.0,):
+        lys = [r[1] for r in after if r[2][0] <= 1e-6]
+        assert lys.count('M4') == lys.count('M6') == 512

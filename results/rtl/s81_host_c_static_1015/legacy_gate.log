@@ -1,0 +1,4 @@
+TB_DSFD_HOST_C MUT=0 sent=53 (program 40, ingest 12) credits_back=53 program_words=40 bad=0 plen=40 ingest_words=12 st=10010100000 PASS
+TB_DSFD_HOST_C MUT=1 sent=23 (program 16, ingest 6) credits_back=7 program_words=0 bad=0 plen=40 ingest_words=6 st=10010100000 FAIL
+TB_DSFD_HOST_C MUT=2 sent=20 (program 15, ingest 4) credits_back=4 program_words=15 bad=0 plen=40 ingest_words=4 st=10010100000 FAIL
+HOST_C_GATE PASS

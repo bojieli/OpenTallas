@@ -1,0 +1,6 @@
+MEASURE jit16 godly17 blk8 nblk4 maxocc11 stall0 go64 freed64 put512 first_go358 ctrlfault0 corefault1 errors0
+FRONT ordinal512 bad0
+OBSERVED_FAIL historical fixed-calendar ring faults under variable PHY latency
+[5358000000] %Fatal: tb_kv_hbm_elastic_boundary.sv:256: Assertion failed in tb_kv_hbm_elastic_boundary
+%Error: /srv/opentallas-scratch/claude/qwen-kvsys/kvel-fc673d277/source/rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv:256: Verilog $stop
+Aborting...
