@@ -9,15 +9,15 @@ m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 class FixedScheduleTests(unittest.TestCase):
     def setUp(self):
         self.contract = dict(stream_period_ps=3, vm_period_ps=4, stream_phase_ps=0, vm_phase_ps=0,
-            banks=32, bank_ops_per_cycle=1, read_ingress_per_cycle=1, write_ingress_per_cycle=1,
+            banks=32, bank_queue_capacity=4, bank_ops_per_cycle=1, read_ingress_per_cycle=1, write_ingress_per_cycle=1,
             request_min_ps=1, read_min_ps=5, commit_min_ps=2,
             slot_capacity={'su/write/0':1, 'su/read/0':1, 'su/read/1':1},
             client_capacity={'su':3}, measured_native_bounds=True)
         self.schedule = dict(trace_complete=True, events=[
             dict(id='w',kind='write',client='su',slot=0,row=64,tag=0,issue_cycle=0,
-                 ingress_cycle=1,service_cycle=2,commit_cycle=4,deadline_cycle=4),
+                 ingress_cycle=1,bank_enqueue_cycle=1,service_cycle=2,commit_cycle=4,deadline_cycle=4),
             dict(id='r',kind='read',client='su',slot=0,row=64,tag=1,issue_cycle=4,
-                 ingress_cycle=4,service_cycle=5,response_cycle=9,deadline_cycle=9)],
+                 ingress_cycle=4,bank_enqueue_cycle=4,service_cycle=5,response_cycle=9,deadline_cycle=9)],
             jobs=[dict(client='su',tag=0,done_cycle=4),dict(client='su',tag=1,done_cycle=9)],
             dependencies=[dict(producer='w',consumer='r')])
     def kinds(self):
@@ -39,12 +39,12 @@ class FixedScheduleTests(unittest.TestCase):
         self.assertIn('missed_fixed_deadline',self.kinds())
     def test_finite_slot_overflow(self):
         other=copy.deepcopy(self.schedule['events'][1]); other.update(id='r2',issue_cycle=5,
-            ingress_cycle=5,service_cycle=6,response_cycle=10,deadline_cycle=10)
+            ingress_cycle=5,bank_enqueue_cycle=5,service_cycle=6,response_cycle=10,deadline_cycle=10)
         self.schedule['events'].append(other)
         self.assertIn('slot_overflow',self.kinds())
     def test_native_group_split(self):
         other=copy.deepcopy(self.schedule['events'][1]); other.update(id='r2',slot=1,row=65,
-            issue_cycle=5,ingress_cycle=5,service_cycle=6,response_cycle=10,deadline_cycle=10)
+            issue_cycle=5,ingress_cycle=5,bank_enqueue_cycle=5,service_cycle=6,response_cycle=10,deadline_cycle=10)
         self.schedule['events'].append(other);self.schedule['groups']=[dict(events=['r','r2'])]
         self.assertIn('response_group_split',self.kinds())
     def test_done_before_real_commit(self):
@@ -65,6 +65,29 @@ class FixedScheduleTests(unittest.TestCase):
         self.assertEqual(len({m.bank_of(row,contract) for row in qr}),16)
         for base in range(0,16384,16):
             self.assertEqual(len({m.bank_of(base+i,contract) for i in range(16)}),16)
+    def test_bank_queue_bound_is_not_endpoint_bound(self):
+        self.contract['bank_queue_capacity']=1
+        first=self.schedule['events'][1]
+        first.update(ingress_cycle=4,bank_enqueue_cycle=4,service_cycle=8,response_cycle=13,deadline_cycle=13)
+        second=copy.deepcopy(first)
+        second.update(id='r2',slot=1,issue_cycle=5,ingress_cycle=5,bank_enqueue_cycle=5,
+                      service_cycle=9,response_cycle=14,deadline_cycle=14)
+        self.schedule['events'].append(second)
+        self.assertIn('bank_queue_overflow',self.kinds())
+    def test_missing_bank_enqueue_remains_incomplete(self):
+        del self.schedule['events'][0]['bank_enqueue_cycle']
+        self.assertEqual(m.check(self.schedule,self.contract)['status'],'incomplete')
+    def test_trace_start_and_done_rows_join_by_job(self):
+        self.schedule['jobs'].insert(0,dict(client='su',tag=0,start_cycle=0))
+        self.assertEqual(m.check(self.schedule,self.contract)['status'],'pass')
+        self.schedule['events'][0]['job']=1
+        self.schedule['jobs'][1].update(job=2)
+        self.assertIn('missing_producer_done',self.kinds())
+    def test_model_trace_without_native_edges_is_incomplete(self):
+        for event in self.schedule['events']:
+            del event['service_cycle']
+            del event['ingress_cycle']
+        self.assertEqual(m.check(self.schedule,self.contract)['status'],'incomplete')
     def test_unknown_bank_hash_rejected(self):
         self.contract['bank_mapping']='unimplemented'
         self.assertIn('invalid_contract',self.kinds())
