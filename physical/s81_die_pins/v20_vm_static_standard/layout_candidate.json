@@ -1,0 +1,2539 @@
+{
+ "schema": "opentallas.s81.native_vm_standard_candidate.v1",
+ "status": "STANDARD_BANK_ASSIGNED_PARENT_CANDIDATE",
+ "parent_outline_um": [
+  1541.784,
+  3952.776
+ ],
+ "bank_count": 128,
+ "macro_count": 128,
+ "bank_macro": "ot_sram_1r1w_512x128_m4_r2c2",
+ "macro_xy_local_um": [
+  23.099999999999994,
+  22.931999999999995
+ ],
+ "macro_core_edge_clearance_um": [
+  20.939999999999994,
+  20.771999999999995
+ ],
+ "nodes": [
+  {
+   "name": "vm_s0_bank0",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    108.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 0,
+   "clock_entry": "ck_bank[0]"
+  },
+  {
+   "name": "vm_s0_bank1",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    185.76
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 1,
+   "clock_entry": "ck_bank[1]"
+  },
+  {
+   "name": "vm_s0_bank2",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    263.52
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 2,
+   "clock_entry": "ck_bank[2]"
+  },
+  {
+   "name": "vm_s0_bank3",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    341.28
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 3,
+   "clock_entry": "ck_bank[3]"
+  },
+  {
+   "name": "vm_s0_bank4",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    419.04
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 4,
+   "clock_entry": "ck_bank[4]"
+  },
+  {
+   "name": "vm_s0_bank5",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    496.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 5,
+   "clock_entry": "ck_bank[5]"
+  },
+  {
+   "name": "vm_s0_bank6",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    574.56
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 6,
+   "clock_entry": "ck_bank[6]"
+  },
+  {
+   "name": "vm_s0_bank7",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    652.32
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 7,
+   "clock_entry": "ck_bank[7]"
+  },
+  {
+   "name": "vm_s0_bank8",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    108.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 8,
+   "clock_entry": "ck_bank[8]"
+  },
+  {
+   "name": "vm_s0_bank9",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    185.76
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 9,
+   "clock_entry": "ck_bank[9]"
+  },
+  {
+   "name": "vm_s0_bank10",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    263.52
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 10,
+   "clock_entry": "ck_bank[10]"
+  },
+  {
+   "name": "vm_s0_bank11",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    341.28
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 11,
+   "clock_entry": "ck_bank[11]"
+  },
+  {
+   "name": "vm_s0_bank12",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    419.04
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 12,
+   "clock_entry": "ck_bank[12]"
+  },
+  {
+   "name": "vm_s0_bank13",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    496.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 13,
+   "clock_entry": "ck_bank[13]"
+  },
+  {
+   "name": "vm_s0_bank14",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    574.56
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 14,
+   "clock_entry": "ck_bank[14]"
+  },
+  {
+   "name": "vm_s0_bank15",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    652.32
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 15,
+   "clock_entry": "ck_bank[15]"
+  },
+  {
+   "name": "vm_s0_bank16",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    1099.44
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 16,
+   "clock_entry": "ck_bank[16]"
+  },
+  {
+   "name": "vm_s0_bank17",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    1177.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 17,
+   "clock_entry": "ck_bank[17]"
+  },
+  {
+   "name": "vm_s0_bank18",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    1254.96
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 18,
+   "clock_entry": "ck_bank[18]"
+  },
+  {
+   "name": "vm_s0_bank19",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    1332.72
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 19,
+   "clock_entry": "ck_bank[19]"
+  },
+  {
+   "name": "vm_s0_bank20",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    1410.48
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 20,
+   "clock_entry": "ck_bank[20]"
+  },
+  {
+   "name": "vm_s0_bank21",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    1488.24
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 21,
+   "clock_entry": "ck_bank[21]"
+  },
+  {
+   "name": "vm_s0_bank22",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    1566.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 22,
+   "clock_entry": "ck_bank[22]"
+  },
+  {
+   "name": "vm_s0_bank23",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    1643.76
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 23,
+   "clock_entry": "ck_bank[23]"
+  },
+  {
+   "name": "vm_s0_bank24",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    1099.44
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 24,
+   "clock_entry": "ck_bank[24]"
+  },
+  {
+   "name": "vm_s0_bank25",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    1177.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 25,
+   "clock_entry": "ck_bank[25]"
+  },
+  {
+   "name": "vm_s0_bank26",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    1254.96
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 26,
+   "clock_entry": "ck_bank[26]"
+  },
+  {
+   "name": "vm_s0_bank27",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    1332.72
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 27,
+   "clock_entry": "ck_bank[27]"
+  },
+  {
+   "name": "vm_s0_bank28",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    1410.48
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 28,
+   "clock_entry": "ck_bank[28]"
+  },
+  {
+   "name": "vm_s0_bank29",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    1488.24
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 29,
+   "clock_entry": "ck_bank[29]"
+  },
+  {
+   "name": "vm_s0_bank30",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    1566.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 30,
+   "clock_entry": "ck_bank[30]"
+  },
+  {
+   "name": "vm_s0_bank31",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    1643.76
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 31,
+   "clock_entry": "ck_bank[31]"
+  },
+  {
+   "name": "vm_s0_wscatter",
+   "slice": 0,
+   "master": "dsfd_vm_static_scatter",
+   "xy_um": [
+    144.72,
+    730.08
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ]
+  },
+  {
+   "name": "vm_s0_read_frontend",
+   "slice": 0,
+   "master": "dsfd_vm_static_suhc_fsr",
+   "xy_um": [
+    144.72,
+    835.92
+   ],
+   "outline_um": [
+    345.6,
+    51.84
+   ],
+   "qualification": "outline provisional until final source area/cuts"
+  },
+  {
+   "name": "vm_s0_return32",
+   "slice": 0,
+   "master": "dsfd_vm_static_return",
+   "xy_um": [
+    144.72,
+    889.92
+   ],
+   "outline_um": [
+    345.6,
+    207.36
+   ],
+   "NROW": 32
+  },
+  {
+   "name": "vm_s0_bridge0",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    285.12,
+    500.04
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    0,
+    15
+   ]
+  },
+  {
+   "name": "vm_s0_bridge1",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    285.12,
+    1150.2
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    16,
+    31
+   ]
+  },
+  {
+   "name": "vm_s0_quarter0",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    0.0,
+    365.04
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    0,
+    7
+   ]
+  },
+  {
+   "name": "vm_s0_quarter1",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    570.24,
+    365.04
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    8,
+    15
+   ]
+  },
+  {
+   "name": "vm_s0_quarter2",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    0.0,
+    1352.16
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    16,
+    23
+   ]
+  },
+  {
+   "name": "vm_s0_quarter3",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    570.24,
+    1352.16
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    24,
+    31
+   ]
+  },
+  {
+   "name": "vm_s1_bank0",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    108.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 0,
+   "clock_entry": "ck_bank[32]"
+  },
+  {
+   "name": "vm_s1_bank1",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    185.76
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 1,
+   "clock_entry": "ck_bank[33]"
+  },
+  {
+   "name": "vm_s1_bank2",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    263.52
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 2,
+   "clock_entry": "ck_bank[34]"
+  },
+  {
+   "name": "vm_s1_bank3",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    341.28
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 3,
+   "clock_entry": "ck_bank[35]"
+  },
+  {
+   "name": "vm_s1_bank4",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    419.04
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 4,
+   "clock_entry": "ck_bank[36]"
+  },
+  {
+   "name": "vm_s1_bank5",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    496.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 5,
+   "clock_entry": "ck_bank[37]"
+  },
+  {
+   "name": "vm_s1_bank6",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    574.56
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 6,
+   "clock_entry": "ck_bank[38]"
+  },
+  {
+   "name": "vm_s1_bank7",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    652.32
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 7,
+   "clock_entry": "ck_bank[39]"
+  },
+  {
+   "name": "vm_s1_bank8",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    108.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 8,
+   "clock_entry": "ck_bank[40]"
+  },
+  {
+   "name": "vm_s1_bank9",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    185.76
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 9,
+   "clock_entry": "ck_bank[41]"
+  },
+  {
+   "name": "vm_s1_bank10",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    263.52
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 10,
+   "clock_entry": "ck_bank[42]"
+  },
+  {
+   "name": "vm_s1_bank11",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    341.28
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 11,
+   "clock_entry": "ck_bank[43]"
+  },
+  {
+   "name": "vm_s1_bank12",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    419.04
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 12,
+   "clock_entry": "ck_bank[44]"
+  },
+  {
+   "name": "vm_s1_bank13",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    496.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 13,
+   "clock_entry": "ck_bank[45]"
+  },
+  {
+   "name": "vm_s1_bank14",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    574.56
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 14,
+   "clock_entry": "ck_bank[46]"
+  },
+  {
+   "name": "vm_s1_bank15",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    652.32
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 15,
+   "clock_entry": "ck_bank[47]"
+  },
+  {
+   "name": "vm_s1_bank16",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    1099.44
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 16,
+   "clock_entry": "ck_bank[48]"
+  },
+  {
+   "name": "vm_s1_bank17",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    1177.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 17,
+   "clock_entry": "ck_bank[49]"
+  },
+  {
+   "name": "vm_s1_bank18",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    1254.96
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 18,
+   "clock_entry": "ck_bank[50]"
+  },
+  {
+   "name": "vm_s1_bank19",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    1332.72
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 19,
+   "clock_entry": "ck_bank[51]"
+  },
+  {
+   "name": "vm_s1_bank20",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    1410.48
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 20,
+   "clock_entry": "ck_bank[52]"
+  },
+  {
+   "name": "vm_s1_bank21",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    1488.24
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 21,
+   "clock_entry": "ck_bank[53]"
+  },
+  {
+   "name": "vm_s1_bank22",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    1566.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 22,
+   "clock_entry": "ck_bank[54]"
+  },
+  {
+   "name": "vm_s1_bank23",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    1643.76
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 23,
+   "clock_entry": "ck_bank[55]"
+  },
+  {
+   "name": "vm_s1_bank24",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    1099.44
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 24,
+   "clock_entry": "ck_bank[56]"
+  },
+  {
+   "name": "vm_s1_bank25",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    1177.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 25,
+   "clock_entry": "ck_bank[57]"
+  },
+  {
+   "name": "vm_s1_bank26",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    1254.96
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 26,
+   "clock_entry": "ck_bank[58]"
+  },
+  {
+   "name": "vm_s1_bank27",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    1332.72
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 27,
+   "clock_entry": "ck_bank[59]"
+  },
+  {
+   "name": "vm_s1_bank28",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    1410.48
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 28,
+   "clock_entry": "ck_bank[60]"
+  },
+  {
+   "name": "vm_s1_bank29",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    1488.24
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 29,
+   "clock_entry": "ck_bank[61]"
+  },
+  {
+   "name": "vm_s1_bank30",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    1566.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 30,
+   "clock_entry": "ck_bank[62]"
+  },
+  {
+   "name": "vm_s1_bank31",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    1643.76
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 31,
+   "clock_entry": "ck_bank[63]"
+  },
+  {
+   "name": "vm_s1_wscatter",
+   "slice": 1,
+   "master": "dsfd_vm_static_scatter",
+   "xy_um": [
+    801.36,
+    730.08
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ]
+  },
+  {
+   "name": "vm_s1_read_frontend",
+   "slice": 1,
+   "master": "dsfd_vm_static_suhc_fsr",
+   "xy_um": [
+    801.36,
+    835.92
+   ],
+   "outline_um": [
+    345.6,
+    51.84
+   ],
+   "qualification": "outline provisional until final source area/cuts"
+  },
+  {
+   "name": "vm_s1_return32",
+   "slice": 1,
+   "master": "dsfd_vm_static_return",
+   "xy_um": [
+    801.36,
+    889.92
+   ],
+   "outline_um": [
+    345.6,
+    207.36
+   ],
+   "NROW": 32
+  },
+  {
+   "name": "vm_s1_bridge0",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    941.76,
+    500.04
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    0,
+    15
+   ]
+  },
+  {
+   "name": "vm_s1_bridge1",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    941.76,
+    1150.2
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    16,
+    31
+   ]
+  },
+  {
+   "name": "vm_s1_quarter0",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    656.64,
+    365.04
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    0,
+    7
+   ]
+  },
+  {
+   "name": "vm_s1_quarter1",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1226.88,
+    365.04
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    8,
+    15
+   ]
+  },
+  {
+   "name": "vm_s1_quarter2",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    656.64,
+    1352.16
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    16,
+    23
+   ]
+  },
+  {
+   "name": "vm_s1_quarter3",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1226.88,
+    1352.16
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    24,
+    31
+   ]
+  },
+  {
+   "name": "vm_s2_bank0",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    1861.92
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 0,
+   "clock_entry": "ck_bank[64]"
+  },
+  {
+   "name": "vm_s2_bank1",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    1939.68
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 1,
+   "clock_entry": "ck_bank[65]"
+  },
+  {
+   "name": "vm_s2_bank2",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    2017.44
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 2,
+   "clock_entry": "ck_bank[66]"
+  },
+  {
+   "name": "vm_s2_bank3",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    2095.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 3,
+   "clock_entry": "ck_bank[67]"
+  },
+  {
+   "name": "vm_s2_bank4",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    2172.96
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 4,
+   "clock_entry": "ck_bank[68]"
+  },
+  {
+   "name": "vm_s2_bank5",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    2250.72
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 5,
+   "clock_entry": "ck_bank[69]"
+  },
+  {
+   "name": "vm_s2_bank6",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    2328.48
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 6,
+   "clock_entry": "ck_bank[70]"
+  },
+  {
+   "name": "vm_s2_bank7",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    2406.24
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 7,
+   "clock_entry": "ck_bank[71]"
+  },
+  {
+   "name": "vm_s2_bank8",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    1861.92
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 8,
+   "clock_entry": "ck_bank[72]"
+  },
+  {
+   "name": "vm_s2_bank9",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    1939.68
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 9,
+   "clock_entry": "ck_bank[73]"
+  },
+  {
+   "name": "vm_s2_bank10",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    2017.44
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 10,
+   "clock_entry": "ck_bank[74]"
+  },
+  {
+   "name": "vm_s2_bank11",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    2095.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 11,
+   "clock_entry": "ck_bank[75]"
+  },
+  {
+   "name": "vm_s2_bank12",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    2172.96
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 12,
+   "clock_entry": "ck_bank[76]"
+  },
+  {
+   "name": "vm_s2_bank13",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    2250.72
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 13,
+   "clock_entry": "ck_bank[77]"
+  },
+  {
+   "name": "vm_s2_bank14",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    2328.48
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 14,
+   "clock_entry": "ck_bank[78]"
+  },
+  {
+   "name": "vm_s2_bank15",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    2406.24
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 15,
+   "clock_entry": "ck_bank[79]"
+  },
+  {
+   "name": "vm_s2_bank16",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    2853.36
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 16,
+   "clock_entry": "ck_bank[80]"
+  },
+  {
+   "name": "vm_s2_bank17",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    2931.12
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 17,
+   "clock_entry": "ck_bank[81]"
+  },
+  {
+   "name": "vm_s2_bank18",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    3008.88
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 18,
+   "clock_entry": "ck_bank[82]"
+  },
+  {
+   "name": "vm_s2_bank19",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    3086.64
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 19,
+   "clock_entry": "ck_bank[83]"
+  },
+  {
+   "name": "vm_s2_bank20",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    3164.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 20,
+   "clock_entry": "ck_bank[84]"
+  },
+  {
+   "name": "vm_s2_bank21",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    3242.16
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 21,
+   "clock_entry": "ck_bank[85]"
+  },
+  {
+   "name": "vm_s2_bank22",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    3319.92
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 22,
+   "clock_entry": "ck_bank[86]"
+  },
+  {
+   "name": "vm_s2_bank23",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    64.8,
+    3397.68
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 23,
+   "clock_entry": "ck_bank[87]"
+  },
+  {
+   "name": "vm_s2_bank24",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    2853.36
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 24,
+   "clock_entry": "ck_bank[88]"
+  },
+  {
+   "name": "vm_s2_bank25",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    2931.12
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 25,
+   "clock_entry": "ck_bank[89]"
+  },
+  {
+   "name": "vm_s2_bank26",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    3008.88
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 26,
+   "clock_entry": "ck_bank[90]"
+  },
+  {
+   "name": "vm_s2_bank27",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    3086.64
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 27,
+   "clock_entry": "ck_bank[91]"
+  },
+  {
+   "name": "vm_s2_bank28",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    3164.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 28,
+   "clock_entry": "ck_bank[92]"
+  },
+  {
+   "name": "vm_s2_bank29",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    3242.16
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 29,
+   "clock_entry": "ck_bank[93]"
+  },
+  {
+   "name": "vm_s2_bank30",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    3319.92
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 30,
+   "clock_entry": "ck_bank[94]"
+  },
+  {
+   "name": "vm_s2_bank31",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    349.92,
+    3397.68
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 31,
+   "clock_entry": "ck_bank[95]"
+  },
+  {
+   "name": "vm_s2_wscatter",
+   "slice": 2,
+   "master": "dsfd_vm_static_scatter",
+   "xy_um": [
+    144.72,
+    2484.0
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ]
+  },
+  {
+   "name": "vm_s2_read_frontend",
+   "slice": 2,
+   "master": "dsfd_vm_static_suhc_fsr",
+   "xy_um": [
+    144.72,
+    2589.84
+   ],
+   "outline_um": [
+    345.6,
+    51.84
+   ],
+   "qualification": "outline provisional until final source area/cuts"
+  },
+  {
+   "name": "vm_s2_return32",
+   "slice": 2,
+   "master": "dsfd_vm_static_return",
+   "xy_um": [
+    144.72,
+    2643.84
+   ],
+   "outline_um": [
+    345.6,
+    207.36
+   ],
+   "NROW": 32
+  },
+  {
+   "name": "vm_s2_bridge0",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    285.12,
+    2253.96
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    0,
+    15
+   ]
+  },
+  {
+   "name": "vm_s2_bridge1",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    285.12,
+    2904.12
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    16,
+    31
+   ]
+  },
+  {
+   "name": "vm_s2_quarter0",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    0.0,
+    2118.96
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    0,
+    7
+   ]
+  },
+  {
+   "name": "vm_s2_quarter1",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    570.24,
+    2118.96
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    8,
+    15
+   ]
+  },
+  {
+   "name": "vm_s2_quarter2",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    0.0,
+    3106.08
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    16,
+    23
+   ]
+  },
+  {
+   "name": "vm_s2_quarter3",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    570.24,
+    3106.08
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    24,
+    31
+   ]
+  },
+  {
+   "name": "vm_s3_bank0",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    1861.92
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 0,
+   "clock_entry": "ck_bank[96]"
+  },
+  {
+   "name": "vm_s3_bank1",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    1939.68
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 1,
+   "clock_entry": "ck_bank[97]"
+  },
+  {
+   "name": "vm_s3_bank2",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    2017.44
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 2,
+   "clock_entry": "ck_bank[98]"
+  },
+  {
+   "name": "vm_s3_bank3",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    2095.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 3,
+   "clock_entry": "ck_bank[99]"
+  },
+  {
+   "name": "vm_s3_bank4",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    2172.96
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 4,
+   "clock_entry": "ck_bank[100]"
+  },
+  {
+   "name": "vm_s3_bank5",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    2250.72
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 5,
+   "clock_entry": "ck_bank[101]"
+  },
+  {
+   "name": "vm_s3_bank6",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    2328.48
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 6,
+   "clock_entry": "ck_bank[102]"
+  },
+  {
+   "name": "vm_s3_bank7",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    2406.24
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 7,
+   "clock_entry": "ck_bank[103]"
+  },
+  {
+   "name": "vm_s3_bank8",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    1861.92
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 8,
+   "clock_entry": "ck_bank[104]"
+  },
+  {
+   "name": "vm_s3_bank9",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    1939.68
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 9,
+   "clock_entry": "ck_bank[105]"
+  },
+  {
+   "name": "vm_s3_bank10",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    2017.44
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 10,
+   "clock_entry": "ck_bank[106]"
+  },
+  {
+   "name": "vm_s3_bank11",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    2095.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 11,
+   "clock_entry": "ck_bank[107]"
+  },
+  {
+   "name": "vm_s3_bank12",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    2172.96
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 12,
+   "clock_entry": "ck_bank[108]"
+  },
+  {
+   "name": "vm_s3_bank13",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    2250.72
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 13,
+   "clock_entry": "ck_bank[109]"
+  },
+  {
+   "name": "vm_s3_bank14",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    2328.48
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 14,
+   "clock_entry": "ck_bank[110]"
+  },
+  {
+   "name": "vm_s3_bank15",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    2406.24
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 15,
+   "clock_entry": "ck_bank[111]"
+  },
+  {
+   "name": "vm_s3_bank16",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    2853.36
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 16,
+   "clock_entry": "ck_bank[112]"
+  },
+  {
+   "name": "vm_s3_bank17",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    2931.12
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 17,
+   "clock_entry": "ck_bank[113]"
+  },
+  {
+   "name": "vm_s3_bank18",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    3008.88
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 18,
+   "clock_entry": "ck_bank[114]"
+  },
+  {
+   "name": "vm_s3_bank19",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    3086.64
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 19,
+   "clock_entry": "ck_bank[115]"
+  },
+  {
+   "name": "vm_s3_bank20",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    3164.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 20,
+   "clock_entry": "ck_bank[116]"
+  },
+  {
+   "name": "vm_s3_bank21",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    3242.16
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 21,
+   "clock_entry": "ck_bank[117]"
+  },
+  {
+   "name": "vm_s3_bank22",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    3319.92
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 22,
+   "clock_entry": "ck_bank[118]"
+  },
+  {
+   "name": "vm_s3_bank23",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    721.44,
+    3397.68
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 23,
+   "clock_entry": "ck_bank[119]"
+  },
+  {
+   "name": "vm_s3_bank24",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    2853.36
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 24,
+   "clock_entry": "ck_bank[120]"
+  },
+  {
+   "name": "vm_s3_bank25",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    2931.12
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 25,
+   "clock_entry": "ck_bank[121]"
+  },
+  {
+   "name": "vm_s3_bank26",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    3008.88
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 26,
+   "clock_entry": "ck_bank[122]"
+  },
+  {
+   "name": "vm_s3_bank27",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    3086.64
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 27,
+   "clock_entry": "ck_bank[123]"
+  },
+  {
+   "name": "vm_s3_bank28",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    3164.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 28,
+   "clock_entry": "ck_bank[124]"
+  },
+  {
+   "name": "vm_s3_bank29",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    3242.16
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 29,
+   "clock_entry": "ck_bank[125]"
+  },
+  {
+   "name": "vm_s3_bank30",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    3319.92
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 30,
+   "clock_entry": "ck_bank[126]"
+  },
+  {
+   "name": "vm_s3_bank31",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1006.56,
+    3397.68
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 31,
+   "clock_entry": "ck_bank[127]"
+  },
+  {
+   "name": "vm_s3_wscatter",
+   "slice": 3,
+   "master": "dsfd_vm_static_scatter",
+   "xy_um": [
+    801.36,
+    2484.0
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ]
+  },
+  {
+   "name": "vm_s3_read_frontend",
+   "slice": 3,
+   "master": "dsfd_vm_static_suhc_fsr",
+   "xy_um": [
+    801.36,
+    2589.84
+   ],
+   "outline_um": [
+    345.6,
+    51.84
+   ],
+   "qualification": "outline provisional until final source area/cuts"
+  },
+  {
+   "name": "vm_s3_return32",
+   "slice": 3,
+   "master": "dsfd_vm_static_return",
+   "xy_um": [
+    801.36,
+    2643.84
+   ],
+   "outline_um": [
+    345.6,
+    207.36
+   ],
+   "NROW": 32
+  },
+  {
+   "name": "vm_s3_bridge0",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    941.76,
+    2253.96
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    0,
+    15
+   ]
+  },
+  {
+   "name": "vm_s3_bridge1",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    941.76,
+    2904.12
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    16,
+    31
+   ]
+  },
+  {
+   "name": "vm_s3_quarter0",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    656.64,
+    2118.96
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    0,
+    7
+   ]
+  },
+  {
+   "name": "vm_s3_quarter1",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1226.88,
+    2118.96
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    8,
+    15
+   ]
+  },
+  {
+   "name": "vm_s3_quarter2",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    656.64,
+    3106.08
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    16,
+    23
+   ]
+  },
+  {
+   "name": "vm_s3_quarter3",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1226.88,
+    3106.08
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    24,
+    31
+   ]
+  }
+ ],
+ "overlaps": [],
+ "outside": 0,
+ "slice_layout": "2x2 slices, logical bank halves lower/upper,8banks perphysicalcolumn perhalf",
+ "frontend_free_bands": {
+  "top_xywh_um": [
+   0,
+   3481.92,
+   1541.784,
+   470.856
+  ],
+  "east_xywh_um": [
+   1291.68,
+   0,
+   250.104,
+   3481.92
+  ]
+ },
+ "native_bank_pin_file": "physical/s81_die_pins/v20_vm_static_standard/dsfd_vm_static_bank128.tcl",
+ "requirements": [
+  "actual frontend/68storage/dispatch packing",
+  "all per-bit relay/bank/scatter/return pin seams and cut<=0.60",
+  "measured independent native clocks/reset/epoch",
+  "uniform physical stage count and actual SRAM visibility",
+  "real compiler mapping and native arithmetic ownership"
+ ],
+ "qualification": "no wholeVMfit/latency/timing claim;20um native bank needs no flow exception; previous47.52candidate is diagnostic only"
+}
