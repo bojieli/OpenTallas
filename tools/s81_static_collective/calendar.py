@@ -51,6 +51,8 @@ def model() -> dict:
       vm_sram_observation_from_source_pin_cycles=10,
       issue_to_vm_source_pin_cycles=5, issue_to_vm_observation_cycles=15,
       peer_links_per_die=3, local_loop='component bench only',
+      existing_diagnostic_link_rates_bits_per_cycle=dict(package=3864,board=157.58),
+      bandwidth_adoption_gate='New2beat512 framing atspacing4 requires256PHYbits/cycle, abovehistorical157.58 boardbudget; actualPHYwidth/calendar must be reconciled, no native speed credit',
       physical_status='UNQUALIFIED: static successor requires accepted DSCOLL slot/pins, actual lane/PHY width and measured pipeline',
       physical_constraints='Preserve closed masters; no reroute until real RTL change + die-owned window',
       latency_composition='commit=source_issue+4+uniform declared PHY flight; unequal flight requires real RTL alignment stages',

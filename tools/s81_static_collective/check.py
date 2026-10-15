@@ -27,6 +27,12 @@ assert len(events)==176 and events[-1]['observation_edge']==187
 try: vm_events(slots,identity=0x78,reservations={},drain_delays={})
 except ValueError: pass
 else: raise AssertionError('missing reservations accepted')
+with tempfile.TemporaryDirectory(prefix='s81-source-') as td:
+ exe=Path(td)/'source_sim'
+ subprocess.run(['iverilog','-g2012','-s','tb_s81_static_tp4_vm_read_source','-o',str(exe),*map(str,sources)],check=True)
+ cp=subprocess.run(['vvp',str(exe)],text=True,capture_output=True)
+ (a.out/'vm_read_source_interface.log').write_text(cp.stdout+cp.stderr)
+ if cp.returncode or 'PASS interface-only' not in cp.stdout:raise RuntimeError('source API proof')
 report=dict(model=model(),source_sha256={str(s.relative_to(repo)):hashlib.sha256(s.read_bytes()).hexdigest() for s in sources},
             calendar_sha256=hashlib.sha256((Path(__file__).parent/'calendar.py').read_bytes()).hexdigest(),
             mutants=['missing source','late PHY beat','reordered sequence','wrong rankmask','corrupt PHY payload','VM out-of-range row'],cases=records)
