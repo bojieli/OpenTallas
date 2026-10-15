@@ -14,7 +14,7 @@ module tb_qfd_seq_su_die;
     reg  [23:0]  acc = 0; reg [511:0] vrq = 0;
     reg  [9:0]   cbr [0:7];
     wire [55:0] dc;  wire [43:0] kvd;  wire [546:0] cd_d;  wire [56:0] xs;  wire [48:0] st;  wire [481:0] su;
-    wire [24:0] cbc [0:7];  wire [8:0] vrd;  wire [520:0] vwr;
+    wire [24:0] cbc [0:7];  wire [20:0] vrd;  wire [532:0] vwr;
     qfd_seq_su dut (.ck(ck), .rsi(rsi), .dh(dh), .dc(dc), .kvd(kvd), .cd_d(cd_d), .cd_cr(cd_cr), .cc(cc), .xm(xm), .xs(xs),
         .st(st), .su(su), .sd(sd), .acc(acc),
         .cbc0(cbc[0]), .cbc1(cbc[1]), .cbc2(cbc[2]), .cbc3(cbc[3]), .cbc4(cbc[4]), .cbc5(cbc[5]), .cbc6(cbc[6]), .cbc7(cbc[7]),
@@ -37,7 +37,7 @@ module tb_qfd_seq_su_die;
     wire [17:0] ntok, su_tok, me_tok, me_pos, kvd_pos, cb_tpos, i_nout, i_nin;
     wire [31:0] nval, c_tag, i_imm1, i_imm2;
     wire [511:0] c_data, vm_wdata;
-    wire [7:0] vm_raddr, vm_waddr;
+    wire [19:0] vm_raddr, vm_waddr;
     wire [11:0] me_pb;
     wire [23:0] su_acc, kvd_wbase, i_abase, i_aso, i_asi, i_bbase, i_bso, i_bsi, i_cbase, i_cso, i_csi, i_dbase, i_dso,
                 i_dsi, i_rbase, i_rso;
@@ -96,8 +96,8 @@ module tb_qfd_seq_su_die;
             su[481:476] === cb_stage, "su");
         for (k = 0; k < 8; k = k + 1)
             chk(cbc[k][5:0] === cb_stage && cbc[k][6] === cb_tok && cbc[k][24:7] === cb_tpos, "cbc");
-        chk(vrd[7:0] === vm_raddr && vrd[8] === vm_re, "vrd");
-        chk(vwr[511:0] === vm_wdata && vwr[519:512] === vm_waddr && vwr[520] === vm_we, "vwr");
+        chk(vrd[19:0] === vm_raddr && vrd[20] === vm_re, "vrd");
+        chk(vwr[511:0] === vm_wdata && vwr[531:512] === vm_waddr && vwr[532] === vm_we, "vwr");
         suc = suc + (su !== su_l); dcc = dcc + (dc !== dc_l); stc = stc + (st !== st_l); cdc = cdc + (cd_d !== cd_l);
         su_l = su; dc_l = dc; st_l = st; cd_l = cd_d;
         goes = goes + go; sdone = sdone + s_done; cvs = cvs + c_valid; rdys = rdys + r_rdy; wfe = wfe + vm_we;

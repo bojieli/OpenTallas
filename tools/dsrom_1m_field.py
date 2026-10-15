@@ -537,6 +537,8 @@ def cmd_build(a):
     rtl = RTL + (QRTL if a.qelem else [])
     if a.qelem:
         params += ["-GQELEM=1", f"-GQXV={a.qelem}"]
+    # s81-ftok r5: --define NAME builds an RTL negative control (e.g. CH_MUTANT_PD in ot_v41_chain4)
+    params += [f"-D{d}" for d in (getattr(a, "define", None) or [])]
     mdir = out / "flat"
     steps = []
     for name, cmd in (
@@ -982,6 +984,7 @@ def main() -> int:
     ap.add_argument("--qelem", type=int, default=0,
                     help="build: 0 = the pinned W10 element (default); N > 0 = the DS q-element with QX = N on the "
                          "FP8/FP4 pairs (ot_v41_pair_w17w10 QELEM)")
+    ap.add_argument("--define", action="append", default=[], help="build: Verilog define (RTL mutant)")
     a = ap.parse_args()
     G.set_arith("chunk8")
     steps = {"bind-schedules": [cmd_bind_schedules], "plan": [cmd_plan], "extract": [cmd_extract], "build": [cmd_build], "run": [cmd_run],

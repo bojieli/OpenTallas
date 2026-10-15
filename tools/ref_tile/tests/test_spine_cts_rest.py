@@ -84,11 +84,14 @@ def docker_ok():
 
 @unittest.skipUnless(docker_ok(), "docker + ORFS image needed")
 class SpineCtsRest(unittest.TestCase):
-    def run_or(self, mutant=False):
+    def run_or(self, mutant=False, ports=None):
         with tempfile.TemporaryDirectory() as w:
             os.chmod(w, 0o777)
             (Path(w) / "t.v").write_text(netlist())
-            (Path(w) / "run.tcl").write_text(FLOW % {"mutant": MUTANT if mutant else ""})
+            flow = FLOW % {"mutant": MUTANT if mutant else ""}
+            if ports:
+                flow = flow.replace("set ::env(OT_SPINE_PORT) ckd", "set ::env(OT_SPINE_PORT) ckd\nset ::env(OT_SPINE_PORTS) " + ports)
+            (Path(w) / "run.tcl").write_text(flow)
             r = subprocess.run(["docker", "run", "--rm", "-v", f"{w}:/w", "-v", f"{ROOT}:/src:ro", IMAGE, OR, "-no_init",
                                 "-exit", "/w/run.tcl"], capture_output=True, text=True, timeout=900)
         return r.returncode, r.stdout + r.stderr
@@ -105,6 +108,18 @@ class SpineCtsRest(unittest.TestCase):
         self.assertGreater(int(m.group(1)), 0)
         self.assertEqual(m.group(1), m.group(2))
         self.assertLess(int(m.group(3)), N_CK)                               # ck got a tree (root no longer drives every flop)
+
+    def test_two_spines_have_unique_names_and_no_triton_rest(self):
+        rc, out = self.run_or(ports="ck,ckd")
+        self.assertEqual(rc, 0, out[-4000:])
+        self.assertIn("OT_SPINE done port ck", out)
+        self.assertIn("OT_SPINE done port ckd", out)
+        self.assertIn("OT_SPINE rest: no other clock net, TritonCTS not run", out)
+        self.assertNotIn("ODB-0370", out)
+        m = re.search(r"RESULT spine (\d+) dont_touch_firm (\d+) ck_root_fanout (\d+)", out)
+        self.assertIsNotNone(m, out[-3000:])
+        self.assertEqual(m.group(1), m.group(2))
+        self.assertLess(int(m.group(3)), N_CK)
 
     def test_mutant_all_clocks_rediscovers_spine(self):
         rc, out = self.run_or(mutant=True)

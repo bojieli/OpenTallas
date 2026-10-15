@@ -13,6 +13,9 @@ instance); the class key is (cause, launch master.port -> capture master.port, v
 order they are tested:
   reset_net        the endpoint or startpoint is a reset relay (hfd_rrl) or the hop's class is reset
   no_plan_hop      the pair is not a die hop of the plan (a path through a block ETM, a clock pin, a top port)
+  view_pin_off_plan  (--geom) the PLACED pin-to-pin distance (case place.tcl + the bound view LEF pin, in the
+                   instance orientation) exceeds max(reach, plan hop + 200 um): the bound view's pin is not where the
+                   plan put it (pin face / slot outline mismatch); a pin-assignment / slot defect, not the wire or tile
   clock_phase      the two ends' flops are clocked at different planned times (region flop targets of
                    <case>/relay_clock_context.json: entry + internal insertion) and the endpoint passes once that
                    difference is taken out: die clock delivery (phi - R per tile), not a tile or a wire
@@ -89,6 +92,55 @@ def case_bind_map(case):
     return kinds, meta, chain_of, ctx
 
 
+def lef_pins(path, want=None):
+    """{macro: (W, H, {pin: (x, y)})} from a LEF: the centre of each pin's first PORT rectangle (streamed)"""
+    out, mac, pin, W, H, pins, got = {}, None, None, 0.0, 0.0, {}, False
+    with open(path, errors='ignore') as f:
+        for ln in f:
+            t = ln.split()
+            if not t:
+                continue
+            if t[0] == 'MACRO':
+                mac, pins, W, H = t[1], {}, 0.0, 0.0
+                if want is not None and mac not in want:
+                    mac = None
+            elif mac is None:
+                continue
+            elif t[0] == 'SIZE':
+                W, H = float(t[1]), float(t[3])
+            elif t[0] == 'PIN':
+                pin, got = t[1], False
+            elif t[0] == 'RECT' and pin and not got:
+                x0, y0, x1, y1 = map(float, t[1:5])
+                pins[pin], got = ((x0 + x1) / 2, (y0 + y1) / 2), True
+            elif t[0] == 'END' and len(t) > 1 and t[1] == mac:
+                out[mac] = (W, H, pins)
+                mac = None
+    return out
+
+
+def placed(case, logs=()):
+    """{instance: (x, y, orient)} from the case place.tcl fplace lines, overridden by OT_MTS_PLACE log lines"""
+    pl = {}
+    pt = Path(case) / 'place.tcl'
+    if pt.exists():
+        for ln in open(pt, errors='ignore'):
+            if ln.startswith('fplace '):
+                t = ln.split()
+                pl[t[1]] = (float(t[2]), float(t[3]), t[4])
+    mts = re.compile(r'^OT_MTS_PLACE (\S+) \S+ (\S+) requested .* placed \(([-\d.]+), ([-\d.]+)\)')
+    for lg in logs:
+        for ln in open(lg, errors='ignore'):
+            m = mts.match(ln)
+            if m:
+                pl[m[1]] = (float(m[3]), float(m[4]), m[2])
+    return pl
+
+
+def pin_xy(W, H, px, py, o):
+    return {'R0': (px, py), 'MX': (px, H - py), 'MY': (W - px, py), 'R180': (W - px, H - py)}.get(o, (px, py))
+
+
 def flop_times(ctx):
     """{instance: {corner: planned flop time ps}} = clock entry at the pin + the view's internal insertion"""
     out = {}
@@ -117,6 +169,9 @@ def main():
     ap.add_argument('--reach', type=float, default=500.0)
     ap.add_argument('--case', help='the STA case directory: view kinds from the libs it bound, relays.json, clock context')
     ap.add_argument('--phase-min-ps', type=float, default=20.0)
+    ap.add_argument('--geom', nargs='*', metavar='LOG',
+                    help='placed geometry check: case place.tcl + views.lef pins (+ OT_MTS_PLACE lines of these logs)')
+    ap.add_argument('--off-plan-um', type=float, default=200.0)
     a = ap.parse_args()
     p = json.load(gzip.open(Path(a.plan) / 'plan.json.gz', 'rt'))
     cd = json.loads((Path(a.plan) / 'clock_delivery.json').read_text())['tiles']
@@ -127,6 +182,26 @@ def main():
     name_re = re.compile(r'^(.*?)/([^/]+)$')
     kinds, meta, chain_of, ctx = case_bind_map(a.case) if a.case else ({}, {}, {}, None)
     ft = flop_times(ctx)
+    geo = None
+    if a.geom is not None and a.case:
+        geo = (placed(a.case, a.geom), lef_pins(Path(a.case) / 'views.lef'))
+
+    def actual_len(si, sp_full, di, dp_full):
+        """placed Manhattan pin-to-pin length; an end without a bound view pin counts at its instance origin"""
+        if geo is None:
+            return None
+        pl, lp = geo
+        pts = []
+        for inst, pn in ((si, sp_full), (di, dp_full)):
+            if inst not in pl:
+                return None
+            x, y, o = pl[inst]
+            v = lp.get(mst.get(inst, ''))
+            if v and pn in v[2]:
+                dx, dy = pin_xy(v[0], v[1], *v[2][pn], o)
+                x, y = x + dx, y + dy
+            pts.append((x, y))
+        return abs(pts[0][0] - pts[1][0]) + abs(pts[0][1] - pts[1][1])
 
     def kind_of(inst, m_):
         if inst in meta or m_.startswith('hfd_rly_'):
@@ -204,6 +279,7 @@ def main():
         hold = corner == 'ff'
         agg = defaultdict(lambda: dict(n=0, viol=0, wns=1e9, tns=0.0, Lmax=0.0, Lsum=0.0, Ln=0, ex=None, dphi=0.0))
         tot = dict(n=0, viol=0)
+        agg_act = {}
         for ln in open(path, errors='ignore'):
             f = ln.split()
             if len(f) < 3:
@@ -221,6 +297,13 @@ def main():
                 cause = 'reset_net'
             elif hcls is None:
                 cause = 'no_plan_hop'
+            elif (La := actual_len(si, f[0].rsplit('/', 1)[-1], di, f[1].rsplit('/', 1)[-1])) is not None and \
+                    La > max(a.reach, (L or 0.0) + a.off_plan_um):
+                cause = 'view_pin_off_plan'
+                r_act = agg_act.setdefault((sm, sp, dm, dp), [0.0, 0.0, 0])
+                r_act[0] = max(r_act[0], La)
+                r_act[1] += La
+                r_act[2] += 1
             elif dphi is not None and abs(dphi) >= a.phase_min_ps and sl < 0 <= sl0:
                 cause = 'clock_phase'
             elif 'placeholder_lib' in (sv, dv) or 'placeholder' in (sv, dv):
@@ -260,7 +343,11 @@ def main():
             c['wns_ps'] = min(c['wns_ps'], r['wns_ps'])
             c['tns_ns'] = round(c['tns_ns'] + r['tns_ns'], 2)
             c['classes'] += 1
-        res[Path(path).name] = dict(endpoints_listed=tot['n'], violators=tot['viol'], by_cause=dict(by_cause), classes=rows)
+        res[Path(path).name] = dict(endpoints_listed=tot['n'], violators=tot['viol'], by_cause=dict(by_cause), classes=rows,
+                                    off_plan_pins=[dict(launch=f'{k[0]}.{k[1]}', capture=f'{k[2]}.{k[3]}', endpoints=v[2],
+                                                        placed_len_max_um=round(v[0], 1),
+                                                        placed_len_mean_um=round(v[1] / v[2], 1))
+                                                   for k, v in sorted(agg_act.items(), key=lambda kv: -kv[1][2])])
     Path(a.out).write_text(json.dumps(dict(schema='opentallas.hbm_die_sta_classes.v2', plan=a.plan, reach_um=a.reach,
                                            case=a.case, view_kinds='STA case bind map' if a.case else 'generator table',
                                            coverage=cov,
@@ -285,6 +372,11 @@ def main():
                '|---|---|---|---:|---:|---:|---:|---|---:|']
         md += [f'| {x["cause"]} | {x["launch"]} -> {x["capture"]} | {x["views"]} | {x["endpoints"]} | {x["violators"]} | '
                f'{x["wns_ps"]} | {x["tns_ns"]} | {x["len_max_um"]} / {x["len_mean_um"]} | {x["clock_phase_ps"]} |' for x in r['classes'][:60]]
+        if r['off_plan_pins']:
+            md += ['', 'view_pin_off_plan: placed pin-to-pin length of the bound views (plan hop length in the class table)', '',
+                   '| launch | capture | endpoints | placed max / mean um |', '|---|---|---:|---|']
+            md += [f'| {x["launch"]} | {x["capture"]} | {x["endpoints"]} | {x["placed_len_max_um"]} / {x["placed_len_mean_um"]} |'
+                   for x in r['off_plan_pins'][:30]]
         md.append('')
     if a.md:
         Path(a.md).write_text('\n'.join(md) + '\n')

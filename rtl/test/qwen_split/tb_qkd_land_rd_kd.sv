@@ -1,10 +1,9 @@
 `timescale 1ns/1ps
 // qwen-split/kvsys v1.2 (die lead r4, 2026-10-14): tb_qkd_land_rd with the landing strip's kn / lt delivery depths:
 // KD = registered stages on kn (the KV write words), KL = on lt (layer start / T / index) between the bench and the group.
-// Results (verilator 5.050): KD 0..12 with KL <= 6 PASS (2,471 rows exact); KL >= 7 FAIL (fault: the layer's row requests
-// reach the group before its lt). GM 1 (no merge) FAIL 9 mismatches (run at KD = KL = 12). Die rule: lt must reach a group
-// before its engine's first
-// row request of the layer.
+// EPOCH=1 uses rq[16] (layer parity) and a DQ ingress queue before merge; a future layer's requests
+// wait for lt instead of being attributed to the previous layer. GM=4 bypasses parity waiting and must FAIL.
+// EPOCH=0 preserves the historical interface/behaviour; KL>=7 then reproduces the fault.
 // el1013-qwen-kvstrips 2026-10-13: exact bench of the KV landing read path of one row engine:
 // 4 x qkd_land_pc (the group's pseudo-channels, CDC landing port) + qkd_land_grp (row matcher + ot_qkvd_kv_merge E 1).
 //   * CDC side (per PC): the layer region streamed in index order j = 0..1,023 as {l_v, l_sec, l_row, l_data} pushes
@@ -17,7 +16,7 @@
 //   * layers 34, 35, 0, 1 (the wrap) over two tokens (T 8,190 then 3,000: 3,000 leaves a tail beyond T to drop);
 //   * end: every streamed word was consumed (credits home), no fault.
 // PASS line "PASS qkd_land_rd ..."; mutants (GM = qkd_land_grp MUT, PM = qkd_land_pc MUT) must FAIL.
-module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G = 5, S = 3);
+module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G = 5, S = 3, EPOCH = 1, DQ = 128);
 
     reg ck = 0; always #0.416667 ck = ~ck;
     reg rst_n = 0;
@@ -25,7 +24,7 @@ module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G
     wire [3:0]   lp;
     wire [272:0] gw [0:3];
     wire [3:0]   gc;
-    reg  [15:0]  rq = 0;
+    reg  [15+EPOCH:0] rq = 0;
     wire [1024:0] rs;
     reg  [20:0]  lt = 0;
     reg  [1046:0] kn = 0;
@@ -40,8 +39,14 @@ module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G
             .gw(gw[q]), .gc(gc[q]), .es(), .er(261'd0), .dni(298'd0), .dno(), .upi(262'd0), .upo(), .cri(32'd0), .cro(),
             .fi(pfo[q]), .fo(pfo[q+1]));
     end
-    qkd_land_grp #(.MUT(GM)) grp (.ck(ck), .rst_n(rst_n), .g(3'(G)), .s(2'(S)), .gw0(gw[0]), .gw1(gw[1]), .gw2(gw[2]),
+    generate if (EPOCH != 0) begin : g_native
+    qkd_land_grp_epoch #(.MUT(GM)) grp (.ck(ck), .rst_n(rst_n), .g(3'(G)), .s(2'(S)), .gw0(gw[0]), .gw1(gw[1]), .gw2(gw[2]),
         .gw3(gw[3]), .gc0(gc[0]), .gc1(gc[1]), .gc2(gc[2]), .gc3(gc[3]), .rq(rq), .rs(rs), .lt(lt_kd), .kn(kn_kd), .fi(pfo[4]), .fo(fo));
+    end else begin : g_legacy
+    qkd_land_grp #(.MUT(GM), .DQ(DQ)) grp (.ck(ck), .rst_n(rst_n), .g(3'(G)), .s(2'(S)), .gw0(gw[0]), .gw1(gw[1]), .gw2(gw[2]),
+        .gw3(gw[3]), .gc0(gc[0]), .gc1(gc[1]), .gc2(gc[2]), .gc3(gc[3]), .rq(rq), .rs(rs), .lt(lt_kd), .kn(kn_kd), .fi(pfo[4]), .fo(fo));
+    end endgenerate
+
 
     function automatic [255:0] src(input integer layer, input integer j, input integer q);
         integer k;
@@ -54,6 +59,8 @@ module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G
     function automatic integer t_of(input integer j);
         t_of = (((j >> 3) & 15) << 9) | (S << 7) | (((j >> 7) & 1) << 6) | ((j & 7) << 3) | G;
     endfunction
+    longint cycles = 0;
+    always @(posedge ck) if (rst_n) cycles <= cycles + 1;
     longint n_err = 0, n_rsp = 0, n_kept = 0, n_req = 0, n_skip = 0, n_word [0:3], n_pop [0:3];
     task automatic bad(input string what);
         if (n_err < 10) $display("MISMATCH %s", what);
@@ -89,10 +96,10 @@ module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G
                 if (rs[1024:1] !== e) bad($sformatf("response %0d data", n_rsp));
             end
         end
-        if (rst_n && rq_l.size() != 0 && eout < 32 && rnd[14:12] != 0) begin
+        if (rst_n && rq_l.size() != 0 && eout < DQ && rnd[14:12] != 0) begin
             automatic int l = rq_l.pop_front(), j = rq_j.pop_front();
             automatic int t = t_of(j);
-            rq <= {13'(t), 1'((j >> 8) & 1), 1'((j >> 9) & 1), 1'b1};
+            rq <= {1'(l & 1), 13'(t), 1'((j >> 8) & 1), 1'((j >> 9) & 1), 1'b1};
             eout++; n_req++;
         end
     end
@@ -138,6 +145,7 @@ module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G
         repeat (20) @(negedge ck);
         if (fo !== 1'b0) bad("fault chain set");
         if (n_rsp != n_req || n_kept != 8 || n_skip < 100) bad("coverage floor");
+        $display("LAND_COST cycles %0d epoch %0d KD %0d KL %0d", cycles, EPOCH, KD, KL);
         if (n_err == 0)
             $display("PASS qkd_land_rd g=%0d s=%0d: %0d row responses exact in request order (%0d replaced by the posted row behind the fence), %0d V rows not requested and %0d words in all consumed, 4 layers across the wrap, tail beyond T dropped",
                      G, S, n_rsp, n_kept, n_skip, n_pop[0] + n_pop[1] + n_pop[2] + n_pop[3]);
