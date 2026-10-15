@@ -1,0 +1,106 @@
+{
+  "source_commit": "c69d89367",
+  "source_sha256": {
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_core_fec_frame_link.sv": "ff9068ebfec6f23e445508ea20d842cc6131e63c14132e38a379c731cd876507",
+    "rtl/hbm_accel/io_static_20261015/tb_core_fec_frame_link.sv": "07fe061e1fb02c22371bd1c3b9492c64eed5347c1f2ce1c25765c13fcd55aa50",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_core_fec_word_window.sv": "268a267d80284b5ccfad46967dce7fe816962a1cbc73519b4674d6a8b43b5071",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_gearbox_step.sv": "8e46150b7c03250a472282f2dcc411513aa74d84822c5fd05488c2f5ad6a581c",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_frame_transport_step.sv": "e59bb8a2a6408757b899cab2ae8793677ac3d61791f8fbcd41e96e29588e62cb",
+    "rtl/hbm_accel/io_static_20261015/hfd_serdes487_phy512_static_window.sv": "6331e5cfe79c7065523dda4f078468cb6556d3857c8ca6f7b3d78dd76f4df461",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_pma_block_gearbox.sv": "f1088a53729847bfcf1bd6436a0c96c61083a86cee48941170d3aa72123ebe04",
+    "rtl/hbm_accel/io_static_20261015/CORE_FEC_FRAME_API.md": "92ca88ceb394c0a30293a4b012d2d6cdfeb593bebe90bf5a8985bedcd64de916",
+    "tools/hbm_io/run_core_fec_frame_link_gate.sh": "c5835667e2fe0ae132bcdca54f2f3757076a6aa04c82ad8b4c51728c3cd4383e",
+    "tools/hbm_io/core_fec_calendar.py": "8e0525703b02bf0a0f0f12d0f9205d45589809617d799bfe5596ca7eb7fc07c8"
+  },
+  "model": {
+    "core_GHz": 1.2,
+    "FEC_GHz": 1.1294117647058823,
+    "core_period_ticks": 16,
+    "FEC_period_ticks": 17,
+    "core_period_ps": 833.333333333,
+    "FEC_period_ps": 885.416666667,
+    "tick_ps": 52.083333333,
+    "words": 2048,
+    "CDC_entries": 16,
+    "Gray_sync_stages": 2,
+    "complete_frame_capacity": 1627,
+    "tail_padding_bits": 25,
+    "tail_frame_must_be_idle": true,
+    "actual_CDC_payload_register_bits": 15584,
+    "actual_CDC_read_face_register_bits": 974,
+    "control_root_register_bits_upper_bound_per_domain": 9000,
+    "clock_groups": [
+      "core1.2:TXstorage+RXread",
+      "FEC16/17:RXstorage+TXread"
+    ],
+    "TX_word_steps": [
+      511,
+      2685
+    ],
+    "TX_CDC_writes": [
+      512,
+      2686
+    ],
+    "TX_CDC_FEC_reads": [
+      488,
+      2535
+    ],
+    "FEC_input_edges": [
+      489,
+      2536
+    ],
+    "FEC_age_edges": 151,
+    "FEC_capture_edges": [
+      640,
+      2687
+    ],
+    "internal_FEC_CDC_reads": [
+      648,
+      2695
+    ],
+    "RX_CDC_FEC_writes": [
+      649,
+      2696
+    ],
+    "RX_CDC_core_reads": [
+      697,
+      2871
+    ],
+    "RX_gearbox_core_steps": [
+      698,
+      2872
+    ],
+    "frame_acceptance": "511+floor(17*floor(613*j/487)/16)",
+    "endpoint_read": "A-7",
+    "endpoint_write": "A-11",
+    "endpoint_RX_capture": "700+floor(17*(ceil(613*(j+1)/487)-1)/16)",
+    "endpoint_RX_publish": "702+floor(17*(ceil(613*(j+1)/487)-1)/16)",
+    "stop_contract": "word_step=0 outside finite2048word reservations; core may continue local decode/store afterwindow; no missingword fault on unreserved edges",
+    "bandwidth_application_bytes_per_core_cycle": 47.85414067747817,
+    "scope": "model before new stepgearbox/real CDC RTL; actualclockphase/drift/physical and wholeintegration tests pending"
+  },
+  "positive": {
+    "payloads": 234,
+    "idle": 66,
+    "decoded_words": 2048,
+    "internal_CDC_words": 2048,
+    "external_CDCs": 2,
+    "PHY_pins": 512
+  },
+  "faults": {
+    "valid_flip": "004",
+    "missing_word_valid": "gearboxfault,dataunchanged",
+    "frame_bit_before_FEC": "001",
+    "PHY_down": "010",
+    "Forney_DMUT2": "decodederrorF640"
+  },
+  "runs": {
+    "host": "ot-epyc1tb",
+    "positive_unit": "oth-ubuntu-770519-1792057237",
+    "forney_unit": "oth-ubuntu-770518-1792057237",
+    "exit": 0,
+    "memory_GB": 8,
+    "threads": 4
+  },
+  "scope": "Actual composite API wiring and declared16:17 numeric clocks proven, no extraFF; endpoints remaincaller; no physical rootphase/CDCMTBF/routedtiming/wholeG96qualification"
+}
