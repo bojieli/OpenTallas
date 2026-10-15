@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.qwen.native-kv-programme.grant.v1",
- "source_commit": "7e292b8ca",
+ "source_commit": "f74794fa4",
  "source_file": "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
- "source_sha256": "b08675ff00a0ea8a68b0b25921bf282d6a61b739d63d98452ff3a3cf4b087b9f",
+ "source_sha256": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
  "master": "qkd_kv_native_programme",
  "outline_um": [
   86.4,
@@ -13,7 +13,7 @@
   "family": "CORE833.334",
   "period_ps": 833.334,
   "physical_roots": 1,
-  "logical_ff": 6291,
+  "logical_ff": 6292,
   "phase_rule": "phi minus actual routed boundary insertion"
  },
  "pins": [
@@ -3881,7 +3881,10 @@
   "boot_final_flush": 1,
   "external_start_before_internal_core_start": 1,
   "slot_interval_shift": 0,
-  "writer_capture_added_edges": 0
+  "writer_capture_added_edges": 0,
+  "reset_pin_release": 1,
+  "minimum_reset_fill_edges": 5
  },
- "qualification": "CONDITIONAL COMPONENT PIN/SLOT GRANT: no runtime parent producer binding, real D2D pin reach, leaf timing, route or native token qualification. Revalidate group anchor under widened-head successor."
+ "qualification": "CONDITIONAL COMPONENT PIN/SLOT GRANT: no runtime parent producer binding, real D2D pin reach, leaf timing, route or native token qualification. Revalidate group anchor under widened-head successor.",
+ "reset_contract": "External rst_n drives exactly one kept asynchronous-assert/synchronous-release pin FF. Its Q owns all404 internal reset sinks; +1release edge, normal slots unchanged. Source and all36 proof reset_v4."
 }

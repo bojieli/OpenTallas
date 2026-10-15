@@ -1,4 +1,4 @@
-# Exact KV die programme candidate pins, source7e292b8ca; registered only.
+# Exact KV die programme candidate pins, sourcef74794fa4; registered only.
 place_pin -pin_name {cfg_we} -layer M4 -location {0.096000 38.124000} -pin_size {0.192000 0.024000}
 place_pin -pin_name {cfg_addr[0]} -layer M4 -location {0.096000 38.412000} -pin_size {0.192000 0.024000}
 place_pin -pin_name {cfg_addr[1]} -layer M4 -location {0.096000 38.700000} -pin_size {0.192000 0.024000}
