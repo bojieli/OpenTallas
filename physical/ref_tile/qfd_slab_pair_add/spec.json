@@ -12,7 +12,9 @@
  "params": {},
  "clock_port": "ck",
  "reset_ports": [
-  "rst_n"
+  "rst_n",
+  "rst_n_a",
+  "rst_n_b"
  ],
  "outline": {
   "w": 86.4,
@@ -22,8 +24,10 @@
   "W": [
    "bw_a",
    "ck_a",
+   "rst_n_a",
    "bw_b",
-   "ck_b"
+   "ck_b",
+   "rst_n_b"
   ],
   "E": [
    "y",
@@ -51,7 +55,7 @@
  "job": {
   "owner": "Claude:q15_compute_elem",
   "branch": "claude/q15-port-tiles",
-  "tag": "pa2",
+  "tag": "pa3",
   "purpose": "port_tiles pair-adder leaf (x4 per word half, 24 per die band set)",
   "extra_paths": [
    "physical/qwen_port_tiles_1015",
@@ -151,7 +155,8 @@
     1
    ],
    "inputs": [
-    "bw_a"
+    "bw_a",
+    "rst_n_a"
    ],
    "outputs": []
   },
@@ -164,7 +169,8 @@
     1
    ],
    "inputs": [
-    "bw_b"
+    "bw_b",
+    "rst_n_b"
    ],
    "outputs": []
   }

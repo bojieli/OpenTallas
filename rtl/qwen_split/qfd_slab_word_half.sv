@@ -26,7 +26,7 @@ module qfd_slab_word_half #(
         localparam integer IA = MUTANT ? p : 2*p;
         localparam integer IB = MUTANT ? p+4 : 2*p+1;
         qfd_slab_pair_add #(.ADD_LAT(ADD_LAT)) u_pair (
-            .ck_a(bw_ck[IA]), .ck_b(bw_ck[IB]), .ck(pair_ck[p]), .rst_n(rst_n),
+            .ck_a(bw_ck[IA]), .ck_b(bw_ck[IB]), .ck(pair_ck[p]), .rst_n_a(rst_n), .rst_n_b(rst_n), .rst_n(rst_n),
             .bw_a(bw[514*IA +: 514]), .bw_b(bw[514*IB +: 514]),
             .y(summed[512*p +: 512]), .pv(pv[p]), .pf(pf[p]));
     end endgenerate

@@ -11,6 +11,8 @@ module qfd_slab_pair_add #(
     input  wire         ck_a,
     input  wire         ck_b,
     input  wire         ck,
+    input  wire         rst_n_a,    // the die reset, one copy per clock entry domain (each captured on its own entry)
+    input  wire         rst_n_b,
     input  wire         rst_n,
     input  wire [513:0] bw_a,
     input  wire [513:0] bw_b,
@@ -20,12 +22,12 @@ module qfd_slab_pair_add #(
 );
     (* keep *) reg [513:0] wa, wb;
     (* keep *) reg reset_a, reset_b;
-    always @(posedge ck_a) reset_a <= rst_n;
+    always @(posedge ck_a) reset_a <= rst_n_a;
     always @(posedge ck_a) begin
         wa[511:0] <= bw_a[511:0];
         wa[513:512] <= reset_a ? bw_a[513:512] : 2'b0;
     end
-    always @(posedge ck_b) reset_b <= rst_n;
+    always @(posedge ck_b) reset_b <= rst_n_b;
     always @(posedge ck_b) begin
         wb[511:0] <= bw_b[511:0];
         wb[513:512] <= reset_b ? bw_b[513:512] : 2'b0;

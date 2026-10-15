@@ -4,10 +4,10 @@ set ::ot_ce_require_wire 1
 set ::ot_ce_refs [dict create {ot_qwen_slab_pg_lanes/clk} {tt {114.9 119.1 122.5} ff {91.4 95.5 98.4} ss {156.1 161.0 164.9}}]
 set ::ot_ce_counts [dict create {ot_qwen_slab_pg_lanes} 4]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{*}} outputs {{*}}}]
-set ::ot_ce_source_domains [dict create {ck} {core} {ck_mul[0]} {core} {ck_mul[1]} {core} {ck_mul[2]} {core} {ck_mul[3]} {core}]
+set ::ot_ce_source_domains [dict create {ck} {core} {ck_mul0} {core} {ck_mul1} {core} {ck_mul2} {core} {ck_mul3} {core}]
 set ::ot_ce_explicit_domains 0
 set ::ot_ce_cts_roots {{ck}}
-set ::ot_ce_ports {{ck} {ck_mul[0]} {ck_mul[1]} {ck_mul[2]} {ck_mul[3]}}
+set ::ot_ce_ports {{ck} {ck_mul0} {ck_mul1} {ck_mul2} {ck_mul3}}
 
 proc ot_ce_corner {} {
   if {[info exists ::ot_ioref_scene] && $::ot_ioref_scene eq "BC"} { return ff }
