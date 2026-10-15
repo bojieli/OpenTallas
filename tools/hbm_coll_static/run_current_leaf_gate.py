@@ -5,7 +5,7 @@ p=argparse.ArgumentParser();p.add_argument('leaf',choices=['issuer','argmax','vm
 r=pathlib.Path(__file__).resolve().parents[2];o=pathlib.Path(a.out).resolve();o.mkdir(parents=True,exist_ok=True)
 base='rtl/hbm_accel/generic/collective/p2p/'
 leaf={'issuer':('ot_hgi_coll_static_issuer','MUT_DATA',[base+'ot_hgi_coll_static_issuer.sv','physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v']), 'argmax':('ot_hgi_coll_argmax_static','MUT_TIE',[base+'ot_hgi_coll_argmax_static.sv','rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv']), 'vmwrite':('ot_hgi_coll_static_vmwrite','MUT',[base+'ot_hgi_coll_static_vmwrite.sv'])}[a.leaf]
-top='tb_'+leaf[0];files=leaf[2]+[base+top+'.sv'];rec={'scope':'component boundary only; no physical or whole-chip qualification','source_sha256':{f:hashlib.sha256((r/f).read_bytes()).hexdigest() for f in files},'cases':[]}
+top='tb_'+leaf[0].removeprefix('ot_');files=leaf[2]+[base+top+'.sv'];rec={'scope':'component boundary only; no physical or whole-chip qualification','source_sha256':{f:hashlib.sha256((r/f).read_bytes()).hexdigest() for f in files},'cases':[]}
 for mutation in (0,1):
  b=o/('mutant' if mutation else 'positive');b.mkdir(exist_ok=True)
  cmd=['verilator','--binary','--timing','-Wno-fatal','--top-module',top,'-j','2','--Mdir',str(b/'obj'),'-G'+leaf[1]+'='+str(mutation)]+files
