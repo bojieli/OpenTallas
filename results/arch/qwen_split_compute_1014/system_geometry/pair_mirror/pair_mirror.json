@@ -1,0 +1,7028 @@
+{
+ "schema": "opentallas.qwen.pair-mirror-columns.v1",
+ "input_sha256": "c6bb77d8e1a3b111999ecfe969449d54550b4c959c4162e8a55709a061b49f05",
+ "source_commit": "f6842ce4a",
+ "baseline": {
+  "bit_um": 1742154039.204,
+  "worst_pair_um": 21281.04,
+  "relay_bit_stages": 2841990,
+  "max_bus_relay_stages": 42,
+  "over_tile_bit_crossings": 1867362
+ },
+ "candidates": [
+  {
+   "name": "pair_mirror_xcol_outer",
+   "geometry": {
+    "inner_um": 16.464,
+    "gapL_um": 64.776,
+    "gapR_um": 64.776,
+    "kept_rows": [],
+    "tile_tree_pin_plan": "current_W_windows"
+   },
+   "rectangle_errors": [],
+   "rectangle_error_count": 0,
+   "totals": {
+    "bit_um": 1548031757.22,
+    "worst_pair_um": 21289.272,
+    "relay_bit_stages": 2483303,
+    "max_bus_relay_stages": 42
+   },
+   "over_tile_bit_crossings": 1373922,
+   "delta": {
+    "bit_um": -194122282.0,
+    "pct": -11.143,
+    "relay_bit_stages": -358687,
+    "worst_pair_um": 8.232
+   },
+   "families": {
+    "corridor": {
+     "before": 482966489.088,
+     "after": 482966489.088,
+     "delta_pct": 0.0
+    },
+    "crom": {
+     "before": 40938514.176,
+     "after": 40938514.176,
+     "delta_pct": 0.0
+    },
+    "d2d_fdi": {
+     "before": 5330.64,
+     "after": 5330.64,
+     "delta_pct": 0.0
+    },
+    "head_chain": {
+     "before": 46127485.632,
+     "after": 51604446.912,
+     "delta_pct": 11.874
+    },
+    "io": {
+     "before": 37781157.792,
+     "after": 37781157.792,
+     "delta_pct": 0.0
+    },
+    "sequencer": {
+     "before": 22277912.304,
+     "after": 22277912.304,
+     "delta_pct": 0.0
+    },
+    "spine_local": {
+     "before": 19054954.836,
+     "after": 19054954.836,
+     "delta_pct": 0.0
+    },
+    "tap": {
+     "before": 1496982.528,
+     "after": 1496982.528,
+     "delta_pct": 0.0
+    },
+    "tree_block": {
+     "before": 750385162.368,
+     "after": 550785919.104,
+     "delta_pct": -26.6
+    },
+    "tree_spine": {
+     "before": 341120049.84,
+     "after": 341120049.84,
+     "delta_pct": 0.0
+    }
+   },
+   "buses": {
+    "changed_buses": 1154,
+    "improvements": [
+     {
+      "bus": "head_21",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_19",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_17",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_15",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_13",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_11",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_9",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_7",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_5",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_3",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     }
+    ],
+    "regressions": [
+     {
+      "bus": "head_47",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_45",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_43",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_41",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_39",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_37",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_35",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_33",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_31",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_29",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     }
+    ],
+    "longest_increases": [
+     {
+      "bus": "xfault_h_0",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_2",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_4",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_6",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_8",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_10",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_12",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_14",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_16",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_18",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     }
+    ],
+    "stage_increases": [
+     {
+      "bus": "xfault_h_0",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_2",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_4",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_6",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_8",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_10",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_12",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_14",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_16",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_18",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_20",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_22",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_47",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_45",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_43",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_41",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_39",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_37",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_35",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_33",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_31",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_29",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_27",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_25",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_22",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_20",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_18",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_16",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_14",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_12",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_10",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_8",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_6",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_4",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_2",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_0",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_25",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_27",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_29",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_31",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_33",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_35",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_37",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_39",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_41",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_43",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_45",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_47",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     }
+    ]
+   },
+   "head_chain": {
+    "hops": 48,
+    "max_hop_before": 4794.96,
+    "max_hop_after": 4410.264,
+    "relay_stages_before": 16,
+    "relay_stages_after": 39
+   },
+   "head_chain_end_to_end": {
+    "west": {
+     "hops": 24,
+     "relays_before": 7,
+     "relays_after": 19,
+     "um_before": 14095.104,
+     "um_after": 16029.816
+    },
+    "east": {
+     "hops": 24,
+     "relays_before": 9,
+     "relays_after": 20,
+     "um_before": 15322.152,
+     "um_after": 16880.4
+    }
+   },
+   "clock_reset_changed": 62,
+   "clock_trunk_hpwl_delta_um": 15688.551,
+   "qualification": false
+  },
+  {
+   "name": "pair_mirror_interleaved",
+   "geometry": {
+    "inner_um": 16.464,
+    "gapL_um": 64.776,
+    "gapR_um": 64.776,
+    "kept_rows": [],
+    "tile_tree_pin_plan": "interleave"
+   },
+   "rectangle_errors": [],
+   "rectangle_error_count": 0,
+   "totals": {
+    "bit_um": 1500074833.508,
+    "worst_pair_um": 21396.284,
+    "relay_bit_stages": 2461201,
+    "max_bus_relay_stages": 42
+   },
+   "over_tile_bit_crossings": 1370838,
+   "delta": {
+    "bit_um": -242079205.7,
+    "pct": -13.895,
+    "relay_bit_stages": -380789,
+    "worst_pair_um": 115.244
+   },
+   "families": {
+    "corridor": {
+     "before": 482966489.088,
+     "after": 482966489.088,
+     "delta_pct": 0.0
+    },
+    "crom": {
+     "before": 40938514.176,
+     "after": 40938514.176,
+     "delta_pct": 0.0
+    },
+    "d2d_fdi": {
+     "before": 5330.64,
+     "after": 5330.64,
+     "delta_pct": 0.0
+    },
+    "head_chain": {
+     "before": 46127485.632,
+     "after": 51604446.912,
+     "delta_pct": 11.874
+    },
+    "io": {
+     "before": 37781157.792,
+     "after": 37781157.792,
+     "delta_pct": 0.0
+    },
+    "sequencer": {
+     "before": 22277912.304,
+     "after": 22277912.304,
+     "delta_pct": 0.0
+    },
+    "spine_local": {
+     "before": 19054954.836,
+     "after": 19054954.836,
+     "delta_pct": 0.0
+    },
+    "tap": {
+     "before": 1496982.528,
+     "after": 1496982.528,
+     "delta_pct": 0.0
+    },
+    "tree_block": {
+     "before": 750385162.368,
+     "after": 503167774.848,
+     "delta_pct": -32.945
+    },
+    "tree_spine": {
+     "before": 341120049.84,
+     "after": 340781270.384,
+     "delta_pct": -0.099
+    }
+   },
+   "buses": {
+    "changed_buses": 1814,
+    "improvements": [
+     {
+      "bus": "head_21",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_19",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_17",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_15",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_13",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_11",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_9",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_7",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_5",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     },
+     {
+      "bus": "head_3",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": -615718.176,
+      "longest_before": 457.704,
+      "longest_after": 64.776,
+      "stages_before": 0,
+      "stages_after": 0
+     }
+    ],
+    "regressions": [
+     {
+      "bus": "head_47",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_45",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_43",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_41",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_39",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_37",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_35",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_33",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_31",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_29",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     }
+    ],
+    "longest_increases": [
+     {
+      "bus": "xfault_h_0",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_2",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_4",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_6",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_8",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_10",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_12",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_14",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_16",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_18",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     }
+    ],
+    "stage_increases": [
+     {
+      "bus": "xfault_h_0",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_2",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_4",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_6",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_8",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_10",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_12",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_14",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_16",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_18",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_20",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_22",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_47",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_45",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_43",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_41",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_39",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_37",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_35",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_33",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_31",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_29",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_27",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "xfault_h_25",
+      "family": "head_chain",
+      "bits": 1,
+      "delta_bit_um": 522.096,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "bword_1",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 38116.184,
+      "longest_before": 12403.752,
+      "longest_after": 12502.532,
+      "stages_before": 24,
+      "stages_after": 25
+     },
+     {
+      "bus": "bword_2",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 38116.184,
+      "longest_before": 16413.84,
+      "longest_after": 16512.62,
+      "stages_before": 32,
+      "stages_after": 33
+     },
+     {
+      "bus": "bword_6",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 38116.184,
+      "longest_before": 15911.472,
+      "longest_after": 16010.252,
+      "stages_before": 31,
+      "stages_after": 32
+     },
+     {
+      "bus": "bword_20",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 38116.184,
+      "longest_before": 3995.208,
+      "longest_after": 4093.988,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "bword_33",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 46578.68,
+      "longest_before": 11885.424,
+      "longest_after": 12000.668,
+      "stages_before": 23,
+      "stages_after": 24
+     },
+     {
+      "bus": "bword_36",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 46578.68,
+      "longest_before": 16464.912,
+      "longest_after": 16580.156,
+      "stages_before": 32,
+      "stages_after": 33
+     },
+     {
+      "bus": "bword_39",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 46578.68,
+      "longest_before": 13979.568,
+      "longest_after": 14094.812,
+      "stages_before": 27,
+      "stages_after": 28
+     },
+     {
+      "bus": "tree_0_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_3_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_8_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_11_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_16_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_19_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_24_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_27_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_32_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_35_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_40_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_43_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_0_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_1_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_1_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_2_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_2_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_3_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_8_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_8_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_9_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_9_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_9_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_10_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_10_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_10_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_11_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_13_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_14_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_15_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_16_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_17_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_17_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_18_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_18_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_19_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_24_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_24_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_25_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_25_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_25_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_26_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_26_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_26_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_27_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_29_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_30_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_31_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_32_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_33_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_33_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_34_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_34_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_35_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_40_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_40_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_41_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_41_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_41_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_42_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_42_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_42_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_43_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_45_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_46_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_47_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "head_22",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_20",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_18",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_16",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_14",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_12",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_10",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_8",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_6",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_4",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_2",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_0",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_25",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_27",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_29",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_31",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_33",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_35",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_37",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_39",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_41",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_43",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_45",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     },
+     {
+      "bus": "head_47",
+      "family": "head_chain",
+      "bits": 1567,
+      "delta_bit_um": 818124.432,
+      "longest_before": 457.704,
+      "longest_after": 979.8,
+      "stages_before": 0,
+      "stages_after": 1
+     }
+    ]
+   },
+   "head_chain": {
+    "hops": 48,
+    "max_hop_before": 4794.96,
+    "max_hop_after": 4410.264,
+    "relay_stages_before": 16,
+    "relay_stages_after": 39
+   },
+   "head_chain_end_to_end": {
+    "west": {
+     "hops": 24,
+     "relays_before": 7,
+     "relays_after": 19,
+     "um_before": 14095.104,
+     "um_after": 16029.816
+    },
+    "east": {
+     "hops": 24,
+     "relays_before": 9,
+     "relays_after": 20,
+     "um_before": 15322.152,
+     "um_after": 16880.4
+    }
+   },
+   "clock_reset_changed": 62,
+   "clock_trunk_hpwl_delta_um": 15688.551,
+   "qualification": false
+  },
+  {
+   "name": "pair_mirror_keep_head_rows",
+   "geometry": {
+    "inner_um": 16.464,
+    "gapL_um": 64.776,
+    "gapR_um": 64.776,
+    "kept_rows": [
+     7,
+     8
+    ],
+    "tile_tree_pin_plan": "current_W_windows"
+   },
+   "rectangle_errors": [],
+   "rectangle_error_count": 0,
+   "totals": {
+    "bit_um": 1578637125.924,
+    "worst_pair_um": 21289.272,
+    "relay_bit_stages": 2521350,
+    "max_bus_relay_stages": 42
+   },
+   "over_tile_bit_crossings": 1395510,
+   "delta": {
+    "bit_um": -163516913.3,
+    "pct": -9.386,
+    "relay_bit_stages": -320640,
+    "worst_pair_um": 8.232
+   },
+   "families": {
+    "corridor": {
+     "before": 482966489.088,
+     "after": 493997363.712,
+     "delta_pct": 2.284
+    },
+    "crom": {
+     "before": 40938514.176,
+     "after": 40938514.176,
+     "delta_pct": 0.0
+    },
+    "d2d_fdi": {
+     "before": 5330.64,
+     "after": 5330.64,
+     "delta_pct": 0.0
+    },
+    "head_chain": {
+     "before": 46127485.632,
+     "after": 46127485.632,
+     "delta_pct": 0.0
+    },
+    "io": {
+     "before": 37781157.792,
+     "after": 37781157.792,
+     "delta_pct": 0.0
+    },
+    "sequencer": {
+     "before": 22277912.304,
+     "after": 22277912.304,
+     "delta_pct": 0.0
+    },
+    "spine_local": {
+     "before": 19054954.836,
+     "after": 19054954.836,
+     "delta_pct": 0.0
+    },
+    "tap": {
+     "before": 1496982.528,
+     "after": 1496982.528,
+     "delta_pct": 0.0
+    },
+    "tree_block": {
+     "before": 750385162.368,
+     "after": 575837374.464,
+     "delta_pct": -23.261
+    },
+    "tree_spine": {
+     "before": 341120049.84,
+     "after": 341120049.84,
+     "delta_pct": 0.0
+    }
+   },
+   "buses": {
+    "changed_buses": 1089,
+    "improvements": [
+     {
+      "bus": "tree_2_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -264126.096,
+      "longest_before": 2064.384,
+      "longest_after": 1550.52,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_2_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -264126.096,
+      "longest_before": 2064.384,
+      "longest_after": 1550.52,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_5_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -264126.096,
+      "longest_before": 1952.352,
+      "longest_after": 1438.488,
+      "stages_before": 3,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_5_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -264126.096,
+      "longest_before": 1952.352,
+      "longest_after": 1438.488,
+      "stages_before": 3,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_10_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -264126.096,
+      "longest_before": 2064.384,
+      "longest_after": 1550.52,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_10_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -264126.096,
+      "longest_before": 2064.384,
+      "longest_after": 1550.52,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_13_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -264126.096,
+      "longest_before": 1952.352,
+      "longest_after": 1438.488,
+      "stages_before": 3,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_13_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -264126.096,
+      "longest_before": 1952.352,
+      "longest_after": 1438.488,
+      "stages_before": 3,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_18_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -264126.096,
+      "longest_before": 2064.384,
+      "longest_after": 1550.52,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_18_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -264126.096,
+      "longest_before": 2064.384,
+      "longest_after": 1550.52,
+      "stages_before": 4,
+      "stages_after": 3
+     }
+    ],
+    "regressions": [
+     {
+      "bus": "cor_46_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_46_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_44_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_44_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_42_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_42_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_40_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_40_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_38_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_38_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     }
+    ],
+    "longest_increases": [
+     {
+      "bus": "cor_0_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_0_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_2_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_2_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_4_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_4_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_6_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_6_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_8_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_8_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     }
+    ],
+    "stage_increases": [
+     {
+      "bus": "cor_0_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_0_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_2_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_2_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_4_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_4_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_6_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_6_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_8_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_8_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_10_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_10_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_12_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_12_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_14_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_14_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_16_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_16_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_18_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_18_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_20_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_20_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_22_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_22_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_24_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_24_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_26_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_26_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_28_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_28_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_30_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_30_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_32_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_32_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_34_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_34_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_36_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_36_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_38_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_38_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_40_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_40_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_42_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_42_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_44_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_44_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_46_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_46_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     }
+    ]
+   },
+   "head_chain": {
+    "hops": 48,
+    "max_hop_before": 4794.96,
+    "max_hop_after": 4794.96,
+    "relay_stages_before": 16,
+    "relay_stages_after": 16
+   },
+   "head_chain_end_to_end": {
+    "west": {
+     "hops": 24,
+     "relays_before": 7,
+     "relays_after": 7,
+     "um_before": 14095.104,
+     "um_after": 14095.104
+    },
+    "east": {
+     "hops": 24,
+     "relays_before": 9,
+     "relays_after": 9,
+     "um_before": 15322.152,
+     "um_after": 15322.152
+    }
+   },
+   "clock_reset_changed": 62,
+   "clock_trunk_hpwl_delta_um": 15680.319,
+   "qualification": false
+  },
+  {
+   "name": "pair_mirror_keep_head_rows_interleaved",
+   "geometry": {
+    "inner_um": 16.464,
+    "gapL_um": 64.776,
+    "gapR_um": 64.776,
+    "kept_rows": [
+     7,
+     8
+    ],
+    "tile_tree_pin_plan": "interleave"
+   },
+   "rectangle_errors": [],
+   "rectangle_error_count": 0,
+   "totals": {
+    "bit_um": 1530680202.212,
+    "worst_pair_um": 21396.284,
+    "relay_bit_stages": 2499248,
+    "max_bus_relay_stages": 42
+   },
+   "over_tile_bit_crossings": 1392426,
+   "delta": {
+    "bit_um": -211473837.0,
+    "pct": -12.139,
+    "relay_bit_stages": -342742,
+    "worst_pair_um": 115.244
+   },
+   "families": {
+    "corridor": {
+     "before": 482966489.088,
+     "after": 493997363.712,
+     "delta_pct": 2.284
+    },
+    "crom": {
+     "before": 40938514.176,
+     "after": 40938514.176,
+     "delta_pct": 0.0
+    },
+    "d2d_fdi": {
+     "before": 5330.64,
+     "after": 5330.64,
+     "delta_pct": 0.0
+    },
+    "head_chain": {
+     "before": 46127485.632,
+     "after": 46127485.632,
+     "delta_pct": 0.0
+    },
+    "io": {
+     "before": 37781157.792,
+     "after": 37781157.792,
+     "delta_pct": 0.0
+    },
+    "sequencer": {
+     "before": 22277912.304,
+     "after": 22277912.304,
+     "delta_pct": 0.0
+    },
+    "spine_local": {
+     "before": 19054954.836,
+     "after": 19054954.836,
+     "delta_pct": 0.0
+    },
+    "tap": {
+     "before": 1496982.528,
+     "after": 1496982.528,
+     "delta_pct": 0.0
+    },
+    "tree_block": {
+     "before": 750385162.368,
+     "after": 528219230.208,
+     "delta_pct": -29.607
+    },
+    "tree_spine": {
+     "before": 341120049.84,
+     "after": 340781270.384,
+     "delta_pct": -0.099
+    }
+   },
+   "buses": {
+    "changed_buses": 1767,
+    "improvements": [
+     {
+      "bus": "tree_2_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -348833.296,
+      "longest_before": 2064.384,
+      "longest_after": 1385.72,
+      "stages_before": 4,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_2_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -348833.296,
+      "longest_before": 2064.384,
+      "longest_after": 1385.72,
+      "stages_before": 4,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_10_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -348833.296,
+      "longest_before": 2064.384,
+      "longest_after": 1385.72,
+      "stages_before": 4,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_10_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -348833.296,
+      "longest_before": 2064.384,
+      "longest_after": 1385.72,
+      "stages_before": 4,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_18_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -348833.296,
+      "longest_before": 2064.384,
+      "longest_after": 1385.72,
+      "stages_before": 4,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_18_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -348833.296,
+      "longest_before": 2064.384,
+      "longest_after": 1385.72,
+      "stages_before": 4,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_26_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -348833.296,
+      "longest_before": 2064.384,
+      "longest_after": 1385.72,
+      "stages_before": 4,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_26_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -348833.296,
+      "longest_before": 2064.384,
+      "longest_after": 1385.72,
+      "stages_before": 4,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_34_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -348833.296,
+      "longest_before": 2064.384,
+      "longest_after": 1385.72,
+      "stages_before": 4,
+      "stages_after": 2
+     },
+     {
+      "bus": "tree_34_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -348833.296,
+      "longest_before": 2064.384,
+      "longest_after": 1385.72,
+      "stages_before": 4,
+      "stages_after": 2
+     }
+    ],
+    "regressions": [
+     {
+      "bus": "cor_46_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_46_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_44_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_44_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_42_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_42_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_40_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_40_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_38_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_38_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     }
+    ],
+    "longest_increases": [
+     {
+      "bus": "cor_0_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_0_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_2_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_2_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_4_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_4_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_6_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_6_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_8_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_8_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     }
+    ],
+    "stage_increases": [
+     {
+      "bus": "bword_1",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 38116.184,
+      "longest_before": 12403.752,
+      "longest_after": 12502.532,
+      "stages_before": 24,
+      "stages_after": 25
+     },
+     {
+      "bus": "bword_2",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 38116.184,
+      "longest_before": 16413.84,
+      "longest_after": 16512.62,
+      "stages_before": 32,
+      "stages_after": 33
+     },
+     {
+      "bus": "bword_20",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 38116.184,
+      "longest_before": 3995.208,
+      "longest_after": 4093.988,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "bword_6",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 42347.432,
+      "longest_before": 15911.472,
+      "longest_after": 16018.484,
+      "stages_before": 31,
+      "stages_after": 32
+     },
+     {
+      "bus": "bword_33",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 46578.68,
+      "longest_before": 11885.424,
+      "longest_after": 12000.668,
+      "stages_before": 23,
+      "stages_after": 24
+     },
+     {
+      "bus": "bword_36",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 46578.68,
+      "longest_before": 16464.912,
+      "longest_after": 16580.156,
+      "stages_before": 32,
+      "stages_after": 33
+     },
+     {
+      "bus": "bword_39",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 46578.68,
+      "longest_before": 13979.568,
+      "longest_after": 14094.812,
+      "stages_before": 27,
+      "stages_after": 28
+     },
+     {
+      "bus": "tree_0_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_3_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_8_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_11_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_16_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_19_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_24_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_27_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_32_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_35_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_40_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_43_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_2_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 80475.952,
+      "longest_before": 2474.64,
+      "longest_after": 2631.208,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_9_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 80475.952,
+      "longest_before": 3960.72,
+      "longest_after": 4117.288,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_10_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 80475.952,
+      "longest_before": 2474.64,
+      "longest_after": 2631.208,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_18_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 80475.952,
+      "longest_before": 2474.64,
+      "longest_after": 2631.208,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_25_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 80475.952,
+      "longest_before": 3960.72,
+      "longest_after": 4117.288,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_26_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 80475.952,
+      "longest_before": 2474.64,
+      "longest_after": 2631.208,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_34_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 80475.952,
+      "longest_before": 2474.64,
+      "longest_after": 2631.208,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_41_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 80475.952,
+      "longest_before": 3960.72,
+      "longest_after": 4117.288,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_42_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 80475.952,
+      "longest_before": 2474.64,
+      "longest_after": 2631.208,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_0_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_1_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_2_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_3_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_8_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_8_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_9_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_10_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_10_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_11_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_13_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_15_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_16_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_17_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_18_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_19_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_24_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_24_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_25_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_26_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_26_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_27_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_29_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_31_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_32_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_33_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_34_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_35_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_40_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_40_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_41_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_42_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_42_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_43_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_45_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_47_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_1_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 2474.64,
+      "longest_after": 2647.672,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_6_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 1952.352,
+      "longest_after": 2125.384,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_6_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 1952.352,
+      "longest_after": 2125.384,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_9_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 2474.64,
+      "longest_after": 2647.672,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_14_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 1952.352,
+      "longest_after": 2125.384,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_14_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 1952.352,
+      "longest_after": 2125.384,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_14_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 3960.72,
+      "longest_after": 4133.752,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_17_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 2474.64,
+      "longest_after": 2647.672,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_22_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 1952.352,
+      "longest_after": 2125.384,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_22_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 1952.352,
+      "longest_after": 2125.384,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_25_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 2474.64,
+      "longest_after": 2647.672,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_30_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 1952.352,
+      "longest_after": 2125.384,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_30_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 1952.352,
+      "longest_after": 2125.384,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_30_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 3960.72,
+      "longest_after": 4133.752,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_33_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 2474.64,
+      "longest_after": 2647.672,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_38_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 1952.352,
+      "longest_after": 2125.384,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_38_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 1952.352,
+      "longest_after": 2125.384,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_41_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 2474.64,
+      "longest_after": 2647.672,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_46_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 1952.352,
+      "longest_after": 2125.384,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_46_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 1952.352,
+      "longest_after": 2125.384,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_46_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 88938.448,
+      "longest_before": 3960.72,
+      "longest_after": 4133.752,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "cor_0_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_0_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_2_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_2_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_4_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_4_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_6_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_6_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_8_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_8_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_10_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_10_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_12_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_12_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_14_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_14_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_16_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_16_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_18_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_18_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_20_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_20_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_22_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_22_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_24_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_24_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_26_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_26_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_28_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_28_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_30_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_30_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_32_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_32_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_34_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_34_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_36_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_36_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_38_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_38_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_40_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_40_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_42_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_42_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_44_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_44_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_46_6",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1371.816,
+      "longest_after": 1858.392,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "cor_46_9",
+      "family": "corridor",
+      "bits": 516,
+      "delta_bit_um": 225562.176,
+      "longest_before": 1335.096,
+      "longest_after": 1821.672,
+      "stages_before": 2,
+      "stages_after": 3
+     }
+    ]
+   },
+   "head_chain": {
+    "hops": 48,
+    "max_hop_before": 4794.96,
+    "max_hop_after": 4794.96,
+    "relay_stages_before": 16,
+    "relay_stages_after": 16
+   },
+   "head_chain_end_to_end": {
+    "west": {
+     "hops": 24,
+     "relays_before": 7,
+     "relays_after": 7,
+     "um_before": 14095.104,
+     "um_after": 14095.104
+    },
+    "east": {
+     "hops": 24,
+     "relays_before": 9,
+     "relays_after": 9,
+     "um_before": 15322.152,
+     "um_after": 15322.152
+    }
+   },
+   "clock_reset_changed": 62,
+   "clock_trunk_hpwl_delta_um": 15680.319,
+   "qualification": false
+  },
+  {
+   "name": "interleave_only_no_mirror",
+   "geometry": {
+    "note": "current placement, tile pin plan only",
+    "tile_tree_pin_plan": "interleave"
+   },
+   "rectangle_errors": [],
+   "rectangle_error_count": 0,
+   "totals": {
+    "bit_um": 1694197115.492,
+    "worst_pair_um": 21388.052,
+    "relay_bit_stages": 2819374,
+    "max_bus_relay_stages": 42
+   },
+   "over_tile_bit_crossings": 1864278,
+   "delta": {
+    "bit_um": -47956923.7,
+    "pct": -2.753,
+    "relay_bit_stages": -22616,
+    "worst_pair_um": 107.012
+   },
+   "families": {
+    "corridor": {
+     "before": 482966489.088,
+     "after": 482966489.088,
+     "delta_pct": 0.0
+    },
+    "crom": {
+     "before": 40938514.176,
+     "after": 40938514.176,
+     "delta_pct": 0.0
+    },
+    "d2d_fdi": {
+     "before": 5330.64,
+     "after": 5330.64,
+     "delta_pct": 0.0
+    },
+    "head_chain": {
+     "before": 46127485.632,
+     "after": 46127485.632,
+     "delta_pct": 0.0
+    },
+    "io": {
+     "before": 37781157.792,
+     "after": 37781157.792,
+     "delta_pct": 0.0
+    },
+    "sequencer": {
+     "before": 22277912.304,
+     "after": 22277912.304,
+     "delta_pct": 0.0
+    },
+    "spine_local": {
+     "before": 19054954.836,
+     "after": 19054954.836,
+     "delta_pct": 0.0
+    },
+    "tap": {
+     "before": 1496982.528,
+     "after": 1496982.528,
+     "delta_pct": 0.0
+    },
+    "tree_block": {
+     "before": 750385162.368,
+     "after": 702767018.112,
+     "delta_pct": -6.346
+    },
+    "tree_spine": {
+     "before": 341120049.84,
+     "after": 340781270.384,
+     "delta_pct": -0.099
+    }
+   },
+   "buses": {
+    "changed_buses": 1488,
+    "improvements": [
+     {
+      "bus": "tree_0_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -84707.2,
+      "longest_before": 2161.584,
+      "longest_after": 1996.784,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_0_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -84707.2,
+      "longest_before": 2161.584,
+      "longest_after": 1996.784,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_0_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -84707.2,
+      "longest_before": 2064.384,
+      "longest_after": 1899.584,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_0_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -84707.2,
+      "longest_before": 2064.384,
+      "longest_after": 1899.584,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_0_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -84707.2,
+      "longest_before": 4072.752,
+      "longest_after": 3907.952,
+      "stages_before": 8,
+      "stages_after": 7
+     },
+     {
+      "bus": "tree_1_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -84707.2,
+      "longest_before": 2064.384,
+      "longest_after": 1899.584,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_1_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -84707.2,
+      "longest_before": 2064.384,
+      "longest_after": 1899.584,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_1_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -84707.2,
+      "longest_before": 2064.384,
+      "longest_after": 1899.584,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_1_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -84707.2,
+      "longest_before": 2064.384,
+      "longest_after": 1899.584,
+      "stages_before": 4,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_1_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": -84707.2,
+      "longest_before": 4072.752,
+      "longest_after": 3907.952,
+      "stages_before": 8,
+      "stages_after": 7
+     }
+    ],
+    "regressions": [
+     {
+      "bus": "tree_47_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_47_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_47_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_47_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2049.552,
+      "longest_after": 2214.352,
+      "stages_before": 4,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_47_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2049.552,
+      "longest_after": 2214.352,
+      "stages_before": 4,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_46_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_46_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_46_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_46_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_46_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     }
+    ],
+    "longest_increases": [
+     {
+      "bus": "tree_8_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_9_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_10_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_13_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_14_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_15_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_24_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_25_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_26_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_29_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     }
+    ],
+    "stage_increases": [
+     {
+      "bus": "bword_1",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 42347.432,
+      "longest_before": 12403.752,
+      "longest_after": 12510.764,
+      "stages_before": 24,
+      "stages_after": 25
+     },
+     {
+      "bus": "bword_2",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 42347.432,
+      "longest_before": 16413.84,
+      "longest_after": 16520.852,
+      "stages_before": 32,
+      "stages_after": 33
+     },
+     {
+      "bus": "bword_6",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 42347.432,
+      "longest_before": 15911.472,
+      "longest_after": 16018.484,
+      "stages_before": 31,
+      "stages_after": 32
+     },
+     {
+      "bus": "bword_20",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 42347.432,
+      "longest_before": 3995.208,
+      "longest_after": 4102.22,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "bword_36",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 42347.432,
+      "longest_before": 16464.912,
+      "longest_after": 16571.924,
+      "stages_before": 32,
+      "stages_after": 33
+     },
+     {
+      "bus": "bword_39",
+      "family": "tree_spine",
+      "bits": 514,
+      "delta_bit_um": 42347.432,
+      "longest_before": 13979.568,
+      "longest_after": 14086.58,
+      "stages_before": 27,
+      "stages_after": 28
+     },
+     {
+      "bus": "tree_0_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_3_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_8_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_11_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_16_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_19_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_24_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_27_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_32_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_35_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_40_2_2a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_43_2_0a",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 57633.792,
+      "longest_before": 1471.248,
+      "longest_after": 1583.376,
+      "stages_before": 2,
+      "stages_after": 3
+     },
+     {
+      "bus": "tree_0_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_1_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_1_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_2_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_2_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_3_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_4_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_4_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_5_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_5_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_5_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_5_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_6_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_6_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_6_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_6_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_7_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_7_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_8_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_8_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_9_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_9_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_9_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_10_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_10_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_10_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_11_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_12_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_12_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_13_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_13_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_13_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_13_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_13_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_14_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_14_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_14_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_14_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_14_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_15_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_15_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_15_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_16_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_17_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_17_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_18_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_18_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_19_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_20_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_20_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_21_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_21_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_21_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_21_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_22_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_22_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_22_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_22_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_23_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_23_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_24_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_24_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_25_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_25_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_25_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_26_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_26_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_26_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_27_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_28_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_28_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_29_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_29_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_29_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_29_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_29_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_30_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_30_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_30_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_30_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_30_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_31_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_31_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_31_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_32_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_33_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_33_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_34_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_34_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_35_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_36_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_36_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_37_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_37_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_37_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_37_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_38_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_38_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_38_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_38_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_39_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_39_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_40_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_40_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_41_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_41_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_41_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_42_2_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_42_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_42_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_43_2_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 2474.64,
+      "longest_after": 2639.44,
+      "stages_before": 4,
+      "stages_after": 5
+     },
+     {
+      "bus": "tree_44_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_44_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_45_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_45_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_45_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_45_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_45_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_46_1_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_46_1_2b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_46_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_46_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_46_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     },
+     {
+      "bus": "tree_47_1_4b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_47_1_6b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 1952.352,
+      "longest_after": 2117.152,
+      "stages_before": 3,
+      "stages_after": 4
+     },
+     {
+      "bus": "tree_47_3_0b",
+      "family": "tree_block",
+      "bits": 514,
+      "delta_bit_um": 84707.2,
+      "longest_before": 3960.72,
+      "longest_after": 4125.52,
+      "stages_before": 7,
+      "stages_after": 8
+     }
+    ]
+   },
+   "head_chain": {
+    "hops": 48,
+    "max_hop_before": 4794.96,
+    "max_hop_after": 4794.96,
+    "relay_stages_before": 16,
+    "relay_stages_after": 16
+   },
+   "head_chain_end_to_end": {
+    "west": {
+     "hops": 24,
+     "relays_before": 7,
+     "relays_after": 7,
+     "um_before": 14095.104,
+     "um_after": 14095.104
+    },
+    "east": {
+     "hops": 24,
+     "relays_before": 9,
+     "relays_after": 9,
+     "um_before": 15322.152,
+     "um_after": 15322.152
+    }
+   },
+   "clock_reset_changed": 0,
+   "clock_trunk_hpwl_delta_um": 0,
+   "qualification": false
+  }
+ ],
+ "qualification": false
+}
