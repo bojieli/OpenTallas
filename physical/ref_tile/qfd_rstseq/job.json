@@ -1,5 +1,5 @@
 {
- "name": "qfd_rstseq-r1-COMMIT",
+ "name": "qfd_rstseq-r1-feceba3b2",
  "block": "qfd_rstseq",
  "ref_tile": true,
  "owner": "Claude:el1015-fill-qwen",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/el1015-fillq-1015",
-  "commit": "COMMIT",
+  "commit": "feceba3b2",
   "extra_paths": [
    "rtl/test/qwen_split"
   ]
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_rstseq/qfd_rstseq-r1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_rstseq/qfd_rstseq-r1-feceba3b2"
   }
  ],
  "cycles_added": 0,
