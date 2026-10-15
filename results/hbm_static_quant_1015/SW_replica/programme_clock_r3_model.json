@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.quant.clock_plan.v1",
+  "before_build": true,
+  "baseline": "bb8a34726",
+  "measured_baseline": {
+    "register_sinks": 1588,
+    "cluster_sinks": 32,
+    "cluster_diameter_um": 127,
+    "mean_sink_wire_um": 224.28,
+    "clock_buffers": 95,
+    "tt_insertion_ps": 336.9,
+    "tt_spread_ps": 139.9
+  },
+  "candidate": {
+    "max_cluster_sinks": 16,
+    "max_cluster_diameter_um": 30,
+    "macro_obstruction_aware": true,
+    "balance_levels": true,
+    "leaf_cluster_lower_bound": 100,
+    "estimated_tree_buffer_order": 220,
+    "extra_operation_cycles": 0,
+    "real_SRAM": 1,
+    "source_same": "a0cbaf1e5",
+    "component_same": "ddcd17cff"
+  },
+  "admission": "ordinaryCTSmeasure first; <=300ps insertion/80ps spread manually enforced irrespective rawgatePASS",
+  "prediction_limit": "physicalnumbers not yet claimed"
+}
