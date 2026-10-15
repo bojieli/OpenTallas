@@ -14,6 +14,8 @@ H14=; V14=
 if [ "${OT_KV_HOST_V14:-0}" = 1 ]; then H14=--host-v14; V14=,host_v14; fi
 # v1.4.1 (OT_KV_HOST_NORTH=1): the HOST root core directly below the static D2D end (kv_die.py --host-north)
 if [ "${OT_KV_HOST_NORTH:-0}" = 1 ]; then H14="--host-v14 --host-north"; V14=,host_v14,host_north; fi
+# v1.4.2 (OT_KV_TREES=1, needs OT_KV_HOST_NORTH=1): HOST reset / boot fan-outs as registered relay trees (kv_die.py --host-trees)
+if [ "${OT_KV_TREES:-0}" = 1 ]; then H14="$H14 --host-trees"; V14=$V14,host_trees; fi
 python3 tools/qwen_kv_die/kv_die.py case --kv-wq-mirror --split $H14 --out $O/case_kv > $O/case.log
 git rev-parse --short=9 HEAD > $O/case_kv/SOURCE_COMMIT
 python3 tools/die_top_lint.py lint --die qwen_kv --variant kv_wq_mirror,split$V14 --out $O/lint > $O/lint.log 2>&1

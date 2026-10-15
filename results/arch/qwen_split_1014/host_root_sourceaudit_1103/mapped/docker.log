@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/host_root_run.py", line 199, in <module>
+    if __name__=="__main__":main()
+  File "/host_root_run.py", line 197, in main
+    report(out,plan,manifest,a.stdlib_area_scale_to_um2)
+  File "/host_root_run.py", line 75, in report
+    if unknown:raise ValueError("unmapped/unknown actual cells: "+json.dumps(unknown))
+ValueError: unmapped/unknown actual cells: {"INVx1_ASAP7_75t_R": 54202, "HB1xp67_ASAP7_75t_R": 1, "$scopeinfo": 232}

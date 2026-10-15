@@ -1,0 +1,22 @@
+{
+ "inputs": {
+  "physical/s81_die_pins/v19_merged/pq_count_slots.json": "db7c38fe90d82b20c36a1399cf224c77edca59fe5509e13da6840c4b476f26e2",
+  "physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz": "1dee3342360ceb7f83ee668a00e521a464703b5f4d573341f0f3cc546f8fc098",
+  "results/arch/hier_contract_1011/s81_v23_hc_budget.json": "b1bf2e325f0411f3a344297e5bbb29b3ca73c79c89030dbf614a4af5d5062a18",
+  "results/physical/die_iter_1012/s81/canonical_gen_1015/capacity_service_gap_broad_reroot_E.json": "ef91a10712e3a585ed51124db7733fb81aa4a3e936ab5def312b516dd585ea6d"
+ },
+ "contract": {
+  "path": "results/arch/hier_contract_1011/s81_v23_hc_budget.json",
+  "sha256": "b1bf2e325f0411f3a344297e5bbb29b3ca73c79c89030dbf614a4af5d5062a18",
+  "version": 23,
+  "updated": "2026-10-14 PM PT (s81 die lead r6, Claude)"
+ },
+ "source_manifest_sha256": "1990a888f9983c65a3ae97d305336f223b6983a51fb540b17b45a3a8e707e2e0",
+ "source_check": {
+  "verdict": "PASS",
+  "required_mismatch": [],
+  "drift_count": 0,
+  "drift_first": [],
+  "contract_drift": []
+ }
+}

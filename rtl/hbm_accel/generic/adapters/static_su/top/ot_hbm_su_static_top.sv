@@ -8,8 +8,8 @@
 // RF coherence: the scalar result of reducer w (tag[8] = write RF word tag[7:0]) travels to EVERY quarter's replica over a
 // dedicated point-to-point relay route of exactly RF_RELAY registered stages (16 routes; the local route is the same
 // depth), so all four replicas commit each word on the same edge: reducer command edge n -> reducer issue n+2 -> scalar
-// held from n+9 -> relay -> RF write pins sample n+10+RF_RELAY -> commit n+11+RF_RELAY -> an RF read command sampled at
-// edge >= n+11+RF_RELAY sees it. RF_RELAY is set from the die geometry (worst quarter-to-quarter route / reach per stage);
+// held from n+10 (reducer r1 LAT 8) -> relay -> RF write pins sample n+11+RF_RELAY -> commit n+12+RF_RELAY -> an RF read command sampled at
+// edge >= n+12+RF_RELAY sees it. RF_RELAY is set from the die geometry (worst quarter-to-quarter route / reach per stage);
 // the compiler uses the same value.
 // No credits/ready/arbitration anywhere; compile-time conflicts are checked (FAULT), never resolved at run time.
 // MUT (bench): quarter mutants pass through (1 fill phase, 2 drain group, 4 RF-broadcast phase); 8 = the relay route from

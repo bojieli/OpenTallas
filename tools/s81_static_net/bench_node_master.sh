@@ -13,7 +13,7 @@ case $mode in
   mut_fault) sed -i 's/fr <= flt | fi\[0\];/fr <= 1'"'"'b0;/; s/fr <= flt;/fr <= 1'"'"'b0;/' "$out/master.sv";;
 esac
 win=$(grep -o '\.WIN([0-9]*)' "$out/master.sv" | head -1 | tr -dc 0-9); [ "$mode" != pass ] && win=$(grep -o '\.WIN([0-9]*)' "$glue" | head -1 | tr -dc 0-9)
-src=(rtl/v41rom/ot_v41_ret.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv
+src=(rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv
      "$out/master.sv" rtl/dsrom_sys/s81_static_net/test/tb_dsfd_node_static.sv)
 defs="-DDUT=$mst"; [ $la = 1 ] && defs="$defs -DLA"; [ $lb = 1 ] && defs="$defs -DLB"; [ $fch = 1 ] && defs="$defs -DHAS_FI"
 fails=0; runs=0

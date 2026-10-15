@@ -1,0 +1,33 @@
+{
+  "source_sha256": "27a03c1a0c27bd81390f5cde5ae35572781e91dd350c05e092e24d42f636c94d",
+  "scope": "Component mechanism only: actual3ROM, exact468registered controls/done on two page replays, common-frequency phase0 clocks, reset release swept within pre-edge window; no delivered die clock/route qualification",
+  "normal_cycle_delta": 0,
+  "reset_relays": 4,
+  "fixed_startup_release_cycles": 3,
+  "results": [
+    {
+      "phase_ns_after_negedge": 0,
+      "returncode": 0
+    },
+    {
+      "phase_ns_after_negedge": 1,
+      "returncode": 0
+    },
+    {
+      "phase_ns_after_negedge": 4,
+      "returncode": 0
+    },
+    {
+      "reset_root_held": 0,
+      "actual_reset_mutant_rejected": true
+    },
+    {
+      "reset_root_held": 1,
+      "actual_reset_mutant_rejected": true
+    },
+    {
+      "reset_root_held": 2,
+      "actual_reset_mutant_rejected": true
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "source_base_commit": "bed3d6968",
+  "scope": "Actual ot_hdc_delay_rf W=25 D=123; enumerate all 128 physical wptr states, non-reset data semantics",
+  "production_rtl_changed": false,
+  "cycles_per_state": 1024,
+  "first_checked_edge_zero_based": 122,
+  "startup_edges_including_sample_edge": 123,
+  "pointer_states": 128,
+  "out_of_range_initial_states": [
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127
+  ],
+  "full_word_checks": 115456,
+  "out_of_range_full_word_checks": 6314,
+  "reset_low_edges": [
+    [
+      0,
+      3
+    ],
+    [
+      300,
+      304
+    ],
+    [
+      500,
+      500
+    ],
+    [
+      777,
+      777
+    ]
+  ],
+  "positive_errors": 0,
+  "mutants": [
+    {
+      "name": "D122",
+      "errors": 115456,
+      "rejected": true
+    },
+    {
+      "name": "wptr equality wrap instead of greater-equal",
+      "errors": 21,
+      "rejected": true
+    }
+  ],
+  "limitations": "Finite random-data simulation, exhaustive physical pointer starts; does not qualify physical timing or arbitrary unknown metastable states. Every compared output is required at the normal D123 edge; no extra startup grace.",
+  "sha256": {
+    "rtl/hdc/ot_hdc_delay_rf.sv": "f7262daea7a3d709b503470c5335cbde92ded954aa14a25b8b2488fabf86074f",
+    "rtl/test/hbm_idx_static/tb_idx_meta_rf_powerup.sv": "5d7df06d4152fa0d00f28284d36fde96350acd9a4386b3301ce374972044547a",
+    "rtl/test/hbm_idx_static/run_meta_rf_powerup.sh": "4c74b73351f9152bf2545f2de6763c10310e562a57d5f64f71472ae2e35a3e41"
+  },
+  "logs": {
+    "run0": "IDX_META_RF_POWERUP states=128 invalid_states=7 cycles=1024 first_checked_edge=122 checks=115456 invalid_checks=6314 errors=0 MUT=0\n",
+    "run1": "mismatch state=0 edge=122 expected=0828f86 actual=13beadf\nmismatch state=1 edge=122 expected=0828f86 actual=13beadf\nmismatch state=2 edge=122 expected=0828f86 actual=13beadf\nmismatch state=3 edge=122 expected=0828f86 actual=13beadf\nmismatch state=4 edge=122 expected=0828f86 actual=13beadf\nmismatch state=5 edge=122 expected=0828f86 actual=13beadf\nmismatch state=6 edge=122 expected=0828f86 actual=13beadf\nmismatch state=7 edge=122 expected=0828f86 actual=13beadf\nmismatch state=8 edge=122 expected=0828f86 actual=13beadf\nmismatch state=9 edge=122 expected=0828f86 actual=13beadf\nmismatch state=10 edge=122 expected=0828f86 actual=13beadf\nmismatch state=11 edge=122 expected=0828f86 actual=13beadf\nIDX_META_RF_POWERUP states=128 invalid_states=7 cycles=1024 first_checked_edge=122 checks=115456 invalid_checks=6314 errors=115456 MUT=1\nFATAL: rtl/test/hbm_idx_static/tb_idx_meta_rf_powerup.sv:48: RF metadata delay is not D123 from every physical pointer state\n       Time: 10240000 Scope: tb_idx_meta_rf_powerup\n",
+    "run2": "mismatch state=121 edge=122 expected=0828f86 actual=xxxxxxx\nmismatch state=122 edge=122 expected=0828f86 actual=xxxxxxx\nmismatch state=123 edge=122 expected=0828f86 actual=xxxxxxx\nmismatch state=124 edge=122 expected=0828f86 actual=xxxxxxx\nmismatch state=125 edge=122 expected=0828f86 actual=xxxxxxx\nmismatch state=126 edge=122 expected=0828f86 actual=xxxxxxx\nmismatch state=121 edge=123 expected=13beadf actual=xxxxxxx\nmismatch state=122 edge=123 expected=13beadf actual=xxxxxxx\nmismatch state=123 edge=123 expected=13beadf actual=xxxxxxx\nmismatch state=124 edge=123 expected=13beadf actual=xxxxxxx\nmismatch state=125 edge=123 expected=13beadf actual=xxxxxxx\nmismatch state=121 edge=124 expected=06c5c0f actual=xxxxxxx\nIDX_META_RF_POWERUP states=128 invalid_states=7 cycles=1024 first_checked_edge=122 checks=115456 invalid_checks=6314 errors=21 MUT=2\nFATAL: rtl/test/hbm_idx_static/tb_idx_meta_rf_powerup.sv:48: RF metadata delay is not D123 from every physical pointer state\n       Time: 10240000 Scope: tb_idx_meta_rf_powerup\n"
+  }
+}

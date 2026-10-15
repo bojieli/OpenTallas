@@ -11,8 +11,9 @@
 // the small begin/start/aperture/owned/epoch/running state (identical inputs -> identical state in every lane).
 // The only cross-lane signals are three registered status bits per lane (all-64-slots-full per bank, PC fault),
 // fanned out by the wires-only parent to every lane: one lane->lane hop per cycle, launched from flops.
-// Register boundaries, cycle timing and every output bit equal the monolithic module (lockstep equivalence bench
-// tb_hbm_svc_vmdel_split_equiv.sv); no credit, ready or retry added. Lane 0 drives block_ready/busy/fault.
+// v3: lane pin registers on every input and output (+2 cycles interface latency, II=1); every output bit equals the
+// monolithic module delayed exactly 2 cycles (lockstep bench tb_hbm_svc_vmdel_split_equiv.sv, LAT=2); no credit,
+// ready or retry added. Lane 0 drives block_ready/busy/fault.
 // Sector = base + slot*32 + group*8 + bank: base is aligned32 (aperture check), so the bank adds no carry and each
 // lane appends its 3-bit bank index (port bank_id, a declared die constant per instance).
 module ot_hbm_svc_static_vm_delivery_split (
@@ -29,13 +30,13 @@ module ot_hbm_svc_static_vm_delivery_split (
  genvar b;
  generate for(b=0;b<8;b=b+1)begin:g_bank
   ot_hbm_svc_vmdel_lane u_lane (.clk(clk),.rst_n(rst_n),.bank_id(b[2:0]),
-   .begin_v(begin_v),.begin_bank(begin_bank),.begin_epoch(begin_epoch),
-   .start(start),.start_bank(start_bank),.start_epoch(start_epoch),.start_base_sector(start_base_sector),
-   .fill_v({fill_v[24+b],fill_v[16+b],fill_v[8+b],fill_v[b]}),
-   .fill_bank({fill_bank[24+b],fill_bank[16+b],fill_bank[8+b],fill_bank[b]}),
-   .fill_slot({fill_slot[(24+b)*6+:6],fill_slot[(16+b)*6+:6],fill_slot[(8+b)*6+:6],fill_slot[b*6+:6]}),
-   .fill_epoch({fill_epoch[(24+b)*16+:16],fill_epoch[(16+b)*16+:16],fill_epoch[(8+b)*16+:16],fill_epoch[b*16+:16]}),
-   .fill_data({fill_data[(24+b)*256+:256],fill_data[(16+b)*256+:256],fill_data[(8+b)*256+:256],fill_data[b*256+:256]}),
+   .begin_v_i(begin_v),.begin_bank_i(begin_bank),.begin_epoch_i(begin_epoch),
+   .start_i(start),.start_bank_i(start_bank),.start_epoch_i(start_epoch),.start_base_sector_i(start_base_sector),
+   .fill_v_i({fill_v[24+b],fill_v[16+b],fill_v[8+b],fill_v[b]}),
+   .fill_bank_i({fill_bank[24+b],fill_bank[16+b],fill_bank[8+b],fill_bank[b]}),
+   .fill_slot_i({fill_slot[(24+b)*6+:6],fill_slot[(16+b)*6+:6],fill_slot[(8+b)*6+:6],fill_slot[b*6+:6]}),
+   .fill_epoch_i({fill_epoch[(24+b)*16+:16],fill_epoch[(16+b)*16+:16],fill_epoch[(8+b)*16+:16],fill_epoch[b*16+:16]}),
+   .fill_data_i({fill_data[(24+b)*256+:256],fill_data[(16+b)*256+:256],fill_data[(8+b)*256+:256],fill_data[b*256+:256]}),
    .full0_all(full0),.full1_all(full1),.pcbad_all(pcbad),
    .full0(full0[b]),.full1(full1[b]),.pcbad(pcbad[b]),
    .block_ready(br[b]),.busy(bz[b]),.fault(ft[b]),.dq(dq[b*281+:281]));
@@ -46,25 +47,44 @@ endmodule
 // the landing/delivery control state.
 module ot_hbm_svc_vmdel_lane (
  input wire clk,rst_n,input wire [2:0] bank_id,
- input wire begin_v,begin_bank,input wire [15:0] begin_epoch,
- input wire start,start_bank,input wire [15:0] start_epoch,start_base_sector,
- input wire [3:0] fill_v,fill_bank,input wire [23:0] fill_slot,input wire [63:0] fill_epoch,input wire [1023:0] fill_data,
+ input wire begin_v_i,begin_bank_i,input wire [15:0] begin_epoch_i,
+ input wire start_i,start_bank_i,input wire [15:0] start_epoch_i,start_base_sector_i,
+ input wire [3:0] fill_v_i,fill_bank_i,input wire [23:0] fill_slot_i,input wire [63:0] fill_epoch_i,input wire [1023:0] fill_data_i,
  input wire [7:0] full0_all,full1_all,pcbad_all,
  output wire full0,full1,pcbad,
- output wire [1:0] block_ready,output wire busy,output wire fault,
- output wire [280:0] dq
+ output reg [1:0] block_ready,output reg busy,output reg fault,
+ output reg [280:0] dq
 );
+ // ---- v3 (HBM-V15-HARDEN 10-15, route hv15_vmdel_lane-countvisible-flow4536 TT -184.64 in->reg / -171.07 reg->out):
+ // every external input is captured in a pin register (begin/start/fill: +1 cycle) and every external output leaves
+ // from a register (dq/block_ready/busy/fault: +1 cycle).  All eight lanes see the same one-cycle-delayed inputs, so
+ // the whole lane state is the v2 state one cycle later and the cross-lane status bits (full0/full1/pcbad, still
+ // registered-state ANDs) stay mutually consistent.  Measured cost: lane interface latency +2 cycles (start->first dq
+ // 1->3, fill->block_ready 1->3), II=1 unchanged; equivalence = v2/monolithic outputs delayed exactly 2 cycles.
+ reg begin_v,begin_bank,start,start_bank; reg [15:0] begin_epoch,start_epoch,start_base_sector;
+ reg [3:0] fill_v,fill_bank; reg [23:0] fill_slot; reg [63:0] fill_epoch; reg [1023:0] fill_data;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n) begin begin_v<=0;start<=0;fill_v<=0; end
+  else begin begin_v<=begin_v_i;start<=start_i;fill_v<=fill_v_i; end
+ always @(posedge clk) begin
+  begin_bank<=begin_bank_i;begin_epoch<=begin_epoch_i;start_bank<=start_bank_i;start_epoch<=start_epoch_i;
+  start_base_sector<=start_base_sector_i;fill_bank<=fill_bank_i;fill_slot<=fill_slot_i;fill_epoch<=fill_epoch_i;fill_data<=fill_data_i;
+ end
+ wire [1:0] block_ready_c; wire busy_c,fault_c; wire [280:0] dq_c;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n) begin block_ready<=0;busy<=0;fault<=0;dq<=0; end
+  else begin block_ready<=block_ready_c;busy<=busy_c;fault<=fault_c;dq<=dq_c; end
  // ---- replicated control (ot_hbm_svc_static_landing + ot_hbm_svc_static_vm_delivery, bit for bit) ----
  reg [1:0] owned; reg [15:0] epoch0,epoch1,base_q; reg running,bank_q,sticky,bad,out_v;
  reg [5:0] slot_q,out_slot; reg [1:0] group_q,out_group;
  wire landing_fault=sticky || |pcbad_all;
- assign fault=bad||landing_fault;
- assign busy=running;
- assign block_ready={owned[1] && (&full1_all),owned[0] && (&full0_all)};
+ assign fault_c=bad||landing_fault;
+ assign busy_c=running;
+ assign block_ready_c={owned[1] && (&full1_all),owned[0] && (&full0_all)};
  wire aperture_ok=start_base_sector[4:0]==0 && start_base_sector[12:0]<=13'd6144 &&
                   (!start_base_sector[15] || start_base_sector[14:13]==0);
  wire lstart=start && aperture_ok && !bad;
- wire start_ok=lstart && !running && owned[start_bank] && block_ready[start_bank] &&
+ wire start_ok=lstart && !running && owned[start_bank] && block_ready_c[start_bank] &&
                start_epoch==(start_bank?epoch1:epoch0) && !landing_fault;
  wire issue=running || start_ok;
  wire rb=running ? bank_q : start_bank;
@@ -126,6 +146,6 @@ module ot_hbm_svc_vmdel_lane (
  wire [255:0] sel=({256{out_group==2'd0}}&macro_data[0+:256])|({256{out_group==2'd1}}&macro_data[256+:256])|
                   ({256{out_group==2'd2}}&macro_data[512+:256])|({256{out_group==2'd3}}&macro_data[768+:256]);
  wire [15:0] sector0=base_q+{5'b0,out_slot,out_group,3'b0};
- assign dq={out_v && !fault,sector0[15:3],bank_id,sel,8'hff};
+ assign dq_c={out_v && !fault_c,sector0[15:3],bank_id,sel,8'hff};
 endmodule
 `default_nettype wire

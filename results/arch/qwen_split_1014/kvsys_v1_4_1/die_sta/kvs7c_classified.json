@@ -1,0 +1,2323 @@
+{
+ "schema": "opentallas.qwen_kvsys_sta_classes.v1",
+ "run": ".",
+ "real_views": [
+  "ot_qkh_head_frontq_native",
+  "ot_qkh_head_nb_native",
+  "ot_qkh_head_score4_native",
+  "ot_qkh_head_stin_native",
+  "ot_qkh_head_stk_native",
+  "ot_qkh_ktree",
+  "ot_qkh_lane8",
+  "qkd_cdc_wleaf",
+  "qkd_ctrl_kc",
+  "qkd_ctrl_pc",
+  "qkd_ectl_a_tp8_epoch_direct",
+  "qkd_ectl_b_tp8_direct",
+  "qkd_ectl_c_tp8_direct",
+  "qkd_kvwq_ctl_bin",
+  "qkd_kvwq_leaf_s_w129_m"
+ ],
+ "rule": "TT setup + FF hold decide; SS sensitivity only. real = closed view (own ETM, phi - R clock); frame / relay = ASSUMED single-flop placeholders (ideal clock)",
+ "corners": {
+  "tt": {
+   "endpoints": 3019305,
+   "causes": {
+    "frame -> frame": {
+     "endpoints": 132161,
+     "violators": 133,
+     "worst_ps": -550466.56
+    },
+    "relay -> phy": {
+     "endpoints": 1044,
+     "violators": 1044,
+     "worst_ps": -7558.65
+    },
+    "reset -> frame": {
+     "endpoints": 12,
+     "violators": 11,
+     "worst_ps": -4838.65
+    },
+    "reset -> real": {
+     "endpoints": 40072,
+     "violators": 5096,
+     "worst_ps": -4168.72
+    },
+    "real -> real": {
+     "endpoints": 1867700,
+     "violators": 299372,
+     "worst_ps": -1216.09
+    },
+    "real -> relay": {
+     "endpoints": 3920,
+     "violators": 369,
+     "worst_ps": -196.7
+    },
+    "real -> frame": {
+     "endpoints": 210152,
+     "violators": 396,
+     "worst_ps": -65.34
+    },
+    "relay -> relay": {
+     "endpoints": 632506,
+     "violators": 34,
+     "worst_ps": -45.4
+    },
+    "frame -> real": {
+     "endpoints": 61468,
+     "violators": 0,
+     "worst_ps": 8.11
+    },
+    "frame -> relay": {
+     "endpoints": 49951,
+     "violators": 0,
+     "worst_ps": 93.04
+    },
+    "relay -> frame": {
+     "endpoints": 15476,
+     "violators": 0,
+     "worst_ps": 146.06
+    },
+    "relay -> real": {
+     "endpoints": 3672,
+     "violators": 0,
+     "worst_ps": 188.24
+    },
+    "frame -> phy": {
+     "endpoints": 584,
+     "violators": 0,
+     "worst_ps": 473.29
+    },
+    "phy -> frame": {
+     "endpoints": 585,
+     "violators": 0,
+     "worst_ps": 486.34
+    },
+    "reset -> phy": {
+     "endpoints": 2,
+     "violators": 0,
+     "worst_ps": 510.53
+    }
+   },
+   "rows": [
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_hslice.bgi",
+     "nearest_pin_um": 25846.6,
+     "endpoints": 2,
+     "violators": 2,
+     "worst_ps": -550466.56,
+     "example": {
+      "start": "host/boot_go[0]",
+      "end": "hsl_ES_0/bgi[0]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_hslice_dn.bgi",
+     "nearest_pin_um": 4627.2,
+     "endpoints": 2,
+     "violators": 2,
+     "worst_ps": -150856.77,
+     "example": {
+      "start": "host/boot_go[0]",
+      "end": "hsl_WN_31/bgi[0]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_d2ds.host_boot_begin",
+     "nearest_pin_um": 564.7,
+     "endpoints": 1,
+     "violators": 1,
+     "worst_ps": -36272.64,
+     "example": {
+      "start": "host/boot_go[0]",
+      "end": "d2d_kv/host_boot_begin[0]"
+     }
+    },
+    {
+     "cause": "relay -> phy",
+     "launch": "qkd_rly_2089",
+     "capture": "ot_qfd_serdes_112g_x12_phy.tx_flit",
+     "nearest_pin_um": 2199.2,
+     "endpoints": 1043,
+     "violators": 1043,
+     "worst_ps": -7558.65,
+     "example": {
+      "start": "rly_host_fdi_55/b[755]",
+      "end": "serdes_host/tx_flit[753]"
+     }
+    },
+    {
+     "cause": "reset -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_ahub.rst_n",
+     "nearest_pin_um": 10352.6,
+     "endpoints": 1,
+     "violators": 1,
+     "worst_ps": -4838.65,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "ahub/rst_n[0]"
+     }
+    },
+    {
+     "cause": "reset -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_astk_n.rst_n",
+     "nearest_pin_um": 5922.1,
+     "endpoints": 2,
+     "violators": 2,
+     "worst_ps": -4838.65,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "astk_EN/rst_n[0]"
+     }
+    },
+    {
+     "cause": "reset -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_astk.rst_n",
+     "nearest_pin_um": 18065.6,
+     "endpoints": 2,
+     "violators": 2,
+     "worst_ps": -4838.65,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "astk_ES/rst_n[0]"
+     }
+    },
+    {
+     "cause": "reset -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_embgw.rst_n",
+     "nearest_pin_um": 875.1,
+     "endpoints": 1,
+     "violators": 1,
+     "worst_ps": -4838.65,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "embgw/rst_n[0]"
+     }
+    },
+    {
+     "cause": "reset -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_land_n.rst_n",
+     "nearest_pin_um": 7524.1,
+     "endpoints": 2,
+     "violators": 2,
+     "worst_ps": -4838.65,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "land_EN/rst_n[0]"
+     }
+    },
+    {
+     "cause": "reset -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_land.rst_n",
+     "nearest_pin_um": 19667.6,
+     "endpoints": 2,
+     "violators": 2,
+     "worst_ps": -4838.65,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "land_ES/rst_n[0]"
+     }
+    },
+    {
+     "cause": "reset -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_seq.rst_n",
+     "nearest_pin_um": 527.3,
+     "endpoints": 1,
+     "violators": 1,
+     "worst_ps": -4838.65,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "seq/rst_n[0]"
+     }
+    },
+    {
+     "cause": "relay -> phy",
+     "launch": "qkd_rly_2089",
+     "capture": "ot_qfd_serdes_112g_x12_phy.tx_v",
+     "nearest_pin_um": 2235.4,
+     "endpoints": 1,
+     "violators": 1,
+     "worst_ps": -4231.35,
+     "example": {
+      "start": "rly_host_fdi_55/b[1]",
+      "end": "serdes_host/tx_v"
+     }
+    },
+    {
+     "cause": "reset -> real",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_ectl_b_tp8_direct.rst_n",
+     "nearest_pin_um": 9734.1,
+     "endpoints": 32,
+     "violators": 32,
+     "worst_ps": -4168.72,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "ectl_EN_0__u_b/rst_n"
+     }
+    },
+    {
+     "cause": "reset -> real",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_ectl_a_tp8_epoch_direct.rst_n",
+     "nearest_pin_um": 10098.9,
+     "endpoints": 32,
+     "violators": 32,
+     "worst_ps": -4154.03,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "ectl_EN_0__u_a/rst_n"
+     }
+    },
+    {
+     "cause": "reset -> real",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_kvwq_leaf_s_w129_m.rst_n",
+     "nearest_pin_um": 13990.5,
+     "endpoints": 128,
+     "violators": 128,
+     "worst_ps": -4133.57,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "wleaf_EN_0/rst_n[0]"
+     }
+    },
+    {
+     "cause": "reset -> real",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_ectl_c_tp8_direct.rst_n",
+     "nearest_pin_um": 9509.2,
+     "endpoints": 32,
+     "violators": 32,
+     "worst_ps": -4128.8,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "ectl_EN_0__u_c/rst_n"
+     }
+    },
+    {
+     "cause": "reset -> real",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_ctrl_kc.rsi",
+     "nearest_pin_um": 5294.1,
+     "endpoints": 4,
+     "violators": 4,
+     "worst_ps": -4117.93,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "ctrl_EN__u_kc/rsi"
+     }
+    },
+    {
+     "cause": "reset -> real",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_kvwq_ctl_bin.rst_n",
+     "nearest_pin_um": 7920.9,
+     "endpoints": 4,
+     "violators": 4,
+     "worst_ps": -4107.3,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "wctl_EN/rst_n[0]"
+     }
+    },
+    {
+     "cause": "reset -> real",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_ctrl_pc.rsi",
+     "nearest_pin_um": 13931.1,
+     "endpoints": 128,
+     "violators": 128,
+     "worst_ps": -4107.25,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "ctrl_EN__u_pc0/rsi"
+     }
+    },
+    {
+     "cause": "reset -> real",
+     "launch": "qkd_host_rt",
+     "capture": "ot_qkh_head_stin_native.rst_n",
+     "nearest_pin_um": 10773.7,
+     "endpoints": 2048,
+     "violators": 2048,
+     "worst_ps": -4092.0,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "head_EN_0_0__g_t_0__u_stin/rst_n"
+     }
+    },
+    {
+     "cause": "reset -> real",
+     "launch": "qkd_host_rt",
+     "capture": "ot_qkh_head_frontq_native.rst_n",
+     "nearest_pin_um": 10650.1,
+     "endpoints": 512,
+     "violators": 512,
+     "worst_ps": -4086.4,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "head_EN_0_0__g_front_0__u_front/rst_n"
+     }
+    },
+    {
+     "cause": "reset -> real",
+     "launch": "qkd_host_rt",
+     "capture": "ot_qkh_head_stk_native.rst_n",
+     "nearest_pin_um": 10563.1,
+     "endpoints": 2048,
+     "violators": 2048,
+     "worst_ps": -4084.01,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "head_EN_0_0__g_t_0__u_stk/rst_n"
+     }
+    },
+    {
+     "cause": "reset -> real",
+     "launch": "qkd_host_rt",
+     "capture": "ot_qkh_head_score4_native.rst_n",
+     "nearest_pin_um": 10304.2,
+     "endpoints": 128,
+     "violators": 128,
+     "worst_ps": -4060.54,
+     "example": {
+      "start": "host/die_rst_n[0]",
+      "end": "head_EN_0_0__u_score/rst_n"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_hslice_dn.hbm_rst_n",
+     "nearest_pin_um": 13564.7,
+     "endpoints": 64,
+     "violators": 64,
+     "worst_ps": -1894.51,
+     "example": {
+      "start": "host/hbm_rst_n[0]",
+      "end": "hsl_EN_0/hbm_rst_n[0]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_hslice.hbm_rst_n",
+     "nearest_pin_um": 25708.2,
+     "endpoints": 64,
+     "violators": 64,
+     "worst_ps": -1894.51,
+     "example": {
+      "start": "host/hbm_rst_n[0]",
+      "end": "hsl_ES_0/hbm_rst_n[0]"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "qkd_ectl_c_tp8_direct",
+     "capture": "ot_qkh_head_frontq_native.q_data_in",
+     "nearest_pin_um": 1025.5,
+     "endpoints": 262144,
+     "violators": 233436,
+     "worst_ps": -1216.09,
+     "example": {
+      "start": "ectl_EN_5__u_c/t1_q[9]",
+      "end": "head_EN_5_3__g_front_0__u_front/q_data_in[2]"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "qkd_ectl_c_tp8_direct",
+     "capture": "ot_qkh_head_frontq_native.q_beat_in",
+     "nearest_pin_um": 1023.6,
+     "endpoints": 3072,
+     "violators": 3072,
+     "worst_ps": -1152.26,
+     "example": {
+      "start": "ectl_WS_7__u_c/t1_q[6]",
+      "end": "head_WS_7_3__g_front_0__u_front/q_beat_in[5]"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "qkd_ectl_c_tp8_direct",
+     "capture": "ot_qkh_head_frontq_native.q_valid_in",
+     "nearest_pin_um": 1023.1,
+     "endpoints": 512,
+     "violators": 512,
+     "worst_ps": -1045.02,
+     "example": {
+      "start": "ectl_WN_6__u_c/t1_q[0]",
+      "end": "head_WN_6_3__g_front_0__u_front/q_valid_in"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "qkd_ectl_b_tp8_direct",
+     "capture": "ot_qkh_head_frontq_native.c_in",
+     "nearest_pin_um": 766.9,
+     "endpoints": 2048,
+     "violators": 2030,
+     "worst_ps": -721.79,
+     "example": {
+      "start": "ectl_ES_2__u_b/t0_cl[2]",
+      "end": "head_ES_2_0__g_front_0__u_front/c_in[2]"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "qkd_ectl_b_tp8_direct",
+     "capture": "ot_qkh_head_frontq_native.lt_in",
+     "nearest_pin_um": 767.1,
+     "endpoints": 6144,
+     "violators": 6142,
+     "worst_ps": -719.85,
+     "example": {
+      "start": "ectl_EN_3__u_b/t0_cl[4]",
+      "end": "head_EN_3_0__g_front_0__u_front/lt_in[0]"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "qkd_ectl_c_tp8_direct",
+     "capture": "ot_qkh_head_frontq_native.e_in",
+     "nearest_pin_um": 890.4,
+     "endpoints": 8192,
+     "violators": 4096,
+     "worst_ps": -626.17,
+     "example": {
+      "start": "ectl_ES_1__u_c/e3[3]",
+      "end": "head_ES_1_3__g_front_0__u_front/e_in[3]"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "ot_qkh_head_score4_native",
+     "capture": "qkd_ectl_c_tp8_direct.s0",
+     "nearest_pin_um": 777.3,
+     "endpoints": 1088,
+     "violators": 1042,
+     "worst_ps": -367.58,
+     "example": {
+      "start": "head_WS_2_0__u_score/sc_o[11]",
+      "end": "ectl_WS_2__u_c/s0[11]"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "ot_qkh_head_score4_native",
+     "capture": "qkd_ectl_c_tp8_direct.s3",
+     "nearest_pin_um": 786.1,
+     "endpoints": 1088,
+     "violators": 1063,
+     "worst_ps": -325.4,
+     "example": {
+      "start": "head_WN_2_3__u_score/sc_o[30]",
+      "end": "ectl_WN_2__u_c/s3[30]"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "qkd_ectl_b_tp8_direct",
+     "capture": "ot_qkh_head_frontq_native.row_in",
+     "nearest_pin_um": 598.0,
+     "endpoints": 65536,
+     "violators": 27016,
+     "worst_ps": -248.87,
+     "example": {
+      "start": "ectl_ES_7__u_b/t0_row[431]",
+      "end": "head_ES_7_0__g_front_3__u_front/row_in[175]"
+     }
+    },
+    {
+     "cause": "real -> relay",
+     "launch": "qkd_ctrl_kc",
+     "capture": "qkd_rly_1.a",
+     "nearest_pin_um": 547.0,
+     "endpoints": 4,
+     "violators": 1,
+     "worst_ps": -196.7,
+     "example": {
+      "start": "ctrl_WS__u_kc/kf",
+      "end": "rly_lkf_WS_0/a[0]"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "qkd_ectl_a_tp8_epoch_direct",
+     "capture": "ot_qkh_head_frontq_native.row_in",
+     "nearest_pin_um": 562.6,
+     "endpoints": 65536,
+     "violators": 20963,
+     "worst_ps": -158.06,
+     "example": {
+      "start": "ectl_ES_6__u_a/t0_row[189]",
+      "end": "head_ES_6_0__g_front_0__u_front/row_in[189]"
+     }
+    },
+    {
+     "cause": "real -> relay",
+     "launch": "qkd_ectl_a_tp8_epoch_direct",
+     "capture": "qkd_rly_17.a",
+     "nearest_pin_um": 447.5,
+     "endpoints": 544,
+     "violators": 368,
+     "worst_ps": -68.31,
+     "example": {
+      "start": "ectl_WS_2__u_a/rq[11]",
+      "end": "rly_krq_WS_2_0/a[11]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "qkd_ctrl_pc",
+     "capture": "qkd_hslice.ctrl_er",
+     "nearest_pin_um": 438.7,
+     "endpoints": 16704,
+     "violators": 396,
+     "worst_ps": -65.34,
+     "example": {
+      "start": "ctrl_ES__u_pc0/er[226]",
+      "end": "hsl_ES_0/ctrl_er[226]"
+     }
+    },
+    {
+     "cause": "relay -> relay",
+     "launch": "qkd_rly_1048",
+     "capture": "qkd_rly_1048.a",
+     "nearest_pin_um": 388.8,
+     "endpoints": 80619,
+     "violators": 34,
+     "worst_ps": -45.4,
+     "example": {
+      "start": "rly_kvn_WS_25/b[569]",
+      "end": "rly_kvn_WS_26/a[569]"
+     }
+    },
+    {
+     "cause": "relay -> relay",
+     "launch": "qkd_rly_540",
+     "capture": "qkd_rly_540.a",
+     "nearest_pin_um": 388.8,
+     "endpoints": 37260,
+     "violators": 0,
+     "worst_ps": 5.46,
+     "example": {
+      "start": "rly_aq_WS_21/b[107]",
+      "end": "rly_aq_WS_22/a[107]"
+     }
+    },
+    {
+     "cause": "frame -> real",
+     "launch": "qkd_hslice",
+     "capture": "qkd_ctrl_pc.es",
+     "nearest_pin_um": 423.5,
+     "endpoints": 18432,
+     "violators": 0,
+     "worst_ps": 8.11,
+     "example": {
+      "start": "hsl_WS_16/ctrl_es[4]",
+      "end": "ctrl_WS__u_pc16/es[4]"
+     }
+    },
+    {
+     "cause": "real -> relay",
+     "launch": "qkd_kvwq_leaf_s_w129_m",
+     "capture": "qkd_rly_2.a",
+     "nearest_pin_um": 294.6,
+     "endpoints": 24,
+     "violators": 0,
+     "worst_ps": 9.59,
+     "example": {
+      "start": "wleaf_EN_8/dp[1]",
+      "end": "rly_wret_EN_1_0/a[1]"
+     }
+    },
+    {
+     "cause": "relay -> relay",
+     "launch": "qkd_rly_2089",
+     "capture": "qkd_rly_2089.a",
+     "nearest_pin_um": 439.0,
+     "endpoints": 114895,
+     "violators": 0,
+     "worst_ps": 28.43,
+     "example": {
+      "start": "rly_host_fdi_21/b[48]",
+      "end": "rly_host_fdi_22/a[48]"
+     }
+    },
+    {
+     "cause": "relay -> relay",
+     "launch": "qkd_rly_1025",
+     "capture": "qkd_rly_1025.a",
+     "nearest_pin_um": 388.8,
+     "endpoints": 193725,
+     "violators": 0,
+     "worst_ps": 34.19,
+     "example": {
+      "start": "rly_krs_EN_7_1/b[425]",
+      "end": "rly_krs_EN_7_2/a[425]"
+     }
+    },
+    {
+     "cause": "frame -> real",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_ctrl_pc.es",
+     "nearest_pin_um": 426.3,
+     "endpoints": 18432,
+     "violators": 0,
+     "worst_ps": 36.0,
+     "example": {
+      "start": "hsl_EN_11/ctrl_es[225]",
+      "end": "ctrl_EN__u_pc11/es[225]"
+     }
+    },
+    {
+     "cause": "relay -> relay",
+     "launch": "qkd_rly_289",
+     "capture": "qkd_rly_289.a",
+     "nearest_pin_um": 388.8,
+     "endpoints": 23328,
+     "violators": 0,
+     "worst_ps": 48.79,
+     "example": {
+      "start": "rly_emf_WS_22/b[119]",
+      "end": "rly_emf_WS_23/a[119]"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "ot_qkh_head_stk_native",
+     "capture": "ot_qkh_ktree.kp_in",
+     "nearest_pin_um": 453.5,
+     "endpoints": 65536,
+     "violators": 0,
+     "worst_ps": 50.45,
+     "example": {
+      "start": "head_WS_3_3__g_t_15__u_stk/kp_o[3]",
+      "end": "head_WS_3_3__u_kt/kp_in[483]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "qkd_ctrl_pc",
+     "capture": "qkd_hslice_dn.ctrl_er",
+     "nearest_pin_um": 423.5,
+     "endpoints": 16704,
+     "violators": 0,
+     "worst_ps": 52.43,
+     "example": {
+      "start": "ctrl_EN__u_pc19/er[90]",
+      "end": "hsl_EN_19/ctrl_er[90]"
+     }
+    },
+    {
+     "cause": "relay -> relay",
+     "launch": "qkd_rly_563",
+     "capture": "qkd_rly_563.a",
+     "nearest_pin_um": 388.8,
+     "endpoints": 12386,
+     "violators": 0,
+     "worst_ps": 53.52,
+     "example": {
+      "start": "rly_ap_ES_0/b[516]",
+      "end": "rly_ap_ES_1/a[516]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk.f61",
+     "nearest_pin_um": 405.2,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 69.91,
+     "example": {
+      "start": "head_WS_6_1__g_t_1__u_nb2/nb_o[4]",
+      "end": "astk_WS/f61[68]"
+     }
+    },
+    {
+     "cause": "reset -> real",
+     "launch": "qkd_rly_1025",
+     "capture": "qkd_ectl_a_tp8_epoch_direct.rs",
+     "nearest_pin_um": 458.1,
+     "endpoints": 32800,
+     "violators": 0,
+     "worst_ps": 71.47,
+     "example": {
+      "start": "rly_krs_EN_7_9/b[104]",
+      "end": "ectl_EN_7__u_a/rs[104]"
+     }
+    },
+    {
+     "cause": "relay -> relay",
+     "launch": "qkd_rly_33",
+     "capture": "qkd_rly_33.a",
+     "nearest_pin_um": 444.3,
+     "endpoints": 5181,
+     "violators": 0,
+     "worst_ps": 73.63,
+     "example": {
+      "start": "rly_kc_ES_22/b[0]",
+      "end": "rly_kc_ES_23/a[0]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk_n.f20",
+     "nearest_pin_um": 405.2,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 79.11,
+     "example": {
+      "start": "head_EN_2_0__g_t_1__u_nb2/nb_o[4]",
+      "end": "astk_EN/f20[68]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk_n.f60",
+     "nearest_pin_um": 405.2,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 79.4,
+     "example": {
+      "start": "head_WN_6_0__g_t_1__u_nb2/nb_o[4]",
+      "end": "astk_WN/f60[68]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk.f21",
+     "nearest_pin_um": 404.8,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 79.44,
+     "example": {
+      "start": "head_ES_2_1__g_t_1__u_nb2/nb_o[9]",
+      "end": "astk_ES/f21[73]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk_n.f61",
+     "nearest_pin_um": 405.2,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 79.55,
+     "example": {
+      "start": "head_WN_6_1__g_t_1__u_nb2/nb_o[4]",
+      "end": "astk_WN/f61[68]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk.f60",
+     "nearest_pin_um": 405.2,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 81.46,
+     "example": {
+      "start": "head_WS_6_0__g_t_1__u_nb2/nb_o[4]",
+      "end": "astk_WS/f60[68]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk_n.f21",
+     "nearest_pin_um": 405.2,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 81.67,
+     "example": {
+      "start": "head_EN_2_1__g_t_1__u_nb2/nb_o[4]",
+      "end": "astk_EN/f21[68]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk.f20",
+     "nearest_pin_um": 405.2,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 81.82,
+     "example": {
+      "start": "head_ES_2_0__g_t_1__u_nb2/nb_o[4]",
+      "end": "astk_ES/f20[68]"
+     }
+    },
+    {
+     "cause": "relay -> relay",
+     "launch": "qkd_rly_521",
+     "capture": "qkd_rly_521.a",
+     "nearest_pin_um": 388.8,
+     "endpoints": 42120,
+     "violators": 0,
+     "worst_ps": 81.94,
+     "example": {
+      "start": "rly_emr_EN_2/b[271]",
+      "end": "rly_emr_EN_3/a[271]"
+     }
+    },
+    {
+     "cause": "relay -> relay",
+     "launch": "qkd_rly_17",
+     "capture": "qkd_rly_17.a",
+     "nearest_pin_um": 388.8,
+     "endpoints": 3094,
+     "violators": 0,
+     "worst_ps": 82.05,
+     "example": {
+      "start": "rly_krq_WN_5_13/b[0]",
+      "end": "rly_krq_WN_5_14/a[0]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk_n.f10",
+     "nearest_pin_um": 405.2,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 87.89,
+     "example": {
+      "start": "head_EN_1_0__g_t_1__u_nb2/nb_o[4]",
+      "end": "astk_EN/f10[68]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk_n.f50",
+     "nearest_pin_um": 405.2,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 90.0,
+     "example": {
+      "start": "head_WN_5_0__g_t_1__u_nb2/nb_o[4]",
+      "end": "astk_WN/f50[68]"
+     }
+    },
+    {
+     "cause": "frame -> relay",
+     "launch": "qkd_land",
+     "capture": "qkd_rly_1025.a",
+     "nearest_pin_um": 432.3,
+     "endpoints": 16400,
+     "violators": 0,
+     "worst_ps": 93.04,
+     "example": {
+      "start": "land_ES/rs6[409]",
+      "end": "rly_krs_ES_6_0/a[409]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk.f01",
+     "nearest_pin_um": 400.8,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 93.3,
+     "example": {
+      "start": "head_ES_0_1__g_t_1__u_nb2/nb_o[50]",
+      "end": "astk_ES/f01[114]"
+     }
+    },
+    {
+     "cause": "relay -> relay",
+     "launch": "qkd_rly_291",
+     "capture": "qkd_rly_291.a",
+     "nearest_pin_um": 388.8,
+     "endpoints": 43941,
+     "violators": 0,
+     "worst_ps": 94.27,
+     "example": {
+      "start": "rly_hchf_WS_2/b[174]",
+      "end": "rly_hchf_WS_3/a[174]"
+     }
+    },
+    {
+     "cause": "frame -> relay",
+     "launch": "qkd_land_n",
+     "capture": "qkd_rly_521.a",
+     "nearest_pin_um": 432.3,
+     "endpoints": 1040,
+     "violators": 0,
+     "worst_ps": 94.38,
+     "example": {
+      "start": "land_EN/emr[242]",
+      "end": "rly_emr_EN_0/a[242]"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "ot_qkh_lane8",
+     "capture": "ot_qkh_head_stk_native.kp_i",
+     "nearest_pin_um": 240.1,
+     "endpoints": 65536,
+     "violators": 0,
+     "worst_ps": 94.96,
+     "example": {
+      "start": "head_WS_4_3__g_t_15__u_l8/kp[0]",
+      "end": "head_WS_4_3__g_t_15__u_stk/kp_i[0]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk.f41",
+     "nearest_pin_um": 401.0,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 95.13,
+     "example": {
+      "start": "head_WS_4_1__g_t_1__u_nb2/nb_o[48]",
+      "end": "astk_WS/f41[112]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk.f10",
+     "nearest_pin_um": 403.1,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 99.94,
+     "example": {
+      "start": "head_ES_1_0__g_t_1__u_nb2/nb_o[26]",
+      "end": "astk_ES/f10[90]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk_n.f11",
+     "nearest_pin_um": 403.3,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 100.34,
+     "example": {
+      "start": "head_EN_1_1__g_t_1__u_nb2/nb_o[24]",
+      "end": "astk_EN/f11[88]"
+     }
+    },
+    {
+     "cause": "real -> real",
+     "launch": "ot_qkh_lane8",
+     "capture": "ot_qkh_head_stk_native.gf_i",
+     "nearest_pin_um": 236.9,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 101.79,
+     "example": {
+      "start": "head_WS_4_3__g_t_15__u_l8/gf",
+      "end": "head_WS_4_3__g_t_15__u_stk/gf_i"
+     }
+    },
+    {
+     "cause": "relay -> relay",
+     "launch": "qkd_rly_521",
+     "capture": "qkd_rly_521.b",
+     "nearest_pin_um": 388.8,
+     "endpoints": 81,
+     "violators": 0,
+     "worst_ps": 106.41,
+     "example": {
+      "start": "rly_emr_EN_3/a[520]",
+      "end": "rly_emr_EN_2/b[520]"
+     }
+    },
+    {
+     "cause": "frame -> relay",
+     "launch": "qkd_land_n",
+     "capture": "qkd_rly_1025.a",
+     "nearest_pin_um": 432.3,
+     "endpoints": 16400,
+     "violators": 0,
+     "worst_ps": 108.8,
+     "example": {
+      "start": "land_EN/rs7[515]",
+      "end": "rly_krs_EN_7_0/a[515]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk.f70",
+     "nearest_pin_um": 400.2,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 111.63,
+     "example": {
+      "start": "head_WS_7_0__g_t_1__u_nb2/nb_o[57]",
+      "end": "astk_WS/f70[121]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "ot_qkh_head_nb_native",
+     "capture": "qkd_astk.f31",
+     "nearest_pin_um": 399.8,
+     "endpoints": 2048,
+     "violators": 0,
+     "worst_ps": 111.73,
+     "example": {
+      "start": "head_ES_3_1__g_t_1__u_nb2/nb_o[61]",
+      "end": "astk_ES/f31[125]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "qkd_cdc_wleaf",
+     "capture": "qkd_land_n.c11i",
+     "nearest_pin_um": 409.5,
+     "endpoints": 564,
+     "violators": 0,
+     "worst_ps": 111.98,
+     "example": {
+      "start": "cdc_EN_11/co[281]",
+      "end": "land_EN/c11i[281]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "qkd_cdc_wleaf",
+     "capture": "qkd_land_n.c15i",
+     "nearest_pin_um": 409.5,
+     "endpoints": 564,
+     "violators": 0,
+     "worst_ps": 111.98,
+     "example": {
+      "start": "cdc_EN_15/co[281]",
+      "end": "land_EN/c15i[281]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "qkd_cdc_wleaf",
+     "capture": "qkd_land_n.c19i",
+     "nearest_pin_um": 409.5,
+     "endpoints": 564,
+     "violators": 0,
+     "worst_ps": 111.98,
+     "example": {
+      "start": "cdc_EN_19/co[281]",
+      "end": "land_EN/c19i[281]"
+     }
+    },
+    {
+     "cause": "real -> frame",
+     "launch": "qkd_cdc_wleaf",
+     "capture": "qkd_land_n.c23i",
+     "nearest_pin_um": 409.5,
+     "endpoints": 564,
+     "violators": 0,
+     "worst_ps": 111.98,
+     "example": {
+      "start": "cdc_EN_23/co[281]",
+      "end": "land_EN/c23i[281]"
+     }
+    }
+   ],
+   "rows_total": 554
+  },
+  "ff": {
+   "endpoints": 3019305,
+   "causes": {
+    "reset -> phy": {
+     "endpoints": 2,
+     "violators": 2,
+     "worst_ps": -80.6
+    },
+    "frame -> phy": {
+     "endpoints": 584,
+     "violators": 584,
+     "worst_ps": -80.35
+    },
+    "frame -> frame": {
+     "endpoints": 132161,
+     "violators": 131943,
+     "worst_ps": -56.76
+    },
+    "reset -> frame": {
+     "endpoints": 12,
+     "violators": 1,
+     "worst_ps": -56.45
+    },
+    "relay -> frame": {
+     "endpoints": 15476,
+     "violators": 10558,
+     "worst_ps": -53.04
+    },
+    "frame -> relay": {
+     "endpoints": 49951,
+     "violators": 6043,
+     "worst_ps": -52.69
+    },
+    "relay -> relay": {
+     "endpoints": 632506,
+     "violators": 82474,
+     "worst_ps": -46.66
+    },
+    "phy -> frame": {
+     "endpoints": 585,
+     "violators": 581,
+     "worst_ps": -12.64
+    },
+    "reset -> real": {
+     "endpoints": 40072,
+     "violators": 0,
+     "worst_ps": 14.99
+    },
+    "real -> frame": {
+     "endpoints": 210152,
+     "violators": 0,
+     "worst_ps": 26.0
+    },
+    "relay -> real": {
+     "endpoints": 3672,
+     "violators": 0,
+     "worst_ps": 30.31
+    },
+    "frame -> real": {
+     "endpoints": 61468,
+     "violators": 0,
+     "worst_ps": 41.26
+    },
+    "real -> relay": {
+     "endpoints": 3920,
+     "violators": 0,
+     "worst_ps": 56.33
+    },
+    "real -> real": {
+     "endpoints": 1867700,
+     "violators": 0,
+     "worst_ps": 62.19
+    },
+    "relay -> phy": {
+     "endpoints": 1044,
+     "violators": 0,
+     "worst_ps": 2718.59
+    }
+   },
+   "rows": [
+    {
+     "cause": "reset -> phy",
+     "launch": "qkd_d2ds",
+     "capture": "ot_qkvd_ucie_x64_phy.rst_n",
+     "nearest_pin_um": 86.2,
+     "endpoints": 1,
+     "violators": 1,
+     "worst_ps": -80.6,
+     "example": {
+      "start": "d2d_kv/phy_rst_n[0]",
+      "end": "ucie_rom/rst_n"
+     }
+    },
+    {
+     "cause": "frame -> phy",
+     "launch": "qkd_d2ds",
+     "capture": "ot_qkvd_ucie_x64_phy.tx_flit",
+     "nearest_pin_um": 2.4,
+     "endpoints": 583,
+     "violators": 583,
+     "worst_ps": -80.35,
+     "example": {
+      "start": "d2d_kv/fdi[575]",
+      "end": "ucie_rom/tx_flit[573]"
+     }
+    },
+    {
+     "cause": "reset -> phy",
+     "launch": "qkd_host_rt",
+     "capture": "ot_qfd_serdes_112g_x12_phy.rst_n",
+     "nearest_pin_um": 22769.2,
+     "endpoints": 1,
+     "violators": 1,
+     "worst_ps": -80.28,
+     "example": {
+      "start": "host/link_rst_n[0]",
+      "end": "serdes_host/rst_n"
+     }
+    },
+    {
+     "cause": "frame -> phy",
+     "launch": "qkd_d2ds",
+     "capture": "ot_qkvd_ucie_x64_phy.tx_v",
+     "nearest_pin_um": 85.8,
+     "endpoints": 1,
+     "violators": 1,
+     "worst_ps": -70.09,
+     "example": {
+      "start": "d2d_kv/fdi[1]",
+      "end": "ucie_rom/tx_v"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_land",
+     "capture": "qkd_hslice.land_es",
+     "nearest_pin_um": 0.3,
+     "endpoints": 18432,
+     "violators": 18432,
+     "worst_ps": -56.76,
+     "example": {
+      "start": "land_WS/es10[144]",
+      "end": "hsl_WS_10/land_es[144]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er0",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.76,
+     "example": {
+      "start": "hsl_WS_0/land_er[130]",
+      "end": "land_WS/er0[130]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er12",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.76,
+     "example": {
+      "start": "hsl_WS_12/land_er[130]",
+      "end": "land_WS/er12[130]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er16",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.76,
+     "example": {
+      "start": "hsl_WS_16/land_er[130]",
+      "end": "land_WS/er16[130]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er20",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.76,
+     "example": {
+      "start": "hsl_WS_20/land_er[130]",
+      "end": "land_WS/er20[130]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er24",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.76,
+     "example": {
+      "start": "hsl_WS_24/land_er[130]",
+      "end": "land_WS/er24[130]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er28",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.76,
+     "example": {
+      "start": "hsl_WS_28/land_er[130]",
+      "end": "land_WS/er28[130]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er4",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.76,
+     "example": {
+      "start": "hsl_WS_4/land_er[130]",
+      "end": "land_WS/er4[130]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er8",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.76,
+     "example": {
+      "start": "hsl_WS_8/land_er[130]",
+      "end": "land_WS/er8[130]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er0",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.75,
+     "example": {
+      "start": "hsl_WN_0/land_er[136]",
+      "end": "land_WN/er0[136]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er12",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.75,
+     "example": {
+      "start": "hsl_WN_12/land_er[136]",
+      "end": "land_WN/er12[136]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er16",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.75,
+     "example": {
+      "start": "hsl_WN_16/land_er[136]",
+      "end": "land_WN/er16[136]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er20",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.75,
+     "example": {
+      "start": "hsl_WN_20/land_er[136]",
+      "end": "land_WN/er20[136]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er24",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.75,
+     "example": {
+      "start": "hsl_WN_24/land_er[136]",
+      "end": "land_WN/er24[136]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er28",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.75,
+     "example": {
+      "start": "hsl_WN_28/land_er[136]",
+      "end": "land_WN/er28[136]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er4",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.75,
+     "example": {
+      "start": "hsl_WN_4/land_er[136]",
+      "end": "land_WN/er4[136]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er8",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.75,
+     "example": {
+      "start": "hsl_WN_8/land_er[136]",
+      "end": "land_WN/er8[136]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_land_n",
+     "capture": "qkd_hslice_dn.land_es",
+     "nearest_pin_um": 0.4,
+     "endpoints": 18432,
+     "violators": 18432,
+     "worst_ps": -56.75,
+     "example": {
+      "start": "land_WN/es10[149]",
+      "end": "hsl_WN_10/land_es[149]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er11",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WN_11/land_er[123]",
+      "end": "land_WN/er11[123]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er15",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WN_15/land_er[123]",
+      "end": "land_WN/er15[123]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er19",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WN_19/land_er[123]",
+      "end": "land_WN/er19[123]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er23",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WN_23/land_er[123]",
+      "end": "land_WN/er23[123]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er27",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WN_27/land_er[123]",
+      "end": "land_WN/er27[123]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er31",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WN_31/land_er[123]",
+      "end": "land_WN/er31[123]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er3",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WN_3/land_er[123]",
+      "end": "land_WN/er3[123]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er7",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WN_7/land_er[123]",
+      "end": "land_WN/er7[123]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er13",
+     "nearest_pin_um": 0.3,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WS_13/land_er[143]",
+      "end": "land_WS/er13[143]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er17",
+     "nearest_pin_um": 0.3,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WS_17/land_er[143]",
+      "end": "land_WS/er17[143]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er1",
+     "nearest_pin_um": 0.3,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WS_1/land_er[143]",
+      "end": "land_WS/er1[143]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er21",
+     "nearest_pin_um": 0.3,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WS_21/land_er[143]",
+      "end": "land_WS/er21[143]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er25",
+     "nearest_pin_um": 0.3,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WS_25/land_er[143]",
+      "end": "land_WS/er25[143]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er29",
+     "nearest_pin_um": 0.3,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WS_29/land_er[143]",
+      "end": "land_WS/er29[143]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er5",
+     "nearest_pin_um": 0.3,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WS_5/land_er[143]",
+      "end": "land_WS/er5[143]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er9",
+     "nearest_pin_um": 0.3,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.74,
+     "example": {
+      "start": "hsl_WS_9/land_er[143]",
+      "end": "land_WS/er9[143]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er11",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WS_11/land_er[118]",
+      "end": "land_WS/er11[118]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er15",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WS_15/land_er[118]",
+      "end": "land_WS/er15[118]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er19",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WS_19/land_er[118]",
+      "end": "land_WS/er19[118]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er23",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WS_23/land_er[118]",
+      "end": "land_WS/er23[118]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er27",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WS_27/land_er[118]",
+      "end": "land_WS/er27[118]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er31",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WS_31/land_er[118]",
+      "end": "land_WS/er31[118]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er3",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WS_3/land_er[118]",
+      "end": "land_WS/er3[118]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er7",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WS_7/land_er[118]",
+      "end": "land_WS/er7[118]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er13",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WN_13/land_er[148]",
+      "end": "land_WN/er13[148]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er17",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WN_17/land_er[148]",
+      "end": "land_WN/er17[148]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er1",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WN_1/land_er[148]",
+      "end": "land_WN/er1[148]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er21",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WN_21/land_er[148]",
+      "end": "land_WN/er21[148]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er25",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WN_25/land_er[148]",
+      "end": "land_WN/er25[148]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er29",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WN_29/land_er[148]",
+      "end": "land_WN/er29[148]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er5",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WN_5/land_er[148]",
+      "end": "land_WN/er5[148]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er9",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.73,
+     "example": {
+      "start": "hsl_WN_9/land_er[148]",
+      "end": "land_WN/er9[148]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er10",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.72,
+     "example": {
+      "start": "hsl_WN_10/land_er[110]",
+      "end": "land_WN/er10[110]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er14",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.72,
+     "example": {
+      "start": "hsl_WN_14/land_er[110]",
+      "end": "land_WN/er14[110]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er18",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.72,
+     "example": {
+      "start": "hsl_WN_18/land_er[110]",
+      "end": "land_WN/er18[110]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er22",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.72,
+     "example": {
+      "start": "hsl_WN_22/land_er[110]",
+      "end": "land_WN/er22[110]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er26",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.72,
+     "example": {
+      "start": "hsl_WN_26/land_er[110]",
+      "end": "land_WN/er26[110]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er2",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.72,
+     "example": {
+      "start": "hsl_WN_2/land_er[110]",
+      "end": "land_WN/er2[110]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er30",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.72,
+     "example": {
+      "start": "hsl_WN_30/land_er[110]",
+      "end": "land_WN/er30[110]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_land_n.er6",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.72,
+     "example": {
+      "start": "hsl_WN_6/land_er[110]",
+      "end": "land_WN/er6[110]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er10",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.71,
+     "example": {
+      "start": "hsl_WS_10/land_er[156]",
+      "end": "land_WS/er10[156]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er14",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.71,
+     "example": {
+      "start": "hsl_WS_14/land_er[156]",
+      "end": "land_WS/er14[156]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er18",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.71,
+     "example": {
+      "start": "hsl_WS_18/land_er[156]",
+      "end": "land_WS/er18[156]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er22",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.71,
+     "example": {
+      "start": "hsl_WS_22/land_er[156]",
+      "end": "land_WS/er22[156]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er26",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.71,
+     "example": {
+      "start": "hsl_WS_26/land_er[156]",
+      "end": "land_WS/er26[156]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er2",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.71,
+     "example": {
+      "start": "hsl_WS_2/land_er[156]",
+      "end": "land_WS/er2[156]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er30",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.71,
+     "example": {
+      "start": "hsl_WS_30/land_er[156]",
+      "end": "land_WS/er30[156]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_land.er6",
+     "nearest_pin_um": 0.4,
+     "endpoints": 522,
+     "violators": 522,
+     "worst_ps": -56.71,
+     "example": {
+      "start": "hsl_WS_6/land_er[156]",
+      "end": "land_WS/er6[156]"
+     }
+    },
+    {
+     "cause": "reset -> frame",
+     "launch": "qkd_host_rt",
+     "capture": "qkd_d2ds.rst_n",
+     "nearest_pin_um": 465.5,
+     "endpoints": 1,
+     "violators": 1,
+     "worst_ps": -56.45,
+     "example": {
+      "start": "host/link_rst_n[0]",
+      "end": "d2d_kv/rst_n[0]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_hslice.fi",
+     "nearest_pin_um": 32.6,
+     "endpoints": 18042,
+     "violators": 18042,
+     "worst_ps": -53.74,
+     "example": {
+      "start": "hsl_WS_0/fo[141]",
+      "end": "hsl_WS_1/fi[141]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_hslice_dn.fi",
+     "nearest_pin_um": 32.6,
+     "endpoints": 18042,
+     "violators": 18042,
+     "worst_ps": -53.73,
+     "example": {
+      "start": "hsl_WN_1/fo[141]",
+      "end": "hsl_WN_0/fi[141]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_hslice_dn.sdi",
+     "nearest_pin_um": 32.6,
+     "endpoints": 1984,
+     "violators": 1984,
+     "worst_ps": -53.72,
+     "example": {
+      "start": "hsl_EN_0/sdo[30]",
+      "end": "hsl_EN_1/sdi[30]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_hslice_dn.ai",
+     "nearest_pin_um": 32.6,
+     "endpoints": 1984,
+     "violators": 1984,
+     "worst_ps": -53.72,
+     "example": {
+      "start": "hsl_WN_0/ao[26]",
+      "end": "hsl_WN_1/ai[26]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_hslice_dn.ci",
+     "nearest_pin_um": 32.6,
+     "endpoints": 1984,
+     "violators": 1984,
+     "worst_ps": -53.72,
+     "example": {
+      "start": "hsl_WN_0/co[29]",
+      "end": "hsl_WN_1/ci[29]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_hslice.sdi",
+     "nearest_pin_um": 32.6,
+     "endpoints": 1984,
+     "violators": 1984,
+     "worst_ps": -53.72,
+     "example": {
+      "start": "hsl_ES_1/sdo[30]",
+      "end": "hsl_ES_0/sdi[30]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_hslice.ai",
+     "nearest_pin_um": 32.6,
+     "endpoints": 1984,
+     "violators": 1984,
+     "worst_ps": -53.72,
+     "example": {
+      "start": "hsl_WS_1/ao[26]",
+      "end": "hsl_WS_0/ai[26]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice",
+     "capture": "qkd_hslice.ci",
+     "nearest_pin_um": 32.6,
+     "endpoints": 1984,
+     "violators": 1984,
+     "worst_ps": -53.72,
+     "example": {
+      "start": "hsl_WS_1/co[29]",
+      "end": "hsl_WS_0/ci[29]"
+     }
+    },
+    {
+     "cause": "frame -> frame",
+     "launch": "qkd_hslice_dn",
+     "capture": "qkd_hslice_dn.sfi",
+     "nearest_pin_um": 32.6,
+     "endpoints": 1984,
+     "violators": 1984,
+     "worst_ps": -53.71,
+     "example": {
+      "start": "hsl_EN_0/sfo[24]",
+      "end": "hsl_EN_1/sfi[24]"
+     }
+    }
+   ],
+   "rows_total": 554
+  }
+ },
+ "status": "NOT_A_DIE_RESULT (OT_BIND_DIAGNOSTIC=1, OT_PDN=skip, src 88ccadd41, GRT overflow 0, WL 826.5 m)",
+ "sta_status_note": "chain reported STA tt/ff FAIL only because case_status.py did not parse current OpenSTA \"tns max X\" typed metric lines (fixed in this commit); tt wns -550466.56 ps, ff hold worst -80.60 ps are finite and real",
+ "classification_r2": {
+  "tt_setup": [
+   {
+    "cls": "DIE_TOP_BROADCAST_NO_DISTRIBUTION",
+    "worst_ps": -550466.56,
+    "nets": [
+     "hboot host.boot_go -> 4 slice chain heads + d2d_kv.host_boot_begin (25.8 mm unbuffered, slew 417 ns)"
+    ],
+    "fix": "v1.4.2: registered equal-depth boot_go distribution tree (relay stages <= PIN_REACH), depth in the boot calendar"
+   },
+   {
+    "cls": "DIE_TOP_RESET_NO_DISTRIBUTION",
+    "worst_ps": -4838.65,
+    "nets": [
+     "rst_die host.die_rst_n -> every die master rst_n (5,096 real + 11 frame violators)",
+     "rst_hbm host.hbm_rst_n -> 128 slices (-1894.5)"
+    ],
+    "fix": "v1.4.2: pipelined reset distribution tree (async-assert local sync, fixed deassert depth) instead of one die net"
+   },
+   {
+    "cls": "GEOMETRY_LAST_RELAY_TO_PHY",
+    "worst_ps": -7558.65,
+    "nets": [
+     "host_fdi rly_host_fdi_55 -> serdes_host.tx_flit 2.2 mm (1,044 endpoints)"
+    ],
+    "fix": "v1.4.2: FDI chain must end within PIN_REACH of the SerDes PHY pins (last relay placed at the PHY face)"
+   },
+   {
+    "cls": "UNHOMED_HEAD_STAGES",
+    "worst_ps": -1216.09,
+    "nets": [
+     "ECTL C t1_q/e -> head frontq (233k endpoints, 0.9-1.0 mm)",
+     "ECTL B t0_cl/row -> frontq (-722)",
+     "score4 sc_o -> ECTL C s0..s3 (-368)"
+    ],
+    "fix": "v1.4.2 head sites: qkh_head_tstage x2 + qkh_head_sstage x1 per head (CLOSED native PASS on main), N=2/M=1 calendar"
+   },
+   {
+    "cls": "PIN_REACH_HOPS",
+    "worst_ps": -196.7,
+    "nets": [
+     "ctrl_kc kf -> rly (547 um)",
+     "ectl_a rq -> rly (448 um)",
+     "ctrl_pc er -> hslice ctrl_er (439 um)",
+     "relay->relay kvn (389 um)"
+    ],
+    "fix": "relay planner FIRST_REACH for ctrl_kc kf / ectl_a rq; slice pin level with ctrl_pc er"
+   }
+  ],
+  "ff_hold": "every FF violator is an ASSUMED class (frame/relay/phy single-flop placeholders with ideal clocks: worst -80.6 frame->phy/reset->phy, -56.8 frame->frame, -46.7 relay->relay); real->real FF +62.19, reset->real +14.99 -> no real hold defect; relay masters need generated views (not placeholders) before FF classes are real"
+ }
+}

@@ -1,0 +1,54 @@
+
+8. Printing statistics.
+
+=== ot_hgi_coll_pring_static_state_lane ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     9463        - wires
+     9729        - wire bits
+       27        - public wires
+      293        - public wire bits
+       27        - ports
+      293        - port bits
+     9564  1058.96 cells
+      204   17.846   A2O1A1Ixp33_ASAP7_75t_R
+       46    6.036   A2O1A1O1Ixp25_ASAP7_75t_R
+       78    6.823   AND2x2_ASAP7_75t_R
+        1    0.087   AND3x1_ASAP7_75t_R
+       90    7.873   AO21x1_ASAP7_75t_R
+        7    1.021   AO221x1_ASAP7_75t_R
+        3    0.394   AO22x1_ASAP7_75t_R
+      156   13.647   AOI211xp5_ASAP7_75t_R
+     1707   124.44   AOI21xp33_ASAP7_75t_R
+       22    2.245   AOI221xp5_ASAP7_75t_R
+     1053   92.116   AOI22xp33_ASAP7_75t_R
+       19    1.939   AOI311xp33_ASAP7_75t_R
+       49    4.287   AOI31xp33_ASAP7_75t_R
+        4    0.467   AOI321xp33_ASAP7_75t_R
+     1664  485.222   DFFHQNx1_ASAP7_75t_R
+      600   26.244   INVx1_ASAP7_75t_R
+     1483   86.489   NAND2xp33_ASAP7_75t_R
+       37    2.697   NAND3xp33_ASAP7_75t_R
+        4     0.35   NAND4xp25_ASAP7_75t_R
+      610   35.575   NOR2xp33_ASAP7_75t_R
+       27    1.968   NOR3xp33_ASAP7_75t_R
+      268   23.445   O2A1O1Ixp33_ASAP7_75t_R
+       25    2.916   OA211x2_ASAP7_75t_R
+      137   13.982   OA21x2_ASAP7_75t_R
+        3    0.437   OA22x2_ASAP7_75t_R
+      153   13.384   OAI211xp5_ASAP7_75t_R
+      870   63.423   OAI21xp33_ASAP7_75t_R
+       34     3.47   OAI221xp5_ASAP7_75t_R
+       20     1.75   OAI22xp33_ASAP7_75t_R
+       82    8.369   OAI311xp33_ASAP7_75t_R
+       19    1.662   OAI31xp33_ASAP7_75t_R
+       19    2.216   OAI321xp33_ASAP7_75t_R
+        1    0.102   OAI32xp33_ASAP7_75t_R
+       47    4.112   OR2x2_ASAP7_75t_R
+       22    1.925   OR3x1_ASAP7_75t_R
+
+   Chip area for module '\ot_hgi_coll_pring_static_state_lane': 1058.959980
+     of which used for sequential elements: 485.222400 (45.82%)
+

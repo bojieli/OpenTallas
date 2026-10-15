@@ -11,8 +11,8 @@
  "clock_port": "ck",
  "reset_ports": [],
  "outline": {
-  "w": 17.28,
-  "h": 30.24,
+  "w": 75.6,
+  "h": 92.88,
   "exact": true
  },
  "layer_cap": "M5",
@@ -28,7 +28,7 @@
    "o"
   ]
  },
- "io_tcl": "physical/s81_die_pins/snet_gen18r/dsfd_xstg_515.tcl",
+ "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_xstg_515.tcl",
  "recipe": 2,
  "route": {
   "pd": 0.5,
@@ -40,20 +40,20 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S-NET dsfd_xstg_515 (2 die instances): the d8g1 ot_meso_fifo (trained placement + CREDITS 16) is replaced by ot_s81_static_lane_end (cw pin register, epoch from the lane marker, fixed-offset crossing, no credit/ready/placement), o = {data, valid & live, live}; RTL = the case glue module rendered by the generator (module sha256 1d1b0ddf83cc9d4b, glue 49e64b6832936598); pins at the generator centres (gen18r).",
+ "structural_change": "S-NET dsfd_xstg_515 (2 die instances): the d8g1 ot_meso_fifo (trained placement + CREDITS 16) is replaced by ot_s81_static_lane_end (cw pin register, epoch from the lane marker, fixed-offset crossing, no credit/ready/placement), o = {data, valid & live, live}; RTL = the case glue module rendered by the generator (module sha256 1d1b0ddf83cc9d4b, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n3 sizing: std 3458 um2 -> util <= 0.55, faces at cut <= 0.6 (outline 75.6 x 92.88 vs generator slot 17.256 x 30.216); pins spread evenly per face (spread_face_pins.py, clock at face centre), no output hold pads (die receivers carry input hold stages)",
  "reroute_reason": {
   "kind": "rtl_change"
  },
  "job": {
   "owner": "Claude:s81-net",
   "branch": "claude/el1015-s81-net-static",
-  "tag": "n1",
+  "tag": "n3",
   "purpose": "S81 S-NET static-schedule redesign: dsfd_xstg_515 (2 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81net_xstg_515/views",
   "record_to": "results/rtl/ref_tile/s81net_xstg_515",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_net/gen",
-   "physical/s81_die_pins/snet_gen18r",
+   "physical/s81_die_pins/snet_gen19b",
    "rtl/dsrom_sys/s81_die_bind",
    "rtl/dsrom_sys/s81_static_net",
    "tools/s81_static_net",
@@ -72,12 +72,25 @@
     "name": "xstg_offset_mutant",
     "cmd": "bash tools/s81_static_net/bench_xstg_master.sh mut_offset dsfd_xstg_515 rtl/dsrom_sys/s81_static_net/gen/dsfd_xstg_515.sv {RUN}/xstg_mut",
     "expect": "fail",
-    "fail_regex": "XSTG",
+    "fail_regex": "GATE MUTANT .*REJECTED",
     "threads": 1,
     "peak_ram_gb": 2
    }
   ]
  },
+ "slot_change_request": {
+  "reason": "S-NET n3: measured std area / pin cut",
+  "outline": [
+   75.6,
+   92.88
+  ],
+  "generator_slot": [
+   17.256,
+   30.216
+  ],
+  "pins": "physical/s81_die_pins/snet_gen19b/dsfd_xstg_515.tcl"
+ },
+ "outhold": false,
  "sdc_extra": [
   "physical/s81_static_net/xstg/dsfd_xstg_515.sdc"
  ],
@@ -92,7 +105,6 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true,
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {

@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.s81.bind19-existing-construction-collect.v1",
+  "source_stream": "S-BIND r6 4a4cf4ff3, predecessor existing run; no new generator launched",
+  "port_bind_sha256": "4fe4e701349ceb30880d62dde6ea08c0ecadb14ccb25bc31301ee7c29878de57",
+  "die_sha256": "4f0331275bc6010065259ffae9489fac0fb11d73df8c0289311cb49113397dda",
+  "actual_remote_json": "ot-epyc4:/srv/opentallas-scratch/claude/s81-bind-1015/bind19_x2pair/port_bind.json",
+  "source_die": "/srv/opentallas-scratch/claude/s81-bind-1015/bind19_x2pair/gen/construction_pass0_die.v",
+  "summary": {
+    "masters": 222,
+    "instances": 81426,
+    "unbound_masters": 0,
+    "stub_masters": 0,
+    "ambiguous_masters": 0,
+    "port_not_in_rtl": 0,
+    "width_mismatch": 1,
+    "input_unconnected": 7,
+    "input_tied": 0,
+    "unparsed_connections": 0,
+    "undriven_net_bits": 0,
+    "multi_driven_net_bits": 0,
+    "top_assigns": 0,
+    "params_not_in_rtl": 0,
+    "strap_ports": 0
+  },
+  "bf_front_static": {
+    "verdict": "PASS",
+    "instances": 519,
+    "input_unconnected": [],
+    "width_mismatch": {}
+  },
+  "pq": {
+    "verdict": "FAIL",
+    "instances": 1,
+    "input_unconnected": [
+      "f_iss"
+    ],
+    "width_mismatch": {
+      "ra2": [
+        [
+          12,
+          14
+        ]
+      ]
+    }
+  },
+  "remaining_fails": {
+    "dsfd_sp_pq_n": {
+      "instances": 1,
+      "input_unconnected": [
+        "f_iss"
+      ],
+      "width_mismatch": {
+        "ra2": [
+          [
+            12,
+            14
+          ]
+        ]
+      },
+      "unparsed_conn": []
+    },
+    "dsfd_sp_vm": {
+      "instances": 1,
+      "input_unconnected": [
+        "f_mx_rq",
+        "f_mx_rqv",
+        "f_mx_wq",
+        "f_mx_wqd",
+        "f_mx_wqm",
+        "f_mx_wqv"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": []
+    }
+  },
+  "final_generator_exit": 143,
+  "qualification": false,
+  "scope": "Construction-pass0 strict structural port evidence only; final generator interrupted. BF all519 xb connections now bound under pair option; no numerical/per-bit timing/route closure claim. Current main later integrates PQ ROM4, so its remaining ra2 finding is historical."
+}
