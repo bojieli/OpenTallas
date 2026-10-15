@@ -43,6 +43,14 @@ def generate(out, read_pipe=0):
     text = replace_once(text, ' .ck_control({5{clk}}),',
                         ' .ck_calendar_rom({3{clk}} & ((CALENDAR_CLOCK_MUT==1 && $time>400000) ? 3\'b110:3\'b111)),\n .ck_calendar_outputs({3{clk}} & ((CALENDAR_CLOCK_MUT==2 && $time>400000) ? 3\'b110:3\'b111)),\n .ck_control({5{clk}}),')
     if read_pipe==4:
+        # CAP2's gated clock must observe a real reset edge after it has opened.
+        # Match the VM owner's proven common-rising 3:4 epoch. No DUT state is
+        # initialized by the bench, and all stimulus follows this warm reset.
+        text=replace_once(text,'reg clk=0;','reg clk=1;')
+        text=replace_once(text,'reg s_ck=0;','reg s_ck=1;')
+        text=replace_once(text,'reg rst_n=0;','reg rst_n=1;')
+        text=replace_once(text,'idle_edges(4);rst_n=1;idle_edges(8);',
+            '#3337;rst_n=0;#9907;rst_n=1;@(negedge clk);idle_edges(8);\n  if(vm.u_cap.xf!==16\'d0)$fatal(1,"CAP2 warm reset x34 alarms %h",vm.u_cap.xf);')
         text=replace_once(text,' dsfd_sp_vm vm(', ' dsfd_sp_vm #(.READ_PIPE(4),.CAP_PIPE(2)) vm(')
         text=replace_once(text,'e<498+14','e<498+18')
         text=replace_once(text,'e>=12&&e<510','e>=16&&e<514')
@@ -51,7 +59,7 @@ def generate(out, read_pipe=0):
     paths[str(tb.relative_to(ROOT))] = hashlib.sha256(tb.read_bytes()).hexdigest()
     (out / 'source_manifest.json').write_text(json.dumps(dict(source_sha256=paths,
         added_delivered_clock_pins=['ck_calendar_rom[0..2]', 'ck_calendar_outputs[0..2]'],
-        normal_edges_added=0, initialization_extra_rom_edges=1,vm_parameters=dict(READ_PIPE=read_pipe,CAP_PIPE=2 if read_pipe==4 else 0),
+        normal_edges_added=0, initialization_extra_rom_edges=1,reset_epoch=('explicit warm pulse3337..13244ps; first common 3:4 rising13344ps' if read_pipe==4 else 'historical default component epoch'),vm_parameters=dict(READ_PIPE=read_pipe,CAP_PIPE=2 if read_pipe==4 else 0),
         qualification='component candidate; die ABI, phi-R, placement and native route remain open'), indent=2)+'\n')
 
 if __name__ == '__main__':
