@@ -26,7 +26,10 @@ $vl --cc --hierarchical -j 1 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEM
 # several huge elaborations and exceed the admitted memory reservation.
 make -C "$out/obj" -f Vot_qwen_tp8_attention_service_hier.mk -j1 "MAKE=make -j$cpp_jobs" hier_build >> "$out/build.log" 2>&1
 cd "$out/obj"
-libs=$(find . -name "*.a" | sort)
+# The embedding executable owns the common Verilator runtime. Including its
+# archive here duplicates runtime definitions when a component links that same
+# runtime explicitly, and can give two independent runtime states in a host.
+libs=$(find . -name "*.a" ! -name libverilated.a | sort)
 g++ -shared -o "$out/libot_qwen_tp8_attention_service.so" -Wl,--whole-archive $libs -Wl,--no-whole-archive >> "$out/build.log" 2>&1
 echo "{\"seconds\": $(( $(date +%s) - start )), \"fp_units\": \"RTL ot_hdc_fp32_add_lat/mul_lat/add_fast/mul_fast\", \"hierarchical\": true}" > "$out/receipt.json"
 sha256sum "$out/libot_qwen_tp8_attention_service.so"
