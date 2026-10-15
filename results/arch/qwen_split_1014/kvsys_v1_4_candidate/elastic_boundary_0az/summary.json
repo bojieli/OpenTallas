@@ -1,0 +1,61 @@
+{
+ "schema": "opentallas.qwen_kv_hbm_elastic_boundary_0az.v1",
+ "date": "2026-10-15",
+ "owner": "Q-KVSYS-DIE (kvsys lead r8)",
+ "source_rev": "82a445f8a55df1dbbaae21b4fe17d02232ea17fb",
+ "rule": "HANDOFF 0az / 0an: flow control kept ONLY at the HBM stack/PHY boundary; HBM reads land in on-chip staging buffers; compiler prefetches and checks ONE ready per buffer block; everything after block-ready is compiler fixed-slot",
+ "hierarchy": [
+  "qkd_ctrl_pc_host_static ELASTIC=1 (raw PHY return window: nominal calendar = minimum, early -> fault, late absorbed, RAW_WD=256 watchdog; in-order tag/class queues TQD=64)",
+  "qkd_kv_hbm_elastic_front NBLK=4 x BLK=8 x 297 b (landing at ACTUAL arrival, block READY after 8 sectors, release on compiled blk_go: first put +2 edges, back-to-back blocks; blk_freed = block-granular RD credit; hold/stall_edges = explicit exceptional block pause; overflow/go faults)",
+  "qkd_static_kv_return_slots (UNCHANGED ABI: the held return r2 master) fed by the front co/epoch/compiled_hbm_put"
+ ],
+ "bench": "rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv via tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh (ot-run EPYC4)",
+ "production": {
+  "runs": 18,
+  "phases_ps": [
+   137,
+   637
+  ],
+  "phy_window_edges": [
+   0,
+   8,
+   16
+  ],
+  "seeds": [
+   1,
+   2,
+   3
+  ],
+  "sectors_per_run": 512,
+  "result": "PASS: 512 sectors exact through controller+front+ring, zero stalls, every release edge equals the compile-time model (blk_go from the RD reservation calendar only), no overflow",
+  "max_occupancy_measured": 11,
+  "occupancy_bound": "BLK + GO_DLY + 2 = 27 <= 32 at one RD per edge"
+ },
+ "failing_cases": {
+  "m2_late (PHY 12 edges beyond window, block-last sector)": "OBSERVED_HOLD: front holds 12 edges, 512 sectors emitted exact; core ring faults because this static bench does not pause the core programme (the sequencer block pause is the exceptional mode)",
+  "m3_historical (fixed RL23 calendar ring, old wiring) under PHY window 16": "OBSERVED_FAIL (ring fault)",
+  "m5_early (one return before nominal)": "OBSERVED_FAIL (controller f_raw)",
+  "m6_silent (PHY silent 600 edges)": "OBSERVED_FAIL (watchdog)",
+  "fm1 front read address +1": "OBSERVED_FAIL",
+  "fm2 ready one sector early (late block-last)": "OBSERVED_FAIL",
+  "fm3 release ignores ready (late)": "OBSERVED_FAIL",
+  "ce0 controller exact-slot check (historical) under window": "OBSERVED_FAIL"
+ },
+ "cost": {
+  "storage_per_pc_bits": 9504,
+  "generic_synth_nblk2": {
+   "dff": 5371,
+   "mux": 9538
+  },
+  "latency_edges_hbm": "first sector of a KV stream: + (BLK-1) RD spacing + GO_DLY (= window + 1) + 2 -> +10 edges at window 0, +26 at window 16 (hbm 1.024 ns)",
+  "token_cost": "hidden when the compiler issues each layer's KV RD reservations GO_DLY + 9 edges earlier (KV of earlier tokens is address-known ahead of the layer); otherwise <= 26 hbm edges x 36 layers per token exposed: to be priced in the token model before adoption",
+  "controller": "tag queue 32 -> 64 entries (+32 x 34 b) + pcport class FIFO 32 -> 64 (+32 b) + 16 b counters"
+ },
+ "write_side": "writer -> controller es crosses ot_qkd_static_emb_cdc (async FIFO depth 8, credit-bounded, faults on overflow): the existing elastic ingress at the controller; HBM writes have fixed CWL from the controller column (no PHY-return dependence), one KV write per PC per (token, layer): occupancy <= 1-2 of 8",
+ "holds": "release item 1 (elastic return + write ingress with block-ready start) satisfied by this proof; item 2 (current die parent/pins/clock/boot integration + native timing audits) still OPEN: neither the writer nor return_slots+front+ELASTIC controller is in the v1.4.1 die netlist yet -> holds KEPT, annotated",
+ "not_claimed": [
+  "whole-token qualification",
+  "physical closure of the front",
+  "die integration"
+ ]
+}

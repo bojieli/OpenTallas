@@ -1,0 +1,11 @@
+LAT 8
+MISMATCH group=0 addr=0 got=375d382737163782371e36c83720374d373b375836d5373e371536e137103701 exp=371837513702374e36dc36df36f336e236c336d136d8369836c436d5369836aa
+MISMATCH group=2 addr=1994 got=3a3339eb3b023a3439c03a9d39933a383b4a39fb3a983a673a253a1639b83aec exp=3ad239df3a9739fb3a2e3acc39aa3a9539f7394639b439ce39e53a3c39b63ab5
+MISMATCH group=7 addr=6979 got=39a239b039ab399939a039ab398b39a6399439b339fe39a23988399139b839d3 exp=399939af39a8399f39c539aa39a83a15399639a339a439d43992399139ae3a64
+MISMATCH group=11 addr=10967 got=3a47398e39c639c339b53a1539a43a0c39d739a239b239bc39de39be3a1439ac exp=3998397239bf39ef39b439c53997399e39de39d639ee39b839da39a639a739dc
+MISMATCH group=16 addr=15952 got=3a033a2939bf3a2a3a0c39ef39e339da39de39d639e539a2399e3a0739d739fd exp=39f43a2239b939c039e43a0a39ef39c339e83a0f39be39b239ba39a039c739c2
+FAIL join960_scale_abi errors=237618 checked=30576
+- /srv/opentallas-scratch/claude/qfunc-join960/pool/rtl/test/qwen_split/tb_join960_scale_abi.sv:73: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 61us; walltime 5.763 s; speed 10.619 us/s
+- Verilator: cpu 5.763 s on 1 threads; allocated 61 MB
