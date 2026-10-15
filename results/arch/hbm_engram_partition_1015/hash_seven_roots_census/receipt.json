@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.hbm.engram.hash_clock_roots.v1",
+  "status": "pass",
+  "logical_FF_by_clock_root": {
+    "clk": 5032,
+    "clk_columns[0]": 3016,
+    "clk_columns[1]": 3021,
+    "clk_columns[2]": 3021,
+    "clk_columns[3]": 3016,
+    "clk_columns[4]": 3021,
+    "clk_columns[5]": 3021
+  },
+  "total_logical_FF": 23148,
+  "maximum_root_FF": 5032,
+  "all_roots_at_most15000": true,
+  "source_sha256": {
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_hash_clock_roots.sv": "49edac680059b3543cd2d642c47b9b80e8afaf6994e3f7c965155a65e375e953",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_dispatch.sv": "1132b94038342443ba24380f1a1e697ebb8c7aa7c2fea231d2e83a991f8a94f9",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_hash_home_clock_roots.sv": "4717c84d8b910f853b3d5f24901cf3977b703eb313a13950b01cc39fbf3831b9"
+  },
+  "scope": "Complete actual 48-column hash, held outputs and both released eight-home dispatch streams. Seven 1:1 same-phase source clocks; no inserted stages or reduced workload. Actual min/max crossing STA, CTS, route and immutable performance admission remain open."
+}
