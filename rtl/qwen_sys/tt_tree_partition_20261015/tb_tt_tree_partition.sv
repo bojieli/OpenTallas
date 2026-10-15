@@ -25,7 +25,7 @@ wire  ref_mx_we,dut_mx_we;
 wire [24-1:0] ref_mx_addr,dut_mx_addr;
 wire [16-1:0] ref_mx_mask,dut_mx_mask;
 wire [16*32-1:0] ref_mx_data,dut_mx_data;
-reg [379:0] cmd=0;
+reg [379:0] cmd[0]=0;
 wire [94:0] ref_ret,dut_ret;
 qfd_tt_ctlm_tree_static u_ref(.clk(clk),.rst_n(rst_n),.me_acc_o(ref_me_acc_o),.me_idle_o(ref_me_idle_o),.me_prog_o(ref_me_prog_o),.up_fault(up_fault),.land_cnt(land_cnt),.scale_re(ref_scale_re),.scale_gre(ref_scale_gre),.scale_addr(ref_scale_addr),.t_sel_e(ref_t_sel_e),.t_tv_e(ref_t_tv_e),.tr_fault(tr_fault),.p_v_e2(ref_p_v_e2),.p_f_e2(ref_p_f_e2),.p_am(p_am),.p_fault(p_fault),.fab_fault(fab_fault),.ov(ref_ov),.mx_we(ref_mx_we),.mx_addr(ref_mx_addr),.mx_mask(ref_mx_mask),.mx_data(ref_mx_data),.cmd(cmd),.ret(ref_ret));
 qfd_tt_tree_partition #(.MUT(MUT)) u_dut(.ck_core(clk),.ck_scale(clk),.rst_n(rst_n),.me_acc_o(dut_me_acc_o),.me_idle_o(dut_me_idle_o),.me_prog_o(dut_me_prog_o),.up_fault(up_fault),.land_cnt(land_cnt),.scale_re(dut_scale_re),.scale_gre(dut_scale_gre),.scale_addr(dut_scale_addr),.t_sel_e(dut_t_sel_e),.t_tv_e(dut_t_tv_e),.tr_fault(tr_fault),.p_v_e2(dut_p_v_e2),.p_f_e2(dut_p_f_e2),.p_am(p_am),.p_fault(p_fault),.fab_fault(fab_fault),.ov(dut_ov),.mx_we(dut_mx_we),.mx_addr(dut_mx_addr),.mx_mask(dut_mx_mask),.mx_data(dut_mx_data),.cmd(cmd),.ret(dut_ret));
@@ -35,10 +35,11 @@ initial begin
 repeat(8) @(negedge clk);rst_n=1;
 for(cyc=0;cyc<30000;cyc=cyc+1)begin
 @(negedge clk);step_rng();
-cmd=0;
-if(cyc%1200==16)begin
-cmd={24'd96,1'b1,1'b1,1'b1,1'b0,24'd32,24'd8,24'd0,1'b1,24'd8192,4'(7+(cyc/1200)%5),3'd0,24'd1,24'd1,24'd1,24'd0,24'd1,24'd1,24'd8,24'(rng&1023),1'b0,18'd32,18'd3072,18'd4096,1'b1};
-go_seen=go_seen+1;end
+cmd[0]=0;
+if(cyc%1200==0)begin
+cmd={24'd96,1'b1,1'b1,1'b1,1'b0,24'd32,24'd8,24'd0,1'b1,24'd8192,4'(7+(cyc/1200)%5),3'd0,24'd1,24'd1,24'd1,24'd0,24'd1,24'd1,24'd8,24'd128,1'b0,18'd4,18'd2,18'd4096,1'b0};
+end
+if(cyc%1200==16)begin cmd[0]=1;go_seen=go_seen+1;end
 p_am={6{1'b1,rng,18'(cyc)}};
 if(ref_ov)land_cnt=land_cnt+1;
 if(cyc>800)begin

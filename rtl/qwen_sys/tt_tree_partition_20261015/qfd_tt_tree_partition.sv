@@ -53,7 +53,7 @@ module qfd_tt_tree_partition #(parameter integer MUT=0,
 );
     wire [166:0] scale_tag; wire scale_v; wire [17:0] scale_t; wire scale_rst_n;
     qfd_tt_core_leaf u_core(.clk(ck_core),
-      .rst_n(rst_n),.me_acc_o(me_acc_o),.me_idle_o(me_idle_o),.me_prog_o(me_prog_o),.up_fault(up_fault),.land_cnt(land_cnt),.t_sel_e(t_sel_e),.t_tv_e(t_tv_e),.tr_fault(tr_fault),.p_v_e2(p_v_e2),.p_f_e2(p_f_e2),.p_am(p_am),.p_fault(p_fault),.fab_fault(fab_fault),.ov(ov),.mx_we(mx_we),.mx_addr(mx_addr),.mx_mask(mx_mask),.mx_data(mx_data),.cmd(cmd),
+      .rst_n(rst_n),.me_acc_o(me_acc_o),.me_idle_o(me_idle_o),.me_prog_o(me_prog_o),.up_fault(up_fault),.land_cnt(land_cnt),.t_sel_e(t_sel_e),.t_tv_e(t_tv_e),.tr_fault(tr_fault),.p_v_e2(p_v_e2),.p_f_e2(p_f_e2),.p_am(p_am),.p_fault(p_fault),.fab_fault(fab_fault),.ov(ov),.mx_we(mx_we),.mx_addr(mx_addr),.mx_mask(mx_mask),.mx_data(mx_data),.cmd(cmd),.ret(ret),
       .scale_tag(scale_tag),.scale_v(scale_v),.scale_t(scale_t),.scale_rst_n(scale_rst_n));
     wire [166:0] scale_tag_m=scale_tag ^ ((MUT==1) ? 167'd1 : 167'd0);
     generate if(MUT==2)begin:g_mut_station

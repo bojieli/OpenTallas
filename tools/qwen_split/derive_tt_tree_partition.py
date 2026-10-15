@@ -119,7 +119,7 @@ endmodule
     header = original_tree[:original_tree.index('\n);') + 3]
     header = header.replace('module qfd_tt_ctlm_tree_static #(', 'module qfd_tt_tree_partition #(parameter integer MUT=0,', 1)
     header = header.replace('input wire  clk,', 'input wire ck_core, input wire ck_scale,')
-    names = re.findall(r'^\s*(?:input|output)\s+wire\s+(?:\[[^\n]*?\]\s*)?(\w+)\s*[,\n]', original_tree[:original_tree.index('\n);')], re.M)
+    names = re.findall(r'^\s*(?:input|output)\s+wire\s+(?:\[[^\n]*?\]\s*)?(\w+)\s*(?:[,\n]|$)', original_tree[:original_tree.index('\n);')], re.M)
     assert 'cmd' in names and 'scale_addr' in names and 'clk' in names
     core_names = [n for n in names if n not in ('clk', 'scale_re', 'scale_gre', 'scale_addr')]
     wrapper = header + '\n    wire [166:0] scale_tag; wire scale_v; wire [17:0] scale_t; wire scale_rst_n;\n'
