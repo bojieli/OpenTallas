@@ -50,16 +50,25 @@ module ot_hgi_sfu_static_operand_store #(
    if(rd_re[4*l+g] && scalar_enable[g] &&
     (!scalar_valid[g] || rd_addr[24*(4*l+g)+:24]!=scalar_addr_q[g]))scalar_bad=1;
  end
- reg bad_source;
+ reg bad_source,bad_range;
  always @*begin
-  bad_source=0;
+  bad_source=0;bad_range=0;
+  for(integer l=0;l<16;l=l+1)begin
+   if(vm_we[l] && |vm_waddr[24*l+LWB+:24-LWB])bad_range=1;
+   for(integer g=0;g<4;g=g+1)
+    if(rd_re[4*l+g] && !scalar_enable[g] && |rd_addr[24*(4*l+g)+LWB+:24-LWB])bad_range=1;
+  end
+  for(integer b=0;b<8;b=b+1)
+   if(stage_v[b] && stage_addr[LWB*b+:LWB]>{LWB{1'b1}}-7)bad_range=1;
+  for(integer b=0;b<2;b=b+1)
+   if(drain_v[b] && drain_addr[LWB*b+:LWB]>{LWB{1'b1}}-7)bad_range=1;
   for(integer l=0;l<16;l=l+1)
    for(integer s=0;s<4;s=s+1)
     if(rd_re[4*l+s] && rd_src[8*l+2*s+:2]!=0)bad_source=1;
  end
  always @(posedge clk or negedge rst_n)
   if(!rst_n)fault<=0;
-  else if(bad_source || scalar_bad || |group_fault)fault<=1;
+  else if(bad_source || bad_range || scalar_bad || |group_fault)fault<=1;
  for(genvar g=0;g<4;g=g+1)begin:g_operand
   wire [15:0] req;
   wire [383:0] addr;

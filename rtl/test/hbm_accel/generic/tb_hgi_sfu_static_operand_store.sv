@@ -43,7 +43,7 @@ module tb_hgi_sfu_static_operand_store;
    rd_re='1;vm_we='1;
    for(integer l=0;l<16;l++)begin
     vm_addr[24*l+:24]=24'(beat*16+l);vm_data[32*l+:32]=value(4,beat*16+l);
-    for(integer g=0;g<4;g++)rd_addr[24*(4*l+g)+:24]=24'((beat*16+l)^($test$plusargs("MUT_ADDR")?1:0));
+    for(integer g=0;g<4;g++)rd_addr[24*(4*l+g)+:24]=24'(((beat*16+l)^($test$plusargs("MUT_ADDR")?1:0))|($test$plusargs("MUT_RANGE")?(1<<LWB):0));
    end
    @(posedge clk);#0.001;
    if(fault)$fatal(1,"STORE_FAULT");
