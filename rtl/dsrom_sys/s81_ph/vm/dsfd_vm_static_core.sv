@@ -30,7 +30,7 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (  // READ_PIPE 0 le
     input  wire          cks, rss,
     input  wire          ck_rsched, ck_seq, ck_landing,
     input  wire [15:0]   ck_mem_fsr,
-    input  wire [3:0]    ck_mem_return,
+    input  wire [15:0]   ck_mem_return,
     input  wire [127:0]  ck_mem_bank, ck_mem_wcapture,
     input  wire [15:0]   ck_mem_wscatter,
     input  wire [47:0]   ck_mem_relay_req, ck_mem_relay_rsp,

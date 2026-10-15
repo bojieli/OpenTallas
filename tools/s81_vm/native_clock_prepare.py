@@ -9,24 +9,28 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import die_port_bind as D
 
-def prepare(out, read_pipeline=1):
+def prepare(out, read_pipeline=1, cap_pipeline=1):
+    # read_pipeline is the core READ_PIPE (0 legacy, 1 L13, 2 L14 pin-registered, 4 L16 production)
     clocks={}; resets={}
     def add(table,port,paths):
         assert port not in table
         table[port]=paths if isinstance(paths,list) else [paths]
     mem='dut.u_core.u_mem'; ws='dut.u_core.u_ws'
-    add(clocks,'cks','dut.cks');add(resets,'rss','dut.rss')
-    for cat,child,cp,rp in [('core','', 'cks','rss'),('rsched','.u_rs','ck','rst_n'),('seq','.u_seq','ck','rst'),('landing','.u_land','ck','rst_n')]:
+    # top-level cks/rss retired (F3): VM-top p_bad/e_flt live in dsfd_vm_seq_tile; ck_core_t feeds u_core.cks
+    rs='.rs_l16.u_rs' if read_pipeline>=4 else '.rs_l14.u_rs'
+    for cat,child,cp,rp in [('core','', 'cks','rss'),('rsched',rs,'ck','rst_n'),('seq','.u_seq','ck','rst'),('landing','.u_land','ck','rst_n')]:
         add(clocks,'ck_'+cat+'_t','dut.u_core'+child+'.'+cp)
         add(resets,'rss_'+cat+'_t','dut.u_core'+child+'.'+rp)
     for cat,child in [('return','u_return')]:
-        add(clocks,'ck_mem_'+cat+'_t',[f'{mem}.slice[{s}].{child}.ck' for s in range(4)])
+        # one clock entry per hardened return lane (4 per slice, 5,380 FF each): 4 tied lanes were 21,520 FF/root > 15k
+        add(clocks,'ck_mem_'+cat+'_t',[f'{mem}.slice[{s}].{child}.ck[{l}]' for s in range(4) for l in range(4)])
         add(resets,'rss_mem_'+cat+'_t',[f'{mem}.slice[{s}].{child}.rst_n' for s in range(4)])
     fsrpaths=[f'{mem}.slice[{s}].u_slice.u_r.b{b}.leaf' for s in range(4) for b in range(4)]
     add(clocks,'ck_mem_fsr_t',[p+'.ck' for p in fsrpaths]);add(resets,'rss_mem_fsr_t',[p+'.rst_n' for p in fsrpaths])
     if read_pipeline:
         for cat,count in [('data',64),('valid',8)]:
-            paths=[f'dut.u_core.bounded_read.u_read.{"d" if cat=="data" else "v"}{b}.leaf' for b in range(count)]
+            rb='l13' if read_pipeline==1 else 'l14'
+            paths=[f'dut.u_core.bounded_read.{rb}.u_read.{"d" if cat=="data" else "v"}{b}' for b in range(count)]
             add(clocks,'ck_read_'+cat+'_t',[p+'.ck' for p in paths]);add(resets,'rss_read_'+cat+'_t',[p+'.rst_n' for p in paths])
     for cat,child,width in [('bank','bank',32),('wcapture','write_group',32),('wscatter','write_group',4)]:
         paths=[]
@@ -65,13 +69,16 @@ def prepare(out, read_pipeline=1):
             mapping[port]={'kind':vec,'start':start,'width':len(paths),'leaf_pins':paths}
             if vec=='clocks':c+=len(paths)
             else:r+=len(paths)
-    assert (c,r)==(610+72*read_pipeline,546+72*read_pipeline),(c,r)
+    assert (c,r)==(621+72*bool(read_pipeline),545+72*bool(read_pipeline)),(c,r)
+    inactive_read = set() if read_pipeline else {'ck_read_data_t','ck_read_valid_t','rss_read_data_t','rss_read_valid_t'}
+    actual_clock_reset = {n for n in mod.ports if n.startswith(('ck_', 'rss_', 'rst_'))}
+    assert set(mapping) | inactive_read == actual_clock_reset, (sorted(actual_clock_reset-set(mapping)-inactive_read), sorted(set(mapping)-actual_clock_reset))
     for port,(direction,_) in mod.ports.items():
         if direction=='input' and port not in mapping:
             width=mod.width(port,env);cons.append(f'.{port}({width}\'d0)')
     tb='`timescale 1ns/1ps\nmodule tb_vm_native_clock_pins;\n'
     tb+=f'reg [{c-1}:0] clocks=0;reg [{r-1}:0] resets=0;wire [{r-1}:0] observed_reset;integer counts[0:{c-1}];integer i,j,bad=0;\n'
-    tb+=f'dsfd_sp_vm #(.READ_PIPE({read_pipeline}), .CAP_PIPE(1)) dut ('+',\n'.join(cons)+');\n'
+    tb+=f'dsfd_sp_vm #(.READ_PIPE({read_pipeline}), .CAP_PIPE({cap_pipeline})) dut ('+',\n'.join(cons)+');\n'
     for i,p in obs:tb+=f'always @(posedge {p}) counts[{i}]=counts[{i}]+1;\n'
     for i,p in robs:tb+=f'assign observed_reset[{i}]={p};\n'
     tb+=f'''initial begin
@@ -88,7 +95,7 @@ end
 endmodule
 '''
     out.mkdir(parents=True,exist_ok=False);(out/'tb_vm_native_clock_pins.sv').write_text(tb)
-    (out/'mapping.json').write_text(json.dumps({'source_sha256':hashlib.sha256(text.encode()).hexdigest(),'clocks':c,'raw_reset_pins':r,'cap_rn_distribution':'16synchronous lane rn pins remain driven by existing cap-control rq2; physicalreset delivery unqualified','categories':mapping},indent=2)+'\n')
+    (out/'mapping.json').write_text(json.dumps({'source_sha256':hashlib.sha256(text.encode()).hexdigest(),'read_pipeline':read_pipeline,'cap_pipeline':cap_pipeline,'clocks':c,'scope':'Independent raw root connectivity only; no CTS, sink-count, related-clock timing, or reset-function qualification.','raw_reset_pins':r,'cap_rn_distribution':'16synchronous lane rn pins remain driven by existing cap-control rq2; physicalreset delivery unqualified','categories':mapping},indent=2)+'\n')
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--read-pipe',type=int,choices=[0,1],default=1);a=ap.parse_args();prepare(a.out,a.read_pipe)
+    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--read-pipe',type=int,choices=[0,1,2,4],default=4);ap.add_argument('--cap-pipe',type=int,choices=[0,1,2],default=2);a=ap.parse_args();prepare(a.out,a.read_pipe,a.cap_pipe)
