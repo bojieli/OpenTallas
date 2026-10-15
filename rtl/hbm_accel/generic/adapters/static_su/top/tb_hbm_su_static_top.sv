@@ -30,7 +30,7 @@ module tb_hbm_su_static_top;
  wire [19:0] fault;
  ot_hbm_su_static_top #(.RF_RELAY(RF_RELAY),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT)) dut(
   .pg_clk({16{clk}}),.clk_lane({4096{clk}}),.clk_insert({2048{clk}}),.rst_lane_n({512{rst_n}}),
-  .clk_bcast({64{clk}}),.rst_bcast_n({64{rst_n}}),.clk_bank({512{clk}}),.clk_rf({256{clk}}),.clk_ctl({16{clk}}),
+  .clk_bcast({64{clk}}),.rst_bcast_n({64{rst_n}}),.clk_bank({512{clk}}),.clk_bank_macro({3072{clk}}),.clk_rf({256{clk}}),.clk_ctl({16{clk}}),
   .clk_core({4{clk}}),.clk_red({4{clk}}),.clk_side({6{clk}}),.clk_relay({4{clk}}),.rst_n(rst_n),
   .control(control),.vmr_cmd(vmr),.vmw_cmd(vmw),.rf_rd_cmd(rf),.red_cmd(red),
   .lg_rq(lg_rq),.lg_wq(lg_wq),.lg_rr(lg_rr),.lg_w_done(lg_w_done),.fault(fault));
