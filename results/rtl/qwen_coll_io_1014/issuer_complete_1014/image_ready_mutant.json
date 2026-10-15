@@ -1,0 +1,17 @@
+{
+  "four_state": true,
+  "mutant": true,
+  "cases": [
+    {
+      "omit": 2,
+      "reload": 0,
+      "rc": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/qcoll-issuer-1014/rtl/test/tb_coll_cmd_issue.sv:31: image readiness omit=2 ready=1\n       Time: 110000  Scope: tb_coll_cmd_issue\n"
+    }
+  ],
+  "sources": {
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+    "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
+    "rtl/test/tb_coll_cmd_issue.sv": "8987e3e2389e656938d29584fb280f222095b7afaa08e377253479193602b396"
+  }
+}

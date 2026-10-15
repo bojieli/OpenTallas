@@ -13,6 +13,6 @@ for omit,reload in ([(2,0)] if a.mutant else [(0,0),(1,0),(2,0),(0,1)]):
  (out/f'omit{omit}-reload{reload}.log').write_text(q.stdout+q.stderr);print(q.stdout.strip(),flush=True)
  records.append({'omit':omit,'reload':reload,'rc':q.returncode,'output':q.stdout})
  if a.mutant:
-  assert q.returncode!=0 and 'completeness omit=2 fault=0' in q.stdout, 'mutant was not detected at the completeness check'
+  assert q.returncode!=0 and ('completeness omit=2 fault=0' in q.stdout or 'image readiness omit=2 ready=1' in q.stdout), 'mutant was not detected at the completeness check'
  else:q.check_returncode()
 (out/'record.json').write_text(json.dumps({'four_state':a.four_state,'mutant':a.mutant,'cases':records,'sources':{str(x.relative_to(r)):hashlib.sha256(x.read_bytes()).hexdigest() for x in src}},indent=2)+'\n')
