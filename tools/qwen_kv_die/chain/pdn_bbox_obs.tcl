@@ -22,6 +22,22 @@ proc ot_pdn_bbox::obstructions {master} {
   }
   return [lsort $result]
 }
+proc ot_pdn_bbox::conservative {master alias} {
+  set cover [dict create]
+  foreach box [$alias getObstructions] {
+    set layer [[$box getTechLayer] getName]
+    if {[dict exists $cover $layer]} {error "PDN bbox: duplicate obstruction layer $layer"}
+    dict set cover $layer [list [$box xMin] [$box yMin] [$box xMax] [$box yMax]]
+  }
+  foreach box [$master getObstructions] {
+    set layer [[$box getTechLayer] getName]
+    if {![dict exists $cover $layer]} {error "PDN bbox: missing obstruction layer $layer"}
+    lassign [dict get $cover $layer] x0 y0 x1 y1
+    if {$x0 > [$box xMin] || $y0 > [$box yMin] || $x1 < [$box xMax] || $y1 < [$box yMax]} {
+      error "PDN bbox: obstruction coverage shrank [$master getName]/$layer"
+    }
+  }
+}
 proc ot_pdn_bbox::begin {dir} {
   variable swaps; variable aliases; variable signatures; variable originals
   if {[llength $swaps]} {error "PDN bbox: already active"}
@@ -43,6 +59,7 @@ proc ot_pdn_bbox::begin {dir} {
     lappend aliases $alias
     set sig [signature $master]
     if {$sig ne [signature $alias]} {error "PDN bbox: pin/outline mismatch $name"}
+    conservative $master $alias
     dict set signatures $name [list $sig [obstructions $master]]
     dict set originals $name $master
   }
