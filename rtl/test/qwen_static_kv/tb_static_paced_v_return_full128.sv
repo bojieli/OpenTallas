@@ -160,7 +160,12 @@ module qkd_paced_v_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, H
    repeat(16)@(negedge ck);rst=1;
    for(integer t=0;t<CYCLES;t++)begin
     drive(t);
-    if(phase==0)begin reserved=0;sr_reserved=0;wr_reserved=0;end
+    // PROFILE2 intersects these advance-compiled request pins with actual
+    // JEDEC legality. Only its frozen accepted slots enter PROFILE0 replay.
+    if(phase==0)begin
+     reserved=(t<1300+PROGRAM_SHIFT)||((t-(1300+PROGRAM_SHIFT))%7==0);
+     sr_reserved=1;wr_reserved=1;
+    end
     else begin reserved=slots[t];sr_reserved=srslots[t];wr_reserved=wrslots[t];end
     sr_read_reserved=sr_reserved && t>=150+PROGRAM_SHIFT && mode!=8;
     if(phase==1&&mode==1&&t>0)reserved=slots[t-1];
@@ -173,8 +178,8 @@ module qkd_paced_v_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, H
     // Wrapper has two RD reservation pin stages ahead of its actual core.
     if(phase==0&&t>=2)begin
      slots[t-2]=dut.u_ctl.core.on.rd_ok;
-     srslots[t-2]=dut.u_ctl.core.on.legal_static;
-     wrslots[t-2]=dut.u_ctl.core.on.legal_write;
+     srslots[t-2]=dut.u_ctl.core.on.s_go;
+     wrslots[t-2]=dut.u_ctl.core.on.wr_ok;
     end
     if(po[0]&&po[3:1]==3'd1)openrow[po[8:4]]=po[27:9];
     if(po[28])begin

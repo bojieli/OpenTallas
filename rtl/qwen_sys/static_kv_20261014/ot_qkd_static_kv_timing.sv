@@ -4,7 +4,8 @@
 // No read-credit input, credit counter, consumer-ready or backpressure state.
 // Production RD events issue only at the compiler's reserved_rd cycles; a slot
 // without JEDEC permission faults and never reschedules that operation.
-// PROFILE=1 is a bench/compiler calibration vehicle, never a production mode.
+// PROFILE1 discovers maximum legal slots; PROFILE2 samples a paced request
+// calendar. Both are compiler/bench vehicles, never production modes.
 // Descriptor range [desc_first,desc_n) permits K 0..255 and V 512..767 without
 // reading unused head g=1. Normal acquisition is read-only: SROW/WR_EN/AQ_RD=0.
 module ot_qkd_static_kv_timing #(
@@ -20,7 +21,7 @@ module ot_qkd_static_kv_timing #(
   parameter integer T_RCD = 19, T_RP = 16, T_RAS = 28, T_RTP = 6, T_CCDL = 3,
   parameter integer T_RRDS = 3, T_RRDL = 4, T_FAW = 15, T_RFC = 342, T_RFCPB = 196,
   parameter integer T_REFI = 3808, T_REFIPB = 118, T_RREFD = 8,
-  parameter integer PROFILE = 0, // bench-only: discover legal fixed slots; production must use compiled reserved_rd
+  parameter integer PROFILE = 0, // 0 strict production,1 maximum-legal compiler,2 paced compiler
   parameter integer REF_PHASE = 0,
   parameter integer IDLE0 = 3, IDLE1 = 4, IDLE2 = 2, IDLE3 = 5,
   parameter integer IDLE4 = 1, IDLE5 = 6, IDLE6 = 0, IDLE7 = 7,
@@ -36,9 +37,10 @@ module ot_qkd_static_kv_timing #(
   output wire        row_v, output wire row_prio, input wire row_gnt,
   output wire [2:0]  row_op, output wire [4:0] row_bank, output wire [18:0] row_row,
   output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
-  input wire reserved_rd,
+  input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
   input wire [9:0] desc_first,
   output wire schedule_fault,
+  output wire phase_idle,
   output wire        busy, output wire ref_fault,
   // WR_EN: write queue (push wr_v && wr_r) and the WR flag of the column command
   input  wire        wr_v, input wire [4:0] wr_bank, input wire [4:0] wr_col,
@@ -46,15 +48,19 @@ module ot_qkd_static_kv_timing #(
   // AQ_RD: the pushed entry is a tagged read; the column command is a queued read
   input  wire        wr_rd, output wire col_aq,
   // SROW: static-row queue (push s_v && s_r) and the static flag of the column command
+  input wire [346:0] s_context,output wire [346:0] col_context,
   input  wire        s_v, input wire s_we, input wire [4:0] s_bank, input wire [4:0] s_col, input wire [18:0] s_row,
   output wire        s_r, output wire col_sr, output wire s_pop
 );
+`ifdef SYNTHESIS
+  initial if(PROFILE!=0)$error("Compiler profile cannot be a native physical master");
+`endif
   localparam [2:0] PRE=0, ACT=1, RD=2, REFAB=4, PREALL=5, REFPB=6;
   generate if (!ENABLE) begin : off
     assign desc_r=0; assign row_v=0; assign row_prio=0; assign row_op=0; assign row_bank=0;
     assign row_row=0; assign col_v=0; assign col_bank=0; assign col_col=0; assign busy=0;
-    assign ref_fault=0; assign schedule_fault=0; assign wr_r=0; assign col_we=0; assign col_aq=0;
-    assign s_r=0; assign col_sr=0; assign s_pop=0;
+    assign ref_fault=0; assign schedule_fault=0; assign phase_idle=1; assign wr_r=0; assign col_we=0; assign col_aq=0;
+    assign s_r=0; assign col_sr=0; assign s_pop=0;assign col_context=0;
   end else begin : on
     localparam W = (WR_EN != 0);
     localparam integer WQW = (WQ > 1) ? $clog2(WQ) : 1;
@@ -68,6 +74,7 @@ module ot_qkd_static_kv_timing #(
                   (s==3'(IDLE4))?4:(s==3'(IDLE5))?5:(s==3'(IDLE6))?6:7;
     endfunction
     reg [10:0] j, n; reg [18:0] row;
+    reg v_consumer_order;
     reg [31:0] open, done, stale, refreshed;
     reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
     reg running; reg [31:0] blk;   // blk: one-hot of rb while a REFpb is pending
@@ -78,7 +85,12 @@ module ot_qkd_static_kv_timing #(
     // r8: the RD bank as a registered one-hot (rd_oh, rd_bgoh) and credit != 0 as a registered
     // flag, updated exactly with j / credit, so rd_ok is an AND-OR of flops (no j-decoded mux).
     reg [31:0] rd_oh; reg [3:0] rd_bgoh;
-    wire [10:0] j_p1 = j + 11'd1;
+    // Native full-context V alternates eight-sector chunks across the two
+    // V bank sets. Match actual n-major V consumption so a 128-row ring can
+    // be admitted with compiled pacing; physical-linear V acquisition cannot.
+    wire [7:0] v_ordinal={j[6:3],j[7],j[2:0]};
+    wire [7:0] v_next=v_ordinal+8'd1;
+    wire [10:0] j_p1 = v_consumer_order ? {3'b010,v_next[3],v_next[7:4],v_next[2:0]} : j+11'd1;
     // ---- write queue (WR_EN) ------------------------------------------------------------
     reg [4:0] wq_bank [0:WQ-1]; reg [4:0] wq_col [0:WQ-1]; reg wq_rd [0:WQ-1];
     localparam AQ = (WR_EN != 0) && (AQ_RD != 0);
@@ -109,6 +121,8 @@ module ot_qkd_static_kv_timing #(
     localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;
     reg [4:0] sq_bank [0:SQD-1]; reg [4:0] sq_col [0:SQD-1]; reg [18:0] sq_row [0:SQD-1]; reg sq_we [0:SQD-1];
     reg [SQW:0] sq_n; reg [SQW-1:0] sq_rp;
+    reg [346:0] sq_context[0:SQD-1];reg [346:0] shead_context;
+    assign col_context=shead_context;
     wire sq_ne = S && sq_n != 0;
     // the head, REGISTERED (sb_oh one-hot): bank, column, row, direction; scm: committed (its ACT issued or it hit);
     // sfl: switched to the twin once.  so_*: the newest static-opened bank and its row (cleared by its PRE).
@@ -283,29 +297,17 @@ module ot_qkd_static_kv_timing #(
     reg [31:0] s_pblk;
     wire s_col_ok = s_hit && ccdl_z[sb[1:0]] && !(|(sb_oh & blk)) && !rd_block &&
                     (swe ? (W && |(sb_oh & rcdw_z) && rtw_c == 0) : (|(sb_oh & rcd_z) && wtr_c == 0));
-    assign s_go = s_col_ok && (sprio || (!rd_ok_base && !(W && wr_ok0)));
+    wire legal_static = s_col_ok && (sprio || (!rd_ok_base && !(W && wr_ok0)));
+    assign s_go = legal_static && (PROFILE == 1 || reserved_static_col);
     wire legal_rd = rd_ok0 && !s_go && !(|(rd_oh & s_pblk));
-    // PROFILE2 is compiler calibration only: derive a slower V calendar from
-    // actual JEDEC legality. Its resulting reservations must be frozen and
-    // replayed by PROFILE0; no pacing counter exists in the production mode.
-    wire discovery_v_allow;
-    if (PROFILE == 2) begin:g_v_calendar_calibration
-      reg [3:0] gap;
-      always @(posedge clk or negedge rst_n)
-        if (!rst_n) gap <= 0;
-        else if (rd_ok && j[9]) gap <= 4'd6;
-        else if (gap != 0) gap <= gap - 1'b1;
-      assign discovery_v_allow = !j[9] || gap == 0;
-    end else begin:g_no_v_calendar_calibration
-      assign discovery_v_allow = 1'b1;
-    end
-    assign rd_ok = legal_rd && (PROFILE != 0 || reserved_rd) && discovery_v_allow;
+    assign rd_ok = legal_rd && (PROFILE == 1 || reserved_rd);
     reg fault_schedule;
     assign schedule_fault = fault_schedule;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) fault_schedule <= 0;
-      else if (PROFILE == 0 && reserved_rd && !legal_rd) fault_schedule <= 1;
-    assign wr_ok = wr_ok0 && !s_go && !(|(hb_oh & s_pblk));
+      else if (PROFILE == 0 && ((reserved_rd && !legal_rd) || (reserved_static_col && !legal_static) || (reserved_write_col && !legal_write) || (({1'b0,reserved_rd}+{1'b0,reserved_static_col}+{1'b0,reserved_write_col})>1))) fault_schedule <= 1;
+    wire legal_write = wr_ok0 && !s_go && !(|(hb_oh & s_pblk));
+    assign wr_ok = legal_write && (PROFILE == 1 || reserved_write_col);
     // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
     function automatic [4:0] act_bank(input integer c, input [2:0] kk);
       act_bank = {(c >= 4) ? kk + 3'd1 : kk, 2'(c & 3)};
@@ -356,9 +358,10 @@ module ot_qkd_static_kv_timing #(
     // next-cycle k and last (the same updates as j and last below)
     wire desc_acc = desc_v && !streaming && !fault_r;
     wire k_step = rd_ok && (j[6:0] == 7'h7f);
-    wire [2:0] k_n = desc_acc ? desc_first[9:7] : k_step ? k + 3'd1 : k;
+    wire v_set_flip=v_consumer_order && rd_ok && j[2:0]==3'd7;
+    wire [2:0] k_n = desc_acc ? desc_first[9:7] : v_set_flip ? (k^3'd1) : k_step ? k+3'd1 : k;
     wire [2:0] last_n = desc_acc ? 3'((desc_n - 11'd1) >> 7) : last;
-    wire [7:0] koh_n = desc_acc ? (8'b1 << desc_first[9:7]) : k_step ? {koh[6:0], koh[7]} : koh;
+    wire [7:0] koh_n = desc_acc ? (8'b1 << desc_first[9:7]) : v_set_flip ? {koh[6],koh[7],koh[4],koh[5],koh[2],koh[3],koh[0],koh[1]} : k_step ? {koh[6:0],koh[7]} : koh;
     // write ACT: closed target bank, not chosen (or about to be chosen) for refresh
     // any queued write's bank may open (oldest first), so a burst of writes opens its banks together
     wire [WQ-1:0] wq_act;
@@ -435,10 +438,11 @@ module ot_qkd_static_kv_timing #(
     assign s_r = S && sq_n != (SQW+1)'(SQD); assign s_pop = s_go;
     assign wr_r = W && wq_n != (WQW+1)'(WQ);
     assign desc_r = !streaming && !fault_r && !wq_ne;
+    assign phase_idle = !streaming && !wq_ne && !sq_ne;
     assign busy = streaming; assign ref_fault = fault_r;
     always @(posedge clk or negedge rst_n) begin
       if (!rst_n) begin
-        streaming <= 0; last <= 0; nm1 <= 0;
+        streaming <= 0;v_consumer_order<=0; last <= 0; nm1 <= 0;
         j <= 0; n <= 0; row <= 0; open <= 0; done <= 0; stale <= 0; refreshed <= 0;
         rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb <= 0; fault_r <= 0;
         ref_c <= RW'(RPH + PERIOD); running <= 0; phase <= 0;
@@ -491,6 +495,7 @@ module ot_qkd_static_kv_timing #(
           if (s_v && s_r) begin
             sq_bank[SQW'(sq_rp + sq_n)] <= s_bank; sq_col[SQW'(sq_rp + sq_n)] <= s_col;
             sq_row[SQW'(sq_rp + sq_n)] <= s_row; sq_we[SQW'(sq_rp + sq_n)] <= s_we;
+            sq_context[SQW'(sq_rp + sq_n)]<=s_context;
           end
           sq_n <= sq_n + ((s_v && s_r) ? 1'b1 : 1'b0) - (s_go ? 1'b1 : 1'b0);
           if (s_go) sq_rp <= SQW'(sq_rp + 1'b1);
@@ -498,8 +503,10 @@ module ot_qkd_static_kv_timing #(
           chg = s_go || sq_n == 0;
           if (chg) begin
             if (sq_n - (s_go ? 1'b1 : 1'b0) != 0) begin
+              shead_context<=sq_context[rpn];
               sb <= sq_bank[rpn]; sc <= sq_col[rpn]; srw <= sq_row[rpn]; swe <= sq_we[rpn]; sb_oh <= 32'b1 << sq_bank[rpn];
             end else begin
+              shead_context<=s_context;
               sb <= s_bank; sc <= s_col; srw <= s_row; swe <= s_we; sb_oh <= 32'b1 << s_bank;
             end
             sfl <= 1'b0; scm <= 1'b0;
@@ -546,7 +553,8 @@ module ot_qkd_static_kv_timing #(
         endcase
         // descriptor
         if (desc_v && !streaming && !fault_r) begin
-          j <= {1'b0,desc_first}; n <= desc_n; row <= desc_row; done <= 0; running <= 0;
+          j <= {1'b0,desc_first}; n <= desc_n; row <= desc_row;
+          v_consumer_order <= desc_first==10'd512 && desc_n==11'd768; done <= 0; running <= 0;
           streaming <= (desc_n != 0); nm1 <= desc_n - 11'd1; last <= 3'((desc_n - 11'd1) >> 7);
           stale <= open_nx;                     // rows still open from the old descriptor close first
         end
