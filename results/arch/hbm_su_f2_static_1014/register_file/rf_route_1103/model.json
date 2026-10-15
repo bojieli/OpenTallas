@@ -48,11 +48,37 @@
     "physical_FF": 49152,
     "outlined_area_mm2": 0.47775744000000003
   },
-  "functional_gate": "pending64stage16route exact payload+reset/bubbles+three separate semantic/root mutants",
+  "functional_gate": {
+    "status": "PASS",
+    "source_pin": "882660d0ee30c5b49b092fac95468a6d10e5ab90",
+    "unit": "oth-ubuntu-1066721-1792089332",
+    "host": "ot-epyc1tb",
+    "routes": 16,
+    "stages": 64,
+    "actual48bitmasters": 1024,
+    "checks": 33856,
+    "reset_and_bubbles": true,
+    "mutants": {
+      "payload_single_stage": {
+        "exit": 1,
+        "mismatches": 1699
+      },
+      "valid_single_stage": {
+        "exit": 1,
+        "mismatches": 1699
+      },
+      "one_stopped_stage_clock": {
+        "exit": 1,
+        "mismatches": 1665
+      }
+    },
+    "scope": "same-clock route functional contract only; no placement or physical phase qualification"
+  },
   "guards": [
     "actual assigned geometry sets stage count",
     "all incident RF core-to-slice legs remain separate obligations",
     "physical view identity/native L/C/TTsetup/FFhold/DRC0 remain unadopted",
     "cycle effects and RF read deadlines must be recompiled from actual route depth"
-  ]
+  ],
+  "quarter_integration": "Die may instantiate quarters directly: scalar red_sv/red_tag[8,7:0]/red_x -> each destination rf_wv/rf_wa/rf_wd; the historical simulation top retains inline RF_RELAY8."
 }
