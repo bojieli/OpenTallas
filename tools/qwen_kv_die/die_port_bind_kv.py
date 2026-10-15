@@ -199,7 +199,11 @@ def main(argv=None):
                     if miss:
                         bad.append(dict(die_port=d_, rtl_missing=miss))
                         continue
-                    base_bits[d_] = sum((rw[p] or 0) for p in rps)
+                    unknown = [p for p in rps if rw[p] is None]
+                    if unknown:
+                        bad.append(dict(die_port=d_, unresolved_rtl_widths=unknown))
+                        continue
+                    base_bits[d_] = sum(rw[p] for p in rps)
                 sliced = b.get('sliced') or {}
                 groups = defaultdict(int)
                 for d_, w in dp.items():
