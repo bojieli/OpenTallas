@@ -1,5 +1,5 @@
 {
- "name": "s81fill2_cfg7_seq_l1-g1-COMMIT",
+ "name": "s81fill2_cfg7_seq_l1-g1-61d2351bf",
  "block": "ot_s81_cfg7_seq",
  "ref_tile": true,
  "owner": "Claude:fill-s81-2",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/el1015-fill-s2-1015",
-  "commit": "COMMIT",
+  "commit": "61d2351bf",
   "extra_paths": [
    "rtl/v41die",
    "physical/dsrom_qx10_parent_context/parent_loader",
@@ -111,7 +111,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81fill2_cfg7_seq_l1/s81fill2_cfg7_seq_l1-g1-COMMIT"
+   "to": "results/rtl/ref_tile/s81fill2_cfg7_seq_l1/s81fill2_cfg7_seq_l1-g1-61d2351bf"
   }
  ],
  "cycles_added": 0,
