@@ -139,8 +139,8 @@ def build(snap_path, layer, check_layer=True):
     at = s["hc"]["attend"]
     T = int(at["T"])
     sh = r.sh
-    nv = T // sh["SM_LPH"]
-    fits = T % sh["SM_LPH"] == 0 and nv <= sh["SM_NVMAX"]
+    nv = (T + sh["SM_LPH"] - 1) // sh["SM_LPH"]
+    fits = T > 0 and nv <= sh["SM_NVMAX"]
     sm_ok = False
     if fits:
         ac, asn = (np.asarray(v, F) for v in at["cs"])
