@@ -5,7 +5,7 @@ vl=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 python3 tools/hbm_static_attention/prepare_physical_engine.py --out "$out/vectors" > "$out/prepare.log" 2>&1
 "$vl" --binary --timing --hierarchical -O1 -j ${JOBS:-4} -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD \
  --unroll-count 1 --unroll-limit 131072 --output-split 20000 --output-split-cfuncs 1000 --top-module tb_hbm_attn_physical_calendar --Mdir "$out/obj" -o sim \
- tools/hbm_static_attention/physical_hierarchy.vlt rtl/hdc/v41x/static/ot_hdc_v41x_attn_physical_calendar.sv rtl/hdc/v41x/static/ot_hbm_attn_physical_event_program.sv rtl/hdc/v41x/static/ot_hbm_attn_transpose_regs.sv \
+ tools/hbm_static_attention/physical_hierarchy.vlt rtl/hdc/v41x/static/ot_hdc_v41x_attn_physical_calendar.sv rtl/hdc/v41x/static/ot_hbm_attn_physical_event_program.sv rtl/hdc/v41x/static/ot_hbm_attn_transpose_regs.sv rtl/hdc/v41x/static/ot_hbm_attn_staging_grouped.sv \
  rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv \
  rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv rtl/hdc/v41x/ot_hdc_v41x_kreg.sv \
  rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv \

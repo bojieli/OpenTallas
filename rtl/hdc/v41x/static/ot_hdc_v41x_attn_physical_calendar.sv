@@ -442,10 +442,10 @@ module ot_hdc_v41x_attn_physical_calendar #(
         end
         wire [AW-1:0] qa = (XD != 0) ? qa_r : qa_c, fa = (XD != 0) ? fa_r : fa_c;
         wire s0f = (XD != 0) ? s0f_r : (act_b && !bbuf), s1f = (XD != 0) ? s1f_r : (act_b && bbuf);
-        ot_hdc_v41x_attn_staging #(.D(D), .NL(NL), .TROWS(TROWS), .SRAM_MACRO(SRAM_MACRO)) u_stage0 (
+        ot_hbm_attn_staging_grouped u_stage0 (
             .clk(clk), .wr_en({NL{kv_go && !fbuf}} & kv_m), .wr_addr(AW'(wptr / NL)), .wr_data(kv_w),
             .rd_addr(s0f ? fa : qa), .rd_data(q0));
-        ot_hdc_v41x_attn_staging #(.D(D), .NL(NL), .TROWS(TROWS), .SRAM_MACRO(SRAM_MACRO)) u_stage1 (
+        ot_hbm_attn_staging_grouped u_stage1 (
             .clk(clk), .wr_en({NL{kv_go && fbuf}} & kv_m), .wr_addr(AW'(wptr / NL)), .wr_data(kv_w),
             .rd_addr(s1f ? fa : qa), .rd_data(q1));
         always @(posedge clk) begin fbuf_r <= fbuf; bbuf_r <= bbuf; end
@@ -454,7 +454,7 @@ module ot_hdc_v41x_attn_physical_calendar #(
         assign st_q0 = q0; assign st_q1 = q1; assign st_fbuf_r = fbuf_r; assign st_bbuf_r = bbuf_r;
         assign rd_q = rd_q_qk;
     end else begin : g_stage1
-        ot_hdc_v41x_attn_staging #(.D(D), .NL(NL), .TROWS(TROWS), .SRAM_MACRO(SRAM_MACRO)) u_stage (
+        ot_hbm_attn_staging_grouped u_stage (
             .clk(clk), .wr_en({NL{kv_go}} & kv_m), .wr_addr(AW'(wptr / NL)), .wr_data(kv_w),
             .rd_addr((XD != 0) ? rd_addr_r : rd_addr), .rd_data(rd_q));
         assign rd_q_qk = rd_q;

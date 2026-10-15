@@ -77,7 +77,18 @@
         ],
         "role": "New systemgeometry physicalcandidate; v1functionalRTL to v2physical port/source equivalence pending"
       }
-    ]
+    ],
+    "successor_packing": {
+      "source_commit": "fff63f04e",
+      "source": "rtl/hdc/v41x/static/ot_hbm_attn_staging_grouped.sv",
+      "same_macro_count": 34,
+      "per_lane": "16codebanks\u00d7256bits+one144bitmetadata",
+      "code_bits": "originalgroup[255:0], includesFP4scale128..143 whenfmt1",
+      "metadata_bits": "originalgroup[264:256] scale8+format1",
+      "external_ABI": "unchanged interleaved265\u00d716\u00d72=8480bits",
+      "read_edges": 1,
+      "qualification": "Groupedsource componentproof supplied geometryowner; fulltarget source/profile/physical qualification remainsOPEN"
+    }
   },
   "headgroup_source_inventory": {
     "functional_full_tile_count": 32,
