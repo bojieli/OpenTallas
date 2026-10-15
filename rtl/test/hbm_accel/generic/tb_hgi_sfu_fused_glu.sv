@@ -13,6 +13,7 @@ module tb_hgi_sfu_fused_glu;
  integer edge_count=0,sent=0,checked=0,mut_diff=0,first_issue=-1,first_output=-1;
  integer issue_edge[0:3071];
  reg [1023:0] data_dir;
+ reg check_mutant=0;
  always @(posedge clk) begin
   edge_count=edge_count+1;
   if(rst_n && v) begin
@@ -26,11 +27,15 @@ module tb_hgi_sfu_fused_glu;
    if(edge_count-issue_edge[checked]!==108) $fatal(1,"FUSED_PHASE actual=%d expected=108",edge_count-issue_edge[checked]);
    if(y!==gold[checked]) $fatal(1,"FUSED_WORD word=%d actual=%h expected=%h",checked,y,gold[checked]);
    if(!mut_vo || mut_tag!==out_tag) $fatal(1,"MUTANT_PHASE");
-   if(mut_y!==gold[checked]) mut_diff=mut_diff+1;
+   if(mut_y!==gold[checked]) begin
+    mut_diff=mut_diff+1;
+    if(check_mutant) $fatal(1,"FUSED_MUTANT_WORD word=%0d actual=%h expected=%h",checked,mut_y,gold[checked]);
+   end
    checked=checked+1;
   end
  end
  initial begin
+  check_mutant=$test$plusargs("MUTANT");
   if(!$value$plusargs("DATA=%s",data_dir)) $fatal(1,"DATA missing");
   $readmemh({data_dir,"/gate.hex"},gates);
   $readmemh({data_dir,"/up.hex"},ups);
