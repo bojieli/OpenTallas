@@ -1,5 +1,5 @@
 {
- "name": "hcoll_capture_ctl-tc-COMMIT",
+ "name": "hcoll_capture_ctl-tc-f5034d006",
  "block": "ot_hgi_coll_static_capture_ctl",
  "ref_tile": true,
  "owner": "Codex:H-COLL-pinreg-controller",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/hcoll-static-seq-1015",
-  "commit": "COMMIT",
+  "commit": "f5034d006",
   "extra_paths": [
    "results/arch/hcoll_pinreg_1015",
    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
@@ -105,7 +105,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/hcoll_capture_ctl_1015/hcoll_capture_ctl-tc-COMMIT"
+   "to": "results/arch/hcoll_capture_ctl_1015/hcoll_capture_ctl-tc-f5034d006"
   }
  ],
  "cycles_added": 0,
