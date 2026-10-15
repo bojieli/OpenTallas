@@ -38,9 +38,9 @@ module ot_hbm_sm_attn_front_static(
     wire [31:0] request_addr;
     wire [9:0] request_tag;
     wire descriptor_fault;
+    // r2: one contiguous line-run descriptor (canonical packed rows); command[115] = load, command[82] = next line
     ot_hbm_sm_kv_desc_static u_desc(.clk(clk),.rst_n(rst_n),.kv_desc(kv_desc),
-        .load_mask(attention?command[116:115]:2'd0),.request_v(attention&&command[82]),
-        .request_entry(command[114]),.h128(h128),.request_line(command[113:112]),
+        .load(attention&&command[115]),.request_v(attention&&command[82]),
         .request_tag(command[49:40]),.req_v(request_v),.req_addr(request_addr),
         .req_tag(request_tag),.fault(descriptor_fault));
     reg attention_q;
@@ -84,9 +84,9 @@ module ot_hbm_sm_attn_front_static(
     always @(posedge clk or negedge rst_n)
         if(!rst_n)schedule_fault<=0;
         else begin
-            if(command!=0 && (command[191:184]!=8'ha2 || |command[131:117] || command[111]))schedule_fault<=1;
+            if(command!=0 && (command[191:184]!=8'ha2 || |command[131:116] || |command[114:112] || command[111]))schedule_fault<=1;
             if(!attention && mode==3)schedule_fault<=1;
-            if(attention_q && request!=expected_q)schedule_fault<=1;
+            if(attention_q && (request[42]!=expected_q[42] || (request[42] && request!=expected_q)))schedule_fault<=1;
             if(!attention && command[25] && converter_busy)schedule_fault<=1;
             if(!attention && command[28] && command[27:26]!=mode[1:0])schedule_fault<=1;
             if(attention)begin
