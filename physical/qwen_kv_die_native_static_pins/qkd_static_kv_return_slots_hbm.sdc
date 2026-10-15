@@ -11,6 +11,29 @@
 create_clock -name hclk -period 1024.000 [get_ports pll_hbm]
 set_clock_uncertainty -setup 60 [get_clocks hclk]
 set_clock_uncertainty -hold 25 [get_clocks hclk]
+
+# Final hold repair may insert more than three buffers before an input capture.
+# STA's actual combinational endpoints stop at the first sequential element;
+# do not infer register reach from a fixed number of buffer hops.
+proc ot_rs_input_clks {ports clock_name} {
+  set owned [dict create]
+  foreach pin [all_registers -clock $clock_name -clock_pins] {dict set owned [get_full_name $pin] 1}
+  set seen [dict create];set result {}
+  foreach port $ports {
+    foreach endpoint [get_fanout -flat -endpoints_only -from $port] {
+      set cells [get_cells -quiet -of_objects $endpoint]
+      if {[llength $cells]!=1} {error "QKD_RETURN_DOMAIN: unregistered boundary endpoint [get_full_name $endpoint]"}
+      set cell [get_full_name [lindex $cells 0]]
+      set pins [get_pins -quiet "$cell/CLK"]
+      if {[llength $pins]!=1} {error "QKD_RETURN_DOMAIN: endpoint has no unique actual register clock $cell"}
+      set pin [lindex $pins 0];set name [get_full_name $pin]
+      if {![dict exists $owned $name]} {error "QKD_RETURN_DOMAIN: boundary capture $name is not owned by $clock_name"}
+      if {![dict exists $seen $name]} {dict set seen $name 1;lappend result $pin}
+    }
+  }
+  return $result
+}
+
 set ot_rs_prop 0
 catch {set ot_rs_prop [get_property [get_clocks core_clk] is_propagated]}
 if {$ot_rs_prop} { set_propagated_clock [get_clocks hclk] }
@@ -32,7 +55,7 @@ if {$ot_rs_prop} {
   set ot_rs_hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]
   catch {sta::worst_slack_cmd max}
   set ot_rs_ck {}
-  if {[llength [info procs ot_pf_clks]]} { set ot_rs_ck [ot_pf_clks $ot_rs_hi] }
+  if {[llength [info procs ot_rs_input_clks]]} { set ot_rs_ck [ot_rs_input_clks $ot_rs_hi hclk] }
   if {![llength $ot_rs_ck]} { set ot_rs_ck [lrange [all_registers -clock hclk -clock_pins] 0 255] }
   set ot_rs_pf {}
   foreach p $ot_rs_ck {
@@ -67,7 +90,7 @@ proc ot_rs_owned_ref {clock_name ports} {
     dict set owned [get_full_name $pin] 1
   }
   set candidates {}
-  foreach pin [ot_pf_clks $ports] {
+  foreach pin [ot_rs_input_clks $ports $clock_name] {
     if {![dict exists $owned [get_full_name $pin]]} {
       error "QKD_RETURN_DOMAIN: boundary capture [get_full_name $pin] is not owned by $clock_name"
     }

@@ -1,0 +1,27 @@
+{
+  "scope": "DIAGNOSTIC COMPONENT MEASUREMENT ONLY; NOT ADOPTABLE HBM BOUNDARY UNDER0az",
+  "unit": "oth-ubuntu-137277-1792078755",
+  "job": "qkd_static_kv_return_slots_r1-r2-b45d90301",
+  "actual_routed_ODB_SPEF": true,
+  "original_orfs_source_mounts": "read-only; overmounted corrected measurement SDC only",
+  "reroute": false,
+  "TT_setup_ps": 148.61362140905499,
+  "FF_hold_ps": 15.102669115307776,
+  "violating_d_pins": 0,
+  "DRC": 0,
+  "positive": "actual first sequential endpoints recover34coreinputcaptureflops through arbitrary implemented hold buffer chains; ownership validated forcore/hclk",
+  "negative": "sameactualTTroute withcoreportgroup declared hclk rejected firstslotcapture",
+  "fix": "Replace three-buffer-hop guess byactualSTA combinational endpoint traversal. Require every reached endpoint unique register clock anddeclaredclockownership. No clocks/delays/crossingchecks waived.",
+  "source_sha256": {
+    "physical/qwen_kv_die_native_static_pins/qkd_static_kv_return_slots_hbm.sdc": "86eacbf14c5780843fae095e0aaf91a92dac4d40b4a50cce09f166b994183615"
+  },
+  "files_sha256": {
+    "ff.log": "79a39f53c04c627657384b3790b19ae4d5bbfb34f83348eccc50f434c8388ae7",
+    "qkd-return-r2-endpoint-signoff.sdc": "361ef7cd5857c0ce6ccd3afa3fc913e856544d4114ed9567a8939bfad4239b6a",
+    "tt.tcl": "2bdc3d6f8b06f7d9baefbaeb31d408782c17185ef33078b757bfb3c21f922d96",
+    "ff.tcl": "b1c9e3244a0d790d6e7213a43b68ac1fbdabbcd0c279aef03d6ef3e7c04f4e46",
+    "swapped.log": "dcbe739e6a44e1d073f3f9f04722e5332613273df5e6e1193725144ff2a8700d",
+    "tt.log": "26c4f98e6d70a2e4452712fd3eb78192e2173e152990aa3a3591f10ddbb780fe"
+  },
+  "production_action": "Do not reroute/re-adoptthisfixedHBMcalendar; resolve0azactualelasticbuffer/blockreadycomposition first. Preserveoriginalr2NEEDS_HUMANmeasurementfailure andthisseparatediagnosticproof."
+}
