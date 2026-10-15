@@ -102,5 +102,11 @@
     ]
   },
   "qualification": "ASSIGNED_PINS_ONLY; mapped area, exact replay/CRC mutants, native pin/clock/reset and TT/FF/DRC are required",
-  "rationale": "One common W-face replay master mirrored for left pair; compact control-between-bank-columns topology avoids through-tile routing and long pin-to-flop output muxes."
+  "rationale": "One common W-face replay master mirrored for left pair; compact control-between-bank-columns topology avoids through-tile routing and long pin-to-flop output muxes.",
+  "face_layers": {
+    "W": "M4",
+    "E": "M4",
+    "N": "M5",
+    "S": "M5"
+  }
 }

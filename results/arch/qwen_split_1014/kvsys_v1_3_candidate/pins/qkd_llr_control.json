@@ -140,10 +140,10 @@
     ]
   },
   "face_layers": {
-    "W": "M5",
-    "E": "M5",
-    "N": "M4",
-    "S": "M4"
+    "W": "M4",
+    "E": "M4",
+    "N": "M5",
+    "S": "M5"
   },
   "requires_io_tcl": "q_dout groups must be placed per bit by these four ranges; io_tcl must also place every other port from pins/pin_ranges",
   "placement": {
