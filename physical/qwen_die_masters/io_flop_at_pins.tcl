@@ -385,6 +385,20 @@ if {[info exists ::env(OT_MPFLOP_PINS)] && $::env(OT_MPFLOP_PINS) ne ""} {
   puts "OT_MPFLOP fixed $ot_nm macro-input-pin flops beside their pins ($mskip pins not flop-driven)"
   if {$ot_nm == 0} { error "OT_MPFLOP: OT_MPFLOP_PINS=$::env(OT_MPFLOP_PINS) matched no flop-driven macro pin (netlist changed?)" }
 }
+# Resolve actual FIRM overlaps without changing the native boundary circuit.
+# The hold hooks record exactly the cells they own; unrelated FIRM cells and
+# hard macros are obstacles, not candidates for movement.
+set ot_pack_names $ot_list
+set ot_pack_record $::env(RESULTS_DIR)/ot_inhold_firm.txt
+if {[file exists $ot_pack_record]} {
+  set ot_pack_file [open $ot_pack_record r]
+  foreach ot_pack_name [split [read $ot_pack_file] \n] {
+    if {$ot_pack_name ne ""} {lappend ot_pack_names $ot_pack_name}
+  }
+  close $ot_pack_file
+}
+source /src/physical/common_flow/anchor_row_packing.tcl
+ot_anchor_pack::repair $ot_blk $ot_pack_names
 set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt w]
 foreach n $ot_list { puts $fh $n }
 close $fh
