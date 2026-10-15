@@ -681,6 +681,10 @@ def on_track(b: dict, x: float, y: float) -> tuple[float, float, int]:
     if dx or dy:
         # keep the shift and stay on the row lattice in y where it costs nothing
         ox, oy = ox + dx, oy + dy
+    # best_shift scores shapes while the access rule accepts each pin's best
+    # shape per layer. Recheck the chosen origin with that actual pin rule.
+    report = cmta.check_placement(tm, b["orient"], ox, oy)
+    off = sum(v["offtrack"] for v in report["layers"].values())
     return ox / 1000.0, oy / 1000.0, off
 
 
