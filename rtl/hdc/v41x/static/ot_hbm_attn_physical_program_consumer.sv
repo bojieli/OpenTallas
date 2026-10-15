@@ -13,7 +13,7 @@ module ot_hbm_attn_physical_program_consumer(
  output wire fetch_v,fetch_epoch,output wire[3:0]fetch_head,
  output wire[2:0]fetch_burst,output wire[15:0]fetch_base_sector,
  output wire p_fetch_v,p_fetch_epoch,output wire[3:0]p_fetch_head,p_fetch_burst,
- output wire[15:0]p_fetch_base_sector,
+ output wire[15:0]p_fetch_base_sector,p_fetch_rows,
  output wire running,output wire fault
 );
  reg iv;reg[222:0]word;reg own_fault;wire core_fault;
@@ -21,7 +21,7 @@ module ot_hbm_attn_physical_program_consumer(
  wire[3:0]op=word[3:0];
  assign fetch_v=iv&&word[2]&&!word[28];
  assign p_fetch_v=iv&&word[2]&&word[28];assign p_fetch_epoch=word[4];
- assign p_fetch_head=word[8:5];assign p_fetch_burst={word[29],word[11:9]};assign p_fetch_base_sector=word[27:12];assign fetch_epoch=word[4];assign fetch_head=word[8:5];
+ assign p_fetch_head=word[8:5];assign p_fetch_burst={word[29],word[11:9]};assign p_fetch_base_sector=word[27:12];assign p_fetch_rows=word[30]?16'd640:16'd128;assign fetch_epoch=word[4];assign fetch_head=word[8:5];
  assign fetch_burst=word[11:9];assign fetch_base_sector=word[27:12];
  always @(posedge clk or negedge rst_n)if(!rst_n)begin iv<=0;rows<=0;pv_only<=0;query_epoch<=0;own_fault<=0;end
  else begin

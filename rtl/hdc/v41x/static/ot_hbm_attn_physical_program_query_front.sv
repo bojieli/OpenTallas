@@ -10,7 +10,7 @@ module ot_hbm_attn_physical_program_query_front(
  output wire q_present,output wire[1023:0]p_words,output wire p_present,output wire fault
 );
  wire query_epoch,fr,fv,fe;wire[15:0]fs;wire[3:0]fh;wire[2:0]fb;wire pf,qf;
- wire pfv,pfe,pfault,ppv;wire[3:0]pfh,pfb;wire[15:0]pfs;
+ wire pfv,pfe,pfault,ppv;wire[3:0]pfh,pfb;wire[15:0]pfs,pfr;
  wire[135:0]qrq,prq;wire[2055:0]qrr,prr;reg[7:0]qowners,powners;reg front_fault,p_hold;
  reg[9:0]p_row;
  always @(posedge clk or negedge rst_n)if(!rst_n)begin
@@ -33,9 +33,8 @@ module ot_hbm_attn_physical_program_query_front(
  ot_hbm_attn_p_prefetch u_p(.clk(clk),.rst_n(rst_n),.fetch_v(pfv),.fetch_epoch(pfe),.fetch_head(pfh),.fetch_burst(pfb),
   .fetch_base_sector(pfs),.profile_rows(rows_for_P),.rq(prq),.rr(prr),.read_v(pread),.read_epoch(query_epoch),
   .read_row(events[0]?10'd0:p_row+10'd4),.p_v(ppv),.p_w(p_words),.fault(pfault));
- // Pfetch precedes launch/rows latch. The actual compiler supplies profile rows
- // with every fetch through its burst-range contract; bothfullsizes fit10bursts.
- wire[15:0]rows_for_P=pfv?16'd640:rows;
+ // Pfetch carries its frozen T128/T640 profile before the launch rows latch.
+ wire[15:0]rows_for_P=pfv?pfr:rows;
  assign p_present=ppv|p_hold;
  reg[3:0]qh;
  always @(posedge clk or negedge rst_n)if(!rst_n)qh<=0;
@@ -45,7 +44,7 @@ module ot_hbm_attn_physical_program_query_front(
  ot_hbm_attn_physical_program_consumer u_program(.clk(clk),.rst_n(rst_n),.instruction_v(instruction_v),.instruction(instruction),
   .events(events),.phase(phase),.event_valid(event_valid),.rows(rows),.pv_only(pv_only),.query_epoch(query_epoch),
   .fetch_v(fv),.fetch_epoch(fe),.fetch_head(fh),.fetch_burst(fb),.fetch_base_sector(fs),
-  .p_fetch_v(pfv),.p_fetch_epoch(pfe),.p_fetch_head(pfh),.p_fetch_burst(pfb),.p_fetch_base_sector(pfs),.running(fr),.fault(pf));
+  .p_fetch_v(pfv),.p_fetch_epoch(pfe),.p_fetch_head(pfh),.p_fetch_burst(pfb),.p_fetch_base_sector(pfs),.p_fetch_rows(pfr),.running(fr),.fault(pf));
  ot_hbm_attn_query_prefetch u_query(.clk(clk),.rst_n(rst_n),.fetch_v(fv),.fetch_epoch(fe),.fetch_head(fh),.fetch_burst(fb),.fetch_base_sector(fs),
   .rq(qrq),.rr(qrr),.read_v(qread),.read_epoch(query_epoch),.read_head(qreadhead),.q_v(q_present),.q_w(q_words),.fault(qf));
  assign fault=pf|qf|pfault|front_fault;

@@ -48,6 +48,24 @@ def launch_instruction(profile,epoch=0):
  profiles,_=resident_event_frames();p=profiles[profile]
  return 2|(profile<<4)|((p['word_count']-1)<<6)|(p['T']<<16)|((p['mode']=='pv')<<32)|(epoch<<33)
 
+def outer_record(profile,epoch=0,query_base_sector=0,P_base_sector=4096,P_head_stride_sectors=80):
+ profiles,_=resident_event_frames();p=profiles[profile];words=[]
+ if p['mode']=='qk':
+  for head in range(16):
+   for burst in range(8):
+    src=query_base_sector+head*64+burst*8
+    words.append(4|(epoch<<4)|(head<<5)|(burst<<9)|(src<<12))
+ else:
+  if P_head_stride_sectors<p['T']//8 or P_head_stride_sectors%8:raise ValueError('nativePheadstride')
+  for head in range(16):
+   for burst in range(p['T']//64):
+    src=P_base_sector+head*P_head_stride_sectors+burst*8
+    if src<0 or src+7>65535:raise ValueError('nativePsectoraperture')
+    words.append(4|(epoch<<4)|(head<<5)|((burst&7)<<9)|(src<<12)|(1<<28)|((burst>>3)<<29)|((p['T']==640)<<30))
+ words += [8]*9
+ words.append(launch_instruction(profile,epoch))
+ return words
+
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
  for T in (128,640):
