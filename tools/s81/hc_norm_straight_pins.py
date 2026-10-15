@@ -147,7 +147,7 @@ def main():
         ctfn=dict(v23_through=cut(list(zip(xmap, xmap))), v23_yshift=cut(ysh),
                   v22_through=cut(list(zip(xs(fn, 'fd_in'), xs(fn, 'fdm')))),
                   v22_yshift=cut([(xs(fn, 'fd_in')[O_D + j + GT32], xs(fn, 'fdm')[O_D + j]) for j in range(NB - O_D - GT32)])),
-        ctfxs_nt='unchanged (fd_in / fdx / fv_in granted v22)')
+        ctfxs_nt='see rep["ctfxs_nt"] (fd_in / fv_in re-pinned straight)')
     gap_xs, gap_fn = Y_XS, Y_FN                     # ctfs(k-1) S face = cth(k) N edge (abutted cth rows)
     seam = lambda a, b, dy: [abs(p - q) + dy for p, q in zip(a, b)]
     s = dict(
@@ -170,8 +170,21 @@ def main():
               'coincide with ctfxs_nt.fd_in (same x), bits 1128..2919 move east (x %.2f..%.2f, was %.2f..%.2f): S-DIE to '
               're-measure the crootr legs' % (east[0], east[-1], min(xs(fn, 'fd_in')), max(xs(fn, 'fd_in'))),
         last='last cth fd_out: same consumers as before (chain end), S-DIE to re-measure')
+    # ---- ctfxs_nt straight (one flop per bit between fd_in N and fdx S: s1 native fd_in 214 / fdx 124 pins over with
+    # up to 83.8 um lateral): fd_in / fv_in at the fdx / fv x of the same bit; fdx (CLOSED ctnl / ctfl consumers) and
+    # the NORM lanes unchanged.  The ctfs_nt(k-1).fd_out -> ctfxs_nt(k).fd_in die seam takes the jog (<= 365.04 + 84).
+    px = {p: [list(b) for b in v['per_bit']] for p, v in fx['ports'].items()}
+    for port, src in (('fd_in', 'fdx'), ('fv_in', 'fv')):
+        px[port] = [['N', 'M5', b[2], a[3]] for a, b in zip(fx['ports'][port]['per_bit'], fx['ports'][src]['per_bit'])]
+    rep['ctfxs_nt'] = dict(rule='fd_in / fv_in at the fdx / fv x (straight feed-through); fdx, lanes unchanged',
+                           internal_v23=cut(list(zip([q[2] for q in px['fd_in'] + px['fv_in']], xs(fx, 'fdx') + xs(fx, 'fv')))),
+                           internal_v22=cut(list(zip(xs(fx, 'fd_in') + xs(fx, 'fv_in'), xs(fx, 'fdx') + xs(fx, 'fv')))),
+                           seam_ctfs_to_ctfxs_max_um=round(max(seam(xmap[:NX] + xfv, [q[2] for q in px['fd_in'] + px['fv_in']],
+                                                                    gap_xs)), 3))
+    write('ot_s81_hc_ctfxs_nt', px, extra := dict(rule='S-NORM candidate 2026-10-15: one fd/fv bit order for producer + '
+                                                        'all consumers (see report.json)'))
     rep['cost'] = dict(cycles=0, area_um2=0, rtl='unchanged', masters_repinned=['ot_s81_hc_ctfn', 'ot_s81_hc_ctfs_nt',
-                       'ot_s81_hc_ctfl_nt'], unchanged=['ot_s81_hc_ctfxs_nt'])
+                       'ot_s81_hc_ctfl_nt', 'ot_s81_hc_ctfxs_nt (fd_in / fv_in only)'])
     extra = dict(rule='S-NORM candidate 2026-10-15: one fd/fv bit order for producer + all consumers (see report.json)')
     write('ot_s81_hc_ctfn', pn, extra)
     write('ot_s81_hc_ctfs_nt', ps, extra)
