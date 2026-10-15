@@ -99,6 +99,24 @@ def generate(base, output, *, issue_offset, fp32_output):
         raise ValueError('source word coverage')
     if {x['logical_address'] for x in records} != set(range(runs[0][5], runs[0][5]+len(order))):
         raise ValueError('source address coverage')
+    # Actual selected BF front has PINREG1, FAST input1, match1: writes
+    # FIFO at pin+3; core consumes programme at pin+1. Model old-state
+    # availability and simultaneous push/pop before any hardware build.
+    occupancy = 0; peak = 0
+    pushes = {}
+    for unit, block in arrivals:
+        edge = arrivals[unit, block]+3
+        pushes[edge] = pushes.get(edge, 0)+1
+    pops = {r['core_issue_edge']:1 for r in records}
+    for edge in range(max(max(pushes),max(pops))+1):
+        if pops.get(edge,0) and occupancy == 0:
+            raise ValueError('fixed programme FIFO underflow at core edge '+str(edge))
+        occupancy += pushes.get(edge,0)-pops.get(edge,0)
+        peak = max(peak,occupancy)
+        if occupancy > 8:
+            raise ValueError('fixed programme XF8 overflow at core edge '+str(edge))
+    if occupancy:
+        raise ValueError('source operand remains unconsumed')
     output.mkdir(parents=True, exist_ok=False)
     (output/'matrix.json').write_text(json.dumps(matrix, indent=2)+'\n')
     (output/'cfg.hex').write_text(''.join(f'{w:012x}\n' for w in cfg))
@@ -130,7 +148,8 @@ def generate(base, output, *, issue_offset, fp32_output):
         numerical_gate=False, physical_gate=False,
         price=dict(macs_per_issue=32, weight_bits_per_issue=548,
                    operand_bits_per_stream_beat=1024, programme_bits_per_edge=38,
-                   ingress_offset_edges=issue_offset, core_issue_after_front_pin=1,
+                   ingress_offset_edges=issue_offset, fifo_push_after_xb_pin=3, fifo_depth=8,
+                   fifo_peak=peak, fifo_terminal=occupancy, core_issue_after_front_pin=1,
                    public_i1_after_front_pin=2, public_i2x_after_front_pin=3,
                    unchanged_arithmetic_pipeline=True),
         files={p.name:sha(p) for p in sorted(output.iterdir())})
