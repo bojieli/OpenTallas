@@ -9,8 +9,10 @@ D > 64, where the packed vector is a VlWide word array (that form escapes the or
 RTL is correct; the simulation model is not, so any PASS/FAIL from such a model is unproven.
 
 Signature in the generated C++ (non-Slow files, NBA-region functions): inside a ``while`` loop, a statement
-writes ``vlSelfRef.X`` (scalar, bit insert or VlWide word) and reads ``vlSelfRef.X`` on its right-hand side,
-X is not a loop counter of that while, and the model has no ``__Vdly__X`` shadow at all.
+writes ``vlSelfRef.X`` (scalar, bit insert or VlWide word) whose inserted VALUE reads ``vlSelfRef.X`` (a
+loop-carried read; the insert's own keep-other-bits mask term does not count), X is not a loop counter of
+that while, the model has no ``__Vdly__X`` shadow, and the recorded RTL writes X with ``<=`` in that scope.
+(Verilator correctly skips the shadow when all reads precede the write; only the loop-carried read breaks.)
 
 Usage: verilator_nba_guard.py OBJ_DIR [OBJ_DIR...]  -> exit 1 if any in-place NBA loop is found.
 Library: scan(obj_dir) -> dict(findings=[...], loops_checked=n); check(obj_dir) raises SystemExit on findings.
@@ -107,24 +109,33 @@ def scan(obj_dir: str) -> dict:
                     var = m.group(1)
                     if var.startswith('__V') or var in counters or var in shadows:
                         continue
-                    if re.search(r'\bvlSelf(?:Ref\.|->)' + re.escape(var) + r'\b', rhs):
+                    # A bit/word insert ``X = (~(m << s) & X) | (v << s)`` reads X once only to keep the other
+                    # bits; Verilator legitimately skips the shadow when nothing reads X after the write. The
+                    # miscompile is a loop-CARRIED read: the inserted value itself reads X (r[i] <= r[i-1]).
+                    reads = len(re.findall(r'\bvlSelf(?:Ref\.|->)' + re.escape(var) + r'\b', rhs))
+                    if re.match(r'\s*\(+\s*~', rhs):
+                        reads -= 1
+                    if reads >= 1:
                         findings.append(dict(file=os.path.relpath(path, obj_dir), function=fname, var=var,
                                              counter=sorted(counters)))
     # A blocking prefix loop (``p[i] = p[i-1] ^ x``) has the same C++ shape. Separate it with the actual
     # Verilog sources Verilator recorded (__verFiles.dat): only a variable the RTL writes with ``<=`` is
     # an in-place NBA miscompile. Unreadable sources keep the finding (fail closed).
     sources, missing = _sources(obj_dir)
-    modules = [m.group(0) for s in sources for m in MODULE.finditer(s)]
+    modules = {}
+    for s in sources:
+        for m in MODULE.finditer(s):
+            h = re.match(r'(?:module|interface|program)\s+(?:automatic\s+|static\s+)?(\w+)', m.group(0))
+            if h:
+                modules.setdefault(h.group(1), []).append(m.group(0))
     kept, blocking = [], 0
     for f in findings:
-        parts = [re.sub(r'__BRA__.*$', '', x) for x in f['var'].split('__DOT__')]
-        name = parts[-1].replace('__PVT__', '')
-        parent = parts[-2].replace('__PVT__', '') if len(parts) > 1 else ''
-        if name.startswith('__V'):
+        parts = [re.sub(r'__BRA__.*$', '', x).replace('__PVT__', '') for x in f['var'].split('__DOT__')]
+        if parts[-1].startswith('__V'):
             continue
         if missing or not sources:
             f['source_check'] = 'UNAVAILABLE'
-        elif any(_nba_in_scope(m, name, parent) for m in modules):
+        elif _nba_in_rtl(modules, parts):
             f['source_check'] = 'NBA_IN_RTL'
         else:
             blocking += 1
@@ -152,7 +163,7 @@ def _named_block(text: str, label: str):
 
 def _nba_in_scope(module: str, name: str, parent: str) -> bool:
     """The RTL writes ``name`` with <= in the scope Verilator named: the named block ``parent`` if the
-    module has one, else a module that declares ``name``."""
+    module has one, else anywhere in a module that declares ``name``."""
     # Statement position only (line start, ';', begin/else, ')' of if/for, ':' of a case item), so a
     # ``<=`` comparison inside an expression is not taken for a non-blocking write.
     nba = re.compile(r'(?:^|;|\bbegin\b|\belse\b|\)|:)[ \t]*' + re.escape(name) + r'\s*(?:\[[^;=]*\]\s*)*<=', re.M)
@@ -163,6 +174,42 @@ def _nba_in_scope(module: str, name: str, parent: str) -> bool:
     return bool(decl.search(module) and nba.search(module))
 
 
+def _resolve(modules: dict, parts: list):
+    """Module texts that own the variable: walk the hierarchical path from the top module through instance
+    declarations (named/generate blocks stay in the module). None when the path cannot be resolved."""
+    cur = modules.get(parts[0])
+    if not cur:
+        return None
+    for comp in parts[1:-1]:
+        nxt = None
+        for text in cur:
+            if re.search(r'\bbegin\s*:\s*' + re.escape(comp) + r'\b', text):
+                nxt = cur
+                break
+            m = re.search(r'\b(\w+)\s*(?:#\s*\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?\s*\b' + re.escape(comp)
+                          + r'\s*(?:\[[^\]]*\]\s*)?\(', text)
+            if m and m.group(1) in modules:
+                nxt = modules[m.group(1)]
+                break
+        if nxt is None:
+            return None
+        cur = nxt
+    return cur
+
+
+def _nba_in_rtl(modules: dict, parts: list) -> bool:
+    name, parent = parts[-1], (parts[-2] if len(parts) > 1 else '')
+    owners = _resolve(modules, parts)
+    if owners is None:  # unresolved path: any module that declares the variable (conservative)
+        owners = [t for texts in modules.values() for t in texts]
+    return any(_nba_in_scope(m, name, parent) for m in owners)
+
+def _strip_comments(text: str) -> str:
+    """Drop // and /* */ comments (keeping strings) so module/always scanning sees only code."""
+    return re.sub(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*.*?\*/',
+                  lambda m: m.group(0) if m.group(0).startswith('"') else ' ', text, flags=re.S)
+
+
 def _sources(obj_dir: str):
     texts, missing = [], []
     for dat in glob.glob(os.path.join(obj_dir, '**', '*__verFiles.dat'), recursive=True):
@@ -171,10 +218,15 @@ def _sources(obj_dir: str):
             if not m or '/share/verilator/' in m.group(1) or m.group(1).endswith('verilator_bin'):
                 continue
             path = m.group(1)
-            cands = [path] if os.path.isabs(path) else [path, os.path.join(os.path.dirname(obj_dir.rstrip('/')), path)]
+            # Relative paths are relative to the build's cwd: try cwd, then the model dir and its ancestors.
+            base, cands = os.path.abspath(obj_dir), [path]
+            if not os.path.isabs(path):
+                for _ in range(6):
+                    cands.append(os.path.join(base, path))
+                    base = os.path.dirname(base)
             for c in cands:
                 if os.path.isfile(c):
-                    texts.append(open(c, errors='replace').read())
+                    texts.append(_strip_comments(open(c, errors='replace').read()))
                     break
             else:
                 missing.append(path)

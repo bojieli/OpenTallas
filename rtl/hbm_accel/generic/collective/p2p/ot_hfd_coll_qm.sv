@@ -1,4 +1,6 @@
 `timescale 1ns/1ps
+// HISTORICAL (OWNER 2026-10-14T23:16 HANDOFF 0an): credit/ready flow control on an on-chip HBM path. Diagnostic/component
+// evidence only; NOT the production schedule. Being replaced by compiler-assigned fixed transfer slots (H-COLL plan, el1014-hbm-p2p-coll.log).
 `default_nettype none
 // The two die masters of the quadrant collective engine (HBM peer-to-peer step 1, contract v14), each hardened once.
 // Both are ot_hfd_coll_q; they differ only in what the die must bind, so that no die port of either is tied off:

@@ -48,6 +48,11 @@ endmodule
 '''
 # Blocking prefix loop in a clocked process: same C++ shape, correct semantics -> must not be flagged.
 BLOCKING = r'''
+// A comment naming a module must not shift module scoping. Another module in the same sources writes a
+// variable of the same name with <=; the tb's blocking loop must still be recognised as blocking.
+module other(input wire clk); reg [8:0] p; integer i;
+  always @(posedge clk) for (i=1;i<9;i=i+1) p[i] <= p[i-1];
+endmodule
 module tb;
   reg clk=0; integer cyc=0; reg [7:0] x=8'h5a; reg [8:0] p; reg [8:0] o2; integer i;
   always #5 clk=~clk;
@@ -55,6 +60,22 @@ module tb;
     p[0] = 1'b1; for (i=1;i<9;i=i+1) p[i] = p[i-1] ^ x[i-1];
     o2 <= p; x <= x + 8'd3; cyc <= cyc + 1;
     if (cyc==10) begin $display("RESULT %0d", o2); $finish; end
+  end
+endmodule
+'''
+
+# NBA loop whose value does not read the target, with a later read in the same process: Verilator may keep
+# it in place legitimately (reads ordered first); it simulates correctly and must not be flagged.
+NO_CARRY = r'''
+module tb;
+  reg clk=0; integer cyc=0; reg [7:0] src=0; reg [7:0] cflt; reg [31:0] acc; integer i, first=-1;
+  always #5 clk=~clk;
+  always @(posedge clk) begin
+    if (cyc==0) begin cflt <= 0; acc <= 0; end
+    else begin for (i = 0; i < 8; i = i + 1) cflt[i] <= src[i]; acc <= acc + (|cflt); end
+    src <= (cyc==3) ? 8'h10 : 8'h00; cyc <= cyc + 1;
+    if (acc!=0 && first<0) first = cyc;
+    if (cyc==12) begin $display("RESULT %0d", first); $finish; end
   end
 endmodule
 '''
@@ -104,6 +125,13 @@ class Guard(unittest.TestCase):
             self.assertGreater(r['loops_checked'], 0)
             self.assertEqual(r['findings'], [])
             self.assertEqual(r['blocking_loops_excluded'], 1)
+
+    def test_value_without_loop_carried_read_is_not_flagged(self):
+        with tempfile.TemporaryDirectory() as d:
+            w = Path(d)
+            self.assertEqual(self.build(w, NO_CARRY, ['--unroll-count', '1']).returncode, 0)
+            self.assertEqual(self.sim(w), 6)  # iverilog reference
+            self.assertEqual(G.scan(str(w / 'obj'))['findings'], [])
 
     def test_front_end_refuses_bad_model_and_passes_good_one(self):
         front = HERE / 'verilator_guarded.py'

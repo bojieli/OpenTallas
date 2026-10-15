@@ -1,0 +1,141 @@
+{
+  "schema": "opentallas.hbm.engram.actual-gather-transport-candidate.v1",
+  "status": "Typed candidate contract; producer/consumer/native chain integration and PMA512 physical transport pending",
+  "owners": {
+    "gather_calendar_and_native_chain": "/root/h_collective/static_ring",
+    "home_staging_and_decode": "/root/h_engram_partition",
+    "real_bridge_program_issuer": "/root/h_collective/static_program_join",
+    "pma544_512": "/root/pma_544_512"
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv": "f50bc60bfb5d3da810fc50007154aa9ceb90f86e60c757031c0bb7293c855c76",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv": "6a419f79c71a5d4d556411ba392262c79dd112bcf0863af4cd8fc0c4eacf8cb8",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv": "d5e879e1e76a0b5f4145279c55a53154401b5b3e3a47aa16b33f82612933937a",
+    "rtl/hbm_accel/io_static_20261015/hfd_serdes487_static_window.sv": "98749b360c86041a02ff88c42e048bbee34ea1f4bede7f37a61198f864d601aa",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_word_cdc.sv": "ad94b9faac315ceab60a97cfbc6c3242ab0872031b252132bb7f72b769182d0e",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_frame_transport.sv": "605472ebab23abb6230d9787e6836f9e54c8a7f86defaff75d078db18961a7f8",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_gearbox.sv": "3ca4eccbd1c00f04e57adf7b596e35d3fae26ad5c7441d5c256ef3cfbfaef5f0"
+  },
+  "native_endpoint": {
+    "module": "ot_hgi_coll_static_link_capture",
+    "clocks": {
+      "ck[0]": "controller",
+      "ck[1:4]": "four native replay SRAM leaves"
+    },
+    "logical_same_domain_roots": 5,
+    "tx_read_to_pin_edges": 6,
+    "rx_capture_to_payload_edges": 2,
+    "payload_flit_bits": 545,
+    "wire_frame_bits": 612,
+    "sequence_bits": 16,
+    "replay_slots": 64,
+    "normal_flow": "compiler assigned write/read/receive reservations; no ready/credits",
+    "wr_ports": {
+      "wr_v": 1,
+      "wr_observed_v": 1,
+      "wr_seq": 16,
+      "wr_flit": 545
+    },
+    "rd_ports": {
+      "rd_v": 1,
+      "rd_seq": 16
+    },
+    "rx_ports": {
+      "rx_expect_v": 1,
+      "rx_expect_seq": 16,
+      "rx_pin_v": 1,
+      "rx_pin_flit": 612
+    },
+    "exception": "epoch_abort/retry_requested is exceptional fault indication; actual recovery not claimed"
+  },
+  "wire_encoding": {
+    "present": "bit544",
+    "destination": "bits543:536",
+    "source_rank": "bits535:528",
+    "flit_index": "bits527:512",
+    "application": "bits511:0"
+  },
+  "proposed_row_transport": {
+    "rows_per_layer": 24,
+    "homes": 8,
+    "bytes_per_row": 288,
+    "sectors256_per_row": 9,
+    "flits512_per_row": 5,
+    "application_flits_total": 120,
+    "index": "5*original_column_slot + chunk; chunk0..4",
+    "tail": "chunk4 low256 contains ninth sector; high256 zero and explicitly checked",
+    "status": "requires agreement against actual home staging/decode format; no implicit BF16 conversion"
+  },
+  "minimal_topology": {
+    "rank_count": 9,
+    "layer1_homes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "layer1_consumer": 8,
+    "layer14_homes": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "layer14_consumer": 16,
+    "route": "candidate actual SerDes neighbor chain with eight native endpoint/transport links, static forwarding at each source; no ideal switch",
+    "physical_pad_package_status": "unbound candidate; full96broadcast still release requirement"
+  },
+  "proved_logical_link_profile": {
+    "reference": "results/arch/hcoll_fec_endpoint_1015/receipt.json",
+    "endpoint_epoch_begin": 450,
+    "TXgearbox_start": 497,
+    "frame_acceptance": "498+floor(613*j/487)",
+    "endpoint_write": "acceptance-11",
+    "endpoint_read": "acceptance-7",
+    "TX_pin": "acceptance-1",
+    "FEC_first_sample": 499,
+    "capture_start": 600,
+    "capture_take": [
+      601,
+      2648
+    ],
+    "CDC_read_start": 608,
+    "CDC_read_take": [
+      609,
+      2656
+    ],
+    "RXgearbox_start": 609,
+    "RXword_sample": [
+      610,
+      2657
+    ],
+    "last_word_index": "k=ceil(613*(j+1)/487)-1",
+    "endpoint_RX_capture": "612+k",
+    "endpoint_RX_publication": "614+k",
+    "FEC_measured_age_edges": 102,
+    "finite_window_words": 2048,
+    "frame_bits_with_valid": 613,
+    "transport_word_bits": 487,
+    "qualification": "same-clock logical12-root family; not physical PMA clock/rate proof"
+  },
+  "physical_blockers": [
+    "FEC PMA outputs544 while real SerDes LEF pins512; dedicated root adapter owns exact17/16 raw word cadence and latency",
+    "Actual controller/store hard views and child pin access not qualified",
+    "Exact package/board routes and clock phase/window bounds unbound"
+  ],
+  "next_join_requirements": [
+    "Actual home SRAM producer read ABI and registered response latency",
+    "Actual consumer row-store/decode ports and original column identity",
+    "Real SRAM control issuers for all forwarding reservations",
+    "Exact finite-window headroom including all eight hop ages",
+    "PMA512 adapter and resulting compiler calendar rebase"
+  ]
+}

@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_kv_static_writer_native_r1-r3-7489b1528/record/views/qkd_kv_static_writer_native/qkd_kv_static_writer_native.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 2009 of 2011 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. compiled_generation[0] M4 (172.681,10.224), compiled_generation[1] M4 (172.681,10.224), compiled_identity[0] M4 (172.681,10.224))"
+ ],
+ "summary": "qkd_kv_static_writer_native 172.8 x 302.4: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 2011 blocked-above 0 blocked-same 0; clock ck insertion 314 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "qkd_kv_static_writer_native",
+  "W": 172.8,
+  "H": 302.4,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 32,
+     "dir": "V",
+     "spread": 0.969,
+     "coverage": 1.0,
+     "shapes_on_top": 32
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 32,
+     "dir": "V",
+     "spread": 0.969,
+     "coverage": 1.0,
+     "shapes_on_top": 32
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 2011,
+   "blocked_above": 0,
+   "covered_below": 0,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 2009,
+   "band_examples": [
+    "compiled_generation[0] M4 (172.681,10.224)",
+    "compiled_generation[1] M4 (172.681,10.224)",
+    "compiled_identity[0] M4 (172.681,10.224)",
+    "compiled_identity[10] M4 (172.681,10.224)",
+    "compiled_identity[11] M4 (172.681,10.224)",
+    "compiled_identity[12] M4 (172.681,10.224)"
+   ]
+  },
+  "clock_insertion": {
+   "ck": {
+    "max_ps": 314.08,
+    "min_ps": 234.0
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 267
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

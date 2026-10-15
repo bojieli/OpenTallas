@@ -1,0 +1,98 @@
+{
+  "source_sha256": {
+    "rtl/hbm_accel/io_static_20261015/tb_static_fec_endpoint_transport.sv": "22cabd91fbe9833ac8d1539c8ea594c4ee38afc633b76367cd223774f1133c45",
+    "tools/hbm_io/run_fec_endpoint_gate.sh": "bc67160a37cb6e94aebf17c17c8ce4deeb5f5aadb0796356298ebf1ce94d4421",
+    "tools/uarch_model_hcoll_fec_endpoint.py": "bd596e46b5d66f4732d0446e48e8e0d23b7d1f08492f3a3c6b399ffddaab762f",
+    "rtl/hbm_accel/io_static_20261015/FEC_ENDPOINT_GATE.md": "4fcf37bd3d8fefb891c51569365d84affebd0d768f64ccb589106b243302e8af",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv": "f50bc60bfb5d3da810fc50007154aa9ceb90f86e60c757031c0bb7293c855c76",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv": "6a419f79c71a5d4d556411ba392262c79dd112bcf0863af4cd8fc0c4eacf8cb8",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv": "d24045a84d64fdd69ab9f15ad9ccc3f8d6b5ccad712da8df51ac2d67db001326",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv": "d5e879e1e76a0b5f4145279c55a53154401b5b3e3a47aa16b33f82612933937a",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv": "21a88e901f304638f66eaf743dfa4ef8555670db66bbe44ba2c489983b719c89",
+    "rtl/hbm_accel/io_static_20261015/hfd_serdes487_static_window.sv": "98749b360c86041a02ff88c42e048bbee34ea1f4bede7f37a61198f864d601aa",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_word_cdc.sv": "ad94b9faac315ceab60a97cfbc6c3242ab0872031b252132bb7f72b769182d0e",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_frame_transport.sv": "605472ebab23abb6230d9787e6836f9e54c8a7f86defaff75d078db18961a7f8",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_gearbox.sv": "3ca4eccbd1c00f04e57adf7b596e35d3fae26ad5c7441d5c256ef3cfbfaef5f0",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_enc_rooted.sv": "f6c0ab6832cadd0f5caf3de18164fdec6335cdbd513107231a8ba1d4000588fa",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv": "15923b429259c028375c48d617189468528b3089047ecab648208c5c0cbd4d10",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_encode52_map.sv": "401ecc4c70ebfc04a624faee5540fc625c4c7bddc8a3f4c6bc48ba30d22b81a3",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_syndrome55_map.sv": "ade2e0bbf131d65d979f693ea4347c6431f9d7cfb420d9273c04849a57fbc27c",
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+    "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855"
+  },
+  "root_sources_byte_identical_to": "262d5e14a",
+  "model": {
+    "endpoint": "actualnativeSRAMcapture TX6/RX2",
+    "transport_frame_bits": 613,
+    "word_bits": 487,
+    "application_bytes_per_cycle": 50.84502446982056,
+    "logical_flit_face_peak_bytes_per_cycle": 68.125,
+    "FEC_source": "262d5e14a",
+    "FEC_numeric_age_edges": 102,
+    "FEC_WINDOW_WORDS": 2048,
+    "CDC_AW": 4,
+    "epoch_begin": 450,
+    "TXgearbox_start": 497,
+    "frame_acceptance": "498+floor613j/487",
+    "SRAM_write": "A-11",
+    "SRAM_read": "A-7",
+    "TXpin": "A-1",
+    "first_FEC_input": 499,
+    "FEC_capture_start": 600,
+    "FEC_capture_edges": [
+      601,
+      2648
+    ],
+    "CDC_read_start": 608,
+    "CDC_read_edges": [
+      609,
+      2656
+    ],
+    "RXgearbox_start": 609,
+    "RX_word_sample_edges": [
+      610,
+      2657
+    ],
+    "RXendpoint_capture": "612+ceil613(j+1)/487-1",
+    "RXpublish": "614+ceil613(j+1)/487-1",
+    "test_frameslots": 300,
+    "valid_payloads": 234,
+    "idle_frames": 66,
+    "FEC_rtl": "actualrootedencoder/decoder maps, finitewindowCDC; unchangedroot source",
+    "native_macro_instances": 8,
+    "FP_MACs_per_cycle": 0,
+    "clock_scope": "declaredideal samephase 833.334ps roots; no drift/physicalphase claim",
+    "warmup": "fixed reset8, epoch450, firstvalidFECinput499; no lock-driven issue",
+    "area_and_pin_fit": "parent physical qualification remainsopen; rootFEC census reused, no new sizing",
+    "status": "SIZED calendar only until exactRTLpositive+mutants complete"
+  },
+  "positive": {
+    "frame_slots": 300,
+    "payloads": 234,
+    "idle": 66,
+    "actual_decoded_words": 2048,
+    "actual_CDC_words": 2048,
+    "FEC_capture_age": 102,
+    "final_cycle": 2657
+  },
+  "mutants": {
+    "valid_flip": "endpointmissing cause004",
+    "missing_word_valid": "gearboxfault, unchangeddata stillfault",
+    "corrupt_word_before_encode": "endpointCRC cause001",
+    "PHY_down": "TXabort010 thenRXmissing004",
+    "Forney_DMUT2": "FEC_DECODE_ERROR at601"
+  },
+  "runs": {
+    "host": "ot-agidock128",
+    "positive_unit": "oth-ubuntu-3757475-1792053199",
+    "positive_runner_exit": 0,
+    "forney_unit": "oth-ubuntu-3757750-1792053233",
+    "forney_runner_exit": 0,
+    "memory_GB": 8,
+    "threads": 4
+  },
+  "clock_scope": "declaredideal samephase 0.833334ns roots; no physicalphase/driftqualification",
+  "physical_controller_job": "hcoll_capture_ctl-tc-f5034d006-src2 RUNNING route separate qualification",
+  "initial_failures": "fixture1psprecision rounded1fsobservationzero; then encoded-input scoreboard sampled beforecycleconditionaldelta. Bothfailedsources/logs retained; no DUT/calendar change",
+  "qualification": "ExactactualrootFEC/finitewindowCDC/nativeendpoint/613gearbox component integration only; no unboundedthroughput, physicalCDC, recovery orG96tokenrate claim"
+}

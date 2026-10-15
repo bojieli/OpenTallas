@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_static_read_v7_p_native_1015_p2-pinreg2-COMMIT",
+ "name": "dsfd_vm_static_read_v7_p_native_1015_p2-pinreg2-18cdcf654",
  "block": "dsfd_vm_static_read_v7_p",
  "ref_tile": true,
  "owner": "Claude:S81 VM F5 read-capture",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/s81-vm-read-pinreg-1015",
-  "commit": "COMMIT",
+  "commit": "18cdcf654",
   "extra_paths": [
    "tools/s81_vm",
    "rtl/dsrom_sys/s81_ph/vm",
@@ -100,7 +100,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_static_read_v7_p_native_1015_p2/dsfd_vm_static_read_v7_p_native_1015_p2-pinreg2-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_static_read_v7_p_native_1015_p2/dsfd_vm_static_read_v7_p_native_1015_p2-pinreg2-18cdcf654"
   }
  ],
  "cycles_added": 1,
