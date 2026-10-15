@@ -33,6 +33,9 @@ def main():
   args=[str(binary),'+N=28',f'+PLAN={out/"a_28.mem"}',f'+BEATS={out/"a_28_beats.mem"}','+ROT=0','+MUT=7']
   result=subprocess.run(['vvp',*args],capture_output=True,text=True);(out/'strap_change.log').write_text(result.stdout+result.stderr)
   if result.returncode or 'PASS dynamic-rank'not in result.stdout:raise RuntimeError('strap change escaped or bench failed '+result.stdout)
+  args=[str(binary),'+N=28',f'+PLAN={out/"a_28.mem"}',f'+BEATS={out/"a_28_beats.mem"}','+ROT=2','+MUT=8']
+  result=subprocess.run(['vvp',*args],capture_output=True,text=True);(out/'boot_edge_issue.log').write_text(result.stdout+result.stderr)
+  if result.returncode or 'PASS dynamic-rank'not in result.stdout:raise RuntimeError('bootedge issue escaped '+result.stdout)
   # Functional mutation changes lane codec peer prefix, causing real writes to fail.
   path=D/'s81_static_fmt1_rank_dynamic_clocked.sv';mut=td/'rank_mut.sv'
   original=path.read_text();changed=original.replace("wire[1:0]peer=rank_q ^ 2'(g+1);", "wire[1:0]peer=rank_q ^ 2'(g);")
@@ -48,6 +51,7 @@ def main():
   lane_mapping='physical lane g0..2 peer = registered_rank XOR (g+1)',
   measured_issue_to_gather_edges=11,gather_metadata='tag32 seq16 last registered with vm_we/vm_rows/vm_data',
   cases=records,source_sha256={str(f.relative_to(ROOT)):hashlib.sha256(f.read_bytes()).hexdigest()for f in FILES+[D/'s81_static_fmt1_vm_rank_dynamic.sv',Path(__file__)]},
+  boot_configuration_guard='Actual attempted source issue on first boot-capture edge asserts fault before sampling edge; no source operation admitted before rank capture',
   mutation='Actual lane codec peer prefix uses rank XOR g, observed gather fault; boot strap change separately detected',
   blockers=['actual native VM source image','runtime rank die strap wiring','accepted dynamic controller/core/lane physical slots and pins','TT/FF/DRC0 and native clock/reset qualification'])
  (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
