@@ -19,10 +19,11 @@
 // All-gather (argmax words): output word 8i + 4d + r = TP8 rank 4d + r (package r, die d) word i, out_rank {d, r}.
 // Buffers are statically sized delay rings written UNCONDITIONALLY every cycle at the free-running slot index and read
 // at a fixed offset (never by a pointer that a missing word could desynchronise):
-//   P ring  ot_sram_1r1w_32x546_m1           local record, offset LU + 1 (LU <= 29)
+//   P ring  ot_coll_static_ring: 32 * B x 546 (B = 1, 2 or 4 banks of ot_sram_1r1w_32x546_m1, B from LU), local
+//           record, delay LU + 2 (LU <= 126: the die value includes both CDC channels of the static UCIe path)
 //   S ring  5 x ot_sram_1r1w_512x128_m4_r2c2  {token, tag, local package word}, offset LS + 1 (LS <= 509); the ring
 //           also carries the word's schedule token across the board latency, so no long control delay line exists
-//   R ring  ot_sram_1r1w_32x546_m1           local cross-fold result, offset LU + 1
+//   R ring  ot_coll_static_ring (as P)          local cross-fold result, offset LU + 1
 // Availability is CHECKED, never waited for: a missing / extra / late producer word or link record, a metadata
 // mismatch or a double-booked stage sets a sticky fault and the timeline is unchanged (fault-only checks).
 //   fault_code[0] arithmetic (pre-fold or cross-fold adder error, or an error-flagged peer result)
@@ -32,7 +33,8 @@
 //   fault_code[4] calendar conflict (command while the slot sequencer is busy, words 0, S-ring/SerDes slot or output
 //                 slot claimed by a reduce and a gather in the same cycle, gather hold overwritten)
 // The rank is strapped (pkg_s / die_ps, one pin flop each): ONE master for all 8 compute dies.
-// Negative controls (bench only): OT_TP8S_MUT_OWNER (each die feeds the other parity), OT_TP8S_MUT_GATHER (die sends
+// Negative controls (bench only): OT_TP8S_MUT_OWNER (owner ignores the die strap; a uniform parity swap is an
+// equivalent mutant, results stay exact), OT_TP8S_MUT_GATHER (die sends
 // hi before lo), OT_TP8S_MUT_RANK (cross fold ranks 1 and 2 swapped), OT_TP8S_MUT_RLAT (R ring read one cycle early).
 // ---------------------------------------------------------------------------
 module ot_coll_tp8_static #(
@@ -88,8 +90,8 @@ module ot_coll_tp8_static #(
     localparam integer NS = FW / 128;
     localparam integer SL = 3 * ADD_LAT + 2;     // ot_coll_fold_slice red_in -> v_out (N 4, SEAM 1)
     localparam integer SEW = 640;                // S ring width (5 x 128)
-    initial if (FW != 512 || TAGW != 32 || LU < 1 || LU > 29 || LS < 1 || LS > 509 || GC != 8)
-        $error("ot_coll_tp8_static: FW 512, TAGW 32, 1 <= LU <= 29, 1 <= LS <= 509, GC 8");
+    initial if (FW != 512 || TAGW != 32 || LU < 1 || LU > 126 || LS < 1 || LS > 509 || GC != 8)
+        $error("ot_coll_tp8_static: FW 512, TAGW 32, 1 <= LU <= 126, 1 <= LS <= 509, GC 8");
 
     // ---------------- straps and reset leaves ----------------
     reg [1:0] pkg_q; reg die_q;
@@ -135,8 +137,7 @@ module ot_coll_tp8_static #(
     assign up_valid = upv_q;
     assign up_rec   = uprec_q;
     wire [PW-1:0] pr_rd;
-    ot_sram_1r1w_32x546_m1 u_pring (.clk(clk), .r_ce_in(1'b1), .r_addr_in(cc[4:0] - 5'(LU + 1)), .rd_out(pr_rd),
-        .w_ce_in(1'b1), .w_addr_in(cc[4:0]), .wd_in(ir_q), .w_mask_in({PW{1'b1}}));
+    ot_coll_static_ring #(.OFF(LU + 2)) u_pring (.clk(clk), .rs_n(rs_p), .wd(ir_q), .rd(pr_rd));
     // schedule token A -> B (LU + 2 edges): {v, mode, last, parity}
     localparam integer DAB = LU + 2;
     reg [4*DAB-1:0] tab;
@@ -153,7 +154,7 @@ module ot_coll_tp8_static #(
     wire [FW-1:0] lo = !DI ? pr_rd[FW-1:0] : dpr_q[FW-1:0];
     wire [FW-1:0] hi = !DI ? dpr_q[FW-1:0] : pr_rd[FW-1:0];
 `ifdef OT_TP8S_MUT_OWNER
-    wire own_b = tb_v && !tb_m && (tb_p != DI);
+    wire own_b = tb_v && !tb_m && (tb_p == 1'b0);    // owner ignores the die strap: both dies claim even words
 `else
     wire own_b = tb_v && !tb_m && (tb_p == DI);
 `endif
@@ -290,12 +291,11 @@ module ot_coll_tp8_static #(
     assign ur_rec   = urr_q;
     wire [PW-1:0] rr_rd;
 `ifdef OT_TP8S_MUT_RLAT
-    localparam integer ROFF = LU;
-`else
     localparam integer ROFF = LU + 1;
+`else
+    localparam integer ROFF = LU + 2;
 `endif
-    ot_sram_1r1w_32x546_m1 u_rring (.clk(clk), .r_ce_in(1'b1), .r_addr_in(cc[4:0] - 5'(ROFF)), .rd_out(rr_rd),
-        .w_ce_in(1'b1), .w_addr_in(cc[4:0]), .wd_in({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .w_mask_in({PW{1'b1}}));
+    ot_coll_static_ring #(.OFF(ROFF)) u_rring (.clk(clk), .rs_n(rs_r), .wd({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .rd(rr_rd));
     // token E -> F (LU + 2 edges): {v, own, last}
     localparam integer DEF = LU + 2;
     reg [3*DEF-1:0] tef;
@@ -334,4 +334,34 @@ module ot_coll_tp8_static #(
         end
     assign fault_code = {f_cf, f_ln, f_pr, f_md, f_ar};
     assign fault = |fault_code;
+endmodule
+
+// Fixed-offset delay ring: written unconditionally every cycle at the free-running index, read OFF cycles later
+// (rd valid OFF cycles after wd).  Depth = 32 * B >= OFF, B banks of the 32 x 546 1R1W macro; the read bank
+// select is registered with the macro's registered read.
+module ot_coll_static_ring #(parameter integer OFF = 20) (
+    input  wire         clk,
+    input  wire         rs_n,
+    input  wire [545:0] wd,
+    output wire [545:0] rd
+);
+    localparam integer B  = (OFF <= 32) ? 1 : (OFF <= 64) ? 2 : 4;
+    localparam integer AW = 5 + $clog2(B);
+    initial if (OFF < 2 || OFF > 128) $error("ot_coll_static_ring: 2 <= OFF <= 128");
+    reg [AW-1:0] wa;
+    always @(posedge clk or negedge rs_n) if (!rs_n) wa <= 0; else wa <= wa + 1'b1;
+    wire [AW-1:0] ra = wa - AW'(OFF - 1);      // read issued OFF - 1 cycles after the write, data one edge later
+    wire [546*B-1:0] rdb;
+    genvar b;
+    generate for (b = 0; b < B; b = b + 1) begin : g_b
+        ot_sram_1r1w_32x546_m1 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
+            .w_ce_in((B == 1) ? 1'b1 : (wa[AW-1:5] == b)), .w_addr_in(wa[4:0]), .wd_in(wd), .w_mask_in({546{1'b1}}));
+    end endgenerate
+    generate if (B == 1) begin : g_one
+        assign rd = rdb;
+    end else begin : g_sel
+        reg [AW-6:0] rbs;
+        always @(posedge clk) rbs <= ra[AW-1:5];
+        assign rd = rdb[rbs*546 +: 546];
+    end endgenerate
 endmodule

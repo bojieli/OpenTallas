@@ -64,7 +64,7 @@ module tb_coll_tp8_static #(
     end
     always @(posedge clk) if (cmd_v) cm <= cm + 1;
 
-    integer bad = 0, words_out = 0, errs = 0, done_n = 0, extra = 0;
+    integer bad = 0, words_out = 0, errs = 0, done_n = 0, extra = 0, total_out = 0, endc = 0, mi;
     genvar g, j;
     generate
         for (g = 0; g < ND; g = g + 1) begin : g_die
@@ -109,13 +109,22 @@ module tb_coll_tp8_static #(
             assign im[g] = `C_MODE(pm);
             assign it[g*TAGW +: TAGW] = (TAGBAD == pm && g == 2) ? (pm ^ 32'h8000) : pm;
             // checker: value, last, rank and EXACT compiled cycle of every output word
-            integer rm = 0, rk = 0, per, rg;
+            // the compiled output windows are disjoint (reserved by the scheduler): an output word belongs to the
+            // message whose window holds its cycle; a word in no window is an extra (uncompiled) output
+            integer rm, rk, per, rg, mm, nout = 0;
             reg [FW-1:0] exp;
             always @(posedge clk) if (ov[g]) begin
-                if (rm >= NMSG) begin
+                rm = -1;
+                for (mm = 0; mm < NMSG; mm = mm + 1) begin
+                    per = `C_MODE(mm) ? ND * `C_W(mm) : `C_W(mm);
+                    if (cyc >= `C_OUT(mm) && cyc < `C_OUT(mm) + per) rm = mm;
+                end
+                if (rm < 0) begin
                     extra = extra + 1;
+                    if (extra < 5) $display("EXTRA die=%0d cyc=%0d", g, cyc);
                 end else begin
                     per = `C_MODE(rm) ? ND * `C_W(rm) : `C_W(rm);
+                    rk = cyc - `C_OUT(rm);
                     if (oe[g]) errs = errs + 1;
                     if (`C_MODE(rm)) begin
                         rg = rk % ND;                                    // TP8 rank = 4 * die + package
@@ -135,21 +144,14 @@ module tb_coll_tp8_static #(
                         bad = bad + 1;
                         if (bad < 5) $display("LAST die=%0d msg=%0d word=%0d last=%0d", g, rm, rk, ol[g]);
                     end
-                    if (cyc != `C_OUT(rm) + rk) begin
-                        bad = bad + 1;
-                        if (bad < 5) $display("CYCLE die=%0d msg=%0d word=%0d cyc=%0d compiled=%0d", g, rm, rk, cyc, `C_OUT(rm) + rk);
-                    end
                     words_out = words_out + 1;
-                    if (rk == per - 1) begin
-                        rk = 0; rm = rm + 1;
-                        if (rm == NMSG) done_n = done_n + 1;
-                    end else rk = rk + 1;
+                    nout = nout + 1;
+                    if (nout == total_out) done_n = done_n + 1;
                 end
             end
         end
     endgenerate
 
-    integer endc;
     initial begin
         if (!$value$plusargs("VEC=%s", dir)) dir = ".";
         if (!$value$plusargs("NMSG=%d", NMSG)) NMSG = 1;
@@ -163,15 +165,19 @@ module tb_coll_tp8_static #(
         $readmemh({dir, "/part.hex"}, part);
         $readmemh({dir, "/sum.hex"}, sum);
         $readmemh({dir, "/cmd.hex"}, cmdv);
+        for (mi = 0; mi < NMSG; mi = mi + 1) begin           // compiled totals: words per die, last output cycle
+            total_out = total_out + (`C_MODE(mi) ? ND * `C_W(mi) : `C_W(mi));
+            if (`C_OUT(mi) + (`C_MODE(mi) ? ND * `C_W(mi) : `C_W(mi)) + 64 > endc)
+                endc = `C_OUT(mi) + (`C_MODE(mi) ? ND * `C_W(mi) : `C_W(mi)) + 64;
+        end
     end
     // end: compiled last output + margin (the timeline is fixed: nothing can arrive later)
     integer t; reg [7:0] need;
     always @(posedge clk) begin
-        endc = `C_OUT(NMSG-1) + (`C_MODE(NMSG-1) ? ND * `C_W(NMSG-1) : `C_W(NMSG-1)) + 64;
         if (rst_n && cyc == endc) begin
             $display("TP8S dies=%0d latu=%0d lats=%0d xu=%0d xs=%0d msgs=%0d inject=%0d tagbad=%0d drop=%0d late=%0d conf=%0d mismatches=%0d extra=%0d out_err=%0d fault=%b code=%b words_out=%0d first=%0d last=%0d",
                      ND, LATU, LATS, XU, XS, NMSG, INJECT, TAGBAD, DROP, LATE, CONF, bad, extra, errs, flt, fc, words_out,
-                     `C_CMD(0) + 1, `C_OUT(NMSG-1) + (`C_MODE(NMSG-1) ? ND * `C_W(NMSG-1) : `C_W(NMSG-1)) - 1);
+                     `C_CMD(0) + 1, endc - 65);
             if (INJECT >= 0) begin                       // every die: arithmetic fault + flagged words
                 need = 0; for (t = 0; t < ND; t = t + 1) need[t] = fc[t*5 + 0];
                 if ((need == 8'hff && errs >= ND)) $display("PASS"); else $display("FAIL");
