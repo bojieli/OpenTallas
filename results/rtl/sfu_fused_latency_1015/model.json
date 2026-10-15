@@ -35,6 +35,12 @@
   "real_VM_binding": false,
   "proposed_memory": "G/U/O each32x128x256 actualmacro; 8contiguous FP32 words per SRAM read; actual ot_hgi_sfu_fused_glu_store; whole array production rate unmeasured",
   "proposed_operand_capacity_bytes": 393216,
+  "operand_macro_area_um2": 373591.38816,
+  "operand_macro_outline_um": [
+    94.824,
+    41.04
+  ],
+  "mapped_memory_area_includes_halos": false,
   "proposed_memory_read_bytes_per_edge": 2048,
   "proposed_memory_write_bytes_per_edge": 1024,
   "existing16bank_word_store_reusable_for256lanes": false,
@@ -54,6 +60,7 @@
   "total_FF_reservation": 10240000,
   "clock_roots_per_lane": 4,
   "max_FF_reservation_per_root": 10000,
+  "physical_clock_partition_implemented": false,
   "clock_roots": 1024,
   "mapped_cell_area_um2": null,
   "cell_area_reservation_um2": 19132416,
