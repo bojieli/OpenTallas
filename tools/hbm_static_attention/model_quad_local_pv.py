@@ -102,7 +102,7 @@ def main():
         source_clock_endpoints_per_store=sum(ff.values()) + 16,
         source_census_is_not_mapped=True,
         registered_tile_selector=dict(leaves=32, inputs=4 * 528,
-                                      outputs=528, source_ff_per_leaf=2646),
+                                      outputs=528, source_ff_per_leaf=2644),
         calendar=dict(write_availability_extra_edges=1,
                       read_extra_edges_vs_current_registered_D=3,
                       registered_cohort_selector_edges=2,
