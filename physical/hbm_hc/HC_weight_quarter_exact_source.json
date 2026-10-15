@@ -1,0 +1,5661 @@
+{
+  "status": "SOURCE_BOUND_PROTOTYPE_PENDING_SOURCE_PROOF_CENSUS",
+  "source": "/home/ubuntu/wt/hc-physical-1015/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_weight_quarter_static.sv",
+  "source_sha256": "6569bacf6214971df87729b313e5a5cb277bf3878ace3f6583c0acb3c2fdfc07",
+  "source_commit": "owner freeze pending",
+  "master": "ot_hgi_hc_weight_quarter_static",
+  "actual_ports": {
+    "clk": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "weight_ap": {
+      "direction": "input",
+      "bits": 278
+    },
+    "expected_bank_id": {
+      "direction": "input",
+      "bits": 3
+    },
+    "expected_quarter_id": {
+      "direction": "input",
+      "bits": 2
+    },
+    "read_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "read_slot": {
+      "direction": "input",
+      "bits": 1
+    },
+    "read_row": {
+      "direction": "input",
+      "bits": 7
+    },
+    "write_done": {
+      "direction": "output",
+      "bits": 1
+    },
+    "read_valid": {
+      "direction": "output",
+      "bits": 1
+    },
+    "fault": {
+      "direction": "output",
+      "bits": 1
+    },
+    "weight_data": {
+      "direction": "output",
+      "bits": 256
+    }
+  },
+  "params": {
+    "MUT_SLOT": 0
+  },
+  "outline_um": [
+    172.8,
+    194.4
+  ],
+  "orientation": "R0",
+  "face_bits": {
+    "W": 278,
+    "N": 16,
+    "E": 259
+  },
+  "literal_bits": 553,
+  "mapped_FF": null,
+  "source_nominal_FF_estimate": 1055,
+  "macro_clock_pins": 2,
+  "clock_period_ps": 833.333333,
+  "clock_entry": "N/M5(86.4,194.4), actual phase/insertion unqualified",
+  "macros": [
+    {
+      "instance": "slot[0].u_weight",
+      "size_um": [
+        94.824,
+        41.04
+      ],
+      "origin_um": [
+        23.76,
+        23.76
+      ],
+      "orientation": "MY"
+    },
+    {
+      "instance": "slot[1].u_weight",
+      "size_um": [
+        94.824,
+        41.04
+      ],
+      "origin_um": [
+        23.76,
+        100.44
+      ],
+      "orientation": "MY"
+    }
+  ],
+  "alternative_v2": "height41.064 ONLY explicit92288b0b9equivalence+exactLEFhash+newOBS/PGaudit; no implicit alias",
+  "east_macro_to_core_um": 52.056,
+  "reserved_east_macro_halo_um": 20,
+  "remaining_FF_band_um": 32.056,
+  "requested_pins": [
+    {
+      "port_bit": "weight_ap[0]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        70.608
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[1]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        70.8
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[2]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        70.992
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[3]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        71.184
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[4]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        71.376
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[5]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        71.568
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[6]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        71.76
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[7]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        71.952
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[8]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        72.144
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[9]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        72.336
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[10]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        72.528
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[11]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        72.72
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[12]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        72.912
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[13]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        73.104
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[14]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        73.296
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[15]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        73.488
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[16]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        73.68
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[17]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        73.872
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[18]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        74.064
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[19]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        74.256
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[20]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        74.448
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[21]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        74.64
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[22]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        74.832
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[23]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        75.024
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[24]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        75.216
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[25]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        75.408
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[26]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        75.6
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[27]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        75.792
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[28]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        75.984
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[29]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        76.176
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[30]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        76.368
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[31]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        76.56
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[32]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        76.752
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[33]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        76.944
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[34]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        77.136
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[35]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        77.328
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[36]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        77.52
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[37]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        77.712
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[38]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        77.904
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[39]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        78.096
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[40]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        78.288
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[41]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        78.48
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[42]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        78.672
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[43]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        78.864
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[44]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        79.056
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[45]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        79.248
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[46]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        79.44
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[47]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        79.632
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[48]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        79.824
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[49]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        80.016
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[50]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        80.208
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[51]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        80.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[52]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        80.592
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[53]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        80.784
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[54]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        80.976
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[55]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        81.168
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[56]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        81.36
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[57]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        81.552
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[58]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        81.744
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[59]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        81.936
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[60]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        82.128
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[61]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        82.32
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[62]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        82.512
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[63]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        82.704
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[64]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        82.896
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[65]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        83.088
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[66]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        83.28
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[67]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        83.472
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[68]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        83.664
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[69]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        83.856
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[70]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        84.048
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[71]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        84.24
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[72]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        84.432
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[73]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        84.624
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[74]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        84.816
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[75]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        85.008
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[76]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        85.2
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[77]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        85.392
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[78]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        85.584
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[79]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        85.776
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[80]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        85.968
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[81]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        86.16
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[82]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        86.352
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[83]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        86.544
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[84]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        86.736
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[85]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        86.928
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[86]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        87.12
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[87]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        87.312
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[88]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        87.504
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[89]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        87.696
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[90]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        87.888
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[91]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        88.08
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[92]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        88.272
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[93]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        88.464
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[94]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        88.656
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[95]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        88.848
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[96]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        89.04
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[97]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        89.232
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[98]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        89.424
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[99]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        89.616
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[100]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        89.808
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[101]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        90.0
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[102]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        90.192
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[103]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        90.384
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[104]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        90.576
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[105]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        90.768
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[106]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        90.96
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[107]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        91.152
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[108]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        91.344
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[109]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        91.536
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[110]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        91.728
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[111]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        91.92
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[112]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        92.112
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[113]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        92.304
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[114]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        92.496
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[115]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        92.688
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[116]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        92.88
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[117]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        93.072
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[118]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        93.264
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[119]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        93.456
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[120]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        93.648
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[121]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        93.84
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[122]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        94.032
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[123]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        94.224
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[124]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        94.416
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[125]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        94.608
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[126]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        94.8
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[127]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        94.992
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[128]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        95.184
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[129]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        95.376
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[130]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        95.568
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[131]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        95.76
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[132]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        95.952
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[133]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        96.144
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[134]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        96.336
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[135]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        96.528
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[136]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        96.72
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[137]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        96.912
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[138]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        97.104
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[139]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        97.296
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[140]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        97.488
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[141]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        97.68
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[142]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        97.872
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[143]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        98.064
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[144]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        98.256
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[145]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        98.448
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[146]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        98.64
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[147]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        98.832
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[148]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        99.024
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[149]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        99.216
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[150]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        99.408
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[151]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        99.6
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[152]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        99.792
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[153]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        99.984
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[154]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        100.176
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[155]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        100.368
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[156]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        100.56
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[157]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        100.752
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[158]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        100.944
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[159]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        101.136
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[160]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        101.328
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[161]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        101.52
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[162]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        101.712
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[163]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        101.904
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[164]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        102.096
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[165]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        102.288
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[166]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        102.48
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[167]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        102.672
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[168]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        102.864
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[169]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        103.056
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[170]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        103.248
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[171]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        103.44
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[172]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        103.632
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[173]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        103.824
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[174]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        104.016
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[175]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        104.208
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[176]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        104.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[177]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        104.592
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[178]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        104.784
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[179]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        104.976
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[180]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        105.168
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[181]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        105.36
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[182]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        105.552
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[183]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        105.744
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[184]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        105.936
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[185]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        106.128
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[186]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        106.32
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[187]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        106.512
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[188]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        106.704
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[189]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        106.896
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[190]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        107.088
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[191]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        107.28
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[192]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        107.472
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[193]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        107.664
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[194]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        107.856
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[195]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        108.048
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[196]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        108.24
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[197]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        108.432
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[198]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        108.624
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[199]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        108.816
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[200]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        109.008
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[201]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        109.2
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[202]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        109.392
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[203]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        109.584
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[204]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        109.776
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[205]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        109.968
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[206]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        110.16
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[207]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        110.352
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[208]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        110.544
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[209]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        110.736
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[210]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        110.928
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[211]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        111.12
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[212]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        111.312
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[213]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        111.504
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[214]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        111.696
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[215]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        111.888
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[216]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        112.08
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[217]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        112.272
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[218]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        112.464
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[219]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        112.656
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[220]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        112.848
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[221]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        113.04
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[222]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        113.232
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[223]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        113.424
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[224]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        113.616
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[225]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        113.808
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[226]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        114.0
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[227]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        114.192
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[228]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        114.384
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[229]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        114.576
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[230]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        114.768
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[231]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        114.96
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[232]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        115.152
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[233]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        115.344
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[234]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        115.536
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[235]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        115.728
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[236]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        115.92
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[237]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        116.112
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[238]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        116.304
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[239]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        116.496
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[240]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        116.688
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[241]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        116.88
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[242]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        117.072
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[243]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        117.264
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[244]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        117.456
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[245]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        117.648
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[246]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        117.84
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[247]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        118.032
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[248]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        118.224
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[249]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        118.416
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[250]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        118.608
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[251]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        118.8
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[252]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        118.992
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[253]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        119.184
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[254]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        119.376
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[255]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        119.568
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[256]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        119.76
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[257]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        119.952
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[258]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        120.144
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[259]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        120.336
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[260]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        120.528
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[261]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        120.72
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[262]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        120.912
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[263]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        121.104
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[264]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        121.296
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[265]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        121.488
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[266]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        121.68
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[267]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        121.872
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[268]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        122.064
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[269]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        122.256
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[270]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        122.448
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[271]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        122.64
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[272]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        122.832
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[273]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        123.024
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[274]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        123.216
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[275]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        123.408
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[276]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        123.6
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_ap[277]",
+      "face": "W",
+      "layer": "M4",
+      "requested_center_um": [
+        0,
+        123.792
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "expected_bank_id[0]",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        21.6,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "expected_bank_id[1]",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        30.240000000000002,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "expected_bank_id[2]",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        38.88,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "expected_quarter_id[0]",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        47.52,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "expected_quarter_id[1]",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        56.160000000000004,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "read_v",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        64.80000000000001,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "read_slot",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        73.44,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "read_row[0]",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        82.08000000000001,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "read_row[1]",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        90.72,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "read_row[2]",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        99.36000000000001,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "read_row[3]",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        108.0,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "read_row[4]",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        116.64000000000001,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "read_row[5]",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        125.28,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "read_row[6]",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        133.92000000000002,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "rst_n",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        142.56,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "clk",
+      "face": "N",
+      "layer": "M5",
+      "requested_center_um": [
+        86.4,
+        194.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[0]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        72.432
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[1]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        72.624
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[2]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        72.816
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[3]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        73.008
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[4]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        73.2
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[5]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        73.392
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[6]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        73.584
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[7]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        73.776
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[8]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        73.968
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[9]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        74.16
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[10]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        74.352
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[11]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        74.544
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[12]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        74.736
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[13]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        74.928
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[14]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        75.12
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[15]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        75.312
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[16]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        75.504
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[17]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        75.696
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[18]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        75.888
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[19]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        76.08
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[20]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        76.272
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[21]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        76.464
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[22]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        76.656
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[23]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        76.848
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[24]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        77.04
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[25]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        77.232
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[26]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        77.424
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[27]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        77.616
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[28]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        77.808
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[29]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        78.0
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[30]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        78.192
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[31]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        78.384
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[32]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        78.576
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[33]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        78.768
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[34]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        78.96
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[35]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        79.152
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[36]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        79.344
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[37]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        79.536
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[38]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        79.728
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[39]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        79.92
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[40]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        80.112
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[41]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        80.304
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[42]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        80.496
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[43]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        80.688
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[44]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        80.88
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[45]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        81.072
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[46]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        81.264
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[47]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        81.456
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[48]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        81.648
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[49]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        81.84
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[50]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        82.032
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[51]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        82.224
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[52]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        82.416
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[53]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        82.608
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[54]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        82.8
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[55]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        82.992
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[56]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        83.184
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[57]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        83.376
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[58]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        83.568
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[59]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        83.76
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[60]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        83.952
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[61]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        84.144
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[62]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        84.336
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[63]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        84.528
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[64]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        84.72
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[65]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        84.912
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[66]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        85.104
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[67]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        85.296
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[68]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        85.488
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[69]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        85.68
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[70]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        85.872
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[71]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        86.064
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[72]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        86.256
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[73]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        86.448
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[74]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        86.64
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[75]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        86.832
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[76]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        87.024
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[77]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        87.216
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[78]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        87.408
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[79]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        87.6
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[80]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        87.792
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[81]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        87.984
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[82]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        88.176
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[83]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        88.368
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[84]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        88.56
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[85]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        88.752
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[86]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        88.944
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[87]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        89.136
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[88]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        89.328
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[89]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        89.52
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[90]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        89.712
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[91]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        89.904
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[92]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        90.096
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[93]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        90.288
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[94]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        90.48
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[95]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        90.672
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[96]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        90.864
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[97]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        91.056
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[98]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        91.248
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[99]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        91.44
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[100]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        91.632
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[101]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        91.824
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[102]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        92.016
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[103]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        92.208
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[104]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        92.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[105]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        92.592
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[106]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        92.784
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[107]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        92.976
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[108]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        93.168
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[109]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        93.36
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[110]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        93.552
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[111]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        93.744
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[112]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        93.936
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[113]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        94.128
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[114]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        94.32
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[115]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        94.512
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[116]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        94.704
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[117]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        94.896
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[118]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        95.088
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[119]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        95.28
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[120]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        95.472
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[121]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        95.664
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[122]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        95.856
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[123]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        96.048
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[124]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        96.24
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[125]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        96.432
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[126]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        96.624
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[127]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        96.816
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[128]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        97.008
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[129]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        97.2
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[130]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        97.392
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[131]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        97.584
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[132]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        97.776
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[133]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        97.968
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[134]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        98.16
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[135]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        98.352
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[136]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        98.544
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[137]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        98.736
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[138]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        98.928
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[139]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        99.12
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[140]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        99.312
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[141]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        99.504
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[142]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        99.696
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[143]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        99.888
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[144]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        100.08
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[145]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        100.272
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[146]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        100.464
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[147]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        100.656
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[148]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        100.848
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[149]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        101.04
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[150]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        101.232
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[151]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        101.424
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[152]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        101.616
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[153]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        101.808
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[154]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        102.0
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[155]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        102.192
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[156]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        102.384
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[157]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        102.576
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[158]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        102.768
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[159]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        102.96
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[160]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        103.152
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[161]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        103.344
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[162]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        103.536
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[163]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        103.728
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[164]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        103.92
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[165]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        104.112
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[166]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        104.304
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[167]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        104.496
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[168]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        104.688
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[169]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        104.88
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[170]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        105.072
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[171]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        105.264
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[172]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        105.456
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[173]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        105.648
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[174]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        105.84
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[175]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        106.032
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[176]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        106.224
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[177]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        106.416
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[178]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        106.608
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[179]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        106.8
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[180]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        106.992
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[181]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        107.184
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[182]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        107.376
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[183]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        107.568
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[184]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        107.76
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[185]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        107.952
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[186]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        108.144
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[187]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        108.336
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[188]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        108.528
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[189]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        108.72
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[190]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        108.912
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[191]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        109.104
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[192]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        109.296
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[193]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        109.488
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[194]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        109.68
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[195]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        109.872
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[196]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        110.064
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[197]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        110.256
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[198]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        110.448
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[199]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        110.64
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[200]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        110.832
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[201]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        111.024
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[202]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        111.216
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[203]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        111.408
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[204]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        111.6
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[205]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        111.792
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[206]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        111.984
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[207]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        112.176
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[208]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        112.368
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[209]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        112.56
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[210]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        112.752
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[211]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        112.944
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[212]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        113.136
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[213]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        113.328
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[214]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        113.52
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[215]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        113.712
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[216]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        113.904
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[217]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        114.096
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[218]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        114.288
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[219]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        114.48
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[220]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        114.672
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[221]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        114.864
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[222]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        115.056
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[223]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        115.248
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[224]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        115.44
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[225]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        115.632
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[226]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        115.824
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[227]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        116.016
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[228]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        116.208
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[229]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        116.4
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[230]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        116.592
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[231]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        116.784
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[232]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        116.976
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[233]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        117.168
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[234]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        117.36
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[235]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        117.552
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[236]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        117.744
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[237]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        117.936
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[238]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        118.128
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[239]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        118.32
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[240]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        118.512
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[241]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        118.704
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[242]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        118.896
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[243]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        119.088
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[244]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        119.28
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[245]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        119.472
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[246]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        119.664
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[247]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        119.856
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[248]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        120.048
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[249]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        120.24
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[250]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        120.432
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[251]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        120.624
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[252]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        120.816
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[253]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        121.008
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[254]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        121.2
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "weight_data[255]",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        121.392
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "write_done",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        121.584
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "read_valid",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        121.776
+      ],
+      "actual_center_um": null
+    },
+    {
+      "port_bit": "fault",
+      "face": "E",
+      "layer": "M4",
+      "requested_center_um": [
+        172.8,
+        121.968
+      ],
+      "actual_center_um": null
+    }
+  ],
+  "latency": "ap sample n\u2192commit n+1; macroread n\u2192rawcapture n+1\u2192selectedoutput n+2\u2192MACcapture n+3, unchangedTML3; sourceproof required",
+  "gates_before_CTS": [
+    "all bank/quarter/slot/mask/conflict proof+mutants terminalPASS",
+    "actualsource-specificmappedFF/rootcensus",
+    "actualfixedFF+macrohaloPGreadback",
+    "exacttrackcut<=.60"
+  ],
+  "whole_engine_candidate": {
+    "quarters": 32,
+    "residual_halves": 16,
+    "control_leaves": 8,
+    "MACs": 32,
+    "minimum_roots": 92,
+    "extra_FF_estimate": 6960,
+    "SRAM_count_arithmetic": 80,
+    "physical_composition_qualified": false
+  },
+  "outside_unresolved": [
+    "MACsum max406.491um ETM reach",
+    "stackAP serializer feedsbanks s ands+4",
+    "sharedcontrol/returnarbitration mustnotteleport acrossPCframe",
+    "actual globalclock/cut/rootbalance"
+  ]
+}
