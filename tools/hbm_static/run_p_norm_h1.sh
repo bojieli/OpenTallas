@@ -11,7 +11,7 @@ for kind in canonical ties;do
   cat "$out/${kind}_t${rows}.log"
  done
 done
-if "$out/obj/Vtb_hbm_p_norm_h1_static" +CASE_DIR="$(pwd)/p-norm-h1-ties/mutant_live_SC_lease" >"$out/mutant_live_SC_lease.log" 2>&1;then echo 'FAIL liveSClease mutant passed';exit 1;fi
-cat "$out/mutant_live_SC_lease.log"
-grep -Eq 'real VM phase|real producer fault|real SE' "$out/mutant_live_SC_lease.log"
-echo 'PASS actual H1 futureE lease and rejected liveSC lease'
+if "$out/obj/Vtb_hbm_p_norm_h1_static" +CASE_DIR="$(pwd)/p-norm-h1-ties/mutant_live_E_rounded_alias" >"$out/mutant_live_E_rounded_alias.log" 2>&1;then echo 'FAIL liveEroundedlease mutant passed';exit 1;fi
+cat "$out/mutant_live_E_rounded_alias.log"
+grep -Eq 'real VM phase|real producer fault|real SE' "$out/mutant_live_E_rounded_alias.log"
+echo 'PASS actual H1 futureE lease and rejected liveE rounded lease'

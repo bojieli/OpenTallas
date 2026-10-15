@@ -23,12 +23,12 @@ def packed(fields,layout):
     return word
 
 
-def compile_head(rows,head,sfu_tools,out,normalize=False,scaled_in_e=False,wrong_lease_sc=False):
+def compile_head(rows,head,sfu_tools,out,normalize=False,scaled_in_e=False,wrong_lease_sc=False,wrong_lease_eb_in_e=False):
     sys.path.insert(0,str(sfu_tools))
     from sfu_control_image import encode
     from sfu_vector_calendar import compile_vector
     beats=rows//16;bursts=rows//64
-    sc=head*(rows//8);eraw=4096;scaled=sc if wrong_lease_sc else (eraw if scaled_in_e else 2048);eb=6000+head*(rows//8)
+    sc=head*(rows//8);eraw=4096;scaled=sc if wrong_lease_sc else (eraw if scaled_in_e else 2048);eb=eraw if wrong_lease_eb_in_e else 6000+head*(rows//8)
     mb=7800+head//8;se=7808+head//8;scalar_word=head%8;mb_local=12672
     io={};aux={};events={}
     def put(table,t,**fields):

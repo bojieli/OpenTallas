@@ -16,7 +16,7 @@ template<class W> unsigned bits(const W& w,unsigned start,unsigned width) {
     return out;
 }
 struct Stat { long first=-1,last=-1,count=0,words=0; };
-struct Pending {long cycle;unsigned sector;};
+struct Pending {long cycle;unsigned sector;std::string stage;};
 static std::string kind(unsigned sector) {
     if(sector>=4608&&sector<5632)return "OUT";
     if(sector>=7904&&sector<8032)return "DEN";
@@ -74,11 +74,12 @@ extern "C" int __wrap_main(int argc,char**argv) {
                 for(unsigned b=0;b<8;b++) {
                     if((R(done)>>b)&1) {
                         if(pending[b].empty())ack_errors++;
-                        else {auto p=pending[b].front();pending[b].pop_front();if(epoch-p.cycle!=12)ack_errors++;record(kind(p.sector)+"_local_VM_done",epoch);}
+                        else {auto p=pending[b].front();pending[b].pop_front();if(epoch-p.cycle!=12)ack_errors++;record(p.stage+"_local_VM_done",epoch);}
                     }
                     if(bits(R(wq),281*b+280,1)) {
                         unsigned sector=bits(R(wq),281*b+264,16),mask=bits(R(wq),281*b,8);
-                        record((kind(sector)=="raw_E"&&!max_complete?std::string("scaled_SC"):kind(sector))+"_VM_WQ_pin",epoch,__builtin_popcount(mask));pending[b].push_back({epoch,sector});
+                        std::string stage=kind(sector)=="raw_E"&&!max_complete?std::string("scaled_SC"):kind(sector);
+                        record(stage+"_VM_WQ_pin",epoch,__builtin_popcount(mask));pending[b].push_back({epoch,sector,stage});
                     }
                 }
             }

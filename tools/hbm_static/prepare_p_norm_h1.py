@@ -14,5 +14,8 @@ for rows in [128,640]:
  for name,dest in [('expected_scaled_sc','expected_scaled'),('expected_e','expected_e')]:shutil.copyfile(a.oracle/f't{rows}_h00'/f'{name}.hex',dst/f'{dest}.hex')
  model=json.loads((src/'model.json').read_text());model.update(heads=1,canonical_frozen_G25_logical_heads=1,extra_scaled_SC_temporary_allocation_bound=True,scaled_SC_lease='future_E_before_raw_E_generation',physical_qualified=False,native_whole_kernel_qualified=False);(dst/'model.json').write_text(json.dumps(model,indent=2)+'\n')
 
-mut=a.out/'mutant_live_SC_lease';shutil.copytree(a.out/'t640_h1',mut,dirs_exist_ok=True)
+mut=a.out/'diagnostic_SC_alias';shutil.copytree(a.out/'t640_h1',mut,dirs_exist_ok=True)
 compile_head(640,0,a.sfu_tools,mut,normalize=True,wrong_lease_sc=True)
+
+mut=a.out/'mutant_live_E_rounded_alias';shutil.copytree(a.out/'t640_h1',mut,dirs_exist_ok=True)
+compile_head(640,0,a.sfu_tools,mut,normalize=True,scaled_in_e=True,wrong_lease_eb_in_e=True)
