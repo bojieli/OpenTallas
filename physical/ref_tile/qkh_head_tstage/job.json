@@ -1,5 +1,5 @@
 {
- "name": "qkh_head_tstage-hs2-COMMIT",
+ "name": "qkh_head_tstage-hs2-5ce46f4f0",
  "block": "qkh_head_tstage",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/qwen-kvsys-el-r5-1015",
-  "commit": "COMMIT",
+  "commit": "5ce46f4f015a51c43897f0336241a4eb5caf2d8b",
   "extra_paths": [
    "rtl/test/qwen_split",
    "rtl/qwen_sys/split_20261014",
@@ -123,7 +123,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkh_head_tstage/qkh_head_tstage-hs2-COMMIT"
+   "to": "results/rtl/ref_tile/qkh_head_tstage/qkh_head_tstage-hs2-5ce46f4f0"
   }
  ],
  "cycles_added": 0,
