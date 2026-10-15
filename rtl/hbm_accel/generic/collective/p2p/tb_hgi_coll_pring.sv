@@ -34,8 +34,8 @@ module tb_hgi_coll_pring;
             d[l*32+:32]=b;
         end expected=d;end
     endfunction
-    integer round=0,issued[0:3],got[0:3],cycles=0,checked=0,pops[0:3],dones[0:3];reg[7:0]seen[0:3];
-    initial begin for(integer q=0;q<4;q=q+1)begin issued[q]=0;got[q]=0;seen[q]=0;pops[q]=0;dones[q]=0;rt[q]=0;rm[q]=0;rd[q]=0;end
+    integer round=0,issued[0:3],got[0:3],cycles=0,checked=0,pops[0:3],dones[0:3],pop_sent[0:3],done_sent[0:3];reg[7:0]seen[0:3];
+    initial begin for(integer q=0;q<4;q=q+1)begin issued[q]=0;got[q]=0;seen[q]=0;pops[q]=0;dones[q]=0;pop_sent[q]=0;done_sent[q]=0;rt[q]=0;rm[q]=0;rd[q]=0;end
         repeat(8)@(negedge clk);rst_n=1;end
     always @(posedge clk)if(rst_n)begin
         cycles<=cycles+1;if(|fault)$fatal(1,"ring protocol fault");
@@ -46,6 +46,7 @@ module tb_hgi_coll_pring;
                 if(od[q]!==expected(int'(ot[q]),round))$fatal(1,"carry arithmetic mismatch q%0d tag%0d round%0d",q,ot[q],round);
                 seen[q][ot[q]]=1;got[q]=got[q]+1;checked=checked+8;
             end
+            if(ep[q])pop_sent[q]=pop_sent[q]+1;if(ed[q])done_sent[q]=done_sent[q]+1;
             if(hp[0][q])pops[q]=pops[q]+1;if(hd[0][q])dones[q]=dones[q]+1;
         end
         if(cycles>100000)$fatal(1,"ring timeout round%0d got%0d/%0d/%0d/%0d",round,got[0],got[1],got[2],got[3]);
@@ -63,7 +64,7 @@ module tb_hgi_coll_pring;
             if(round==ROUNDS)begin
                 // Give CTRL traffic its full relay time before comparing exactly-once counts.
                 rv=0;repeat(100)@(negedge clk);
-                for(integer q=0;q<4;q=q+1)if(pops[q]!=dones[q]||pops[q]==0)$fatal(1,"CTRL counts q%0d pop%0d done%0d",q,pops[q],dones[q]);
+                for(integer q=0;q<4;q=q+1)if(pops[q]!=pop_sent[q]||dones[q]!=done_sent[q]||pops[q]==0)$fatal(1,"CTRL counts q%0d pop%0d done%0d",q,pops[q],dones[q]);
                 $display("PRING_NATIVE PASS checked=%0d cycles=%0d rounds=%0d",checked,cycles,round);$finish;
             end
             for(integer q=0;q<4;q=q+1)begin issued[q]=0;got[q]=0;seen[q]=0;end

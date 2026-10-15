@@ -1,0 +1,44 @@
+{
+  "source": "bcc5db931",
+  "clock_roots": {
+    "ring_state": {
+      "count": 8,
+      "payload_sinks_each": 1536
+    },
+    "ring_add": {
+      "count": 8,
+      "LAT": 8,
+      "implementation": "input pin capture +7 real FP pipeline cuts"
+    },
+    "rgx_rx": {
+      "count": 4,
+      "payload_sinks_each": 9952,
+      "CRD": 16
+    },
+    "topk_rx": {
+      "count": 1,
+      "payload_sinks": 5680,
+      "CRD": 8
+    }
+  },
+  "global_vm_composition": {
+    "top": "ot_vms_slice_coll_sw",
+    "NC": 9,
+    "RG": 2,
+    "WG": 3,
+    "WRS": [
+      3,
+      3,
+      3
+    ],
+    "packet_credit_each": 4,
+    "dedicated_write_credit_each": 10,
+    "route": "local SW main on8 bank wide lanes; nonlocal main/mirror via real native packet hub/ring",
+    "posted_completion": "COLL credit only after2 committed sector acknowledgements",
+    "measured_write_cycles": 18707,
+    "measured_flits": 768,
+    "measured_readbacks": 2442,
+    "performance_qualified": false
+  },
+  "physical_qualification": false
+}
