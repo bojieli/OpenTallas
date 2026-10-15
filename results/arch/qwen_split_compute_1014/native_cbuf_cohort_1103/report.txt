@@ -1,0 +1,55 @@
+CROM/R3/D3 regional cohort screen, 2026-10-15
+
+Scope: analytic candidate only. No geometry grant, actual routing, native D3
+qualification, or clock/reset/SU/sequence peer connectivity is claimed.
+
+Pinned inputs and SHA256 are in receipt.json. CROM/R3 come from immutable
+base dbad6aa247b697b26f42141e596cfef05c82e2a0; native D3 body comes from
+5b7116662d2d519e300b6fcccdfa2c6902f26377. The exact existing c19s r7 pdn.tcl
+was collected read-only from EPYC4 and SHA-bound. It is an old-profile diagnostic,
+not the new macro M5-to-upper PG adapter or a region PG approval.
+
+Rank 1: two_pin_variants. CROM->D3 max412.800um, D3->CBUF max466.320um,
+per-bit two-leg sum max877.536um. Request max145.956um. All8208 incident
+return hops and1648 request hops explicitly enumerated. Zero return hops exceed
+500um diagnostic. D3 actual native costs are unknown, therefore500um is NOT
+an established actual pair reach or adoption threshold.
+
+Rank 2: single_master_folded. Max474.240/527.760um, sum1000.224um;
+396 incident return hops exceed500um. Same source/box/PG constraints.
+
+All24 boxes fit the supplied518.376x3119.04 envelope without overlap. Eight
+D3 candidates occupy x19671.552..19736.352. Per row, left cohort uses the
+upper D3, right cohort the lower D3; D3 boxes separated8.64um vertically.
+CROM/R3 both MX are track-compatible on every actual M5 signal pin but have
+no LEF SYMMETRY grant. D3 staysR0: MX would move M4 centers from12 to36nm
+mod48nm. Origins and all signal/clock/reset preferred-axis phases were checked.
+
+Compact D3 W/E M4 pin pitch96nm;1026data/fault pins plusN M5ck/rst_n.
+Above window3.372..52.524um; below77.100..126.252um. Independent a/b physical
+ordering is selected using actual per-bit CROM/R3 endpoint x coordinates.
+Bit512 remainsfault andbits511:0 remain data; logical bit identity unchanged.
+Two variants need distinct actual source module/view identities implemented by
+native owner. Candidate JSON does not fabricate aliases or native views.
+
+Conservative two-track cut: exact y-interval sweep peaks1026 incident return
+nets =>2052tracks. Across82.056um, M7/M9 offer at most2079 tracks after known
+r7 PG widths plusone-pitch spacing/via guard: only27tracks residual. This is
+a tight upper bound before other nets and actual new PG/via adapters. No track
+is claimed reserved/free. M6/M8 horizontal upper bound6758 versus4104 demanded
+tracks. M5 overhead earns zero capacity because actual views obstruct throughM5.
+Known layer/PG/OBS inputs and allfour horizontalrowwindows remain in receipt.
+
+6344 external pin endpoints per arrangement remain explicitly OPEN, including
+SUrequest/answer, sequence cbc/cbr andready_tpos, all24roots/reset, ROM lane-base
+straps, CBUF grp/f_lat straps, and ROM fault-code observations. Exact peer homes,
+other neighboring/relay occupancy and new PG adapters are required for a grant.
+No unknown peer or control pin has been pruned to improve the verdict.
+
+SVG andPNG are to scale in both axes. Purple lines show existing r7 M8/M9 PG;
+blue/orange lines are representative pin-to-pin Manhattan sketches, not routes.
+Full per-bit endpoints and distances live in arrangement JSONs.
+
+Reproduce from repo root: python3 tools/qwen_split/cbuf_cohort_screen.py
+The script checks Coordinator.lock before every artifact write. PIN/phase/
+source/leg/count/containment checks pass; no heavy job was launched.
