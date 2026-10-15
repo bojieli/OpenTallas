@@ -1560,6 +1560,18 @@ def _wrap(v, m, G, peers):
                     if f'ck_l{j}' not in band.order:
                         band.order.append(f'ck_l{j}')
                 band.ports['ck'] = ('pins', 1, 'N', 'M5', [440.652], 1)
+                band.ports['rst_n'] = ('pins', 1, 'S', 'M5', [20.028], 1)
+                band.ports['b0'] = ('pins', 1, 'S', 'M5', [25.02], 1)
+                band.ports['lnk'] = ('pins', 6, 'S', 'M5', [round(32.028+.096*j,4) for j in range(6)], 1)
+                # Two4096-bit registered word faces fit at every second track,
+                # below the native12pins/um limit; old single-track pads do not.
+                band.ports['tw'] = ('face', 4096, 'N', 'M5', 650.0, 2)
+                band.ports['ty'] = ('face', 4096, 'N', 'M5', 230.0, 2)
+                for pn in ('tt', 'pw', 'c'):
+                    sp=band.ports[pn]
+                    band.ports[pn]=sp[:-1]+(2,)
+                band.order = list(dict.fromkeys(band.order + ['b0','lnk']))
+                band.obs_top = 6
 
     v.V5_FINAL_MASTERS = final
 
