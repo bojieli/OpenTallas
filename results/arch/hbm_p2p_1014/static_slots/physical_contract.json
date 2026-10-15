@@ -7,10 +7,10 @@
   "clock_delivery": "each real child clock pin at phi-R from its own insertion.json; synchronous cycle phase",
   "new_leaves": [
     {"top": "ot_hgi_coll_qslots_capture", "replicas": {"NS10": 1,"NS9": 3}, "payload_flops": {"NS10":5450,"NS9":4905}, "pin_faces": {"S":["src_v","src_d","capture_slot"],"N":["captured","captured_slot","fault"],"W":["clk","rst_n"]}, "outline": "synthesis and die assignment pending"},
-    {"top": "ot_hgi_coll_qslots_output", "replicas": {"NS10_ND16": 1,"NS9_ND15": 3}, "payload_flops": {"ND16":8720,"ND15":8175}, "pin_faces": {"S":["captured","captured_slot","sink_slot","sink_select"],"N":["dst_v","dst_d","select_fault","unavailable_fault"],"W":["clk","rst_n"]}, "outline": "synthesis and die assignment pending"},
+    {"top": "ot_hgi_coll_qslots_output", "replicas": {"NS10_ND16": 1,"NS9_ND15": 3}, "payload_flops": {"NS10_ND16":14170,"NS9_ND15":13080}, "pin_faces": {"S":["captured","captured_slot","sink_slot","sink_select"],"N":["dst_v","dst_d","select_fault","unavailable_fault"],"W":["clk","rst_n"]}, "outline": "synthesis and die assignment pending"},
     {"top": "ot_hgi_coll_static_vmwrite", "replicas": 4,"declared_flop_upper_bound":7944,"pin_faces":{"S":["rgx_v","rgx_addr","rgx_data","rgx_vm","tkw_v","tkw_d","ingress_slot","slot_valid","slot_owner"],"N":["kq","launch_done","fault"],"W":["clk","rst_n","sid"]},"outline":"synthesis and die assignment pending"}
   ],
-  "transport_latency": "source capture C -> registered sink C+1; each physical relay adds a compiler cycle",
+  "transport_latency": "source capture C -> switch input capture C+1 -> registered sink C+2; each physical relay adds a compiler cycle",
   "writer_latency": "input capture C -> registered low C+1 / high C+2; bank samples C+2 / C+3; launch_done is not commit",
   "ring": "new state/add/control child masters; predecessor CLOSED credit-ring views cannot substitute",
   "legacy_rx_views": "w552/w568 names are unique on predecessor branch, but those FIFOs remain historical credit evidence",
