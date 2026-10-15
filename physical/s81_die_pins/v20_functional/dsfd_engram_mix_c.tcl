@@ -3304,4 +3304,7 @@ place_pin -pin_name {ck[21]} -layer M4 -location {1151.958 115.200} -force_to_di
 place_pin -pin_name {ck[22]} -layer M4 -location {1151.958 115.296} -force_to_die_boundary
 place_pin -pin_name {ck[23]} -layer M4 -location {1151.958 115.392} -force_to_die_boundary
 place_pin -pin_name {ck[24]} -layer M4 -location {1151.958 115.488} -force_to_die_boundary
-place_pin -pin_name {rst} -layer M4 -location {1151.958 116.544} -force_to_die_boundary
+place_pin -pin_name {ck[25]} -layer M4 -location {1151.958 115.584} -force_to_die_boundary
+place_pin -pin_name {ck[26]} -layer M4 -location {1151.958 115.680} -force_to_die_boundary
+place_pin -pin_name {ck[27]} -layer M4 -location {1151.958 115.776} -force_to_die_boundary
+place_pin -pin_name {rst} -layer M4 -location {1151.958 116.832} -force_to_die_boundary
