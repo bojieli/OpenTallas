@@ -1,0 +1,42 @@
+{
+  "snapshot": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+  "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "tensors": {
+    "layers.0.attn.wo_a.weight": {
+      "file": "weight.bin",
+      "sha256": "3284598d0a93704c4fa89a6e29271e4ee0f422a886a41717409e4f758daea470",
+      "first_element": 0,
+      "descriptor": {
+        "dtype": "F8_E4M3",
+        "shape": [
+          8192,
+          4096
+        ],
+        "data_offsets": [
+          435344856,
+          468899288
+        ]
+      },
+      "source_shard": "model-00003-of-00048.safetensors"
+    },
+    "layers.0.attn.wo_a.scale": {
+      "file": "scale.bin",
+      "sha256": "421350d8dc5a98ea2e1e5a510c00387cb7bbfba217b44bc1507423f8eacd5d19",
+      "first_element": 0,
+      "descriptor": {
+        "dtype": "F8_E8M0",
+        "shape": [
+          256,
+          128
+        ],
+        "data_offsets": [
+          7894488,
+          7927256
+        ]
+      },
+      "source_shard": "model-00003-of-00048.safetensors"
+    }
+  },
+  "bytes_collected": 8320
+}
