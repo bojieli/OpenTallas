@@ -98,12 +98,19 @@ proc ot_ce_corner {} {
   if {[info exists ::ot_ce_corner]} { return $::ot_ce_corner }
   # WC is a scene label, not an actual library corner: option-B overlays WC
   # with TT. Bind the reference to actual loaded child Liberty objects.
-  set found {}
-  foreach cell [get_cells -quiet -hierarchical *] {
+  set found {}; set clock_cells {}
+  # Physical-only taps/endcaps have no Liberty association. The clock corner
+  # belongs to actual sequential clock sinks, not every physical instance.
+  foreach pin [all_registers -clock_pins] {
+    set cell [get_cells -quiet -of_objects $pin]
+    if {[llength $cell] != 1 || $cell eq "NULL"} {error "OT_MULTI_ROOT: clock sink lacks one actual sequential cell"}
+    dict set clock_cells [get_full_name $cell] $cell
+  }
+  if {![dict size $clock_cells]} {error "OT_MULTI_ROOT: no actual sequential cells for corner inference"}
+  foreach cell [dict values $clock_cells] {
     set master [get_property $cell ref_name]
-    if {![dict exists $::ot_ce_counts $master] && !$::ot_ce_leaf_roots} continue
     set libcells [get_lib_cells -quiet -of_objects $cell]
-    if {![llength $libcells]} { error "OT_ENTRIES: $master has no loaded Liberty association" }
+    if {![llength $libcells] || "NULL" in $libcells} { error "OT_MULTI_ROOT: actual sequential cell $master has no loaded Liberty association" }
     foreach lc $libcells {
       set full [get_full_name $lc]
       if {![regexp -nocase {_(tt|ff|ss)/|_(tt|ff|ss)_} $full -> corner alt]} { error "OT_ENTRIES: unknown actual Liberty corner $full" }
