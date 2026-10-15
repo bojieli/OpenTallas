@@ -160,7 +160,7 @@ def main():
  input wire [16383:0] vi_q,
  input wire [65535:0] rd_q,
  input wire [31:0] side_y,
- output wire side_v, output wire [31:0] side_x,
+ output wire side_v, output wire [31:0] side_x,\n output wire [2:0] side_fn, side_fn_out,
  output wire [511:0] vi_re, vm_we, kv_we, ro_v, fault, coll,
  output wire [12287:0] vi_addr, vm_waddr, kv_waddr,
  output wire [49151:0] rd_addr,
@@ -192,7 +192,7 @@ module ot_hbm_su_static_arithmetic #(parameter integer FETCH_EXTRA_EDGES=2)(
     grid+='  assign {'+','.join('c_'+n for n,_ in FIELDS)+'}=g_bcast[l/8].ctl[l%8];\n'
     # Keep low7 terms for 128 true local lanes. Other ABI terms have no identity bit.
     grid+='  wire [839:0] terms;\n  for(genvar s=0;s<5;s=s+1)begin:g_terms\n   assign terms[s*168+:168]=c_ld_c[s*240+:168];\n  end\n'
-    grid+='  wire sv; wire [31:0] sx;\n  if(l==0)begin:g_side\n   assign side_v=sv; assign side_x=sx;\n  end\n'
+    grid+='  wire sv; wire [31:0] sx;\n  if(l==0)begin:g_side\n   assign side_v=sv; assign side_x=sx; assign side_fn=c_ci_sfu; assign side_fn_out=c_cs_sfu;\n  end\n'
     grid+='  ot_hbm_su_static_lane #(.LN(7),.KIND(KIND),.MLAT(3),.ALAT(3),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES)) u_lane(\n'
     conns=['.clk_stage(clk_lane[l*8+:8])','.clk_insert(clk_insert[l*4+:4])','.rst_n(rst_lane_n[l])',".lane_id(11'(LOCAL))",'.cx_srcs(c_srcs)']
     conns += [f'.{n}(terms)' if n=='ld_c' else f'.{n}(c_{n})' for n,_ in FIELDS]
@@ -201,6 +201,22 @@ module ot_hbm_su_static_arithmetic #(parameter integer FETCH_EXTRA_EDGES=2)(
     conns += ['.side_v(sv)','.side_x(sx)','.side_y(side_y)']
     grid+='   '+',\n   '.join(conns)+');\n end\nendmodule\n`default_nettype wire\n'
     (OUT/'ot_hbm_su_static_arithmetic.sv').write_text(grid)
+    # A prior native-lane census remains valid only for byte-identical lane,
+    # insertion and native arithmetic dependencies. The wires-only parent is
+    # not instantiated in that per-KIND census.
+    census_path=RESULT/'clock_census.json'
+    if census_path.exists():
+        census=json.loads(census_path.read_text())
+        sources=census.get('source_sha256',{})
+        relevant={p:h for p,h in sources.items()if not p.endswith('ot_hbm_su_static_arithmetic.sv')}
+        if relevant and all((ROOT/p).exists() and hashlib.sha256((ROOT/p).read_bytes()).hexdigest()==h
+                            for p,h in relevant.items()):
+            maximum=max(r['max_sink']for r in census['records'])
+            model['clock_roots']['max_native_register_sinks_per_root']=maximum
+            model['clock_roots']['lane_sink_census']='Actual byte-matched Yosys per-KIND register census; no CTS'
+            model['arithmetic']['register_bits_actual_census']=sum(
+                n*sum(r['clock_sink_upper_bound'].values())for n,r in zip((384,127,1),census['records']))
+            (RESULT/'model.json').write_text(json.dumps(model,indent=2)+'\n')
 
 
 if __name__=='__main__': main()

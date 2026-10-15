@@ -13,6 +13,7 @@ module ot_hbm_su_static_arithmetic #(parameter integer FETCH_EXTRA_EDGES=2)(
  input wire [65535:0] rd_q,
  input wire [31:0] side_y,
  output wire side_v, output wire [31:0] side_x,
+ output wire [2:0] side_fn, side_fn_out,
  output wire [511:0] vi_re, vm_we, kv_we, ro_v, fault, coll,
  output wire [12287:0] vi_addr, vm_waddr, kv_waddr,
  output wire [49151:0] rd_addr,
@@ -79,7 +80,7 @@ module ot_hbm_su_static_arithmetic #(parameter integer FETCH_EXTRA_EDGES=2)(
   end
   wire sv; wire [31:0] sx;
   if(l==0)begin:g_side
-   assign side_v=sv; assign side_x=sx;
+   assign side_v=sv; assign side_x=sx; assign side_fn=c_ci_sfu; assign side_fn_out=c_cs_sfu;
   end
   ot_hbm_su_static_lane #(.LN(7),.KIND(KIND),.MLAT(3),.ALAT(3),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES)) u_lane(
    .clk_stage(clk_lane[l*8+:8]),

@@ -17,7 +17,7 @@
     "external_scalar": 1,
     "broadcast_registered_bits_per_root": 13936,
     "insertion_max_flops_per_root": 5808,
-    "lane_sink_census": "ActualYosys proc/flatten/memory_map: all3KINDs <=11532 registerbits/root, zero unknown clocks; no CTS",
+    "lane_sink_census": "Actual byte-matched Yosys per-KIND register census; no CTS",
     "max_native_register_sinks_per_root": 11532
   },
   "memory": {
