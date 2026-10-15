@@ -101,7 +101,7 @@ module tb_dsfd_sp_vm_static;
     endfunction
     integer cmd_row = 0;
     task issue(input [2:0] code, input [20:0] op);
-        begin c_cmd = mkcmd(code, op, 7'(cmd_row)); e_dn[tk + 1 + 6] = {1'b1, 1'b0, 7'(cmd_row)}; cmd_row = cmd_row + 1; end
+        begin c_cmd = mkcmd(code, op, 7'(cmd_row)); e_dn[tk + 1 + 7] = {1'b1, 1'b0, 7'(cmd_row)}; cmd_row = cmd_row + 1; end
     endtask
     task stream(input integer dest, input integer base, input integer n);
         integer k, I, E; reg [511:0] d;
