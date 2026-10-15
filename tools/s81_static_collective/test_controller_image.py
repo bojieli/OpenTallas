@@ -180,6 +180,14 @@ endmodule
                     else:outclocks=stopped
                 tb=tb.replace('.clk(clk),','.clk(clk),.clk_rom('+romclocks+'),.clk_outputs('+outclocks+'),')
                 tb=tb.replace('rst_n=1;end endtask','rst_n=1;repeat(3)@(negedge clk);end endtask')
+                tb=tb.replace("reg rst_n=0;", "reg fault_input=0;reg rst_n=0;")
+                tb=tb.replace(".datapath_fault(1'b0)",".datapath_fault(fault_input)")
+                fault_check="""reset();c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=0;fault_input=1;
+ @(posedge clk);#1;if(st[0])$fatal(1,"fault input bypassed its capture stage");
+ @(negedge clk);fault_input=0;@(posedge clk);#1;
+ if(!st[0] || observed || done)$fatal(1,"captured external fault not applied on exact next edge");
+ """
+                tb=tb.replace('$display("PASS v2 controller',fault_check+'$display("PASS v2 controller')
             (p/'tb.sv').write_text(tb)
             subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'sim'),str(selected_rtl),*([str(ROOT/'rtl/lib/ot_rst_relay.sv')] if partitioned else []),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
             if clock_mutant:

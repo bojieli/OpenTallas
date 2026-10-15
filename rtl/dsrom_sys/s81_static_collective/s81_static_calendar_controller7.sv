@@ -71,6 +71,8 @@ module s81_static_calendar_controller7 #(
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) rst_out0(.clk(clk_outputs[0]),.rst_n_in(rst_n),.rst_n(rst_output[0]));
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) rst_out1(.clk(clk_outputs[1]),.rst_n_in(rst_n),.rst_n(rst_output[1]));
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) rst_out2(.clk(clk_outputs[2]),.rst_n_in(rst_n),.rst_n(rst_output[2]));
+ reg datapath_fault_q;
+ always @(posedge clk or negedge rst_state) if(!rst_state)datapath_fault_q<=0;else datapath_fault_q<=datapath_fault;
  localparam integer CB=468,RW=564;
  // Physical immutable controlpage: three actual4096x266 macros in width.
  // Macro q is synchronous, one enabled edge; row0 is fetched during idle,
@@ -121,7 +123,7 @@ module s81_static_calendar_controller7 #(
 `endif
  assign macro_addr_n=running && !entry[RW-2] && int'(current_row)<CYCLES-1 ?
                    12'(int'(current_row)+1):12'd0;
- wire enabled=rst_state && running && !fault && !datapath_fault && !row_bad;
+ wire enabled=rst_state && running && !fault && !datapath_fault_q && !row_bad;
  assign busy=active;
  assign c_st={online,fault};
  always @(posedge clk or negedge rst_state) begin
@@ -129,9 +131,9 @@ module s81_static_calendar_controller7 #(
   else begin
    online<=CONFIGURED && rom_valid_q && entry[RW-1];
    c_done<=0;
-   if(datapath_fault)fault<=1;
+   if(datapath_fault_q)fault<=1;
    if(running && !fault) begin
-    if(row_bad || datapath_fault)begin fault<=1;active<=0;end
+    if(row_bad || datapath_fault_q)begin fault<=1;active<=0;end
     else begin
      c_done<=entry[CB+85+:9];
      if(entry[RW-2])begin active<=0;cursor<=0;end

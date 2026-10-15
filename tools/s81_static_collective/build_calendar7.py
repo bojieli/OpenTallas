@@ -26,6 +26,10 @@ def generate():
     for i in range(3):
         reset+=' ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) rst_out'+str(i)+'(.clk(clk_outputs['+str(i)+']),.rst_n_in(rst_n),.rst_n(rst_output['+str(i)+']));\n'
     text=text[:start]+reset+text[start:]
+    body_start=text.index(' localparam integer CB=468,RW=564;')
+    text=text[:body_start]+re.sub(r'\bdatapath_fault\b','datapath_fault_q',text[body_start:])
+    capture=' reg datapath_fault_q;\n always @(posedge clk or negedge rst_state) if(!rst_state)datapath_fault_q<=0;else datapath_fault_q<=datapath_fault;\n'
+    text=text[:body_start]+capture+text[body_start:]
     groups=[[],[],[]];offset=0
     for name,width in FIELDS:
         group=min(2,offset//156);offset+=width
@@ -49,6 +53,6 @@ def generate():
     census=dict(base_sha256=digest,source=str(out.relative_to(ROOT)),source_sha256=hashlib.sha256(out.read_bytes()).hexdigest(),
                 clocks=['clk']+['clk_rom['+str(i)+']' for i in range(3)]+['clk_outputs['+str(i)+']' for i in range(3)],
                 output_groups=[dict(clock='clk_outputs['+str(i)+']',bits=sum(w for _,w,_ in fields),ports=[n for n,_,_ in fields]) for i,fields in enumerate(groups)],
-                added_data_edges=0,added_data_registers=0,reset_relays=4,initialization_release_extra_edges=3,rom_macros=3,qualification=False)
+                added_data_edges=0,added_data_registers=0,reset_relays=4,initialization_release_extra_edges=3,fault_input_capture_extra_edges=1,rom_macros=3,qualification=False)
     return census
 if __name__=='__main__':print(json.dumps(generate(),indent=2))
