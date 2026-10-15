@@ -11,29 +11,46 @@ BODY='rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv'
 def read(path):return subprocess.check_output(['git','show',REF+':'+path],cwd=ROOT,text=True)
 
 def export():
+    views_ref=subprocess.check_output(['git','rev-parse','origin/main'],cwd=ROOT,text=True).strip()
+    def view_read(path):
+        p=subprocess.run(['git','show',views_ref+':'+path],cwd=ROOT,text=True,capture_output=True)
+        return p.stdout if p.returncode==0 else None
     source={p:read(p)for p in (TOP,REGION,BODY)}
     lc={int(i):p for i,p in re.findall(r'assign\s+lc\[(\d+)\]\s*=\s*(ck_r\d+_\d+)\s*;',source[TOP])}
     oc={int(i):p for i,p in re.findall(r'assign\s+oc\[(\d+)\]\s*=\s*(ck_r\d+_\d+)\s*;',source[TOP])}
     assert set(lc)==set(range(448)) and set(oc)==set(range(24,63))
     recipes={}
-    files=subprocess.check_output(['rg','--files','tools/ref_tile','-g','qfd_vm*.json'],cwd=ROOT,text=True).splitlines()
+    files=[p for p in subprocess.check_output(['git','ls-tree','-r','--name-only',views_ref,'tools/ref_tile'],cwd=ROOT,text=True).splitlines()if re.search(r'/qfd_vm[^/]*\.json$',p)]
     for f in files:
-        a=json.loads((ROOT/f).read_text())
+        a=json.loads(view_read(f))
         if 'top'not in a or 'name'not in a:continue
-        view=ROOT/'physical/ref_tile'/a['name']/'views'/a['name']
-        lef=view/(a['name']+'.lef');size=None
-        if lef.exists():
-            m=re.search(r'\bSIZE\s+([0-9.eE+-]+)\s+BY\s+([0-9.eE+-]+)',lef.read_text())
+        view=ROOT/'physical/ref_tile'/a['name']/'views'/a['top']
+        lef=view/(a['top']+'.lef');size=None
+        lef_data=view_read(str(lef.relative_to(ROOT)))
+        tt_lib=view/(a['top']+'_tt.lib');tt_data=view_read(str(tt_lib.relative_to(ROOT)))
+        if lef_data:
+            m=re.search(r'\bSIZE\s+([0-9.eE+-]+)\s+BY\s+([0-9.eE+-]+)',lef_data)
             if m:size=[float(m[1]),float(m[2])]
         recipes.setdefault(a['top'],[]).append(dict(recipe=f,params=a.get('params',{}),clock_port=a.get('clock_port'),
-            candidate_outline=a.get('outline'),lef=str(lef.relative_to(ROOT))if lef.exists()else None,
-            actual_lef_size_um=size,tt_lib=str((view/(a['name']+'_tt.lib')).relative_to(ROOT))if(view/(a['name']+'_tt.lib')).exists()else None,
+            candidate_outline=a.get('outline'),view_ref=views_ref,lef=str(lef.relative_to(ROOT))if lef_data else None,lef_sha256=hashlib.sha256(lef_data.encode()).hexdigest()if lef_data else None,
+            actual_lef_size_um=size,tt_lib=str(tt_lib.relative_to(ROOT))if tt_data else None,
             source_equivalence='UNQUALIFIED historical reference; selected parameters, clocks, pins and native view must be verified'))
+    module_paths={name:path for path,names in {
+        REGION:['ot_qfd_vm_bctl_nx','ot_qfd_vm_rr2_nx','qfd_vm_qcommit'],
+        BODY:['ot_qfd_vm_bank_t','ot_qfd_vm_su_t'],
+        'rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv':['ot_qfd_vm_sctl_t','ot_qfd_vm_rr4_t','ot_qfd_vm_delay1_t','ot_qfd_vm_delay2_t'],
+        'rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv':['ot_qfd_vm_su1024_t']}.items()for name in names}
+    module_identity={}
+    for name,path in module_paths.items():
+        text=read(path);match=re.search(r'(?ms)^module\s+'+re.escape(name)+r'\b.*?^\s*endmodule\b',text)
+        if not match:raise ValueError('selected module definition absent: '+name)
+        module_identity[name]=dict(source=path,source_ref=REF,module_sha256=hashlib.sha256(match.group().encode()).hexdigest(),
+            meaning='Exact selected module declaration/body identity, independent of unrelated modules in the same file; physical view qualification remains owner-audited.')
     leaves=[]
     def add(clock,master,path,role,region=None,**kw):
         leaves.append(dict(clock=clock,master=master,path=path,role=role,region=region,
             clock_pin='ck'if master in('qfd_vm_qcommit','UNPARTITIONED_VM_RESIDUAL')else'clk',
-            physical_home=None,source_equivalent_physical_view=None,candidate_recipe_views=recipes.get(master,[]),**kw))
+            selected_module=module_identity.get(master),physical_home=None,source_equivalent_physical_view=None,candidate_recipe_views=recipes.get(master,[]),**kw))
     for r in range(8):
         base=f'u_vm.g_tile.g_t[{r}].u_t'
         for b in range(8):
@@ -63,7 +80,7 @@ def export():
         size_estimate=None)
     ports=load_nodes()['vm']['ports'];clocks={p for p,s in ports.items()if s['direction']=='input'and(p=='ck'or p.startswith('ck_'))}
     assert len(leaves)==488 and {x['clock']for x in leaves}==clocks and len(clocks)==488
-    return dict(schema='opentallas.qwen.vm-native-leaf-inventory.v1',qualified=False,source_ref=REF,
+    return dict(schema='opentallas.qwen.vm-native-leaf-inventory.v1',qualified=False,source_ref=REF,candidate_views_ref=views_ref,
         source_sha256={p:hashlib.sha256(s.encode()).hexdigest()for p,s in source.items()},
         counts=dict(region_leaves=448,write_commit_observers=39,main_residual=1,total_roots=488),leaves=leaves,
         operand_mapping=dict(A='sq[2047:0]',B='sq[4095:2048]',C='sq[6143:4096]',
