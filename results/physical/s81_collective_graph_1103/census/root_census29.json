@@ -1,0 +1,320 @@
+{
+  "schema": "s81.actual-collective-clock-root-census.v1",
+  "source_commit": "2eb33e9a8e8046d4f579fc1395e0ac6038a11341",
+  "top": "s81_static_collective_slab",
+  "parameters": {
+    "ROM_FILE": "",
+    "CYCLES": 1,
+    "MUT": 0,
+    "VMB_PINCAP": 1
+  },
+  "scope": "Current parent-default source elaboration. SYNTHESIS ROM interface is a hard blackbox, not modeled storage. Counts are generic one-bit sequential cell clock sinks, before technology mapping/CTS. Wrapper reset_q adds two control0 flops outside this slab.",
+  "root_count": 29,
+  "slab_sequential_clock_sinks": 106536,
+  "wrapper_additional_sinks": {
+    "ck_control[0]": 2
+  },
+  "full_wrapper_delivered_root_sequential_sinks": 106538,
+  "per_root": [
+    {
+      "clock": "ck_control[0]",
+      "sequential_clock_sinks": 1147,
+      "cell_types": {
+        "$_DFF_PN0_": 567,
+        "$_DFFE_PN0P_": 16,
+        "$_DFFE_PP_": 564
+      }
+    },
+    {
+      "clock": "ck_control[1]",
+      "sequential_clock_sinks": 8424,
+      "cell_types": {
+        "$_DFF_PN0_": 8420,
+        "$_DFFE_PN0N_": 2,
+        "$_DFFE_PN0P_": 2
+      }
+    },
+    {
+      "clock": "ck_control[2]",
+      "sequential_clock_sinks": 6267,
+      "cell_types": {
+        "$_DFF_P_": 4163,
+        "$_DFF_PN0_": 13,
+        "$_DFFE_PN0P_": 556,
+        "$_SDFF_PP1_": 2,
+        "$_SDFF_PN0_": 1061,
+        "$_SDFF_PP0_": 472
+      }
+    },
+    {
+      "clock": "ck_control[3]",
+      "sequential_clock_sinks": 5472,
+      "cell_types": {
+        "$_DFF_PN0_": 84,
+        "$_SDFF_PN0_": 4355,
+        "$_DFFE_PP_": 1024,
+        "$_DFFE_PN0P_": 9
+      }
+    },
+    {
+      "clock": "ck_control[4]",
+      "sequential_clock_sinks": 967,
+      "cell_types": {
+        "$_DFF_PN0_": 3,
+        "$_DFF_P_": 882,
+        "$_DFFE_PN0P_": 18,
+        "$_DFFE_PP_": 64
+      }
+    },
+    {
+      "clock": "ck_lane[0]",
+      "sequential_clock_sinks": 4360,
+      "cell_types": {
+        "$_DFF_PN0_": 2437,
+        "$_DFFE_PN0P_": 1923
+      }
+    },
+    {
+      "clock": "ck_lane[1]",
+      "sequential_clock_sinks": 4360,
+      "cell_types": {
+        "$_DFF_PN0_": 2437,
+        "$_DFFE_PN0P_": 1923
+      }
+    },
+    {
+      "clock": "ck_lane[2]",
+      "sequential_clock_sinks": 4360,
+      "cell_types": {
+        "$_DFF_PN0_": 2437,
+        "$_DFFE_PN0P_": 1923
+      }
+    },
+    {
+      "clock": "ck_lane[3]",
+      "sequential_clock_sinks": 4383,
+      "cell_types": {
+        "$_DFFE_PN0P_": 1929,
+        "$_DFF_PN0_": 2454
+      }
+    },
+    {
+      "clock": "ck_lane[4]",
+      "sequential_clock_sinks": 4383,
+      "cell_types": {
+        "$_DFFE_PN0P_": 1929,
+        "$_DFF_PN0_": 2454
+      }
+    },
+    {
+      "clock": "ck_lane[5]",
+      "sequential_clock_sinks": 4383,
+      "cell_types": {
+        "$_DFFE_PN0P_": 1929,
+        "$_DFF_PN0_": 2454
+      }
+    },
+    {
+      "clock": "ck_lane[6]",
+      "sequential_clock_sinks": 4383,
+      "cell_types": {
+        "$_DFFE_PN0P_": 1929,
+        "$_DFF_PN0_": 2454
+      }
+    },
+    {
+      "clock": "ck_lane[7]",
+      "sequential_clock_sinks": 4383,
+      "cell_types": {
+        "$_DFFE_PN0P_": 1929,
+        "$_DFF_PN0_": 2454
+      }
+    },
+    {
+      "clock": "ck_hc_lane[0]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105,
+        "$_DFFE_PP_": 1024
+      }
+    },
+    {
+      "clock": "ck_hc_lane[1]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105,
+        "$_DFFE_PP_": 1024
+      }
+    },
+    {
+      "clock": "ck_hc_lane[2]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105,
+        "$_DFFE_PP_": 1024
+      }
+    },
+    {
+      "clock": "ck_hc_lane[3]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105,
+        "$_DFFE_PP_": 1024
+      }
+    },
+    {
+      "clock": "ck_hc_lane[4]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105,
+        "$_DFFE_PP_": 1024
+      }
+    },
+    {
+      "clock": "ck_hc_lane[5]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105,
+        "$_DFFE_PP_": 1024
+      }
+    },
+    {
+      "clock": "ck_hc_lane[6]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105,
+        "$_DFFE_PP_": 1024
+      }
+    },
+    {
+      "clock": "ck_hc_lane[7]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105,
+        "$_DFFE_PP_": 1024
+      }
+    },
+    {
+      "clock": "ck_hc_lane[8]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105,
+        "$_DFFE_PP_": 1024
+      }
+    },
+    {
+      "clock": "ck_hc_lane[9]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105,
+        "$_DFFE_PP_": 1024
+      }
+    },
+    {
+      "clock": "ck_hc_lane[10]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105,
+        "$_DFFE_PP_": 1024
+      }
+    },
+    {
+      "clock": "ck_hc_lane[11]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_DFFE_PP_": 1024,
+        "$_SDFF_PP0_": 105
+      }
+    },
+    {
+      "clock": "ck_hc_lane[12]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_DFFE_PP_": 1024,
+        "$_SDFF_PP0_": 105
+      }
+    },
+    {
+      "clock": "ck_hc_lane[13]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_DFFE_PP_": 1024,
+        "$_SDFF_PP0_": 105
+      }
+    },
+    {
+      "clock": "ck_hc_lane[14]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_DFFE_PP_": 1024,
+        "$_SDFF_PP0_": 105
+      }
+    },
+    {
+      "clock": "ck_hc_lane[15]",
+      "sequential_clock_sinks": 3079,
+      "cell_types": {
+        "$_DFF_PN0_": 1145,
+        "$_DFF_P_": 805,
+        "$_DFFE_PP_": 1024,
+        "$_SDFF_PP0_": 105
+      }
+    }
+  ],
+  "hard_macros": [
+    {
+      "instance": "s81_static_collective_slab.calendar.ROM_BANK[0].u_rom",
+      "master": "ot_rom_4096x266_m8",
+      "clock": "ck_control[0]",
+      "internal_register_count": "hard macro excluded"
+    },
+    {
+      "instance": "s81_static_collective_slab.calendar.ROM_BANK[1].u_rom",
+      "master": "ot_rom_4096x266_m8",
+      "clock": "ck_control[0]",
+      "internal_register_count": "hard macro excluded"
+    },
+    {
+      "instance": "s81_static_collective_slab.calendar.ROM_BANK[2].u_rom",
+      "master": "ot_rom_4096x266_m8",
+      "clock": "ck_control[0]",
+      "internal_register_count": "hard macro excluded"
+    }
+  ],
+  "unresolved_clock_sinks": [],
+  "raw_json_sha256": "2aabc374e962cb02bdd5b09426fc00d58a4a07dce23deaf31066c672fc376649",
+  "tool": "Yosys0.67 2d1509d1b",
+  "peak_memory_mb": 4862.31,
+  "elapsed_yosys_seconds": 86.84,
+  "warning": "Not a production calendar7 root census; candidate needs35 roots. CYCLES1 is actual default; a different production parameter changes calendar storage. This is not placed CTS load capacitance or an outline proof."
+}

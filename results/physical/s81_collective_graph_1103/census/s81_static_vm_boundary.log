@@ -1,0 +1,1297 @@
+
+-- Executing script file `results/physical/s81_collective_graph_1103/census/s81_static_vm_boundary.ys' --
+
+1. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv' to AST representation.
+Storing AST representation for module `$abstract\dsfd_coll_ck'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv' to AST representation.
+Storing AST representation for module `$abstract\dsfd_coll_static_channels'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_s81ph_ckbuf'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_optreg'.
+Storing AST representation for module `$abstract\ot_s81ph_fp32_add_rne_preexp'.
+Storing AST representation for module `$abstract\ot_s81ph_fp32_exp_prefix'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv' to AST representation.
+Storing AST representation for module `$abstract\dsfd_sp_collective_static_c'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_calendar_controller'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_calendar_controller7'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_collective_slab'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_channels'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_channels_clocked'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_codec'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_codec_dynamic'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_core'.
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_core_dynamic'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_gearbox'.
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_lane'.
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_lane_dynamic'.
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_rank'.
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_rank_dynamic'.
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_rank_dynamic_clocked'.
+Successfully finished Verilog frontend.
+
+21. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_vm_rank'.
+Successfully finished Verilog frontend.
+
+22. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_vm_rank_dynamic'.
+Successfully finished Verilog frontend.
+
+23. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_host_queue'.
+Successfully finished Verilog frontend.
+
+24. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_phy_digital.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_phy_digital.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_phy_digital'.
+Successfully finished Verilog frontend.
+
+25. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_raw_fmt1_codec'.
+Successfully finished Verilog frontend.
+
+26. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_raw_fmt1_lane'.
+Successfully finished Verilog frontend.
+
+27. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_vm_rows.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_vm_rows.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_raw_vm_rows'.
+Successfully finished Verilog frontend.
+
+28. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_endpoint'.
+Successfully finished Verilog frontend.
+
+29. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_endpoint_dynamic'.
+Successfully finished Verilog frontend.
+
+30. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_rank.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_rank.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_rank'.
+Successfully finished Verilog frontend.
+
+31. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_producer.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_producer.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_vm_producer'.
+Successfully finished Verilog frontend.
+
+32. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_read_source.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_read_source.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_vm_read_source'.
+Successfully finished Verilog frontend.
+
+33. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_vm_boundary'.
+Successfully finished Verilog frontend.
+
+34. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_assemble_clocked'.
+Storing AST representation for module `$abstract\s81_static_hc_scalar_assemble'.
+Storing AST representation for module `$abstract\s81_static_hc_assemble'.
+Successfully finished Verilog frontend.
+
+35. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_reduce_clocked'.
+Storing AST representation for module `$abstract\s81_static_hc_scalar_reduce'.
+Storing AST representation for module `$abstract\s81_static_hc_reduce'.
+Successfully finished Verilog frontend.
+
+36. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/hdc/ot_hdc_prefix.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/hdc/ot_hdc_prefix.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_ksadd_k'.
+Storing AST representation for module `$abstract\ot_hdc_inc_k'.
+Successfully finished Verilog frontend.
+
+37. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/link/ot_link_crc32.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/link/ot_link_crc32.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_link_crc32'.
+Successfully finished Verilog frontend.
+Parameter \PINCAP = 1
+
+38. Executing AST frontend in derive mode using pre-parsed AST for module `\s81_static_vm_boundary'.
+Parameter \PINCAP = 1
+Generating RTLIL representation for module `$paramod\s81_static_vm_boundary\PINCAP=s32'00000000000000000000000000000001'.
+Warning: Replacing memory \reduce_row with list of registers. See results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:47
+
+39. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_rst_relay'.
+Successfully finished Verilog frontend.
+
+40. Executing HIERARCHY pass (managing design hierarchy).
+
+41. Executing AST frontend in derive mode using pre-parsed AST for module `\s81_static_vm_boundary'.
+Generating RTLIL representation for module `\s81_static_vm_boundary'.
+Warning: Replacing memory \reduce_row with list of registers. See results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:47
+
+41.1. Analyzing design hierarchy..
+Top module:  \s81_static_vm_boundary
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+
+41.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Generating RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv:42
+
+41.3. Analyzing design hierarchy..
+Top module:  \s81_static_vm_boundary
+Used module:     $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+
+41.4. Analyzing design hierarchy..
+Top module:  \s81_static_vm_boundary
+Used module:     $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+Removing unused module `$abstract\ot_rst_relay'.
+Removing unused module `$abstract\ot_link_crc32'.
+Removing unused module `$abstract\ot_hdc_inc_k'.
+Removing unused module `$abstract\ot_hdc_ksadd_k'.
+Removing unused module `$abstract\s81_static_hc_reduce'.
+Removing unused module `$abstract\s81_static_hc_scalar_reduce'.
+Removing unused module `$abstract\s81_static_hc_reduce_clocked'.
+Removing unused module `$abstract\s81_static_hc_assemble'.
+Removing unused module `$abstract\s81_static_hc_scalar_assemble'.
+Removing unused module `$abstract\s81_static_hc_assemble_clocked'.
+Removing unused module `$abstract\s81_static_vm_boundary'.
+Removing unused module `$abstract\s81_static_tp4_vm_read_source'.
+Removing unused module `$abstract\s81_static_tp4_vm_producer'.
+Removing unused module `$abstract\s81_static_tp4_rank'.
+Removing unused module `$abstract\s81_static_tp4_endpoint_dynamic'.
+Removing unused module `$abstract\s81_static_tp4_endpoint'.
+Removing unused module `$abstract\s81_static_raw_vm_rows'.
+Removing unused module `$abstract\s81_static_raw_fmt1_lane'.
+Removing unused module `$abstract\s81_static_raw_fmt1_codec'.
+Removing unused module `$abstract\s81_static_phy_digital'.
+Removing unused module `$abstract\s81_static_host_queue'.
+Removing unused module `$abstract\s81_static_fmt1_vm_rank_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_vm_rank'.
+Removing unused module `$abstract\s81_static_fmt1_rank_dynamic_clocked'.
+Removing unused module `$abstract\s81_static_fmt1_rank_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_rank'.
+Removing unused module `$abstract\s81_static_fmt1_lane_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_lane'.
+Removing unused module `$abstract\s81_static_fmt1_gearbox'.
+Removing unused module `$abstract\s81_static_fmt1_core_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_core'.
+Removing unused module `$abstract\s81_static_fmt1_codec_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_codec'.
+Removing unused module `$abstract\s81_static_fmt1_channels_clocked'.
+Removing unused module `$abstract\s81_static_fmt1_channels'.
+Removing unused module `$abstract\s81_static_collective_slab'.
+Removing unused module `$abstract\s81_static_calendar_controller7'.
+Removing unused module `$abstract\s81_static_calendar_controller'.
+Removing unused module `$abstract\dsfd_sp_collective_static_c'.
+Removing unused module `$abstract\ot_s81ph_fp32_exp_prefix'.
+Removing unused module `$abstract\ot_s81ph_fp32_add_rne_preexp'.
+Removing unused module `$abstract\ot_optreg'.
+Removing unused module `$abstract\ot_s81ph_ckbuf'.
+Removing unused module `$abstract\dsfd_coll_static_channels'.
+Removing unused module `$abstract\dsfd_coll_ck'.
+Removed 45 unused modules.
+
+42. Executing SYNTH pass.
+
+42.1. Executing HIERARCHY pass (managing design hierarchy).
+
+42.1.1. Analyzing design hierarchy..
+Top module:  \s81_static_vm_boundary
+Used module:     $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+
+42.1.2. Analyzing design hierarchy..
+Top module:  \s81_static_vm_boundary
+Used module:     $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+Removed 0 unused modules.
+
+42.2. Executing PROC pass (convert processes to netlists).
+
+42.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv:40$163'.
+Cleaned up 1 empty switch.
+
+42.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:88$127 in module s81_static_vm_boundary.
+Marked 20 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106 in module s81_static_vm_boundary.
+Marked 1 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:53$104 in module s81_static_vm_boundary.
+Marked 1 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv:40$163 in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Marked 1 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv:28$161 in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Removed a total of 0 dead cases.
+
+42.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 7 redundant assignments.
+Promoted 41 assignments to connections.
+
+42.2.4. Executing PROC_INIT pass (extract init attributes).
+
+42.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_l in `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:88$127'.
+Found async reset \rst_l in `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:53$104'.
+Found async reset \rst_n_in in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv:40$163'.
+Found async reset \rst_n_in in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv:28$161'.
+
+42.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~29 debug messages>
+
+42.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:80$160'.
+Creating decoders for process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:33$159'.
+Creating decoders for process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:88$127'.
+     1/10: $1$fordecl_block$38.j[31:0]$132
+     2/10: $0\vm_full[2203:0]
+     3/10: $1$fordecl_block$36.j[31:0]$131
+     4/10: $0\vm_v[3:0] [3]
+     5/10: $0\vm_v[3:0] [2]
+     6/10: $0\vm_v[3:0] [1]
+     7/10: $0\vm_v[3:0] [0]
+     8/10: $0\crq_row_r[13:0]
+     9/10: $0\crq_v[0:0]
+    10/10: $0\fault[0:0]
+Creating decoders for process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:86$126'.
+Creating decoders for process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106'.
+     1/50: $1$fordecl_block$33.j[31:0]$125
+     2/50: $14\next_vm[1653:1653]
+     3/50: $13\next_vm[1102:1102]
+     4/50: $12\next_vm[551:551]
+     5/50: $11\next_vm[0:0]
+     6/50: $10\next_vm[31:31]
+     7/50: $18\pack_bad[0:0]
+     8/50: $9\occupied[1:1]
+     9/50: $9\next_vm[1101:551]
+    10/50: $17\pack_bad[0:0]
+    11/50: $16\pack_bad[0:0]
+    12/50: $8\occupied[0:0]
+    13/50: $8\next_vm[550:0]
+    14/50: $15\pack_bad[0:0]
+    15/50: $14\pack_bad[0:0]
+    16/50: $13\pack_bad[0:0]
+    17/50: $7\occupied[0:0]
+    18/50: $7\next_vm[550:0]
+    19/50: $12\pack_bad[0:0]
+    20/50: $11\pack_bad[0:0]
+    21/50: $2\occupied[3:0] [3]
+    22/50: $6\occupied[3:3]
+    23/50: $6\next_vm[2203:1653]
+    24/50: $9\pack_bad[0:0]
+    25/50: $8\pack_bad[0:0]
+    26/50: $5\occupied[2:2]
+    27/50: $5\next_vm[1652:1102]
+    28/50: $7\pack_bad[0:0]
+    29/50: $6\pack_bad[0:0]
+    30/50: $4\occupied[1:1]
+    31/50: $4\next_vm[1101:551]
+    32/50: $5\pack_bad[0:0]
+    33/50: $4\pack_bad[0:0]
+    34/50: $3\occupied[0:0]
+    35/50: $3\next_vm[550:0]
+    36/50: $3\pack_bad[0:0]
+    37/50: $2$fordecl_block$29.j[31:0]$112
+    38/50: $2\occupied[3:0] [2]
+    39/50: $2\pack_bad[0:0]
+    40/50: $2\next_vm[2203:0] [1652:1102]
+    41/50: $2\occupied[3:0] [1]
+    42/50: $2\next_vm[2203:0] [1101:551]
+    43/50: $2\occupied[3:0] [0]
+    44/50: $2\next_vm[2203:0] [550:0]
+    45/50: $2\next_vm[2203:0] [2203:1653]
+    46/50: $10\pack_bad[0:0]
+    47/50: $1$fordecl_block$29.j[31:0]$111
+    48/50: $1\occupied[3:0]
+    49/50: $1\pack_bad[0:0]
+    50/50: $1\next_vm[2203:0]
+Creating decoders for process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:53$104'.
+     1/1: $0\pack_bad_q[0:0]
+Creating decoders for process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+Creating decoders for process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv:40$163'.
+     1/1: $0\relay_q[0][0:0]
+Creating decoders for process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv:28$161'.
+     1/1: $0\sync_q[1:0]
+
+42.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\s81_static_vm_boundary.\next_vm' from process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106'.
+No latch inferred for signal `\s81_static_vm_boundary.\pack_bad' from process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106'.
+No latch inferred for signal `\s81_static_vm_boundary.\occupied' from process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106'.
+No latch inferred for signal `\s81_static_vm_boundary.\word' from process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106'.
+No latch inferred for signal `\s81_static_vm_boundary.$fordecl_block$31.j' from process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106'.
+Warning: Latch inferred for signal `\s81_static_vm_boundary.$fordecl_block$29.j [1:0]' from process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106': $auto$proc_dlatch.cc:543:proc_dlatch$522
+Warning: Latch inferred for signal `\s81_static_vm_boundary.$fordecl_block$29.j [2]' from process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106': $auto$proc_dlatch.cc:545:proc_dlatch$525
+Warning: Latch inferred for signal `\s81_static_vm_boundary.$fordecl_block$29.j [31:3]' from process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106': $auto$proc_dlatch.cc:543:proc_dlatch$528
+Warning: Latch inferred for signal `\s81_static_vm_boundary.$fordecl_block$33.j [1:0]' from process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106': $auto$proc_dlatch.cc:543:proc_dlatch$537
+Warning: Latch inferred for signal `\s81_static_vm_boundary.$fordecl_block$33.j [2]' from process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106': $auto$proc_dlatch.cc:545:proc_dlatch$540
+Warning: Latch inferred for signal `\s81_static_vm_boundary.$fordecl_block$33.j [31:3]' from process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106': $auto$proc_dlatch.cc:543:proc_dlatch$543
+
+42.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\s81_static_vm_boundary.\vm_q' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:80$160'.
+  created $dff cell `$procdff$544' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\g_cap.q' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:33$159'.
+  created $dff cell `$procdff$545' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\fault' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:88$127'.
+  created $adff cell `$procdff$550' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_vm_boundary.\vm_full' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:88$127'.
+  created $adff cell `$procdff$555' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_vm_boundary.\vm_v' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:88$127'.
+  created $adff cell `$procdff$560' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_vm_boundary.\crq_v' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:88$127'.
+  created $adff cell `$procdff$565' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_vm_boundary.\crq_row_r' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:88$127'.
+  created $adff cell `$procdff$570' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_vm_boundary.$fordecl_block$36.j' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:88$127'.
+  created $dff cell `$procdff$577' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.$fordecl_block$38.j' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:88$127'.
+  created $dff cell `$procdff$584' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\crq_row_p' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:86$126'.
+  created $dff cell `$procdff$585' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\pack_bad_q' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:53$104'.
+  created $adff cell `$procdff$590' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_vm_boundary.\gather_mode_q' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$591' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\p' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$592' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[0]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$593' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[1]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$594' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[2]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$595' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[3]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$596' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[4]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$597' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[5]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$598' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[6]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$599' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[7]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$600' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[8]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$601' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[9]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$602' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[10]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$603' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[11]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$604' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[12]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$605' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[13]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$606' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[14]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$607' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[15]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$608' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[16]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$609' with positive edge clock.
+Creating register for signal `\s81_static_vm_boundary.\reduce_row[17]' using process `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+  created $dff cell `$procdff$610' with positive edge clock.
+Creating register for signal `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.\relay_q[0]' using process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv:40$163'.
+  created $adff cell `$procdff$615' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.\sync_q' using process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv:28$161'.
+  created $adff cell `$procdff$620' with positive edge clock and positive level reset.
+
+42.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+42.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:80$160'.
+Removing empty process `s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:33$159'.
+Found and cleaned up 9 empty switches in `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:88$127'.
+Removing empty process `s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:88$127'.
+Removing empty process `s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:86$126'.
+Found and cleaned up 20 empty switches in `\s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106'.
+Removing empty process `s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:55$106'.
+Removing empty process `s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:53$104'.
+Removing empty process `s81_static_vm_boundary.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:46$103'.
+Removing empty process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv:40$163'.
+Removing empty process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/lib/ot_rst_relay.sv:28$161'.
+Cleaned up 29 empty switches.
+
+42.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+<suppressed ~90 debug messages>
+Optimizing module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+<suppressed ~4 debug messages>
+
+42.3. Executing CHECK pass (checking for obvious problems).
+Checking module s81_static_vm_boundary...
+Checking module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay...
+Found and reported 0 problems.
+
+42.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+<suppressed ~1 debug messages>
+
+42.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+Removed 34 unused cells and 316 unused wires.
+<suppressed ~39 debug messages>
+
+42.7. Executing CHECK pass (checking for obvious problems).
+Checking module s81_static_vm_boundary...
+Found and reported 0 problems.
+
+42.8. Executing OPT pass (performing simple optimizations).
+
+42.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 130 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_vm_boundary..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port B of cell $procmux$226: \g_cap.q [1097:547] -> { \g_cap.q [1097:548] 1'1 }
+      Replacing known input bits on port B of cell $procmux$211: \g_cap.q [1648:1098] -> { \g_cap.q [1648:1099] 1'1 }
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$397.
+    dead port 2/2 on $mux $procmux$395.
+    dead port 2/2 on $mux $procmux$430.
+    dead port 2/2 on $mux $procmux$358.
+    dead port 2/2 on $mux $procmux$356.
+    dead port 2/2 on $mux $procmux$442.
+    dead port 2/2 on $mux $procmux$319.
+    dead port 2/2 on $mux $procmux$317.
+    dead port 2/2 on $mux $procmux$280.
+    dead port 2/2 on $mux $procmux$278.
+    dead port 2/2 on $mux $procmux$454.
+    dead port 2/2 on $mux $procmux$460.
+Removed 12 multiplexer ports.
+<suppressed ~270 debug messages>
+
+42.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_vm_boundary.
+Performed a total of 0 changes.
+
+42.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 118 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+Removed 0 unused cells and 12 unused wires.
+<suppressed ~1 debug messages>
+
+42.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+42.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_vm_boundary..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~258 debug messages>
+
+42.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_vm_boundary.
+Performed a total of 0 changes.
+
+42.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 118 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+
+42.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+42.9. Executing FSM pass (extract and optimize FSM).
+
+42.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+42.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+42.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+42.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+
+42.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+42.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+42.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+42.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+42.10. Executing OPT pass (performing simple optimizations).
+
+42.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 118 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_vm_boundary..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~258 debug messages>
+
+42.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_vm_boundary.
+Performed a total of 0 changes.
+
+42.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 118 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $procdff$544 ($dff) from module s81_static_vm_boundary (D = { $6\next_vm[2203:1653] [30:15] $5\next_vm[1652:1102] [30:15] }, Q = { \vm_q [1683:1668] \vm_q [1132:1117] }, rval = 0).
+Adding SRST signal on $procdff$544 ($dff) from module s81_static_vm_boundary (D = { \g_cap.q [2232:2225] \g_cap.q [3792:3281] \g_cap.q [4348:4335] }, Q = { \vm_q [1652:1133] \vm_q [1116:1103] }, rval = 534'000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).
+Adding SRST signal on $procdff$544 ($dff) from module s81_static_vm_boundary (D = { \g_cap.q [2232:2225] \g_cap.q [4304:3793] \g_cap.q [4363:4350] }, Q = { \vm_q [2203:1684] \vm_q [1667:1654] }, rval = 534'000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).
+Adding EN signal on $procdff$550 ($adff) from module s81_static_vm_boundary (D = $0\fault[0:0], Q = \fault).
+
+42.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+
+42.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+<suppressed ~1 debug messages>
+
+42.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+42.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_vm_boundary..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~288 debug messages>
+
+42.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_vm_boundary.
+Performed a total of 0 changes.
+
+42.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 125 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+
+42.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.10.16. Finished fast OPT passes. (There is nothing left to do.)
+
+42.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 2 bits (of 1104) from FF cell s81_static_vm_boundary.$auto$ff.cc:337:slice$631 ($dff).
+Removed top 31 bits (of 32) from port B of cell s81_static_vm_boundary.$gt$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:96$139 ($gt).
+Removed top 2 bits (of 4) from mux cell s81_static_vm_boundary.$procmux$478 ($mux).
+Removed top 550 bits (of 2204) from mux cell s81_static_vm_boundary.$procmux$484 ($mux).
+Removed cell s81_static_vm_boundary.$procmux$260 ($mux).
+Removed cell s81_static_vm_boundary.$procmux$416 ($mux).
+Removed top 550 bits (of 551) from mux cell s81_static_vm_boundary.$procmux$458 ($mux).
+Removed top 520 bits (of 551) from mux cell s81_static_vm_boundary.$procmux$276 ($mux).
+Removed top 520 bits (of 551) from wire s81_static_vm_boundary.$6\next_vm[2203:1653].
+Removed top 2 bits (of 4) from wire s81_static_vm_boundary.$2\occupied[3:0].
+Removed top 550 bits (of 2204) from wire s81_static_vm_boundary.$2\next_vm[2203:0].
+Removed top 2 bits (of 4) from wire s81_static_vm_boundary.$1\occupied[3:0].
+Removed top 550 bits (of 2204) from wire s81_static_vm_boundary.$1\next_vm[2203:0].
+Removed top 550 bits (of 2204) from wire s81_static_vm_boundary.next_vm.
+
+42.12. Executing PEEPOPT pass (run peephole optimizers).
+
+42.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+Removed 2 unused cells and 8 unused wires.
+<suppressed ~3 debug messages>
+
+42.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module s81_static_vm_boundary:
+  creating $alu model for $gt$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:96$139 ($gt): new $alu
+  creating $alu cell for $gt$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv:96$139: $auto$alumacc.cc:512:replace_alu$642
+  created 1 $alu and 0 $macc cells.
+
+42.15. Executing SHARE pass (SAT-based resource sharing).
+
+42.16. Executing OPT pass (performing simple optimizations).
+
+42.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 125 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_vm_boundary..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~284 debug messages>
+
+42.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_vm_boundary.
+Performed a total of 0 changes.
+
+42.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 125 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+42.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+42.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_vm_boundary..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~284 debug messages>
+
+42.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_vm_boundary.
+Performed a total of 0 changes.
+
+42.16.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 125 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+
+42.16.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.16.16. Finished fast OPT passes. (There is nothing left to do.)
+
+42.17. Executing MEMORY pass.
+
+42.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+42.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+42.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+42.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+42.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+42.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+
+42.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+42.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+42.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+
+42.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+42.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+
+42.19. Executing OPT pass (performing simple optimizations).
+
+42.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+<suppressed ~30 debug messages>
+
+42.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 113 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+Removed 0 unused cells and 12 unused wires.
+<suppressed ~1 debug messages>
+
+42.19.5. Finished fast OPT passes.
+
+42.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+42.21. Executing OPT pass (performing simple optimizations).
+
+42.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 113 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_vm_boundary..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~63 debug messages>
+
+42.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_vm_boundary.
+    Consolidated identical input bits for $mux cell $procmux$354:
+      Old ports: A=551'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B={ \g_cap.q [2232:2225] \g_cap.q [3280:2769] 16'1111111111111111 \g_cap.q [4333:4320] 1'1 }, Y=$4\next_vm[1101:551]
+      New ports: A=535'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B={ \g_cap.q [2232:2225] \g_cap.q [3280:2769] \g_cap.q [4333:4320] 1'1 }, Y={ $4\next_vm[1101:551] [550:31] $4\next_vm[1101:551] [14:0] }
+      New connections: $4\next_vm[1101:551] [30:15] = { $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] $4\next_vm[1101:551] [0] }
+    Consolidated identical input bits for $mux cell $procmux$315:
+      Old ports: A=551'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B={ \g_cap.q [2232:2225] \g_cap.q [3792:3281] 16'1111111111111111 \g_cap.q [4348:4335] 1'1 }, Y=$5\next_vm[1652:1102]
+      New ports: A=535'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B={ \g_cap.q [2232:2225] \g_cap.q [3792:3281] \g_cap.q [4348:4335] 1'1 }, Y={ $5\next_vm[1652:1102] [550:31] $5\next_vm[1652:1102] [14:0] }
+      New connections: $5\next_vm[1652:1102] [30:15] = { $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] $5\next_vm[1652:1102] [0] }
+    Consolidated identical input bits for $mux cell $procmux$393:
+      Old ports: A=551'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B={ \g_cap.q [2232:2225] \g_cap.q [2768:2257] 16'1111111111111111 \g_cap.q [4318:4305] 1'1 }, Y=$3\next_vm[550:0]
+      New ports: A=535'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B={ \g_cap.q [2232:2225] \g_cap.q [2768:2257] \g_cap.q [4318:4305] 1'1 }, Y={ $3\next_vm[550:0] [550:31] $3\next_vm[550:0] [14:0] }
+      New connections: $3\next_vm[550:0] [30:15] = { $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] $3\next_vm[550:0] [0] }
+    Consolidated identical input bits for $mux cell $procmux$276:
+      Old ports: A=31'0000000000000000000000000000000, B={ 16'1111111111111111 \g_cap.q [4363:4350] 1'1 }, Y=$6\next_vm[2203:1653]
+      New ports: A=15'000000000000000, B={ \g_cap.q [4363:4350] 1'1 }, Y=$6\next_vm[2203:1653] [14:0]
+      New connections: $6\next_vm[2203:1653] [30:15] = { $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] $6\next_vm[2203:1653] [0] }
+  Optimizing cells in module \s81_static_vm_boundary.
+    Consolidated identical input bits for $mux cell $procmux$452:
+      Old ports: A=551'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B=$3\next_vm[550:0], Y=$2\next_vm[2203:0] [550:0]
+      New ports: A=535'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B={ $3\next_vm[550:0] [550:31] $3\next_vm[550:0] [14:0] }, Y={ $2\next_vm[2203:0] [550:31] $2\next_vm[2203:0] [14:0] }
+      New connections: $2\next_vm[2203:0] [30:15] = { $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] $2\next_vm[2203:0] [0] }
+    Consolidated identical input bits for $mux cell $procmux$428:
+      Old ports: A=551'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B=$5\next_vm[1652:1102], Y=$2\next_vm[2203:0] [1652:1102]
+      New ports: A=535'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B={ $5\next_vm[1652:1102] [550:31] $5\next_vm[1652:1102] [14:0] }, Y={ $2\next_vm[2203:0] [1652:1133] $2\next_vm[2203:0] [1116:1102] }
+      New connections: $2\next_vm[2203:0] [1132:1117] = { $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] $2\next_vm[2203:0] [1102] }
+    Consolidated identical input bits for $mux cell $procmux$440:
+      Old ports: A=551'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B=$4\next_vm[1101:551], Y=$2\next_vm[2203:0] [1101:551]
+      New ports: A=535'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B={ $4\next_vm[1101:551] [550:31] $4\next_vm[1101:551] [14:0] }, Y={ $2\next_vm[2203:0] [1101:582] $2\next_vm[2203:0] [565:551] }
+      New connections: $2\next_vm[2203:0] [581:566] = { $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] $2\next_vm[2203:0] [551] }
+  Optimizing cells in module \s81_static_vm_boundary.
+    Consolidated identical input bits for $mux cell $procmux$484:
+      Old ports: A=1654'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B=$2\next_vm[2203:0], Y={ $1\next_vm[2203:0] [1653] \next_vm [1652:1103] $1\next_vm[2203:0] [1102:0] }
+      New ports: A=1606'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B={ $2\next_vm[2203:0] [1653:1133] $2\next_vm[2203:0] [1116:582] $2\next_vm[2203:0] [565:31] $2\next_vm[2203:0] [14:0] }, Y={ $1\next_vm[2203:0] [1653] \next_vm [1652:1133] \next_vm [1116:1103] $1\next_vm[2203:0] [1102:582] $1\next_vm[2203:0] [565:31] $1\next_vm[2203:0] [14:0] }
+      New connections: { \next_vm [1132:1117] $1\next_vm[2203:0] [581:566] $1\next_vm[2203:0] [30:15] } = { $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [1102] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [551] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] $1\next_vm[2203:0] [0] }
+  Optimizing cells in module \s81_static_vm_boundary.
+    Consolidated identical input bits for $mux cell $procmux$244:
+      Old ports: A=$1\next_vm[2203:0] [550:0], B={ \g_cap.q [1656:1649] \g_cap.q [2192:1681] 16'1111111111111111 \reduce_row[17] 1'1 }, Y=$7\next_vm[550:0]
+      New ports: A={ $1\next_vm[2203:0] [550:31] $1\next_vm[2203:0] [14:0] }, B={ \g_cap.q [1656:1649] \g_cap.q [2192:1681] \reduce_row[17] 1'1 }, Y={ $7\next_vm[550:0] [550:31] $7\next_vm[550:0] [14:0] }
+      New connections: $7\next_vm[550:0] [30:15] = { $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] $7\next_vm[550:0] [0] }
+  Optimizing cells in module \s81_static_vm_boundary.
+Performed a total of 9 changes.
+
+42.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 113 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.21.6. Executing OPT_SHARE pass.
+
+42.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+
+42.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.21.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+42.21.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_vm_boundary..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~63 debug messages>
+
+42.21.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_vm_boundary.
+Performed a total of 0 changes.
+
+42.21.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 113 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.21.14. Executing OPT_SHARE pass.
+
+42.21.15. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.21.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+
+42.21.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.21.18. Finished fast OPT passes. (There is nothing left to do.)
+
+42.22. Executing TECHMAP pass (map to technology primitives).
+
+42.22.1. Executing Verilog-2005 frontend: /usr/local/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/local/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+42.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$b8c0a997bce700f23568a5ada79cc6781d1f5ca0\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $sdff.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+No more expansions possible.
+<suppressed ~347 debug messages>
+
+42.23. Executing OPT pass (performing simple optimizations).
+
+42.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+<suppressed ~29 debug messages>
+
+42.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 13447 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Computing hashes of 13414 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+<suppressed ~99 debug messages>
+Removed a total of 33 cells.
+
+42.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+Removed 2183 unused cells and 59 unused wires.
+<suppressed ~2184 debug messages>
+
+42.23.5. Finished fast OPT passes.
+
+42.24. Executing ABC pass (technology mapping using ABC).
+
+42.24.1. Extracting gate netlist of module `\s81_static_vm_boundary' to `<abc-temp-dir>/input.blif'..
+
+42.24.1.1. Executed ABC.
+Extracted 4969 gates and 7748 wires to a netlist network with 2777 inputs and 1109 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+42.24.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:       56
+ABC RESULTS:            ANDNOT cells:        7
+ABC RESULTS:               MUX cells:      567
+ABC RESULTS:              NAND cells:     3218
+ABC RESULTS:               NOR cells:        8
+ABC RESULTS:               NOT cells:        1
+ABC RESULTS:                OR cells:        5
+ABC RESULTS:             ORNOT cells:       31
+ABC RESULTS:              XNOR cells:        5
+ABC RESULTS:        internal signals:     3862
+ABC RESULTS:           input signals:     2777
+ABC RESULTS:          output signals:     1109
+Removing temp directory.
+Removing global temp directory.
+
+42.25. Executing OPT pass (performing simple optimizations).
+
+42.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_vm_boundary.
+
+42.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_vm_boundary'.
+Computing hashes of 10160 cells of `\s81_static_vm_boundary'.
+Finding duplicate cells in `\s81_static_vm_boundary'.
+Removed a total of 0 cells.
+
+42.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+42.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_vm_boundary..
+Removed 1 unused cells and 3965 unused wires.
+<suppressed ~2 debug messages>
+
+42.25.5. Finished fast OPT passes.
+
+42.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `s81_static_vm_boundary'. Setting top module to s81_static_vm_boundary.
+
+42.26.1. Analyzing design hierarchy..
+Top module:  \s81_static_vm_boundary
+
+42.26.2. Analyzing design hierarchy..
+Top module:  \s81_static_vm_boundary
+Removed 0 unused modules.
+
+42.27. Printing statistics.
+
+=== s81_static_vm_boundary ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2888 wires
+    31605 wire bits
+       95 public wires
+    28812 public wire bits
+       33 ports
+     6614 port bits
+    10159 cells
+        7   $_ANDNOT_
+       56   $_AND_
+        1   $_DFFE_PN0P_
+        9   $_DFF_PN0_
+     5180   $_DFF_P_
+      567   $_MUX_
+     3218   $_NAND_
+        8   $_NOR_
+        1   $_NOT_
+       31   $_ORNOT_
+        5   $_OR_
+     1070   $_SDFF_PN0_
+        5   $_XNOR_
+        1   $scopeinfo
+
+42.28. Executing CHECK pass (checking for obvious problems).
+Checking module s81_static_vm_boundary...
+Found and reported 0 problems.
+
+43. Executing JSON backend.
+
+44. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+45. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+45.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\s81_static_vm_boundary':
+  mapped 10 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 6250 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+46. Executing ABC pass (technology mapping using ABC).
+
+46.1. Extracting gate netlist of module `\s81_static_vm_boundary' to `<abc-temp-dir>/input.blif'..
+
+46.1.1. Executed ABC.
+Extracted 11229 gates and 17491 wires to a netlist network with 6260 inputs and 4623 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_7f237910.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+46.1.2. Re-integrating ABC results.
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:       18
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:        5
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:        3
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:        2
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:     2471
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:      538
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:        3
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:     1072
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:        2
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:        5
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:      551
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:     1074
+ABC RESULTS:   OAI32xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:        3
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:        2
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:        5
+ABC RESULTS:        internal signals:     6608
+ABC RESULTS:           input signals:     6260
+ABC RESULTS:          output signals:     4623
+Removing temp directory.
+Removing global temp directory.
+Removed 0 unused cells and 13702 unused wires.
+
+47. Printing statistics.
+
+=== s81_static_vm_boundary ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     8540        - wires
+    32402        - wire bits
+       69        - public wires
+    23931        - public wire bits
+       33        - ports
+     6614        - port bits
+    12024 2.17E+03 cells
+        1        -   $scopeinfo
+        1    0.102   AND4x1_ASAP7_75t_R
+        1    0.117   AND5x1_ASAP7_75t_R
+        1    0.087   AOI211xp5_ASAP7_75t_R
+       18    1.312   AOI21xp33_ASAP7_75t_R
+        5     0.51   AOI221xp5_ASAP7_75t_R
+        3    0.262   AOI22xp33_ASAP7_75t_R
+        2    0.204   AOI32xp33_ASAP7_75t_R
+       10    3.791   DFFASRHQNx1_ASAP7_75t_R
+     6250   1822.5   DFFHQNx1_ASAP7_75t_R
+     2471  108.082   INVx1_ASAP7_75t_R
+      538   31.376   NAND2xp33_ASAP7_75t_R
+        1    0.073   NAND3xp33_ASAP7_75t_R
+        3    0.262   NAND4xp25_ASAP7_75t_R
+     1072   62.519   NOR2xp33_ASAP7_75t_R
+        2    0.146   NOR3xp33_ASAP7_75t_R
+        5    0.437   NOR4xp25_ASAP7_75t_R
+        1    0.102   NOR5xp2_ASAP7_75t_R
+        1    0.102   OA21x2_ASAP7_75t_R
+        1    0.087   OAI211xp5_ASAP7_75t_R
+      551   40.168   OAI21xp33_ASAP7_75t_R
+     1074   93.954   OAI22xp33_ASAP7_75t_R
+        1    0.102   OAI32xp33_ASAP7_75t_R
+        3    0.262   OR2x2_ASAP7_75t_R
+        1    0.102   OR4x1_ASAP7_75t_R
+        2    0.262   XNOR2xp5_ASAP7_75t_R
+        5    0.656   XOR2xp5_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\s81_static_vm_boundary': 2167.579440
+     of which used for sequential elements: 1826.290800 (84.25%)
+
+48. Executing JSON backend.
+
+Warnings: 8 unique messages, 9 total
+End of script. Logfile hash: 37295c7a7c, time: 2.13s, user: 1.49s, system: 0.12s, MEM: 168.14 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 33% 2x abc (0 sec), 18% 12x opt_dff (0 sec), ...

@@ -1,0 +1,222 @@
+{
+  "schema": "s81.collective-arithmetic-reuse-audit.v1",
+  "source_commit": "2eb33e9a8e8046d4f579fc1395e0ac6038a11341",
+  "candidate_master": "ot_hgi_coll_pring_static_add_lane",
+  "candidate_view": "physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_static_add_lane",
+  "candidate_outline_um": [
+    36.72,
+    36.72
+  ],
+  "candidate_pin_names": [
+    "a[0]",
+    "a[10]",
+    "a[11]",
+    "a[12]",
+    "a[13]",
+    "a[14]",
+    "a[15]",
+    "a[16]",
+    "a[17]",
+    "a[18]",
+    "a[19]",
+    "a[1]",
+    "a[20]",
+    "a[21]",
+    "a[22]",
+    "a[23]",
+    "a[24]",
+    "a[25]",
+    "a[26]",
+    "a[27]",
+    "a[28]",
+    "a[29]",
+    "a[2]",
+    "a[30]",
+    "a[31]",
+    "a[3]",
+    "a[4]",
+    "a[5]",
+    "a[6]",
+    "a[7]",
+    "a[8]",
+    "a[9]",
+    "b[0]",
+    "b[10]",
+    "b[11]",
+    "b[12]",
+    "b[13]",
+    "b[14]",
+    "b[15]",
+    "b[16]",
+    "b[17]",
+    "b[18]",
+    "b[19]",
+    "b[1]",
+    "b[20]",
+    "b[21]",
+    "b[22]",
+    "b[23]",
+    "b[24]",
+    "b[25]",
+    "b[26]",
+    "b[27]",
+    "b[28]",
+    "b[29]",
+    "b[2]",
+    "b[30]",
+    "b[31]",
+    "b[3]",
+    "b[4]",
+    "b[5]",
+    "b[6]",
+    "b[7]",
+    "b[8]",
+    "b[9]",
+    "clk",
+    "rst_n",
+    "valid_in",
+    "valid_out",
+    "y[0]",
+    "y[10]",
+    "y[11]",
+    "y[12]",
+    "y[13]",
+    "y[14]",
+    "y[15]",
+    "y[16]",
+    "y[17]",
+    "y[18]",
+    "y[19]",
+    "y[1]",
+    "y[20]",
+    "y[21]",
+    "y[22]",
+    "y[23]",
+    "y[24]",
+    "y[25]",
+    "y[26]",
+    "y[27]",
+    "y[28]",
+    "y[29]",
+    "y[2]",
+    "y[30]",
+    "y[31]",
+    "y[3]",
+    "y[4]",
+    "y[5]",
+    "y[6]",
+    "y[7]",
+    "y[8]",
+    "y[9]",
+    "VDD",
+    "VSS"
+  ],
+  "candidate_pin_count": 102,
+  "candidate_parameters": {
+    "LAT": 8
+  },
+  "candidate_inner_adder": {
+    "module": "ot_hdc_fp32_add_lat",
+    "parameters": {
+      "LAT": 7,
+      "DRST": 0
+    }
+  },
+  "current_inner_adder": {
+    "module": "ot_s81ph_fp32_add_rne_preexp",
+    "parameters": {
+      "SPLIT": 7,
+      "KS": 1
+    },
+    "instances_per_scalar": 3,
+    "err_output_bits": 2
+  },
+  "direct_source_identical_reuse": false,
+  "reason": [
+    "Different implementation source modules and parameterization",
+    "HBM wrapper includes an input pin capture before LAT-1 arithmetic; current S81 scalar owns its own input pin capture and three SPLIT7 arithmetic instances",
+    "HBM closed wrapper omits err output; current S81 reduction error/fault behavior consumes two-bit adder errors",
+    "HBM closed wrapper contains one addition; S81 scalar root contains a three-adder pairwise tree plus assembly"
+  ],
+  "action": "Reuse requires an independently reviewed source/edge/error equivalence and integration decision; no substitution or arithmetic rewrite performed.",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv": "bcd4b251ecdddf7740cf652a1198950d2790e06d3618bc9c537a8a7257bb36af",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30"
+  },
+  "lef_sha256": "d5fc6e23d2116fe64d926eb8fd2df555d709e857b6f8fdf5b4d48b80b43c5925",
+  "renamed_view_evidence": {
+    "schema": "opentallas.ref_tile.view_rename.v1",
+    "from_view": "/home/ubuntu/wt/takeover-hcoll-ready-0821/physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_add_lane",
+    "from_master": "ot_hgi_coll_pring_add_lane",
+    "master": "ot_hgi_coll_pring_static_add_lane",
+    "rule": "master name only; geometry, pins and timing arcs byte-identical",
+    "files": {
+      "abstract.json": {
+        "from": "abstract.json",
+        "from_sha256": "e89924bb1958d2e5874c3850b68c38186b492c2ab9b46a63a511329c8cc85a20",
+        "sha256": "3353cc99394efc020ab589b927310223684871cc19fc71fdc6950877ce354b27"
+      },
+      "child_lint.json": {
+        "from": "child_lint.json",
+        "from_sha256": "644ceda194fd06368210222fabb330f2a6fb71e2b272ba8ccba2a29ccf20525f",
+        "sha256": "9a39c9d5ca628efb4113e8314b224384647735a80217b67515779d6149b805d5"
+      },
+      "export_ff.log": {
+        "from": "export_ff.log",
+        "from_sha256": "f79d1082dc59ef6e7f42957cea48d8b65da9caa25b72cfa8fb615cd19c4d2ce8",
+        "sha256": "f79d1082dc59ef6e7f42957cea48d8b65da9caa25b72cfa8fb615cd19c4d2ce8"
+      },
+      "export_ff.tcl": {
+        "from": "export_ff.tcl",
+        "from_sha256": "19203cdf359e6d7cee278de0712f8e9904a2080ec7837d555f4796b1f8775f09",
+        "sha256": "19203cdf359e6d7cee278de0712f8e9904a2080ec7837d555f4796b1f8775f09"
+      },
+      "export_ss.log": {
+        "from": "export_ss.log",
+        "from_sha256": "71d42044fb06f90c82556389e3845ec42b4eecbf4fc654b78052b6a965e68f48",
+        "sha256": "71d42044fb06f90c82556389e3845ec42b4eecbf4fc654b78052b6a965e68f48"
+      },
+      "export_ss.tcl": {
+        "from": "export_ss.tcl",
+        "from_sha256": "7a26a9ebbcf5d4b1da627b247bfb1f4053ab1cb0d06f350574dd2a0f820b5b21",
+        "sha256": "7a26a9ebbcf5d4b1da627b247bfb1f4053ab1cb0d06f350574dd2a0f820b5b21"
+      },
+      "export_tt.log": {
+        "from": "export_tt.log",
+        "from_sha256": "87e6c4d96bc9d9e37070f5b1e82cecfbe0fcba1bdde058b3286c869dd44d7a87",
+        "sha256": "87e6c4d96bc9d9e37070f5b1e82cecfbe0fcba1bdde058b3286c869dd44d7a87"
+      },
+      "export_tt.tcl": {
+        "from": "export_tt.tcl",
+        "from_sha256": "62d10a158bdde22dc5652860e39c7bc05eb04d756835ffe42987f3c2b4273505",
+        "sha256": "62d10a158bdde22dc5652860e39c7bc05eb04d756835ffe42987f3c2b4273505"
+      },
+      "insertion.json": {
+        "from": "insertion.json",
+        "from_sha256": "46fcd58f5de500d3ad5a9fe6e76b2fc4a6e6f2e08095b40a9961e597464e2360",
+        "sha256": "46fcd58f5de500d3ad5a9fe6e76b2fc4a6e6f2e08095b40a9961e597464e2360"
+      },
+      "ot_hgi_coll_pring_static_add_lane.lef": {
+        "from": "ot_hgi_coll_pring_add_lane.lef",
+        "from_sha256": "0f0557a437e4f0ec20f98b706ae958fded737a17bba8118c80c8b00587cf10b3",
+        "sha256": "d5fc6e23d2116fe64d926eb8fd2df555d709e857b6f8fdf5b4d48b80b43c5925"
+      },
+      "ot_hgi_coll_pring_static_add_lane_ff.lib": {
+        "from": "ot_hgi_coll_pring_add_lane_ff.lib",
+        "from_sha256": "c23a1d8c42d25ec742ef7a9467563d83f2f764c4fbcc224670e080a1eabea52f",
+        "sha256": "030f3f39f68db07471cdc007a76a21cec9b610d47bf30d16afc18aef5ef8379b"
+      },
+      "ot_hgi_coll_pring_static_add_lane_ss.lib": {
+        "from": "ot_hgi_coll_pring_add_lane_ss.lib",
+        "from_sha256": "425a9a721f43c589efe66468f759340ed93780cec137a322ff85c4ba1a12ea0a",
+        "sha256": "c8fd5ab4c3e4a96043b0de326fd19a5b5733c826db53ba9d370dad7fd43cd66b"
+      },
+      "ot_hgi_coll_pring_static_add_lane_tt.lib": {
+        "from": "ot_hgi_coll_pring_add_lane_tt.lib",
+        "from_sha256": "db1c8a67e28fb0dcb04e754c1a1402c22b61db57dfe1394dfc3654568e2ba897",
+        "sha256": "59c7ad2cacadce95f1330fd450d5ffcf7e7eb430b91acc9244b139cc656eaa5f"
+      }
+    }
+  }
+}

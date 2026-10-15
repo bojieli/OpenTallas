@@ -1,0 +1,1145 @@
+
+-- Executing script file `results/physical/s81_collective_graph_1103/census/s81_static_host_queue.ys' --
+
+1. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv' to AST representation.
+Storing AST representation for module `$abstract\dsfd_coll_ck'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv' to AST representation.
+Storing AST representation for module `$abstract\dsfd_coll_static_channels'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_s81ph_ckbuf'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_optreg'.
+Storing AST representation for module `$abstract\ot_s81ph_fp32_add_rne_preexp'.
+Storing AST representation for module `$abstract\ot_s81ph_fp32_exp_prefix'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv' to AST representation.
+Storing AST representation for module `$abstract\dsfd_sp_collective_static_c'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_calendar_controller'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_calendar_controller7'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_collective_slab'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_channels'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_channels_clocked'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_codec'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_codec_dynamic'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_core'.
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_core_dynamic'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_gearbox'.
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_lane'.
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_lane_dynamic'.
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_rank'.
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_rank_dynamic'.
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_rank_dynamic_clocked'.
+Successfully finished Verilog frontend.
+
+21. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_vm_rank'.
+Successfully finished Verilog frontend.
+
+22. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_fmt1_vm_rank_dynamic'.
+Successfully finished Verilog frontend.
+
+23. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_host_queue'.
+Successfully finished Verilog frontend.
+
+24. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_phy_digital.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_phy_digital.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_phy_digital'.
+Successfully finished Verilog frontend.
+
+25. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_raw_fmt1_codec'.
+Successfully finished Verilog frontend.
+
+26. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_raw_fmt1_lane'.
+Successfully finished Verilog frontend.
+
+27. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_vm_rows.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_raw_vm_rows.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_raw_vm_rows'.
+Successfully finished Verilog frontend.
+
+28. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_endpoint'.
+Successfully finished Verilog frontend.
+
+29. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint_dynamic.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint_dynamic.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_endpoint_dynamic'.
+Successfully finished Verilog frontend.
+
+30. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_rank.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_rank.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_rank'.
+Successfully finished Verilog frontend.
+
+31. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_producer.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_producer.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_vm_producer'.
+Successfully finished Verilog frontend.
+
+32. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_read_source.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_read_source.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_tp4_vm_read_source'.
+Successfully finished Verilog frontend.
+
+33. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_vm_boundary'.
+Successfully finished Verilog frontend.
+
+34. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_assemble_clocked'.
+Storing AST representation for module `$abstract\s81_static_hc_scalar_assemble'.
+Storing AST representation for module `$abstract\s81_static_hc_assemble'.
+Successfully finished Verilog frontend.
+
+35. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv' to AST representation.
+Storing AST representation for module `$abstract\s81_static_hc_reduce_clocked'.
+Storing AST representation for module `$abstract\s81_static_hc_scalar_reduce'.
+Storing AST representation for module `$abstract\s81_static_hc_reduce'.
+Successfully finished Verilog frontend.
+
+36. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/hdc/ot_hdc_prefix.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/hdc/ot_hdc_prefix.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_ksadd_k'.
+Storing AST representation for module `$abstract\ot_hdc_inc_k'.
+Successfully finished Verilog frontend.
+
+37. Executing Verilog-2005 frontend: results/physical/s81_collective_graph_1103/census/source/rtl/link/ot_link_crc32.sv
+Parsing SystemVerilog input from `results/physical/s81_collective_graph_1103/census/source/rtl/link/ot_link_crc32.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_link_crc32'.
+Successfully finished Verilog frontend.
+
+38. Executing HIERARCHY pass (managing design hierarchy).
+
+39. Executing AST frontend in derive mode using pre-parsed AST for module `\s81_static_host_queue'.
+Generating RTLIL representation for module `\s81_static_host_queue'.
+
+39.1. Analyzing design hierarchy..
+Top module:  \s81_static_host_queue
+
+39.2. Analyzing design hierarchy..
+Top module:  \s81_static_host_queue
+Removing unused module `$abstract\ot_link_crc32'.
+Removing unused module `$abstract\ot_hdc_inc_k'.
+Removing unused module `$abstract\ot_hdc_ksadd_k'.
+Removing unused module `$abstract\s81_static_hc_reduce'.
+Removing unused module `$abstract\s81_static_hc_scalar_reduce'.
+Removing unused module `$abstract\s81_static_hc_reduce_clocked'.
+Removing unused module `$abstract\s81_static_hc_assemble'.
+Removing unused module `$abstract\s81_static_hc_scalar_assemble'.
+Removing unused module `$abstract\s81_static_hc_assemble_clocked'.
+Removing unused module `$abstract\s81_static_vm_boundary'.
+Removing unused module `$abstract\s81_static_tp4_vm_read_source'.
+Removing unused module `$abstract\s81_static_tp4_vm_producer'.
+Removing unused module `$abstract\s81_static_tp4_rank'.
+Removing unused module `$abstract\s81_static_tp4_endpoint_dynamic'.
+Removing unused module `$abstract\s81_static_tp4_endpoint'.
+Removing unused module `$abstract\s81_static_raw_vm_rows'.
+Removing unused module `$abstract\s81_static_raw_fmt1_lane'.
+Removing unused module `$abstract\s81_static_raw_fmt1_codec'.
+Removing unused module `$abstract\s81_static_phy_digital'.
+Removing unused module `$abstract\s81_static_host_queue'.
+Removing unused module `$abstract\s81_static_fmt1_vm_rank_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_vm_rank'.
+Removing unused module `$abstract\s81_static_fmt1_rank_dynamic_clocked'.
+Removing unused module `$abstract\s81_static_fmt1_rank_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_rank'.
+Removing unused module `$abstract\s81_static_fmt1_lane_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_lane'.
+Removing unused module `$abstract\s81_static_fmt1_gearbox'.
+Removing unused module `$abstract\s81_static_fmt1_core_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_core'.
+Removing unused module `$abstract\s81_static_fmt1_codec_dynamic'.
+Removing unused module `$abstract\s81_static_fmt1_codec'.
+Removing unused module `$abstract\s81_static_fmt1_channels_clocked'.
+Removing unused module `$abstract\s81_static_fmt1_channels'.
+Removing unused module `$abstract\s81_static_collective_slab'.
+Removing unused module `$abstract\s81_static_calendar_controller7'.
+Removing unused module `$abstract\s81_static_calendar_controller'.
+Removing unused module `$abstract\dsfd_sp_collective_static_c'.
+Removing unused module `$abstract\ot_s81ph_fp32_exp_prefix'.
+Removing unused module `$abstract\ot_s81ph_fp32_add_rne_preexp'.
+Removing unused module `$abstract\ot_optreg'.
+Removing unused module `$abstract\ot_s81ph_ckbuf'.
+Removing unused module `$abstract\dsfd_coll_static_channels'.
+Removing unused module `$abstract\dsfd_coll_ck'.
+Removed 44 unused modules.
+
+40. Executing SYNTH pass.
+
+40.1. Executing HIERARCHY pass (managing design hierarchy).
+
+40.1.1. Analyzing design hierarchy..
+Top module:  \s81_static_host_queue
+
+40.1.2. Analyzing design hierarchy..
+Top module:  \s81_static_host_queue
+Removed 0 unused modules.
+
+40.2. Executing PROC pass (convert processes to netlists).
+
+40.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+40.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:28$63 in module s81_static_host_queue.
+Marked 1 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$56 in module s81_static_host_queue.
+Marked 1 switch rules as full_case in process $proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:21$46 in module s81_static_host_queue.
+Removed a total of 0 dead cases.
+
+40.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 2 redundant assignments.
+Promoted 3 assignments to connections.
+
+40.2.4. Executing PROC_INIT pass (extract init attributes).
+
+40.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:28$63'.
+Found async reset \rst_n in `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:21$46'.
+
+40.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~4 debug messages>
+
+40.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:28$63'.
+     1/4: $0\n[4:0]
+     2/4: $0\rp[3:0]
+     3/4: $0\wp[3:0]
+     4/4: $0\fault[0:0]
+Creating decoders for process `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$56'.
+     1/3: $1$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$62
+     2/3: $1$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_DATA[63:0]$61
+     3/3: $1$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_ADDR[3:0]$60
+Creating decoders for process `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:21$46'.
+     1/1: $0\p[76:0]
+
+40.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+40.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\s81_static_host_queue.\fault' using process `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:28$63'.
+  created $adff cell `$procdff$100' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_host_queue.\n' using process `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:28$63'.
+  created $adff cell `$procdff$105' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_host_queue.\wp' using process `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:28$63'.
+  created $adff cell `$procdff$110' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_host_queue.\rp' using process `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:28$63'.
+  created $adff cell `$procdff$115' with positive edge clock and positive level reset.
+Creating register for signal `\s81_static_host_queue.$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_ADDR' using process `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$56'.
+  created $dff cell `$procdff$116' with positive edge clock.
+Creating register for signal `\s81_static_host_queue.$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_DATA' using process `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$56'.
+  created $dff cell `$procdff$117' with positive edge clock.
+Creating register for signal `\s81_static_host_queue.$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN' using process `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$56'.
+  created $dff cell `$procdff$118' with positive edge clock.
+Creating register for signal `\s81_static_host_queue.\p' using process `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:21$46'.
+  created $adff cell `$procdff$123' with positive edge clock and positive level reset.
+
+40.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+40.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 3 empty switches in `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:28$63'.
+Removing empty process `s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:28$63'.
+Found and cleaned up 1 empty switch in `\s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$56'.
+Removing empty process `s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$56'.
+Removing empty process `s81_static_host_queue.$proc$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:21$46'.
+Cleaned up 4 empty switches.
+
+40.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+<suppressed ~13 debug messages>
+
+40.3. Executing CHECK pass (checking for obvious problems).
+Checking module s81_static_host_queue...
+Found and reported 0 problems.
+
+40.4. Executing FLATTEN pass (flatten design).
+
+40.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+Removed 10 unused cells and 38 unused wires.
+<suppressed ~11 debug messages>
+
+40.7. Executing CHECK pass (checking for obvious problems).
+Checking module s81_static_host_queue...
+Found and reported 0 problems.
+
+40.8. Executing OPT pass (performing simple optimizations).
+
+40.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 35 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Computing hashes of 33 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+40.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_host_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~18 debug messages>
+
+40.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_host_queue.
+    Consolidated identical input bits for $mux cell $procmux$88:
+      Old ports: A=64'0000000000000000000000000000000000000000000000000000000000000000, B=64'1111111111111111111111111111111111111111111111111111111111111111, Y=$0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59
+      New ports: A=1'0, B=1'1, Y=$0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0]
+      New connections: $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [63:1] = { $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] $0$memwr$\q$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:27$45_EN[63:0]$59 [0] }
+  Optimizing cells in module \s81_static_host_queue.
+Performed a total of 1 changes.
+
+40.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 33 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Computing hashes of 32 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+40.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+40.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+40.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+40.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_host_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~16 debug messages>
+
+40.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_host_queue.
+Performed a total of 0 changes.
+
+40.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 32 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+40.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+
+40.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+40.9. Executing FSM pass (extract and optimize FSM).
+
+40.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+40.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+40.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+40.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+
+40.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+40.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+40.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+40.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+40.10. Executing OPT pass (performing simple optimizations).
+
+40.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 32 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_host_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~16 debug messages>
+
+40.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_host_queue.
+Performed a total of 0 changes.
+
+40.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 32 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$115 ($adff) from module s81_static_host_queue (D = $add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:32$66_Y, Q = \rp).
+Adding EN signal on $procdff$100 ($adff) from module s81_static_host_queue (D = 1'1, Q = \fault).
+Adding EN signal on $procdff$110 ($adff) from module s81_static_host_queue (D = $add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:31$65_Y, Q = \wp).
+
+40.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+Removed 3 unused cells and 3 unused wires.
+<suppressed ~4 debug messages>
+
+40.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+40.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_host_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~10 debug messages>
+
+40.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_host_queue.
+Performed a total of 0 changes.
+
+40.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 29 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+40.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+
+40.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.10.16. Finished fast OPT passes. (There is nothing left to do.)
+
+40.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 4 bits (of 5) from port B of cell s81_static_host_queue.$add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:33$68 ($add).
+Removed top 4 bits (of 5) from port B of cell s81_static_host_queue.$sub$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:33$70 ($sub).
+
+40.12. Executing PEEPOPT pass (run peephole optimizers).
+
+40.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+
+40.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module s81_static_host_queue:
+  creating $macc model for $sub$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:33$70 ($sub).
+  creating $macc model for $add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:33$68 ($add).
+  creating $macc model for $add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:32$66 ($add).
+  creating $macc model for $add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:31$65 ($add).
+  merging $macc model for $add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:33$68 into $sub$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:33$70.
+  creating $alu model for $macc $add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:32$66.
+  creating $alu model for $macc $add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:31$65.
+  creating $macc cell for $sub$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:33$70: $auto$alumacc.cc:382:replace_macc$128
+  creating $alu cell for $add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:31$65: $auto$alumacc.cc:512:replace_alu$129
+  creating $alu cell for $add$results/physical/s81_collective_graph_1103/census/source/rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv:32$66: $auto$alumacc.cc:512:replace_alu$132
+  created 2 $alu and 1 $macc cells.
+
+40.15. Executing SHARE pass (SAT-based resource sharing).
+
+40.16. Executing OPT pass (performing simple optimizations).
+
+40.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 29 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_host_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~10 debug messages>
+
+40.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_host_queue.
+Performed a total of 0 changes.
+
+40.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 29 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+40.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+Removed 1 unused cells and 1 unused wires.
+<suppressed ~2 debug messages>
+
+40.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+40.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_host_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~10 debug messages>
+
+40.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_host_queue.
+Performed a total of 0 changes.
+
+40.16.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 28 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+40.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+
+40.16.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.16.16. Finished fast OPT passes. (There is nothing left to do.)
+
+40.17. Executing MEMORY pass.
+
+40.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+40.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+40.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+  Analyzing s81_static_host_queue.q write port 0.
+
+40.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+40.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+Checking read port `\q'[0] in module `\s81_static_host_queue': no output FF found.
+Checking read port address `\q'[0] in module `\s81_static_host_queue': address FF has async set and/or reset, not supported.
+
+40.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+
+40.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+40.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+40.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+
+40.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+40.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+
+40.19. Executing OPT pass (performing simple optimizations).
+
+40.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+<suppressed ~4 debug messages>
+
+40.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 23 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+40.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+40.19.5. Finished fast OPT passes.
+
+40.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+Mapping memory \q in module \s81_static_host_queue:
+  created 16 $dff cells and 0 static cells of width 64.
+  read interface: 0 $dff and 15 $mux cells.
+  write interface: 16 write mux blocks.
+
+40.21. Executing OPT pass (performing simple optimizations).
+
+40.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+<suppressed ~8 debug messages>
+
+40.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 113 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_host_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~49 debug messages>
+
+40.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_host_queue.
+Performed a total of 0 changes.
+
+40.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 113 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.21.6. Executing OPT_SHARE pass.
+
+40.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+40.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+Removed 0 unused cells and 36 unused wires.
+<suppressed ~1 debug messages>
+
+40.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.21.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+40.21.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_host_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~49 debug messages>
+
+40.21.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_host_queue.
+Performed a total of 0 changes.
+
+40.21.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 113 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.21.14. Executing OPT_SHARE pass.
+
+40.21.15. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $memory\q[0]$137 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[0]).
+Adding EN signal on $memory\q[1]$139 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[1]).
+Adding EN signal on $memory\q[2]$141 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[2]).
+Adding EN signal on $memory\q[3]$143 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[3]).
+Adding EN signal on $memory\q[4]$145 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[4]).
+Adding EN signal on $memory\q[5]$147 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[5]).
+Adding EN signal on $memory\q[6]$149 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[6]).
+Adding EN signal on $memory\q[7]$151 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[7]).
+Adding EN signal on $memory\q[8]$153 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[8]).
+Adding EN signal on $memory\q[9]$155 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[9]).
+Adding EN signal on $memory\q[10]$157 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[10]).
+Adding EN signal on $memory\q[11]$159 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[11]).
+Adding EN signal on $memory\q[12]$161 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[12]).
+Adding EN signal on $memory\q[13]$163 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[13]).
+Adding EN signal on $memory\q[14]$165 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[14]).
+Adding EN signal on $memory\q[15]$167 ($dff) from module s81_static_host_queue (D = \p [63:0], Q = \q[15]).
+
+40.21.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+Removed 16 unused cells and 16 unused wires.
+<suppressed ~17 debug messages>
+
+40.21.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.21.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+40.21.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \s81_static_host_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~17 debug messages>
+
+40.21.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \s81_static_host_queue.
+Performed a total of 0 changes.
+
+40.21.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 97 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.21.22. Executing OPT_SHARE pass.
+
+40.21.23. Executing OPT_DFF pass (perform DFF optimizations).
+
+40.21.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+
+40.21.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.21.26. Finished fast OPT passes. (There is nothing left to do.)
+
+40.22. Executing TECHMAP pass (map to technology primitives).
+
+40.22.1. Executing Verilog-2005 frontend: /usr/local/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/local/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+40.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $dffe.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod$32a7b7b86c07519b7537abc18e96f0331f97914d\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add \n (5 bits, unsigned)
+  sub \pop (1 bits, unsigned)
+  add \push (1 bits, unsigned)
+  packed 1 (1) bits / 1 words into adder tree
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $adff.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000101 for cells of type $fa.
+Using template $paramod$b18e16801adf491a64caa0542270798e5d4ac6b6\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000100 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000100 for cells of type $lcu.
+Using extmapper simplemap for cells of type $pos.
+Using extmapper simplemap for cells of type $or.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~536 debug messages>
+
+40.23. Executing OPT pass (performing simple optimizations).
+
+40.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+<suppressed ~123 debug messages>
+
+40.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 2266 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Computing hashes of 2251 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Computing hashes of 2249 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+<suppressed ~51 debug messages>
+Removed a total of 17 cells.
+
+40.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+40.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+Removed 10 unused cells and 163 unused wires.
+<suppressed ~11 debug messages>
+
+40.23.5. Finished fast OPT passes.
+
+40.24. Executing ABC pass (technology mapping using ABC).
+
+40.24.1. Extracting gate netlist of module `\s81_static_host_queue' to `<abc-temp-dir>/input.blif'..
+
+40.24.1.1. Executed ABC.
+Extracted 1124 gates and 2165 wires to a netlist network with 1040 inputs and 98 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+40.24.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      693
+ABC RESULTS:            ANDNOT cells:       22
+ABC RESULTS:               MUX cells:      270
+ABC RESULTS:              NAND cells:      790
+ABC RESULTS:               NOR cells:      141
+ABC RESULTS:               NOT cells:        3
+ABC RESULTS:                OR cells:       33
+ABC RESULTS:             ORNOT cells:      259
+ABC RESULTS:              XNOR cells:        8
+ABC RESULTS:               XOR cells:        7
+ABC RESULTS:        internal signals:     1027
+ABC RESULTS:           input signals:     1040
+ABC RESULTS:          output signals:       98
+Removing temp directory.
+Removing global temp directory.
+
+40.25. Executing OPT pass (performing simple optimizations).
+
+40.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module s81_static_host_queue.
+
+40.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\s81_static_host_queue'.
+Computing hashes of 3341 cells of `\s81_static_host_queue'.
+Finding duplicate cells in `\s81_static_host_queue'.
+Removed a total of 0 cells.
+
+40.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+40.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \s81_static_host_queue..
+Removed 0 unused cells and 1202 unused wires.
+<suppressed ~2 debug messages>
+
+40.25.5. Finished fast OPT passes.
+
+40.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `s81_static_host_queue'. Setting top module to s81_static_host_queue.
+
+40.26.1. Analyzing design hierarchy..
+Top module:  \s81_static_host_queue
+
+40.26.2. Analyzing design hierarchy..
+Top module:  \s81_static_host_queue
+Removed 0 unused modules.
+
+40.27. Printing statistics.
+
+=== s81_static_host_queue ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2181 wires
+     3445 wire bits
+       30 public wires
+     1274 public wire bits
+        8 ports
+      158 port bits
+     3341 cells
+       22   $_ANDNOT_
+      693   $_AND_
+        9   $_DFFE_PN0P_
+     1024   $_DFFE_PP_
+       82   $_DFF_PN0_
+      270   $_MUX_
+      790   $_NAND_
+      141   $_NOR_
+        3   $_NOT_
+      259   $_ORNOT_
+       33   $_OR_
+        8   $_XNOR_
+        7   $_XOR_
+
+40.28. Executing CHECK pass (checking for obvious problems).
+Checking module s81_static_host_queue...
+Found and reported 0 problems.
+
+41. Executing JSON backend.
+
+42. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+43. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+43.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\s81_static_host_queue':
+  mapped 91 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 1024 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+44. Executing ABC pass (technology mapping using ABC).
+
+44.1. Extracting gate netlist of module `\s81_static_host_queue' to `<abc-temp-dir>/input.blif'..
+
+44.1.1. Executed ABC.
+Extracted 4374 gates and 5491 wires to a netlist network with 1116 inputs and 1116 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_7f237910.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+44.1.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:       95
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:        6
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:      472
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:       36
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:      198
+ABC RESULTS:   AOI311xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:      276
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:        2
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:       78
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:        8
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:        1
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:      337
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:       64
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:      986
+ABC RESULTS:   OAI221xp5_ASAP7_75t_R cells:      192
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:      128
+ABC RESULTS:   OAI311xp33_ASAP7_75t_R cells:       36
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:      322
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:      193
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:       11
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:        2
+ABC RESULTS:        internal signals:     3259
+ABC RESULTS:           input signals:     1116
+ABC RESULTS:          output signals:     1116
+Removing temp directory.
+Removing global temp directory.
+Removed 0 unused cells and 4402 unused wires.
+
+45. Printing statistics.
+
+=== s81_static_host_queue ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     4494        - wires
+     4728        - wire bits
+        9        - public wires
+      235        - public wire bits
+        8        - ports
+      158        - port bits
+     4566  597.401 cells
+       95    8.311   A2O1A1Ixp33_ASAP7_75t_R
+        2    0.175   AND2x2_ASAP7_75t_R
+        6    0.525   AND3x1_ASAP7_75t_R
+      472   41.291   AO21x1_ASAP7_75t_R
+       36    3.149   AOI211xp5_ASAP7_75t_R
+      198   14.434   AOI21xp33_ASAP7_75t_R
+        1    0.102   AOI311xp33_ASAP7_75t_R
+        1    0.087   AOI31xp33_ASAP7_75t_R
+        1    0.102   AOI32xp33_ASAP7_75t_R
+       91   34.496   DFFASRHQNx1_ASAP7_75t_R
+     1024  298.598   DFFHQNx1_ASAP7_75t_R
+      276   12.072   INVx1_ASAP7_75t_R
+        2    0.204   MAJIxp5_ASAP7_75t_R
+       78    4.549   NAND2xp33_ASAP7_75t_R
+        8    0.583   NAND3xp33_ASAP7_75t_R
+        1    0.087   NAND4xp25_ASAP7_75t_R
+      337   19.654   NOR2xp33_ASAP7_75t_R
+        1    0.073   NOR3xp33_ASAP7_75t_R
+       64    5.599   O2A1O1Ixp33_ASAP7_75t_R
+        2    0.204   OA21x2_ASAP7_75t_R
+      986   71.879   OAI21xp33_ASAP7_75t_R
+      192   19.596   OAI221xp5_ASAP7_75t_R
+      128   11.197   OAI22xp33_ASAP7_75t_R
+       36    3.674   OAI311xp33_ASAP7_75t_R
+      322   28.169   OR2x2_ASAP7_75t_R
+      193   16.884   OR3x1_ASAP7_75t_R
+       11    1.443   XNOR2xp5_ASAP7_75t_R
+        2    0.262   XOR2xp5_ASAP7_75t_R
+
+   Chip area for module '\s81_static_host_queue': 597.400920
+     of which used for sequential elements: 333.094680 (55.76%)
+
+46. Executing JSON backend.
+
+End of script. Logfile hash: 411e6297c5, time: 1.14s, user: 0.47s, system: 0.06s, MEM: 145.79 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 62% 2x abc (0 sec), 14% 2x stat (0 sec), ...

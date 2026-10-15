@@ -24,7 +24,7 @@ def balanced(s,i):
     return s[i+1:j-1],j
 sources={}
 modules={}
-selected=[x for x in paths if x.endswith('.sv') and (x.startswith('rtl/dsrom_sys/s81_static_collective/') or x.startswith('rtl/dsrom_sys/s81_static_hc/') or x in ['rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv','rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv','rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv','rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv']) and '/test' not in x and '/tb_' not in x]
+selected=[x for x in paths if x.endswith('.sv') and (x.startswith('rtl/dsrom_sys/s81_static_collective/') or x.startswith('rtl/dsrom_sys/s81_static_hc/') or x in ['rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv','rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv','rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv','rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv','rtl/lib/ot_rst_relay.sv','rtl/link/ot_link_crc32.sv','rtl/hdc/ot_hdc_prefix.sv','rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv','rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv']) and '/test' not in x and '/tb_' not in x]
 for path in selected:
     src=read(path);sources[path]=hashlib.sha256(src.encode()).hexdigest();s=clean(src)
     for match in re.finditer(r'\bmodule\s+(\w+)\s*',s):
@@ -32,18 +32,21 @@ for path in selected:
         if s[i:i+1]=='#':
             i=s.index('(',i);_,i=balanced(s,i)
         i=s.index('(',i);header,end=balanced(s,i)
-        ports=[];direction=None;width=1
+        ports=[];direction=None;width=1;width_expression=None
         for part in header.split(','):
             part=part.strip()
             m=re.match(r'(input|output|inout)\b\s*(.*)',part,flags=re.S)
             if m:
-                direction=m[1];part=m[2];width=1
+                direction=m[1];part=m[2];width=1;width_expression=None
                 part=re.sub(r'\b(wire|reg|logic|signed)\b','',part).strip()
-                w=re.match(r'\[\s*(\d+)\s*:\s*(\d+)\s*\]\s*(.*)',part,flags=re.S)
-                if w:width=abs(int(w[1])-int(w[2]))+1;part=w[3]
+                w=re.match(r'\[([^]]+)\]\s*(.*)',part,flags=re.S)
+                if w:
+                    width_expression=w[1];part=w[2]
+                    n=re.fullmatch(r'\s*(\d+)\s*:\s*(\d+)\s*',width_expression)
+                    width=abs(int(n[1])-int(n[2]))+1 if n else None
             if direction and re.fullmatch(r'\w+',part.strip()):
-                ports.append(dict(name=part.strip(),direction=direction,bits=width))
-        modules[name]=dict(source=path,ports=ports,declared_port_bits=sum(x['bits'] for x in ports),body=s[end:s.index('endmodule',end)])
+                ports.append(dict(name=part.strip(),direction=direction,bits=width,width_expression=width_expression))
+        modules[name]=dict(source=path,ports=ports,declared_port_bits=sum(x['bits'] for x in ports) if all(x['bits'] is not None for x in ports) else None,body=s[end:s.index('endmodule',end)])
 for name,m in modules.items():
     instances=[]
     for typ in modules:
@@ -66,7 +69,7 @@ def root(id,clock,ownership,missing):
     roots.append(dict(id=id,clock=clock,logic_ownership=ownership,physical_cut_status=missing,outline_um=None,placed_home=None,physical_pin_coordinates=None))
 root('control0','ck_control[0]',['slab.calendar (CURRENT one-clock calendar, three ROMs)','wrapper.reset_q','slab.reset_root[0].rr'],'UNHARDENED; calendar7 candidate is not instantiated')
 root('control1','ck_control[1]',['slab.tp4.core','slab.tp4.rank_q/rank_set/rank_fault','slab.tp4.remote_v_map/remote_frame_map combinational mapping','slab.reset_root[1].rr'],'UNHARDENED; core-only module omits wrapper ownership')
-root('control2','ck_control[2]',['slab.raw_rows','slab.vm_boundary PINCAP=1','slab.status_q','slab.reset_root[2].rr'],'VMB-only candidate kit exists; full same-root cut absent')
+root('control2','ck_control[2]',['slab.raw_rows REGISTER_VM_WRITES=0','slab.vm_boundary PINCAP=1 including ot_rst_relay REGIONS=1 SYNC_STAGES=2 TREE_STAGES=1','slab.status_q','slab.reset_root[2].rr'],'VMB-only candidate kit exists; full same-root cut absent')
 root('control3','ck_control[3]',['slab.channels.a','slab.host_queue DEPTH=16 MUT=0','slab.reset_root[3].rr'],'UNHARDENED; adapter-only module omits host queue')
 root('control4','ck_control[4]',['slab.reduce.identity[0:17]','slab.reduce.fault and lv/le reductions','slab.assemble.seen/assembly_tag/row_valid/row_tag/fault','slab.assemble.write_good/emit_good/destination_index combinational logic','slab.reset_root[4].rr'],'MISSING extracted metadata leaf spanning two modules')
 faces=['W0','W1','W2','W3','E0','E1','E2','E3']

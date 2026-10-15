@@ -52,3 +52,31 @@ The supporting clock service does have `physical/s81_ph_views/closed/dsfd_coll_c
 The old 1727.976 by 2721.576 slab rectangle remains a reservation. Actual required area, 29 root-cut outlines, placed homes and physical pin coordinates are unknown and represented by nulls. There is no defensible numerical packing candidate yet. The source supports a structural adjacency candidate: pair each HC arithmetic leaf with its own assembly leaf, keep all sixteen close to the shared TP4 gather and HC metadata, keep VMB/raw-row control near the external VM face, keep host queue with adapter, and align each codec/gearbox lane with its actual W/E PHY face. This is an adjacency requirement, not an authorized geometric placement or a road grant.
 
 Before a coherent die grant, extract the missing cuts without changing functional edge counts, synthesize their complete same-root ownership, export source/parameter-bound outlines and pins, then pack all cuts plus clock/reset service with every incident neighbor priced. The historical 7431b0d19 census cannot supply these missing measurements.
+
+## Current synthesis follow-up
+
+`census/summary.json` now supplies measured **standalone module cell areas**, and `census/root_census29.json` supplies a new **actual current parent root census**. They refine the missing-area evidence above; they do not supply placed outlines or pin coordinates. Exact source snapshots, Yosys command files, full logs and compressed generic/mapped netlists are retained under `census/`. The source was not rewritten. Yosys 0.67 in ORFS image `sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34` used actual ASAP7 RVT TT NLDM combinational and sequential libraries. All nine reported native modules map completely, including asynchronous resets through real sequential cells. There are no residual generic implementation cells in their reported areas.
+
+| Native module | Actual parent parameters beyond MUT=0 | Standalone sequential bits | Mapped cell area, µm² | Provisional square side including margin, µm |
+|---|---|---:|---:|---:|
+| HC scalar reduce | source SPLIT=7, KS=1 arithmetic | 2053 | 1188.284580 | 65.88 |
+| HC scalar assemble | source defaults | 1024 | 458.934660 | 45.36 |
+| Peer FMT1 lane | source defaults | 4361 | 3560.363100 | 105.84 |
+| Pass FMT1 lane | source defaults | 4381 | 3573.703800 | 105.84 |
+| TP4 core | source defaults | 8418 | 4238.843400 | 182.52 |
+| Pass adapter | source defaults | 4358 | 2531.525400 | 260.28 |
+| Host queue | DEPTH=16 | 1115 | 597.400920 | 49.68 |
+| Raw VM rows | REGISTER_VM_WRITES=0 | 556 | 311.370480 | 95.04 |
+| VMB | PINCAP=1, including actual reset relay | 6260 | 2167.579440 | 209.52 |
+
+The outline column is an **area and aggregate pin bound study**, not a legalized or routed outline. It assumes 40% cell utilization, 0.048 µm M4 pitch, two-track pin spacing, 80% edge availability and hypothetical balance across four faces, then rounds the core side up to 1.08 µm and adds a 5.4 µm margin on every side. Actual site size is 0.054 by 0.270 µm. These assumptions are recorded in the JSON. Fixed face assignments, actual pin-fit, PDN, clock tree, congestion, pin escape and all incident neighbors remain open. The large adapter/core/VMB outline estimates are driven by aggregate interface pins, illustrating why area alone is insufficient. These module studies do not yet describe the combined same-root cuts.
+
+The 16 reducer plus 16 assembler instances measure **26355.507840 µm²** of mapped cells and **49232** sequential bits before the 32 parent-local reset bits. Each actual parent HC root has **3079** sequential sinks. A combined HC outline and physical pin count remain unset because the two source boundaries have internal connections that must disappear inside a coherent combined cut.
+
+The current slab census uses the actual parent defaults `CYCLES=1`, `MUT=0`, `VMB_PINCAP=1`; its three ROMs are exact-port hard macro blackboxes and their internal storage is excluded. It finds **106536** one-bit sequential clock sinks across **29 roots**, with no unresolved sequential clocks. Control roots 0..4 own **1147, 8424, 6267, 5472, 967** sinks. The three peer roots own **4360 each**, the five pass roots **4383 each**, and the sixteen HC roots **3079 each**. Wrapper `reset_q` adds two sinks to control0, giving **106538** for the delivered-root sequential census of the full wrapper; the external PLL/reset service is separate. Full-slab synthesis peaked at 4862.31 MB and took 86.84 seconds of Yosys elapsed time.
+
+Standalone module counts and areas cannot simply be relabeled as final root-cut counts: flattening permits cross-module optimization and sharing, while a hard physical boundary can retain duplicated captures. The standalone versus full-parent difference is visible in peer and pass/control roots. A production `CYCLES` parameter or calendar7 integration requires another source/parameter-bound census. This census is separate from functional traffic-count evidence such as the parent's 85100 VM checks.
+
+For arithmetic reuse, `arithmetic_reuse_audit.json` records the real closed HBM `ot_hgi_coll_pring_static_add_lane` view: **36.72 by 36.72 µm**, **102 pins**, LAT=8, with a source wrapper pin capture followed by `ot_hdc_fp32_add_lat` LAT=7/DRST=0. Current S81 uses three `ot_s81ph_fp32_add_rne_preexp` SPLIT=7/KS=1 instances and consumes each adder's error outputs; the HBM wrapper omits that error port. The sources, parameters, topology and ports are not identical. A closed-view substitution therefore requires a reviewed source/edge/error-equivalence and integration decision. No substitution or arithmetic rewrite was made, and no historical credit-bearing view was reused.
+
+The scripts reference the retained uncompressed filenames. To replay the retained synthesis, decompress the corresponding `.json.gz`/`.lib.gz` artifacts first, run a selected `.ys` file using the pinned ORFS image from the repository root, then run `census/summarize.py` or `census/root_census.py`. `source_paths.json` identifies the source snapshot inputs. The clock census uses `rom_blackbox.v` only as the exact hard macro interface; it does not replace ROM storage with synthetic registers.

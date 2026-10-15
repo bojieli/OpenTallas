@@ -1,0 +1,559 @@
+{
+  "schema": "s81.actual-collective-module-synthesis.v1",
+  "source_commit": "2eb33e9a8e8046d4f579fc1395e0ac6038a11341",
+  "tool": "Yosys 0.67 2d1509d1b in openroad/orfs:latest",
+  "technology": "ASAP7 RVT TT NLDM, real sequential library 220123 plus four combinational libraries",
+  "library_sha256": "7110a7a75b4d2802053266c170bed511640a53d1c85ba9e43939fd4cb8dfe817",
+  "library_cell_area_um2": {
+    "A2O1A1Ixp33_ASAP7_75t_R": 0.08748,
+    "A2O1A1O1Ixp25_ASAP7_75t_R": 0.13122,
+    "AO211x2_ASAP7_75t_R": 0.23328,
+    "AO21x1_ASAP7_75t_R": 0.08748,
+    "AO21x2_ASAP7_75t_R": 0.10206,
+    "AO221x1_ASAP7_75t_R": 0.1458,
+    "AO221x2_ASAP7_75t_R": 0.16038,
+    "AO222x2_ASAP7_75t_R": 0.17496,
+    "AO22x1_ASAP7_75t_R": 0.13122,
+    "AO22x2_ASAP7_75t_R": 0.1458,
+    "AO31x2_ASAP7_75t_R": 0.23328,
+    "AO322x2_ASAP7_75t_R": 0.2187,
+    "AO32x1_ASAP7_75t_R": 0.11664,
+    "AO32x2_ASAP7_75t_R": 0.13122,
+    "AO331x1_ASAP7_75t_R": 0.1458,
+    "AO331x2_ASAP7_75t_R": 0.16038,
+    "AO332x1_ASAP7_75t_R": 0.16038,
+    "AO332x2_ASAP7_75t_R": 0.17496,
+    "AO333x1_ASAP7_75t_R": 0.17496,
+    "AO333x2_ASAP7_75t_R": 0.18954,
+    "AO33x2_ASAP7_75t_R": 0.1458,
+    "AOI211x1_ASAP7_75t_R": 0.17496,
+    "AOI211xp5_ASAP7_75t_R": 0.08748,
+    "AOI21x1_ASAP7_75t_R": 0.11664,
+    "AOI21xp33_ASAP7_75t_R": 0.0729,
+    "AOI21xp5_ASAP7_75t_R": 0.0729,
+    "AOI221x1_ASAP7_75t_R": 0.20412,
+    "AOI221xp5_ASAP7_75t_R": 0.10206,
+    "AOI222xp33_ASAP7_75t_R": 0.1458,
+    "AOI22x1_ASAP7_75t_R": 0.1458,
+    "AOI22xp33_ASAP7_75t_R": 0.08748,
+    "AOI22xp5_ASAP7_75t_R": 0.08748,
+    "AOI311xp33_ASAP7_75t_R": 0.10206,
+    "AOI31xp33_ASAP7_75t_R": 0.08748,
+    "AOI31xp67_ASAP7_75t_R": 0.18954,
+    "AOI321xp33_ASAP7_75t_R": 0.11664,
+    "AOI322xp5_ASAP7_75t_R": 0.13122,
+    "AOI32xp33_ASAP7_75t_R": 0.10206,
+    "AOI331xp33_ASAP7_75t_R": 0.13122,
+    "AOI332xp33_ASAP7_75t_R": 0.1458,
+    "AOI333xp33_ASAP7_75t_R": 0.16038,
+    "AOI33xp33_ASAP7_75t_R": 0.11664,
+    "BUFx10_ASAP7_75t_R": 0.20412,
+    "BUFx12_ASAP7_75t_R": 0.23328,
+    "BUFx12f_ASAP7_75t_R": 0.26244,
+    "BUFx16f_ASAP7_75t_R": 0.32076,
+    "BUFx24_ASAP7_75t_R": 0.4374,
+    "BUFx2_ASAP7_75t_R": 0.0729,
+    "BUFx3_ASAP7_75t_R": 0.08748,
+    "BUFx4_ASAP7_75t_R": 0.10206,
+    "BUFx4f_ASAP7_75t_R": 0.11664,
+    "BUFx5_ASAP7_75t_R": 0.11664,
+    "BUFx6f_ASAP7_75t_R": 0.1458,
+    "BUFx8_ASAP7_75t_R": 0.17496,
+    "CKINVDCx10_ASAP7_75t_R": 0.34992,
+    "CKINVDCx11_ASAP7_75t_R": 0.37908,
+    "CKINVDCx12_ASAP7_75t_R": 0.37908,
+    "CKINVDCx14_ASAP7_75t_R": 0.40824,
+    "CKINVDCx16_ASAP7_75t_R": 0.4374,
+    "CKINVDCx20_ASAP7_75t_R": 0.55404,
+    "CKINVDCx5p33_ASAP7_75t_R": 0.32076,
+    "CKINVDCx6p67_ASAP7_75t_R": 0.34992,
+    "CKINVDCx8_ASAP7_75t_R": 0.32076,
+    "CKINVDCx9p33_ASAP7_75t_R": 0.40824,
+    "HB1xp67_ASAP7_75t_R": 0.05832,
+    "HB2xp67_ASAP7_75t_R": 0.0729,
+    "HB3xp67_ASAP7_75t_R": 0.08748,
+    "HB4xp67_ASAP7_75t_R": 0.10206,
+    "INVx11_ASAP7_75t_R": 0.18954,
+    "INVx13_ASAP7_75t_R": 0.2187,
+    "INVx1_ASAP7_75t_R": 0.04374,
+    "INVx2_ASAP7_75t_R": 0.05832,
+    "INVx3_ASAP7_75t_R": 0.0729,
+    "INVx4_ASAP7_75t_R": 0.08748,
+    "INVx5_ASAP7_75t_R": 0.10206,
+    "INVx6_ASAP7_75t_R": 0.11664,
+    "INVx8_ASAP7_75t_R": 0.1458,
+    "INVxp33_ASAP7_75t_R": 0.04374,
+    "INVxp67_ASAP7_75t_R": 0.04374,
+    "O2A1O1Ixp33_ASAP7_75t_R": 0.08748,
+    "O2A1O1Ixp5_ASAP7_75t_R": 0.11664,
+    "OA211x2_ASAP7_75t_R": 0.11664,
+    "OA21x2_ASAP7_75t_R": 0.10206,
+    "OA221x2_ASAP7_75t_R": 0.23328,
+    "OA222x2_ASAP7_75t_R": 0.17496,
+    "OA22x2_ASAP7_75t_R": 0.1458,
+    "OA31x2_ASAP7_75t_R": 0.2187,
+    "OA331x1_ASAP7_75t_R": 0.1458,
+    "OA331x2_ASAP7_75t_R": 0.16038,
+    "OA332x1_ASAP7_75t_R": 0.16038,
+    "OA332x2_ASAP7_75t_R": 0.17496,
+    "OA333x1_ASAP7_75t_R": 0.17496,
+    "OA333x2_ASAP7_75t_R": 0.18954,
+    "OA33x2_ASAP7_75t_R": 0.1458,
+    "OAI211xp5_ASAP7_75t_R": 0.08748,
+    "OAI21x1_ASAP7_75t_R": 0.11664,
+    "OAI21xp33_ASAP7_75t_R": 0.0729,
+    "OAI21xp5_ASAP7_75t_R": 0.0729,
+    "OAI221xp5_ASAP7_75t_R": 0.10206,
+    "OAI222xp33_ASAP7_75t_R": 0.1458,
+    "OAI22x1_ASAP7_75t_R": 0.1458,
+    "OAI22xp33_ASAP7_75t_R": 0.08748,
+    "OAI22xp5_ASAP7_75t_R": 0.08748,
+    "OAI311xp33_ASAP7_75t_R": 0.10206,
+    "OAI31xp33_ASAP7_75t_R": 0.08748,
+    "OAI31xp67_ASAP7_75t_R": 0.18954,
+    "OAI321xp33_ASAP7_75t_R": 0.11664,
+    "OAI322xp33_ASAP7_75t_R": 0.13122,
+    "OAI32xp33_ASAP7_75t_R": 0.10206,
+    "OAI331xp33_ASAP7_75t_R": 0.13122,
+    "OAI332xp33_ASAP7_75t_R": 0.1458,
+    "OAI333xp33_ASAP7_75t_R": 0.16038,
+    "OAI33xp33_ASAP7_75t_R": 0.11664,
+    "AND2x2_ASAP7_75t_R": 0.08748,
+    "AND2x4_ASAP7_75t_R": 0.1458,
+    "AND2x6_ASAP7_75t_R": 0.17496,
+    "AND3x1_ASAP7_75t_R": 0.08748,
+    "AND3x2_ASAP7_75t_R": 0.10206,
+    "AND3x4_ASAP7_75t_R": 0.20412,
+    "AND4x1_ASAP7_75t_R": 0.10206,
+    "AND4x2_ASAP7_75t_R": 0.11664,
+    "AND5x1_ASAP7_75t_R": 0.11664,
+    "AND5x2_ASAP7_75t_R": 0.2916,
+    "FAx1_ASAP7_75t_R": 0.20412,
+    "HAxp5_ASAP7_75t_R": 0.13122,
+    "MAJIxp5_ASAP7_75t_R": 0.10206,
+    "MAJx2_ASAP7_75t_R": 0.13122,
+    "MAJx3_ASAP7_75t_R": 0.1458,
+    "NAND2x1_ASAP7_75t_R": 0.08748,
+    "NAND2x1p5_ASAP7_75t_R": 0.11664,
+    "NAND2x2_ASAP7_75t_R": 0.1458,
+    "NAND2xp33_ASAP7_75t_R": 0.05832,
+    "NAND2xp5_ASAP7_75t_R": 0.05832,
+    "NAND2xp67_ASAP7_75t_R": 0.08748,
+    "NAND3x1_ASAP7_75t_R": 0.16038,
+    "NAND3x2_ASAP7_75t_R": 0.2916,
+    "NAND3xp33_ASAP7_75t_R": 0.0729,
+    "NAND4xp25_ASAP7_75t_R": 0.08748,
+    "NAND4xp75_ASAP7_75t_R": 0.20412,
+    "NAND5xp2_ASAP7_75t_R": 0.10206,
+    "NOR2x1_ASAP7_75t_R": 0.08748,
+    "NOR2x1p5_ASAP7_75t_R": 0.11664,
+    "NOR2x2_ASAP7_75t_R": 0.1458,
+    "NOR2xp33_ASAP7_75t_R": 0.05832,
+    "NOR2xp67_ASAP7_75t_R": 0.08748,
+    "NOR3x1_ASAP7_75t_R": 0.16038,
+    "NOR3x2_ASAP7_75t_R": 0.2916,
+    "NOR3xp33_ASAP7_75t_R": 0.0729,
+    "NOR4xp25_ASAP7_75t_R": 0.08748,
+    "NOR4xp75_ASAP7_75t_R": 0.20412,
+    "NOR5xp2_ASAP7_75t_R": 0.10206,
+    "OR2x2_ASAP7_75t_R": 0.08748,
+    "OR2x4_ASAP7_75t_R": 0.11664,
+    "OR2x6_ASAP7_75t_R": 0.17496,
+    "OR3x1_ASAP7_75t_R": 0.08748,
+    "OR3x2_ASAP7_75t_R": 0.10206,
+    "OR3x4_ASAP7_75t_R": 0.13122,
+    "OR4x1_ASAP7_75t_R": 0.10206,
+    "OR4x2_ASAP7_75t_R": 0.11664,
+    "OR5x1_ASAP7_75t_R": 0.11664,
+    "OR5x2_ASAP7_75t_R": 0.13122,
+    "TIEHIx1_ASAP7_75t_R": 0.04374,
+    "TIELOx1_ASAP7_75t_R": 0.04374,
+    "XNOR2x1_ASAP7_75t_R": 0.17496,
+    "XNOR2x2_ASAP7_75t_R": 0.16038,
+    "XNOR2xp5_ASAP7_75t_R": 0.13122,
+    "XOR2x1_ASAP7_75t_R": 0.17496,
+    "XOR2x2_ASAP7_75t_R": 0.16038,
+    "XOR2xp5_ASAP7_75t_R": 0.13122,
+    "DFFASRHQNx1_ASAP7_75t_R": 0.37908,
+    "DFFHQNx1_ASAP7_75t_R": 0.2916,
+    "DFFHQNx2_ASAP7_75t_R": 0.30618,
+    "DFFHQNx3_ASAP7_75t_R": 0.32076,
+    "DFFHQx4_ASAP7_75t_R": 0.3645,
+    "DFFLQNx1_ASAP7_75t_R": 0.2916,
+    "DFFLQNx2_ASAP7_75t_R": 0.30618,
+    "DFFLQNx3_ASAP7_75t_R": 0.32076,
+    "DFFLQx4_ASAP7_75t_R": 0.3645,
+    "DHLx1_ASAP7_75t_R": 0.2187,
+    "DHLx2_ASAP7_75t_R": 0.23328,
+    "DHLx3_ASAP7_75t_R": 0.24786,
+    "DLLx1_ASAP7_75t_R": 0.2187,
+    "DLLx2_ASAP7_75t_R": 0.23328,
+    "DLLx3_ASAP7_75t_R": 0.24786,
+    "ICGx1_ASAP7_75t_R": 0.26244,
+    "ICGx2_ASAP7_75t_R": 0.27702,
+    "ICGx2p67DC_ASAP7_75t_R": 0.69984,
+    "ICGx3_ASAP7_75t_R": 0.2916,
+    "ICGx4DC_ASAP7_75t_R": 0.69984,
+    "ICGx4_ASAP7_75t_R": 0.30618,
+    "ICGx5_ASAP7_75t_R": 0.32076,
+    "ICGx5p33DC_ASAP7_75t_R": 0.69984,
+    "ICGx6p67DC_ASAP7_75t_R": 0.69984,
+    "ICGx8DC_ASAP7_75t_R": 0.69984,
+    "SDFHx1_ASAP7_75t_R": 0.3645,
+    "SDFHx2_ASAP7_75t_R": 0.37908,
+    "SDFHx3_ASAP7_75t_R": 0.39366,
+    "SDFHx4_ASAP7_75t_R": 0.45198,
+    "SDFLx1_ASAP7_75t_R": 0.3645,
+    "SDFLx2_ASAP7_75t_R": 0.37908,
+    "SDFLx3_ASAP7_75t_R": 0.39366,
+    "SDFLx4_ASAP7_75t_R": 0.45198
+  },
+  "scope": "Exact-source module synthesis with actual parent parameters. No source edits, clock/reset/latency transformations, placement, CTS or routing. Full DFF legalization uses physical asynchronous-set/reset cells. Module-only counts exclude surrounding wrapper ownership.",
+  "outline_study_assumptions": {
+    "target_cell_utilization": 0.4,
+    "M4_pitch_um": 0.048,
+    "pin_spacing_tracks": 2,
+    "available_edge_fraction": 0.8,
+    "edge_assignment": "hypothetical balanced across four sides; no actual pin-fit test",
+    "alignment_grid_um": 1.08,
+    "site_um": [
+      0.054,
+      0.27
+    ],
+    "margin_each_side_um": 5.4,
+    "warning": "Provisional geometric study. Fixed face assignment, PDN, CTS, congestion, pin escape, access DRC and all incident neighbors can require larger or nonsquare outlines."
+  },
+  "modules": [
+    {
+      "module": "dsfd_coll_static_channels",
+      "parameters": {
+        "MUT": 0
+      },
+      "sequential_bit_cells": 4358,
+      "sequential_cell_types": {
+        "$_SDFF_PN0_": 4358
+      },
+      "mapped_cell_area_um2": 2531.5254,
+      "mapped_cell_count": 22011,
+      "unmapped_cell_types": {},
+      "declared_rtl_port_bits": 8308,
+      "outline_study": {
+        "status": "SITE_ALIGNED_AREA_AND_AGGREGATE_PIN_BOUND_ONLY_NOT_LEGALIZED",
+        "area_square_side_um": 79.55384025928603,
+        "aggregate_pin_square_side_um": 249.23999999999998,
+        "provisional_square_core_um": [
+          249.48,
+          249.48
+        ],
+        "provisional_square_with_5p4_margin_um": [
+          260.28,
+          260.28
+        ]
+      },
+      "evidence": {
+        "generic_json": "dsfd_coll_static_channels.generic.json",
+        "mapped_json": "dsfd_coll_static_channels.mapped.json",
+        "log": "dsfd_coll_static_channels.log",
+        "script": "dsfd_coll_static_channels.ys"
+      }
+    },
+    {
+      "module": "s81_static_fmt1_core_dynamic",
+      "parameters": {
+        "MUT": 0
+      },
+      "sequential_bit_cells": 8418,
+      "sequential_cell_types": {
+        "$_DFF_PN0_": 8417,
+        "$_DFFE_PN0P_": 1
+      },
+      "mapped_cell_area_um2": 4238.8434,
+      "mapped_cell_count": 23707,
+      "unmapped_cell_types": {},
+      "declared_rtl_port_bits": 5698,
+      "outline_study": {
+        "status": "SITE_ALIGNED_AREA_AND_AGGREGATE_PIN_BOUND_ONLY_NOT_LEGALIZED",
+        "area_square_side_um": 102.94225808675462,
+        "aggregate_pin_square_side_um": 170.94,
+        "provisional_square_core_um": [
+          171.72,
+          171.72
+        ],
+        "provisional_square_with_5p4_margin_um": [
+          182.52,
+          182.52
+        ]
+      },
+      "evidence": {
+        "generic_json": "s81_static_fmt1_core_dynamic.generic.json",
+        "mapped_json": "s81_static_fmt1_core_dynamic.mapped.json",
+        "log": "s81_static_fmt1_core_dynamic.log",
+        "script": "s81_static_fmt1_core_dynamic.ys"
+      }
+    },
+    {
+      "module": "s81_static_fmt1_lane_dynamic",
+      "parameters": {
+        "MUT": 0
+      },
+      "sequential_bit_cells": 4361,
+      "sequential_cell_types": {
+        "$_DFFE_PN0P_": 1924,
+        "$_DFF_PN0_": 2437
+      },
+      "mapped_cell_area_um2": 3560.3631,
+      "mapped_cell_count": 22885,
+      "unmapped_cell_types": {},
+      "declared_rtl_port_bits": 2179,
+      "outline_study": {
+        "status": "SITE_ALIGNED_AREA_AND_AGGREGATE_PIN_BOUND_ONLY_NOT_LEGALIZED",
+        "area_square_side_um": 94.34462226327476,
+        "aggregate_pin_square_side_um": 65.36999999999999,
+        "provisional_square_core_um": [
+          95.04,
+          95.04
+        ],
+        "provisional_square_with_5p4_margin_um": [
+          105.84,
+          105.84
+        ]
+      },
+      "evidence": {
+        "generic_json": "s81_static_fmt1_lane_dynamic.generic.json",
+        "mapped_json": "s81_static_fmt1_lane_dynamic.mapped.json",
+        "log": "s81_static_fmt1_lane_dynamic.log",
+        "script": "s81_static_fmt1_lane_dynamic.ys"
+      }
+    },
+    {
+      "module": "s81_static_hc_scalar_assemble",
+      "parameters": {
+        "MUT": 0
+      },
+      "sequential_bit_cells": 1024,
+      "sequential_cell_types": {
+        "$_DFFE_PP_": 1024
+      },
+      "mapped_cell_area_um2": 458.93466,
+      "mapped_cell_count": 3605,
+      "unmapped_cell_types": {},
+      "declared_rtl_port_bits": 551,
+      "outline_study": {
+        "status": "SITE_ALIGNED_AREA_AND_AGGREGATE_PIN_BOUND_ONLY_NOT_LEGALIZED",
+        "area_square_side_um": 33.87235819957034,
+        "aggregate_pin_square_side_um": 16.529999999999998,
+        "provisional_square_core_um": [
+          34.56,
+          34.56
+        ],
+        "provisional_square_with_5p4_margin_um": [
+          45.36,
+          45.36
+        ]
+      },
+      "evidence": {
+        "generic_json": "s81_static_hc_scalar_assemble.generic.json",
+        "mapped_json": "s81_static_hc_scalar_assemble.mapped.json",
+        "log": "s81_static_hc_scalar_assemble.log",
+        "script": "s81_static_hc_scalar_assemble.ys"
+      }
+    },
+    {
+      "module": "s81_static_hc_scalar_reduce",
+      "parameters": {
+        "MUT": 0
+      },
+      "sequential_bit_cells": 2053,
+      "sequential_cell_types": {
+        "$_DFF_PN0_": 1143,
+        "$_DFF_P_": 805,
+        "$_SDFF_PP0_": 105
+      },
+      "mapped_cell_area_um2": 1188.28458,
+      "mapped_cell_count": 9144,
+      "unmapped_cell_types": {},
+      "declared_rtl_port_bits": 165,
+      "outline_study": {
+        "status": "SITE_ALIGNED_AREA_AND_AGGREGATE_PIN_BOUND_ONLY_NOT_LEGALIZED",
+        "area_square_side_um": 54.50423332182556,
+        "aggregate_pin_square_side_um": 4.949999999999999,
+        "provisional_square_core_um": [
+          55.08,
+          55.08
+        ],
+        "provisional_square_with_5p4_margin_um": [
+          65.88,
+          65.88
+        ]
+      },
+      "evidence": {
+        "generic_json": "s81_static_hc_scalar_reduce.generic.json",
+        "mapped_json": "s81_static_hc_scalar_reduce.mapped.json",
+        "log": "s81_static_hc_scalar_reduce.log",
+        "script": "s81_static_hc_scalar_reduce.ys"
+      }
+    },
+    {
+      "module": "s81_static_host_queue",
+      "parameters": {
+        "MUT": 0,
+        "DEPTH": 16
+      },
+      "sequential_bit_cells": 1115,
+      "sequential_cell_types": {
+        "$_DFFE_PP_": 1024,
+        "$_DFFE_PN0P_": 9,
+        "$_DFF_PN0_": 82
+      },
+      "mapped_cell_area_um2": 597.40092,
+      "mapped_cell_count": 4566,
+      "unmapped_cell_types": {},
+      "declared_rtl_port_bits": 158,
+      "outline_study": {
+        "status": "SITE_ALIGNED_AREA_AND_AGGREGATE_PIN_BOUND_ONLY_NOT_LEGALIZED",
+        "area_square_side_um": 38.64585747528446,
+        "aggregate_pin_square_side_um": 4.74,
+        "provisional_square_core_um": [
+          38.88,
+          38.88
+        ],
+        "provisional_square_with_5p4_margin_um": [
+          49.68,
+          49.68
+        ]
+      },
+      "evidence": {
+        "generic_json": "s81_static_host_queue.generic.json",
+        "mapped_json": "s81_static_host_queue.mapped.json",
+        "log": "s81_static_host_queue.log",
+        "script": "s81_static_host_queue.ys"
+      }
+    },
+    {
+      "module": "s81_static_raw_fmt1_lane",
+      "parameters": {
+        "MUT": 0
+      },
+      "sequential_bit_cells": 4381,
+      "sequential_cell_types": {
+        "$_DFFE_PN0P_": 1929,
+        "$_DFF_PN0_": 2452
+      },
+      "mapped_cell_area_um2": 3573.7038,
+      "mapped_cell_count": 23033,
+      "unmapped_cell_types": {},
+      "declared_rtl_port_bits": 2166,
+      "outline_study": {
+        "status": "SITE_ALIGNED_AREA_AND_AGGREGATE_PIN_BOUND_ONLY_NOT_LEGALIZED",
+        "area_square_side_um": 94.52121190505335,
+        "aggregate_pin_square_side_um": 64.98,
+        "provisional_square_core_um": [
+          95.04,
+          95.04
+        ],
+        "provisional_square_with_5p4_margin_um": [
+          105.84,
+          105.84
+        ]
+      },
+      "evidence": {
+        "generic_json": "s81_static_raw_fmt1_lane.generic.json",
+        "mapped_json": "s81_static_raw_fmt1_lane.mapped.json",
+        "log": "s81_static_raw_fmt1_lane.log",
+        "script": "s81_static_raw_fmt1_lane.ys"
+      }
+    },
+    {
+      "module": "s81_static_raw_vm_rows",
+      "parameters": {
+        "MUT": 0,
+        "REGISTER_VM_WRITES": 0
+      },
+      "sequential_bit_cells": 556,
+      "sequential_cell_types": {
+        "$_DFFE_PN0P_": 555,
+        "$_DFF_PN0_": 1
+      },
+      "mapped_cell_area_um2": 311.37048,
+      "mapped_cell_count": 2260,
+      "unmapped_cell_types": {},
+      "declared_rtl_port_bits": 2773,
+      "outline_study": {
+        "status": "SITE_ALIGNED_AREA_AND_AGGREGATE_PIN_BOUND_ONLY_NOT_LEGALIZED",
+        "area_square_side_um": 27.900290321070134,
+        "aggregate_pin_square_side_um": 83.19,
+        "provisional_square_core_um": [
+          84.24,
+          84.24
+        ],
+        "provisional_square_with_5p4_margin_um": [
+          95.04,
+          95.04
+        ]
+      },
+      "evidence": {
+        "generic_json": "s81_static_raw_vm_rows.generic.json",
+        "mapped_json": "s81_static_raw_vm_rows.mapped.json",
+        "log": "s81_static_raw_vm_rows.log",
+        "script": "s81_static_raw_vm_rows.ys"
+      }
+    },
+    {
+      "module": "s81_static_vm_boundary",
+      "parameters": {
+        "MUT": 0,
+        "PINCAP": 1
+      },
+      "sequential_bit_cells": 6260,
+      "sequential_cell_types": {
+        "$_DFF_P_": 5180,
+        "$_DFF_PN0_": 9,
+        "$_SDFF_PN0_": 1070,
+        "$_DFFE_PN0P_": 1
+      },
+      "mapped_cell_area_um2": 2167.57944,
+      "mapped_cell_count": 12023,
+      "unmapped_cell_types": {},
+      "declared_rtl_port_bits": 6614,
+      "outline_study": {
+        "status": "SITE_ALIGNED_AREA_AND_AGGREGATE_PIN_BOUND_ONLY_NOT_LEGALIZED",
+        "area_square_side_um": 73.61350827124055,
+        "aggregate_pin_square_side_um": 198.42,
+        "provisional_square_core_um": [
+          198.72,
+          198.72
+        ],
+        "provisional_square_with_5p4_margin_um": [
+          209.52,
+          209.52
+        ]
+      },
+      "evidence": {
+        "generic_json": "s81_static_vm_boundary.generic.json",
+        "mapped_json": "s81_static_vm_boundary.mapped.json",
+        "log": "s81_static_vm_boundary.log",
+        "script": "s81_static_vm_boundary.ys"
+      }
+    }
+  ],
+  "hc16_summary": {
+    "arithmetic_instances": 16,
+    "assembly_instances": 16,
+    "pair_mapped_cell_area_um2": 1647.21924,
+    "all32_mapped_cell_area_um2": 26355.50784,
+    "pair_storage_bits": 3077,
+    "all32_storage_bits": 49232,
+    "additional_parent_local_reset_bits": 32,
+    "combined_physical_pin_count": null,
+    "combined_outline": null
+  },
+  "container_image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+  "known_standalone_module_instance_area_subtotal_um2": 64751.83578,
+  "area_subtotal_exclusions": [
+    "current calendar and its three ROM hardmacros",
+    "HC metadata/control root",
+    "surrounding wrapper clock/reset/rank configuration and fault/status ownership not inside measured standalone modules",
+    "CTS buffers, PDN, fill, routing and pin escape"
+  ],
+  "area_subtotal_warning": "Standalone module sum before shared optimization or hard-cut boundary selection; not complete collective area."
+}
