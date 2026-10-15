@@ -1,0 +1,14 @@
+GATE_SOURCE_ARCHIVE_SHA256=2dea2f1cf08b6f327a233ce72d3bb4276175e5e15b64976dd6196e3695abd4cc
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=1 GATE_FLOW_S=83
+GATE_FLOWERR FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:
+GATE_FLOWERR Error: 1_2_yosys.sdc, 28 invalid command name "remove_input_delay"
+GATE_FLOWERR Error: 1_2_yosys.sdc, 28 invalid command name "remove_input_delay"
+
+--- stderr
+ot-run: ot-epyc1tb     admits   517 GB (avail 744, growth 50, headroom 64, waiters 0/0 GB) load 48/128 running 13 disk 652 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: request 32G is charged 10G (family 'ref_gate_*' seed 10G (class 'ref_gate_hbm_su_static_kind#_#_#-#.sh' not measured yet)); the cap stays 32G
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1299648-1792062272 after 0 s
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1299648-1792062272): exit 0

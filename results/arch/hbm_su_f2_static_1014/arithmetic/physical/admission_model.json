@@ -415,9 +415,9 @@
   },
   "leaf_face_bits": {
     "N": 852,
-    "S": 562,
     "W": 192,
-    "E": 315
+    "E": 315,
+    "S": 562
   },
   "kinds": [
     {
@@ -448,7 +448,7 @@
         216,
         216
       ],
-      "outline_status": "geometry prototype only",
+      "outline_status": "independent geometry prototype only",
       "mapping": {
         "area_um2": 5539.457,
         "cells": 42400,
@@ -485,7 +485,7 @@
         302.4,
         302.4
       ],
-      "outline_status": "geometry independent generous prototype only",
+      "outline_status": "independent geometry prototype only",
       "mapping": {
         "area_um2": 18429.8,
         "cells": 132865,
@@ -522,7 +522,7 @@
         302.4,
         302.4
       ],
-      "outline_status": "geometry independent generous prototype only",
+      "outline_status": "independent geometry prototype only",
       "mapping": {
         "area_um2": 22171.489,
         "cells": 155237,
@@ -594,65 +594,56 @@
       "M4"
     ],
     "candidate_outline_um": [
-      364.472,
-      142.07999999999998
+      369.36,
+      151.2
     ],
     "candidate_placement": [
       {
         "reader": 0,
-        "x_um": 20.0,
-        "y_um": 20.0,
+        "x_um": 22.464,
+        "y_um": 23.76,
         "orientation": "R0"
       },
       {
         "reader": 1,
-        "x_um": 134.824,
-        "y_um": 20.0,
+        "x_um": 137.376,
+        "y_um": 23.76,
         "orientation": "R0"
       },
       {
         "reader": 2,
-        "x_um": 249.648,
-        "y_um": 20.0,
+        "x_um": 252.288,
+        "y_um": 23.76,
         "orientation": "R0"
       },
       {
         "reader": 3,
-        "x_um": 20.0,
-        "y_um": 81.03999999999999,
+        "x_um": 22.464,
+        "y_um": 86.4,
         "orientation": "R0"
       },
       {
         "reader": 4,
-        "x_um": 134.824,
-        "y_um": 81.03999999999999,
+        "x_um": 137.376,
+        "y_um": 86.4,
         "orientation": "R0"
       },
       {
         "reader": 5,
-        "x_um": 249.648,
-        "y_um": 81.03999999999999,
+        "x_um": 252.288,
+        "y_um": 86.4,
         "orientation": "R0"
       }
     ],
     "intermacro_channel_um": 20,
-    "macro_edge_margin_um": 20,
+    "macro_core_edge_margin_um": 20,
+    "core_margin_um": 2.16,
     "standard_cell_FF": 330,
     "clock_loads": "330 flops plus6 actual SRAM clockpins",
     "geometry_status": "candidate only; needs pin/PG/channel and source-qualified mapping",
     "read_edges": 2,
     "write_commit_edges": 1,
-    "floorplan_mapping": {
-      "status": "sourcequalified no placement/CTS",
-      "actual_macros": 6,
-      "macro_area_um2": 23349.5,
-      "stdcell_area_um2": 369.02,
-      "stdcell_count": 3280,
-      "external_pins": 302,
-      "raw_floorplan_setup_ps": 186.678,
-      "raw_floorplan_hold_ps": 6.74111,
-      "raw_timing_is_qualification": false
-    }
+    "prior_die_edge_model_compliant": false
   },
   "whole_parent": {
     "operand_network_implemented": false,
@@ -668,7 +659,5 @@
     "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv": "229d8a8b344ae0db15a77705794cffd00f46bdacbd71d1e22ed9650bf60bce62",
     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227"
   },
-  "geometry_assignment": "/home/ubuntu/wt/geometry-hbm-1015/results/arch/hbm_system_geometry_1015/physical_assignments/SU_actual_arithmetic.json",
-  "kind0_physical_wrapper": "Scalar naming of twelve literal clock bits only; all1921pins bijective, no state/edges added; actual parent remains nativebusABI",
-  "kind0_local_pin_PG_preflight": "PASS native pre_route_gate local; actual placedPG pending"
+  "geometry_assignment": "/home/ubuntu/wt/geometry-hbm-1015/results/arch/hbm_system_geometry_1015/physical_assignments/SU_actual_arithmetic.json"
 }

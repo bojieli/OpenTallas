@@ -138,7 +138,7 @@ create_clock -name clk_insert_0 -period $clk_period [get_ports clk_insert_0]
 create_clock -name clk_insert_1 -period $clk_period [get_ports clk_insert_1]
 create_clock -name clk_insert_2 -period $clk_period [get_ports clk_insert_2]
 create_clock -name clk_insert_3 -period $clk_period [get_ports clk_insert_3]
-remove_input_delay [get_ports {clk_stage_* clk_insert_*}]
+unset_input_delay [get_ports {clk_stage_* clk_insert_*}]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 
