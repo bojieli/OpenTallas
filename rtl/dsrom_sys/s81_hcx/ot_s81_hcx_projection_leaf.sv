@@ -7,7 +7,9 @@
 // Serial 0.9-GHz domain; stage bus is compiler-reserved, 80 consecutive beats
 // of eight native packed-BF16 rows (4096b/beat). Commands follow SRAM visibility.
 // Native static calendar must reserve the full prefetch; no credit/ready gating.
-module ot_s81_hcx_projection_leaf #(parameter IMAGE="hcx_r0",parameter integer MUT_BANK=0,MUT_PAGE=0)(
+// HLAYOUT=1: the stage bus comes from ot_s81_hcx_hrow_transpose (HC h_rows VM layout); canonical words then
+// arrive in the fixed order (n%4)*20+n/4 instead of 0..79. Data path, addresses and arithmetic are unchanged.
+module ot_s81_hcx_projection_leaf #(parameter IMAGE="hcx_r0",parameter integer MUT_BANK=0,MUT_PAGE=0,HLAYOUT=0)(
  input wire clk,rst_n,
  input wire stage_begin,stage_v,
  input wire [6:0] stage_word,
@@ -81,7 +83,7 @@ module ot_s81_hcx_projection_leaf #(parameter IMAGE="hcx_r0",parameter integer M
   else begin
    if(stage_begin)begin if(!idle)fault<=1;staged<=0;end
    if(stage_v_q)begin
-    if(stage_word_q!=staged || staged>=80 || !idle)fault<=1;
+    if(stage_word_q!=(HLAYOUT?7'(20*staged[1:0]+staged[6:2]):staged) || staged>=80 || !idle)fault<=1;
     staged<=staged+1'b1;
    end
    // Availability is a check; it never moves the command's compiled cycle.
