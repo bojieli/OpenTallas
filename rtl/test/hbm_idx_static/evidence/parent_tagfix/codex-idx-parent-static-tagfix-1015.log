@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     admits   557 GB (avail 784, growth 34, headroom 64, waiters 0/0 GB) load 43/128 running 11 disk 655 GB 
+ot-run: ot-epyc4       admits   669 GB (avail 896, growth 75, headroom 48, waiters 0/0 GB) load 28/128 running 20 disk 452 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-942919-1792061301 after 0 s
+IDX_PARENT_STATIC scores10928 records512 flits64 errors0 fault1 scoreedges123..293 TXedges951..1071
+[14650000000] %Fatal: tb_idx_parent_static.sv:99: Assertion failed in tb_idx_parent_static: fullshape real static INDEX parent mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_parent_static.sv:99: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-942919-1792061301): exit 1
