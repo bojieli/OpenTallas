@@ -1,0 +1,105 @@
+delta HPWL                    7 %
+
+Took 12 seconds: detailed_placement
+optimize_mirroring
+[INFO DPL-0020] Mirrored 17935 instances
+[INFO DPL-0021] HPWL before          363945.1 u
+[INFO DPL-0022] HPWL after           359547.9 u
+[INFO DPL-0023] HPWL delta               -1.2 %
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 5181 um^2 54% utilization.
+write_db /work/results/asap7/opentallas_qfd_xs_leaf_banked_asap7_ref_gate/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_qfd_xs_leaf_banked_asap7_ref_gate/base/3_place.sdc
+Elapsed time: 0:33.06[h:]min:sec. CPU time: user 37.13 sys 1.90 (118%). Peak memory: 598164KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb           33            584 de9a254e7e33d457b7c5
+cp /work/results/asap7/opentallas_qfd_xs_leaf_banked_asap7_ref_gate/base/3_5_place_dp.odb /work/results/asap7/opentallas_qfd_xs_leaf_banked_asap7_ref_gate/base/3_place.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_qfd_xs_leaf_banked_asap7_ref_gate/base/3_place.odb
+read_sdc /work/results/asap7/opentallas_qfd_xs_leaf_banked_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_pre_cts.tcl
+BANK_LOCALITY bank=0 cells=2932 flops=567 area_um2=379.7215200000093 util=0.5651909722222361 box_um=6.48,24.84,58.32,37.8 roots=17 unique_write_added=1249 shared_write_global=1087
+BANK_LOCALITY bank=1 cells=2937 flops=567 area_um2=381.9376800000102 util=0.5684895833333483 box_um=6.48,38.879999999999995,58.32,51.839999999999996 roots=17 unique_write_added=1252 shared_write_global=1170
+BANK_LOCALITY bank=2 cells=2930 flops=567 area_um2=380.1151800000096 util=0.5657769097222368 box_um=6.48,52.92,58.32,65.88 roots=17 unique_write_added=1246 shared_write_global=1240
+BANK_LOCALITY bank=3 cells=2944 flops=567 area_um2=382.3021800000123 util=0.5690321180555742 box_um=6.48,66.96,58.32,79.91999999999999 roots=17 unique_write_added=1256 shared_write_global=1204
+BANK_LOCALITY bank=4 cells=2929 flops=567 area_um2=378.2781000000088 util=0.5630425347222356 box_um=6.48,81.0,58.32,93.96 roots=17 unique_write_added=1239 shared_write_global=1354
+BANK_LOCALITY bank=5 cells=2906 flops=567 area_um2=378.4968000000087 util=0.5633680555555688 box_um=6.48,95.03999999999999,58.32,107.99999999999999 roots=17 unique_write_added=1223 shared_write_global=1377
+BANK_LOCALITY bank=6 cells=2919 flops=567 area_um2=379.1966400000098 util=0.5644097222222371 box_um=6.48,109.08,58.32,122.03999999999999 roots=17 unique_write_added=1235 shared_write_global=1292
+BANK_LOCALITY bank=7 cells=2945 flops=567 area_um2=382.71042000001165 util=0.5696397569444627 box_um=6.48,123.12,58.32,136.07999999999998 roots=17 unique_write_added=1261 shared_write_global=1210
+BANK_LOCALITY PASS banks=8 cells=23442 locality_groups_bound=1 physical_route_admitted=0
+[INFO DPL-0006] Core area: 9536.49 um^2
+[INFO DPL-0007] Movable instances area: 5130.31 um^2
+[INFO DPL-0008] Fixed instances area within core: 51.15 um^2
+[INFO DPL-0009] Utilization: 54.3%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 41980 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        833 |       157 |       676
+        1 |        222 |        38 |       184
+        2 |         49 |        14 |        35
+        3 |         43 |        14 |        29
+        4 |         35 |        13 |        22
+        5 |         22 |        10 |        12
+        6 |          7 |         7 |         0
+        7 |          7 |         7 |         0
+        8 |          7 |         7 |         0
+        9 |          7 |         7 |         0
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 7 for 3 consecutive iterations.
+Using old diamond search for 7 remaining illegal cells.
+diamond recovery: recovered 0/7 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          7 |         7 |         0
+      403 |          7 |         7 |         0
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 7 for 3 consecutive iterations. Using diamond search for 7 remaining illegal cells.
+diamond recovery: recovered 0/7 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 7
+[INFO DPL-0500] Runtime: 0.73s
+Placement Analysis
+---------------------------------
+total displacement       8348.4 u
+average displacement        0.2 u
+max displacement           57.9 u
+original HPWL          359547.9 u
+legalized HPWL         363491.2 u
+delta HPWL                    1 %
+
+[WARNING DPL-0008] Region placement check failed (7).
+ place7804
+ place7828
+ place7930
+ place7933
+ wire9483
+ wire9553
+ wire9564
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: cts.tcl, 6 DPL-0033
+Elapsed time: 0:05.02[h:]min:sec. CPU time: user 4.89 sys 0.13 (99%). Peak memory: 514140KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_qfd_xs_leaf_banked_asap7_ref_gate/base/4_1_cts.odb] Error 2

@@ -1,0 +1,41 @@
+{
+  "cell": "qwen_glue_v514",
+  "view": "physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514",
+  "lib_cell": "qwen_glue_v514",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 83.7,
+  "spread_ps": 8.9,
+  "outputs": 514,
+  "inputs": 515,
+  "launch_ps": 185.0,
+  "launch_pin": "q[444]",
+  "capture_ps": 128.5,
+  "capture_pin": "d[494]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "qualified_scope": "Existing routed capture master only; new composition homes/phase not qualified",
+  "source_commit": "86fe4c922",
+  "record_commit": "53fc78c0192f2173246b23f93e2314b541ee5b69",
+  "view_sha256": {
+    "export_tt.tcl": "c601e647707b9656d281eba17c9b33ecc1bbd564dd4615e586e5d1e059bd9d85",
+    "qwen_glue_v514_tt.lib": "5ca19ce1b4f9dc7b2acc06e9791d6c309f88b54004d1eb67918d0e0f824ab9f9",
+    "abstract.json": "5552a7533d9f5f571fe6323dbc19891d571c597cf5c41880ae1945669d7d54ee",
+    "export_ff.tcl": "d83ec778682a3bab30dd2518191b66fa6c30e72ff3597e80c4dccf5bde96eb58",
+    "insertion.json": "dbca26d7607acf9db8492f78a3f7c20021a3aa70c593b35602e4f855ca69efcb",
+    "export_tt.log": "c8cfd33475738bdb842f58f7afd4e6b72a95ade712613435d2a536da856497c9",
+    "export_ss.log": "9f1ba6f63cc091e269b7fa4fb484bde4ad169f222a0eb88293c4eb4040b7dba0",
+    "qwen_glue_v514_ss.lib": "c009627bccc72605fc14d1ea9e704cc5d85cd41450f881285165db33d7736ebb",
+    "qwen_glue_v514_ff.lib": "985147c167f93a4460101504fdee1dc4869b4dafa057c7b7180c437cf519e8f0",
+    "export_ff.log": "3f35aad3f3a3b87b750dbea46ce576b1f1bf7feb1507a82ef14c84c4db0436d4",
+    "export_ss.tcl": "e6bb4b6a45a80a0ec5dc83124dca6f22d4e5ba6fe8345514b6992bcfd337db15",
+    "qwen_glue_v514.lef": "a0f3fb49379ce4eee6b203658f38d443437a3e77faf4b1ca714de005a5a7ed71",
+    "child_lint.json": "5eb6f8df04db773267449b45958af8cd1d9d91d5d5bb834e940905ad74915f5a"
+  }
+}
