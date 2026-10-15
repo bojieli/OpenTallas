@@ -1111,6 +1111,18 @@ module ot_v41_bf_front_core #(
         if (!rst_n) programme_fault <= 1'b0;
         else if (STATIC_PROGRAM != 0 && prog_issue_pin && programme_bad)
             programme_fault <= 1'b1;
+`ifdef OT_BF_ISSUE_TRACE
+    // S-BIND 2026-10-15 measurement probe (simulation only): the compiled BF programme of this core = every free-clock
+    // edge's issue and the identity a static programme must present (pin->consume ages added by the producer).
+    integer tr_fd = 0, tr_cyc = 0, tr_go = -1;
+    initial tr_fd = $fopen("bf_issue_trace.txt", "w");
+    always @(posedge clk) begin
+        tr_cyc = tr_cyc + 1;
+        if (tr_fd != 0 && go) begin tr_go = tr_cyc; $fwrite(tr_fd, "G %0d %0d %0d\n", tr_cyc, go_bf, tr_go); end
+        if (tr_fd != 0 && issue_available)
+            $fwrite(tr_fd, "I %0d %0d %0d %0d %0d %0d %0d %0d\n", tr_cyc, tr_cyc - tr_go, a_ctr, programme_operand, w_s, w_h, w_cnt, go_bf);
+    end
+`endif
     wire [NB-1:0] bk_fault;
     wire [NB-1:0] qy_bkf;               // QY: each half's fault OR, registered
     // QPIPE: busy and the front-end fault are delayed with the datapath (registered outputs); the datapath faults
