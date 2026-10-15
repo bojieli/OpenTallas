@@ -1,0 +1,73 @@
+{
+  "status": "MODEL_PASS_RTL_AND_PHYSICAL_UNQUALIFIED",
+  "checks": 69632,
+  "rejected_mutants": [
+    "contiguous_quad",
+    "epoch_alias"
+  ],
+  "head_order": [
+    [
+      0,
+      1,
+      4,
+      5
+    ],
+    [
+      2,
+      3,
+      6,
+      7
+    ],
+    [
+      8,
+      9,
+      12,
+      13
+    ],
+    [
+      10,
+      11,
+      14,
+      15
+    ]
+  ],
+  "stores": 128,
+  "macros_per_store": 16,
+  "total_macros": 2048,
+  "macro_shape": "32x128 actual source macro; two allocated epoch addresses",
+  "source_ff_per_store": {
+    "write_face": 138,
+    "stored_flags": 128,
+    "read_flags": 64,
+    "read_lane_select": 2,
+    "read_response_valid": 1,
+    "output_face": 529
+  },
+  "source_ff_total_per_store": 862,
+  "source_clock_endpoints_per_store": 878,
+  "source_census_is_not_mapped": true,
+  "registered_tile_selector": {
+    "leaves": 32,
+    "inputs": 2112,
+    "outputs": 528,
+    "source_ff_per_leaf": 2646
+  },
+  "calendar": {
+    "write_availability_extra_edges": 1,
+    "read_extra_edges_vs_current_registered_D": 3,
+    "registered_cohort_selector_edges": 2,
+    "h16_commits": 128,
+    "h1_commits": 8,
+    "capture_edges": 16,
+    "h1_min_record_interval_edges": 16
+  },
+  "open": [
+    "Actual RTL and SRAM port proof",
+    "Native current-bank producer join",
+    "Registered face control/clock equality proof",
+    "Mapped cell/clock census",
+    "Actual pin budgets/access/cuts",
+    "Whole forward placement",
+    "Immutable whole-operation throughput price"
+  ]
+}
