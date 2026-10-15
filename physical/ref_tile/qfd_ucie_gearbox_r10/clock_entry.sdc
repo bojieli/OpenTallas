@@ -89,7 +89,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   foreach c [all_clocks] {lappend actual [get_full_name $c]}
   if {[lsort $actual] ne [lsort $expected]} {error "OT_MULTI_ROOT: undeclared clock alias or relationship"}
   set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}
-  foreach root $::ot_ce_cts_roots {
+  foreach root $::ot_ce_ports {
     set domain [dict get $::ot_ce_source_domains $root]
     dict set domain_roots $domain $root
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
@@ -173,6 +173,15 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     }
     foreach kind {max min} {
       set paths [find_timing_paths -from $from -to $to -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" &&
+          ![info exists ::ot_mm_active]} {
+        # Multi-mode route/gate (tools/orfs_hold_mm.tcl): this SDC is being read into mode ss BEFORE any scene is
+        # defined, so the unscened default scene has no clocks and no path can be found yet.  The crossing population
+        # above is structural (actual fanin) and unchanged; the finite-path proof runs strictly in every single-scene
+        # read (non-MM stages, corner_sta / sign-off), which carries the timing claim.
+        puts "OT_MULTI_ROOT RELATED_PATH_DEFERRED $source_domain -> $target_domain $kind (multi-mode read before scene definition; strict at sign-off)"
+        continue
+      }
       if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
         error "OT_MULTI_ROOT: related crossing lacks actual finite $kind STA path $source_domain -> $target_domain"
       }

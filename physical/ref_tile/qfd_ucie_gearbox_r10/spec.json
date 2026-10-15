@@ -156,6 +156,17 @@
     "pass_regex": "PASS qfd_ucie_six_five r10 block-stage component",
     "threads": 4,
     "peak_ram_gb": 8
+   },
+   {
+    "name": "gearbox_r10_mut_wrong_word",
+    "cmd": "mkdir -p {RUN}/mut2 && python3 -c \"import sys,subprocess;sys.path.insert(0,'tools');import qwen_ucie_six_five_bench as b;from pathlib import Path;o=Path('{RUN}/mut2');h=o/'harness.cpp';h.write_text(b.CPP);subprocess.run(['verilator','--cc','--exe','--build','-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD','-Wno-MULTIDRIVEN','--top-module','tb_qfd_ucie_six_five','-GMUT=2','--Mdir',str(o/'obj'),'rtl/physical/ot_qfd_ucie_six_five.sv','rtl/test/tb_qfd_ucie_six_five.sv',str(h),'-j','4'],check=True);r=subprocess.run([str(o/'obj/Vtb_qfd_ucie_six_five')]);sys.exit(r.returncode)\"",
+    "expect": "fail",
+    "fail_regex": "^cases=30 checks=[0-9]+ mismatches=[1-9]",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "extra_paths": [
