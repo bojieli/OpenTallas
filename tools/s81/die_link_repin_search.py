@@ -19,7 +19,7 @@ import argparse, collections, hashlib, json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import group_placement_opt as G
-from hub_face_repin_search import abacus, edge_stats, along
+from hub_face_repin_search import abacus, edge_stats, along, pack_face
 PA = G.PA
 # partner-only kinds: hard IP, ROM macros, immutable field children, stations/relays (hop finalization owns them)
 FIXED_KINDS = {'phy', 'link', 'pqrom', 'bf', 'bfcol', 'seq', 'cfg', 'q', 'qbank', 'node', 'rly', 'stn', 'sstn', 'hstn', 'rstg'}
@@ -130,10 +130,7 @@ def run(plan_path, lef_path, out_path, iters, kinds, reorder, only_masters=None)
                     t = 0.0 if anchored else sum(s['w'] * s['t'] for s in g['m']) / w
                     rows.append(dict(width=g['hi0'] - g['lo0'], desired=g['lo0'] + t, w=ANCHOR_W if anchored else w,
                                      anchored=anchored))
-                if reorder:         # anchored groups keep position order relative to each other via their huge weight
-                    order = sorted(range(len(rows)), key=lambda i: rows[i]['desired'])
-                    rows = [rows[i] for i in order]; groups = [groups[i] for i in order]
-                new = abacus(rows, flo, fhi)
+                new = pack_face(rows, flo, fhi, reorder)    # anchors immovable; reorder within anchor intervals
                 for g, x in zip(groups, new):
                     for s in g['m']:
                         if s['port'] is not None:
