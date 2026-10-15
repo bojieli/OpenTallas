@@ -1,0 +1,142 @@
+{
+ "name": "s81_svc_payload_job_ref-payload1-COMMIT",
+ "block": "dsfd_svcio_job",
+ "ref_tile": true,
+ "owner": "Codex:s_native_svc",
+ "purpose": "Payload-correct native service job successor with explicit v20 legacy geometry and scalar clock names. No reuse of old scalar or vector views. TT setup/FF hold/DRC0; original-header and first-source mutants must fail. Completion observation is now two edges after final accepted output pin (tap plus event stage); q flight is unchanged2. Price the fixed extra observer edge in static compiler completion, separately from downstream VM commit.",
+ "threads": 4,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "codex/s81-native-svc-1014",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/svc/test",
+   "rtl/dsrom_sys/s81_ctrl/test",
+   "results/rtl/s81_native_svc_1014/payload_done",
+   "physical/s81_die_pins/v20_svc_native",
+   "tools/s81_probability_ingress_model.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_svcio_job u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv rtl/dsrom_sys/s81_ph/svc/dsfd_svcio_job.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "actual_physical_payload_gate",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/svc/test/run_payload_done.sh {RUN}/payload",
+    "expect": "pass",
+    "pass_regex": "SVC_PAYLOAD_DONE jobs=2 errors=0 verdict=PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "physical_four_slab_long_payload",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; bash rtl/dsrom_sys/s81_ctrl/test/run_svc_job_gate.sh {RUN}/long one long -GTILE=1 -GNS=4 -GSEED=7 -GLONG_END=1",
+    "expect": "pass",
+    "pass_regex": "SVC_JOB_ONE long rc=0",
+    "threads": 1,
+    "peak_ram_gb": 3,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "physical_payload_header_mutant",
+    "cmd": "mkdir -p {RUN}\niverilog -g2012 -s tb_svc_payload_done -Ptb_svc_payload_done.MUT=7 -o {RUN}/mut rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv rtl/dsrom_sys/s81_ph/svc/dsfd_svcio_job.sv rtl/dsrom_sys/s81_ph/svc/test/tb_svc_payload_done.sv && vvp {RUN}/mut",
+    "expect": "fail",
+    "fail_regex": "EARLY_OR_LATE_DONE",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "physical_payload_firstsource_mutant",
+    "cmd": "mkdir -p {RUN}\niverilog -g2012 -s tb_svc_payload_done -Ptb_svc_payload_done.MUT=5 -o {RUN}/mut rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv rtl/dsrom_sys/s81_ph/svc/dsfd_svcio_job.sv rtl/dsrom_sys/s81_ph/svc/test/tb_svc_payload_done.sv && vvp {RUN}/mut",
+    "expect": "fail",
+    "fail_regex": "EARLY_OR_LATE_DONE",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81_svc_payload_job_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81_svc_payload_job_ref/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81_svc_payload_job_ref --out {RUN}/record/views/dsfd_svcio_job  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81_svc_payload_job_ref/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81_svc_payload_job_ref/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81_svc_payload_job_ref/s81_svc_payload_job_ref-payload1-COMMIT"
+  }
+ ],
+ "cycles_added": 1,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Retain END/tag/source across each actual output payload then one fixed completion-event register isolates terminal decode from job bookkeeping. 96 extra FF, unchanged q transport/ports/SRAM/clock roots, no credit or scheduler.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "files": [
+   "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv"
+  ],
+  "description": "Actual output tap completion now waits for final terminal payload. Original END-header completion fails authentic mutant even with all frames numerically correct. dsfd_svc_join body unchanged."
+ }
+}

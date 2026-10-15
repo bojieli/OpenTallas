@@ -59,4 +59,4 @@ integration passes40 jobs,620 frames,0early/0fault in4,315cycles. That harness
 uses a historical credit issuer and behavioural arithmetic stimuli, so its
 elapsed cycles are safety evidence only, not production static token throughput.
 The actual job and IO RTL is instantiated. The fixed unit calendar has no
-credit issuer or output-dependent scheduling. The complete job safety suite also passes seven positive and nine expected-negative cases (`event2/suite.log`). Final successor CTS is pending.
+credit issuer or output-dependent scheduling. The complete job safety suite also passes seven positive and nine expected-negative cases (`event2/suite.log`). Final assigned-pin CTS now passes with TT setup +75.2ps and hold +27.2ps; max TT insertion231.1ps/spread36.9ps across1,571sinks. Logic depth falls from~652ps to~538ps. Synth std area887um2. The exact assigned slot utilization warning remains; new route TT/FF/DRC0 remains required. See `pre_route_event2.json`.

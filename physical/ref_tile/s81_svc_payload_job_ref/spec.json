@@ -1,0 +1,135 @@
+{
+ "name": "s81_svc_payload_job_ref",
+ "top": "dsfd_svcio_job",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv",
+  "rtl/dsrom_sys/s81_ph/svc/dsfd_svcio_job.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 270.0,
+  "h": 64.8,
+  "exact": true
+ },
+ "macros": [],
+ "pins": {
+  "W": [
+   "ck",
+   "rst",
+   "j",
+   "jd"
+  ],
+  "N": [
+   "q"
+  ],
+  "S": [
+   "q_o"
+  ],
+  "E": [
+   "t_a0",
+   "t_a1",
+   "t_x",
+   "t_od"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:s_native_svc",
+  "branch": "codex/s81-native-svc-1014",
+  "tag": "payload1",
+  "purpose": "Payload-correct native service job successor with explicit v20 legacy geometry and scalar clock names. No reuse of old scalar or vector views. TT setup/FF hold/DRC0; original-header and first-source mutants must fail. Completion observation is now two edges after final accepted output pin (tap plus event stage); q flight is unchanged2. Price the fixed extra observer edge in static compiler completion, separately from downstream VM commit.",
+  "benches": [
+   {
+    "name": "actual_physical_payload_gate",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/svc/test/run_payload_done.sh {RUN}/payload",
+    "expect": "pass",
+    "pass_regex": "SVC_PAYLOAD_DONE jobs=2 errors=0 verdict=PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "physical_four_slab_long_payload",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; bash rtl/dsrom_sys/s81_ctrl/test/run_svc_job_gate.sh {RUN}/long one long -GTILE=1 -GNS=4 -GSEED=7 -GLONG_END=1",
+    "expect": "pass",
+    "pass_regex": "SVC_JOB_ONE long rc=0",
+    "threads": 1,
+    "peak_ram_gb": 3,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "physical_payload_header_mutant",
+    "cmd": "mkdir -p {RUN}\niverilog -g2012 -s tb_svc_payload_done -Ptb_svc_payload_done.MUT=7 -o {RUN}/mut rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv rtl/dsrom_sys/s81_ph/svc/dsfd_svcio_job.sv rtl/dsrom_sys/s81_ph/svc/test/tb_svc_payload_done.sv && vvp {RUN}/mut",
+    "expect": "fail",
+    "fail_regex": "EARLY_OR_LATE_DONE",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "physical_payload_firstsource_mutant",
+    "cmd": "mkdir -p {RUN}\niverilog -g2012 -s tb_svc_payload_done -Ptb_svc_payload_done.MUT=5 -o {RUN}/mut rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv rtl/dsrom_sys/s81_ph/svc/dsfd_svcio_job.sv rtl/dsrom_sys/s81_ph/svc/test/tb_svc_payload_done.sv && vvp {RUN}/mut",
+    "expect": "fail",
+    "fail_regex": "EARLY_OR_LATE_DONE",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/s81_svc_payload_job_ref/views",
+  "record_to": "results/rtl/ref_tile/s81_svc_payload_job_ref",
+  "cycles_added": 1,
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/svc/test",
+   "rtl/dsrom_sys/s81_ctrl/test",
+   "results/rtl/s81_native_svc_1014/payload_done",
+   "physical/s81_die_pins/v20_svc_native",
+   "tools/s81_probability_ingress_model.py"
+  ]
+ },
+ "recipe": 2,
+ "layer_cap": "M5",
+ "io_tcl": "physical/s81_die_pins/v20_svc_native/dsfd_svcio_job_payload.tcl",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "files": [
+   "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv"
+  ],
+  "description": "Actual output tap completion now waits for final terminal payload. Original END-header completion fails authentic mutant even with all frames numerically correct. dsfd_svc_join body unchanged."
+ },
+ "structural_change": "Retain END/tag/source across each actual output payload then one fixed completion-event register isolates terminal decode from job bookkeeping. 96 extra FF, unchanged q transport/ports/SRAM/clock roots, no credit or scheduler.",
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
