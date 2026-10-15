@@ -151,7 +151,9 @@ def main():
         write(out/(name+".ys"),script)
         p=run(["yosys","-Q","-T","-s",str(out/(name+".ys"))],out/(name+".log"))
         log=p.stdout+p.stderr
-        if p.returncode==0 or ("$fatal" not in log and "native ingest requires full32-macro QPIPE2 provider" not in log):
+        guard_failure=("native ingest requires full32-macro QPIPE2 provider" in log or
+            re.search(r"qkd_host_native_engine\.sv:133[^\n]*\$(?:fatal|error)",log) is not None)
+        if p.returncode==0 or not guard_failure:
             raise RuntimeError("actual native source guard negative did not fail specifically")
         negatives.append(dict(case=name,exit_code=p.returncode,log_sha256=sha(log.encode())))
     write(out/"source_guard_negatives.json",json.dumps(negatives,indent=2)+"\n")
