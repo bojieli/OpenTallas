@@ -1,0 +1,9277 @@
+{
+ "scope": "COMPLETE_GROUP_ENDPOINT_BOUNDED_ROAD_LOCALIZATION",
+ "root": "sp_hc_s",
+ "route_topology": "admitted_road",
+ "source_canonical_sha256": "ef91a10712e3a585ed51124db7733fb81aa4a3e936ab5def312b516dd585ea6d",
+ "source_roadmap_sha256": "29516b701a2354ece79560e0d7e64fc96f12f526dfa9c4943465ea014ae6acfc",
+ "source_trees_sha256": "817ba4695584a535cece8936aa58aaa1060685a12cd7e7e97667dfe210c39761",
+ "field_return_endpoints": [
+  {
+   "chain": "RP_W0_cf1",
+   "source": {
+    "data": [
+     "cf1",
+     "rd"
+    ],
+    "clock": [
+     "cf1",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W0",
+     "di9"
+    ],
+    "clock": [
+     "hr_W0",
+     "fi9"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W0_cf3",
+   "source": {
+    "data": [
+     "cf3",
+     "rd"
+    ],
+    "clock": [
+     "cf3",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W0",
+     "di8"
+    ],
+    "clock": [
+     "hr_W0",
+     "fi8"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W0_cf4",
+   "source": {
+    "data": [
+     "cf4",
+     "rd"
+    ],
+    "clock": [
+     "cf4",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W0",
+     "di7"
+    ],
+    "clock": [
+     "hr_W0",
+     "fi7"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W0_cf5",
+   "source": {
+    "data": [
+     "cf5",
+     "rd"
+    ],
+    "clock": [
+     "cf5",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W0",
+     "di6"
+    ],
+    "clock": [
+     "hr_W0",
+     "fi6"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W0_cf7",
+   "source": {
+    "data": [
+     "cf7",
+     "rd"
+    ],
+    "clock": [
+     "cf7",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W0",
+     "di5"
+    ],
+    "clock": [
+     "hr_W0",
+     "fi5"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W0_cf9",
+   "source": {
+    "data": [
+     "cf9",
+     "rd"
+    ],
+    "clock": [
+     "cf9",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W0",
+     "di4"
+    ],
+    "clock": [
+     "hr_W0",
+     "fi4"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W0_cf11",
+   "source": {
+    "data": [
+     "cf11",
+     "rd"
+    ],
+    "clock": [
+     "cf11",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W0",
+     "di3"
+    ],
+    "clock": [
+     "hr_W0",
+     "fi3"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W0_cf14",
+   "source": {
+    "data": [
+     "cf14",
+     "rd"
+    ],
+    "clock": [
+     "cf14",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W0",
+     "di2"
+    ],
+    "clock": [
+     "hr_W0",
+     "fi2"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W0_cf32",
+   "source": {
+    "data": [
+     "cf32",
+     "rd"
+    ],
+    "clock": [
+     "cf32",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W0",
+     "di1"
+    ],
+    "clock": [
+     "hr_W0",
+     "fi1"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W0_cf45",
+   "source": {
+    "data": [
+     "cf45",
+     "rd"
+    ],
+    "clock": [
+     "cf45",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W0",
+     "di0"
+    ],
+    "clock": [
+     "hr_W0",
+     "fi0"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W1_cf112",
+   "source": {
+    "data": [
+     "cf112",
+     "rd"
+    ],
+    "clock": [
+     "cf112",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W1",
+     "di10"
+    ],
+    "clock": [
+     "hr_W1",
+     "fi10"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W1_cf6",
+   "source": {
+    "data": [
+     "cf6",
+     "rd"
+    ],
+    "clock": [
+     "cf6",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W1",
+     "di9"
+    ],
+    "clock": [
+     "hr_W1",
+     "fi9"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W1_cf10",
+   "source": {
+    "data": [
+     "cf10",
+     "rd"
+    ],
+    "clock": [
+     "cf10",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W1",
+     "di8"
+    ],
+    "clock": [
+     "hr_W1",
+     "fi8"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W1_cf102",
+   "source": {
+    "data": [
+     "cf102",
+     "rd"
+    ],
+    "clock": [
+     "cf102",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W1",
+     "di7"
+    ],
+    "clock": [
+     "hr_W1",
+     "fi7"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W1_cf12",
+   "source": {
+    "data": [
+     "cf12",
+     "rd"
+    ],
+    "clock": [
+     "cf12",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W1",
+     "di6"
+    ],
+    "clock": [
+     "hr_W1",
+     "fi6"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W1_cf13",
+   "source": {
+    "data": [
+     "cf13",
+     "rd"
+    ],
+    "clock": [
+     "cf13",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W1",
+     "di5"
+    ],
+    "clock": [
+     "hr_W1",
+     "fi5"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W1_cf35",
+   "source": {
+    "data": [
+     "cf35",
+     "rd"
+    ],
+    "clock": [
+     "cf35",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W1",
+     "di4"
+    ],
+    "clock": [
+     "hr_W1",
+     "fi4"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W1_cf41",
+   "source": {
+    "data": [
+     "cf41",
+     "rd"
+    ],
+    "clock": [
+     "cf41",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W1",
+     "di3"
+    ],
+    "clock": [
+     "hr_W1",
+     "fi3"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W1_cf15",
+   "source": {
+    "data": [
+     "cf15",
+     "rd"
+    ],
+    "clock": [
+     "cf15",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W1",
+     "di2"
+    ],
+    "clock": [
+     "hr_W1",
+     "fi2"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W1_cf16",
+   "source": {
+    "data": [
+     "cf16",
+     "rd"
+    ],
+    "clock": [
+     "cf16",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W1",
+     "di1"
+    ],
+    "clock": [
+     "hr_W1",
+     "fi1"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W1_cf18",
+   "source": {
+    "data": [
+     "cf18",
+     "rd"
+    ],
+    "clock": [
+     "cf18",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W1",
+     "di0"
+    ],
+    "clock": [
+     "hr_W1",
+     "fi0"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W2_cf36",
+   "source": {
+    "data": [
+     "cf36",
+     "rd"
+    ],
+    "clock": [
+     "cf36",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W2",
+     "di10"
+    ],
+    "clock": [
+     "hr_W2",
+     "fi10"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W2_cf43",
+   "source": {
+    "data": [
+     "cf43",
+     "rd"
+    ],
+    "clock": [
+     "cf43",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W2",
+     "di9"
+    ],
+    "clock": [
+     "hr_W2",
+     "fi9"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W2_cf44",
+   "source": {
+    "data": [
+     "cf44",
+     "rd"
+    ],
+    "clock": [
+     "cf44",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W2",
+     "di8"
+    ],
+    "clock": [
+     "hr_W2",
+     "fi8"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W2_cf26",
+   "source": {
+    "data": [
+     "cf26",
+     "rd"
+    ],
+    "clock": [
+     "cf26",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W2",
+     "di7"
+    ],
+    "clock": [
+     "hr_W2",
+     "fi7"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W2_cf65",
+   "source": {
+    "data": [
+     "cf65",
+     "rd"
+    ],
+    "clock": [
+     "cf65",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W2",
+     "di6"
+    ],
+    "clock": [
+     "hr_W2",
+     "fi6"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W2_cf72",
+   "source": {
+    "data": [
+     "cf72",
+     "rd"
+    ],
+    "clock": [
+     "cf72",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W2",
+     "di5"
+    ],
+    "clock": [
+     "hr_W2",
+     "fi5"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W2_cf80",
+   "source": {
+    "data": [
+     "cf80",
+     "rd"
+    ],
+    "clock": [
+     "cf80",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W2",
+     "di4"
+    ],
+    "clock": [
+     "hr_W2",
+     "fi4"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W2_cf87",
+   "source": {
+    "data": [
+     "cf87",
+     "rd"
+    ],
+    "clock": [
+     "cf87",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W2",
+     "di3"
+    ],
+    "clock": [
+     "hr_W2",
+     "fi3"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W2_cf96",
+   "source": {
+    "data": [
+     "cf96",
+     "rd"
+    ],
+    "clock": [
+     "cf96",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W2",
+     "di2"
+    ],
+    "clock": [
+     "hr_W2",
+     "fi2"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W2_cf103",
+   "source": {
+    "data": [
+     "cf103",
+     "rd"
+    ],
+    "clock": [
+     "cf103",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W2",
+     "di1"
+    ],
+    "clock": [
+     "hr_W2",
+     "fi1"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W2_cf109",
+   "source": {
+    "data": [
+     "cf109",
+     "rd"
+    ],
+    "clock": [
+     "cf109",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W2",
+     "di0"
+    ],
+    "clock": [
+     "hr_W2",
+     "fi0"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W3_cf8",
+   "source": {
+    "data": [
+     "cf8",
+     "rd"
+    ],
+    "clock": [
+     "cf8",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W3",
+     "di10"
+    ],
+    "clock": [
+     "hr_W3",
+     "fi10"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W3_cf34",
+   "source": {
+    "data": [
+     "cf34",
+     "rd"
+    ],
+    "clock": [
+     "cf34",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W3",
+     "di9"
+    ],
+    "clock": [
+     "hr_W3",
+     "fi9"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W3_cf59",
+   "source": {
+    "data": [
+     "cf59",
+     "rd"
+    ],
+    "clock": [
+     "cf59",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W3",
+     "di8"
+    ],
+    "clock": [
+     "hr_W3",
+     "fi8"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W3_cf85",
+   "source": {
+    "data": [
+     "cf85",
+     "rd"
+    ],
+    "clock": [
+     "cf85",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W3",
+     "di7"
+    ],
+    "clock": [
+     "hr_W3",
+     "fi7"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W3_cf33",
+   "source": {
+    "data": [
+     "cf33",
+     "rd"
+    ],
+    "clock": [
+     "cf33",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W3",
+     "di6"
+    ],
+    "clock": [
+     "hr_W3",
+     "fi6"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W3_cf37",
+   "source": {
+    "data": [
+     "cf37",
+     "rd"
+    ],
+    "clock": [
+     "cf37",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W3",
+     "di5"
+    ],
+    "clock": [
+     "hr_W3",
+     "fi5"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W3_cf39",
+   "source": {
+    "data": [
+     "cf39",
+     "rd"
+    ],
+    "clock": [
+     "cf39",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W3",
+     "di4"
+    ],
+    "clock": [
+     "hr_W3",
+     "fi4"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W3_cf40",
+   "source": {
+    "data": [
+     "cf40",
+     "rd"
+    ],
+    "clock": [
+     "cf40",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W3",
+     "di3"
+    ],
+    "clock": [
+     "hr_W3",
+     "fi3"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W3_cf46",
+   "source": {
+    "data": [
+     "cf46",
+     "rd"
+    ],
+    "clock": [
+     "cf46",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W3",
+     "di2"
+    ],
+    "clock": [
+     "hr_W3",
+     "fi2"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W3_cf47",
+   "source": {
+    "data": [
+     "cf47",
+     "rd"
+    ],
+    "clock": [
+     "cf47",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W3",
+     "di1"
+    ],
+    "clock": [
+     "hr_W3",
+     "fi1"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W3_cf22",
+   "source": {
+    "data": [
+     "cf22",
+     "rd"
+    ],
+    "clock": [
+     "cf22",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W3",
+     "di0"
+    ],
+    "clock": [
+     "hr_W3",
+     "fi0"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W4_cf48",
+   "source": {
+    "data": [
+     "cf48",
+     "rd"
+    ],
+    "clock": [
+     "cf48",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W4",
+     "di10"
+    ],
+    "clock": [
+     "hr_W4",
+     "fi10"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W4_cf49",
+   "source": {
+    "data": [
+     "cf49",
+     "rd"
+    ],
+    "clock": [
+     "cf49",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W4",
+     "di9"
+    ],
+    "clock": [
+     "hr_W4",
+     "fi9"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W4_cf55",
+   "source": {
+    "data": [
+     "cf55",
+     "rd"
+    ],
+    "clock": [
+     "cf55",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W4",
+     "di8"
+    ],
+    "clock": [
+     "hr_W4",
+     "fi8"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W4_cf57",
+   "source": {
+    "data": [
+     "cf57",
+     "rd"
+    ],
+    "clock": [
+     "cf57",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W4",
+     "di7"
+    ],
+    "clock": [
+     "hr_W4",
+     "fi7"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W4_cf110",
+   "source": {
+    "data": [
+     "cf110",
+     "rd"
+    ],
+    "clock": [
+     "cf110",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W4",
+     "di6"
+    ],
+    "clock": [
+     "hr_W4",
+     "fi6"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W4_cf0",
+   "source": {
+    "data": [
+     "cf0",
+     "rd"
+    ],
+    "clock": [
+     "cf0",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W4",
+     "di5"
+    ],
+    "clock": [
+     "hr_W4",
+     "fi5"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W4_cf25",
+   "source": {
+    "data": [
+     "cf25",
+     "rd"
+    ],
+    "clock": [
+     "cf25",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W4",
+     "di4"
+    ],
+    "clock": [
+     "hr_W4",
+     "fi4"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W4_cf51",
+   "source": {
+    "data": [
+     "cf51",
+     "rd"
+    ],
+    "clock": [
+     "cf51",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W4",
+     "di3"
+    ],
+    "clock": [
+     "hr_W4",
+     "fi3"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W4_cf76",
+   "source": {
+    "data": [
+     "cf76",
+     "rd"
+    ],
+    "clock": [
+     "cf76",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W4",
+     "di2"
+    ],
+    "clock": [
+     "hr_W4",
+     "fi2"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W4_cf30",
+   "source": {
+    "data": [
+     "cf30",
+     "rd"
+    ],
+    "clock": [
+     "cf30",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W4",
+     "di1"
+    ],
+    "clock": [
+     "hr_W4",
+     "fi1"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W4_cf31",
+   "source": {
+    "data": [
+     "cf31",
+     "rd"
+    ],
+    "clock": [
+     "cf31",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W4",
+     "di0"
+    ],
+    "clock": [
+     "hr_W4",
+     "fi0"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W5_cf50",
+   "source": {
+    "data": [
+     "cf50",
+     "rd"
+    ],
+    "clock": [
+     "cf50",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W5",
+     "di9"
+    ],
+    "clock": [
+     "hr_W5",
+     "fi9"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W5_cf52",
+   "source": {
+    "data": [
+     "cf52",
+     "rd"
+    ],
+    "clock": [
+     "cf52",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W5",
+     "di8"
+    ],
+    "clock": [
+     "hr_W5",
+     "fi8"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W5_cf53",
+   "source": {
+    "data": [
+     "cf53",
+     "rd"
+    ],
+    "clock": [
+     "cf53",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W5",
+     "di7"
+    ],
+    "clock": [
+     "hr_W5",
+     "fi7"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W5_cf54",
+   "source": {
+    "data": [
+     "cf54",
+     "rd"
+    ],
+    "clock": [
+     "cf54",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W5",
+     "di6"
+    ],
+    "clock": [
+     "hr_W5",
+     "fi6"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W5_cf58",
+   "source": {
+    "data": [
+     "cf58",
+     "rd"
+    ],
+    "clock": [
+     "cf58",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W5",
+     "di5"
+    ],
+    "clock": [
+     "hr_W5",
+     "fi5"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W5_cf60",
+   "source": {
+    "data": [
+     "cf60",
+     "rd"
+    ],
+    "clock": [
+     "cf60",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W5",
+     "di4"
+    ],
+    "clock": [
+     "hr_W5",
+     "fi4"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W5_cf61",
+   "source": {
+    "data": [
+     "cf61",
+     "rd"
+    ],
+    "clock": [
+     "cf61",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W5",
+     "di3"
+    ],
+    "clock": [
+     "hr_W5",
+     "fi3"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W5_cf62",
+   "source": {
+    "data": [
+     "cf62",
+     "rd"
+    ],
+    "clock": [
+     "cf62",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W5",
+     "di2"
+    ],
+    "clock": [
+     "hr_W5",
+     "fi2"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W5_cf119",
+   "source": {
+    "data": [
+     "cf119",
+     "rd"
+    ],
+    "clock": [
+     "cf119",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W5",
+     "di1"
+    ],
+    "clock": [
+     "hr_W5",
+     "fi1"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_W5_cf94",
+   "source": {
+    "data": [
+     "cf94",
+     "rd"
+    ],
+    "clock": [
+     "cf94",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_W5",
+     "di0"
+    ],
+    "clock": [
+     "hr_W5",
+     "fi0"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E0_cf27",
+   "source": {
+    "data": [
+     "cf27",
+     "rd"
+    ],
+    "clock": [
+     "cf27",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E0",
+     "di9"
+    ],
+    "clock": [
+     "hr_E0",
+     "fi9"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E0_cf29",
+   "source": {
+    "data": [
+     "cf29",
+     "rd"
+    ],
+    "clock": [
+     "cf29",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E0",
+     "di8"
+    ],
+    "clock": [
+     "hr_E0",
+     "fi8"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E0_cf66",
+   "source": {
+    "data": [
+     "cf66",
+     "rd"
+    ],
+    "clock": [
+     "cf66",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E0",
+     "di7"
+    ],
+    "clock": [
+     "hr_E0",
+     "fi7"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E0_cf69",
+   "source": {
+    "data": [
+     "cf69",
+     "rd"
+    ],
+    "clock": [
+     "cf69",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E0",
+     "di6"
+    ],
+    "clock": [
+     "hr_E0",
+     "fi6"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E0_cf77",
+   "source": {
+    "data": [
+     "cf77",
+     "rd"
+    ],
+    "clock": [
+     "cf77",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E0",
+     "di5"
+    ],
+    "clock": [
+     "hr_E0",
+     "fi5"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E0_cf83",
+   "source": {
+    "data": [
+     "cf83",
+     "rd"
+    ],
+    "clock": [
+     "cf83",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E0",
+     "di4"
+    ],
+    "clock": [
+     "hr_E0",
+     "fi4"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E0_cf90",
+   "source": {
+    "data": [
+     "cf90",
+     "rd"
+    ],
+    "clock": [
+     "cf90",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E0",
+     "di3"
+    ],
+    "clock": [
+     "hr_E0",
+     "fi3"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E0_cf99",
+   "source": {
+    "data": [
+     "cf99",
+     "rd"
+    ],
+    "clock": [
+     "cf99",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E0",
+     "di2"
+    ],
+    "clock": [
+     "hr_E0",
+     "fi2"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E0_cf106",
+   "source": {
+    "data": [
+     "cf106",
+     "rd"
+    ],
+    "clock": [
+     "cf106",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E0",
+     "di1"
+    ],
+    "clock": [
+     "hr_E0",
+     "fi1"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E0_cf114",
+   "source": {
+    "data": [
+     "cf114",
+     "rd"
+    ],
+    "clock": [
+     "cf114",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E0",
+     "di0"
+    ],
+    "clock": [
+     "hr_E0",
+     "fi0"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E1_cf23",
+   "source": {
+    "data": [
+     "cf23",
+     "rd"
+    ],
+    "clock": [
+     "cf23",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E1",
+     "di10"
+    ],
+    "clock": [
+     "hr_E1",
+     "fi10"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E1_cf24",
+   "source": {
+    "data": [
+     "cf24",
+     "rd"
+    ],
+    "clock": [
+     "cf24",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E1",
+     "di9"
+    ],
+    "clock": [
+     "hr_E1",
+     "fi9"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E1_cf63",
+   "source": {
+    "data": [
+     "cf63",
+     "rd"
+    ],
+    "clock": [
+     "cf63",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E1",
+     "di8"
+    ],
+    "clock": [
+     "hr_E1",
+     "fi8"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E1_cf64",
+   "source": {
+    "data": [
+     "cf64",
+     "rd"
+    ],
+    "clock": [
+     "cf64",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E1",
+     "di7"
+    ],
+    "clock": [
+     "hr_E1",
+     "fi7"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E1_cf70",
+   "source": {
+    "data": [
+     "cf70",
+     "rd"
+    ],
+    "clock": [
+     "cf70",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E1",
+     "di6"
+    ],
+    "clock": [
+     "hr_E1",
+     "fi6"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E1_cf78",
+   "source": {
+    "data": [
+     "cf78",
+     "rd"
+    ],
+    "clock": [
+     "cf78",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E1",
+     "di5"
+    ],
+    "clock": [
+     "hr_E1",
+     "fi5"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E1_cf84",
+   "source": {
+    "data": [
+     "cf84",
+     "rd"
+    ],
+    "clock": [
+     "cf84",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E1",
+     "di4"
+    ],
+    "clock": [
+     "hr_E1",
+     "fi4"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E1_cf91",
+   "source": {
+    "data": [
+     "cf91",
+     "rd"
+    ],
+    "clock": [
+     "cf91",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E1",
+     "di3"
+    ],
+    "clock": [
+     "hr_E1",
+     "fi3"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E1_cf100",
+   "source": {
+    "data": [
+     "cf100",
+     "rd"
+    ],
+    "clock": [
+     "cf100",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E1",
+     "di2"
+    ],
+    "clock": [
+     "hr_E1",
+     "fi2"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E1_cf107",
+   "source": {
+    "data": [
+     "cf107",
+     "rd"
+    ],
+    "clock": [
+     "cf107",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E1",
+     "di1"
+    ],
+    "clock": [
+     "hr_E1",
+     "fi1"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E1_cf115",
+   "source": {
+    "data": [
+     "cf115",
+     "rd"
+    ],
+    "clock": [
+     "cf115",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E1",
+     "di0"
+    ],
+    "clock": [
+     "hr_E1",
+     "fi0"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E2_cf93",
+   "source": {
+    "data": [
+     "cf93",
+     "rd"
+    ],
+    "clock": [
+     "cf93",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E2",
+     "di10"
+    ],
+    "clock": [
+     "hr_E2",
+     "fi10"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E2_cf17",
+   "source": {
+    "data": [
+     "cf17",
+     "rd"
+    ],
+    "clock": [
+     "cf17",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E2",
+     "di9"
+    ],
+    "clock": [
+     "hr_E2",
+     "fi9"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E2_cf42",
+   "source": {
+    "data": [
+     "cf42",
+     "rd"
+    ],
+    "clock": [
+     "cf42",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E2",
+     "di8"
+    ],
+    "clock": [
+     "hr_E2",
+     "fi8"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E2_cf68",
+   "source": {
+    "data": [
+     "cf68",
+     "rd"
+    ],
+    "clock": [
+     "cf68",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E2",
+     "di7"
+    ],
+    "clock": [
+     "hr_E2",
+     "fi7"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E2_cf71",
+   "source": {
+    "data": [
+     "cf71",
+     "rd"
+    ],
+    "clock": [
+     "cf71",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E2",
+     "di6"
+    ],
+    "clock": [
+     "hr_E2",
+     "fi6"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E2_cf79",
+   "source": {
+    "data": [
+     "cf79",
+     "rd"
+    ],
+    "clock": [
+     "cf79",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E2",
+     "di5"
+    ],
+    "clock": [
+     "hr_E2",
+     "fi5"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E2_cf86",
+   "source": {
+    "data": [
+     "cf86",
+     "rd"
+    ],
+    "clock": [
+     "cf86",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E2",
+     "di4"
+    ],
+    "clock": [
+     "hr_E2",
+     "fi4"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E2_cf95",
+   "source": {
+    "data": [
+     "cf95",
+     "rd"
+    ],
+    "clock": [
+     "cf95",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E2",
+     "di3"
+    ],
+    "clock": [
+     "hr_E2",
+     "fi3"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E2_cf101",
+   "source": {
+    "data": [
+     "cf101",
+     "rd"
+    ],
+    "clock": [
+     "cf101",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E2",
+     "di2"
+    ],
+    "clock": [
+     "hr_E2",
+     "fi2"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E2_cf108",
+   "source": {
+    "data": [
+     "cf108",
+     "rd"
+    ],
+    "clock": [
+     "cf108",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E2",
+     "di1"
+    ],
+    "clock": [
+     "hr_E2",
+     "fi1"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E2_cf116",
+   "source": {
+    "data": [
+     "cf116",
+     "rd"
+    ],
+    "clock": [
+     "cf116",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E2",
+     "di0"
+    ],
+    "clock": [
+     "hr_E2",
+     "fi0"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E3_cf19",
+   "source": {
+    "data": [
+     "cf19",
+     "rd"
+    ],
+    "clock": [
+     "cf19",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E3",
+     "di10"
+    ],
+    "clock": [
+     "hr_E3",
+     "fi10"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E3_cf21",
+   "source": {
+    "data": [
+     "cf21",
+     "rd"
+    ],
+    "clock": [
+     "cf21",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E3",
+     "di9"
+    ],
+    "clock": [
+     "hr_E3",
+     "fi9"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E3_cf28",
+   "source": {
+    "data": [
+     "cf28",
+     "rd"
+    ],
+    "clock": [
+     "cf28",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E3",
+     "di8"
+    ],
+    "clock": [
+     "hr_E3",
+     "fi8"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E3_cf67",
+   "source": {
+    "data": [
+     "cf67",
+     "rd"
+    ],
+    "clock": [
+     "cf67",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E3",
+     "di7"
+    ],
+    "clock": [
+     "hr_E3",
+     "fi7"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E3_cf75",
+   "source": {
+    "data": [
+     "cf75",
+     "rd"
+    ],
+    "clock": [
+     "cf75",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E3",
+     "di6"
+    ],
+    "clock": [
+     "hr_E3",
+     "fi6"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E3_cf82",
+   "source": {
+    "data": [
+     "cf82",
+     "rd"
+    ],
+    "clock": [
+     "cf82",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E3",
+     "di5"
+    ],
+    "clock": [
+     "hr_E3",
+     "fi5"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E3_cf89",
+   "source": {
+    "data": [
+     "cf89",
+     "rd"
+    ],
+    "clock": [
+     "cf89",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E3",
+     "di4"
+    ],
+    "clock": [
+     "hr_E3",
+     "fi4"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E3_cf98",
+   "source": {
+    "data": [
+     "cf98",
+     "rd"
+    ],
+    "clock": [
+     "cf98",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E3",
+     "di3"
+    ],
+    "clock": [
+     "hr_E3",
+     "fi3"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E3_cf105",
+   "source": {
+    "data": [
+     "cf105",
+     "rd"
+    ],
+    "clock": [
+     "cf105",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E3",
+     "di2"
+    ],
+    "clock": [
+     "hr_E3",
+     "fi2"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E3_cf113",
+   "source": {
+    "data": [
+     "cf113",
+     "rd"
+    ],
+    "clock": [
+     "cf113",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E3",
+     "di1"
+    ],
+    "clock": [
+     "hr_E3",
+     "fi1"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E3_cf120",
+   "source": {
+    "data": [
+     "cf120",
+     "rd"
+    ],
+    "clock": [
+     "cf120",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E3",
+     "di0"
+    ],
+    "clock": [
+     "hr_E3",
+     "fi0"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E4_cf73",
+   "source": {
+    "data": [
+     "cf73",
+     "rd"
+    ],
+    "clock": [
+     "cf73",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E4",
+     "di10"
+    ],
+    "clock": [
+     "hr_E4",
+     "fi10"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E4_cf81",
+   "source": {
+    "data": [
+     "cf81",
+     "rd"
+    ],
+    "clock": [
+     "cf81",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E4",
+     "di9"
+    ],
+    "clock": [
+     "hr_E4",
+     "fi9"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E4_cf88",
+   "source": {
+    "data": [
+     "cf88",
+     "rd"
+    ],
+    "clock": [
+     "cf88",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E4",
+     "di8"
+    ],
+    "clock": [
+     "hr_E4",
+     "fi8"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E4_cf97",
+   "source": {
+    "data": [
+     "cf97",
+     "rd"
+    ],
+    "clock": [
+     "cf97",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E4",
+     "di7"
+    ],
+    "clock": [
+     "hr_E4",
+     "fi7"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E4_cf104",
+   "source": {
+    "data": [
+     "cf104",
+     "rd"
+    ],
+    "clock": [
+     "cf104",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E4",
+     "di6"
+    ],
+    "clock": [
+     "hr_E4",
+     "fi6"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E4_cf111",
+   "source": {
+    "data": [
+     "cf111",
+     "rd"
+    ],
+    "clock": [
+     "cf111",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E4",
+     "di5"
+    ],
+    "clock": [
+     "hr_E4",
+     "fi5"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E4_cf118",
+   "source": {
+    "data": [
+     "cf118",
+     "rd"
+    ],
+    "clock": [
+     "cf118",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E4",
+     "di4"
+    ],
+    "clock": [
+     "hr_E4",
+     "fi4"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E4_cf125",
+   "source": {
+    "data": [
+     "cf125",
+     "rd"
+    ],
+    "clock": [
+     "cf125",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E4",
+     "di3"
+    ],
+    "clock": [
+     "hr_E4",
+     "fi3"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E4_cf126",
+   "source": {
+    "data": [
+     "cf126",
+     "rd"
+    ],
+    "clock": [
+     "cf126",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E4",
+     "di2"
+    ],
+    "clock": [
+     "hr_E4",
+     "fi2"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E4_cf56",
+   "source": {
+    "data": [
+     "cf56",
+     "rd"
+    ],
+    "clock": [
+     "cf56",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E4",
+     "di1"
+    ],
+    "clock": [
+     "hr_E4",
+     "fi1"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E4_cf74",
+   "source": {
+    "data": [
+     "cf74",
+     "rd"
+    ],
+    "clock": [
+     "cf74",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E4",
+     "di0"
+    ],
+    "clock": [
+     "hr_E4",
+     "fi0"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E5_cf117",
+   "source": {
+    "data": [
+     "cf117",
+     "rd"
+    ],
+    "clock": [
+     "cf117",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E5",
+     "di9"
+    ],
+    "clock": [
+     "hr_E5",
+     "fi9"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E5_cf121",
+   "source": {
+    "data": [
+     "cf121",
+     "rd"
+    ],
+    "clock": [
+     "cf121",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E5",
+     "di8"
+    ],
+    "clock": [
+     "hr_E5",
+     "fi8"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E5_cf122",
+   "source": {
+    "data": [
+     "cf122",
+     "rd"
+    ],
+    "clock": [
+     "cf122",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E5",
+     "di7"
+    ],
+    "clock": [
+     "hr_E5",
+     "fi7"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E5_cf123",
+   "source": {
+    "data": [
+     "cf123",
+     "rd"
+    ],
+    "clock": [
+     "cf123",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E5",
+     "di6"
+    ],
+    "clock": [
+     "hr_E5",
+     "fi6"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E5_cf124",
+   "source": {
+    "data": [
+     "cf124",
+     "rd"
+    ],
+    "clock": [
+     "cf124",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E5",
+     "di5"
+    ],
+    "clock": [
+     "hr_E5",
+     "fi5"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E5_cf127",
+   "source": {
+    "data": [
+     "cf127",
+     "rd"
+    ],
+    "clock": [
+     "cf127",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E5",
+     "di4"
+    ],
+    "clock": [
+     "hr_E5",
+     "fi4"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E5_cf2",
+   "source": {
+    "data": [
+     "cf2",
+     "rd"
+    ],
+    "clock": [
+     "cf2",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E5",
+     "di3"
+    ],
+    "clock": [
+     "hr_E5",
+     "fi3"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E5_cf20",
+   "source": {
+    "data": [
+     "cf20",
+     "rd"
+    ],
+    "clock": [
+     "cf20",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E5",
+     "di2"
+    ],
+    "clock": [
+     "hr_E5",
+     "fi2"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E5_cf38",
+   "source": {
+    "data": [
+     "cf38",
+     "rd"
+    ],
+    "clock": [
+     "cf38",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E5",
+     "di1"
+    ],
+    "clock": [
+     "hr_E5",
+     "fi1"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  },
+  {
+   "chain": "RP_E5_cf92",
+   "source": {
+    "data": [
+     "cf92",
+     "rd"
+    ],
+    "clock": [
+     "cf92",
+     "rf"
+    ]
+   },
+   "sink": {
+    "data": [
+     "hr_E5",
+     "di0"
+    ],
+    "clock": [
+     "hr_E5",
+     "fi0"
+    ]
+   },
+   "lanes": [
+    70
+   ]
+  }
+ ],
+ "broadcast_source_endpoints": [
+  {
+   "chain": "BC_W_spine",
+   "source": [
+    "hx_W",
+    "fo/oa andfo2/ob"
+   ],
+   "sink": "sharedsourcecanonical broadcasttree",
+   "lanes": [
+    566,
+    538
+   ]
+  },
+  {
+   "chain": "BC_E_spine",
+   "source": [
+    "hx_E",
+    "fo/oa andfo2/ob"
+   ],
+   "sink": "sharedsourcecanonical broadcasttree",
+   "lanes": [
+    566,
+    538
+   ]
+  }
+ ],
+ "source_plan_sha256": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa",
+ "replay_sha256": "cfa18a844ab66eeb46f11a806cd6d94808b26fd1b7054a9272d646b76018b6eb",
+ "script_sha256": "7c8bf574054cb38372a89323d5f737ad1d4ce77c758299a06a9a5ac4727a7784",
+ "baseline": {
+  "peak_tracks": 23572,
+  "y_um": 13055.24,
+  "saved_tracks": 0,
+  "budget_at060": 20284.425,
+  "ideal_share": 0.6972443142953276,
+  "by_road": {
+   "S14W": 9836,
+   "VCH": 7990,
+   "S14E": 5746
+  },
+  "active": [
+   {
+    "chain": "qSW",
+    "road": "S14W",
+    "tracks": 515,
+    "lo": 3902.0799999999995,
+    "hi": 14137.188
+   },
+   {
+    "chain": "aSW",
+    "road": "S14W",
+    "tracks": 1027,
+    "lo": 3902.0799999999995,
+    "hi": 13737.588
+   },
+   {
+    "chain": "coSW",
+    "road": "S14W",
+    "tracks": 515,
+    "lo": 3953.24,
+    "hi": 23916.588
+   },
+   {
+    "chain": "sel",
+    "road": "VCH",
+    "tracks": 515,
+    "lo": 3460.32,
+    "hi": 13588.548
+   },
+   {
+    "chain": "c5_bk_selector",
+    "road": "VCH",
+    "tracks": 87,
+    "lo": 1816.296,
+    "hi": 19303.908
+   },
+   {
+    "chain": "d5_bk_selector",
+    "road": "VCH",
+    "tracks": 11,
+    "lo": 1816.296,
+    "hi": 19383.828
+   },
+   {
+    "chain": "s5_bk_selector",
+    "road": "VCH",
+    "tracks": 4,
+    "lo": 1816.296,
+    "hi": 19445.388
+   },
+   {
+    "chain": "c4_svcj",
+    "road": "S14W",
+    "tracks": 87,
+    "lo": 3953.24,
+    "hi": 19604.148
+   },
+   {
+    "chain": "d4_svcj",
+    "road": "S14W",
+    "tracks": 11,
+    "lo": 3902.0799999999995,
+    "hi": 19630.068
+   },
+   {
+    "chain": "s4_svcj",
+    "road": "S14W",
+    "tracks": 4,
+    "lo": 3902.0799999999995,
+    "hi": 19685.147999999997
+   },
+   {
+    "chain": "hwSW",
+    "road": "S14W",
+    "tracks": 294,
+    "lo": 3953.24,
+    "hi": 22532.028000000002
+   },
+   {
+    "chain": "hcSW",
+    "road": "S14W",
+    "tracks": 11,
+    "lo": 11868.16,
+    "hi": 22565.508
+   },
+   {
+    "chain": "KW0t",
+    "road": "S14W",
+    "tracks": 513,
+    "lo": 9935.88,
+    "hi": 20948.748000000003
+   },
+   {
+    "chain": "KW0r",
+    "road": "S14W",
+    "tracks": 513,
+    "lo": 9935.88,
+    "hi": 20948.748000000003
+   },
+   {
+    "chain": "KW1t",
+    "road": "S14W",
+    "tracks": 513,
+    "lo": 9985.88,
+    "hi": 21038.748000000003
+   },
+   {
+    "chain": "KW1r",
+    "road": "S14W",
+    "tracks": 513,
+    "lo": 9985.88,
+    "hi": 21038.748000000003
+   },
+   {
+    "chain": "KW2t",
+    "road": "S14W",
+    "tracks": 513,
+    "lo": 13005.24,
+    "hi": 21128.748000000003
+   },
+   {
+    "chain": "KW2r",
+    "road": "S14W",
+    "tracks": 513,
+    "lo": 13005.24,
+    "hi": 21128.748000000003
+   },
+   {
+    "chain": "KW3t",
+    "road": "S14W",
+    "tracks": 513,
+    "lo": 13055.24,
+    "hi": 21218.748000000003
+   },
+   {
+    "chain": "KW3t",
+    "road": "S14W",
+    "tracks": 513,
+    "lo": 13055.24,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "KW3r",
+    "road": "S14W",
+    "tracks": 513,
+    "lo": 13055.24,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "KW3r",
+    "road": "S14W",
+    "tracks": 513,
+    "lo": 13055.24,
+    "hi": 21218.748000000003
+   },
+   {
+    "chain": "KE0t",
+    "road": "VCH",
+    "tracks": 513,
+    "lo": 12808.26,
+    "hi": 20948.748000000003
+   },
+   {
+    "chain": "KE0r",
+    "road": "VCH",
+    "tracks": 513,
+    "lo": 12808.26,
+    "hi": 20948.748000000003
+   },
+   {
+    "chain": "KE1t",
+    "road": "S14E",
+    "tracks": 513,
+    "lo": 9985.88,
+    "hi": 13243.26
+   },
+   {
+    "chain": "KE1r",
+    "road": "S14E",
+    "tracks": 513,
+    "lo": 9985.88,
+    "hi": 13243.26
+   },
+   {
+    "chain": "KE2t",
+    "road": "S14E",
+    "tracks": 513,
+    "lo": 13005.24,
+    "hi": 13678.26
+   },
+   {
+    "chain": "KE2r",
+    "road": "S14E",
+    "tracks": 513,
+    "lo": 13005.24,
+    "hi": 13678.26
+   },
+   {
+    "chain": "KE3t",
+    "road": "VCH",
+    "tracks": 513,
+    "lo": 12721.26,
+    "hi": 21218.748000000003
+   },
+   {
+    "chain": "KE3t",
+    "road": "S14E",
+    "tracks": 513,
+    "lo": 13055.24,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "KE3r",
+    "road": "S14E",
+    "tracks": 513,
+    "lo": 13055.24,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "KE3r",
+    "road": "VCH",
+    "tracks": 513,
+    "lo": 12721.26,
+    "hi": 21218.748000000003
+   },
+   {
+    "chain": "hb_sseq_su_s",
+    "road": "VCH",
+    "tracks": 86,
+    "lo": 12534.936000000002,
+    "hi": 19467.600000000002
+   },
+   {
+    "chain": "hb_su_s_sseq",
+    "road": "VCH",
+    "tracks": 10,
+    "lo": 12534.936000000002,
+    "hi": 19467.600000000002
+   },
+   {
+    "chain": "hb_su_s_c_st_sseq",
+    "road": "VCH",
+    "tracks": 3,
+    "lo": 12534.936000000002,
+    "hi": 19467.600000000002
+   },
+   {
+    "chain": "hb_hc_s_t_tf2_hc_t",
+    "road": "VCH",
+    "tracks": 3057,
+    "lo": 12443.736,
+    "hi": 13955.76
+   },
+   {
+    "chain": "hb_hc_t_t_sr2_hc_s",
+    "road": "VCH",
+    "tracks": 2165,
+    "lo": 12443.736,
+    "hi": 13955.76
+   },
+   {
+    "chain": "RP_W0_cf3",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W0_cf4",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W0_cf7",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W0_cf11",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W0_cf14",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W1_cf112",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W1_cf6",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W1_cf10",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W1_cf13",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W1_cf35",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W1_cf41",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W3_cf47",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W3_cf22",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W5_cf54",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_W5_cf62",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E0_cf29",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E0_cf69",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E0_cf77",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E0_cf83",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E0_cf90",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E0_cf99",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E0_cf106",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E0_cf114",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E3_cf21",
+    "road": "S14W",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E3_cf28",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E3_cf67",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E3_cf75",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E3_cf82",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E3_cf89",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E3_cf98",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E3_cf105",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E3_cf113",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E3_cf120",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E4_cf126",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E4_cf74",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E5_cf121",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E5_cf127",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "RP_E5_cf92",
+    "road": "S14E",
+    "tracks": 71,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "BC_W_edge44",
+    "road": "S14W",
+    "tracks": 1106,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   },
+   {
+    "chain": "BC_E_edge5",
+    "road": "S14E",
+    "tracks": 1106,
+    "lo": 11919.32,
+    "hi": 15851.199999999999
+   }
+  ]
+ },
+ "group": [
+  "sp_hc_s"
+ ],
+ "group_direct_buses": [],
+ "clock_reset_obligations": [
+  {
+   "bus": "clk_stream",
+   "kind": "clock",
+   "bits": 1,
+   "endpoint_count": 1203
+  },
+  {
+   "bus": "rst_stream",
+   "kind": "reset",
+   "bits": 1,
+   "endpoint_count": 200
+  }
+ ],
+ "ranked_alternatives": [
+  {
+   "rank": 1,
+   "name": "best_scanned_whole_group_local_entry",
+   "local_vertical_outside_admitted_roads_peak_tracks": 10444,
+   "route_topology": "admitted_road",
+   "group_y_um": 13955.76,
+   "home": [
+    17312.399999999998,
+    13955.76,
+    1816.536,
+    8806.296
+   ],
+   "statistics": {
+    "peak_tracks": 23572,
+    "y_um": 13055.24,
+    "saved_tracks": 0,
+    "budget_at060": 20284.425,
+    "ideal_share": 0.6972443142953276,
+    "by_road": {
+     "S14W": 9836,
+     "VCH": 7990,
+     "S14E": 5746
+    },
+    "active": [
+     {
+      "chain": "qSW",
+      "road": "S14W",
+      "tracks": 515,
+      "lo": 3902.0799999999995,
+      "hi": 14137.188
+     },
+     {
+      "chain": "aSW",
+      "road": "S14W",
+      "tracks": 1027,
+      "lo": 3902.0799999999995,
+      "hi": 13737.588
+     },
+     {
+      "chain": "coSW",
+      "road": "S14W",
+      "tracks": 515,
+      "lo": 3953.24,
+      "hi": 23916.588
+     },
+     {
+      "chain": "sel",
+      "road": "VCH",
+      "tracks": 515,
+      "lo": 3460.32,
+      "hi": 13588.548
+     },
+     {
+      "chain": "c5_bk_selector",
+      "road": "VCH",
+      "tracks": 87,
+      "lo": 1816.296,
+      "hi": 19303.908
+     },
+     {
+      "chain": "d5_bk_selector",
+      "road": "VCH",
+      "tracks": 11,
+      "lo": 1816.296,
+      "hi": 19383.828
+     },
+     {
+      "chain": "s5_bk_selector",
+      "road": "VCH",
+      "tracks": 4,
+      "lo": 1816.296,
+      "hi": 19445.388
+     },
+     {
+      "chain": "c4_svcj",
+      "road": "S14W",
+      "tracks": 87,
+      "lo": 3953.24,
+      "hi": 19604.148
+     },
+     {
+      "chain": "d4_svcj",
+      "road": "S14W",
+      "tracks": 11,
+      "lo": 3902.0799999999995,
+      "hi": 19630.068
+     },
+     {
+      "chain": "s4_svcj",
+      "road": "S14W",
+      "tracks": 4,
+      "lo": 3902.0799999999995,
+      "hi": 19685.147999999997
+     },
+     {
+      "chain": "hwSW",
+      "road": "S14W",
+      "tracks": 294,
+      "lo": 3953.24,
+      "hi": 22532.028000000002
+     },
+     {
+      "chain": "hcSW",
+      "road": "S14W",
+      "tracks": 11,
+      "lo": 11868.16,
+      "hi": 22565.508
+     },
+     {
+      "chain": "KW0t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 9935.88,
+      "hi": 20948.748000000003
+     },
+     {
+      "chain": "KW0r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 9935.88,
+      "hi": 20948.748000000003
+     },
+     {
+      "chain": "KW1t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 9985.88,
+      "hi": 21038.748000000003
+     },
+     {
+      "chain": "KW1r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 9985.88,
+      "hi": 21038.748000000003
+     },
+     {
+      "chain": "KW2t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 13005.24,
+      "hi": 21128.748000000003
+     },
+     {
+      "chain": "KW2r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 13005.24,
+      "hi": 21128.748000000003
+     },
+     {
+      "chain": "KW3t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 13055.24,
+      "hi": 21218.748000000003
+     },
+     {
+      "chain": "KW3t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 13055.24,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "KW3r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 13055.24,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "KW3r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 13055.24,
+      "hi": 21218.748000000003
+     },
+     {
+      "chain": "KE0t",
+      "road": "VCH",
+      "tracks": 513,
+      "lo": 12808.26,
+      "hi": 20948.748000000003
+     },
+     {
+      "chain": "KE0r",
+      "road": "VCH",
+      "tracks": 513,
+      "lo": 12808.26,
+      "hi": 20948.748000000003
+     },
+     {
+      "chain": "KE1t",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 9985.88,
+      "hi": 13243.26
+     },
+     {
+      "chain": "KE1r",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 9985.88,
+      "hi": 13243.26
+     },
+     {
+      "chain": "KE2t",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 13005.24,
+      "hi": 13678.26
+     },
+     {
+      "chain": "KE2r",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 13005.24,
+      "hi": 13678.26
+     },
+     {
+      "chain": "KE3t",
+      "road": "VCH",
+      "tracks": 513,
+      "lo": 12721.26,
+      "hi": 21218.748000000003
+     },
+     {
+      "chain": "KE3t",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 13055.24,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "KE3r",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 13055.24,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "KE3r",
+      "road": "VCH",
+      "tracks": 513,
+      "lo": 12721.26,
+      "hi": 21218.748000000003
+     },
+     {
+      "chain": "hb_sseq_su_s",
+      "road": "VCH",
+      "tracks": 86,
+      "lo": 12534.936000000002,
+      "hi": 19467.600000000002
+     },
+     {
+      "chain": "hb_su_s_sseq",
+      "road": "VCH",
+      "tracks": 10,
+      "lo": 12534.936000000002,
+      "hi": 19467.600000000002
+     },
+     {
+      "chain": "hb_su_s_c_st_sseq",
+      "road": "VCH",
+      "tracks": 3,
+      "lo": 12534.936000000002,
+      "hi": 19467.600000000002
+     },
+     {
+      "chain": "hb_hc_s_t_tf2_hc_t",
+      "road": "VCH",
+      "tracks": 3057,
+      "lo": 12443.736,
+      "hi": 13955.76
+     },
+     {
+      "chain": "hb_hc_t_t_sr2_hc_s",
+      "road": "VCH",
+      "tracks": 2165,
+      "lo": 12443.736,
+      "hi": 13955.76
+     },
+     {
+      "chain": "RP_W0_cf3",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W0_cf4",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W0_cf7",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W0_cf11",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W0_cf14",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf112",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf6",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf10",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf13",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf35",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf41",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W3_cf47",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W3_cf22",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W5_cf54",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W5_cf62",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf29",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf69",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf77",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf83",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf90",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf99",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf106",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf114",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf21",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf28",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf67",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf75",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf82",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf89",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf98",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf105",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf113",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf120",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E4_cf126",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E4_cf74",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E5_cf121",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E5_cf127",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E5_cf92",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "BC_W_edge44",
+      "road": "S14W",
+      "tracks": 1106,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "BC_E_edge5",
+      "road": "S14E",
+      "tracks": 1106,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     }
+    ]
+   },
+   "incident_chain_count": 28,
+   "stage_ledger": [
+    {
+     "chain": "hb_hc_s_vm",
+     "lanes": [
+      2
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "rq_v"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "rq_v",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       14100.655999999999
+      ],
+      [
+       15577.895999999999,
+       14100.655999999999
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_rq_row_vm",
+     "lanes": [
+      28
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "rq_row"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "rq_row",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       14941.903999999999
+      ],
+      [
+       15577.895999999999,
+       14941.903999999999
+      ]
+     ]
+    },
+    {
+     "chain": "hb_vm_hc_s",
+     "lanes": [
+      2
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "rs_v"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "rs_v",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15577.895999999999,
+       15780.655999999999
+      ],
+      [
+       17312.399999999998,
+       15780.655999999999
+      ]
+     ]
+    },
+    {
+     "chain": "hb_vm_t_hc_rs_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "rs_d"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "rs_d",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15577.895999999999,
+       14351.312
+      ],
+      [
+       17312.399999999998,
+       14351.312
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_wq_v_vm",
+     "lanes": [
+      8
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "wq_v"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "wq_v",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       15190.544
+      ],
+      [
+       15577.895999999999,
+       15190.544
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_wq_row_vm",
+     "lanes": [
+      112
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "wq_row"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "wq_row",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       16030.736
+      ],
+      [
+       15577.895999999999,
+       16030.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_wq_mask_vm",
+     "lanes": [
+      128
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "wq_mask"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "wq_mask",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       14601.104000000001
+      ],
+      [
+       15577.895999999999,
+       14601.104000000001
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_wq_d_vm",
+     "lanes": [
+      4096
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "wq_d"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "wq_d",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       16250.768
+      ],
+      [
+       15577.895999999999,
+       16250.768
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_hc_s",
+     "lanes": [
+      1
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_v"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_v",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       22195.808
+      ],
+      [
+       17312.399999999998,
+       22195.808
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_0_1023_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[0:1023]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[0:1023]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       19988.912000000004
+      ],
+      [
+       17312.399999999998,
+       19988.912000000004
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_1024_2047_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[1024:2047]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[1024:2047]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20087.216000000004
+      ],
+      [
+       17312.399999999998,
+       20087.216000000004
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_2048_3071_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[2048:3071]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[2048:3071]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20185.520000000004
+      ],
+      [
+       17312.399999999998,
+       20185.520000000004
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_3072_4095_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[3072:4095]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[3072:4095]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20283.824000000004
+      ],
+      [
+       17312.399999999998,
+       20283.824000000004
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_4096_5119_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[4096:5119]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[4096:5119]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20382.128
+      ],
+      [
+       17312.399999999998,
+       20382.128
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_5120_6143_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[5120:6143]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[5120:6143]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20480.432
+      ],
+      [
+       17312.399999999998,
+       20480.432
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_6144_7167_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[6144:7167]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[6144:7167]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20578.736
+      ],
+      [
+       17312.399999999998,
+       20578.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_7168_8191_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[7168:8191]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[7168:8191]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20677.04
+      ],
+      [
+       17312.399999999998,
+       20677.04
+      ]
+     ]
+    },
+    {
+     "chain": "hb_sseq_hc_s",
+     "lanes": [
+      85
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "c_cmd"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "c_cmd",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 8,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 8,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       19467.600000000002
+      ],
+      [
+       16491.6,
+       19467.600000000002
+      ],
+      [
+       17312.399999999998,
+       19467.600000000002
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_sseq",
+     "lanes": [
+      9
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "c_done"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "c_done",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 8,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 8,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       19505.868000000002
+      ],
+      [
+       16561.6,
+       19505.868000000002
+      ],
+      [
+       15670.776,
+       19505.868000000002
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_c_st_sseq",
+     "lanes": [
+      2
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "c_st"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "c_st",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 8,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 8,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       19505.868000000002
+      ],
+      [
+       16631.6,
+       19505.868000000002
+      ],
+      [
+       15670.776,
+       19505.868000000002
+      ]
+     ]
+    },
+    {
+     "chain": "hb_vm_t_inp_hc_hc_s",
+     "lanes": [
+      1
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "f_inp"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "f_inp",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15577.895999999999,
+       14758.208
+      ],
+      [
+       17312.399999999998,
+       14758.208
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_tag_hc_s",
+     "lanes": [
+      32
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_tag"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_tag",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       21467.696000000004
+      ],
+      [
+       17312.399999999998,
+       21467.696000000004
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_hc_t",
+     "lanes": [
+      3056
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "t_tf0"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "t_tf0",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1512.0239999999994,
+     "source_stations": 7,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17465.48,
+       13955.76
+      ],
+      [
+       17465.48,
+       12443.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_t_hc_s",
+     "lanes": [
+      2164
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "f_tr0"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "f_tr0",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1512.0239999999994,
+     "source_stations": 7,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17736.039999999997,
+       12443.736
+      ],
+      [
+       17736.039999999997,
+       13955.76
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_t_tf1_hc_t",
+     "lanes": [
+      3056
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "t_tf1"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "t_tf1",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1512.0239999999994,
+     "source_stations": 7,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       18085.399999999998,
+       13955.76
+      ],
+      [
+       18085.399999999998,
+       12443.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_t_t_sr1_hc_s",
+     "lanes": [
+      2164
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "f_tr1"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "f_tr1",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1512.0239999999994,
+     "source_stations": 7,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       18355.959999999995,
+       12443.736
+      ],
+      [
+       18355.959999999995,
+       13955.76
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_t_tf2_hc_t",
+     "lanes": [
+      3056
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "t_tf2"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "t_tf2",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1512.0239999999994,
+     "source_stations": 7,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       18705.32,
+       13955.76
+      ],
+      [
+       18705.32,
+       12443.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_t_t_sr2_hc_s",
+     "lanes": [
+      2164
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "f_tr2"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "f_tr2",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1512.0239999999994,
+     "source_stations": 7,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       18975.879999999997,
+       12443.736
+      ],
+      [
+       18975.879999999997,
+       13955.76
+      ]
+     ]
+    }
+   ],
+   "geometry": {
+    "die_inside": true,
+    "overlapping_historical_whole_hubs": [],
+    "adapters": [],
+    "allincident_native_stations_placed": false,
+    "source_pins": "Generator source anchor offsets translated exactly; native LEF pin access not measured"
+   },
+   "status": "BOUNDED_ROAD_SCREEN_NOT_BUILDABLE"
+  },
+  {
+   "rank": 2,
+   "name": "requested_collective_y_only_or_closed_HC_gap_local_entry",
+   "local_vertical_outside_admitted_roads_peak_tracks": 0,
+   "route_topology": "admitted_road",
+   "group_y_um": 12465.336,
+   "home": [
+    17312.399999999998,
+    12465.336,
+    1816.536,
+    8806.296
+   ],
+   "statistics": {
+    "peak_tracks": 29813,
+    "y_um": 12443.736,
+    "saved_tracks": -6241,
+    "budget_at060": 20284.425,
+    "ideal_share": 0.8818490048399203,
+    "by_road": {
+     "S14W": 7784,
+     "VCH": 16283,
+     "S14E": 5746
+    },
+    "active": [
+     {
+      "chain": "qSW",
+      "road": "S14W",
+      "tracks": 515,
+      "lo": 3902.0799999999995,
+      "hi": 14137.188
+     },
+     {
+      "chain": "aSW",
+      "road": "S14W",
+      "tracks": 1027,
+      "lo": 3902.0799999999995,
+      "hi": 13737.588
+     },
+     {
+      "chain": "coSW",
+      "road": "S14W",
+      "tracks": 515,
+      "lo": 3953.24,
+      "hi": 23916.588
+     },
+     {
+      "chain": "sel",
+      "road": "VCH",
+      "tracks": 515,
+      "lo": 3460.32,
+      "hi": 13588.548
+     },
+     {
+      "chain": "c5_bk_selector",
+      "road": "VCH",
+      "tracks": 87,
+      "lo": 1816.296,
+      "hi": 19303.908
+     },
+     {
+      "chain": "d5_bk_selector",
+      "road": "VCH",
+      "tracks": 11,
+      "lo": 1816.296,
+      "hi": 19383.828
+     },
+     {
+      "chain": "s5_bk_selector",
+      "road": "VCH",
+      "tracks": 4,
+      "lo": 1816.296,
+      "hi": 19445.388
+     },
+     {
+      "chain": "c4_svcj",
+      "road": "S14W",
+      "tracks": 87,
+      "lo": 3953.24,
+      "hi": 19604.148
+     },
+     {
+      "chain": "d4_svcj",
+      "road": "S14W",
+      "tracks": 11,
+      "lo": 3902.0799999999995,
+      "hi": 19630.068
+     },
+     {
+      "chain": "s4_svcj",
+      "road": "S14W",
+      "tracks": 4,
+      "lo": 3902.0799999999995,
+      "hi": 19685.147999999997
+     },
+     {
+      "chain": "hwSW",
+      "road": "S14W",
+      "tracks": 294,
+      "lo": 3953.24,
+      "hi": 22532.028000000002
+     },
+     {
+      "chain": "hcSW",
+      "road": "S14W",
+      "tracks": 11,
+      "lo": 11868.16,
+      "hi": 22565.508
+     },
+     {
+      "chain": "KW0t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 9935.88,
+      "hi": 20948.748000000003
+     },
+     {
+      "chain": "KW0r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 9935.88,
+      "hi": 20948.748000000003
+     },
+     {
+      "chain": "KW1t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 9985.88,
+      "hi": 21038.748000000003
+     },
+     {
+      "chain": "KW1r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 9985.88,
+      "hi": 21038.748000000003
+     },
+     {
+      "chain": "KW2t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 11868.16,
+      "hi": 13005.24
+     },
+     {
+      "chain": "KW2r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 11868.16,
+      "hi": 13005.24
+     },
+     {
+      "chain": "KE0t",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 9935.88,
+      "hi": 12808.26
+     },
+     {
+      "chain": "KE0r",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 9935.88,
+      "hi": 12808.26
+     },
+     {
+      "chain": "KE1t",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 9985.88,
+      "hi": 13243.26
+     },
+     {
+      "chain": "KE1r",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 9985.88,
+      "hi": 13243.26
+     },
+     {
+      "chain": "KE2t",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 11919.32,
+      "hi": 13005.24
+     },
+     {
+      "chain": "KE2r",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 11919.32,
+      "hi": 13005.24
+     },
+     {
+      "chain": "hb_hc_s_hc_t",
+      "road": "VCH",
+      "tracks": 3057,
+      "lo": 12443.736,
+      "hi": 12465.336
+     },
+     {
+      "chain": "hb_hc_t_hc_s",
+      "road": "VCH",
+      "tracks": 2165,
+      "lo": 12443.736,
+      "hi": 12465.336
+     },
+     {
+      "chain": "hb_hc_s_t_tf1_hc_t",
+      "road": "VCH",
+      "tracks": 3057,
+      "lo": 12443.736,
+      "hi": 12465.336
+     },
+     {
+      "chain": "hb_hc_t_t_sr1_hc_s",
+      "road": "VCH",
+      "tracks": 2165,
+      "lo": 12443.736,
+      "hi": 12465.336
+     },
+     {
+      "chain": "hb_hc_s_t_tf2_hc_t",
+      "road": "VCH",
+      "tracks": 3057,
+      "lo": 12443.736,
+      "hi": 12465.336
+     },
+     {
+      "chain": "hb_hc_t_t_sr2_hc_s",
+      "road": "VCH",
+      "tracks": 2165,
+      "lo": 12443.736,
+      "hi": 12465.336
+     },
+     {
+      "chain": "RP_W0_cf3",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W0_cf4",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W0_cf7",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W0_cf11",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W0_cf14",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf112",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf6",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf10",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf13",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf35",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf41",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W3_cf47",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W3_cf22",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W5_cf54",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W5_cf62",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf29",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf69",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf77",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf83",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf90",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf99",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf106",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf114",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf21",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf28",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf67",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf75",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf82",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf89",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf98",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf105",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf113",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf120",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E4_cf126",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E4_cf74",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E5_cf121",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E5_cf127",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E5_cf92",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "BC_W_edge44",
+      "road": "S14W",
+      "tracks": 1106,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "BC_E_edge5",
+      "road": "S14E",
+      "tracks": 1106,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     }
+    ]
+   },
+   "incident_chain_count": 28,
+   "stage_ledger": [
+    {
+     "chain": "hb_hc_s_vm",
+     "lanes": [
+      2
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "rq_v"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "rq_v",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 6097.728000000003,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       12610.231999999998
+      ],
+      [
+       18748.8,
+       12610.231999999998
+      ],
+      [
+       18748.8,
+       14100.655999999999
+      ],
+      [
+       15577.895999999999,
+       14100.655999999999
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_rq_row_vm",
+     "lanes": [
+      28
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "rq_row"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "rq_row",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 6097.728000000003,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       13451.479999999998
+      ],
+      [
+       18748.8,
+       13451.479999999998
+      ],
+      [
+       18748.8,
+       14941.903999999999
+      ],
+      [
+       15577.895999999999,
+       14941.903999999999
+      ]
+     ]
+    },
+    {
+     "chain": "hb_vm_hc_s",
+     "lanes": [
+      2
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "rs_v"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "rs_v",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 6097.728000000003,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15577.895999999999,
+       15780.655999999999
+      ],
+      [
+       18748.8,
+       15780.655999999999
+      ],
+      [
+       18748.8,
+       14290.231999999998
+      ],
+      [
+       17312.399999999998,
+       14290.231999999998
+      ]
+     ]
+    },
+    {
+     "chain": "hb_vm_t_hc_rs_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "rs_d"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "rs_d",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 6097.728000000003,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15577.895999999999,
+       14351.312
+      ],
+      [
+       18748.8,
+       14351.312
+      ],
+      [
+       18748.8,
+       12860.887999999999
+      ],
+      [
+       17312.399999999998,
+       12860.887999999999
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_wq_v_vm",
+     "lanes": [
+      8
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "wq_v"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "wq_v",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 6097.728000000003,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       13700.119999999999
+      ],
+      [
+       18748.8,
+       13700.119999999999
+      ],
+      [
+       18748.8,
+       15190.544
+      ],
+      [
+       15577.895999999999,
+       15190.544
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_wq_row_vm",
+     "lanes": [
+      112
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "wq_row"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "wq_row",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 6097.728000000003,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       14540.312
+      ],
+      [
+       18748.8,
+       14540.312
+      ],
+      [
+       18748.8,
+       16030.736
+      ],
+      [
+       15577.895999999999,
+       16030.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_wq_mask_vm",
+     "lanes": [
+      128
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "wq_mask"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "wq_mask",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 6097.728000000003,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       13110.68
+      ],
+      [
+       18748.8,
+       13110.68
+      ],
+      [
+       18748.8,
+       14601.104000000001
+      ],
+      [
+       15577.895999999999,
+       14601.104000000001
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_wq_d_vm",
+     "lanes": [
+      4096
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "wq_d"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "wq_d",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 6097.728000000003,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       14760.344
+      ],
+      [
+       18748.8,
+       14760.344
+      ],
+      [
+       18748.8,
+       16250.768
+      ],
+      [
+       15577.895999999999,
+       16250.768
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_hc_s",
+     "lanes": [
+      1
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_v"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_v",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848000000004,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       22195.808
+      ],
+      [
+       18748.8,
+       22195.808
+      ],
+      [
+       18748.8,
+       20705.384
+      ],
+      [
+       17312.399999999998,
+       20705.384
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_0_1023_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[0:1023]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[0:1023]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       19988.912000000004
+      ],
+      [
+       18748.8,
+       19988.912000000004
+      ],
+      [
+       18748.8,
+       18498.488000000005
+      ],
+      [
+       17312.399999999998,
+       18498.488000000005
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_1024_2047_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[1024:2047]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[1024:2047]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848000000004,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20087.216000000004
+      ],
+      [
+       18748.8,
+       20087.216000000004
+      ],
+      [
+       18748.8,
+       18596.792
+      ],
+      [
+       17312.399999999998,
+       18596.792
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_2048_3071_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[2048:3071]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[2048:3071]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20185.520000000004
+      ],
+      [
+       18748.8,
+       20185.520000000004
+      ],
+      [
+       18748.8,
+       18695.096000000005
+      ],
+      [
+       17312.399999999998,
+       18695.096000000005
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_3072_4095_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[3072:4095]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[3072:4095]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848000000004,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20283.824000000004
+      ],
+      [
+       18748.8,
+       20283.824000000004
+      ],
+      [
+       18748.8,
+       18793.4
+      ],
+      [
+       17312.399999999998,
+       18793.4
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_4096_5119_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[4096:5119]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[4096:5119]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848000000004,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20382.128
+      ],
+      [
+       18748.8,
+       20382.128
+      ],
+      [
+       18748.8,
+       18891.703999999998
+      ],
+      [
+       17312.399999999998,
+       18891.703999999998
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_5120_6143_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[5120:6143]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[5120:6143]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20480.432
+      ],
+      [
+       18748.8,
+       20480.432
+      ],
+      [
+       18748.8,
+       18990.008
+      ],
+      [
+       17312.399999999998,
+       18990.008
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_6144_7167_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[6144:7167]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[6144:7167]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848000000004,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20578.736
+      ],
+      [
+       18748.8,
+       20578.736
+      ],
+      [
+       18748.8,
+       19088.311999999998
+      ],
+      [
+       17312.399999999998,
+       19088.311999999998
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_7168_8191_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[7168:8191]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[7168:8191]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20677.04
+      ],
+      [
+       18748.8,
+       20677.04
+      ],
+      [
+       18748.8,
+       19186.616
+      ],
+      [
+       17312.399999999998,
+       19186.616
+      ]
+     ]
+    },
+    {
+     "chain": "hb_sseq_hc_s",
+     "lanes": [
+      85
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "c_cmd"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "c_cmd",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848000000004,
+     "source_stations": 8,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 4,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       19467.600000000002
+      ],
+      [
+       18748.8,
+       19467.600000000002
+      ],
+      [
+       18748.8,
+       17977.176
+      ],
+      [
+       17312.399999999998,
+       17977.176
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_sseq",
+     "lanes": [
+      9
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "c_done"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "c_done",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848,
+     "source_stations": 8,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 4,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       18015.444000000003
+      ],
+      [
+       18748.8,
+       18015.444000000003
+      ],
+      [
+       18748.8,
+       19505.868000000002
+      ],
+      [
+       15670.776,
+       19505.868000000002
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_c_st_sseq",
+     "lanes": [
+      2
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "c_st"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "c_st",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848,
+     "source_stations": 8,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 4,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       18015.444000000003
+      ],
+      [
+       18748.8,
+       18015.444000000003
+      ],
+      [
+       18748.8,
+       19505.868000000002
+      ],
+      [
+       15670.776,
+       19505.868000000002
+      ]
+     ]
+    },
+    {
+     "chain": "hb_vm_t_inp_hc_hc_s",
+     "lanes": [
+      1
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "f_inp"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "f_inp",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 6097.728000000003,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15577.895999999999,
+       14758.208
+      ],
+      [
+       18748.8,
+       14758.208
+      ],
+      [
+       18748.8,
+       13267.784
+      ],
+      [
+       17312.399999999998,
+       13267.784
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_tag_hc_s",
+     "lanes": [
+      32
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_tag"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_tag",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 6004.848,
+     "source_stations": 9,
+     "minimum_stages_at500um": 12,
+     "retained_stages": 12,
+     "added_stages": 3,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       21467.696000000004
+      ],
+      [
+       18748.8,
+       21467.696000000004
+      ],
+      [
+       18748.8,
+       19977.272000000004
+      ],
+      [
+       17312.399999999998,
+       19977.272000000004
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_hc_t",
+     "lanes": [
+      3056
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "t_tf0"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "t_tf0",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 2588.239999999998,
+     "source_stations": 7,
+     "minimum_stages_at500um": 5,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17465.48,
+       12465.336
+      ],
+      [
+       18748.8,
+       12465.336
+      ],
+      [
+       18748.8,
+       12443.736
+      ],
+      [
+       17465.48,
+       12443.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_t_hc_s",
+     "lanes": [
+      2164
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "f_tr0"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "f_tr0",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 2047.1200000000026,
+     "source_stations": 7,
+     "minimum_stages_at500um": 4,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17736.039999999997,
+       12443.736
+      ],
+      [
+       18748.8,
+       12443.736
+      ],
+      [
+       18748.8,
+       12465.336
+      ],
+      [
+       17736.039999999997,
+       12465.336
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_t_tf1_hc_t",
+     "lanes": [
+      3056
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "t_tf1"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "t_tf1",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1348.4000000000015,
+     "source_stations": 7,
+     "minimum_stages_at500um": 2,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       18085.399999999998,
+       12465.336
+      ],
+      [
+       18748.8,
+       12465.336
+      ],
+      [
+       18748.8,
+       12443.736
+      ],
+      [
+       18085.399999999998,
+       12443.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_t_t_sr1_hc_s",
+     "lanes": [
+      2164
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "f_tr1"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "f_tr1",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 807.2800000000061,
+     "source_stations": 7,
+     "minimum_stages_at500um": 1,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       18355.959999999995,
+       12443.736
+      ],
+      [
+       18748.8,
+       12443.736
+      ],
+      [
+       18748.8,
+       12465.336
+      ],
+      [
+       18355.959999999995,
+       12465.336
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_t_tf2_hc_t",
+     "lanes": [
+      3056
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "t_tf2"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "t_tf2",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 108.55999999999767,
+     "source_stations": 7,
+     "minimum_stages_at500um": 0,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       18705.32,
+       12465.336
+      ],
+      [
+       18748.8,
+       12465.336
+      ],
+      [
+       18748.8,
+       12443.736
+      ],
+      [
+       18705.32,
+       12443.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_t_t_sr2_hc_s",
+     "lanes": [
+      2164
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "f_tr2"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "f_tr2",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 475.75999999999476,
+     "source_stations": 7,
+     "minimum_stages_at500um": 0,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       18975.879999999997,
+       12443.736
+      ],
+      [
+       18748.8,
+       12443.736
+      ],
+      [
+       18748.8,
+       12465.336
+      ],
+      [
+       18975.879999999997,
+       12465.336
+      ]
+     ]
+    }
+   ],
+   "geometry": {
+    "die_inside": true,
+    "overlapping_historical_whole_hubs": [],
+    "adapters": [],
+    "allincident_native_stations_placed": false,
+    "source_pins": "Generator source anchor offsets translated exactly; native LEF pin access not measured"
+   },
+   "status": "BOUNDED_ROAD_SCREEN_NOT_BUILDABLE"
+  },
+  {
+   "rank": 3,
+   "name": "same_home_local_entry_only",
+   "local_vertical_outside_admitted_roads_peak_tracks": 10444,
+   "route_topology": "admitted_road",
+   "group_y_um": 13955.76,
+   "home": [
+    17312.399999999998,
+    13955.76,
+    1816.536,
+    8806.296
+   ],
+   "statistics": {
+    "peak_tracks": 23572,
+    "y_um": 13055.24,
+    "saved_tracks": 0,
+    "budget_at060": 20284.425,
+    "ideal_share": 0.6972443142953276,
+    "by_road": {
+     "S14W": 9836,
+     "VCH": 7990,
+     "S14E": 5746
+    },
+    "active": [
+     {
+      "chain": "qSW",
+      "road": "S14W",
+      "tracks": 515,
+      "lo": 3902.0799999999995,
+      "hi": 14137.188
+     },
+     {
+      "chain": "aSW",
+      "road": "S14W",
+      "tracks": 1027,
+      "lo": 3902.0799999999995,
+      "hi": 13737.588
+     },
+     {
+      "chain": "coSW",
+      "road": "S14W",
+      "tracks": 515,
+      "lo": 3953.24,
+      "hi": 23916.588
+     },
+     {
+      "chain": "sel",
+      "road": "VCH",
+      "tracks": 515,
+      "lo": 3460.32,
+      "hi": 13588.548
+     },
+     {
+      "chain": "c5_bk_selector",
+      "road": "VCH",
+      "tracks": 87,
+      "lo": 1816.296,
+      "hi": 19303.908
+     },
+     {
+      "chain": "d5_bk_selector",
+      "road": "VCH",
+      "tracks": 11,
+      "lo": 1816.296,
+      "hi": 19383.828
+     },
+     {
+      "chain": "s5_bk_selector",
+      "road": "VCH",
+      "tracks": 4,
+      "lo": 1816.296,
+      "hi": 19445.388
+     },
+     {
+      "chain": "c4_svcj",
+      "road": "S14W",
+      "tracks": 87,
+      "lo": 3953.24,
+      "hi": 19604.148
+     },
+     {
+      "chain": "d4_svcj",
+      "road": "S14W",
+      "tracks": 11,
+      "lo": 3902.0799999999995,
+      "hi": 19630.068
+     },
+     {
+      "chain": "s4_svcj",
+      "road": "S14W",
+      "tracks": 4,
+      "lo": 3902.0799999999995,
+      "hi": 19685.147999999997
+     },
+     {
+      "chain": "hwSW",
+      "road": "S14W",
+      "tracks": 294,
+      "lo": 3953.24,
+      "hi": 22532.028000000002
+     },
+     {
+      "chain": "hcSW",
+      "road": "S14W",
+      "tracks": 11,
+      "lo": 11868.16,
+      "hi": 22565.508
+     },
+     {
+      "chain": "KW0t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 9935.88,
+      "hi": 20948.748000000003
+     },
+     {
+      "chain": "KW0r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 9935.88,
+      "hi": 20948.748000000003
+     },
+     {
+      "chain": "KW1t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 9985.88,
+      "hi": 21038.748000000003
+     },
+     {
+      "chain": "KW1r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 9985.88,
+      "hi": 21038.748000000003
+     },
+     {
+      "chain": "KW2t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 13005.24,
+      "hi": 21128.748000000003
+     },
+     {
+      "chain": "KW2r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 13005.24,
+      "hi": 21128.748000000003
+     },
+     {
+      "chain": "KW3t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 13055.24,
+      "hi": 21218.748000000003
+     },
+     {
+      "chain": "KW3t",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 13055.24,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "KW3r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 13055.24,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "KW3r",
+      "road": "S14W",
+      "tracks": 513,
+      "lo": 13055.24,
+      "hi": 21218.748000000003
+     },
+     {
+      "chain": "KE0t",
+      "road": "VCH",
+      "tracks": 513,
+      "lo": 12808.26,
+      "hi": 20948.748000000003
+     },
+     {
+      "chain": "KE0r",
+      "road": "VCH",
+      "tracks": 513,
+      "lo": 12808.26,
+      "hi": 20948.748000000003
+     },
+     {
+      "chain": "KE1t",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 9985.88,
+      "hi": 13243.26
+     },
+     {
+      "chain": "KE1r",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 9985.88,
+      "hi": 13243.26
+     },
+     {
+      "chain": "KE2t",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 13005.24,
+      "hi": 13678.26
+     },
+     {
+      "chain": "KE2r",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 13005.24,
+      "hi": 13678.26
+     },
+     {
+      "chain": "KE3t",
+      "road": "VCH",
+      "tracks": 513,
+      "lo": 12721.26,
+      "hi": 21218.748000000003
+     },
+     {
+      "chain": "KE3t",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 13055.24,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "KE3r",
+      "road": "S14E",
+      "tracks": 513,
+      "lo": 13055.24,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "KE3r",
+      "road": "VCH",
+      "tracks": 513,
+      "lo": 12721.26,
+      "hi": 21218.748000000003
+     },
+     {
+      "chain": "hb_sseq_su_s",
+      "road": "VCH",
+      "tracks": 86,
+      "lo": 12534.936000000002,
+      "hi": 19467.600000000002
+     },
+     {
+      "chain": "hb_su_s_sseq",
+      "road": "VCH",
+      "tracks": 10,
+      "lo": 12534.936000000002,
+      "hi": 19467.600000000002
+     },
+     {
+      "chain": "hb_su_s_c_st_sseq",
+      "road": "VCH",
+      "tracks": 3,
+      "lo": 12534.936000000002,
+      "hi": 19467.600000000002
+     },
+     {
+      "chain": "hb_hc_s_t_tf2_hc_t",
+      "road": "VCH",
+      "tracks": 3057,
+      "lo": 12443.736,
+      "hi": 13955.76
+     },
+     {
+      "chain": "hb_hc_t_t_sr2_hc_s",
+      "road": "VCH",
+      "tracks": 2165,
+      "lo": 12443.736,
+      "hi": 13955.76
+     },
+     {
+      "chain": "RP_W0_cf3",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W0_cf4",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W0_cf7",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W0_cf11",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W0_cf14",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf112",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf6",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf10",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf13",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf35",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W1_cf41",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W3_cf47",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W3_cf22",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W5_cf54",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_W5_cf62",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf29",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf69",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf77",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf83",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf90",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf99",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf106",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E0_cf114",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf21",
+      "road": "S14W",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf28",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf67",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf75",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf82",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf89",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf98",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf105",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf113",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E3_cf120",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E4_cf126",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E4_cf74",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E5_cf121",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E5_cf127",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "RP_E5_cf92",
+      "road": "S14E",
+      "tracks": 71,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "BC_W_edge44",
+      "road": "S14W",
+      "tracks": 1106,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     },
+     {
+      "chain": "BC_E_edge5",
+      "road": "S14E",
+      "tracks": 1106,
+      "lo": 11919.32,
+      "hi": 15851.199999999999
+     }
+    ]
+   },
+   "incident_chain_count": 28,
+   "stage_ledger": [
+    {
+     "chain": "hb_hc_s_vm",
+     "lanes": [
+      2
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "rq_v"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "rq_v",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       14100.655999999999
+      ],
+      [
+       15577.895999999999,
+       14100.655999999999
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_rq_row_vm",
+     "lanes": [
+      28
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "rq_row"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "rq_row",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       14941.903999999999
+      ],
+      [
+       15577.895999999999,
+       14941.903999999999
+      ]
+     ]
+    },
+    {
+     "chain": "hb_vm_hc_s",
+     "lanes": [
+      2
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "rs_v"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "rs_v",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15577.895999999999,
+       15780.655999999999
+      ],
+      [
+       17312.399999999998,
+       15780.655999999999
+      ]
+     ]
+    },
+    {
+     "chain": "hb_vm_t_hc_rs_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "rs_d"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "rs_d",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15577.895999999999,
+       14351.312
+      ],
+      [
+       17312.399999999998,
+       14351.312
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_wq_v_vm",
+     "lanes": [
+      8
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "wq_v"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "wq_v",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       15190.544
+      ],
+      [
+       15577.895999999999,
+       15190.544
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_wq_row_vm",
+     "lanes": [
+      112
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "wq_row"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "wq_row",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       16030.736
+      ],
+      [
+       15577.895999999999,
+       16030.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_wq_mask_vm",
+     "lanes": [
+      128
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "wq_mask"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "wq_mask",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       14601.104000000001
+      ],
+      [
+       15577.895999999999,
+       14601.104000000001
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_wq_d_vm",
+     "lanes": [
+      4096
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "wq_d"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "wq_d",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       16250.768
+      ],
+      [
+       15577.895999999999,
+       16250.768
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_hc_s",
+     "lanes": [
+      1
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_v"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_v",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       22195.808
+      ],
+      [
+       17312.399999999998,
+       22195.808
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_0_1023_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[0:1023]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[0:1023]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       19988.912000000004
+      ],
+      [
+       17312.399999999998,
+       19988.912000000004
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_1024_2047_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[1024:2047]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[1024:2047]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20087.216000000004
+      ],
+      [
+       17312.399999999998,
+       20087.216000000004
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_2048_3071_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[2048:3071]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[2048:3071]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20185.520000000004
+      ],
+      [
+       17312.399999999998,
+       20185.520000000004
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_3072_4095_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[3072:4095]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[3072:4095]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20283.824000000004
+      ],
+      [
+       17312.399999999998,
+       20283.824000000004
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_4096_5119_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[4096:5119]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[4096:5119]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20382.128
+      ],
+      [
+       17312.399999999998,
+       20382.128
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_5120_6143_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[5120:6143]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[5120:6143]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20480.432
+      ],
+      [
+       17312.399999999998,
+       20480.432
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_6144_7167_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[6144:7167]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[6144:7167]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20578.736
+      ],
+      [
+       17312.399999999998,
+       20578.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_y_7168_8191_hc_s",
+     "lanes": [
+      1024
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_d[7168:8191]"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_d[7168:8191]",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       20677.04
+      ],
+      [
+       17312.399999999998,
+       20677.04
+      ]
+     ]
+    },
+    {
+     "chain": "hb_sseq_hc_s",
+     "lanes": [
+      85
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "c_cmd"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "c_cmd",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 8,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 8,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       19467.600000000002
+      ],
+      [
+       16491.6,
+       19467.600000000002
+      ],
+      [
+       17312.399999999998,
+       19467.600000000002
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_sseq",
+     "lanes": [
+      9
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "c_done"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "c_done",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 8,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 8,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       19505.868000000002
+      ],
+      [
+       16561.6,
+       19505.868000000002
+      ],
+      [
+       15670.776,
+       19505.868000000002
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_c_st_sseq",
+     "lanes": [
+      2
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "c_st"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "c_st",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 8,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 8,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17312.399999999998,
+       19505.868000000002
+      ],
+      [
+       16631.6,
+       19505.868000000002
+      ],
+      [
+       15670.776,
+       19505.868000000002
+      ]
+     ]
+    },
+    {
+     "chain": "hb_vm_t_inp_hc_hc_s",
+     "lanes": [
+      1
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "f_inp"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "f_inp",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1734.503999999999,
+     "candidate_path_length_um": 1734.503999999999,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15577.895999999999,
+       14758.208
+      ],
+      [
+       17312.399999999998,
+       14758.208
+      ]
+     ]
+    },
+    {
+     "chain": "hb_collective_t_hc_tag_hc_s",
+     "lanes": [
+      32
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "y_tag"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "y_tag",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1641.623999999998,
+     "candidate_path_length_um": 1641.623999999998,
+     "source_stations": 9,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 9,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       15670.776,
+       21467.696000000004
+      ],
+      [
+       17312.399999999998,
+       21467.696000000004
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_hc_t",
+     "lanes": [
+      3056
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "t_tf0"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "t_tf0",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1512.0239999999994,
+     "source_stations": 7,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17465.48,
+       13955.76
+      ],
+      [
+       17465.48,
+       12443.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_t_hc_s",
+     "lanes": [
+      2164
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "f_tr0"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "f_tr0",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1512.0239999999994,
+     "source_stations": 7,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       17736.039999999997,
+       12443.736
+      ],
+      [
+       17736.039999999997,
+       13955.76
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_t_tf1_hc_t",
+     "lanes": [
+      3056
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "t_tf1"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "t_tf1",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1512.0239999999994,
+     "source_stations": 7,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       18085.399999999998,
+       13955.76
+      ],
+      [
+       18085.399999999998,
+       12443.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_t_t_sr1_hc_s",
+     "lanes": [
+      2164
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "f_tr1"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "f_tr1",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1512.0239999999994,
+     "source_stations": 7,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       18355.959999999995,
+       12443.736
+      ],
+      [
+       18355.959999999995,
+       13955.76
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_s_t_tf2_hc_t",
+     "lanes": [
+      3056
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "t_tf2"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": 0,
+       "instance": "sp_hc_s",
+       "port": "t_tf2",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1512.0239999999994,
+     "source_stations": 7,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       18705.32,
+       13955.76
+      ],
+      [
+       18705.32,
+       12443.736
+      ]
+     ]
+    },
+    {
+     "chain": "hb_hc_t_t_sr2_hc_s",
+     "lanes": [
+      2164
+     ],
+     "endpoints": [
+      [
+       "sp_hc_s",
+       "f_tr2"
+      ]
+     ],
+     "translated_anchors": [
+      {
+       "end": -1,
+       "instance": "sp_hc_s",
+       "port": "f_tr2",
+       "anchor_distance_to_outline": 0.0
+      }
+     ],
+     "source_path_length_um": 1512.0239999999994,
+     "candidate_path_length_um": 1512.0239999999994,
+     "source_stations": 7,
+     "minimum_stages_at500um": 3,
+     "retained_stages": 7,
+     "added_stages": 0,
+     "retiming_credit": 0,
+     "path": [
+      [
+       18975.879999999997,
+       12443.736
+      ],
+      [
+       18975.879999999997,
+       13955.76
+      ]
+     ]
+    }
+   ],
+   "geometry": {
+    "die_inside": true,
+    "overlapping_historical_whole_hubs": [],
+    "adapters": [],
+    "allincident_native_stations_placed": false,
+    "source_pins": "Generator source anchor offsets translated exactly; native LEF pin access not measured"
+   },
+   "status": "BOUNDED_ROAD_SCREEN_NOT_BUILDABLE"
+  }
+ ],
+ "scan": [
+  {
+   "y": 0.0,
+   "peak": 52345
+  },
+  {
+   "y": 250.0,
+   "peak": 52345
+  },
+  {
+   "y": 500.0,
+   "peak": 52343
+  },
+  {
+   "y": 750.0,
+   "peak": 52343
+  },
+  {
+   "y": 1000.0,
+   "peak": 52343
+  },
+  {
+   "y": 1250.0,
+   "peak": 52310
+  },
+  {
+   "y": 1500.0,
+   "peak": 52310
+  },
+  {
+   "y": 1750.0,
+   "peak": 52310
+  },
+  {
+   "y": 2000.0,
+   "peak": 50890
+  },
+  {
+   "y": 2250.0,
+   "peak": 49328
+  },
+  {
+   "y": 2500.0,
+   "peak": 46253
+  },
+  {
+   "y": 2750.0,
+   "peak": 46225
+  },
+  {
+   "y": 3000.0,
+   "peak": 46225
+  },
+  {
+   "y": 3250.0,
+   "peak": 46225
+  },
+  {
+   "y": 3500.0,
+   "peak": 46225
+  },
+  {
+   "y": 3750.0,
+   "peak": 46223
+  },
+  {
+   "y": 4000.0,
+   "peak": 46223
+  },
+  {
+   "y": 4250.0,
+   "peak": 46223
+  },
+  {
+   "y": 4500.0,
+   "peak": 46190
+  },
+  {
+   "y": 4750.0,
+   "peak": 46190
+  },
+  {
+   "y": 5000.0,
+   "peak": 46190
+  },
+  {
+   "y": 5250.0,
+   "peak": 44140
+  },
+  {
+   "y": 5500.0,
+   "peak": 44011
+  },
+  {
+   "y": 5750.0,
+   "peak": 44011
+  },
+  {
+   "y": 6000.0,
+   "peak": 44011
+  },
+  {
+   "y": 6250.0,
+   "peak": 44011
+  },
+  {
+   "y": 6500.0,
+   "peak": 42591
+  },
+  {
+   "y": 6750.0,
+   "peak": 39801
+  },
+  {
+   "y": 7000.0,
+   "peak": 39798
+  },
+  {
+   "y": 7250.0,
+   "peak": 39798
+  },
+  {
+   "y": 7500.0,
+   "peak": 39789
+  },
+  {
+   "y": 7750.0,
+   "peak": 39760
+  },
+  {
+   "y": 8000.0,
+   "peak": 39629
+  },
+  {
+   "y": 8250.0,
+   "peak": 38604
+  },
+  {
+   "y": 8500.0,
+   "peak": 38601
+  },
+  {
+   "y": 8750.0,
+   "peak": 37891
+  },
+  {
+   "y": 9000.0,
+   "peak": 37891
+  },
+  {
+   "y": 9250.0,
+   "peak": 37891
+  },
+  {
+   "y": 9500.0,
+   "peak": 37891
+  },
+  {
+   "y": 9750.0,
+   "peak": 35223
+  },
+  {
+   "y": 10000.0,
+   "peak": 35223
+  },
+  {
+   "y": 10005.211,
+   "peak": 35223
+  },
+  {
+   "y": 10250.0,
+   "peak": 33678
+  },
+  {
+   "y": 10500.0,
+   "peak": 33678
+  },
+  {
+   "y": 10750.0,
+   "peak": 33669
+  },
+  {
+   "y": 11000.0,
+   "peak": 33640
+  },
+  {
+   "y": 11250.0,
+   "peak": 33509
+  },
+  {
+   "y": 11500.0,
+   "peak": 32484
+  },
+  {
+   "y": 11750.0,
+   "peak": 32481
+  },
+  {
+   "y": 12000.0,
+   "peak": 30841
+  },
+  {
+   "y": 12250.0,
+   "peak": 29816
+  },
+  {
+   "y": 12465.336,
+   "peak": 29813
+  },
+  {
+   "y": 12500.0,
+   "peak": 29813
+  },
+  {
+   "y": 12750.0,
+   "peak": 31964
+  },
+  {
+   "y": 13000.0,
+   "peak": 31964
+  },
+  {
+   "y": 13250.0,
+   "peak": 34016
+  },
+  {
+   "y": 13500.0,
+   "peak": 34016
+  },
+  {
+   "y": 13750.0,
+   "peak": 34016
+  },
+  {
+   "y": 13955.76,
+   "peak": 23572
+  },
+  {
+   "y": 14000.0,
+   "peak": 34016
+  },
+  {
+   "y": 14250.0,
+   "peak": 34016
+  },
+  {
+   "y": 14500.0,
+   "peak": 34016
+  },
+  {
+   "y": 14750.0,
+   "peak": 34016
+  },
+  {
+   "y": 15000.0,
+   "peak": 34016
+  },
+  {
+   "y": 15250.0,
+   "peak": 34016
+  },
+  {
+   "y": 15500.0,
+   "peak": 34016
+  },
+  {
+   "y": 15750.0,
+   "peak": 34016
+  },
+  {
+   "y": 16000.0,
+   "peak": 34016
+  },
+  {
+   "y": 16250.0,
+   "peak": 34016
+  },
+  {
+   "y": 16500.0,
+   "peak": 34016
+  },
+  {
+   "y": 16750.0,
+   "peak": 43196
+  },
+  {
+   "y": 17000.0,
+   "peak": 43196
+  }
+ ],
+ "gaps": [
+  "All 128x70-data+1clock returns and source shared 566+538+2clock broadcast preserved unchanged.",
+  "Complete incident constructed chains and direct native buses retained, with no workload changes.",
+  "Source old noncollective homes retained for bounded experiment; root free to repack all groups.",
+  "Collective requested SA y tested at historical source x; this is not the complete SA layout. Clock/reset endpoint obligations enumerated but CTS/PG and concrete station homes not emitted.",
+  "Kept source stage counts even when route shorter; extra minimum stages charged; static compiler clock age/turn retiming still unqualified.",
+  "Road access horizontals may cross bodies; no screen is a geometric routing or timing PASS.",
+  "Historical collective contract is not a source complete native footprint and adapter geometry could improve through legal constituent repacking."
+ ]
+}

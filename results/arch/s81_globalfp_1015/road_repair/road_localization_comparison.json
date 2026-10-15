@@ -1,0 +1,109 @@
+{
+ "scope": "BOUNDED_SOURCE_ANCHOR_ROAD_LOCALIZATION_NO_GENERATOR_EDIT",
+ "base_commit": "dbb283cf18bdb90f9b24c457fb6995d722e20ea6",
+ "source_plan_sha256": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa",
+ "source_replay_sha256": "cfa18a844ab66eeb46f11a806cd6d94808b26fd1b7054a9272d646b76018b6eb",
+ "script_sha256": "7c8bf574054cb38372a89323d5f737ad1d4ce77c758299a06a9a5ac4727a7784",
+ "canonical_source_sha256": "ef91a10712e3a585ed51124db7733fb81aa4a3e936ab5def312b516dd585ea6d",
+ "roadmap_source_sha256": "29516b701a2354ece79560e0d7e64fc96f12f526dfa9c4943465ea014ae6acfc",
+ "trees_source_sha256": "817ba4695584a535cece8936aa58aaa1060685a12cd7e7e97667dfe210c39761",
+ "baseline_joint_peak": 23572,
+ "budget_tracks_at060": 20284.425,
+ "integer_tracks_to_remove": 3288,
+ "field_returns": {
+  "count": 128,
+  "data_bits_each": 70,
+  "forward_clock_each": 1,
+  "all_source_sink_endpoints_preserved": true
+ },
+ "broadcast": {
+  "data_lanes": [
+   566,
+   538
+  ],
+  "forward_clocks": 2,
+  "source_shared_canonical_tree_and_entry_overrides_preserved": true
+ },
+ "ranked_alternatives": [
+  {
+   "rank": 1,
+   "name": "Whole collective and eight HL adapters, local road entries at same source home",
+   "root": "sp_collective",
+   "home": [
+    13942.8,
+    19722.960000000003,
+    1727.976,
+    2721.576
+   ],
+   "joint_peak_tracks": 22935,
+   "saved_vs23572": 637,
+   "remaining_over_budget": 2650.5750000000007,
+   "incident_chains": 35,
+   "source_stages": 1347,
+   "retained_or_added_stages": 1347,
+   "minimum_added_stages": 0,
+   "maximum_added_chain_cycles": 0,
+   "whole_source_hub_overlaps": [],
+   "source_root_inside33x26": true,
+   "status": "NO_BUILDABLE_CANDIDATE_NATIVE_PIN_STATION_CLOCK_ROUTE_PROOF_OPEN"
+  },
+  {
+   "rank": 2,
+   "name": "Whole HC_s closes source inter-HC gap to21.6um; all28 incident chains rerouted",
+   "root": "sp_hc_s",
+   "home": [
+    17312.399999999998,
+    12465.336,
+    1816.536,
+    8806.296
+   ],
+   "joint_peak_tracks": 27578,
+   "saved_vs23572": -4006,
+   "remaining_over_budget": 7293.575000000001,
+   "incident_chains": 28,
+   "source_stages": 237,
+   "retained_or_added_stages": 306,
+   "minimum_added_stages": 69,
+   "maximum_added_chain_cycles": 4,
+   "whole_source_hub_overlaps": [],
+   "source_root_inside33x26": true,
+   "status": "NO_BUILDABLE_CANDIDATE_NATIVE_PIN_STATION_CLOCK_ROUTE_PROOF_OPEN"
+  },
+  {
+   "rank": 3,
+   "name": "Whole collective and eight HL adapters translate to requestedSA y only, source x retained",
+   "root": "sp_collective",
+   "home": [
+    13942.8,
+    10005.211,
+    1727.976,
+    2721.576
+   ],
+   "joint_peak_tracks": 31006,
+   "saved_vs23572": -7434,
+   "remaining_over_budget": 10721.575,
+   "incident_chains": 35,
+   "source_stages": 1347,
+   "retained_or_added_stages": 1682,
+   "minimum_added_stages": 335,
+   "maximum_added_chain_cycles": 25,
+   "whole_source_hub_overlaps": [
+    "sp_su_s",
+    "sp_vm"
+   ],
+   "source_root_inside33x26": true,
+   "status": "NO_BUILDABLE_CANDIDATE_NATIVE_PIN_STATION_CLOCK_ROUTE_PROOF_OPEN"
+  }
+ ],
+ "findings": [
+  "No tested complete-group translation/local-entry family removes3288tracks. This is not a universal infeasibility result for arbitrary native constituent repacking.",
+  "Same-home local-entry cleanup is the only tested road improvement,637tracks, leaving2650.575tracks above ideal jointbudget and individual-road allocation still unresolved.",
+  "Moving collective alone brings eight1024b HC-y streams and two2204b VM streams across its new separation; complete connected functional group rehome is required.",
+  "HC_s sourcegap closure has no old wholehub overlap but reallocates other wideHC links; no overall road save. Its source footprints differ from currentGEN19b and cannot substitute for current nativeHC geometry.",
+  "All source station counts retained; additional500um minimum-stage costs explicit, with0timing credit. Real source static compiler turn/clock-age retiming unqualified.",
+  "GlobalPLL stream/serial/HBM clock and reset fanouts enumerated independently from forwarded data clocks.",
+  "No GRT or heavy jobs launched; no die generator edits.",
+  "Road metric counts exact original three named-road predicate plus requestedVCH; outside-three-road source field streets and hub channels are explicitly reported and require native capacity proof."
+ ],
+ "reproduction": "python3 tools/s81/global_fp/road_localize.py --root sp_collective --hub-routing admitted_road --plan /home/ubuntu/geometry-s81-gen17/g18c/construction_pass0_plan.json.gz --replay /home/ubuntu/wt/s81-sa-road-1015/results/arch/s81_globalfp_1015/road_repair/rp_requested_SA_homes_replay.json.gz --out /tmp/collective_replay.json"
+}
