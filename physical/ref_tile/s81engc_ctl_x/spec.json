@@ -1,6 +1,6 @@
 {
- "name": "s81engc_ctl",
- "top": "ot_engc_ctl_leaf",
+ "name": "s81engc_ctl_x",
+ "top": "ot_engc_ctl_x",
  "kind": "tile",
  "sources": [
   "rtl/dsrom_sys/engram/rso_candidate/ot_engc_hl_leaves.sv"
@@ -13,37 +13,25 @@
  "util": 0.5,
  "pins": {
   "W": [
-   "ck",
-   "rst",
-   "child_rso",
-   "states",
-   "rso"
-  ],
-  "N": [
-   "rst_win_n",
-   "rst_io_n",
-   "rst_ws_n",
-   "rst_pb1_n",
-   "rst_pb0_n",
-   "rst_pb2_n",
-   "rst_lkp_n",
-   "rst_sink_n",
-   "s_rdy_q",
-   "s_perr_q",
-   "vrel"
-  ],
-  "S": [
-   "x_oh",
-   "x_a",
    "x_d",
-   "s_rdy",
-   "s_perr",
-   "vrel_q"
+   "x_oh",
+   "x_a"
   ],
   "E": [
+   "x_d_q",
    "x_oh_q",
-   "x_a_q",
-   "x_d_q"
+   "x_a_q"
+  ],
+  "S": [
+   "ck",
+   "rst",
+   "ack_x",
+   "rst_pb1_n",
+   "child_rso_x",
+   "states_x",
+   "rst_io_n",
+   "rst_pb0_n",
+   "rst_pb2_n"
   ]
  },
  "layer_cap": "M5",
@@ -56,55 +44,12 @@
   "pin_v": "M3 M5",
   "macro_halo_um": 5.4
  },
- "structural_change": "Die decision 10-14 06:36 (el1013-s81-engram.log): the Engram parent's own state (930 data + 16 reset flops) is hardened into leaves so the parent holds no flop: three same-edge return relay leaves at the bank source pins (256/256/64) and one control leaf beside IO_R1 (8 conditioners, status/transit/release pipes, registered ACK). Parent dsfd_engram_c_hl, rtl/dsrom_sys/engram/rso_candidate/{dsfd_engram_c_hl,ot_engc_hl_leaves}.sv.",
- "slot_change_request": {
-  "name": "s81engc_ctl",
-  "reason": "NEW leaf (die decision 10-14 06:36): slot + die-assigned pins requested in el1011-s81die.log; provisional faces until the v18+ pin file",
-  "outline": [
-   38.88,
-   43.2
-  ],
-  "pin_faces": {
-   "W": [
-    "ck",
-    "rst",
-    "child_rso",
-    "states",
-    "rso"
-   ],
-   "N": [
-    "rst_win_n",
-    "rst_io_n",
-    "rst_ws_n",
-    "rst_pb1_n",
-    "rst_pb0_n",
-    "rst_pb2_n",
-    "rst_lkp_n",
-    "rst_sink_n",
-    "s_rdy_q",
-    "s_perr_q",
-    "vrel"
-   ],
-   "S": [
-    "x_oh",
-    "x_a",
-    "x_d",
-    "s_rdy",
-    "s_perr",
-    "vrel_q"
-   ],
-   "E": [
-    "x_oh_q",
-    "x_a_q",
-    "x_d_q"
-   ]
-  }
- },
+ "structural_change": "Die decision 10-14 06:36 (el1013-s81-engram.log): the Engram parent's own state (930 data + 16 reset flops) is hardened into leaves so the parent holds no flop: three same-edge return relay leaves at the bank source pins (256/256/64) and one control leaf beside IO_R1 (8 conditioners, status/transit/release pipes, registered ACK). Parent dsfd_engram_c_hl, rtl/dsrom_sys/engram/rso_candidate/{dsfd_engram_c_hl,ot_engc_hl_leaves}.sv. Die r6 16:26 (v19_engram_hl, main eb466f470): ot_engc_ctl_x outline 36.288 x 88.56 and pins assigned by the die (io_tcl); ctl split into ot_engc_ctl_x / ot_engc_ctl_s, rr1 = ot_engc_rr256w, rr64 conditions the async die reset itself.",
  "job": {
-  "owner": "Claude:s81-romB2-1014",
-  "branch": "claude/s81-romB2-enghl",
-  "tag": "hl1",
-  "purpose": "S81 Engram hardened own-state leaf ot_engc_ctl_leaf",
+  "owner": "Claude:s81-elemB6-1014",
+  "branch": "claude/s81-elemB6-1014",
+  "tag": "hl2",
+  "purpose": "S81 Engram hardened own-state leaf ot_engc_ctl_x on the die-assigned v19_engram_hl pins/outline",
   "benches": [
    {
     "name": "engram_hl_exact",
@@ -140,21 +85,23 @@
     "pass_regex": "ENGRAM_RSO_ACK_GATE PASS"
    }
   ],
-  "views_to": "physical/ref_tile/s81engc_ctl/views",
-  "record_to": "results/rtl/ref_tile/s81engc_ctl",
+  "views_to": "physical/ref_tile/s81engc_ctl_x/views",
+  "record_to": "results/rtl/ref_tile/s81engc_ctl_x",
   "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/s81_die_pins/v19_engram_hl",
    "rtl/dsrom_sys",
+   "rtl/hdc",
    "rtl/lib",
    "rtl/test",
    "rtl/v41rom",
-   "rtl/hdc",
-   "physical/asap7_memory_macros",
    "tools/s81_svceng"
   ]
  },
  "outline": {
-  "w": 38.88,
-  "h": 43.2
+  "w": 36.288,
+  "h": 88.56,
+  "exact": true
  },
  "why_floorplan": "pin-limited relay/control leaf: face length set by the bus at <= 6-10 b/um/layer, not by area",
  "macros": [],
@@ -170,5 +117,6 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "io_tcl": "physical/s81_die_pins/v19_engram_hl/ot_engc_ctl_x.tcl"
 }
