@@ -96,8 +96,14 @@ module qkd_kv_static_writer #(parameter integer MUT = 0) (
             if (slot && !identity_ok) begin fault <= 1; fault_code[1] <= 1; end
             if (slot && wv && !header_ok) begin fault <= 1; fault_code[2] <= 1; end
             if (slot && !pair_ok) begin fault <= 1; fault_code[3] <= 1; end
+            // Low-half payload capture is enabled by the compiled slot alone
+            // (2 registered bits), not by the 59-bit identity/pair/program
+            // compares: those only qualify half_live.  A bad low half leaves
+            // half_live 0, so the high half sees !pair_ok -> w_v 0 + fault,
+            // exactly as before; only the (invalid, w_v 0) es data differs.
+            if (slot && !ix[0]) half_data <= wd;
             if (slot && !ix[0] && good) begin
-                half_live <= 1; half_data <= wd; half_identity <= wi;
+                half_live <= 1; half_identity <= wi;
                 half_generation <= wg; half_index <= ix;
             end
             if (slot && ix[0]) begin
