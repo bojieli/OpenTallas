@@ -1,0 +1,48 @@
+{
+ "masters": {
+  "dsfd_host_c": {
+   "NS": 1,
+   "_source": "die stacks SW"
+  },
+  "dsfd_sp_hc_c": {
+   "CSPLIT": 1,
+   "HALF": 1,
+   "HIER": 1,
+   "TAIL_SPLIT": 1,
+   "_source": "hc_t in the die: production hierarchical HC split at the TAIL_SPLIT 1 seam"
+  },
+  "dsfd_svc_join": {
+   "NS": 1,
+   "_source": "die stacks SW"
+  },
+  "ot_s81_cfg7_seq": {
+   "PQ": 1,
+   "_source": "q element ot_v41_rom_elem_q_qxpq_w10 carries go_tag / sh_free / bank_free"
+  },
+  "ot_v41_rom_elem_q_qxpq_w10": {
+   "EARLY": 1,
+   "FAST": 1,
+   "MTP": 1,
+   "NB": 2,
+   "PP": 1,
+   "PQ": 1,
+   "QM": 5,
+   "QPIPE": 1,
+   "QP_CAP": 0,
+   "QP_CSAM": 10,
+   "QP_P1": 1,
+   "QP_XS": 1,
+   "QS": 5,
+   "QTIMING_FIX": 1,
+   "QW": 0,
+   "QX": 10,
+   "QY": 1,
+   "QZ": 1,
+   "QZ_NE": 4,
+   "QZ_NS": 8,
+   "_source": "results/rtl/dsrom_qelem_pq_20261006/closed_qs5f/receipt.json"
+  }
+ },
+ "netlist": "construction_pass0_die.v",
+ "schema": "opentallas.die_params.v1"
+}
