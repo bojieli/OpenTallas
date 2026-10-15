@@ -1,13 +1,13 @@
 {
-  "status": "SCREEN12_LIVE_ALL_SERVICE_STREET_PATHS",
-  "source_commit": "ae2651806",
+  "status": "SCREEN13_BASELINE_AND_SCREEN14_REROOT_LIVE",
+  "source_commit": "e5e33df8d",
   "host": "ot-epyc4",
-  "pid": 1753885,
-  "unit": "oth-ubuntu-1753863-1792059827",
-  "local_systemd_unit": "canonical-gen-1015-screen12.service",
-  "local_log": "/home/ubuntu/canonical-gen-1015-screen12.log",
+  "pid": 1799112,
+  "unit": "oth-ubuntu-1799095-1792060810",
+  "local_systemd_unit": "canonical-gen-1015-screen14.service",
+  "local_log": "/home/ubuntu/canonical-gen-1015-screen14.log",
   "remote_source": "/srv/opentallas-scratch/codex-canonical-gen-1015/src",
-  "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen12",
+  "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen14",
   "scope": "Actual full2417 typed generator. No native timing or placement success claim while active. All sourcepairIDs2417/BF519 andPHW10 metadata preserved.",
   "first_failure": "Historical slot_geometry required uniform BF_PER_REGION; canonical exactperframe slot inventory now replaces only canonical restriction. Failed screen1 remains immutable.",
   "artifacts_expected": {
@@ -42,7 +42,7 @@
     "local_systemd_unit": "canonical-gen-1015-screen3.service",
     "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen3"
   },
-  "updated_utc": "2026-10-15T10:26:40.887930+00:00",
+  "updated_utc": "2026-10-15T10:42:07.381196+00:00",
   "screen7": {
     "status": "GEN_FAIL",
     "exit_code": 1,
@@ -87,10 +87,35 @@
     "error": "NameError in moved-column spine lookup; fixed local cols[i] reference. No physical verdict inferred. Undefined-name lint and py_compile pass."
   },
   "screen12": {
-    "status": "LIVE",
+    "status": "GEN_FAIL",
     "source": "ae2651806",
     "capacity_sha256": "2d1fa10aa7e3136a4fece04b2b9b1d094a99391dcd5c7a6726991061ff540995",
     "structural_change": "Allfour q/a/ix/co service paths use actual irregularstreet/gap graph; externalS14spine placed outside movedinnercolumn outline; actual per-chain polylines/stationboxes and broadcasttree injectors/parents exported for system optimizer.",
-    "fix": "Use actual cols[i] for moved-column lookup; previous local name was undefined."
+    "fix": "Use actual cols[i] for moved-column lookup; previous local name was undefined.",
+    "error": "All 128 root broadcast/return paths and q/a/ix/co service flows construct; control s4_svcj fails the remaining legacy shoreline assumption."
+  },
+  "screen13": {
+    "screen": 13,
+    "source": "3c15dadc6",
+    "host": "ot-epyc4",
+    "pid": 1780381,
+    "unit": "oth-ubuntu-1780361-1792060276",
+    "source_tree": "/srv/opentallas-scratch/codex-canonical-gen-1015/src",
+    "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen13",
+    "local_service": "canonical-gen-1015-screen13.service",
+    "verified_elapsed_seconds": 590,
+    "scope": "Baseline broad service gap, full construction reached actual hop-finalization/rebuild. Thirteen alignment bundles refused, no waiver."
+  },
+  "screen14": {
+    "screen": 14,
+    "source": "e5e33df8d",
+    "host": "ot-epyc4",
+    "pid": 1799112,
+    "unit": "oth-ubuntu-1799095-1792060810",
+    "source_tree": "/srv/opentallas-scratch/codex-canonical-gen-1015/e_reroot/src",
+    "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen14",
+    "local_service": "canonical-gen-1015-screen14.service",
+    "capacity_sha256": "ef91a10712e3a585ed51124db7733fb81aa4a3e936ab5def312b516dd585ea6d",
+    "scope": "Distinct actual E broadcast reroot at existing S14 node [19116.55,11919.32], same source/HC route; independent frozen source, all IDs retained."
   }
 }
