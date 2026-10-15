@@ -13,8 +13,8 @@ def pw_image(events, stage_start_cycle, relay_edges, stop_cycle, program_words, 
         raise ScheduleError('native instructions overlap reserved PW944 collective window')
     if stage_start_cycle < 0 or relay_edges < 0 or stop_cycle < 2 or command_pin_edges != 1:
         raise ScheduleError('invalid actual stage/relay/stop calendar')
-    if not 1 <= len(events) < DEPTH:
-        raise ScheduleError('collective calendar requires one to seven actual commands and END')
+    if not 0 <= len(events) < DEPTH:
+        raise ScheduleError('collective calendar requires at most seven actual commands plus END')
     out = []
     previous = 1
     for k, event in enumerate(events):
