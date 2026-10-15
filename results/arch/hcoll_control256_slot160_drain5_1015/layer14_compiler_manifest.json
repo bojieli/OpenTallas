@@ -1,0 +1,155 @@
+{
+  "status": "PRE_NATIVE_TYPED160_MACHINE_IMAGES",
+  "target": 120,
+  "kernel": "EngramlocalSlot160Drain5",
+  "native_profile": "slot160_21_drain5",
+  "drain_NOPS": 5,
+  "drain_control_indices": [
+    2569,
+    2570,
+    2571,
+    2572,
+    2573
+  ],
+  "issuer_done_cycle": 2978,
+  "source_module": "ot_hcoll_engram_chain_slot_node",
+  "layer": 14,
+  "banks_per_node": 21,
+  "nodes": 9,
+  "limit": 2574,
+  "launch": 399,
+  "first_control_consumer": 406,
+  "done": 2978,
+  "packets": 160,
+  "logical_payloads": 120,
+  "hops": 720,
+  "application_NOPs": 40,
+  "field_audit": {
+    "status": "PASS compiledtypedfieldaudit",
+    "hops": 720,
+    "packets": 160,
+    "sectors": 216
+  },
+  "fields": {
+    "capture": {
+      "lsb": 0,
+      "width": 10
+    },
+    "sink": {
+      "lsb": 10,
+      "width": 16
+    },
+    "select": {
+      "lsb": 26,
+      "width": 64
+    },
+    "wr": {
+      "lsb": 90,
+      "width": 1
+    },
+    "wrseq": {
+      "lsb": 91,
+      "width": 16
+    },
+    "rd": {
+      "lsb": 107,
+      "width": 1
+    },
+    "rdseq": {
+      "lsb": 108,
+      "width": 16
+    },
+    "rx": {
+      "lsb": 124,
+      "width": 1
+    },
+    "rxseq": {
+      "lsb": 125,
+      "width": 16
+    },
+    "bridge": {
+      "lsb": 141,
+      "width": 49
+    },
+    "srcread": {
+      "lsb": 190,
+      "width": 1
+    },
+    "srcrow": {
+      "lsb": 191,
+      "width": 5
+    },
+    "srcsector": {
+      "lsb": 196,
+      "width": 4
+    },
+    "pkt_expect": {
+      "lsb": 200,
+      "width": 1
+    },
+    "pkt_low": {
+      "lsb": 201,
+      "width": 1
+    },
+    "pkt_pub": {
+      "lsb": 202,
+      "width": 1
+    },
+    "pkt_row": {
+      "lsb": 203,
+      "width": 5
+    },
+    "pkt_pair": {
+      "lsb": 208,
+      "width": 3
+    },
+    "asm_expect": {
+      "lsb": 211,
+      "width": 1
+    },
+    "asm_row": {
+      "lsb": 212,
+      "width": 5
+    },
+    "asm_pair": {
+      "lsb": 217,
+      "width": 3
+    },
+    "asm_home": {
+      "lsb": 220,
+      "width": 8
+    },
+    "consumer_read": {
+      "lsb": 228,
+      "width": 1
+    },
+    "consumer_row": {
+      "lsb": 229,
+      "width": 5
+    },
+    "consumer_sector": {
+      "lsb": 234,
+      "width": 4
+    }
+  },
+  "local_slot_fields": [
+    "srcrow",
+    "pkt_row",
+    "asm_row"
+  ],
+  "global_row_source": "actual source descriptor metadata and native545 header; never catalogue constants",
+  "images_sha256": {
+    "n0.hex": "345ec61ab93de7b202b830997eda6de78391bee1f7eefb1f135512aa2af06bac",
+    "n1.hex": "28d3116ae57f1f6dc04eefe396d3feddf5e0b1ba83ff4fa0cbd281a0e05fc5c7",
+    "n2.hex": "d41a22c4608be147e520ce04d40441f62b3019bada93437afb0f98275a0c7c99",
+    "n3.hex": "5e73b397296b52ee6ecc74c4004a53a6ba9e81ff34bc0eeb8512a79e1888eb29",
+    "n4.hex": "e9c3cc690f2e9451b845d70c07685721eac05d67beaf159529cb0e841b2c35af",
+    "n5.hex": "14ada6f52bc4b32ed4d5ba9e0b99e4c85bcc97dc8c62c01abe31998e9b4a7122",
+    "n6.hex": "fa41509739880eff9ffc39c5891847da560c7f96edc5d916f088a2dfe0a1de89",
+    "n7.hex": "a9b946fd9519047626c9223e8f44f8f35a6847a105589d4fe242e5f95dc78dc7",
+    "n8.hex": "0230679d0eb44e9c9c116a91ceba5caa1827398c8831b9200418bdb10553e5b2"
+  },
+  "native_successor_proven": false,
+  "normative_unchanged_programme": false,
+  "physical_qualified": false
+}
