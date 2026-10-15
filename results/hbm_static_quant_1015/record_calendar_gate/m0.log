@@ -1,0 +1,5 @@
+PASS QUANT_RECORD_CALENDAR native_records=8 beats=104 long_idle_cycles=3000 adjacent_records=4 mapped_programme_macros=1
+- rtl/test/hbm_accel/generic/tb_hgi_qdq_record_calendar.sv:40: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 40us; walltime 0.006 s; speed 3.790 ms/s
+- Verilator: cpu 0.011 s on 1 threads; alloced 505 MB

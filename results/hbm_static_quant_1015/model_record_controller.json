@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.hbm-static-quant-record-controller.v1",
+  "programme_macros": 1,
+  "programme_macro": "actual1024x256",
+  "payload_bits": 94,
+  "payload_fields": {
+    "start_cycle": 32,
+    "beat_count": 16,
+    "source_sector": 16,
+    "destination_sector": 16,
+    "op": 6,
+    "block": 8
+  },
+  "max_native_records": 1024,
+  "max_beats_per_record": 65535,
+  "scheduling": "absolute compile-time issue timestamp, no dynamic wait or credit",
+  "arithmetic": "unchanged existing static QDQ transport+DXL/DBQ/DAQ",
+  "memory_bytes_per_cycle": 128,
+  "output_bytes_per_cycle": 128,
+  "boundary_bits_per_cycle": 4440,
+  "new_datapath": "active beat counter/address walker plus one prefetched descriptor",
+  "max_descriptor_state_bits": 1088,
+  "SRAM_fetch_edges": 1,
+  "independent_macro_capture_edges": 1,
+  "validation_edges": 1,
+  "model_min_beats_per_record": 4,
+  "prefetch_policy": "fetch next record on first active beat; source identity and absolute launch checked",
+  "startup_model_edges": 8,
+  "latency_per_record_added_after_startup": 0,
+  "throughput": "immutable168 fixture price, no repricing; actual model comparison remains required",
+  "physical_slot": "same programme leaf prototype216x129.6 with actual174.744x70.470macro",
+  "production_status": "UNPROVEN: actual full token operation timestamps/residency and gate not yet built"
+}

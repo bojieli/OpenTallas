@@ -119,6 +119,29 @@ def calendar(vectors: Path, read_station=0, write_station=0):
         qualification='COMPONENT ONLY; native CP/programme SRAM and actual NW station+other-client composition OPEN')
 
 
+def compact_record_words(records, issue_cycles, resident_sid):
+    """Compile source-decoded native records and absolute global issue timestamps.
+
+    The external whole-program scheduler owns issue_cycles and must prove operand
+    residency/dependencies. No cost-driven fabricated timestamps or new price.
+    """
+    if len(records)!=len(issue_cycles) or not records or len(records)>1024:
+        raise ValueError('native Quant record count exceeds actual1024-word macro')
+    words=[];previous_end=-1
+    for pc,(record,cycle) in enumerate(zip(records,issue_cycles)):
+        commands=lower_record(record,cycle,resident_sid)
+        if len(commands)<4 or len(commands)>65535 or cycle<8 or cycle<=previous_end:
+            raise ValueError('native Quant timestamp/beat count overlaps or lacks initial SRAM margin')
+        # Row gaps must be represented as separate statically allocated records.
+        if any(c['src']!=commands[0]['src']+4*i or c['dst']!=commands[0]['dst']+4*i for i,c in enumerate(commands)):
+            raise ValueError('compact Quant requires contiguous row placement or explicit split records')
+        c=commands[0]
+        payload=(c['block']<<86)|(c['op']<<80)|(c['dst']<<64)|(c['src']<<48)|(len(commands)<<32)|cycle
+        words.append((0xc7a1<<240)|(pc<<224)|payload)
+        previous_end=cycle+len(commands)-1
+    return words
+
+
 def native_nw_programme(result, layout):
     """Reserve actual native NW bank selectors from the same command schedule.
 
@@ -151,10 +174,28 @@ def main():
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--program-out',type=Path)
     ap.add_argument('--nw-out',type=Path)
+    ap.add_argument('--compact-records',type=Path,help='source-pinned actual records with explicit compiled issue cycles and resident_sid')
+    ap.add_argument('--compact-out',type=Path)
     ap.add_argument('--nw-layout',type=Path,default=Path('results/hbm_static_quant_1015/nw_layout.json'))
     ap.add_argument('--read-station',type=int,default=0)
     ap.add_argument('--write-station',type=int,default=0)
     a=ap.parse_args()
+    if a.compact_records:
+        if not a.compact_out:ap.error('--compact-records requires --compact-out')
+        from hgi_sim.records import decode_one
+        native=json.loads(a.compact_records.read_text())
+        records=[];cycles=[]
+        for item in native['records']:
+            raw=bytes.fromhex(item['record_hex']);record,end=decode_one(raw,0)
+            if end!=len(raw):raise ValueError('native Quant source contains trailing/unbound record bytes')
+            records.append(record);cycles.append(item['issue_cycle'])
+        words=compact_record_words(records,cycles,native['resident_sid'])
+        a.compact_out.write_text(''.join(f'{w:064x}\n' for w in words))
+        a.out.write_text(json.dumps(dict(schema='opentallas.hbm-quant-compact-source-binding.v1',
+            source=str(a.compact_records),source_sha256=hashlib.sha256(a.compact_records.read_bytes()).hexdigest(),
+            record_count=len(records),issue_cycles=cycles,resident_sid=native['resident_sid'],
+            hardware_programme_words=len(words),whole_token_qualified=False),indent=2)+'\n')
+        return
     result=calendar(a.vectors,a.read_station,a.write_station)
     a.out.parent.mkdir(parents=True,exist_ok=True)
     a.out.write_text(json.dumps(result,indent=2)+'\n')
