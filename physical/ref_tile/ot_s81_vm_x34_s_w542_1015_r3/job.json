@@ -1,5 +1,5 @@
 {
- "name": "ot_s81_vm_x34_s_w542_1015_r3-native3-COMMIT",
+ "name": "ot_s81_vm_x34_s_w542_1015_r3-native3-6eabdb3ef",
  "block": "ot_s81_vm_x34_s",
  "ref_tile": true,
  "owner": "claude:S81 VM F2 capture",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/s81-cap-pre-1015",
-  "commit": "COMMIT"
+  "commit": "6eabdb3ef"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ot_s81_vm_x34_s_w542_1015_r3/ot_s81_vm_x34_s_w542_1015_r3-native3-COMMIT"
+   "to": "results/rtl/ref_tile/ot_s81_vm_x34_s_w542_1015_r3/ot_s81_vm_x34_s_w542_1015_r3-native3-6eabdb3ef"
   }
  ],
  "cycles_added": 0,
