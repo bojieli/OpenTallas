@@ -14,13 +14,13 @@
     "rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm_static.sv": "Testbench, not production RTL."
   },
   "observed_rejections": [
-    "Changed unlisted dsfd_vm_static_return_bank8.sv followed by evidence_for rehash still fails vm_service_profile_unmeasured_source",
+    "Actual unlisted return_bank8 latency mutant bypasses release pin register (rv=q_rv -> rv=release_v); evidence_for rehash still fails vm_service_profile_unmeasured_source",
     "Changed listed dsfd_sp_vm_static.sv followed by rehash still fails vm_service_profile_unmeasured_source",
     "Rewritten empty manifest followed by rehash fails vm_service_profile_unmeasured_artifact"
   ],
   "source_sha256": {
     "tools/s81_suhc/vm_service_profile.py": "b897455131c372ef48afa95e90cb864cdedd32ea933ff9f7e46b7ac56ceccbd0",
-    "tools/s81_suhc/tests/test_vm_service_profile.py": "914bad4b9c3b6dc42720365f20836ba5177ea8153b0a9f8f6721090323c558eb",
+    "tools/s81_suhc/tests/test_vm_service_profile.py": "8e6503c4e7f65e0b7e20fcfcf10b73cf0eb4227af4cb43a4aea30fc3c3ac8f5b",
     "tools/s81_compile_schedule/test_compile_calendar.py": "54f8663cada746c2c94982cda29355bca796e8183192a38f1302fb9251340fdd"
   },
   "limits": "Compiler mechanism only; no new hardware or whole-token qualification"

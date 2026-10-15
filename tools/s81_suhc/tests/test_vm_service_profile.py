@@ -116,8 +116,11 @@ class SelectedProfileTests(unittest.TestCase):
     def test_rehashed_unlisted_latency_stage_is_not_a_measurement(self):
         path = 'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return_bank8.sv'
         self.assertNotIn(path, VSP.RTL_SOURCES)
-        with (self.root / path).open('a') as stream:
-            stream.write('\n// changed return pipeline stage\n')
+        target = self.root / path
+        original = target.read_text()
+        # A real latency mutant: bypass the return release pin register.
+        self.assertEqual(original.count('assign rv=q_rv;'), 1)
+        target.write_text(original.replace('assign rv=q_rv;', 'assign rv=release_v;'))
         self.contract['vm_service_profile']['evidence'] = VSP.evidence_for(NAME, self.root)
         self.assertIn('invalid:vm_service_profile_unmeasured_source:' + path, self.kinds())
 
