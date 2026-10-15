@@ -28,12 +28,10 @@
       "bad_chunk",
       "bad_tree",
       "jv",
-      "jd",
       "je"
     ],
     "N": [
       "out_valid",
-      "out_bits",
       "fault",
       "mul_fire",
       "mul_weight",
@@ -46,7 +44,10 @@
       "rst_n",
       "start"
     ],
-    "E": []
+    "E": [
+      "jd",
+      "out_bits"
+    ]
   },
   "layer_cap": "M5",
   "recipe": 2,
@@ -57,7 +58,7 @@
     "hold_margin_ns": 0.03,
     "macro_halo_um": 5.4
   },
-  "structural_change": "Static16beat calendar replaces demand/ready controller; unconditional payload/diagnostic input captures, registered launch data/head, reset conditioner. Arithmetic pc2 leaves unchanged. Fixed calendar measured in static bench; no flow control.",
+  "structural_change": "Co-locate jd input and out_bits output on interleaved E-face pin bank. Same out_bits flop captures jd and launches result, previously physically forced across S/N faces with 42um lateral span: routed native launch230.1ps. Dedicated empty E face places capture/launch flop beside both pins, no RTL or calendar cycle change; arithmetic12 unchanged.",
   "slot_change_request": {
     "name": "s81_markov_ctl_static",
     "outline": [
@@ -73,12 +74,10 @@
         "bad_chunk",
         "bad_tree",
         "jv",
-        "jd",
         "je"
       ],
       "N": [
         "out_valid",
-        "out_bits",
         "fault",
         "mul_fire",
         "mul_weight",
@@ -91,15 +90,18 @@
         "rst_n",
         "start"
       ],
-      "E": []
+      "E": [
+        "jd",
+        "out_bits"
+      ]
     },
-    "reason": "Static successor of assigned v19 Markov controller: sameoutline, retainedpins samecoordinates, remove readiness pins; real pin flops. Await die adoption."
+    "reason": "Co-locate jd input and out_bits output on interleaved E-face pin bank. Same out_bits flop captures jd and launches result, previously physically forced across S/N faces with 42um lateral span: routed native launch230.1ps. Dedicated empty E face places capture/launch flop beside both pins, no RTL or calendar cycle change; arithmetic12 unchanged."
   },
   "job": {
     "owner": "Codex:s81-markov-native-1014",
     "branch": "codex/s81-markov-native-1014",
-    "tag": "st1",
-    "purpose": "Static16beat calendar replaces demand/ready controller; unconditional payload/diagnostic input captures, registered launch data/head, reset conditioner. Arithmetic pc2 leaves unchanged. Fixed calendar measured in static bench; no flow control.",
+    "tag": "st2e",
+    "purpose": "Co-locate jd input and out_bits output on interleaved E-face pin bank. Same out_bits flop captures jd and launches result, previously physically forced across S/N faces with 42um lateral span: routed native launch230.1ps. Dedicated empty E face places capture/launch flop beside both pins, no RTL or calendar cycle change; arithmetic12 unchanged.",
     "benches": [
       {
         "name": "static_exact",
@@ -138,8 +140,45 @@
   },
   "io_tcl": "physical/ref_tile_specs/s81_markov_native/ctl_static_pins.tcl",
   "reroute_reason": {
-    "kind": "rtl_change",
-    "why": "Static16beat calendar replaces demand/ready controller; unconditional payload/diagnostic input captures, registered launch data/head, reset conditioner. Arithmetic pc2 leaves unchanged. Fixed calendar measured in static bench; no flow control."
+    "kind": "slot_change",
+    "slot_change_request": {
+      "name": "s81_markov_ctl_static",
+      "outline": [
+        73.44,
+        34.56
+      ],
+      "pin_faces": {
+        "S": [
+          "head_logit",
+          "weight_bf16",
+          "embed_bf16",
+          "pf",
+          "bad_chunk",
+          "bad_tree",
+          "jv",
+          "je"
+        ],
+        "N": [
+          "out_valid",
+          "fault",
+          "mul_fire",
+          "mul_weight",
+          "mul_embed",
+          "head",
+          "pv_last"
+        ],
+        "W": [
+          "clk",
+          "rst_n",
+          "start"
+        ],
+        "E": [
+          "jd",
+          "out_bits"
+        ]
+      },
+      "reason": "Co-locate jd input and out_bits output on interleaved E-face pin bank. Same out_bits flop captures jd and launches result, previously physically forced across S/N faces with 42um lateral span: routed native launch230.1ps. Dedicated empty E face places capture/launch flop beside both pins, no RTL or calendar cycle change; arithmetic12 unchanged."
+    }
   },
   "params": {},
   "macros": [],
