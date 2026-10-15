@@ -8,7 +8,7 @@
 // Completion fires there unconditionally; core completion is checked, not gated.
 // Shared core Sinkhorn /7 step phase needs fixed worst6-edge padding. A540
 // serial compiled budget covers measured534base+0..6phase, no runtime waiting.
-module ot_s81_hcx_post_native #(parameter integer RL=4,WL=4,MUT_POST=0,parameter IMAGE="hcx_post")(
+module ot_s81_hcx_post_native #(parameter integer RL=4,WL=4,MUT_POST=0,EXTERNAL_ROM=0,parameter IMAGE="hcx_post")(
  input wire clk,rst_n,start,ffn,
  input wire [13:0] raw_base_row,coef_base_row,
  input wire [5:0] layer_idx,
@@ -24,7 +24,11 @@ module ot_s81_hcx_post_native #(parameter integer RL=4,WL=4,MUT_POST=0,parameter
  output wire [15:0] wq_mask,
  output wire [511:0] wq_d,
  input wire wq_commit,
- output reg fault
+ output reg fault,
+ // Compiler-owned shared parameter/gain ROM face; no request handshake.
+ output wire param_ce,
+ output wire [11:0] param_addr,
+ input wire [255:0] param_data
 );
  wire ready,actual_done,core_fault,halted,transport_fault;
  wire [337:0]vmq;wire[273:0]vmr;
@@ -33,7 +37,9 @@ module ot_s81_hcx_post_native #(parameter integer RL=4,WL=4,MUT_POST=0,parameter
  reg [34:0]base;
  wire[287:0]pq;
  reg hv;reg[1:0]hb;reg[4:0]htag;
- wire[255:0]hd={pq[216+:64],pq[144+:64],pq[72+:64],pq[0+:64]};
+ wire[255:0]hd=EXTERNAL_ROM ? param_data : {pq[216+:64],pq[144+:64],pq[72+:64],pq[0+:64]};
+ assign param_ce=pbusy;
+ assign param_addr=12'(base+beat);
  wire[255:0]a=256'h100018000000000001 | (256'(raw_base_row)<<12);
  wire[255:0]b=256'h1000000000004 | (256'(8*layer_idx+4*ffn)<<13);
  wire[255:0]o=256'h18000000000001 | (256'(coef_base_row)<<12);
@@ -47,14 +53,15 @@ module ot_s81_hcx_post_native #(parameter integer RL=4,WL=4,MUT_POST=0,parameter
   .clk(clk),.rst_n(rst_n),.job_start(start),.coef_base_row(coef_base_row),.norm_eps(norm_eps),
   .vmq(vmq),.vmr(vmr),.rq_v(rq_v),.rq_row(rq_row),.rs_v(rs_v),.rs_d(rs_d),
   .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wq_mask),.wq_d(wq_d),.wq_commit(wq_commit),.fault(transport_fault));
- generate for(genvar m=0;m<4;m=m+1)begin:g_rom
+ generate if(!EXTERNAL_ROM)begin:g_internal_rom
+ for(genvar m=0;m<4;m=m+1)begin:g_rom
 `ifndef SYNTHESIS
   ot_rom_4096x72_m8 #(.INSTANCE($sformatf("%s_p%0d",IMAGE,m)))rom(
 `else
   ot_rom_4096x72_m8 rom(
 `endif
    .clk(clk),.ce_in(pbusy),.addr_in(12'(base+beat)),.rd_out(pq[72*m+:72]));
- end endgenerate
+ end end endgenerate
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin busy<=0;pbusy<=0;observed_done<=0;age<=0;done<=0;fault<=0;hv<=0;beat<=0;end
   else begin
