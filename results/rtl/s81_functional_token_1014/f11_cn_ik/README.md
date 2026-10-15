@@ -25,7 +25,7 @@ Evidence:
 - Removed sine branch mutants FAIL59(CN) and52(IK) combined checks. See source-
   pinned result.json/result_mut.json and run logs in each native directory.
 - Full-shape actual descriptor/control/VM interface composition with diagnostic
-  DPI arithmetic: all18 existing job classes/cases, including T133, PASS2413rows;
+  DPI arithmetic: an18-job program covering existing classes, including T133, PASS2413rows;
   twelve-job KV/CN/IK gain-epoch interleave PASS162rows, no faults or early done.
   This diagnostic is explicitly NOT an all-RTL native full-layer receipt.
 - Shared job measurement before adding the standalone-only raw observation
@@ -48,3 +48,15 @@ Remaining qualification:
   implementation is the native target; no flat-reference substitution is allowed.
 - CP, index query RoPE/quant, new-key state and candidate-final native paths are
   separate still-open operations with dedicated owners. They are not CN/IK aliases.
+
+Explicit CN/IK leaf clock join
+------------------------------
+The production parent exposes39 scalar leaf entries through ck_cn[19:0],
+ck_cnnw[15:0],ck_ikh[1:0],ck_ikr and matching reset entries when compiled with
+OT_S81_NATIVE_LEAF_CLOCKS. Actual hardened boundary wrappers from be48e6985
+replace the raw helper instances. Historical no-flag clocking is diagnostic.
+The explicit-clock bench repeats the2413-row stress and162-row interleave with
+identical cycles and zero faults/early completion. native_leaf_clock_build.json
+binds that macro flag to the compiled source set; native_leaf_clocks.json is
+the matching result. Arithmetic remains DPI in this interface composition;
+physical phi-R delivery, pins and timing remain the die/physical owner gate.
