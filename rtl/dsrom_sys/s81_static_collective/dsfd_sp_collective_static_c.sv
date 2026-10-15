@@ -10,7 +10,7 @@ module dsfd_sp_collective_static_c #(
  parameter ROM_FILE="",parameter integer CYCLES=1
 )(
  input wire[0:0]refclk,por,
- input wire[0:0]ck_control,input wire[7:0]ck_lane,input wire[15:0]ck_hc_lane,
+ input wire[4:0]ck_control,input wire[7:0]ck_lane,input wire[15:0]ck_hc_lane,
  input wire[1:0]f_rank,
  input wire[512:0]f_crs,output wire[14:0]t_crq,output wire[2203:0]t_vm,
  input wire[514:0]rW0,rW1,rW2,rW3,rE0,rE1,rE2,rE3,
@@ -37,7 +37,7 @@ module dsfd_sp_collective_static_c #(
   assign rx_live[g]=rx[g*515+513];assign rx_fault[g]=rx[g*515+514];
  end endgenerate
  s81_static_collective_slab #(.ROM_FILE(ROM_FILE),.CYCLES(CYCLES)) slab(
- .ck_control(ck_control[0]),.ck_lane(ck_lane),.ck_hc_lane(ck_hc_lane),.rst_n(reset_q[1]),
+ .ck_control(ck_control),.ck_lane(ck_lane),.ck_hc_lane(ck_hc_lane),.rst_n(reset_q[1]),
  .f_rank(f_rank),.c_cmd(c_cmd),.c_done(c_done),.c_st(c_st),
  .t_crq(t_crq),.f_crs(f_crs),.t_vm(t_vm),
  .phy_rx_valid(rx_valid),.phy_rx_data(rx_data),.phy_rx_fault(rx_fault),.phy_rx_live(rx_live),

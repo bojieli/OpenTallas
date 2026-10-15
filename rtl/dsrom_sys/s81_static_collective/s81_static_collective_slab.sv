@@ -1,12 +1,13 @@
 `timescale 1ns/1ps
 // Real static S81 collective datapath composition, native candidate.
+// ck_control[0..4] = sequencer/ROM, TP4 core, VM boundary, pass adapter, HC metadata.
 // Clocks are delivered pins from the die PLL tree; no common-pin phase waiver.
 // Configuration ROM/memory macro and production placement/phase/image are open
 // qualification gates. Missing ROM fails closed, never fabricates a schedule.
 module s81_static_collective_slab #(
- parameter ROM_FILE="",parameter integer CYCLES=1
+ parameter ROM_FILE="",parameter integer CYCLES=1,parameter integer MUT=0
 )(
- input wire ck_control,input wire[7:0]ck_lane,input wire[15:0]ck_hc_lane,
+ input wire[4:0]ck_control,input wire[7:0]ck_lane,input wire[15:0]ck_hc_lane,
  input wire rst_n,input wire[1:0]f_rank,
  input wire[84:0]c_cmd,output wire[8:0]c_done,output wire[1:0]c_st,
  output reg[14:0]t_crq,input wire[512:0]f_crs,output reg[2203:0]t_vm,
@@ -65,11 +66,19 @@ module s81_static_collective_slab #(
  wire [13:0]raw_rx_meta_row;
  wire [7:0]raw_rx_tag;
  wire hc_assemble_slot;
+ wire[4:0]rn_control;
+ genvar root;
+ generate for(root=0;root<5;root=root+1)begin:reset_root
+  reg[1:0]rr;
+  always @(posedge ck_control[root] or negedge rst_n)
+   if(!rst_n)rr<=0;else rr<={rr[0],1'b1};
+  assign rn_control[root]=rr[1];
+ end endgenerate
  wire[1:0]controller_status;wire busy;wire transport_fault,channel_fault,raw_fault,reduce_fault,assemble_fault;
  reg boundary_fault;
  wire datapath_fault=transport_fault|channel_fault|raw_fault|reduce_fault|assemble_fault|boundary_fault;
  s81_static_calendar_controller #(.ROM_FILE(ROM_FILE),.CYCLES(CYCLES)) calendar(
- .clk(ck_control),.rst_n(rst_n),.c_cmd(c_cmd),.c_done(c_done),.c_st(controller_status),
+ .clk(ck_control[0]),.rst_n(rn_control[0]),.c_cmd(c_cmd),.c_done(c_done),.c_st(controller_status),
  .datapath_fault(datapath_fault),.busy(busy),
  .read_slot(read_slot),
  .read_row(read_row),
@@ -122,14 +131,14 @@ module s81_static_collective_slab #(
  // The controller's status is already pin registered. Faults are collected at
  // this boundary so c_st also has a final output register.
  reg[1:0]status_q;
- always @(posedge ck_control or negedge rst_n)
-  if(!rst_n)status_q<=0;else status_q<={controller_status[1],controller_status[0]|datapath_fault};
+ always @(posedge ck_control[2] or negedge rn_control[2])
+  if(!rn_control[2])status_q<=0;else status_q<={controller_status[1],controller_status[0]|datapath_fault};
  assign c_st=status_q;
  wire[3:0]gather_we;wire[59:0]gather_rows;wire[2047:0]gather_data;
  wire[31:0]gather_tag;wire[15:0]gather_seq;wire gather_last;
  wire raw_capture=raw_capture_payload_slot|raw_capture_meta_slot;
- s81_static_fmt1_rank_dynamic_clocked tp4(
- .rank(f_rank),.clk_core(ck_control),.clk_lane(ck_lane[2:0]),.rst_n(rst_n),
+ s81_static_fmt1_rank_dynamic_clocked #(.LOCAL_RESET_SYNC(1)) tp4(
+ .rank(f_rank),.clk_core(ck_control[1]),.clk_lane(ck_lane[2:0]),.rst_n(rn_control[1]),
  .issue_slot(issue_slot),.src_valid(f_crs[0]&&!raw_capture),.src_data(f_crs[512:1]),
  .tag(tag),.seq(seq),.last(last),.rankmask(rankmask),
  .commit_slot(commit_slot),.commit_tag(commit_tag),.commit_seq(commit_seq),
@@ -141,21 +150,21 @@ module s81_static_collective_slab #(
  .vm_we(gather_we),.vm_rows(gather_rows),.vm_data(gather_data),
  .gather_tag(gather_tag),.gather_seq(gather_seq),.gather_last(gather_last),.fault(transport_fault));
  reg gather_mode_q;reg[13:0]reduce_row[0:17];integer p;
- always @(posedge ck_control)begin
+ always @(posedge ck_control[2])begin
   gather_mode_q<=commit_gather;reduce_row[0]<=gather_rows[13:0];
   for(p=1;p<18;p=p+1)reduce_row[p]<=reduce_row[p-1];
  end
  wire reduced_valid,reduced_last,reduced_error;
  wire[511:0]reduced_data;wire[31:0]reduced_tag;wire[15:0]reduced_seq;
- s81_static_hc_reduce_clocked reduce(
- .clk_lane(ck_hc_lane),.clk_control(ck_control),.rst_n(rst_n),.slot(hc_reduce_slot),
+ s81_static_hc_reduce_clocked #(.LOCAL_RESET_SYNC(1)) reduce(
+ .clk_lane(ck_hc_lane),.clk_control(ck_control[4]),.rst_n(rn_control[4]),.slot(hc_reduce_slot),
  .rank_valid(gather_we&{4{hc_reduce_slot}}),.rank_data(gather_data),
  .tag(gather_tag),.seq(gather_seq),.last(gather_last),
  .word_valid(reduced_valid),.word_data(reduced_data),.word_tag(reduced_tag),
  .word_seq(reduced_seq),.word_last(reduced_last),.word_error(reduced_error),.fault(reduce_fault));
  wire[31:0]row_tag;
  s81_static_hc_assemble_clocked assemble(
- .clk_lane(ck_hc_lane),.clk_control(ck_control),.rst_n(rst_n),.write_slot(hc_assemble_slot),
+ .clk_lane(ck_hc_lane),.clk_control(ck_control[4]),.rst_n(rn_control[4]),.write_slot(hc_assemble_slot),
  .word_index(hc_word_index),.word_valid(reduced_valid&&hc_assemble_slot),
  .word_data(reduced_data),.word_tag(reduced_tag),.word_error(reduced_error),
  .emit_slot(hc_emit_slot),.emit_tag(hc_emit_tag),.row_valid(t_hc_yv),
@@ -174,7 +183,7 @@ module s81_static_collective_slab #(
  wire[551:0]vm_tx_payload,vm_rx_payload;
  wire[1101:0]raw_sources;
  s81_static_raw_vm_rows #(.REGISTER_VM_WRITES(0)) raw_rows(
- .clk(ck_control),.rst_n(rst_n),.capture_payload_slot(raw_capture_payload_slot),
+ .clk(ck_control[2]),.rst_n(rn_control[2]),.capture_payload_slot(raw_capture_payload_slot),
  .capture_meta_slot(raw_capture_meta_slot),.f_crs({f_crs[512:1],f_crs[0]&&raw_capture}),
  .send_slot(raw_send),.send_last(raw_last),.send_channel(raw_channel),
  .vm_tx_valid(vm_tx_valid),.vm_tx_last(vm_tx_last),.vm_tx_channel(vm_tx_channel),.vm_tx_payload(vm_tx_payload),
@@ -182,8 +191,8 @@ module s81_static_collective_slab #(
  .rx_payload_row(raw_rx_payload_row),.rx_meta_row(raw_rx_meta_row),.rx_tag(raw_rx_tag),
  .vm_write_sources(raw_sources),.fault(raw_fault));
  wire[515:0]host_rx;
- s81_static_fmt1_channels_clocked channels(
- .clk_adapter(ck_control),.clk_lane(ck_lane[7:3]),.rst_n(rst_n),
+ s81_static_fmt1_channels_clocked #(.LOCAL_RESET_SYNC(1)) channels(
+ .clk_adapter(ck_control[3]),.clk_lane(ck_lane[7:3]),.rst_n(rn_control[3]),
  .tx_slot(channel_tx_slot),.rx_slot(channel_rx_slot),.tx_kind(channel_tx_kind),.rx_kind(channel_rx_kind),
  .vm_tx_last(vm_tx_last),.vm_tx_valid(vm_tx_valid),.vm_tx_channel(vm_tx_channel),.vm_tx_payload(vm_tx_payload),
  .wfc_tx(f_wfc),.host_tx_valid(f_host[76]),.host_status(f_host[75:65]),.host_completion(f_host[64:0]),
@@ -218,10 +227,11 @@ module s81_static_collective_slab #(
    word=raw_sources[j*551+:551];
    if(word[0])begin if(occupied[j])pack_bad=1;next_vm[j*551+:551]=word;occupied[j]=1;end
   end
+  if(MUT==1 && hc_write_slot)next_vm[31]=~next_vm[31];
   if(pack_bad||boundary_fault)for(integer j=0;j<4;j=j+1)next_vm[j*551]=0;
  end
- always @(posedge ck_control or negedge rst_n)begin
-  if(!rst_n)begin t_crq<=0;t_vm<=0;boundary_fault<=0;end
+ always @(posedge ck_control[2] or negedge rn_control[2])begin
+  if(!rn_control[2])begin t_crq<=0;t_vm<=0;boundary_fault<=0;end
   else begin
    t_crq<={read_row,read_slot};t_vm<=next_vm;
    if(pack_bad||(|phy_rx_fault)||(issue_slot&&raw_capture)||

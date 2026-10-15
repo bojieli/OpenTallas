@@ -1,5 +1,6 @@
 `timescale 1ps/1ps
 module tb_s81_static_collective_slab;
+ parameter integer MUT=0;
  import ot_fp32_rne_pkg::*;
  reg clk=0;always #417 clk=~clk;reg s_ck=0;always #556 s_ck=~s_ck;
  reg rst_n=0;reg[84:0]c_cmd=0;wire[8:0]done;wire[1:0]status;
@@ -7,8 +8,8 @@ module tb_s81_static_collective_slab;
  wire[7:0]tv,rv;wire[4095:0]td,rd;
  reg[513:0]f_wfc=0;wire[513:0]t_wfc;reg[76:0]f_host=0;wire[514:0]t_host;
  wire[8191:0]hc_y;wire hc_v;
- s81_static_collective_slab #(.ROM_FILE("calendar.mem"),.CYCLES(2141)) dut(
- .ck_control(clk),.ck_lane({8{clk}}),.ck_hc_lane({16{clk}}),.rst_n(rst_n),.f_rank(2'd0),
+ s81_static_collective_slab #(.ROM_FILE("calendar.mem"),.CYCLES(2141),.MUT(MUT)) dut(
+ .ck_control({5{clk}}),.ck_lane({8{clk}}),.ck_hc_lane({16{clk}}),.rst_n(rst_n),.f_rank(2'd0),
  .c_cmd(c_cmd),.c_done(done),.c_st(status),.t_crq(crq),.f_crs(crs),.t_vm(writes),
  .phy_rx_valid(rv),.phy_rx_data(rd),.phy_rx_fault(8'd0),.phy_rx_live(8'hff),
  .phy_tx_valid(tv),.phy_tx_data(td),.f_wfc(f_wfc),.t_wfc(t_wfc),.f_host(f_host),.t_host(t_host),

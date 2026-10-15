@@ -7,7 +7,7 @@
 // tx_seq is sampled one edge after adapter TX slot. RX expected metadata is
 // sampled one edge after the gearbox frame-completion edge. rx_slot is sampled
 // three edges after gearbox completion. PHY flight/relays remain extra.
-module s81_static_fmt1_channels_clocked #(parameter integer MUT=0)(
+module s81_static_fmt1_channels_clocked #(parameter integer MUT=0,parameter integer LOCAL_RESET_SYNC=0)(
  input wire clk_adapter, input wire[4:0]clk_lane, input wire rst_n,
  input wire[4:0]tx_slot,rx_slot,input wire[9:0]tx_kind,rx_kind,
  input wire vm_tx_last,vm_tx_valid,input wire[2:0]vm_tx_channel,
@@ -27,7 +27,14 @@ module s81_static_fmt1_channels_clocked #(parameter integer MUT=0)(
  dsfd_coll_static_channels a(.*,.clk(clk_adapter),.fault(af));
  genvar c;
  generate for(c=0;c<5;c=c+1)begin:g_lane
- s81_static_raw_fmt1_lane #(.MUT(MUT)) l(.clk(clk_lane[c]),.rst_n(rst_n),
+ wire lane_rst_n;
+ if(LOCAL_RESET_SYNC)begin:reset_lane
+  reg[1:0]rr;
+  always @(posedge clk_lane[c] or negedge rst_n)if(!rst_n)rr<=0;else rr<={rr[0],1'b1};
+  assign lane_rst_n=rr[1];
+ end else begin:reset_compat assign lane_rst_n=rst_n;end
+
+ s81_static_raw_fmt1_lane #(.MUT(MUT)) l(.clk(clk_lane[c]),.rst_n(lane_rst_n),
  .tx_v(lane_tx_valid[c]),.tx_seq(tx_seq[c*10+:10]),.tx_last(lane_tx_last[c]),.tx_payload(lane_tx_payload[c*552+:552]),
  .rx_v(lane_rx_valid[c]),.rx_last(lane_rx_last[c]),.rx_payload(lane_rx_payload[c*552+:552]),
  .rx_expected_seq(rx_expected_seq[c*10+:10]),.rx_expected_last(rx_expected_last[c]),
