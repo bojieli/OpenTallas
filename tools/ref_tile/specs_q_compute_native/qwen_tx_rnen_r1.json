@@ -1,0 +1,165 @@
+{
+  "name": "qwen_tx_rnen_r1",
+  "top": "qwen_tx_rnen_r1",
+  "kind": "tile",
+  "sources": [
+    "rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rne_native.sv",
+    "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 15.12,
+    "h": 64.8
+  },
+  "pins": {
+    "W": [
+      "d",
+      "clk"
+    ],
+    "E": [
+      "q"
+    ],
+    "S": [
+      "rst_n"
+    ]
+  },
+  "inter": [],
+  "refglob": "*",
+  "layer_cap": "M5",
+  "recipe": 2,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "inhold": true,
+  "outhold": true,
+  "io_flop_at_pins": {
+    "cols": 4
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M5"
+    },
+    "m5_pg_pitch": 2.7,
+    "macro_halo_um": 5.4
+  },
+  "structural_change": "NATIVE-BOUNDARY successor (CLOSED qwen_tx_rne_r0/r1 views FAIL native TT capture: r0 203.3, r1 223.8 > 190): input pins registered, carry/inc after the R0 flop, mask after the R1 flop; same two TX edges: R1 exact modulo16increment/mask then198real kept data bits. Not a CLOSEDmaster reroute; parent unintegrated. Packetpipe reset3 retained. Actual native timing and recipe2 posthook area unmeasured; no waiver.",
+  "job": {
+    "owner": "Claude:q15_compute_elem",
+    "branch": "claude/q15-rne-native",
+    "tag": "n1",
+    "purpose": "Standalone proven TX RNE native candidate; parent unqualified",
+    "extra_paths": [
+      "physical/qwen_tx_rne_retime_1015",
+      "results/rtl/qwen_compute_native_glue_1014/tx_rne207_1015"
+    ],
+    "benches": [
+      {
+        "name": "rnen267to198_m0",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_native.sh {RUN}/bench/rnen_m0 0",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS RNEnative267to198"
+      },
+      {
+        "name": "rnen267to198_m1",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_native.sh {RUN}/bench/rnen_m1 1",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      },
+      {
+        "name": "rnen267to198_m2",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_native.sh {RUN}/bench/rnen_m2 2",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      },
+      {
+        "name": "rnen267to198_m3",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_native.sh {RUN}/bench/rnen_m3 3",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      },
+      {
+        "name": "rnen267to198_m4",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_native.sh {RUN}/bench/rnen_m4 4",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      },
+      {
+        "name": "rnen267to198_m5",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_native.sh {RUN}/bench/rnen_m5 5",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      },
+      {
+        "name": "rnen267to198_m6",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_native.sh {RUN}/bench/rnen_m6 6",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      }
+    ],
+    "views_to": "physical/ref_tile/qwen_tx_rnen_r1/views",
+    "record_to": "results/rtl/ref_tile/qwen_tx_rnen_r1",
+    "cycles_added": 0,
+    "hold_merge": "Standalone leaf only; parent integration and wholeparent proof pending"
+  },
+  "io_tcl": "physical/ref_tile/qwen_tx_rnen_r1/assigned_pins.tcl",
+  "pin_ranges": {
+    "d": [
+      5.436,
+      59.388
+    ],
+    "q": [
+      5.436,
+      59.388
+    ]
+  },
+  "macros": [],
+  "children": [],
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  }
+}
