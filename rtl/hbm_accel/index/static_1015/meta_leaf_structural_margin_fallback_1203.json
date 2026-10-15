@@ -1,0 +1,333 @@
+{
+  "schema": "opentallas.hbm-idx-meta-structural-margin-fallback.v1",
+  "status": "PROPOSAL_ONLY_NOT_GRANTED_NOT_ROUTED",
+  "recorded": "2026-10-15T12:02:19.385050-07:00",
+  "trigger": "Use only if prescribed first-route147pathholdECO fails/stalls; presentECOwait is diskadmission, not physicalfailure",
+  "current_source": "849481897",
+  "canonical_grant": "38c9e94a2",
+  "current_outline_um": [
+    51.84,
+    51.84
+  ],
+  "candidate_outline_um": [
+    86.4,
+    86.4
+  ],
+  "current_core_um2": 2258,
+  "candidate_core_um2": 6737.126400000002,
+  "measured_global_margin_projection": {
+    "cts_growth_util_points": 21.8,
+    "grt_growth_util_points": 21.3,
+    "cts_buffer_area_estimate_um2": 492.24399999999997,
+    "grt_buffer_area_estimate_um2": 480.954,
+    "candidate_cts_growth_util_points": 7.3064385432934715,
+    "candidate_grt_growth_util_points": 7.1388596776216025,
+    "unchanged_shared_guard_util_points": 8,
+    "note": "Re-expression of actual firstflow projected holdrepair area; fresh86.4CTS/route must measure actual demand, not inherited proof"
+  },
+  "replicas": 16,
+  "leaf_footprint_increase_um2": 76441.1904,
+  "die_outline_change_um2": 0,
+  "die_outline_change_note": "Geometric proposal fits existing parent rectangles; actual512hslice+allotherglue packing remainsOPEN",
+  "cycles_added": 0,
+  "clock_period_ps": 833.333,
+  "logical_delay_edges": 123,
+  "sink_count_upper_bound": 3075,
+  "needed_before_route": [
+    "typed86.4grant with exactactualpins",
+    "freshCTS at86.4 with current sourceboundbytes",
+    "native exact+mutants unchanged proof",
+    "registeredboundary/cut/clock audits"
+  ],
+  "local_rectangle_checks": [
+    {
+      "slot": "idx_s0_meta0",
+      "origin": {
+        "x": 2376.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s0",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s0_meta1",
+      "origin": {
+        "x": 2592.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s0",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s0_meta2",
+      "origin": {
+        "x": 2808.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s0",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s0_meta3",
+      "origin": {
+        "x": 3024.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s0",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s1_meta0",
+      "origin": {
+        "x": 2376.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s1",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s1_meta1",
+      "origin": {
+        "x": 2592.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s1",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s1_meta2",
+      "origin": {
+        "x": 2808.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s1",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s1_meta3",
+      "origin": {
+        "x": 3024.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s1",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s2_meta0",
+      "origin": {
+        "x": 2376.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s2",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s2_meta1",
+      "origin": {
+        "x": 2592.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s2",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s2_meta2",
+      "origin": {
+        "x": 2808.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s2",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s2_meta3",
+      "origin": {
+        "x": 3024.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s2",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s3_meta0",
+      "origin": {
+        "x": 2376.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s3",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s3_meta1",
+      "origin": {
+        "x": 2592.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s3",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s3_meta2",
+      "origin": {
+        "x": 2808.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s3",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    },
+    {
+      "slot": "idx_s3_meta3",
+      "origin": {
+        "x": 3024.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "parent": "idx_s3",
+      "parent_outline_um": [
+        3840.48,
+        3008.88
+      ],
+      "candidate_outline_um": [
+        86.4,
+        86.4
+      ],
+      "inside_existing_parent_rectangle": true
+    }
+  ],
+  "qualification": false
+}
