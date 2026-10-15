@@ -116,5 +116,12 @@
     "missing_tile_parent_LEFs": 16,
     "frame_mm2": 11.316163968,
     "scope": "actualsource inventory; plannedtile group outlines are not nativeclosure"
+  },
+  "park_q1_production_scope": {
+    "decision": "Do not reroute historical unused PARKQ1; preserveCLOSEDrecordandnativeFAIL",
+    "source_map_commit": "bc3a80e94",
+    "source_map": "results/arch/hbm_p2p_1014/static_storage_successors_1015.json",
+    "selected_V1_V4_PARK_references": 0,
+    "logical_storage": "successor-native storage/resultstore joins remain separatelyowned/open"
   }
 }
