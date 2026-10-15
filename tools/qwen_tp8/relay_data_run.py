@@ -135,7 +135,8 @@ if '--case' in sys.argv:
             cx, cy = (r[0] + r[2]) / 2, (r[1] + r[3]) / 2
             d = dict(W=cx, E=mst.w - cx, S=cy, N=mst.h - cy)
             f = min(d, key=d.get)
-            q = g.setdefault(base, dict(face=f, layer=layer, pos=[], interior=d[f] > 1.0))
+            q = g.setdefault(base, dict(face=f, layer=layer, pos=[], xy=[], interior=d[f] > 1.0))
+            q['xy'].append((int(idx[:-1]) if idx else 0, round(cx,4), round(cy,4)))
             q['pos'].append((int(idx[:-1]) if idx else 0, round(cy if f in 'EW' else cx, 4)))
         faces, rng, ports = {}, {}, {}
         for base, q in g.items():
@@ -144,7 +145,7 @@ if '--case' in sys.argv:
             ports[base] = dict(face=q['face'], layer=q['layer'], bits=len(q['pos']), range_um=[lo, hi],
                                bit0_at='lo' if q['pos'][0][1] <= q['pos'][-1][1] else 'hi',
                                direction=dirs.get(name, {}).get(base, 'input'), peer=peer.get((name, base)),
-                               **({'interior': True} if q['interior'] else {}))
+                               **({'interior': True, 'positions_xy_um': [[x,y] for _,x,y in sorted(q['xy'])]} if q['interior'] else {}))
             if not q['interior']:
                 faces.setdefault(q['face'], []).append((lo, base))
                 rng[base] = [lo, hi]

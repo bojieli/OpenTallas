@@ -1549,6 +1549,18 @@ def _wrap(v, m, G, peers):
                 from qwen_tp8.ectl_pin_replan_candidate import apply as head_pin_candidate
                 head_pin_candidate(model, M)
             align_abutted(v, model, M, pw1, split, model['tp8b_v5'].setdefault('pin_align', {}))
+            # Actual R0 band leaves: each hard child clock enters at its
+            # measured physical pin, not an arbitrary parent-center M8 pin.
+            band = M.get('qfd_sp_band_lanes')
+            if band is not None and SPLIT_COMPUTE:
+                for j in range(16):
+                    x = (25.92, 311.04, 596.16)[j % 3] + 97.02
+                    y = 25.92 + 177.12 * (j // 3) + 151.158
+                    band.ports[f'ck_l{j}'] = ('xy', 1, 'M5', [(round(x,4),round(y,4))], 1)
+                    if f'ck_l{j}' not in band.order:
+                        band.order.append(f'ck_l{j}')
+                band.ports['ck'] = ('pins', 1, 'N', 'M5', [440.652], 1)
+
     v.V5_FINAL_MASTERS = final
 
     def port_widths(model, k=1):
@@ -1568,7 +1580,7 @@ def _wrap(v, m, G, peers):
         return {key: live[key] for key in set(w) | set(live) if key in live}
 
     def pin_rects(mst, k, wmap):
-        mine = {p: sp for p, sp in mst.ports.items() if sp[0] == 'pins'}
+        mine = {p: sp for p, sp in mst.ports.items() if sp[0] in ('pins', 'xy')}
         if mine:
             cp = type(mst)(mst.name, mst.w, mst.h, mst.obs_top, mst.note)
             cp.ports = {p: sp for p, sp in mst.ports.items() if p not in mine}
@@ -1576,6 +1588,11 @@ def _wrap(v, m, G, peers):
             out = base_pr(cp, k, wmap)
             depth = 0.192
             for p in dict.fromkeys(q for q in mst.order if q in mine):
+                if mine[p][0] == 'xy':
+                    _, n0, layer, poss, _ = mine[p]
+                    for i, (x, y) in enumerate(poss[:wmap.get(p, n0)]):
+                        out.append((f'{p}[{i}]', layer, (x-.012,y-.012,x+.012,y+.012)))
+                    continue
                 _, n0, f, layer, poss, _ = mine[p]
                 n = min(wmap.get(p, n0), len(poss))
                 for i in range(n):
