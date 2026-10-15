@@ -98,8 +98,9 @@ def main():
     ap.add_argument("--execute",action="store_true");ap.add_argument("--inside-container",action="store_true")
     ap.add_argument("--resume-from-run",type=Path,help="reuse source-manifest-matched generic.json and successful frontend/guard receipts")
     a=ap.parse_args();plan=a.plan.resolve();out=a.out.resolve()
+    owner0=json.loads(a.coordinator_lock.read_text())["owner"] if a.coordinator_lock else None
     def guard():
-        if a.coordinator_lock and json.loads(a.coordinator_lock.read_text())["owner"]!="codex":raise RuntimeError("COORD changed")
+        if a.coordinator_lock and json.loads(a.coordinator_lock.read_text())["owner"]!=owner0:raise RuntimeError("COORD changed")
     def write(path,text):
         guard();path.parent.mkdir(parents=True,exist_ok=True);guard();path.write_text(text)
     def run(cmd,log,cwd=None):
@@ -110,7 +111,9 @@ def main():
     if manifest["status"]!="PASS_VERILATOR_HIERARCHY_ONLY":raise ValueError("actual Verilator hierarchy proof required")
     for path,digest in manifest["files_sha256"].items():
         if sha((plan/"src"/path).read_bytes())!=digest:raise ValueError("source bytes changed: "+path)
-    if len(manifest["physical_macros"])!=4:raise ValueError("all four real physical macro views required")
+    # every macro the plan stages (host_root_plan.MACROS: 4 + the program loader's 1RW 256x64 since kvsys r8) must be present
+    if len(manifest["physical_macros"])<5 or any(not m.get("blackbox") or not m.get("tt_liberty") for m in manifest["physical_macros"]):
+        raise ValueError("all real physical macro views (incl. the program-loader SRAM) required")
     if a.stdlib_area_scale_to_um2<=0:raise ValueError("positive explicit standard area scale required")
     if a.report_only:
         receipt=json.loads((out/"run_plan.json").read_text())
