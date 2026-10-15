@@ -223,7 +223,7 @@ def export(q, out):
                 rects.append((p+f'[{k}]',L,r))
         if s[0] == 'xy':
             x,y = s[3][0]
-            rects.append((p+'[0]', s[2], (x-.012,y-.012,x+.012,y+.012)))
+            rects.append((p+'[0]', s[2], ((x-.012,y-.048,x+.012,y+.048) if s[2] in ('M1','M3','M5','M7','M9') else (x-.048,y-.012,x+.048,y+.012))))
     seen = {}
     tcl = []
     groups = {}

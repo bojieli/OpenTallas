@@ -1019,10 +1019,42 @@ def lef_text(mst, k, wmap):
         L += [f'  PIN {nm}', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    PORT', f'      LAYER {layer} ;',
               f'        RECT {a:.3f} {b:.3f} {c_:.3f} {d:.3f} ;', '    END', f'  END {nm}']
     L.append('  OBS')
+    # split compute C19s (DRT-0073 on every interior clock entry): an interior pin under a full M1..obs_top OBS has no
+    # access point; the OBS keeps a 0.6-um chimney above each interior pin (its layer up to obs_top) so the die drops
+    # in from M8.  A hardened parent must keep the same chimney free.
+    holes = {}
+    for nm, layer, (a, b, c_, d) in pins:
+        vert = layer in ('M1', 'M3', 'M5', 'M7', 'M9')
+        edge_ok = (b < 0.5 or d > mst.h - 0.5) if vert else (a < 0.5 or c_ > mst.w - 0.5)
+        if not edge_ok:     # its own preferred direction does not reach the nearest outline edge
+            lv = int(layer[1:])
+            for i in range(lv, mst.obs_top + 1):
+                holes.setdefault(i, []).append((a - 0.3, b - 0.3, c_ + 0.3, d + 0.3))
     for i in range(1, mst.obs_top + 1):
-        L += [f'    LAYER M{i} ;', f'      RECT 0 0 {mst.w:.3f} {mst.h:.3f} ;']
+        L += [f'    LAYER M{i} ;']
+        L += [f'      RECT {a:.3f} {b:.3f} {c_:.3f} {d:.3f} ;' for a, b, c_, d in _minus(mst.w, mst.h, holes.get(i, []))]
     L += ['  END', f'END {mst.name}', '']
     return '\n'.join(L), len(pins)
+
+
+def _minus(w, h, holes):
+    """[0, w] x [0, h] minus the hole rectangles, as x-slabs of y-intervals (exact cover, no overlap)."""
+    if not holes:
+        return [(0.0, 0.0, w, h)]
+    xs = sorted({0.0, w} | {max(0.0, min(w, q)) for hl in holes for q in (hl[0], hl[2])})
+    out = []
+    for x0, x1 in zip(xs, xs[1:]):
+        if x1 - x0 < 1e-6:
+            continue
+        ys = sorted((max(0.0, hl[1]), min(h, hl[3])) for hl in holes if hl[0] < x1 - 1e-9 and hl[2] > x0 + 1e-9)
+        y = 0.0
+        for a, b in ys:
+            if a > y + 1e-6:
+                out.append((x0, y, x1, a))
+            y = max(y, b)
+        if h > y + 1e-6:
+            out.append((x0, y, x1, h))
+    return out
 
 
 # ------------------------------------------------------------------------------------------------ writers

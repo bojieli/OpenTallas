@@ -48,8 +48,9 @@ OPEN_INPUTS = ('cmd_v', 'cmd_mode', 'cmd_words', 'cmd_tag', 'pkg_s', 'die_ps')
 def _aliases(ports):
     """Die-level single-bit / slice names for the vector clock and SerDes ports (port_join: alias -> real bits)."""
     a = {}
-    for p in ('face_ck', 'relay_ck', 'fdi_rx_ck'):
-        a.update({f'{p}{k}': (p, [k]) for k in range(ports[p][0])})
+    for p in ('face_ck', 'relay_ck', 'fdi_rx_ck', 'blk_ck'):
+        if p in ports:
+            a.update({f'{p}{k}': (p, [k]) for k in range(ports[p][0])})
     for s in range(3):
         a[f'stx{s}'] = ('serdes_tx', list(range(s * FW_S, (s + 1) * FW_S)))
         a[f'srx{s}'] = ('serdes_rx', list(range(s * FW_S, (s + 1) * FW_S)))
@@ -60,7 +61,9 @@ def _aliases(ports):
 
 def core_clock_pins(ports):
     return (CORE_CLOCKS + [f'face_ck{k}' for k in range(ports['face_ck'][0])] +
-            [f'relay_ck{k}' for k in range(ports['relay_ck'][0])] + ['gearbox_core_ck'])
+            [f'relay_ck{k}' for k in range(ports['relay_ck'][0])] + ['gearbox_core_ck'] +
+            # QCOLL r10 (f3d6a685d): 200 MHz block-stage roots; timed in the core domain here (833 ps: pessimistic)
+            [f'blk_ck{k}' for k in range(ports['blk_ck'][0] if 'blk_ck' in ports else 0)])
 
 
 def fdi_clock_pins(ports):

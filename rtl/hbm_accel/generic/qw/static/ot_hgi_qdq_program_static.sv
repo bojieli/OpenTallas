@@ -14,7 +14,8 @@ module ot_hgi_qdq_program_static #(
     // banks; adds exactly +2 read-return edges (rq,rr) and +1 write-commit edge (wq) to the fixed calendar.
     // LG=0 is the previous single-cluster boundary (unchanged behaviour).
     parameter integer LG=0,
-    parameter integer LGMUT=0 // bench only: 1 binds port groups 0/1 to each other's bank-pair write slice
+    parameter integer LGMUT=0, // bench only: 1 binds port groups 0/1 to each other's bank-pair write slice
+    parameter integer TSPLIT=0 // 1: word-sliced transport leaves (control + NS read/write slices), zero added edges
 )(
     input wire clk_program,clk_transport,clk_dxl,clk_dbq,clk_daq,rst_n,
     input wire [3:0] clk_lg,
@@ -51,7 +52,7 @@ module ot_hgi_qdq_program_static #(
     end else begin: single_cluster
         assign rq=rq_e; assign rr_e=rr; assign wq=wq_e;
     end endgenerate
-    ot_hgi_qdq_static #(.IO_REGS(IO_REGS),.RL(RL+(LG!=0?2:0)),.WC(WC+(LG!=0?1:0)),.MUT(MUT)) engine(
+    ot_hgi_qdq_static #(.IO_REGS(IO_REGS),.RL(RL+(LG!=0?2:0)),.WC(WC+(LG!=0?1:0)),.MUT(MUT),.TSPLIT(TSPLIT)) engine(
         .clk_transport(clk_transport),.clk_dxl(clk_dxl),.clk_dbq(clk_dbq),.clk_daq(clk_daq),.rst_n(rst_n),.cmd_v(command_v&&command[0]),
         .cmd_op(command[6:1]),.cmd_block(command[14:7]),.cmd_src(command[30:15]),
         .cmd_dst(command[46:31]),.cmd_last(command[47]),
