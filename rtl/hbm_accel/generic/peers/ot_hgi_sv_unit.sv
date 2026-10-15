@@ -27,6 +27,14 @@ module ot_hgi_sv_lmem #(parameter integer N = 16, LWB = 18, AW = 24, NR = N / 8,
   input wire [31:0] ldr_v, input wire [32*15-1:0] ldr_sec, output wire [31:0] ldr_rv, output wire [32*256-1:0] ldr_d, output wire [32*12-1:0] ldr_em,
   input wire [3:0] rf_clr, input wire rf_rv, input wire [4:0] rf_rsec, output wire rf_rrv, output wire [255:0] rf_rd, output wire [7:0] rf_rm,
   output reg bank_err);
+`ifndef SYNTHESIS
+`ifdef SV_PORT_CENSUS
+    ot_hbm_su_port_census #(.N(N),.LWB(LWB),.AW(AW),.NR(NR)) u_port_census(
+      .clk(clk),.rst_n(rst_n),.vi_re(vi_re),.vi_addr(vi_addr),.rd_re(rd_re),.rd_addr(rd_addr),
+      .vm_we(vm_we),.vm_waddr(vm_waddr),.res_we(res_we),.res_addr(res_addr),
+      .lsw_v(lsw_v),.lsw_sec(lsw_sec),.ldr_v(ldr_v),.ldr_sec(ldr_sec));
+`endif
+`endif
     localparam integer LW = 1 << LWB, LS = 15, NSEC = LW / 8;
     /* verilator lint_off BLKSEQ */
     reg [31:0] lm [0:LW-1];

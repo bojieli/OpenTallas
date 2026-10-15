@@ -1,0 +1,2 @@
+PORT_CENSUS PASS same_class_conflict cross_class_allowed broadcast_allowed write_conflict rf_ports
+SV_PORT_CENSUS {"cycles":5,"active_cycles":5,"read_row_conflict_cycles":1,"write_conflict_cycles":1,"rf_reads":1,"rf_writes":1,"off_column_reads":3,"first_bad":{"cycle":1,"class":1,"bank":0,"row_a":0,"row_b":1}}

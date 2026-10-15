@@ -1,0 +1,65 @@
+{
+  "status": "UNIMPLEMENTED local-store hardware; current production SV model is behavioral",
+  "logical_capacity_bytes": {
+    "data": 1048576,
+    "epoch_masks": 49152,
+    "RF": 1024,
+    "RF_valid_bits": 256
+  },
+  "ports_N512": {
+    "gather_word_reads": 512,
+    "operand_word_reads": 2048,
+    "element_word_writes": 512,
+    "reducer_word_writes": 64,
+    "stage_sector_writes": 32,
+    "drain_sector_reads": 32
+  },
+  "legacy_gap": {
+    "RB": 9,
+    "real_macro_supported_RB": [
+      10,
+      11,
+      12,
+      13
+    ],
+    "MACRO1_RB9": "falls into behavioral g_b, not real macro",
+    "gather": "vi_q tied zero and vi_re faults",
+    "semantic_gap": "separate A/B/C/D/O groups lack shared-frame forwarding and RF operand reads/epochs"
+  },
+  "viable_conditional_design": {
+    "bank_word_bits": 9,
+    "banks": 512,
+    "words_per_bank": 512,
+    "read_replicas_compute": 5,
+    "read_replicas_including_overlapped_drain": 6,
+    "required_precondition": "actual production census proves at most one distinct row per bank per port class; arbitrary gather is not covered",
+    "existing_128x256_macro_padding": "64used rows of128, doubles capacity per replica",
+    "padded_physical_capacity_MiB": [
+      10,
+      12
+    ],
+    "other_required_hardware": [
+      "RF operand-read/write paths",
+      "epoch and lane-mask updates",
+      "pre-edge read semantics",
+      "actual simultaneous-write legality or explicit compiler serialization",
+      "placed wires and pin budgets for cross-bank accesses"
+    ]
+  },
+  "live_census": {
+    "snapshot": "/srv/opentallas-scratch/codex/hbm-su-port-census/{qwen,deepseek}",
+    "source_files": 70,
+    "vectors_each": 9,
+    "dimensions": "N512/M128/LWB18, historical native credit fixture, 833 engine clock",
+    "sessions": [
+      99973,
+      89707
+    ],
+    "claim": "port demand evidence only, not new static production qualification"
+  },
+  "immutable_price_cycles": {
+    "DeepSeek": 2912,
+    "Qwen": 1548
+  },
+  "no_accepted_cost_or_qualification": true
+}
