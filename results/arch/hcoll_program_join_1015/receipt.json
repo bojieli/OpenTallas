@@ -1,0 +1,35 @@
+{
+  "source_commit": "fad1cf89e",
+  "scope": "hostframe assembler joined to actualnativeissuer and three real64x512 SRAM macros; no behavioral replacement",
+  "command": "ot-run --mem8 --threads4 --dir /srv/opentallas-scratch/codex/hcoll-program-fad1cf89e -- env JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_static_program_target_suite.sh /srv/opentallas-scratch/codex/hcoll-program-fad1cf89e-out",
+  "terminal": "ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-502188-1792051711): exit0",
+  "actual_memory_peak": "systemd scope journal 1G, rounded as printed",
+  "wall_seconds": 6.984,
+  "cpu_seconds": 21.205,
+  "verilator_reported_allocation_MB": 59.434,
+  "checked_uops": 65648,
+  "checked_data_bits": 100835328,
+  "row_completion_edges": 55,
+  "host_launch_first_uop_edges": 5,
+  "native_metadata_repeat_counts": [
+    2048,
+    2
+  ],
+  "descriptor_validation_edges": 64,
+  "host_descriptor_launch_gap_edges": 66,
+  "fault_scenarios": 20,
+  "mutant": "MUT_DATA1 flips one nativecfg32 fragment; fails DATA mismatch pc0 word0 at intended exact-data check",
+  "structural_lint": "no warnings in final Verilator build",
+  "qualification": "component exactness only; parent host binding, physical slot/mapping/timing and production throughput remain unqualified",
+  "sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv": "a59c8375139d8e033d0b312d917c6f9e7db9156f9987ce4984c89914140086ac",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_program_target.sv": "4671934eb44dbd6e21087d291faaf4743d07d6aa4392e4c0e72aab3c2b2bb478",
+    "rtl/hbm_accel/generic/collective/p2p/run_static_program_target_bench.sh": "4abe0d636d52574b1ec8d943efec160ab2aeba7b3335b5a64497471f0a2e41c2",
+    "rtl/hbm_accel/generic/collective/p2p/run_static_program_target_suite.sh": "0d08f9f4fae5789580d8a0b35a1759e0b75dfff71d0e65c0c9e29c21d340149f",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "tools/hbm_coll_static/program_transport.py": "206acd9204bb8b40e6bc03aace73ee3f1a1ea454869efe96a296a2b149dd751a",
+    "tools/hbm_coll_static/allgather.py": "07ab17db6a6eb8f73b4fdba12ce051b137fe886ece0cf749549110815cca1b5a",
+    "rtl/hbm_accel/generic/collective/p2p/static_uop_layout.json": "2e1b2a16329bcd67d96e3f7dfe49afd8f6339f0cfcea1eb67af79417660d3f6e"
+  }
+}
