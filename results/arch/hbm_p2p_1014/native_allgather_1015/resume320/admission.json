@@ -1,0 +1,32 @@
+{
+  "status": "LIVE: capacity-backed resume, no functional verdict",
+  "original_unit": "oth-ubuntu-1122149-1792048206.scope",
+  "original_result": "oom-kill",
+  "measured_original_peak_and_cap_GiB": 160,
+  "revalidation": "original scope failed/oom-kill, no remaining child process, preserved PT64 library verified, 22 pinned native build/program input hashes verified",
+  "preserved_PT64_archive": {
+    "bytes": 12109946,
+    "sha256": "9dfed4fc994a00da48568c51fbd249d779fd893b6e8a59fe21845a6e68a3cb61",
+    "path": "/tmp/hcoll-native-allgather-1015/obj/Vot_hgi_coll_tkm_tile_8/libot_hgi_coll_tkm_tile_8.a"
+  },
+  "failed_invocation": {
+    "tool_session": 75823,
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1260545-1792051190",
+    "exit": 2,
+    "cause": "original Verilator command reused cached partial state but tried nonexistent top.mk; no build progressed, existing objects retained"
+  },
+  "live_resume": {
+    "tool_session": 25039,
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1261452-1792051213",
+    "mem_GiB": 320,
+    "threads": 4,
+    "command": "ot-run --mem 320 --threads 4 --disk 12 --dir /tmp/hcoll-native-allgather-1015 -- bash resume-eight.sh",
+    "script": "resume-eight.sh",
+    "actual_incremental_command": "make -C /tmp/hcoll-native-allgather-1015/obj -f Vtb_hfd_coll_static_allgather_hier.mk -j4 hier_build",
+    "log": "/tmp/hcoll-native-allgather-1015/resume320-build.log",
+    "verified_live_top_PID": 1261474
+  },
+  "capacity_basis": "same full-eight-parent elaboration exhausted measured160GiB limit;320GiB reservation is two times observed censored peak, admitted with824GiB available/598GiB guard headroom. No shape reduction or duplicate job. Reuses completed PT64 native archive."
+}

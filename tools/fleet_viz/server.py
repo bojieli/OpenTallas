@@ -429,13 +429,15 @@ def ticker():
             log('snapshot: %s' % e)
 
 # ---------------------------------------------------------------- http
-STATIC = {'/explorer/flow_layout.js': ('explorer/flow_layout.js', 'text/javascript; charset=utf-8'), '/explorer_chip_dataflow.js': ('explorer_chip_dataflow.js', 'text/javascript; charset=utf-8'), '/explorer/dataflow.js': ('explorer/dataflow.js', 'text/javascript; charset=utf-8'), '/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
+STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
           '/replay': ('index.html', 'text/html; charset=utf-8'), '/explorer': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.html': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.js': ('explorer.js', 'text/javascript; charset=utf-8'),
           '/explorer_story.js': ('explorer_story.js', 'text/javascript; charset=utf-8'),
           '/fv_stale.js': ('fv_stale.js', 'text/javascript; charset=utf-8'),
           '/fv_flow.js': ('fv_flow.js', 'text/javascript; charset=utf-8')}
+# /explorer/dataflow/...: data-flow views (page + modules) and data/<die revision>.links.json.gz (dataflow_links.py)
+DF_DIR = HERE / 'explorer' / 'dataflow'
 # /explorer/token/...: mount point for the token-path views (a separate stream ships them into explorer/token/)
 TOKEN_DIR = HERE / 'explorer' / 'token'
 TOKEN_TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -642,6 +644,9 @@ class H(BaseHTTPRequestHandler):
         if u.path == '/explorer/element' or u.path.startswith('/explorer/element/'):
             if u.path == '/explorer/element': return self.redirect('/explorer/element/' + ('?' + u.query if u.query else ''))
             return self.elem(u.path[len('/explorer/element'):].lstrip('/') or 'index.html', safe)
+        if u.path == '/explorer/dataflow' or u.path.startswith('/explorer/dataflow/'):
+            if u.path == '/explorer/dataflow': return self.redirect('/explorer/dataflow/' + ('#' + u.fragment if u.fragment else ''))
+            return self.dataflow(u.path[len('/explorer/dataflow'):].lstrip('/') or 'index.html')
         if u.path == '/explorer/token' or u.path.startswith('/explorer/token/'):
             return self.token(u.path[len('/explorer/token'):].lstrip('/') or 'index.html')
         if u.path.startswith('/layout_store/'):
@@ -694,6 +699,20 @@ class H(BaseHTTPRequestHandler):
             return self.send(404, b'not found', 'text/plain')
         return self.send(200, p.read_bytes(), TOKEN_TYPES.get(p.suffix, 'application/octet-stream'))
 
+    def dataflow(self, rel):
+        try:
+            p = (DF_DIR / rel).resolve()
+            ok = p.is_relative_to(DF_DIR.resolve()) and p.is_file() and (p.suffix in TOKEN_TYPES or p.name.endswith('.json.gz'))
+        except (OSError, ValueError):
+            ok = False
+        if not ok: return self.send(404, b'not found', 'text/plain')
+        if p.name.endswith('.json.gz'):   # stored gzip: sent as is to every client that takes gzip
+            if 'gzip' in (self.headers.get('Accept-Encoding') or ''):
+                return self.send(200, p.read_bytes(), 'application/json', (('Content-Encoding', 'gzip'),))
+            import gzip as _gz
+            return self.send(200, _gz.decompress(p.read_bytes()), 'application/json')
+        return self.send(200, p.read_bytes(), TOKEN_TYPES[p.suffix])
+
     def token(self, rel):
         try:
             p = (TOKEN_DIR / rel).resolve()
@@ -710,16 +729,6 @@ class H(BaseHTTPRequestHandler):
         js = lambda o, code=200: self.send(code, json.dumps(o, separators=(',', ':')).encode(), 'application/json')
         if what == 'meta':
             return js(stamp(EXPLORER.api_meta(safe), safe, explorer=True))
-        if what == 'dataflow':
-            b = EXPLORER.dataflow_bytes(arg('die') or '', safe=safe)
-            if b is None: return js(dict(error='no geometry for this die yet'), 404)
-            if 'gzip' not in (self.headers.get('Accept-Encoding') or ''):
-                import gzip as _gz
-                return self.send(200, _gz.decompress(b), 'application/json')
-            self.send_response(200); self.send_header('Content-Type', 'application/json'); self.send_header('Content-Encoding', 'gzip')
-            self.send_header('Content-Length', str(len(b))); self.end_headers()
-            if self.command != 'HEAD': self.wfile.write(b)
-            return
         if what == 'geom':
             b = EXPLORER.geom_bytes(arg('die') or '', safe)
             if b is None: return js(dict(error='no geometry for this die yet'), 404)

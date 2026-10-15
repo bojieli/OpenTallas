@@ -17,8 +17,6 @@ Output (<state>/explorer/geom/<die>.json.gz, schema opentallas.explorer.die_geom
   python3 explorer_geom.py export --die qwen_r21b --repo /home/ubuntu/OpenTallas --state ~/.local/state/fleet-viz
   python3 explorer_geom.py status                 # recipe commit vs cached commit for every die
 """
-from explorer_dataflow import model_connections
-
 import argparse, builtins, datetime, gzip, hashlib, io, json, os, pathlib, re, subprocess, sys, tarfile, threading, time
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -54,6 +52,26 @@ def recipe_commit(repo, d):
 def recipe_key(d, commit):
     keep = {k: d[k] for k in ('kind', 'recipe', 'variant', 'opts', 'die', 'relays', 'env') if k in d}
     return commit[:12] + '-' + hashlib.sha256(json.dumps(keep, sort_keys=True).encode()).hexdigest()[:8]
+
+
+# ------------------------------------------------------------------------------------------------ raw bus records
+def width(value):
+    return value if isinstance(value, int) and not isinstance(value, bool) and value > 0 else None
+
+
+def model_connections(model):
+    """Keep raw recipe IDs and ports before geometry compression loses them."""
+    out = []
+    for ordinal, bus in enumerate(model.get('buses', [])):
+        if not isinstance(bus, (list, tuple)) or len(bus) < 4:
+            continue
+        bid, cls, bits, endpoints = bus[:4]
+        out.append(dict(id=str(bid), kind='ported_bus', bus_class=str(cls),
+                        width_bits=width(bits), endpoints=[
+                            dict(instance=str(e[0]), port=str(e[1]) if len(e) > 1 else None)
+                            if isinstance(e, (list, tuple)) else dict(instance=str(e), port=None)
+                            for e in endpoints], ordinal=ordinal))
+    return out
 
 
 # ------------------------------------------------------------------------------------------------ source snapshot

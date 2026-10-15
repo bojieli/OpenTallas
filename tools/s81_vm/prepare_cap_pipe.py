@@ -2,7 +2,7 @@
 """Actual production cap bench: PIPE1 and exactly one serial edge of added age."""
 import sys, pathlib, subprocess, json, hashlib
 out=pathlib.Path(sys.argv[1]).resolve()
-PIPE=int(sys.argv[2]) if len(sys.argv)>2 else 1   # 2 = PIPE1 age with pin-stage decode (claude F2 1015)
+PIPE=int(sys.argv[2]) if len(sys.argv)>2 else 1   # 2 = pure pin flops + decode stage, +2 serial vs legacy (claude F2 1015)
 assert PIPE in (1,2)
 out.mkdir(parents=True,exist_ok=False)
 vm=pathlib.Path('rtl/dsrom_sys/s81_ph/vm')
@@ -16,6 +16,8 @@ assert s.count(a)==1;s=s.replace(a,b)
 p=out/'tb_dsfd_vm_static_cap.sv';s=p.read_text()
 a='dsfd_vm_static_cap #(.E(8))';b=f'dsfd_vm_static_cap #(.E(8), .CAP_PIPE({PIPE}))'
 assert s.count(a)==1;s=s.replace(a,b)
-assert s.count('q = p + 2;')==1;s=s.replace('q = p + 2;','q = p + 3;')
+assert s.count('q = p + 2;')==1;s=s.replace('q = p + 2;',f'q = p + {2+PIPE};')
+if PIPE==2:   # NAT=1 3:4 transfer: stream output one more stream edge (claude F2 1015)
+ assert s.count('t_of = 4 * (q / 3) + 2 + (q % 3);')==1;s=s.replace('t_of = 4 * (q / 3) + 2 + (q % 3);','t_of = 4 * (q / 3) + 3 + (q % 3);')   # PIPE serial edges added (claude F2: PIPE2 = +2)
 p.write_text(s)
-(out/'pipe_age_receipt.json').write_text(json.dumps(dict(source='de6ef76d6',PIPE=PIPE,default_PIPE=0,serial_age_delta=1,II=1,bench_changes=[a+' -> '+b,'q=p+2 -> q=p+3'],x34_first_visibility='4*floor((P+3)/3)+2+((P+3)%3); existing output checker +1 unchanged',native_clock_claim=False,hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.glob('*.sv')}),indent=2)+'\n')
+(out/'pipe_age_receipt.json').write_text(json.dumps(dict(source='de6ef76d6',PIPE=PIPE,default_PIPE=0,serial_age_delta=PIPE,II=1,bench_changes=[a+' -> '+b,f'q=p+2 -> q=p+{2+PIPE}'],x34_first_visibility=f'4*floor((P+{2+PIPE})/3)+{2+(PIPE==2)}+((P+{2+PIPE})%3); existing output checker +1 unchanged',native_clock_claim=False,hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.glob('*.sv')}),indent=2)+'\n')
