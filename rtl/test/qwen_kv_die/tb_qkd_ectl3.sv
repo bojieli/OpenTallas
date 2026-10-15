@@ -24,7 +24,7 @@ module tb_qkd_ectl3;
     wire [15:0]   d_e0, d_e1, d_e2, d_e3, r_e0, r_e1, r_e2, r_e3;
 `ifdef KVD_ECTL_DIRECT
     `ifdef KVD_ECTL_EPOCH
-    qkd_ectl3_direct_s #(.EPOCH(1)) u_d
+    qkd_ectl3_epoch_direct_s u_d
 `else
     qkd_ectl3_direct_s u_d
 `endif (.ck({3{ck}}), .cfg({3'(E), 2'(S)}),

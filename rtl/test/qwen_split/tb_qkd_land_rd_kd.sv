@@ -39,8 +39,14 @@ module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G
             .gw(gw[q]), .gc(gc[q]), .es(), .er(261'd0), .dni(298'd0), .dno(), .upi(262'd0), .upo(), .cri(32'd0), .cro(),
             .fi(pfo[q]), .fo(pfo[q+1]));
     end
-    qkd_land_grp #(.MUT(GM), .EPOCH(EPOCH), .DQ(DQ)) grp (.ck(ck), .rst_n(rst_n), .g(3'(G)), .s(2'(S)), .gw0(gw[0]), .gw1(gw[1]), .gw2(gw[2]),
+    generate if (EPOCH != 0) begin : g_native
+    qkd_land_grp_epoch #(.MUT(GM)) grp (.ck(ck), .rst_n(rst_n), .g(3'(G)), .s(2'(S)), .gw0(gw[0]), .gw1(gw[1]), .gw2(gw[2]),
         .gw3(gw[3]), .gc0(gc[0]), .gc1(gc[1]), .gc2(gc[2]), .gc3(gc[3]), .rq(rq), .rs(rs), .lt(lt_kd), .kn(kn_kd), .fi(pfo[4]), .fo(fo));
+    end else begin : g_legacy
+    qkd_land_grp #(.MUT(GM), .DQ(DQ)) grp (.ck(ck), .rst_n(rst_n), .g(3'(G)), .s(2'(S)), .gw0(gw[0]), .gw1(gw[1]), .gw2(gw[2]),
+        .gw3(gw[3]), .gc0(gc[0]), .gc1(gc[1]), .gc2(gc[2]), .gc3(gc[3]), .rq(rq), .rs(rs), .lt(lt_kd), .kn(kn_kd), .fi(pfo[4]), .fo(fo));
+    end endgenerate
+
 
     function automatic [255:0] src(input integer layer, input integer j, input integer q);
         integer k;
