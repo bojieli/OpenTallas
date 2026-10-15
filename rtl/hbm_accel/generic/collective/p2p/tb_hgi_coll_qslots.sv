@@ -24,7 +24,8 @@ module tb_hgi_coll_qslots;
         reg [NS*545-1:0] prev_d=0;
         reg [NS-1:0] prev_slot=0;
         reg [ND-1:0] expected_v=0;
-        reg [ND*545-1:0] expected_d=0;
+        reg [ND*545-1:0] expected_d=0, next_d=0, now_d=0;
+        reg [ND-1:0] next_v=0;
         ot_hgi_coll_qslots #(.NPT(NP),.MUT_SELECT(MUT_SELECT),.MUT_PIN_LATENCY(MUT_PIN_LATENCY)) u(
             .clk_capture(clk),.clk_output(clk),.rst_n(rst_n),.src_v(sv),.src_d(sd),.capture_slot(cs),
             .sink_slot(ds),.sink_select(sel),.dst_v(ov),.dst_d(od),.fault(fault[q]),.fault_kind(fk));
@@ -53,8 +54,9 @@ module tb_hgi_coll_qslots;
             if(BAD_SLOT==3 && cyc==8) begin cs='0; sv='0; end
         end
         always @(posedge clk) if(rst_n) begin
-            expected_v=ds;
-            for(integer d=0;d<ND;d=d+1) expected_d[d*545+:545]=prev_d[int'(sel[d*SW+:SW])*545+:545];
+            expected_v=next_v; expected_d=next_d;
+            for(integer d=0;d<ND;d=d+1) now_d[d*545+:545]=prev_d[int'(sel[d*SW+:SW])*545+:545];
+            next_v=ds; next_d=now_d;
             prev_d=sd;
             prev_slot=cs;
             #0.01;

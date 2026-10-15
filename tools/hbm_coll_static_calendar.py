@@ -46,7 +46,7 @@ def compile_calendar(transfers: list[Transfer], npt: int) -> dict:
     return dict(schema='hcoll.quadrant-calendar.v1',npt=npt,sources=ns,sinks=nd,
                 source_select_bits=sw,word_bits=ns+nd+nd*sw,
                 packed_order_lsb=['capture_slot','sink_slot','sink_select'],
-                cycles=count,transfers=len(transfers),unique_captures=len(captures),
+                cycles=count,last_output_edge=count,transport_latency_edges=2,transfers=len(transfers),unique_captures=len(captures),
                 words=words,
                 scope='transport reservation compilation; production issuer, topology, arithmetic and slot closure pending')
 

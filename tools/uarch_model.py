@@ -720,7 +720,7 @@ def hgi_generic_topk_heap_model(n=49152, k=2048, rows=1, iw=1, heaps=2):
 def hbm_coll_static_quadrant_model(npt=3, inject=2, deliver=4, flit_bits=545, period_ps=833.3):
     """0an successor transport: compiler reserves every pin sample and output edge.
 
-    One pin-capture bank and one registered output bank, no elastic storage.
+    One source capture bank, one output-leaf pin capture bank and one registered output bank, no elastic storage.
     This sizes the transport before RTL; reduction, TOPK and VM service are
     separately scheduled engines and their latency is not hidden in this row.
     """
@@ -731,15 +731,15 @@ def hbm_coll_static_quadrant_model(npt=3, inject=2, deliver=4, flit_bits=545, pe
     select_bits = (sources - 1).bit_length()
     controls = sources + sinks * (select_bits + 1)
     return dict(source_lanes=sources, sink_lanes=sinks, flit_bits=flit_bits,
-                capture_edges=1, output_edges=1, latency_edges=1,
+                capture_edges=2, output_edges=1, latency_edges=2,
                 bits_per_cycle_in=sources * flit_bits,
                 bits_per_cycle_out=sinks * flit_bits,
-                payload_flops=(sources + sinks) * flit_bits,
+                payload_flops=(2 * sources + sinks) * flit_bits,
                 control_flops=controls, clock_roots_required=2,
-                largest_root_sinks=max(sources, sinks) * flit_bits + controls,
+                largest_root_sinks=(sources + sinks) * flit_bits + 2 * controls,
                 select_cost_bits=sinks * sources * flit_bits,
                 period_ps=period_ps, elastic_entries=0,
-                compiler_rule="each enabled sink selects a source reserved on the preceding capture edge",
+                compiler_rule="sink instruction at C+1 selects a source captured C; output pin changes C+2",
                 routing_rule="sources may multicast; distinct sources cannot own the same sink edge",
                 status="SIZED transport only; no physical closure or complete collective price")
 
