@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_static_read_q2_native_1015_r1-native1-COMMIT",
+ "name": "dsfd_vm_static_read_q2_native_1015_r1-native1-9e72690a9",
  "block": "dsfd_vm_static_read_q2",
  "ref_tile": true,
  "owner": "Codex:S_VM read native",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/s81-read-router-1015",
-  "commit": "COMMIT",
+  "commit": "9e72690a9",
   "extra_paths": [
    "tools/s81_vm",
    "rtl/dsrom_sys/s81_ph/vm",
@@ -100,7 +100,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_static_read_q2_native_1015_r1/dsfd_vm_static_read_q2_native_1015_r1-native1-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_static_read_q2_native_1015_r1/dsfd_vm_static_read_q2_native_1015_r1-native1-9e72690a9"
   }
  ],
  "cycles_added": 1,
