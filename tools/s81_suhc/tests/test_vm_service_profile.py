@@ -21,7 +21,7 @@ class SelectedProfileTests(unittest.TestCase):
         for p in VSP.PROFILES[NAME]['receipts'] + VSP.RTL_SOURCES:
             f = self.root / p; f.parent.mkdir(parents=True, exist_ok=True); f.write_text('pinned ' + p)
         self.contract = dict(stream_period_ps=833, vm_period_ps=833, stream_phase_ps=0, vm_phase_ps=0,
-            banks=32, bank_queue_capacity=4, bank_ops_per_cycle=1, read_ingress_per_cycle=1, write_ingress_per_cycle=1,
+            banks=32, bank_mapping='xor_row7_5_shift2', bank_queue_capacity=4, bank_ops_per_cycle=1, read_ingress_per_cycle=1, write_ingress_per_cycle=1,
             request_min_ps=0, read_min_ps=0, commit_min_ps=0,
             slot_capacity={'su/write/0': 1, 'su/read/0': 1}, client_capacity={'su': 2},
             vm_service_profile=dict(name=NAME, rtl_tuple=dict(READ_PIPE=4, CAP_PIPE=2, WSCATTER_PIPE=1),
@@ -77,6 +77,32 @@ class SelectedProfileTests(unittest.TestCase):
     def test_missing_lane_rejected(self):
         del self.schedule['events'][0]['lane']
         self.assertIn('profile_write_lane_unbound', self.kinds())
+
+    def test_disconnected_service_edge_rejected(self):
+        # Correct raw/return ages cannot conceal an invented bank-use cycle.
+        self.schedule['events'][0]['service_cycle'] = 9
+        self.assertIn('profile_service_raw_edge_mismatch', self.kinds())
+
+    def test_service_and_raw_domains_compare_physical_time(self):
+        self.contract['vm_period_ps'] = 416.5
+        for event in self.schedule['events']:
+            for field in ('ingress_cycle', 'bank_enqueue_cycle', 'service_cycle'):
+                event[field] *= 2
+        self.assertEqual(self.run_check()['status'], 'pass')
+        self.contract['vm_phase_ps'] = 1
+        self.assertIn('profile_service_raw_edge_mismatch', self.kinds())
+
+    def test_noninteger_raw_edge_rejected(self):
+        self.schedule['events'][0]['raw_cycle'] = 10.0
+        self.assertIn('profile_raw_cycle_unbound', self.kinds())
+
+    def test_wrong_bank_map_rejected(self):
+        self.contract['bank_mapping'] = 'rowmod'
+        self.assertIn('invalid:vm_service_profile_bank_mapping_mismatch', self.kinds())
+
+    def test_invented_bank_capacity_rejected(self):
+        self.contract['bank_ops_per_cycle'] = 2
+        self.assertIn('invalid:vm_service_profile_bank_capacity_mismatch', self.kinds())
 
     def test_stale_source_invalidates_profile(self):
         (self.root / VSP.RTL_SOURCES[0]).write_text('edited')
