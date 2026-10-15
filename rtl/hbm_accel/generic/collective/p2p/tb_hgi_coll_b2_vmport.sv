@@ -56,7 +56,7 @@ module tb_hgi_coll_b2_vmport;
             o=golden[key];for(integer w=0;w<8;w=w+1)if(m[h*8+w])o[w*32+:32]=d[(h*8+w)*32+:32];golden[key]=o;
         end end
     endtask
-    integer sent[0:3], ks=0, cycles=0, phase=0, ri=0, copies=0, checking=0, read_sid=0, checked=0, returned=0;
+    integer sent[0:3], ks=0, cycles=0, write_start=0, phase=0, ri=0, copies=0, checking=0, read_sid=0, checked=0, returned=0;
     reg [255:0] expected; reg [15:0] rtag=0;
     integer seed_i=0,seed_pending[0:3],seed_done=0;
     initial begin for(integer l=0;l<4;l=l+1)sent[l]=0;for(integer s=0;s<4;s=s+1)begin readq[s]=0;seed_pending[s]=0;end
@@ -97,7 +97,7 @@ module tb_hgi_coll_b2_vmport;
                     seed_pending[dest]=seed_pending[dest]+1;seed_i=seed_i+1;
                 end
             end
-            if(seed_done==keys.size())phase=1;
+            if(seed_done==keys.size())begin write_start=cycles;phase=1;end
         end else if(phase==1)begin
             for(integer l=0;l<4;l=l+1)if(sent[l]<N)begin iv[l]=1;ia[l*40+:40]=addr(l,sent[l]);id[l*512+:512]={dataword(l,sent[l],1),dataword(l,sent[l],0)};end
             if(ks<KLINES)begin kv=1;kd={addr(4,ks),16'(ks%3==0?16'h5555:16'hffff),dataword(4,ks,1),dataword(4,ks,0)};end
@@ -105,7 +105,7 @@ module tb_hgi_coll_b2_vmport;
                 // End-to-end drained means no packet write remains outstanding at the receiver.
                 for(integer l=0;l<5;l=l+1)if(g_slice[0].g_sw.u.u_coll.pc[l]!=4)$fatal(1,"premature credit drain lane%0d",l);
                 for(integer b=0;b<8;b=b+1)if(g_slice[0].g_sw.u.u_coll.on[b]!=0)$fatal(1,"premature wide write drain bank%0d",b);
-                $display("B2_WRITE cycles=%0d rgx=%0d topk=%0d",cycles,4*N,KLINES);phase=2;
+                $display("B2_WRITE cycles=%0d rgx=%0d topk=%0d",cycles-write_start,4*N,KLINES);phase=2;
             end
         end else if(phase==2&&!checking)begin
             if(ri==keys.size())begin $display("B2_COLL_VMPORT PASS flits=%0d checked=%0d",4*N+KLINES,checked);$finish;end

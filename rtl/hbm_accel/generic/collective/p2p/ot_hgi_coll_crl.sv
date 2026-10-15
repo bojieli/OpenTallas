@@ -138,20 +138,25 @@ module ot_hgi_coll_rx_native #(parameter integer W=552, CRD=16)(
     reg v_pin,pop_pin;reg[W-1:0]d_pin;
     reg[W-1:0]q[0:CRD-1];reg[AW-1:0]hd,tl;reg[AW:0]n;
     wire pop=out_v&&pop_pin;
-    always @(posedge clk)d_pin<=t_d;
+    // Payload state has no reset gate: only validity and pointers require reset.
+    // Keeping reset out of these enables avoids distributing it to every FIFO word.
+    always @(posedge clk)begin
+        d_pin<=t_d;
+        if(v_pin)q[tl]<=d_pin;
+        if((n==0&&v_pin)||(n==1&&pop&&v_pin))out_d<=d_pin;
+        else if(pop&&n>1)out_d<=q[(hd==AW'(CRD-1))?'0:hd+1'b1];
+    end
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin v_pin<=0;pop_pin<=0;hd<=0;tl<=0;n<=0;out_v<=0;epoch<=0;fault<=0;end
         else begin
             v_pin<=t_v;pop_pin<=out_rdy;
             if(v_pin)begin
                 if(n==(AW+1)'(CRD)&&!pop)fault<=1;
-                q[tl]<=d_pin;tl<=(tl==AW'(CRD-1))?'0:tl+1'b1;
+                tl<=(tl==AW'(CRD-1))?'0:tl+1'b1;
             end
             if(pop)begin hd<=(hd==AW'(CRD-1))?'0:hd+1'b1;epoch<=!epoch;end
             n<=n+(AW+1)'(v_pin)-(AW+1)'(pop);
             out_v<=(n+(AW+1)'(v_pin)-(AW+1)'(pop))!='0;
-            if((n==0&&v_pin)||(n==1&&pop&&v_pin))out_d<=d_pin;
-            else if(pop&&n>1)out_d<=q[(hd==AW'(CRD-1))?'0:hd+1'b1];
         end
 endmodule
 `default_nettype wire
