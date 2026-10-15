@@ -438,6 +438,12 @@ def hgi_collective_endpoint_model():
     return endpoint_model()
 
 
+def hgi_collective_static_reduction_model():
+    """16 real native FP32 lanes and fixed-calendar collective publication."""
+    from uarch_model_hcoll_reduce_static import model
+    return model()
+
+
 def hgi_collective_static_sequence_link_model():
     """HBM545 full logical sequence, native SRAM/CRC, fixed TX3/RX1."""
     from uarch_model_hcoll_static_seq import model

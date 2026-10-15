@@ -1,0 +1,106 @@
+{
+  "base_commit": "fb735597bfedd8eaf8ef9864487e1409bc3d3709",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv": "208ece87fe5d2beb545dcfa11ad50836a98d704bfc0b3afef06ddac940d4f5db",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_reduce_static.sv": "af9de0483e5f3bd00eb13ce2a2c63fae19f7c92b15846d357285b1d896897af1",
+    "rtl/hbm_accel/generic/collective/p2p/run_reduce_static_bench.sh": "d7261e747e5d9ec061a1142ffb8e62eb174a2a6311cd4e633e08dc539f035ae7",
+    "rtl/hbm_accel/generic/collective/p2p/STATIC_REDUCE.md": "cf7258a70255410198774d094cda7d19d1db73aaaab5e4b4a24045868148d317",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+    "rtl/hbm_accel/generic/collective/p2p/f32add.c": "fb471ffa0ebfb78c26b9d9a4f1d29514607d92b049fb6bccb05c5a6dc98b4040",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "tools/uarch_model_hcoll_reduce_static.py": "2242f844b98543e82fe7f49c873d169e93392f174bf9d473d6678fe4946d11f4"
+  },
+  "native_git_blobs": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "0b2a27263f15a30e6807f35c7df553f1b2f542fc",
+    "rtl/hbm_accel/generic/collective/p2p/f32add.c": "44c11b55cfd28a19beda3e4da7a38fbd2a76e225",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "8ec3f3c48aa559bfd6e5de83b749d79544748260",
+    "rtl/hdc/ot_hdc_prefix.sv": "73a8c705c11a9d9a9361163529cbd0652e1e14c6",
+    "rtl/hdc/ot_hdc_fastfp.sv": "83a0e3f0423e812ee2a11496d638945b1fbe51f5"
+  },
+  "model": {
+    "fp32_lanes": 16,
+    "tags": 16,
+    "state_roots": 16,
+    "state_flops_per_root": 640,
+    "add_roots": 16,
+    "add_flops_per_root": 676,
+    "control_root_flops_upper_bound": 1000,
+    "ingress_bits_per_cycle": 545,
+    "ingress_payload_bytes_per_cycle": 64,
+    "state_read_bytes_per_cycle": 64,
+    "state_write_bytes_per_cycle": 64,
+    "publication_bits_per_cycle": 545,
+    "macs_per_cycle": 0,
+    "fp32_adds_per_cycle": 16,
+    "replicas": 1,
+    "tag_control_fanout": 16,
+    "add_read_to_issue_edges": 1,
+    "add_issue_to_writeback_edges": 8,
+    "earliest_dependent_read_after_issue_edges": 9,
+    "publication_read_to_pin_edges": 1,
+    "quarter_flits": 16,
+    "groups": 12,
+    "group_ranks": 8,
+    "pairwise_tree_adds_per_flit": 7,
+    "full_workload_fp32_adds": 21504,
+    "bf16_publication_values": 32,
+    "routing_tracks_required": 545,
+    "channel_capacity_tracks": null,
+    "area_slot_fit": "16 real state leaves +16 native add leaves; physical slot unqualified",
+    "latency": "distributed pairwise tree: three dependent add stages; each read+issue+WB then next read only after WB",
+    "status": "SIZED; behavioral component gate only; physical and G96 token qualification pending"
+  },
+  "normal": {
+    "groups": 12,
+    "ranks": 8,
+    "quarter_flits": 16,
+    "fp32_lanes": 16,
+    "publications_checked": 1345,
+    "cycles": 4965,
+    "exact_pairwise_tree": true
+  },
+  "fault_scenarios": 12,
+  "mutants": [
+    "writeback tag XOR1:960 payload mismatches",
+    "BF16 ties-away rounding:1 payload mismatch",
+    "first reduction partner rank2 instead rank1:576 payload mismatches"
+  ],
+  "fleet_runs": [
+    {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-1188729-1792048925",
+      "mode": "normal",
+      "exit_code": 0
+    },
+    {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-403794-1792048885",
+      "mode": "tag",
+      "exit_code": 0
+    },
+    {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-403787-1792048885",
+      "mode": "bf16",
+      "exit_code": 0
+    }
+  ],
+  "admission": {
+    "memory_gb": 8,
+    "threads": 4
+  },
+  "measured": {
+    "verilator_allocated_mb": 266.441,
+    "simulation_allocated_mb": 8,
+    "simulation_wall_seconds": 0.023
+  },
+  "limitations": [
+    "behavioral component only",
+    "physical timing and channel slot unqualified",
+    "no G96 token throughput claim",
+    "finite FP32 workload; native nonfinite handling unchanged"
+  ],
+  "note": "First normal invocation completed baseline but runner exited127 because remote rg was absent; portable grep runner rerun reused binary and passed all scenarios. Mutant builds used semantically identical runner with rg available."
+}
