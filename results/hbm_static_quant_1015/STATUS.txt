@@ -1,0 +1,17 @@
+STATIC QUANT COMPONENT ONLY. Actual released ot_hgi_qw_dec3 arithmetic and eight
+actual ot_vms_bank_static instances, each instantiating three real mapped SRAM
+macros. Exact immutable qdqvec: 8 records,104 beats,3328 words,416 sectors.
+Measured macro commit142 cycles versus immutable168; historical WQ3 price184.
+All sector writes and all actual SRAM readback words match independent golden.
+Fixed done pulses equal actual bank macro commit pulses. Three mutants killed:
+input sector map, output lane map, unexpected late response (fault, no reschedule).
+No ready/credit/demand queue. Bare bank registered response at input n+6;
+consumer captures n+7. Decoder25 stages means24 post-input edges (26-stage old
+text included an extra input count); initial off-by-one receipt preserved.
+
+NOT CLOSED: no transport physical views, parent slot/pins unassigned, station
+edges not yet bound. Proof currently one read/write group per bank; next joins
+actual NW RG4/WG2 among RG5/WG3 and native mapped programme producer. No claim
+of complete programme/full layer or native wholechip qualification.
+Model/calendars retain production 104beat shape and immutable price. Local SID0
+relocation matches historical B2 component vectors, not full multi-SID binding.
