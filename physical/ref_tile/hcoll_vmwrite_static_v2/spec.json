@@ -1,0 +1,125 @@
+{
+ "name": "hcoll_vmwrite_static_v2",
+ "top": "ot_hgi_coll_static_vmwrite",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 103.68,
+  "h": 388.8,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "rgx_v",
+   "rgx_addr",
+   "rgx_data",
+   "rgx_vm"
+  ],
+  "E": [
+   "kq",
+   "launch_done",
+   "fault"
+  ],
+  "S": [
+   "tkw_v",
+   "tkw_d"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "sid",
+   "ingress_slot",
+   "slot_valid",
+   "slot_owner"
+  ]
+ },
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "period_ps": 833.333333,
+  "hold_margin_ns": 0.03,
+  "pin_min_tracks": 2,
+  "pin_group_max": 32,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-COLL+IDX",
+  "branch": "claude/hcoll-writer-cap-1015",
+  "tag": "pincap1",
+  "purpose": "Constant-bank writer with PIN-CAPTURED fault checks (structural fix of v1 CTS gate TT input->fault -210.1 ps / 19 paths, worst slot_owner->fault 8 levels): every check port is a pin flop, all checks evaluated from registers at C+1; data/kq/launch_done/calendar unchanged; canonical coll_SW_writer0 slot 103.68x388.8.",
+  "extra_paths": [
+   "tools/hbm_coll_static",
+   "rtl/hbm_accel/generic/collective/p2p"
+  ],
+  "benches": [
+   {
+    "name": "vmwrite_exact",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_physical_gate.sh 0 {RUN}/bench/vmwrite_exact",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "checked=83"
+   },
+   {
+    "name": "vmwrite_payload_mutant",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_physical_gate.sh 1 {RUN}/bench/vmwrite_payload_mutant",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vmwrite_fault_late_mutant",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_physical_gate.sh 3 {RUN}/bench/vmwrite_fault_late_mutant",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vmwrite_fault_suppress_mutant",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_physical_gate.sh 2 {RUN}/bench/vmwrite_fault_suppress_mutant",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_vmwrite_static_v2/views",
+  "record_to": "results/arch/hcoll_physical_1339/vmwrite_v2"
+ },
+ "std_area_um2": 4400.0,
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
