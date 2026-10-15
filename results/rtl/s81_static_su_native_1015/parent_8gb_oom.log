@@ -1,0 +1,14 @@
+%Warning-PINMISSING: rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv:51:54: Cell has missing pin: 'norm_v'
+   51 |         ot_s81_su_kve #(.RP(ROTATE),.LM(LM),.LA(LA)) u_norm(
+      |                                                      ^~~~~~
+                     rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv:173:26: ... Location of port declaration
+  173 |     output reg           norm_v,
+      |                          ^~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.032
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv:51:54: Cell has missing pin: 'norm_y'
+   51 |         ot_s81_su_kve #(.RP(ROTATE),.LM(LM),.LA(LA)) u_norm(
+      |                                                      ^~~~~~
+                     rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv:174:26: ... Location of port declaration
+  174 |     output wire [127:0]  norm_y,           
+      |                          ^~~~~~

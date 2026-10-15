@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.s81.static-su-checkpoint.v1",
+  "qualified": false,
+  "status": "actual static scheduler and mapped store connected; full SU calendars/physical qualification open",
+  "source_manifest": "source_manifest.json",
+  "mapped_source_manifest": "mapped_source_manifest.json",
+  "native_rx_external_calendar": {
+    "rows": 24,
+    "scalars": 384,
+    "first_write_edge": 38,
+    "last_write_edge": 61,
+    "completion_observed_edge": 101,
+    "note": "chosen component completion, not native VM commit/production duration",
+    "positive_rc": 0,
+    "bias_mutant_rc": 134,
+    "missing_response_rc": 134
+  },
+  "actual_store": {
+    "rows": 64,
+    "request_edges": 64,
+    "completion_edge": 64,
+    "positive_rc": 0,
+    "corrupt_word_rc": 1
+  },
+  "full_parent": {
+    "first_attempt": "8GB cgroup OOM (verified journal)",
+    "live_successor": "ot-epyc4 unit oth-ubuntu-1349436-1792053311",
+    "request_gb": 160,
+    "source_commit": "24b453de9 (before MOE additions; does not cover new MOE head join)"
+  },
+  "remaining": [
+    "actual canonical full operand allocation and every operation profile",
+    "full-SU fixed calendars with actual VM3:4 phases and mapped storage capacity",
+    "every granular arithmetic operation in actual composed gate and mutants",
+    "new control/program-store physical slot split/placement/clock and TT/FF/DRC",
+    "full-layer native producers/memory/links and measured throughput"
+  ],
+  "log_sha256": {
+    "rx_mapped_calendar_positive.log": "4e55dc218be3b385269769c4ec6a0338b3f03a3b579a1e9f9f71f66b4a89d7b0",
+    "rx_bias_mutant.log": "93453789542e734a633656b831ab35e5ad270a17b4912f5e55ec83c2d6ad29e3",
+    "parent_8gb_oom.log": "92c2eb2f31131bc9164f26e7cd7a00acb77e8c26256b7532ca4b0e9161d2a8e3",
+    "positive.log": "061922228944ff25635c417a439fc980a469d5367507e86bb1afeab835229fa4",
+    "mutant.log": "331b8a0951fc76d19cff8859701a1a9a70fba4bf109507a1a18fa9fbf47e59c6",
+    "discovery_rx16.log": "9fe73c66784df5f3ed576786ecdc6ccd4168f72f85bd0ab579e65d94b30cf37a",
+    "rx_external_calendar_positive.log": "a49e94c76fb1ca604bb35f226413f367bcecc3d3102de68716d6a5d8d0d62fba",
+    "rx_mapped_calendar_missing_response.log": "675e0bf51851861c8d48ca0ab758856f74c245844fb84914741909ce6f23a7a2",
+    "rx_missing_response.log": "e9c041ec1d57a76d0f874501c5867efe302f1873523aa8f02ed8cc664b3a3bea"
+  },
+  "native_math_mapped_calendar": {
+    "positive_rc": 0,
+    "missing_response_rc": 134,
+    "rows": 24,
+    "scalar_results": 384,
+    "component_only": true,
+    "actual_program_macros": 4,
+    "program_words": 128,
+    "first_write_edge": 38,
+    "last_write_edge": 61,
+    "completion_observed_edge": 101,
+    "native_no_cxx_or_dpi": true,
+    "scope": "actual mapped calendar+fixed control+pin owner+RX; externalVM stimuli"
+  },
+  "historical_source_override": {
+    "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_static_rx.sv": "historical/tb_rx_external_calendar.sv.txt"
+  },
+  "compiler_tests": 10,
+  "canonical_note": "81 physical weight stages do not imply81SU instruction programs; full SU allocation remains absent",
+  "moe_sum": {
+    "component_native_pass": true,
+    "source_nodes": [
+      "L0.I101",
+      "L0.I102",
+      "L0.I103",
+      "L0.I104",
+      "L0.I105",
+      "L0.I106"
+    ],
+    "rank_words": 1280,
+    "input_row_count": 560,
+    "output_rows": 80,
+    "sequential_fp32_adds": 6,
+    "final_bf16_only": true,
+    "nominal_pipeline_edges": 42,
+    "output_cycle_span": [
+      133,
+      212
+    ],
+    "actual_sram_macros": 21,
+    "arithmetic_reassociation_mutant_rc": -6,
+    "early_bf16_mutant_rc": -6,
+    "missing_operand_rc": -6,
+    "mutant_output_cycles_identical": true,
+    "whole_parent_and_vm_join_qualified": false
+  }
+}

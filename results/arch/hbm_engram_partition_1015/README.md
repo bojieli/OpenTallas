@@ -30,3 +30,11 @@ PYTHONPATH=tools python3 tools/hbm_engram_hash_home_gate.py --out hash_proof
 ```
 
 Actual Yosys 0.52 `proc; opt; memory_map; opt` census (`dispatch_census_receipt.json`, terminal unit `oth-ubuntu-1389084-1792053962`) retains 150 register bits per dispatcher. This is an optimized logical-storage count, excluding the hash and serializer, and does not establish physical area or clock delivery. Both native streams use two such dispatchers.
+
+## Actual SRAM staging and eight-scale decode
+
+`ot_hbm_engram_row_store_decode` implements 24 complete 288-byte rows with two real 128×256 ASAP7 SRAM macros. Input address/data are registered before the macro, macro outputs are captured, and the outgoing raw/decode face is registered. A read reserved at edge t returns at t+3, accepting one request each edge. Home staging uses DECODE_ENABLE=0 and may read sectors in any order; consumer DECODE_ENABLE=1 reads scale sector8 first and then code sectors0–7, using each block's matching scale. No ready/credit mechanism is present. Explicit epoch_begin invalidates row-visibility metadata without resetting SRAM or upstream hash history. Duplicate writes, reads of unwritten words and invalid row/sector addresses fault.
+
+`external_rows/` contains 48 actual released-checkpoint rows selected by the real hash contract from compressed CID history [17,999,5543,99091]. Each original code/scale region is pinned by file/header/absolute offset/SHA; only these original bytes may supply the external HBM model. BF16 expectations are comparison-only. This is a valid component input sequence, not a claim of replaying the canonical 1M-token programme.
+
+Terminal unit `oth-ubuntu-1500123-1792055383`: both SRAM epochs, all432 raw sectors,384 decoded blocks/12,288 BF16 elements, exact read age3, epoch reuse without global reset and unwritten retained-old-epoch fault all pass. Actual DUT mutant reusing scale0 for every block fails. No DMA/collective/hash composition or physical qualification is inferred. Initial simulator elaboration rejected a generated macro-output connection; two explicit fixed bank instances preserve the actual two-macro architecture and pass. The controller and full operation join are tracked separately.

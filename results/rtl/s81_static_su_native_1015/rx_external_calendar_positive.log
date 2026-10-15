@@ -1,0 +1,30 @@
+RX_WRITE cycle=38 row=1024 value=40400000
+RX_WRITE cycle=39 row=1025 value=40400000
+RX_WRITE cycle=40 row=1026 value=40400000
+RX_WRITE cycle=41 row=1027 value=40400000
+RX_WRITE cycle=42 row=1028 value=40400000
+RX_WRITE cycle=43 row=1029 value=40400000
+RX_WRITE cycle=44 row=1030 value=40400000
+RX_WRITE cycle=45 row=1031 value=40400000
+RX_WRITE cycle=46 row=1032 value=40400000
+RX_WRITE cycle=47 row=1033 value=40400000
+RX_WRITE cycle=48 row=1034 value=40400000
+RX_WRITE cycle=49 row=1035 value=40400000
+RX_WRITE cycle=50 row=1036 value=40400000
+RX_WRITE cycle=51 row=1037 value=40400000
+RX_WRITE cycle=52 row=1038 value=40400000
+RX_WRITE cycle=53 row=1039 value=40400000
+RX_WRITE cycle=54 row=1040 value=40400000
+RX_WRITE cycle=55 row=1041 value=40400000
+RX_WRITE cycle=56 row=1042 value=40400000
+RX_WRITE cycle=57 row=1043 value=40400000
+RX_WRITE cycle=58 row=1044 value=40400000
+RX_WRITE cycle=59 row=1045 value=40400000
+RX_WRITE cycle=60 row=1046 value=40400000
+RX_WRITE cycle=61 row=1047 value=40400000
+STATIC_RX nw=24 errors=0 done=1 first=38 last=61 fault=0 code=0 cycle=120
+STATIC_RX PASS
+- rtl/dsrom_sys/s81_suhc/test/tb_s81_su_static_rx.sv:111: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 1us; walltime 0.277 s; speed 4.945 us/s
+- Verilator: cpu 0.278 s on 1 threads; alloced 1043 MB
