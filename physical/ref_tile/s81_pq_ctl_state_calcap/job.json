@@ -1,5 +1,5 @@
 {
- "name": "s81_pq_ctl_state_calcap-c4direct-COMMIT",
+ "name": "s81_pq_ctl_state_calcap-c4direct-ac647b77b",
  "block": "ot_s81_pq_ctl_state_phw10",
  "ref_tile": true,
  "owner": "Codex:s81-pq-physical-1103",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/s81-pq-physical-1103",
-  "commit": "COMMIT",
+  "commit": "ac647b77b",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_control",
    "rtl/dsrom_sys/s81_die_bind",
@@ -115,7 +115,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81_pq_ctl_state_calcap/s81_pq_ctl_state_calcap-c4direct-COMMIT"
+   "to": "results/rtl/ref_tile/s81_pq_ctl_state_calcap/s81_pq_ctl_state_calcap-c4direct-ac647b77b"
   }
  ],
  "cycles_added": 0,
@@ -131,6 +131,7 @@
   "cell": "ot_s81_pq_ctl_state_phw10",
   "launch_ps": 191.4,
   "capture_ps": 297.1,
-  "why": "c3k CLOSED TT+205.53/FF+16.56 DRC0 but exact native capture25pins>190; real ROM input ->buffer->hold-enable mux->flop and distributed externalreset path. c4direct inserts genuine boundary payload/reset captures, no holdmargin/phase relaxation."
+  "why": "c3k CLOSED TT+205.53/FF+16.56 DRC0 but exact native capture25pins>190; real ROM input ->buffer->hold-enable mux->flop and distributed externalreset path. c4direct inserts genuine boundary payload/reset captures, no holdmargin/phase relaxation.",
+  "fix": "Free-running existing48bit R1 ROM payload capture removes reset-enable mux;80bit phaseROM pin capture isolates four tagged hold-enable stores; dedicated pin resetrelay localizes externalreset. Added86sourceFF,0SRAM,0productionedges. Exactsame432x86.4outline/1824pins; samecentredspreadpinfile. Native c3k input297.1ps defect measured in committed exactETM/TTFFpaths; newsource gates and fresh MMCTS pass."
  }
 }
