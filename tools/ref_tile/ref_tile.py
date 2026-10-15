@@ -1432,13 +1432,13 @@ ROUTE_PREFIX = ("export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/
 def clock_fix_hooks(s: dict) -> str:
     """Explicit multi-root boundaries own IO timing; retain physical clock fixes."""
     hooks = ["physical/common_flow/cg_pushdown.tcl", "physical/common_flow/clk_net_protect.tcl"]
-    if s.get("clock") != "multiple_cts_roots":
+    if not clock_entry_constraints.native_leaf(s):
         hooks.append("physical/common_flow/link_budget_hook.tcl")
     return " ".join(hooks)
 
 
 def route_prefix(s: dict) -> str:
-    if s.get("clock") != "multiple_cts_roots":
+    if not clock_entry_constraints.native_leaf(s):
         return ROUTE_PREFIX  # existing job command bytes stay unchanged
     return ROUTE_PREFIX.replace("physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl",
                                 "physical/common_flow/clk_net_protect.tcl")
