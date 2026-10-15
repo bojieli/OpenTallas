@@ -46,6 +46,31 @@ MASTERS = {
         what="per-pair configuration sequencer (PQ 1 loader, as die.v.params.json binds it: the q element "
              "ot_v41_rom_elem_q_qxpq_w10 carries go_tag / sh_free / bank_free)",
         benches=[("lockstep_pq1", "pq1", "pass"), ("go_tag_mutant", "mut_tag", "fail")]),
+    "s81fill2_cfg7_seq_pd": dict(
+        master="ot_s81_cfg7_seq", top="ot_s81_cfg7_seq", params={"PQ": 1}, sources=CFG7_SRC, extra=CFG7_EXTRA,
+        clock="clk", resets=["rst_n"], inst=1898, size="density", std_um2=230,
+        what="per-pair configuration sequencer (PQ 1), B candidate: outline sized from pin density (10 b/um/layer) "
+             "and content instead of the generator slot",
+        benches=[("lockstep_pq1", "pq1", "pass"), ("go_tag_mutant", "mut_tag", "fail")]),
+    "s81fill2_cfg7_seq_bf_pd": dict(
+        master="ot_s81_cfg7_seq_bf", top="ot_s81_cfg7_seq_bf", params={}, sources=CFG7_SRC, extra=CFG7_EXTRA,
+        clock="clk", resets=["rst_n"], inst=519, size="density", std_um2=230,
+        what="BF pair configuration sequencer (PQ 0), B candidate: outline sized from pin density and content",
+        benches=[("lockstep_bf", "bf", "pass"), ("bank_select_mutant", "mut_bank_bf", "fail")]),
+    "s81fill2_sseq_c8": dict(
+        master="dsfd_stage_seq_static_c8", top="dsfd_stage_seq_static_c8", params={},
+        sources=["rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv", "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv",
+                 "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv", "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv"],
+        extra=["rtl/dsrom_sys/s81_static_control", "tools/s81_static_control", "tools/s81/fill2_c8_bench.sh", "physical/s81_fill2", PIN_DIR],
+        clock="ck", resets=["rst", "ckv", "rsv"], inst=1, size="density", std_um2=9000, majority=True,
+        extra_spec={"sdc_extra": ["physical/s81_fill2/sseq_ser_ref.sdc"], "boundary_tcl": ["physical/s81_fill2/sseq_ser_ref.tcl"]},
+        bench="tools/s81/fill2_c8_bench.sh", bench_tag="C8",
+        what="static stage sequencer (128 x 76 compiled calendar rows, 2 contexts, engines 0..7 + VM 12, START/PW/KIT "
+             "fixed mailboxes on the 3:4 serial clock ckv; no credit/ready). The generator reservation 1727.976 x 88.536 "
+             "has every data pin within 12 um of its EAST end (clocks spread 848..1624 um along S): a 1.7-mm strip would "
+             "need a > 600-um clock root for no reason, so the block is compact at that end (slot change request)",
+        benches=[("c8_wrapper_and_128row_issuer", "pass", "pass"), ("vm_absent_mutant", "mut_vm_absent", "fail"),
+                 ("issuer_timing_mutant", "mut_issuer", "fail")]),
     "s81fill2_cfg7_seq_bf": dict(
         master="ot_s81_cfg7_seq_bf", top="ot_s81_cfg7_seq_bf", params={}, sources=CFG7_SRC, extra=CFG7_EXTRA,
         clock="clk", resets=["rst_n"], inst=519,
@@ -114,6 +139,35 @@ def spread(mac: dict, dw: float, dh: float, clock: str, resets: list):
     return out, rep
 
 
+BPU = 10.0             # target pins per um per layer on the busiest face (gate limit 12)
+
+
+def majority(mac: dict) -> dict:
+    """move every bus to the face that holds most of its bits (the generator splits a few buses at the corners)"""
+    import collections
+    cnt = collections.defaultdict(collections.Counter)
+    for p in mac['pins']:
+        cnt[base(p['pin'])][p['face']] += 1
+    pins = []
+    for p in mac['pins']:
+        f = cnt[base(p['pin'])].most_common(1)[0][0]
+        if f != p['face']:
+            p = dict(p, face=f, layer='M4' if f in 'WE' else 'M5',
+                     x={'W': 0.0, 'E': mac['w']}.get(f, p['x']), y={'S': 0.0, 'N': mac['h']}.get(f, p['y']))
+        pins.append(p)
+    return dict(mac, pins=pins)
+
+
+def density_outline(mac: dict, std: float, clocks: list):
+    import collections
+    n = collections.Counter(p['face'] for p in mac['pins'])
+    h = snap(max(n['W'], n['E']) / BPU + 2 * EDGE + 0.5)
+    w_pins = snap(max(n['N'], n['S']) / BPU + 2 * EDGE + 0.5)
+    core = std / 0.5
+    w_area = snap(core / (h - 2 * EDGE) + 2 * EDGE)
+    return max(w_pins, w_area, 10.8), h
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument('--lef', required=True)
@@ -131,7 +185,12 @@ def main() -> int:
         if name not in sel:
             continue
         mac = lef_macro(lef, d['master'])
-        dw, dh = snap(mac['w']), snap(mac['h'])
+        if d.get('majority'):
+            mac = majority(mac)
+        if d.get('size') == 'density':
+            dw, dh = density_outline(mac, d['std_um2'], [d['clock']] + d['resets'])
+        else:
+            dw, dh = snap(mac['w']), snap(mac['h'])
         pins, rep = spread(mac, dw, dh, d['clock'], d['resets'])
         assert all(r['cut'] <= 0.6 for r in rep.values()), rep
         scalar = {base(p['pin']) for p in mac['pins'] if p['pin'].endswith('[0]')} - \
@@ -145,17 +204,23 @@ def main() -> int:
             tcl.append(f'place_pin -pin_name {{{pname}}} -layer {p["layer"]} -location {{{p["x"]:.3f} {p["y"]:.3f}}} '
                        f'-force_to_die_boundary')
             faces.setdefault(p['face'], set()).add(base(p['pin']))
-        (ROOT / PIN_DIR / f'{d["master"]}.tcl').write_text('\n'.join(tcl) + '\n')
-        benches = [{'name': bn, 'cmd': f'bash {BENCH} {mode} {{RUN}}/bench_{mode}', 'expect': exp,
-                    **({'pass_regex': f'CFG7 BENCH PASS {mode}'} if exp == 'pass' else {'fail_regex': f'CFG7 BENCH FAIL {mode}'}),
+        (ROOT / PIN_DIR / f'{d["master"]}{"_pd" if d.get("size") == "density" and not d.get("majority") else ""}.tcl').write_text('\n'.join(tcl) + '\n')
+        bsh, btag = d.get('bench', BENCH), d.get('bench_tag', 'CFG7')
+        benches = [{'name': bn, 'cmd': f'bash {bsh} {mode} {{RUN}}/bench_{mode}', 'expect': exp,
+                    **({'pass_regex': f'{btag} BENCH PASS' + (f' {mode}' if btag == 'CFG7' else '')} if exp == 'pass' else {'fail_regex': f'{btag} BENCH FAIL {mode}'}),
                     'threads': 4, 'peak_ram_gb': 4, 'needs': ['verilator']} for bn, mode, exp in d['benches']]
         spec = {
             'name': name, 'top': d['top'], 'kind': 'tile', 'sources': d['sources'], 'params': d['params'],
             'clock_port': d['clock'], 'reset_ports': d['resets'],
             'outline': {'w': dw, 'h': dh, 'exact': True}, 'layer_cap': 'M5',
             'pins': {f: sorted(v) for f, v in sorted(faces.items())},
-            'io_tcl': f'{PIN_DIR}/{d["master"]}.tcl', 'recipe': 2, 'outhold': False,
+            'io_tcl': f'{PIN_DIR}/{d["master"]}{"_pd" if d.get("size") == "density" and not d.get("majority") else ""}.tcl',
+            'recipe': 2, 'outhold': False, **d.get('extra_spec', {}),
             'route': {'pd': 0.5, 'threads': 4, 'peak_ram_gb': 8, 'pin_h': 'M4', 'pin_v': 'M3 M5', 'm5_pg_pitch': 2.7},
+            **({'slot_change_request': {'reason': f'outline from pin density (<= {BPU} b/um/layer, face cut <= 0.6) and '
+                                       f'content (~{d["std_um2"]} um2 std + recipe-2 cells at util ~0.5) instead of the '
+                                       f'generator slot {mac["w"]} x {mac["h"]}', 'outline': [dw, dh],
+                                       'generator_slot': [mac['w'], mac['h']]}} if d.get('size') == 'density' else {}),
             'structural_change': (f'First hardening of the S81 die master {d["master"]} ({d["inst"]} die instances, '
                                   f'{d["what"]}); real RTL {d["sources"][0]} (exact lockstep gate '
                                   f'rtl/v41die/test/tb_ot_s81_cfg7_seq.sv); 0 cycles; pins = {CASE} order with the '
