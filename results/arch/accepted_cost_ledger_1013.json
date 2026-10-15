@@ -69,6 +69,40 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "TX.RNE qwen_tx_rnes (+1 TX edge: R0 pin flop -> RNE/mask -> out flop, R1 capture; 2 -> 3 edges)",
+   "group": "TX.RNE",
+   "measured": 3.0,
+   "price": 2.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.5,
+   "e2e_loss_pct": 0.402,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 250439.0,
+     "added_cycles": 1008.0,
+     "runs_per_token": 72,
+     "critical_runs": 72,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1008.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.402
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "codex/closure-record-qwen_tx_rnes_r0-s2-845936439 (c8f1ce181) + _r1 (115297c79); rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Coordinator 12:50 PT 10-15 ACCEPTED +1 TX cycle as the structural native fix (no zero-edge RNE split fits 220/190: rnen r1 capture 228.2, rnep r0 launch 248.1). R0/R1 CLOSED TT +338.04/+347.87, FF +27.04/+27.49, DRC0, native PASS (launch 179.2/170.9, capture 125.6/123.0). Edge cost measured (1 edge = 1 cycle at 833.333 ps, exact 267->198 composition bench). Critical-path share MODELLED as an upper bound: every TX traversal of both TP8 all-reduces serial, 2 x (TP-1) = 14 per AR, 28 cycles a layer, 1,008 a token (0.402 %); the real number is fewer (a pipelined AR stream pays the edge once per hop fill). Per-layer measured die run with the 3-edge TX calendar: OPEN with Q-FUNC/compiler (owner of the TX calendar/serializer slot) and the die lead.  share modelled (upper bound) until the per-layer die run",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "qwen_rom",
    "unit": "VM.XREAD DVM (owner-adopted distributed x slices, TP8: x read = central priced XVM 1 -> 13 edges: tap 3 + head/leaf DX 10)",
    "group": "VM.XREAD",
    "measured": 13.0,
@@ -1066,11 +1100,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 0,
-   "proposed_pct": 3.629,
-   "accepted_plus_proposed_pct": 3.629,
+   "proposed_pct": 4.031,
+   "accepted_plus_proposed_pct": 4.031,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 3,
+   "proposed_rows": 4,
    "headroom_pct": 15.0,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
@@ -1092,7 +1126,7 @@
    "accepted_plus_proposed_pct": 107.972,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 15,
+   "proposed_rows": 16,
    "headroom_pct": 15.0,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
