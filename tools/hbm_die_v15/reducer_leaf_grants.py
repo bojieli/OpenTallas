@@ -55,7 +55,7 @@ def apply(c,source_ref):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--contract',type=Path,required=True);ap.add_argument('--out',type=Path,required=True)
-    ap.add_argument('--source-ref',default='0987612f8');a=ap.parse_args()
+    ap.add_argument('--source-ref',default='5223681bb');a=ap.parse_args()
     c,blob=apply(json.loads(a.contract.read_text()),a.source_ref)
     (ROOT/PINFILE).write_bytes(blob);a.out.write_text(json.dumps(c,indent=1)+'\n')
     print(json.dumps(c['su_reducer_child_grants_1319']))

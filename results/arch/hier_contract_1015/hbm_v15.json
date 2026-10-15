@@ -95023,8 +95023,8 @@
    "name": "sucore_SW_reducer",
    "cell": "ot_hbm_su_reduce_static",
    "source": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
-   "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
-   "source_prerequisite": "0987612f8",
+   "source_sha256": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+   "source_prerequisite": "5223681bb",
    "params": {
     "AW": 10
    },
@@ -95221,7 +95221,7 @@
    "version": 1,
    "grant": "diagnostic_component_child",
    "assigned_pin_file": "results/arch/hbm_die_v15/reducer_leaf_pins_1319.json",
-   "assigned_pin_file_sha256": "3b97089fb79c30d365ccbeb52c5e8c4190f859d8fecf24bf58bb48d462baa605",
+   "assigned_pin_file_sha256": "ad1f369da067c6a077704c8168e95f6ecfe96ef6d3e66648e34ae926dd92c047",
    "su_reducer_child_grant_1319": true,
    "macros": [
     {
@@ -95235,8 +95235,8 @@
    "name": "sucore_SE_reducer",
    "cell": "ot_hbm_su_reduce_static",
    "source": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
-   "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
-   "source_prerequisite": "0987612f8",
+   "source_sha256": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+   "source_prerequisite": "5223681bb",
    "params": {
     "AW": 10
    },
@@ -95433,7 +95433,7 @@
    "version": 1,
    "grant": "diagnostic_component_child",
    "assigned_pin_file": "results/arch/hbm_die_v15/reducer_leaf_pins_1319.json",
-   "assigned_pin_file_sha256": "3b97089fb79c30d365ccbeb52c5e8c4190f859d8fecf24bf58bb48d462baa605",
+   "assigned_pin_file_sha256": "ad1f369da067c6a077704c8168e95f6ecfe96ef6d3e66648e34ae926dd92c047",
    "su_reducer_child_grant_1319": true,
    "macros": [
     {
@@ -95447,8 +95447,8 @@
    "name": "sucore_NW_reducer",
    "cell": "ot_hbm_su_reduce_static",
    "source": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
-   "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
-   "source_prerequisite": "0987612f8",
+   "source_sha256": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+   "source_prerequisite": "5223681bb",
    "params": {
     "AW": 10
    },
@@ -95645,7 +95645,7 @@
    "version": 1,
    "grant": "diagnostic_component_child",
    "assigned_pin_file": "results/arch/hbm_die_v15/reducer_leaf_pins_1319.json",
-   "assigned_pin_file_sha256": "3b97089fb79c30d365ccbeb52c5e8c4190f859d8fecf24bf58bb48d462baa605",
+   "assigned_pin_file_sha256": "ad1f369da067c6a077704c8168e95f6ecfe96ef6d3e66648e34ae926dd92c047",
    "su_reducer_child_grant_1319": true,
    "macros": [
     {
@@ -95659,8 +95659,8 @@
    "name": "sucore_NE_reducer",
    "cell": "ot_hbm_su_reduce_static",
    "source": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
-   "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
-   "source_prerequisite": "0987612f8",
+   "source_sha256": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+   "source_prerequisite": "5223681bb",
    "params": {
     "AW": 10
    },
@@ -95857,7 +95857,7 @@
    "version": 1,
    "grant": "diagnostic_component_child",
    "assigned_pin_file": "results/arch/hbm_die_v15/reducer_leaf_pins_1319.json",
-   "assigned_pin_file_sha256": "3b97089fb79c30d365ccbeb52c5e8c4190f859d8fecf24bf58bb48d462baa605",
+   "assigned_pin_file_sha256": "ad1f369da067c6a077704c8168e95f6ecfe96ef6d3e66648e34ae926dd92c047",
    "su_reducer_child_grant_1319": true,
    "macros": [
     {
@@ -99338,7 +99338,7 @@
  },
  "su_reducer_child_grants_1319": {
   "count": 4,
-  "source_ref": "0987612f8",
+  "source_ref": "5223681bb",
   "outline_area_mm2": 0.1306368,
   "whole_su_or_die_qualified": false
  }
