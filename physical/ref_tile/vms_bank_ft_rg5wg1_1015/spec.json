@@ -1,0 +1,249 @@
+{
+ "name": "vms_bank_ft_rg5wg1_1015",
+ "top": "hfd_vms_bank_ft_rg5wg1",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_ft_rg5wg1.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_ft.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "rq0",
+   "rr0",
+   "rq4",
+   "rr4",
+   "wq0",
+   "wq_done0",
+   "clk",
+   "rst_n",
+   "bid",
+   "wslot_v",
+   "status"
+  ],
+  "S": [
+   "rq1",
+   "rr1",
+   "pq",
+   "pr",
+   "eg"
+  ],
+  "E": [
+   "rq2",
+   "rr2",
+   "dq",
+   "dq_done",
+   "xq",
+   "xq_done",
+   "sid",
+   "wslot"
+  ],
+  "W": [
+   "rq3",
+   "rr3",
+   "kq",
+   "kq_done",
+   "xq2",
+   "xq2_done",
+   "rslot_v",
+   "rslot"
+  ]
+ },
+ "pin_ranges": {
+  "rq0": [
+   5.4,
+   12.28
+  ],
+  "rr0": [
+   12.28,
+   116.283
+  ],
+  "rq4": [
+   116.283,
+   123.163
+  ],
+  "rr4": [
+   123.163,
+   227.167
+  ],
+  "wq0": [
+   227.167,
+   340.883
+  ],
+  "wq_done0": [
+   340.883,
+   341.288
+  ],
+  "clk": [
+   341.288,
+   341.692
+  ],
+  "rst_n": [
+   341.692,
+   342.097
+  ],
+  "bid": [
+   342.097,
+   343.311
+  ],
+  "wslot_v": [
+   343.311,
+   343.716
+  ],
+  "status": [
+   343.716,
+   351.0
+  ],
+  "rq1": [
+   5.4,
+   10.736
+  ],
+  "rr1": [
+   10.736,
+   91.408
+  ],
+  "pq": [
+   91.408,
+   180.868
+  ],
+  "pr": [
+   180.868,
+   264.365
+  ],
+  "eg": [
+   264.365,
+   351.0
+  ],
+  "rq2": [
+   5.4,
+   12.586
+  ],
+  "rr2": [
+   12.586,
+   121.225
+  ],
+  "dq": [
+   121.225,
+   240.01
+  ],
+  "dq_done": [
+   240.01,
+   240.433
+  ],
+  "xq": [
+   240.433,
+   357.104
+  ],
+  "xq_done": [
+   357.104,
+   357.526
+  ],
+  "sid": [
+   357.526,
+   358.372
+  ],
+  "wslot": [
+   358.372,
+   359.64
+  ],
+  "rq3": [
+   5.4,
+   12.595
+  ],
+  "rr3": [
+   12.595,
+   121.364
+  ],
+  "kq": [
+   121.364,
+   240.29
+  ],
+  "kq_done": [
+   240.29,
+   240.714
+  ],
+  "xq2": [
+   240.714,
+   357.524
+  ],
+  "xq2_done": [
+   357.524,
+   357.947
+  ],
+  "rslot_v": [
+   357.947,
+   358.37
+  ],
+  "rslot": [
+   358.37,
+   359.64
+  ]
+ },
+ "outline": {
+  "w": 356.4,
+  "h": 365.04,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 3
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-ELEM-A (VM bank, from stopped Codex H-VM)",
+  "branch": "codex/hbm-vm-static-hub-1014",
+  "tag": "ft3",
+  "purpose": "Static VM bank (RG5/WG1, SW/SE) for the 833.333 ps a1 engine clock: wdecode+CE successor plus (1) sticky fault as a registered 2-level tree (gate reg->reg -71 ps ended at flt), (2) local reset relay (async assert, 3-edge sync release; port drives 3 flops only; gate in->reg -54.2 ps rq_v reset recovery). Same 3 actual SRAMs, slots, read n+6 / commit n+3 / egress n+1, pin ABI. Status fault visibility +2 edges; reset release is initialization mode (+3 edges before the first compiler slot).",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static"
+  ],
+  "record_to": "results/rtl/ref_tile/vms_bank_ft_rg5wg1_1015",
+  "benches": [
+   {
+    "name": "all_native_groups_exact_and_mutants",
+    "cmd": "mkdir -p {RUN}/bench_inputs && cp rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_ft.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v {RUN}/bench_inputs/ && bash rtl/hbm_accel/generic/vm/static/physical/run_physical_banks_ft.sh {RUN}/bench/allgroups {RUN}/bench_inputs",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "min_count_regex": "eachgroup_reads=(\\d+)"
+   }
+  ],
+  "structural_change": "Static VM bank (RG5/WG1, SW/SE) for the 833.333 ps a1 engine clock: wdecode+CE successor plus (1) sticky fault as a registered 2-level tree (gate reg->reg -71 ps ended at flt), (2) local reset relay (async assert, 3-edge sync release; port drives 3 flops only; gate in->reg -54.2 ps rq_v reset recovery). Same 3 actual SRAMs, slots, read n+6 / commit n+3 / egress n+1, pin ABI. Status fault visibility +2 edges; reset release is initialization mode (+3 edges before the first compiler slot). | ft2: ft1 gate TT insertion 466.5..589.7 (spread 123.2) with the 3 SRAM clock pins on the register tree: explicit register sink clustering (24 sinks / 40 um) and no H-tree detour around the SRAM stack (-no_obstruction_aware, as the S81 gather leaf). | ft3: TritonCTS on the 3-SRAM bank measured TT insertion 473-593 / spread 119 (rg5wg1) and 379-488 / 110 (rg7wg3) > 80 even with explicit sink clustering: the pre-placed balanced clock spine (physical/common_flow/clock_spine.tcl) replaces it, each SRAM clock pin its own spine leaf (spine_macro_leaf), registers on balanced spine bins -- the per-SRAM clock root structure without a second clock port.",
+  "views_to": "physical/ref_tile/vms_bank_ft_rg5wg1_1015/views"
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock": "spine"
+}

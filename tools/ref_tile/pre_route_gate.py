@@ -408,13 +408,65 @@ def check_sources(g: Gate, job: dict, extra_seeds=(), commit=None):
 
 
 # --------------------------------------------------------------------------------------------- kit checks
+MULTI_ROOT_PROOF = "related crossing lacks actual finite"
+MULTI_ROOT_DEFERRAL = "RELATED_PATH_DEFERRED"
+
+
+def stale_multi_root_sdcs(kd: Path) -> list:
+    """Kit SDCs baked by ref_tile.py before f489fa9d5: they carry the multi-root related-crossing finite-path proof
+    without the multi-mode pre-scene deferral, so under the gate/production OT_HOLD_MM session (read_sdc -mode ss before
+    any scene) find_timing_paths returns nothing and 1_synth/synth_odb dies with 'OT_MULTI_ROOT: related crossing lacks
+    actual finite max STA path' although the same netlist + SDC pass a single-scene replay (TT head h3, xcol_{e,w}_rq,
+    2026-10-15).  The generator is current; only the committed kit bytes are stale."""
+    out = []
+    for f in sorted(kd.glob("*.sdc")):
+        t = f.read_text(errors="replace")
+        # independent-domain leaves never reach the proof (any crossing is refused structurally first)
+        if MULTI_ROOT_PROOF in t and MULTI_ROOT_DEFERRAL not in t and "set ::ot_ce_related_data 1" in t:
+            out.append(f.name)
+    return out
+
+
+
+def stale_native_cts_sdcs(kd: Path, spec: dict) -> list:
+    """Require operational current generated policy, only for native leaf CTS kits.
+
+    These modes prohibit custom SDC hooks. Compare the complete generated SDCs,
+    including stage flags, executable procedure and its invocation: a log marker,
+    commented correction, no-op, or later re-propagation is not sufficient proof.
+    This local/new-submit check never walks accepted jobs or changes frozen SDCs.
+    """
+    if not RT.clock_entry_constraints.native_leaf(spec):
+        return []
+    expected = {
+        "clock.sdc": RT.gen_sdc(spec, float(spec.get("route", {}).get("period_ps", 770))),
+        "clock_entry.sdc": "set ::ot_ce_require_wire 1\n" + RT.clock_entry_constraints.generate(spec, RT.ROOT),
+        "signoff.sdc": RT.gen_signoff(spec, spec.get("refglob", "*"), ",".join(spec.get("inter", [])) or "none_*"),
+    }
+    return [name for name, text in expected.items()
+            if not (kd / name).is_file() or (kd / name).read_bytes() != text.encode()]
+
+
 def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
+    stale = stale_multi_root_sdcs(kd)
+    if stale:
+        g.add("FAIL", "kit_sdc", f"{stale} predate the multi-mode pre-scene deferral of the OT_MULTI_ROOT related-crossing "
+              "proof (f489fa9d5): ORFS synth_odb fails 'related crossing lacks actual finite max STA path' under OT_HOLD_MM",
+              "rebase on main and re-run ref_tile.py gen for this kit, commit, then gate")
     spec = RT.load_spec(str(kd / "spec.json"))
     try:
         fresh = RT.gen(str(kd / "spec.json"), spec.get("std_area_um2"), write=False)
     except RT.SpecError as ex:
         g.add("FAIL", "spec", str(ex), "fix the tile spec")
         return spec
+    stale_native = stale_native_cts_sdcs(kd, spec)
+    if stale_native:
+        g.add("FAIL", "native_cts_sdc", f"{stale_native} differ from current generated native CTS stage policy "
+              "(4af58769b): declared standard CTS roots must be ideal before CTS, while raw hard-entry roots "
+              "and require-wire/postCTS checks retain actual propagation; a marker alone is insufficient",
+              "rebase on main; run python3 tools/ref_tile/ref_tile.py gen <this kit's spec.json>; "
+              "review unchanged RTL/pins/periods, commit regenerated kit, then run a fresh source-bound --cts gate "
+              "and submit a new normal successor; preserve original accepted/frozen jobs")
     for sev, chk, msg, fix in fresh["findings"]:
         g.add(sev, chk, msg, fix)
     fp = json.loads((kd / "floorplan.json").read_text())

@@ -1,0 +1,7 @@
+x6 s1 RXH_EQ FAIL shadow_fail=0
+  RXH_EQ kind 8 jobs 12 first-result latency flat 133 cluster 138 (+5)
+  RXH_EQ kind 9 jobs 14 first-result latency flat 13 cluster 16 (+3)
+  RXH_EQ kind 10 jobs 13 first-result latency flat 21 cluster 25 (+4)
+  RXH_EQ kind 11 jobs 9 first-result latency flat 74 cluster 79 (+5)
+  RXH_EQ rows 213 + 62 (slot 2) faults fu 1 fo 0 errors 62 XMUT 6
+GATE rc=0

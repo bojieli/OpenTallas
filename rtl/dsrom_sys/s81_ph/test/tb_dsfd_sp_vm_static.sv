@@ -23,7 +23,9 @@ module tb_dsfd_sp_vm_static;
 `else
     localparam integer READ_PIPE=0;
 `endif
-`ifdef OT_VM_NATIVE_CAP
+`ifdef OT_VM_NATIVE_CAP_PINREG
+    localparam integer CAP_PIPE=2;
+`elsif OT_VM_NATIVE_CAP
     localparam integer CAP_PIPE=1;
 `else
     localparam integer CAP_PIPE=0;
@@ -99,7 +101,7 @@ module tb_dsfd_sp_vm_static;
     endfunction
     integer cmd_row = 0;
     task issue(input [2:0] code, input [20:0] op);
-        begin c_cmd = mkcmd(code, op, 7'(cmd_row)); e_dn[tk + 1 + 6] = {1'b1, 1'b0, 7'(cmd_row)}; cmd_row = cmd_row + 1; end
+        begin c_cmd = mkcmd(code, op, 7'(cmd_row)); e_dn[tk + 1 + 7] = {1'b1, 1'b0, 7'(cmd_row)}; cmd_row = cmd_row + 1; end
     endtask
     task stream(input integer dest, input integer base, input integer n);
         integer k, I, E; reg [511:0] d;

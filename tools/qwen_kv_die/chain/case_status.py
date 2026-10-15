@@ -24,7 +24,8 @@ def check(log, stage, process_exit=0, case_kind='a'):
         # A completed clock/SPEF load is insufficient: require real STA output.
         required = []
         for metric in ('tns', 'wns', 'worst slack'):
-            matches = re.findall(r'^' + metric + r'\s+(\S+)\s*$', log, re.M)
+            # OpenSTA prints 'tns max -1.0' (path type) on current builds, 'tns -1.0' on older ones.
+            matches = re.findall(r'^' + metric + r'(?:\s+(?:max|min))?\s+(\S+)\s*$', log, re.M)
             try:
                 valid = bool(matches) and all(math.isfinite(float(v)) for v in matches)
             except ValueError:

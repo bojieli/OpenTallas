@@ -32,13 +32,13 @@ set i [ot_ref_pick $ot_ref_by ot_qwen_slab_pg_lanes {u_port.g_hard_mul.g_mul[0].
 $i setOrient R0; $i setLocation [expr {round(32.4 * $dbu)}] [expr {round(22.68 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_slab_pg_lanes at 32.4 22.68 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_slab_pg_lanes {u_port.g_hard_mul.g_mul[1].u_ln}]
-$i setOrient R0; $i setLocation [expr {round(125.28 * $dbu)}] [expr {round(22.68 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_slab_pg_lanes at 125.28 22.68 R0"
+$i setOrient R0; $i setLocation [expr {round(138.24 * $dbu)}] [expr {round(22.68 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_slab_pg_lanes at 138.24 22.68 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_slab_pg_lanes {u_port.g_hard_mul.g_mul[2].u_ln}]
-$i setOrient R0; $i setLocation [expr {round(218.16 * $dbu)}] [expr {round(22.68 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_slab_pg_lanes at 218.16 22.68 R0"
+$i setOrient R180; $i setLocation [expr {round(32.424 * $dbu)}] [expr {round(115.56 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_slab_pg_lanes at 32.424 115.56 R180"
 set i [ot_ref_pick $ot_ref_by ot_qwen_slab_pg_lanes {u_port.g_hard_mul.g_mul[3].u_ln}]
-$i setOrient R0; $i setLocation [expr {round(311.04 * $dbu)}] [expr {round(22.68 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_slab_pg_lanes at 311.04 22.68 R0"
+$i setOrient R180; $i setLocation [expr {round(138.264 * $dbu)}] [expr {round(115.56 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_slab_pg_lanes at 138.264 115.56 R180"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 4} { error "ref_tile place: expected 4 macros, netlist has $nb" }

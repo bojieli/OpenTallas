@@ -27,7 +27,7 @@ module ot_hbm_idx_score_static #(parameter integer MUT=0)(
   end
   wire[19:0]first=g0+20'((e/2)*768+(e%2)*4);
   wire[24:0]meta;
-  ot_hdc_delay #(.W(25),.D(123)) md(.clk(clk_meta[e]),.rst_n(rst_n),
+  hidx_meta_w25_d123_r0 md(.clk(clk_meta[e]),.rst_n(rst_n),
    .d({(({4'd0,beat_index}+12'd1)*12'd16>=nkeys),first,4'd0}),.q(meta));
   for(genvar l=0;l<4;l=l+1)begin:go
    assign idx[(e*4+l)*20+:20]=meta[23:4]+20'(l);

@@ -2,7 +2,7 @@
 // Separate token candidate; no physical qualification.
 // Production prompt composition: five independent synchronous child entries,
 // zero parent flops. Physical SRAM response latency4 bound explicitly.
-module qkd_host_control_prompt_observed #(parameter integer T_LINK=200000,T_HBM=200000,WDOG=1<<22,PROMPT_MUT=0,PROMPT_BIND_LATENCY=4,ENABLE_SERVICE=0)(
+module qkd_host_control_prompt_observed #(parameter integer T_LINK=200000,T_HBM=200000,WDOG=1<<22,PROMPT_MUT=0,PROMPT_BIND_LATENCY=4,ENABLE_SERVICE=0,NL=6)(
     input wire ck_host, ck_csr, ck_rst, ck_ctl, ck_prompt,
     input wire [2:0] die_id,
     input  wire               por_n,
@@ -50,7 +50,7 @@ module qkd_host_control_prompt_observed #(parameter integer T_LINK=200000,T_HBM=
     input  wire [1:0]         m_bresp,
     output wire               irq,
     // reset / boot
-    input  wire [6-1:0]      link_up,
+    input  wire [NL-1:0]     link_up,     // NL real link ends (KV die v1.4: 2 = static D2D + host SerDes)
     input  wire [8-1:0]       boot_done,
     input  wire [8-1:0]       boot_ok,
     output wire               host_rst_n,
@@ -95,7 +95,7 @@ output wire  startup_allowed,
  input wire peer_reset_request
 );
  wire pb_we,pb_re,pb_fault;wire[13:0]pb_waddr,pb_raddr;wire[17:0]pb_wdata,pb_q;
- qkd_host_fullcontrol_observed #(.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.PROMPT_READ_LATENCY(PROMPT_BIND_LATENCY),.ENABLE_SERVICE(ENABLE_SERVICE))u_control(.peer_reset_request(peer_reset_request),.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
+ qkd_host_fullcontrol_observed #(.NL(NL),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.PROMPT_READ_LATENCY(PROMPT_BIND_LATENCY),.ENABLE_SERVICE(ENABLE_SERVICE))u_control(.peer_reset_request(peer_reset_request),.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
  .package_abort(package_abort),.begin_tx_cr(begin_tx_cr),.begin_tx_available(begin_tx_available),.pending_ack8(pending_ack8),.service_epoch8(service_epoch8),.service_fault(service_fault),.ingest_permission(ingest_permission),.begin_v(begin_v),.begin_epoch(begin_epoch),.begin_available(begin_available),.begin_fault(begin_fault),.epoch_busy(epoch_busy),.startup_allowed(startup_allowed),
  .service_abort(service_abort),.service_ready(service_ready),.service_ready8(service_ready8),.service_diag_raw(service_diag_raw),.service_status(service_status),
  .ck_host(ck_host),

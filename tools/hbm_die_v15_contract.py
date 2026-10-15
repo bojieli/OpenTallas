@@ -21,7 +21,10 @@ LG_SOURCE = 'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv'
 SFU_SOURCE = 'rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv'      # LG mid tap 14/11
 DBK_SOURCE = 'rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv'    # direct RG, bank n+1/n+7
 IDX_SOURCE = 'rtl/hbm_accel/index/ot_hbm_idx_client_static.sv'                 # H-IDX 40e9f801e: INDEX+TOPK, RG4 + record client 4
-# ATT PV source (D local PV) not bound while attention architecture is under comparison (owner 10:30).
+ARGMAX_SOURCE = 'rtl/hbm_accel/generic/ot_hbm_argmax_static.sv'                # H-IDX 815c87b41: static ARGMAX.LOCAL (MTP), record client 0
+QUANT_SOURCE = 'rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv'       # H-ATTQ 07:47: QUANT host top on NW RG 'quant' / WG 'quant'
+# ATTENTION: H-ATTQ verdict 2026-10-15T07:47 under owner 10:30/10:45/10:55 = ADOPT B (QK/PV on SM engines at SM 1.0x +
+# SU softmax). Dedicated ATT tiles, attention RG/WG, ATT LG groups and the PV return are DROPPED from v15.
 SU_SOURCE = 'rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv'  # LG near tap 10/7, 4 bank-pair groups
 SID = ('SW','SE','NW','NE')
 # H-IDX answer 2026-10-15 (main 40e9f801e): SW record clients 7 -> 3.
@@ -32,7 +35,7 @@ RECORD_DISPOSITION = {
     ('SW','coll'): 'DEAD (static COLL uses RG3/kq): remove from VM ABI',
     ('SW','hc'): 'DEAD pending HC owner confirmation: remove from VM ABI when confirmed',
     ('SW','dma'): 'PENDING: DMA owner decides (static DMA back uses RG1)',
-    ('SW','argmax'): 'OPEN: needed for MTP; no static argmax RTL yet; owner H-IDX',
+    ('SW','argmax'): 'hb_argmax (ot_hbm_argmax_static O {value,id} fixed-slot writes, H-IDX 815c87b41)',
 }
 # OWNER rule refinement (HANDOFF 0az, 2026-10-15): link-level flow control stays at every OFF-DIE
 # boundary; everything on-die is fixed-slot from 'buffer block ready'. Credits are removed only on
@@ -57,7 +60,36 @@ VM_ABI_CHANGE_REQUESTS = [
     dict(change='remove IDX read group in SE/NW/NE (RG 5->4 SE, 7->6 NW/NE); IDX reads only SW group 4',
          condition='SU route.scores_bias.O must be REPL (H-ELEM-B)', source='H-IDX 40e9f801e', owner='H-ELEM-A (VM slice)',
          status='APPLIED 2026-10-15 H-ELEM-A: condition met (H-ELEM-B main 9505d6569, scores_bias lands in SW); IDX was the last group so COLL stays RG3 (S) / RG5 (N); compiler fixtures re-packed with the 8 IDX bank slots/fixture removed'),
+    dict(change='remove NE attention read group and write group (RG 6->5, WG 3->2 NE); drop ATT LG port-group row',
+         condition='MET: H-ATTQ ATT-vs-SM verdict B (2026-10-15T07:47, owner 10:30/10:45/10:55); coordinator 09:25 adopted T_band2__npg4_s5 (no ATT)',
+         source='el1015-hbm-attq.log COLLECT-ATTCMP', owner='H-ELEM-A (VM slice)', status='READY_TO_APPLY'),
 ]
+# ATTENTION on the SM engines (H-ATTQ verdict B 2026-10-15T07:47, owner 10:45 adopt; floorplan T_band2__npg4_s5 adopted
+# 09:25). There is NO attention instance, ATT tile, attention VM group, ATT LG group or PV return in this die. Attention
+# is a compiler mapping onto existing engines; the obligations below are hardware/compiler work items with owners.
+ATTENTION_ON_SM = dict(
+    verdict='B: QK^T and PV on the SM engines at SM 1.0x; softmax/pv_normalize on SU (+SFU exp) unchanged',
+    kv_dataflow=('KV rows stream HBM PHY -> PC -> SM on the existing SM HBM port exactly like weights (both QK and PV '
+                 'passes stream the row set); kv_home = stack_local: dense rows sequence-sliced to the SM whose stack '
+                 'holds them, DS top-k rows rank-assigned, DS compressed KV replicated in all four stacks'),
+    replication_cost='DS compressed KV stored in all 4 stacks: +3 row writes / layer / token -- MEASURE on the compiled DS '
+                     'programme and record in the accepted-cost ledger (H-ATTQ/compiler); not silently priced',
+    sm_obligations=['PV accumulate mode (per-lane FP32 accumulate of V row x scalar p, no reduction tree)',
+                    'BF16/FP32 x against FP8/FP4 block-exponent W (quality contract required)',
+                    'GQA multi-x (up to 4 x vectors per streamed KV line)',
+                    'KV row = 4 SM lines (544 B = 4 x 136 B); FP4 top-k row 288 B vs 272 B to reconcile',
+                    'KV_DESC: one 64-bit KV descriptor input port per SM, driven by the quadrant VM hub (floorplan link '
+                    'vmh_<q> -> sm_<q>k KV_DESC 64 b); owner H-SM-ATT / H-ELEM-A (SM master + VM hub)'],
+    vm_hub_condition='VM hub outline >= 1.1 mm (S face 1.04..1.19 utilisation at 900 um) OR the 8-lane delivery split (ot_hbm_svc_static_vm_delivery_split)',
+    su_role='scores land in VM as SM FP32 outputs; SU softmax + PV normalize per existing SU records; PV partial reduce on SU',
+    compiler='ATT.QK -> SM.MATVEC, ATT.PV -> SM.ACC, KV prefetch descriptors issued at IDX top-k (rows known before q)',
+    status='source/compiler/SM-RTL adoption OPEN; no attention performance or physical qualification inherited',
+    owners=dict(sm='H-SM-ATT / H-ELEM-A', su='H-ELEM-B', compiler='H-ATTQ', floorplan='GLOBAL-FP-H (adopted)'))
+# Groups the die no longer needs: bound to nothing on purpose, removed by the VM ABI change above.
+RETIRED_GROUPS = {
+    ('NE','read','attention'):'RETIRE (VM ABI change pending H-ELEM-A): ATT dropped, verdict B',
+    ('NE','write','attention'):'RETIRE (VM ABI change pending H-ELEM-A): ATT dropped, verdict B',
+}
 
 
 def generate(out):
@@ -104,12 +136,13 @@ def generate(out):
     for q in abi['quadrants']:
         module('hb_sfu_'+q,SFU_SOURCE,'ot_hgi_sfu_scheduled_engine',dict(PAGE_AW=1,AW=11,LWB=15))
         module('hb_dbk_'+q,DBK_SOURCE,'ot_hgi_dma_back_static',dict(STK=SID.index(q)))
-        # SW/SE NPG 5: die-lead BANK_GROUP map, PROVISIONAL bank7 alone (0x43221100, = H-ELEM-B vehicle map)
-        # until GEO-H confirms against the RG5 bank pin readback.
-        swse=q in ('SW','SE')
+        # Adopted floorplan T_band2__npg4_s5 (coordinator 2026-10-15 ~09:25) condition: SW/SE engines use 4 bank-pair
+        # port groups like NW/NE (not 5): NPG 4, BANK_GROUP 0x33221100 in every quadrant.
         module('hb_su_'+q,SU_SOURCE,'ot_hbm_su_static_vm_ports',dict(QID=SID.index(q),READ_RETURN=10,WRITE_RETURN=7,
-               NPG=5 if swse else 4,BANK_GROUP=0x43221100 if swse else 0x33221100))
+               NPG=4,BANK_GROUP=0x33221100))
     module('hb_idx',IDX_SOURCE,'ot_hbm_idx_client_static')
+    module('hb_argmax',ARGMAX_SOURCE,'ot_hbm_argmax_static')
+    module('hb_quant_NW',QUANT_SOURCE,'ot_hgi_qdq_host_static',dict(RL=7,WC=4,COMPACT=1))
     edges=[]; connected=set(); parts={}; logical_constants=[]
     def edge(name,src,dst):
         sm,sp=src; dm,dp=dst
@@ -206,18 +239,34 @@ def generate(out):
     logical_constants.append(dict(sink=['hb_idx','sid'],bits=2,value=0,
         reason='INDEX operand face reads the SW slice (sid order SW,SE,NW,NE)',physical_tie_cells_qualified=False))
     connected.add(('hb_idx','sid'))
-    # OWNER 10:30 2026-10-15: attention architecture under comparison (dedicated ATT tiles vs
-    # attention on SM engines + SU/SFU softmax, H-ATTQ). No ATT-specific die resources in v15
-    # until the verdict: no attention instance, write group binding or PV drain/return here.
-    # Placeholder note lives in die_chain_readiness.json only.
+    # ARGMAX (H-IDX 815c87b41): reads through the IDX share (third compiler-booked owner of SW RG4),
+    # O {value,id} on SW record client 'argmax'. sid = SW declared constant.
+    # cq_seq remains an explicit duplicate output: VM client_seq is calendar-owned.
+    # The actual loaded programme must prove equality; do not create two VM drivers.
+    edge('argmax_rq',('hb_argmax','vm_rq'),('hb_idx','argmax_rq'))
+    edge('argmax_rr',('hb_idx','argmax_rr'),('hb_argmax','vm_rr'))
+    c=abi['clients']['SW']['records'].index('argmax')
+    slice_edge('argmax_cq',('hb_argmax','cq',0),('hb_vms_SW','cq',338*c),338)
+    slice_edge('argmax_cr',('hb_vms_SW','cr',274*c),('hb_argmax','cr',0),274)
+    logical_constants.append(dict(sink=['hb_argmax','sid'],bits=2,value=0,
+        reason='ARGMAX reads/writes the SW slice (sid order SW,SE,NW,NE)',physical_tie_cells_qualified=False))
+    connected.add(('hb_argmax','sid'))
+    # QUANT host top (H-ATTQ 07:47:59, PASS HGI_QDQ_COMPACT_NATIVE_HOST_NW RG4_WG2): NW read group / write group 'quant'.
+    g=abi['clients']['NW']['read'].index('quant');w=abi['clients']['NW']['write'].index('quant')
+    slice_edge('quant_vm_rq',('hb_quant_NW','rq',0),('hb_vms_NW','rq',136*g),136)
+    slice_edge('quant_vm_rr',('hb_vms_NW','rr',2056*g),('hb_quant_NW','rr',0),2056)
+    slice_edge('quant_vm_wq',('hb_quant_NW','wq',0),('hb_vms_NW','wq',2248*w),2248)
+    slice_bind['NW']['read_groups'][str(g)]='hb_quant_NW';slice_bind['NW']['write_groups'][str(w)]='hb_quant_NW'
+    # Attention: verdict B (H-ATTQ 07:47, owner 10:45 adopt-if-small) -> no ATT instance, no attention
+    # group binding, no PV drain/return. QK/PV run on the SM engines (SM owner), softmax on SU.
     long_returns=[]
     for q in abi['quadrants']:
         reads=abi['clients'][q]['read'];rec=slice_bind[q]
         for i,name in enumerate(reads):
-            rec['read_groups'].setdefault(str(i),'UNBOUND: no static producer for "%s"'%name)
+            rec['read_groups'].setdefault(str(i),RETIRED_GROUPS.get((q,'read',name),'UNBOUND: no static producer for "%s"'%name))
         writes=abi['clients'][q]['write']
         for i,name in enumerate(writes):
-            rec['write_groups'].setdefault(str(i),'UNBOUND: no static producer for "%s"'%name)
+            rec['write_groups'].setdefault(str(i),RETIRED_GROUPS.get((q,'write',name),'UNBOUND: no static producer for "%s"'%name))
         for i,name in enumerate(abi['clients'][q]['records']):
             rec['records'][str(i)]=RECORD_DISPOSITION.get((q,name),'UNBOUND: record client "%s" has no static cq338/cr274 source'%name)
     # Coordinator structural rule 2026-10-15 (GEO-H bank<->LG geometry): every SU/SFU/HC
@@ -225,12 +274,12 @@ def generate(out):
     # each LG link stays <500 um at the fixed tap return latencies. A single connection
     # point means 1.5-7.7 mm wires. Logical bus may stay one port; the PIN/leaf plan must
     # split it per bank pair (bits b*17/b*281/b*257 of banks 2k,2k+1 form group k).
-    engine_rule=dict(rule='>=4 LG port groups per quadrant per engine (one per bank pair), 5 on SW/SE; every LG link <500 um',
+    engine_rule=dict(rule='4 LG port groups per quadrant per engine (one per bank pair) in EVERY quadrant (adopted T_band2__npg4_s5 condition; supersedes 5 on SW/SE); every LG link <500 um',
         source='coordinator decision 2026-10-15 on GEO-H 7025b4f52 (el1011-hbmdie.log)',
         bank_pair_bits=dict(rq='[(2k)*17,(2k+2)*17)',wq='[(2k)*281,(2k+2)*281)',rr='[(2k)*257,(2k+2)*257)',w_done='[2k,2k+2)'),
         engines={})
     for q in abi['quadrants']:
-        need=5 if q in ('SW','SE') else 4
+        need=4
         for stage,eng,owner in ((0,'SU','H-ELEM-B (static SU)'),(1,'SFU','SFU owner'),(2,'HC','HC/hbm_hard_physical owner')):
             inst={'SFU':'hb_sfu_'+q,'SU':'hb_su_'+q}.get(eng)
             engine_rule['engines'][f'{eng}_{q}']=dict(tap=f'lg_{q}_{stage}',instance=inst,owner=owner,
@@ -241,9 +290,10 @@ def generate(out):
                 rec['status']=('SOURCE MET (%d pg_clk groups, db4f2facb)%s; pins open'%(need,
                                '' if need==4 else ', BANK_GROUP 0x43221100 provisional (bank 7 alone) pending GEO-H RG5 readback'))
     # H-ATTQ request 2026-10-15T07:17: other LG-attached engines carry the same rule.
-    engine_rule['engines']['QUANT_SW']=dict(tap=None,instance=None,owner='H-ATTQ',required_port_groups=5,
-        physical_port_groups=5,bank_group='0x43221100 (same provisional SW/SE map as SU; H-ATTQ bench PASS 152 cy)',
-        status='RTL groups present (H-ATTQ); physical leaves open; quant not yet a contract instance')
+    # QUANT lives on NW (quadrant_abi sid 2, H-ATTQ 07:47:59 ABI note), direct RG/WG 'quant', not an LG tap.
+    engine_rule['engines']['QUANT_NW']=dict(tap=None,instance='hb_quant_NW',owner='H-ATTQ',required_port_groups=4,
+        physical_port_groups=None,bank_group='host top RL7/WC4 binds now; LG=1 NPG/BANK_GROUP successor (ot_hgi_qdq_program_static, +2 read/+1 write) changes NW reservation timestamps -> H-ATTQ next',
+        status='OPEN: bound host top is single-port on direct RG/WG; port-group/9-leaf successor pending H-ATTQ')
     qs=('SW','SE','NE','NW')
     for i,q in enumerate(qs):
         edge('ring_cw_'+q,('hb_vms_'+q,'cw_out'),('hb_vms_'+qs[(i+1)%4],'cw_in'))
@@ -295,8 +345,13 @@ def generate(out):
                 if port.startswith(('pll_','por_')):continue # other actual die domains; outside this subnet
             if name.startswith('hb_coll_') and port in ('tx_pin_v','tx_pin_flit','rx_pin_v','rx_pin_flit','phy_up','retry_requested'):
                 owner='OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)'
-            elif name=='hb_attn_pv':
-                owner='actual HG1 PV producer / attention drain calendar (H-ATTQ)'
+            elif name=='hb_argmax':
+                owner=('actual SU static logit stream (MTP, H-ELEM-B/s_mtp)' if port=='am_stream'
+                       else 'actual ARGMAX record issuer (programme loader / CP)' if port in ('go','mode','imm_a','a_mirror','a_base','n','o_base','o_is','die_id')
+                       else 'calendar fault aggregation / CP status')
+            elif name=='hb_quant_NW':
+                owner=('actual host/CP loader (NW target 48)' if port.startswith(('cfg_','desc_','launch'))
+                       else 'calendar fault aggregation / CP status')
             elif name.startswith('hb_su_'):
                 owner='actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)'
             elif name.startswith('hb_sfu_'):
@@ -355,7 +410,8 @@ def generate(out):
                 service_qualification_rejections=service['qualification_rejections'] if service else [],
                 abi_sha256=hashlib.sha256(abi_path.read_bytes()).hexdigest(),
                 instances=modules,known_actual_edges=edges,clock_roots=roots,vm_slice_bind=slice_bind,
-                engine_lg_port_group_rule=engine_rule,floorplan_direction='HBM D local PV (owner-approved 2026-10-15); attention resources ON HOLD (owner 10:30, H-ATTQ comparison)',
+                engine_lg_port_group_rule=engine_rule,floorplan_direction='ADOPTED T_band2__npg4_s5 (coordinator 2026-10-15 ~09:25, GLOBAL-FP-H main 952c5933c): per quadrant PHY+PC row on the edge, 2x4 SM block, 1.8 mm VM band (VM slice, LG chains, SU/SFU/HC/QUANT port groups, hub, COLL); attention on SM engines (no ATT). Grants: results/arch/hier_contract_1015/hbm_v15.json',
+                attention_on_sm=ATTENTION_ON_SM,
                 long_returns=long_returns,vm_abi_change_requests=VM_ABI_CHANGE_REQUESTS,
                 flow_control_boundaries=FLOW_CONTROL_BOUNDARIES,
                 registered_station_masters=generated,logical_constant_requests=logical_constants,unbound_ports=unresolved,

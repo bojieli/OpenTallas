@@ -1,0 +1,100 @@
+{
+ "name": "s81fill_stnv_86x1",
+ "top": "dsfd_stnv_86x1",
+ "kind": "tile",
+ "sources": [
+  "rtl/common/ot_fwd_link_stage.sv",
+  "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_stnv_86x1.sv"
+ ],
+ "params": {},
+ "clock_port": "fi0",
+ "reset_ports": [],
+ "forwarded_clock": true,
+ "boundary_tcl": [
+  "physical/s81_station_native/fwd_clock_out.tcl"
+ ],
+ "sdc_extra": [
+  "physical/s81_station_native/fwd_clock_out.tcl"
+ ],
+ "outline": {
+  "w": 17.28,
+  "h": 17.28,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "do0",
+   "fo0"
+  ],
+  "S": [
+   "di0",
+   "fi0"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_86x1.tcl",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7
+ },
+ "structural_change": "First hardening of the GEN18r generated forwarded-clock station dsfd_stnv_86x1 (94 die instances): capture on the falling edge of the forwarded fi0, fo0 = kept forwarding INV, 86 b, no reset, 0 cycles; RTL = the case glue module byte-identical (module sha256 8da40893e05f4d2c, glue 81730f1679e7bc00); pins at the generator centres. Slot 17.256 x 17.256 holds 167 um2 of core vs 78 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 17.28 x 17.28 (data-pin coordinates unchanged).",
+ "job": {
+  "owner": "Claude:fill-s81",
+  "branch": "claude/el1015-fill-1015",
+  "tag": "f3",
+  "purpose": "S81 FILL: GEN18r die station dsfd_stnv_86x1 (94 replicas, hardened once): exact phase/basis/random bench + wrong-edge and payload mutants; recipe 2, M5 cap, generator pins",
+  "views_to": "physical/ref_tile/s81fill_stnv_86x1/views",
+  "record_to": "results/rtl/ref_tile/s81fill_stnv_86x1",
+  "extra_paths": [
+   "rtl/common",
+   "rtl/dsrom_sys/s81_station_native/gen18r",
+   "tools/s81_station_native",
+   "physical/s81_die_pins/v22_gen18r_stations",
+   "physical/hbm_accel_die_views/stations/bench",
+   "physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl",
+   "physical/s81_station_native"
+  ],
+  "benches": [
+   {
+    "name": "phase_words",
+    "cmd": "bash tools/s81_station_native/run_fwd_station_gate.sh pass dsfd_stnv_86x1 86 {RUN}/bench_p",
+    "expect": "pass",
+    "pass_regex": "STATION PASS 20000 words 86 bits fwd_negedge",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "wrong_clock_edge_mutant",
+    "cmd": "bash tools/s81_station_native/run_fwd_station_gate.sh clock_mutant_raw dsfd_stnv_86x1 86 {RUN}/bench_c",
+    "expect": "fail",
+    "fail_regex": "STATION FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "payload_bit_mutant",
+    "cmd": "bash tools/s81_station_native/run_fwd_station_gate.sh data_mutant_raw dsfd_stnv_86x1 86 {RUN}/bench_d",
+    "expect": "fail",
+    "fail_regex": "STATION FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "slot_change_request": {
+  "reason": "recipe-2 content 78 um2 exceeds util 0.55 of the generator slot core 167 um2; depth-only growth keeps every data pin coordinate",
+  "outline": [
+   17.28,
+   17.28
+  ],
+  "generator_slot": [
+   17.256,
+   17.256
+  ]
+ }
+}

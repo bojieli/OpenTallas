@@ -1,0 +1,270 @@
+{
+  "schema": "opentallas.qwen.kvsys.takeover1103.v1",
+  "observed_at": "2026-10-15T12:03:14.753258-07:00",
+  "source_commit": "d2cad92c954f76a2cbeee198b69de9a288960846",
+  "production_release": "OPEN: missing native producers, current parent joins and physical views",
+  "latest_live_chain": {
+    "run": "kvs7c",
+    "source": "88ccadd41",
+    "host": "ot-epyc1tb",
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs7c",
+    "admitted_gb": 64,
+    "docker_gb": 140,
+    "threads": 16,
+    "docker_pid": 992750,
+    "status": "LIVE diagnostic GRT extra iteration3/30; original native PORT BIND FAIL and PDN skip remain; NOT A DIE RESULT",
+    "sta": "TT/FF not yet produced",
+    "chain_pid": 778754,
+    "docker_id": "d432cd211d7d",
+    "observed_rss_gib": 38.49,
+    "admission_mismatch": "Original64GB admission versus current GRT Docker140GB limit; preserved original job and reported root"
+  },
+  "latest_finished_chain": {
+    "run": "kvs6s",
+    "scope": "historical pathfinding NOT_A_DIE_RESULT; real leaf ETMs plus ASSUMED frames/relays",
+    "corners": {
+      "tt": {
+        "real -> real": {
+          "endpoints": 1867700,
+          "violators": 298181,
+          "worst_ps": -1388.1
+        },
+        "real -> frame": {
+          "endpoints": 210154,
+          "violators": 129,
+          "worst_ps": -70.27
+        },
+        "real -> relay": {
+          "endpoints": 3916,
+          "violators": 88,
+          "worst_ps": -40.75
+        },
+        "relay -> relay": {
+          "endpoints": 496456,
+          "violators": 2,
+          "worst_ps": -15.09
+        },
+        "frame -> real": {
+          "endpoints": 61468,
+          "violators": 0,
+          "worst_ps": 10.39
+        },
+        "frame -> relay": {
+          "endpoints": 48065,
+          "violators": 0,
+          "worst_ps": 45.35
+        },
+        "reset -> real": {
+          "endpoints": 34976,
+          "violators": 0,
+          "worst_ps": 70.99
+        },
+        "relay -> frame": {
+          "endpoints": 15677,
+          "violators": 0,
+          "worst_ps": 158.69
+        },
+        "relay -> real": {
+          "endpoints": 3672,
+          "violators": 0,
+          "worst_ps": 168.72
+        },
+        "frame -> frame": {
+          "endpoints": 3716,
+          "violators": 0,
+          "worst_ps": 423.67
+        },
+        "frame -> phy": {
+          "endpoints": 1628,
+          "violators": 0,
+          "worst_ps": 523.18
+        }
+      },
+      "ff": {
+        "frame -> phy": {
+          "endpoints": 1628,
+          "violators": 1628,
+          "worst_ps": -56.74
+        },
+        "frame -> frame": {
+          "endpoints": 3716,
+          "violators": 3716,
+          "worst_ps": -56.5
+        },
+        "relay -> relay": {
+          "endpoints": 496456,
+          "violators": 85840,
+          "worst_ps": -55.91
+        },
+        "relay -> frame": {
+          "endpoints": 15677,
+          "violators": 9781,
+          "worst_ps": -54.53
+        },
+        "frame -> relay": {
+          "endpoints": 48065,
+          "violators": 5013,
+          "worst_ps": -54.39
+        },
+        "relay -> real": {
+          "endpoints": 3672,
+          "violators": 0,
+          "worst_ps": 1.51
+        },
+        "reset -> real": {
+          "endpoints": 34976,
+          "violators": 0,
+          "worst_ps": 14.1
+        },
+        "real -> frame": {
+          "endpoints": 210154,
+          "violators": 0,
+          "worst_ps": 18.89
+        },
+        "frame -> real": {
+          "endpoints": 61468,
+          "violators": 0,
+          "worst_ps": 26.46
+        },
+        "real -> real": {
+          "endpoints": 1867700,
+          "violators": 0,
+          "worst_ps": 62.27
+        },
+        "real -> relay": {
+          "endpoints": 3916,
+          "violators": 0,
+          "worst_ps": 80.96
+        }
+      },
+      "ss": {
+        "real -> real": {
+          "endpoints": 1867700,
+          "violators": 421118,
+          "worst_ps": -1709.87
+        },
+        "real -> frame": {
+          "endpoints": 210154,
+          "violators": 27989,
+          "worst_ps": -302.43
+        },
+        "real -> relay": {
+          "endpoints": 3916,
+          "violators": 1136,
+          "worst_ps": -228.81
+        },
+        "reset -> real": {
+          "endpoints": 34976,
+          "violators": 232,
+          "worst_ps": -36.23
+        },
+        "frame -> real": {
+          "endpoints": 61468,
+          "violators": 1794,
+          "worst_ps": -36.13
+        },
+        "relay -> relay": {
+          "endpoints": 496456,
+          "violators": 2,
+          "worst_ps": -15.09
+        },
+        "frame -> relay": {
+          "endpoints": 48065,
+          "violators": 0,
+          "worst_ps": 45.35
+        },
+        "relay -> real": {
+          "endpoints": 3672,
+          "violators": 0,
+          "worst_ps": 113.71
+        },
+        "relay -> frame": {
+          "endpoints": 15677,
+          "violators": 0,
+          "worst_ps": 158.69
+        },
+        "frame -> frame": {
+          "endpoints": 3716,
+          "violators": 0,
+          "worst_ps": 423.67
+        },
+        "frame -> phy": {
+          "endpoints": 1628,
+          "violators": 0,
+          "worst_ps": 523.18
+        }
+      }
+    },
+    "tt_priority": [
+      "ECTL C/B/A to frontq q_data/beat/valid/lt/c/e/row: physical fanout+reach; staged leaves closed but actual homes/integration pending",
+      "score4 to ECTL C: staged return leaf closed, actual homes pending",
+      "ctrl_kc to land.kf -70.27ps frame boundary; ECTL A to relay -40.75ps shared boundary"
+    ],
+    "ff_classification": "real-to-real +62.27ps; failing -56.74..-54.39ps endpoints all generated frame/relay/PHY placeholders"
+  },
+  "host_root_synth": {
+    "status": "MAPPED_SOURCE_AREA_ONLY",
+    "report": "results/arch/qwen_split_1014/host_root_sourceaudit_1103/mapped/area.json",
+    "source": "96967cee695fc14158e28367a0dbae641cd86141",
+    "standard_cells": 804996,
+    "real_srams": 41,
+    "ff_count": 208629,
+    "cell_area_um2": 198196.7869,
+    "cell_area_over_frame": 0.49167187346195007,
+    "clock_cap_violation": {
+      "ck_program_loader": 66392
+    },
+    "physical": "OPEN: no placement/STA/current native composition proof",
+    "mapping": "Retained generic SHA matched; four canonical RVT combinational libraries ABC, SEQ dfflibmap, four physical SRAM libraries stat/area only"
+  },
+  "current_pin_proof": {
+    "schema": "opentallas.qwen.kvsys142.verification.v1",
+    "source_pin_grant_commit": "233825580",
+    "generator_before_case_admission_sha256": "4f168395461fdf7cb3b96b2191e118d18636d11e72a0d80c177b96a9d2745c09",
+    "plan_result": {
+      "die_mm2": 265.5,
+      "instances": 3411,
+      "fill": 0.6151,
+      "overlap": 0,
+      "outside": 0,
+      "stacklocal_bits": 571596,
+      "stacklocal_hops": 2204,
+      "worst_um": 498.696,
+      "violations": 0,
+      "unmeasured": 0
+    },
+    "repaired_failure": {
+      "previous_grant": "a75d2c824",
+      "old_bus_center_worst_um": 498.5,
+      "exact_pin_bit_worst_um": 524.736,
+      "buses_over_500": 256,
+      "fix": "retain actual strip centre levels and spread at six M4 tracks/bit"
+    },
+    "not_claimed": [
+      "native leaf timing",
+      "current parent binding",
+      "all-real die views",
+      "die GRT/TT/FF signoff"
+    ],
+    "next": "new source-bound hslice/dn gates and actual leaf views; source-real HBM boundary/calendar producers; actual head-stage layout"
+  },
+  "exact_bump_stages": {
+    "hfwd_epoch": 3,
+    "hfwd_link_rst_n": 7,
+    "host_fdi": 56,
+    "host_service": 0
+  },
+  "boundary": {
+    "proof": "18component runs under windows0/8/16 +8negativecases on main",
+    "actual_parent": "OPEN; no reservation/block calendar/independent expectations/drain joins; helper source-pins deficits",
+    "holds": "KEPT writer r4 and return r2; registered ring idle new candidate ABI requires new physical successor",
+    "static_after_block_ready": true,
+    "off_die_elastic_preserved": true
+  },
+  "independent_jobs": {
+    "hslice": "Actual boot+1 and LPC capture componentproof positive/mutants pass; south CTS hold repair still live, no physical pass",
+    "front": "Actual strict CTS PASS; component route independent, whole boundary open",
+    "head_stages": "Actual87-child source and3515 numerical checks PASS; missing T1/S1 mutants reject. Widened+54um physical source integration in progress; no physical qualification",
+    "programme": "Final sourcef74794fa4 reset_v4 6292FF/348pins; grant5838d364e; frozen leafpackage db1ccb727. Root publication receipt required before element launch"
+  }
+}

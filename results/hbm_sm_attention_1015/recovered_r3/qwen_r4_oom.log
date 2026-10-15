@@ -1,0 +1,4 @@
+Oct 15 11:01:50 regular-crane systemd[3813]: Started oth-ubuntu-1014132-1792086707.scope - [systemd-run] /usr/bin/bash -c "cd /srv/opentallas-scratch/claude/smatt-1015/src-8f5cdf11f && python3 tools/hbm_sm_attention/sm_attn_bench.py run --work /srv/opentallas-scratch/claude/smatt-1015/r4/w-qwen_m0 --out /srv/opentallas-scratch/claude/smatt-1015/r4/qwen_m0.json --jobs 16 --shape qwen8192".
+Oct 15 11:02:11 regular-crane systemd[3813]: oth-ubuntu-1014132-1792086707.scope: The kernel OOM killer killed some processes in this unit.
+Oct 15 11:02:12 regular-crane systemd[3813]: oth-ubuntu-1014132-1792086707.scope: Failed with result 'oom-kill'.
+Oct 15 11:02:12 regular-crane systemd[3813]: oth-ubuntu-1014132-1792086707.scope: Consumed 22.182s CPU time over 22.228s wall clock time, 8G memory peak.

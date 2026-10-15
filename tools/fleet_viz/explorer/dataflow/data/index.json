@@ -2,6 +2,496 @@
  "schema": "opentallas.dataflow.links_index.v1",
  "records": [
   {
+   "id": "gfp_s81_C0_GEN18c_as_built",
+   "file": "gfp_s81_C0_GEN18c_as_built.links.json.gz",
+   "label": "S81 GLOBAL-FP-S \u00b7 C0_GEN18c_as_built",
+   "design": "ds_rom",
+   "token_designs": [
+    "ds_rom"
+   ],
+   "revision": "GLOBAL-FP-S gfp_s81_C0_GEN18c_as_built",
+   "role": "candidate",
+   "candidate": {
+    "of": "s81_gen18c",
+    "agent": "GLOBAL-FP-S",
+    "name": "C0_GEN18c_as_built",
+    "note": "VM legacy slab 1.54x3.95 mm = 6.1 mm2: the real 4-slice VM needs 4x2073.6x1555.2 + 1987.2x561.6 edge = 14.0 mm2 (area-infeasible baseline); MIX4 at S-DIE GEN18m2 proposal 15714.0,9061.2 (771.12x3229.2), not legal-built yet; GEO-S pin overrides: represented by the facing-face pin estimator (pins packed on the facing face) | screen-only block-level candidate; hub links re-planned (stations every 215 um on L-routes, facing-face ends); t = width x class duty x 828,878 cycles/token (activity proxy); cr = 1 for field/su/coll classes. Objective (GLOBAL-FP-S score.py): traffic x length 253.6 M bit.um/cycle, worst field round trip 69.7 mm, legality overlaps 0",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-s81.log"
+   },
+   "scope": "SCREEN_ONLY_BLOCK_LEVEL_CANDIDATE_NOT_ADOPTED_NOT_NATIVE",
+   "coverage": {
+    "links": 85982,
+    "placed": 85966,
+    "unplaced": 16,
+    "width_known": 85982,
+    "directed": 85796,
+    "pin_ends": 192958,
+    "box_ends": 631,
+    "unplaced_ends": 16,
+    "stages_known": 14752,
+    "bypass": 35,
+    "blocks": 68795,
+    "bits_total": 4960464,
+    "bit_um_total": 2005606634,
+    "metrics": {
+     "sum_width_length_bit_um": 1634899388,
+     "sum_bit_um_hops": 2005606634,
+     "sum_traffic_length": 176816553104901,
+     "traffic_links": 186,
+     "over_reach_bits": 57574,
+     "relays": 40346,
+     "relay_bit_stages": 5215040,
+     "needed_relay_bit_stages_lower_bound": 1891702,
+     "worst_cut": 1.3157,
+     "cut_windows_over_limit": 70
+    }
+   },
+   "inputs": [
+    {
+     "path": "tools/fleet_viz/explorer/dataflow/data/s81_gen18c.links.json.gz",
+     "sha256": "73631e8d3c4a4839aa51832db76e1d11b770e9ff0781ab7296336facc295b576"
+    },
+    {
+     "path": "/home/ubuntu/geometry-s81-gen17/g18c/construction_pass0_plan.json.gz",
+     "sha256": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa"
+    },
+    {
+     "path": "graph.json",
+     "sha256": "f0ac1171cfaaf2abe008790d05802e4cee2b4ece183ecae5a6557ebdbd0b7693"
+    },
+    {
+     "path": "out6/candidates.json",
+     "sha256": "a7f0bdf6536905662491842211828fe51bcd9bb13825a0988e4cea373f5274cf"
+    },
+    {
+     "path": "/tmp/gfp_s81_rec_e6j1p8ir/gfp_s81_C0_GEN18c_as_built.json",
+     "sha256": "595a1469ba279fba18eb92cf28222e3185ab3b87dd6acb96c69939beb86712b0"
+    }
+   ],
+   "generated": "2026-10-15T16:26:57+00:00",
+   "bytes": 23186627
+  },
+  {
+   "id": "gfp_s81_C1_B_compact2x2_codex",
+   "file": "gfp_s81_C1_B_compact2x2_codex.links.json.gz",
+   "label": "S81 GLOBAL-FP-S \u00b7 C1_B_compact2x2_codex",
+   "design": "ds_rom",
+   "token_designs": [
+    "ds_rom"
+   ],
+   "revision": "GLOBAL-FP-S gfp_s81_C1_B_compact2x2_codex",
+   "role": "candidate",
+   "candidate": {
+    "of": "s81_gen18c",
+    "agent": "GLOBAL-FP-S",
+    "name": "C1_B_compact2x2_codex",
+    "note": "Codex system_geometry_options.py option B applied to GEN18c: VM 2x2 4168.8x3715.2 at (13446,12804.48), HC +324 um E; E-half crossing: the hc_corridor now ends at the VM; only the 361-um strip y 12443.8-12804.5 under the VM crosses the spine | screen-only block-level candidate; hub links re-planned (stations every 215 um on L-routes, facing-face ends); t = width x class duty x 828,878 cycles/token (activity proxy); cr = 1 for field/su/coll classes. Objective (GLOBAL-FP-S score.py): traffic x length 274.0 M bit.um/cycle, worst field round trip 69.7 mm, legality overlaps 2",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-s81.log"
+   },
+   "scope": "SCREEN_ONLY_BLOCK_LEVEL_CANDIDATE_NOT_ADOPTED_NOT_NATIVE",
+   "coverage": {
+    "links": 85982,
+    "placed": 85966,
+    "unplaced": 16,
+    "width_known": 85982,
+    "directed": 85796,
+    "pin_ends": 192958,
+    "box_ends": 631,
+    "unplaced_ends": 16,
+    "stages_known": 14752,
+    "bypass": 74,
+    "blocks": 68795,
+    "bits_total": 4960464,
+    "bit_um_total": 2001676711,
+    "metrics": {
+     "sum_width_length_bit_um": 1618062438,
+     "sum_bit_um_hops": 2001676711,
+     "sum_traffic_length": 175958424572435,
+     "traffic_links": 186,
+     "over_reach_bits": 57574,
+     "relays": 40318,
+     "relay_bit_stages": 5188194,
+     "needed_relay_bit_stages_lower_bound": 1852504,
+     "worst_cut": 1.2218,
+     "cut_windows_over_limit": 72
+    }
+   },
+   "inputs": [
+    {
+     "path": "tools/fleet_viz/explorer/dataflow/data/s81_gen18c.links.json.gz",
+     "sha256": "73631e8d3c4a4839aa51832db76e1d11b770e9ff0781ab7296336facc295b576"
+    },
+    {
+     "path": "/home/ubuntu/geometry-s81-gen17/g18c/construction_pass0_plan.json.gz",
+     "sha256": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa"
+    },
+    {
+     "path": "graph.json",
+     "sha256": "f0ac1171cfaaf2abe008790d05802e4cee2b4ece183ecae5a6557ebdbd0b7693"
+    },
+    {
+     "path": "out6/candidates.json",
+     "sha256": "a7f0bdf6536905662491842211828fe51bcd9bb13825a0988e4cea373f5274cf"
+    },
+    {
+     "path": "/tmp/gfp_s81_rec_e6j1p8ir/gfp_s81_C1_B_compact2x2_codex.json",
+     "sha256": "ba0239898a68c9a7797478789a5b82f057177f0213f353c4629ec73a9c79bb69"
+    }
+   ],
+   "generated": "2026-10-15T16:27:04+00:00",
+   "bytes": 23188567
+  },
+  {
+   "id": "gfp_s81_P1_pipeline2x2_RP",
+   "file": "gfp_s81_P1_pipeline2x2_RP.links.json.gz",
+   "label": "S81 GLOBAL-FP-S \u00b7 P1_pipeline2x2_RP",
+   "design": "ds_rom",
+   "token_designs": [
+    "ds_rom"
+   ],
+   "revision": "GLOBAL-FP-S gfp_s81_P1_pipeline2x2_RP",
+   "role": "candidate",
+   "candidate": {
+    "of": "s81_gen18c",
+    "agent": "GLOBAL-FP-S",
+    "name": "P1_pipeline2x2_RP",
+    "note": "P1_pipeline2x2 + return trees re-partitioned by locality (same 14 trees, same sizes) | screen-only block-level candidate; hub links re-planned (stations every 215 um on L-routes, facing-face ends); t = width x class duty x 828,878 cycles/token (activity proxy); cr = 1 for field/su/coll classes. Objective (GLOBAL-FP-S score.py): traffic x length 224.3 M bit.um/cycle, worst field round trip 54.4 mm, legality overlaps 0",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-s81.log"
+   },
+   "scope": "SCREEN_ONLY_BLOCK_LEVEL_CANDIDATE_NOT_ADOPTED_NOT_NATIVE",
+   "coverage": {
+    "links": 85982,
+    "placed": 85966,
+    "unplaced": 16,
+    "width_known": 85982,
+    "directed": 85796,
+    "pin_ends": 192958,
+    "box_ends": 631,
+    "unplaced_ends": 16,
+    "stages_known": 14752,
+    "bypass": 35,
+    "blocks": 68795,
+    "bits_total": 4960464,
+    "bit_um_total": 1852724619,
+    "metrics": {
+     "sum_width_length_bit_um": 1479295247,
+     "sum_bit_um_hops": 1852724619,
+     "sum_traffic_length": 136607129052800,
+     "traffic_links": 186,
+     "over_reach_bits": 64533,
+     "relays": 39177,
+     "relay_bit_stages": 4436153,
+     "needed_relay_bit_stages_lower_bound": 1581583,
+     "worst_cut": 0.7837,
+     "cut_windows_over_limit": 30
+    }
+   },
+   "inputs": [
+    {
+     "path": "tools/fleet_viz/explorer/dataflow/data/s81_gen18c.links.json.gz",
+     "sha256": "73631e8d3c4a4839aa51832db76e1d11b770e9ff0781ab7296336facc295b576"
+    },
+    {
+     "path": "/home/ubuntu/geometry-s81-gen17/g18c/construction_pass0_plan.json.gz",
+     "sha256": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa"
+    },
+    {
+     "path": "out6/graph_rp_p1.json",
+     "sha256": "6444d49cb84ad6c3174dd8b44553e7ca00ede62b9c8875cb76b6fa918932a462"
+    },
+    {
+     "path": "out6/candidates.json",
+     "sha256": "a7f0bdf6536905662491842211828fe51bcd9bb13825a0988e4cea373f5274cf"
+    },
+    {
+     "path": "/tmp/gfp_s81_rec_e6j1p8ir/gfp_s81_P1_pipeline2x2_RP.json",
+     "sha256": "7f6562ced60ffff9f64619e5dd59e83039d64b006b4d6b83defeb92c73488fde"
+    }
+   ],
+   "generated": "2026-10-15T16:27:30+00:00",
+   "bytes": 23095004
+  },
+  {
+   "id": "gfp_s81_P1_pipeline2x2_gcm_RP",
+   "file": "gfp_s81_P1_pipeline2x2_gcm_RP.links.json.gz",
+   "label": "S81 GLOBAL-FP-S \u00b7 P1_pipeline2x2_gcm_RP",
+   "design": "ds_rom",
+   "token_designs": [
+    "ds_rom"
+   ],
+   "revision": "GLOBAL-FP-S gfp_s81_P1_pipeline2x2_gcm_RP",
+   "role": "candidate",
+   "candidate": {
+    "of": "s81_gen18c",
+    "agent": "GLOBAL-FP-S",
+    "name": "P1_pipeline2x2_gcm_RP",
+    "note": "P1_pipeline2x2_gcm + return trees re-partitioned by locality | screen-only block-level candidate; hub links re-planned (stations every 215 um on L-routes, facing-face ends); t = width x class duty x 828,878 cycles/token (activity proxy); cr = 1 for field/su/coll classes. Objective (GLOBAL-FP-S score.py): traffic x length 228.2 M bit.um/cycle, worst field round trip 54.0 mm, legality overlaps 0",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-s81.log"
+   },
+   "scope": "SCREEN_ONLY_BLOCK_LEVEL_CANDIDATE_NOT_ADOPTED_NOT_NATIVE",
+   "coverage": {
+    "links": 85982,
+    "placed": 85966,
+    "unplaced": 16,
+    "width_known": 85982,
+    "directed": 85796,
+    "pin_ends": 192958,
+    "box_ends": 631,
+    "unplaced_ends": 16,
+    "stages_known": 14752,
+    "bypass": 35,
+    "blocks": 68795,
+    "bits_total": 4960464,
+    "bit_um_total": 1880449892,
+    "metrics": {
+     "sum_width_length_bit_um": 1497119203,
+     "sum_bit_um_hops": 1880449892,
+     "sum_traffic_length": 137180669399701,
+     "traffic_links": 186,
+     "over_reach_bits": 44842,
+     "relays": 39494,
+     "relay_bit_stages": 4679236,
+     "needed_relay_bit_stages_lower_bound": 1625796,
+     "worst_cut": 2.4459,
+     "cut_windows_over_limit": 24
+    }
+   },
+   "inputs": [
+    {
+     "path": "tools/fleet_viz/explorer/dataflow/data/s81_gen18c.links.json.gz",
+     "sha256": "73631e8d3c4a4839aa51832db76e1d11b770e9ff0781ab7296336facc295b576"
+    },
+    {
+     "path": "/home/ubuntu/geometry-s81-gen17/g18c/construction_pass0_plan.json.gz",
+     "sha256": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa"
+    },
+    {
+     "path": "out6/graph_rp_p1_gcm.json",
+     "sha256": "122184d1accf24f9384b54c70531a67ae9c2a0c528e51e6943c61d1c038d6f3d"
+    },
+    {
+     "path": "out6/candidates.json",
+     "sha256": "a7f0bdf6536905662491842211828fe51bcd9bb13825a0988e4cea373f5274cf"
+    },
+    {
+     "path": "/tmp/gfp_s81_rec_e6j1p8ir/gfp_s81_P1_pipeline2x2_gcm_RP.json",
+     "sha256": "2219e3b9c168215ca1b6f20caf8f04c0ff9a58c95bac9714b009c4b50e1f792f"
+    }
+   ],
+   "generated": "2026-10-15T16:27:26+00:00",
+   "bytes": 23116351
+  },
+  {
+   "id": "gfp_s81_RTMP_wl",
+   "file": "gfp_s81_RTMP_wl.links.json.gz",
+   "label": "S81 GLOBAL-FP-S \u00b7 RTMP_wl",
+   "design": "ds_rom",
+   "token_designs": [
+    "ds_rom"
+   ],
+   "revision": "GLOBAL-FP-S gfp_s81_RTMP_wl",
+   "role": "candidate",
+   "candidate": {
+    "of": "s81_gen18c",
+    "agent": "GLOBAL-FP-S",
+    "name": "RTMP_wl",
+    "note": "OpenROAD v2.0-17598-ga008522d8 rtl_macro_placer -boundary_weight 0 -notch_weight 0 -wirelength_weight 1000, fence = hub region, net multiplicity = traffic/40; RTL-MP has no crossing-corridor model: widest free full-width band used as the corridor: y 10770..12901 | screen-only block-level candidate; hub links re-planned (stations every 215 um on L-routes, facing-face ends); t = width x class duty x 828,878 cycles/token (activity proxy); cr = 1 for field/su/coll classes. Objective (GLOBAL-FP-S score.py): traffic x length 278.6 M bit.um/cycle, worst field round trip 54.2 mm, legality overlaps 0",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-s81.log"
+   },
+   "scope": "SCREEN_ONLY_BLOCK_LEVEL_CANDIDATE_NOT_ADOPTED_NOT_NATIVE",
+   "coverage": {
+    "links": 85982,
+    "placed": 85966,
+    "unplaced": 16,
+    "width_known": 85982,
+    "directed": 85796,
+    "pin_ends": 192958,
+    "box_ends": 631,
+    "unplaced_ends": 16,
+    "stages_known": 14752,
+    "bypass": 37,
+    "blocks": 68795,
+    "bits_total": 4960464,
+    "bit_um_total": 2063798399,
+    "metrics": {
+     "sum_width_length_bit_um": 1648988424,
+     "sum_bit_um_hops": 2063798399,
+     "sum_traffic_length": 161600925579070,
+     "traffic_links": 186,
+     "over_reach_bits": 85219,
+     "relays": 39601,
+     "relay_bit_stages": 4802436,
+     "needed_relay_bit_stages_lower_bound": 1893300,
+     "worst_cut": 1.8854,
+     "cut_windows_over_limit": 119
+    }
+   },
+   "inputs": [
+    {
+     "path": "tools/fleet_viz/explorer/dataflow/data/s81_gen18c.links.json.gz",
+     "sha256": "73631e8d3c4a4839aa51832db76e1d11b770e9ff0781ab7296336facc295b576"
+    },
+    {
+     "path": "/home/ubuntu/geometry-s81-gen17/g18c/construction_pass0_plan.json.gz",
+     "sha256": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa"
+    },
+    {
+     "path": "graph.json",
+     "sha256": "f0ac1171cfaaf2abe008790d05802e4cee2b4ece183ecae5a6557ebdbd0b7693"
+    },
+    {
+     "path": "out6/candidates.json",
+     "sha256": "a7f0bdf6536905662491842211828fe51bcd9bb13825a0988e4cea373f5274cf"
+    },
+    {
+     "path": "/tmp/gfp_s81_rec_e6j1p8ir/gfp_s81_RTMP_wl.json",
+     "sha256": "fba5578aa7cdadb47b36b09394f3ce91f30b59e81906466279df91a4c6885368"
+    }
+   ],
+   "generated": "2026-10-15T16:27:16+00:00",
+   "bytes": 23167978
+  },
+  {
+   "id": "gfp_s81_SA_1x4v",
+   "file": "gfp_s81_SA_1x4v.links.json.gz",
+   "label": "S81 GLOBAL-FP-S \u00b7 SA_1x4v",
+   "design": "ds_rom",
+   "token_designs": [
+    "ds_rom"
+   ],
+   "revision": "GLOBAL-FP-S gfp_s81_SA_1x4v",
+   "role": "candidate",
+   "candidate": {
+    "of": "s81_gen18c",
+    "agent": "GLOBAL-FP-S",
+    "name": "SA_1x4v",
+    "note": "slot-stack annealer, full-width crossing corridor 1512 um at y 11036; MIX4 shape 2x2 | screen-only block-level candidate; hub links re-planned (stations every 215 um on L-routes, facing-face ends); t = width x class duty x 828,878 cycles/token (activity proxy); cr = 1 for field/su/coll classes. Objective (GLOBAL-FP-S score.py): traffic x length 219.8 M bit.um/cycle, worst field round trip 59.6 mm, legality overlaps 0",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-s81.log"
+   },
+   "scope": "SCREEN_ONLY_BLOCK_LEVEL_CANDIDATE_NOT_ADOPTED_NOT_NATIVE",
+   "coverage": {
+    "links": 85982,
+    "placed": 85966,
+    "unplaced": 16,
+    "width_known": 85982,
+    "directed": 85796,
+    "pin_ends": 192958,
+    "box_ends": 631,
+    "unplaced_ends": 16,
+    "stages_known": 14752,
+    "bypass": 37,
+    "blocks": 68795,
+    "bits_total": 4960464,
+    "bit_um_total": 1841541679,
+    "metrics": {
+     "sum_width_length_bit_um": 1470833022,
+     "sum_bit_um_hops": 1841541679,
+     "sum_traffic_length": 135981491895877,
+     "traffic_links": 186,
+     "over_reach_bits": 44842,
+     "relays": 39345,
+     "relay_bit_stages": 4531511,
+     "needed_relay_bit_stages_lower_bound": 1565104,
+     "worst_cut": 1.0014,
+     "cut_windows_over_limit": 50
+    }
+   },
+   "inputs": [
+    {
+     "path": "tools/fleet_viz/explorer/dataflow/data/s81_gen18c.links.json.gz",
+     "sha256": "73631e8d3c4a4839aa51832db76e1d11b770e9ff0781ab7296336facc295b576"
+    },
+    {
+     "path": "/home/ubuntu/geometry-s81-gen17/g18c/construction_pass0_plan.json.gz",
+     "sha256": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa"
+    },
+    {
+     "path": "graph.json",
+     "sha256": "f0ac1171cfaaf2abe008790d05802e4cee2b4ece183ecae5a6557ebdbd0b7693"
+    },
+    {
+     "path": "out6/candidates.json",
+     "sha256": "a7f0bdf6536905662491842211828fe51bcd9bb13825a0988e4cea373f5274cf"
+    },
+    {
+     "path": "/tmp/gfp_s81_rec_e6j1p8ir/gfp_s81_SA_1x4v.json",
+     "sha256": "d3f724ac7e11ca84cadd4c72c855b5f0d6f4161e9736940fcf8ffb145d17035a"
+    }
+   ],
+   "generated": "2026-10-15T16:27:11+00:00",
+   "bytes": 23151478
+  },
+  {
+   "id": "gfp_s81_SA_2x2_RP",
+   "file": "gfp_s81_SA_2x2_RP.links.json.gz",
+   "label": "S81 GLOBAL-FP-S \u00b7 SA_2x2_RP",
+   "design": "ds_rom",
+   "token_designs": [
+    "ds_rom"
+   ],
+   "revision": "GLOBAL-FP-S gfp_s81_SA_2x2_RP",
+   "role": "candidate",
+   "candidate": {
+    "of": "s81_gen18c",
+    "agent": "GLOBAL-FP-S",
+    "name": "SA_2x2_RP",
+    "note": "SA_2x2 + return trees re-partitioned by locality (same 14 trees, same sizes, lane_equal kept) | screen-only block-level candidate; hub links re-planned (stations every 215 um on L-routes, facing-face ends); t = width x class duty x 828,878 cycles/token (activity proxy); cr = 1 for field/su/coll classes. Objective (GLOBAL-FP-S score.py): traffic x length 217.3 M bit.um/cycle, worst field round trip 58.7 mm, legality overlaps 0",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-s81.log"
+   },
+   "scope": "SCREEN_ONLY_BLOCK_LEVEL_CANDIDATE_NOT_ADOPTED_NOT_NATIVE",
+   "coverage": {
+    "links": 85982,
+    "placed": 85966,
+    "unplaced": 16,
+    "width_known": 85982,
+    "directed": 85796,
+    "pin_ends": 192958,
+    "box_ends": 631,
+    "unplaced_ends": 16,
+    "stages_known": 14752,
+    "bypass": 35,
+    "blocks": 68795,
+    "bits_total": 4960464,
+    "bit_um_total": 1839711897,
+    "metrics": {
+     "sum_width_length_bit_um": 1463231303,
+     "sum_bit_um_hops": 1839711897,
+     "sum_traffic_length": 130952083278736,
+     "traffic_links": 186,
+     "over_reach_bits": 61979,
+     "relays": 39107,
+     "relay_bit_stages": 4393289,
+     "needed_relay_bit_stages_lower_bound": 1554843,
+     "worst_cut": 0.7769,
+     "cut_windows_over_limit": 4
+    }
+   },
+   "inputs": [
+    {
+     "path": "tools/fleet_viz/explorer/dataflow/data/s81_gen18c.links.json.gz",
+     "sha256": "73631e8d3c4a4839aa51832db76e1d11b770e9ff0781ab7296336facc295b576"
+    },
+    {
+     "path": "/home/ubuntu/geometry-s81-gen17/g18c/construction_pass0_plan.json.gz",
+     "sha256": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa"
+    },
+    {
+     "path": "out6/graph_rp.json",
+     "sha256": "7a8ea49e536ee89a6f7743ca3b14a3ae90edebfeecbd59163990083dc793023c"
+    },
+    {
+     "path": "out6/candidates.json",
+     "sha256": "a7f0bdf6536905662491842211828fe51bcd9bb13825a0988e4cea373f5274cf"
+    },
+    {
+     "path": "/tmp/gfp_s81_rec_e6j1p8ir/gfp_s81_SA_2x2_RP.json",
+     "sha256": "5bddff93847f8d8af2566b8a50b827389763980e163a8c8dbcae92af2591db33"
+    }
+   ],
+   "generated": "2026-10-15T16:27:21+00:00",
+   "bytes": 23090004
+  },
+  {
    "id": "s81_gen17",
    "file": "s81_gen17.links.json.gz",
    "label": "DeepSeek ROM S81 die \u00b7 GEN17 pass0 (construction screen)",
@@ -156,6 +646,447 @@
    ],
    "generated": "2026-10-15T14:21:04+00:00",
    "bytes": 16732787
+  },
+  {
+   "id": "hbm_gfp_C200_nogap_s2",
+   "file": "hbm_gfp_C200_nogap_s2.links.json.gz",
+   "label": "Compact 20.0 mm outline",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "Compact 20.0 mm outline",
+    "note": "660 mm2 die (-197 mm2), cut 0.574, fr 0. Whole-design change: owner decision, not adopted.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (193-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 715,
+    "placed": 715,
+    "unplaced": 0,
+    "width_known": 715,
+    "directed": 715,
+    "pin_ends": 0,
+    "box_ends": 1430,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 0,
+    "blocks": 193,
+    "bits_total": 366916,
+    "bit_um_total": 956266621,
+    "metrics": {
+     "sum_width_length_bit_um": 956266659,
+     "sum_bit_um_hops": 956266621,
+     "sum_traffic_length": 36499165716771,
+     "traffic_links": 715,
+     "over_reach_bits": 199445,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 1756327,
+     "worst_cut": 1.4871,
+     "cut_windows_over_limit": 205
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/C200_nogap_s2.P.json",
+     "sha256": "636efa41fc8e2486a229e1dfe6ff1153eebd1b0814a75f466991a692120518af"
+    },
+    {
+     "path": "recs/hbm_gfp_C200_nogap_s2.json",
+     "sha256": "c65016d79742f0945ec1b274abbaf94a1d8d658862909f83194cd39a5775cde9"
+    }
+   ],
+   "generated": "2026-10-15T16:19:09+00:00",
+   "bytes": 250097
+  },
+  {
+   "id": "hbm_gfp_T_band0__hc_quad_s2",
+   "file": "hbm_gfp_T_band0__hc_quad_s2.links.json.gz",
+   "label": "VM band at the PHY edge",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "VM band at the PHY edge",
+    "note": "VM band between the PC row and SM row 0 (HBM->VM shortest); HC engine per quadrant. Qwen traffic-length +21%.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (196-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 715,
+    "placed": 715,
+    "unplaced": 0,
+    "width_known": 715,
+    "directed": 715,
+    "pin_ends": 0,
+    "box_ends": 1430,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 0,
+    "blocks": 196,
+    "bits_total": 366916,
+    "bit_um_total": 1040177679,
+    "metrics": {
+     "sum_width_length_bit_um": 1040177401,
+     "sum_bit_um_hops": 1040177679,
+     "sum_traffic_length": 52485600368214,
+     "traffic_links": 715,
+     "over_reach_bits": 190728,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 1939036,
+     "worst_cut": 1.4361,
+     "cut_windows_over_limit": 274
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/T_band0__hc_quad_s2.P.json",
+     "sha256": "f2af44432756367bf7c952eac9bcec00a3c1b9fc3a5ce8471e2ff55014e440d9"
+    },
+    {
+     "path": "recs/hbm_gfp_T_band0__hc_quad_s2.json",
+     "sha256": "95945c31d95d0adba92c3e1699b85d96826ec55b915e90c9c3134e06b19ace63"
+    }
+   ],
+   "generated": "2026-10-15T16:19:08+00:00",
+   "bytes": 250306
+  },
+  {
+   "id": "hbm_gfp_T_band2__npg4_s5",
+   "file": "hbm_gfp_T_band2__npg4_s5.links.json.gz",
+   "label": "Mid-block VM band, NPG4 (recommended)",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "Mid-block VM band, NPG4 (recommended)",
+    "note": "Mid-block VM band + SW/SE engines at 4 bank-pair port groups (BANK_GROUP 0x33221100). Only v15-outline candidate with fr 0 and cut <= 0.60 at low traffic-length.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (187-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 709,
+    "placed": 709,
+    "unplaced": 0,
+    "width_known": 709,
+    "directed": 709,
+    "pin_ends": 0,
+    "box_ends": 1418,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 0,
+    "blocks": 187,
+    "bits_total": 365380,
+    "bit_um_total": 992142059,
+    "metrics": {
+     "sum_width_length_bit_um": 992142447,
+     "sum_bit_um_hops": 992142059,
+     "sum_traffic_length": 41739447849939,
+     "traffic_links": 709,
+     "over_reach_bits": 199589,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 1831922,
+     "worst_cut": 1.0729,
+     "cut_windows_over_limit": 214
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/T_band2__npg4_s5.P.json",
+     "sha256": "08965c7d56926c9829368b07df9df5762c2afd1ed14541fb81c3a1e4141885cb"
+    },
+    {
+     "path": "recs/hbm_gfp_T_band2__npg4_s5.json",
+     "sha256": "6f04742a921041c72d55f21d489c049353919b2b3f7a8abef36e919f147b89f0"
+    }
+   ],
+   "generated": "2026-10-15T16:19:09+00:00",
+   "bytes": 248108
+  },
+  {
+   "id": "hbm_gfp_T_nogap__none_s9",
+   "file": "hbm_gfp_T_nogap__none_s9.links.json.gz",
+   "label": "Edge block, engines free",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "Edge block, engines free",
+    "note": "2x4 SM block at the die edge, no column gap; VM slice, engines, hub and COLL annealed into the free centre.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (193-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 715,
+    "placed": 715,
+    "unplaced": 0,
+    "width_known": 715,
+    "directed": 715,
+    "pin_ends": 0,
+    "box_ends": 1430,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 0,
+    "blocks": 193,
+    "bits_total": 366916,
+    "bit_um_total": 999902400,
+    "metrics": {
+     "sum_width_length_bit_um": 999902087,
+     "sum_bit_um_hops": 999902400,
+     "sum_traffic_length": 36290114179181,
+     "traffic_links": 715,
+     "over_reach_bits": 195679,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 1839173,
+     "worst_cut": 1.4405,
+     "cut_windows_over_limit": 245
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/T_nogap__none_s9.P.json",
+     "sha256": "27fdda52e3ca964536f52da46b9feb151ef32d31831c6833b9274dd9661d6e5b"
+    },
+    {
+     "path": "recs/hbm_gfp_T_nogap__none_s9.json",
+     "sha256": "11eecc3dd5ae360a33d8761d085e7eb86d1d199c77c280788620a3fa616accc8"
+    }
+   ],
+   "generated": "2026-10-15T16:19:00+00:00",
+   "bytes": 250129
+  },
+  {
+   "id": "hbm_gfp_base_v15_noatt",
+   "file": "hbm_gfp_base_v15_noatt.links.json.gz",
+   "label": "v15/D boxes minus ATT",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "v15/D boxes minus ATT",
+    "note": "Current v15.1 + D layout with every ATT block removed; the 150-odd blocks without a v15 box placed by the shared greedy rule. J reference = 3.00 + penalties.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (193-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 715,
+    "placed": 715,
+    "unplaced": 0,
+    "width_known": 715,
+    "directed": 715,
+    "pin_ends": 0,
+    "box_ends": 1430,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 57,
+    "blocks": 193,
+    "bits_total": 366916,
+    "bit_um_total": 1465654183,
+    "metrics": {
+     "sum_width_length_bit_um": 1465654267,
+     "sum_bit_um_hops": 1465654183,
+     "sum_traffic_length": 56442585335457,
+     "traffic_links": 715,
+     "over_reach_bits": 235008,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 2761294,
+     "worst_cut": 1.6396,
+     "cut_windows_over_limit": 477
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/base_v15_noatt.P.json",
+     "sha256": "6718987f24c81e44ef3969306522edf7a476431c0d291b539a2fee642a979875"
+    },
+    {
+     "path": "recs/hbm_gfp_base_v15_noatt.json",
+     "sha256": "55381094c58f898f5dc00fb8ef793ac7f0d9a971f0cd2823140c689d5fef1ec6"
+    }
+   ],
+   "generated": "2026-10-15T16:18:58+00:00",
+   "bytes": 251982
+  },
+  {
+   "id": "hbm_gfp_rtlmp_width_raw",
+   "file": "hbm_gfp_rtlmp_width_raw.links.json.gz",
+   "label": "OpenROAD RTL-MP (width)",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "OpenROAD RTL-MP (width)",
+    "note": "rtl_macro_placer dataflow clustering on the die graph, legalized. Ignores the stack/quadrant structure: SMs leave their stacks, cut 38.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (193-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 715,
+    "placed": 715,
+    "unplaced": 0,
+    "width_known": 715,
+    "directed": 715,
+    "pin_ends": 0,
+    "box_ends": 1430,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 514,
+    "blocks": 193,
+    "bits_total": 366916,
+    "bit_um_total": 3250957301,
+    "metrics": {
+     "sum_width_length_bit_um": 3250957188,
+     "sum_bit_um_hops": 3250957301,
+     "sum_traffic_length": 170254242914576,
+     "traffic_links": 715,
+     "over_reach_bits": 342598,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 6321006,
+     "worst_cut": 4.4563,
+     "cut_windows_over_limit": 1184
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/rtlmp_width_raw.P.json",
+     "sha256": "6c647b5c57fd6bbe59292b37a1270b3bd6124233713bcb98b54570f1036b8ffc"
+    },
+    {
+     "path": "recs/hbm_gfp_rtlmp_width_raw.json",
+     "sha256": "e81fb71955e692221aa68d50d262564fe1b7a3617b261d716359df61816ea118"
+    }
+   ],
+   "generated": "2026-10-15T16:18:59+00:00",
+   "bytes": 256590
+  },
+  {
+   "id": "hbm_gfp_sa_free_s1",
+   "file": "hbm_gfp_sa_free_s1.links.json.gz",
+   "label": "Free annealer",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "Free annealer",
+    "note": "All movable blocks annealed from the v15 start (PHY + SerDes fixed). Shortest wires but cut 0.83 and 2 LG fixed-return violations.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (193-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 715,
+    "placed": 715,
+    "unplaced": 0,
+    "width_known": 715,
+    "directed": 715,
+    "pin_ends": 0,
+    "box_ends": 1430,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 0,
+    "blocks": 193,
+    "bits_total": 366916,
+    "bit_um_total": 855824153,
+    "metrics": {
+     "sum_width_length_bit_um": 855824581,
+     "sum_bit_um_hops": 855824153,
+     "sum_traffic_length": 34671009911176,
+     "traffic_links": 715,
+     "over_reach_bits": 206619,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 1523998,
+     "worst_cut": 1.3754,
+     "cut_windows_over_limit": 215
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/sa_free_s1.P.json",
+     "sha256": "3f46f0c7f2991b28963f3b8b009574e97eea6ded43f56764813b252fcb09b47e"
+    },
+    {
+     "path": "recs/hbm_gfp_sa_free_s1.json",
+     "sha256": "f425ea8a33b3d1e28fd7b2448df5f61a505b69c537b36726a9ab857131648acb"
+    }
+   ],
+   "generated": "2026-10-15T16:18:59+00:00",
+   "bytes": 250218
   },
   {
    "id": "hbm_r25gph",
