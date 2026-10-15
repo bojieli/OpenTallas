@@ -23,6 +23,11 @@
 module tb_qwen_split_link;
     parameter integer SPLIT   = 1;
     parameter integer C_ST    = 8;
+    // Separate measured compute-die faces. C_ST remains the legacy symmetric default.
+    parameter integer C_X3 = C_ST, C_X3_CR = C_X3;
+    parameter integer C_AR = C_ST, C_AR_CR = C_AR;
+    parameter integer C_SD = C_ST, C_KVD = C_ST;
+    parameter integer C_DS = C_ST, C_PW = C_ST;
     parameter integer K_ST    = 16;
     parameter integer ROM_ST  = 24;
     parameter integer PHY_LAT = 5;
@@ -59,17 +64,19 @@ module tb_qwen_split_link;
     wire [3:0]   faults_link;
 
     generate if (SPLIT) begin : g_split
-        // ---- compute die relays (C_ST stages each way) ----
+        // ---- compute die relays (each directed face has its measured stage count) ----
         wire c_x3_v, c_x3_cr, c_ar_v, c_ar_cr;  wire [522:0] c_x3; wire [518:0] c_ar; wire [55:0] c_sd; wire [43:0] c_kvd;
         wire [261:0] c_sc;
-        ot_hdc_delay #(.W(1),   .D(C_ST), .RESET(1)) u_c1 (.clk(clk), .rst_n(rst_n), .d(su_x3_v), .q(c_x3_v));
-        ot_hdc_delay #(.W(523), .D(C_ST))            u_c2 (.clk(clk), .rst_n(rst_n), .d({su_x3_tag, su_x3_d}), .q(c_x3));
-        ot_hdc_delay #(.W(1),   .D(C_ST), .RESET(1)) u_c3 (.clk(clk), .rst_n(rst_n), .d(c_x3_cr), .q(su_x3_cr));
-        ot_hdc_delay #(.W(56+44), .D(C_ST), .RESET(1)) u_c4 (.clk(clk), .rst_n(rst_n), .d({rs_sd, su_kvd}), .q({c_sd, c_kvd}));
-        ot_hdc_delay #(.W(1),   .D(C_ST), .RESET(1)) u_c5 (.clk(clk), .rst_n(rst_n), .d(c_ar_v), .q(vm_ar_v));
-        ot_hdc_delay #(.W(519), .D(C_ST))            u_c6 (.clk(clk), .rst_n(rst_n), .d(c_ar), .q(vm_ar_d));
-        ot_hdc_delay #(.W(1),   .D(C_ST), .RESET(1)) u_c7 (.clk(clk), .rst_n(rst_n), .d(vm_ar_cr), .q(c_ar_cr));
-        ot_hdc_delay #(.W(262), .D(C_ST), .RESET(1)) u_c8 (.clk(clk), .rst_n(rst_n), .d(c_sc), .q({rs_pw, rs_ds}));
+        ot_hdc_delay #(.W(1),   .D(C_X3), .RESET(1)) u_c1 (.clk(clk), .rst_n(rst_n), .d(su_x3_v), .q(c_x3_v));
+        ot_hdc_delay #(.W(523), .D(C_X3))            u_c2 (.clk(clk), .rst_n(rst_n), .d({su_x3_tag, su_x3_d}), .q(c_x3));
+        ot_hdc_delay #(.W(1),   .D(C_X3_CR), .RESET(1)) u_c3 (.clk(clk), .rst_n(rst_n), .d(c_x3_cr), .q(su_x3_cr));
+        ot_hdc_delay #(.W(56), .D(C_SD), .RESET(1)) u_c4_sd (.clk(clk), .rst_n(rst_n), .d(rs_sd), .q(c_sd));
+        ot_hdc_delay #(.W(44), .D(C_KVD), .RESET(1)) u_c4_kvd (.clk(clk), .rst_n(rst_n), .d(su_kvd), .q(c_kvd));
+        ot_hdc_delay #(.W(1),   .D(C_AR), .RESET(1)) u_c5 (.clk(clk), .rst_n(rst_n), .d(c_ar_v), .q(vm_ar_v));
+        ot_hdc_delay #(.W(519), .D(C_AR))            u_c6 (.clk(clk), .rst_n(rst_n), .d(c_ar), .q(vm_ar_d));
+        ot_hdc_delay #(.W(1),   .D(C_AR_CR), .RESET(1)) u_c7 (.clk(clk), .rst_n(rst_n), .d(vm_ar_cr), .q(c_ar_cr));
+        ot_hdc_delay #(.W(187), .D(C_DS), .RESET(1)) u_c8_ds (.clk(clk), .rst_n(rst_n), .d(c_sc[186:0]), .q(rs_ds));
+        ot_hdc_delay #(.W(75), .D(C_PW), .RESET(1)) u_c8_pw (.clk(clk), .rst_n(rst_n), .d(c_sc[261:187]), .q(rs_pw));
         // ---- compute die link end ----
         wire c_up, c_txv, c_rxv, c_lv, k_up, k_txv, k_rxv, k_lv;
         wire [FW-1:0] c_txf, c_rxf, k_txf, k_rxf;
@@ -77,7 +84,7 @@ module tb_qwen_split_link;
         wire [7:0] c_fc; wire [4:0] k_fc;
         wire [186:0] c_ds; wire [74:0] c_pw;
         assign c_sc = {c_pw, c_ds};
-        ot_qfd_split_romlink #(.XS(2 * C_ST + 48), .OCR_AR(2 * C_ST + 40), .RB_RES(32)) u_rl (
+        ot_qfd_split_romlink #(.XS(C_X3 + C_X3_CR + 48), .OCR_AR(C_AR + C_AR_CR + 40), .RB_RES(32)) u_rl (
             .clk(clk), .rst_n(rst_n), .x3_v(c_x3_v), .x3_d(c_x3[511:0]), .x3_tag(c_x3[522:512]), .x3_cr(c_x3_cr),
             .ar_v(c_ar_v), .ar_d(c_ar), .ar_cr(c_ar_cr), .ea_v(1'b0), .ea_kind(1'b0), .ea_addr(24'd0), .ea_cr(),
             .eq_v(), .eq_d(), .sd(c_sd), .kvd(c_kvd), .ds(c_ds), .pw(c_pw),

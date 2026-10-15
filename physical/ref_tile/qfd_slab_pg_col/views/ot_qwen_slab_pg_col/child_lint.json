@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch/claude/closure-loop/qfd_slab_pg_col_pr-pr2-c7a7edfdb/record/views/ot_qwen_slab_pg_col/ot_qwen_slab_pg_col.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/qfd_slab_pg_col_pr-pr4-418bfb8f4/record/views/ot_qwen_slab_pg_col/ot_qwen_slab_pg_col.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
   "(f) face-pin access: 286 of 286 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. addr1[0] M5 (115.920,0.016), addr1[10] M5 (115.920,0.016), addr1[11] M5 (115.920,0.016))"
  ],
- "summary": "ot_qwen_slab_pg_col 324.0 x 216.0: PG M5 VDD 60 stripes (98% spread, 100% cov) / VSS 60 stripes (98% spread, 100% cov); strap M6; face pins 286 blocked-above 0 blocked-same 0; clock clk insertion 496 ps; pockets M5 0 (closed)",
+ "summary": "ot_qwen_slab_pg_col 324.0 x 216.0: PG M5 VDD 60 stripes (98% spread, 100% cov) / VSS 60 stripes (98% spread, 100% cov); strap M6; face pins 286 blocked-above 0 blocked-same 0; clock clk insertion 601 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_qwen_slab_pg_col",
   "W": 324.0,
@@ -56,8 +56,8 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 495.51,
-    "min_ps": 379.33
+    "max_ps": 601.04,
+    "min_ps": 437.41
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 285
+    "added": 366
    },
    "count": 0,
    "area_um2": 0,

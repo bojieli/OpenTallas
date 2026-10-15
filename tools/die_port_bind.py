@@ -39,9 +39,65 @@ SCHEMA = 'opentallas.die_port_bind.v2'
 
 
 # ------------------------------------------------------------------------------------------------ text helpers
+def _lexical_mask(text: str, strings=False) -> str:
+    """Blank comments (and optionally strings), preserving offsets and newlines."""
+    chars = list(text)
+    i = 0
+    while i < len(text):
+        start = i
+        if text[i] == "\\":
+            # Escaped identifiers end at whitespace; comment markers inside
+            # their spelling are not lexical comments.
+            i += 1
+            while i < len(text) and not text[i].isspace():
+                i += 1
+            continue
+        if text[i] == '"':
+            i += 1
+            while i < len(text):
+                if text[i] == "\\":
+                    i += 2
+                elif text[i] == '"':
+                    i += 1
+                    break
+                else:
+                    i += 1
+            else:
+                raise ValueError('unterminated SystemVerilog string')
+            blank = strings
+        elif text.startswith('//', i):
+            end = text.find('\n', i)
+            i = len(text) if end < 0 else end
+            blank = True
+        elif text.startswith('/*', i):
+            end = text.find('*/', i + 2)
+            if end < 0:
+                raise ValueError('unterminated SystemVerilog comment')
+            i = end + 2
+            blank = True
+        else:
+            i += 1
+            continue
+        if blank:
+            chars[start:i] = ['\n' if c == '\n' else ' ' for c in text[start:i]]
+    return ''.join(chars)
+
+
 def strip_comments(t: str) -> str:
-    t = re.sub(r'/\*.*?\*/', lambda m: '\n' * m.group(0).count('\n'), t, flags=re.S)
-    return re.sub(r'//[^\n]*', '', t)
+    return _lexical_mask(t)
+
+
+def _closing_paren(text, start):
+    masked = _lexical_mask(text, strings=True)
+    depth = 0
+    for i in range(start, len(masked)):
+        if masked[i] == '(':
+            depth += 1
+        elif masked[i] == ')':
+            depth -= 1
+            if depth == 0:
+                return i
+    raise ValueError('unterminated SystemVerilog module header')
 
 
 def preprocess(t: str, defines: dict) -> str:
@@ -225,10 +281,13 @@ def _parse_ranges(s):
 
 
 def parse_modules(text: str, path: str):
+    text = strip_comments(text)
+    masked = _lexical_mask(text, strings=True)
     mods = []
-    for m in re.finditer(r'\bmodule\s+(\w+)\s*', text):
+    for m in re.finditer(r'\bmodule\s+(\w+)\s*', masked):
         name = m.group(1)
-        end = text.find('endmodule', m.end())
+        em = re.search(r'\bendmodule\b', masked[m.end():])
+        end = m.end() + em.start() if em else -1
         if end < 0:
             continue
         seg = text[m.end():end]
@@ -236,34 +295,18 @@ def parse_modules(text: str, path: str):
         i = 0
         if seg.lstrip().startswith('#'):
             j = seg.find('(')
-            depth, k = 0, j
-            while k < len(seg):
-                if seg[k] == '(':
-                    depth += 1
-                elif seg[k] == ')':
-                    depth -= 1
-                    if depth == 0:
-                        break
-                k += 1
+            k = _closing_paren(seg, j)
             plist = seg[j + 1:k]
             for item in _split_commas(plist):
-                pm = re.match(r'\s*(?:parameter|localparam)?\s*(?:integer|int|logic|bit|signed|unsigned|real|\[[^\]]*\]\s*)*\s*(\w+)\s*=\s*(.+)$', item.strip(), re.S)
+                pm = re.match(r'\s*(?:parameter|localparam)?\s*(?:integer|int|logic|bit|signed|unsigned|real|string|\[[^\]]*\]\s*)*\s*(\w+)\s*=\s*(.+)$', item.strip(), re.S)
                 if pm:
                     params[pm.group(1)] = pm.group(2).strip()
             i = k + 1
         j = seg.find('(', i)
         semi = seg.find(';', i)
-        ports, order = {}, []
+        ports, order, port_errors = {}, [], []
         if j >= 0 and (semi < 0 or j < semi):
-            depth, k = 0, j
-            while k < len(seg):
-                if seg[k] == '(':
-                    depth += 1
-                elif seg[k] == ')':
-                    depth -= 1
-                    if depth == 0:
-                        break
-                k += 1
+            k = _closing_paren(seg, j)
             plist = seg[j + 1:k]
             body = seg[k + 1:]
             cur = (None, [])
@@ -273,6 +316,7 @@ def parse_modules(text: str, path: str):
                     continue
                 pm = re.match(r'(input|output|inout)?\s*(wire|reg|logic|var)?\s*(signed|unsigned)?\s*((?:\[[^\]]+\]\s*)*)\s*(\\\S+|\w+)\s*((?:\[[^\]]+\]\s*)*)$', it, re.S)
                 if not pm:
+                    port_errors.append(it)
                     continue
                 d, _, _, pr, pn, ur = pm.groups()
                 if d:
@@ -283,30 +327,36 @@ def parse_modules(text: str, path: str):
                 order.append(pn)
         else:
             body = seg[i:]
+        # Declaration keywords inside strings must not resolve non-ANSI ports.
+        body_masked = _lexical_mask(body, strings=True)
         # localparams / body parameters (non-ANSI parameter declarations)
-        for pm in re.finditer(r'\b(?:parameter|localparam)\s+(?:integer\s+|int\s+|\[[^\]]*\]\s*)?([^;]+);', body):
-            for item in _split_commas(pm.group(1)):          # a declaration list: localparam A = .., B = .., C = ..;
+        for pm in re.finditer(r'\b(?:parameter|localparam)\s+(?:integer\s+|int\s+|\[[^\]]*\]\s*)?([^;]+);', body_masked):
+            for item in _split_commas(body[pm.start(1):pm.end(1)]):          # a declaration list: localparam A = .., B = .., C = ..;
                 im = re.match(r'\s*(\w+)\s*=\s*(.+)$', item, re.S)
                 if im:
                     params.setdefault(im.group(1), im.group(2).strip())
         # non-ANSI port declarations in the body
-        for pm in re.finditer(r'\b(input|output|inout)\s+(?:wire\s+|reg\s+|logic\s+)?(?:signed\s+)?((?:\[[^\]]+\]\s*)*)([^;]+);', body):
+        for pm in re.finditer(r'\b(input|output|inout)\s+(?:wire\s+|reg\s+|logic\s+)?(?:signed\s+)?((?:\[[^\]]+\]\s*)*)([^;]+);', body_masked):
             for pn in _split_commas(pm.group(3)):
                 pn = pn.strip().split('=')[0].strip()
                 if pn in ports and ports[pn][0] is None:
                     ports[pn] = (pm.group(1), _parse_ranges(pm.group(2)))
-        mods.append(Module(name, path, params, ports, body, order))
+        parsed = Module(name, path, params, ports, body, order)
+        parsed.port_parse_errors = port_errors
+        mods.append(parsed)
     return mods
 
 
 def _split_commas(s):
     out, depth, cur = [], 0, []
-    for c in s:
-        if c in '([{':
+    masked = _lexical_mask(s, strings=True)
+    for i, c in enumerate(s):
+        token = masked[i]
+        if token in '([{':
             depth += 1
-        elif c in ')]}':
+        elif token in ')]}':
             depth -= 1
-        if c == ',' and depth == 0:
+        if token == ',' and depth == 0:
             out.append(''.join(cur)); cur = []
         else:
             cur.append(c)
@@ -488,7 +538,9 @@ def expr_bits(expr, nets):
 
 
 # ------------------------------------------------------------------------------------------------ check
-def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
+def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=frozenset()):
+    """straps: {(master, port)} declared STRAP inputs (die constants by contract: tile ids, station indexes, group
+    numbers); a constant on one of them is recorded as a strap, not as INPUT_TIED.  Every other tied input fails."""
     nets, tin, tout, insts = parse_die(die_v, top)
     mparams = mparams or {}
     drv = defaultdict(int)       # (net) -> bitmask of driven bits (by count via lists below)
@@ -507,7 +559,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
             continue
         rec = masters.setdefault(mst, dict(instances=0, rtl=None, kind=None, param_sets={}, examples=[],
                                            die_port_not_in_rtl=set(), input_unconnected=set(), input_tied=set(),
-                                           output_open=set(), width_mismatch={}, unparsed_conn=set()))
+                                           output_open=set(), width_mismatch={}, unparsed_conn=set(), straps=set()))
         rec['instances'] += 1
         if len(rec['examples']) < 3:
             rec['examples'].append(inst)
@@ -548,7 +600,10 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
             for b in bits:
                 if b[0] in ('CONST', 'Z'):
                     if d != 'output':
-                        rec['input_tied'].add(pn)
+                        if b[0] == 'CONST' and (mst, pn) in straps:
+                            rec['straps'].add(pn)
+                        else:
+                            rec['input_tied'].add(pn)
                 elif b[0] == 'UNDECL':
                     rec['unparsed_conn'].add(pn)
                 elif d == 'output':
@@ -589,7 +644,8 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
              unbound_masters=0, stub_masters=0, ambiguous_masters=0, port_not_in_rtl=0, width_mismatch=0,
              input_unconnected=0, input_tied=0, unparsed_connections=0, undriven_net_bits=sum(undriven.values()),
              multi_driven_net_bits=sum(multi.values()), top_assigns=len(findings['TOP_ASSIGN']),
-             params_not_in_rtl=len(findings['PARAM_NOT_IN_RTL']))
+             params_not_in_rtl=len(findings['PARAM_NOT_IN_RTL']),
+             strap_ports=sum(len(r['straps']) for r in masters.values()))
     out_m = {}
     for mst, r in sorted(masters.items()):
         bad = []
@@ -612,10 +668,11 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
                           die_port_not_in_rtl=sorted(r['die_port_not_in_rtl'])[:max_list],
                           input_unconnected=sorted(r['input_unconnected'])[:max_list],
                           input_tied=sorted(r['input_tied'])[:max_list],
+                          straps=sorted(r['straps'])[:max_list],
                           output_open=sorted(r['output_open'])[:max_list],
                           width_mismatch={p: sorted(v) for p, v in sorted(r['width_mismatch'].items())[:max_list]},
                           unparsed_conn=sorted(r['unparsed_conn'])[:max_list])
-    fail_keys = [k for k in S if k not in ('masters', 'instances') and S[k]]
+    fail_keys = [k for k in S if k not in ('masters', 'instances', 'strap_ports') and S[k]]
     return dict(schema=SCHEMA, die_v=str(die_v), top=top, verdict='PASS' if not fail_keys else 'FAIL',
                 failing=fail_keys, summary=S, masters=out_m,
                 undriven_nets=dict(sorted(undriven.items(), key=lambda kv: -kv[1])[:200]),
@@ -649,6 +706,8 @@ def elab_kit(die_v, top, idx, mparams, out_dir, defines):
         ps = ', '.join(f'.{k}({v})' for k, v in prm.items())
         return f'{m.group(1)}{mst} #({ps}){rest}'
     text = re.sub(r'^(\s+)(\w+)(\s+(?:#\s*\(.*?\)\s*)?[\w\\]\S*\s*\()', sub, text, flags=re.M)
+    # Verilator's preprocessor stops at 40,000 tokens a line: break the long bit-concatenation lines at their commas
+    text = '\n'.join(ln if len(ln) < 4000 else ln.replace(', ', ',\n      ') for ln in text.split('\n'))
     (out_dir / 'die_top.sv').write_text(text)
     files, seen, todo, missing = [], set(), sorted(used), []
     while todo:
@@ -703,8 +762,15 @@ def main(argv=None):
     ap.add_argument('--elab-out', help='write DIR/die_top.sv (sidecar parameters inline) + DIR/die_top.f (RTL closure) '
                                        'for a full-RTL Verilator elaboration of the die')
     ap.add_argument('--closure', action='append', default=[], help='print the RTL file closure of MODULE (no die check)')
+    ap.add_argument('--strap', action='append', default=[], help='MASTER:PORT declared strap input (a die constant by '
+                    'contract, e.g. a tile id); a constant on it is recorded, not INPUT_TIED')
+    ap.add_argument('--strap-file', help='JSON [[master, port], ...] or {"straps": [[master, port], ...]}')
     ap.add_argument('--out')
     a = ap.parse_args(argv)
+    straps = {tuple(s.split(':', 1)) for s in a.strap}
+    if a.strap_file:
+        sj = json.loads(Path(a.strap_file).read_text())
+        straps |= {tuple(x) for x in (sj.get('straps', []) if isinstance(sj, dict) else sj)}
     files = list(a.rtl_file)
     libdirs = []
     for fl in a.filelists:
@@ -732,7 +798,8 @@ def main(argv=None):
         return 0
     pj = a.params or (a.die_v + '.params.json' if Path(a.die_v + '.params.json').exists() else None)
     mparams = json.loads(Path(pj).read_text()).get('masters', {}) if pj else {}
-    rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams)
+    rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams, straps=frozenset(straps))
+    rec['straps_declared'] = sorted(':'.join(s) for s in straps)
     rec['params_file'] = pj
     if a.elab_out:
         rec['elab'] = elab_kit(a.die_v, a.top, idx, mparams, a.elab_out, a.define)

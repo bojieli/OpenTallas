@@ -23,6 +23,9 @@
 # CHAINS (optional): the HC chain fixture of tools/s81_ctrl/die_layer_chain.py for a layer the pinned CASES pickle does
 # not hold (LAYERS=L14, an Engram layer: its eng.* ops are BEHAVIOURAL at program duration, see the stim tool);
 # CHAINS may hold "%L", replaced by the layer name.  Unset: L0 / L2 exactly as before.
+# SUSNAP (s81-ftok r3): the REAL SU slab (+define+TB_SU_REAL): the layer's SU operand snapshot path, "%N" replaced by the
+# two-digit layer number (tools/dsrom_1m_su.py golden --engram snap_L%N.pkl); modes mut_su (slab MUT 4: gain set
+# ignored), mut_sux (XMUT 3: QR inverse rotation) and mut_rw (XMUT 4: RW without route_scale) must FAIL.
 set -u
 SRC=$1; OUT=$2; MODES=${3:-"base seqc mut_ep mut_drop mut_hc mut_coll mut_inp mut_seqc"}
 NG=${NG:-16}; FP=${FP:-rtl}; HCH=${HCH:-0}; LAYERS=${LAYERS:-"L0 L2"}; VL=${VL:-verilator}; J=${J:-16}; ADMIT=${ADMIT:-}
@@ -31,7 +34,9 @@ S=$SRC/rtl/dsrom_sys; P=$S/s81_ph
 CHAINS=${CHAINS:-}
 for L in $LAYERS; do
   CH=""; case $L in L0|L2) ;; *) [ -n "$CHAINS" ] && CH="--chain ${CHAINS//%L/$L}";; esac
-  python3 $SRC/tools/s81_ctrl/die_layer_stim.py $OUT/stim_$L --cases $CASES --layer $L --ng $NG $CH ${STIMX:-} > $OUT/stim_$L.log 2>&1 \
+  case $L in M*) CH="$CH --program-layer ${PROGL:-L0}";; esac
+  SS=""; if [ -n "${SUSNAP:-}" ]; then f=${SUSNAP//%L/$L}; case $L in L*) f=${f//%N/$(printf %02d ${L#L})};; esac; SS="--su-snap $f"; fi
+  python3 $SRC/tools/s81_ctrl/die_layer_stim.py $OUT/stim_$L --cases $CASES --layer $L --ng $NG $CH $SS ${STIMX:-} > $OUT/stim_$L.log 2>&1 \
     || { echo "DIE_LAYER_GATE FAIL stim $L: $(tail -2 $OUT/stim_$L.log)" | tee $OUT/verdicts.log; exit 1; }
 done
 FPF="rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv"
@@ -63,6 +68,10 @@ LIST="rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_skid_buffer.s
  physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
  physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
  $FPF rtl/dsrom_sys/s81_ctrl/test/tb_s81_die_layer.sv"
+if [ -n "${SUSNAP:-}" ]; then
+  SUL=$(cd $SRC && python3 -c "import sys; sys.path.insert(0,'tools/s81_suhc'); import su_gate as G; print(' '.join(dict.fromkeys(G.RTL + G.HIER)))")
+  LIST="$SUL $LIST"
+fi
 # the hierarchical HC slab modules dsfd_sp_hc.sv names since 10-12 (HIER generate; the bench keeps HIER 0): without them the build fails
 FILES=$( (for f in $LIST; do echo $SRC/$f; done; ls $SRC/rtl/dsrom_sys/s81_suhc/hier/*.sv) | awk '!seen[$0]++')
 if [ $FP = dpi ]; then
@@ -70,19 +79,21 @@ if [ $FP = dpi ]; then
   ( cd $SRC && python3 -c "import sys; sys.path.insert(0,'tools/s81_suhc'); import hc_gate; from pathlib import Path; [print(p) for p in hc_gate.dpi_rest(Path('$OUT/dpi_rest'))]" ) > $OUT/dpi_rest.list
   FILES="$(cat $OUT/dpi_rest.list) $(echo "$FILES" | grep -v '/rtl/hdc/ot_hdc_prefix.sv')"
 fi
-sha256sum $FILES $SRC/tools/s81_ctrl/die_layer_stim.py $SRC/tools/s81_suhc/hc_gate.py > $OUT/sources.sha256
+sha256sum $FILES $SRC/tools/s81_ctrl/die_layer_stim.py $SRC/tools/s81_suhc/hc_gate.py $SRC/tools/s81_ftok/su_layer.py $SRC/tools/s81_suhc/su_gate.py > $OUT/sources.sha256
+SUD=""; [ -n "${SUSNAP:-}" ] && SUD="+define+TB_SU_REAL"
+[ -n "${SUSNAP:-}" ] && for L in $LAYERS; do f=${SUSNAP//%L/$L}; case $L in L*) f=${f//%N/$(printf %02d ${L#L})};; esac; sha256sum $f; done >> $OUT/sources.sha256
 [ -n "$CHAINS" ] && sha256sum $SRC/tools/s81_ctrl/die_layer_chain.py $(for L in $LAYERS; do f=${CHAINS//%L/$L}; [ -f "$f" ] && echo $f; done | sort -u) >> $OUT/sources.sha256
 SPL="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP"
 HX=""; [ $HCH = 1 ] && HX="+define+TB_HC_HIER -GHIER=1 -GHALF=1 -GCSPLIT=1 -GTAIL_SPLIT=2 -GCNL_PIN=1 -GCHAIN_STEP=6 -GHEAD_ROWS=$([ $NG = 256 ] && echo 10 || echo 2)"
 for m in $MODES; do
-  case $m in base) X="";; nom) X="-GEPER=0";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";; mut_pd) X="-GPIPE=1 -GPIPE_PD=0";; mut_hl) X="-GHST=1 -GHLMUT=1";; mut_tx) X="-GHTX=3";;
+  case $m in base) X="";; nom) X="-GEPER=0";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";; mut_pd) X="-GPIPE=1 -GPIPE_PD=0";; mut_hl) X="-GHST=1 -GHLMUT=1";; mut_tx) X="-GHTX=3";; mut_su) X="-GSUMUT=4";; mut_sux) X="-GSUXMUT=3";; mut_rw) X="-GSUXMUT=4";;
     seqc) X="+define+TB_SEQC -GTMAX=110000";; mut_seqc) X="+define+TB_SEQC +define+OT_SSEQC_MUT_DROP_START -GTMAX=110000";; esac
   RUNL=$LAYERS; [ $m = base ] || [ $m = nom ] || [ $m = seqc ] || RUNL=$(echo $LAYERS | awk '{print $1}')
   XGM=""; for g in ${XG:-}; do n=${g%%=*}; case " $X " in *" $n="*) ;; *) XGM="$XGM $g";; esac; done
   ( $ADMIT $VL --binary --timing -j $J -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING \
-      -DOT_S81PH_PLL_MODEL +define+OT_S81PH_COLL_JOB $SPL -I$S/s81_ctrl --unroll-count 4 -fno-dfg -CFLAGS -O1 \
+      -DOT_S81PH_PLL_MODEL +define+OT_S81PH_COLL_JOB $SPL $SUD -I$S/s81_ctrl --unroll-count 4 -fno-dfg -CFLAGS -O1 \
       --top-module tb_s81_die_layer -GNG=$NG $HX $XGM $X --Mdir $OUT/obj_$m -o sim $FILES > $OUT/build_$m.log 2>&1 \
-    && for L in $RUNL; do /usr/bin/time -v $OUT/obj_$m/sim +DIR=$OUT/stim_$L > $OUT/run_${m}_$L.log 2>&1; done ) &
+    && for L in $RUNL; do TX=""; [ -n "${VM_TRACE:-}" ] && TX="+VM_TRACE=${VM_TRACE}_${m}_${L}.csv"; /usr/bin/time -v $OUT/obj_$m/sim +DIR=$OUT/stim_$L $TX > $OUT/run_${m}_$L.log 2>&1; done ) &
 done
 wait
 for m in $MODES; do
@@ -92,7 +103,8 @@ for m in $MODES; do
     [ -z "$v" ] && v="NO_RESULT (build: $(grep -m1 -i '%Error' $OUT/build_$m.log))"
     exp=FAIL; [ $m = base ] || [ $m = nom ] || [ $m = seqc ] && exp=PASS
     x=$(grep -h "^XFER" $OUT/run_${m}_$L.log 2>/dev/null)
-    echo "$m $L expect $exp: $v | $s | $x"
+    su=$(grep -h "^SU_REAL" $OUT/run_${m}_$L.log 2>/dev/null)
+    echo "$m $L expect $exp: $v | $s | $x | $su"
   done
 done | tee $OUT/verdicts.log
 if [ $(grep -c "expect PASS: TB_S81_DIE_LAYER PASS" $OUT/verdicts.log) -eq $(grep -c "expect PASS" $OUT/verdicts.log) ] && \

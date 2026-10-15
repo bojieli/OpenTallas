@@ -111,7 +111,7 @@ class Emit:
         self.margin = margin          # owner margin rule: register every face pin of a meso crossing (see --margin)
         self.body, self.sdc, self.map = [], [], {}
         self.clk_in, self.clk_out = [], []        # (port, idx) forwarded clock inputs / outputs
-        self.mutant = mutant          # negative control: the first primitive swaps its two lowest data bits
+        self.mutant = mutant          # negative control: swap two bits, or flip a single-bit credit
         self.ck = 'ck' in rec['ports']
         self.ins = {}                             # (port, idx) -> domain clock name of input data
         self.outs = {}                            # (port, idx) -> ('fwd', out clock port bit) | ('ck',)
@@ -120,6 +120,12 @@ class Emit:
         if self.mutant and len(lst) >= 2:
             lst = list(lst)
             lst[0], lst[1] = lst[1], lst[0]
+            self.mutant = False
+        elif self.mutant and len(lst) == 1:
+            # Forwarded credit stations have ONE data bit plus their clock.
+            # Swapping two data bits cannot mutate them; invert only the data.
+            x = lst[0]
+            lst = [("~" + x[0], x[1])] if isinstance(x, tuple) else [f"~({x})"]
             self.mutant = False
         return lst
 
@@ -261,13 +267,18 @@ def build(rec, fcm, mutant=False, margin=False, **kw):
     elif role == 'stn':                           # launch: a local (SM request), b forwarded
         da = dirs(rec, 'a')
         assert not lay['a'][0] and lay['b'][0]
-        (ob, oc), = E.slices('b', 'out')
+        bslices = E.slices('b', 'out')
+        nout = sum(len(ob) for ob, _ in bslices)
         ain = [i for i, d in enumerate(da) if d == 'in']
         aout = [i for i, d in enumerate(da) if d == 'out']
-        srcs = [f'a[{i}]' for i in ain] + ["1'b0"] * (len(ob) - len(ain))
+        assert len(ain) <= nout, (mst, len(ain), nout)
+        srcs = [f'a[{i}]' for i in ain] + ["1'b0"] * (nout - len(ain))
         for i in ain:
             E.ins[('a', i)] = ('ck', 0)
-        E.launch(srcs, 'b', ob, oc)
+        pos = 0
+        for ob, oc in bslices:
+            E.launch(srcs[pos:pos + len(ob)], 'b', ob, oc)
+            pos += len(ob)
         for i in aout:
             E.body.append(f'  reg r_one_{i}; always @(posedge ck[0]) r_one_{i} <= rst[0];  // SM req_ready: no ready return')
             E.body.append(f'  assign a[{i}] = r_one_{i};')
@@ -481,6 +492,7 @@ def main(argv=None):
     ap.add_argument('--ports', required=True)
     ap.add_argument('--out', required=True)
     ap.add_argument('--master', action='append')
+    ap.add_argument('--variant', default='', help='HBM generator preset (as tools/hbm_die_views.py --variant)')
     ap.add_argument('--margin', action='store_true',
                     help='owner margin rule (2026-10-06): every face pin of a meso crossing registered -- the FIFO input '
                          'captured at the pin on the write clock (ot_hbm_stn_meso RI=1, +1 cycle), the FIFO readout '
@@ -498,6 +510,9 @@ def main(argv=None):
     ap.add_argument('--plreg', action='store_true', help='meso FIFOs: registered read-pointer placement (PLREG=1, 0 cycles)')
     ap.add_argument('--rsplit', action='store_true', help='--margin meso FIFOs: half-select readout flops (RSPLIT=1, 0 cycles)')
     a = ap.parse_args(argv)
+    if a.variant:
+        import hbm_die_views as V_
+        V_.L.VARIANT = a.variant
     kw = dict(wchk=a.wchk, pin_stages=a.pin_stages, fdly=a.fdly, ldly=a.ldly, fwd_rc=a.fwd_rc, plreg=a.plreg, rsplit=a.rsplit, onreg=a.onreg)
     fcm = fc_map()
     pdir = Path(a.ports)

@@ -173,6 +173,17 @@ class Abut(unittest.TestCase):
         h = RT.read_view_lef(self.V)["H"]
         self.assertEqual(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)]), [])
 
+    def test_stack_abutted_mirrored(self):
+        """MY / MX / R180 banks abut like R0 (touching faces carry no signal pin); a rotated macro keeps the rule"""
+        h = RT.read_view_lef(self.V)["H"]
+        for o in ("MY", "MX", "R180"):
+            a, b = self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)
+            a["orient"] = b["orient"] = o
+            self.assertEqual(self.chan([a, b]), [], o)
+        a, b = self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)
+        a["orient"] = b["orient"] = "R90"
+        self.assertEqual(len(self.chan([a, b])), 1)
+
     def test_at_exact_is_not_snapped(self):
         h = RT.read_view_lef(self.V)["H"]
         s = {"kind": "tile", "pins": {"S": ["ck"]}, "children": [],
@@ -346,6 +357,27 @@ class Recipe(unittest.TestCase):
         kd = RT.kit_dir(s)
         self.assertIn("physical/common_flow/macro_edge_via_guard.tcl", RT.referenced_paths(s, kd))
         self.assertFalse(RT.macro_edge_guard(dict(s, macros=[])))           # no hard macro: no guard
+
+    def test_io_hold_margin_split(self):
+        # q14 r8 2026-10-14: route.io_hold_margin_ns relieves ONLY the route-time FF repair SDC of the boundary; sign-off
+        # (signoff.sdc, verdict post_sdc) is unchanged; no field -> one margin, no extra file (existing kits unchanged)
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+            k = self.kit(a, name="iohm_a", route={"hold_margin_ns": 0.06, "io_hold_margin_ns": 0.01})
+            o = self.kit(b, name="iohm_b", route={"hold_margin_ns": 0.03})
+        ffr, so = k["signoff_ffrepair.sdc"], k["signoff.sdc"]
+        self.assertIn("set ::env(OT_IO_HOLD_SKEW) 0\nset ::env(OT_IO_IN_HOLD_SKEW) -50\n", ffr)
+        self.assertTrue(ffr.rstrip().endswith("unset -nocomplain ::env(OT_IO_IN_HOLD_SKEW)"))
+        self.assertNotIn("set ::env(OT_IO_IN_HOLD_SKEW)", so)
+        self.assertIn("set ::env(OT_IO_HOLD_SKEW) 50\n", so)
+        job = json.loads(k["job.json"])
+        self.assertIn("signoff_ffrepair.sdc'", job["stages"]["route"]["cmd"])
+        self.assertIn("HM=0.06 ", job["stages"]["route"]["cmd"])
+        self.assertTrue(job["verdict"]["post_sdc"][0].endswith("/signoff.sdc"))
+        self.assertTrue(any(f.endswith("/signoff_ffrepair.sdc") for f in json.loads(k["floorplan.json"])["referenced"]))
+        self.assertNotIn("signoff_ffrepair.sdc", o)
+        self.assertNotIn("signoff_ffrepair", json.loads(o["job.json"])["stages"]["route"]["cmd"])
+        with self.assertRaises(RT.SpecError):
+            RT.io_hold_relief_ps({"route": {"hold_margin_ns": 0.01, "io_hold_margin_ns": 0.02}})
 
     def test_recipe_2_spec_overrides(self):
         with tempfile.TemporaryDirectory() as a:

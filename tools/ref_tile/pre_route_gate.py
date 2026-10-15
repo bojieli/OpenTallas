@@ -428,9 +428,9 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
         g.add("FAIL", "density", "kit leaves ORFS's PLACE_DENSITY_LB_ADDON in force: the placer target becomes lower-bound + "
               "0.05, not the spec PD (qkd_nhb_pbst 0.50 -> 0.1075, GPL-0305)", "re-run ref_tile.py gen")
     lc = fp["layer_contract"]
-    rl = re.search(r"^RLAYERS='M2 (M[5-9])'$", env, re.M)
+    rl = re.search(r"^RLAYERS='M2 (M[2-9])'$", env, re.M)
     if not rl:
-        g.add("FAIL", "layer", "kit.env has no explicit RLAYERS M2..M5/M6/M7/M8/M9 (a script default would override the "
+        g.add("FAIL", "layer", "kit.env has no explicit RLAYERS M2..M2-M9 (a script default would override the "
               "layer contract)", "re-run ref_tile.py gen")
     elif spec["kind"] == "tile":
         fresh_lc = RT.layer_contract(spec, RT.contract_slot(spec))
@@ -439,6 +439,16 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
                   f"gives cap {fresh_lc['rlayers'][1]} / PG {fresh_lc['pg_layer']} ({fresh_lc.get('cap_basis')}; new tiles "
                   "cap at M5, M6 only with layer_cap_grant)", "re-run ref_tile.py gen")
         cap_n = int(rl.group(1)[1:])
+        if cap_n < 5:
+            cr = re.search(r"^CLOCK_RLAYERS='(M[2-9]) (M[2-9])'$", env, re.M)
+            try:
+                want = RT.clock_rlayers(fresh_lc)
+            except RT.SpecError as e:
+                want = None
+                g.add("FAIL", "layer", str(e), "raise the tile's signal cap to >= M3")
+            if want and (not cr or cr.groups() != want):
+                g.add("FAIL", "layer", f"signal cap {rl.group(1)} needs CLOCK_RLAYERS='{want[0]} {want[1]}' (OpenROAD needs a "
+                      "two-layer clock range; the ASAP7 default M4..cap fails ODB-0137 at floorplan)", "re-run ref_tile.py gen")
         pins_used = set()
         for k in ("PIN_H", "PIN_V", "export OT_PIN_BALANCE_H", "export OT_PIN_BALANCE_V"):
             mm = re.search(rf"^{k}='([^']*)'", env, re.M)
@@ -589,6 +599,87 @@ def ship_tar(paths, overlay_payloads=None, overlay_modes=None):
     return buf.getvalue()
 
 
+def gate_consumed(data: bytes, kd: Path, spec: dict, referenced, entries) -> dict:
+    """The staged files this gate consumes (SB.consumed_closure over the archive bytes): the kit directory (spec.json,
+    kit.env, SDCs, hooks, pin files), the spec's RTL file list and its `include closure, the floorplan's referenced
+    closure, child/macro view directories, the job's source.extra_paths, the tools REMOTE_SH runs and the daemon
+    overlays.  The route binding compares only these; any other staged-file difference is reported, not refused."""
+    kit = str(kd.relative_to(ROOT))
+    try:
+        job = json.loads((kd / "job.json").read_text())
+    except (OSError, ValueError):
+        job = {}
+    extra = [str(x) for x in ((job.get("source") or {}).get("extra_paths") or [])]
+    views = [it["view"] for it in list(spec.get("macros") or []) + list(spec.get("children") or []) if it.get("view")]
+    seeds = list(spec.get("sources") or []) + sorted(referenced) + list(SB.GATE_TOOLS) + list(SHIP_HELPERS)
+    paths = SB.consumed_closure(SB.archive_contents(data), seeds, [kit, *views, *extra], PATH_RE)
+    # the kit's job.json is the route's job spec, not a gate input (no remote step reads it; submit_check re-checks the
+    # submitted job itself): its tag/purpose edits never invalidate a gate
+    return SB.consumed_record(paths - {f"{kit}/job.json"}, entries, "staged archive closure at gate time")
+
+
+class _BlobFiles(dict):
+    """{path: bytes} view of a staged manifest whose payloads are read lazily from the git object store by blob id."""
+    def __init__(self, entries):
+        super().__init__()
+        self.blobs = {e["path"]: e["git_blob"] for e in entries if e.get("kind") == "file"}
+        self.proc = None
+
+    def __contains__(self, k):
+        return k in self.blobs
+
+    def __iter__(self):
+        return iter(self.blobs)
+
+    def __getitem__(self, k):
+        if not dict.__contains__(self, k):
+            if self.proc is None:
+                self.proc = subprocess.Popen(["git", "-C", str(ROOT), "cat-file", "--batch"],
+                                             stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+            self.proc.stdin.write((self.blobs[k] + "\n").encode())
+            self.proc.stdin.flush()
+            head = self.proc.stdout.readline().split()
+            if len(head) != 3 or head[1] != b"blob":
+                raise KeyError(f"staged blob {self.blobs[k]} of {k} not in the object store")
+            data = self.proc.stdout.read(int(head[2]))
+            self.proc.stdout.read(1)
+            dict.__setitem__(self, k, data)
+        return dict.__getitem__(self, k)
+
+    def close(self):
+        if self.proc is not None:
+            self.proc.stdin.close()
+            self.proc.wait()
+
+
+def reconstruct_consumed(binding: dict, kd: Path) -> dict | None:
+    """The consumed-file record of a gate that predates it (snapshot v1 without "consumed"), derived by the same closure
+    from the gate's own staged bytes (manifest git blobs, read back from the object store) -- never from today's tree.
+    None when any needed staged blob is unavailable: the gate is then validated exactly as before (full snapshot)."""
+    # kd may be the submit hook's materialised copy (a temp dir): the kit path is the staged spec.json path it ends with
+    kits = sorted({e["path"][:-len("/spec.json")] for e in binding.get("files") or []
+                   if e["path"].endswith(f"/{kd.name}/spec.json") and kd.as_posix().endswith(e["path"][:-len("/spec.json")])},
+                  key=len, reverse=True)
+    if not kits:
+        return None
+    kit = kits[0]
+    files = _BlobFiles(binding.get("files") or [])
+    try:
+        spec = json.loads(files[f"{kit}/spec.json"])
+        fp = json.loads(files[f"{kit}/floorplan.json"]) if f"{kit}/floorplan.json" in files else {}
+        job = json.loads(files[f"{kit}/job.json"]) if f"{kit}/job.json" in files else {}
+        extra = [str(x) for x in ((job.get("source") or {}).get("extra_paths") or [])]
+        views = [it["view"] for it in list(spec.get("macros") or []) + list(spec.get("children") or []) if it.get("view")]
+        seeds = list(spec.get("sources") or []) + list(fp.get("referenced") or []) + list(SB.GATE_TOOLS) + \
+            list(binding.get("daemon_overlays") or [])
+        paths = SB.consumed_closure(files, seeds, [kit, *views, *extra], PATH_RE) - {f"{kit}/job.json"}
+    except (KeyError, ValueError, TypeError, OSError):
+        return None
+    finally:
+        files.close()
+    return SB.consumed_record(paths, binding["files"], "reconstructed from the gate's staged manifest blobs")
+
+
 def absent_working_inputs(seeds):
     # The archive is made from the working tree, not git show.  A sparse checkout
     # can contain the hook but omit a committed helper that the hook sources.
@@ -630,6 +721,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]})
     binding = SB.snapshot(data, ROOT, start_commit, DAEMON_TREE, daemon_commit, SHIP_HELPERS)
     binding["route_overlay_plan"] = route_plan
+    binding["consumed"] = gate_consumed(data, kd, spec, ref, binding["files"])
     binding["captured"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     g.source_binding = binding
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
@@ -813,7 +905,7 @@ def clock_item(g: Gate, rec: dict) -> None:
         g.add("INFO", "clock_rule", f"root {rec['root']}: {rec['text']}")
 
 
-def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None) -> dict | None:
+def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, note: list | None = None) -> dict | None:
     """The kit's gate result when it is bound to this exact source commit and to the daemon overlays the gate executed
     (SB.validate: route-only helper drift does not invalidate a gate).  why: receives the refusal reason."""
     def no(reason):
@@ -823,9 +915,17 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None) -> 
     try:
         d = json.loads((kd / CLOCK_RESULT).read_text())
         binding = d.get("source_binding")
+        if isinstance(binding, dict) and binding.get("schema") == SB.SCHEMA and "consumed" not in binding \
+                and binding.get("files"):
+            rec = reconstruct_consumed(binding, kd)
+            if rec is not None:
+                binding = {**binding, "consumed": rec}
+                d["source_binding"] = binding
         ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit)
         if not ok:
             return no(reason)
+        if note is not None:
+            note.append(reason)
         if not binding.get("remote_archive_verified"):
             return no("remote archive verification missing")
         if not isinstance(d.get("clock"), dict):
@@ -845,9 +945,11 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
     sink count of this block's latest synthesized design (known_sinks, from the loop's job history) does.  A kit with no
     gate result and no history passes here and is judged by the in-flow lint right after synthesis (FLOORPLAN_MARGIN,
     before placement).  closed_stands: a CLOSED tile is not re-judged."""
-    why = []
-    rec = kit_gate_evidence(kd, source_commit, why)
+    why, note = [], []
+    rec = kit_gate_evidence(kd, source_commit, why, note)
     ev = rec["clock"] if rec else None
+    if rec and note and "reported, not refused" in note[0]:
+        g.add("INFO", "source_binding", note[0][:1500])
     if rec and not closed_stands:
         frozen = rec["source_binding"].get("route_overlay_plan")
         if frozen is None:

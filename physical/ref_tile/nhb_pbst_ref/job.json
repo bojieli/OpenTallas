@@ -1,5 +1,5 @@
 {
- "name": "nhb_pbst_ref-np2-COMMIT",
+ "name": "nhb_pbst_ref-np2-e9d2e317a",
  "block": "ot_nhb_pbst",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -12,7 +12,7 @@
  "peak_ram_gb": 112,
  "source": {
   "branch": "claude/qwen-kvsys-ahub-1014",
-  "commit": "COMMIT",
+  "commit": "e9d2e317a",
   "extra_paths": [
    "results/arch/qwen_kv_die_20261009"
   ]
@@ -103,7 +103,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/nhb_pbst_ref/nhb_pbst_ref-np2-COMMIT"
+   "to": "results/rtl/ref_tile/nhb_pbst_ref/nhb_pbst_ref-np2-e9d2e317a"
   }
  ],
  "cycles_added": 0,

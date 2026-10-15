@@ -85,7 +85,8 @@ module ot_qwen_die_cdc_ch #(
     wire         x_af_v, x_af_pop;
     wire [W-1:0] ib_head;
     generate if (IBMEM != 0) begin : g_ib_mem
-        initial if (W != 546 || IBUF != 32 || RXP != 0) $error("IBMEM needs32x546/RXP0");
+        initial if (W != 546 || RXP != 0 || !((IBMEM == 1 && IBUF == 32) || (IBMEM == 2 && IBUF == 64)))
+            $error("IBMEM needs32x546 (1) or64x546 (2), RXP0");
         wire [IA-1:0] next_head = ir[IA-1:0] + (pop ? 1'b1 : 1'b0);
         wire [W-1:0] mq;
         reg bypass;
@@ -94,8 +95,15 @@ module ot_qwen_die_cdc_ch #(
             if (!wr_n) bypass <= 1'b0;
             else bypass <= x_wr && (iw[IA-1:0] == next_head);
         always @(posedge wclk) if (x_wr && (iw[IA-1:0] == next_head)) bypass_data <= id_q;
-        ot_sram_1r1w_32x546_m1 u_ib (.clk(wclk),.r_ce_in(1'b1),.r_addr_in(next_head),.rd_out(mq),
-            .w_ce_in(x_wr),.w_addr_in(iw[IA-1:0]),.wd_in(id_q),.w_mask_in({W{1'b1}}));
+        if (IBMEM == 1) begin : g_32
+            ot_sram_1r1w_32x546_m1 u_ib (.clk(wclk),.r_ce_in(1'b1),.r_addr_in(next_head),.rd_out(mq),
+                .w_ce_in(x_wr),.w_addr_in(iw[IA-1:0]),.wd_in(id_q),.w_mask_in({W{1'b1}}));
+        end else begin : g_64
+            // Both macro clock pins belong to the writer domain: this is an
+            // input-credit queue, before the separate asynchronous FIFO.
+            ot_sram_1r1w2c_64x546_m1 u_ib (.rclk(wclk),.wclk(wclk),.r_ce_in(1'b1),.r_addr_in(next_head),.rd_out(mq),
+                .w_ce_in(x_wr),.w_addr_in(iw[IA-1:0]),.wd_in(id_q),.w_mask_in({W{1'b1}}));
+        end
 `ifdef OT_CDC_IBMEM_MUT_NOBYPASS
         assign ib_head = mq;
 `else

@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkh_recip_ref-cx1-df9bba544/record/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkh_recip_ref-np1-922bf01f4/record/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 68 of 69 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M4 (0.060,117.360), rst_n M4 (0.060,117.360), fault M5 (211.920,0.016))"
+  "(f) face-pin access: 68 of 69 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M4 (0.060,113.904), rst_n M4 (0.060,113.904), fault M5 (205.008,0.016))"
  ],
- "summary": "ot_qkh_recip_leaf 216.0 x 216.0: PG M6 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M7; face pins 69 blocked-above 0 blocked-same 0; clock clk insertion 262 ps",
+ "summary": "ot_qkh_recip_leaf 216.0 x 216.0: PG M6 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M7; face pins 69 blocked-above 0 blocked-same 0; clock clk insertion 265 ps; pockets M6 0 (closed)",
  "info": {
   "cell": "ot_qkh_recip_leaf",
   "W": 216.0,
@@ -46,19 +46,31 @@
    "same_examples": [],
    "band_same": 68,
    "band_examples": [
-    "clk M4 (0.060,117.360)",
-    "rst_n M4 (0.060,117.360)",
-    "fault M5 (211.920,0.016)",
-    "vo M5 (211.920,0.016)",
-    "y[0] M5 (211.920,0.016)",
-    "y[10] M5 (211.920,0.016)"
+    "clk M4 (0.060,113.904)",
+    "rst_n M4 (0.060,113.904)",
+    "fault M5 (205.008,0.016)",
+    "vo M5 (205.008,0.016)",
+    "y[0] M5 (205.008,0.016)",
+    "y[10] M5 (205.008,0.016)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 262.46,
-    "min_ps": 203.41
+    "max_ps": 264.83,
+    "min_ps": 201.61
    }
+  },
+  "pockets": {
+   "layer": "M6",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M6",
+    "d_um": 2.048,
+    "added": 910
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
   }
  }
 }

@@ -12,6 +12,7 @@ const FLOW_CSS = `
 .tp-flow .gbox.crit .frame{stroke:${CRIT};stroke-opacity:.55}
 .tp-flow .gbox.on .frame{stroke:${CRIT};stroke-width:2.5;stroke-opacity:1}
 .tp-flow .gbox:hover .frame{stroke:#e8eefc}
+.tp-flow .gbox.inspected .frame{stroke:#fff;stroke-width:3;stroke-opacity:1;stroke-dasharray:5 2}
 .tp-flow .glab{fill:#e8eefc!important;font-weight:600}
 .tp-flow .gshare{fill:#8a97b8!important}
 .tp-flow .link{fill:none;stroke:#2a3a63;stroke-width:1.5}
@@ -23,7 +24,7 @@ const FLOW_CSS = `
 .tp-flow .nd.par circle.body{fill-opacity:.45}
 .tp-flow .nd.on circle.body{fill-opacity:1;filter:drop-shadow(0 0 6px ${CRIT})}
 .tp-flow .nd:hover circle.ring,.tp-flow .nd.sel circle.ring{stroke:#e8eefc;stroke-width:3}
-.tp-flow .pulse{fill:#fff;filter:drop-shadow(0 0 8px ${CRIT}) drop-shadow(0 0 3px #fff)}
+.tp-flow .pulse{pointer-events:none;fill:#fff;filter:drop-shadow(0 0 8px ${CRIT}) drop-shadow(0 0 3px #fff)}
 .tp-flow .rowlab{fill:#4a5678!important}
 .tp-flow .gbox.hwp .frame{stroke-dasharray:4 3;stroke:#c3cbe0;stroke-opacity:.9}
 .tp-flow .nd.hwp circle.ring{stroke-dasharray:3 2;stroke:#c3cbe0}
@@ -51,17 +52,25 @@ function tokenLevel(root, data, p, W, onDrill) {
   const G = data.groups.filter((g) => g.critical);
   const total = G.reduce((a, g) => a + g.cycles, 0);
   const pad = 14, gap = 10, BH = 38, rowGap = 40, minW = 26;
-  let rows, k;
-  for (let R = 1; R <= 12; R++) {
-    k = (R * (W - 2 * pad) - G.length * gap) / total;
-    rows = [[]]; let x = 0;
+  // Pack proportional stage widths into a predictable number of readable rows.
+  // Account for minimum-width stages while searching, so a tiny embedding stage
+  // cannot make every candidate overflow and inflate the graph to twelve rows.
+  const targetRows = Math.max(1, Math.ceil(G.length / Math.max(2, Math.floor((W - 2 * pad) / 140))));
+  const pack = (scale) => {
+    const out = [[]]; let x = 0;
     for (const g of G) {
-      const w = Math.max(minW, g.cycles * k);
-      if (x + w > W - 2 * pad + 0.5 && rows[rows.length - 1].length) { rows.push([]); x = 0; }
-      rows[rows.length - 1].push([g, w]); x += w + gap;
+      const w = Math.max(minW, g.cycles * scale);
+      if (x + w > W - 2 * pad + 0.5 && out[out.length - 1].length) { out.push([]); x = 0; }
+      out[out.length - 1].push([g, w]); x += w + gap;
     }
-    if (rows.length <= R) break;
+    return out;
+  };
+  let lo = 0, hi = targetRows * W / Math.max(1, total);
+  for (let i = 0; i < 30; i++) {
+    const mid = (lo + hi) / 2;
+    if (pack(mid).length <= targetRows) lo = mid; else hi = mid;
   }
+  const rows = pack(lo);
   const ph = !!data.phases, top0 = ph ? 12 : 0;
   const H = pad * 2 + top0 + rows.length * BH + (rows.length - 1) * rowGap + 18;
   const s = svg('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${data.title}: ${ph ? 'one MTP step' : 'token path'} by stage` }, root);
@@ -97,7 +106,7 @@ function tokenLevel(root, data, p, W, onDrill) {
   const boxes = {};
   for (const g of G) {
     const { x0, y, w } = pos[g.id];
-    const gg = svg('g', { class: 'gbox crit', tabindex: 0 }, boxL);
+    const gg = svg('g', { class: 'gbox crit', tabindex: 0, role: 'button', 'aria-label': `Inspect ${g.label}` }, boxL);
     let cx = x0;
     const parts = Object.entries(g.cls_cycles);
     const sum = parts.reduce((a, [, c]) => a + c, 0) || 1;

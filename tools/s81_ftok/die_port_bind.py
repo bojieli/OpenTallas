@@ -8,7 +8,7 @@ width mismatches.  Functional composition item, not a timing check.
 
     python3 tools/s81_ftok/die_port_bind.py DIE_V --out JSON
 """
-import argparse, json, re, sys
+import argparse, importlib.util, json, re, sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -32,33 +32,29 @@ def rtl_index():
 
 
 def header(text, mod):
-    m = re.search(r'^\s*module\s+' + mod + r'\b(.*?)\);', text, re.M | re.S)
-    if not m:
+    # Share the generalized binder's lexical/balanced parser. Import by path:
+    # this legacy helper has the same filename and may itself be the script.
+    parser_path = ROOT / 'tools/die_port_bind.py'
+    spec = importlib.util.spec_from_file_location('_opentallas_die_bind_parser', parser_path)
+    parser = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(parser)
+    try:
+        matches = [m for m in parser.parse_modules(text, '<header>') if m.name == mod]
+    except ValueError:
         return None, None
-    h = re.sub(r'//[^\n]*', '', m.group(1))
-    h = re.sub(r'/\*.*?\*/', '', h, flags=re.S)
-    params = {}
-    pm = re.match(r'\s*#\s*\((.*?)\)\s*\(', h, re.S)
-    body = h
-    if pm:
-        for d in re.finditer(r'(\w+)\s*=\s*([^,]+?)(?=,\s*(?:parameter\s+)?(?:integer\s+|\[[^\]]*\]\s*)?\w+\s*=|$)', pm.group(1), re.S):
-            params[d.group(1)] = d.group(2).strip()
-        body = h[pm.end():]
-    else:
-        body = h[h.find('(') + 1:]
+    if len(matches) != 1:
+        return None, None
+    parsed = matches[0]
+    if parsed.port_parse_errors or any(d is None for d, _ in parsed.ports.values()):
+        return None, None
     ports = {}
-    cur_dir, cur_w = None, '0'
-    for item in body.split(','):
-        item = item.strip()
-        mm = re.match(r'(input|output|inout)?\s*(wire|reg|logic)?\s*(signed)?\s*(\[[^\]]+\])?\s*(\w+)\s*$', item)
-        if not mm:
-            continue
-        if mm.group(1):
-            cur_dir = mm.group(1); cur_w = mm.group(4)[1:-1] if mm.group(4) else '0:0'
-        elif mm.group(4):
-            cur_w = mm.group(4)[1:-1]
-        ports[mm.group(5)] = (cur_dir, cur_w)
-    return params, ports
+    for name, (direction, ranges) in parsed.ports.items():
+        # Preserve the legacy (direction, hi:lo expression) interface, including
+        # complete packed dimensions instead of silently dropping their width.
+        width = '*'.join(f'(abs(({hi})-({lo}))+1)' for hi, lo in ranges)
+        ports[name] = (direction, ':'.join(ranges[0]) if len(ranges) == 1 else
+                       f'({width})-1:0' if width else '0:0')
+    return parsed.params, ports
 
 
 def evalw(w, params):

@@ -6,7 +6,10 @@
  "rule": "sequencer port c<e>[84:0] -> slab c_cmd, slab c_done[8:0] -> d<e>, slab c_st[1:0] -> s<e>; a slab master is listed for an engine only when its RTL carries the pinned endpoint (ot_s81_slab_ep / ot_s81_engine_adapter) wired to its datapath AND its gate passed. An empty list = UNBOUND = die gate FAIL.",
  "sequencers": [
   "dsfd_stage_seq",
-  "dsfd_stage_seq_c"
+  "dsfd_stage_seq_c",
+  "dsfd_stage_seq_c8",
+  "dsfd_stage_seq_static_c",
+  "dsfd_stage_seq_static_c8"
  ],
  "engines": {
   "fld": {
@@ -41,19 +44,23 @@
   },
   "sel": {
    "masters": [
-    "dsfd_bk_selector_c"
+    "dsfd_bk_selector_c",
+    "dsfd_bk_selector_c1"
    ],
    "note": "lead s81-ctl v2"
   },
   "col": {
    "masters": [
-    "dsfd_bk_collector_c"
+    "dsfd_bk_collector_c",
+    "dsfd_bk_collector_c1"
    ],
    "note": "lead s81-ctl v2"
   },
   "hop": {
-   "masters": [],
-   "note": "hop_tx retired; under decision A the stage hand-off is the WFC kit's: kit endpoint for port 7 (mtp-wfc) pending"
+   "masters": [
+    "dsfd_wfc_stg"
+   ],
+   "note": "s81-die-rtl-bind 2026-10-14 (F4): the stage hand-off is the WFC stage kit's -- dsfd_wfc_stg = the hardened kit cluster (rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv under +define+DSFD_WFC_STG_CL_DIE) with the hop endpoint dsfd_wfc_hop_ep (done = the kit's link-out message end); the sequencer's kit done excludes engine 7 (dsfd_stage_seq_c8 KDX 7). Generator: --rtl-bind only (gates rtl/dsrom_sys/mtp/test/run_wfc_hop_ep_gate.sh, rtl/dsrom_sys/s81_ctrl/test/run_stage_seq_c8.sh)"
   },
   "head": {
    "masters": [],
@@ -72,6 +79,13 @@
   "spare": {
    "masters": [],
    "note": "unused unless a role binds it"
+  },
+  "vm": {
+   "masters": [
+    "dsfd_sp_vm"
+   ],
+   "port": 12,
+   "note": "VM sequencer engine 12 of the STATIC issuer (owner 2026-10-14 18:59: no credits/backpressure): c_cmd 85 / c_done 9 (exact compiled done edge, tag {slot,row7}) / c_st 2 {available,fault} on stream cks/rss. RTL + exact bench owned by the VM stream; die port-bind mandatory."
   }
  },
  "role_absent": {
@@ -85,7 +99,8 @@
    "col",
    "head",
    "eng",
-   "spare"
+   "spare",
+   "vm"
   ],
   "head": [
    "fld",
@@ -96,7 +111,8 @@
    "col",
    "emb",
    "eng",
-   "spare"
+   "spare",
+   "vm"
   ],
   "layer1": [
    "head",

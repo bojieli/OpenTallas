@@ -1,0 +1,71 @@
+[
+ {
+  "cell": "qkd_cdc_wleaf_hpin",
+  "view": "physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf_hpin",
+  "lib_cell": "qkd_cdc_wleaf_hpin",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 222.7,
+  "spread_ps": 39.0,
+  "outputs": 613,
+  "inputs": 585,
+  "launch_ps": 192.9,
+  "launch_pin": "l_data[239]",
+  "capture_ps": 234.3,
+  "capture_pin": "h_wcon",
+  "launch_over": 0,
+  "capture_over": 1,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 234.3 > 190 (1 pins)"
+ },
+ {
+  "cell": "qkd_ectl_a_tp8_epoch_direct",
+  "view": "physical/ref_tile/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct",
+  "lib_cell": "qkd_ectl_a_tp8_epoch_direct",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 375.3,
+  "spread_ps": 33.6,
+  "outputs": 1554,
+  "inputs": 1067,
+  "launch_ps": 183.8,
+  "launch_pin": "rq[11]",
+  "capture_ps": 153.1,
+  "capture_pin": "x_i[22]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ {
+  "cell": "qkd_ectl_c_tp8_direct",
+  "view": "physical/ref_tile/qkd_ectl_c_tp8_direct/views/qkd_ectl_c_tp8_direct",
+  "lib_cell": "qkd_ectl_c_tp8_direct",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 197.3,
+  "spread_ps": 27.0,
+  "outputs": 1501,
+  "inputs": 777,
+  "launch_ps": 194.6,
+  "launch_pin": "t1_q[293]",
+  "capture_ps": 159.4,
+  "capture_pin": "s3[9]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ }
+]

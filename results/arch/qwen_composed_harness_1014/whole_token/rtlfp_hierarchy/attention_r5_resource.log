@@ -1,0 +1,8 @@
+Oct 14 18:42:23 regular-crane systemd[3813]: Started oth-ubuntu-133525-1792028543.scope - [systemd-run] /usr/bin/env JOBS=8 bash /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/r5/build_attn_hier.sh /srv/opentallas-scratch/codex/native-service-f46073090 /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5.
+Oct 14 18:45:33 regular-crane kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-133525-1792028543.scope:
+Oct 14 18:45:33 regular-crane kernel: [ 133525]  1000 133525     1986      950       75      875         0    57344        0             0 bash
+Oct 14 18:45:33 regular-crane kernel: [ 134192]  1000 134192  4263213    38351    35156     3195         0  1105920        0             0 verilator_bin
+Oct 14 18:45:33 regular-crane kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-133525-1792028543.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-133525-1792028543.scope,task=verilator_bin,pid=338921,uid=1000
+Oct 14 18:45:33 regular-crane systemd[3813]: oth-ubuntu-133525-1792028543.scope: The kernel OOM killer killed some processes in this unit.
+Oct 14 18:45:48 regular-crane systemd[3813]: oth-ubuntu-133525-1792028543.scope: Failed with result 'oom-kill'.
+Oct 14 18:45:48 regular-crane systemd[3813]: oth-ubuntu-133525-1792028543.scope: Consumed 18min 27.283s CPU time over 3min 24.554s wall clock time, 200G memory peak.
