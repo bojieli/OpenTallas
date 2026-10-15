@@ -5,8 +5,8 @@
  "clock_port": "clk",
  "reset_ports": [],
  "outline": {
-  "w": 60.48,
-  "h": 60.48,
+  "w": 68.04,
+  "h": 68.04,
   "exact": true
  },
  "sources": [
@@ -35,7 +35,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "slot_change_request": "H-IDX Claude 2026-10-15 12:55: structural successor of 1015b (verdict NEEDS_RTL TT+356.68/FF-6.28, hold ECO 2,211 cells still FF-2.14 on 3,100 zero-logic flop->flop endpoints). Register-file delay (ot_hdc_delay_rf) adds ~517 um2 of write-enable/read-mux logic -> grow 51.84 -> 60.48 square (+0.0024 mm2/tile, 16 tiles +0.039 mm2) for ~49% synth util. Same faces/layers/pins (M5 N clk/rst_n/d, S q). H-DIE canonical typed grant to follow.",
+ "slot_change_request": "H-IDX Claude 2026-10-15 12:55: structural successor of 1015b (verdict NEEDS_RTL TT+356.68/FF-6.28, hold ECO 2,211 cells still FF-2.14 on 3,100 zero-logic flop->flop endpoints). Register-file delay (ot_hdc_delay_rf) synthesizes to 2,125 um2 (gate on a89152e47 at 60.48: util 67%, TT insertion 126.9/spread 7.1 ps, post-CTS hold WNS +54 ps) -> grow 51.84 -> 68.04 square (+0.0020 mm2/tile, 16 tiles +0.033 mm2) for 52% synth util. Same faces/layers/pins (M5 N clk/rst_n/d, S q). H-DIE canonical typed grant to follow.",
  "job": {
   "owner": "Claude:H-IDX",
   "branch": "claude/hidx-meta-rf-1015",
@@ -71,7 +71,7 @@
    }
   ]
  },
- "std_area_um2": 1550,
+ "std_area_um2": 2125,
  "structural_change": "Replace the 3,075-flop shift line (every stage a zero-logic hold hop) by pin-in reg -> 121-row circular buffer (write-enable mux, N:1 read mux) -> pin-out reg, cycle-exact (D123, data unreset, wptr unreset self-converging); only 25 data flops toggle per edge. Exact bench 678 checks 0 errors, D122 mutant 678 errors, RESET mutant 250 errors; +0 cycles.",
  "children": [],
  "inter": [],
