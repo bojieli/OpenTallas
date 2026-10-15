@@ -48,6 +48,11 @@ endmodule
 '''
 # Blocking prefix loop in a clocked process: same C++ shape, correct semantics -> must not be flagged.
 BLOCKING = r'''
+// A comment naming a module must not shift module scoping. Another module in the same sources writes a
+// variable of the same name with <=; the tb's blocking loop must still be recognised as blocking.
+module other(input wire clk); reg [8:0] p; integer i;
+  always @(posedge clk) for (i=1;i<9;i=i+1) p[i] <= p[i-1];
+endmodule
 module tb;
   reg clk=0; integer cyc=0; reg [7:0] x=8'h5a; reg [8:0] p; reg [8:0] o2; integer i;
   always #5 clk=~clk;
