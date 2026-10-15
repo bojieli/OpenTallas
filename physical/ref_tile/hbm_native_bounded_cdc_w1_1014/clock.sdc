@@ -114,13 +114,24 @@ proc ot_ncdc_arcs {} {
   set t [expr {min([get_property [get_clocks core_clk] period],[get_property [get_clocks vm_clk] period])}]
   set sy {}; set ld {}
   foreach c [all_registers -cells] {
-    set n [get_full_name $c]
-    if {[regexp {^(ack1|ackn1|re1|ren1|pub1|pubn1|we1|wen1)\[[0-9]+\]} $n]} { lappend sy $c } \
-    elseif {[regexp {^landed_slots\[} $n]} { lappend ld $c }
+    set b [string trimleft [lindex [split [get_full_name $c] "\["] 0] "\\"]
+    if {[lsearch -exact {ack1 ackn1 re1 ren1 pub1 pubn1 we1 wen1} $b] >= 0} {
+      lappend sy $c
+    } elseif {$b eq "landed_slots"} {
+      lappend ld $c
+    }
   }
-  if {[llength $sy]} { set_max_delay -ignore_clock_latency [expr {0.5*$t}] -to $sy; set_false_path -hold -to $sy }
-  if {[llength $ld]} { set_max_delay -ignore_clock_latency [expr {$t-60.0}] -to $ld; set_false_path -hold -to $ld }
-  puts [format "NATIVE_CDC arcs: %d first synchroniser flops (max datapath %.1f ps, no hold), %d landing flops (max datapath %.1f ps, no hold)" [llength $sy] [expr {0.5*$t}] [llength $ld] [expr {$t-60.0}]]
+  # (plain variables in the constraint commands: OpenSTA's sdc_file_line list-parses the calling command text)
+  set dp [expr {0.5*$t}]; set dm [expr {$t-60.0}]
+  if {[llength $sy]} {
+    set_max_delay -ignore_clock_latency $dp -to $sy
+    set_false_path -hold -to $sy
+  }
+  if {[llength $ld]} {
+    set_max_delay -ignore_clock_latency $dm -to $ld
+    set_false_path -hold -to $ld
+  }
+  puts [format "NATIVE_CDC arcs: %d first synchroniser flops (max datapath %.1f ps, no hold), %d landing flops (max datapath %.1f ps, no hold)" [llength $sy] $dp [llength $ld] $dm]
 }
 ot_ncdc_arcs
 set_input_transition 150 [all_inputs -no_clocks]
