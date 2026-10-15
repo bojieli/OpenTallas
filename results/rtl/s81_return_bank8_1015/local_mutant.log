@@ -1,10 +1,10 @@
-MISMATCH mode0 check1003 ov00000000 nveeeeeeee of1 nf1
-MISMATCH mode0 check1005 ov00000000 nvdddddddd of1 nf2
-MISMATCH mode0 check1007 ov00000000 nvbbbbbbbb of1 nf4
-MISMATCH mode0 check1009 ov00000000 nv77777777 of1 nf8
-MISMATCH mode0 check1011 ov00000000 nveeeeeeee of1 nf1
-MISMATCH mode0 check1018 ov00000000 nveeeeeeee of1 nf1
-MISMATCH mode0 check1021 ov00000000 nveeeeeeee of1 nf1
-RETURN_BANK8 groups1014 words20233 checks1025 atomic_missing0 errors11
+MISMATCH mode1 check1003 ov00000000 nveeeeeeee of1 nf1
+MISMATCH mode1 check1005 ov00000000 nvdddddddd of1 nf2
+MISMATCH mode1 check1007 ov00000000 nvbbbbbbbb of1 nf4
+MISMATCH mode1 check1009 ov00000000 nv77777777 of1 nf8
+MISMATCH mode1 check1011 ov00000000 nveeeeeeee of1 nf1
+MISMATCH mode1 check1018 ov00000000 nveeeeeeee of1 nf1
+MISMATCH mode1 check1021 ov00000000 nveeeeeeee of1 nf1
+RETURN_BANK8 groups1014 words32224 checks1025 atomic_missing0 errors11
 RETURN_BANK8 FAIL
 rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_return_bank8.sv:86: $finish called at 4462100 (1ps)
