@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.hbm.engram.store_decode.v1",
+  "status": "pass",
+  "actual_rows": 48,
+  "bf16_elements": 12288,
+  "actual_macros": 2,
+  "epochs": 2,
+  "raw_sectors": 432,
+  "epoch_reuse_without_global_reset": true,
+  "unwritten_old_epoch_fault": true,
+  "read_latency_edges": 3,
+  "source_binding": {
+    "external_hbm_sectors.hex": "ac4d7ba200db8e9f93fef59783ec78aff7eb2205661006e93b582fa75b7ead74",
+    "expected_bf16.hex": "5ce905a3deb3996bf985b2f2252a9ee5c07ff1942e14eeffe9f5e8f72bc9ec7f"
+  },
+  "runs": [
+    {
+      "name": "baseline",
+      "returncode": 0,
+      "output": "PASS actual2macros SRAM source48rows 384blocks 12288BF16 eight-scales raw432 epochreuse unwrittenfault exactreadage3\nstore_decode_raw_epoch_proof/tb.sv:54: $finish called at 8928000 (1ps)"
+    },
+    {
+      "name": "reuse_scale0",
+      "returncode": 1,
+      "output": "FATAL: store_decode_raw_epoch_proof/tb.sv:25: actual SRAM/decode mismatch edge233 row0 block2\n       Time: 2327000  Scope: tb"
+    }
+  ],
+  "scope": "Actual288B source rows -> actual128x256 SRAM macros -> real per32-code UE8M0/E4M3 decode, externalstimulus at write face",
+  "dma_coll_hash_join_qualified": false,
+  "physical_qualified": false,
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/hdc/v41/ot_hdc_engram_gather.sv": "2edd7582a38629ebd662f68eff7eb88c5f90d88c689157cbbe2acf5d5a2099ed",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_row_store_decode.sv": "e450c13fee2e85d1c5099f225875af1914075ba7154894c5b50659e46505df2d"
+  }
+}
