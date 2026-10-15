@@ -1,0 +1,187 @@
+{
+  "name": "ot_hbm_host_static_ingress",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/routes/hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -8.724598821174823e-11 min 7.699677007089178e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/routes/hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/record/views/ot_hbm_host_static_ingress:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/src/physical/ref_tile/hbm_host_static_ingress_pin2_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/routes/hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 3.3187419479219216e-10 min 2.385769359847245e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/routes/hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/record/views/ot_hbm_host_static_ingress:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/src/physical/ref_tile/hbm_host_static_ingress_pin2_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/routes/hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.8139933999350433e-10 min 4.701411482344042e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/routes/hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/record/views/ot_hbm_host_static_ingress:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/src/physical/ref_tile/hbm_host_static_ingress_pin2_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/routes/hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/src/physical/ref_tile/hbm_host_static_ingress_pin2_ref/signoff.sdc",
+    "sha256": "8929e3dbdf2c75ce4b6a170e9330347394d59728ceee5b49c8579c20171e038a",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/cl/routed_ioref.a1.json",
+    "sha256": "8d84ecdd48da7e42eb011648b008329157583505d5cbd0c500e6a40d085022f4",
+    "expect_ps": {
+      "tt": 181.4,
+      "ff": 23.86
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/routes/hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/routes/hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/work/orfs/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.odb",
+        "sha256": "1379ee83df83171b2d9d059708122af8af6ee418e6f47c02c0577fd9001aa5fa"
+      },
+      "/work/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/routes/hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/work/orfs/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.sdc",
+        "sha256": "eb2789172886b65740a86865986c8265a835f8ce70347d806b38c757073d79fa"
+      },
+      "/work/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/routes/hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/work/orfs/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.spef",
+        "sha256": "ca4650e303ef6e7b3d215e1d1b43af2cc65f24fb5d0db09baaa82442b1b2180a"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e/routes/hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/work/orfs/w18_extra.sdc",
+        "sha256": "8929e3dbdf2c75ce4b6a170e9330347394d59728ceee5b49c8579c20171e038a"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 23.85769359847245,
+        "verdict_ps": 23.86,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 181.39933999350433,
+        "verdict_ps": 181.4,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hbm_host_static_ingress_asap7_ref_hbm_host_static_ingress_pin2_ref_pin2_4e16b003e/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_hbm_host_static_ingress.lef": "5cc68aa8d1277562a39428273682279a569898725f8ac4e13bc9c4c9b6204deb",
+    "ot_hbm_host_static_ingress_ff.lib": "2493a2c729f260a7e876c5bfd144d4d3711e668fb74eb0009662735429c87174",
+    "ot_hbm_host_static_ingress_ss.lib": "b80d5d4128b45c838fde748ca1a1df844673cb634514749fcfa4282e671b3042",
+    "ot_hbm_host_static_ingress_tt.lib": "b5a3a30eff0eb095fcfaf409f7c121c6bb664fcff429daad21bdeaa74138135f"
+  },
+  "ok": true,
+  "checked": true
+}
