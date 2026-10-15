@@ -5,12 +5,14 @@ repo=$(cd "$(dirname "$0")/../../../.." && pwd)
 build=${1:?separate build directory}; vectors=${2:?directory containing vectors_TOKEN dirs}
 mkdir -p "$build/calendar"
 cd "$repo"
-base=rtl/qwen_sys/static_kv_20261014
+controller_root=${CONTROLLER_SOURCE_ROOT:-$repo}
+base=$controller_root/rtl/qwen_sys/static_kv_20261014
 verilator --binary --timing -Wno-fatal --top-module tb_static_embed_controller -j 4 --Mdir "$build/obj" \
  rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_controller.sv \
  rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_pc.sv \
  rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv \
  "$base/qkd_ctrl_pc_host_static.sv" "$base/ot_qkd_static_ctrl_pc_emb.sv" "$base/ot_qkd_static_kv_timing.sv" \
+ "$base/ot_qkd_static_emb_cdc.sv" "$base/qkd_static_kv_write_observer.sv" \
  rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv \
  rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv \
  rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv \

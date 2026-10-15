@@ -34,7 +34,10 @@ module tb_static_embed_controller;
             .pll_hbm(hclk),.hrst(reset&&(replay?(g==1):(g==0))),.ck(ck),.rsi(reset&&(replay?(g==1):(g==0))),
             .pc(5'd0),.ci(319'd0),.co(),.es(controller_es),.er(er[g]),.po(po[g]),.pi(pi),.ki(33'd0),.ko(),.fi(1'b0),.fo(cf[g]),
             .static_cmd_owner(1'b0),.static_cmd(43'd0),.reserved_rd(1'b0),.reserved_static_col(sr_reserved),.reserved_write_col(1'b0),
-            .static_epoch(16'd43),.expected_raw_valid(raw_reserved),.corrected_epoch(),.completion_v(),.completion_we(),.completion_fault(completion_fault[g]));
+            .static_epoch(16'd43),.expected_raw_valid(raw_reserved),
+            .cfg_stack(2'd0),.es_context(318'd0),.es_expected_valid(1'b0),.es_expected_identity(61'd0),
+            .es_expected_address(29'd0),.es_expected_pc(5'd0),.es_expected_stack(2'd0),
+            .native_commit_valid(),.native_commit_identity(),.native_commit_address(),.corrected_epoch(),.completion_v(),.completion_we(),.completion_fault(completion_fault[g]));
     end endgenerate
     bit srslots[0:HC-1],rawslots[0:HC-1],retslots[0:CC-1];
     bit due[0:HC+RL];reg [287:0] raw[0:HC+RL];
