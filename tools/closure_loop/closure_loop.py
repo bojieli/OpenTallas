@@ -960,7 +960,7 @@ def _only_serial_bench_failed(j):
     if (j.get("stage_key") != key or j.get("stage_tag") != f"{key}.a1"
             or receipt.get("ok") is not False or receipt.get("track") is not None
             or "rc" not in receipt
-            or j.get("reason") != f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"):
+            or not _bench_reason_is(j.get("reason"), key, receipt)):
         return False
     launches = [str(e).split(" launched ", 1)[1] for e in events if " launched " in str(e)]
     if not launches or not any(e.startswith(f"{key} (attempt 1) on ") for e in launches):
@@ -970,6 +970,13 @@ def _only_serial_bench_failed(j):
             and not any(re.search(r"\b(?:route|calibrate|signoff|eco)[.-]a?\d|launched (?:route|calibrate|signoff)\b",
                                   str(e)) for e in events))
 
+
+
+def _bench_reason_is(reason, key, receipt):
+    """The bench verdict reason, with or without the bench_why() cause suffix."""
+    base = f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"
+    reason = str(reason or "")
+    return reason == base or reason.startswith(base + " (")
 
 
 def _bench_cancelled_physical_track(j):
@@ -992,7 +999,7 @@ def _bench_cancelled_physical_track(j):
     failed = []
     for key, receipt in (j.get("benches") or {}).items():
         if (receipt.get("ok") is False and receipt.get("track") == "parallel" and "rc" in receipt
-                and why == f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"):
+                and _bench_reason_is(why, key, receipt)):
             failed.append(key)
     if len(failed) != 1:
         return False
@@ -3247,6 +3254,22 @@ def bench_outcome(j, st, rc, ok_extra=True):
     return expected_fail_seen(st, rc, full)
 
 
+def bench_why(j, st, rc, ok_extra=True):
+    """Why a bench with expect PASS was judged not passed, for the verdict reason.  rc=0 alone read as 'expected PASS
+    but rc=0' (5 jobs 2026-10-15: pass_regex not matching the bench's actual verdict line, or a min_count_regex the
+    bench never prints) and was triaged as a flow bug."""
+    if st.get("expect") != "pass" or rc != 0:
+        return ""
+    if not ok_extra:
+        return " (ok check failed)"
+    note = (j.get("bench_work") or {}).get(st["key"], "")
+    if note.startswith("vacuous"):
+        return f" ({note})"
+    if st.get("pass_regex"):
+        return f" (pass_regex {st['pass_regex']!r} not matched in the bench log)"
+    return ""
+
+
 def expected_fail_seen(st, rc, full):
     """expect FAIL (negative control): the log's own verdict decides, regardless of rc -- a mutant bench that prints
     FAIL but exits 0 was read as "expected FAIL but rc=0" (LOOP-GAPS 2026-10-08).  With fail_regex: it must match (a
@@ -4525,7 +4548,7 @@ def bench_track(j, fleet, stl):
         j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
         if not passed:
             stop_main_for_bench(j)
-            finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}",
+            finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
                    f"NEEDS_RTL: bench {k} expected {st['expect'].upper()}, got rc={rc} (parallel track; route stopped)\n" +
                    "\n".join(tail.strip().splitlines()[-5:]))
             return False
@@ -5164,7 +5187,7 @@ def step(j, fleet):
             passed = bench_outcome(j, st, rc, ok_extra)
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:])
             if not passed:
-                finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}",
+                finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
                        f"NEEDS_RTL: bench {st['key']} expected {st['expect'].upper()}, got rc={rc}\n" +
                        "\n".join(tail.strip().splitlines()[-5:]))
                 return
