@@ -1,7 +1,7 @@
 {
   "schema": "hbm_smh_native_mapped_numerical_v1",
-  "updated_utc": "2026-10-15T09:53:15.938110+00:00",
-  "status": "STACK0_PASS_STACK1_LIVE",
+  "updated_utc": "2026-10-15T10:28:13.070846+00:00",
+  "status": "PASS_13_ACTIVE_SMS_AND_NUMERICAL_MUTANT",
   "source_commits": [
     "ceb834c54",
     "5fd91715d"
@@ -19,11 +19,16 @@
     4,
     5,
     6,
-    7
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
   ],
-  "exact_1088_records": 320,
-  "actual_PHY_sectors": 1376,
-  "bit_exact_FP32_results": 64,
+  "exact_1088_records": 520,
+  "actual_PHY_sectors": 2236,
+  "bit_exact_FP32_results": 104,
   "result_after_command_edges": 197,
   "cold_prefetch_ps_range": [
     103749.958,
@@ -74,12 +79,36 @@
       "sm": 7,
       "sha256": "1963cdddf10b303398b2b264882cfbb8d6513f433928ce717049c1eba3e904f8",
       "verdict": "MAPPED4_NATIVE_SM PASS sm=7 stack=0 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=103749.958000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    },
+    {
+      "sm": 8,
+      "sha256": "db885e7ce204a7e908fd7112cc438bd61c57d184d6ed366764e7cc3211ceaa73",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=8 stack=1 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=103749.958000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    },
+    {
+      "sm": 9,
+      "sha256": "cbce6e71998559b9811b6bbe65f24450a62ebae318b5ff5d8def74e9aeb4c132",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=9 stack=1 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=103749.958000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    },
+    {
+      "sm": 10,
+      "sha256": "98b623bf4b37058f92a4ac99a47693c3531e8c96a4afe5d734fa26d2c7cd77cf",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=10 stack=1 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=103749.958000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    },
+    {
+      "sm": 11,
+      "sha256": "893b47f79217c09a5df3e9b1ed0bdb1c5fe5a4adc478ee0ecbe35a9399b76468",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=11 stack=1 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=103749.958000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    },
+    {
+      "sm": 12,
+      "sha256": "c834695c20931a941b442787d09324fff8c73efe00f63e0b00c2cabdad81b0ff",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=12 stack=1 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=112916.621000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
     }
   ],
   "scope": "Actual checkpoint\u2192mapped4 PHY\u219237 service SRAMs\u21922 SRAM programme planes83/34\u2192original production NC8/SUB4 arithmetic. External seedX explicitly declared; golden comparison only. Behavioral PHY/controller retained.",
   "full_price_qualified": false,
   "remaining": [
-    "STACK1 SM08..12 true specialization",
     "Actual VM activation/xwrite producer",
     "Common native len4 DRAM controller",
     "WB/34band/native source composition",
@@ -88,18 +117,46 @@
     "1024 word programme whole-operation capacity",
     "Physical completefront slots and closure"
   ],
-  "live_stack1": {
-    "unit": "oth-ubuntu-797598-1792057960",
-    "pid": 797622,
-    "session": 80021,
-    "directory": "/var/tmp/smh-native-mapped-1015-v2",
-    "admission_directory": "/var/tmp/smh-native-stack1-reuse-1015-731050",
-    "same_objects_reused": true
-  },
   "failed_stack1_admission": {
     "unit": "oth-ubuntu-1630988-1792057951",
     "host": "ot-epyc4",
     "exit": 127,
     "reason": "Shared directory name existed on host without script; command did not build. Corrected to unique existing-object admission directory."
-  }
+  },
+  "idle_sms_declared": [
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ],
+  "stack1": {
+    "unit": "oth-ubuntu-797598-1792057960",
+    "pid": 797622,
+    "session": 80021,
+    "directory": "/var/tmp/smh-native-mapped-1015-v2",
+    "admission_directory": "/var/tmp/smh-native-stack1-reuse-1015-731050",
+    "object_directory_preserved": true,
+    "regeneration_observation": "Verilator rewrote generated dependencies; make recompiled files, including the large root unit. No objects deleted; original stack0 binary separately preserved.",
+    "exit": 0,
+    "status": "TERMINAL_PASS",
+    "verilator_walltime_s": 2044.357,
+    "binary_sha256": "b76617311791668de3005a05511974b7d98458a63f9fd174d8001e199b94b499"
+  },
+  "stack0_preserved_binary_sha256": "c0dcc86a94e50586de72c38325e625cc532f81ca7714d9ecc136a6cfaf966a22",
+  "next_activation_source": "HVM source79d1f839d actual2AQ+16codeSRAM+programme, realVMbank520beat gate pending; rawFP32 artifact00c45069d, previousxw/goldens unchanged"
 }
