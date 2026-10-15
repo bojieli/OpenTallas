@@ -33,7 +33,9 @@ def lower(raw):
     if why:return dict(supported=False,reasons=sorted(set(why)),sut=sut),[]
     no,ni=desc['A'].m,dispatch['n'][0]
     if not no or not ni:return dict(supported=True,empty=True,words=0,sut=sut),[]
-    slot=1<<(ni-1).bit_length();ls=slot.bit_length()-1
+    # A physical issue is at most512 elements. Long rows advance i_v/vb
+    # directly; padding a 20480-column row to32768 would add24 empty issues.
+    slot=min(512,1<<(max(ni,8 if sut['red']else 1)-1).bit_length());ls=slot.bit_length()-1
     ctl=dict(no=no,ni=ni,ls=ls,lvw=7,srcs=0,dst=sut['dst'],co_dst=sut['dst'],
              aind=0,cpair=sut['c_pair'],cx_arnd=sut['a_rnd'],cx_arelu=sut['a_relu'],
              cx_amin=sut['a_min'],cx_cclip=sut['c_clip'],cx_imm3=sut['imm3'],
@@ -52,10 +54,12 @@ def lower(raw):
             terms|=term<<(24*(s*10+k))
     ctl['ld_c']=terms
     schedule=[];checked=0
-    for pos in range(0,((no*slot+511)//512)*512,512):
+    positions=([(o,0)for o in range(0,no,512//slot)]if ni<=512 else
+               [(o,i)for o in range(no)for i in range(0,ni,512)])
+    for outer,inner in positions:
         words=[]
         for q in range(4):
-            base=pos+q*128;ov,iv=divmod(base,slot)
+            base=q*128;qo,qi=divmod(base,slot);ov,iv=outer+qo,inner+qi
             vb=0
             for s,role in enumerate('ABCDO'):
                 if role not in desc:continue

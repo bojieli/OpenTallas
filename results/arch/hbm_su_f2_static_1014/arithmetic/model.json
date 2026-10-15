@@ -14,10 +14,12 @@
     "lane_stage_entries": 4096,
     "insertion_entries": 2048,
     "broadcast": 64,
-    "external_scalar": 1,
+    "scalar_side_external": true,
+    "scalar_side_native_roots_candidate": 6,
     "broadcast_registered_bits_per_root": 13936,
     "insertion_max_flops_per_root": 5808,
     "lane_sink_census": "Actual byte-matched Yosys per-KIND register census; no CTS",
+    "active_arithmetic_and_broadcast_roots": 4034,
     "max_native_register_sinks_per_root": 11532
   },
   "memory": {

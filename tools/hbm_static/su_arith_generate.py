@@ -32,7 +32,7 @@ def main():
         shape=dict(quarters=4,lanes_per_quarter=128,sfu_per_quarter=32,
                    full_lanes=1,sfu_only_lanes=127,light_lanes=384),
         replica_policy='KIND2 only global lane0; local lane0 in quarters1..3 is KIND1',
-        clock_roots=dict(lane_stage_entries=4096,insertion_entries=2048,broadcast=64,external_scalar=1,
+        clock_roots=dict(lane_stage_entries=4096,insertion_entries=2048,broadcast=64,scalar_side_external=True,scalar_side_native_roots_candidate=6,
                          broadcast_registered_bits_per_root=13936,
                          insertion_max_flops_per_root=5808,lane_sink_census='stage roots split; actual synthesized count and CTS remain unverified'),
         memory=dict(read_ports=2048,index_read_ports=512,word_bits=32,
@@ -212,6 +212,9 @@ module ot_hbm_su_static_arithmetic #(parameter integer FETCH_EXTRA_EDGES=2)(
         if relevant and all((ROOT/p).exists() and hashlib.sha256((ROOT/p).read_bytes()).hexdigest()==h
                             for p,h in relevant.items()):
             maximum=max(r['max_sink']for r in census['records'])
+            model['clock_roots']['active_arithmetic_and_broadcast_roots']=64+sum(
+                n*sum(v>0 for v in r['clock_sink_upper_bound'].values())
+                for n,r in zip((384,127,1),census['records']))
             model['clock_roots']['max_native_register_sinks_per_root']=maximum
             model['clock_roots']['lane_sink_census']='Actual byte-matched Yosys per-KIND register census; no CTS'
             model['arithmetic']['register_bits_actual_census']=sum(

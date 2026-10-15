@@ -78,7 +78,14 @@
       "host": "ot-epyc1tb",
       "session": 17500,
       "result": "/tmp/hbm-su-arithmetic-stageclk-1015/validate_v3",
-      "status": "live"
+      "status": "terminalPASS base+3failingmutants unit868419"
+    },
+    {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-1795385-1792060675",
+      "session": 79737,
+      "status": "live full31-case affine/control/BF16 expansion;1015808words plusstrictcyclechecks",
+      "result": "/tmp/hbm-su-arithmetic-all-affine-1015/run"
     }
   ],
   "open": [
@@ -92,5 +99,35 @@
     "kv_norm.rs actualscalarSIDE thenkv_norm.y/kv_rope.tail sourceandVMcommitepochs",
     "productionendtoendprice",
     "TTsetup/FFhold/DRC0"
-  ]
+  ],
+  "baseline_native_exact_pass": true,
+  "baseline_scope": "12 classes, realN512/3072pinnedSRAM,393216words,786432strictchecks includingrealcommitreadback; source before additiveSIDEfn wires",
+  "native_exact_pass_scope": "full canonical programme remains unqualified",
+  "baseline_exact_calendar_pass": true,
+  "baseline_calendar_scope": "12 arithmetic/BF16 classes; all393216 outputs at cycles31..94, issue-to-receiving-pin23edges, II1; one-edge shift retainsallwords butfailsallphaseassertions",
+  "calendar_gate": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-891929-1792059625",
+    "session": 1419,
+    "status": "terminalPASS",
+    "result": "/tmp/hbm-su-arithmetic-calendar-1015/run/validation"
+  },
+  "actual_scalar_component": {
+    "owner": "/root/h_hc_sfu/sfu_fused_latency",
+    "source": "1a291c29e",
+    "clock_proof": "42a5cc2ed",
+    "status": "owner-reported terminalPASS; full head1slot with6actualSRAMs and6rootSIDE",
+    "transactions": 320,
+    "output_readback_neighbor_checks": 650,
+    "raw_emit_to_output_preNBA": {
+      "RSQRT": 60,
+      "SQRT": 54,
+      "SPSQRT": 185,
+      "EGATE": 127,
+      "DIVIMM_EPS_RSQRT": 76
+    },
+    "max_clock_sinks": 13902,
+    "physical": false
+  },
+  "memory_demand_model": "canonical_memory_demand.json:16/28loweredrecords need>1 narrowwordrow perbank;7need>1physicalmacroline; wideinterfaceUNIMPLEMENTED"
 }

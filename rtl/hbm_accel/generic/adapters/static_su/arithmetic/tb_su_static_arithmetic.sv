@@ -1,11 +1,12 @@
 `timescale 1ns/1ps
 module tb_su_static_arithmetic;
+ parameter integer NOPS=12;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,seed_v=0,drain_v=0;
  reg[8:0]seed_row=0,drain_row=0;
  reg[6967:0]control=0;
- reg[31:0]seed[0:262143],gold[0:393215];
- reg[6967:0]programme[0:2111];
+ reg[31:0]seed[0:262143],gold[0:NOPS*32768-1];
+ reg[6967:0]programme[0:NOPS*176-1];
  wire[511:0]vi_re,vm_we,kv_we,ro_v,fault,coll;
  wire[12287:0]vi_addr,vm_waddr,kv_waddr;
  wire[49151:0]rd_addr;wire[2047:0]rd_re;wire[4095:0]rd_src;
@@ -50,6 +51,9 @@ module tb_su_static_arithmetic;
     checks=checks+1;outputs=outputs+1;
     if(count[l]>=64)fail("extra output");
     else begin
+     // Compiler cycle8 issue -> registered output visible to the receiving
+     // pin at cycle31. Every subsequent issued vector must appear next edge.
+     if(cycle!=31+count[l])fail("compiled output cycle mismatch");
      if(vm_wdata[l*32+:32]!==gold[op*32768+count[l]*512+l])fail($sformatf("lane=%0d word=%0d got=%h want=%h",l,count[l],vm_wdata[l*32+:32],gold[op*32768+count[l]*512+l]));
      if(vm_waddr[l*24+:24]!==24'(((l/128)<<14)+(((256+count[l])>>7)<<16)+(((256+count[l])&127)<<7)+(l%128)))fail("output identity/address");
     end
@@ -66,14 +70,13 @@ module tb_su_static_arithmetic;
   repeat(4)@(negedge clk);rst_n=1;seed_v=1;
   for(integer r=0;r<512;r=r+1)begin seed_row=9'(r);@(negedge clk);end
   seed_v=0;repeat(5)@(negedge clk);
-  for(integer j=0;j<12;j=j+1)begin
+  for(integer j=0;j<NOPS;j=j+1)begin
    op=j;for(integer l=0;l<512;l=l+1)count[l]=0;
    for(integer c=0;c<176;c=c+1)begin
     cycle=c;
-    control=programme[j*176+c];
+    control=programme[j*176+(mut_phase&&c>0?c-1:c)];
     // Corrupt the quarter1 A affine bit0 term, not golden or reference memory.
     if(mut_addr&&c==0)control[1742+540+:24]=24'd3;
-    if(mut_phase&&c==71)control=0;
     @(negedge clk);
    end
    control=0;
@@ -91,6 +94,6 @@ module tb_su_static_arithmetic;
    drain_v=0;
   end
   if(errors)$fatal(1,"SU_ARITH FAIL checks=%0d errors=%0d outputs=%0d",checks,errors,outputs);
-  $display("SU_ARITH PASS lanes=512 FULL=1 SFU=127 LIGHT=384 actual_SRAMs=3072 outputs=%0d checks=%0d fixed_issue=64",outputs,checks);$finish;
+  $display("SU_ARITH PASS lanes=512 FULL=1 SFU=127 LIGHT=384 actual_SRAMs=3072 outputs=%0d checks=%0d fixed_issue=64 first_output=31 last_output=94 issue_to_output=23 II=1",outputs,checks);$finish;
  end
 endmodule
