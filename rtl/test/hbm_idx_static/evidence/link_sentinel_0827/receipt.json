@@ -1,0 +1,12 @@
+{
+  "unit": "oth-ubuntu-36379-1792078071",
+  "host": "ot-epyc4",
+  "positive_records": 512,
+  "positive_flits": 64,
+  "positive_errors": 0,
+  "mutant_errors": [
+    1025,
+    64
+  ],
+  "scope": "Actual IDX link producer BF16FFFF expands FP32FFFF0000, never padFFFFFFFF. All512 valid; no padding. Generic arbitraryFP32 static own-list producer absent/unqualified; historical endpoint has canonicalization but does not qualify current static seam."
+}
