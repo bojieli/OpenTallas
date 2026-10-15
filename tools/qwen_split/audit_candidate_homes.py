@@ -48,6 +48,16 @@ def audit(old, current, homes):
             incident.append(dict(bus=b['b'], bits=b['n'], endpoints=b['e']))
         if b != oldbus.get(b['b']):
             changed_buses.append(b['b'])
+    mapping = homes.get('logical_tile_map', {})
+    map_errors = []
+    if len(set(mapping.values())) != len(mapping):
+        map_errors.append(dict(reason='non_bijective_logical_map'))
+    for src, dst in mapping.items():
+        if src not in ci or dst not in ci:
+            map_errors.append(dict(source=src, destination=dst, reason='missing_current_instance'))
+        elif ci[src]['m'] != ci[dst]['m']:
+            map_errors.append(dict(source=src, destination=dst, reason='master_mismatch',
+                                   source_master=ci[src]['m'], destination_master=ci[dst]['m']))
     overlaps = []
     outside = []
     die = current['die']
@@ -66,9 +76,10 @@ def audit(old, current, homes):
         scope='Current master rectangles and complete incident-bus inventory; no relay allocation, cut, clock, route or timing proof',
         instance_count=len(ci), covered_instances=len(placed), missing_homes=missing, extra_homes=extra,
         changed_instances=changed, moved_instances=moved, changed_buses=changed_buses,
+        logical_map_errors=map_errors,
         retired_buses=sorted(set(oldbus) - {b['b'] for b in current['buses']}),
         incident_buses_requiring_recheck=incident, rectangle_overlaps=overlaps, outside_die=outside,
-        compatible_for_geometry_recheck=not(missing or extra or changed or changed_buses or overlaps or outside),
+        compatible_for_geometry_recheck=not(missing or extra or changed or changed_buses or map_errors or overlaps or outside),
         unresolved=['Actual registered-pin reach per endpoint', 'Real relay rectangles, ownership and channel cuts',
                     'Clock insertion/phase and reset delivery after movement', 'Current compiler calendar and source producers for newly exposed inputs',
                     'Physical area of train24 banks and new VM writeback ports'])

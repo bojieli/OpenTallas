@@ -32,5 +32,12 @@ class HomesTests(unittest.TestCase):
         cur=copy.deepcopy(self.graph);cur['buses'][0]['n']=2
         self.assertFalse(audit(self.graph,cur,self.homes)['compatible_for_geometry_recheck'])
 
+    def test_map_cannot_move_node_into_leaf_only_master(self):
+        cur=copy.deepcopy(self.graph);cur['insts'][1]['m']='leaf';cur['masters']['leaf']=cur['masters']['m']
+        self.homes['logical_tile_map']={'a':'b','b':'a'}
+        r=audit(cur,cur,self.homes)
+        self.assertEqual(len(r['logical_map_errors']),2)
+        self.assertFalse(r['compatible_for_geometry_recheck'])
+
 
 if __name__=='__main__': unittest.main()
