@@ -19,83 +19,48 @@
 //     issue flops: +1 cycle on every RX kind.
 //   * RW (kind 11, ffn.weights, ot_s81_su_rw; added to the flat tile after v1) was missing from v1: it now lives in the
 //     RB leaf (both take the control's registered operand word xq_x), result on the same leaf result port.
-module ot_s81_su_rxc #(
-    parameter integer S_RD = 5, LM = 5, LA = 4, XMUT = 0,
-    parameter integer QW = 2                  // QR rope rows a cycle (2: rows j, j + 1 of a head on two read / write slots)
-) (
-    input  wire                   clk,
-    input  wire                   rst_in,
-    input  wire                   dn_st_i,
-    input  wire [3:0]             dn_kind_i,
-    input  wire [7:0]             dn_jid_i,
-    input  wire [S_RD-1:0]        dn_v_i,
-    input  wire [S_RD*512-1:0]    dn_d_i,
-    output reg                    o_v,
-    output reg  [13:0]            o_a,
-    output reg  [15:0]            o_m,
-    output reg  [511:0]           o_d,
-    output reg                    o_v2,       // QW 2: the second QR result row (write slot W0 + 1)
-    output reg  [13:0]            o_a2,
-    output reg  [511:0]           o_d2,
-    output reg                    o_fu, o_fo, o_alive, o_den, o_rdy,
-    output reg  [7:0]             o_rjid,
-    // RA lane leaves (16 front / back pairs)
-    output reg                    xa_v,
-    output reg  [511:0]           xa_x,
-    input  wire                   xa_vi,
-    input  wire [511:0]           xa_r,
-    input  wire [15:0]            xa_f,       // one fault bit per lane (the back leaf's)
-    // QR row leaves (2 rows x 2 leaves of 8 lanes)
-    output reg  [1:0]             xq_v,
-    output reg  [1023:0]          xq_x,       // QR {pair row, row}; RB {bias, score}; RW {-, operand row}
-    output reg  [511:0]           xq_c,
-    output reg  [511:0]           xq_s,
-    input  wire [1:0]             xq_vi,
-    input  wire [1023:0]          xq_y,
-    input  wire [3:0]             xq_f,
-    // RB + RW leaf (operands on xq_x)
-    output reg                    xb_v,       // RB issue
-    output reg                    xw_st,      // RW job start
-    output reg                    xw_v,       // RW operand row
-    output reg                    xw_last,    // RW last score row
-    output reg  [39:0]            xw_cfg,     // RW {k[3:0], off[3:0], route_scale[31:0]} (sampled by the leaf with row 0)
-    input  wire                   xb_vi,
-    input  wire                   xb_wi,      // the result is RW's (address = out_base, word mask xb_m)
-    input  wire [511:0]           xb_y,
-    input  wire [15:0]            xb_m,
-    input  wire                   xb_f
+// ---------------------------------------------------------------------------------------------------------------------
+// RXC split (S-ELEM-C 2026-10-15, native audit of the CLOSED g4 route: R 368.1 / spread 67.2 ps, launch 265.5 > 220
+// (xq_x), capture 201.3 > 190 (52 xa_r pins): one 11.6k-sink root over a pin-limited 280.8 x 367.2 tile).  Structural
+// fix: the control becomes a wires-only composition of ONE control leaf (ot_s81_su_rxc_ctl: job/row context, issue
+// valids, RW config, result valids/faults, write address/mask) and FOUR identical bit-slice data leaves
+// (ot_s81_su_rxc_sl, hardened once, replicated).  Slice s owns bits [64s +: 64] and [256 + 64s +: 64] of every 512-bit
+// row (the s-th 64-bit quarter of both 256-bit halves), so the QR coefficient select (coef word jj, 64-bit quarter s)
+// is slice-local.  Every leaf captures dn_st / dn_kind / dn_v itself and runs an identical copy of the slot-class /
+// row-context logic (ot_s81_su_rxc_seq, ~40 FF), so no select crosses a leaf boundary: same registers per bit, same
+// stages, same cycles as the flat control (0 added cycles).  The control leaf captures only the parameter-row-0
+// fields it uses (base, n, scale, k, off: 70 b per slot).
+module ot_s81_su_rxc_seq #(parameter integer S_RD = 5) (
+    input  wire                 clk, rst_n,
+    input  wire                 dn_st_i,
+    input  wire [3:0]           dn_kind_i,
+    input  wire [S_RD-1:0]      dn_v_i,
+    output reg                  dq_st,
+    output reg  [3:0]           dq_kind,
+    output reg  [S_RD-1:0]      dq_v,
+    output reg  [3:0]           jk,
+    output reg                  mine,
+    output reg  [15:0]          rc,
+    output reg  [2:0]           pend,
+    output wire [3:0]           np,
+    output reg  [S_RD-1:0]      sv, s0, s2,
+    output reg  [S_RD*3-1:0]    sj,
+    output wire                 xv, xtwo,
+    output wire [15:0]          oi_a, nrc,
+    output reg                  b_st, b_mine, b_xv, b_xtwo,
+    output reg  [3:0]           b_jk, b_kind,
+    output reg  [15:0]          b_oi
 );
     localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10, K_RW = 11;
-    localparam integer MAXP = 5;
-
-    reg rr0, rr1;
-    always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
-    wire rst_n = rr1;
-
-    // ------------------------------------------------------------------ stage A: pin flops (the down-spine tap)
-    reg                dq_st;
-    reg  [3:0]         dq_kind;
-    reg  [S_RD-1:0]    dq_v;
-    reg  [S_RD*512-1:0] dq_d;
-    always @(posedge clk) begin dq_kind <= dn_kind_i; dq_d <= dn_d_i; end
+    always @(posedge clk) dq_kind <= dn_kind_i;
     always @(posedge clk or negedge rst_n) if (!rst_n) begin dq_st <= 1'b0; dq_v <= 0; end
                                            else begin dq_st <= dn_st_i; dq_v <= dn_v_i; end
-
-    // ------------------------------------------------------------------ job context (rows numbered from the announce)
-    reg  [3:0]   jk;
-    reg          mine;
-    reg  [15:0]  rc;                          // rows of the job seen (descriptor + parameters, then operands)
-    reg  [2:0]   pend;                        // parameter rows still expected = max(np - rc, 0)
-    reg  [511:0] prow [0:MAXP-1];
-    wire [3:0]   np = (jk == K_QR) ? 4'd5 : 4'd1;
+    assign np = (jk == K_QR) ? 4'd5 : 4'd1;
     function automatic [2:0] np_of(input [3:0] k); np_of = (k == K_QR) ? 3'd5 : 3'd1; endfunction
-
     // slot classes: cb[i] = valid slots below i; slot i is parameter row (rc + cb[i]) while cb[i] < pend, else operand
     // row cb[i] - pend of this cycle (the first is xin, the last of two or more is xin2)
-    reg  [3*S_RD-1:0]  cb;
-    reg  [3:0]   nv;                          // valid slots this cycle
-    reg  [S_RD-1:0] sv, s0, s2;               // parameter / first operand / last-of-several operand
-    reg  [S_RD*3-1:0] sj;                     // a parameter slot's index
+    reg  [3*S_RD-1:0] cb;
+    reg  [3:0]        nv;
     always @(*) begin : cls
         integer i;
         reg [3:0] c;
@@ -109,23 +74,14 @@ module ot_s81_su_rxc #(
             c = c + {3'd0, dq_v[i]};
         end
         nv = c;
-        for (i = 0; i < S_RD; i = i + 1)                 // the last operand slot, when there are two or more
+        for (i = 0; i < S_RD; i = i + 1)
             if (dq_v[i] && {1'b0, cb[3 * i +: 3]} > {1'b0, pend} && ((dq_v >> (i + 1)) == 0)) s2[i] = 1'b1;
     end
-    wire         xv = {1'b0, nv} >= {2'b0, pend} + 5'd1;
-    wire         xtwo = {1'b0, nv} >= {2'b0, pend} + 5'd2;
-    wire [15:0]  nrc = rc + {12'd0, nv};
-    wire [15:0]  oi_a = rc + {13'd0, pend} - {12'd0, np};      // the first operand row's index (when xv)
-    wire [3:0]   pn = ({1'b0, pend} > nv) ? {1'b0, pend} - nv : 4'd0;
-    reg  [511:0] xin_a, xin2_a;
-    always @(*) begin : sel
-        integer i;
-        xin_a = 512'd0; xin2_a = 512'd0;
-        for (i = 0; i < S_RD; i = i + 1) begin
-            xin_a  = xin_a  | ({512{s0[i]}} & dq_d[512 * i +: 512]);
-            xin2_a = xin2_a | ({512{s2[i]}} & dq_d[512 * i +: 512]);
-        end
-    end
+    assign xv = {1'b0, nv} >= {2'b0, pend} + 5'd1;
+    assign xtwo = {1'b0, nv} >= {2'b0, pend} + 5'd2;
+    assign nrc = rc + {12'd0, nv};
+    assign oi_a = rc + {13'd0, pend} - {12'd0, np};
+    wire [3:0] pn = ({1'b0, pend} > nv) ? {1'b0, pend} - nv : 4'd0;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin jk <= 0; mine <= 0; rc <= 0; pend <= 3'd1; end
         else if (dq_st) begin
@@ -133,57 +89,176 @@ module ot_s81_su_rxc #(
             mine <= (dq_kind == K_RA || dq_kind == K_RB || dq_kind == K_QR || dq_kind == K_RW);
         end else if (mine) begin rc <= nrc; pend <= pn[2:0]; end
     end
-    // parameter rows: one-hot slot -> prow[j] (two slots never carry the same index in one cycle)
-    reg  [MAXP-1:0]     phit;
-    reg  [MAXP*512-1:0] pnew;
-    always @(*) begin : psel
-        integer i, jj;
-        phit = 0; pnew = 0;
-        for (jj = 0; jj < MAXP; jj = jj + 1)
-            for (i = 0; i < S_RD; i = i + 1)
-                if (sv[i] && sj[3 * i +: 3] == jj) begin
-                    phit[jj] = 1'b1; pnew[512 * jj +: 512] = pnew[512 * jj +: 512] | dq_d[512 * i +: 512];
-                end
-    end
-    integer j;
-    always @(posedge clk)
-        if (mine && !dq_st)
-            for (j = 0; j < MAXP; j = j + 1) if (phit[j]) prow[j] <= pnew[512 * j +: 512];
-
-    // ------------------------------------------------------------------ stage B: the selected operand rows, registered
-    reg          b_st, b_mine, b_xv, b_xtwo;
-    reg  [3:0]   b_jk, b_kind;
-    reg  [15:0]  b_oi;
-    reg  [511:0] xin, xin2;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin b_st <= 0; b_mine <= 0; b_xv <= 0; b_xtwo <= 0; b_jk <= 0; b_kind <= 0; b_oi <= 0; end
         else begin
             b_st <= dq_st; b_kind <= dq_kind; b_mine <= mine; b_jk <= jk; b_xv <= xv; b_xtwo <= xtwo;
             b_oi <= oi_a;
         end
-    always @(posedge clk) begin xin <= xin_a; xin2 <= xin2_a; end
-    wire [13:0]  obase = prow[0][13:0];
+endmodule
 
-    // ------------------------------------------------------------------ engine issue (registered toward the leaves)
-    reg  [511:0] hold;                        // RB: the score row waiting for its bias row (legacy split pair)
-    wire         isop = b_xv && b_mine;
+// Bit-slice data leaf: one per 128-bit slice (bits [64s +: 64], [256 + 64s +: 64] of every row; the parent gathers).
+module ot_s81_su_rxc_sl #(parameter integer S_RD = 5, QW = 2) (
+    input  wire                   clk, rst_in,
+    input  wire                   dn_st_i,
+    input  wire [3:0]             dn_kind_i,
+    input  wire [S_RD-1:0]        dn_v_i,
+    input  wire [S_RD*128-1:0]    dn_d_i,
+    output reg  [127:0]           xa_x,
+    input  wire                   xa_vi,
+    input  wire [127:0]           xa_r,
+    output reg  [255:0]           xq_x,       // {e_b slice, e_x slice}
+    output reg  [127:0]           xq_c, xq_s, // {table half 1 quarter s, table half 0 quarter s}
+    input  wire [1:0]             xq_vi,
+    input  wire [255:0]           xq_y,       // {row 1 slice, row 0 slice}
+    input  wire                   xb_vi, xb_wi,
+    input  wire [127:0]           xb_y,
+    output reg  [127:0]           o_d, o_d2
+);
+    localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10, K_RW = 11;
+    localparam integer MAXP = 5;
+    reg rr0, rr1;
+    always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
+    wire rst_n = rr1;
+    wire dq_st, mine, xv, xtwo, b_st, b_mine, b_xv, b_xtwo;
+    wire [3:0] dq_kind, jk, np, b_jk, b_kind; wire [S_RD-1:0] dq_v, sv, s0, s2; wire [S_RD*3-1:0] sj;
+    wire [15:0] rc, oi_a, nrc, b_oi; wire [2:0] pend;
+    ot_s81_su_rxc_seq #(.S_RD(S_RD)) seq (.clk(clk), .rst_n(rst_n), .dn_st_i(dn_st_i), .dn_kind_i(dn_kind_i), .dn_v_i(dn_v_i),
+        .dq_st(dq_st), .dq_kind(dq_kind), .dq_v(dq_v), .jk(jk), .mine(mine), .rc(rc), .pend(pend), .np(np),
+        .sv(sv), .s0(s0), .s2(s2), .sj(sj), .xv(xv), .xtwo(xtwo), .oi_a(oi_a), .nrc(nrc),
+        .b_st(b_st), .b_mine(b_mine), .b_xv(b_xv), .b_xtwo(b_xtwo), .b_jk(b_jk), .b_kind(b_kind), .b_oi(b_oi));
+    // stage A: the tap data slice at the pins
+    reg  [S_RD*128-1:0] dq_d;
+    always @(posedge clk) dq_d <= dn_d_i;
+    reg  [127:0] xin_a, xin2_a;
+    always @(*) begin : sel
+        integer i;
+        xin_a = 128'd0; xin2_a = 128'd0;
+        for (i = 0; i < S_RD; i = i + 1) begin
+            xin_a  = xin_a  | ({128{s0[i]}} & dq_d[128 * i +: 128]);
+            xin2_a = xin2_a | ({128{s2[i]}} & dq_d[128 * i +: 128]);
+        end
+    end
+    // parameter rows 1..4 (the rope tables; row 0 fields live in the control leaf)
+    reg  [127:0] prow [1:MAXP-1];
+    reg  [MAXP-1:0]     phit;
+    reg  [MAXP*128-1:0] pnew;
+    always @(*) begin : psel
+        integer i, jj;
+        phit = 0; pnew = 0;
+        for (jj = 1; jj < MAXP; jj = jj + 1)
+            for (i = 0; i < S_RD; i = i + 1)
+                if (sv[i] && sj[3 * i +: 3] == jj) begin
+                    phit[jj] = 1'b1; pnew[128 * jj +: 128] = pnew[128 * jj +: 128] | dq_d[128 * i +: 128];
+                end
+    end
+    integer j;
+    always @(posedge clk)
+        if (mine && !dq_st)
+            for (j = 1; j < MAXP; j = j + 1) if (phit[j]) prow[j] <= pnew[128 * j +: 128];
+    // stage B
+    reg  [127:0] xin, xin2;
+    always @(posedge clk) begin xin <= xin_a; xin2 <= xin2_a; end
+    reg  [127:0] hold;
     wire         rbp = (b_jk == K_RB) && b_xtwo;
-    wire         e_v = isop && !b_st && b_jk != K_RW && (b_jk != K_RB || rbp || b_oi[0]);
     wire         qrp = (QW > 1) && (b_jk == K_QR) && b_xtwo;
-    wire [511:0] e_x = (b_jk == K_RB) ? (rbp ? xin : hold) : xin;
-    wire [511:0] e_b = (rbp || qrp) ? xin2 : xin;
-    wire [1:0]   e_j = b_oi[1:0];
+    wire [127:0] e_x = (b_jk == K_RB) ? (rbp ? xin : hold) : xin;
+    wire [127:0] e_b = (rbp || qrp) ? xin2 : xin;
     always @(posedge clk)
         if (b_mine && !b_st && b_xv && b_jk == K_RB && !b_oi[0] && !b_xtwo) hold <= xin;
-    function automatic [255:0] coef(input [1:0] jj, input [1023:0] t);
+    always @(posedge clk) begin
+        xa_x <= e_x;
+        xq_x <= {e_b, e_x};
+    end
+    // QR coefficients, quarter s of coefficient word jj: word 0/1 = row 1 low/high half, 2/3 = row 2 low/high (cos);
+    // rows 3/4 likewise (sin).  Kept copies of j as in the flat control (two used per slice).
+    function automatic [63:0] coefq(input [1:0] jj, input [127:0] ra, input [127:0] rb);
         case (jj)
-            2'd0: coef = t[0 +: 256];
-            2'd1: coef = t[256 +: 256];
-            2'd2: coef = t[512 +: 256];
-            default: coef = t[768 +: 256];
+            2'd0: coefq = ra[63:0];
+            2'd1: coefq = ra[127:64];
+            2'd2: coefq = rb[63:0];
+            default: coefq = rb[127:64];
         endcase
     endfunction
-    wire [1023:0] cos_t = {prow[2], prow[1]}, sin_t = {prow[4], prow[3]};
+    (* keep *) reg [15:0] cj;
+    always @(posedge clk) cj <= {8{oi_a[1:0]}};
+    genvar gq;
+    generate for (gq = 0; gq < 2; gq = gq + 1) begin : g_cf
+        wire [1:0] jj = cj[2 * gq +: 2] + ((gq != 0) ? 2'd1 : 2'd0);
+        always @(posedge clk) begin
+            xq_c[64 * gq +: 64] <= coefq(jj, prow[1], prow[2]);
+            xq_s[64 * gq +: 64] <= coefq(jj, prow[3], prow[4]);
+        end
+    end endgenerate
+    // results from the leaves, captured at the pins; the result row slice
+    reg a_vq, b_vq, b_wq; reg [1:0] q_vq; reg [127:0] a_rq, b_yq; reg [255:0] q_yq;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin a_vq <= 1'b0; q_vq <= 2'b00; b_vq <= 1'b0; b_wq <= 1'b0; end
+        else begin a_vq <= xa_vi; q_vq <= xq_vi; b_vq <= xb_vi; b_wq <= xb_wi; end
+    always @(posedge clk) begin a_rq <= xa_r; q_yq <= xq_y; b_yq <= xb_y; end
+    wire [127:0] ed  = a_vq ? a_rq : b_vq ? b_yq : q_yq[127:0];
+    wire [127:0] ed2 = q_yq[255:128];
+    always @(posedge clk) begin o_d <= ed; o_d2 <= ed2; end
+endmodule
+
+// Control leaf: row/job context, engine issue valids, RW config, result valids / faults, write slot address / mask.
+module ot_s81_su_rxc_ctl #(parameter integer S_RD = 5, QW = 2) (
+    input  wire                   clk, rst_in,
+    input  wire                   dn_st_i,
+    input  wire [3:0]             dn_kind_i,
+    input  wire [7:0]             dn_jid_i,
+    input  wire [S_RD-1:0]        dn_v_i,
+    input  wire [S_RD*70-1:0]     dn_f_i,     // per slot {d[160+:4], d[128+:4], d[96+:32], d[64+:16], d[0+:14]}
+    output reg                    o_v,
+    output reg  [13:0]            o_a,
+    output reg  [15:0]            o_m,
+    output reg                    o_v2,
+    output reg  [13:0]            o_a2,
+    output reg                    o_fu, o_fo, o_alive, o_den, o_rdy,
+    output reg  [7:0]             o_rjid,
+    output reg                    xa_v,
+    input  wire                   xa_vi,
+    input  wire [15:0]            xa_f,
+    output reg  [1:0]             xq_v,
+    input  wire [1:0]             xq_vi,
+    input  wire [3:0]             xq_f,
+    output reg                    xb_v, xw_st, xw_v, xw_last,
+    output reg  [39:0]            xw_cfg,
+    input  wire                   xb_vi, xb_wi,
+    input  wire [15:0]            xb_m,
+    input  wire                   xb_f
+);
+    localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10, K_RW = 11;
+    reg rr0, rr1;
+    always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
+    wire rst_n = rr1;
+    wire dq_st, mine, xv, xtwo, b_st, b_mine, b_xv, b_xtwo;
+    wire [3:0] dq_kind, jk, np, b_jk, b_kind; wire [S_RD-1:0] dq_v, sv, s0, s2; wire [S_RD*3-1:0] sj;
+    wire [15:0] rc, oi_a, nrc, b_oi; wire [2:0] pend;
+    ot_s81_su_rxc_seq #(.S_RD(S_RD)) seq (.clk(clk), .rst_n(rst_n), .dn_st_i(dn_st_i), .dn_kind_i(dn_kind_i), .dn_v_i(dn_v_i),
+        .dq_st(dq_st), .dq_kind(dq_kind), .dq_v(dq_v), .jk(jk), .mine(mine), .rc(rc), .pend(pend), .np(np),
+        .sv(sv), .s0(s0), .s2(s2), .sj(sj), .xv(xv), .xtwo(xtwo), .oi_a(oi_a), .nrc(nrc),
+        .b_st(b_st), .b_mine(b_mine), .b_xv(b_xv), .b_xtwo(b_xtwo), .b_jk(b_jk), .b_kind(b_kind), .b_oi(b_oi));
+    // parameter row 0 fields
+    reg  [S_RD*70-1:0] dq_f;
+    always @(posedge clk) dq_f <= dn_f_i;
+    reg  [69:0] p0;
+    reg         p0hit;
+    reg  [69:0] p0new;
+    always @(*) begin : psel
+        integer i;
+        p0hit = 1'b0; p0new = 70'd0;
+        for (i = 0; i < S_RD; i = i + 1)
+            if (sv[i] && sj[3 * i +: 3] == 3'd0) begin p0hit = 1'b1; p0new = p0new | dq_f[70 * i +: 70]; end
+    end
+    always @(posedge clk) if (mine && !dq_st && p0hit) p0 <= p0new;
+    wire [13:0] obase = p0[13:0];
+    wire [15:0] p0_n = p0[14 +: 16];
+    // engine issue
+    wire isop = b_xv && b_mine;
+    wire rbp = (b_jk == K_RB) && b_xtwo;
+    wire e_v = isop && !b_st && b_jk != K_RW && (b_jk != K_RB || rbp || b_oi[0]);
+    wire qrp = (QW > 1) && (b_jk == K_QR) && b_xtwo;
     wire iss_a = e_v && b_jk == K_RA;
     wire iss_q = e_v && b_jk == K_QR;
     wire iss_b = e_v && b_jk == K_RB;
@@ -193,54 +268,24 @@ module ot_s81_su_rxc #(
             xa_v <= iss_a; xq_v <= {iss_q && qrp, iss_q}; xb_v <= iss_b;
             xw_st <= b_st && b_kind == K_RW;
             xw_v <= isop && !b_st && b_jk == K_RW;
-            xw_last <= b_oi == prow[0][64 +: 16] - 16'd1;
+            xw_last <= b_oi == p0_n - 16'd1;
         end
-    always @(posedge clk) begin
-        xa_x <= e_x;
-        xq_x <= {e_b, e_x};                  // QR: {pair row, row}; RB: {bias, score}; RW: {-, operand row}
-    end
-    // QR coefficient select: the row index j drives 2 x 1024 output bits through 4:1 muxes (g3 gate: b_oi[1] = 3,076
-    // loads).  Eight kept copies of j (one per 128-bit coefficient group of each table half) bound the fanout.
-    (* keep *) reg [15:0] cj;                 // copy gq at [2 gq +: 2]
-    always @(posedge clk) cj <= {8{oi_a[1:0]}};
-    genvar gq;
-    generate for (gq = 0; gq < 8; gq = gq + 1) begin : g_cf
-        // group gq: table half gq / 4 (0 = row j, 1 = row j + 1), 64-bit slice gq % 4 of the 256-bit coefficient word
-        localparam integer H = gq / 4, Q = gq % 4;
-        wire [1:0] jj = cj[2 * gq +: 2] + ((H != 0) ? 2'd1 : 2'd0);
-        always @(posedge clk) begin
-            xq_c[256 * H + 64 * Q +: 64] <= coef(jj, cos_t) >> (64 * Q);
-            xq_s[256 * H + 64 * Q +: 64] <= coef(jj, sin_t) >> (64 * Q);
-        end
-    end endgenerate
-    always @(posedge clk) begin
-        xw_cfg <= {prow[0][160 +: 4], prow[0][128 +: 4], prow[0][96 +: 32]};
-    end
-
-    // ------------------------------------------------------------------ results from the leaves, captured at the pins
-    reg          a_vq; reg [511:0] a_rq; reg [15:0] a_fq;
-    reg  [1:0]   q_vq; reg [1023:0] q_yq; reg [3:0] q_fq;
-    reg          b_vq, b_wq; reg [511:0] b_yq; reg [15:0] b_mq; reg b_fq;
+    always @(posedge clk) xw_cfg <= {p0[66 +: 4], p0[62 +: 4], p0[30 +: 32]};
+    // results
+    reg a_vq; reg [15:0] a_fq; reg [1:0] q_vq; reg [3:0] q_fq; reg b_vq, b_wq, b_fq; reg [15:0] b_mq;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin a_vq <= 1'b0; q_vq <= 2'b00; a_fq <= 16'd0; q_fq <= 4'd0; b_vq <= 1'b0; b_wq <= 1'b0; b_fq <= 1'b0; end
         else begin a_vq <= xa_vi; q_vq <= xq_vi; a_fq <= xa_f; q_fq <= xq_f; b_vq <= xb_vi; b_wq <= xb_wi; b_fq <= xb_f; end
-    always @(posedge clk) begin a_rq <= xa_r; q_yq <= xq_y; b_yq <= xb_y; b_mq <= xb_m; end
-    // result row (one job kind runs at a time)
-    wire         ev  = a_vq | (b_vq & !b_wq) | q_vq[0];
-    wire         ev2 = q_vq[1];
-    wire         rwv = b_vq & b_wq;
-    wire [511:0] ed  = a_vq ? a_rq : b_vq ? b_yq : q_yq[511:0];
-    wire [511:0] ed2 = q_yq[1023:512];
-    wire         ef  = |a_fq || b_fq || |q_fq;
-
-    // ------------------------------------------------------------------ result rows -> the write slot
-    reg [15:0] wc;                            // result rows of the job written
+    always @(posedge clk) b_mq <= xb_m;
+    wire ev  = a_vq | (b_vq & !b_wq) | q_vq[0];
+    wire ev2 = q_vq[1];
+    wire rwv = b_vq & b_wq;
+    wire ef  = |a_fq || b_fq || |q_fq;
+    reg [15:0] wc;
     wire [13:0] wa = (jk == K_QR) ? obase + {wc[13:2], 5'd0} + 14'd28 + {12'd0, wc[1:0]} : obase + wc[13:0];
     wire [15:0] wc1 = wc + 16'd1;
     wire [13:0] wa2 = obase + {wc1[13:2], 5'd0} + 14'd28 + {12'd0, wc1[1:0]};
-    always @(posedge clk) begin
-        o_a <= rwv ? obase : wa; o_m <= rwv ? b_mq : 16'hFFFF; o_d <= ed; o_a2 <= wa2; o_d2 <= ed2;
-    end
+    always @(posedge clk) begin o_a <= rwv ? obase : wa; o_m <= rwv ? b_mq : 16'hFFFF; o_a2 <= wa2; end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             o_v <= 0; o_v2 <= 0; o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0; wc <= 0;
@@ -252,22 +297,22 @@ module ot_s81_su_rxc #(
         end
     end
 `ifndef SYNTHESIS
-    initial if (S_RD > 7) $fatal(1, "ot_s81_su_rxc: S_RD <= 7 (3-bit slot classes)");
-    // shadow of the flat tile's serial row numbering: the slot classes above must equal it every cycle
+    initial if (S_RD > 7) $fatal(1, "ot_s81_su_rxc_ctl: S_RD <= 7 (3-bit slot classes)");
+    // shadow of the flat tile's serial row numbering: the slot classes must equal it every cycle
     always @(posedge clk) if (rst_n && mine && !dq_st) begin : shadow
-        integer i; reg [15:0] c; reg fx, ft; reg [511:0] fi, fi2;
-        c = rc; fx = 0; ft = 0; fi = 0; fi2 = 0;
+        integer i; reg [15:0] c; reg fx, ft;
+        c = rc; fx = 0; ft = 0;
         for (i = 0; i < S_RD; i = i + 1)
             if (dq_v[i]) begin
                 if (c < {12'd0, np}) begin
                     if (!sv[i] || sj[3 * i +: 3] != c[2:0]) $display("RXC_SHADOW_FAIL param slot %0d", i);
                 end else begin
-                    if (fx) begin ft = 1; fi2 = dq_d[512 * i +: 512]; end
-                    else begin fx = 1; fi = dq_d[512 * i +: 512]; if (oi_a != c - {12'd0, np}) $display("RXC_SHADOW_FAIL oi"); end
+                    if (fx) ft = 1;
+                    else begin fx = 1; if (oi_a != c - {12'd0, np}) $display("RXC_SHADOW_FAIL oi"); end
                 end
                 c = c + 1;
             end
-        if (fx != xv || ft != xtwo || (fx && fi != xin_a) || (ft && fi2 != xin2_a) || c != nrc ||
+        if (fx != xv || ft != xtwo || c != nrc ||
             ({12'd0, pend} != ((rc < {12'd0, np}) ? {12'd0, np} - rc : 16'd0)))
             $display("RXC_SHADOW_FAIL classes rc=%0d pend=%0d", rc, pend);
     end
@@ -281,6 +326,80 @@ module ot_s81_su_rxc #(
         if (ev && !tr_e) begin tr_e <= 1'b1; $display("RXTR rxc %0d first_result", tr_cyc); end
     end
 `endif
+endmodule
+
+// The RX control as a wires-only composition: control leaf + four bit-slice leaves (ports = the flat control's).
+module ot_s81_su_rxc #(
+    parameter integer S_RD = 5, LM = 5, LA = 4, XMUT = 0,
+    parameter integer QW = 2                  // QR rope rows a cycle (2: rows j, j + 1 of a head on two read / write slots)
+) (
+    input  wire                   clk,
+    input  wire                   rst_in,
+    input  wire                   dn_st_i,
+    input  wire [3:0]             dn_kind_i,
+    input  wire [7:0]             dn_jid_i,
+    input  wire [S_RD-1:0]        dn_v_i,
+    input  wire [S_RD*512-1:0]    dn_d_i,
+    output wire                   o_v,
+    output wire [13:0]            o_a,
+    output wire [15:0]            o_m,
+    output wire [511:0]           o_d,
+    output wire                   o_v2,
+    output wire [13:0]            o_a2,
+    output wire [511:0]           o_d2,
+    output wire                   o_fu, o_fo, o_alive, o_den, o_rdy,
+    output wire [7:0]             o_rjid,
+    output wire                   xa_v,
+    output wire [511:0]           xa_x,
+    input  wire                   xa_vi,
+    input  wire [511:0]           xa_r,
+    input  wire [15:0]            xa_f,
+    output wire [1:0]             xq_v,
+    output wire [1023:0]          xq_x,
+    output wire [511:0]           xq_c,
+    output wire [511:0]           xq_s,
+    input  wire [1:0]             xq_vi,
+    input  wire [1023:0]          xq_y,
+    input  wire [3:0]             xq_f,
+    output wire                   xb_v, xw_st, xw_v, xw_last,
+    output wire [39:0]            xw_cfg,
+    input  wire                   xb_vi, xb_wi,
+    input  wire [511:0]           xb_y,
+    input  wire [15:0]            xb_m,
+    input  wire                   xb_f
+);
+    wire [S_RD*70-1:0] dn_f;
+    genvar i, s;
+    generate for (i = 0; i < S_RD; i = i + 1) begin : g_f
+        assign dn_f[70 * i +: 70] = {dn_d_i[512 * i + 160 +: 4], dn_d_i[512 * i + 128 +: 4], dn_d_i[512 * i + 96 +: 32],
+                                     dn_d_i[512 * i + 64 +: 16], dn_d_i[512 * i +: 14]};
+    end endgenerate
+    ot_s81_su_rxc_ctl #(.S_RD(S_RD), .QW(QW)) u_ctl (.clk(clk), .rst_in(rst_in), .dn_st_i(dn_st_i), .dn_kind_i(dn_kind_i),
+        .dn_jid_i(dn_jid_i), .dn_v_i(dn_v_i), .dn_f_i(dn_f), .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_v2(o_v2), .o_a2(o_a2),
+        .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid),
+        .xa_v(xa_v), .xa_vi(xa_vi), .xa_f(xa_f), .xq_v(xq_v), .xq_vi(xq_vi), .xq_f(xq_f),
+        .xb_v(xb_v), .xw_st(xw_st), .xw_v(xw_v), .xw_last(xw_last), .xw_cfg(xw_cfg),
+        .xb_vi(xb_vi), .xb_wi(xb_wi), .xb_m(xb_m), .xb_f(xb_f));
+    generate for (s = 0; s < 4; s = s + 1) begin : g_sl
+        wire [S_RD*128-1:0] d_s;
+        for (i = 0; i < S_RD; i = i + 1) begin : g_d
+            assign d_s[128 * i +: 128] = {dn_d_i[512 * i + 256 + 64 * s +: 64], dn_d_i[512 * i + 64 * s +: 64]};
+        end
+        wire [127:0] ax, cc, ss, od, od2; wire [255:0] qx;
+        ot_s81_su_rxc_sl #(.S_RD(S_RD), .QW(QW)) u_sl (.clk(clk), .rst_in(rst_in), .dn_st_i(dn_st_i), .dn_kind_i(dn_kind_i),
+            .dn_v_i(dn_v_i), .dn_d_i(d_s),
+            .xa_x(ax), .xa_vi(xa_vi), .xa_r({xa_r[256 + 64 * s +: 64], xa_r[64 * s +: 64]}),
+            .xq_x(qx), .xq_c(cc), .xq_s(ss), .xq_vi(xq_vi),
+            .xq_y({xq_y[768 + 64 * s +: 64], xq_y[512 + 64 * s +: 64], xq_y[256 + 64 * s +: 64], xq_y[64 * s +: 64]}),
+            .xb_vi(xb_vi), .xb_wi(xb_wi), .xb_y({xb_y[256 + 64 * s +: 64], xb_y[64 * s +: 64]}),
+            .o_d(od), .o_d2(od2));
+        assign {xa_x[256 + 64 * s +: 64], xa_x[64 * s +: 64]} = ax;
+        assign {xq_x[768 + 64 * s +: 64], xq_x[512 + 64 * s +: 64], xq_x[256 + 64 * s +: 64], xq_x[64 * s +: 64]} = qx;
+        assign {xq_c[256 + 64 * s +: 64], xq_c[64 * s +: 64]} = cc;
+        assign {xq_s[256 + 64 * s +: 64], xq_s[64 * s +: 64]} = ss;
+        assign {o_d[256 + 64 * s +: 64], o_d[64 * s +: 64]} = od;
+        assign {o_d2[256 + 64 * s +: 64], o_d2[64 * s +: 64]} = od2;
+    end endgenerate
 endmodule
 
 // RA lane FRONT leaf: x -> exp(-|x|) Horner -> u = t / (t + 2) -> u^2 (ot_hdc_v41x_softplus_s up to T_U2, the same
@@ -562,6 +681,37 @@ module dsfd_su_t_rxc (
         .xq_v(xq_v), .xq_x(xq_x), .xq_c(xq_c), .xq_s(xq_s), .xq_vi(xq_vi), .xq_y(xq_y), .xq_f(xq_f),
         .xb_v(xb_v), .xw_st(xw_st), .xw_v(xw_v), .xw_last(xw_last), .xw_cfg(xw_cfg),
         .xb_vi(xb_vi), .xb_wi(xb_wi), .xb_y(xb_y), .xb_m(xb_m), .xb_f(xb_f));
+endmodule
+// RXC split leaves at the production parameters (hardened once each; the slice is replicated x4)
+module dsfd_su_t_rxcc (
+    input  wire          ck, rst,
+    input  wire          dn_st, input wire [3:0] dn_kind, input wire [7:0] dn_jid, input wire [4:0] dn_v,
+    input  wire [349:0]  dn_f,
+    output wire          o_v, output wire [13:0] o_a, output wire [15:0] o_m, output wire o_v2, output wire [13:0] o_a2,
+    output wire          o_fu, o_fo, o_alive, o_den, o_rdy, output wire [7:0] o_rjid,
+    output wire          xa_v, input wire xa_vi, input wire [15:0] xa_f,
+    output wire [1:0]    xq_v, input wire [1:0] xq_vi, input wire [3:0] xq_f,
+    output wire          xb_v, xw_st, xw_v, xw_last, output wire [39:0] xw_cfg,
+    input  wire          xb_vi, xb_wi, input wire [15:0] xb_m, input wire xb_f
+);
+    ot_s81_su_rxc_ctl #(.S_RD(5), .QW(2)) u_c (.clk(ck), .rst_in(rst), .dn_st_i(dn_st), .dn_kind_i(dn_kind), .dn_jid_i(dn_jid),
+        .dn_v_i(dn_v), .dn_f_i(dn_f), .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_v2(o_v2), .o_a2(o_a2),
+        .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid),
+        .xa_v(xa_v), .xa_vi(xa_vi), .xa_f(xa_f), .xq_v(xq_v), .xq_vi(xq_vi), .xq_f(xq_f),
+        .xb_v(xb_v), .xw_st(xw_st), .xw_v(xw_v), .xw_last(xw_last), .xw_cfg(xw_cfg),
+        .xb_vi(xb_vi), .xb_wi(xb_wi), .xb_m(xb_m), .xb_f(xb_f));
+endmodule
+module dsfd_su_t_rxcs (
+    input  wire          ck, rst,
+    input  wire          dn_st, input wire [3:0] dn_kind, input wire [4:0] dn_v, input wire [639:0] dn_d,
+    output wire [127:0]  xa_x, input wire xa_vi, input wire [127:0] xa_r,
+    output wire [255:0]  xq_x, output wire [127:0] xq_c, xq_s, input wire [1:0] xq_vi, input wire [255:0] xq_y,
+    input  wire          xb_vi, xb_wi, input wire [127:0] xb_y,
+    output wire [127:0]  o_d, o_d2
+);
+    ot_s81_su_rxc_sl #(.S_RD(5), .QW(2)) u_s (.clk(ck), .rst_in(rst), .dn_st_i(dn_st), .dn_kind_i(dn_kind), .dn_v_i(dn_v),
+        .dn_d_i(dn_d), .xa_x(xa_x), .xa_vi(xa_vi), .xa_r(xa_r), .xq_x(xq_x), .xq_c(xq_c), .xq_s(xq_s), .xq_vi(xq_vi),
+        .xq_y(xq_y), .xb_vi(xb_vi), .xb_wi(xb_wi), .xb_y(xb_y), .o_d(o_d), .o_d2(o_d2));
 endmodule
 module dsfd_su_t_rxrb (
     input wire ck, rst, i_v, input wire [1023:0] i_x, input wire w_st, w_v, w_last, input wire [39:0] w_cfg,
