@@ -1,0 +1,480 @@
+{
+  "ot_hfd_coll_q3_static_host_v3": {
+    "ports": {
+      "rst_n": {
+        "direction": "input",
+        "width": 1
+      },
+      "clk_program": {
+        "direction": "input",
+        "width": 1
+      },
+      "clk_control": {
+        "direction": "input",
+        "width": 1
+      },
+      "clk_issue": {
+        "direction": "input",
+        "width": 4
+      },
+      "clk_qslots": {
+        "direction": "input",
+        "width": 2
+      },
+      "clk_ring": {
+        "direction": "input",
+        "width": 17
+      },
+      "clk_reduce": {
+        "direction": "input",
+        "width": 33
+      },
+      "clk_arg": {
+        "direction": "input",
+        "width": 1
+      },
+      "clk_tkm": {
+        "direction": "input",
+        "width": 34
+      },
+      "clk_vmwrite": {
+        "direction": "input",
+        "width": 1
+      },
+      "clk_link": {
+        "direction": "input",
+        "width": 15
+      },
+      "cfg_v": {
+        "direction": "input",
+        "width": 1
+      },
+      "cfg_target": {
+        "direction": "input",
+        "width": 8
+      },
+      "cfg_addr": {
+        "direction": "input",
+        "width": 12
+      },
+      "cfg_data": {
+        "direction": "input",
+        "width": 256
+      },
+      "desc_v": {
+        "direction": "input",
+        "width": 1
+      },
+      "desc_base": {
+        "direction": "input",
+        "width": 12
+      },
+      "desc_limit": {
+        "direction": "input",
+        "width": 13
+      },
+      "desc_loops": {
+        "direction": "input",
+        "width": 16
+      },
+      "launch_v": {
+        "direction": "input",
+        "width": 1
+      },
+      "program_configured": {
+        "direction": "output",
+        "width": 1
+      },
+      "program_init_busy": {
+        "direction": "output",
+        "width": 1
+      },
+      "program_fault": {
+        "direction": "output",
+        "width": 1
+      },
+      "hgi_busy": {
+        "direction": "output",
+        "width": 1
+      },
+      "hgi_done": {
+        "direction": "output",
+        "width": 1
+      },
+      "hgi_fault": {
+        "direction": "output",
+        "width": 1
+      },
+      "inj_rd": {
+        "direction": "output",
+        "width": 2
+      },
+      "inj_idx": {
+        "direction": "output",
+        "width": 32
+      },
+      "hgi_inj_addr": {
+        "direction": "output",
+        "width": 160
+      },
+      "inj_d": {
+        "direction": "input",
+        "width": 1024
+      },
+      "del_valid": {
+        "direction": "output",
+        "width": 4
+      },
+      "del_flit": {
+        "direction": "output",
+        "width": 2180
+      },
+      "hgi_del_obase": {
+        "direction": "output",
+        "width": 160
+      },
+      "rc_v": {
+        "direction": "input",
+        "width": 1
+      },
+      "rc_tag": {
+        "direction": "input",
+        "width": 3
+      },
+      "rc_d": {
+        "direction": "input",
+        "width": 256
+      },
+      "rr_v": {
+        "direction": "output",
+        "width": 1
+      },
+      "rr_tag": {
+        "direction": "output",
+        "width": 3
+      },
+      "rr_d": {
+        "direction": "output",
+        "width": 256
+      },
+      "phy_up": {
+        "direction": "input",
+        "width": 3
+      },
+      "tx_pin_v": {
+        "direction": "output",
+        "width": 3
+      },
+      "tx_pin_flit": {
+        "direction": "output",
+        "width": 1836
+      },
+      "rx_pin_v": {
+        "direction": "input",
+        "width": 3
+      },
+      "rx_pin_flit": {
+        "direction": "input",
+        "width": 1836
+      },
+      "retry_requested": {
+        "direction": "output",
+        "width": 3
+      },
+      "pr_cw_i": {
+        "direction": "input",
+        "width": 280
+      },
+      "pr_ccw_i": {
+        "direction": "input",
+        "width": 280
+      },
+      "pr_cw_o": {
+        "direction": "output",
+        "width": 280
+      },
+      "pr_ccw_o": {
+        "direction": "output",
+        "width": 280
+      },
+      "vm_rq": {
+        "direction": "output",
+        "width": 136
+      },
+      "vm_rr": {
+        "direction": "input",
+        "width": 2056
+      },
+      "vm_kq": {
+        "direction": "output",
+        "width": 2248
+      },
+      "fault": {
+        "direction": "output",
+        "width": 1
+      },
+      "done": {
+        "direction": "output",
+        "width": 1
+      },
+      "stat_cycles": {
+        "direction": "output",
+        "width": 32
+      }
+    },
+    "input_bits_excluding_clock_reset": 6062,
+    "output_bits": 7624,
+    "clock_pins": {
+      "clk_program": 1,
+      "clk_control": 1,
+      "clk_issue": 4,
+      "clk_qslots": 2,
+      "clk_ring": 17,
+      "clk_reduce": 33,
+      "clk_arg": 1,
+      "clk_tkm": 34,
+      "clk_vmwrite": 1,
+      "clk_link": 15
+    },
+    "logical_clock_roots": 109,
+    "actual_native_child": "ot_hfd_coll_q3_static_v3",
+    "physical_QID": "0",
+    "host_target": "52+QID",
+    "feedback": "all9bits direct nativeissuer ports, typed bound; no hierarchical reference",
+    "mechanism_scope": "q2 native functional bench; q3 binding/header only, no q3 numerical or fullparent physical qualification"
+  },
+  "ot_hfd_coll_q2_static_host_v3": {
+    "ports": {
+      "rst_n": {
+        "direction": "input",
+        "width": 1
+      },
+      "clk_program": {
+        "direction": "input",
+        "width": 1
+      },
+      "clk_control": {
+        "direction": "input",
+        "width": 1
+      },
+      "clk_issue": {
+        "direction": "input",
+        "width": 4
+      },
+      "clk_qslots": {
+        "direction": "input",
+        "width": 2
+      },
+      "clk_ring": {
+        "direction": "input",
+        "width": 17
+      },
+      "clk_reduce": {
+        "direction": "input",
+        "width": 33
+      },
+      "clk_vmwrite": {
+        "direction": "input",
+        "width": 1
+      },
+      "clk_link": {
+        "direction": "input",
+        "width": 10
+      },
+      "cfg_v": {
+        "direction": "input",
+        "width": 1
+      },
+      "cfg_target": {
+        "direction": "input",
+        "width": 8
+      },
+      "cfg_addr": {
+        "direction": "input",
+        "width": 12
+      },
+      "cfg_data": {
+        "direction": "input",
+        "width": 256
+      },
+      "desc_v": {
+        "direction": "input",
+        "width": 1
+      },
+      "desc_base": {
+        "direction": "input",
+        "width": 12
+      },
+      "desc_limit": {
+        "direction": "input",
+        "width": 13
+      },
+      "desc_loops": {
+        "direction": "input",
+        "width": 16
+      },
+      "launch_v": {
+        "direction": "input",
+        "width": 1
+      },
+      "program_configured": {
+        "direction": "output",
+        "width": 1
+      },
+      "program_init_busy": {
+        "direction": "output",
+        "width": 1
+      },
+      "program_fault": {
+        "direction": "output",
+        "width": 1
+      },
+      "hgi_busy": {
+        "direction": "output",
+        "width": 1
+      },
+      "hgi_done": {
+        "direction": "output",
+        "width": 1
+      },
+      "hgi_fault": {
+        "direction": "output",
+        "width": 1
+      },
+      "inj_rd": {
+        "direction": "output",
+        "width": 2
+      },
+      "inj_idx": {
+        "direction": "output",
+        "width": 32
+      },
+      "hgi_inj_addr": {
+        "direction": "output",
+        "width": 160
+      },
+      "inj_d": {
+        "direction": "input",
+        "width": 1024
+      },
+      "del_valid": {
+        "direction": "output",
+        "width": 4
+      },
+      "del_flit": {
+        "direction": "output",
+        "width": 2180
+      },
+      "hgi_del_obase": {
+        "direction": "output",
+        "width": 160
+      },
+      "rc_v": {
+        "direction": "input",
+        "width": 1
+      },
+      "rc_tag": {
+        "direction": "input",
+        "width": 3
+      },
+      "rc_d": {
+        "direction": "input",
+        "width": 256
+      },
+      "rr_v": {
+        "direction": "output",
+        "width": 1
+      },
+      "rr_tag": {
+        "direction": "output",
+        "width": 3
+      },
+      "rr_d": {
+        "direction": "output",
+        "width": 256
+      },
+      "phy_up": {
+        "direction": "input",
+        "width": 2
+      },
+      "tx_pin_v": {
+        "direction": "output",
+        "width": 2
+      },
+      "tx_pin_flit": {
+        "direction": "output",
+        "width": 1224
+      },
+      "rx_pin_v": {
+        "direction": "input",
+        "width": 2
+      },
+      "rx_pin_flit": {
+        "direction": "input",
+        "width": 1224
+      },
+      "retry_requested": {
+        "direction": "output",
+        "width": 2
+      },
+      "pr_cw_i": {
+        "direction": "input",
+        "width": 280
+      },
+      "pr_ccw_i": {
+        "direction": "input",
+        "width": 280
+      },
+      "pr_cw_o": {
+        "direction": "output",
+        "width": 280
+      },
+      "pr_ccw_o": {
+        "direction": "output",
+        "width": 280
+      },
+      "vm_rq": {
+        "direction": "output",
+        "width": 136
+      },
+      "vm_rr": {
+        "direction": "input",
+        "width": 2056
+      },
+      "vm_kq": {
+        "direction": "output",
+        "width": 2248
+      },
+      "fault": {
+        "direction": "output",
+        "width": 1
+      },
+      "done": {
+        "direction": "output",
+        "width": 1
+      },
+      "stat_cycles": {
+        "direction": "output",
+        "width": 32
+      }
+    },
+    "input_bits_excluding_clock_reset": 5448,
+    "output_bits": 7010,
+    "clock_pins": {
+      "clk_program": 1,
+      "clk_control": 1,
+      "clk_issue": 4,
+      "clk_qslots": 2,
+      "clk_ring": 17,
+      "clk_reduce": 33,
+      "clk_vmwrite": 1,
+      "clk_link": 10
+    },
+    "logical_clock_roots": 69,
+    "actual_native_child": "ot_hfd_coll_q2_static_v3",
+    "physical_QID": "1..3",
+    "host_target": "52+QID",
+    "feedback": "all9bits direct nativeissuer ports, typed bound; no hierarchical reference",
+    "mechanism_scope": "q2 native functional bench; q3 binding/header only, no q3 numerical or fullparent physical qualification"
+  }
+}
