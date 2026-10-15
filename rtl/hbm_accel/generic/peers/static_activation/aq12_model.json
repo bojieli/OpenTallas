@@ -1,0 +1,33 @@
+{
+  "stage": "BEFORE_CONVERTER_BENCH",
+  "DUT": "unchangedot_dsrom_aq12; actualF12qmulLAT5",
+  "roots": 2,
+  "words_per_edge": 64,
+  "blocks32_per_edge": 2,
+  "native_shape": {
+    "P": 8,
+    "K": 5120,
+    "words": 40960,
+    "blocks": 1280,
+    "input_edges": 640
+  },
+  "latency": "18registeredstages; measureNBAobserver anddownstreamsampled convention separately",
+  "storage_per_AQ_untrimmed_source_FF": {
+    "s0_x": 1024,
+    "x_delay11": 11264,
+    "max_tree31x31": 961,
+    "s11": 33,
+    "s12": 1515,
+    "s13": 1131,
+    "s14": 1035,
+    "s15": 363,
+    "s16": 1195,
+    "q_e_y_vo_fault": 780,
+    "vline": 18,
+    "nonfinite_delay_lowerbound": 10
+  },
+  "source_storage_lowerbound_FF_per_root": 19329,
+  "not_counted": "F12multiplier cut bundles and anyderivedretiming; q/e-only cone maypruneyencode terms; mappedclockcounts required",
+  "physical": "newAQ12usage notphysicallyqualified; two nominal roots do notprove<=15k/root; internalpartitionsmayberequired",
+  "external_reference": "actualtools/hdc_golden_v41.quant_fp8/qdq_fp8 + exactSeedX rawFP32 artifact; no goldeninsideDUT"
+}
