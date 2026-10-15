@@ -36,6 +36,15 @@ module tb_hgi_hc_bank_memory_static;
    for(l=0;l<8;l=l+1)begin ap[8+l*32+:32]=pattern(s*512+r*4+q,l);golden_w[s*128+r][q*256+l*32+:32]=ap[8+l*32+:32];end
   end
   @(negedge clk);ap=0;repeat(3)@(negedge clk);
+  for(n=0;n<32;n=n+1)begin
+   ap=0;ap[277]=1;ap[276]=1'(n);ap[273+:3]=3;ap[266+:7]=7'(n*3);ap[264+:2]=2'(n/2);ap[7:0]=8'h55;
+   for(l=0;l<8;l=l+1)begin
+    ap[8+l*32+:32]=pattern(9000+n,l);
+    if(ap[l])golden_w[(n%2)*128+((n*3)%128)][((n/2)%4)*256+l*32+:32]=ap[8+l*32+:32];
+   end
+   @(negedge clk);
+  end
+  ap=0;repeat(3)@(negedge clk);
   for(n=0;n<640;n=n+1)begin xv=1;xword=10'(n);xdata=golden_x[n];@(negedge clk);end
   xv=0;repeat(3)@(negedge clk);
   for(n=0;n<8;n=n+1)begin wr=1;xr=1;slot=1'(n);row=0;xaddr=0;@(negedge clk);end
@@ -43,6 +52,6 @@ module tb_hgi_hc_bank_memory_static;
   for(n=0;n<1280;n=n+1)begin wr=1;xr=1;slot=1'(n);row=7'(n/2);xaddr=10'(n%640);@(negedge clk);end
   check_enable=0;wr=0;xr=0;repeat(4)@(negedge clk);
   if(fault||checks!=1280)$fatal(1,"BANK_MEMORY fault=%b checks=%0d",fault,checks);
-  $display("BANK_MEMORY PASS checks=%0d macros=10 weight_writes=1024 residual_writes=640 memory_latency=3",checks);$finish;
+  $display("BANK_MEMORY PASS checks=%0d macros=10 weight_writes=1056 residual_writes=640 memory_latency=3",checks);$finish;
  end
 endmodule
