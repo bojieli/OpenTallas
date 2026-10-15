@@ -1639,6 +1639,9 @@ def _wrap(v, m, G, peers):
                 band.obs_top = 7  # actual native cluster signalsM2-M7/PGM7, not a leaf-only M6 draft
 
     v.V5_FINAL_MASTERS = final
+    # split compute C17: band_lanes may be placed MX (band 0 stack mirrored); its clock pins are the closed native view's
+    # real pins set in final(), so the generic mirror clock-pin relocation must not run for it
+    v.MIRROR_CK_FINAL = ('qfd_sp_band_lanes',) if SPLIT_COMPUTE else ()
 
     def port_widths(model, k=1):
         w = base_pw(model, k)

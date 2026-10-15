@@ -384,9 +384,18 @@ def place(v, m, G):
             y0 = head_y - HROW - gh
             if y0 < lo:
                 raise SystemExit('split compute seam: slab stack cannot clear the head-row channel')
-        put(f'sp_band_lanes_{b}', xa + dl, y0, LANES_WH)
-        put(f'sp_port_tiles_{b}', xa, y0 + LANES_WH[1] + 4.32, PORT_WH)
-        put(f'sp_res_ser_{b}', xa + dr, y0 + LANES_WH[1] + PORT_WH[1] + 8.64, RES_WH)
+        if b == 0 and STACK == 'seamw' and os.environ.get('OT_SPLIT_BAND0_FLIP', '0') != '0':
+            # C17: band 0's stack mirrored (MX): band_lanes on top, nearest the tree top (pword_0 / tt_ty / tt_lc0),
+            # res_ser at the bottom; the abutted tw / ty and rs faces keep facing each other under the mirror
+            r_ = put(f'sp_res_ser_{b}', xa + dr, y0, RES_WH)
+            p_ = put(f'sp_port_tiles_{b}', xa, y0 + RES_WH[1] + 4.32, PORT_WH)
+            l_ = put(f'sp_band_lanes_{b}', xa + dl, y0 + RES_WH[1] + PORT_WH[1] + 8.64, LANES_WH)
+            r_.orient = p_.orient = l_.orient = 'MX'
+            rec['band0_flip'] = True
+        else:
+            put(f'sp_band_lanes_{b}', xa + dl, y0, LANES_WH)
+            put(f'sp_port_tiles_{b}', xa, y0 + LANES_WH[1] + 4.32, PORT_WH)
+            put(f'sp_res_ser_{b}', xa + dr, y0 + LANES_WH[1] + PORT_WH[1] + 8.64, RES_WH)
         yf = max(lo_f, cents[b] - PORT_WH[1] / 2)
         yf = min(yf, top - PORT_WH[1])
         if STACK in ('seam', 'seamw') and yf < head_y + HROW and yf + PORT_WH[1] > head_y - HROW:

@@ -4556,7 +4556,7 @@ def _r18_masters(v, m):
                     if pn in M.ports:
                         M.order.remove(pn)
                         M.ports.pop(pn)
-                    if mn in mirrored_x:
+                    if mn in mirrored_x and mn not in getattr(v, 'MIRROR_CK_FINAL', ()):
                         # MX / R180 masters: an M8 area pin's mirror lands off the M8 track (r18c: ot_mts found no
                         # legal origin for qfd_lst_c_split MX); an M5 pin on the N face stays on track mirrored
                         nf = [q for q, sp in M.ports.items() if sp[0] == 'face' and sp[2] == 'N'
